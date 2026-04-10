@@ -206,6 +206,27 @@ Important constraint:
 - start with public case index and hearing data, not a broad criminal-docket mirror
 - keep any judge-evaluation view downstream and derived from explicit event-level records
 
+### Commercial People-Search Evaluation
+
+Revisit later whether a commercial people-search or background-check service is useful as an optional operator-assisted research aid.
+
+Examples to revisit:
+
+- `publicdatacheck.com`
+- other services with APIs, bulk export, or better matching controls
+
+Possible uses:
+
+- operator-side identity disambiguation for already-public named cases
+- cross-checking whether two public records likely refer to the same adult person
+- backfilling non-core metadata where official records are too thin
+
+Important constraint:
+
+- do not make a commercial people-search vendor a core dependency of the graph
+- do not treat third-party people-search output as primary evidence
+- if revisited, evaluate API access, terms of use, legal risk, matching quality, and how any output would be kept outside the core official-record truth layer
+
 ### State / Federal / Quasi-Governmental Governance Layer
 
 Track outside institutions that materially constrain Marin outcomes even when they are not ordinary municipal bodies.
@@ -253,3 +274,4 @@ Ideas worth keeping but not prioritizing yet:
 - map overlays for projects, hearings, and place-based disputes
 - public-comment archive with speaker recurrence
 - local power map / org-chart view
+- optional operator-side commercial lookup tooling for identity disambiguation, including `publicdatacheck.com`
