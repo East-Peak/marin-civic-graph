@@ -10,6 +10,11 @@ It is intentionally mixed:
 
 The goal is to keep good ideas from disappearing into chat history.
 
+Note:
+
+- unresolved source ambiguities and modeling questions now live in [open-questions.md](./open-questions.md)
+- this file stays focused on backlog and wishlist work, not active join ambiguity
+
 ## Near-Term
 
 ### Case Study 01

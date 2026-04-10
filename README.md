@@ -82,6 +82,7 @@ Start narrow:
 - [Source Registry Format](./docs/source-registry-format.md)
 - [Seed Source Registry](./registry/README.md)
 - [Media Attribution Rules](./docs/media-attribution-rules.md)
+- [Open Questions](./docs/open-questions.md)
 - [Backlog](./docs/backlog.md)
 - [Case Study 01](./docs/case-studies/01-san-rafael-homelessness.md)
 - [Case Study 01 Ingestion Checklist](./docs/case-studies/01-san-rafael-homelessness-ingestion-checklist.md)
