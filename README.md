@@ -65,6 +65,7 @@ Start narrow:
 - [Record Model](./docs/record-model.md)
 - [Judicial And Oversight Extension](./docs/judicial-and-oversight-extension.md)
 - [Judicial Pressure-Test Basket Source Bundle](./docs/judicial-pressure-test-basket-source-bundle.md)
+- [Judicial Pressure-Test Basket Ingestion Checklist](./docs/judicial-pressure-test-basket-ingestion-checklist.md)
 - [Entity Glossary](./docs/entity-glossary.md)
 - [Jurisdiction Source Map](./docs/jurisdiction-source-map.md)
 - [Ingestion Agents](./docs/ingestion-agents.md)
