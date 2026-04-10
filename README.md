@@ -62,6 +62,7 @@ Start narrow:
 - [Borrow Map](./docs/borrow-map.md)
 - [Schema v1](./docs/schema-v1.md)
 - [Graph Data Model](./docs/graph-data-model.md)
+- [Graph Joins And Identity](./docs/graph-joins-and-identity.md)
 - [Record Model](./docs/record-model.md)
 - [Judicial And Oversight Extension](./docs/judicial-and-oversight-extension.md)
 - [Judicial Pressure-Test Basket Source Bundle](./docs/judicial-pressure-test-basket-source-bundle.md)
