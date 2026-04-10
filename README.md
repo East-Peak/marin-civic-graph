@@ -81,7 +81,18 @@ Start narrow:
 - [Raw Artifacts](./data/raw/README.md)
 - [Extracted Outputs](./data/extracted/README.md)
 - [Normalized Outputs](./data/normalized/README.md)
+- [Bundle 01 Extracted Summary](./data/extracted/san-rafael-homelessness-01/bundle-01-summary.json)
+- [Bundle 01 Normalized Summary](./data/normalized/san-rafael-homelessness-01/bundle-01.json)
+
+## Scripts
+
+- [Case Study 01 Extractor](./scripts/extract_case_study_01_bundle.py)
 
 ## Current Status
 
-This repo is for planning, schema design, source mapping, and architecture decisions before implementation begins.
+This repo started as a planning workspace and now includes the first live implementation slice:
+
+- source registry seeds
+- raw official source captures for case study 01
+- extracted text and metadata for bundle 01
+- a first normalized candidate bundle centered on the August 19, 2024 San Rafael homelessness decision chain

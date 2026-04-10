@@ -56,32 +56,32 @@ That means collecting enough material to instantiate:
 
 - [ ] July 2023 camping ordinance materials
 - [ ] May 6, 2024 ordinance amendment materials
-- [ ] August 19, 2024 staff report PDF
-- [ ] August 19, 2024 agenda and packet attachments
+- [x] August 19, 2024 staff report PDF
+- [x] August 19, 2024 agenda and packet attachments
 - [ ] August 19, 2024 meeting video
-- [ ] August 19, 2024 minutes once located
-- [ ] `Grants Pass` city statement
-- [ ] `Grants Pass` city explainer / FAQ
-- [ ] news release on `Boyd` dismissal
-- [ ] camping implementation approach page and linked administrative orders
-- [ ] sanctioned camping area operating pages and updates
+- [x] August 19, 2024 minutes once located
+- [x] `Grants Pass` city statement
+- [x] `Grants Pass` city explainer / FAQ
+- [x] news release on `Boyd` dismissal
+- [x] camping implementation approach page and linked administrative orders
+- [x] sanctioned camping area operating pages and updates
 
 ### Output Required
 
-- [ ] each document stored as raw artifact
-- [ ] each document classified by type
-- [ ] extracted text available
+- [x] each document stored as raw artifact
+- [x] each document classified by type
+- [x] extracted text available
 - [ ] canonical document metadata assigned
 
 ## Phase 2: Meeting and Decision Extraction
 
 ### August 19, 2024 Meeting
 
-- [ ] create `Meeting`
-- [ ] enumerate relevant `AgendaItem` objects
-- [ ] identify all formal `Decision` candidates
-- [ ] extract any vote tables or motions
-- [ ] extract linked contracts, appropriations, and grant references
+- [x] create `Meeting`
+- [x] enumerate relevant `AgendaItem` objects
+- [x] identify all formal `Decision` candidates
+- [x] extract any vote tables or motions
+- [x] extract linked contracts, appropriations, and grant references
 
 ### Earlier Ordinance Steps
 
@@ -93,17 +93,17 @@ That means collecting enough material to instantiate:
 
 ### Must Normalize
 
-- [ ] Mahon Creek Path
-- [ ] Lindaro Street
-- [ ] Andersen Drive
-- [ ] Francisco Blvd W
-- [ ] Albert Park
-- [ ] Menzies parking lot
-- [ ] 350 Merrydale Road
+- [x] Mahon Creek Path
+- [x] Lindaro Street
+- [x] Andersen Drive
+- [x] Francisco Blvd W
+- [x] Albert Park
+- [x] Menzies parking lot
+- [x] 350 Merrydale Road
 
 ### Output Required
 
-- [ ] canonical place IDs
+- [x] canonical place IDs
 - [ ] normalized aliases
 - [ ] lat / lon where safe
 - [ ] linked decisions and documents
@@ -133,7 +133,7 @@ That means collecting enough material to instantiate:
 
 ### Output Required
 
-- [ ] actor records
+- [x] actor records
 - [ ] initial aliases
 - [ ] institution links
 - [ ] membership candidates where supported
@@ -150,8 +150,8 @@ That means collecting enough material to instantiate:
 
 ### Output Required
 
-- [ ] `MoneyFlow` candidates
-- [ ] linked `Decision` objects
+- [x] `MoneyFlow` candidates
+- [x] linked `Decision` objects
 - [ ] recipient and payer actors
 - [ ] evidence documents
 
@@ -181,10 +181,10 @@ That means collecting enough material to instantiate:
 
 The first usable deliverable for this case study should be:
 
-- [ ] one timeline from July 2023 to January 2025
-- [ ] one actor table
-- [ ] one place table
-- [ ] one decision chain centered on August 19, 2024
+- [x] one timeline from July 2023 to January 2025
+- [x] one actor table
+- [x] one place table
+- [x] one decision chain centered on August 19, 2024
 - [ ] one media-attribution sample showing at least one recurring quoted actor pattern if present
 
 ## Blocking Questions
@@ -205,5 +205,10 @@ If doing this manually first, the order should be:
 5. normalize actors
 6. extract money flows
 7. layer in media
+
+Status as of April 10, 2026:
+
+- phases 1 through 6 have a first-pass official-source bundle, extraction set, and normalized candidate bundle
+- the remaining major gap is the media layer, especially citation-level Marin IJ coverage and later attribution review
 
 That will create the first trustworthy version of the case without over-relying on media before the official spine exists.

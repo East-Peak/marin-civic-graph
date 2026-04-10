@@ -1,0 +1,58 @@
+{
+  "source_id": "marin-county-campaign-finance-netfile",
+  "capture_id": "marin-county-campaign-finance-netfile__2026-04-10",
+  "capture_date": "2026-04-10",
+  "bundle_id": "san-rafael-homelessness-01__bundle-01",
+  "entry_url": "https://netfile.com/agency/cmar/",
+  "fetch_strategy": "static_html_manual_bundle",
+  "generated_at": "2026-04-10T18:04:29.619176+00:00",
+  "artifacts": [
+    {
+      "artifact_path": "data/raw/marin-county-campaign-finance-netfile/2026-04-10/source.html",
+      "content_type": "text/html",
+      "artifact_type": "html",
+      "title": "County of Marin Electronic Filing System",
+      "published_at": null,
+      "text_path": "data/extracted/marin-county-campaign-finance-netfile/source.txt",
+      "word_count": 297,
+      "links": [
+        "https://fonts.gstatic.com",
+        "https://www.marincounty.gov",
+        "https://www.marincounty.gov/how-do-i",
+        "https://www.marincounty.gov/departments",
+        "https://www.marincounty.gov/your-government",
+        "http://www.co.marin.ca.us/depts/RV/Main/RegisterVote/registervote.html",
+        "http://www.co.marin.ca.us/depts/RV/Main/PollPlaces/pollplaces.html",
+        "http://www.co.marin.ca.us/depts/RV/Main/PollWorkers/pollworkers.html",
+        "http://www.co.marin.ca.us/depts/RV/Main/Voting/voting.html",
+        "http://www.co.marin.ca.us/depts/RV/Main/Elections/elections.html",
+        "http://www.co.marin.ca.us/depts/RV/Main/Candidates/candidates.html",
+        "http://www.co.marin.ca.us/depts/RV/Main/Advisory_Committee/Advisory.html",
+        "http://www.co.marin.ca.us/depts/RV/Main/RelatedLinks/relatedlinks.html",
+        "http://www.co.marin.ca.us/sysApps/Feedback/feedback.asp",
+        "https://public.netfile.com/pub2/?aid=CMAR",
+        "https://netfile.com/Filer",
+        "https://www.hr.marincounty.org/work-with-us/job-opportunities",
+        "https://www.marincounty.gov/website-accessibility",
+        "https://www.marincounty.gov/privacy-policy",
+        "https://www.facebook.com/CountyOfMarin?sk=wall",
+        "https://twitter.com/maringov",
+        "https://www.linkedin.com/company/county-of-marin",
+        "https://www.youtube.com/user/maringchannel",
+        "https://www.instagram.com/marincountygov",
+        "https://nextdoor.com/agency-detail/ca/san-rafael/marin-county/",
+        "https://www.marincounty.gov/"
+      ]
+    }
+  ],
+  "candidate_signals": {
+    "money_values": [],
+    "actor_hits": [],
+    "place_hits": [],
+    "issue_hits": [],
+    "legal_refs": []
+  },
+  "notes": [
+    "NetFile landing page captured as HTML only in bundle 01."
+  ]
+}

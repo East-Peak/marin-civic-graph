@@ -1,0 +1,93 @@
+{
+  "source_id": "san-rafael-homelessness-update-nov-2024",
+  "capture_id": "san-rafael-homelessness-update-nov-2024__2026-04-10",
+  "capture_date": "2026-04-10",
+  "bundle_id": "san-rafael-homelessness-01__bundle-01",
+  "entry_url": "https://www.cityofsanrafael.org/homelessness-news-update-november-21-2024/",
+  "fetch_strategy": "static_html_manual_bundle",
+  "generated_at": "2026-04-10T18:04:30.473935+00:00",
+  "artifacts": [
+    {
+      "artifact_path": "data/raw/san-rafael-homelessness-update-nov-2024/2026-04-10/source.html",
+      "content_type": "text/html",
+      "artifact_type": "html",
+      "title": "Homelessness News Update &#8211; November 21, 2024",
+      "published_at": "2024-11-22T01:00:40+00:00",
+      "text_path": "data/extracted/san-rafael-homelessness-update-nov-2024/source.txt",
+      "word_count": 1074,
+      "links": [
+        "https://www.cityofsanrafael.org/homelessness-news-update-november-21-2024/",
+        "https://www.cityofsanrafael.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.cityofsanrafael.org%2Fhomelessness-news-update-november-21-2024%2F",
+        "https://www.cityofsanrafael.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.cityofsanrafael.org%2Fhomelessness-news-update-november-21-2024%2F&format=xml",
+        "https://www.cityofsanrafael.org/wp-includes/css/dist/block-library/style.min.css?ver=6.9.4",
+        "https://www.cityofsanrafael.org/wp-content/plugins/wp-media-folder/assets/css/display-gallery/magnific-popup.css?ver=6.1.12",
+        "https://www.cityofsanrafael.org/wp-content/plugins/auth0/assets/css/main.css?ver=6.9.4",
+        "https://www.cityofsanrafael.org/wp-content/plugins/gravity-forms-bootstrap-3-style/gravity-forms-bootstrap.css?ver=1.0",
+        "https://www.cityofsanrafael.org/wp-content/plugins/simple-staff-list/public/css/simple-staff-list-public.css?ver=2.2.5",
+        "https://www.cityofsanrafael.org/wp-content/plugins/wp-job-manager/assets/dist/css/job-listings.css?ver=598383a28ac5f9f156e4",
+        "https://www.cityofsanrafael.org/wp-content/plugins/wp-proud-agency/assets/css/proud-agency-styles.css?ver=1.0",
+        "https://www.cityofsanrafael.org/wp-content/plugins/elasticpress/dist/css/general-styles.css?ver=66295efe92a630617c00",
+        "https://www.cityofsanrafael.org/wp-content/plugins/wp-fullcalendar/includes/css/main.css?ver=1.6",
+        "https://www.cityofsanrafael.org/wp-content/plugins/wp-fullcalendar/includes/css/jquery-ui/smoothness/jquery-ui.min.css?ver=1.6",
+        "https://www.cityofsanrafael.org/wp-content/plugins/wp-fullcalendar/includes/css/jquery-ui/smoothness/theme.css?ver=1.6",
+        "https://www.cityofsanrafael.org/wp-content/themes/wp-proud-theme/dist/styles/proud.css?ver=2026.03.31.1400",
+        "https://www.cityofsanrafael.org/wp-content/themes/wp-proud-sr-ca-theme/dist/styles/proud-subtheme-vendor.css?ver=2026.03.18.1948",
+        "https://www.cityofsanrafael.org/wp-content/themes/wp-proud-sr-ca-theme/dist/styles/proud-subtheme.css?ver=2026.03.18.1948",
+        "https://www.cityofsanrafael.org/wp-content/themes/wp-proud-sr-ca-theme/dist/fonts/sr-iconset/style.css?ver=6.9.4",
+        "https://www.cityofsanrafael.org/wp-json/",
+        "https://www.cityofsanrafael.org/wp-json/wp/v2/posts/93343",
+        "https://www.cityofsanrafael.org/",
+        "https://www.cityofsanrafael.org/residents/",
+        "https://www.cityofsanrafael.org/businesses/",
+        "https://www.cityofsanrafael.org/visitors/",
+        "https://www.cityofsanrafael.org/departments/",
+        "https://www.cityofsanrafael.org/news/",
+        "https://www.cityofsanrafael.org/events/",
+        "https://www.cityofsanrafael.org/contact",
+        "https://www.cityofsanrafael.org/ordinance-regulating-camping/",
+        "https://www.cityofsanrafael.org/camping-enforcement-plan/",
+        "https://youtu.be/EB-ywtd-GK8?si=2T5SYYOI-r0ZzIen",
+        "https://web.archive.org/web/20241103060113/https://www.marincounty.gov/news-releases/photography-exhibit-depicts-dignity-homelessness",
+        "https://www.cityofsanrafael.org/art-burst-grant/",
+        "https://www.cityofsanrafael.org/work-started-lincoln-avenue-safety-improvements-at-wilson-court-and-brookdale-avenue-project/",
+        "https://www.cityofsanrafael.org/garden-workdays-kick-off-the-planting-season/",
+        "https://www.cityofsanrafael.org/started-4-8-26-phase-2-embarcadero-one-way-conversion-pilot-project/",
+        "https://www.cityofsanrafael.org/engine-51-connects-with-students-at-laurel-dell-elementary/",
+        "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.cityofsanrafael.org%2Fhomelessness-news-update-november-21-2024%3Fname%3Dhomelessness-news-update-november-21-2024",
+        "https://twitter.com/share?url=https%3A%2F%2Fwww.cityofsanrafael.org%2Fhomelessness-news-update-november-21-2024%3Fname%3Dhomelessness-news-update-november-21-2024",
+        "https://www.facebook.com/CityofSanRafael",
+        "https://www.instagram.com/thecityofsanrafael/",
+        "https://x.com/i/flow/login?redirect_after_login=%2FCityofSanRafael",
+        "https://www.cityofsanrafael.org/city-social-media-accounts/",
+        "https://proudcity.com"
+      ]
+    }
+  ],
+  "candidate_signals": {
+    "money_values": [],
+    "actor_hits": [
+      "City of San Rafael",
+      "Defense Block Security",
+      "FS Global",
+      "Ritter Center",
+      "Marin County Health and Human Services",
+      "Marin County"
+    ],
+    "place_hits": [
+      "Mahon Creek Path",
+      "Mahon Creek",
+      "Lincoln Avenue"
+    ],
+    "issue_hits": [
+      "homelessness",
+      "camping ordinance",
+      "sanctioned camping",
+      "safe sleeping",
+      "public property"
+    ],
+    "legal_refs": []
+  },
+  "notes": [
+    "November 21, 2024 City update page captured as HTML only in bundle 01."
+  ]
+}

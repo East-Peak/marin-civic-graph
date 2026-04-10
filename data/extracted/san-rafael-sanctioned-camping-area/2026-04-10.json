@@ -1,0 +1,107 @@
+{
+  "source_id": "san-rafael-sanctioned-camping-area",
+  "capture_id": "san-rafael-sanctioned-camping-area__2026-04-10",
+  "capture_date": "2026-04-10",
+  "bundle_id": "san-rafael-homelessness-01__bundle-01",
+  "entry_url": "https://www.cityofsanrafael.org/sanctioned-camping-area/",
+  "fetch_strategy": "static_html_manual_bundle",
+  "generated_at": "2026-04-10T18:04:30.477591+00:00",
+  "artifacts": [
+    {
+      "artifact_path": "data/raw/san-rafael-sanctioned-camping-area/2026-04-10/source.html",
+      "content_type": "text/html",
+      "artifact_type": "html",
+      "title": "Sanctioned Camping Area - San Rafael",
+      "published_at": null,
+      "text_path": "data/extracted/san-rafael-sanctioned-camping-area/source.txt",
+      "word_count": 873,
+      "links": [
+        "https://www.cityofsanrafael.org/sanctioned-camping-area/",
+        "https://www.cityofsanrafael.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.cityofsanrafael.org%2Fsanctioned-camping-area%2F",
+        "https://www.cityofsanrafael.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.cityofsanrafael.org%2Fsanctioned-camping-area%2F&format=xml",
+        "https://www.cityofsanrafael.org/wp-includes/css/dist/block-library/style.min.css?ver=6.9.4",
+        "https://www.cityofsanrafael.org/wp-content/plugins/wp-media-folder/assets/css/display-gallery/magnific-popup.css?ver=6.1.12",
+        "https://www.cityofsanrafael.org/wp-content/plugins/auth0/assets/css/main.css?ver=6.9.4",
+        "https://www.cityofsanrafael.org/wp-content/plugins/gravity-forms-bootstrap-3-style/gravity-forms-bootstrap.css?ver=1.0",
+        "https://www.cityofsanrafael.org/wp-content/plugins/simple-staff-list/public/css/simple-staff-list-public.css?ver=2.2.5",
+        "https://www.cityofsanrafael.org/wp-content/plugins/siteorigin-panels/css/front-flex.min.css?ver=2.34.0",
+        "https://www.cityofsanrafael.org/wp-content/plugins/wp-job-manager/assets/dist/css/job-listings.css?ver=598383a28ac5f9f156e4",
+        "https://www.cityofsanrafael.org/wp-content/plugins/wp-proud-agency/assets/css/proud-agency-styles.css?ver=1.0",
+        "https://www.cityofsanrafael.org/wp-content/plugins/elasticpress/dist/css/general-styles.css?ver=66295efe92a630617c00",
+        "https://www.cityofsanrafael.org/wp-content/plugins/wp-fullcalendar/includes/css/main.css?ver=1.6",
+        "https://www.cityofsanrafael.org/wp-content/plugins/wp-fullcalendar/includes/css/jquery-ui/smoothness/jquery-ui.min.css?ver=1.6",
+        "https://www.cityofsanrafael.org/wp-content/plugins/wp-fullcalendar/includes/css/jquery-ui/smoothness/theme.css?ver=1.6",
+        "https://www.cityofsanrafael.org/wp-content/themes/wp-proud-theme/dist/styles/proud.css?ver=2026.03.31.1400",
+        "https://www.cityofsanrafael.org/wp-content/themes/wp-proud-sr-ca-theme/dist/styles/proud-subtheme-vendor.css?ver=2026.03.18.1948",
+        "https://www.cityofsanrafael.org/wp-content/themes/wp-proud-sr-ca-theme/dist/styles/proud-subtheme.css?ver=2026.03.18.1948",
+        "https://www.cityofsanrafael.org/wp-content/themes/wp-proud-sr-ca-theme/dist/fonts/sr-iconset/style.css?ver=6.9.4",
+        "https://www.cityofsanrafael.org/wp-json/",
+        "https://www.cityofsanrafael.org/wp-json/wp/v2/pages/103035",
+        "https://www.cityofsanrafael.org/wp-content/plugins/wp-proud-core/plugin_override/so-pagebuilder/assets/lightbox2/css/lightbox.min.css?ver=6.9.4",
+        "https://www.cityofsanrafael.org/",
+        "https://www.cityofsanrafael.org/residents/",
+        "https://www.cityofsanrafael.org/businesses/",
+        "https://www.cityofsanrafael.org/visitors/",
+        "https://www.cityofsanrafael.org/departments/",
+        "https://www.cityofsanrafael.org/news/",
+        "https://www.cityofsanrafael.org/events/",
+        "https://www.cityofsanrafael.org/contact",
+        "https://www.cityofsanrafael.org/departments/homelessness/",
+        "https://www.cityofsanrafael.org/city-response-to-homelessness/",
+        "https://www.cityofsanrafael.org/supporting-unhoused-community-members/",
+        "https://www.cityofsanrafael.org/homelessness-report-issues/",
+        "https://www.cityofsanrafael.org/community-questions-about-homelessness/",
+        "https://www.cityofsanrafael.org/homelessness-ordinance-regulating-encampments/",
+        "https://www.cityofsanrafael.org/interim-shelter-site-at-350-merrydale-road/",
+        "https://www.cityofsanrafael.org/350-merrydale-frequently-asked-questions/",
+        "https://www.cityofsanrafael.org/seedsofhope/",
+        "https://everyonehome.org/wp-content/uploads/2016/02/VI-SPDAT-2.0-Single-Adults.pdf",
+        "https://marin.bitfocus.com/coordinated-entry-assessment-packet",
+        "https://www.cityofsanrafael.org/sanctioned-camping-area/1-58/",
+        "https://www.cityofsanrafael.org/sanctioned-camping-area/2-44/",
+        "https://www.cityofsanrafael.org/sanctioned-camping-area/3-31/",
+        "https://www.cityofsanrafael.org/sanctioned-camping-area/4-28/",
+        "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.cityofsanrafael.org%2Fsanctioned-camping-area%3Fpagename%3Dsanctioned-camping-area",
+        "https://twitter.com/share?url=https%3A%2F%2Fwww.cityofsanrafael.org%2Fsanctioned-camping-area%3Fpagename%3Dsanctioned-camping-area",
+        "https://www.facebook.com/CityofSanRafael",
+        "https://www.instagram.com/thecityofsanrafael/",
+        "https://x.com/i/flow/login?redirect_after_login=%2FCityofSanRafael",
+        "https://www.cityofsanrafael.org/city-social-media-accounts/",
+        "https://proudcity.com"
+      ]
+    }
+  ],
+  "candidate_signals": {
+    "money_values": [],
+    "actor_hits": [
+      "City of San Rafael",
+      "FS Global",
+      "Marin County"
+    ],
+    "place_hits": [
+      "Mahon Creek Path",
+      "Mahon Creek Path Area",
+      "Mahon Creek",
+      "Lindaro Street",
+      "Andersen Drive",
+      "Francisco Blvd West",
+      "Albert Park",
+      "350 Merrydale Road"
+    ],
+    "issue_hits": [
+      "homelessness",
+      "encampment",
+      "sanctioned camping",
+      "ERF3",
+      "Encampment Resolution Fund",
+      "Boyd"
+    ],
+    "legal_refs": [
+      "ERF3",
+      "Boyd v. City of San Rafael"
+    ]
+  },
+  "notes": [
+    "Sanctioned camping program page captured as HTML only in bundle 01."
+  ]
+}
