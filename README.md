@@ -63,6 +63,7 @@ Start narrow:
 - [Schema v1](./docs/schema-v1.md)
 - [Graph Data Model](./docs/graph-data-model.md)
 - [Record Model](./docs/record-model.md)
+- [Judicial And Oversight Extension](./docs/judicial-and-oversight-extension.md)
 - [Entity Glossary](./docs/entity-glossary.md)
 - [Jurisdiction Source Map](./docs/jurisdiction-source-map.md)
 - [Ingestion Agents](./docs/ingestion-agents.md)

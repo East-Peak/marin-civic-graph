@@ -181,6 +181,26 @@ Would need:
 - prosecutor / public defender / city attorney links
 - careful methodology for any downstream outcome claims
 
+### Permits / Applications / Denials Layer
+
+Track the administrative process around things that never become a big council item but still matter.
+
+Should cover:
+
+- permit applications
+- discretionary applications
+- denials
+- conditions of approval
+- appeals
+- staff determinations
+- hearing notices
+
+Why this matters:
+
+- many real local power fights happen in administrative review, not just headline council votes
+- this creates a second major constraint surface alongside courts and oversight
+- it connects well to land use, homelessness facilities, shelter approvals, street changes, and public-space regulation
+
 ## Parking Lot
 
 Ideas worth keeping but not prioritizing yet:
