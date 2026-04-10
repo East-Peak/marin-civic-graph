@@ -64,6 +64,7 @@ Start narrow:
 - [Entity Glossary](./docs/entity-glossary.md)
 - [Jurisdiction Source Map](./docs/jurisdiction-source-map.md)
 - [Ingestion Agents](./docs/ingestion-agents.md)
+- [Backlog](./docs/backlog.md)
 - [Source Inventory](./docs/source-inventory.md)
 - [Reference Notes](./docs/reference-notes.md)
 
