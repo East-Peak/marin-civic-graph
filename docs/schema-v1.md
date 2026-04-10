@@ -246,6 +246,18 @@ Make these first-class so they can carry date, role, confidence, and evidence.
 - `role`
 - `date?`
 
+### ArticleMention
+
+- `id`
+- `document_id`
+- `actor_id?`
+- `name_raw`
+- `role_label?`
+- `affiliation_label?`
+- `quote_excerpt?`
+- `mention_type`
+- `confidence`
+
 ## Core Relationships
 
 - actor `HOLDS` seat
@@ -301,3 +313,4 @@ Only Tier A-C should promote a claim into the main graph.
 - Show recurring actors across campaign giving, public comment, contracts, and grants.
 - Show every decision that touched a specific park, corridor, or encampment site.
 - Show all organizations that received public money and later appeared in related meetings.
+- Show people quoted as ordinary residents in local media who also recur as activists, nonprofit staff, board members, donors, or public commenters.

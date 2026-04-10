@@ -226,6 +226,31 @@ Examples:
 - amicus
 - counsel
 
+### ArticleMention
+
+A record that an actor was named, quoted, paraphrased, or described in a media document.
+
+Examples:
+
+- quoted resident
+- nonprofit spokesperson
+- attorney for plaintiffs
+- city spokesperson
+
+Why it matters:
+
+- local media often introduces actors without clearly surfacing their deeper affiliations
+- this object preserves the raw article framing before the system resolves it against other evidence
+
+Suggested fields:
+
+- raw name string
+- role label as printed
+- affiliation label as printed
+- quote excerpt
+- resolved actor if known
+- confidence
+
 ## Evidence Terms
 
 ### Lead
@@ -252,10 +277,12 @@ Examples:
 - person X is affiliated with organization Y
 - organization Y received grant Z
 - speaker X appeared on issue A three times
+- person X was described as an unaffiliated resident in an article but appears elsewhere as an NGO activist or recurring advocate
 
 Rule:
 
 - claims should be promotable or rejectable based on evidence tier
+- article-based affiliation claims should usually require corroboration unless the affiliation is explicit in the article itself
 
 ### Evidence Tier
 

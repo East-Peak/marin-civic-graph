@@ -63,6 +63,7 @@ Start narrow:
 - [Schema v1](./docs/schema-v1.md)
 - [Entity Glossary](./docs/entity-glossary.md)
 - [Jurisdiction Source Map](./docs/jurisdiction-source-map.md)
+- [Ingestion Agents](./docs/ingestion-agents.md)
 - [Source Inventory](./docs/source-inventory.md)
 - [Reference Notes](./docs/reference-notes.md)
 
