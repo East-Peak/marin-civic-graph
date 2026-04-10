@@ -59,17 +59,22 @@ The first pass covers:
 
 ### Court Surfaces
 
-- [ ] capture the `ePortal` overview page as raw HTML
+- [x] capture the `ePortal` overview page as raw HTML
 - [ ] capture `Court Records & Exhibits` as raw HTML
-- [ ] capture `Judicial Assignments` as raw HTML
-- [ ] capture `Judicial Biographies` as raw HTML
+- [x] capture `Judicial Assignments` as raw HTML
+- [x] capture `Judicial Biographies` as raw HTML
+- [x] note that the public `ePortal` landing page appears to require registration before live case search can be used
+- [x] note that pre-June 20, 2023 criminal matters remain in `EJUS`, not `ePortal`
 
 ### Sheriff Surfaces
 
-- [ ] capture the `Detention Bureau` page as raw HTML
-- [ ] identify the booking-log access path from the detention or FAQ surface
-- [ ] capture the `Warrants` page as raw HTML
-- [ ] capture the `Records` page as raw HTML
+- [x] capture the `Detention Bureau` page as raw HTML
+- [x] identify the booking-log access path from the detention or FAQ surface
+- [x] capture the `Warrants` page as raw HTML
+- [x] capture the `Records` page as raw HTML
+- [x] identify the warrant-search access path from the sheriff warrants page
+- [x] note that the public booking-log page says it covers the last 48 hours for people still in custody plus a complete inmate list at runtime
+- [x] note that the public booking-log page offers an optional last-name filter and approximate bail warning
 
 ### Optional Discovery Surface
 
@@ -77,6 +82,11 @@ The first pass covers:
 - [ ] mark any criminal case statements as discovery-only unless they can be linked back to court records
 
 ## Phase 2: Sample Selection
+
+Important boundary:
+
+- [ ] do not put private defendant names into committed planning docs during sample selection
+- [ ] keep the first live sample selection operator-only unless and until we define a safe private storage boundary
 
 ### Slot A: Booking-First Open Case
 
@@ -180,8 +190,9 @@ The first usable criminal deliverable should be:
 
 ## Blocking Questions
 
-- [ ] how discoverable is the live booking-log surface for reproducible capture?
-- [ ] can public `ePortal` access expose enough to distinguish booked charges, filed charges, and dispositions?
+- [x] how discoverable is the live booking-log surface for reproducible capture?
+- [ ] how should the project handle person-level booking and warrant surfaces without committing private names into the repo?
+- [ ] can public `ePortal` access expose enough to distinguish booked charges, filed charges, and dispositions once a public account is registered?
 - [ ] how often are attorney roles visible without restricted access?
 - [ ] how often are sentence outcomes visible without minute orders or records requests?
 - [ ] do we need a dedicated records-request workflow before criminal ingestion can move beyond planning?
@@ -200,5 +211,5 @@ If doing this manually first, the order should be:
 ## Status As Of April 10, 2026
 
 - the criminal submodel now exists in the schema docs
-- the official source surfaces are identified
-- the remaining work is selecting the first three sample slots and proving the joins against real public records
+- the official source surfaces are identified and the first court and sheriff landing surfaces are captured as raw HTML
+- the remaining work is selecting the first three sample slots in an operator-only workflow and proving the joins against real public records

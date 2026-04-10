@@ -41,6 +41,19 @@ The first bundle should rely on these official source surfaces:
 - `marin-county-da-newsroom`
   - https://marincountyda.org/
 
+## Access Findings As Of April 10, 2026
+
+The current public-access picture is clearer now:
+
+- the public booking-log page says it includes public data about people booked in the last 48 hours who are still in custody, plus a complete list of inmates as of the time the search is run
+- the booking-log page presents an optional last-name filter and warns that displayed bail may be approximate
+- the online warrant-search page requires an exact last name and at least the first letter of the first name, with optional year of birth
+- the warrant-search page warns that misuse of warrant information may subject a user to civil or criminal liability
+- the public `ePortal` landing page says criminal matters filed, set, scheduled, or issued before June 20, 2023 remain in `EJUS`, while newer criminal matters are handled through `ePortal`
+- the public `ePortal` site appears to require registration before live case search can be used in practice
+
+These findings mean the first sample-selection pass should be treated as an operator workflow, not as a blind scraper.
+
 ## Sample Slots
 
 The first basket should not start as "all cases."
@@ -166,6 +179,8 @@ The first sample basket should follow these rules:
 - prefer cases with at least two source surfaces, not one
 - prefer cases where the next step in the chain is visible before trying to collect complete history
 - avoid putting real person names in planning docs until the sample is actually captured
+- avoid committing private defendant names or person-level criminal histories into the repo during sample selection
+- treat live booking-log, warrant-search, and public-portal case selection as an operator-only step until we define a safe private storage boundary
 
 ## Minimum Deliverable
 
@@ -198,3 +213,10 @@ After registering the criminal source surfaces, create a checklist that says:
 - what to capture first
 - what graph objects each sample slot must yield
 - what evidence gaps are acceptable in v1
+
+After that, do the first live sample-selection pass outside committed planning docs, then promote only:
+
+- anonymized slot IDs
+- source surfaces used
+- which joins held
+- which joins failed or stayed ambiguous
