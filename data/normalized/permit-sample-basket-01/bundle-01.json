@@ -8,7 +8,8 @@
       "official project discovery pages",
       "one official city hearing notice",
       "one official county appeal-hearing page",
-      "first-pass project and application candidates"
+      "first-pass project and application candidates",
+      "separate P4134 appeal-chain normalization"
     ],
     "excluded": [
       "full attachment downloads",
@@ -219,6 +220,6 @@
   "open_questions": [
     "The 700 Irwin hearing notice body says January 13, 2025, but the project timeline and posting chronology strongly suggest January 13, 2026. Keep the hearing-date join in review until reconciled against the linked meeting page.",
     "P5139 clearly bundles multiple requested approvals in one thread; later extraction should decide whether those become one Application with multiple Permit signals or multiple child Application objects.",
-    "P4134 already exposes an appeal chain, but the first-pass bundle does not yet split the original determination from the later appeal materials into separate Determination and Appeal nodes."
+    "P4134 appeal-chain objects now live in p4134-appeal-chain.json; permit-specific child records and condition extraction still remain for a later pass."
   ]
 }

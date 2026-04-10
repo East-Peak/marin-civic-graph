@@ -102,6 +102,7 @@ Start narrow:
 - [Item 5.a Split Map](./data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-record-splits.json)
 - [Item 5.a Normalized Record Splits](./data/normalized/san-rafael-homelessness-01/aug-19-item-5a-record-splits.json)
 - [Permit Sample Basket Bundle](./data/normalized/permit-sample-basket-01/bundle-01.json)
+- [P4134 Appeal Chain Split](./data/normalized/permit-sample-basket-01/p4134-appeal-chain.json)
 
 ## Scripts
 
@@ -116,6 +117,7 @@ This repo started as a planning workspace and now includes the first live implem
 - raw criminal-justice source captures for Marin court and sheriff landing surfaces
 - permit-layer schema, source bundle, and checklist for Marin County and San Rafael planning workflows
 - first permit execution slice with raw captures for selected city and county project threads plus a normalized project-discovery bundle
+- first appeal-chain split for P4134 with explicit determination, appeal, meeting, and decision candidates
 - extracted text and metadata for bundle 01
 - a first normalized candidate bundle centered on the August 19, 2024 San Rafael homelessness decision chain
 - a derived record-splitting layer for August 19 item `5.a`, including ordinance, resolution, contract, site-plan, code-of-conduct, and correspondence child records
