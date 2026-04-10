@@ -2,6 +2,10 @@
 
 Date started: April 10, 2026
 
+Companion execution doc:
+
+- [Ingestion Checklist](./01-san-rafael-homelessness-ingestion-checklist.md)
+
 ## Why This Thread
 
 This is the right first case study because it concentrates nearly every hard problem the project needs to solve:

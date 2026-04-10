@@ -64,8 +64,11 @@ Start narrow:
 - [Entity Glossary](./docs/entity-glossary.md)
 - [Jurisdiction Source Map](./docs/jurisdiction-source-map.md)
 - [Ingestion Agents](./docs/ingestion-agents.md)
+- [Source Registry Format](./docs/source-registry-format.md)
+- [Media Attribution Rules](./docs/media-attribution-rules.md)
 - [Backlog](./docs/backlog.md)
 - [Case Study 01](./docs/case-studies/01-san-rafael-homelessness.md)
+- [Case Study 01 Ingestion Checklist](./docs/case-studies/01-san-rafael-homelessness-ingestion-checklist.md)
 - [Source Inventory](./docs/source-inventory.md)
 - [Reference Notes](./docs/reference-notes.md)
 
