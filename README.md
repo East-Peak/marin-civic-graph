@@ -10,7 +10,7 @@ The core idea is to build a searchable local graph of:
 - agenda items
 - decisions
 - money
-- documents
+- records
 - issues
 - places
 
@@ -20,7 +20,7 @@ The product should make it easier to answer questions like:
 - Which meeting and agenda item covered it?
 - Who spoke on it?
 - Who voted?
-- What documents justified it?
+- What records justified it?
 - Which organizations, donors, contractors, or grantees were adjacent to the decision?
 
 ## Product Thesis
@@ -52,7 +52,7 @@ The system should privilege primary-source evidence:
 Start narrow:
 
 1. Marin County government and San Rafael
-2. Meetings, agenda items, votes, speakers, documents
+2. Meetings, agenda items, votes, speakers, records
 3. Campaign money, grants, contracts, and public disclosures
 4. Entity resolution for recurring people and organizations
 
@@ -61,6 +61,7 @@ Start narrow:
 - [Project Brief](./docs/project-brief.md)
 - [Borrow Map](./docs/borrow-map.md)
 - [Schema v1](./docs/schema-v1.md)
+- [Record Model](./docs/record-model.md)
 - [Entity Glossary](./docs/entity-glossary.md)
 - [Jurisdiction Source Map](./docs/jurisdiction-source-map.md)
 - [Ingestion Agents](./docs/ingestion-agents.md)
