@@ -26,6 +26,32 @@ This bundle should be enough to produce:
 - one first-pass place table
 - one first-pass money-flow set
 
+## Status
+
+Bundle 01 was started on April 10, 2026.
+
+Captured so far:
+
+- August 19, 2024 meeting page
+- August 19, 2024 agenda PDF
+- August 19, 2024 packet PDF
+- August 19, 2024 minutes PDF
+- August 19, 2024 staff report landing page
+- August 19, 2024 staff report PDF
+- August 19, 2024 item 5.a report PDF
+- August 19, 2024 item 5.a public comment PDFs
+- camping ordinance implementation page
+- `Boyd` dismissal news release page
+- `Grants Pass` statement page
+- `Grants Pass` explainer page
+- sanctioned camping area page
+- June 2024 homelessness update page
+- November 21, 2024 homelessness update page
+- January 24, 2025 homelessness update page
+- San Francisco City Attorney `Grants Pass` amicus page
+- San Rafael disclosures page
+- Marin County campaign finance NetFile landing page
+
 ## Priority Order
 
 1. August 19, 2024 meeting package
@@ -40,14 +66,14 @@ This bundle should be enough to produce:
 
 These are the highest-value artifacts in the first bundle.
 
-- [ ] meeting page
+- [x] meeting page
   - source ID: `san-rafael-aug-19-2024-council-meeting`
   - URL: https://www.cityofsanrafael.org/meetings/city-council-august-19-2024/
   - expected artifacts:
     - `source.html`
     - any linked agenda / packet / video URLs in manifest
 
-- [ ] staff report landing page
+- [x] staff report landing page
   - source ID: `san-rafael-aug-19-2024-staff-report`
   - URL: https://www.cityofsanrafael.org/documents/august-19-2024-staff-report-camping-ordinance-amendments-report-on-homelessness/
   - expected artifacts:
@@ -55,41 +81,41 @@ These are the highest-value artifacts in the first bundle.
     - `staff-report.pdf`
     - linked attachments if available
 
-- [ ] agenda PDF if separately linked
+- [x] agenda PDF if separately linked
   - expected filename: `agenda.pdf`
 
-- [ ] packet PDF if separately linked
+- [x] packet PDF if separately linked
   - expected filename: `packet.pdf`
 
-- [ ] minutes if separately linked
+- [x] minutes if separately linked
   - expected filename: `minutes.pdf` or `minutes.html`
 
-- [ ] meeting video URL capture
+- [x] meeting video URL capture
   - expected storage:
     - URL in manifest
     - screenshot only if page structure is fragile
 
 ### B. Legal / Litigation Framing
 
-- [ ] `Grants Pass` statement page
+- [x] `Grants Pass` statement page
   - source ID: `san-rafael-grants-pass-statement`
   - URL: https://www.cityofsanrafael.org/city-of-san-rafael-statement-on-grants-pass-decision/
   - expected artifact:
     - `source.html`
 
-- [ ] `Grants Pass` explainer / FAQ page
+- [x] `Grants Pass` explainer / FAQ page
   - source ID: `san-rafael-grants-pass-explainer`
   - URL: https://www.cityofsanrafael.org/supreme-courts-grants-pass-ruling-its-effect-on-san-rafaels-encampment-policy/
   - expected artifact:
     - `source.html`
 
-- [ ] `Boyd` dismissal news release
+- [x] `Boyd` dismissal news release
   - source ID: `san-rafael-boyd-dismissal-news-release`
   - URL: https://www.cityofsanrafael.org/news-release-federal-judge-dismisses-lawsuit-limiting-city-regulation-of-camping-on-public-property/
   - expected artifact:
     - `source.html`
 
-- [ ] San Francisco City Attorney amicus post
+- [x] San Francisco City Attorney amicus post
   - source ID: `sf-city-attorney-grants-pass-amicus`
   - URL: https://sfcityattorney.org/san-francisco-files-amicus-brief-with-u-s-supreme-court-in-grants-pass/
   - expected artifact:
@@ -97,7 +123,7 @@ These are the highest-value artifacts in the first bundle.
 
 ### C. Implementation / Program Pages
 
-- [ ] implementation approach page
+- [x] implementation approach page
   - source ID: `san-rafael-camping-implementation-plan`
   - URL: https://www.cityofsanrafael.org/camping-ordinance-implementation-approach-plan/
   - expected artifact:
@@ -107,7 +133,7 @@ These are the highest-value artifacts in the first bundle.
     - site-specific restrictions
     - gift-card / free-food references
 
-- [ ] sanctioned camping area page
+- [x] sanctioned camping area page
   - source ID: `san-rafael-sanctioned-camping-area`
   - URL: https://www.cityofsanrafael.org/sanctioned-camping-area/
   - expected artifact:
@@ -115,19 +141,19 @@ These are the highest-value artifacts in the first bundle.
 
 ### D. Timeline Update Pages
 
-- [ ] June 2024 update
+- [x] June 2024 update
   - source ID: `san-rafael-homelessness-update-june-2024`
   - URL: https://www.cityofsanrafael.org/homelessness-update-june-2024-2/
   - expected artifact:
     - `source.html`
 
-- [ ] November 21, 2024 update
+- [x] November 21, 2024 update
   - source ID: `san-rafael-homelessness-update-nov-2024`
   - URL: https://www.cityofsanrafael.org/homelessness-news-update-november-21-2024/
   - expected artifact:
     - `source.html`
 
-- [ ] January 24, 2025 update
+- [x] January 24, 2025 update
   - source ID: `san-rafael-homelessness-update-jan-2025`
   - URL: https://www.cityofsanrafael.org/homelessness-news-update-january-24-2025/
   - expected artifact:
@@ -135,13 +161,13 @@ These are the highest-value artifacts in the first bundle.
 
 ### E. Context and Money Surfaces
 
-- [ ] San Rafael disclosures page
+- [x] San Rafael disclosures page
   - source ID: `san-rafael-disclosures`
   - URL: https://www.cityofsanrafael.org/disclosures/
   - expected artifact:
     - `source.html`
 
-- [ ] Marin County campaign finance portal landing page
+- [x] Marin County campaign finance portal landing page
   - source ID: `marin-county-campaign-finance-netfile`
   - URL: https://netfile.com/agency/cmar/
   - expected artifact:
@@ -224,26 +250,24 @@ The first normalized objects from this bundle should be:
 
 Bundle 01 is complete when:
 
-- [ ] all core official pages are captured raw
-- [ ] the August 19, 2024 package is materially complete
-- [ ] all known PDFs and attachment URLs from the meeting package are preserved
-- [ ] timeline update pages are captured
+- [x] all core official pages are captured raw
+- [x] the August 19, 2024 package is materially complete
+- [x] all known PDFs and attachment URLs from the meeting package are preserved
+- [x] timeline update pages are captured
 - [ ] at least a citation-level Marin IJ article list exists
 
 ## Known Gaps
 
-- exact August 19 attachment URLs still need to be discovered from the meeting and report pages
-- minutes availability needs confirmation
+- the relationship between the item-specific meeting PDF and the separate staff report PDF still needs review
 - video export strategy is still open
 - Marin IJ archive coverage will depend on operator access
 
 ## Recommended Immediate Next Action
 
-Do one manual source-bundle pass for:
+Continue bundle 01 with:
 
-1. `san-rafael-aug-19-2024-council-meeting`
-2. `san-rafael-aug-19-2024-staff-report`
-3. `san-rafael-camping-implementation-plan`
-4. `san-rafael-boyd-dismissal-news-release`
+1. citation-level Marin IJ article inventory
+2. first extraction pass over the official bundle
+3. review overlap between `item-5a-report.pdf`, `staff-report.pdf`, and `packet.pdf`
 
-That should be enough to start the first extraction and normalization pass.
+That should make bundle 01 complete enough to begin a disciplined first extraction and normalization pass.
