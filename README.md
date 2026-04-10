@@ -118,6 +118,7 @@ This repo started as a planning workspace and now includes the first live implem
 - permit-layer schema, source bundle, and checklist for Marin County and San Rafael planning workflows
 - first permit execution slice with raw captures for selected city and county project threads plus a normalized project-discovery bundle
 - first appeal-chain split for P4134 with explicit determination, appeal, meeting, and decision candidates
+- selected P4134 child-record captures preserved as proxy text snapshots for the HCR decision, consistency analysis, hearing notice, staff report, signed resolution, and appeal attachment
 - extracted text and metadata for bundle 01
 - a first normalized candidate bundle centered on the August 19, 2024 San Rafael homelessness decision chain
 - a derived record-splitting layer for August 19 item `5.a`, including ordinance, resolution, contract, site-plan, code-of-conduct, and correspondence child records

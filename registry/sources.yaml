@@ -1466,3 +1466,176 @@ sources:
     dedupe_key_strategy: exact_url
     notes:
       - Core appeal-hearing surface for the P4134 pressure test.
+
+  - source_id: marin-county-p4134-hcr-decision
+    label: P4134 Housing Compliance Review Decision
+    owner_type: institution
+    owner_id: marin-county-community-development-agency
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - permit-sample-basket-01
+    source_category: permits
+    source_type: determination_document
+    entry_url: https://assets.marincounty.gov/marincounty-prod/public/2025-05/Housing%20Compliance%20Review%20Approval.5.14.2025.pdf
+    discovery_urls:
+      - https://www.marincounty.gov/departments/cda/planning/projects/san-rafael-lucas-valley-marinwood/souang-vesting-tentative-map-and-housing-compliance-review-p4134
+    fetch_strategy: proxy_text_snapshot
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - determination
+      - condition
+      - record:determination_decision
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: exact official PDF URL; direct fetches are blocked in this environment, so the first capture uses a transparent text proxy snapshot
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Child determination record for the P4134 appeal-chain split.
+
+  - source_id: marin-county-p4134-hcr-consistency-analysis
+    label: P4134 Housing Compliance Review Consistency Analysis
+    owner_type: institution
+    owner_id: marin-county-community-development-agency
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - permit-sample-basket-01
+    source_category: permits
+    source_type: consistency_analysis
+    entry_url: https://assets.marincounty.gov/marincounty-prod/public/2025-05/Housing%20Compliance%20Review%20Consistency%20Analysis.pdf
+    discovery_urls:
+      - https://www.marincounty.gov/departments/cda/planning/projects/san-rafael-lucas-valley-marinwood/souang-vesting-tentative-map-and-housing-compliance-review-p4134
+    fetch_strategy: proxy_text_snapshot
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - determination
+      - record:consistency_analysis
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: exact official PDF URL; direct fetches are blocked in this environment, so the first capture uses a transparent text proxy snapshot
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Supporting analysis record for the P4134 Housing Compliance Review decision.
+
+  - source_id: marin-county-p4134-pc-hearing-notice
+    label: P4134 Planning Commission Hearing Notice
+    owner_type: institution
+    owner_id: marin-county-planning-commission
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - permit-sample-basket-01
+    source_category: permits
+    source_type: hearing_notice
+    entry_url: https://assets.marincounty.gov/marincounty-prod/public/2025-11/Notice%20of%20Marin%20County%20Planning%20Commission%20Hearing%20-%20P4134.pdf
+    discovery_urls:
+      - https://www.marincounty.gov/node/25691
+    fetch_strategy: proxy_text_snapshot
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - appeal
+      - record:hearing_notice
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: exact official PDF URL; direct fetches are blocked in this environment, so the first capture uses a transparent text proxy snapshot
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Child hearing-notice record for the December 8, 2025 P4134 appeal hearing.
+
+  - source_id: marin-county-p4134-pc-staff-report
+    label: P4134 Planning Commission Staff Report
+    owner_type: institution
+    owner_id: marin-county-planning-commission
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - permit-sample-basket-01
+    source_category: permits
+    source_type: staff_report
+    entry_url: https://assets.marincounty.gov/marincounty-prod/public/2025-11/1_PC%20staff%20report_Reilly%20appeal%20of%20Sicular%20proposal%20%28Souang%29.pdf
+    discovery_urls:
+      - https://www.marincounty.gov/node/25691
+    fetch_strategy: proxy_text_snapshot
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - appeal
+      - decision
+      - record:staff_report
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: exact official PDF URL; direct fetches are blocked in this environment, so the first capture uses a transparent text proxy snapshot
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Core decision-support record for the December 8, 2025 P4134 appeal hearing.
+
+  - source_id: marin-county-p4134-pc-signed-resolution
+    label: P4134 Planning Commission Signed Resolution
+    owner_type: institution
+    owner_id: marin-county-planning-commission
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - permit-sample-basket-01
+    source_category: permits
+    source_type: signed_resolution
+    entry_url: https://assets.marincounty.gov/marincounty-prod/public/2025-12/PC%20Resolution%20NO.%20PC24-003%20-%20signed%20%28002%29.pdf
+    discovery_urls:
+      - https://www.marincounty.gov/node/25691
+    fetch_strategy: proxy_text_snapshot
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - decision
+      - appeal
+      - record:resolution
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: exact official PDF URL; direct fetches are blocked in this environment, so the first capture uses a transparent text proxy snapshot
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Signed outcome record for the December 8, 2025 P4134 appeal hearing.
+
+  - source_id: marin-county-p4134-reilly-appeal-attachment
+    label: P4134 Reilly Appeal Attachment
+    owner_type: institution
+    owner_id: marin-county-planning-commission
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - permit-sample-basket-01
+    source_category: permits
+    source_type: appeal_attachment
+    entry_url: https://assets.marincounty.gov/marincounty-prod/public/2025-11/Att%203.%20Reilly%20appeal%20of%20Sicular%20proposal%20%28Souang%29.pdf
+    discovery_urls:
+      - https://www.marincounty.gov/node/25691
+    fetch_strategy: proxy_text_snapshot
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - appeal
+      - actor
+      - record:appeal_filing
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: exact official PDF URL; direct fetches are blocked in this environment, so the first capture uses a transparent text proxy snapshot
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Named appeal filing surfaced on the December 8, 2025 P4134 hearing page.

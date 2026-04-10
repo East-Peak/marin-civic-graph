@@ -2,8 +2,9 @@
   "case_study_id": "permit-sample-basket-01",
   "bundle_id": "permit-sample-basket-01__bundle-01",
   "slice_id": "p4134-appeal-chain",
-  "status": "first_pass_appeal_split",
-  "generated_at": "2026-04-10T23:30:00Z",
+  "status": "appeal_split_with_selected_child_capture",
+  "capture_status": "selected_child_records_captured_via_proxy_text_snapshot",
+  "generated_at": "2026-04-10T23:33:00Z",
   "parent_project_id": "project-souang-p4134",
   "scope": {
     "included": [
@@ -11,13 +12,15 @@
       "named appeal signals",
       "planning commission appeal hearing",
       "planning commission signed-resolution signal",
+      "selected child-record capture status",
       "later board hearing signal"
     ],
     "excluded": [
-      "full attachment downloads",
+      "full binary attachment downloads",
       "condition-level extraction",
       "final board outcome extraction",
-      "appellant identity resolution beyond the visible Reilly appeal label"
+      "appellant identity resolution beyond the visible Reilly appeal label",
+      "supplemental memorandum and board-hearing child-record capture"
     ]
   },
   "record_candidates": [
@@ -26,7 +29,10 @@
       "record_class": "administrative_record",
       "record_type": "determination_decision",
       "title": "Lucas Valley Road, LLC Housing Compliance Review Decision",
-      "status": "citation_only",
+      "status": "captured_proxy_text_snapshot",
+      "source_id": "marin-county-p4134-hcr-decision",
+      "entry_url": "https://assets.marincounty.gov/marincounty-prod/public/2025-05/Housing%20Compliance%20Review%20Approval.5.14.2025.pdf",
+      "artifact_path": "data/raw/marin-county-p4134-hcr-decision/2026-04-10/source.txt",
       "source_record_id": "record-p4134-project-page",
       "source_context": "Listed under Final Decision on the official P4134 project page as the ministerial decision dated May 14, 2025."
     },
@@ -35,7 +41,10 @@
       "record_class": "administrative_record",
       "record_type": "consistency_analysis",
       "title": "Lucas Valley Road, LLC Housing Compliance Review Consistency Analysis",
-      "status": "citation_only",
+      "status": "captured_proxy_text_snapshot",
+      "source_id": "marin-county-p4134-hcr-consistency-analysis",
+      "entry_url": "https://assets.marincounty.gov/marincounty-prod/public/2025-05/Housing%20Compliance%20Review%20Consistency%20Analysis.pdf",
+      "artifact_path": "data/raw/marin-county-p4134-hcr-consistency-analysis/2026-04-10/source.txt",
       "source_record_id": "record-p4134-project-page",
       "source_context": "Listed under Final Decision on the official P4134 project page as dated May 10, 2025."
     },
@@ -44,7 +53,10 @@
       "record_class": "administrative_record",
       "record_type": "hearing_notice",
       "title": "Notice of Marin County Planning Commission Hearing - P4134",
-      "status": "citation_only",
+      "status": "captured_proxy_text_snapshot",
+      "source_id": "marin-county-p4134-pc-hearing-notice",
+      "entry_url": "https://assets.marincounty.gov/marincounty-prod/public/2025-11/Notice%20of%20Marin%20County%20Planning%20Commission%20Hearing%20-%20P4134.pdf",
+      "artifact_path": "data/raw/marin-county-p4134-pc-hearing-notice/2026-04-10/source.txt",
       "source_record_id": "record-p4134-planning-commission-hearing",
       "source_context": "Listed on the official Planning Commission hearing page for December 8, 2025."
     },
@@ -53,7 +65,10 @@
       "record_class": "administrative_record",
       "record_type": "staff_report",
       "title": "Staff Report - Reilly appeal of Sicular proposal (Souang)",
-      "status": "citation_only",
+      "status": "captured_proxy_text_snapshot",
+      "source_id": "marin-county-p4134-pc-staff-report",
+      "entry_url": "https://assets.marincounty.gov/marincounty-prod/public/2025-11/1_PC%20staff%20report_Reilly%20appeal%20of%20Sicular%20proposal%20%28Souang%29.pdf",
+      "artifact_path": "data/raw/marin-county-p4134-pc-staff-report/2026-04-10/source.txt",
       "source_record_id": "record-p4134-planning-commission-hearing",
       "source_context": "Listed on the official Planning Commission hearing page for December 8, 2025."
     },
@@ -62,7 +77,10 @@
       "record_class": "administrative_record",
       "record_type": "resolution",
       "title": "PC Resolution NO. PC24-003 - signed",
-      "status": "citation_only",
+      "status": "captured_proxy_text_snapshot",
+      "source_id": "marin-county-p4134-pc-signed-resolution",
+      "entry_url": "https://assets.marincounty.gov/marincounty-prod/public/2025-12/PC%20Resolution%20NO.%20PC24-003%20-%20signed%20%28002%29.pdf",
+      "artifact_path": "data/raw/marin-county-p4134-pc-signed-resolution/2026-04-10/source.txt",
       "source_record_id": "record-p4134-planning-commission-hearing",
       "source_context": "Listed on the official Planning Commission hearing page for December 8, 2025 as a signed resolution."
     },
@@ -71,7 +89,10 @@
       "record_class": "administrative_record",
       "record_type": "appeal_filing",
       "title": "Reilly appeal of Sicular proposal (Souang)",
-      "status": "citation_only",
+      "status": "captured_proxy_text_snapshot",
+      "source_id": "marin-county-p4134-reilly-appeal-attachment",
+      "entry_url": "https://assets.marincounty.gov/marincounty-prod/public/2025-11/Att%203.%20Reilly%20appeal%20of%20Sicular%20proposal%20%28Souang%29.pdf",
+      "artifact_path": "data/raw/marin-county-p4134-reilly-appeal-attachment/2026-04-10/source.txt",
       "source_record_id": "record-p4134-planning-commission-hearing",
       "source_context": "Listed on the official Planning Commission hearing page for December 8, 2025 as the appeal attachment."
     },
@@ -81,6 +102,7 @@
       "record_type": "supplemental_memorandum",
       "title": "Supplemental Memorandum - Souang P4134",
       "status": "citation_only",
+      "entry_url": "https://assets.marincounty.gov/marincounty-prod/public/2025-11/Supplemental%20Memorandum.pdf",
       "source_record_id": "record-p4134-planning-commission-hearing",
       "source_context": "Listed on the official Planning Commission hearing page for December 8, 2025 with public comments received before the hearing."
     },
@@ -218,6 +240,7 @@
   "open_questions": [
     "The December 8, 2025 hearing page description reads 'Reilly Appeal of Sicular Environmental Consulting Proposal to Prepare a Section 15183 Checklist,' which appears mismatched with the Souang housing-project attachments listed on the same page. Keep that description mismatch as a source-level inconsistency rather than resolving it away.",
     "The current split isolates the May 14, 2025 Housing Compliance Review determination, but it does not yet prove whether the Vesting Tentative Map and Tree Removal components were resolved in the same decision or in separate determinations.",
+    "The captured child records surface role-label drift across the thread. The project page names John Bogdsarian as applicant, the Housing Compliance Review decision names Steve Reilly as applicant, and the appeal filing identifies a Lucas Valley Road LLC / 330 Land Co. appellant. Keep those actor-role joins in review until the project ownership and representation chain is reconciled.",
     "The March 10, 2026 Board of Supervisors hearing is visible, but this slice does not yet promote a final Board decision because only the hearing-level materials are presently in view, not a clearly signed final outcome document."
   ]
 }
