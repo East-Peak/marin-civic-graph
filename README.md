@@ -70,8 +70,17 @@ Start narrow:
 - [Backlog](./docs/backlog.md)
 - [Case Study 01](./docs/case-studies/01-san-rafael-homelessness.md)
 - [Case Study 01 Ingestion Checklist](./docs/case-studies/01-san-rafael-homelessness-ingestion-checklist.md)
+- [Case Study 01 Source Bundle](./docs/case-studies/01-san-rafael-homelessness-source-bundle.md)
+- [Artifact Conventions](./docs/artifact-conventions.md)
 - [Source Inventory](./docs/source-inventory.md)
 - [Reference Notes](./docs/reference-notes.md)
+
+## Data Layout
+
+- [Data README](./data/README.md)
+- [Raw Artifacts](./data/raw/README.md)
+- [Extracted Outputs](./data/extracted/README.md)
+- [Normalized Outputs](./data/normalized/README.md)
 
 ## Current Status
 
