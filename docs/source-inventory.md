@@ -1,8 +1,12 @@
 # Source Inventory
 
-This file tracks target sources for Marin v1.
+This file tracks target source categories for Marin v1.
 
-## Government Process
+For the current verified jurisdiction-specific URLs, see:
+
+- [Jurisdiction Source Map](./jurisdiction-source-map.md)
+
+## Government Process Categories
 
 - Marin County Board of Supervisors meetings
 - San Rafael City Council meetings

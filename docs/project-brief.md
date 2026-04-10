@@ -119,3 +119,9 @@ Then expand to:
 - A user can trace one real decision from issue to meeting to document to vote.
 - A user can inspect one recurring actor across meetings, articles, and money.
 - A user can compare formal public process with surrounding influence surfaces.
+
+## Immediate Planning Deliverables
+
+- verify official source surfaces for Marin County and San Rafael
+- lock a small, stable vocabulary for nodes and relationships
+- choose one case-study issue to pressure-test the model
