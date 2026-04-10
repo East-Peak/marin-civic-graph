@@ -241,7 +241,7 @@ The first normalized objects from this bundle should be:
 - 1 `Meeting`
 - 3-10 `AgendaItem` candidates
 - 3-8 `Decision` candidates
-- 10-20 `Document` records
+- 10-20 `Record` nodes
 - 5-15 `Actor` seed records
 - 5-10 `Place` records
 - 3-10 `MoneyFlow` candidates
@@ -254,7 +254,9 @@ Bundle 01 is complete when:
 - [x] the August 19, 2024 package is materially complete
 - [x] all known PDFs and attachment URLs from the meeting package are preserved
 - [x] timeline update pages are captured
-- [ ] at least a citation-level Marin IJ article list exists
+- [x] at least a citation-level Marin IJ article list exists
+
+Bundle 01 is now complete at the citation-only media layer.
 
 ## Known Gaps
 
@@ -266,8 +268,8 @@ Bundle 01 is complete when:
 
 Continue bundle 01 with:
 
-1. citation-level Marin IJ article inventory
-2. first extraction pass over the official bundle
+1. article-body extraction and quote isolation for the first Marin IJ set
+2. record-level splitting of ordinances, resolutions, exhibits, and correspondence
 3. review overlap between `item-5a-report.pdf`, `staff-report.pdf`, and `packet.pdf`
 
-That should make bundle 01 complete enough to begin a disciplined first extraction and normalization pass.
+That should move the case study from a complete first-pass bundle into richer record-level ingestion.

@@ -504,3 +504,4 @@ sources:
     notes:
       - High-value local-media source for actor framing and quote extraction.
       - Full-text access may depend on operator login and archive availability.
+      - Citation-level title / URL / date capture can begin before article-body extraction.

@@ -22,7 +22,7 @@ Do not silently collapse them.
 
 ## Objects Involved
 
-- `Document` with `document_type = article`
+- `Record` with `record_class = media_record`
 - `ArticleMention`
 - `Actor`
 - `Claim`
@@ -209,4 +209,5 @@ For Marin IJ and similar local outlets:
 - treat quote extraction as high value
 - treat affiliation resolution as medium-to-high review risk
 - preserve article framing verbatim
+- support a citation-only mode when title / URL / date are known but article-body extraction is deferred
 - do not rely on subscription-local-media quotes alone to establish a canonical political role

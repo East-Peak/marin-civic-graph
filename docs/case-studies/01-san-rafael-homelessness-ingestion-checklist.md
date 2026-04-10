@@ -159,9 +159,9 @@ That means collecting enough material to instantiate:
 
 ### Article Collection
 
-- [ ] collect core Marin IJ pieces on this thread
+- [x] collect core Marin IJ pieces on this thread at citation level
 - [ ] collect other relevant local coverage
-- [ ] capture citation metadata even when full text is unavailable
+- [x] capture citation metadata even when full text is unavailable
 
 ### ArticleMention Extraction
 
@@ -209,6 +209,6 @@ If doing this manually first, the order should be:
 Status as of April 10, 2026:
 
 - phases 1 through 6 have a first-pass official-source bundle, extraction set, and normalized candidate bundle
-- the remaining major gap is the media layer, especially citation-level Marin IJ coverage and later attribution review
+- the remaining major gap is the media layer beyond citation-only Marin IJ coverage, especially article-body extraction and later attribution review
 
 That will create the first trustworthy version of the case without over-relying on media before the official spine exists.

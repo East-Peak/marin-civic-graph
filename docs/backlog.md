@@ -49,6 +49,24 @@ Should distinguish:
 
 ## Medium-Term
 
+### Record Node Taxonomy
+
+Formalize `Record` as a first-class graph node family.
+
+Should cover:
+
+- meeting records
+- legislative records
+- media records
+- financial records
+- contract records
+- legal records
+- program records
+
+Immediate implication:
+
+- Marin IJ article, ordinance, resolution, minutes, packet, and contract should all exist as typed record nodes
+
 ### Marin Monitor Civic / Governance Feed
 
 Create a governance-oriented feed or section inside Marin Monitor that automatically ingests civic-process signals into a dedicated panel or wire.
@@ -95,6 +113,37 @@ Stand up first-class actor pages that unify:
 - meetings
 - mentions
 - related issues
+
+### Ordinance / Resolution Ingestion
+
+Promote ordinances and resolutions from attachment text into first-class record and decision objects.
+
+Should include:
+
+- ordinance record nodes
+- resolution record nodes
+- adoption / introduction status
+- links back to meeting, agenda item, and vote
+- links forward to contracts, appropriations, and implementation pages
+
+Why this matters:
+
+- many of the most important local actions are formalized in ordinance and resolution text, not just staff reports or minutes
+
+### Exhibit And Attachment Splitting
+
+Split dense packet items into child records rather than leaving everything buried inside one PDF.
+
+Examples:
+
+- contract exhibit
+- code of conduct
+- site plan
+- public correspondence packet
+
+Why this matters:
+
+- the graph should ingest records as records, not just preserve them as page ranges inside a giant packet
 
 ## Longer-Term
 

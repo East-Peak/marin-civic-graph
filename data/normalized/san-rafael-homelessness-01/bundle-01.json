@@ -474,6 +474,11 @@
   ],
   "place_candidates": [
     {
+      "id": "place-san-rafael",
+      "name": "San Rafael",
+      "place_type": "jurisdiction"
+    },
+    {
       "id": "place-mahon-creek-path",
       "name": "Mahon Creek Path",
       "place_type": "corridor",
@@ -677,9 +682,9 @@
     }
   ],
   "open_questions": [
-    "Build the citation-level Marin IJ inventory for this thread before adding any media-layer claims.",
+    "Move from citation-level Marin IJ records to article-body extraction and quote isolation before adding any media-layer attribution claims.",
     "Resolve raw-official-label councilmember seeds to canonical person records.",
-    "Extract the resolution exhibits into separate contract document records rather than leaving them nested inside the item 5.a report.",
+    "Extract the resolution exhibits into separate contract records rather than leaving them nested inside the item 5.a report.",
     "Move from landing-page campaign finance capture to row-level filing extraction."
   ]
 }

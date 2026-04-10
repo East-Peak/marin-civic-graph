@@ -1,0 +1,158 @@
+{
+  "case_study_id": "san-rafael-homelessness-01",
+  "bundle_id": "san-rafael-homelessness-01__bundle-01",
+  "layer_type": "media_record_citations",
+  "status": "citation_only",
+  "generated_at": "2026-04-10T19:27:00Z",
+  "records": [
+    {
+      "id": "record-mij-2023-10-23-homeless-campers-federal-judge",
+      "record_class": "media_record",
+      "record_type": "article",
+      "publisher": "Marin Independent Journal",
+      "title": "San Rafael rules on homeless campers restricted by federal judge",
+      "source_url": "https://www.marinij.com/2023/10/23/san-rafael-rules-on-homeless-campers-restricted-by-federal-judge/",
+      "published_at": "2023-10-24T01:42:56Z",
+      "related_issue_ids": [
+        "issue-homelessness",
+        "issue-encampments",
+        "issue-camping-ordinance"
+      ],
+      "related_place_ids": [
+        "place-san-rafael"
+      ],
+      "coverage_phase": "injunction_period"
+    },
+    {
+      "id": "record-mij-2023-12-12-registration-encampment",
+      "record_class": "media_record",
+      "record_type": "article",
+      "publisher": "Marin Independent Journal",
+      "title": "San Rafael begins registration for homeless encampment",
+      "source_url": "https://www.marinij.com/2023/12/12/san-rafael-begins-registration-for-homeless-encampment/",
+      "published_at": "2023-12-13T00:57:21Z",
+      "related_issue_ids": [
+        "issue-homelessness",
+        "issue-encampments"
+      ],
+      "related_place_ids": [
+        "place-san-rafael",
+        "place-mahon-creek-path"
+      ],
+      "coverage_phase": "implementation_rollout"
+    },
+    {
+      "id": "record-mij-2024-08-08-enforce-camping-law",
+      "record_class": "media_record",
+      "record_type": "article",
+      "publisher": "Marin Independent Journal",
+      "title": "Federal judge: San Rafael can enforce homeless camping law",
+      "source_url": "https://www.marinij.com/2024/08/08/federal-judge-san-rafael-can-enforce-homeless-camping-law/",
+      "published_at": "2024-08-09T00:44:57Z",
+      "related_issue_ids": [
+        "issue-homelessness",
+        "issue-encampments",
+        "issue-camping-ordinance"
+      ],
+      "related_place_ids": [
+        "place-san-rafael"
+      ],
+      "coverage_phase": "boyd_dismissal_aftermath"
+    },
+    {
+      "id": "record-mij-2024-08-24-establish-camp-mahon-creek",
+      "record_class": "media_record",
+      "record_type": "article",
+      "publisher": "Marin Independent Journal",
+      "title": "San Rafael to establish camp for homeless people along Mahon Creek",
+      "source_url": "https://www.marinij.com/2024/08/24/san-rafael-to-establish-camp-for-homeless-people-along-mahon-creek/",
+      "published_at": "2024-08-24T18:20:03Z",
+      "related_issue_ids": [
+        "issue-homelessness",
+        "issue-encampments"
+      ],
+      "related_place_ids": [
+        "place-san-rafael",
+        "place-mahon-creek-path"
+      ],
+      "coverage_phase": "authorized_camp_approval",
+      "related_decision_id": "decision-2024-08-19-resolution-15336"
+    },
+    {
+      "id": "record-mij-2024-09-20-prepares-site-authorized-camp",
+      "record_class": "media_record",
+      "record_type": "article",
+      "publisher": "Marin Independent Journal",
+      "title": "San Rafael prepares site for authorized homeless camp",
+      "source_url": "https://www.marinij.com/2024/09/20/san-rafael-prepares-site-for-authorized-homeless-camp/",
+      "published_at": "2024-09-20T20:48:05Z",
+      "related_issue_ids": [
+        "issue-homelessness",
+        "issue-encampments"
+      ],
+      "related_place_ids": [
+        "place-san-rafael",
+        "place-mahon-creek-path"
+      ],
+      "coverage_phase": "site_preparation"
+    },
+    {
+      "id": "record-mij-2024-10-05-opens-authorized-camp",
+      "record_class": "media_record",
+      "record_type": "article",
+      "publisher": "Marin Independent Journal",
+      "title": "San Rafael opens authorized camp for homeless",
+      "source_url": "https://www.marinij.com/2024/10/05/san-rafael-opens-authorized-camp-for-homeless/",
+      "published_at": "2024-10-05T20:36:24Z",
+      "related_issue_ids": [
+        "issue-homelessness",
+        "issue-encampments"
+      ],
+      "related_place_ids": [
+        "place-san-rafael",
+        "place-mahon-creek-path"
+      ],
+      "coverage_phase": "program_launch"
+    },
+    {
+      "id": "record-mij-2024-10-20-editorial-sanctioned-encampment",
+      "record_class": "media_record",
+      "record_type": "editorial",
+      "publisher": "Marin Independent Journal",
+      "title": "Editorial: San Rafael takes step forward with sanctioned encampment",
+      "source_url": "https://www.marinij.com/2024/10/20/editorial-san-rafael-takes-step-forward-with-sanctioned-encampment/",
+      "published_at": "2024-10-20T17:50:35Z",
+      "related_issue_ids": [
+        "issue-homelessness",
+        "issue-encampments"
+      ],
+      "related_place_ids": [
+        "place-san-rafael",
+        "place-mahon-creek-path"
+      ],
+      "coverage_phase": "editorial_reaction"
+    },
+    {
+      "id": "record-mij-2024-11-10-approves-contracts-funding",
+      "record_class": "media_record",
+      "record_type": "article",
+      "publisher": "Marin Independent Journal",
+      "title": "San Rafael approves contracts for homelessness funding",
+      "source_url": "https://www.marinij.com/2024/11/10/san-rafael-approves-contracts-for-homelessness-funding/",
+      "published_at": "2024-11-10T21:18:52Z",
+      "related_issue_ids": [
+        "issue-homelessness",
+        "issue-encampments",
+        "issue-contracts"
+      ],
+      "related_place_ids": [
+        "place-san-rafael"
+      ],
+      "coverage_phase": "post_launch_contracts"
+    }
+  ],
+  "notes": [
+    "These are citation-level media records only.",
+    "They are safe to use for chronology and coverage tracking, but not yet for quote or affiliation extraction."
+  ]
+}

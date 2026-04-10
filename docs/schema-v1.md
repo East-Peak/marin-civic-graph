@@ -4,7 +4,7 @@ The schema should stay small and composable.
 
 ## Core Principle
 
-Store concrete events and documents.
+Store concrete events and records.
 
 Do not store "influence" as a primitive fact. Derive it later from observable data.
 
@@ -133,10 +133,12 @@ Key fields:
 - `related_decision_id?`
 - `related_issue_ids[]`
 
-### Document
+### Record
 
 Represents:
 
+- ordinance
+- resolution
 - agenda
 - packet
 - minutes
@@ -151,13 +153,36 @@ Represents:
 Key fields:
 
 - `id`
-- `document_type`
+- `record_class`
+- `record_type`
 - `title`
 - `source_url`
 - `publisher`
 - `published_at?`
 - `source_tier`
 - `text_extracted?`
+
+Suggested `record_class` values:
+
+- `meeting_record`
+- `legislative_record`
+- `media_record`
+- `financial_record`
+- `contract_record`
+- `legal_record`
+- `program_record`
+
+Examples:
+
+- Marin IJ article = `media_record`
+- ordinance or resolution = `legislative_record`
+- minutes or packet = `meeting_record`
+- Form 460 / 700 / 803 / 990 = `financial_record`
+
+Note:
+
+- older planning notes may still say `Document`
+- treat `Record` as the umbrella node and migrate older naming over time
 
 ### Issue
 
@@ -249,7 +274,7 @@ Make these first-class so they can carry date, role, confidence, and evidence.
 ### ArticleMention
 
 - `id`
-- `document_id`
+- `record_id`
 - `actor_id?`
 - `name_raw`
 - `role_label?`

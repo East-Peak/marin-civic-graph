@@ -104,12 +104,14 @@ Rule:
 - not every agenda item results in a decision
 - not every decision happens inside a meeting
 
-### Document
+### Record
 
 A source artifact that can evidence an object or event.
 
 Examples:
 
+- ordinance
+- resolution
 - agenda
 - packet
 - minutes
@@ -124,7 +126,25 @@ Examples:
 
 Rule:
 
-- documents are evidence, not conclusions
+- records are evidence, not conclusions
+- `Record` is the umbrella node
+- older notes that say `Document` should be read as the early name for this concept
+
+Suggested classification:
+
+- `meeting_record`
+- `legislative_record`
+- `media_record`
+- `financial_record`
+- `contract_record`
+- `legal_record`
+- `program_record`
+
+Examples:
+
+- Marin IJ article = `media_record`
+- ordinance / resolution = `legislative_record`
+- minutes / packet = `meeting_record`
 
 ### MoneyFlow
 
@@ -228,7 +248,7 @@ Examples:
 
 ### ArticleMention
 
-A record that an actor was named, quoted, paraphrased, or described in a media document.
+A record that an actor was named, quoted, paraphrased, or described in a media record.
 
 Examples:
 

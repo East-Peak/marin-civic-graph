@@ -1,0 +1,34 @@
+{
+  "source_id": "marin-ij-homelessness-coverage",
+  "capture_id": "marin-ij-homelessness-coverage__2026-04-10",
+  "capture_date": "2026-04-10",
+  "bundle_id": "san-rafael-homelessness-01__bundle-01",
+  "mode": "citation_only",
+  "generated_at": "2026-04-10T19:27:00Z",
+  "artifact_path": "data/raw/marin-ij-homelessness-coverage/2026-04-10/citations.json",
+  "publisher": "Marin Independent Journal",
+  "record_count": 8,
+  "record_type_breakdown": {
+    "article": 7,
+    "editorial": 1
+  },
+  "candidate_signals": {
+    "issue_hits": [
+      "homelessness",
+      "encampments",
+      "camping ordinance"
+    ],
+    "place_hits": [
+      "San Rafael",
+      "Mahon Creek"
+    ],
+    "time_span": {
+      "start": "2023-10-24T01:42:56Z",
+      "end": "2024-11-10T21:18:52Z"
+    }
+  },
+  "notes": [
+    "This layer preserves article title, URL, date, and coarse phase only.",
+    "No article-body extraction or quote isolation has been performed yet."
+  ]
+}

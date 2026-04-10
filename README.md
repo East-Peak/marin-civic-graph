@@ -83,6 +83,7 @@ Start narrow:
 - [Normalized Outputs](./data/normalized/README.md)
 - [Bundle 01 Extracted Summary](./data/extracted/san-rafael-homelessness-01/bundle-01-summary.json)
 - [Bundle 01 Normalized Summary](./data/normalized/san-rafael-homelessness-01/bundle-01.json)
+- [Marin IJ Citation Layer](./data/normalized/san-rafael-homelessness-01/marin-ij-citation-layer.json)
 
 ## Scripts
 

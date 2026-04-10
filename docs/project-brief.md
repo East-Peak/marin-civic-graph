@@ -34,7 +34,7 @@ Build a civic graph that joins:
 - institutions
 - officeholders and appointees
 - decisions
-- documents
+- records
 - money
 - issue areas
 - places
@@ -46,10 +46,33 @@ The system should help users trace process, not just consume headlines.
 - Who actually had authority over this issue?
 - What body or department touched it?
 - Which meeting and agenda item addressed it?
-- What did the staff report or packet say?
+- What did the staff report, ordinance, resolution, packet, or article say?
 - Who commented publicly?
 - How did members vote?
 - Which organizations, donors, grantees, or contractors show up repeatedly around the issue?
+
+## Record Model
+
+Records should be first-class graph nodes, not just attachments.
+
+Examples:
+
+- Marin IJ article
+- ordinance
+- resolution
+- agenda
+- packet
+- minutes
+- staff report
+- contract
+- campaign filing
+
+This is important because many of the questions the product should answer are really record questions:
+
+- which record introduced the claim?
+- which record authorized the action?
+- which record memorialized the vote?
+- which record framed the issue for the public?
 
 ## V1 Surface Area
 
