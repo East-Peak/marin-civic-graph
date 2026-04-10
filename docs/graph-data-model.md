@@ -26,7 +26,7 @@ That lets the project answer civic questions without pretending every parser out
 The graph should store:
 
 - canonical entities like actors, institutions, places, issues, programs, and cases
-- process entities like meetings, agenda items, decisions, votes, comments, appointments, memberships, and money flows
+- process entities like meetings, agenda items, decisions, votes, comments, appointments, memberships, money flows, proceedings, charges, custody events, release decisions, dispositions, and sentences
 - record nodes for ordinances, minutes, articles, contracts, packets, and filings
 - extracted mentions and candidate claims when they are worth reviewing or linking
 - references back to raw and extracted artifacts on disk
@@ -160,6 +160,7 @@ Examples:
 
 - `Boyd v. City of San Rafael`
 - `City of Grants Pass v. Johnson`
+- one Marin felony prosecution
 
 Key fields:
 
@@ -306,6 +307,152 @@ Use for party and counsel roles in a case.
 - `role`
 - `started_at?`
 - `ended_at?`
+
+### Proceeding
+
+Use for bounded court events inside a case.
+
+Examples:
+
+- arraignment
+- bail review
+- plea hearing
+- sentencing hearing
+- probation review
+
+Key fields:
+
+- `id`
+- `case_id`
+- `proceeding_type`
+- `scheduled_at?`
+- `occurred_at?`
+- `judge_actor_id?`
+- `status`
+
+### Charge
+
+Use for criminal charges attached to a criminal prosecution.
+
+Important distinction:
+
+- booked charge
+- filed charge
+- amended charge
+- final disposition charge
+
+Key fields:
+
+- `id`
+- `case_id`
+- `charge_stage`
+- `statute_code?`
+- `description`
+- `severity`
+- `count_number?`
+- `status`
+
+### CustodyEvent
+
+Use for arrest, booking, jail admission, release, remand, and transfer events.
+
+Key fields:
+
+- `id`
+- `actor_id`
+- `case_id?`
+- `custody_event_type`
+- `occurred_at`
+- `facility_place_id?`
+- `booking_number?`
+- `bail_amount?`
+
+### ReleaseDecision
+
+Use for detention and release outcomes.
+
+Examples:
+
+- bail set
+- own recognizance release
+- supervised release
+- remand
+
+Key fields:
+
+- `id`
+- `case_id`
+- `proceeding_id?`
+- `actor_id`
+- `judge_actor_id?`
+- `release_type`
+- `amount?`
+- `decided_at`
+- `conditions_text?`
+
+### AttorneyRepresentation
+
+Use for prosecutor and defense roles in a case or proceeding.
+
+Key fields:
+
+- `id`
+- `case_id`
+- `proceeding_id?`
+- `actor_id`
+- `client_actor_id?`
+- `organization_actor_id?`
+- `representation_role`
+- `started_at?`
+- `ended_at?`
+
+### Disposition
+
+Use for the outcome of a case or charge.
+
+Examples:
+
+- dismissed
+- plea
+- convicted
+- acquitted
+- diversion
+
+Key fields:
+
+- `id`
+- `case_id`
+- `charge_id?`
+- `proceeding_id?`
+- `disposition_type`
+- `disposition_date`
+- `judge_actor_id?`
+- `notes?`
+
+### Sentence
+
+Use for punishment or supervision outcomes following disposition.
+
+Examples:
+
+- jail term
+- prison term
+- probation
+- fine
+- restitution
+- time served
+
+Key fields:
+
+- `id`
+- `case_id`
+- `charge_id?`
+- `disposition_id?`
+- `sentence_type`
+- `imposed_at`
+- `duration_text?`
+- `amount?`
+- `conditions_text?`
 
 ## Layer 3: Record And Evidence Nodes
 
@@ -558,6 +705,23 @@ Typical relationship chain:
 - article record `record_reports_on_decision` decision
 - mention preserves `role_label` and `affiliation_label` exactly as printed
 - claim compares article framing against other records
+
+### Criminal Case Public Surface
+
+Typical outputs:
+
+- one `Case` with `case_type = criminal_prosecution`
+- zero or more `Charge`
+- zero or more `CustodyEvent`
+- zero or more `Proceeding`
+- zero or more `ReleaseDecision`
+- zero or more `AttorneyRepresentation`
+- zero or more `Disposition`
+- zero or more `Sentence`
+- one or more `Record` nodes for booking logs, case-index records, calendar entries, minute orders, or judgments
+- `Claim` nodes where booked charges, filed charges, and final outcomes cannot yet be cleanly matched
+
+The key rule is to preserve stage differences rather than flattening everything into one case summary.
 
 ## Promotion Rules
 

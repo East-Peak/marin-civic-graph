@@ -292,6 +292,91 @@ Examples:
 - amicus
 - counsel
 
+### Proceeding
+
+A bounded court event inside a case.
+
+Examples:
+
+- arraignment
+- bail review
+- pretrial conference
+- plea hearing
+- sentencing hearing
+
+Rule:
+
+- use `Proceeding` when the date, judge, or hearing type matters
+- do not collapse all case activity into one `Case`
+
+### Charge
+
+A criminal count or allegation attached to a prosecution.
+
+Rule:
+
+- distinguish booked charges from filed charges and later amended charges
+- do not assume the booking stage and the disposition stage describe the same charge object
+
+### CustodyEvent
+
+A jail or custody state change tied to a person.
+
+Examples:
+
+- booking
+- admission
+- release on bail
+- release on own recognizance
+- remand
+
+### ReleaseDecision
+
+A judicial or custody decision about detention, bail, or release conditions.
+
+Rule:
+
+- use `ReleaseDecision` for the outcome
+- use `CustodyEvent` for the actual custody state change
+
+### AttorneyRepresentation
+
+A prosecutor or defense role inside a case or proceeding.
+
+Examples:
+
+- deputy district attorney
+- public defender
+- private defense counsel
+
+Rule:
+
+- keep attorney roles explicit rather than leaving them as loose mentions
+
+### Disposition
+
+The formal outcome of a case or charge.
+
+Examples:
+
+- dismissed
+- plea
+- convicted
+- acquitted
+- diversion
+
+### Sentence
+
+The punishment or supervision result that follows a conviction or plea.
+
+Examples:
+
+- jail term
+- probation
+- fine
+- restitution
+- time served
+
 ### Mention
 
 A record that an actor, institution, place, or issue was named, quoted, paraphrased, or described in a record.

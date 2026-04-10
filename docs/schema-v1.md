@@ -153,6 +153,10 @@ Represents:
 - Form 700
 - Form 803
 - 990
+- booking log entry
+- case index record
+- calendar entry
+- judgment
 
 Key fields:
 
@@ -182,6 +186,7 @@ Examples:
 - ordinance or resolution = `legislative_record`
 - minutes or packet = `meeting_record`
 - Form 460 / 700 / 803 / 990 = `financial_record`
+- booking log entry or sentencing order = `legal_record`
 
 Note:
 
@@ -232,6 +237,7 @@ Represents:
 - lawsuit
 - appeal
 - enforcement dispute
+- criminal prosecution
 
 Key fields:
 
@@ -242,6 +248,142 @@ Key fields:
 - `status`
 - `filed_at?`
 - `closed_at?`
+
+### Proceeding
+
+Represents:
+
+- hearing
+- calendar event
+- arraignment
+- bail review
+- plea hearing
+- sentencing hearing
+
+Key fields:
+
+- `id`
+- `case_id`
+- `proceeding_type`
+- `scheduled_at?`
+- `occurred_at?`
+- `judge_actor_id?`
+- `status`
+
+### Charge
+
+Represents a criminal charge inside a case.
+
+Key fields:
+
+- `id`
+- `case_id`
+- `charge_stage`
+- `statute_code?`
+- `description`
+- `severity`
+- `count_number?`
+- `status`
+
+### CustodyEvent
+
+Represents:
+
+- booking
+- jail admission
+- release
+- remand
+- transfer
+
+Key fields:
+
+- `id`
+- `actor_id`
+- `case_id?`
+- `custody_event_type`
+- `occurred_at`
+- `facility_place_id?`
+- `booking_number?`
+- `bail_amount?`
+
+### ReleaseDecision
+
+Represents:
+
+- bail set
+- bail denied
+- own-recognizance release
+- supervised release
+- remand
+
+Key fields:
+
+- `id`
+- `case_id`
+- `proceeding_id?`
+- `actor_id`
+- `judge_actor_id?`
+- `release_type`
+- `amount?`
+- `decided_at`
+
+### AttorneyRepresentation
+
+Represents a prosecutor or defense role in a case or proceeding.
+
+Key fields:
+
+- `id`
+- `case_id`
+- `proceeding_id?`
+- `actor_id`
+- `client_actor_id?`
+- `organization_actor_id?`
+- `representation_role`
+- `started_at?`
+- `ended_at?`
+
+### Disposition
+
+Represents:
+
+- dismissal
+- plea
+- conviction
+- acquittal
+- diversion
+
+Key fields:
+
+- `id`
+- `case_id`
+- `charge_id?`
+- `proceeding_id?`
+- `disposition_type`
+- `disposition_date`
+- `judge_actor_id?`
+
+### Sentence
+
+Represents:
+
+- jail term
+- prison term
+- probation
+- fine
+- restitution
+- time served
+
+Key fields:
+
+- `id`
+- `case_id`
+- `charge_id?`
+- `disposition_id?`
+- `sentence_type`
+- `imposed_at`
+- `duration_text?`
+- `amount?`
 
 ### Place
 
