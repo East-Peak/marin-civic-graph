@@ -101,6 +101,7 @@ Start narrow:
 - [Marin IJ Citation Layer](./data/normalized/san-rafael-homelessness-01/marin-ij-citation-layer.json)
 - [Item 5.a Split Map](./data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-record-splits.json)
 - [Item 5.a Normalized Record Splits](./data/normalized/san-rafael-homelessness-01/aug-19-item-5a-record-splits.json)
+- [Permit Sample Basket Bundle](./data/normalized/permit-sample-basket-01/bundle-01.json)
 
 ## Scripts
 
@@ -114,6 +115,7 @@ This repo started as a planning workspace and now includes the first live implem
 - raw official source captures for case study 01
 - raw criminal-justice source captures for Marin court and sheriff landing surfaces
 - permit-layer schema, source bundle, and checklist for Marin County and San Rafael planning workflows
+- first permit execution slice with raw captures for selected city and county project threads plus a normalized project-discovery bundle
 - extracted text and metadata for bundle 01
 - a first normalized candidate bundle centered on the August 19, 2024 San Rafael homelessness decision chain
 - a derived record-splitting layer for August 19 item `5.a`, including ordinance, resolution, contract, site-plan, code-of-conduct, and correspondence child records

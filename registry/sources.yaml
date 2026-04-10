@@ -1308,3 +1308,161 @@ sources:
     dedupe_key_strategy: meeting_date_plus_url
     notes:
       - Strong city-side source for project determinations and appeal candidates.
+
+  - source_id: san-rafael-700-irwin-project-page
+    label: 700 Irwin St. Project Page
+    owner_type: institution
+    owner_id: san-rafael-planning-division
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - permit-sample-basket-01
+    source_category: permits
+    source_type: project_page
+    entry_url: https://www.cityofsanrafael.org/700-irwin-st
+    discovery_urls:
+      - https://www.cityofsanrafael.org/major-planning-projects-2025/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - project
+      - application
+      - record:project_page
+      - actor
+      - place
+    cadence: manual
+    history_depth: rolling_window
+    source_tier_default: A
+    robots_notes: public city project page with direct links into eTRAKiT attachments and city-hosted correspondence
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Slot A project page for the first permit sample basket.
+
+  - source_id: san-rafael-700-irwin-public-hearing-notice
+    label: Public Hearing for Project at 700 Irwin St.
+    owner_type: institution
+    owner_id: san-rafael-planning-commission
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - permit-sample-basket-01
+    source_category: permits
+    source_type: hearing_notice
+    entry_url: https://www.cityofsanrafael.org/public-hearing-for-project-at-700-irwin/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/700-irwin-st
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - project
+      - record:hearing_notice
+      - claim
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public city hearing notice page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Slot A hearing notice for the first permit sample basket.
+      - Date fields on the page should be handled carefully because the body text and project timeline may conflict.
+
+  - source_id: marin-county-p5139-project-page
+    label: Metropolis San Pedro Road, LP Tentative Map (P5139)
+    owner_type: institution
+    owner_id: marin-county-community-development-agency
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - permit-sample-basket-01
+    source_category: permits
+    source_type: project_page
+    entry_url: https://www.marincounty.gov/departments/cda/planning/projects/san-rafael-santa-venetia/metropolis-san-pedro-rd-lp-p5139
+    discovery_urls:
+      - https://www.marincounty.gov/departments/cda/planning/projects
+    fetch_strategy: web_text_snapshot
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - project
+      - application
+      - record:project_page
+      - actor
+      - place
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public county project page; ordinary CLI fetches are blocked in this environment, so the first capture uses a browser-visible text snapshot
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Slot B active county application thread for the first permit sample basket.
+
+  - source_id: marin-county-p4134-project-page
+    label: Souang Vesting Tentative Map and Housing Compliance Review (P4134)
+    owner_type: institution
+    owner_id: marin-county-community-development-agency
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - permit-sample-basket-01
+    source_category: permits
+    source_type: project_page
+    entry_url: https://www.marincounty.gov/departments/cda/planning/projects/san-rafael-lucas-valley-marinwood/souang-vesting-tentative-map-and-housing-compliance-review-p4134
+    discovery_urls:
+      - https://www.marincounty.gov/departments/cda/planning/projects
+    fetch_strategy: web_text_snapshot
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - project
+      - application
+      - determination
+      - appeal
+      - record:project_page
+      - actor
+      - place
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public county project page; first capture uses a browser-visible text snapshot because CLI fetches are blocked in this environment
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Slot C appeal-chain thread for the first permit sample basket.
+
+  - source_id: marin-county-p4134-planning-commission-hearing
+    label: Planning Commission Hearing for P4134 on December 8 2025
+    owner_type: institution
+    owner_id: marin-county-planning-commission
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - permit-sample-basket-01
+    source_category: permits
+    source_type: hearing_page
+    entry_url: https://www.marincounty.gov/node/25691
+    discovery_urls:
+      - https://www.marincounty.gov/departments/cda/planning/projects/san-rafael-lucas-valley-marinwood/souang-vesting-tentative-map-and-housing-compliance-review-p4134
+    fetch_strategy: web_text_snapshot
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - appeal
+      - decision
+      - record:agenda
+      - record:staff_report
+      - record:resolution
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public county hearing page; first capture uses a browser-visible text snapshot because CLI fetches are blocked in this environment
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Core appeal-hearing surface for the P4134 pressure test.
