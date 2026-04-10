@@ -26,7 +26,7 @@ Low-priority later material:
 
 - depositions
 - discovery fights
-- broad criminal-case ingestion
+- routine criminal-case ingestion outside the public-accountability basket documented elsewhere
 - routine private civil litigation with little civic relevance
 
 ## Why This Matters

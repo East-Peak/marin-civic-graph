@@ -172,7 +172,7 @@ Track:
 
 ### Judicial / Court Extension
 
-Possible later-phase work only.
+Possible later-phase work only for civil and public-law expansion.
 
 Would need:
 
@@ -180,6 +180,49 @@ Would need:
 - judge pages
 - prosecutor / public defender / city attorney links
 - careful methodology for any downstream outcome claims
+
+### Criminal Justice / Judge Accountability Layer
+
+Track public criminal-case surfaces in a way that is evidence-first and methodologically defensible.
+
+Should cover:
+
+- booking and custody events
+- warrant surfaces
+- criminal case metadata
+- hearings and proceedings
+- attorney roles
+- dispositions and sentences where publicly available
+- judge assignments and recurrence
+
+Why this matters:
+
+- lower-level judges exercise real power with weak public scrutiny
+- this creates a public-safety and accountability layer that is adjacent to, but distinct from, civil litigation
+- the graph should make it easier to see recurring patterns without turning anecdote into a scorecard
+
+Important constraint:
+
+- start with public case index and hearing data, not a broad criminal-docket mirror
+- keep any judge-evaluation view downstream and derived from explicit event-level records
+
+### State / Federal / Quasi-Governmental Governance Layer
+
+Track outside institutions that materially constrain Marin outcomes even when they are not ordinary municipal bodies.
+
+Should cover:
+
+- Coastal Commission
+- Caltrans
+- state parks
+- federal land managers
+- special districts
+- land trusts and conservancies when they hold operational leverage, contracts, easements, or advisory influence
+
+Why this matters:
+
+- a large share of Marin land and development friction sits outside normal city-council process
+- this creates an “external veto point” layer that the graph should make legible
 
 ### Permits / Applications / Denials Layer
 

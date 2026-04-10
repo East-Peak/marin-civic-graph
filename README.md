@@ -63,6 +63,7 @@ Start narrow:
 - [Schema v1](./docs/schema-v1.md)
 - [Graph Data Model](./docs/graph-data-model.md)
 - [Graph Joins And Identity](./docs/graph-joins-and-identity.md)
+- [Domain Expansion Matrix](./docs/domain-expansion-matrix.md)
 - [Record Model](./docs/record-model.md)
 - [Judicial And Oversight Extension](./docs/judicial-and-oversight-extension.md)
 - [Judicial Pressure-Test Basket Source Bundle](./docs/judicial-pressure-test-basket-source-bundle.md)
