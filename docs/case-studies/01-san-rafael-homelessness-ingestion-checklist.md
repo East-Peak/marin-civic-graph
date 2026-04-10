@@ -72,6 +72,7 @@ That means collecting enough material to instantiate:
 - [x] each document classified by type
 - [x] extracted text available
 - [ ] canonical document metadata assigned
+- [x] dense item `5.a` packet split into derived child records
 
 ## Phase 2: Meeting and Decision Extraction
 
@@ -82,6 +83,7 @@ That means collecting enough material to instantiate:
 - [x] identify all formal `Decision` candidates
 - [x] extract any vote tables or motions
 - [x] extract linked contracts, appropriations, and grant references
+- [x] split item `5.a` into ordinance, resolution, attachment, contract, site-plan, code-of-conduct, and correspondence child records
 
 ### Earlier Ordinance Steps
 
@@ -189,7 +191,8 @@ The first usable deliverable for this case study should be:
 
 ## Blocking Questions
 
-- [ ] where exactly do the August 19, 2024 attachments live, and do they expose contract detail cleanly?
+- [x] locate the August 19, 2024 item `5.a` child records inside the packet
+- [ ] explain why the FS Global contract authorization discussed in the report does not appear as a discrete exhibit in pages 19-97
 - [ ] are the meeting minutes sufficiently detailed to extract vote records directly?
 - [ ] which local-media pieces require subscription access versus open citation capture?
 - [ ] what is the cleanest official source for the ERF grant amount and program obligations?
@@ -209,6 +212,7 @@ If doing this manually first, the order should be:
 Status as of April 10, 2026:
 
 - phases 1 through 6 have a first-pass official-source bundle, extraction set, and normalized candidate bundle
-- the remaining major gap is the media layer beyond citation-only Marin IJ coverage, especially article-body extraction and later attribution review
+- the August 19 item `5.a` packet now has a derived child-record layer for ordinance, resolution, four contract exhibits, the site plan, the code of conduct, and correspondence
+- the remaining major gaps are the missing FS Global exhibit, the media layer beyond citation-only Marin IJ coverage, and later attribution review
 
 That will create the first trustworthy version of the case without over-relying on media before the official spine exists.

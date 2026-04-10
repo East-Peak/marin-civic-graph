@@ -18,7 +18,183 @@ from pypdf import PdfReader
 ROOT = Path(__file__).resolve().parent.parent
 RAW_DIR = ROOT / "data" / "raw"
 EXTRACTED_DIR = ROOT / "data" / "extracted"
+NORMALIZED_DIR = ROOT / "data" / "normalized"
 BUNDLE_ID = "san-rafael-homelessness-01__bundle-01"
+CASE_STUDY_ID = "san-rafael-homelessness-01"
+ITEM_5A_SOURCE_ID = "san-rafael-aug-19-2024-council-meeting"
+ITEM_5A_SOURCE_RECORD_ID = "doc-2024-08-19-item-5a-report"
+ITEM_5A_RAW_PDF = RAW_DIR / ITEM_5A_SOURCE_ID / "2026-04-10" / "item-5a-report.pdf"
+ITEM_5A_EXTRACTED_DIR = EXTRACTED_DIR / ITEM_5A_SOURCE_ID
+CASE_STUDY_NORMALIZED_DIR = NORMALIZED_DIR / CASE_STUDY_ID
+
+
+@dataclass(frozen=True)
+class RecordSplitSpec:
+    id: str
+    slug: str
+    record_class: str
+    record_type: str
+    title: str
+    start_page: int
+    end_page: int
+    decision_ids: tuple[str, ...] = ()
+    related_moneyflow_ids: tuple[str, ...] = ()
+    actor_ids: tuple[str, ...] = ()
+    issue_ids: tuple[str, ...] = ()
+    place_ids: tuple[str, ...] = ()
+    attached_to_record_id: str | None = None
+    decision_relationship_type: str | None = None
+    notes: tuple[str, ...] = ()
+
+
+ITEM_5A_RECORD_SPLIT_SPECS = [
+    RecordSplitSpec(
+        id="record-2024-08-19-ordinance-2040-text",
+        slug="ordinance-2040",
+        record_class="legislative_record",
+        record_type="ordinance_text",
+        title="Ordinance No. 2040 amending Chapter 19.50 to regulate camping on public property",
+        start_page=19,
+        end_page=25,
+        decision_ids=("decision-2024-08-19-ordinance-2040-introduction",),
+        issue_ids=("issue-homelessness", "issue-encampments", "issue-camping-ordinance"),
+        place_ids=("place-san-rafael",),
+        decision_relationship_type="record_introduces_decision",
+    ),
+    RecordSplitSpec(
+        id="record-2024-08-19-resolution-15336-text",
+        slug="resolution-15336",
+        record_class="legislative_record",
+        record_type="resolution_text",
+        title=(
+            "Resolution No. 15336 appropriating $2,256,400 and authorizing "
+            "$2,002,400 for ERF3 and other homelessness services"
+        ),
+        start_page=26,
+        end_page=27,
+        decision_ids=("decision-2024-08-19-resolution-15336",),
+        issue_ids=("issue-homelessness", "issue-encampments"),
+        place_ids=("place-mahon-creek-path",),
+        decision_relationship_type="record_authorizes_decision",
+    ),
+    RecordSplitSpec(
+        id="record-2024-08-19-resolution-15336-attachment-a-budget-amendment",
+        slug="resolution-15336-attachment-a-budget-amendment",
+        record_class="legislative_record",
+        record_type="budget_amendment_resolution_attachment",
+        title="Attachment A budget amendment resolution for fiscal year 2023-24 appropriations and transfers",
+        start_page=28,
+        end_page=28,
+        attached_to_record_id="record-2024-08-19-resolution-15336-text",
+        notes=(
+            "Attachment A is embedded in the packet as a child record of Resolution 15336.",
+            "The extracted page does not show a visible resolution number.",
+        ),
+    ),
+    RecordSplitSpec(
+        id="record-2024-08-19-contract-defense-block-security",
+        slug="contract-defense-block-security",
+        record_class="contract_record",
+        record_type="professional_services_agreement",
+        title="Defense Block Security agreement for security services in sanctioned camps",
+        start_page=29,
+        end_page=45,
+        decision_ids=("decision-2024-08-19-resolution-15336",),
+        related_moneyflow_ids=("moneyflow-2024-08-19-defense-block-contract",),
+        actor_ids=("actor-defense-block-security",),
+        issue_ids=("issue-homelessness", "issue-encampments"),
+        place_ids=("place-mahon-creek-path",),
+        attached_to_record_id="record-2024-08-19-resolution-15336-text",
+    ),
+    RecordSplitSpec(
+        id="record-2024-08-19-contract-other-junk-co",
+        slug="contract-other-junk-co",
+        record_class="contract_record",
+        record_type="services_contract",
+        title="The Other Junk Co. contract for encampment trash removal services",
+        start_page=46,
+        end_page=55,
+        decision_ids=("decision-2024-08-19-resolution-15336",),
+        related_moneyflow_ids=("moneyflow-2024-08-19-other-junk-contract",),
+        actor_ids=("actor-other-junk-co",),
+        issue_ids=("issue-homelessness", "issue-encampments"),
+        place_ids=("place-mahon-creek-path",),
+        attached_to_record_id="record-2024-08-19-resolution-15336-text",
+    ),
+    RecordSplitSpec(
+        id="record-2024-08-19-contract-wehope",
+        slug="contract-wehope",
+        record_class="contract_record",
+        record_type="services_contract",
+        title="WeHope contract for FY 2024-25 mobile shower services",
+        start_page=56,
+        end_page=62,
+        decision_ids=("decision-2024-08-19-resolution-15336",),
+        related_moneyflow_ids=("moneyflow-2024-08-19-wehope-contract",),
+        actor_ids=("actor-wehope",),
+        issue_ids=("issue-homelessness",),
+        attached_to_record_id="record-2024-08-19-resolution-15336-text",
+    ),
+    RecordSplitSpec(
+        id="record-2024-08-19-contract-downtown-streets-team",
+        slug="contract-downtown-streets-team",
+        record_class="contract_record",
+        record_type="professional_services_agreement",
+        title=(
+            "Downtown Streets Team agreement for implementation and management "
+            "of employment development and volunteer work"
+        ),
+        start_page=63,
+        end_page=78,
+        decision_ids=("decision-2024-08-19-resolution-15336",),
+        related_moneyflow_ids=("moneyflow-2024-08-19-dst-contract",),
+        actor_ids=("actor-downtown-streets-team",),
+        issue_ids=("issue-homelessness",),
+        attached_to_record_id="record-2024-08-19-resolution-15336-text",
+    ),
+    RecordSplitSpec(
+        id="record-2024-08-19-sanctioned-camp-site-plan",
+        slug="sanctioned-camp-site-plan",
+        record_class="program_record",
+        record_type="site_plan",
+        title="Sanctioned encampment site plan with 47 total campsites",
+        start_page=79,
+        end_page=79,
+        issue_ids=("issue-homelessness", "issue-encampments"),
+        place_ids=("place-mahon-creek-path",),
+        attached_to_record_id="record-2024-08-19-resolution-15336-text",
+    ),
+    RecordSplitSpec(
+        id="record-2024-08-19-sanctioned-camp-code-of-conduct",
+        slug="sanctioned-camp-code-of-conduct",
+        record_class="program_record",
+        record_type="code_of_conduct",
+        title="Draft code of conduct for the San Rafael sanctioned camping area",
+        start_page=80,
+        end_page=81,
+        issue_ids=("issue-homelessness", "issue-encampments"),
+        place_ids=("place-mahon-creek-path",),
+        attached_to_record_id="record-2024-08-19-resolution-15336-text",
+    ),
+    RecordSplitSpec(
+        id="record-2024-08-19-item-5a-correspondence-packet",
+        slug="item-5a-correspondence-packet",
+        record_class="meeting_record",
+        record_type="public_correspondence_packet",
+        title="Public correspondence packet attached to August 19, 2024 item 5.a",
+        start_page=82,
+        end_page=97,
+        issue_ids=("issue-homelessness", "issue-encampments"),
+        attached_to_record_id=ITEM_5A_SOURCE_RECORD_ID,
+    ),
+]
+
+ITEM_5A_UNRESOLVED_GAPS = [
+    (
+        "The staff report discusses a proposed FS Global Solutions contract, but the packet does not "
+        "appear to include a discrete FS Global contract exhibit in pages 19-97."
+    ),
+]
 
 
 ACTOR_PATTERNS = [
@@ -272,6 +448,38 @@ def extract_pdf(raw_path: Path, output_txt: Path) -> dict[str, Any]:
     }
 
 
+def extract_pdf_page_range_text(reader: PdfReader, start_page: int, end_page: int) -> str:
+    pages: list[str] = []
+    for index in range(start_page - 1, end_page):
+        text = (reader.pages[index].extract_text() or "").strip()
+        if text:
+            pages.append(text)
+    return "\n\n".join(pages).strip() + "\n"
+
+
+def first_nonempty_line(text: str) -> str | None:
+    for line in text.splitlines():
+        cleaned = line.strip()
+        if cleaned:
+            return cleaned
+    return None
+
+
+def write_json_if_changed(path: Path, payload: dict[str, Any]) -> dict[str, Any]:
+    comparison_payload = dict(payload)
+    comparison_payload.pop("generated_at", None)
+
+    if path.exists():
+        existing = json.loads(path.read_text(encoding="utf-8"))
+        comparison_existing = dict(existing)
+        comparison_existing.pop("generated_at", None)
+        if comparison_existing == comparison_payload:
+            return existing
+
+    path.write_text(json.dumps(payload, indent=2, sort_keys=False) + "\n", encoding="utf-8")
+    return payload
+
+
 def collect_signals(texts: list[str]) -> dict[str, list[str]]:
     combined = "\n".join(texts)
     money_values = normalize_money_values(MONEY_RE.findall(combined))
@@ -297,6 +505,9 @@ def extract_source(manifest_path: Path) -> dict[str, Any]:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     source_id = manifest["source_id"]
     capture_date = manifest["capture_id"].rsplit("__", 1)[-1]
+
+    if manifest["fetch_strategy"].startswith("citation_only"):
+        raise ValueError(f"citation-only source requires a dedicated extractor: {source_id}")
 
     output_dir = EXTRACTED_DIR / source_id
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -344,8 +555,7 @@ def extract_source(manifest_path: Path) -> dict[str, Any]:
         "notes": manifest.get("notes", []),
     }
 
-    output_json.write_text(json.dumps(result, indent=2, sort_keys=False) + "\n", encoding="utf-8")
-    return result
+    return write_json_if_changed(output_json, result)
 
 
 def write_bundle_summary(results: list[dict[str, Any]]) -> None:
@@ -380,7 +590,121 @@ def write_bundle_summary(results: list[dict[str, Any]]) -> None:
     }
 
     summary_path = summary_dir / "bundle-01-summary.json"
-    summary_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    write_json_if_changed(summary_path, summary)
+
+
+def write_item_5a_record_splits() -> None:
+    ITEM_5A_EXTRACTED_DIR.mkdir(parents=True, exist_ok=True)
+    CASE_STUDY_NORMALIZED_DIR.mkdir(parents=True, exist_ok=True)
+
+    reader = PdfReader(str(ITEM_5A_RAW_PDF))
+    extracted_records: list[dict[str, Any]] = []
+    normalized_records: list[dict[str, Any]] = []
+    record_relationships: list[dict[str, str]] = []
+
+    raw_pdf_rel = str(ITEM_5A_RAW_PDF.relative_to(ROOT))
+    extracted_json_path = ITEM_5A_EXTRACTED_DIR / "item-5a-record-splits.json"
+    normalized_json_path = CASE_STUDY_NORMALIZED_DIR / "aug-19-item-5a-record-splits.json"
+
+    for spec in ITEM_5A_RECORD_SPLIT_SPECS:
+        text = extract_pdf_page_range_text(reader, spec.start_page, spec.end_page)
+        text_filename = f"item-5a-{spec.slug}.txt"
+        text_path = ITEM_5A_EXTRACTED_DIR / text_filename
+        text_path.write_text(text, encoding="utf-8")
+
+        text_rel = str(text_path.relative_to(ROOT))
+        extracted_record = {
+            "id": spec.id,
+            "record_class": spec.record_class,
+            "record_type": spec.record_type,
+            "title": spec.title,
+            "page_range": {
+                "start": spec.start_page,
+                "end": spec.end_page,
+            },
+            "text_path": text_rel,
+            "word_count": len(text.split()),
+            "first_line": first_nonempty_line(text),
+        }
+        extracted_records.append(extracted_record)
+
+        normalized_record = {
+            "id": spec.id,
+            "status": "derived_candidate",
+            "record_class": spec.record_class,
+            "record_type": spec.record_type,
+            "title": spec.title,
+            "publisher": "City of San Rafael",
+            "published_at": "2024-08-19",
+            "source_tier": "official",
+            "source_record_id": ITEM_5A_SOURCE_RECORD_ID,
+            "artifact_paths": [raw_pdf_rel],
+            "text_path": text_rel,
+            "page_range": {
+                "start": spec.start_page,
+                "end": spec.end_page,
+            },
+            "word_count": len(text.split()),
+            "meeting_id": "meeting-2024-08-19-san-rafael-city-council",
+            "agenda_item_id": "agenda-item-2024-08-19-5a",
+            "decision_ids": list(spec.decision_ids),
+            "related_moneyflow_ids": list(spec.related_moneyflow_ids),
+            "actor_ids": list(spec.actor_ids),
+            "issue_ids": list(spec.issue_ids),
+            "place_ids": list(spec.place_ids),
+            "notes": list(spec.notes),
+        }
+        normalized_records.append(normalized_record)
+
+        record_relationships.append(
+            {
+                "source_record_id": spec.id,
+                "relationship_type": "record_extracts_from_record",
+                "target_record_id": ITEM_5A_SOURCE_RECORD_ID,
+            }
+        )
+
+        if spec.attached_to_record_id:
+            record_relationships.append(
+                {
+                    "source_record_id": spec.id,
+                    "relationship_type": "record_attached_to_record",
+                    "target_record_id": spec.attached_to_record_id,
+                }
+            )
+
+        if spec.decision_relationship_type:
+            for decision_id in spec.decision_ids:
+                record_relationships.append(
+                    {
+                        "source_record_id": spec.id,
+                        "relationship_type": spec.decision_relationship_type,
+                        "target_decision_id": decision_id,
+                    }
+                )
+
+    extracted_payload = {
+        "source_id": ITEM_5A_SOURCE_ID,
+        "bundle_id": BUNDLE_ID,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "derived_from_record_id": ITEM_5A_SOURCE_RECORD_ID,
+        "derived_from_artifact_path": raw_pdf_rel,
+        "record_splits": extracted_records,
+        "unresolved_gaps": ITEM_5A_UNRESOLVED_GAPS,
+    }
+    write_json_if_changed(extracted_json_path, extracted_payload)
+
+    normalized_payload = {
+        "case_study_id": CASE_STUDY_ID,
+        "bundle_id": BUNDLE_ID,
+        "status": "derived_candidate_record_splits",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "derived_from_record_id": ITEM_5A_SOURCE_RECORD_ID,
+        "record_refs": normalized_records,
+        "record_relationships": record_relationships,
+        "unresolved_gaps": ITEM_5A_UNRESOLVED_GAPS,
+    }
+    write_json_if_changed(normalized_json_path, normalized_payload)
 
 
 def main() -> None:
@@ -391,8 +715,16 @@ def main() -> None:
         if manifest.get("bundle_id") == BUNDLE_ID:
             selected.append(manifest_path)
 
-    results = [extract_source(path) for path in selected]
+    filtered = []
+    for path in selected:
+        manifest = json.loads(path.read_text(encoding="utf-8"))
+        if manifest["fetch_strategy"].startswith("citation_only"):
+            continue
+        filtered.append(path)
+
+    results = [extract_source(path) for path in filtered]
     write_bundle_summary(results)
+    write_item_5a_record_splits()
 
 
 if __name__ == "__main__":

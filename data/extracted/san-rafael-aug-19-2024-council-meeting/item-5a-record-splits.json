@@ -1,0 +1,142 @@
+{
+  "source_id": "san-rafael-aug-19-2024-council-meeting",
+  "bundle_id": "san-rafael-homelessness-01__bundle-01",
+  "generated_at": "2026-04-10T19:49:33.893629+00:00",
+  "derived_from_record_id": "doc-2024-08-19-item-5a-report",
+  "derived_from_artifact_path": "data/raw/san-rafael-aug-19-2024-council-meeting/2026-04-10/item-5a-report.pdf",
+  "record_splits": [
+    {
+      "id": "record-2024-08-19-ordinance-2040-text",
+      "record_class": "legislative_record",
+      "record_type": "ordinance_text",
+      "title": "Ordinance No. 2040 amending Chapter 19.50 to regulate camping on public property",
+      "page_range": {
+        "start": 19,
+        "end": 25
+      },
+      "text_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-ordinance-2040.txt",
+      "word_count": 2936,
+      "first_line": "ORDINANCE NO."
+    },
+    {
+      "id": "record-2024-08-19-resolution-15336-text",
+      "record_class": "legislative_record",
+      "record_type": "resolution_text",
+      "title": "Resolution No. 15336 appropriating $2,256,400 and authorizing $2,002,400 for ERF3 and other homelessness services",
+      "page_range": {
+        "start": 26,
+        "end": 27
+      },
+      "text_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-resolution-15336.txt",
+      "word_count": 742,
+      "first_line": "RESOLUTION NO."
+    },
+    {
+      "id": "record-2024-08-19-resolution-15336-attachment-a-budget-amendment",
+      "record_class": "legislative_record",
+      "record_type": "budget_amendment_resolution_attachment",
+      "title": "Attachment A budget amendment resolution for fiscal year 2023-24 appropriations and transfers",
+      "page_range": {
+        "start": 28,
+        "end": 28
+      },
+      "text_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-resolution-15336-attachment-a-budget-amendment.txt",
+      "word_count": 314,
+      "first_line": "Attachment A"
+    },
+    {
+      "id": "record-2024-08-19-contract-defense-block-security",
+      "record_class": "contract_record",
+      "record_type": "professional_services_agreement",
+      "title": "Defense Block Security agreement for security services in sanctioned camps",
+      "page_range": {
+        "start": 29,
+        "end": 45
+      },
+      "text_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-contract-defense-block-security.txt",
+      "word_count": 4999,
+      "first_line": "Rev. 08.22 1"
+    },
+    {
+      "id": "record-2024-08-19-contract-other-junk-co",
+      "record_class": "contract_record",
+      "record_type": "services_contract",
+      "title": "The Other Junk Co. contract for encampment trash removal services",
+      "page_range": {
+        "start": 46,
+        "end": 55
+      },
+      "text_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-contract-other-junk-co.txt",
+      "word_count": 3694,
+      "first_line": "City Attorney Form, July 2023      Page 1"
+    },
+    {
+      "id": "record-2024-08-19-contract-wehope",
+      "record_class": "contract_record",
+      "record_type": "services_contract",
+      "title": "WeHope contract for FY 2024-25 mobile shower services",
+      "page_range": {
+        "start": 56,
+        "end": 62
+      },
+      "text_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-contract-wehope.txt",
+      "word_count": 3210,
+      "first_line": "City Attorney Form, July 2023      Page 1"
+    },
+    {
+      "id": "record-2024-08-19-contract-downtown-streets-team",
+      "record_class": "contract_record",
+      "record_type": "professional_services_agreement",
+      "title": "Downtown Streets Team agreement for implementation and management of employment development and volunteer work",
+      "page_range": {
+        "start": 63,
+        "end": 78
+      },
+      "text_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-contract-downtown-streets-team.txt",
+      "word_count": 5087,
+      "first_line": "Rev. 08.22 1"
+    },
+    {
+      "id": "record-2024-08-19-sanctioned-camp-site-plan",
+      "record_class": "program_record",
+      "record_type": "site_plan",
+      "title": "Sanctioned encampment site plan with 47 total campsites",
+      "page_range": {
+        "start": 79,
+        "end": 79
+      },
+      "text_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-sanctioned-camp-site-plan.txt",
+      "word_count": 50,
+      "first_line": "Sanctioned Encampment Site, 47 Total Campsites"
+    },
+    {
+      "id": "record-2024-08-19-sanctioned-camp-code-of-conduct",
+      "record_class": "program_record",
+      "record_type": "code_of_conduct",
+      "title": "Draft code of conduct for the San Rafael sanctioned camping area",
+      "page_range": {
+        "start": 80,
+        "end": 81
+      },
+      "text_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-sanctioned-camp-code-of-conduct.txt",
+      "word_count": 492,
+      "first_line": "San Rafael Sanctioned Camping Area"
+    },
+    {
+      "id": "record-2024-08-19-item-5a-correspondence-packet",
+      "record_class": "meeting_record",
+      "record_type": "public_correspondence_packet",
+      "title": "Public correspondence packet attached to August 19, 2024 item 5.a",
+      "page_range": {
+        "start": 82,
+        "end": 97
+      },
+      "text_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-item-5a-correspondence-packet.txt",
+      "word_count": 3034,
+      "first_line": "From:"
+    }
+  ],
+  "unresolved_gaps": [
+    "The staff report discusses a proposed FS Global Solutions contract, but the packet does not appear to include a discrete FS Global contract exhibit in pages 19-97."
+  ]
+}
