@@ -65,6 +65,8 @@ Start narrow:
 - [Graph Joins And Identity](./docs/graph-joins-and-identity.md)
 - [Domain Expansion Matrix](./docs/domain-expansion-matrix.md)
 - [Criminal Justice Submodel](./docs/criminal-justice-submodel.md)
+- [Criminal Sample Basket Source Bundle](./docs/criminal-sample-basket-source-bundle.md)
+- [Criminal Sample Basket Ingestion Checklist](./docs/criminal-sample-basket-ingestion-checklist.md)
 - [Record Model](./docs/record-model.md)
 - [Judicial And Oversight Extension](./docs/judicial-and-oversight-extension.md)
 - [Judicial Pressure-Test Basket Source Bundle](./docs/judicial-pressure-test-basket-source-bundle.md)

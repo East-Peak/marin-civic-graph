@@ -741,3 +741,237 @@ sources:
       - High-value local-media source for actor framing and quote extraction.
       - Full-text access may depend on operator login and archive availability.
       - Citation-level title / URL / date capture can begin before article-body extraction.
+
+  - source_id: marin-superior-court-eportal
+    label: Marin Superior Court ePortal
+    owner_type: institution
+    owner_id: marin-superior-court
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: criminal_justice
+    source_type: case_search_portal
+    entry_url: https://www.marin.courts.ca.gov/online-services/ecourt-online-portal
+    discovery_urls:
+      - https://www.marin.courts.ca.gov/divisions/court-records-exhibits
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - case
+      - proceeding
+      - document:case_index_record
+      - document:calendar_entry
+      - actor
+    cadence: manual
+    history_depth: rolling_window
+    source_tier_default: A
+    robots_notes: public portal overview page; public access supports case and calendar search, while document viewing is restricted for parties, attorneys, and justice partners
+    review_risk: medium
+    dedupe_key_strategy: case_number_plus_hearing_date_plus_event_label
+    notes:
+      - Primary criminal-case discovery surface.
+      - Public access appears strong for case metadata and hearings, but weak for remote PDF access.
+
+  - source_id: marin-superior-court-court-records-exhibits
+    label: Marin Superior Court Court Records and Exhibits
+    owner_type: institution
+    owner_id: marin-superior-court
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: criminal_justice
+    source_type: records_request_page
+    entry_url: https://www.marin.courts.ca.gov/divisions/court-records-exhibits
+    discovery_urls:
+      - https://www.marin.courts.ca.gov/online-services/ecourt-online-portal
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:register_of_actions
+      - document:minute_order
+      - document:judgment
+      - claim
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public court page describing in-person inspection and records-request workflow for active and disposed criminal records
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Critical source for understanding what is public but not remotely downloadable.
+      - Likely required for any deeper sentence or minute-order coverage.
+
+  - source_id: marin-superior-court-judicial-assignments
+    label: Marin Superior Court Judicial Assignments
+    owner_type: institution
+    owner_id: marin-superior-court
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: criminal_justice
+    source_type: article
+    entry_url: https://www.marin.courts.ca.gov/general-information/judicial-assignments
+    discovery_urls:
+      - https://www.marin.courts.ca.gov/general-information
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - actor
+      - seat
+      - institution
+      - claim
+    cadence: monthly
+    history_depth: rolling_window
+    source_tier_default: A
+    robots_notes: public court page listing current department and assignment structure
+    review_risk: low
+    dedupe_key_strategy: judge_name_plus_assignment
+    notes:
+      - Primary source for mapping criminal departments to judges.
+      - Use with care because assignments can change over time.
+
+  - source_id: marin-superior-court-judicial-biographies
+    label: Marin Superior Court Judicial Biographies
+    owner_type: institution
+    owner_id: marin-superior-court
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: criminal_justice
+    source_type: article
+    entry_url: https://www.marin.courts.ca.gov/general-information/judicial-biographies
+    discovery_urls:
+      - https://www.marin.courts.ca.gov/general-information
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - actor
+      - appointment
+      - claim
+    cadence: manual
+    history_depth: rolling_window
+    source_tier_default: A
+    robots_notes: public court page summarizing appointment and election history for judges and subordinate judicial officers
+    review_risk: low
+    dedupe_key_strategy: judge_name_plus_bench_start
+    notes:
+      - Useful for normalizing judge actors and distinguishing appointed from elected bench history.
+
+  - source_id: marin-sheriff-detention-bureau
+    label: Marin Sheriff Detention Bureau
+    owner_type: institution
+    owner_id: marin-county-sheriff
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: criminal_justice
+    source_type: article
+    entry_url: https://marinsheriff.gov/about-us/detention-bureau
+    discovery_urls:
+      - https://www.marinsheriff.org/about-us/detention-bureau
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:booking_log_entry
+      - custody_event
+      - charge
+      - actor
+    cadence: manual
+    history_depth: rolling_window
+    source_tier_default: A
+    robots_notes: public sheriff page with navigation into the jail booking log surface
+    review_risk: medium
+    dedupe_key_strategy: booking_number_plus_booking_datetime
+    notes:
+      - Primary discovery page for current jail-booking visibility.
+      - The booking-log endpoint itself may require separate capture handling.
+
+  - source_id: marin-sheriff-warrants
+    label: Marin Sheriff Warrants
+    owner_type: institution
+    owner_id: marin-county-sheriff
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: criminal_justice
+    source_type: article
+    entry_url: https://marinsheriff.gov/services/warrants
+    discovery_urls:
+      - https://www.marinsheriff.org/services/warrants
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:warrant_entry
+      - case
+      - actor
+      - claim
+    cadence: manual
+    history_depth: rolling_window
+    source_tier_default: A
+    robots_notes: public sheriff warrants page for Marin-issued warrants only
+    review_risk: medium
+    dedupe_key_strategy: warrant_number_or_name_plus_status
+    notes:
+      - Useful for warrant-linked control samples.
+      - Likely thinner than booking and court surfaces, so use as a join supplement rather than the sole source.
+
+  - source_id: marin-sheriff-records
+    label: Marin Sheriff Records
+    owner_type: institution
+    owner_id: marin-county-sheriff
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: criminal_justice
+    source_type: records_request_page
+    entry_url: https://marinsheriff.gov/services/records
+    discovery_urls:
+      - https://www.marinsheriff.org/services/records
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:booking_record
+      - document:incident_report
+      - claim
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public sheriff records page describing requests and limits for booking and incident records
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Important for understanding where public booking visibility ends and records-request work begins.
+
+  - source_id: marin-county-da-newsroom
+    label: Marin County District Attorney Newsroom
+    owner_type: institution
+    owner_id: marin-county-district-attorney
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: criminal_justice
+    source_type: article_archive
+    entry_url: https://marincountyda.org/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:official_statement
+      - claim
+      - actor
+      - case
+    cadence: weekly
+    history_depth: rolling_window
+    source_tier_default: B
+    robots_notes: public DA site; use as discovery and official charging / conviction context, not as a substitute for court records
+    review_risk: medium
+    dedupe_key_strategy: canonical_article_url
+    notes:
+      - Useful for finding publicly announced charges or convictions that can then be verified against court surfaces.
