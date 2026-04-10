@@ -476,6 +476,242 @@ sources:
     notes:
       - External context for how San Francisco framed the Supreme Court case.
 
+  - source_id: scotus-grants-pass-docket
+    label: Supreme Court Docket for City of Grants Pass v. Johnson
+    owner_type: external
+    owner_id: united-states-supreme-court
+    jurisdiction_id: united-states
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: litigation
+    source_type: html_index
+    entry_url: https://www.supremecourt.gov/docket/docketfiles/html/public/23-175.html
+    discovery_urls:
+      - https://www.supremecourt.gov/docket/docketfiles/html/public/23-175.html
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - case
+      - proceeding
+      - document:docket_entry
+      - document:opinion
+      - document:amicus_brief
+      - case_participation
+    cadence: manual
+    history_depth: rolling_window
+    source_tier_default: A
+    robots_notes: public Supreme Court docket page
+    review_risk: low
+    dedupe_key_strategy: docket_number_plus_entry_date_plus_title
+    notes:
+      - Primary official source surface for the Grants Pass case.
+      - Use this as the discovery point for the opinion and docket-linked PDFs.
+
+  - source_id: sf-city-attorney-coalition-injunction-appeal
+    label: SF City Attorney Opening Brief Post in Coalition on Homelessness Appeal
+    owner_type: external
+    owner_id: san-francisco-city-attorney
+    jurisdiction_id: san-francisco
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: litigation
+    source_type: article
+    entry_url: https://sfcityattorney.org/san-francisco-files-opening-brief-in-homeless-encampment-injunction-appeal/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - case
+      - proceeding
+      - document:official_statement
+      - document:appeal_brief
+      - claim
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city-attorney page; some automated clients may receive 403 and need browser-like request behavior
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Useful for the preliminary injunction appeal stage in Coalition on Homelessness.
+
+  - source_id: sf-city-attorney-coalition-vacatur
+    label: SF City Attorney Vacatur Post in Coalition on Homelessness
+    owner_type: external
+    owner_id: san-francisco-city-attorney
+    jurisdiction_id: san-francisco
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: litigation
+    source_type: article
+    entry_url: https://www.sfcityattorney.org/2024/07/08/ninth-circuit-vacates-part-of-injunction-in-homeless-encampment-lawsuit/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - case
+      - proceeding
+      - document:official_statement
+      - document:appellate_order
+      - claim
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city-attorney page; some automated clients may receive 403 and need browser-like request behavior
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Important for the Ninth Circuit narrowing of the injunction.
+
+  - source_id: sf-city-attorney-coalition-narrowed-scope
+    label: SF City Attorney Narrowed Scope Post in Coalition on Homelessness
+    owner_type: external
+    owner_id: san-francisco-city-attorney
+    jurisdiction_id: san-francisco
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: litigation
+    source_type: article
+    entry_url: https://sfcityattorney.org/court-significantly-narrows-scope-of-homeless-encampment-lawsuit/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - case
+      - proceeding
+      - document:official_statement
+      - claim
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city-attorney page; some automated clients may receive 403 and need browser-like request behavior
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Useful for modeling intermediate court narrowing before final resolution.
+
+  - source_id: sf-city-attorney-coalition-settlement
+    label: SF City Attorney Settlement Post in Coalition on Homelessness
+    owner_type: external
+    owner_id: san-francisco-city-attorney
+    jurisdiction_id: san-francisco
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: litigation
+    source_type: article
+    entry_url: https://sfcityattorney.org/san-francisco-finalizes-settlement-in-homeless-encampment-lawsuit/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - case
+      - document:settlement_agreement
+      - document:official_statement
+      - claim
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city-attorney page; some automated clients may receive 403 and need browser-like request behavior
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Useful for modeling the settlement end-state of the Coalition litigation.
+
+  - source_id: marin-civil-grand-jury-reports-index
+    label: Marin Civil Grand Jury Reports Index
+    owner_type: institution
+    owner_id: marin-county-civil-grand-jury
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: oversight
+    source_type: html_index
+    entry_url: https://www.marincounty.gov/departments/grand-jury/civil-grand-jury-reports
+    discovery_urls:
+      - https://www.marincounty.gov/departments/grand-jury/report-names-prior-2018
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - oversight_report
+      - document:oversight_report
+      - document:agency_response
+      - finding
+      - recommendation
+    cadence: monthly
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public county page; some automated clients may receive 403 while browser access remains public
+    review_risk: low
+    dedupe_key_strategy: report_year_plus_title
+    notes:
+      - Primary Marin oversight index.
+      - Use together with the prior-to-2018 index for older homelessness-related reports.
+
+  - source_id: marin-civil-grand-jury-report-names-prior-2018
+    label: Marin Civil Grand Jury Report Names Prior to 2018
+    owner_type: institution
+    owner_id: marin-county-civil-grand-jury
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: oversight
+    source_type: html_index
+    entry_url: https://www.marincounty.gov/departments/grand-jury/report-names-prior-2018
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - oversight_report
+      - document:oversight_report
+      - claim
+    cadence: manual
+    history_depth: archive
+    source_tier_default: B
+    robots_notes: public county page; some automated clients may receive 403 while browser access remains public
+    review_risk: low
+    dedupe_key_strategy: report_year_plus_title
+    notes:
+      - Useful discovery surface for older homelessness-related Marin grand-jury reports.
+
+  - source_id: marin-civil-grand-jury-homelessness-progress-report
+    label: Marin Civil Grand Jury 2017-2018 Homelessness in Marin A Progress Report
+    owner_type: institution
+    owner_id: marin-county-civil-grand-jury
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: oversight
+    source_type: document_landing_page
+    entry_url: https://assets.marincounty.gov/marincounty-prod/public/2025-09/05.17.18%20Homelessness%20in%20Marin%20A%20Progress%20Report.pdf
+    discovery_urls:
+      - https://www.marincounty.gov/departments/grand-jury/report-names-prior-2018
+    fetch_strategy: pdf_download
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - oversight_report
+      - document:oversight_report
+      - finding
+      - recommendation
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public county PDF; some automated clients may receive 403 while browser access remains public
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - First local oversight sample for the judicial / oversight pressure-test basket.
+
   - source_id: marin-ij-homelessness-coverage
     label: Marin Independent Journal Homelessness Coverage
     owner_type: external
