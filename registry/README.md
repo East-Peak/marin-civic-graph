@@ -25,6 +25,8 @@ The first registry entries focus on:
 - Marin County Board of Supervisors
 - Marin County campaign finance
 - a minimal local-media entry for Marin IJ
+- criminal court and sheriff source surfaces
+- Marin County and San Rafael planning / permit source surfaces
 
 ## Reference
 

@@ -9,6 +9,7 @@ The core idea is to build a searchable local graph of:
 - meetings
 - agenda items
 - decisions
+- projects
 - money
 - records
 - issues
@@ -67,6 +68,9 @@ Start narrow:
 - [Criminal Justice Submodel](./docs/criminal-justice-submodel.md)
 - [Criminal Sample Basket Source Bundle](./docs/criminal-sample-basket-source-bundle.md)
 - [Criminal Sample Basket Ingestion Checklist](./docs/criminal-sample-basket-ingestion-checklist.md)
+- [Permits, Applications, And Denials Submodel](./docs/permits-applications-denials-submodel.md)
+- [Permit Layer Source Bundle](./docs/permit-layer-source-bundle.md)
+- [Permit Layer Ingestion Checklist](./docs/permit-layer-ingestion-checklist.md)
 - [Record Model](./docs/record-model.md)
 - [Judicial And Oversight Extension](./docs/judicial-and-oversight-extension.md)
 - [Judicial Pressure-Test Basket Source Bundle](./docs/judicial-pressure-test-basket-source-bundle.md)
@@ -108,6 +112,7 @@ This repo started as a planning workspace and now includes the first live implem
 - source registry seeds
 - raw official source captures for case study 01
 - raw criminal-justice source captures for Marin court and sheriff landing surfaces
+- permit-layer schema, source bundle, and checklist for Marin County and San Rafael planning workflows
 - extracted text and metadata for bundle 01
 - a first normalized candidate bundle centered on the August 19, 2024 San Rafael homelessness decision chain
 - a derived record-splitting layer for August 19 item `5.a`, including ordinance, resolution, contract, site-plan, code-of-conduct, and correspondence child records

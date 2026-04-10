@@ -86,6 +86,10 @@ Examples:
 - `membership.actor_id`
 - `appointment.seat_id`
 - `decision.case_id`
+- `application.project_id`
+- `permit.project_id`
+- `determination.application_id`
+- `appeal.from_determination_id`
 - `record.place_ids[]`
 - `program.operator_actor_id`
 
@@ -152,6 +156,7 @@ Use for durable browseable objects:
 - `seat-*`
 - `place-*`
 - `issue-*`
+- `project-*`
 - `program-*`
 - `case-*`
 
@@ -164,6 +169,11 @@ Use for things that happened:
 - `meeting-*`
 - `agenda-item-*`
 - `decision-*`
+- `application-*`
+- `permit-*`
+- `determination-*`
+- `condition-*`
+- `appeal-*`
 - `vote-*`
 - `comment-*`
 - `moneyflow-*`

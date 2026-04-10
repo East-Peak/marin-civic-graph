@@ -67,6 +67,24 @@ Immediate implication:
 
 - Marin IJ article, ordinance, resolution, minutes, packet, and contract should all exist as typed record nodes
 
+### Permit Thread Pressure Test
+
+Pressure-test the permits / applications / determinations layer on one real project thread.
+
+Should include:
+
+- project
+- application
+- hearing notice
+- staff report
+- determination
+- permit or denial
+- appeal if present
+
+Why this matters:
+
+- many consequential local decisions happen before they ever reach a city council or board spotlight
+
 ### Marin Monitor Civic / Governance Feed
 
 Create a governance-oriented feed or section inside Marin Monitor that automatically ingests civic-process signals into a dedicated panel or wire.

@@ -149,6 +149,9 @@ Represents:
 - filing
 - contract
 - article
+- application
+- hearing notice
+- determination letter
 - Form 460
 - Form 700
 - Form 803
@@ -179,6 +182,7 @@ Suggested `record_class` values:
 - `contract_record`
 - `legal_record`
 - `program_record`
+- `administrative_record`
 
 Examples:
 
@@ -187,6 +191,7 @@ Examples:
 - minutes or packet = `meeting_record`
 - Form 460 / 700 / 803 / 990 = `financial_record`
 - booking log entry or sentencing order = `legal_record`
+- planning application, hearing notice, or appeal filing = `administrative_record`
 
 Note:
 
@@ -210,6 +215,29 @@ Key fields:
 - `name`
 - `slug`
 - `description?`
+
+### Project
+
+Represents a durable real-world proposal or site-specific thread that can outlive one application or hearing.
+
+Examples:
+
+- housing development proposal
+- shelter site
+- restaurant expansion
+- street redesign
+- coastal permit proposal
+
+Key fields:
+
+- `id`
+- `name`
+- `project_type`
+- `primary_place_id`
+- `jurisdiction_id`
+- `applicant_actor_id?`
+- `status`
+- `source_system_ref?`
 
 ### Program
 
@@ -269,6 +297,98 @@ Key fields:
 - `occurred_at?`
 - `judge_actor_id?`
 - `status`
+
+### Application
+
+Represents a request submitted to a planning, permitting, or administrative review body.
+
+Key fields:
+
+- `id`
+- `project_id`
+- `institution_id`
+- `application_type`
+- `application_number?`
+- `applicant_actor_id?`
+- `filed_at?`
+- `deemed_complete_at?`
+- `status`
+- `parent_application_id?`
+
+### Permit
+
+Represents an issued or issuable entitlement, authorization, or permit tied to a project.
+
+Key fields:
+
+- `id`
+- `project_id`
+- `application_id?`
+- `institution_id`
+- `permit_type`
+- `permit_number?`
+- `status`
+- `issued_at?`
+- `expires_at?`
+- `discretionary?`
+
+### Determination
+
+Represents an administrative or quasi-judicial outcome on an application.
+
+Examples:
+
+- completeness determination
+- approval
+- approval with conditions
+- denial
+- exemption determination
+- continuation
+
+Key fields:
+
+- `id`
+- `project_id`
+- `application_id?`
+- `institution_id`
+- `determination_type`
+- `status`
+- `decided_at?`
+- `related_decision_id?`
+- `appeal_deadline_at?`
+
+### Condition
+
+Represents one bounded obligation, restriction, or mitigation attached to a determination or permit.
+
+Key fields:
+
+- `id`
+- `project_id`
+- `determination_id?`
+- `permit_id?`
+- `condition_number?`
+- `condition_type`
+- `text`
+- `status`
+- `due_at?`
+
+### Appeal
+
+Represents a challenge to a permit or determination.
+
+Key fields:
+
+- `id`
+- `project_id`
+- `from_determination_id?`
+- `from_permit_id?`
+- `appellant_actor_id?`
+- `institution_id`
+- `filed_at?`
+- `status`
+- `outcome_decision_id?`
+- `hearing_meeting_id?`
 
 ### Charge
 
@@ -395,6 +515,8 @@ Represents:
 - park
 - corridor
 - address cluster
+- parcel
+- site
 
 Key fields:
 

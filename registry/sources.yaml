@@ -975,3 +975,336 @@ sources:
     dedupe_key_strategy: canonical_article_url
     notes:
       - Useful for finding publicly announced charges or convictions that can then be verified against court surfaces.
+
+  - source_id: marin-county-planning-landing
+    label: Marin County Planning
+    owner_type: institution
+    owner_id: marin-county-community-development-agency
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: permits
+    source_type: html_index
+    entry_url: https://www.marincounty.gov/departments/cda/planning
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - institution
+      - document:administrative_index
+      - claim
+    cadence: monthly
+    history_depth: rolling_window
+    source_tier_default: A
+    robots_notes: public planning landing page; browser-visible, but some Marin County pages can block ordinary CLI fetches
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - High-level discovery surface for planning permit help, hearing bodies, and project tracking.
+
+  - source_id: marin-county-planning-permits
+    label: Marin County Get a Planning Permit
+    owner_type: institution
+    owner_id: marin-county-community-development-agency
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: permits
+    source_type: service_landing_page
+    entry_url: https://www.marincounty.gov/departments/cda/planning/planning-permits
+    discovery_urls:
+      - https://www.marincounty.gov/departments/cda/planning
+      - https://www.marincounty.gov/departments/cda/planning/planning-permits/planning-permit-review-process
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - application
+      - permit
+      - document:administrative_guide
+      - claim
+    cadence: monthly
+    history_depth: rolling_window
+    source_tier_default: A
+    robots_notes: public county permit workflow page; browser-visible, but CLI fetches may hit Cloudflare
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Canonical county entry page for permit workflow.
+      - Links out to active applications, forms, and appeal workflow.
+
+  - source_id: marin-county-planning-projects
+    label: Marin County Planning Applications Under Review
+    owner_type: institution
+    owner_id: marin-county-community-development-agency
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: permits
+    source_type: html_index
+    entry_url: https://www.marincounty.gov/departments/cda/planning/projects
+    discovery_urls:
+      - https://www.marincounty.gov/departments/cda/planning
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - project
+      - application
+      - place
+      - document:project_status_page
+    cadence: weekly
+    history_depth: rolling_window
+    source_tier_default: A
+    robots_notes: public county project-discovery surface for active planning applications
+    review_risk: medium
+    dedupe_key_strategy: application_number_plus_project_name
+    notes:
+      - Strong county discovery spine for `Project` and `Application` candidates before final outcomes.
+
+  - source_id: marin-county-planning-division-forms
+    label: Marin County Planning Division Forms
+    owner_type: institution
+    owner_id: marin-county-community-development-agency
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: permits
+    source_type: html_index
+    entry_url: https://www.marincounty.gov/departments/cda/planning/planning-permits/planning-division-forms
+    discovery_urls:
+      - https://www.marincounty.gov/departments/cda/planning/planning-permits
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:planning_application_form
+      - document:appeal_form
+      - application
+      - appeal
+    cadence: monthly
+    history_depth: rolling_window
+    source_tier_default: A
+    robots_notes: public forms page covering general planning applications and petition-for-appeal workflow
+    review_risk: low
+    dedupe_key_strategy: form_label_plus_url
+    notes:
+      - Important because it explicitly confirms county appeal workflow.
+
+  - source_id: marin-county-planning-commission-hearings
+    label: Marin County Planning Commission Hearings
+    owner_type: institution
+    owner_id: marin-county-planning-commission
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: permits
+    source_type: html_index
+    entry_url: https://www.marincounty.gov/departments/cda/planning/boards-commissions-and-public-hearings/planning-commission-hearings
+    discovery_urls:
+      - https://www.marincounty.gov/departments/cda/planning
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - agenda_item
+      - decision
+      - document:agenda
+      - document:staff_report
+      - document:minutes
+      - document:video
+      - appeal
+    cadence: weekly
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public county hearing archive for planning-commission actions
+    review_risk: low
+    dedupe_key_strategy: meeting_date_plus_url
+    notes:
+      - Core permit-hearing surface for county planning appeals and recommendations.
+
+  - source_id: marin-county-deputy-zoning-administrator-hearings
+    label: Marin County Deputy Zoning Administrator Hearings
+    owner_type: institution
+    owner_id: marin-county-deputy-zoning-administrator
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: permits
+    source_type: html_index
+    entry_url: https://www.marincounty.gov/departments/cda/planning/boards-commissions-and-public-hearings/deputy-zoning-administrator-hearings
+    discovery_urls:
+      - https://www.marincounty.gov/departments/cda/planning
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - project
+      - determination
+      - document:agenda
+      - document:staff_report
+      - document:minutes
+      - document:audio
+    cadence: weekly
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public county administrative-hearing archive for zoning-administrator actions
+    review_risk: medium
+    dedupe_key_strategy: meeting_date_plus_url
+    notes:
+      - Strong pressure-test surface for `Determination`, `Condition`, and appeal layering.
+
+  - source_id: san-rafael-apply-to-planning-online
+    label: San Rafael Apply to Planning Online
+    owner_type: institution
+    owner_id: san-rafael-planning-division
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: permits
+    source_type: service_landing_page
+    entry_url: https://www.cityofsanrafael.org/apply-to-planning-online/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/departments/planning/
+      - https://www.cityofsanrafael.org/opengov
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - application
+      - permit
+      - document:application_guide
+      - document:submittal_requirements
+    cadence: monthly
+    history_depth: rolling_window
+    source_tier_default: A
+    robots_notes: public city explainer page linking to planning forms and the OpenGov portal
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Best city-side landing surface for how planning applications are submitted.
+
+  - source_id: san-rafael-opengov-planning-category
+    label: San Rafael OpenGov Planning Category
+    owner_type: institution
+    owner_id: san-rafael-planning-division
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: permits
+    source_type: planning_portal
+    entry_url: https://cityofsanrafaelca.portal.opengov.com/categories/1083
+    discovery_urls:
+      - https://www.cityofsanrafael.org/opengov
+      - https://www.cityofsanrafael.org/apply-to-planning-online/
+    fetch_strategy: browser_html
+    browser_required: true
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - project
+      - application
+      - permit
+      - document:portal_status_entry
+    cadence: weekly
+    history_depth: rolling_window
+    source_tier_default: A
+    robots_notes: browser-oriented portal; likely richer than the public explainer page but may need browser capture rather than CLI fetches
+    review_risk: medium
+    dedupe_key_strategy: project_name_plus_record_type_plus_status
+    notes:
+      - Likely strongest San Rafael project/application discovery surface if public access remains stable.
+
+  - source_id: san-rafael-major-planning-projects
+    label: San Rafael Major Planning Projects
+    owner_type: institution
+    owner_id: san-rafael-planning-division
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: permits
+    source_type: html_index
+    entry_url: https://www.cityofsanrafael.org/major-planning-projects-2025/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/departments/planning/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - project
+      - place
+      - issue
+      - claim
+    cadence: monthly
+    history_depth: rolling_window
+    source_tier_default: B
+    robots_notes: public city page summarizing current major planning projects
+    review_risk: medium
+    dedupe_key_strategy: project_name_plus_url
+    notes:
+      - Useful for early project identity normalization even before deep extraction.
+
+  - source_id: san-rafael-planning-commission-meetings
+    label: San Rafael Planning Commission Meetings
+    owner_type: institution
+    owner_id: san-rafael-planning-commission
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: permits
+    source_type: html_index
+    entry_url: https://www.cityofsanrafael.org/planning-commission-meetings/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/board-and-commission-meetings/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - agenda_item
+      - decision
+      - document:agenda
+      - document:packet
+      - document:minutes
+      - document:video
+    cadence: weekly
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public city hearing archive for planning commission actions
+    review_risk: low
+    dedupe_key_strategy: meeting_date_plus_url
+    notes:
+      - Core city-side planning hearing surface.
+
+  - source_id: san-rafael-zoning-administrator-hearings
+    label: San Rafael Zoning Administrator Hearings
+    owner_type: institution
+    owner_id: san-rafael-zoning-administrator
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: permits
+    source_type: html_index
+    entry_url: https://www.cityofsanrafael.org/zoning-administrator-hearings/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/board-and-commission-meetings/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - project
+      - determination
+      - document:agenda
+      - document:packet
+      - document:minutes
+      - document:video
+    cadence: weekly
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public city administrative-hearing archive with agenda, packet, minutes, and video links
+    review_risk: low
+    dedupe_key_strategy: meeting_date_plus_url
+    notes:
+      - Strong city-side source for project determinations and appeal candidates.

@@ -118,6 +118,9 @@ Examples:
 - video
 - staff report
 - contract
+- application
+- hearing notice
+- determination letter
 - Form 460
 - Form 700
 - Form 803
@@ -139,12 +142,14 @@ Suggested classification:
 - `contract_record`
 - `legal_record`
 - `program_record`
+- `administrative_record`
 
 Examples:
 
 - Marin IJ article = `media_record`
 - ordinance / resolution = `legislative_record`
 - minutes / packet = `meeting_record`
+- planning application / hearing notice / determination letter = `administrative_record`
 
 ### MoneyFlow
 
@@ -195,6 +200,23 @@ Rule:
 
 - use `Program` when the thing being tracked has operators, updates, and implementation over time
 - do not collapse a long-running program into one decision or one place
+
+### Project
+
+A durable proposal, site-specific thread, or capital concept that can persist across applications, hearings, determinations, permits, appeals, and litigation.
+
+Examples:
+
+- one housing development
+- one use-permit renewal
+- one shelter site
+- one streetscape redesign
+
+Rule:
+
+- use `Project` when the same real-world proposal shows up across multiple records and process events
+- do not use `Project` for a one-off meeting item with no continuing administrative life
+- a `Project` can exist before approval and can survive amendments, denials, or appeals
 
 ### Case
 
@@ -308,6 +330,81 @@ Rule:
 
 - use `Proceeding` when the date, judge, or hearing type matters
 - do not collapse all case activity into one `Case`
+
+### Application
+
+A filed request for planning, permitting, or administrative review.
+
+Examples:
+
+- planning permit application
+- use permit amendment
+- petition for appeal
+
+Rule:
+
+- `Application` is the request
+- it is not the same thing as the project and not the same thing as the final permit
+
+### Permit
+
+An issued or issuable entitlement, permit, or authorization attached to a project.
+
+Examples:
+
+- coastal development permit
+- use permit
+- tree removal permit
+
+Rule:
+
+- only create a `Permit` when the record clearly identifies an entitlement or issuance state
+- do not confuse a requested permit type inside an application with a permit that has actually been granted
+
+### Determination
+
+An administrative or quasi-judicial outcome on an application.
+
+Examples:
+
+- completeness determination
+- approval with conditions
+- denial letter
+- exemption determination
+
+Rule:
+
+- use `Determination` for the domain-specific outcome
+- link it to a broader `Decision` when there is also a formal vote or appeal ruling
+
+### Condition
+
+A single obligation, restriction, or mitigation attached to a determination or permit.
+
+Examples:
+
+- operating-hours limit
+- landscaping condition
+- design revision requirement
+
+Rule:
+
+- store conditions separately when they will matter for compliance, later amendments, or conflict
+
+### Appeal
+
+A challenge to a determination or permit.
+
+Examples:
+
+- neighbor appeal of approval
+- applicant appeal of denial
+- board appeal of zoning administrator action
+
+Rule:
+
+- `Appeal` is the challenge object
+- the hearing or ruling on that appeal may also produce a `Meeting`, `Proceeding`, or `Decision`
 
 ### Charge
 

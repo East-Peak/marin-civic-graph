@@ -25,9 +25,9 @@ That lets the project answer civic questions without pretending every parser out
 
 The graph should store:
 
-- canonical entities like actors, institutions, places, issues, programs, and cases
-- process entities like meetings, agenda items, decisions, votes, comments, appointments, memberships, money flows, proceedings, charges, custody events, release decisions, dispositions, and sentences
-- record nodes for ordinances, minutes, articles, contracts, packets, and filings
+- canonical entities like actors, institutions, places, projects, issues, programs, and cases
+- process entities like meetings, agenda items, decisions, applications, permits, determinations, conditions, appeals, votes, comments, appointments, memberships, money flows, proceedings, charges, custody events, release decisions, dispositions, and sentences
+- record nodes for ordinances, minutes, articles, contracts, packets, applications, determinations, and filings
 - extracted mentions and candidate claims when they are worth reviewing or linking
 - references back to raw and extracted artifacts on disk
 
@@ -119,6 +119,30 @@ Subtypes:
 - corridor
 - parking_lot
 - address
+- parcel
+- site
+
+### Project
+
+Use for a durable proposal, site-specific thread, or capital concept that persists across one or more applications, determinations, permits, appeals, meetings, or cases.
+
+Examples:
+
+- one housing project
+- one use-permit renewal thread
+- one shelter site proposal
+- one road-diet or streetscape redesign
+
+Key fields:
+
+- `id`
+- `project_type`
+- `name`
+- `primary_place_id`
+- `jurisdiction_place_id`
+- `applicant_actor_id?`
+- `status`
+- `source_system_ref?`
 
 ### Issue
 
@@ -203,6 +227,9 @@ Subtypes:
 - ordinance_introduction
 - ordinance_adoption
 - resolution_adoption
+- permit_approval
+- permit_denial
+- appeal_decision
 - appropriation
 - contract_authorization
 - litigation_position
@@ -219,6 +246,124 @@ Key fields:
 - `status`
 - `decided_at?`
 - `effective_date?`
+
+### Application
+
+Use for a filed request that starts or extends a project review thread.
+
+Examples:
+
+- planning permit application
+- use permit amendment
+- design review application
+- petition for appeal
+
+Key fields:
+
+- `id`
+- `project_id`
+- `institution_id`
+- `application_type`
+- `application_number?`
+- `applicant_actor_id?`
+- `filed_at?`
+- `deemed_complete_at?`
+- `status`
+- `parent_application_id?`
+
+### Permit
+
+Use for a specific entitlement, permit, or authorization attached to a project.
+
+Examples:
+
+- coastal development permit
+- use permit
+- sign permit
+- tree removal permit
+
+Key fields:
+
+- `id`
+- `project_id`
+- `application_id?`
+- `institution_id`
+- `permit_type`
+- `permit_number?`
+- `status`
+- `issued_at?`
+- `expires_at?`
+- `discretionary?`
+
+### Determination
+
+Use for a planning or administrative outcome that may or may not coincide with a meeting vote.
+
+Examples:
+
+- application deemed incomplete
+- CEQA exemption determination
+- approval with conditions
+- denial letter
+- continuation pending revisions
+
+Key fields:
+
+- `id`
+- `project_id`
+- `application_id?`
+- `institution_id`
+- `determination_type`
+- `status`
+- `decided_at?`
+- `related_decision_id?`
+- `appeal_deadline_at?`
+
+### Condition
+
+Use for one requirement attached to a project outcome.
+
+Examples:
+
+- landscaping requirement
+- hours-of-operation limit
+- mitigation monitoring condition
+- design revision requirement
+
+Key fields:
+
+- `id`
+- `project_id`
+- `determination_id?`
+- `permit_id?`
+- `condition_number?`
+- `condition_type`
+- `text`
+- `status`
+- `due_at?`
+
+### Appeal
+
+Use for a challenge to a permit or determination.
+
+Examples:
+
+- neighborhood appeal of approval
+- applicant appeal of denial
+- board appeal of zoning administrator decision
+
+Key fields:
+
+- `id`
+- `project_id`
+- `from_determination_id?`
+- `from_permit_id?`
+- `appellant_actor_id?`
+- `institution_id`
+- `filed_at?`
+- `status`
+- `hearing_meeting_id?`
+- `outcome_decision_id?`
 
 ### VoteCast
 
@@ -471,6 +616,7 @@ Subclasses:
 - `contract_record`
 - `legal_record`
 - `program_record`
+- `administrative_record`
 
 Key fields:
 
@@ -673,6 +819,34 @@ Typical relationship chain:
 - meeting `CONTAINS` agenda item
 - decision `PART_OF` agenda item
 
+### Planning Application Or Permit Thread
+
+Typical outputs:
+
+- one `Project`
+- one or more `Application`
+- zero or more `Record` nodes for application forms, completeness letters, hearing notices, staff reports, determination letters, permit cards, and appeal filings
+- zero or more `Determination`
+- zero or more `Condition`
+- zero or more `Permit`
+- zero or more `Appeal`
+- optional `Meeting` or `Proceeding`
+- optional `Decision`
+- optional `Case`
+
+Typical relationship chain:
+
+- application record `record_describes_project` project
+- application record `record_starts_process` application
+- application `FOR_PROJECT` project
+- hearing notice `record_for_event` meeting or proceeding
+- staff report `record_introduces_decision` determination or decision
+- determination `FOR_APPLICATION` application
+- permit `FOR_PROJECT` project
+- appeal `CHALLENGES` determination
+- appeal decision `FOR_PROJECT` project
+- case `ABOUT` project if litigated
+
 ### Ordinance Or Resolution
 
 Typical outputs:
@@ -746,6 +920,7 @@ Usually keep as `Claim` first:
 The graph should support these first:
 
 - actor -> records, comments, money, memberships, mentions
+- project -> applications, permits, determinations, appeals, records, places
 - issue -> decisions, meetings, records, places, recurring actors
 - decision -> supporting records, votes, money, related program, affected place
 - record -> what it says, what it attaches to, what claims came from it
