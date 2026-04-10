@@ -65,6 +65,7 @@ Start narrow:
 - [Jurisdiction Source Map](./docs/jurisdiction-source-map.md)
 - [Ingestion Agents](./docs/ingestion-agents.md)
 - [Source Registry Format](./docs/source-registry-format.md)
+- [Seed Source Registry](./registry/README.md)
 - [Media Attribution Rules](./docs/media-attribution-rules.md)
 - [Backlog](./docs/backlog.md)
 - [Case Study 01](./docs/case-studies/01-san-rafael-homelessness.md)

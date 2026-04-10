@@ -1,0 +1,506 @@
+version: 1
+updated_at: 2026-04-10
+sources:
+  - source_id: marin-county-bos-meetings
+    label: Marin County Board of Supervisors Meetings
+    owner_type: institution
+    owner_id: marin-county-board-of-supervisors
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: meetings
+    source_type: html_index
+    entry_url: https://www.marincounty.gov/departments/board/board-supervisors-meetings
+    discovery_urls:
+      - https://www.marincounty.gov/departments/board/clerk-board
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - agenda_item
+      - document:agenda
+      - document:packet
+      - document:minutes
+      - document:video
+    cadence: daily
+    history_depth: archive
+    source_tier_default: B
+    robots_notes: county site may return 403 to some automated clients; browser and normal web access still show usable public pages
+    review_risk: low
+    dedupe_key_strategy: meeting_date_plus_url
+    notes:
+      - High-value county meeting spine.
+      - Explicitly advertises reports, minutes, and video.
+
+  - source_id: marin-county-campaign-finance-netfile
+    label: Marin County Campaign Finance Portal
+    owner_type: jurisdiction
+    owner_id: marin-county
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: campaign_finance
+    source_type: campaign_portal
+    entry_url: https://netfile.com/agency/cmar/
+    discovery_urls:
+      - https://www.marincounty.gov/departments/elections/current-election/candidate-guide/campaign-finance-reporting-and-information
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:campaign_filing
+      - money_flow:campaign_contribution
+      - money_flow:campaign_expenditure
+      - actor
+    cadence: election_cycle
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public portal
+    review_risk: medium
+    dedupe_key_strategy: committee_plus_filing_period_plus_document
+    notes:
+      - Primary portal for local campaign disclosure.
+      - Likely needs source-specific normalization for committees and filing periods.
+
+  - source_id: san-rafael-city-council-meetings
+    label: San Rafael City Council Meetings
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: meetings
+    source_type: html_index
+    entry_url: https://www.cityofsanrafael.org/city-council-meetings/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/departments/public-meetings/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - agenda_item
+      - document:agenda
+      - document:packet
+      - document:minutes
+      - document:video
+    cadence: daily
+    history_depth: archive
+    source_tier_default: B
+    robots_notes: public city page
+    review_risk: low
+    dedupe_key_strategy: meeting_date_plus_url
+    notes:
+      - High-value city meeting spine.
+      - Strong candidate for first production fetcher.
+
+  - source_id: san-rafael-boards-and-commissions-index
+    label: San Rafael Boards and Commissions Index
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: meetings
+    source_type: html_index
+    entry_url: https://www.cityofsanrafael.org/board-and-commission-meetings/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/boards-commissions/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - institution
+      - seat
+      - meeting
+      - document:agenda
+      - document:minutes
+      - document:video
+    cadence: weekly
+    history_depth: archive
+    source_tier_default: B
+    robots_notes: public city page
+    review_risk: low
+    dedupe_key_strategy: body_plus_meeting_date_plus_url
+    notes:
+      - Important for commission expansion after city council.
+
+  - source_id: san-rafael-disclosures
+    label: San Rafael Disclosures Page
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: disclosures
+    source_type: html_index
+    entry_url: https://www.cityofsanrafael.org/disclosures/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/departments/city-clerks-office/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:form700
+      - document:form803
+      - document:form804
+      - document:form806
+      - actor
+    cadence: monthly
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public city page
+    review_risk: medium
+    dedupe_key_strategy: form_type_plus_year_plus_actor
+    notes:
+      - Important for official disclosure context.
+      - May expose campaign-adjacent and conflict-of-interest material.
+
+  - source_id: san-rafael-aug-19-2024-council-meeting
+    label: San Rafael City Council Meeting on August 19 2024
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: meetings
+    source_type: document_landing_page
+    entry_url: https://www.cityofsanrafael.org/meetings/city-council-august-19-2024/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/city-council-meetings/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - agenda_item
+      - decision
+      - document:agenda
+      - document:packet
+      - document:minutes
+      - document:video
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city meeting page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Tactical entry point for case study 01.
+      - Should anchor the first end-to-end extraction run.
+
+  - source_id: san-rafael-aug-19-2024-staff-report
+    label: San Rafael August 19 2024 Homelessness Staff Report
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: documents
+    source_type: document_landing_page
+    entry_url: https://www.cityofsanrafael.org/documents/august-19-2024-staff-report-camping-ordinance-amendments-report-on-homelessness/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/meetings/city-council-august-19-2024/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:staff_report
+      - decision
+      - money_flow:contract
+      - money_flow:grant
+      - place
+      - issue
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public city document page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Likely one of the most information-dense documents in the first case study.
+      - Attachments may contain contracts, maps, or supplemental correspondence.
+
+  - source_id: san-rafael-grants-pass-statement
+    label: San Rafael Statement on Grants Pass
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: official_communications
+    source_type: article
+    entry_url: https://www.cityofsanrafael.org/city-of-san-rafael-statement-on-grants-pass-decision/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:official_statement
+      - decision
+      - issue
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city news page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Important snapshot of city framing on June 28, 2024.
+
+  - source_id: san-rafael-grants-pass-explainer
+    label: San Rafael Grants Pass Explainer
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: official_communications
+    source_type: article
+    entry_url: https://www.cityofsanrafael.org/supreme-courts-grants-pass-ruling-its-effect-on-san-rafaels-encampment-policy/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:official_explainer
+      - claim
+      - issue
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Important for preserving the city's later explanation that Boyd was not purely an Eighth Amendment issue.
+
+  - source_id: san-rafael-camping-implementation-plan
+    label: San Rafael Camping Ordinance Implementation Approach and Plan
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: official_communications
+    source_type: article
+    entry_url: https://www.cityofsanrafael.org/camping-ordinance-implementation-approach-plan/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:implementation_plan
+      - place
+      - actor
+      - claim
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Explicitly names nonprofit partners and describes incentives and place-specific restrictions.
+
+  - source_id: san-rafael-sanctioned-camping-area
+    label: San Rafael Sanctioned Camping Area Page
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: official_communications
+    source_type: article
+    entry_url: https://www.cityofsanrafael.org/sanctioned-camping-area/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:program_page
+      - place
+      - actor
+      - claim
+    cadence: weekly
+    history_depth: rolling_window
+    source_tier_default: B
+    robots_notes: public city page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Operational page for the program itself.
+      - Likely useful for participant counts, rules, and timeline snapshots.
+
+  - source_id: san-rafael-homelessness-update-june-2024
+    label: San Rafael Homelessness Update June 2024
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: official_communications
+    source_type: article
+    entry_url: https://www.cityofsanrafael.org/homelessness-update-june-2024-2/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:update
+      - decision
+      - place
+      - actor
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Useful for timeline stitching around May-June 2024.
+
+  - source_id: san-rafael-homelessness-update-nov-2024
+    label: San Rafael Homelessness News Update November 21 2024
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: official_communications
+    source_type: article
+    entry_url: https://www.cityofsanrafael.org/homelessness-news-update-november-21-2024/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:update
+      - actor
+      - place
+      - claim
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Establishes opening date and operational state of the sanctioned camping area.
+
+  - source_id: san-rafael-homelessness-update-jan-2025
+    label: San Rafael Homelessness News Update January 24 2025
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: official_communications
+    source_type: article
+    entry_url: https://www.cityofsanrafael.org/homelessness-news-update-january-24-2025/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:update
+      - actor
+      - place
+      - claim
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Extends the operational timeline into early 2025.
+
+  - source_id: san-rafael-boyd-dismissal-news-release
+    label: San Rafael News Release on Boyd Dismissal
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: litigation
+    source_type: article
+    entry_url: https://www.cityofsanrafael.org/news-release-federal-judge-dismisses-lawsuit-limiting-city-regulation-of-camping-on-public-property/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:news_release
+      - case_participation
+      - decision
+      - claim
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Key source for the city's litigation timeline summary.
+
+  - source_id: sf-city-attorney-grants-pass-amicus
+    label: San Francisco City Attorney Grants Pass Amicus Post
+    owner_type: external
+    owner_id: san-francisco-city-attorney
+    jurisdiction_id: san-francisco
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: litigation
+    source_type: article
+    entry_url: https://sfcityattorney.org/san-francisco-files-amicus-brief-with-u-s-supreme-court-in-grants-pass/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:official_statement
+      - case_participation
+      - claim
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city-attorney page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - External context for how San Francisco framed the Supreme Court case.
+
+  - source_id: marin-ij-homelessness-coverage
+    label: Marin Independent Journal Homelessness Coverage
+    owner_type: external
+    owner_id: marin-independent-journal
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: media
+    source_type: article_archive
+    entry_url: https://www.marinij.com/
+    fetch_strategy: manual_operator
+    browser_required: true
+    auth_required: true
+    paywall_status: mixed_archive
+    login_owner: operator
+    expected_objects:
+      - document:article
+      - article_mention
+      - claim
+    cadence: manual
+    history_depth: archive
+    source_tier_default: C
+    robots_notes: use operator-assisted access when subscription is available
+    review_risk: high
+    dedupe_key_strategy: canonical_article_url
+    notes:
+      - High-value local-media source for actor framing and quote extraction.
+      - Full-text access may depend on operator login and archive availability.

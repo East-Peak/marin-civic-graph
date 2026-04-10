@@ -33,6 +33,8 @@ label: San Rafael City Council Meetings
 owner_type: institution
 owner_id: san-rafael-city-council
 jurisdiction_id: san-rafael
+case_study_ids:
+  - san-rafael-homelessness-01
 source_category: meetings
 source_type: html_index
 entry_url: https://www.cityofsanrafael.org/city-council-meetings/
@@ -67,6 +69,7 @@ notes:
 - `owner_type`
 - `owner_id`
 - `jurisdiction_id`
+- `case_study_ids`
 
 ### Classification
 
@@ -113,6 +116,7 @@ Allowed values:
 Examples:
 
 - `meetings`
+- `official_communications`
 - `disclosures`
 - `campaign_finance`
 - `contracts`
@@ -131,6 +135,7 @@ Examples:
 - `legistar`
 - `campaign_portal`
 - `article`
+- `article_archive`
 - `document_landing_page`
 
 ### `fetch_strategy`
@@ -153,6 +158,7 @@ Examples:
 - `meeting`
 - `agenda_item`
 - `decision`
+- `claim`
 - `document:agenda`
 - `document:packet`
 - `document:minutes`
@@ -205,6 +211,16 @@ Examples:
 - `jurisdiction_scope`
 - `place_scope`
 - `notes`
+
+## `case_study_ids`
+
+Use this field when a source is directly tied to one or more named case studies.
+
+Examples:
+
+- `san-rafael-homelessness-01`
+
+This is mainly a planning and scoping convenience.
 
 ## Paywall / Auth Fields
 
