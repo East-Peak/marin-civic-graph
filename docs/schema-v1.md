@@ -2,6 +2,10 @@
 
 The schema should stay small and composable.
 
+This is the compact summary.
+
+For the layered version of what belongs in the graph database, see [Graph Data Model](./graph-data-model.md).
+
 ## Core Principle
 
 Store concrete events and records.
@@ -202,6 +206,43 @@ Key fields:
 - `slug`
 - `description?`
 
+### Program
+
+Represents:
+
+- sanctioned camping program
+- work program
+- outreach program
+- shelter operation
+
+Key fields:
+
+- `id`
+- `name`
+- `program_type`
+- `operator_actor_id?`
+- `status`
+- `start_date?`
+- `end_date?`
+
+### Case
+
+Represents:
+
+- lawsuit
+- appeal
+- enforcement dispute
+
+Key fields:
+
+- `id`
+- `name`
+- `case_type`
+- `court_name?`
+- `status`
+- `filed_at?`
+- `closed_at?`
+
 ### Place
 
 Represents:
@@ -221,6 +262,25 @@ Key fields:
 - `jurisdiction_id?`
 - `lat?`
 - `lon?`
+
+### RecordSegment
+
+Represents:
+
+- ordinance pages split out of a packet
+- contract exhibit inside a resolution bundle
+- quoted section inside an article
+- correspondence section inside a report
+
+Key fields:
+
+- `id`
+- `record_id`
+- `segment_type`
+- `title?`
+- `page_start?`
+- `page_end?`
+- `text_path?`
 
 ## Event Nodes
 
@@ -266,22 +326,61 @@ Make these first-class so they can carry date, role, confidence, and evidence.
 ### CaseParticipation
 
 - `id`
-- `case_name`
-- `actor_id`
+- `case_id`
+- `actor_id?`
+- `institution_id?`
 - `role`
-- `date?`
+- `start_date?`
+- `end_date?`
 
-### ArticleMention
+### Mention
 
 - `id`
 - `record_id`
+- `segment_id?`
 - `actor_id?`
+- `institution_id?`
+- `place_id?`
+- `issue_id?`
 - `name_raw`
 - `role_label?`
 - `affiliation_label?`
 - `quote_excerpt?`
 - `mention_type`
 - `confidence`
+
+### Claim
+
+Represents a candidate assertion derived from one or more records.
+
+Examples:
+
+- actor affiliation
+- duplicate record match
+- article framing claim
+- decision authorization claim
+
+Key fields:
+
+- `id`
+- `claim_type`
+- `subject_node_id`
+- `object_node_id?`
+- `value_text?`
+- `value_number?`
+- `status`
+- `confidence`
+- `derived_from_record_id`
+
+### Lead
+
+Represents a useful but unverified pointer.
+
+Examples:
+
+- anecdote
+- tip
+- unresolved social-media assertion
 
 ## Core Relationships
 
@@ -292,7 +391,11 @@ Make these first-class so they can carry date, role, confidence, and evidence.
 - agenda_item `RESULTS_IN` decision
 - decision `ABOUT` issue
 - decision `AFFECTS` place
-- document `EVIDENCES` meeting / agenda_item / decision / money_flow / comment
+- decision `IMPLEMENTS` program
+- case `INVOLVES` actor / institution
+- record `EVIDENCES` meeting / agenda_item / decision / money_flow / comment / claim
+- record `ATTACHED_TO` record
+- record_segment `PART_OF` record
 - actor `MADE` public_comment
 - actor `MADE` money_flow
 - actor `RECEIVED` money_flow

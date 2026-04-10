@@ -61,6 +61,7 @@ Start narrow:
 - [Project Brief](./docs/project-brief.md)
 - [Borrow Map](./docs/borrow-map.md)
 - [Schema v1](./docs/schema-v1.md)
+- [Graph Data Model](./docs/graph-data-model.md)
 - [Record Model](./docs/record-model.md)
 - [Entity Glossary](./docs/entity-glossary.md)
 - [Jurisdiction Source Map](./docs/jurisdiction-source-map.md)

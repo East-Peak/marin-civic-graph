@@ -180,6 +180,36 @@ Rule:
 
 - issues are cross-cutting tags, not institutions and not events
 
+### Program
+
+An ongoing operational effort that persists across multiple decisions, records, and updates.
+
+Examples:
+
+- sanctioned camping program
+- outreach team
+- work program
+- shelter operation
+
+Rule:
+
+- use `Program` when the thing being tracked has operators, updates, and implementation over time
+- do not collapse a long-running program into one decision or one place
+
+### Case
+
+A lawsuit or other formal dispute that appears across many records and process events.
+
+Examples:
+
+- `Boyd v. City of San Rafael`
+- `City of Grants Pass v. Johnson`
+
+Rule:
+
+- use `Case` for the durable dispute object
+- use `CaseParticipation` for the role an actor or institution played in it
+
 ### Place
 
 A geographic object relevant to governance or impact.
@@ -196,6 +226,22 @@ Examples:
 Rule:
 
 - use `Place` whenever geography matters to jurisdiction, impact, or repeated conflict
+
+### RecordSegment
+
+A bounded part of a larger record that matters operationally.
+
+Examples:
+
+- ordinance pages inside a packet
+- contract exhibit inside a resolution bundle
+- quote block inside an article
+- correspondence section inside a staff report
+
+Rule:
+
+- use `RecordSegment` when the parent record still matters
+- promote a segment into its own `Record` when users will need to browse, cite, or relate to it directly
 
 ## Event Objects
 
@@ -246,9 +292,9 @@ Examples:
 - amicus
 - counsel
 
-### ArticleMention
+### Mention
 
-A record that an actor was named, quoted, paraphrased, or described in a media record.
+A record that an actor, institution, place, or issue was named, quoted, paraphrased, or described in a record.
 
 Examples:
 
@@ -256,11 +302,13 @@ Examples:
 - nonprofit spokesperson
 - attorney for plaintiffs
 - city spokesperson
+- place named in minutes
+- organization named in a staff report
 
 Why it matters:
 
 - local media often introduces actors without clearly surfacing their deeper affiliations
-- this object preserves the raw article framing before the system resolves it against other evidence
+- records in general often introduce names before the system resolves them against other evidence
 
 Suggested fields:
 
@@ -270,6 +318,11 @@ Suggested fields:
 - quote excerpt
 - resolved actor if known
 - confidence
+
+Note:
+
+- older notes may still say `ArticleMention`
+- treat that as the media-specific version of `Mention`
 
 ## Evidence Terms
 
