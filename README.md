@@ -71,6 +71,7 @@ Start narrow:
 - [Permits, Applications, And Denials Submodel](./docs/permits-applications-denials-submodel.md)
 - [Permit Layer Source Bundle](./docs/permit-layer-source-bundle.md)
 - [Permit Layer Ingestion Checklist](./docs/permit-layer-ingestion-checklist.md)
+- [Permit Sample Basket Selection](./docs/permit-sample-basket-selection.md)
 - [Record Model](./docs/record-model.md)
 - [Judicial And Oversight Extension](./docs/judicial-and-oversight-extension.md)
 - [Judicial Pressure-Test Basket Source Bundle](./docs/judicial-pressure-test-basket-source-bundle.md)
