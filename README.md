@@ -107,6 +107,7 @@ This repo started as a planning workspace and now includes the first live implem
 
 - source registry seeds
 - raw official source captures for case study 01
+- raw criminal-justice source captures for Marin court and sheriff landing surfaces
 - extracted text and metadata for bundle 01
 - a first normalized candidate bundle centered on the August 19, 2024 San Rafael homelessness decision chain
 - a derived record-splitting layer for August 19 item `5.a`, including ordinance, resolution, contract, site-plan, code-of-conduct, and correspondence child records
