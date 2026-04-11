@@ -68,6 +68,9 @@ Start narrow:
 - [Criminal Justice Submodel](./docs/criminal-justice-submodel.md)
 - [Criminal Sample Basket Source Bundle](./docs/criminal-sample-basket-source-bundle.md)
 - [Criminal Sample Basket Ingestion Checklist](./docs/criminal-sample-basket-ingestion-checklist.md)
+- [Procurement, Grants, Contracts, And Performance Submodel](./docs/procurement-grants-contracts-submodel.md)
+- [Procurement Layer Source Bundle](./docs/procurement-layer-source-bundle.md)
+- [Procurement Layer Ingestion Checklist](./docs/procurement-layer-ingestion-checklist.md)
 - [Permits, Applications, And Denials Submodel](./docs/permits-applications-denials-submodel.md)
 - [Permit Layer Source Bundle](./docs/permit-layer-source-bundle.md)
 - [Permit Layer Ingestion Checklist](./docs/permit-layer-ingestion-checklist.md)
@@ -116,6 +119,7 @@ This repo started as a planning workspace and now includes the first live implem
 - source registry seeds
 - raw official source captures for case study 01
 - raw criminal-justice source captures for Marin court and sheriff landing surfaces
+- procurement-layer schema, source bundle, and checklist for Marin County and San Rafael funding and contract workflows
 - permit-layer schema, source bundle, and checklist for Marin County and San Rafael planning workflows
 - first permit execution slice with raw captures for selected city and county project threads plus a normalized project-discovery bundle
 - first appeal-chain split for P4134 with explicit determination, appeal, meeting, and decision candidates

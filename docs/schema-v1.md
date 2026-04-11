@@ -116,6 +116,118 @@ Key fields:
 - `status`
 - `effective_date?`
 
+### Procurement
+
+Represents:
+
+- request for proposals
+- request for qualifications
+- invitation for bids
+- emergency procurement
+- sole-source procurement
+
+Key fields:
+
+- `id`
+- `institution_id`
+- `procurement_type`
+- `title`
+- `solicitation_number?`
+- `procurement_method?`
+- `status`
+- `issued_at?`
+- `due_at?`
+- `project_id?`
+- `program_id?`
+
+### Agreement
+
+Represents:
+
+- professional services agreement
+- public works contract
+- grant agreement
+- subrecipient agreement
+- memorandum of understanding
+
+Key fields:
+
+- `id`
+- `institution_id`
+- `counterparty_actor_id`
+- `agreement_type`
+- `agreement_number?`
+- `procurement_id?`
+- `project_id?`
+- `program_id?`
+- `status`
+- `effective_start?`
+- `effective_end?`
+- `not_to_exceed_amount?`
+
+### Amendment
+
+Represents:
+
+- contract amendment
+- grant amendment
+- no-cost extension
+- amount increase
+- scope change
+
+Key fields:
+
+- `id`
+- `agreement_id`
+- `amendment_type`
+- `sequence_number?`
+- `status`
+- `decided_at?`
+- `effective_date?`
+- `delta_amount?`
+- `new_total_amount?`
+- `term_extended_to?`
+
+### Deliverable
+
+Represents:
+
+- annual work plan
+- quarterly report
+- outreach milestone
+- reimbursement request
+
+Key fields:
+
+- `id`
+- `agreement_id?`
+- `program_id?`
+- `deliverable_type`
+- `title`
+- `due_at?`
+- `submitted_at?`
+- `status`
+
+### PerformanceReview
+
+Represents:
+
+- single audit finding
+- recovery-plan progress report
+- program update
+- compliance review
+
+Key fields:
+
+- `id`
+- `agreement_id?`
+- `program_id?`
+- `review_type`
+- `period_start?`
+- `period_end?`
+- `status`
+- `summary?`
+
 ### MoneyFlow
 
 Represents:
@@ -135,6 +247,8 @@ Key fields:
 - `from_actor_id?`
 - `to_actor_id?`
 - `related_decision_id?`
+- `agreement_id?`
+- `amendment_id?`
 - `related_issue_ids[]`
 
 ### Record
@@ -244,6 +358,8 @@ Key fields:
 Represents:
 
 - sanctioned camping program
+- grant-funded initiative
+- capital funding program
 - work program
 - outreach program
 - shelter operation

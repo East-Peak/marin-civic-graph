@@ -365,6 +365,126 @@ Key fields:
 - `hearing_meeting_id?`
 - `outcome_decision_id?`
 
+### Procurement
+
+Use for a bounded public solicitation or vendor-selection process.
+
+Examples:
+
+- request for proposals
+- request for qualifications
+- invitation for bids
+- emergency procurement
+
+Key fields:
+
+- `id`
+- `institution_id`
+- `procurement_type`
+- `title`
+- `solicitation_number?`
+- `procurement_method?`
+- `status`
+- `issued_at?`
+- `due_at?`
+- `project_id?`
+- `program_id?`
+
+### Agreement
+
+Use for the ongoing contractual or grant relationship, not just the approval vote or the PDF itself.
+
+Examples:
+
+- professional services agreement
+- public works contract
+- grant agreement
+- on-call consultant agreement
+- memorandum of understanding
+
+Key fields:
+
+- `id`
+- `institution_id`
+- `counterparty_actor_id`
+- `agreement_type`
+- `agreement_number?`
+- `procurement_id?`
+- `project_id?`
+- `program_id?`
+- `status`
+- `effective_start?`
+- `effective_end?`
+- `not_to_exceed_amount?`
+
+### Amendment
+
+Use for one bounded change to an agreement.
+
+Examples:
+
+- amount increase
+- scope change
+- term extension
+- no-cost extension
+
+Key fields:
+
+- `id`
+- `agreement_id`
+- `amendment_type`
+- `sequence_number?`
+- `status`
+- `decided_at?`
+- `effective_date?`
+- `delta_amount?`
+- `new_total_amount?`
+- `term_extended_to?`
+
+### Deliverable
+
+Use for one promised output or reporting milestone under an agreement or funded program.
+
+Examples:
+
+- annual work plan
+- quarterly progress report
+- reimbursement request
+- outreach milestone
+
+Key fields:
+
+- `id`
+- `agreement_id?`
+- `program_id?`
+- `deliverable_type`
+- `title`
+- `due_at?`
+- `submitted_at?`
+- `status`
+
+### PerformanceReview
+
+Use for public evaluation, compliance, or monitoring objects tied to agreements or programs.
+
+Examples:
+
+- single audit finding
+- recovery-plan performance report
+- subrecipient compliance review
+- board update on contracted outcomes
+
+Key fields:
+
+- `id`
+- `agreement_id?`
+- `program_id?`
+- `review_type`
+- `period_start?`
+- `period_end?`
+- `status`
+- `summary?`
+
 ### VoteCast
 
 Use for individual member votes.
@@ -439,6 +559,8 @@ Key fields:
 - `from_institution_id?`
 - `to_institution_id?`
 - `decision_id?`
+- `agreement_id?`
+- `amendment_id?`
 - `program_id?`
 
 ### CaseParticipation

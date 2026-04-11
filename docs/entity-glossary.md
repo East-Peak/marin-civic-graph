@@ -104,6 +104,88 @@ Rule:
 - not every agenda item results in a decision
 - not every decision happens inside a meeting
 
+### Procurement
+
+A bounded public solicitation or vendor-selection process.
+
+Examples:
+
+- RFP
+- RFQ
+- invitation for bids
+- emergency procurement
+- sole-source procurement
+
+Rule:
+
+- use `Procurement` for the selection process
+- do not collapse the process into the later contract PDF or approval vote
+
+### Agreement
+
+The operative contractual or grant relationship between a public institution and a counterparty.
+
+Examples:
+
+- professional services agreement
+- public works contract
+- grant agreement
+- subrecipient agreement
+- memorandum of understanding
+
+Rule:
+
+- the approval action is a `Decision`
+- the PDF is a `Record`
+- the ongoing relationship is an `Agreement`
+
+### Amendment
+
+A bounded change to an existing agreement.
+
+Examples:
+
+- first amendment
+- no-cost extension
+- increase in compensation
+- scope revision
+
+Rule:
+
+- use `Amendment` when the public record treats the change as its own approval or document
+- do not overwrite the base agreement node with later totals
+
+### Deliverable
+
+A promised output or reporting milestone under an agreement or funded program.
+
+Examples:
+
+- quarterly report
+- work plan
+- outreach milestone
+- reimbursement package
+
+Rule:
+
+- use `Deliverable` when a public record gives the obligation enough shape to track separately
+
+### PerformanceReview
+
+A public evaluation, compliance, or monitoring object tied to an agreement or funded program.
+
+Examples:
+
+- single audit finding
+- recovery-plan report
+- subrecipient monitoring review
+- board update on program outcomes
+
+Rule:
+
+- use `PerformanceReview` for the evaluative object
+- keep the underlying report or audit PDF as a `Record`
+
 ### Record
 
 A source artifact that can evidence an object or event.
@@ -192,6 +274,8 @@ An ongoing operational effort that persists across multiple decisions, records, 
 Examples:
 
 - sanctioned camping program
+- grant-funded initiative
+- capital program
 - outreach team
 - work program
 - shelter operation

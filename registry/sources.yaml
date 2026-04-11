@@ -1639,3 +1639,264 @@ sources:
     dedupe_key_strategy: exact_url
     notes:
       - Named appeal filing surfaced on the December 8, 2025 P4134 hearing page.
+
+  - source_id: marin-county-contracting-opportunities
+    label: Marin County Contracting Opportunities
+    owner_type: jurisdiction
+    owner_id: marin-county
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: procurement
+    source_type: solicitation_index
+    entry_url: https://www.marincounty.gov/contracting-opportunities
+    discovery_urls:
+      - https://publicworks.marincounty.gov/agencies/procurement/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - procurement
+      - record:solicitation
+      - record:addendum
+      - actor
+    cadence: weekly
+    history_depth: latest_plus_archive_if_listed
+    source_tier_default: A
+    robots_notes: public county-wide solicitation surface
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Strong county discovery surface for RFP, RFQ, and IFB opportunities.
+
+  - source_id: marin-county-procurement-division
+    label: Marin County Procurement Division
+    owner_type: institution
+    owner_id: marin-county-procurement
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: procurement
+    source_type: program_page
+    entry_url: https://publicworks.marincounty.gov/agencies/procurement/
+    discovery_urls:
+      - https://www.marincounty.gov/contracting-opportunities
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - institution
+      - procurement
+      - record:procurement_manual
+      - record:procurement_form
+      - claim
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public procurement guidance surface
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Useful for procurement policy, methods, and vendor requirements.
+
+  - source_id: marin-county-budget-and-priority-setting
+    label: Marin County Budget and Priority Setting
+    owner_type: institution
+    owner_id: marin-county-office-county-executive
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: finance
+    source_type: program_page
+    entry_url: https://www.marincounty.gov/departments/executive/budget-and-priority-setting
+    discovery_urls:
+      - https://www.marincounty.gov/departments/executive
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - program
+      - money_flow
+      - record:budget_report
+      - record:financial_statement
+      - claim
+    cadence: monthly
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public county budget and executive-policy surface
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Gateway to budget reports, service metrics, delegated agreements, and recovery-fund reporting.
+
+  - source_id: marin-county-service-metrics
+    label: Marin County How We Measure Success
+    owner_type: institution
+    owner_id: marin-county-office-county-executive
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: performance
+    source_type: metrics_page
+    entry_url: https://www.marincounty.gov/departments/executive/budget-and-priority-setting/how-we-measure-success
+    discovery_urls:
+      - https://www.marincounty.gov/departments/executive/budget-and-priority-setting
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - program
+      - performance_review
+      - record:performance_report
+      - claim
+    cadence: monthly
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public county performance and metrics explainer surface
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Useful for public-service outcome context tied to funded programs.
+
+  - source_id: marin-county-slfrf
+    label: Marin County State and Local Fiscal Recovery Funds
+    owner_type: institution
+    owner_id: marin-county-office-county-executive
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: grants
+    source_type: recovery_plan_page
+    entry_url: https://www.marincounty.gov/departments/executive/budget-and-priority-setting/how-were-using-state-and-local-fiscal-recovery-funds
+    discovery_urls:
+      - https://www.marincounty.gov/departments/executive/budget-and-priority-setting
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - program
+      - money_flow
+      - performance_review
+      - record:recovery_plan
+      - claim
+    cadence: annual
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public county federal-recovery-funds reporting surface
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Strong grant-allocation and reporting surface for program-level funding decisions.
+
+  - source_id: marin-county-acfr-2024
+    label: Marin County FY 2024 ACFR
+    owner_type: jurisdiction
+    owner_id: marin-county
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: finance
+    source_type: annual_financial_report
+    entry_url: https://assets.marincounty.gov/marincounty-prod/public/2025-03/acfr-fiscal-year-2024.pdf
+    discovery_urls:
+      - https://www.marincounty.gov/departments/executive/budget-and-priority-setting
+    fetch_strategy: pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - record:financial_statement
+      - claim
+      - money_flow
+    cadence: annual
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: direct county PDF financial statement
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Useful for grant, liability, and fund-accounting context.
+
+  - source_id: san-rafael-bids-and-proposals
+    label: San Rafael Bids and Proposals
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: procurement
+    source_type: solicitation_index
+    entry_url: https://www.cityofsanrafael.org/bids-and-proposals/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/news/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - procurement
+      - record:solicitation
+      - record:addendum
+      - actor
+    cadence: weekly
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public city solicitation surface for bids, RFPs, and RFQs
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Strongest city-wide discovery surface for procurement opportunities.
+
+  - source_id: san-rafael-acfr-2023
+    label: San Rafael ACFR 2023
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: finance
+    source_type: annual_financial_report
+    entry_url: https://www.cityofsanrafael.org/documents/san-rafael-acfr-2023/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/departments/finance/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - record:financial_statement
+      - claim
+      - money_flow
+    cadence: annual
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public city financial-report document page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Useful for city-wide grant, capital, and fund-accounting context.
+
+  - source_id: san-rafael-single-audit-2023
+    label: San Rafael 2023 Single Audit
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: performance
+    source_type: single_audit
+    entry_url: https://www.cityofsanrafael.org/documents/2023-single-audit/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/departments/finance/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - performance_review
+      - record:single_audit
+      - claim
+    cadence: annual
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public city audit and federal-awards compliance surface
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Useful for grant compliance and program monitoring context.

@@ -168,6 +168,23 @@ Why this matters:
 
 - the graph should ingest records as records, not just preserve them as page ranges inside a giant packet
 
+### Procurement / Grant Pressure Test
+
+Pressure-test the procurement, grant, contract, and performance layer on one county thread and one city thread.
+
+Should include:
+
+- solicitation
+- approval decision
+- operative agreement
+- amendment or renewal
+- program or project linkage
+- audit or performance surface if public
+
+Why this matters:
+
+- this is one of the strongest accountability surfaces for NGOs, vendors, consultants, and public spending
+
 ## Longer-Term
 
 ### NGO Influence Map

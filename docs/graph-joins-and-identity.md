@@ -86,6 +86,12 @@ Examples:
 - `membership.actor_id`
 - `appointment.seat_id`
 - `decision.case_id`
+- `procurement.program_id`
+- `agreement.procurement_id`
+- `agreement.counterparty_actor_id`
+- `amendment.agreement_id`
+- `deliverable.agreement_id`
+- `performance_review.program_id`
 - `application.project_id`
 - `permit.project_id`
 - `determination.application_id`
@@ -174,6 +180,11 @@ Use for things that happened:
 - `determination-*`
 - `condition-*`
 - `appeal-*`
+- `procurement-*`
+- `agreement-*`
+- `amendment-*`
+- `deliverable-*`
+- `performance-review-*`
 - `vote-*`
 - `comment-*`
 - `moneyflow-*`

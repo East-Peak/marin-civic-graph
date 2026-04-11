@@ -188,13 +188,16 @@ Primary record types:
 New graph objects:
 
 - `Procurement`
-- `ContractAmendment`
-- `GrantProgram`
+- `Agreement`
+- `Amendment`
 - `Deliverable`
 - `PerformanceReview`
 
 Key joins:
 
+- solicitation `Procurement`
+- award or approval `Decision`
+- operative `Agreement`
 - vendor or grantee `Actor`
 - approving `Decision`
 - operating `Program`
@@ -203,7 +206,7 @@ Key joins:
 
 Recommended first deliverable:
 
-- one recurring vendor or nonprofit across multiple decisions and renewals
+- one recurring vendor or nonprofit across a solicitation, award, amendment, and performance or audit surface
 
 ### 5. Campaign Finance, Disclosures, And Influence
 
