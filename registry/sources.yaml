@@ -750,12 +750,13 @@ sources:
     cadence: weekly
     history_depth: archive
     source_tier_default: A
-    robots_notes: public Laserfiche folder linked from the San Rafael disclosures page; page browsing requires session bootstrap and listing likely needs JSON endpoint work
+    robots_notes: public Laserfiche folder linked from the San Rafael disclosures page; anonymous GetFolderListing probes currently fail and election landing pages are the safer discovery surface for child candidate folders
     review_risk: medium
     dedupe_key_strategy: entry_id
     notes:
       - This appears to be the city-side destination for local financial filings rather than the SEI NetFile portal.
       - Same municipality, different filing family, different destination path.
+      - The November 5 2024 city election page exposes candidate-specific child folder IDs even though anonymous top-level folder enumeration is currently unstable.
 
   - source_id: san-rafael-public-records-independent-expenditures-folder
     label: San Rafael public records portal independent expenditures folder
@@ -782,12 +783,13 @@ sources:
     cadence: weekly
     history_depth: archive
     source_tier_default: A
-    robots_notes: public Laserfiche folder linked from the San Rafael disclosures page; session bootstrap likely required before listing calls succeed
+    robots_notes: public Laserfiche folder linked from the San Rafael disclosures page; anonymous GetFolderListing probes currently fail and page-linked discovery is safer than direct top-level listing
     review_risk: medium
     dedupe_key_strategy: entry_id
     notes:
       - San Rafael appears to split local financial filings and independent-expenditure filings into separate public-records destinations.
       - Useful example of municipality-specific source fragmentation that should be documented per jurisdiction.
+      - The current working independent-expenditure discovery layer includes the city election page and direct DocView links such as the city ordinance referenced there.
 
   - source_id: san-rafael-kate-colin-form-803-2025-09-04
     label: Kate Colin Form 803 in San Rafael public records

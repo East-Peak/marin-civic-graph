@@ -37,10 +37,10 @@ The key questions are:
 | Major planning projects / applications | `san-rafael-major-planning-projects`, `san-rafael-opengov-planning-category`, `san-rafael-apply-to-planning-online` | mixed `wordpress_proudcity` + external planning system | mixed public pages with external destination | project-by-project, not one clean archive | `2020-01-01` | `weekly` | partial | Discovery is on city pages; operative records may live elsewhere |
 | Form 700 disclosures | `san-rafael-sei-netfile-portal`, `san-rafael-sei-rss-feed` | `netfile_campaign_portal` | public portal + RSS + direct filing image | filing history by filer / period | `2019-01-01` | `weekly` | strong | Best current city filing surface for structured disclosure backfill |
 | Form 803 disclosures | `san-rafael-public-records-form-803-search`, `san-rafael-kate-colin-form-803-2025-09-04` | `laserfiche_public_records` | `cookie_aware_json` | searchable public-records corpus | `2019-01-01` | `weekly` | first live slice | Strong example of filing family living outside NetFile |
-| Campaign financial filings | `san-rafael-public-records-financial-filings-folder` | `laserfiche_public_records` | likely `cookie_aware_json` listing + record capture | folder-style archive | `2019-01-01` | `weekly` | destination confirmed, adapter not built | This is the likely city-side campaign filing destination |
-| Independent expenditures | `san-rafael-public-records-independent-expenditures-folder` | `laserfiche_public_records` | likely `cookie_aware_json` listing + record capture | folder-style archive | `2019-01-01` | `weekly` | destination confirmed, adapter not built | Separate official destination from campaign filing folder |
+| Campaign financial filings | `san-rafael-public-records-financial-filings-folder` | `laserfiche_public_records` | `cookie_aware_json` probe + page-linked discovery | top-level folder plus child candidate folders | `2019-01-01` | `weekly` | partial | Destination confirmed; anonymous folder enumeration currently fails, so election pages are the current discovery backbone |
+| Independent expenditures | `san-rafael-public-records-independent-expenditures-folder` | `laserfiche_public_records` | `cookie_aware_json` probe + page-linked discovery | folder-style archive plus source-linked direct records | `2019-01-01` | `weekly` | partial | Separate official destination from campaign filing folder; top-level listing currently does not yield a usable anonymous inventory |
 | Procurement / bids / project awards | `san-rafael-bids-and-proposals`, city council meeting records, Downtown Library thread | mixed `wordpress_proudcity` + council packets | public page + linked packet PDFs | mixed archive / project pages | `2020-01-01` | `weekly` | usable | Actual agreement lineage often lives in council packets, not procurement page alone |
-| Election / canvass pages | `san-rafael-november-5-2024-election` | `wordpress_proudcity` | `static_public_page` | election-specific landing pages | `2020-01-01` | `manual` | usable | Good for seat and outcome resolution, not primary filing discovery |
+| Election / canvass pages | `san-rafael-november-5-2024-election` | `wordpress_proudcity` | `static_public_page` | election-specific landing pages | `2020-01-01` | `manual` | usable | Good for seat and outcome resolution, and currently the cleanest way to enumerate candidate-specific campaign-finance folder IDs |
 
 ### San Rafael Idiosyncrasies
 
@@ -49,6 +49,7 @@ The key questions are:
   - `Form 803` lives in Laserfiche
   - campaign financial filings appear to live in a different Laserfiche folder
   - independent expenditures appear to live in yet another Laserfiche folder
+- The public election pages can expose candidate-specific campaign-finance folder IDs even when the top-level Laserfiche browse URLs do not yield usable anonymous listings.
 - The public disclosures page is a routing surface, not the real data store.
 - Many city policy, procurement, and implementation records are easiest to recover through council packets rather than program pages.
 - San Rafael is a good first municipality precisely because it exposes this fragmentation in a manageable way.

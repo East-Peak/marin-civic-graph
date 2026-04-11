@@ -162,10 +162,11 @@ Sources:
 
 - `san-rafael-public-records-financial-filings-folder`
 - `san-rafael-public-records-independent-expenditures-folder`
+- `san-rafael-november-5-2024-election`
 
 Target:
 
-- backfill filing folders from `2019-01-01` forward if the folder listing supports it
+- backfill city-side campaign filings from `2019-01-01` forward using election landing pages as the current child-folder discovery surface, with direct folder enumeration only where anonymous Laserfiche listing actually works
 
 Expected graph yield:
 
@@ -178,6 +179,7 @@ Expected graph yield:
 Reason:
 
 - this is the missing city-side campaign surface needed for true local media-to-campaign overlaps
+- the current working discovery pattern is `disclosures page -> top-level folder ids`, then `election page -> candidate-specific folder ids`
 
 ## Wave 01 Exclusions
 

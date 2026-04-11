@@ -128,6 +128,7 @@ Start narrow:
 - [San Rafael City Council Archive Inventory](./data/extracted/san-rafael-city-council-meetings/2026-04-11.json)
 - [Marin County BOS Archive Inventory](./data/extracted/marin-county-bos-meetings/2026-04-11.json)
 - [Marin County Campaign Finance Yearly Export Inventory](./data/extracted/marin-county-campaign-finance-yearly-exports/2026-04-11.json)
+- [San Rafael City-Side Campaign Filing Inventory](./data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json)
 - [Item 5.a Split Map](./data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-record-splits.json)
 - [Item 5.a Normalized Record Splits](./data/normalized/san-rafael-homelessness-01/aug-19-item-5a-record-splits.json)
 - [Procurement Sample Basket Bundle](./data/normalized/procurement-sample-basket-01/bundle-01.json)
@@ -139,6 +140,7 @@ Start narrow:
 - [Case Study 01 Extractor](./scripts/extract_case_study_01_bundle.py)
 - [San Rafael Form 803 Capture Workflow](./scripts/capture_san_rafael_form803.py)
 - [San Rafael City Council Archive Capture Workflow](./scripts/capture_san_rafael_city_council_archive.py)
+- [San Rafael City-Side Campaign Filing Inventory Workflow](./scripts/capture_san_rafael_city_campaign_filing_inventory.py)
 - [Marin County BOS Archive Capture Workflow](./scripts/capture_marin_county_bos_archive.py)
 - [Marin County Campaign Finance Export Capture Workflow](./scripts/capture_marin_county_campaign_finance_exports.py)
 
@@ -166,6 +168,11 @@ This repo started as a planning workspace and now includes the first live implem
   - captured amended-only yearly export ZIPs for `2019` through `2026`
   - recorded portal year coverage back to `1997` and current election-tree labels for public election context
   - confirmed the operating split: yearly export is the historical backfill surface, while RSS remains the near-real-time change feed
+- fourth wave-01 source execution started for `San Rafael city-side campaign filings`:
+  - added a derived inventory workflow that uses existing San Rafael disclosure and 2024 election pages to enumerate city-side campaign filing destinations
+  - captured the two top-level Laserfiche filing destinations and `10` candidate-specific child folder IDs exposed on the November 5, 2024 election page
+  - recorded the current adapter boundary explicitly: anonymous Laserfiche folder-listing probes for both top-level folders and a sampled child folder currently fail with session-limit error `[9030]`
+  - confirmed the current working discovery pattern is `disclosures page -> top-level folder ids -> election page -> candidate-specific child folder ids`
 - raw official source captures for case study 01
 - raw criminal-justice source captures for Marin court and sheriff landing surfaces
 - campaign-finance and disclosure layer formalized around `Election`, `Committee`, `Candidacy`, `Filing`, and `EconomicInterestDisclosure`

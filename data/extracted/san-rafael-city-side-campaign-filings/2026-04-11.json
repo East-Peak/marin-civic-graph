@@ -1,0 +1,228 @@
+{
+  "capture_date": "2026-04-11",
+  "captured_at": "2026-04-11T20:49:13Z",
+  "derived_from": [
+    {
+      "source_id": "san-rafael-disclosures",
+      "path": "data/raw/san-rafael-disclosures/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-5-2024-election",
+      "path": "data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html"
+    }
+  ],
+  "top_level_destinations": [
+    {
+      "source_id": "san-rafael-public-records-financial-filings-folder",
+      "label": "View Financial Filings",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31076&dbid=0&repo=CityofSanRafael&cr=1",
+      "folder_entry_id": 31076
+    },
+    {
+      "source_id": "san-rafael-public-records-independent-expenditures-folder",
+      "label": "View Independent Expenditures Filings",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=25358&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 25358
+    }
+  ],
+  "top_level_folder_probes": [
+    {
+      "source_id": "san-rafael-public-records-financial-filings-folder",
+      "folder_entry_id": 31076,
+      "probe": {
+        "status": "ok",
+        "request_payload": {
+          "repoName": "CityofSanRafael",
+          "entryId": 31076,
+          "startRow": 0,
+          "endRow": 25,
+          "sortColumn": null,
+          "sortDirection": 0,
+          "getNewListing": true,
+          "displayInGridView": true
+        },
+        "response": {
+          "data": {
+            "name": null,
+            "folderId": 1,
+            "colTypes": null,
+            "results": null,
+            "failed": true,
+            "errMsg": "Sign in failed because the number of sessions has reached the licensed limit, or the user account has reached its session limit, or no named user license has been allocated to the user account. [9030]",
+            "entryType": 0,
+            "path": null,
+            "parentId": 0,
+            "showColumnPicker": false,
+            "totalEntries": 0,
+            "sortAscending": false,
+            "sortColumn": null
+          },
+          "__breach": "4uVhAlZ0OMblR82ypGqEkz"
+        },
+        "failed": true,
+        "error_message": "Sign in failed because the number of sessions has reached the licensed limit, or the user account has reached its session limit, or no named user license has been allocated to the user account. [9030]",
+        "total_entries": 0
+      }
+    },
+    {
+      "source_id": "san-rafael-public-records-independent-expenditures-folder",
+      "folder_entry_id": 25358,
+      "probe": {
+        "status": "ok",
+        "request_payload": {
+          "repoName": "CityofSanRafael",
+          "entryId": 25358,
+          "startRow": 0,
+          "endRow": 25,
+          "sortColumn": null,
+          "sortDirection": 0,
+          "getNewListing": true,
+          "displayInGridView": true
+        },
+        "response": {
+          "data": {
+            "name": null,
+            "folderId": 1,
+            "colTypes": null,
+            "results": null,
+            "failed": true,
+            "errMsg": "Sign in failed because the number of sessions has reached the licensed limit, or the user account has reached its session limit, or no named user license has been allocated to the user account. [9030]",
+            "entryType": 0,
+            "path": null,
+            "parentId": 0,
+            "showColumnPicker": false,
+            "totalEntries": 0,
+            "sortAscending": false,
+            "sortColumn": null
+          },
+          "__breach": "tEsVoDI/xq1ics5gisUi"
+        },
+        "failed": true,
+        "error_message": "Sign in failed because the number of sessions has reached the licensed limit, or the user account has reached its session limit, or no named user license has been allocated to the user account. [9030]",
+        "total_entries": 0
+      }
+    }
+  ],
+  "candidate_folder_inventory": [
+    {
+      "section_label": "City of San Rafael Election",
+      "office_label": "Mayoral Candidates",
+      "candidate_name": "Kate Colin",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=35554&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 35554
+    },
+    {
+      "section_label": "City of San Rafael Election",
+      "office_label": "Mayoral Candidates",
+      "candidate_name": "Mahmoud Shirazi",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=36469&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 36469
+    },
+    {
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 4 Candidates",
+      "candidate_name": "Rachel Kertz",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=36450&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 36450
+    },
+    {
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 4 Candidates",
+      "candidate_name": "Mark Galperin",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=37449&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 37449
+    },
+    {
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 1 Candidate",
+      "candidate_name": "Maika Llorens Gulati",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=36529&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 36529
+    },
+    {
+      "section_label": "City of San Rafael Election",
+      "office_label": "City Attorney Candidate",
+      "candidate_name": "Robert Epstein",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=37362&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 37362
+    },
+    {
+      "section_label": "City of San Rafael Election",
+      "office_label": "Clerk & Assessor Candidate",
+      "candidate_name": "Lindsay Lara",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=37451&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 37451
+    },
+    {
+      "section_label": "San Rafael City Schools",
+      "office_label": "Governing Board Member, Trustee Area 1",
+      "candidate_name": "Mark Koerner",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=37259&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 37259
+    },
+    {
+      "section_label": "San Rafael City Schools",
+      "office_label": "Governing Board Member, Trustee Area 3",
+      "candidate_name": "Maureen 'Mo' de Nieva-Marsh",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=37376&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 37376
+    },
+    {
+      "section_label": "San Rafael City Schools",
+      "office_label": "Governing Board Member, Trustee Area 5",
+      "candidate_name": "Isai Rodas",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=37459&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 37459
+    }
+  ],
+  "candidate_folder_count": 10,
+  "independent_expenditure_resource": {
+    "label": "City of San Rafael Independent Expenditure Ordinance",
+    "record_url": "http://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=10756&searchid=35c8afd5-3ac3-45a3-aa75-9695eaa5c1c5&dbid=0&repo=CityofSanRafael",
+    "record_entry_id": 10756
+  },
+  "sample_child_folder_probe": {
+    "candidate_name": "Kate Colin",
+    "office_label": "Mayoral Candidates",
+    "folder_entry_id": 35554,
+    "probe": {
+      "status": "ok",
+      "request_payload": {
+        "repoName": "CityofSanRafael",
+        "entryId": 35554,
+        "startRow": 0,
+        "endRow": 25,
+        "sortColumn": null,
+        "sortDirection": 0,
+        "getNewListing": true,
+        "displayInGridView": true
+      },
+      "response": {
+        "data": {
+          "name": null,
+          "folderId": 1,
+          "colTypes": null,
+          "results": null,
+          "failed": true,
+          "errMsg": "Sign in failed because the number of sessions has reached the licensed limit, or the user account has reached its session limit, or no named user license has been allocated to the user account. [9030]",
+          "entryType": 0,
+          "path": null,
+          "parentId": 0,
+          "showColumnPicker": false,
+          "totalEntries": 0,
+          "sortAscending": false,
+          "sortColumn": null
+        },
+        "__breach": "oRmcJvDHRJi5luExgqzFWjRCxqB"
+      },
+      "failed": true,
+      "error_message": "Sign in failed because the number of sessions has reached the licensed limit, or the user account has reached its session limit, or no named user license has been allocated to the user account. [9030]",
+      "total_entries": 0
+    }
+  },
+  "notes": [
+    "San Rafael city-side campaign filings are publicly routed through the disclosures page and cycle-specific election pages.",
+    "The 2024 election page exposes candidate-specific campaign-finance folder IDs even though anonymous folder-listing probes currently fail.",
+    "Until Laserfiche folder enumeration becomes reliably accessible, the safest backfill strategy is page-linked folder discovery plus record-level capture where direct document links are exposed."
+  ]
+}
