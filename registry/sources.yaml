@@ -653,6 +653,66 @@ sources:
     notes:
       - Best first discovery surface for recent San Rafael Form 700 activity.
 
+  - source_id: san-rafael-public-records-form-803-search
+    label: San Rafael public records portal Form 803 search surface
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: disclosures
+    source_type: search_portal
+    entry_url: https://publicrecords.cityofsanrafael.org/WebLink/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/disclosures/
+    fetch_strategy: cookie_aware_json
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - filing
+      - document:form803
+      - claim
+    cadence: occasional
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public Laserfiche portal; anonymous session required before search JSON endpoints succeed
+    review_risk: medium
+    dedupe_key_strategy: search_query_plus_entry_id
+    notes:
+      - First confirmed local San Rafael surface that exposes filed Form 803 records.
+      - Public search results for quoted query `Form 803` return entry ID 41053 for `Form 803 - Kate Colin`.
+
+  - source_id: san-rafael-kate-colin-form-803-2025-09-04
+    label: Kate Colin Form 803 in San Rafael public records
+    owner_type: actor
+    owner_id: kate-colin
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: disclosures
+    source_type: public_records_document
+    entry_url: https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=41053&dbid=0&repo=CityofSanRafael
+    discovery_urls:
+      - https://publicrecords.cityofsanrafael.org/WebLink/
+      - https://www.cityofsanrafael.org/disclosures/
+    fetch_strategy: cookie_aware_json
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - filing
+      - document:form803
+      - actor
+      - money_flow:behested_payment
+    cadence: record
+    history_depth: record
+    source_tier_default: A
+    robots_notes: public Laserfiche record; metadata and OCR text accessible through JSON endpoints after anonymous session setup
+    review_risk: medium
+    dedupe_key_strategy: entry_id
+    notes:
+      - First captured local San Rafael Form 803 sample.
+      - Extractable OCR text exposes the payor, payee, payment date, amount, and purpose fields needed for a first behested-payment normalization pass.
+
   - source_id: san-rafael-quinn-gardner-form-700-2026-04-08
     label: Quinn Gardner annual Form 700 filed on April 8 2026
     owner_type: actor

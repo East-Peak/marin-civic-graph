@@ -140,7 +140,7 @@ Mirror the question here when it affects:
 
 ### OQ-016: San Rafael local Form 803 filing surface
 
-- `status`: open
+- `status`: resolved
 - `layer`: disclosure surface discovery
 - `scope`: `campaign-finance-form-803-slice-01`
 - `source refs`:
@@ -149,9 +149,12 @@ Mirror the question here when it affects:
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-sei-netfile-portal/2026-04-11/source.html)
   - [document.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-governance-protocols-2026/2026-04-11/document.pdf)
   - [agenda-packet.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-2026-01-20-agenda-packet/2026-04-11/agenda-packet.pdf)
+  - [search-results.json](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-public-records-form-803-search/2026-04-11/search-results.json)
+  - [metadata.json](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-kate-colin-form-803-2025-09-04/2026-04-11/metadata.json)
+  - [source.txt](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-kate-colin-form-803-2025-09-04/2026-04-11/source.txt)
 - `question`: What exact local San Rafael surface exposes filed Form 803 reports for local officials, if any?
 - `why it matters`: The local-versus-state filing rule is now clear, but the project still lacks the first actual local Form 803 filing needed to promote a real behested-payment `Filing` and `MoneyFlow`.
-- `next evidence`: search City Clerk, local public-records surfaces, and later meeting packets for an actual filed Form 803 or posting page.
+- `resolution note`: Resolved through the San Rafael public Laserfiche portal. A quoted search for `Form 803` in the public records corpus returns `Form 803 - Kate Colin` as entry `41053`, and the same portal exposes both record metadata and extractable OCR page text through public JSON endpoints. That is strong enough to promote the first local `Filing` and `MoneyFlow: behested_payment` objects in the Form 803 slice.
 
 ### OQ-013: Mary Sackett seat and election boundary
 

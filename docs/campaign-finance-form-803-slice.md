@@ -4,13 +4,12 @@ Verified: April 11, 2026
 
 This note takes the Form 803 / behested-payment thread from a reserve idea into a concrete slice.
 
-The goal is not to pretend we already have a clean local Form 803 filing feed.
-
 The goal is to:
 
 - verify the real local-versus-state filing boundary
 - capture the official San Rafael records that currently expose behested-payment guidance
-- identify the exact local filing-surface gap that still blocks the first true local Form 803 sample
+- identify the actual local filing surface
+- capture the first true local San Rafael Form 803 sample
 
 ## What The Official Surfaces Show
 
@@ -54,6 +53,41 @@ As of this verification pass:
 
 No `Form 803` or `Behested` option is visible in the public SEI portal UI that is currently captured.
 
+### San Rafael's public records portal does expose filed local Form 803 records
+
+The missing surface turned out to be the City's public Laserfiche portal, not the SEI NetFile UI.
+
+Using the anonymous public-records search backend, a quoted search for `Form 803` returns a real local filing:
+
+- `Form 803 - Kate Colin`
+- entry ID `41053`
+- template `FPPC Materials`
+- created `9/17/2025 8:21:03 PM`
+- modified `9/18/2025 7:52:23 PM`
+
+The same public portal exposes:
+
+- record metadata, including the public-records path
+- page text through the document text endpoint
+
+That is enough to treat the portal as a real local filing surface and to promote the first local `Filing` and `MoneyFlow: behested_payment` objects.
+
+### First captured local Form 803 sample
+
+The first promoted local sample is the Kate Colin filing.
+
+The extractable filing text supports these fields cleanly enough to normalize:
+
+- official / filer: `Kate Colin`
+- agency: `City of San Rafael`
+- payor: `Pacific Gas and Electric Company`
+- payee: `Canal Alliance`
+- payment date: `2025-08-08`
+- amount: `$5,000`
+- purpose text: `Affordable Applications Training`
+
+One caution remains: some checkbox-driven subfields in the OCR text are noisy. The data model now promotes the clean fields above while leaving checkbox-only analytics fields conservative.
+
 ### San Rafael does publish behested-payment guidance inside City Council governance records
 
 The strongest local public records found in this slice are:
@@ -77,20 +111,16 @@ But it is strong evidence for:
 
 ## What This Slice Produces
 
-This slice is currently a `guidance-and-surface` slice, not a `filed-payment` slice.
+This slice is now a `guidance + filed sample` slice.
 
 It produces:
 
 - `Record` nodes for San Rafael guidance records
+- `Record` nodes for the public-records search result and the first filed local Form 803 sample
 - a cleaner source registry for Form 803 work
-- a normalized methodology bundle documenting the filing boundary
-- one explicit open question for the missing local filed-report surface
-
-It does not yet produce:
-
-- a local `Filing` object for a real San Rafael Form 803
-- a `MoneyFlow` object for an actual behested payment
-- payor/payee/amount normalization from a filed local report
+- a normalized methodology bundle documenting the filing boundary and the first local filing
+- the first local `Filing` object for a real San Rafael Form 803
+- the first local `MoneyFlow: behested_payment`
 
 ## First Captured Records
 
@@ -98,24 +128,26 @@ It does not yet produce:
 - San Rafael SEI portal
 - San Rafael City Council governance protocols page and PDF
 - San Rafael January 20, 2026 City Council agenda-packet page and PDF
+- San Rafael public-records Form 803 search results
+- Kate Colin Form 803 metadata and page text from the public-records portal
 
 ## Promotion Rule
 
 Do not promote a `Form 803` filing or `MoneyFlow: behested_payment` from guidance alone.
 
-Only promote those objects when a filed report or an equivalent official filed-report surface is captured.
+Promote those objects only when a filed report or an equivalent official filed-report surface is captured.
+
+For the current Kate Colin sample:
+
+- the filing shell is official and public
+- the page text is official and public
+- payor, payee, date, amount, and purpose are clean enough to normalize
+- checkbox-only subfields should still be treated cautiously until a higher-fidelity page artifact is captured
 
 ## Next Move
 
 The next real step in this slice is:
 
-1. identify the actual local San Rafael surface where filed Form 803 reports are posted
-2. capture the first filed local Form 803
-3. normalize:
-   - filer / officeholder
-   - filing officer / agency
-   - payor
-   - payee
-   - amount
-   - date
-   - charitable / governmental / legislative purpose
+1. turn the public-records portal discovery into a repeatable capture workflow
+2. search for additional San Rafael local Form 803 filings beyond the Kate Colin sample
+3. decide whether checkbox-derived fields need image verification before broader analytics use

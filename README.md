@@ -149,7 +149,9 @@ This repo started as a planning workspace and now includes the first live implem
     - direct raw captures for the February 5, 2026 City Council governance protocols page/PDF and the January 20, 2026 agenda packet page/PDF
     - verified that the public San Rafael SEI portal is Form 700-oriented and does not visibly expose a Form 803 filing type
     - verified the local-versus-state filing boundary: local officials file Form 803 with the local agency, while FPPC's public Form 803 search is state-level
-    - logged the remaining blocker as a first-class open question: the actual local San Rafael surface for filed Form 803 reports
+    - resolved the local filing-surface blocker through the San Rafael public Laserfiche portal
+    - captured the first real local Form 803 sample, `Form 803 - Kate Colin`
+    - promoted the first local `Filing` plus `MoneyFlow: behested_payment` with payor `Pacific Gas and Electric Company`, payee `Canal Alliance`, amount `$5,000`, date `2025-08-08`, and purpose `Affordable Applications Training`
 - procurement-layer schema, source bundle, and checklist for Marin County and San Rafael funding and contract workflows
 - selected first procurement sample basket:
   - county `Board Chambers Audio Visual Refresh / Prime Electric`
