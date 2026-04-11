@@ -2213,3 +2213,65 @@ sources:
     dedupe_key_strategy: exact_url
     notes:
       - Useful for Slot C follow-through on grant compliance and oversight.
+
+  - source_id: san-rafael-downtown-library-first-amendment-staff-report
+    label: San Rafael Downtown Library First Amendment Staff Report
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: documents
+    source_type: staff_report_pdf
+    entry_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/09/4.d-Downtown-Library-Modernization-Project-Agreement-Amendment.pdf
+    discovery_urls:
+      - https://www.cityofsanrafael.org/meetings/city-council-september-18-2023/
+    fetch_strategy: pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - agreement
+      - amendment
+      - decision
+      - record:staff_report
+      - money_flow
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: direct city PDF linked from the September 18, 2023 Council page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Tactical Slot B staff report for the first Noll and Tam amendment.
+
+  - source_id: san-rafael-downtown-library-second-amendment-staff-report
+    label: San Rafael Downtown Library Second Amendment Staff Report
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: documents
+    source_type: staff_report_pdf
+    entry_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/04/4.j-Downtown-Library-Renovation-Project.pdf
+    discovery_urls:
+      - https://www.cityofsanrafael.org/meetings/city-council-april-7-2025-special-regular/
+    fetch_strategy: pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - agreement
+      - amendment
+      - decision
+      - record:staff_report
+      - money_flow
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: direct city PDF linked from the April 7, 2025 Council page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Tactical Slot B staff report covering the later Noll and Tam and Unger amendments.

@@ -106,6 +106,7 @@ Start narrow:
 - [Marin IJ Citation Layer](./data/normalized/san-rafael-homelessness-01/marin-ij-citation-layer.json)
 - [Item 5.a Split Map](./data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-record-splits.json)
 - [Item 5.a Normalized Record Splits](./data/normalized/san-rafael-homelessness-01/aug-19-item-5a-record-splits.json)
+- [Procurement Sample Basket Bundle](./data/normalized/procurement-sample-basket-01/bundle-01.json)
 - [Permit Sample Basket Bundle](./data/normalized/permit-sample-basket-01/bundle-01.json)
 - [P4134 Appeal Chain Split](./data/normalized/permit-sample-basket-01/p4134-appeal-chain.json)
 
@@ -125,6 +126,11 @@ This repo started as a planning workspace and now includes the first live implem
   - county `Board Chambers Audio Visual Refresh / Prime Electric`
   - city `Downtown Library Renovation Project`
   - county `State and Local Fiscal Recovery Funds (SLFRF)`
+- first procurement execution slice with:
+  - direct raw HTML captures for the selected San Rafael project, procurement, meeting, and reopening pages
+  - direct city PDF captures for the first and second Downtown Library amendment staff reports
+  - transparent county text-proxy captures for blocked procurement, recovery-plan, and audit surfaces
+  - first normalized procurement basket linking `Procurement`, `Agreement`, `Amendment`, `Program`, `PerformanceReview`, and `MoneyFlow` candidates
 - permit-layer schema, source bundle, and checklist for Marin County and San Rafael planning workflows
 - first permit execution slice with raw captures for selected city and county project threads plus a normalized project-discovery bundle
 - first appeal-chain split for P4134 with explicit determination, appeal, meeting, and decision candidates

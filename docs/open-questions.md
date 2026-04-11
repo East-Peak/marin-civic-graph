@@ -138,6 +138,59 @@ Mirror the question here when it affects:
 - `why it matters`: This is the same join problem that will recur across meetings, votes, appointments, and disclosures.
 - `next evidence`: build the first canonical `Person` seeds for San Rafael electeds and map the August 19 records against them.
 
+### OQ-009: Prime Electric approval packet gap
+
+- `status`: open
+- `layer`: procurement joins
+- `scope`: `project-bos-chambers-av-refresh`
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/procurement-sample-basket-01/bundle-01.json)
+  - [source.txt](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-bos-chamber-upgrades-news-release/2026-04-11/source.txt)
+  - [source.txt](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-rfp-2883-bos-chambers-av-refresh/2026-04-11/source.txt)
+- `question`: What is the exact Marin County Board record set for the October 21, 2025 Prime Electric approval?
+- `why it matters`: The current county-side chain has the solicitation and a later official release, but it is still missing the meeting packet, staff report, and operative contract record that would anchor the `Decision -> Agreement` join cleanly.
+- `next evidence`: capture the October 21, 2025 Board meeting page, packet, and any linked agreement or staff report.
+
+### OQ-010: Downtown Library agreement-family boundary
+
+- `status`: open
+- `layer`: procurement schema
+- `scope`: `project-downtown-library-renovation`
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/procurement-sample-basket-01/bundle-01.json)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-2023-09-18-downtown-library/2026-04-11/source.html)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-2025-04-07-downtown-library/2026-04-11/source.html)
+  - [staff-report.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-downtown-library-first-amendment-staff-report/2026-04-11/staff-report.pdf)
+  - [staff-report.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-downtown-library-second-amendment-staff-report/2026-04-11/staff-report.pdf)
+- `question`: Should the Downtown Library architect and construction threads remain separate `Agreement` objects with a shared parent `Project`, or should they also roll up into a project-level contract family abstraction?
+- `why it matters`: This is a direct pressure test of whether the procurement layer can stay specific enough for contract analytics without losing the user-facing “one project” view.
+- `next evidence`: inspect the captured staff reports and any later signed agreement pages for the Noll & Tam and Unger actions, then compare how the city itself groups the contract family.
+
+### OQ-011: Downtown Library State Library funding claim
+
+- `status`: watch
+- `layer`: claim promotion
+- `scope`: `project-downtown-library-renovation`
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/procurement-sample-basket-01/bundle-01.json)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-downtown-library-reopening/2026-04-11/source.html)
+- `question`: What is the underlying official award record for the reopening page’s statement that the renovation was funded by the State of California and administered by the California State Library?
+- `why it matters`: The graph should not promote that sentence into a durable `Grant` or `MoneyFlow` relationship without the award notice, Council acceptance record, or grant agreement.
+- `next evidence`: capture the underlying grant award surface or city acceptance record before promoting the funding relationship.
+
+### OQ-012: County direct-artifact replacement path
+
+- `status`: watch
+- `layer`: source methodology
+- `scope`: procurement sample basket 01
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/procurement-sample-basket-01/bundle-01.json)
+  - [source.txt](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-bos-chamber-upgrades-news-release/2026-04-11/source.txt)
+  - [source.txt](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-slfrf/2026-04-11/source.txt)
+- `question`: When the environment eventually permits direct county fetches, how should these proxy text captures be superseded without breaking stable record IDs?
+- `why it matters`: The current procurement slice is honest about using text proxies, but the graph needs a stable way to replace proxies with raw HTML/PDF artifacts later.
+- `next evidence`: define a replacement convention where `Record` IDs stay stable while artifact paths and provenance metadata are upgraded.
+
 ## Maintenance
 
 When a question is answered:
