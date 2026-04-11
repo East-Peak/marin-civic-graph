@@ -242,23 +242,33 @@
       "effective_date": null,
       "votes": [
         {
-          "actor_id": "actor-councilmember-bushey",
+          "actor_id": "actor-maribeth-bushey",
+          "seat_id": "seat-san-rafael-city-council-district-3",
+          "seat_service_id": "seatservice-maribeth-bushey-d3-current",
           "vote": "aye"
         },
         {
-          "actor_id": "actor-councilmember-kertz",
+          "actor_id": "actor-rachel-kertz",
+          "seat_id": "seat-san-rafael-city-council-district-4",
+          "seat_service_id": "seatservice-rachel-kertz-d4-current",
           "vote": "aye"
         },
         {
-          "actor_id": "actor-councilmember-llorens-gulati",
+          "actor_id": "actor-maika-llorens-gulati",
+          "seat_id": "seat-san-rafael-city-council-district-1",
+          "seat_service_id": "seatservice-maika-llorens-gulati-d1-current",
           "vote": "aye"
         },
         {
-          "actor_id": "actor-mayor-kate",
+          "actor_id": "actor-kate-colin",
+          "seat_id": "seat-san-rafael-mayor-at-large",
+          "seat_service_id": "seatservice-kate-colin-mayor-current",
           "vote": "aye"
         },
         {
-          "actor_id": "actor-vice-mayor-hill",
+          "actor_id": "actor-eli-hill",
+          "seat_id": "seat-san-rafael-city-council-district-2",
+          "seat_service_id": "seatservice-eli-hill-d2-current",
           "vote": "absent"
         }
       ],
@@ -280,23 +290,33 @@
       "effective_date": "2024-08-19",
       "votes": [
         {
-          "actor_id": "actor-councilmember-bushey",
+          "actor_id": "actor-maribeth-bushey",
+          "seat_id": "seat-san-rafael-city-council-district-3",
+          "seat_service_id": "seatservice-maribeth-bushey-d3-current",
           "vote": "aye"
         },
         {
-          "actor_id": "actor-councilmember-kertz",
+          "actor_id": "actor-rachel-kertz",
+          "seat_id": "seat-san-rafael-city-council-district-4",
+          "seat_service_id": "seatservice-rachel-kertz-d4-current",
           "vote": "aye"
         },
         {
-          "actor_id": "actor-councilmember-llorens-gulati",
+          "actor_id": "actor-maika-llorens-gulati",
+          "seat_id": "seat-san-rafael-city-council-district-1",
+          "seat_service_id": "seatservice-maika-llorens-gulati-d1-current",
           "vote": "aye"
         },
         {
-          "actor_id": "actor-mayor-kate",
+          "actor_id": "actor-kate-colin",
+          "seat_id": "seat-san-rafael-mayor-at-large",
+          "seat_service_id": "seatservice-kate-colin-mayor-current",
           "vote": "aye"
         },
         {
-          "actor_id": "actor-vice-mayor-hill",
+          "actor_id": "actor-eli-hill",
+          "seat_id": "seat-san-rafael-city-council-district-2",
+          "seat_service_id": "seatservice-eli-hill-d2-current",
           "vote": "absent"
         }
       ],
@@ -520,34 +540,50 @@
   ],
   "actor_seed_records": [
     {
-      "id": "actor-mayor-kate",
-      "name": "Mayor Kate",
+      "id": "actor-kate-colin",
+      "name": "Kate Colin",
       "actor_type": "person",
-      "seed_status": "raw_official_label"
+      "seed_status": "canonical_backfill",
+      "observed_labels": [
+        "Mayor Kate",
+        "Mayor Kate Colin"
+      ]
     },
     {
-      "id": "actor-councilmember-bushey",
-      "name": "Councilmember Bushey",
+      "id": "actor-maribeth-bushey",
+      "name": "Maribeth Bushey",
       "actor_type": "person",
-      "seed_status": "raw_official_label"
+      "seed_status": "canonical_backfill",
+      "observed_labels": [
+        "Councilmember Bushey"
+      ]
     },
     {
-      "id": "actor-councilmember-kertz",
-      "name": "Councilmember Kertz",
+      "id": "actor-rachel-kertz",
+      "name": "Rachel Kertz",
       "actor_type": "person",
-      "seed_status": "raw_official_label"
+      "seed_status": "canonical_backfill",
+      "observed_labels": [
+        "Councilmember Kertz"
+      ]
     },
     {
-      "id": "actor-councilmember-llorens-gulati",
-      "name": "Councilmember Llorens Gulati",
+      "id": "actor-maika-llorens-gulati",
+      "name": "Maika Llorens Gulati",
       "actor_type": "person",
-      "seed_status": "raw_official_label"
+      "seed_status": "canonical_backfill",
+      "observed_labels": [
+        "Councilmember Llorens Gulati"
+      ]
     },
     {
-      "id": "actor-vice-mayor-hill",
-      "name": "Vice Mayor Hill",
+      "id": "actor-eli-hill",
+      "name": "Eli Hill",
       "actor_type": "person",
-      "seed_status": "raw_official_label"
+      "seed_status": "canonical_backfill",
+      "observed_labels": [
+        "Vice Mayor Hill"
+      ]
     },
     {
       "id": "actor-cristine-alilovich",
@@ -683,7 +719,6 @@
   ],
   "open_questions": [
     "Move from citation-level Marin IJ records to article-body extraction and quote isolation before adding any media-layer attribution claims.",
-    "Resolve raw-official-label councilmember seeds to canonical person records.",
     "Extract the resolution exhibits into separate contract records rather than leaving them nested inside the item 5.a report.",
     "Move from landing-page campaign finance capture to row-level filing extraction."
   ]
