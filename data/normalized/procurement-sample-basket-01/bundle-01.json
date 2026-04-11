@@ -1,8 +1,8 @@
 {
   "case_study_id": "procurement-sample-basket-01",
   "bundle_id": "procurement-sample-basket-01__bundle-01",
-  "status": "discovery_capture_plus_prime_electric_county_and_downtown_library_2024_award_records",
-  "generated_at": "2026-04-11T12:04:48Z",
+  "status": "discovery_capture_plus_downtown_library_state_funding_records",
+  "generated_at": "2026-04-11T12:10:54Z",
   "scope": {
     "included": [
       "direct city HTML captures for project, procurement, meeting, and completion surfaces",
@@ -158,6 +158,34 @@
       "record_type": "agenda_packet",
       "source_id": "san-rafael-city-council-2024-09-16-agenda-packet",
       "artifact_path": "data/raw/san-rafael-city-council-2024-09-16-agenda-packet/2026-04-11/agenda-packet.pdf"
+    },
+    {
+      "id": "record-srcc-2022-12-19-library-grants",
+      "record_class": "meeting_record",
+      "record_type": "meeting_page",
+      "source_id": "san-rafael-city-council-2022-12-19-library-grants",
+      "artifact_path": "data/raw/san-rafael-city-council-2022-12-19-library-grants/2026-04-11/source.html"
+    },
+    {
+      "id": "record-downtown-library-state-grant-acceptance-staff-report",
+      "record_class": "financial_record",
+      "record_type": "staff_report",
+      "source_id": "san-rafael-downtown-library-state-grant-acceptance-staff-report",
+      "artifact_path": "data/raw/san-rafael-downtown-library-state-grant-acceptance-staff-report/2026-04-11/staff-report.pdf"
+    },
+    {
+      "id": "record-csl-building-forward-report-2021-2022",
+      "record_class": "financial_record",
+      "record_type": "annual_report",
+      "source_id": "california-state-library-building-forward-report-2021-2022",
+      "artifact_path": "data/raw/california-state-library-building-forward-report-2021-2022/2026-04-11/source.txt"
+    },
+    {
+      "id": "record-csl-lds-annual-update-2023-2024",
+      "record_class": "financial_record",
+      "record_type": "annual_report",
+      "source_id": "california-state-library-lds-annual-update-2023-2024",
+      "artifact_path": "data/raw/california-state-library-lds-annual-update-2023-2024/2026-04-11/source.txt"
     }
   ],
   "institution_candidates": [
@@ -195,6 +223,11 @@
       "id": "inst-marin-county-internal-audit",
       "name": "Marin County Internal Audit",
       "institution_type": "county_office"
+    },
+    {
+      "id": "inst-california-state-library",
+      "name": "California State Library",
+      "institution_type": "state_agency"
     }
   ],
   "actor_candidates": [
@@ -254,6 +287,11 @@
       "id": "place-downtown-library-1100-e-st",
       "name": "Downtown Library, 1100 E Street, San Rafael",
       "place_type": "facility"
+    },
+    {
+      "id": "place-california",
+      "name": "California",
+      "place_type": "state"
     }
   ],
   "project_candidates": [
@@ -279,9 +317,13 @@
       "status": "reopened",
       "record_ids": [
         "record-downtown-library-project-page",
-        "record-downtown-library-reopening"
+        "record-downtown-library-reopening",
+        "record-srcc-2022-12-19-library-grants",
+        "record-downtown-library-state-grant-acceptance-staff-report",
+        "record-csl-building-forward-report-2021-2022",
+        "record-csl-lds-annual-update-2023-2024"
       ],
-      "evidence_summary": "The city project page describes the renovation scope and the reopening page says the historic Carnegie Library reopened on August 4, 2025 after extensive renovations."
+      "evidence_summary": "The project is supported by direct city grant-acceptance records and California State Library award records showing a $1,000,000 SB 129 / Building Forward Downtown Carnegie award plus a separate $1,000,000 targeted design-process award."
     }
   ],
   "meeting_candidates": [
@@ -316,6 +358,14 @@
       "record_ids": [
         "record-srcc-2024-09-16-downtown-library",
         "record-srcc-2024-09-16-agenda-packet"
+      ]
+    },
+    {
+      "id": "meeting-2022-12-19-san-rafael-city-council",
+      "institution_id": "inst-san-rafael-city-council",
+      "meeting_date": "2022-12-19",
+      "record_ids": [
+        "record-srcc-2022-12-19-library-grants"
       ]
     }
   ],
@@ -449,6 +499,22 @@
         "record-srcc-2024-09-16-agenda-packet"
       ],
       "authorized_total_amount": 210536.82
+    },
+    {
+      "id": "decision-2022-12-19-downtown-carnegie-grant-acceptance",
+      "institution_id": "inst-san-rafael-city-council",
+      "meeting_id": "meeting-2022-12-19-san-rafael-city-council",
+      "agenda_item_ref": "4.f.i",
+      "decision_type": "grant_acceptance",
+      "decided_at": "2022-12-19",
+      "related_agreement_ids": [
+        "agreement-csl-downtown-carnegie-building-forward"
+      ],
+      "evidence_record_ids": [
+        "record-srcc-2022-12-19-library-grants",
+        "record-downtown-library-state-grant-acceptance-staff-report"
+      ],
+      "authorized_total_amount": 1000000
     }
   ],
   "agreement_candidates": [
@@ -517,6 +583,35 @@
         "record-srcc-2024-09-16-agenda-packet"
       ],
       "effective_start": "2024-09-16"
+    },
+    {
+      "id": "agreement-csl-downtown-carnegie-building-forward",
+      "institution_id": "inst-san-rafael-city-council",
+      "counterparty_actor_id": "actor-california-state-library",
+      "agreement_type": "grant_agreement",
+      "program_id": "program-csl-building-forward",
+      "project_id": "project-downtown-library-renovation",
+      "status": "accepted",
+      "not_to_exceed_amount": 1000000,
+      "evidence_record_ids": [
+        "record-srcc-2022-12-19-library-grants",
+        "record-downtown-library-state-grant-acceptance-staff-report",
+        "record-csl-building-forward-report-2021-2022"
+      ],
+      "effective_start": "2022-12-19"
+    },
+    {
+      "id": "agreement-csl-downtown-carnegie-targeted-design-grant",
+      "institution_id": "inst-san-rafael-city-council",
+      "counterparty_actor_id": "actor-california-state-library",
+      "agreement_type": "grant_agreement",
+      "program_id": "program-csl-targeted-grants",
+      "project_id": "project-downtown-library-renovation",
+      "status": "awarded",
+      "not_to_exceed_amount": 1000000,
+      "evidence_record_ids": [
+        "record-csl-lds-annual-update-2023-2024"
+      ]
     }
   ],
   "amendment_candidates": [
@@ -575,6 +670,28 @@
         "record-slfrf-program-page",
         "record-slfrf-recovery-plan-page",
         "record-slfrf-recovery-plan-2025"
+      ]
+    },
+    {
+      "id": "program-csl-building-forward",
+      "name": "California State Library Building Forward Library Facilities Improvement Program",
+      "program_type": "state_library_facilities_grant_program",
+      "institution_id": "inst-california-state-library",
+      "jurisdiction_place_id": "place-california",
+      "status": "active",
+      "record_ids": [
+        "record-csl-building-forward-report-2021-2022"
+      ]
+    },
+    {
+      "id": "program-csl-targeted-grants",
+      "name": "California State Library Targeted Grants",
+      "program_type": "state_library_targeted_grant_program",
+      "institution_id": "inst-california-state-library",
+      "jurisdiction_place_id": "place-california",
+      "status": "active",
+      "record_ids": [
+        "record-csl-lds-annual-update-2023-2024"
       ]
     }
   ],
@@ -687,11 +804,34 @@
       "evidence_record_ids": [
         "record-downtown-library-construction-award-staff-report"
       ]
+    },
+    {
+      "id": "moneyflow-downtown-carnegie-building-forward-grant-2022",
+      "flow_type": "grant_award",
+      "amount": 1000000,
+      "institution_id": "inst-san-rafael-city-council",
+      "counterparty_actor_id": "actor-california-state-library",
+      "decision_id": "decision-2022-12-19-downtown-carnegie-grant-acceptance",
+      "agreement_id": "agreement-csl-downtown-carnegie-building-forward",
+      "evidence_record_ids": [
+        "record-srcc-2022-12-19-library-grants",
+        "record-downtown-library-state-grant-acceptance-staff-report",
+        "record-csl-building-forward-report-2021-2022"
+      ]
+    },
+    {
+      "id": "moneyflow-downtown-carnegie-targeted-design-grant",
+      "flow_type": "grant_award",
+      "amount": 1000000,
+      "institution_id": "inst-san-rafael-city-council",
+      "counterparty_actor_id": "actor-california-state-library",
+      "agreement_id": "agreement-csl-downtown-carnegie-targeted-design-grant",
+      "evidence_record_ids": [
+        "record-csl-lds-annual-update-2023-2024"
+      ]
     }
   ],
   "open_questions": [
-    "Decide whether the Downtown Library architect and construction agreements should stay separate agreement threads or also roll up into a project-level contract family view.",
-    "Confirm the underlying California State Library award record before promoting the reopening-page funding statement into a grant relationship.",
     "Replace county proxy text captures with direct binary or raw HTML artifacts if the environment later allows first-party fetches."
   ]
 }

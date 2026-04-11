@@ -174,15 +174,19 @@ Mirror the question here when it affects:
 
 ### OQ-011: Downtown Library State Library funding claim
 
-- `status`: watch
+- `status`: resolved
 - `layer`: claim promotion
 - `scope`: `project-downtown-library-renovation`
 - `source refs`:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/procurement-sample-basket-01/bundle-01.json)
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-downtown-library-reopening/2026-04-11/source.html)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-2022-12-19-library-grants/2026-04-11/source.html)
+  - [staff-report.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-downtown-library-state-grant-acceptance-staff-report/2026-04-11/staff-report.pdf)
+  - [source.txt](/Users/tammypais/projects/marin-civic-graph/data/raw/california-state-library-building-forward-report-2021-2022/2026-04-11/source.txt)
+  - [source.txt](/Users/tammypais/projects/marin-civic-graph/data/raw/california-state-library-lds-annual-update-2023-2024/2026-04-11/source.txt)
 - `question`: What is the underlying official award record for the reopening page’s statement that the renovation was funded by the State of California and administered by the California State Library?
 - `why it matters`: The graph should not promote that sentence into a durable `Grant` or `MoneyFlow` relationship without the award notice, Council acceptance record, or grant agreement.
-- `next evidence`: capture the underlying grant award surface or city acceptance record before promoting the funding relationship.
+- `resolution note`: The city-side claim is now backed by primary sources. The December 19, 2022 Council item and staff report confirm a `$1,000,000` SB 129 / Building Forward Downtown Carnegie grant accepted by the City. The California State Library annual update also lists a separate `$1,000,000` Targeted Grant for the `San Rafael Downtown Carnegie Library Preservation, Renovation, and Expansion Design Process`, which supports the city’s later `$2M` State Library funding line for the downtown project.
 
 ### OQ-012: County direct-artifact replacement path
 
