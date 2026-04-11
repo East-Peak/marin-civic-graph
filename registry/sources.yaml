@@ -1900,3 +1900,316 @@ sources:
     dedupe_key_strategy: exact_url
     notes:
       - Useful for grant compliance and program monitoring context.
+
+  - source_id: marin-county-rfp-2883-bos-chambers-av-refresh
+    label: Marin County RFP 2883 Board Chambers Audio Visual Refresh
+    owner_type: jurisdiction
+    owner_id: marin-county
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: procurement
+    source_type: solicitation
+    entry_url: https://www.marincounty.gov/sites/g/files/fdkgoe241/files/2025-04/FINAL%20RFP%20-%20BOS%20Chambers%20Audio%20Visual%20Projects.pdf
+    discovery_urls:
+      - https://www.marincounty.gov/contracting-opportunities
+    fetch_strategy: pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - procurement
+      - actor
+      - record:solicitation
+      - claim
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: direct official county RFP PDF
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Slot A tactical source for the first procurement sample basket.
+      - Should anchor the county-side `Procurement -> Decision -> Agreement` chain.
+
+  - source_id: marin-county-bos-chamber-upgrades-news-release
+    label: Marin County Chamber Upgrades Approval News Release
+    owner_type: jurisdiction
+    owner_id: marin-county
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: official_communications
+    source_type: article
+    entry_url: https://www.marincounty.gov/news-releases/supervisors-relocating-regular-meetings-accommodate-chamber-upgrades
+    discovery_urls:
+      - https://www.marincounty.gov/news-releases
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - decision
+      - agreement
+      - actor
+      - record:official_statement
+      - claim
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public county news release tied to later Board approval
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Tactical Slot A approval surface until the exact Board packet is captured.
+
+  - source_id: san-rafael-downtown-library-renovation-project-page
+    label: San Rafael Downtown Library Renovation Project Page
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: projects
+    source_type: project_page
+    entry_url: https://www.cityofsanrafael.org/downtown-library-renovation/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/news/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - project
+      - agreement
+      - amendment
+      - record:project_update
+      - claim
+    cadence: monthly
+    history_depth: rolling_window
+    source_tier_default: B
+    robots_notes: public city capital-project page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Slot B tactical source for the first city-side contract family.
+      - Useful for completion status and high-level funding context.
+
+  - source_id: san-rafael-downtown-library-renovation-rfp
+    label: San Rafael Downtown Library Renovation Request for Proposals
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: procurement
+    source_type: solicitation
+    entry_url: https://www.cityofsanrafael.org/request-for-proposals-downtown-library-renovation-project/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/bids-and-proposals/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - procurement
+      - actor
+      - record:solicitation
+      - claim
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public city procurement posting
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Tactical Slot B procurement-stage source.
+
+  - source_id: san-rafael-city-council-2023-09-18-downtown-library
+    label: San Rafael City Council September 18 2023 Downtown Library Meeting Surface
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: meetings
+    source_type: document_landing_page
+    entry_url: https://www.cityofsanrafael.org/meetings/city-council-september-18-2023/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/city-council-meetings/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - agenda_item
+      - decision
+      - agreement
+      - amendment
+      - record:agenda
+      - record:packet
+      - record:minutes
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city council meeting page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Tactical Slot B amendment-stage meeting surface.
+
+  - source_id: san-rafael-city-council-2025-04-07-downtown-library
+    label: San Rafael City Council April 7 2025 Downtown Library Meeting Surface
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: meetings
+    source_type: document_landing_page
+    entry_url: https://www.cityofsanrafael.org/meetings/city-council-april-7-2025-special-regular/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/city-council-meetings/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - agenda_item
+      - decision
+      - agreement
+      - amendment
+      - money_flow
+      - record:agenda
+      - record:packet
+      - record:minutes
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city council meeting page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Tactical Slot B later amendment-stage meeting surface.
+
+  - source_id: san-rafael-downtown-library-reopening
+    label: San Rafael Downtown Library Reopening Page
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: official_communications
+    source_type: article
+    entry_url: https://www.cityofsanrafael.org/reopening-downtown-library-after-renovations/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/downtown-library-renovation/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - project
+      - record:project_update
+      - money_flow
+      - claim
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city project-completion update
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Useful for downstream completion reporting and funding claims.
+
+  - source_id: marin-county-slfrf-recovery-plan-page
+    label: Marin County SLFRF Recovery Plan 2025 Report Page
+    owner_type: institution
+    owner_id: marin-county-office-county-executive
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: grants
+    source_type: report_landing_page
+    entry_url: https://www.marincounty.gov/departments/executive/budget-and-priority-setting/how-were-using-state-and-local-fiscal-recovery-funds/recovery-plan-2025-report
+    discovery_urls:
+      - https://www.marincounty.gov/departments/executive/budget-and-priority-setting/how-were-using-state-and-local-fiscal-recovery-funds
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - program
+      - performance_review
+      - record:recovery_plan
+      - claim
+    cadence: annual
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public county recovery-plan landing page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Tactical Slot C reporting surface for the first procurement sample basket.
+
+  - source_id: marin-county-slfrf-recovery-plan-2025-pdf
+    label: Marin County SLFRF Recovery Plan 2025 PDF
+    owner_type: institution
+    owner_id: marin-county-office-county-executive
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: grants
+    source_type: recovery_plan_pdf
+    entry_url: https://assets.marincounty.gov/marincounty-prod/public/2025-07/County%20of%20Marin%20ARPA%20Funds%20report%20-%20Jul%2031%202025.pdf
+    discovery_urls:
+      - https://www.marincounty.gov/departments/executive/budget-and-priority-setting/how-were-using-state-and-local-fiscal-recovery-funds/recovery-plan-2025-report
+    fetch_strategy: pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - program
+      - money_flow
+      - performance_review
+      - record:recovery_plan
+      - claim
+    cadence: annual
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: direct county PDF recovery-plan report
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Strongest Slot C reporting record for funding slices and program narratives.
+
+  - source_id: marin-county-single-audit-reports
+    label: Marin County Single Audit Reports
+    owner_type: jurisdiction
+    owner_id: marin-county
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: performance
+    source_type: single_audit_index
+    entry_url: https://www.marincounty.gov/departments/finance/internal-audit/single-audit-reports
+    discovery_urls:
+      - https://www.marincounty.gov/departments/finance/internal-audit
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - performance_review
+      - record:single_audit
+      - claim
+    cadence: annual
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public county audit and federal-awards compliance index
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Useful for Slot C follow-through on grant compliance and oversight.
