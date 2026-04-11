@@ -1,7 +1,7 @@
 {
   "case_study_id": "procurement-sample-basket-01",
   "bundle_id": "procurement-sample-basket-01__bundle-01",
-  "status": "discovery_capture_plus_downtown_library_state_funding_records",
+  "status": "discovery_capture_plus_proxy_upgrade_rule",
   "generated_at": "2026-04-11T12:10:54Z",
   "scope": {
     "included": [
@@ -832,6 +832,6 @@
     }
   ],
   "open_questions": [
-    "Replace county proxy text captures with direct binary or raw HTML artifacts if the environment later allows first-party fetches."
+
   ]
 }

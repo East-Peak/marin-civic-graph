@@ -225,6 +225,25 @@ Examples:
 The source surface is where we discovered the artifact.
 The record ID is the graph object for the actual artifact.
 
+## Artifact Supersession
+
+Proxy-to-direct upgrades should not break graph identity.
+
+Rules:
+
+- keep `source_id` stable when the source surface is the same
+- create a new `capture_id` for each improved fetch
+- keep the same `record_id` when the newer artifact is the same semantic record
+- update normalized artifact references to the higher-fidelity capture only after review
+- keep the older proxy capture in `data/raw/` for provenance
+
+This means:
+
+- proxy text -> direct PDF is usually a provenance upgrade
+- proxy page -> exact child attachment may require new child `record-*` nodes
+
+The key test is not file format. The key test is object identity.
+
 ## Normalized File Shape
 
 Normalized files should not depend on path-based inference.
@@ -254,6 +273,14 @@ Example pattern:
 ```
 
 The importer should never have to guess the join keys from filenames.
+
+If a normalized object uses a single `artifact_path`, that path should point to the current preferred artifact for that record.
+
+Older captures remain discoverable through:
+
+- the same `source_id`
+- prior raw capture directories
+- raw `manifest.json` files
 
 ## Neo4j Materialization
 

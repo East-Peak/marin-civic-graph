@@ -190,16 +190,19 @@ Mirror the question here when it affects:
 
 ### OQ-012: County direct-artifact replacement path
 
-- `status`: watch
+- `status`: resolved
 - `layer`: source methodology
 - `scope`: procurement sample basket 01
 - `source refs`:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/procurement-sample-basket-01/bundle-01.json)
   - [source.txt](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-bos-chamber-upgrades-news-release/2026-04-11/source.txt)
   - [source.txt](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-slfrf/2026-04-11/source.txt)
+  - [artifact-conventions.md](/Users/tammypais/projects/marin-civic-graph/docs/artifact-conventions.md)
+  - [graph-joins-and-identity.md](/Users/tammypais/projects/marin-civic-graph/docs/graph-joins-and-identity.md)
+  - [source-registry-format.md](/Users/tammypais/projects/marin-civic-graph/docs/source-registry-format.md)
 - `question`: When the environment eventually permits direct county fetches, how should these proxy text captures be superseded without breaking stable record IDs?
 - `why it matters`: The current procurement slice is honest about using text proxies, but the graph needs a stable way to replace proxies with raw HTML/PDF artifacts later.
-- `next evidence`: define a replacement convention where `Record` IDs stay stable while artifact paths and provenance metadata are upgraded.
+- `resolution note`: The replacement convention is now explicit. Keep `source_id` and graph `record_id` stable when the newer artifact is the same semantic record; create a new `capture_id`, keep the older proxy capture in `data/raw/`, rerun extraction, and update the preferred normalized `artifact_path` only after review. Mint a new `record-*` node only when the improved artifact reveals a different object boundary.
 
 ## Maintenance
 

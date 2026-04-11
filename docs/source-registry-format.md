@@ -146,8 +146,14 @@ Allowed values for v1:
 - `json`
 - `static_html`
 - `pdf_download`
+- `text_proxy`
 - `browser_assisted`
 - `manual_operator`
+
+Notes:
+
+- use `text_proxy` when the official source is public but direct CLI fetch is blocked and a transparent text mirror is temporarily required
+- if later direct fetch becomes possible, keep the same `source_id` and change the fetch strategy on the next capture rather than creating a new source entry
 
 ### `expected_objects`
 

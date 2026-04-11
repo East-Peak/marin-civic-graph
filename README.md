@@ -137,6 +137,7 @@ This repo started as a planning workspace and now includes the first live implem
   - resolved county-side amount split for Prime Electric: `$994,866.17` contract, `$99,487` contingency, `$49,884` additional project costs, `$1,144,237` authorized project total
   - resolved the Downtown Library agreement-family boundary in favor of separate `Agreement` objects for Noll & Tam, Unger, and Unico under one shared project
   - resolved the Downtown Library state-funding claim into two California State Library grant relationships: a `$1,000,000` SB 129 / Building Forward award and a separate `$1,000,000` targeted design-process award
+  - resolved the proxy-to-direct replacement rule: keep `source_id` and `record_id` stable, append new captures, and only change the preferred artifact reference when the semantic record is unchanged
 - permit-layer schema, source bundle, and checklist for Marin County and San Rafael planning workflows
 - first permit execution slice with raw captures for selected city and county project threads plus a normalized project-discovery bundle
 - first appeal-chain split for P4134 with explicit determination, appeal, meeting, and decision candidates
