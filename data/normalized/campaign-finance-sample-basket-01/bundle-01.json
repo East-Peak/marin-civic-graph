@@ -1,0 +1,232 @@
+{
+  "case_study_id": "campaign-finance-sample-basket-01",
+  "bundle_id": "campaign-finance-sample-basket-01__bundle-01",
+  "status": "first_capture",
+  "generated_at": "2026-04-11T13:05:00Z",
+  "scope": [
+    "candidate committee discovery",
+    "sponsored committee discovery",
+    "city Form 700 disclosure discovery"
+  ],
+  "record_refs": [
+    {
+      "id": "record-marin-county-campaign-netfile-home",
+      "record_class": "financial_record",
+      "record_type": "campaign_portal",
+      "source_id": "marin-county-campaign-finance-netfile",
+      "artifact_path": "data/raw/marin-county-campaign-finance-netfile/2026-04-11/source.html"
+    },
+    {
+      "id": "record-marin-county-campaign-rss",
+      "record_class": "financial_record",
+      "record_type": "campaign_rss_feed",
+      "source_id": "marin-county-campaign-finance-rss",
+      "artifact_path": "data/raw/marin-county-campaign-finance-rss/2026-04-11/campaign.xml"
+    },
+    {
+      "id": "record-mary-sackett-form-497-2026-04-10",
+      "record_class": "financial_record",
+      "record_type": "form_497",
+      "source_id": "marin-county-mary-sackett-form-497-2026-04-10",
+      "artifact_path": "data/raw/marin-county-mary-sackett-form-497-2026-04-10/2026-04-11/filing.pdf"
+    },
+    {
+      "id": "record-resource-conservation-pac-form-460-2026-04-08",
+      "record_class": "financial_record",
+      "record_type": "form_460",
+      "source_id": "marin-county-resource-conservation-pac-form-460-2026-04-08",
+      "artifact_path": "data/raw/marin-county-resource-conservation-pac-form-460-2026-04-08/2026-04-11/filing.pdf"
+    },
+    {
+      "id": "record-san-rafael-disclosures-page",
+      "record_class": "administrative_record",
+      "record_type": "disclosure_index",
+      "source_id": "san-rafael-disclosures",
+      "artifact_path": "data/raw/san-rafael-disclosures/2026-04-11/source.html"
+    },
+    {
+      "id": "record-san-rafael-sei-portal",
+      "record_class": "financial_record",
+      "record_type": "disclosure_portal",
+      "source_id": "san-rafael-sei-netfile-portal",
+      "artifact_path": "data/raw/san-rafael-sei-netfile-portal/2026-04-11/source.html"
+    },
+    {
+      "id": "record-san-rafael-sei-rss",
+      "record_class": "financial_record",
+      "record_type": "disclosure_rss_feed",
+      "source_id": "san-rafael-sei-rss-feed",
+      "artifact_path": "data/raw/san-rafael-sei-rss-feed/2026-04-11/sei.xml"
+    },
+    {
+      "id": "record-quinn-gardner-form-700-2026-04-08",
+      "record_class": "financial_record",
+      "record_type": "form_700",
+      "source_id": "san-rafael-quinn-gardner-form-700-2026-04-08",
+      "artifact_path": "data/raw/san-rafael-quinn-gardner-form-700-2026-04-08/2026-04-11/filing.pdf"
+    }
+  ],
+  "place_candidates": [
+    {
+      "id": "place-marin-county",
+      "name": "Marin County",
+      "place_type": "county"
+    },
+    {
+      "id": "place-san-rafael",
+      "name": "San Rafael",
+      "place_type": "city"
+    }
+  ],
+  "institution_candidates": [
+    {
+      "id": "inst-marin-county-elections",
+      "name": "Marin County Elections",
+      "institution_type": "elections_office"
+    },
+    {
+      "id": "inst-city-of-san-rafael",
+      "name": "City of San Rafael",
+      "institution_type": "city_government"
+    },
+    {
+      "id": "inst-san-rafael-fire-department",
+      "name": "San Rafael Fire Department",
+      "institution_type": "department",
+      "parent_institution_id": "inst-city-of-san-rafael"
+    }
+  ],
+  "actor_candidates": [
+    {
+      "id": "actor-mary-sackett",
+      "name": "Mary Sackett",
+      "actor_type": "person"
+    },
+    {
+      "id": "actor-dignity-california-seiu-local-2015",
+      "name": "Dignity California Service Employees International Union SEIU Local 2015",
+      "actor_type": "organization"
+    },
+    {
+      "id": "actor-marin-resource-recovery",
+      "name": "Marin Resource Recovery",
+      "actor_type": "business"
+    },
+    {
+      "id": "actor-marie-powers",
+      "name": "Marie Powers",
+      "actor_type": "person"
+    },
+    {
+      "id": "actor-quinn-gardner",
+      "name": "Quinn Gardner",
+      "actor_type": "person"
+    }
+  ],
+  "committee_candidates": [
+    {
+      "id": "committee-mary-sackett-for-marin-county-supervisor-2026",
+      "name": "Mary Sackett for Marin County Supervisor 2026",
+      "committee_type": "candidate_linked_committee",
+      "fppc_id": "1462337",
+      "jurisdiction_place_id": "place-marin-county",
+      "controlling_actor_id": "actor-mary-sackett",
+      "evidence_record_ids": [
+        "record-mary-sackett-form-497-2026-04-10"
+      ]
+    },
+    {
+      "id": "committee-resource-conservation-pac",
+      "name": "Resource Conservation PAC, sponsored by Marin Resource Recovery",
+      "committee_type": "sponsored_general_purpose_committee",
+      "fppc_id": "1347886",
+      "jurisdiction_place_id": "place-marin-county",
+      "sponsored_by_actor_id": "actor-marin-resource-recovery",
+      "treasurer_actor_id": "actor-marie-powers",
+      "evidence_record_ids": [
+        "record-resource-conservation-pac-form-460-2026-04-08"
+      ]
+    }
+  ],
+  "candidacy_candidates": [
+    {
+      "id": "candidacy-mary-sackett-supervisor-2026-unresolved-seat",
+      "candidate_actor_id": "actor-mary-sackett",
+      "committee_id": "committee-mary-sackett-for-marin-county-supervisor-2026",
+      "result_status": "unknown",
+      "evidence_record_ids": [
+        "record-mary-sackett-form-497-2026-04-10"
+      ],
+      "notes": "Committee title shows a supervisor run, but the current filing set does not yet resolve district or election context."
+    }
+  ],
+  "filing_candidates": [
+    {
+      "id": "filing-2026-04-10-mary-sackett-form-497",
+      "filing_type": "form_497",
+      "committee_id": "committee-mary-sackett-for-marin-county-supervisor-2026",
+      "filed_at": "2026-04-10T15:10:38-07:00",
+      "report_no": "4",
+      "page_count": 1,
+      "evidence_record_ids": [
+        "record-mary-sackett-form-497-2026-04-10"
+      ]
+    },
+    {
+      "id": "filing-2026-04-08-resource-conservation-pac-form-460",
+      "filing_type": "form_460",
+      "committee_id": "committee-resource-conservation-pac",
+      "filed_at": "2026-04-08T12:03:30-07:00",
+      "period_start": "2025-07-01",
+      "period_end": "2025-12-31",
+      "status": "amended",
+      "page_count": 10,
+      "evidence_record_ids": [
+        "record-resource-conservation-pac-form-460-2026-04-08"
+      ]
+    }
+  ],
+  "economic_interest_disclosure_candidates": [
+    {
+      "id": "eid-2026-quinn-gardner-annual-form-700",
+      "filer_actor_id": "actor-quinn-gardner",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "department_institution_id": "inst-san-rafael-fire-department",
+      "disclosure_type": "annual",
+      "covering_period_start": "2025-01-01",
+      "covering_period_end": "2025-12-31",
+      "filed_at": "2026-04-08T14:40:15-07:00",
+      "position_title": "Deputy Director of Emergency Management",
+      "evidence_record_ids": [
+        "record-quinn-gardner-form-700-2026-04-08"
+      ]
+    }
+  ],
+  "money_flow_candidates": [
+    {
+      "id": "moneyflow-2026-04-09-seiu-local-2015-to-mary-sackett",
+      "flow_type": "campaign_contribution",
+      "amount": 1000.0,
+      "flow_date": "2026-04-09",
+      "from_actor_id": "actor-dignity-california-seiu-local-2015",
+      "to_committee_id": "committee-mary-sackett-for-marin-county-supervisor-2026",
+      "filing_id": "filing-2026-04-10-mary-sackett-form-497",
+      "contributor_code": "SCC",
+      "evidence_record_ids": [
+        "record-mary-sackett-form-497-2026-04-10"
+      ]
+    }
+  ],
+  "open_questions": [
+    {
+      "id": "campaign-001",
+      "status": "open",
+      "question": "What exact seat, district, and election should the Mary Sackett committee and candidacy join to?"
+    },
+    {
+      "id": "campaign-002",
+      "status": "watch",
+      "question": "What race, measure, or issue context should the Resource Conservation PAC join to before line-item schedule extraction is complete?"
+    }
+  ]
+}

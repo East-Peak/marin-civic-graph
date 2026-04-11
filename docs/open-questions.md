@@ -138,6 +138,31 @@ Mirror the question here when it affects:
 - `why it matters`: This is the same join problem that will recur across meetings, votes, appointments, and disclosures.
 - `next evidence`: build the first canonical `Person` seeds for San Rafael electeds and map the August 19 records against them.
 
+### OQ-013: Mary Sackett seat and election boundary
+
+- `status`: open
+- `layer`: campaign joins
+- `scope`: `committee-mary-sackett-for-marin-county-supervisor-2026`
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
+  - [filing.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-mary-sackett-form-497-2026-04-10/2026-04-11/filing.pdf)
+- `question`: What exact seat, district, and election context should the Mary Sackett committee and candidacy join to?
+- `why it matters`: The current filing title is strong enough to justify a candidate-linked committee and candidacy candidate, but not yet strong enough to safely promote a fully resolved `Seat -> Election -> Candidacy` chain.
+- `next evidence`: capture an official election listing, committee search result, or candidate declaration surface that states the office and district explicitly.
+
+### OQ-014: Resource Conservation PAC beneficiary boundary
+
+- `status`: watch
+- `layer`: campaign methodology
+- `scope`: `committee-resource-conservation-pac`
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
+  - [campaign.xml](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-campaign-finance-rss/2026-04-11/campaign.xml)
+  - [filing.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-resource-conservation-pac-form-460-2026-04-08/2026-04-11/filing.pdf)
+- `question`: What election, measure, or issue thread should the Resource Conservation PAC join to before schedule-level extraction is complete?
+- `why it matters`: The cover page is enough to model the committee, sponsor, treasurer, and filing period, but not enough to safely attach the committee to a specific Marin decision chain without overclaiming.
+- `next evidence`: extract schedule-level transactions and capture any linked election or measure context from official filing or portal records.
+
 ### OQ-009: Prime Electric approval packet gap
 
 - `status`: resolved

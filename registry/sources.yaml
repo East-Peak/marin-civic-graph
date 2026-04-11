@@ -67,6 +67,102 @@ sources:
       - Primary portal for local campaign disclosure.
       - Likely needs source-specific normalization for committees and filing periods.
 
+  - source_id: marin-county-campaign-finance-rss
+    label: Marin County Campaign Finance RSS Feed
+    owner_type: jurisdiction
+    owner_id: marin-county
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: campaign_finance
+    source_type: rss_feed
+    entry_url: https://netfile.com/connect2/api/public/list/filing/rss/CMAR/campaign.xml
+    discovery_urls:
+      - https://public.netfile.com/pub2/?aid=CMAR
+    fetch_strategy: static_xml
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - committee
+      - filing
+      - document:campaign_filing
+      - money_flow:campaign_contribution
+      - money_flow:campaign_expenditure
+    cadence: near_realtime
+    history_depth: recent_window
+    source_tier_default: A
+    robots_notes: public NetFile RSS feed
+    review_risk: low
+    dedupe_key_strategy: rss_guid
+    notes:
+      - Best first discovery surface for current Marin filing activity.
+      - Exposes filing titles, filing types, and direct document links.
+
+  - source_id: marin-county-mary-sackett-form-497-2026-04-10
+    label: Mary Sackett for Marin County Supervisor 2026 Form 497 filed on April 10 2026
+    owner_type: committee
+    owner_id: mary-sackett-for-marin-county-supervisor-2026
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: campaign_finance
+    source_type: filing_pdf
+    entry_url: https://netfile.com/Connect2/api/public/image/216618080
+    discovery_urls:
+      - https://netfile.com/connect2/api/public/list/filing/rss/CMAR/campaign.xml
+      - https://public.netfile.com/pub2/?aid=CMAR
+    fetch_strategy: direct_pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - committee
+      - filing
+      - document:form497
+      - money_flow:campaign_contribution
+      - actor
+    cadence: record
+    history_depth: record
+    source_tier_default: A
+    robots_notes: public NetFile PDF endpoint
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - First candidate-linked committee sample for the campaign layer.
+      - Page one already exposes committee ID, filing timestamp, and donor committee details.
+
+  - source_id: marin-county-resource-conservation-pac-form-460-2026-04-08
+    label: Resource Conservation PAC sponsored by Marin Resource Recovery Form 460 filed on April 8 2026
+    owner_type: committee
+    owner_id: resource-conservation-pac
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: campaign_finance
+    source_type: filing_pdf
+    entry_url: https://netfile.com/Connect2/api/public/image/216601918
+    discovery_urls:
+      - https://netfile.com/connect2/api/public/list/filing/rss/CMAR/campaign.xml
+      - https://public.netfile.com/pub2/?aid=CMAR
+    fetch_strategy: direct_pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - committee
+      - filing
+      - document:form460
+      - actor
+      - money_flow:campaign_expenditure
+      - money_flow:campaign_contribution
+    cadence: record
+    history_depth: record
+    source_tier_default: A
+    robots_notes: public NetFile PDF endpoint
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - First sponsored-committee sample for the campaign layer.
+      - Cover page exposes sponsor status, treasurer, filing period, and committee ID.
+
   - source_id: marin-county-campaign-finance-guide
     label: Marin County Campaign Finance Reporting and Information
     owner_type: jurisdiction
@@ -326,6 +422,99 @@ sources:
     notes:
       - Important for official disclosure context.
       - May expose campaign-adjacent and conflict-of-interest material.
+
+  - source_id: san-rafael-sei-netfile-portal
+    label: San Rafael Statement of Economic Interests NetFile Portal
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: disclosures
+    source_type: disclosure_portal
+    entry_url: https://public.netfile.com/pub/?AID=raf
+    discovery_urls:
+      - https://www.cityofsanrafael.org/disclosures/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - economic_interest_disclosure
+      - filing
+      - document:form700
+      - actor
+      - seat
+    cadence: daily
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public NetFile portal
+    review_risk: low
+    dedupe_key_strategy: filer_plus_filed_at_plus_document
+    notes:
+      - Primary public search surface for San Rafael Form 700 records.
+      - Exposes statement types and direct RSS feed access.
+
+  - source_id: san-rafael-sei-rss-feed
+    label: San Rafael Statement of Economic Interests RSS Feed
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: disclosures
+    source_type: rss_feed
+    entry_url: https://netfile.com/connect2/api/public/list/filing/rss/RAF/sei.xml
+    discovery_urls:
+      - https://public.netfile.com/pub/?AID=raf
+      - https://www.cityofsanrafael.org/disclosures/
+    fetch_strategy: static_xml
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - economic_interest_disclosure
+      - document:form700
+      - actor
+    cadence: near_realtime
+    history_depth: recent_window
+    source_tier_default: A
+    robots_notes: public NetFile RSS feed
+    review_risk: low
+    dedupe_key_strategy: rss_guid
+    notes:
+      - Best first discovery surface for recent San Rafael Form 700 activity.
+
+  - source_id: san-rafael-quinn-gardner-form-700-2026-04-08
+    label: Quinn Gardner annual Form 700 filed on April 8 2026
+    owner_type: actor
+    owner_id: quinn-gardner
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: disclosures
+    source_type: filing_pdf
+    entry_url: https://netfile.com/Connect2/api/public/image/216603530
+    discovery_urls:
+      - https://netfile.com/connect2/api/public/list/filing/rss/RAF/sei.xml
+      - https://public.netfile.com/pub/?AID=raf
+      - https://www.cityofsanrafael.org/disclosures/
+    fetch_strategy: direct_pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - economic_interest_disclosure
+      - document:form700
+      - actor
+      - seat
+      - institution
+    cadence: record
+    history_depth: record
+    source_tier_default: A
+    robots_notes: public NetFile PDF endpoint
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - First disclosure-thread sample for the campaign layer.
+      - Cover page exposes city, department, position, filing timestamp, and annual coverage period.
 
   - source_id: san-rafael-aug-19-2024-council-meeting
     label: San Rafael City Council Meeting on August 19 2024

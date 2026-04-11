@@ -71,6 +71,7 @@ Start narrow:
 - [Campaign Finance And Disclosure Submodel](./docs/campaign-finance-disclosures-submodel.md)
 - [Campaign Finance Layer Source Bundle](./docs/campaign-finance-layer-source-bundle.md)
 - [Campaign Finance Layer Ingestion Checklist](./docs/campaign-finance-layer-ingestion-checklist.md)
+- [Campaign Finance Sample Basket Selection](./docs/campaign-finance-sample-basket-selection.md)
 - [Procurement, Grants, Contracts, And Performance Submodel](./docs/procurement-grants-contracts-submodel.md)
 - [Procurement Layer Source Bundle](./docs/procurement-layer-source-bundle.md)
 - [Procurement Layer Ingestion Checklist](./docs/procurement-layer-ingestion-checklist.md)
@@ -107,6 +108,7 @@ Start narrow:
 - [Bundle 01 Extracted Summary](./data/extracted/san-rafael-homelessness-01/bundle-01-summary.json)
 - [Bundle 01 Normalized Summary](./data/normalized/san-rafael-homelessness-01/bundle-01.json)
 - [Marin IJ Citation Layer](./data/normalized/san-rafael-homelessness-01/marin-ij-citation-layer.json)
+- [Campaign Finance Sample Basket Bundle](./data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
 - [Item 5.a Split Map](./data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-record-splits.json)
 - [Item 5.a Normalized Record Splits](./data/normalized/san-rafael-homelessness-01/aug-19-item-5a-record-splits.json)
 - [Procurement Sample Basket Bundle](./data/normalized/procurement-sample-basket-01/bundle-01.json)
@@ -126,6 +128,18 @@ This repo started as a planning workspace and now includes the first live implem
 - raw criminal-justice source captures for Marin court and sheriff landing surfaces
 - campaign-finance and disclosure layer formalized around `Election`, `Committee`, `Candidacy`, `Filing`, and `EconomicInterestDisclosure`
 - campaign/disclosure source bundle and ingestion checklist for Marin County, San Rafael, and FPPC filing surfaces
+- selected first campaign/disclosure sample basket:
+  - `Mary Sackett for Marin County Supervisor 2026`
+  - `Resource Conservation PAC, sponsored by Marin Resource Recovery`
+  - `Quinn Gardner annual Form 700`
+- first campaign/disclosure execution slice with:
+  - direct raw HTML capture of the Marin NetFile campaign portal home
+  - direct raw XML capture of the Marin campaign RSS feed
+  - direct PDF captures for the selected Mary Sackett Form 497 and Resource Conservation PAC Form 460 filings
+  - direct raw HTML capture of the San Rafael disclosures page and SEI portal
+  - direct raw XML capture of the San Rafael SEI RSS feed
+  - direct PDF capture of the selected Quinn Gardner Form 700
+  - first normalized campaign basket linking `Committee`, `Candidacy`, `Filing`, `EconomicInterestDisclosure`, and campaign `MoneyFlow` candidates
 - procurement-layer schema, source bundle, and checklist for Marin County and San Rafael funding and contract workflows
 - selected first procurement sample basket:
   - county `Board Chambers Audio Visual Refresh / Prime Electric`
