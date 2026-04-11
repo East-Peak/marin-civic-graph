@@ -167,17 +167,17 @@ That means collecting enough material to instantiate:
 
 ### ArticleMention Extraction
 
-- [ ] isolate quoted people
-- [ ] preserve role label as printed
-- [ ] preserve affiliation label as printed
-- [ ] mark unresolved names for review
+- [x] isolate quoted people
+- [x] preserve role label as printed
+- [x] preserve affiliation label as printed
+- [x] mark unresolved names for review
 
 ### Attribution Review
 
-- [ ] check whether quoted people recur in meeting comments
+- [x] check whether quoted people recur in meeting comments
 - [ ] check whether quoted people appear in org rosters
 - [ ] check whether quoted people appear in campaign or disclosure records
-- [ ] separate article framing from corroborated affiliation
+- [x] separate article framing from corroborated affiliation
 
 ## Phase 7: Minimum Deliverable
 
@@ -187,7 +187,7 @@ The first usable deliverable for this case study should be:
 - [x] one actor table
 - [x] one place table
 - [x] one decision chain centered on August 19, 2024
-- [ ] one media-attribution sample showing at least one recurring quoted actor pattern if present
+- [x] one media-attribution sample showing at least one recurring quoted actor pattern if present
 
 ## Blocking Questions
 
@@ -213,6 +213,6 @@ Status as of April 10, 2026:
 
 - phases 1 through 6 have a first-pass official-source bundle, extraction set, and normalized candidate bundle
 - the August 19 item `5.a` packet now has a derived child-record layer for ordinance, resolution, four contract exhibits, the site plan, the code of conduct, and correspondence
-- the remaining major gaps are the missing FS Global exhibit, the media layer beyond citation-only Marin IJ coverage, and later attribution review
+- the remaining major gaps are the missing FS Global exhibit, wider Marin IJ recurrence work beyond the first article-body example, and later attribution review
 
 That will create the first trustworthy version of the case without over-relying on media before the official spine exists.

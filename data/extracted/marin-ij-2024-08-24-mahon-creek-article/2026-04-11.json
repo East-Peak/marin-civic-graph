@@ -1,0 +1,134 @@
+{
+  "source_id": "marin-ij-2024-08-24-mahon-creek-article",
+  "capture_id": "marin-ij-2024-08-24-mahon-creek-article__2026-04-11",
+  "capture_date": "2026-04-11",
+  "bundle_id": "san-rafael-homelessness-01__bundle-01",
+  "mode": "wp_json_article_body",
+  "generated_at": "2026-04-11T16:14:46Z",
+  "record_id": "record-mij-2024-08-24-establish-camp-mahon-creek",
+  "wp_post_id": 8295214,
+  "publisher": "Marin Independent Journal",
+  "title": "San Rafael to establish camp for homeless people along Mahon Creek",
+  "canonical_url": "https://www.marinij.com/2024/08/24/san-rafael-to-establish-camp-for-homeless-people-along-mahon-creek/",
+  "published_at": "2024-08-24T18:20:03Z",
+  "excerpt_text": "The City Council appropriated $2.2 million for the first phase of the program. It also amended its camping ordinance to more closely align with a statewide order by Gov. Gavin Newsom.",
+  "paragraph_count": 39,
+  "selected_paragraphs": [
+    {
+      "id": "P2",
+      "text": "The City Council voted unanimously Monday to appropriate $2.2 million for the first phase of the program. The council also approved amendments to its camping ordinance to more closely align with a state executive order. Vice Mayor Eli Hill was absent from the meeting."
+    },
+    {
+      "id": "P3",
+      "text": "\"People do not choose to be homeless but they get into a situation where that is the only option, and the network and the support we are proposing with this plan is where we need to go,\" Councilmember Rachel Kertz said."
+    },
+    {
+      "id": "P12",
+      "text": "Katie Fleet, who lives in the Gerstle Park neighborhood, said she has a child who attends the Parkside Children's Center. She said the City Council should delay any decisions on the program in order to understand the possible effects on the children."
+    },
+    {
+      "id": "P13",
+      "text": "\"I haven't heard anyone mention Parkside Children's Center and its proximity to all of the issues that we're talking about,\" Fleet said. \"There are over 1,000 children that attend Davidson Middle School. This is 47 people we're talking about in this camp and a thousand-plus kids.\""
+    },
+    {
+      "id": "P14",
+      "text": "Kevin Bruner, also a parent to a child at the children's center, said he has had to shield his child from multiple negative experiences with camp residents in the past year. He worried the plan will cause further displacement for those ineligible for the program."
+    },
+    {
+      "id": "P15",
+      "text": "\"I appreciate that the sanctioned area, with its code of ethics, will make sure that people who are helpable might get some services,\" Bruner said. \"The collateral damage of this is the people who will not conform, who are incapable mentally of conforming, who are high, who are dangerous, who are going to scatter to other neighborhoods.\""
+    },
+    {
+      "id": "P19",
+      "text": "Mark Rivera, an unhoused resident of San Rafael, wondered if some services could be increased, specifically relating to hygiene."
+    },
+    {
+      "id": "P20",
+      "text": "\"I think that showering once a week by anyone's standard is inadequate,\" Rivera said. \"Most of us get showers twice a day.\""
+    },
+    {
+      "id": "P27",
+      "text": "\"The city has already been doing what the government order calls for to the extent possible given the legal constraints,\" said John Stefanski, assistant city manager. \"The city has removed over 31 tons of debris as a result of bringing these structures down.\""
+    }
+  ],
+  "mention_candidates": [
+    {
+      "id": "mention-mij-2024-08-24-rachel-kertz",
+      "mention_type": "quoted_person",
+      "name_raw": "Rachel Kertz",
+      "article_scoped_role_label": "Councilmember",
+      "article_scoped_affiliation_label": null,
+      "quote_excerpt": "\"People do not choose to be homeless but they get into a situation where that is the only option, and the network and the support we are proposing with this plan is where we need to go,\"",
+      "paragraph_refs": [
+        "P3"
+      ],
+      "candidate_actor_ids": [
+        "actor-rachel-kertz"
+      ],
+      "join_status": "resolved_canonical"
+    },
+    {
+      "id": "mention-mij-2024-08-24-katie-fleet",
+      "mention_type": "quoted_person",
+      "name_raw": "Katie Fleet",
+      "article_scoped_role_label": "lives in the Gerstle Park neighborhood",
+      "article_scoped_affiliation_label": null,
+      "quote_excerpt": "\"I haven't heard anyone mention Parkside Children's Center and its proximity to all of the issues that we're talking about,\"",
+      "paragraph_refs": [
+        "P12",
+        "P13"
+      ],
+      "candidate_actor_ids": [
+        "actor-katie-fleet"
+      ],
+      "join_status": "resolved_case_actor"
+    },
+    {
+      "id": "mention-mij-2024-08-24-kevin-bruner",
+      "mention_type": "quoted_person",
+      "name_raw": "Kevin Bruner",
+      "article_scoped_role_label": "parent to a child at the children's center",
+      "article_scoped_affiliation_label": null,
+      "quote_excerpt": "\"I appreciate that the sanctioned area, with its code of ethics, will make sure that people who are helpable might get some services,\"",
+      "paragraph_refs": [
+        "P14",
+        "P15"
+      ],
+      "candidate_actor_ids": [],
+      "join_status": "unresolved"
+    },
+    {
+      "id": "mention-mij-2024-08-24-mark-rivera",
+      "mention_type": "quoted_person",
+      "name_raw": "Mark Rivera",
+      "article_scoped_role_label": "unhoused resident of San Rafael",
+      "article_scoped_affiliation_label": null,
+      "quote_excerpt": "\"I think that showering once a week by anyone's standard is inadequate,\"",
+      "paragraph_refs": [
+        "P19",
+        "P20"
+      ],
+      "candidate_actor_ids": [],
+      "join_status": "unresolved"
+    },
+    {
+      "id": "mention-mij-2024-08-24-john-stefanski",
+      "mention_type": "quoted_person",
+      "name_raw": "John Stefanski",
+      "article_scoped_role_label": "assistant city manager",
+      "article_scoped_affiliation_label": null,
+      "quote_excerpt": "\"The city has already been doing what the government order calls for to the extent possible given the legal constraints,\"",
+      "paragraph_refs": [
+        "P27"
+      ],
+      "candidate_actor_ids": [
+        "actor-john-stefanski"
+      ],
+      "join_status": "resolved_case_actor"
+    }
+  ],
+  "notes": [
+    "This extracted layer intentionally focuses on quote-bearing and identity-bearing paragraphs rather than the full article text.",
+    "The goal is to pressure-test Mention and Claim promotion, not to build a general-purpose article parser yet."
+  ]
+}

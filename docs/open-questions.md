@@ -117,15 +117,18 @@ Mirror the question here when it affects:
 
 ### OQ-007: Marin IJ body-extraction threshold
 
-- `status`: watch
+- `status`: resolved
 - `layer`: media methodology
 - `scope`: case study 01
 - `source refs`:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/bundle-01.json)
   - [media-attribution-rules.md](/Users/tammypais/projects/marin-civic-graph/docs/media-attribution-rules.md)
+  - [manifest.json](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-ij-2024-08-24-mahon-creek-article/2026-04-11/manifest.json)
+  - [2026-04-11.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/marin-ij-2024-08-24-mahon-creek-article/2026-04-11.json)
+  - [marin-ij-2024-08-24-mention-claim-example.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/marin-ij-2024-08-24-mention-claim-example.json)
 - `question`: When do citation-only Marin IJ records graduate into full article-body extraction and quote isolation?
 - `why it matters`: This determines when `ArticleMention` and attribution-gap work can become evidence-bearing instead of remaining citation-level.
-- `next evidence`: define a stable operator-assisted capture workflow for subscription-backed articles before promoting any quote-level claims.
+- `resolution note`: Resolved with the first public WordPress API capture for the August 24, 2024 Mahon Creek article. Citation-only Marin IJ records can graduate when a reproducible article-body surface exists, either through the public post API or a later operator-assisted path. The first worked example now supports mixed outcomes in one article: canonical actor join, case-scoped actor join, and hold-for-review mentions.
 
 ### OQ-008: San Rafael councilmember seed resolution
 

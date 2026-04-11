@@ -66,6 +66,7 @@ Start narrow:
 - [Graph Joins And Identity](./docs/graph-joins-and-identity.md)
 - [Identity Resolution Submodel](./docs/identity-resolution-submodel.md)
 - [Actor Resolution Worked Example](./docs/actor-resolution-worked-example.md)
+- [Media Mention And Claim Worked Example](./docs/media-mention-claim-worked-example.md)
 - [Domain Expansion Matrix](./docs/domain-expansion-matrix.md)
 - [Criminal Justice Submodel](./docs/criminal-justice-submodel.md)
 - [Criminal Sample Basket Source Bundle](./docs/criminal-sample-basket-source-bundle.md)
@@ -111,6 +112,7 @@ Start narrow:
 - [Bundle 01 Extracted Summary](./data/extracted/san-rafael-homelessness-01/bundle-01-summary.json)
 - [Bundle 01 Normalized Summary](./data/normalized/san-rafael-homelessness-01/bundle-01.json)
 - [Marin IJ Citation Layer](./data/normalized/san-rafael-homelessness-01/marin-ij-citation-layer.json)
+- [Marin IJ 2024-08-24 Mention/Claim Example](./data/normalized/san-rafael-homelessness-01/marin-ij-2024-08-24-mention-claim-example.json)
 - [Campaign Finance Sample Basket Bundle](./data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
 - [Campaign Finance Form 803 Slice Bundle](./data/normalized/campaign-finance-form-803-slice-01/bundle-01.json)
 - [San Rafael Canonical Seed Bundle](./data/normalized/canonical-seeds-san-rafael-01.json)
@@ -165,6 +167,11 @@ This repo started as a planning workspace and now includes the first live implem
   - official San Rafael elected-official, City Council, and November 5, 2024 election pages captured as identity evidence
   - explicit seat candidates and current `SeatService` candidates added for the at-large Mayor and Districts 1-4
   - `Vice Mayor` clarified as a role layered on a district seat service rather than a separate elected seat
+  - older San Rafael meeting and disclosure bundles backfilled so votes and the first local Form 803 sample now target canonical actor, seat, and `SeatService` IDs
+- first real media pressure test added:
+  - direct raw JSON capture of the August 24, 2024 Mahon Creek Marin IJ article through the public WordPress post API
+  - extracted mention layer preserving article-scoped labels for Rachel Kertz, Katie Fleet, Kevin Bruner, Mark Rivera, and John Stefanski
+  - normalized worked example showing one canonical join, two case-scoped joins, and unresolved article-only mentions held in the review layer
 - procurement-layer schema, source bundle, and checklist for Marin County and San Rafael funding and contract workflows
 - selected first procurement sample basket:
   - county `Board Chambers Audio Visual Refresh / Prime Electric`
