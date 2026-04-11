@@ -682,6 +682,71 @@ sources:
       - First confirmed local San Rafael surface that exposes filed Form 803 records.
       - Public search results for quoted query `Form 803` return entry ID 41053 for `Form 803 - Kate Colin`.
 
+  - source_id: san-rafael-public-records-financial-filings-folder
+    label: San Rafael public records portal financial filings folder
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: campaign_finance
+    source_type: public_records_folder
+    entry_url: https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31076&dbid=0&repo=CityofSanRafael&cr=1
+    discovery_urls:
+      - https://www.cityofsanrafael.org/disclosures/
+      - https://publicrecords.cityofsanrafael.org/WebLink/
+    fetch_strategy: cookie_aware_json
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - committee
+      - filing
+      - document:campaign_filing
+      - money_flow:campaign_contribution
+      - money_flow:campaign_expenditure
+      - candidacy
+    cadence: weekly
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public Laserfiche folder linked from the San Rafael disclosures page; page browsing requires session bootstrap and listing likely needs JSON endpoint work
+    review_risk: medium
+    dedupe_key_strategy: entry_id
+    notes:
+      - This appears to be the city-side destination for local financial filings rather than the SEI NetFile portal.
+      - Same municipality, different filing family, different destination path.
+
+  - source_id: san-rafael-public-records-independent-expenditures-folder
+    label: San Rafael public records portal independent expenditures folder
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: campaign_finance
+    source_type: public_records_folder
+    entry_url: https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=25358&dbid=0&repo=CityofSanRafael
+    discovery_urls:
+      - https://www.cityofsanrafael.org/disclosures/
+      - https://publicrecords.cityofsanrafael.org/WebLink/
+    fetch_strategy: cookie_aware_json
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - filing
+      - document:independent_expenditure
+      - money_flow:independent_expenditure
+      - committee
+      - actor
+    cadence: weekly
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public Laserfiche folder linked from the San Rafael disclosures page; session bootstrap likely required before listing calls succeed
+    review_risk: medium
+    dedupe_key_strategy: entry_id
+    notes:
+      - San Rafael appears to split local financial filings and independent-expenditure filings into separate public-records destinations.
+      - Useful example of municipality-specific source fragmentation that should be documented per jurisdiction.
+
   - source_id: san-rafael-kate-colin-form-803-2025-09-04
     label: Kate Colin Form 803 in San Rafael public records
     owner_type: actor

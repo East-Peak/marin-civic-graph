@@ -41,6 +41,26 @@ Should include:
 - cadence
 - review risk
 
+### Municipality Source Profiles
+
+Build jurisdiction-by-jurisdiction source profiles that document where each record family actually lives.
+
+Should cover:
+
+- meetings
+- campaign filings
+- disclosure filings
+- public-records portals
+- permit systems
+- contracts / procurement
+- court / oversight surfaces where relevant
+
+Why this matters:
+
+- the project is not integrating one platform
+- each municipality and county surface has different quirks, indexing rules, and fetch constraints
+- these profiles should become the operational map for adapters, backfill, and cron
+
 ### Media Attribution Rules
 
 Write a review rubric for quoted people in local media.
@@ -168,6 +188,41 @@ Why this matters:
 
 - this is one of the strongest recurring-actor surfaces in the project
 - it is where donor, committee, officeholder, and disclosure data stop being abstract and start joining back into permits, contracts, meetings, and appointments
+
+### Historical Backfill Plan
+
+Formalize the first large backfill window and source ordering.
+
+Suggested baseline:
+
+- sweep recurring high-value sources back to at least `2019-01-01`
+
+Should include:
+
+- source families
+- earliest target date by family
+- archive-walk strategy
+- stop conditions and known exceptions
+
+Why this matters:
+
+- the project will eventually need multi-year context, not just forward collection
+- backfill should be deliberate and repeatable instead of ad hoc
+
+### Cron Rollout Plan
+
+Formalize recurring sync after initial backfill.
+
+Should include:
+
+- weekly default cadence for stable sources
+- daily cadence for faster-changing sources
+- manual exceptions
+- expected manifest/diff outputs per run
+
+Why this matters:
+
+- the graph needs an ongoing operating model, not just one-time data grabs
 
 ### Exhibit And Attachment Splitting
 

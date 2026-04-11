@@ -13,6 +13,8 @@ It should answer:
 - what it exposes
 - how to fetch it
 - how often to check it
+- how far back we intend to backfill it
+- what platform quirks it has
 - what risks it carries
 
 ## Core Principles
@@ -50,11 +52,16 @@ expected_objects:
   - document:video
 cadence: daily
 history_depth: archive
+backfill_start_target: 2019-01-01
+platform_family: wordpress_proudcity
+access_pattern: static_public_page
+change_signal: new_meeting_page_or_updated_packet
 source_tier_default: B
 robots_notes: allow
 auth_required: false
 review_risk: low
 dedupe_key_strategy: url_plus_meeting_date
+known_quirks: []
 notes:
   - Stable city page with archive links.
   - High-value source for v1.
@@ -88,6 +95,10 @@ notes:
 
 - `cadence`
 - `history_depth`
+- `backfill_start_target`
+- `platform_family`
+- `access_pattern`
+- `change_signal`
 - `review_risk`
 - `dedupe_key_strategy`
 
@@ -187,6 +198,11 @@ Suggested values:
 - `election_cycle`
 - `manual`
 
+Operational note:
+
+- for long-running recurring collection, `weekly` should be treated as the default floor for stable civic record surfaces
+- use `daily` only where the source actually changes often enough to justify it
+
 ### `history_depth`
 
 Suggested values:
@@ -194,6 +210,51 @@ Suggested values:
 - `latest_only`
 - `rolling_window`
 - `archive`
+
+### `backfill_start_target`
+
+The earliest date we intend to backfill to for this source, when known.
+
+Examples:
+
+- `2019-01-01`
+- `2020-01-01`
+- `archive_start_unknown`
+
+Operational note:
+
+- the project default for recurring civic surfaces should be at least `2019-01-01` unless the source family is lower value or the archive shape makes that unrealistic
+
+### `platform_family`
+
+Examples:
+
+- `wordpress_proudcity`
+- `laserfiche_public_records`
+- `netfile_campaign_portal`
+- `granicus_meeting_portal`
+- `cloudflare_blocked_html`
+- `pdf_first_archive`
+
+### `access_pattern`
+
+Examples:
+
+- `static_public_page`
+- `cookie_bootstrap_required`
+- `rss_plus_direct_document`
+- `browser_visible_cli_blocked`
+- `public_search_portal`
+
+### `change_signal`
+
+Examples:
+
+- `new_rss_item`
+- `new_meeting_page_or_updated_packet`
+- `new_folder_entry`
+- `new_filing_image`
+- `manual_archive_sweep`
 
 ### `review_risk`
 
@@ -219,6 +280,7 @@ Examples:
 - `login_owner`
 - `jurisdiction_scope`
 - `place_scope`
+- `known_quirks`
 - `notes`
 
 ## `case_study_ids`

@@ -95,6 +95,7 @@ Start narrow:
 - [Jurisdiction Source Map](./docs/jurisdiction-source-map.md)
 - [Ingestion Agents](./docs/ingestion-agents.md)
 - [Source Registry Format](./docs/source-registry-format.md)
+- [Source Adapter And Operations Plan](./docs/source-adapter-and-operations-plan.md)
 - [Seed Source Registry](./registry/README.md)
 - [Media Attribution Rules](./docs/media-attribution-rules.md)
 - [Open Questions](./docs/open-questions.md)
@@ -138,6 +139,8 @@ Start narrow:
 This repo started as a planning workspace and now includes the first live implementation slice:
 
 - source registry seeds
+- source-registry format now expanded to capture platform family, backfill target, change signal, and source-specific quirks
+- source-adapter operations note added to document municipality/county source idiosyncrasies, historical backfill planning, and recurring sync strategy
 - raw official source captures for case study 01
 - raw criminal-justice source captures for Marin court and sheriff landing surfaces
 - campaign-finance and disclosure layer formalized around `Election`, `Committee`, `Candidacy`, `Filing`, and `EconomicInterestDisclosure`
