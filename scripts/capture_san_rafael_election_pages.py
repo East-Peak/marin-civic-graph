@@ -15,6 +15,31 @@ RAW_DIR = ROOT / "data" / "raw"
 
 ELECTION_PAGES = [
     {
+        "source_id": "san-rafael-november-8-2011-election",
+        "label": "San Rafael November 8 2011 Election Page",
+        "entry_url": "https://www.cityofsanrafael.org/november-8-2011-election/",
+    },
+    {
+        "source_id": "san-rafael-november-5-2013-election",
+        "label": "San Rafael November 5 2013 Election Page",
+        "entry_url": "https://www.cityofsanrafael.org/november-5-2013-election/",
+    },
+    {
+        "source_id": "san-rafael-november-3-2015-election",
+        "label": "San Rafael November 3 2015 Election Page",
+        "entry_url": "https://www.cityofsanrafael.org/november-3-2015-election/",
+    },
+    {
+        "source_id": "san-rafael-november-7-2017-election",
+        "label": "San Rafael November 7 2017 General Municipal Election Page",
+        "entry_url": "https://www.cityofsanrafael.org/november-7-2017-election/",
+    },
+    {
+        "source_id": "san-rafael-november-6-2018-election",
+        "label": "San Rafael November 6 2018 Election Page",
+        "entry_url": "https://www.cityofsanrafael.org/november-6-2018-election/",
+    },
+    {
         "source_id": "san-rafael-november-3-2020-election",
         "label": "San Rafael November 3 2020 Election Page",
         "entry_url": "https://www.cityofsanrafael.org/november-3-2020-election/",

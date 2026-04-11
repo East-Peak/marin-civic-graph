@@ -40,7 +40,7 @@ The key questions are:
 | Campaign financial filings | `san-rafael-public-records-financial-filings-folder` | `laserfiche_public_records` | `cookie_aware_json` probe + page-linked discovery | top-level folder plus child candidate folders | `2019-01-01` | `weekly` | partial | Destination confirmed; anonymous folder enumeration currently fails, so election pages are the current discovery backbone |
 | Independent expenditures | `san-rafael-public-records-independent-expenditures-folder` | `laserfiche_public_records` | `cookie_aware_json` probe + page-linked discovery | folder-style archive plus source-linked direct records | `2019-01-01` | `weekly` | partial | Separate official destination from campaign filing folder; top-level listing currently does not yield a usable anonymous inventory |
 | Procurement / bids / project awards | `san-rafael-bids-and-proposals`, city council meeting records, Downtown Library thread | mixed `wordpress_proudcity` + council packets | public page + linked packet PDFs | mixed archive / project pages | `2020-01-01` | `weekly` | usable | Actual agreement lineage often lives in council packets, not procurement page alone |
-| Election / canvass pages | `san-rafael-november-5-2024-election` | `wordpress_proudcity` | `static_public_page` | election-specific landing pages | `2020-01-01` | `manual` | usable | Good for seat and outcome resolution, and currently the cleanest way to enumerate candidate-specific campaign-finance folder IDs |
+| Election / canvass pages | `san-rafael-november-8-2011-election`, `san-rafael-november-5-2013-election`, `san-rafael-november-3-2015-election`, `san-rafael-november-7-2017-election`, `san-rafael-november-6-2018-election`, `san-rafael-november-3-2020-election`, `san-rafael-november-8-2022-election`, `san-rafael-november-5-2024-election` | `wordpress_proudcity` | `static_public_page` | election-specific landing pages | `2011-01-01` | `manual` | usable | Good for seat and outcome resolution; older pages expose election-level finance folders, while 2020+ pages expose candidate-specific folder IDs |
 
 ### San Rafael Idiosyncrasies
 
@@ -50,6 +50,9 @@ The key questions are:
   - campaign financial filings appear to live in a different Laserfiche folder
   - independent expenditures appear to live in yet another Laserfiche folder
 - The public election pages can expose candidate-specific campaign-finance folder IDs even when the top-level Laserfiche browse URLs do not yield usable anonymous listings.
+- The campaign-filing shape changes over time:
+  - `2011` through `2018` pages expose election-level filing folders
+  - `2020` through `2024` pages expose candidate-specific filing folders
 - The public disclosures page is a routing surface, not the real data store.
 - Many city policy, procurement, and implementation records are easiest to recover through council packets rather than program pages.
 - San Rafael is a good first municipality precisely because it exposes this fragmentation in a manageable way.

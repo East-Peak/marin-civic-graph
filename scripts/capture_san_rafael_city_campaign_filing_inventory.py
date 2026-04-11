@@ -29,6 +29,11 @@ JSON_HEADERS = {
 
 DISCLOSURES_SOURCE_ID = "san-rafael-disclosures"
 ELECTION_SOURCE_IDS = [
+    "san-rafael-november-8-2011-election",
+    "san-rafael-november-5-2013-election",
+    "san-rafael-november-3-2015-election",
+    "san-rafael-november-7-2017-election",
+    "san-rafael-november-6-2018-election",
     "san-rafael-november-3-2020-election",
     "san-rafael-november-8-2022-election",
     "san-rafael-november-5-2024-election",
@@ -198,6 +203,37 @@ def extract_ie_filing_folder(
     return None
 
 
+def extract_election_level_campaign_folder(
+    election_html: str, source_id: str, election_label: str
+) -> dict[str, Any] | None:
+    lines = election_html.splitlines()
+    labels = {
+        "Campaign Finance Disclosure",
+        "Campaign Finance Reporting",
+        "Financial Filings",
+    }
+    for idx, line in enumerate(lines):
+        clean = clean_html_text(line)
+        if clean not in labels:
+            continue
+        for back in range(max(0, idx - 6), idx + 1):
+            url_match = re.search(
+                r'href="(?P<url>https?://publicrecords\.cityofsanrafael\.org/WebLink/Browse\.aspx\?id=\d+[^"]*)"',
+                lines[back],
+                re.I,
+            )
+            if url_match:
+                url = html.unescape(url_match.group("url"))
+                return {
+                    "source_id": source_id,
+                    "election_label": election_label,
+                    "label": clean,
+                    "folder_url": url,
+                    "folder_entry_id": entry_id_from_url(url),
+                }
+    return None
+
+
 class LaserficheProbeClient:
     def __init__(self) -> None:
         self.cookie_jar = http.cookiejar.CookieJar()
@@ -269,6 +305,7 @@ def main() -> None:
     candidate_folders: list[dict[str, Any]] = []
     ie_resources: list[dict[str, Any]] = []
     ie_filing_folders: list[dict[str, Any]] = []
+    election_level_campaign_folders: list[dict[str, Any]] = []
     derived_from = [
         {
             "source_id": DISCLOSURES_SOURCE_ID,
@@ -294,6 +331,11 @@ def main() -> None:
         ie_filing_folder = extract_ie_filing_folder(election_html, source_id, election_label)
         if ie_filing_folder is not None:
             ie_filing_folders.append(ie_filing_folder)
+        election_level_campaign_folder = extract_election_level_campaign_folder(
+            election_html, source_id, election_label
+        )
+        if election_level_campaign_folder is not None:
+            election_level_campaign_folders.append(election_level_campaign_folder)
 
     top_level_probes: list[dict[str, Any]] = []
     sample_child_probe = None
@@ -377,12 +419,13 @@ def main() -> None:
         "top_level_folder_probes": top_level_probes,
         "candidate_folder_inventory": candidate_folders,
         "candidate_folder_count": len(candidate_folders),
+        "election_level_campaign_filing_folders": election_level_campaign_folders,
         "independent_expenditure_resources": ie_resources,
         "independent_expenditure_filing_folders": ie_filing_folders,
         "sample_child_folder_probe": sample_child_probe,
         "notes": [
             "San Rafael city-side campaign filings are publicly routed through the disclosures page and cycle-specific election pages.",
-            "The 2020, 2022, and 2024 election pages expose candidate-specific campaign-finance folder IDs even though anonymous folder-listing probes currently fail.",
+            "The 2011 through 2018 election pages expose election-level campaign-finance filing folders, while the 2020, 2022, and 2024 election pages expose candidate-specific campaign-finance folder IDs.",
             "Until Laserfiche folder enumeration becomes reliably accessible, the safest backfill strategy is page-linked folder discovery plus record-level capture where direct document links are exposed.",
         ],
     }

@@ -170,10 +170,11 @@ This repo started as a planning workspace and now includes the first live implem
   - recorded portal year coverage back to `1997` and current election-tree labels for public election context
   - confirmed the operating split: yearly export is the historical backfill surface, while RSS remains the near-real-time change feed
 - fourth wave-01 source execution started for `San Rafael city-side campaign filings`:
-  - added a dedicated election-page capture workflow for San Rafael's `2020`, `2022`, and `2024` municipal election landing pages
-  - added a derived inventory workflow that uses the San Rafael disclosures page plus the captured `2020`, `2022`, and `2024` election pages to enumerate city-side campaign filing destinations
-  - captured the two top-level Laserfiche filing destinations and `27` candidate-specific child folder IDs exposed across the November 3, 2020, November 8, 2022, and November 5, 2024 election pages
+  - added a dedicated election-page capture workflow for San Rafael's `2011`, `2013`, `2015`, `2017`, `2018`, `2020`, `2022`, and `2024` election landing pages
+  - added a derived inventory workflow that uses the San Rafael disclosures page plus those captured election pages to enumerate city-side campaign filing destinations
+  - captured the two top-level Laserfiche filing destinations, `5` pre-2020 election-level filing folders, and `27` candidate-specific child folder IDs across the November 3, 2020, November 8, 2022, and November 5, 2024 election pages
   - extracted cycle-specific independent-expenditure filing folder IDs for `2020` and `2022`
+  - confirmed the source-shape breakpoint: `2011` through `2018` pages expose election-level campaign filing folders, while `2020+` pages expose candidate-specific filing folders
   - recorded the current adapter boundary explicitly: anonymous Laserfiche folder-listing probes for both top-level campaign folders and a sampled child folder currently fail with session-limit error `[9030]`
   - confirmed the current working discovery pattern is `disclosures page -> top-level folder ids -> election page -> candidate-specific child folder ids`
 - raw official source captures for case study 01

@@ -1,10 +1,30 @@
 {
   "capture_date": "2026-04-11",
-  "captured_at": "2026-04-11T20:58:19Z",
+  "captured_at": "2026-04-11T21:07:50Z",
   "derived_from": [
     {
       "source_id": "san-rafael-disclosures",
       "path": "data/raw/san-rafael-disclosures/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-8-2011-election",
+      "path": "data/raw/san-rafael-november-8-2011-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-5-2013-election",
+      "path": "data/raw/san-rafael-november-5-2013-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-3-2015-election",
+      "path": "data/raw/san-rafael-november-3-2015-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-7-2017-election",
+      "path": "data/raw/san-rafael-november-7-2017-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-6-2018-election",
+      "path": "data/raw/san-rafael-november-6-2018-election/2026-04-11/source.html"
     },
     {
       "source_id": "san-rafael-november-3-2020-election",
@@ -575,6 +595,43 @@
     }
   ],
   "candidate_folder_count": 27,
+  "election_level_campaign_filing_folders": [
+    {
+      "source_id": "san-rafael-november-8-2011-election",
+      "election_label": "November 8, 2011 Election - San Rafael",
+      "label": "Campaign Finance Disclosure",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31078&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31078
+    },
+    {
+      "source_id": "san-rafael-november-5-2013-election",
+      "election_label": "November 5, 2013 Election - San Rafael",
+      "label": "Campaign Finance Reporting",
+      "folder_url": "http://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=24866&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 24866
+    },
+    {
+      "source_id": "san-rafael-november-3-2015-election",
+      "election_label": "November 3, 2015 Election - San Rafael",
+      "label": "Campaign Finance Disclosure",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31078&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31078
+    },
+    {
+      "source_id": "san-rafael-november-7-2017-election",
+      "election_label": "November 7, 2017 General Municipal Election - San Rafael",
+      "label": "Campaign Finance Disclosure",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31078&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31078
+    },
+    {
+      "source_id": "san-rafael-november-6-2018-election",
+      "election_label": "November 6, 2018 Election - San Rafael",
+      "label": "Financial Filings",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31078&dbid=0&repo=CityofSanRafaelv",
+      "folder_entry_id": 31078
+    }
+  ],
   "independent_expenditure_resources": [
     {
       "source_id": "san-rafael-november-3-2020-election",
@@ -764,7 +821,7 @@
   },
   "notes": [
     "San Rafael city-side campaign filings are publicly routed through the disclosures page and cycle-specific election pages.",
-    "The 2020, 2022, and 2024 election pages expose candidate-specific campaign-finance folder IDs even though anonymous folder-listing probes currently fail.",
+    "The 2011 through 2018 election pages expose election-level campaign-finance filing folders, while the 2020, 2022, and 2024 election pages expose candidate-specific campaign-finance folder IDs.",
     "Until Laserfiche folder enumeration becomes reliably accessible, the safest backfill strategy is page-linked folder discovery plus record-level capture where direct document links are exposed."
   ]
 }

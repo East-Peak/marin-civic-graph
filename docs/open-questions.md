@@ -194,7 +194,19 @@ Mirror the question here when it affects:
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html)
 - `question`: Should the city-side campaign backfill adapter rely permanently on election-page child-folder discovery, or is there a stable anonymous Laserfiche listing path for the top-level filing folders that we have not found yet?
 - `why it matters`: This determines whether historical city-side campaign backfill is `page-linked` or truly `folder-enumerated`, which affects how much year-by-year election-page recovery we need before cron sync starts.
-- `next evidence`: the `2020`, `2022`, and `2024` election pages now confirm the child-folder pattern across three cycles, so the remaining work is to test whether older pre-2020 city election pages exist and whether the top-level Laserfiche folder endpoints ever expose a stable anonymous listing path outside the current `[9030]` session-limit failure.
+- `next evidence`: the `2011`, `2013`, `2015`, `2017`, and `2018` election pages now confirm a pre-2020 election-level filing-folder pattern, while `2020`, `2022`, and `2024` confirm the later candidate-folder pattern. The remaining work is to test whether the top-level Laserfiche folder endpoints ever expose a stable anonymous listing path outside the current `[9030]` session-limit failure.
+
+### OQ-021: San Rafael 2018 election filing URL typo
+
+- `status`: watch
+- `layer`: source hygiene
+- `scope`: `san-rafael-november-6-2018-election`
+- `source refs`:
+  - [2026-04-11.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-6-2018-election/2026-04-11/source.html)
+- `question`: The 2018 election page publishes a `Financial Filings` browse URL with `repo=CityofSanRafaelv` instead of `repo=CityofSanRafael`. Should the adapter preserve that raw URL only, or canonicalize the repo parameter while keeping the same folder ID (`31078`)?
+- `why it matters`: This is a source-quality issue rather than a graph-model blocker, but it affects whether later replay or browser automation should trust the page URL verbatim.
+- `next evidence`: test whether the same folder ID works with the canonical repo parameter in a browser-visible session and keep the raw published URL as provenance either way.
 
 ### OQ-016: San Rafael local Form 803 filing surface
 

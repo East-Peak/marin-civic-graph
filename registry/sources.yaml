@@ -3461,6 +3461,157 @@ sources:
     notes:
       - Confirms the certified November 5, 2024 winners for Mayor, District 1, and District 4.
 
+  - source_id: san-rafael-november-6-2018-election
+    label: San Rafael November 6 2018 Election Page
+    owner_type: institution
+    owner_id: san-rafael-city-clerk
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: official_communications
+    source_type: election_page
+    entry_url: https://www.cityofsanrafael.org/november-6-2018-election/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/past-elections/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - election
+      - seat
+      - actor
+      - filing
+      - claim
+    cadence: record
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public city election page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Exposes an election-level `Financial Filings` folder card rather than candidate-specific filing folders.
+      - The published browse URL includes a malformed `repo=CityofSanRafaelv` suffix even though the folder ID still parses as `31078`.
+
+  - source_id: san-rafael-november-7-2017-election
+    label: San Rafael November 7 2017 General Municipal Election Page
+    owner_type: institution
+    owner_id: san-rafael-city-clerk
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: official_communications
+    source_type: election_page
+    entry_url: https://www.cityofsanrafael.org/november-7-2017-election/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/past-elections/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - election
+      - seat
+      - actor
+      - filing
+      - claim
+    cadence: record
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public city election page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Exposes an election-level `Campaign Finance Disclosure` folder card rather than candidate-specific filing folders.
+
+  - source_id: san-rafael-november-3-2015-election
+    label: San Rafael November 3 2015 Election Page
+    owner_type: institution
+    owner_id: san-rafael-city-clerk
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: official_communications
+    source_type: election_page
+    entry_url: https://www.cityofsanrafael.org/november-3-2015-election/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/past-elections/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - election
+      - seat
+      - actor
+      - filing
+      - claim
+    cadence: record
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public city election page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Exposes an election-level `Campaign Finance Disclosure` folder card rather than candidate-specific filing folders.
+
+  - source_id: san-rafael-november-5-2013-election
+    label: San Rafael November 5 2013 Election Page
+    owner_type: institution
+    owner_id: san-rafael-city-clerk
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: official_communications
+    source_type: election_page
+    entry_url: https://www.cityofsanrafael.org/november-5-2013-election/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/past-elections/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - election
+      - seat
+      - actor
+      - filing
+      - claim
+    cadence: record
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public city election page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Exposes an election-level `Campaign Finance Reporting` folder card with a different filing folder ID (`24866`) than later cycles.
+
+  - source_id: san-rafael-november-8-2011-election
+    label: San Rafael November 8 2011 Election Page
+    owner_type: institution
+    owner_id: san-rafael-city-clerk
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: official_communications
+    source_type: election_page
+    entry_url: https://www.cityofsanrafael.org/november-8-2011-election/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/past-elections/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - election
+      - seat
+      - actor
+      - filing
+      - claim
+    cadence: record
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public city election page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Exposes an election-level `Campaign Finance Disclosure` folder card rather than candidate-specific filing folders.
+
   - source_id: san-rafael-november-8-2022-election
     label: San Rafael November 8 2022 Election Page
     owner_type: institution
