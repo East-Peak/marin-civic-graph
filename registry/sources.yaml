@@ -46,6 +46,8 @@ sources:
     entry_url: https://netfile.com/agency/cmar/
     discovery_urls:
       - https://www.marincounty.gov/departments/elections/current-election/candidate-guide/campaign-finance-reporting-and-information
+      - https://public.netfile.com/pub2/Search.aspx?aid=CMAR
+      - https://public.netfile.com/pub2/Elections.aspx?aid=CMAR
     fetch_strategy: static_html
     browser_required: false
     auth_required: false
@@ -68,6 +70,7 @@ sources:
     notes:
       - Primary portal for local campaign disclosure.
       - Likely needs source-specific normalization for committees and filing periods.
+      - Portal UI exposes yearly export back to 1997 plus election browsing and search tabs.
 
   - source_id: marin-county-campaign-finance-rss
     label: Marin County Campaign Finance RSS Feed
@@ -99,6 +102,43 @@ sources:
     notes:
       - Best first discovery surface for current Marin filing activity.
       - Exposes filing titles, filing types, and direct document links.
+      - Feed description caps history at 15 days or 1000 items.
+
+  - source_id: marin-county-campaign-finance-yearly-exports
+    label: Marin County Campaign Finance Yearly Export Workbooks
+    owner_type: jurisdiction
+    owner_id: marin-county
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: campaign_finance
+    source_type: netfile_yearly_export
+    entry_url: https://public.netfile.com/pub2/?aid=CMAR
+    discovery_urls:
+      - https://netfile.com/agency/cmar/
+      - https://public.netfile.com/pub2/?aid=CMAR
+    fetch_strategy: aspnet_form_post
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - filing
+      - money_flow:campaign_contribution
+      - money_flow:campaign_expenditure
+      - money_flow:independent_expenditure
+      - money_flow:late_contribution
+      - document:campaign_export_workbook
+      - committee
+      - election
+    cadence: overnight
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public NetFile export surface with year select and ASP.NET postback workflow
+    review_risk: medium
+    dedupe_key_strategy: year_plus_export_mode
+    notes:
+      - Best current historical backfill surface for Marin County campaign finance.
+      - Portal exposes years back to 1997 and supports amended-only or all-versions yearly ZIP exports.
+      - Prefer amended-only exports for wave-01 backfill; keep RSS as the near-real-time change feed.
 
   - source_id: marin-county-mary-sackett-form-497-2026-04-10
     label: Mary Sackett for Marin County Supervisor 2026 Form 497 filed on April 10 2026

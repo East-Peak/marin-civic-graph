@@ -127,6 +127,7 @@ Start narrow:
 - [San Rafael Canonical Seed Bundle](./data/normalized/canonical-seeds-san-rafael-01.json)
 - [San Rafael City Council Archive Inventory](./data/extracted/san-rafael-city-council-meetings/2026-04-11.json)
 - [Marin County BOS Archive Inventory](./data/extracted/marin-county-bos-meetings/2026-04-11.json)
+- [Marin County Campaign Finance Yearly Export Inventory](./data/extracted/marin-county-campaign-finance-yearly-exports/2026-04-11.json)
 - [Item 5.a Split Map](./data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-record-splits.json)
 - [Item 5.a Normalized Record Splits](./data/normalized/san-rafael-homelessness-01/aug-19-item-5a-record-splits.json)
 - [Procurement Sample Basket Bundle](./data/normalized/procurement-sample-basket-01/bundle-01.json)
@@ -139,6 +140,7 @@ Start narrow:
 - [San Rafael Form 803 Capture Workflow](./scripts/capture_san_rafael_form803.py)
 - [San Rafael City Council Archive Capture Workflow](./scripts/capture_san_rafael_city_council_archive.py)
 - [Marin County BOS Archive Capture Workflow](./scripts/capture_marin_county_bos_archive.py)
+- [Marin County Campaign Finance Export Capture Workflow](./scripts/capture_marin_county_campaign_finance_exports.py)
 
 ## Current Status
 
@@ -159,6 +161,11 @@ This repo started as a planning workspace and now includes the first live implem
   - extracted `317` archived meetings spanning `2019` through `2026`, plus `3` currently listed upcoming events
   - meeting-type classification across `regular`, `budget`, `joint_meeting`, `truth_act_forum`, and `other`
   - artifact-availability tracking for agenda, minutes, video, captions, MP3, and MP4 links
+- third wave-01 source execution completed for `Marin County campaign finance`:
+  - added a dedicated yearly-export adapter against the public NetFile portal
+  - captured amended-only yearly export ZIPs for `2019` through `2026`
+  - recorded portal year coverage back to `1997` and current election-tree labels for public election context
+  - confirmed the operating split: yearly export is the historical backfill surface, while RSS remains the near-real-time change feed
 - raw official source captures for case study 01
 - raw criminal-justice source captures for Marin court and sheriff landing surfaces
 - campaign-finance and disclosure layer formalized around `Election`, `Committee`, `Candidacy`, `Filing`, and `EconomicInterestDisclosure`
