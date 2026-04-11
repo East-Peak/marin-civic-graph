@@ -120,6 +120,7 @@ Start narrow:
 ## Scripts
 
 - [Case Study 01 Extractor](./scripts/extract_case_study_01_bundle.py)
+- [San Rafael Form 803 Capture Workflow](./scripts/capture_san_rafael_form803.py)
 
 ## Current Status
 
@@ -152,6 +153,7 @@ This repo started as a planning workspace and now includes the first live implem
     - resolved the local filing-surface blocker through the San Rafael public Laserfiche portal
     - captured the first real local Form 803 sample, `Form 803 - Kate Colin`
     - promoted the first local `Filing` plus `MoneyFlow: behested_payment` with payor `Pacific Gas and Electric Company`, payee `Canal Alliance`, amount `$5,000`, date `2025-08-08`, and purpose `Affordable Applications Training`
+    - codified the Laserfiche capture path in a repeatable script and confirmed that the broader search census still surfaces only one actual filed local Form 803 as of April 11, 2026
 - procurement-layer schema, source bundle, and checklist for Marin County and San Rafael funding and contract workflows
 - selected first procurement sample basket:
   - county `Board Chambers Audio Visual Refresh / Prime Electric`

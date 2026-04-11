@@ -88,6 +88,27 @@ The extractable filing text supports these fields cleanly enough to normalize:
 
 One caution remains: some checkbox-driven subfields in the OCR text are noisy. The data model now promotes the clean fields above while leaving checkbox-only analytics fields conservative.
 
+### Repeatable capture workflow
+
+The current repeatable workflow is:
+
+1. bootstrap an anonymous public Laserfiche session
+2. run a small discovery census across:
+   - `"Form 803"`
+   - `"Form 803 -"`
+   - `"Behested Payment Report"`
+   - `behested payment`
+   - `behested`
+3. dedupe actual Form 803 hits by metadata and title
+4. capture record metadata
+5. capture page text for every discovered page
+
+The repo now includes a dedicated script for this:
+
+- [capture_san_rafael_form803.py](../scripts/capture_san_rafael_form803.py)
+
+As of this verification pass, the broader discovery census still surfaces only one actual filed local Form 803 record, the Kate Colin filing.
+
 ### San Rafael does publish behested-payment guidance inside City Council governance records
 
 The strongest local public records found in this slice are:

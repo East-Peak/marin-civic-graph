@@ -6,7 +6,8 @@
   "scope": [
     "San Rafael local Form 803 filing-surface verification",
     "behested-payment guidance records",
-    "first filed local Form 803 capture"
+    "first filed local Form 803 capture",
+    "repeatable public-records capture workflow"
   ],
   "record_refs": [
     {
@@ -56,7 +57,7 @@
       "record_class": "administrative_record",
       "record_type": "public_records_search_results",
       "source_id": "san-rafael-public-records-form-803-search",
-      "artifact_path": "data/raw/san-rafael-public-records-form-803-search/2026-04-11/search-results.json"
+      "artifact_path": "data/raw/san-rafael-public-records-form-803-search/2026-04-11/search-summary.json"
     },
     {
       "id": "record-kate-colin-form-803-2025-09-04",
@@ -186,6 +187,14 @@
       "summary": "The first captured local San Rafael Form 803 sample is the Kate Colin filing. Its extractable OCR text supports a behested-payment normalization pass with payor Pacific Gas and Electric Company, payee Canal Alliance, date 2025-08-08, amount $5,000, and purpose `Affordable Applications Training`.",
       "evidence_record_ids": [
         "record-kate-colin-form-803-2025-09-04"
+      ]
+    },
+    {
+      "id": "form803-finding-006",
+      "finding_type": "search_census",
+      "summary": "The repeatable public-records discovery census currently surfaces one actual filed local Form 803 record. Broader terms like `Behested Payment Report` and `behested` mainly return guidance and meeting records rather than additional filed reports.",
+      "evidence_record_ids": [
+        "record-san-rafael-public-records-form-803-search"
       ]
     }
   ],
