@@ -180,7 +180,8 @@ It does three bounded things:
 
 - resolves the August 19, 2024 San Rafael council roster into canonical people
 - stabilizes a first group of recurring organizations across homelessness, procurement, and disclosure slices
-- records role claims without overpromoting seat or district structure
+- records role claims without overpromoting term boundaries
+- seeds explicit San Rafael council seats and current `SeatService` objects from stronger official city pages
 
 ## What This Layer Does Not Do
 

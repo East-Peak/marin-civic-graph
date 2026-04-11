@@ -87,6 +87,9 @@ Examples:
 - `candidacy.candidate_actor_id`
 - `candidacy.seat_id`
 - `candidacy.election_id`
+- `seat_service.actor_id`
+- `seat_service.seat_id`
+- `seat_service.election_id?`
 - `filing.committee_id`
 - `filing.filing_institution_id`
 - `economic_interest_disclosure.filer_actor_id`

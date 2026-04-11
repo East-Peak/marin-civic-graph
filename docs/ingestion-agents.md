@@ -594,6 +594,7 @@ Objects to prove:
 
 - Institution
 - Seat
+- SeatService
 - Appointment
 - Meeting
 

@@ -104,6 +104,31 @@ Key fields:
 - `district?`
 - `appointing_institution_id?`
 
+### SeatService
+
+Use for one actor currently or historically occupying one seat.
+
+Examples:
+
+- Kate Colin serving as at-large Mayor
+- Maika Llorens Gulati serving as District 1 Councilmember
+- one appointed commissioner serving Seat 4
+
+Key fields:
+
+- `id`
+- `actor_id`
+- `seat_id`
+- `service_type`
+- `institution_id?`
+- `election_id?`
+- `candidacy_id?`
+- `appointment_id?`
+- `started_at?`
+- `ended_at?`
+- `observed_at?`
+- `status`
+
 ### Election
 
 Use for one contest context tied to a date and jurisdiction.
@@ -555,15 +580,15 @@ Use for meeting comments, letters, or public submissions tied to process.
 
 ### Appointment
 
-Use for one actor occupying one seat for a bounded time period.
+Use for the selection action that places someone into an appointed seat.
 
 - `id`
-- `actor_id`
 - `seat_id`
+- `selected_actor_id`
 - `appointed_by_actor_id?`
 - `appointed_by_institution_id?`
-- `started_at`
-- `ended_at?`
+- `appointed_at`
+- `resulting_seat_service_id?`
 
 ### Membership
 
@@ -578,7 +603,7 @@ Use for board seats, staff roles, treasurers, executives, and other affiliations
 
 ### Candidacy
 
-Use for one actor running for or holding one seat in one election cycle.
+Use for one actor running for one seat in one election cycle.
 
 - `id`
 - `candidate_actor_id`
@@ -997,7 +1022,8 @@ Examples:
 
 - `Contribution` should be a `MoneyFlow`, not just `actor DONATED_TO actor`
 - board service should be a `Membership`, not just `actor MEMBER_OF actor`
-- officeholding should be an `Appointment`, not just `actor HOLDS seat`
+- officeholding should be a `SeatService`, not just `actor HOLDS seat`
+- appointed selection should be an `Appointment`, not just `institution APPOINTED actor`
 
 Use direct edges for simpler structure:
 
@@ -1025,6 +1051,7 @@ These are views, not primary truth.
 
 The primary truth should still live in:
 
+- `SeatService`
 - `Appointment`
 - `Membership`
 - `MoneyFlow`

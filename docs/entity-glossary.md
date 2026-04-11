@@ -62,6 +62,22 @@ Why it matters:
 - appointments and elections attach cleanly to seats
 - people can rotate through the same seat over time
 
+### SeatService
+
+A record that one actor occupies one seat for a bounded or observed period.
+
+Examples:
+
+- Kate Colin serving as Mayor
+- Eli Hill serving as District 2 Councilmember
+- one commissioner serving Planning Commissioner Seat 4
+
+Rule:
+
+- use `Seat` for the office itself
+- use `SeatService` for the actual holder of that office
+- do not collapse current officeholding into `Appointment` or `Candidacy`
+
 ### Election
 
 A bounded contest context for a seat, office, or measure.
@@ -138,7 +154,7 @@ Rule:
 
 ### Candidacy
 
-One actor running for or holding one seat in one election cycle.
+One actor running for one seat in one election cycle.
 
 Examples:
 
@@ -457,7 +473,7 @@ Rule:
 
 ### Appointment
 
-A record that someone was appointed or elected into a seat.
+A record of the appointment action that selects someone for an appointed seat.
 
 ### Membership
 

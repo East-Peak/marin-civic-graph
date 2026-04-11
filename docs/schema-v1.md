@@ -69,6 +69,25 @@ Key fields:
 - `district?`
 - `appointing_authority?`
 
+### SeatService
+
+Represents one actor occupying one seat for a bounded or observed period.
+
+Key fields:
+
+- `id`
+- `actor_id`
+- `seat_id`
+- `service_type`
+- `institution_id?`
+- `election_id?`
+- `candidacy_id?`
+- `appointment_id?`
+- `started_at?`
+- `ended_at?`
+- `observed_at?`
+- `status`
+
 ### Election
 
 Represents a bounded contest for a seat, office, or measure.
@@ -149,7 +168,7 @@ Key fields:
 
 ### Candidacy
 
-Represents one actor running for or holding one seat in one election cycle.
+Represents one actor running for one seat in one election cycle.
 
 Key fields:
 
@@ -779,12 +798,15 @@ Make these first-class so they can carry date, role, confidence, and evidence.
 
 ### Appointment
 
+Represents an appointment action or appointment record that may create a later seat service.
+
 - `id`
-- `actor_id`
 - `seat_id`
+- `selected_actor_id`
 - `appointed_by_actor_id?`
+- `appointed_by_institution_id?`
 - `appointed_at`
-- `ended_at?`
+- `resulting_seat_service_id?`
 
 ### Membership
 

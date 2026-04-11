@@ -32,6 +32,7 @@ The point is not to cover every actor. The point is to show the exact threshold 
 
 - no term start date from this evidence alone
 - no district or election-seat inference from the meeting packet alone
+- use the later official elected-official and election pages for the actual seat and current `SeatService` objects
 
 ## Example 2: Defense Block Security
 

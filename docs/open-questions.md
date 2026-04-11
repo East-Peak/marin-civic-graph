@@ -141,15 +141,29 @@ Mirror the question here when it affects:
 
 ### OQ-017: San Rafael elected seat boundary
 
-- `status`: watch
+- `status`: resolved
 - `layer`: seat modeling
 - `scope`: `canonical-seeds-san-rafael-01`
 - `source refs`:
   - [canonical-seeds-san-rafael-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/canonical-seeds-san-rafael-01.json)
   - [identity-resolution-submodel.md](/Users/tammypais/projects/marin-civic-graph/docs/identity-resolution-submodel.md)
 - `question`: When should San Rafael elected identity seeds graduate into explicit seat and term objects rather than role-only claims?
-- `why it matters`: Vote, election, and disclosure joins will eventually want durable seat objects, but the current seed layer intentionally stops short of forcing district or term boundaries from one meeting packet.
-- `next evidence`: capture an official San Rafael elections or council-roster source that clearly states seat structure, districts if any, and term boundaries.
+- `why it matters`: Vote, election, and disclosure joins want durable seat objects and a clean separation between the underlying elected seat and transient leadership designations such as `Vice Mayor`.
+- `resolution note`: Resolved with official San Rafael elected-official, City Council, and November 5, 2024 election pages. The graph now supports explicit seat candidates for the at-large Mayor and Districts 1-4, plus `SeatService` candidates for the current officeholders. `Vice Mayor` remains a role claim layered on Rachel Kertz's District 4 seat service, not a separate seat.
+
+### OQ-018: San Rafael current council term boundaries
+
+- `status`: watch
+- `layer`: term-boundary modeling
+- `scope`: `canonical-seeds-san-rafael-01`
+- `source refs`:
+  - [canonical-seeds-san-rafael-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/canonical-seeds-san-rafael-01.json)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-elected-officials/2026-04-11/source.html)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-page/2026-04-11/source.html)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html)
+- `question`: What are the exact start and end dates for the current District 2 and District 3 council seat services, and what is the formal duration of the current Vice Mayor designation?
+- `why it matters`: The graph can now represent current seat occupancy, but exact term boundaries still matter for historical queries and officeholder overlap analysis.
+- `next evidence`: capture the earlier district-election or canvass materials that seated the current District 2 and District 3 councilmembers, plus any formal council action or protocol that defines the Vice Mayor designation period.
 
 ### OQ-016: San Rafael local Form 803 filing surface
 

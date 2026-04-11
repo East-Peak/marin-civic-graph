@@ -162,6 +162,9 @@ This repo started as a planning workspace and now includes the first live implem
   - first evidence-backed San Rafael canonical seed bundle for city institutions, electeds, and recurring organizations
   - raw councilmember placeholders in earlier bundles now have a documented promotion path into canonical actor IDs instead of staying permanent pseudo-actors
   - role claims for the August 19, 2024 council roster are accepted as identity claims without forcing weak seat or district joins
+  - official San Rafael elected-official, City Council, and November 5, 2024 election pages captured as identity evidence
+  - explicit seat candidates and current `SeatService` candidates added for the at-large Mayor and Districts 1-4
+  - `Vice Mayor` clarified as a role layered on a district seat service rather than a separate elected seat
 - procurement-layer schema, source bundle, and checklist for Marin County and San Rafael funding and contract workflows
 - selected first procurement sample basket:
   - county `Board Chambers Audio Visual Refresh / Prime Electric`

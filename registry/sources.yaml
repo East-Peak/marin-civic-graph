@@ -3201,3 +3201,93 @@ sources:
     dedupe_key_strategy: exact_url
     notes:
       - Executed Prime Electric contract package for the BOS Chambers AV refresh approval.
+
+  - source_id: san-rafael-elected-officials
+    label: San Rafael Elected Officials
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: official_communications
+    source_type: html_index
+    entry_url: https://www.cityofsanrafael.org/elected-officials/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/departments/city-clerk/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - actor
+      - institution
+      - seat
+      - seat_service
+      - claim
+    cadence: weekly
+    history_depth: changing_page
+    source_tier_default: A
+    robots_notes: public city roster page
+    review_risk: low
+    dedupe_key_strategy: page_url
+    notes:
+      - Strong current-state roster for San Rafael elected officials and district assignments.
+
+  - source_id: san-rafael-city-council-page
+    label: San Rafael City Council Page
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: official_communications
+    source_type: department_page
+    entry_url: https://www.cityofsanrafael.org/departments/city-council/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/elected-officials/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - institution
+      - seat
+      - seat_service
+      - claim
+    cadence: weekly
+    history_depth: changing_page
+    source_tier_default: A
+    robots_notes: public city council department page
+    review_risk: low
+    dedupe_key_strategy: page_url
+    notes:
+      - Useful for the current at-large Mayor plus District 1-4 council structure.
+      - Useful for treating Vice Mayor as a role designation instead of a separate elected seat.
+
+  - source_id: san-rafael-november-5-2024-election
+    label: San Rafael November 5 2024 Election Page
+    owner_type: institution
+    owner_id: san-rafael-city-clerk
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: official_communications
+    source_type: election_page
+    entry_url: https://www.cityofsanrafael.org/november-5-2024-election/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/elected-officials/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - election
+      - seat
+      - actor
+      - seat_service
+      - claim
+    cadence: record
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public city election results page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Confirms the certified November 5, 2024 winners for Mayor, District 1, and District 4.

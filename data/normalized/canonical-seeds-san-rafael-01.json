@@ -4,8 +4,8 @@
   "generated_at": "2026-04-11T18:30:00-07:00",
   "scope": {
     "jurisdiction": "San Rafael",
-    "focus": "Evidence-backed canonical actor and institution seeds for cross-slice joins",
-    "seed_boundary": "Promote canonical seeds when identity is explicit in official records or filings. Preserve role and seat uncertainty as claims or constraints instead of forcing weak joins."
+    "focus": "Evidence-backed canonical actor, seat, and institution seeds for cross-slice joins",
+    "seed_boundary": "Promote canonical seeds when identity is explicit in official records or filings. Preserve term uncertainty as claims or watch items instead of forcing weak joins."
   },
   "record_refs": [
     {
@@ -77,6 +77,27 @@
       "record_type": "contract_extract",
       "source_id": "san-rafael-aug-19-2024-council-meeting",
       "artifact_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-contract-downtown-streets-team.txt"
+    },
+    {
+      "id": "record-san-rafael-elected-officials-2026-04-11",
+      "record_class": "administrative_record",
+      "record_type": "official_roster_page",
+      "source_id": "san-rafael-elected-officials",
+      "artifact_path": "data/raw/san-rafael-elected-officials/2026-04-11/source.html"
+    },
+    {
+      "id": "record-san-rafael-city-council-page-2026-04-11",
+      "record_class": "administrative_record",
+      "record_type": "department_page",
+      "source_id": "san-rafael-city-council-page",
+      "artifact_path": "data/raw/san-rafael-city-council-page/2026-04-11/source.html"
+    },
+    {
+      "id": "record-san-rafael-november-5-2024-election-page",
+      "record_class": "administrative_record",
+      "record_type": "election_results_page",
+      "source_id": "san-rafael-november-5-2024-election",
+      "artifact_path": "data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html"
     }
   ],
   "institution_candidates": [
@@ -98,7 +119,9 @@
       "seed_status": "canonical_seed",
       "evidence_record_ids": [
         "record-san-rafael-city-council-2024-08-19-item-5a-report",
-        "record-san-rafael-library-grants-2022-12-19"
+        "record-san-rafael-library-grants-2022-12-19",
+        "record-san-rafael-elected-officials-2026-04-11",
+        "record-san-rafael-city-council-page-2026-04-11"
       ]
     },
     {
@@ -108,7 +131,8 @@
       "parent_institution_id": "inst-city-of-san-rafael",
       "seed_status": "canonical_seed",
       "evidence_record_ids": [
-        "record-kate-colin-form-803-2025-09-04"
+        "record-kate-colin-form-803-2025-09-04",
+        "record-san-rafael-november-5-2024-election-page"
       ]
     }
   ],
@@ -127,7 +151,10 @@
         "record-san-rafael-city-council-2024-08-19-item-5a-report",
         "record-san-rafael-boyd-dismissal-release-2024-08-08",
         "record-san-rafael-downtown-library-reopening-2025-04-07",
-        "record-kate-colin-form-803-2025-09-04"
+        "record-kate-colin-form-803-2025-09-04",
+        "record-san-rafael-elected-officials-2026-04-11",
+        "record-san-rafael-city-council-page-2026-04-11",
+        "record-san-rafael-november-5-2024-election-page"
       ],
       "resolves_raw_actor_seed_ids": [
         "actor-mayor-kate"
@@ -143,12 +170,13 @@
         "Vice Mayor Hill"
       ],
       "evidence_record_ids": [
-        "record-san-rafael-city-council-2024-08-19-item-5a-report"
+        "record-san-rafael-city-council-2024-08-19-item-5a-report",
+        "record-san-rafael-elected-officials-2026-04-11",
+        "record-san-rafael-city-council-page-2026-04-11"
       ],
       "resolves_raw_actor_seed_ids": [
         "actor-vice-mayor-hill"
-      ],
-      "notes": "Promoted from the official August 19, 2024 roster line. No seat or term boundary is inferred here."
+      ]
     },
     {
       "id": "actor-maribeth-bushey",
@@ -160,12 +188,13 @@
         "Councilmember Bushey"
       ],
       "evidence_record_ids": [
-        "record-san-rafael-city-council-2024-08-19-item-5a-report"
+        "record-san-rafael-city-council-2024-08-19-item-5a-report",
+        "record-san-rafael-elected-officials-2026-04-11",
+        "record-san-rafael-city-council-page-2026-04-11"
       ],
       "resolves_raw_actor_seed_ids": [
         "actor-councilmember-bushey"
-      ],
-      "notes": "Promoted from the official August 19, 2024 roster line. No seat or term boundary is inferred here."
+      ]
     },
     {
       "id": "actor-rachel-kertz",
@@ -174,15 +203,18 @@
       "seed_status": "canonical_seed",
       "observed_labels": [
         "Rachel Kertz",
-        "Councilmember Kertz"
+        "Councilmember Kertz",
+        "Vice Mayor Rachel Kertz"
       ],
       "evidence_record_ids": [
-        "record-san-rafael-city-council-2024-08-19-item-5a-report"
+        "record-san-rafael-city-council-2024-08-19-item-5a-report",
+        "record-san-rafael-elected-officials-2026-04-11",
+        "record-san-rafael-city-council-page-2026-04-11",
+        "record-san-rafael-november-5-2024-election-page"
       ],
       "resolves_raw_actor_seed_ids": [
         "actor-councilmember-kertz"
-      ],
-      "notes": "Promoted from the official August 19, 2024 roster line. No seat or term boundary is inferred here."
+      ]
     },
     {
       "id": "actor-maika-llorens-gulati",
@@ -194,12 +226,14 @@
         "Councilmember Llorens Gulati"
       ],
       "evidence_record_ids": [
-        "record-san-rafael-city-council-2024-08-19-item-5a-report"
+        "record-san-rafael-city-council-2024-08-19-item-5a-report",
+        "record-san-rafael-elected-officials-2026-04-11",
+        "record-san-rafael-city-council-page-2026-04-11",
+        "record-san-rafael-november-5-2024-election-page"
       ],
       "resolves_raw_actor_seed_ids": [
         "actor-councilmember-llorens-gulati"
-      ],
-      "notes": "Promoted from the official August 19, 2024 roster line. No seat or term boundary is inferred here."
+      ]
     },
     {
       "id": "actor-pacific-gas-and-electric-company",
@@ -297,6 +331,176 @@
       "notes": "Promoted from a signed public comment preserved in official meeting materials."
     }
   ],
+  "seat_candidates": [
+    {
+      "id": "seat-san-rafael-mayor-at-large",
+      "institution_id": "inst-san-rafael-city-council",
+      "name": "Mayor",
+      "seat_type": "elected",
+      "district": "at_large",
+      "evidence_record_ids": [
+        "record-san-rafael-elected-officials-2026-04-11",
+        "record-san-rafael-city-council-page-2026-04-11",
+        "record-san-rafael-november-5-2024-election-page"
+      ]
+    },
+    {
+      "id": "seat-san-rafael-city-council-district-1",
+      "institution_id": "inst-san-rafael-city-council",
+      "name": "District 1 Councilmember",
+      "seat_type": "elected",
+      "district": "1",
+      "evidence_record_ids": [
+        "record-san-rafael-elected-officials-2026-04-11",
+        "record-san-rafael-city-council-page-2026-04-11",
+        "record-san-rafael-november-5-2024-election-page"
+      ]
+    },
+    {
+      "id": "seat-san-rafael-city-council-district-2",
+      "institution_id": "inst-san-rafael-city-council",
+      "name": "District 2 Councilmember",
+      "seat_type": "elected",
+      "district": "2",
+      "evidence_record_ids": [
+        "record-san-rafael-elected-officials-2026-04-11",
+        "record-san-rafael-city-council-page-2026-04-11"
+      ]
+    },
+    {
+      "id": "seat-san-rafael-city-council-district-3",
+      "institution_id": "inst-san-rafael-city-council",
+      "name": "District 3 Councilmember",
+      "seat_type": "elected",
+      "district": "3",
+      "evidence_record_ids": [
+        "record-san-rafael-elected-officials-2026-04-11",
+        "record-san-rafael-city-council-page-2026-04-11"
+      ]
+    },
+    {
+      "id": "seat-san-rafael-city-council-district-4",
+      "institution_id": "inst-san-rafael-city-council",
+      "name": "District 4 Councilmember",
+      "seat_type": "elected",
+      "district": "4",
+      "evidence_record_ids": [
+        "record-san-rafael-elected-officials-2026-04-11",
+        "record-san-rafael-city-council-page-2026-04-11",
+        "record-san-rafael-november-5-2024-election-page"
+      ]
+    }
+  ],
+  "election_candidates": [
+    {
+      "id": "election-2024-11-05-san-rafael-mayor-general",
+      "jurisdiction_id": "place-san-rafael",
+      "election_type": "general_municipal",
+      "election_date": "2024-11-05",
+      "seat_id": "seat-san-rafael-mayor-at-large",
+      "status": "certified",
+      "evidence_record_ids": [
+        "record-san-rafael-november-5-2024-election-page"
+      ]
+    },
+    {
+      "id": "election-2024-11-05-san-rafael-council-district-1-general",
+      "jurisdiction_id": "place-san-rafael",
+      "election_type": "general_municipal",
+      "election_date": "2024-11-05",
+      "seat_id": "seat-san-rafael-city-council-district-1",
+      "status": "certified",
+      "evidence_record_ids": [
+        "record-san-rafael-november-5-2024-election-page"
+      ]
+    },
+    {
+      "id": "election-2024-11-05-san-rafael-council-district-4-general",
+      "jurisdiction_id": "place-san-rafael",
+      "election_type": "general_municipal",
+      "election_date": "2024-11-05",
+      "seat_id": "seat-san-rafael-city-council-district-4",
+      "status": "certified",
+      "evidence_record_ids": [
+        "record-san-rafael-november-5-2024-election-page"
+      ]
+    }
+  ],
+  "seat_service_candidates": [
+    {
+      "id": "seatservice-kate-colin-mayor-current",
+      "actor_id": "actor-kate-colin",
+      "seat_id": "seat-san-rafael-mayor-at-large",
+      "service_type": "elected",
+      "institution_id": "inst-san-rafael-city-council",
+      "election_id": "election-2024-11-05-san-rafael-mayor-general",
+      "observed_at": "2026-04-11",
+      "status": "current",
+      "evidence_record_ids": [
+        "record-san-rafael-elected-officials-2026-04-11",
+        "record-san-rafael-city-council-page-2026-04-11",
+        "record-san-rafael-november-5-2024-election-page"
+      ]
+    },
+    {
+      "id": "seatservice-maika-llorens-gulati-d1-current",
+      "actor_id": "actor-maika-llorens-gulati",
+      "seat_id": "seat-san-rafael-city-council-district-1",
+      "service_type": "elected",
+      "institution_id": "inst-san-rafael-city-council",
+      "election_id": "election-2024-11-05-san-rafael-council-district-1-general",
+      "observed_at": "2026-04-11",
+      "status": "current",
+      "evidence_record_ids": [
+        "record-san-rafael-elected-officials-2026-04-11",
+        "record-san-rafael-city-council-page-2026-04-11",
+        "record-san-rafael-november-5-2024-election-page"
+      ]
+    },
+    {
+      "id": "seatservice-eli-hill-d2-current",
+      "actor_id": "actor-eli-hill",
+      "seat_id": "seat-san-rafael-city-council-district-2",
+      "service_type": "elected",
+      "institution_id": "inst-san-rafael-city-council",
+      "observed_at": "2026-04-11",
+      "status": "current",
+      "evidence_record_ids": [
+        "record-san-rafael-elected-officials-2026-04-11",
+        "record-san-rafael-city-council-page-2026-04-11"
+      ],
+      "notes": "Current officeholding is explicit on official city pages, but the start date is not yet captured in this bundle."
+    },
+    {
+      "id": "seatservice-maribeth-bushey-d3-current",
+      "actor_id": "actor-maribeth-bushey",
+      "seat_id": "seat-san-rafael-city-council-district-3",
+      "service_type": "elected",
+      "institution_id": "inst-san-rafael-city-council",
+      "observed_at": "2026-04-11",
+      "status": "current",
+      "evidence_record_ids": [
+        "record-san-rafael-elected-officials-2026-04-11",
+        "record-san-rafael-city-council-page-2026-04-11"
+      ],
+      "notes": "Current officeholding is explicit on official city pages, but the start date is not yet captured in this bundle."
+    },
+    {
+      "id": "seatservice-rachel-kertz-d4-current",
+      "actor_id": "actor-rachel-kertz",
+      "seat_id": "seat-san-rafael-city-council-district-4",
+      "service_type": "elected",
+      "institution_id": "inst-san-rafael-city-council",
+      "election_id": "election-2024-11-05-san-rafael-council-district-4-general",
+      "observed_at": "2026-04-11",
+      "status": "current",
+      "evidence_record_ids": [
+        "record-san-rafael-elected-officials-2026-04-11",
+        "record-san-rafael-city-council-page-2026-04-11",
+        "record-san-rafael-november-5-2024-election-page"
+      ]
+    }
+  ],
   "claim_candidates": [
     {
       "id": "claim-kate-colin-city-council-mayor-2024-08-19",
@@ -377,6 +581,20 @@
         "record-san-rafael-public-comment-ms-2024-08-19"
       ],
       "notes": "Derived from the sign-off and self-description in the official submitted public comment."
+    },
+    {
+      "id": "claim-rachel-kertz-city-council-vice-mayor-2026-04-11",
+      "claim_type": "actor_role_at_institution",
+      "status": "accepted_for_seed",
+      "confidence": "high",
+      "subject_actor_id": "actor-rachel-kertz",
+      "institution_id": "inst-san-rafael-city-council",
+      "role_label": "Vice Mayor",
+      "effective_date": "2026-04-11",
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-page-2026-04-11"
+      ],
+      "notes": "The official City Council page presents Rachel Kertz as Vice Mayor while also listing District 4 as the underlying elected seat. This should remain a role claim, not a separate seat."
     }
   ],
   "methodology_findings": [
@@ -391,22 +609,27 @@
     {
       "id": "identity-finding-san-rafael-03",
       "summary": "Alias capture is valuable when official records expand the alias themselves, such as `Defense Block Security (DBS)` and `Downtown Streets Team (DST)`. Acronym-only matches should remain context-bound."
+    },
+    {
+      "id": "identity-finding-san-rafael-04",
+      "summary": "San Rafael's current official structure is an at-large Mayor plus four district council seats. `Vice Mayor` is better modeled as a role claim layered on top of a district seat service, not as a separate elected seat."
     }
   ],
   "promotion_constraints": [
     "Do not infer San Rafael council district or seat structure from the August 19, 2024 packet alone.",
     "Do not backdate or forward-fill officeholder term dates from one roster observation.",
     "Do not merge actors from title-only labels unless the full name is explicit in the same record or a corroborating official record.",
-    "Do not use media-only framing to mint canonical actors when official records are absent."
+    "Do not use media-only framing to mint canonical actors when official records are absent.",
+    "Do not model `Vice Mayor` as a separate elected seat unless a stronger legal source says it is independently elected."
   ],
   "open_questions": [
     {
-      "id": "OQ-017",
+      "id": "OQ-018",
       "status": "watch",
-      "layer": "seat modeling",
-      "question": "When should San Rafael elected identity seeds graduate into explicit seat and term objects rather than role-only claims?",
-      "why_it_matters": "Votes, elections, and disclosure joins will eventually want durable seat objects, but this seed bundle does not yet have a strong official district-or-term source for those council roles.",
-      "next_evidence": "Capture an official San Rafael elections or council-roster source that clearly states seat structure, districts if any, and term boundaries."
+      "layer": "term-boundary modeling",
+      "question": "What are the exact start and end dates for the current District 2 and District 3 council seat services, and what is the formal duration of the current Vice Mayor designation?",
+      "why_it_matters": "This bundle now supports explicit seat and current officeholding objects, but the exact start and end dates for the current District 2 and District 3 seat services are still missing.",
+      "next_evidence": "Capture the earlier San Rafael election or canvass materials that seated the current District 2 and District 3 councilmembers, and capture any formal source defining the duration of the Vice Mayor designation."
     }
   ]
 }
