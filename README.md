@@ -96,6 +96,8 @@ Start narrow:
 - [Ingestion Agents](./docs/ingestion-agents.md)
 - [Source Registry Format](./docs/source-registry-format.md)
 - [Source Adapter And Operations Plan](./docs/source-adapter-and-operations-plan.md)
+- [Source Profile Matrix](./docs/source-profile-matrix.md)
+- [Historical Backfill Wave 01](./docs/historical-backfill-wave-01.md)
 - [Seed Source Registry](./registry/README.md)
 - [Media Attribution Rules](./docs/media-attribution-rules.md)
 - [Open Questions](./docs/open-questions.md)
@@ -141,6 +143,8 @@ This repo started as a planning workspace and now includes the first live implem
 - source registry seeds
 - source-registry format now expanded to capture platform family, backfill target, change signal, and source-specific quirks
 - source-adapter operations note added to document municipality/county source idiosyncrasies, historical backfill planning, and recurring sync strategy
+- first source-profile matrix added for `San Rafael` and `Marin County`
+- first historical backfill plan added, targeting `2019-01-01` for the initial council, BOS, campaign, and disclosure wave
 - raw official source captures for case study 01
 - raw criminal-justice source captures for Marin court and sheriff landing surfaces
 - campaign-finance and disclosure layer formalized around `Election`, `Committee`, `Candidacy`, `Filing`, and `EconomicInterestDisclosure`
