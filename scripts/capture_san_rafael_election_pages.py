@@ -9,52 +9,11 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+from san_rafael_election_pages import DISCOVERY_PAGES, build_discovered_election_pages
+
 
 ROOT = Path(__file__).resolve().parent.parent
 RAW_DIR = ROOT / "data" / "raw"
-
-ELECTION_PAGES = [
-    {
-        "source_id": "san-rafael-november-8-2011-election",
-        "label": "San Rafael November 8 2011 Election Page",
-        "entry_url": "https://www.cityofsanrafael.org/november-8-2011-election/",
-    },
-    {
-        "source_id": "san-rafael-november-5-2013-election",
-        "label": "San Rafael November 5 2013 Election Page",
-        "entry_url": "https://www.cityofsanrafael.org/november-5-2013-election/",
-    },
-    {
-        "source_id": "san-rafael-november-3-2015-election",
-        "label": "San Rafael November 3 2015 Election Page",
-        "entry_url": "https://www.cityofsanrafael.org/november-3-2015-election/",
-    },
-    {
-        "source_id": "san-rafael-november-7-2017-election",
-        "label": "San Rafael November 7 2017 General Municipal Election Page",
-        "entry_url": "https://www.cityofsanrafael.org/november-7-2017-election/",
-    },
-    {
-        "source_id": "san-rafael-november-6-2018-election",
-        "label": "San Rafael November 6 2018 Election Page",
-        "entry_url": "https://www.cityofsanrafael.org/november-6-2018-election/",
-    },
-    {
-        "source_id": "san-rafael-november-3-2020-election",
-        "label": "San Rafael November 3 2020 Election Page",
-        "entry_url": "https://www.cityofsanrafael.org/november-3-2020-election/",
-    },
-    {
-        "source_id": "san-rafael-november-8-2022-election",
-        "label": "San Rafael November 8 2022 Election Page",
-        "entry_url": "https://www.cityofsanrafael.org/november-8-2022-election/",
-    },
-    {
-        "source_id": "san-rafael-november-5-2024-election",
-        "label": "San Rafael November 5 2024 Election Page",
-        "entry_url": "https://www.cityofsanrafael.org/november-5-2024-election/",
-    },
-]
 
 
 def utc_now_iso() -> str:
@@ -89,7 +48,34 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    for page in ELECTION_PAGES:
+    discovery_html_texts: list[str] = []
+    for page in DISCOVERY_PAGES:
+        html_text = fetch_html(page["entry_url"])
+        capture_dir = RAW_DIR / page["source_id"] / args.capture_date
+        capture_dir.mkdir(parents=True, exist_ok=True)
+        (capture_dir / "source.html").write_text(html_text)
+        discovery_html_texts.append(html_text)
+        write_json(
+            capture_dir / "manifest.json",
+            {
+                "source_id": page["source_id"],
+                "capture_id": f"{page['source_id']}__{args.capture_date}",
+                "captured_at": utc_now_iso(),
+                "entry_url": page["entry_url"],
+                "fetch_strategy": "static_html",
+                "artifacts": [
+                    {"path": "source.html", "content_type": "text/html"},
+                ],
+                "notes": [
+                    page["label"],
+                    f"Captured title: {extract_title(html_text)}",
+                ],
+            },
+        )
+        print(page["source_id"])
+
+    discovered_pages = build_discovered_election_pages(discovery_html_texts)
+    for page in discovered_pages:
         html_text = fetch_html(page["entry_url"])
         capture_dir = RAW_DIR / page["source_id"] / args.capture_date
         capture_dir.mkdir(parents=True, exist_ok=True)
@@ -107,6 +93,7 @@ def main() -> None:
                 ],
                 "notes": [
                     page["label"],
+                    "Discovered through the San Rafael elections index pages.",
                     f"Captured title: {extract_title(html_text)}",
                 ],
             },

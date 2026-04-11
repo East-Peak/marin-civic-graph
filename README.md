@@ -139,6 +139,7 @@ Start narrow:
 
 - [Case Study 01 Extractor](./scripts/extract_case_study_01_bundle.py)
 - [San Rafael Form 803 Capture Workflow](./scripts/capture_san_rafael_form803.py)
+- [San Rafael Election Page Discovery Helpers](./scripts/san_rafael_election_pages.py)
 - [San Rafael Election Page Capture Workflow](./scripts/capture_san_rafael_election_pages.py)
 - [San Rafael City Council Archive Capture Workflow](./scripts/capture_san_rafael_city_council_archive.py)
 - [San Rafael City-Side Campaign Filing Inventory Workflow](./scripts/capture_san_rafael_city_campaign_filing_inventory.py)
@@ -170,13 +171,16 @@ This repo started as a planning workspace and now includes the first live implem
   - recorded portal year coverage back to `1997` and current election-tree labels for public election context
   - confirmed the operating split: yearly export is the historical backfill surface, while RSS remains the near-real-time change feed
 - fourth wave-01 source execution started for `San Rafael city-side campaign filings`:
-  - added a dedicated election-page capture workflow for San Rafael's `2011`, `2013`, `2015`, `2017`, `2018`, `2020`, `2022`, and `2024` election landing pages
-  - added a derived inventory workflow that uses the San Rafael disclosures page plus those captured election pages to enumerate city-side campaign filing destinations
-  - captured the two top-level Laserfiche filing destinations, `5` pre-2020 election-level filing folders, and `27` candidate-specific child folder IDs across the November 3, 2020, November 8, 2022, and November 5, 2024 election pages
+  - added a discovery-aware election-page capture workflow that starts from the city's own `elections` and `past-elections` index pages
+  - added a derived inventory workflow that uses the San Rafael disclosures page plus those discovered election landing pages to enumerate city-side campaign filing destinations
+  - captured `13` election landing pages spanning `2010` through `2026`
+  - confirmed `9` campaign-bearing election pages: `6` election-level filing-folder pages and `3` candidate-folder pages
+  - captured the two top-level Laserfiche filing destinations and `27` candidate-specific child folder IDs across the November 3, 2020, November 8, 2022, and November 5, 2024 election pages
   - extracted cycle-specific independent-expenditure filing folder IDs for `2020` and `2022`
-  - confirmed the source-shape breakpoint: `2011` through `2018` pages expose election-level campaign filing folders, while `2020+` pages expose candidate-specific filing folders
+  - confirmed the source-shape breakpoint: the November `2011` through `2018` pages plus the June 7, 2016 page expose election-level campaign filing folders, while `2020+` pages expose candidate-specific filing folders
+  - confirmed that the June 8, 2010, November 2, 2010, June 5, 2018 special, and June 2, 2026 special pages are useful election-context records but do not currently expose campaign-filing destinations
   - recorded the current adapter boundary explicitly: anonymous Laserfiche folder-listing probes for both top-level campaign folders and a sampled child folder currently fail with session-limit error `[9030]`
-  - confirmed the current working discovery pattern is `disclosures page -> top-level folder ids -> election page -> candidate-specific child folder ids`
+  - confirmed the current working discovery pattern is `elections / past-elections -> election landing page -> campaign filing destination`, with Laserfiche browse probing kept as a secondary experiment rather than the primary discovery path
 - raw official source captures for case study 01
 - raw criminal-justice source captures for Marin court and sheriff landing surfaces
 - campaign-finance and disclosure layer formalized around `Election`, `Committee`, `Candidacy`, `Filing`, and `EconomicInterestDisclosure`

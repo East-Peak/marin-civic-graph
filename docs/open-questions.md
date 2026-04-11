@@ -189,12 +189,15 @@ Mirror the question here when it affects:
   - [2026-04-11.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json)
   - [folder-probe.json](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-public-records-financial-filings-folder/2026-04-11/folder-probe.json)
   - [folder-probe.json](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-public-records-independent-expenditures-folder/2026-04-11/folder-probe.json)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-elections-index/2026-04-11/source.html)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-past-elections/2026-04-11/source.html)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-june-7-2016-election/2026-04-11/source.html)
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-3-2020-election/2026-04-11/source.html)
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-8-2022-election/2026-04-11/source.html)
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html)
 - `question`: Should the city-side campaign backfill adapter rely permanently on election-page child-folder discovery, or is there a stable anonymous Laserfiche listing path for the top-level filing folders that we have not found yet?
 - `why it matters`: This determines whether historical city-side campaign backfill is `page-linked` or truly `folder-enumerated`, which affects how much year-by-year election-page recovery we need before cron sync starts.
-- `next evidence`: the `2011`, `2013`, `2015`, `2017`, and `2018` election pages now confirm a pre-2020 election-level filing-folder pattern, while `2020`, `2022`, and `2024` confirm the later candidate-folder pattern. The remaining work is to test whether the top-level Laserfiche folder endpoints ever expose a stable anonymous listing path outside the current `[9030]` session-limit failure.
+- `next evidence`: the city `elections` and `past-elections` pages are now the stable discovery backbone. They expose `13` election landing pages from `2010` through `2026`, and `9` of those pages are campaign-bearing. The remaining work is narrower: test whether the top-level Laserfiche folder endpoints ever expose a stable anonymous listing path outside the current `[9030]` session-limit failure, or treat page-linked discovery as the permanent operating path.
 
 ### OQ-021: San Rafael 2018 election filing URL typo
 

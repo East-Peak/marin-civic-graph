@@ -13,6 +13,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from san_rafael_election_pages import DISCOVERY_PAGES, build_discovered_election_pages
+
 
 ROOT = Path(__file__).resolve().parent.parent
 RAW_DIR = ROOT / "data" / "raw"
@@ -28,16 +30,6 @@ JSON_HEADERS = {
 }
 
 DISCLOSURES_SOURCE_ID = "san-rafael-disclosures"
-ELECTION_SOURCE_IDS = [
-    "san-rafael-november-8-2011-election",
-    "san-rafael-november-5-2013-election",
-    "san-rafael-november-3-2015-election",
-    "san-rafael-november-7-2017-election",
-    "san-rafael-november-6-2018-election",
-    "san-rafael-november-3-2020-election",
-    "san-rafael-november-8-2022-election",
-    "san-rafael-november-5-2024-election",
-]
 
 TOP_LEVEL_LABELS = {
     "View Financial Filings": "san-rafael-public-records-financial-filings-folder",
@@ -75,6 +67,11 @@ def entry_id_from_url(url: str) -> int | None:
 def read_capture(source_id: str, capture_date: str) -> str:
     path = RAW_DIR / source_id / capture_date / "source.html"
     return path.read_text()
+
+
+def load_discovered_election_pages(capture_date: str) -> list[dict[str, str]]:
+    discovery_html_texts = [read_capture(page["source_id"], capture_date) for page in DISCOVERY_PAGES]
+    return build_discovered_election_pages(discovery_html_texts)
 
 
 def extract_top_level_destinations(disclosures_html: str) -> list[dict[str, Any]]:
@@ -209,6 +206,7 @@ def extract_election_level_campaign_folder(
     lines = election_html.splitlines()
     labels = {
         "Campaign Finance Disclosure",
+        "Campaign Finance Disclosures",
         "Campaign Finance Reporting",
         "Financial Filings",
     }
@@ -302,17 +300,28 @@ def main() -> None:
 
     disclosures_html = read_capture(DISCLOSURES_SOURCE_ID, args.capture_date)
     top_level_destinations = extract_top_level_destinations(disclosures_html)
+    discovered_pages = load_discovered_election_pages(args.capture_date)
     candidate_folders: list[dict[str, Any]] = []
     ie_resources: list[dict[str, Any]] = []
     ie_filing_folders: list[dict[str, Any]] = []
     election_level_campaign_folders: list[dict[str, Any]] = []
+    campaign_page_inventory: list[dict[str, Any]] = []
     derived_from = [
         {
             "source_id": DISCLOSURES_SOURCE_ID,
             "path": f"data/raw/{DISCLOSURES_SOURCE_ID}/{args.capture_date}/source.html",
         }
     ]
-    for source_id in ELECTION_SOURCE_IDS:
+    for page in DISCOVERY_PAGES:
+        derived_from.append(
+            {
+                "source_id": page["source_id"],
+                "path": f"data/raw/{page['source_id']}/{args.capture_date}/source.html",
+            }
+        )
+
+    for page in discovered_pages:
+        source_id = page["source_id"]
         election_html = read_capture(source_id, args.capture_date)
         match = re.search(r"<title>(.*?)</title>", election_html, re.S | re.I)
         election_label = clean_html_text(match.group(1)) if match else source_id
@@ -322,9 +331,8 @@ def main() -> None:
                 "path": f"data/raw/{source_id}/{args.capture_date}/source.html",
             }
         )
-        candidate_folders.extend(
-            extract_campaign_folder_inventory(election_html, source_id, election_label)
-        )
+        page_candidate_folders = extract_campaign_folder_inventory(election_html, source_id, election_label)
+        candidate_folders.extend(page_candidate_folders)
         ie_resource = extract_ie_resource(election_html, source_id, election_label)
         if ie_resource is not None:
             ie_resources.append(ie_resource)
@@ -336,6 +344,24 @@ def main() -> None:
         )
         if election_level_campaign_folder is not None:
             election_level_campaign_folders.append(election_level_campaign_folder)
+        campaign_page_inventory.append(
+            {
+                "source_id": source_id,
+                "entry_url": page["entry_url"],
+                "election_label": election_label,
+                "candidate_folder_count": len(page_candidate_folders),
+                "has_election_level_campaign_folder": election_level_campaign_folder is not None,
+                "has_independent_expenditure_resource": ie_resource is not None,
+                "has_independent_expenditure_filing_folder": ie_filing_folder is not None,
+                "campaign_signal_kind": (
+                    "candidate_folders"
+                    if page_candidate_folders
+                    else "election_level_folder"
+                    if election_level_campaign_folder is not None
+                    else "none"
+                ),
+            }
+        )
 
     top_level_probes: list[dict[str, Any]] = []
     sample_child_probe = None
@@ -415,17 +441,27 @@ def main() -> None:
         "capture_date": args.capture_date,
         "captured_at": utc_now_iso(),
         "derived_from": derived_from,
+        "discovered_election_pages": discovered_pages,
+        "election_page_inventory": campaign_page_inventory,
+        "election_page_count": len(discovered_pages),
+        "campaign_bearing_election_page_count": sum(
+            1 for page in campaign_page_inventory if page["campaign_signal_kind"] != "none"
+        ),
         "top_level_destinations": top_level_destinations,
         "top_level_folder_probes": top_level_probes,
         "candidate_folder_inventory": candidate_folders,
         "candidate_folder_count": len(candidate_folders),
         "election_level_campaign_filing_folders": election_level_campaign_folders,
+        "election_level_campaign_filing_folder_count": len(election_level_campaign_folders),
         "independent_expenditure_resources": ie_resources,
         "independent_expenditure_filing_folders": ie_filing_folders,
+        "independent_expenditure_filing_folder_count": len(ie_filing_folders),
         "sample_child_folder_probe": sample_child_probe,
         "notes": [
-            "San Rafael city-side campaign filings are publicly routed through the disclosures page and cycle-specific election pages.",
-            "The 2011 through 2018 election pages expose election-level campaign-finance filing folders, while the 2020, 2022, and 2024 election pages expose candidate-specific campaign-finance folder IDs.",
+            "San Rafael city-side campaign filings are publicly routed through the disclosures page plus the city's own elections index pages.",
+            "The current discovery backbone is `elections` and `past-elections`, which expose election landing pages from 2010 through 2026.",
+            "Campaign-bearing pages currently include the June 7, 2016 page, the November 2011 through 2018 pages, and the November 2020 through 2024 pages. The June 8, 2010, November 2, 2010, June 5, 2018 special, and June 2, 2026 special pages do not currently expose campaign-filing destinations.",
+            "The 2011 through 2018 election pages plus the June 7, 2016 page expose election-level campaign-finance filing folders, while the 2020, 2022, and 2024 election pages expose candidate-specific campaign-finance folder IDs.",
             "Until Laserfiche folder enumeration becomes reliably accessible, the safest backfill strategy is page-linked folder discovery plus record-level capture where direct document links are exposed.",
         ],
     }

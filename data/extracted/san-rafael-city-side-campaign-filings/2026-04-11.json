@@ -1,44 +1,273 @@
 {
   "capture_date": "2026-04-11",
-  "captured_at": "2026-04-11T21:07:50Z",
+  "captured_at": "2026-04-11T22:04:40Z",
   "derived_from": [
     {
       "source_id": "san-rafael-disclosures",
       "path": "data/raw/san-rafael-disclosures/2026-04-11/source.html"
     },
     {
-      "source_id": "san-rafael-november-8-2011-election",
-      "path": "data/raw/san-rafael-november-8-2011-election/2026-04-11/source.html"
+      "source_id": "san-rafael-elections-index",
+      "path": "data/raw/san-rafael-elections-index/2026-04-11/source.html"
     },
     {
-      "source_id": "san-rafael-november-5-2013-election",
-      "path": "data/raw/san-rafael-november-5-2013-election/2026-04-11/source.html"
+      "source_id": "san-rafael-past-elections",
+      "path": "data/raw/san-rafael-past-elections/2026-04-11/source.html"
     },
     {
-      "source_id": "san-rafael-november-3-2015-election",
-      "path": "data/raw/san-rafael-november-3-2015-election/2026-04-11/source.html"
+      "source_id": "san-rafael-june-2-2026-special-municipal-election",
+      "path": "data/raw/san-rafael-june-2-2026-special-municipal-election/2026-04-11/source.html"
     },
     {
-      "source_id": "san-rafael-november-7-2017-election",
-      "path": "data/raw/san-rafael-november-7-2017-election/2026-04-11/source.html"
-    },
-    {
-      "source_id": "san-rafael-november-6-2018-election",
-      "path": "data/raw/san-rafael-november-6-2018-election/2026-04-11/source.html"
-    },
-    {
-      "source_id": "san-rafael-november-3-2020-election",
-      "path": "data/raw/san-rafael-november-3-2020-election/2026-04-11/source.html"
+      "source_id": "san-rafael-november-5-2024-election",
+      "path": "data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html"
     },
     {
       "source_id": "san-rafael-november-8-2022-election",
       "path": "data/raw/san-rafael-november-8-2022-election/2026-04-11/source.html"
     },
     {
-      "source_id": "san-rafael-november-5-2024-election",
-      "path": "data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html"
+      "source_id": "san-rafael-november-3-2020-election",
+      "path": "data/raw/san-rafael-november-3-2020-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-june-5-2018-special-municipal-election",
+      "path": "data/raw/san-rafael-june-5-2018-special-municipal-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-6-2018-election",
+      "path": "data/raw/san-rafael-november-6-2018-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-7-2017-election",
+      "path": "data/raw/san-rafael-november-7-2017-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-3-2015-election",
+      "path": "data/raw/san-rafael-november-3-2015-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-june-7-2016-election",
+      "path": "data/raw/san-rafael-june-7-2016-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-5-2013-election",
+      "path": "data/raw/san-rafael-november-5-2013-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-8-2011-election",
+      "path": "data/raw/san-rafael-november-8-2011-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-2-2010-election",
+      "path": "data/raw/san-rafael-november-2-2010-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-june-8-2010-election",
+      "path": "data/raw/san-rafael-june-8-2010-election/2026-04-11/source.html"
     }
   ],
+  "discovered_election_pages": [
+    {
+      "source_id": "san-rafael-june-2-2026-special-municipal-election",
+      "label": "San Rafael June 2 2026 Special Municipal Election Page",
+      "entry_url": "https://www.cityofsanrafael.org/june-2-2026-special-municipal-election/"
+    },
+    {
+      "source_id": "san-rafael-november-5-2024-election",
+      "label": "San Rafael November 5 2024 Election Page",
+      "entry_url": "https://www.cityofsanrafael.org/november-5-2024-election/"
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "label": "San Rafael November 8 2022 Election Page",
+      "entry_url": "https://www.cityofsanrafael.org/november-8-2022-election/"
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "label": "San Rafael November 3 2020 Election Page",
+      "entry_url": "https://www.cityofsanrafael.org/november-3-2020-election/"
+    },
+    {
+      "source_id": "san-rafael-june-5-2018-special-municipal-election",
+      "label": "San Rafael June 5 2018 Special Municipal Election Page",
+      "entry_url": "https://www.cityofsanrafael.org/june-5-2018-special-municipal-election/"
+    },
+    {
+      "source_id": "san-rafael-november-6-2018-election",
+      "label": "San Rafael November 6 2018 Election Page",
+      "entry_url": "https://www.cityofsanrafael.org/november-6-2018-election/"
+    },
+    {
+      "source_id": "san-rafael-november-7-2017-election",
+      "label": "San Rafael November 7 2017 General Municipal Election Page",
+      "entry_url": "https://www.cityofsanrafael.org/november-7-2017-election/"
+    },
+    {
+      "source_id": "san-rafael-november-3-2015-election",
+      "label": "San Rafael November 3 2015 Election Page",
+      "entry_url": "https://www.cityofsanrafael.org/november-3-2015-election/"
+    },
+    {
+      "source_id": "san-rafael-june-7-2016-election",
+      "label": "San Rafael June 7 2016 Election Page",
+      "entry_url": "https://www.cityofsanrafael.org/june-7-2016-election/"
+    },
+    {
+      "source_id": "san-rafael-november-5-2013-election",
+      "label": "San Rafael November 5 2013 Election Page",
+      "entry_url": "https://www.cityofsanrafael.org/november-5-2013-election/"
+    },
+    {
+      "source_id": "san-rafael-november-8-2011-election",
+      "label": "San Rafael November 8 2011 Election Page",
+      "entry_url": "https://www.cityofsanrafael.org/november-8-2011-election/"
+    },
+    {
+      "source_id": "san-rafael-november-2-2010-election",
+      "label": "San Rafael November 2 2010 Election Page",
+      "entry_url": "https://www.cityofsanrafael.org/november-2-2010-election/"
+    },
+    {
+      "source_id": "san-rafael-june-8-2010-election",
+      "label": "San Rafael June 8 2010 Election Page",
+      "entry_url": "https://www.cityofsanrafael.org/june-8-2010-election/"
+    }
+  ],
+  "election_page_inventory": [
+    {
+      "source_id": "san-rafael-june-2-2026-special-municipal-election",
+      "entry_url": "https://www.cityofsanrafael.org/june-2-2026-special-municipal-election/",
+      "election_label": "June 2, 2026 Special Municipal Election - San Rafael",
+      "candidate_folder_count": 0,
+      "has_election_level_campaign_folder": false,
+      "has_independent_expenditure_resource": false,
+      "has_independent_expenditure_filing_folder": false,
+      "campaign_signal_kind": "none"
+    },
+    {
+      "source_id": "san-rafael-november-5-2024-election",
+      "entry_url": "https://www.cityofsanrafael.org/november-5-2024-election/",
+      "election_label": "November 5, 2024 Election - San Rafael",
+      "candidate_folder_count": 10,
+      "has_election_level_campaign_folder": false,
+      "has_independent_expenditure_resource": true,
+      "has_independent_expenditure_filing_folder": false,
+      "campaign_signal_kind": "candidate_folders"
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "entry_url": "https://www.cityofsanrafael.org/november-8-2022-election/",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "candidate_folder_count": 8,
+      "has_election_level_campaign_folder": false,
+      "has_independent_expenditure_resource": true,
+      "has_independent_expenditure_filing_folder": true,
+      "campaign_signal_kind": "candidate_folders"
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "entry_url": "https://www.cityofsanrafael.org/november-3-2020-election/",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "candidate_folder_count": 9,
+      "has_election_level_campaign_folder": false,
+      "has_independent_expenditure_resource": true,
+      "has_independent_expenditure_filing_folder": true,
+      "campaign_signal_kind": "candidate_folders"
+    },
+    {
+      "source_id": "san-rafael-june-5-2018-special-municipal-election",
+      "entry_url": "https://www.cityofsanrafael.org/june-5-2018-special-municipal-election/",
+      "election_label": "June 5, 2018 Special Municipal Election - San Rafael",
+      "candidate_folder_count": 0,
+      "has_election_level_campaign_folder": false,
+      "has_independent_expenditure_resource": false,
+      "has_independent_expenditure_filing_folder": false,
+      "campaign_signal_kind": "none"
+    },
+    {
+      "source_id": "san-rafael-november-6-2018-election",
+      "entry_url": "https://www.cityofsanrafael.org/november-6-2018-election/",
+      "election_label": "November 6, 2018 Election - San Rafael",
+      "candidate_folder_count": 0,
+      "has_election_level_campaign_folder": true,
+      "has_independent_expenditure_resource": false,
+      "has_independent_expenditure_filing_folder": false,
+      "campaign_signal_kind": "election_level_folder"
+    },
+    {
+      "source_id": "san-rafael-november-7-2017-election",
+      "entry_url": "https://www.cityofsanrafael.org/november-7-2017-election/",
+      "election_label": "November 7, 2017 General Municipal Election - San Rafael",
+      "candidate_folder_count": 0,
+      "has_election_level_campaign_folder": true,
+      "has_independent_expenditure_resource": false,
+      "has_independent_expenditure_filing_folder": false,
+      "campaign_signal_kind": "election_level_folder"
+    },
+    {
+      "source_id": "san-rafael-november-3-2015-election",
+      "entry_url": "https://www.cityofsanrafael.org/november-3-2015-election/",
+      "election_label": "November 3, 2015 Election - San Rafael",
+      "candidate_folder_count": 0,
+      "has_election_level_campaign_folder": true,
+      "has_independent_expenditure_resource": false,
+      "has_independent_expenditure_filing_folder": false,
+      "campaign_signal_kind": "election_level_folder"
+    },
+    {
+      "source_id": "san-rafael-june-7-2016-election",
+      "entry_url": "https://www.cityofsanrafael.org/june-7-2016-election/",
+      "election_label": "June 7, 2016 Election - San Rafael",
+      "candidate_folder_count": 0,
+      "has_election_level_campaign_folder": true,
+      "has_independent_expenditure_resource": false,
+      "has_independent_expenditure_filing_folder": false,
+      "campaign_signal_kind": "election_level_folder"
+    },
+    {
+      "source_id": "san-rafael-november-5-2013-election",
+      "entry_url": "https://www.cityofsanrafael.org/november-5-2013-election/",
+      "election_label": "November 5, 2013 Election - San Rafael",
+      "candidate_folder_count": 0,
+      "has_election_level_campaign_folder": true,
+      "has_independent_expenditure_resource": false,
+      "has_independent_expenditure_filing_folder": false,
+      "campaign_signal_kind": "election_level_folder"
+    },
+    {
+      "source_id": "san-rafael-november-8-2011-election",
+      "entry_url": "https://www.cityofsanrafael.org/november-8-2011-election/",
+      "election_label": "November 8, 2011 Election - San Rafael",
+      "candidate_folder_count": 0,
+      "has_election_level_campaign_folder": true,
+      "has_independent_expenditure_resource": false,
+      "has_independent_expenditure_filing_folder": false,
+      "campaign_signal_kind": "election_level_folder"
+    },
+    {
+      "source_id": "san-rafael-november-2-2010-election",
+      "entry_url": "https://www.cityofsanrafael.org/november-2-2010-election/",
+      "election_label": "November 2, 2010 Election - San Rafael",
+      "candidate_folder_count": 0,
+      "has_election_level_campaign_folder": false,
+      "has_independent_expenditure_resource": false,
+      "has_independent_expenditure_filing_folder": false,
+      "campaign_signal_kind": "none"
+    },
+    {
+      "source_id": "san-rafael-june-8-2010-election",
+      "entry_url": "https://www.cityofsanrafael.org/june-8-2010-election/",
+      "election_label": "June 8, 2010 Election - San Rafael",
+      "candidate_folder_count": 0,
+      "has_election_level_campaign_folder": false,
+      "has_independent_expenditure_resource": false,
+      "has_independent_expenditure_filing_folder": false,
+      "campaign_signal_kind": "none"
+    }
+  ],
+  "election_page_count": 13,
+  "campaign_bearing_election_page_count": 9,
   "top_level_destinations": [
     {
       "source_id": "san-rafael-public-records-financial-filings-folder",
@@ -351,159 +580,6 @@
   ],
   "candidate_folder_inventory": [
     {
-      "source_id": "san-rafael-november-3-2020-election",
-      "election_label": "November 3, 2020 Election - San Rafael",
-      "section_label": "City of San Rafael Election",
-      "office_label": "Mayoral Candidates",
-      "candidate_name": "Kate Colin",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31079&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 31079
-    },
-    {
-      "source_id": "san-rafael-november-3-2020-election",
-      "election_label": "November 3, 2020 Election - San Rafael",
-      "section_label": "City of San Rafael Election",
-      "office_label": "Mayoral Candidates",
-      "candidate_name": "Mahmoud Shirazi",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31080&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 31080
-    },
-    {
-      "source_id": "san-rafael-november-3-2020-election",
-      "election_label": "November 3, 2020 Election - San Rafael",
-      "section_label": "City of San Rafael Election",
-      "office_label": "Councilmember District 4 Candidates",
-      "candidate_name": "John Gamblin",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31431&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 31431
-    },
-    {
-      "source_id": "san-rafael-november-3-2020-election",
-      "election_label": "November 3, 2020 Election - San Rafael",
-      "section_label": "City of San Rafael Election",
-      "office_label": "Councilmember District 4 Candidates",
-      "candidate_name": "Rachel Kertz",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31082&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 31082
-    },
-    {
-      "source_id": "san-rafael-november-3-2020-election",
-      "election_label": "November 3, 2020 Election - San Rafael",
-      "section_label": "City of San Rafael Election",
-      "office_label": "Councilmember District 4 Candidates",
-      "candidate_name": "Greg Knell",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31081&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 31081
-    },
-    {
-      "source_id": "san-rafael-november-3-2020-election",
-      "election_label": "November 3, 2020 Election - San Rafael",
-      "section_label": "City of San Rafael Election",
-      "office_label": "Councilmember District 1 Candidate",
-      "candidate_name": "Maika Llorens Gulati",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31093&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 31093
-    },
-    {
-      "source_id": "san-rafael-november-3-2020-election",
-      "election_label": "November 3, 2020 Election - San Rafael",
-      "section_label": "Board of Education Election",
-      "office_label": "Trustee Area 1",
-      "candidate_name": "Gina Daly",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31435&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 31435
-    },
-    {
-      "source_id": "san-rafael-november-3-2020-election",
-      "election_label": "November 3, 2020 Election - San Rafael",
-      "section_label": "Board of Education Election",
-      "office_label": "Trustee Area 3",
-      "candidate_name": "Linda Jackson",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31438&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 31438
-    },
-    {
-      "source_id": "san-rafael-november-3-2020-election",
-      "election_label": "November 3, 2020 Election - San Rafael",
-      "section_label": "Board of Education Election",
-      "office_label": "Trustee Area 5",
-      "candidate_name": "Marina Palma",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31477&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 31477
-    },
-    {
-      "source_id": "san-rafael-november-8-2022-election",
-      "election_label": "November 8, 2022 Election - San Rafael",
-      "section_label": "City of San Rafael Election",
-      "office_label": "Councilmember District 2 Candidates:",
-      "candidate_name": "Eli Hill",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=33055&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 33055
-    },
-    {
-      "source_id": "san-rafael-november-8-2022-election",
-      "election_label": "November 8, 2022 Election - San Rafael",
-      "section_label": "City of San Rafael Election",
-      "office_label": "Councilmember District 2 Candidates:",
-      "candidate_name": "Gerrod Herndon",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34870&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 34870
-    },
-    {
-      "source_id": "san-rafael-november-8-2022-election",
-      "election_label": "November 8, 2022 Election - San Rafael",
-      "section_label": "City of San Rafael Election",
-      "office_label": "Councilmember District 3 Candidates:",
-      "candidate_name": "Maribeth Bushey",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34885&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 34885
-    },
-    {
-      "source_id": "san-rafael-november-8-2022-election",
-      "election_label": "November 8, 2022 Election - San Rafael",
-      "section_label": "City of San Rafael Election",
-      "office_label": "Councilmember District 3 Candidates:",
-      "candidate_name": "Jonathan Frieman",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34937&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 34937
-    },
-    {
-      "source_id": "san-rafael-november-8-2022-election",
-      "election_label": "November 8, 2022 Election - San Rafael",
-      "section_label": "Board of Education Election",
-      "office_label": "Trustee Area 2 Candidates:",
-      "candidate_name": "Lucia Martel Dow",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=33988&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 33988
-    },
-    {
-      "source_id": "san-rafael-november-8-2022-election",
-      "election_label": "November 8, 2022 Election - San Rafael",
-      "section_label": "Board of Education Election",
-      "office_label": "Trustee Area 2 Candidates:",
-      "candidate_name": "Lisa Longnecker",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34939&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 34939
-    },
-    {
-      "source_id": "san-rafael-november-8-2022-election",
-      "election_label": "November 8, 2022 Election - San Rafael",
-      "section_label": "Board of Education Election",
-      "office_label": "Trustee Area 4 Candidates:",
-      "candidate_name": "Faye Bourret",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34411&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 34411
-    },
-    {
-      "source_id": "san-rafael-november-8-2022-election",
-      "election_label": "November 8, 2022 Election - San Rafael",
-      "section_label": "Board of Education Election",
-      "office_label": "Trustee Area 4 Candidates:",
-      "candidate_name": "Carolina Martin",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34627&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 34627
-    },
-    {
       "source_id": "san-rafael-november-5-2024-election",
       "election_label": "November 5, 2024 Election - San Rafael",
       "section_label": "City of San Rafael Election",
@@ -592,14 +668,188 @@
       "candidate_name": "Isai Rodas",
       "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=37459&dbid=0&repo=CityofSanRafael",
       "folder_entry_id": 37459
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 2 Candidates:",
+      "candidate_name": "Eli Hill",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=33055&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 33055
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 2 Candidates:",
+      "candidate_name": "Gerrod Herndon",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34870&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 34870
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 3 Candidates:",
+      "candidate_name": "Maribeth Bushey",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34885&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 34885
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 3 Candidates:",
+      "candidate_name": "Jonathan Frieman",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34937&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 34937
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "Board of Education Election",
+      "office_label": "Trustee Area 2 Candidates:",
+      "candidate_name": "Lucia Martel Dow",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=33988&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 33988
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "Board of Education Election",
+      "office_label": "Trustee Area 2 Candidates:",
+      "candidate_name": "Lisa Longnecker",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34939&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 34939
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "Board of Education Election",
+      "office_label": "Trustee Area 4 Candidates:",
+      "candidate_name": "Faye Bourret",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34411&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 34411
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "Board of Education Election",
+      "office_label": "Trustee Area 4 Candidates:",
+      "candidate_name": "Carolina Martin",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34627&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 34627
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Mayoral Candidates",
+      "candidate_name": "Kate Colin",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31079&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31079
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Mayoral Candidates",
+      "candidate_name": "Mahmoud Shirazi",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31080&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31080
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 4 Candidates",
+      "candidate_name": "John Gamblin",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31431&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31431
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 4 Candidates",
+      "candidate_name": "Rachel Kertz",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31082&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31082
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 4 Candidates",
+      "candidate_name": "Greg Knell",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31081&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31081
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 1 Candidate",
+      "candidate_name": "Maika Llorens Gulati",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31093&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31093
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "Board of Education Election",
+      "office_label": "Trustee Area 1",
+      "candidate_name": "Gina Daly",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31435&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31435
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "Board of Education Election",
+      "office_label": "Trustee Area 3",
+      "candidate_name": "Linda Jackson",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31438&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31438
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "Board of Education Election",
+      "office_label": "Trustee Area 5",
+      "candidate_name": "Marina Palma",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31477&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31477
     }
   ],
   "candidate_folder_count": 27,
   "election_level_campaign_filing_folders": [
     {
-      "source_id": "san-rafael-november-8-2011-election",
-      "election_label": "November 8, 2011 Election - San Rafael",
+      "source_id": "san-rafael-november-6-2018-election",
+      "election_label": "November 6, 2018 Election - San Rafael",
+      "label": "Financial Filings",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31078&dbid=0&repo=CityofSanRafaelv",
+      "folder_entry_id": 31078
+    },
+    {
+      "source_id": "san-rafael-november-7-2017-election",
+      "election_label": "November 7, 2017 General Municipal Election - San Rafael",
       "label": "Campaign Finance Disclosure",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31078&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31078
+    },
+    {
+      "source_id": "san-rafael-november-3-2015-election",
+      "election_label": "November 3, 2015 Election - San Rafael",
+      "label": "Campaign Finance Disclosure",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31078&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31078
+    },
+    {
+      "source_id": "san-rafael-june-7-2016-election",
+      "election_label": "June 7, 2016 Election - San Rafael",
+      "label": "Campaign Finance Disclosures",
       "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31078&dbid=0&repo=CityofSanRafael",
       "folder_entry_id": 31078
     },
@@ -611,31 +861,18 @@
       "folder_entry_id": 24866
     },
     {
-      "source_id": "san-rafael-november-3-2015-election",
-      "election_label": "November 3, 2015 Election - San Rafael",
+      "source_id": "san-rafael-november-8-2011-election",
+      "election_label": "November 8, 2011 Election - San Rafael",
       "label": "Campaign Finance Disclosure",
       "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31078&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 31078
-    },
-    {
-      "source_id": "san-rafael-november-7-2017-election",
-      "election_label": "November 7, 2017 General Municipal Election - San Rafael",
-      "label": "Campaign Finance Disclosure",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31078&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 31078
-    },
-    {
-      "source_id": "san-rafael-november-6-2018-election",
-      "election_label": "November 6, 2018 Election - San Rafael",
-      "label": "Financial Filings",
-      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31078&dbid=0&repo=CityofSanRafaelv",
       "folder_entry_id": 31078
     }
   ],
+  "election_level_campaign_filing_folder_count": 6,
   "independent_expenditure_resources": [
     {
-      "source_id": "san-rafael-november-3-2020-election",
-      "election_label": "November 3, 2020 Election - San Rafael",
+      "source_id": "san-rafael-november-5-2024-election",
+      "election_label": "November 5, 2024 Election - San Rafael",
       "label": "City of San Rafael Independent Expenditure Ordinance",
       "record_url": "http://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=10756&searchid=35c8afd5-3ac3-45a3-aa75-9695eaa5c1c5&dbid=0&repo=CityofSanRafael",
       "record_entry_id": 10756
@@ -648,8 +885,8 @@
       "record_entry_id": 10756
     },
     {
-      "source_id": "san-rafael-november-5-2024-election",
-      "election_label": "November 5, 2024 Election - San Rafael",
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
       "label": "City of San Rafael Independent Expenditure Ordinance",
       "record_url": "http://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=10756&searchid=35c8afd5-3ac3-45a3-aa75-9695eaa5c1c5&dbid=0&repo=CityofSanRafael",
       "record_entry_id": 10756
@@ -657,20 +894,21 @@
   ],
   "independent_expenditure_filing_folders": [
     {
-      "source_id": "san-rafael-november-3-2020-election",
-      "election_label": "November 3, 2020 Election - San Rafael",
-      "label": "Independent Expenditure Filings 2020",
-      "folder_url": "http://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=32164&dbid=0&repo=CityofSanRafael",
-      "folder_entry_id": 32164
-    },
-    {
       "source_id": "san-rafael-november-8-2022-election",
       "election_label": "November 8, 2022 Election - San Rafael",
       "label": "Independent Expenditure Filings 2022",
       "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34126&dbid=0&repo=CityofSanRafael",
       "folder_entry_id": 34126
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "label": "Independent Expenditure Filings 2020",
+      "folder_url": "http://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=32164&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 32164
     }
   ],
+  "independent_expenditure_filing_folder_count": 2,
   "sample_child_folder_probe": {
     "candidate_name": "Kate Colin",
     "office_label": "Mayoral Candidates",
@@ -820,8 +1058,10 @@
     }
   },
   "notes": [
-    "San Rafael city-side campaign filings are publicly routed through the disclosures page and cycle-specific election pages.",
-    "The 2011 through 2018 election pages expose election-level campaign-finance filing folders, while the 2020, 2022, and 2024 election pages expose candidate-specific campaign-finance folder IDs.",
+    "San Rafael city-side campaign filings are publicly routed through the disclosures page plus the city's own elections index pages.",
+    "The current discovery backbone is `elections` and `past-elections`, which expose election landing pages from 2010 through 2026.",
+    "Campaign-bearing pages currently include the June 7, 2016 page, the November 2011 through 2018 pages, and the November 2020 through 2024 pages. The June 8, 2010, November 2, 2010, June 5, 2018 special, and June 2, 2026 special pages do not currently expose campaign-filing destinations.",
+    "The 2011 through 2018 election pages plus the June 7, 2016 page expose election-level campaign-finance filing folders, while the 2020, 2022, and 2024 election pages expose candidate-specific campaign-finance folder IDs.",
     "Until Laserfiche folder enumeration becomes reliably accessible, the safest backfill strategy is page-linked folder discovery plus record-level capture where direct document links are exposed."
   ]
 }
