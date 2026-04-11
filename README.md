@@ -125,6 +125,7 @@ Start narrow:
 - [Campaign Finance Sample Basket Bundle](./data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
 - [Campaign Finance Form 803 Slice Bundle](./data/normalized/campaign-finance-form-803-slice-01/bundle-01.json)
 - [San Rafael Canonical Seed Bundle](./data/normalized/canonical-seeds-san-rafael-01.json)
+- [San Rafael City Council Archive Inventory](./data/extracted/san-rafael-city-council-meetings/2026-04-11.json)
 - [Item 5.a Split Map](./data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-record-splits.json)
 - [Item 5.a Normalized Record Splits](./data/normalized/san-rafael-homelessness-01/aug-19-item-5a-record-splits.json)
 - [Procurement Sample Basket Bundle](./data/normalized/procurement-sample-basket-01/bundle-01.json)
@@ -135,6 +136,7 @@ Start narrow:
 
 - [Case Study 01 Extractor](./scripts/extract_case_study_01_bundle.py)
 - [San Rafael Form 803 Capture Workflow](./scripts/capture_san_rafael_form803.py)
+- [San Rafael City Council Archive Capture Workflow](./scripts/capture_san_rafael_city_council_archive.py)
 
 ## Current Status
 
@@ -145,6 +147,11 @@ This repo started as a planning workspace and now includes the first live implem
 - source-adapter operations note added to document municipality/county source idiosyncrasies, historical backfill planning, and recurring sync strategy
 - first source-profile matrix added for `San Rafael` and `Marin County`
 - first historical backfill plan added, targeting `2019-01-01` for the initial council, BOS, campaign, and disclosure wave
+- first wave-01 source execution completed for `San Rafael City Council meetings`:
+  - direct raw HTML capture of the archive page
+  - extracted inventory of `263` meeting rows spanning `2019` through `2026`
+  - meeting-type classification across `regular`, `special`, `closed_session`, `special_closed_session`, `special_retreat`, `study_session`, and `cancelled`
+  - artifact-availability tracking for agenda, packet, minutes, and video tabs
 - raw official source captures for case study 01
 - raw criminal-justice source captures for Marin court and sheriff landing surfaces
 - campaign-finance and disclosure layer formalized around `Election`, `Committee`, `Candidacy`, `Filing`, and `EconomicInterestDisclosure`
