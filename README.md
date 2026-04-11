@@ -129,10 +129,12 @@ This repo started as a planning workspace and now includes the first live implem
 - first procurement execution slice with:
   - direct raw HTML captures for the selected San Rafael project, procurement, meeting, and reopening pages
   - direct city PDF captures for the first and second Downtown Library amendment staff reports
+  - direct city meeting, staff-report, and agenda-packet captures for the September 16, 2024 Downtown Library construction award
   - transparent county text-proxy captures for blocked procurement, recovery-plan, and audit surfaces
   - first normalized procurement basket linking `Procurement`, `Agreement`, `Amendment`, `Program`, `PerformanceReview`, and `MoneyFlow` candidates
   - captured Marin County Granicus record set for Prime Electric `CB-6`: agenda page, staff report, attachment, and agreement
   - resolved county-side amount split for Prime Electric: `$994,866.17` contract, `$99,487` contingency, `$49,884` additional project costs, `$1,144,237` authorized project total
+  - resolved the Downtown Library agreement-family boundary in favor of separate `Agreement` objects for Noll & Tam, Unger, and Unico under one shared project
 - permit-layer schema, source bundle, and checklist for Marin County and San Rafael planning workflows
 - first permit execution slice with raw captures for selected city and county project threads plus a normalized project-discovery bundle
 - first appeal-chain split for P4134 with explicit determination, appeal, meeting, and decision candidates

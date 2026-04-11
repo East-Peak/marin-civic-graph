@@ -1,8 +1,8 @@
 {
   "case_study_id": "procurement-sample-basket-01",
   "bundle_id": "procurement-sample-basket-01__bundle-01",
-  "status": "discovery_capture_plus_county_cb6_record_set",
-  "generated_at": "2026-04-11T11:58:59Z",
+  "status": "discovery_capture_plus_prime_electric_county_and_downtown_library_2024_award_records",
+  "generated_at": "2026-04-11T12:04:48Z",
   "scope": {
     "included": [
       "direct city HTML captures for project, procurement, meeting, and completion surfaces",
@@ -137,6 +137,27 @@
       "record_type": "agreement",
       "source_id": "marin-county-prime-electric-agreement",
       "artifact_path": "data/raw/marin-county-prime-electric-agreement/2026-04-11/agreement.pdf"
+    },
+    {
+      "id": "record-srcc-2024-09-16-downtown-library",
+      "record_class": "meeting_record",
+      "record_type": "meeting_page",
+      "source_id": "san-rafael-city-council-2024-09-16-downtown-library",
+      "artifact_path": "data/raw/san-rafael-city-council-2024-09-16-downtown-library/2026-04-11/source.html"
+    },
+    {
+      "id": "record-downtown-library-construction-award-staff-report",
+      "record_class": "contract_record",
+      "record_type": "staff_report",
+      "source_id": "san-rafael-downtown-library-construction-award-staff-report",
+      "artifact_path": "data/raw/san-rafael-downtown-library-construction-award-staff-report/2026-04-11/staff-report.pdf"
+    },
+    {
+      "id": "record-srcc-2024-09-16-agenda-packet",
+      "record_class": "meeting_record",
+      "record_type": "agenda_packet",
+      "source_id": "san-rafael-city-council-2024-09-16-agenda-packet",
+      "artifact_path": "data/raw/san-rafael-city-council-2024-09-16-agenda-packet/2026-04-11/agenda-packet.pdf"
     }
   ],
   "institution_candidates": [
@@ -206,6 +227,11 @@
       "id": "actor-first-5-marin",
       "name": "First 5 Marin",
       "actor_type": "nonprofit"
+    },
+    {
+      "id": "actor-unico-engineering",
+      "name": "Unico Engineering",
+      "actor_type": "business"
     }
   ],
   "place_candidates": [
@@ -281,6 +307,15 @@
       "meeting_date": "2025-10-21",
       "record_ids": [
         "record-marin-county-board-2025-10-21-agenda"
+      ]
+    },
+    {
+      "id": "meeting-2024-09-16-san-rafael-city-council",
+      "institution_id": "inst-san-rafael-city-council",
+      "meeting_date": "2024-09-16",
+      "record_ids": [
+        "record-srcc-2024-09-16-downtown-library",
+        "record-srcc-2024-09-16-agenda-packet"
       ]
     }
   ],
@@ -377,6 +412,43 @@
         "record-srcc-2025-04-07-downtown-library",
         "record-downtown-library-second-amendment-staff-report"
       ]
+    },
+    {
+      "id": "decision-2024-09-16-unger-award",
+      "institution_id": "inst-san-rafael-city-council",
+      "meeting_id": "meeting-2024-09-16-san-rafael-city-council",
+      "agenda_item_ref": "4.e",
+      "decision_type": "contract_authorization",
+      "decided_at": "2024-09-16",
+      "related_procurement_ids": [
+        "procurement-downtown-library-renovation-construction-rfp"
+      ],
+      "related_agreement_ids": [
+        "agreement-unger-downtown-library-construction"
+      ],
+      "evidence_record_ids": [
+        "record-srcc-2024-09-16-downtown-library",
+        "record-downtown-library-construction-award-staff-report",
+        "record-srcc-2024-09-16-agenda-packet"
+      ],
+      "authorized_total_amount": 2100000.0
+    },
+    {
+      "id": "decision-2024-09-16-unico-approval",
+      "institution_id": "inst-san-rafael-city-council",
+      "meeting_id": "meeting-2024-09-16-san-rafael-city-council",
+      "agenda_item_ref": "4.e",
+      "decision_type": "contract_authorization",
+      "decided_at": "2024-09-16",
+      "related_agreement_ids": [
+        "agreement-unico-downtown-library-construction-management"
+      ],
+      "evidence_record_ids": [
+        "record-srcc-2024-09-16-downtown-library",
+        "record-downtown-library-construction-award-staff-report",
+        "record-srcc-2024-09-16-agenda-packet"
+      ],
+      "authorized_total_amount": 210536.82
     }
   ],
   "agreement_candidates": [
@@ -423,8 +495,26 @@
       "status": "amended",
       "not_to_exceed_amount": 2200000,
       "evidence_record_ids": [
+        "record-srcc-2024-09-16-downtown-library",
+        "record-downtown-library-construction-award-staff-report",
+        "record-srcc-2024-09-16-agenda-packet",
         "record-srcc-2025-04-07-downtown-library",
         "record-downtown-library-second-amendment-staff-report"
+      ],
+      "effective_start": "2024-09-16"
+    },
+    {
+      "id": "agreement-unico-downtown-library-construction-management",
+      "institution_id": "inst-san-rafael-city-council",
+      "counterparty_actor_id": "actor-unico-engineering",
+      "agreement_type": "professional_services_agreement",
+      "project_id": "project-downtown-library-renovation",
+      "status": "approved",
+      "not_to_exceed_amount": 210536.82,
+      "evidence_record_ids": [
+        "record-srcc-2024-09-16-downtown-library",
+        "record-downtown-library-construction-award-staff-report",
+        "record-srcc-2024-09-16-agenda-packet"
       ],
       "effective_start": "2024-09-16"
     }
@@ -564,6 +654,38 @@
       "evidence_record_ids": [
         "record-prime-electric-staff-report",
         "record-prime-electric-budget-attachment"
+      ]
+    },
+    {
+      "id": "moneyflow-unger-contract-2024",
+      "flow_type": "obligation",
+      "amount": 1825000.0,
+      "institution_id": "inst-san-rafael-city-council",
+      "counterparty_actor_id": "actor-unger-construction-co",
+      "decision_id": "decision-2024-09-16-unger-award",
+      "evidence_record_ids": [
+        "record-downtown-library-construction-award-staff-report"
+      ]
+    },
+    {
+      "id": "moneyflow-unger-contingency-2024",
+      "flow_type": "contingency_authorization",
+      "amount": 275000.0,
+      "institution_id": "inst-san-rafael-city-council",
+      "decision_id": "decision-2024-09-16-unger-award",
+      "evidence_record_ids": [
+        "record-downtown-library-construction-award-staff-report"
+      ]
+    },
+    {
+      "id": "moneyflow-unico-construction-management-2024",
+      "flow_type": "obligation",
+      "amount": 210536.82,
+      "institution_id": "inst-san-rafael-city-council",
+      "counterparty_actor_id": "actor-unico-engineering",
+      "decision_id": "decision-2024-09-16-unico-approval",
+      "evidence_record_ids": [
+        "record-downtown-library-construction-award-staff-report"
       ]
     }
   ],

@@ -2059,6 +2059,39 @@ sources:
     notes:
       - Tactical Slot B amendment-stage meeting surface.
 
+  - source_id: san-rafael-city-council-2024-09-16-downtown-library
+    label: San Rafael City Council September 16 2024 Downtown Library Meeting Surface
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: meetings
+    source_type: document_landing_page
+    entry_url: https://www.cityofsanrafael.org/meetings/city-council-september-16-2024/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/city-council-meetings/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - agenda_item
+      - decision
+      - agreement
+      - record:agenda
+      - record:packet
+      - record:minutes
+    cadence: manual
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: public city council meeting page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Tactical Slot B base construction-award meeting surface.
+
   - source_id: san-rafael-city-council-2025-04-07-downtown-library
     label: San Rafael City Council April 7 2025 Downtown Library Meeting Surface
     owner_type: institution
@@ -2244,6 +2277,68 @@ sources:
     dedupe_key_strategy: exact_url
     notes:
       - Tactical Slot B staff report for the first Noll and Tam amendment.
+
+  - source_id: san-rafael-downtown-library-construction-award-staff-report
+    label: San Rafael Downtown Library Construction Award Staff Report
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: documents
+    source_type: staff_report_pdf
+    entry_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/09/4.e-Downtown-Library-Renovation-Project.pdf
+    discovery_urls:
+      - https://www.cityofsanrafael.org/meetings/city-council-september-16-2024/
+    fetch_strategy: pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - decision
+      - agreement
+      - amendment
+      - record:staff_report
+      - money_flow
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: direct city PDF linked from the September 16, 2024 Council page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Tactical Slot B staff report for the base Unger and Unico awards.
+
+  - source_id: san-rafael-city-council-2024-09-16-agenda-packet
+    label: San Rafael City Council September 16 2024 Agenda Packet
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: documents
+    source_type: agenda_packet_pdf
+    entry_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/09/Agenda-Packet-2024-09-16r.pdf
+    discovery_urls:
+      - https://www.cityofsanrafael.org/meetings/city-council-september-16-2024/
+    fetch_strategy: pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - agenda_item
+      - decision
+      - agreement
+      - record:packet
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: direct city agenda packet PDF for the September 16, 2024 Council meeting
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Packet-level source for embedded draft contract and PSA attachments.
 
   - source_id: san-rafael-downtown-library-second-amendment-staff-report
     label: San Rafael Downtown Library Second Amendment Staff Report

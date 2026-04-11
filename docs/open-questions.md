@@ -157,18 +157,20 @@ Mirror the question here when it affects:
 
 ### OQ-010: Downtown Library agreement-family boundary
 
-- `status`: open
+- `status`: resolved
 - `layer`: procurement schema
 - `scope`: `project-downtown-library-renovation`
 - `source refs`:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/procurement-sample-basket-01/bundle-01.json)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-2024-09-16-downtown-library/2026-04-11/source.html)
+  - [staff-report.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-downtown-library-construction-award-staff-report/2026-04-11/staff-report.pdf)
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-2023-09-18-downtown-library/2026-04-11/source.html)
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-2025-04-07-downtown-library/2026-04-11/source.html)
   - [staff-report.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-downtown-library-first-amendment-staff-report/2026-04-11/staff-report.pdf)
   - [staff-report.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-downtown-library-second-amendment-staff-report/2026-04-11/staff-report.pdf)
 - `question`: Should the Downtown Library architect and construction threads remain separate `Agreement` objects with a shared parent `Project`, or should they also roll up into a project-level contract family abstraction?
 - `why it matters`: This is a direct pressure test of whether the procurement layer can stay specific enough for contract analytics without losing the user-facing “one project” view.
-- `next evidence`: inspect the captured staff reports and any later signed agreement pages for the Noll & Tam and Unger actions, then compare how the city itself groups the contract family.
+- `resolution note`: Keep separate `Agreement` objects for the architect, construction, and construction-management workstreams, all joined by the shared `Project`. The September 16, 2024 award record makes the boundary explicit: one project, but separate Unger construction and Unico construction-management agreements, in addition to the Noll & Tam design/administration PSA.
 
 ### OQ-011: Downtown Library State Library funding claim
 
