@@ -55,6 +55,7 @@ The key questions are:
   - `2011` through `2018` pages plus the June 7, 2016 page expose election-level filing folders
   - `2020` through `2024` pages expose candidate-specific filing folders
   - `2010`, June 5, 2018 special, and June 2, 2026 special pages do not currently expose campaign-filing destinations
+- The election pages also expose page-linked `DocView` records such as election-call resolutions, canvass/results resolutions, initiative records, and the independent-expenditure ordinance; those direct records are a stronger public capture path than anonymous folder enumeration.
 - The public disclosures page is a routing surface, not the real data store.
 - Many city policy, procurement, and implementation records are easiest to recover through council packets rather than program pages.
 - San Rafael is a good first municipality precisely because it exposes this fragmentation in a manageable way.

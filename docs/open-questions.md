@@ -211,6 +211,19 @@ Mirror the question here when it affects:
 - `why it matters`: This is a source-quality issue rather than a graph-model blocker, but it affects whether later replay or browser automation should trust the page URL verbatim.
 - `next evidence`: test whether the same folder ID works with the canonical repo parameter in a browser-visible session and keep the raw published URL as provenance either way.
 
+### OQ-022: San Rafael election direct-record holdout
+
+- `status`: watch
+- `layer`: direct record capture / election records
+- `scope`: `san-rafael-election-direct-records`
+- `source refs`:
+  - [2026-04-11.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-election-direct-records/2026-04-11.json)
+  - [records.json](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-election-direct-records/2026-04-11/records.json)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-june-2-2026-special-municipal-election/2026-04-11/source.html)
+- `question`: Why does entry `41998` (`Resolution Calling Election`) still return HTTP 500 on the public Laserfiche JSON follow-up path when `36` other election-linked `DocView` records captured successfully?
+- `why it matters`: The direct `DocView` path is now the best page-linked record-capture route for San Rafael election pages, so understanding the single remaining holdout will tell us whether the gap is document-specific or a broader current-cycle edge case.
+- `next evidence`: retest entry `41998` with browser-visible session state and compare it to sibling entry `41989`, which was captured from the same June 2, 2026 special-election page.
+
 ### OQ-016: San Rafael local Form 803 filing surface
 
 - `status`: resolved

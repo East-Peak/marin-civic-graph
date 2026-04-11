@@ -129,6 +129,7 @@ Start narrow:
 - [Marin County BOS Archive Inventory](./data/extracted/marin-county-bos-meetings/2026-04-11.json)
 - [Marin County Campaign Finance Yearly Export Inventory](./data/extracted/marin-county-campaign-finance-yearly-exports/2026-04-11.json)
 - [San Rafael City-Side Campaign Filing Inventory](./data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json)
+- [San Rafael Election Direct Records](./data/extracted/san-rafael-election-direct-records/2026-04-11.json)
 - [Item 5.a Split Map](./data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-record-splits.json)
 - [Item 5.a Normalized Record Splits](./data/normalized/san-rafael-homelessness-01/aug-19-item-5a-record-splits.json)
 - [Procurement Sample Basket Bundle](./data/normalized/procurement-sample-basket-01/bundle-01.json)
@@ -143,6 +144,7 @@ Start narrow:
 - [San Rafael Election Page Capture Workflow](./scripts/capture_san_rafael_election_pages.py)
 - [San Rafael City Council Archive Capture Workflow](./scripts/capture_san_rafael_city_council_archive.py)
 - [San Rafael City-Side Campaign Filing Inventory Workflow](./scripts/capture_san_rafael_city_campaign_filing_inventory.py)
+- [San Rafael Election Direct Record Capture Workflow](./scripts/capture_san_rafael_election_direct_records.py)
 - [Marin County BOS Archive Capture Workflow](./scripts/capture_marin_county_bos_archive.py)
 - [Marin County Campaign Finance Export Capture Workflow](./scripts/capture_marin_county_campaign_finance_exports.py)
 
@@ -181,6 +183,10 @@ This repo started as a planning workspace and now includes the first live implem
   - confirmed that the June 8, 2010, November 2, 2010, June 5, 2018 special, and June 2, 2026 special pages are useful election-context records but do not currently expose campaign-filing destinations
   - recorded the current adapter boundary explicitly: anonymous Laserfiche folder-listing probes for both top-level campaign folders and a sampled child folder currently fail with session-limit error `[9030]`
   - confirmed the current working discovery pattern is `elections / past-elections -> election landing page -> campaign filing destination`, with Laserfiche browse probing kept as a secondary experiment rather than the primary discovery path
+  - added a direct-record follow-on capture workflow for page-linked `DocView` records exposed on the election pages
+  - captured `37` unique page-linked election records from the San Rafael election pages
+  - fully extracted `36` of those records through the public Laserfiche metadata, document-info, and OCR-text endpoints
+  - narrowed the remaining direct-record extraction problem to one holdout: entry `41998` (`Resolution Calling Election` on the June 2, 2026 special-election page)
 - raw official source captures for case study 01
 - raw criminal-justice source captures for Marin court and sheriff landing surfaces
 - campaign-finance and disclosure layer formalized around `Election`, `Committee`, `Candidacy`, `Filing`, and `EconomicInterestDisclosure`

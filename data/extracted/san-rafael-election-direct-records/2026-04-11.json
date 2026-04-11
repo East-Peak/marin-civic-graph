@@ -1,0 +1,1293 @@
+{
+  "capture_date": "2026-04-11",
+  "captured_at": "2026-04-11T22:18:44Z",
+  "derived_from": [
+    {
+      "source_id": "san-rafael-june-2-2026-special-municipal-election",
+      "path": "data/raw/san-rafael-june-2-2026-special-municipal-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-5-2024-election",
+      "path": "data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "path": "data/raw/san-rafael-november-8-2022-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "path": "data/raw/san-rafael-november-3-2020-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-june-5-2018-special-municipal-election",
+      "path": "data/raw/san-rafael-june-5-2018-special-municipal-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-6-2018-election",
+      "path": "data/raw/san-rafael-november-6-2018-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-7-2017-election",
+      "path": "data/raw/san-rafael-november-7-2017-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-3-2015-election",
+      "path": "data/raw/san-rafael-november-3-2015-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-june-7-2016-election",
+      "path": "data/raw/san-rafael-june-7-2016-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-5-2013-election",
+      "path": "data/raw/san-rafael-november-5-2013-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-8-2011-election",
+      "path": "data/raw/san-rafael-november-8-2011-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-2-2010-election",
+      "path": "data/raw/san-rafael-november-2-2010-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-june-8-2010-election",
+      "path": "data/raw/san-rafael-june-8-2010-election/2026-04-11/source.html"
+    }
+  ],
+  "record_count": 37,
+  "captured_record_count": 36,
+  "error_record_count": 1,
+  "records": [
+    {
+      "entry_id": 4496,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=4496&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-8-2011-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-8-2011-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-8-2011-election/",
+          "label": "San Rafael November 8 2011 Election Page",
+          "anchor_text": "declaring canvass of returns and results"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2009-2015\\2011\\12-05-2011\\CC 2011 Election; Canvass of Votes",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "12/5/2011"
+        ],
+        "Department": [
+          "City Clerk"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "File No.": [
+          "9-4"
+        ]
+      },
+      "page_count": 24,
+      "first_page_text_excerpt": "Agenda Item No: \r\nSpecial \r\nMeeting Date: Dec. 5, 2011 \r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\nDepartment: City Clerk \r\nPrepared by: Esther Beirne \r\nCity Manager Approvalf \r\nSUBJECT: a) RESOLUTION DECLARING CANVASS OF RETURNS AND RESULTS OF , \r\nCONSOLIDATED GENERAL MUNICIPAL ELECTION HELD ON NOVEMBER 8, \r\n2011 \r\nb) SWEARING-IN CEREMONIES: \r\nThe following to be sworn in by Albert J. Boro, Mayor \r\nPaul M. Cohen, Board of Education Trustee \r\nLinda M. Jackson, Board of Education Trustee \r\nGreg Kne"
+    },
+    {
+      "entry_id": 4958,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=4958&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-5-2013-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-5-2013-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-5-2013-election/",
+          "label": "San Rafael November 5 2013 Election Page",
+          "anchor_text": "May 6, 2013"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2009-2015\\2013\\05-06-2013\\CC 2013 Election; Consolidation",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "5/6/2013"
+        ],
+        "Department": [
+          "City Clerk"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "File No.": [
+          "9-4"
+        ]
+      },
+      "page_count": 6,
+      "first_page_text_excerpt": "Agenda Item No: 3. b \r\nMeeting Date: May 6, 2013 \r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\nDepartment: City Clerk \r\nPrepared by: Esther Beirne Z\ufffd - \r\nCity Manager Approval -\ufffd iU 4-\ufffdClf \r\nFile No.: 9-4 \r\nSUBJECT: RESOLUTION RE: ELECTION MATTERS - GENERAL MUNICIPAL ELECTION, \r\nTUESDAY, NOVEMBER 5, 2013 (CC) \r\nRECOMMENDATION: \r\nRecommend adoption of Resolution: \r\nI ) Proposing a General Municipal Election, including the San Rafael Elementary School \r\nDistrict and the San Rafael High School District"
+    },
+    {
+      "entry_id": 5037,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=5037&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-5-2013-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-5-2013-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-5-2013-election/",
+          "label": "San Rafael November 5 2013 Election Page",
+          "anchor_text": "City Attorney\u2019s Impartial Analysis"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2009-2015\\2013\\08-05-2013\\CA Measure E  - TUT Ballot Measure",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "8/5/2013"
+        ],
+        "Department": [
+          "City Attorney"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "File No.": [
+          "9-4"
+        ]
+      },
+      "page_count": 25,
+      "first_page_text_excerpt": "Department: City .Attorney \r\nAgenda \r\na+ a a \r\nrng Date: August 5 2013 \r\nC7 1 \r\nPrepared by: Robert Epstein, City Attorney City Manager Approva \r\n1) RESCINDING RESOLUTION NO. 13572; D \r\nORDERING2) O THE ELECTORS OF THI \r\nCITY OF SAN RAFAEL, A BALLOT MEASURE PROPOSIN( \r\nAN l \r\nCODE OF THE CITY OF 1 RAFAEL TO EXTEND ANI \r\nINCREASE THE EXISTING TRANSACTIONS AND USE TA) \r\nAT MUNICIPAL \r\nTUESDAY,, \r\nAS CALLED B) \r\nRESOLUTION O ORDERING \r\nPUBLICATION \r\n3) REQUESTING CONSOLIDATION WITH ANY i \r\nELECTION"
+    },
+    {
+      "entry_id": 5146,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=5146&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-5-2013-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-5-2013-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-5-2013-election/",
+          "label": "San Rafael November 5 2013 Election Page",
+          "anchor_text": "December 2, 2013"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2009-2015\\2013\\12-02-2013\\CC 2013 Election; Canvass of Votes",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "12/2/2013"
+        ],
+        "Department": [
+          "City Clerk"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "File No.": [
+          "9-4"
+        ]
+      },
+      "page_count": 29,
+      "first_page_text_excerpt": "Department: City Clerk \r\nPrepared by: Esther Beirne \r\nAgenda Item No: \r\nSPECIAL \r\nMeeting Date: \r\nIt I \r\nCity Manager Appro41: M4_c\"i \r\nSUBJECT: a) RESOLUTION DECLARING CANVASS OF RETURNS AND RESULTS OF \r\nCONSOLIDATED GENERAL MUNICIPAL ELECTION HELD ON NOVEMBERS, \r\n20137 TO INCLUDE RESULTS OF BALLOT MEASURE E \r\nb) SWEARING-IN CEREMONIES: \r\nThe following to be sworn in by Esther Beirne, City Clerk: \r\nRachel Kertz, Board of Education Trustee \r\nNatu Tuatagaloa, Board of Education Trustee \r\nMaribeth"
+    },
+    {
+      "entry_id": 5717,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=5717&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-3-2015-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-3-2015-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-3-2015-election/",
+          "label": "San Rafael November 3 2015 Election Page",
+          "anchor_text": "Staff report and resolution calling the election"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2009-2015\\2015\\06-15-2015\\CC 2015 General Municipal Election",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "6/15/2015"
+        ],
+        "Department": [
+          "City Clerk"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "File No.": [
+          "9-4"
+        ]
+      },
+      "page_count": 7,
+      "first_page_text_excerpt": "orrr OF Agenda Item No: 3. c \r\nMeeting Date: June 15, 2015 \r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\nDepartment: City Clerk \r\nPrepared by: Esther Beirne 0lia \r\nCity Manager Approval- I \r\nFile No.: 9-4 \r\nSUBJECT: RESOLUTION RE: ELECTION MATTERS \u2014 GENERAL MUNICIPAL ELECTION, \r\nTUESDAY, NOVEMBER 3, 2015 (CC) \r\nRECOMMENDATION: \r\nRecommend adoption of Resolution: \r\n1) Proposing a General Municipal Election, including the San Rafael Elementary School \r\nDistrict and the San Rafael High School District "
+    },
+    {
+      "entry_id": 5873,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=5873&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-3-2015-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-3-2015-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-3-2015-election/",
+          "label": "San Rafael November 3 2015 Election Page",
+          "anchor_text": "Staff Report and resolution"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2009-2015\\2015\\08-17-2015\\CC 2015 Election; Appoint Unopposed Candidates",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "8/17/2015"
+        ],
+        "Department": [
+          "City Clerk"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "File No.": [
+          "9-4"
+        ]
+      },
+      "page_count": 10,
+      "first_page_text_excerpt": "Agenda Item No: 4. a \r\nMeeting Date: August 17, 2015 \r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\nDepartment: CITY ATTORNEY \r\nPrepared by: Lisa A. Goldfien, \r\nAssistant City Attorney \r\nCity Manager Approval: \r\nTOPIC: APPOINTMENT OF UNOPPOSED CANDIDATES TO CITY OFFICES AND \r\nCANCELLING NOVEMBER 3, 2015 CITY ELECTION \r\nSUBJECT: RESOLUTION OF THE CITY COUNCIL OF THE CITY OF SAN RAFAEL \r\nPROVIDING FOR THE APPOINTMENT TO THE OFFICES OF THIS CITY \r\nTHAT WERE TO BE ELECTED ON TUESDAY, NOVEMBER 3, 2015 AND"
+    },
+    {
+      "entry_id": 6720,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=6720&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-5-2013-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-5-2013-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-5-2013-election/",
+          "label": "San Rafael November 5 2013 Election Page",
+          "anchor_text": "July 2013"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\03. Legal, Legislative & City Attorney\\03-01-00 Legislative Information (Ordinances, Resolutions, Charter)\\03-01-03 Resolutions\\Resolutions\\Resolutions (1961-Present)\\2001 - 2020\\2013 (13480-13663)\\CC Resolution 13586 (Election 2013; Ballot Measure)",
+      "template_name": "Council Minutes, Resos, Ords",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "8/5/2013"
+        ],
+        "Doc Type - Council Docs": [
+          "Resolutions"
+        ]
+      },
+      "page_count": 23,
+      "first_page_text_excerpt": "RESOLUTION NO. 13586 \r\nRESOLUTION OF THE CITY COUNCIL OF THE CITY OF SAN RAFAEL: \r\n1) RESCINDING RESOLUTION NO. 13572. \r\n2) ORDERING THE SUBMISSION TO THE ELECTORS OF THE CITY \r\nOF SAN RAFAEL, A BALLOT MEASURE PROPOSING AN \r\nAMENDMENT TO CHAPTER 3.19 OF THE MUNICIPAL CODE OF \r\nTHE CITY OF SAN RAFAEL TO EXTEND AND INCREASE THE \r\nEXISTING TRANSACTIONS AND USE TAX AT THE GENERAL \r\nMUNICIPAL ELECTION TO BE HELD TUESDAY, NOVEMBER 5, \r\n2013, AS CALLED BY RESOLUTION NO. 13529 AND ORDERING \r\nTHE PUBLICA"
+    },
+    {
+      "entry_id": 6779,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=6779&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-5-2013-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-5-2013-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-5-2013-election/",
+          "label": "San Rafael November 5 2013 Election Page",
+          "anchor_text": "December 2, 2013"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\03. Legal, Legislative & City Attorney\\03-01-00 Legislative Information (Ordinances, Resolutions, Charter)\\03-01-03 Resolutions\\Resolutions\\Resolutions (1961-Present)\\2001 - 2020\\2013 (13480-13663)\\CC Resolution 13645 (Election Results 2013)",
+      "template_name": "Council Minutes, Resos, Ords",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "12/2/2013"
+        ],
+        "Doc Type - Council Docs": [
+          "Resolutions"
+        ]
+      },
+      "page_count": 28,
+      "first_page_text_excerpt": "RESOLUTION NO. 13645 \r\nRESOLUTION OF THE CITY COUNCIL OF THE CITY OF SAN RAFAEL \r\nDECLARING CANVASS OF RETURNS AND RESULTS \r\nOF CONSOLIDATED GENERAL MUNICIPAL ELECTION HELD ON \r\nNOVEMBER 5, 2013, TO INCLUDE RESULTS OF BALLOT MEASURE E - \r\nTRANSACTIONS AND USE TAX \r\nWHEREAS, in pursuance of law and the Charter of the City of San Rafael, there was held in \r\nsaid City on Tuesday, the 5th day of November, 2013, a consolidated general municipal election to \r\nelect municipal officers, at which electio"
+    },
+    {
+      "entry_id": 7098,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=7098&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-8-2011-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-8-2011-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-8-2011-election/",
+          "label": "San Rafael November 8 2011 Election Page",
+          "anchor_text": "resolution"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\03. Legal, Legislative & City Attorney\\03-01-00 Legislative Information (Ordinances, Resolutions, Charter)\\03-01-03 Resolutions\\Resolutions\\Resolutions (1961-Present)\\2001 - 2020\\2011 (13089-13278)\\CC Resolution 13155 (Election 2011)",
+      "template_name": "Council Minutes, Resos, Ords",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "6/6/2011"
+        ],
+        "Doc Type - Council Docs": [
+          "Resolutions"
+        ]
+      },
+      "page_count": 3,
+      "first_page_text_excerpt": "RESOLUTION NO. 13155 \r\nRESOLUTION OF THE CITY COUNCIL OF THE CITY OF SAN RAFAEL \r\n1) PROPOSING A GENERAL MUNICIPAL ELECTION, INCLUDING THE \r\nSAN RAFAEL ELEMENTARY SCHOOL DISTRICT AND THE SAN RAFAEL HIGH SCHOOL \r\nDISTRICT GENERAL ELECTION TO BE HELD ON TUESDAY, NOVEMBER 8,2011; \r\n2) REQUESTING THE BOARD OF SUPERVISORS TO CONSOLIDATE \r\nWITH ANY OTHER ELECTION CONDUCTED ON THE SAME DATE; \r\n3) REQUESTING ELECTION SERVICES BY THE COUNTY CLERK; \r\n4) REAFFIRMING POLICY REGARDING NUMBER OF WORDS IN CAND"
+    },
+    {
+      "entry_id": 7341,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=7341&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-2-2010-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-2-2010-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-2-2010-election/",
+          "label": "San Rafael November 2 2010 Election Page",
+          "anchor_text": "resolution"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\03. Legal, Legislative & City Attorney\\03-01-00 Legislative Information (Ordinances, Resolutions, Charter)\\03-01-03 Resolutions\\Resolutions\\Resolutions (1961-Present)\\2001 - 2020\\2010 (12902-13088)\\CC Resolution 13017 (Special Election 2010; Paramedic Tax)",
+      "template_name": "Council Minutes, Resos, Ords",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "7/19/2010"
+        ],
+        "File No.": [
+          "9-4"
+        ],
+        "Doc Type - Council Docs": [
+          "Resolutions"
+        ]
+      },
+      "page_count": 9,
+      "first_page_text_excerpt": "RESOLUTION NO. 13017 \r\nRESOLUTION OF THE CITY COUNCIL OF THE CITY OF SAN RAFAEL: \r\n1) CALLING A SPECIAL MUNICIPAL ELECTION TO BE HELD ON \r\nTUESDAY NOVEMBER 2,2010; AND \r\n2) ORDERING THE SUBMISSION OF A PROPOSITION OF \r\nINCREASING THE CITY'S PARAMEDIC SERVICE SPECIAL TAX \r\nRATE AND APPROPRIATIONS LIMIT TO THE QUALIFIED \r\nVOTERS OF THE CITY OF SAN RAFAEL AT THE SPECIAL \r\nMUNICIPAL ELECTION TO BE HELD ON NOVEMBER 2, 2010; \r\nAND \r\n3) REQUESTING CONSOLIDATION WITH ANY OTHER ELECTION \r\nCONDUCTED ON TH"
+    },
+    {
+      "entry_id": 10718,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=10718&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-5-2013-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-5-2013-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-5-2013-election/",
+          "label": "San Rafael November 5 2013 Election Page",
+          "anchor_text": "Measure E on the ballot"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\03. Legal, Legislative & City Attorney\\03-01-00 Legislative Information (Ordinances, Resolutions, Charter)\\03-01-02 Ordinances\\Ordinances (1975 to Present)\\2000 - 2019\\Ordinance 1913 (Transaction and Use Tax)",
+      "template_name": "Council Minutes, Resos, Ords",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "8/5/2013"
+        ],
+        "Doc Type - Council Docs": [
+          "Ordinances"
+        ]
+      },
+      "page_count": 10,
+      "first_page_text_excerpt": "CLERK'S CERTIFICATE \r\nI, ESTHER C. BEIRNE, Clerk of the City of San Rafael, and Ex -Officio Clerk of the \r\nCouncil of said City, do hereby certify that the foregoing: \r\nORDINANCE NO. 1913 \r\nAN ORDINANCE OF THE CITY OF SAN RAFAEL AMENDING CHAPTER 3.19 OF \r\nTHE SAN RAFAEL MUNICIPAL CODE EXTENDING AND INCREASING THE \r\nEXISTING TRANSACTIONS AND USE TAX ADMINISTERED BY THE STATE \r\nBOARD OF EQUALIZATION, SUBJECT TO APPROVAL OF A MAJORITY OF THE \r\nELECTORS VOTING ON THE TAX MEASURE AT THE GENERAL MUNIC"
+    },
+    {
+      "entry_id": 10756,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=10756&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-5-2024-election",
+        "san-rafael-november-8-2022-election",
+        "san-rafael-november-3-2020-election",
+        "san-rafael-november-7-2017-election",
+        "san-rafael-november-5-2013-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-5-2024-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-5-2024-election/",
+          "label": "San Rafael November 5 2024 Election Page",
+          "anchor_text": "City of San Rafael Independent Expenditure Ordinance"
+        },
+        {
+          "source_id": "san-rafael-november-8-2022-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-8-2022-election/",
+          "label": "San Rafael November 8 2022 Election Page",
+          "anchor_text": "City of San Rafael Independent Expenditure Ordinance"
+        },
+        {
+          "source_id": "san-rafael-november-3-2020-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-3-2020-election/",
+          "label": "San Rafael November 3 2020 Election Page",
+          "anchor_text": "City of San Rafael Independent Expenditure Ordinance"
+        },
+        {
+          "source_id": "san-rafael-november-7-2017-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-7-2017-election/",
+          "label": "San Rafael November 7 2017 General Municipal Election Page",
+          "anchor_text": "Independent Expenditure Ordinance"
+        },
+        {
+          "source_id": "san-rafael-november-5-2013-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-5-2013-election/",
+          "label": "San Rafael November 5 2013 Election Page",
+          "anchor_text": "Independent Expenditure Ordinance"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\03. Legal, Legislative & City Attorney\\03-01-00 Legislative Information (Ordinances, Resolutions, Charter)\\03-01-02 Ordinances\\Ordinances (1975 to Present)\\2000 - 2019\\Ordinance 1887 (Independent Expenditures)",
+      "template_name": "Council Minutes, Resos, Ords",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "9/7/2010"
+        ],
+        "Doc Type - Council Docs": [
+          "Ordinances"
+        ]
+      },
+      "page_count": 11,
+      "first_page_text_excerpt": "CLERK'S CERTIFICATE \r\nI, ESTHER C. BEIRNE, Clerk of the City of San Rafael, and Ex -Officio Clerk of the \r\nCouncil of said City, do hereby certify that the foregoing Charter Ordinance No. 1887 entitled: \r\nAN ORDINANCE OF THE CITY OF SAN RAFAEL ADDING NEW CHAPTER 1.16 TO \r\nTHE SAN RAFAEL MUNICIPAL CODE ENACTING DISCLOSURE AND \r\nREPORTING REGULATIONS FOR INDEPENDENT EXPENDITURES IN CITY \r\nELECTIONS \r\nis a true and correct copy of an Ordinance of said City and was introduced at a REGULAR \r\nmeeting "
+    },
+    {
+      "entry_id": 12010,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=12010&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-june-7-2016-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-june-7-2016-election",
+          "entry_url": "https://www.cityofsanrafael.org/june-7-2016-election/",
+          "label": "San Rafael June 7 2016 Election Page",
+          "anchor_text": "Ordinance 1942"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\03. Legal, Legislative & City Attorney\\03-01-00 Legislative Information (Ordinances, Resolutions, Charter)\\03-01-02 Ordinances\\Ordinances (1975 to Present)\\2000 - 2019\\Ordinance 1942 (Special Library Parcel Tax)",
+      "template_name": "Council Minutes, Resos, Ords",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "7/18/2016"
+        ],
+        "Doc Type - Council Docs": [
+          "Ordinances"
+        ]
+      },
+      "page_count": 5,
+      "first_page_text_excerpt": "ORDINANCE NO. 1942 \r\nAN ORDINANCE OF THE CITY OF SAN RAFAEL AMENDING \r\nCHAPTER 3.36 OF THE SAN RAFAEL MUNICIPAL CODE \r\nEXTENDING, REVISING AND INCREASING THE EXISTING \r\nSPECIAL LIBRARY SERVICES PARCEL TAX SUBJECT TO \r\nAPPROVAL OF TWO-THIRDS OF THE ELECTORS VOTING \r\nON THE TAX MEASURE AT THE GENERAL MUNICIPAL \r\nELECTION TO BE HELD ON TUESDAY, JUNE 7, 2016 \r\nThe City Council of the City of San Rafael hereby makes the following findings in \r\nconnection with the adoption of this Ordinance: \r\nDIVISIO"
+    },
+    {
+      "entry_id": 12054,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=12054&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-june-7-2016-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-june-7-2016-election",
+          "entry_url": "https://www.cityofsanrafael.org/june-7-2016-election/",
+          "label": "San Rafael June 7 2016 Election Page",
+          "anchor_text": "Election Results"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2016-2025\\2016\\07-18-2016\\CC Measure D Election Results",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "7/18/2016"
+        ],
+        "Department": [
+          "City Clerk"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "File No.": [
+          "9-4"
+        ]
+      },
+      "page_count": 22,
+      "first_page_text_excerpt": "CITY OF\ufffd Agenda Item No: 4.c \r\nMeeting Date: July 18, 2016 \r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\nDepartment: City Clerk \r\nPrepared by: Esther Beirne City Manager Approval: \r\nSUBJECT: SPECIAL LIBRARY SERVICES PARCEL TAX - MEASURE D: (CC) \r\n(a) RESOLUTION DECLARING CANVASS OF RETURNS AND RESULTS \r\nOF CONSOLIDATED SPECIAL MUNICIPAL ELECTION HELD ON JUNE \r\n7, 2016, RE: MEASURE D \u2014 SPECIAL LIBRARY SERVICES PARCEL \r\nTAX \r\n(b) ORDINANCE NO. 1942 - AN ORDINANCE OF THE CITY COUNCIL OF \r\nTHE CITY OF S"
+    },
+    {
+      "entry_id": 15680,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=15680&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-june-8-2010-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-june-8-2010-election",
+          "entry_url": "https://www.cityofsanrafael.org/june-8-2010-election/",
+          "label": "San Rafael June 8 2010 Election Page",
+          "anchor_text": "resolution"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2009-2015\\2010\\02-16-2010\\Lib Special Municipal Election 2010",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "2/16/2010"
+        ],
+        "Department": [
+          "Library"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "File No.": [
+          "9-4"
+        ]
+      },
+      "page_count": 19,
+      "first_page_text_excerpt": "\ufffd\ufffd\ufffd of Agenda Item No: 9 \r\nMeeting Date: February 16, 2010 \r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\nDepartment: Library \r\nPrepared by: David Dodd, Library Director City Manager Approval: 1 \r\nSUBJECT: Consideration of a Resolution calling a special municipal election to be held on June 8, 2010 \r\nand ordering the submission of a measure of levying a Special Library Services Parcel Tax to the \r\nqualified voters of the City of San Rafael at that election. \r\nRECOMMENDATION: Staff recommends that the"
+    },
+    {
+      "entry_id": 15682,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=15682&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-june-8-2010-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-june-8-2010-election",
+          "entry_url": "https://www.cityofsanrafael.org/june-8-2010-election/",
+          "label": "San Rafael June 8 2010 Election Page",
+          "anchor_text": "impartial analysis"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2009-2015\\2010\\03-15-2010\\CA Measure C  - Library Parcel Tax Impartial Analysis",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "3/15/2010"
+        ],
+        "Department": [
+          "City Attorney"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "File No.": [
+          "9-4"
+        ]
+      },
+      "page_count": 4,
+      "first_page_text_excerpt": "crrr of Agenda Item No: 4 \r\nn. Meeting Date: March 15, 2010 \r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\nDepartment: City Attorney \r\nII\ufffd \r\nPrepared by: Robert F. Epstein, City Attorney City Manager Approval: h, \r\nSUBJECT: City Attorney's Impartial Analysis of San Rafael Special Library Services Parcel \r\nTax Measure \r\nRECOMMENDATION: \r\nReview and accept the City Attorney's Impartial Analysis for the San Rafael Special Library Services \r\nParcel Tax Measure on the June 8, 2010 ballot. \r\nBACKGROLIND: \r"
+    },
+    {
+      "entry_id": 15683,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=15683&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-2-2010-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-2-2010-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-2-2010-election/",
+          "label": "San Rafael November 2 2010 Election Page",
+          "anchor_text": "Impartial Analysis"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2009-2015\\2010\\08-02-2010\\CA Paramedic Tax Impartial Analysis 2010",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "8/2/2010"
+        ],
+        "Department": [
+          "City Attorney"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "File No.": [
+          "9-4"
+        ]
+      },
+      "page_count": 3,
+      "first_page_text_excerpt": "carr oF\ufffd\ufffd Agenda Item No: 3 \r\nMeeting Date: August 2, 2010 \r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\nDepartment: City Attorney n\ufffd \r\nPrepared by: Robert F. Epstein, City Attorney City Manager Approval: \r\nSUBJECT: City Attorney's Impartial Analysis of City of San Rafael Paramedic Service Special \r\nTax Rate Increase and Appropriations Limit Increase Measure \r\nRECOMMENDATION: \r\nReview and accept the City Attorney's Impartial Analysis for the City of San Rafael Paramedic Service \r\nSpecial Tax Rate In"
+    },
+    {
+      "entry_id": 15684,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=15684&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-june-8-2010-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-june-8-2010-election",
+          "entry_url": "https://www.cityofsanrafael.org/june-8-2010-election/",
+          "label": "San Rafael June 8 2010 Election Page",
+          "anchor_text": "declaring canvass of returns"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2009-2015\\2010\\07-06-2010\\CC Measure C - Library Parcel Tax Election Results; 2010",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "7/6/2010"
+        ],
+        "Department": [
+          "City Clerk"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "File No.": [
+          "9-4"
+        ]
+      },
+      "page_count": 25,
+      "first_page_text_excerpt": "c\u25barr OFaz Agenda Item No: 3 \r\nMeeting Date: July 6, 2010 \r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\nDepartment: City Clerk \r\nPrepared by: Esther BeirneCity Manager Approval: \r\nSUBJECT: SPECIAL LIBRARY SERVICES PARCEL TAX - MEASURE C: (CC) \r\n(a) RESOLUTION DECLARING CANVASS OF RETURNS AND RESULTS \r\nOF CONSOLIDATED SPECIAL MUNICIPAL ELECTION HELD ON JUNE \r\n8, 2010, RE: MEASURE C - SPECIAL LIBRARY SERVICES PARCEL \r\nTAX \r\n(b) ACCEPTANCE OF ORDINANCE NO. 1883 - AN ORDINANCE OF THE \r\nCITY COUNCIL OF TH"
+    },
+    {
+      "entry_id": 15686,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=15686&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-2-2010-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-2-2010-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-2-2010-election/",
+          "label": "San Rafael November 2 2010 Election Page",
+          "anchor_text": "declaring canvass of returns"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2009-2015\\2010\\12-06-2010\\CC Paramedic Tax Election Results; 2010",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "12/6/2010"
+        ],
+        "Department": [
+          "City Clerk"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "File No.": [
+          "9-4"
+        ]
+      },
+      "page_count": 14,
+      "first_page_text_excerpt": "c\ufffdTr oF\ufffd Agenda Item No: 2 \r\nAopt I\ufffdV\"L\u00ada Meeting Date: December 6, 2010 \r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\nDepartment: City Clerk \r\nPrepared by: Esther Beirne City Manager Approval: , 1 \r\nSUBJECT: PARAMEDIC TAX - MEASURE I: (CC) \r\n(a) RESOLUTION DECLARING CANVASS OF RETURNS AND RESULTS \r\nOF CONSOLIDATED SPECIAL MUNICIPAL ELECTION HELD ON \r\nNOVEMBER 2, 2010, RE: MEASURE I - PARAMEDIC SERVICES \r\nSPECIAL TAX ON RESIDENTIAL UNITS AND ON NON-RESIDENTIAL \r\nSTRUCTURES AND APPROPRIATIONS LIMIT I"
+    },
+    {
+      "entry_id": 15687,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=15687&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-2-2010-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-2-2010-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-2-2010-election/",
+          "label": "San Rafael November 2 2010 Election Page",
+          "anchor_text": "Staff report & Resolution calling the election"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2009-2015\\2010\\07-19-2010\\FD Special Election; Paramedic Tax 2010",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "7/19/2010"
+        ],
+        "Department": [
+          "Fire"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "File No.": [
+          "9-4"
+        ]
+      },
+      "page_count": 25,
+      "first_page_text_excerpt": "CITY OF Agenda Item No. 12 \r\nn. 1\ufffdV&4 Meeting Date: July 19, 2010 \r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\nDepartment: Fire Department; City Attorney \r\nPrepared by: Chris Gray, Fire Chief fT City Manager Approval: \r\nLisa Goldfien, Deputy City Attorney II \r\nSUBJECT: \r\nResolution Calling a Special Municipal Election to be Held on Tuesday November 2, 2010; \r\nOrdering the Submission of a Proposition of Increasing the City's Paramedic Service Special Tax \r\nRate and Appropriations Limit to the Qualif"
+    },
+    {
+      "entry_id": 15689,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=15689&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-8-2011-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-8-2011-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-8-2011-election/",
+          "label": "San Rafael November 8 2011 Election Page",
+          "anchor_text": "Staff report & Resolution calling election"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2009-2015\\2011\\06-06-2011\\CC Calling Election 2011",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "6/6/2011"
+        ],
+        "Department": [
+          "City Clerk"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "File No.": [
+          "9-4"
+        ]
+      },
+      "page_count": 6,
+      "first_page_text_excerpt": "circ OF\ufffdAoft Agenda Item No: \r\n4 \r\nMeeting Date: June 6, 2011 \r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\nDepartment: City Clerk \r\nPrepared by: Esther Beirne \r\nCity Manager Approvald ), f \r\nFile No.: 9-4 \r\nSUBJECT: RESOLUTION RE: ELECTION MATTERS - GENERAL MUNICIPAL ELECTION, \r\nTUESDAY, NOVEMBER 8, 2011 (CC) \r\nRECOMMENDATION: \r\nRecommend adoption of Resolution: \r\n1) Proposing a General Municipal Election, including the San Rafael Elementary School \r\nDistrict and the San Rafael High School District"
+    },
+    {
+      "entry_id": 21179,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=21179&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-7-2017-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-7-2017-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-7-2017-election/",
+          "label": "San Rafael November 7 2017 General Municipal Election Page",
+          "anchor_text": "Staff report and resolution cancelling the election"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2016-2025\\2017\\08-21-2017\\CA Election Cancellation 2017",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "8/21/2017"
+        ],
+        "Department": [
+          "City Attorney"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "File No.": [
+          "9-4"
+        ]
+      },
+      "page_count": 7,
+      "first_page_text_excerpt": "SAN RAFAEL \r\nTHE CITY WITH A MISSION \r\nAgenda Item No: 5.e \r\nMeeting Date: August 21, 2017 \r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\nDepartment: CITY ATTORNEY _ \r\nPrepared by: Lisa A. Goldfien, City Manager Approval: \r\nAssistant City Attorney \r\nTOPIC: NOVEMBER 7, 2017 GENERAL MUNICIPAL ELECTION \r\nSUBJECT: RESOLUTION OF THE CITY COUNCIL OF THE CITY OF SAN RAFAEL PROVIDING FOR THE \r\nAPPOINTMENT TO THE OFFICES OF THIS CITY THAT WERE TO BE ELECTED ON TUESDAY, \r\nNOVEMBER 7, 2017 AND CANCELLING THE CI"
+    },
+    {
+      "entry_id": 22166,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=22166&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-june-5-2018-special-municipal-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-june-5-2018-special-municipal-election",
+          "entry_url": "https://www.cityofsanrafael.org/june-5-2018-special-municipal-election/",
+          "label": "San Rafael June 5 2018 Special Municipal Election Page",
+          "anchor_text": "Resolution Calling Election"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\03. Legal, Legislative & City Attorney\\03-01-00 Legislative Information (Ordinances, Resolutions, Charter)\\03-01-03 Resolutions\\Resolutions\\Resolutions (1961-Present)\\2001 - 2020\\2018 (14447-14620)\\CC Resolution 14477 (Cannabis Special Tax Election)",
+      "template_name": "Council Minutes, Resos, Ords",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "3/5/2018"
+        ],
+        "File No.": [
+          "9-4 x 287"
+        ],
+        "Doc Type - Council Docs": [
+          "Resolutions"
+        ]
+      },
+      "page_count": 20,
+      "first_page_text_excerpt": " \r\n 1 \r\nRESOLUTION NO. 14477 \r\n \r\nRESOLUTION OF THE CITY COUNCIL OF THE CITY OF SAN RAFAEL: \r\n \r\n1) CALLING A SPECIAL MUNICIPAL ELECTION TO BE HELD ON \r\nTUESDAY JUNE 5, 2018; AND \r\n2) ORDERING THE SUBMISSION OF A PROPOSITION OF LEVYING A \r\nSPECIAL COMMERCIAL CANNABIS BUSINESS TAX  TO THE \r\nQUALIFIED VOTERS OF THE CITY OF SAN RAFAEL AT THE \r\nSPECIAL MUNICIPAL ELECTION TO BE HELD ON JUNE 5, 2018; \r\nAND \r\n3) REQUESTING CONSOLIDATION WITH ANY OTHER ELECTION \r\nCONDUCTED ON THE SAME DATE; AND \r\n4) REQ"
+    },
+    {
+      "entry_id": 24131,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=24131&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-6-2018-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-6-2018-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-6-2018-election/",
+          "label": "San Rafael November 6 2018 Election Page",
+          "anchor_text": "staff report & resolution"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2016-2025\\2018\\06-04-2018\\CC City Schools District General Election",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "6/4/2018"
+        ],
+        "Department": [
+          "City Clerk"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ]
+      },
+      "page_count": 7,
+      "first_page_text_excerpt": "____________________________________________________________________________________ \r\nFOR CITY CLERK ONLY \r\n \r\nCouncil Meeting: 6/04/2018 \r\n \r\nDisposition: Resolution 14510 \r\n \r\n \r\nAgenda Item No: 4.b \r\n \r\nMeeting Date:      June 4, 2018 \r\n \r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\n \r\nDepartment:  City Clerk  \r\n \r\n \r\nPrepared by: Lindsay Lara, City Clerk \r\n \r\nCity Manager Approval:  ______________ \r\n \r\n \r\nTOPIC: Proposing San Rafael City Schools District General Election \r\n \r\nSUBJECT: RESOLUTIO"
+    },
+    {
+      "entry_id": 24145,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=24145&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-6-2018-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-6-2018-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-6-2018-election/",
+          "label": "San Rafael November 6 2018 Election Page",
+          "anchor_text": "resolution"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\03. Legal, Legislative & City Attorney\\03-01-00 Legislative Information (Ordinances, Resolutions, Charter)\\03-01-03 Resolutions\\Resolutions\\Resolutions (1961-Present)\\2001 - 2020\\2018 (14447-14620)\\CC Resolution 14510 (City Schools District General Election)",
+      "template_name": "Council Minutes, Resos, Ords",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "6/4/2018"
+        ],
+        "Doc Type - Council Docs": [
+          "Resolutions"
+        ]
+      },
+      "page_count": 4,
+      "first_page_text_excerpt": "RESOLUTION NO. 14510 \r\n \r\n RESOLUTION OF THE CITY COUNCIL OF THE CITY OF SAN RAFAEL \r\n \r\n1) PROPOSING A SAN RAFAEL CITY SCHOOLS DISTRICT GENERAL \r\nELECTION TO BE HELD ON TUESDAY, NOVEMBER 6, 2018; \r\n \r\n2) REQUESTING THE BOARD OF SUPERVISORS TO CONSOLIDATE WITH ANY \r\nOTHER ELECTION CONDUCTED ON THE SAME DATE; \r\n \r\n3) REQUESTING ELECTION SERVICES BY THE REGISTRAR OF VOTERS; \r\n \r\n4) REAFFIRMING POLICY REGARDING NUMBER OF WORDS IN CANDIDATE\u2019S \r\nSTATEMENT OF QUALIFICATIONS AND PROVIDING THAT THE COST"
+    },
+    {
+      "entry_id": 24697,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=24697&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-june-5-2018-special-municipal-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-june-5-2018-special-municipal-election",
+          "entry_url": "https://www.cityofsanrafael.org/june-5-2018-special-municipal-election/",
+          "label": "San Rafael June 5 2018 Special Municipal Election Page",
+          "anchor_text": "Staff report and resolution declaring canvass of returns"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2016-2025\\2018\\07-16-2018\\CC Special Election Results - Measure G",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "7/16/2018"
+        ],
+        "Department": [
+          "City Clerk"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ]
+      },
+      "page_count": 20,
+      "first_page_text_excerpt": "____________________________________________________________________________________ \r\nFOR CITY CLERK ONLY \r\n \r\nCouncil Meeting: 7-16-2018 \r\n \r\nDisposition: Resolution 14542 & Ordinance 1961 \r\n \r\nAgenda Item No: 4.c \r\n \r\nMeeting Date: July 16, 2018 \r\n \r\nSAN RAFAEL CITY COUNCIL STAFF REPORT \r\n \r\nDepartment:  City Clerk  \r\n \r\nPrepared by:  Lindsay Lara, City Clerk City Manager Approval:  ________ \r\n \r\n \r\nTOPICS:  CANNABIS INDUSTRY TAX - MEASURE G \r\n \r\nSUBJECT: \r\n1. RESOLUTION DECLARING CANVASS OF "
+    },
+    {
+      "entry_id": 24710,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=24710&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-june-5-2018-special-municipal-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-june-5-2018-special-municipal-election",
+          "entry_url": "https://www.cityofsanrafael.org/june-5-2018-special-municipal-election/",
+          "label": "San Rafael June 5 2018 Special Municipal Election Page",
+          "anchor_text": "resolution declaring canvass of returns"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\03. Legal, Legislative & City Attorney\\03-01-00 Legislative Information (Ordinances, Resolutions, Charter)\\03-01-03 Resolutions\\Resolutions\\Resolutions (1961-Present)\\2001 - 2020\\2018 (14447-14620)\\CC Resolution 14542 (Cannabis Industry Tax - Measure G)",
+      "template_name": "Council Minutes, Resos, Ords",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "7/16/2018"
+        ],
+        "Doc Type - Council Docs": [
+          "Resolutions"
+        ]
+      },
+      "page_count": 18,
+      "first_page_text_excerpt": "RESOLUTION NO.  14542 \r\n \r\nRESOLUTION OF THE CITY COUNCIL OF THE CITY OF SAN RAFAEL DECLARING \r\nCANVASS OF RETURNS AND RESULTS OF CONSOLIDATED SPECIAL \r\nMUNICIPAL ELECTION HELD ON JUNE 5, 2018 REGARDING MEASURE G \u2013 \r\nCANNABIS INDUSTRY TAX  \r\n \r\n \r\n WHEREAS, in pursuance of law and the Charter of the City of San Rafael, \r\nthere was held in said City on Tuesday, the 5th day of June 2018, a special municipal \r\nelection (consolidated with the Consolidated Primary Election) for the purpose of \r\nsubmi"
+    },
+    {
+      "entry_id": 24727,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=24727&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-june-5-2018-special-municipal-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-june-5-2018-special-municipal-election",
+          "entry_url": "https://www.cityofsanrafael.org/june-5-2018-special-municipal-election/",
+          "label": "San Rafael June 5 2018 Special Municipal Election Page",
+          "anchor_text": "Ordinance"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\03. Legal, Legislative & City Attorney\\03-01-00 Legislative Information (Ordinances, Resolutions, Charter)\\03-01-02 Ordinances\\Ordinances (1975 to Present)\\2000 - 2019\\Ordinance 1961 (Cannabis Industry Tax)",
+      "template_name": "Council Minutes, Resos, Ords",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "7/16/2018"
+        ],
+        "Doc Type - Council Docs": [
+          "Ordinances"
+        ]
+      },
+      "page_count": 10,
+      "first_page_text_excerpt": "ORDINANCE NO. 1961 \r\nAN ORDINANCE OF CITY OF SAN RAFAEL ADDING CHAPTER 3.40 TO THE SAN \r\nRAFAEL MUNICIPAL CODE ENTITLED \"CANNABIS INDUSTRY TAX.\" \r\nTHE PEOPLE OF THE CITY OF SAN RAFAEL DO ORDAIN AS FOLLOWS: \r\nDIVISION 1. Chapter 3.40 is hereby added to the San Rafael Municipal Code to read as \r\nfollows: \r\nCHAPTER 3.40 CANNABIS INDUSTRY TAX \r\n3.40.010. Title. This ordinance shall be known as the Cannabis Industry Tax Ordinance \r\n3.40.020. Special Excise Tax. A special excise tax is imposed by this"
+    },
+    {
+      "entry_id": 25815,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=25815&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-6-2018-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-6-2018-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-6-2018-election/",
+          "label": "San Rafael November 6 2018 Election Page",
+          "anchor_text": "declaring canvass of returns and results"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\03. Legal, Legislative & City Attorney\\03-01-00 Legislative Information (Ordinances, Resolutions, Charter)\\03-01-03 Resolutions\\Resolutions\\Resolutions (1961-Present)\\2001 - 2020\\2018 (14447-14620)\\CC Resolution 14613 (General Municipal Election Results)",
+      "template_name": "Council Minutes, Resos, Ords",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "12/17/2018"
+        ],
+        "Doc Type - Council Docs": [
+          "Resolutions"
+        ]
+      },
+      "page_count": 15,
+      "first_page_text_excerpt": "Page 1 of 2 \r\nRESOLUTION NO. 14613\r\nA RESOLUTION OF THE CITY COUNCIL OF THE CITY OF SAN RAFAEL DECLARING \r\nTHE RESULTS OF THE GENERAL MUNICIPAL ELECTION HELD IN THE CITY OF \r\nSAN RAFAEL ON NOVEMBER 6, 2018 \r\nWHEREAS, a General Municipal Election was held and conducted in the City of \r\nSan Rafael, County of Marin, State of California, on Tuesday the sixth day of November \r\n2018, as required by law, for the purpose of electing two trustees of the San Rafael Board \r\nof Education for the full term o"
+    },
+    {
+      "entry_id": 29206,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=29206&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-3-2020-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-3-2020-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-3-2020-election/",
+          "label": "San Rafael November 3 2020 Election Page",
+          "anchor_text": "resolution"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2016-2025\\2020\\06-15-2020\\CC Proposing General Municipal Election 2020",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "6/15/2020"
+        ],
+        "Department": [
+          "City Clerk"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "Resolution #": [
+          "14814"
+        ]
+      },
+      "page_count": 10,
+      "first_page_text_excerpt": "____________________________________________________________________________________ \r\nFOR CITY CLERK ONLY \r\nCouncil Meeting: June 15, 2020 \r\nDisposition: Resolution 14814 \r\nAgenda Item No: 4.b \r\nMeeting Date: June 15, 2020\r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\nDepartment:  City Clerk \r\nPrepared by: Lindsay Lara, City Clerk City Manager Approval:  ______________ \r\nTOPIC: PROPOSING GENERAL MUNICIPAL ELECTION 2020 \r\nSUBJECT: RESOLUTION CALLING AND GIVING NOTICE OF AT-LARGE ELECTIONS, BY-\r\nDISTR"
+    },
+    {
+      "entry_id": 32407,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=32407&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-3-2020-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-3-2020-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-3-2020-election/",
+          "label": "San Rafael November 3 2020 Election Page",
+          "anchor_text": "declaring canvass of returns and results"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2016-2025\\2020\\12-07-2020\\CC November 3, 2020 General Municipal Election Results",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "12/7/2020"
+        ],
+        "Department": [
+          "City Clerk"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "Resolution #": [
+          "14879"
+        ]
+      },
+      "page_count": 24,
+      "first_page_text_excerpt": "____________________________________________________________________________________ \r\nFOR CITY CLERK ONLY \r\nCouncil Meeting: December 7, 2020 \r\nDisposition: Resolution 14879 \r\nAgenda Item No: SM 1.a    \r\nMeeting Date: December 7, 2020\r\nSAN RAFAEL CITY COUNCIL STAFF REPORT \r\nDepartment:  City Clerk  \r\nPrepared by: Lindsay Lara, City Clerk City Manager Approval:  ________ \r\nTOPIC: NOVEMBER 3, 2020 GENERAL MUNICIPAL ELECTION RESULTS \r\nSUBJECT:  RESOLUTION DECLARING CANVASS OF VOTES CAST AND \r\nRESU"
+    },
+    {
+      "entry_id": 36622,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=36622&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-5-2024-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-5-2024-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-5-2024-election/",
+          "label": "San Rafael November 5 2024 Election Page",
+          "anchor_text": "an initiative to fund a new main library and community center at Albert Park"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-03-00 Elections\\02-03-05 Referendum / Recall / Citizens Initiative Petitions\\2024-11-05 General Municipal Election\\Initiative Submitted by the Voters\\2. City Attorney's Ballot Title and Summary 2024",
+      "template_name": "Miscellaneous Documents",
+      "metadata_fields": {},
+      "page_count": 2,
+      "first_page_text_excerpt": " \r\n4880-5927-0821 v3  \r\nINITIATIVE MEASURE TO BE SUBMITTED DIRECTLY TO THE VOTERS \r\nThe city attorney has prepared the following title and summary of the chief purpose and points of \r\nthe proposed measure: \r\nBALLOT TITLE \r\nAn Initiative Measure Amending the City of San Rafael\u2019s Municipal Code to Provide Funding for \r\nConstruction of a New Main Library and Community Center at Albert Park in Downtown San \r\nRafael. \r\nBALLOT SUMMARY \r\nThe initiative measure would add a chapter to the San Rafael Muni"
+    },
+    {
+      "entry_id": 37027,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=37027&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-5-2024-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-5-2024-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-5-2024-election/",
+          "label": "San Rafael November 5 2024 Election Page",
+          "anchor_text": "Staff report and resolution calling the election"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2016-2025\\2024\\06-03-2024\\CC 2024 General Municipal Election",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "6/3/2024"
+        ],
+        "Department": [
+          "City Clerk"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "Resolution #": [
+          "15290"
+        ]
+      },
+      "page_count": 11,
+      "first_page_text_excerpt": "____________________________________________________________________________________ \r\nFOR CITY CLERK ONLY \r\nCouncil Meeting: June 3, 2024 \r\nDisposition: Resolution 15290 \r\nAgenda Item No: 4.d \r\nMeeting Date: June 3, 2024\r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\nDepartment: City Clerk \r\nPrepared by: Lindsay Lara, City Clerk City Manager Approval:  ______________ \r\nTOPIC: 2024 GENERAL MUNICIPAL ELECTION \r\nSUBJECT: RESOLUTION CALLING AND GIVING NOTICE OF AT-LARGE ELECTIONS, BY-\r\nDISTRICT ELECTIONS"
+    },
+    {
+      "entry_id": 37028,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=37028&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-5-2024-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-5-2024-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-5-2024-election/",
+          "label": "San Rafael November 5 2024 Election Page",
+          "anchor_text": "approved"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2016-2025\\2024\\06-03-2024\\CC An Initiative Measure to Provide Funding for the Construction of a New Main Library and Community Center at Albert Park",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "6/3/2024"
+        ],
+        "Department": [
+          "City Clerk"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "Resolution #": [
+          "15295"
+        ]
+      },
+      "page_count": 18,
+      "first_page_text_excerpt": "____________________________________________________________________________________ \r\nFOR CITY CLERK ONLY \r\nCouncil Meeting: June 3, 2024 \r\nDisposition: Accepted Certificate of Sufficiency of the petition for the proposed Initiative Measure \r\namending the City of San Rafael\u2019s Municipal Code to provide funding for construction of a new main \r\nlibrary and community center at Albert Park x Resolution 15295 \r\nAgenda Item No: 6.e \r\nMeeting Date: June 3, 2024 \r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r"
+    },
+    {
+      "entry_id": 40185,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=40185&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-november-5-2024-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-november-5-2024-election",
+          "entry_url": "https://www.cityofsanrafael.org/november-5-2024-election/",
+          "label": "San Rafael November 5 2024 Election Page",
+          "anchor_text": "declaring canvass of returns"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2016-2025\\2024\\12-16-2024\\CC November 5, 2024 General Municipal Election Results",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "12/16/2024"
+        ],
+        "Department": [
+          "City Clerk"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "Resolution #": [
+          "15361"
+        ]
+      },
+      "page_count": 18,
+      "first_page_text_excerpt": "____________________________________________________________________________________ \r\nFOR CITY CLERK ONLY \r\nCouncil Meeting: December 16, 2024 \r\nDisposition: Resolution 15361 \r\nAgenda Item No: SM 1.a  \r\nMeeting Date: December 16, 2024\r\nSAN RAFAEL CITY COUNCIL STAFF REPORT \r\nDepartment: City Clerk \r\nPrepared by: Lindsay Lara, City Clerk City Manager Approval:  ________ \r\nTOPIC: NOVEMBER 5, 2024 GENERAL MUNICIPAL ELECTION RESULTS \r\nSUBJECT:  RESOLUTION DECLARING CANVASS OF VOTES CAST AND \r\nRESULT"
+    },
+    {
+      "entry_id": 41989,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=41989&dbid=0&repo=CityofSanRafael",
+      "capture_status": "captured",
+      "error": null,
+      "linked_from_source_ids": [
+        "san-rafael-june-2-2026-special-municipal-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-june-2-2026-special-municipal-election",
+          "entry_url": "https://www.cityofsanrafael.org/june-2-2026-special-municipal-election/",
+          "label": "San Rafael June 2 2026 Special Municipal Election Page",
+          "anchor_text": "Staff Report and Ordinance \u2013 Full Text of Measure"
+        }
+      ],
+      "path": "\\Public Records\\Public Records\\02. City Clerk\\02-01-00 City Council Records\\02-01-02 Agenda Packets & Staff Reports\\2026\\02-17-2026\\CM Call for a Special Election to Renew the Special Library Services Parcel Tax",
+      "template_name": "Council Staff Reports",
+      "metadata_fields": {
+        "Date - Meeting": [
+          "2/17/2026"
+        ],
+        "Department": [
+          "City Manager"
+        ],
+        "Doc Type - Council Docs": [
+          "Staff Reports"
+        ],
+        "Resolution #": [
+          "15511"
+        ]
+      },
+      "page_count": 13,
+      "first_page_text_excerpt": "____________________________________________________________________________________ \r\nFOR CITY CLERK ONLY \r\nCouncil Meeting: February 17, 2026 \r\nDisposition: Resolution 15511 \r\nAgenda Item No: 3.a \r\nMeeting Date: February 17, 2026 \r\nSAN RAFAEL CITY COUNCIL AGENDA REPORT \r\nDepartment: City Manager \r\nPrepared by: John Stefanski, Assistant City \r\nManager \r\nPaul Navazio, Finance Director \r\nCity Manager Approval:  ______________ \r\nTOPIC: CALL FOR A SPECIAL ELECTION TO RENEW THE SPECIAL LIBRARY SERVI"
+    },
+    {
+      "entry_id": 41998,
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=41998&dbid=0&repo=CityofSanRafael",
+      "capture_status": "error",
+      "error": "<HTTPError 500: 'Internal Server Error'>",
+      "linked_from_source_ids": [
+        "san-rafael-june-2-2026-special-municipal-election"
+      ],
+      "linked_from": [
+        {
+          "source_id": "san-rafael-june-2-2026-special-municipal-election",
+          "entry_url": "https://www.cityofsanrafael.org/june-2-2026-special-municipal-election/",
+          "label": "San Rafael June 2 2026 Special Municipal Election Page",
+          "anchor_text": "Resolution Calling Election"
+        }
+      ],
+      "path": "",
+      "template_name": null,
+      "metadata_fields": {},
+      "page_count": null,
+      "first_page_text_excerpt": ""
+    }
+  ],
+  "notes": [
+    "This slice captures only direct DocView records that San Rafael election pages expose publicly.",
+    "Candidate campaign filing folders remain a separate page-linked discovery problem; this slice does not imply folder enumeration is solved.",
+    "The public page-linked record set is still useful even when JSON follow-up fails, because the election pages preserve anchor text and record URLs for those records."
+  ]
+}

@@ -184,6 +184,7 @@ Reason:
 - this is the missing city-side campaign surface needed for true local media-to-campaign overlaps
 - the current working discovery pattern is `elections / past-elections -> election landing page -> campaign filing destination`
 - within that pattern, pre-2020 campaign-bearing pages expose election-level folder IDs, while `2020+` pages expose candidate-specific folder IDs
+- those same election pages also expose direct `DocView` records that can be captured as first-class election records even when folder enumeration remains flaky
 
 ## Wave 01 Exclusions
 
