@@ -3460,3 +3460,66 @@ sources:
     dedupe_key_strategy: exact_url
     notes:
       - Confirms the certified November 5, 2024 winners for Mayor, District 1, and District 4.
+
+  - source_id: san-rafael-november-8-2022-election
+    label: San Rafael November 8 2022 Election Page
+    owner_type: institution
+    owner_id: san-rafael-city-clerk
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: official_communications
+    source_type: election_page
+    entry_url: https://www.cityofsanrafael.org/november-8-2022-election/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/elected-officials/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - election
+      - seat
+      - actor
+      - seat_service
+      - filing
+      - claim
+    cadence: record
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public city election page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Confirms the November 8, 2022 election outcome context for District 2 and District 3.
+      - Exposes candidate-specific `Campaign Finance Documents` folder links for city and school-board races.
+
+  - source_id: san-rafael-november-3-2020-election
+    label: San Rafael November 3 2020 Election Page
+    owner_type: institution
+    owner_id: san-rafael-city-clerk
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: official_communications
+    source_type: election_page
+    entry_url: https://www.cityofsanrafael.org/november-3-2020-election/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/elected-officials/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - election
+      - seat
+      - actor
+      - seat_service
+      - filing
+      - claim
+    cadence: record
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public city election page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Exposes candidate-specific `Campaign Finance Documents` folder links for the November 3, 2020 city election cycle.

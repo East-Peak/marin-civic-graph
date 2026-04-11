@@ -139,6 +139,7 @@ Start narrow:
 
 - [Case Study 01 Extractor](./scripts/extract_case_study_01_bundle.py)
 - [San Rafael Form 803 Capture Workflow](./scripts/capture_san_rafael_form803.py)
+- [San Rafael Election Page Capture Workflow](./scripts/capture_san_rafael_election_pages.py)
 - [San Rafael City Council Archive Capture Workflow](./scripts/capture_san_rafael_city_council_archive.py)
 - [San Rafael City-Side Campaign Filing Inventory Workflow](./scripts/capture_san_rafael_city_campaign_filing_inventory.py)
 - [Marin County BOS Archive Capture Workflow](./scripts/capture_marin_county_bos_archive.py)
@@ -169,9 +170,11 @@ This repo started as a planning workspace and now includes the first live implem
   - recorded portal year coverage back to `1997` and current election-tree labels for public election context
   - confirmed the operating split: yearly export is the historical backfill surface, while RSS remains the near-real-time change feed
 - fourth wave-01 source execution started for `San Rafael city-side campaign filings`:
-  - added a derived inventory workflow that uses existing San Rafael disclosure and 2024 election pages to enumerate city-side campaign filing destinations
-  - captured the two top-level Laserfiche filing destinations and `10` candidate-specific child folder IDs exposed on the November 5, 2024 election page
-  - recorded the current adapter boundary explicitly: anonymous Laserfiche folder-listing probes for both top-level folders and a sampled child folder currently fail with session-limit error `[9030]`
+  - added a dedicated election-page capture workflow for San Rafael's `2020`, `2022`, and `2024` municipal election landing pages
+  - added a derived inventory workflow that uses the San Rafael disclosures page plus the captured `2020`, `2022`, and `2024` election pages to enumerate city-side campaign filing destinations
+  - captured the two top-level Laserfiche filing destinations and `27` candidate-specific child folder IDs exposed across the November 3, 2020, November 8, 2022, and November 5, 2024 election pages
+  - extracted cycle-specific independent-expenditure filing folder IDs for `2020` and `2022`
+  - recorded the current adapter boundary explicitly: anonymous Laserfiche folder-listing probes for both top-level campaign folders and a sampled child folder currently fail with session-limit error `[9030]`
   - confirmed the current working discovery pattern is `disclosures page -> top-level folder ids -> election page -> candidate-specific child folder ids`
 - raw official source captures for case study 01
 - raw criminal-justice source captures for Marin court and sheriff landing surfaces

@@ -189,10 +189,12 @@ Mirror the question here when it affects:
   - [2026-04-11.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json)
   - [folder-probe.json](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-public-records-financial-filings-folder/2026-04-11/folder-probe.json)
   - [folder-probe.json](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-public-records-independent-expenditures-folder/2026-04-11/folder-probe.json)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-3-2020-election/2026-04-11/source.html)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-8-2022-election/2026-04-11/source.html)
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html)
 - `question`: Should the city-side campaign backfill adapter rely permanently on election-page child-folder discovery, or is there a stable anonymous Laserfiche listing path for the top-level filing folders that we have not found yet?
 - `why it matters`: This determines whether historical city-side campaign backfill is `page-linked` or truly `folder-enumerated`, which affects how much year-by-year election-page recovery we need before cron sync starts.
-- `next evidence`: probe older San Rafael election landing pages for the same child-folder pattern, and re-test the top-level Laserfiche folder endpoints after quiet periods to see whether the current `[9030]` session-limit failure is structural or intermittent.
+- `next evidence`: the `2020`, `2022`, and `2024` election pages now confirm the child-folder pattern across three cycles, so the remaining work is to test whether older pre-2020 city election pages exist and whether the top-level Laserfiche folder endpoints ever expose a stable anonymous listing path outside the current `[9030]` session-limit failure.
 
 ### OQ-016: San Rafael local Form 803 filing surface
 

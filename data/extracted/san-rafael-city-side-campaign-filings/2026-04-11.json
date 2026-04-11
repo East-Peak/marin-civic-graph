@@ -1,10 +1,18 @@
 {
   "capture_date": "2026-04-11",
-  "captured_at": "2026-04-11T20:49:13Z",
+  "captured_at": "2026-04-11T20:58:19Z",
   "derived_from": [
     {
       "source_id": "san-rafael-disclosures",
       "path": "data/raw/san-rafael-disclosures/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "path": "data/raw/san-rafael-november-3-2020-election/2026-04-11/source.html"
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "path": "data/raw/san-rafael-november-8-2022-election/2026-04-11/source.html"
     },
     {
       "source_id": "san-rafael-november-5-2024-election",
@@ -43,25 +51,134 @@
         },
         "response": {
           "data": {
-            "name": null,
+            "name": "CityofSanRafael",
             "folderId": 1,
-            "colTypes": null,
+            "colTypes": [
+              {
+                "displayName": "Name",
+                "name": "Name",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": false,
+                "multiValue": false,
+                "width": 248
+              },
+              {
+                "displayName": "Page count",
+                "name": "PageCount",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": false,
+                "multiValue": false,
+                "width": 117
+              },
+              {
+                "displayName": "Template name",
+                "name": "TemplateName",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": false,
+                "multiValue": false,
+                "width": 148
+              },
+              {
+                "displayName": "ID",
+                "name": "Id",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              },
+              {
+                "displayName": "Template ID",
+                "name": "TemplateId",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              },
+              {
+                "displayName": "Entry type",
+                "name": "EntryType",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              },
+              {
+                "displayName": "Shortcut target",
+                "name": "LinkTo",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              },
+              {
+                "displayName": "Relationship type",
+                "name": "LinkType",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              },
+              {
+                "displayName": "Extension",
+                "name": "Extension",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              },
+              {
+                "displayName": "Flags",
+                "name": "Flags",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              },
+              {
+                "displayName": "Date created",
+                "name": "CreationDate",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              },
+              {
+                "displayName": "Date modified",
+                "name": "LastModified",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              }
+            ],
             "results": null,
             "failed": true,
-            "errMsg": "Sign in failed because the number of sessions has reached the licensed limit, or the user account has reached its session limit, or no named user license has been allocated to the user account. [9030]",
+            "errMsg": "Specified argument was out of the range of valid values.\r\nParameter name: winSize",
             "entryType": 0,
-            "path": null,
+            "path": "\\",
             "parentId": 0,
-            "showColumnPicker": false,
-            "totalEntries": 0,
+            "showColumnPicker": true,
+            "totalEntries": 2,
             "sortAscending": false,
             "sortColumn": null
           },
-          "__breach": "4uVhAlZ0OMblR82ypGqEkz"
+          "__breach": "oPpqbhhdbpElioAG/yzHGvGJF"
         },
         "failed": true,
-        "error_message": "Sign in failed because the number of sessions has reached the licensed limit, or the user account has reached its session limit, or no named user license has been allocated to the user account. [9030]",
-        "total_entries": 0
+        "error_message": "Specified argument was out of the range of valid values.\r\nParameter name: winSize",
+        "total_entries": 2
       }
     },
     {
@@ -81,30 +198,294 @@
         },
         "response": {
           "data": {
-            "name": null,
+            "name": "CityofSanRafael",
             "folderId": 1,
-            "colTypes": null,
+            "colTypes": [
+              {
+                "displayName": "Name",
+                "name": "Name",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": false,
+                "multiValue": false,
+                "width": 248
+              },
+              {
+                "displayName": "Page count",
+                "name": "PageCount",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": false,
+                "multiValue": false,
+                "width": 117
+              },
+              {
+                "displayName": "Template name",
+                "name": "TemplateName",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": false,
+                "multiValue": false,
+                "width": 148
+              },
+              {
+                "displayName": "ID",
+                "name": "Id",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              },
+              {
+                "displayName": "Template ID",
+                "name": "TemplateId",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              },
+              {
+                "displayName": "Entry type",
+                "name": "EntryType",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              },
+              {
+                "displayName": "Shortcut target",
+                "name": "LinkTo",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              },
+              {
+                "displayName": "Relationship type",
+                "name": "LinkType",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              },
+              {
+                "displayName": "Extension",
+                "name": "Extension",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              },
+              {
+                "displayName": "Flags",
+                "name": "Flags",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              },
+              {
+                "displayName": "Date created",
+                "name": "CreationDate",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              },
+              {
+                "displayName": "Date modified",
+                "name": "LastModified",
+                "type": 0,
+                "isNumeric": false,
+                "hidden": true,
+                "multiValue": false,
+                "width": 0
+              }
+            ],
             "results": null,
             "failed": true,
-            "errMsg": "Sign in failed because the number of sessions has reached the licensed limit, or the user account has reached its session limit, or no named user license has been allocated to the user account. [9030]",
+            "errMsg": "Specified argument was out of the range of valid values.\r\nParameter name: winSize",
             "entryType": 0,
-            "path": null,
+            "path": "\\",
             "parentId": 0,
-            "showColumnPicker": false,
-            "totalEntries": 0,
+            "showColumnPicker": true,
+            "totalEntries": 2,
             "sortAscending": false,
             "sortColumn": null
           },
-          "__breach": "tEsVoDI/xq1ics5gisUi"
+          "__breach": "KcEBa6vyFCzTCrr5+QztoDjHrrHk"
         },
         "failed": true,
-        "error_message": "Sign in failed because the number of sessions has reached the licensed limit, or the user account has reached its session limit, or no named user license has been allocated to the user account. [9030]",
-        "total_entries": 0
+        "error_message": "Specified argument was out of the range of valid values.\r\nParameter name: winSize",
+        "total_entries": 2
       }
     }
   ],
   "candidate_folder_inventory": [
     {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Mayoral Candidates",
+      "candidate_name": "Kate Colin",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31079&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31079
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Mayoral Candidates",
+      "candidate_name": "Mahmoud Shirazi",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31080&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31080
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 4 Candidates",
+      "candidate_name": "John Gamblin",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31431&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31431
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 4 Candidates",
+      "candidate_name": "Rachel Kertz",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31082&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31082
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 4 Candidates",
+      "candidate_name": "Greg Knell",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31081&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31081
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 1 Candidate",
+      "candidate_name": "Maika Llorens Gulati",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31093&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31093
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "Board of Education Election",
+      "office_label": "Trustee Area 1",
+      "candidate_name": "Gina Daly",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31435&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31435
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "Board of Education Election",
+      "office_label": "Trustee Area 3",
+      "candidate_name": "Linda Jackson",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31438&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31438
+    },
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "Board of Education Election",
+      "office_label": "Trustee Area 5",
+      "candidate_name": "Marina Palma",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31477&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 31477
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 2 Candidates:",
+      "candidate_name": "Eli Hill",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=33055&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 33055
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 2 Candidates:",
+      "candidate_name": "Gerrod Herndon",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34870&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 34870
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 3 Candidates:",
+      "candidate_name": "Maribeth Bushey",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34885&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 34885
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 3 Candidates:",
+      "candidate_name": "Jonathan Frieman",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34937&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 34937
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "Board of Education Election",
+      "office_label": "Trustee Area 2 Candidates:",
+      "candidate_name": "Lucia Martel Dow",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=33988&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 33988
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "Board of Education Election",
+      "office_label": "Trustee Area 2 Candidates:",
+      "candidate_name": "Lisa Longnecker",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34939&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 34939
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "Board of Education Election",
+      "office_label": "Trustee Area 4 Candidates:",
+      "candidate_name": "Faye Bourret",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34411&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 34411
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "Board of Education Election",
+      "office_label": "Trustee Area 4 Candidates:",
+      "candidate_name": "Carolina Martin",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34627&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 34627
+    },
+    {
+      "source_id": "san-rafael-november-5-2024-election",
+      "election_label": "November 5, 2024 Election - San Rafael",
       "section_label": "City of San Rafael Election",
       "office_label": "Mayoral Candidates",
       "candidate_name": "Kate Colin",
@@ -112,6 +493,8 @@
       "folder_entry_id": 35554
     },
     {
+      "source_id": "san-rafael-november-5-2024-election",
+      "election_label": "November 5, 2024 Election - San Rafael",
       "section_label": "City of San Rafael Election",
       "office_label": "Mayoral Candidates",
       "candidate_name": "Mahmoud Shirazi",
@@ -119,6 +502,8 @@
       "folder_entry_id": 36469
     },
     {
+      "source_id": "san-rafael-november-5-2024-election",
+      "election_label": "November 5, 2024 Election - San Rafael",
       "section_label": "City of San Rafael Election",
       "office_label": "Councilmember District 4 Candidates",
       "candidate_name": "Rachel Kertz",
@@ -126,6 +511,8 @@
       "folder_entry_id": 36450
     },
     {
+      "source_id": "san-rafael-november-5-2024-election",
+      "election_label": "November 5, 2024 Election - San Rafael",
       "section_label": "City of San Rafael Election",
       "office_label": "Councilmember District 4 Candidates",
       "candidate_name": "Mark Galperin",
@@ -133,6 +520,8 @@
       "folder_entry_id": 37449
     },
     {
+      "source_id": "san-rafael-november-5-2024-election",
+      "election_label": "November 5, 2024 Election - San Rafael",
       "section_label": "City of San Rafael Election",
       "office_label": "Councilmember District 1 Candidate",
       "candidate_name": "Maika Llorens Gulati",
@@ -140,6 +529,8 @@
       "folder_entry_id": 36529
     },
     {
+      "source_id": "san-rafael-november-5-2024-election",
+      "election_label": "November 5, 2024 Election - San Rafael",
       "section_label": "City of San Rafael Election",
       "office_label": "City Attorney Candidate",
       "candidate_name": "Robert Epstein",
@@ -147,6 +538,8 @@
       "folder_entry_id": 37362
     },
     {
+      "source_id": "san-rafael-november-5-2024-election",
+      "election_label": "November 5, 2024 Election - San Rafael",
       "section_label": "City of San Rafael Election",
       "office_label": "Clerk & Assessor Candidate",
       "candidate_name": "Lindsay Lara",
@@ -154,6 +547,8 @@
       "folder_entry_id": 37451
     },
     {
+      "source_id": "san-rafael-november-5-2024-election",
+      "election_label": "November 5, 2024 Election - San Rafael",
       "section_label": "San Rafael City Schools",
       "office_label": "Governing Board Member, Trustee Area 1",
       "candidate_name": "Mark Koerner",
@@ -161,6 +556,8 @@
       "folder_entry_id": 37259
     },
     {
+      "source_id": "san-rafael-november-5-2024-election",
+      "election_label": "November 5, 2024 Election - San Rafael",
       "section_label": "San Rafael City Schools",
       "office_label": "Governing Board Member, Trustee Area 3",
       "candidate_name": "Maureen 'Mo' de Nieva-Marsh",
@@ -168,6 +565,8 @@
       "folder_entry_id": 37376
     },
     {
+      "source_id": "san-rafael-november-5-2024-election",
+      "election_label": "November 5, 2024 Election - San Rafael",
       "section_label": "San Rafael City Schools",
       "office_label": "Governing Board Member, Trustee Area 5",
       "candidate_name": "Isai Rodas",
@@ -175,12 +574,46 @@
       "folder_entry_id": 37459
     }
   ],
-  "candidate_folder_count": 10,
-  "independent_expenditure_resource": {
-    "label": "City of San Rafael Independent Expenditure Ordinance",
-    "record_url": "http://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=10756&searchid=35c8afd5-3ac3-45a3-aa75-9695eaa5c1c5&dbid=0&repo=CityofSanRafael",
-    "record_entry_id": 10756
-  },
+  "candidate_folder_count": 27,
+  "independent_expenditure_resources": [
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "label": "City of San Rafael Independent Expenditure Ordinance",
+      "record_url": "http://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=10756&searchid=35c8afd5-3ac3-45a3-aa75-9695eaa5c1c5&dbid=0&repo=CityofSanRafael",
+      "record_entry_id": 10756
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "label": "City of San Rafael Independent Expenditure Ordinance",
+      "record_url": "http://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=10756&searchid=35c8afd5-3ac3-45a3-aa75-9695eaa5c1c5&dbid=0&repo=CityofSanRafael",
+      "record_entry_id": 10756
+    },
+    {
+      "source_id": "san-rafael-november-5-2024-election",
+      "election_label": "November 5, 2024 Election - San Rafael",
+      "label": "City of San Rafael Independent Expenditure Ordinance",
+      "record_url": "http://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=10756&searchid=35c8afd5-3ac3-45a3-aa75-9695eaa5c1c5&dbid=0&repo=CityofSanRafael",
+      "record_entry_id": 10756
+    }
+  ],
+  "independent_expenditure_filing_folders": [
+    {
+      "source_id": "san-rafael-november-3-2020-election",
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "label": "Independent Expenditure Filings 2020",
+      "folder_url": "http://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=32164&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 32164
+    },
+    {
+      "source_id": "san-rafael-november-8-2022-election",
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "label": "Independent Expenditure Filings 2022",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34126&dbid=0&repo=CityofSanRafael",
+      "folder_entry_id": 34126
+    }
+  ],
   "sample_child_folder_probe": {
     "candidate_name": "Kate Colin",
     "office_label": "Mayoral Candidates",
@@ -199,30 +632,139 @@
       },
       "response": {
         "data": {
-          "name": null,
+          "name": "CityofSanRafael",
           "folderId": 1,
-          "colTypes": null,
+          "colTypes": [
+            {
+              "displayName": "Name",
+              "name": "Name",
+              "type": 0,
+              "isNumeric": false,
+              "hidden": false,
+              "multiValue": false,
+              "width": 248
+            },
+            {
+              "displayName": "Page count",
+              "name": "PageCount",
+              "type": 0,
+              "isNumeric": false,
+              "hidden": false,
+              "multiValue": false,
+              "width": 117
+            },
+            {
+              "displayName": "Template name",
+              "name": "TemplateName",
+              "type": 0,
+              "isNumeric": false,
+              "hidden": false,
+              "multiValue": false,
+              "width": 148
+            },
+            {
+              "displayName": "ID",
+              "name": "Id",
+              "type": 0,
+              "isNumeric": false,
+              "hidden": true,
+              "multiValue": false,
+              "width": 0
+            },
+            {
+              "displayName": "Template ID",
+              "name": "TemplateId",
+              "type": 0,
+              "isNumeric": false,
+              "hidden": true,
+              "multiValue": false,
+              "width": 0
+            },
+            {
+              "displayName": "Entry type",
+              "name": "EntryType",
+              "type": 0,
+              "isNumeric": false,
+              "hidden": true,
+              "multiValue": false,
+              "width": 0
+            },
+            {
+              "displayName": "Shortcut target",
+              "name": "LinkTo",
+              "type": 0,
+              "isNumeric": false,
+              "hidden": true,
+              "multiValue": false,
+              "width": 0
+            },
+            {
+              "displayName": "Relationship type",
+              "name": "LinkType",
+              "type": 0,
+              "isNumeric": false,
+              "hidden": true,
+              "multiValue": false,
+              "width": 0
+            },
+            {
+              "displayName": "Extension",
+              "name": "Extension",
+              "type": 0,
+              "isNumeric": false,
+              "hidden": true,
+              "multiValue": false,
+              "width": 0
+            },
+            {
+              "displayName": "Flags",
+              "name": "Flags",
+              "type": 0,
+              "isNumeric": false,
+              "hidden": true,
+              "multiValue": false,
+              "width": 0
+            },
+            {
+              "displayName": "Date created",
+              "name": "CreationDate",
+              "type": 0,
+              "isNumeric": false,
+              "hidden": true,
+              "multiValue": false,
+              "width": 0
+            },
+            {
+              "displayName": "Date modified",
+              "name": "LastModified",
+              "type": 0,
+              "isNumeric": false,
+              "hidden": true,
+              "multiValue": false,
+              "width": 0
+            }
+          ],
           "results": null,
           "failed": true,
-          "errMsg": "Sign in failed because the number of sessions has reached the licensed limit, or the user account has reached its session limit, or no named user license has been allocated to the user account. [9030]",
+          "errMsg": "Specified argument was out of the range of valid values.\r\nParameter name: winSize",
           "entryType": 0,
-          "path": null,
+          "path": "\\",
           "parentId": 0,
-          "showColumnPicker": false,
-          "totalEntries": 0,
+          "showColumnPicker": true,
+          "totalEntries": 2,
           "sortAscending": false,
           "sortColumn": null
         },
-        "__breach": "oRmcJvDHRJi5luExgqzFWjRCxqB"
+        "__breach": "Qnjxi2vv7nxHizmxcRajm3+c"
       },
       "failed": true,
-      "error_message": "Sign in failed because the number of sessions has reached the licensed limit, or the user account has reached its session limit, or no named user license has been allocated to the user account. [9030]",
-      "total_entries": 0
+      "error_message": "Specified argument was out of the range of valid values.\r\nParameter name: winSize",
+      "total_entries": 2
     }
   },
   "notes": [
     "San Rafael city-side campaign filings are publicly routed through the disclosures page and cycle-specific election pages.",
-    "The 2024 election page exposes candidate-specific campaign-finance folder IDs even though anonymous folder-listing probes currently fail.",
+    "The 2020, 2022, and 2024 election pages expose candidate-specific campaign-finance folder IDs even though anonymous folder-listing probes currently fail.",
     "Until Laserfiche folder enumeration becomes reliably accessible, the safest backfill strategy is page-linked folder discovery plus record-level capture where direct document links are exposed."
   ]
 }

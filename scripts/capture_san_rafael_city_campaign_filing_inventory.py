@@ -28,7 +28,11 @@ JSON_HEADERS = {
 }
 
 DISCLOSURES_SOURCE_ID = "san-rafael-disclosures"
-ELECTION_SOURCE_ID = "san-rafael-november-5-2024-election"
+ELECTION_SOURCE_IDS = [
+    "san-rafael-november-3-2020-election",
+    "san-rafael-november-8-2022-election",
+    "san-rafael-november-5-2024-election",
+]
 
 TOP_LEVEL_LABELS = {
     "View Financial Filings": "san-rafael-public-records-financial-filings-folder",
@@ -92,42 +96,64 @@ def extract_top_level_destinations(disclosures_html: str) -> list[dict[str, Any]
     return results
 
 
-def extract_campaign_folder_inventory(election_html: str) -> list[dict[str, Any]]:
-    section_pattern = re.compile(
-        r"<h3>(?P<section>City of San Rafael Election|San Rafael City Schools)</h3>(?P<body>.*?)(?=<h3>|<h5>)",
-        re.S | re.I,
-    )
-    office_pattern = re.compile(r"<h4>(?P<office>.*?)</h4>(?P<body>.*?)(?=<h4>|</td>|</tr>)", re.S | re.I)
-    candidate_pattern = re.compile(
-        r'<p style="padding-left: 40px;">(?:<strong>|<b>)(?P<name>.*?)<br\s*/?>\s*</(?:strong|b)>.*?'
-        r'<a href="(?P<url>https://publicrecords\.cityofsanrafael\.org/WebLink/Browse\.aspx\?id=\d+[^"]*)">'
-        r"Campaign Finance Documents</a>",
-        re.S | re.I,
-    )
-
+def extract_campaign_folder_inventory(
+    election_html: str, source_id: str, election_label: str
+) -> list[dict[str, Any]]:
     results: list[dict[str, Any]] = []
-    for section_match in section_pattern.finditer(election_html):
-        section_label = clean_html_text(section_match.group("section"))
-        section_body = section_match.group("body")
-        for office_match in office_pattern.finditer(section_body):
-            office_label = clean_html_text(office_match.group("office"))
-            office_body = office_match.group("body")
-            for candidate_match in candidate_pattern.finditer(office_body):
-                candidate_name = clean_html_text(candidate_match.group("name"))
-                folder_url = html.unescape(candidate_match.group("url"))
-                results.append(
-                    {
-                        "section_label": section_label,
-                        "office_label": office_label,
-                        "candidate_name": candidate_name,
-                        "folder_url": folder_url,
-                        "folder_entry_id": entry_id_from_url(folder_url),
-                    }
+    section_label: str | None = None
+    office_label: str | None = None
+    lines = election_html.splitlines()
+    idx = 0
+
+    while idx < len(lines):
+        line = lines[idx]
+        if section_match := re.search(
+            r"<h[23]>(City of San Rafael Election|San Rafael City Schools|Board of Education Election)</h[23]>",
+            line,
+            re.I,
+        ):
+            section_label = clean_html_text(section_match.group(1))
+        elif office_match := re.search(r"<h4>(.*?)</h4>", line, re.I):
+            office_label = clean_html_text(office_match.group(1))
+        elif "<p" in line:
+            block_lines = [line]
+            while idx + 1 < len(lines) and "</p>" not in lines[idx]:
+                idx += 1
+                block_lines.append(lines[idx])
+            block = "\n".join(block_lines)
+            if "Campaign Finance Documents" in block:
+                name_match = re.search(
+                    r"<(?:strong|b)>(?P<name>.*?)(?:<br\s*/?>)?\s*</(?:strong|b)>",
+                    block,
+                    re.S | re.I,
                 )
+                url_match = re.search(
+                    r'href="(?P<url>https://publicrecords\.cityofsanrafael\.org/WebLink/Browse\.aspx\?id=\d+[^"]*)"[^>]*>Campaign Finance Documents</a>',
+                    block,
+                    re.S | re.I,
+                )
+                if name_match and url_match:
+                    candidate_name = clean_html_text(name_match.group("name"))
+                    folder_url = html.unescape(url_match.group("url"))
+                    results.append(
+                        {
+                            "source_id": source_id,
+                            "election_label": election_label,
+                            "section_label": section_label,
+                            "office_label": office_label,
+                            "candidate_name": candidate_name,
+                            "folder_url": folder_url,
+                            "folder_entry_id": entry_id_from_url(folder_url),
+                        }
+                    )
+        idx += 1
+
     return results
 
 
-def extract_ie_resource(election_html: str) -> dict[str, Any] | None:
+def extract_ie_resource(
+    election_html: str, source_id: str, election_label: str
+) -> dict[str, Any] | None:
     match = re.search(
         r'<a href="(?P<url>https?://publicrecords\.cityofsanrafael\.org/WebLink/DocView\.aspx\?id=\d+[^"]*)">'
         r"(?P<label>City of San Rafael\s*Independent Expenditure Ordinance)</a>",
@@ -138,10 +164,38 @@ def extract_ie_resource(election_html: str) -> dict[str, Any] | None:
         return None
     url = html.unescape(match.group("url"))
     return {
+        "source_id": source_id,
+        "election_label": election_label,
         "label": clean_html_text(match.group("label")),
         "record_url": url,
         "record_entry_id": entry_id_from_url(url),
     }
+
+
+def extract_ie_filing_folder(
+    election_html: str, source_id: str, election_label: str
+) -> dict[str, Any] | None:
+    lines = election_html.splitlines()
+    for idx, line in enumerate(lines):
+        if "Independent Expenditure Filings" not in line:
+            continue
+        label = clean_html_text(line)
+        for back in range(max(0, idx - 6), idx + 1):
+            url_match = re.search(
+                r'href="(?P<url>https?://publicrecords\.cityofsanrafael\.org/WebLink/Browse\.aspx\?id=\d+[^"]*)"',
+                lines[back],
+                re.I,
+            )
+            if url_match:
+                url = html.unescape(url_match.group("url"))
+                return {
+                    "source_id": source_id,
+                    "election_label": election_label,
+                    "label": label,
+                    "folder_url": url,
+                    "folder_entry_id": entry_id_from_url(url),
+                }
+    return None
 
 
 class LaserficheProbeClient:
@@ -199,6 +253,11 @@ def parse_args() -> argparse.Namespace:
         default=datetime.now().date().isoformat(),
         help="Capture date folder in YYYY-MM-DD format. Defaults to local today.",
     )
+    parser.add_argument(
+        "--skip-probes",
+        action="store_true",
+        help="Skip Laserfiche folder-listing probes and reuse existing raw probe captures.",
+    )
     return parser.parse_args()
 
 
@@ -206,80 +265,124 @@ def main() -> None:
     args = parse_args()
 
     disclosures_html = read_capture(DISCLOSURES_SOURCE_ID, args.capture_date)
-    election_html = read_capture(ELECTION_SOURCE_ID, args.capture_date)
-
     top_level_destinations = extract_top_level_destinations(disclosures_html)
-    candidate_folders = extract_campaign_folder_inventory(election_html)
-    ie_resource = extract_ie_resource(election_html)
-
-    probe_client = LaserficheProbeClient()
-    top_level_probes: list[dict[str, Any]] = []
-    for item in top_level_destinations:
-        entry_id = item.get("folder_entry_id")
-        if entry_id is None:
-            continue
-        probe = probe_client.probe_folder_listing(entry_id)
-        top_level_probes.append(
+    candidate_folders: list[dict[str, Any]] = []
+    ie_resources: list[dict[str, Any]] = []
+    ie_filing_folders: list[dict[str, Any]] = []
+    derived_from = [
+        {
+            "source_id": DISCLOSURES_SOURCE_ID,
+            "path": f"data/raw/{DISCLOSURES_SOURCE_ID}/{args.capture_date}/source.html",
+        }
+    ]
+    for source_id in ELECTION_SOURCE_IDS:
+        election_html = read_capture(source_id, args.capture_date)
+        match = re.search(r"<title>(.*?)</title>", election_html, re.S | re.I)
+        election_label = clean_html_text(match.group(1)) if match else source_id
+        derived_from.append(
             {
-                "source_id": item["source_id"],
-                "folder_entry_id": entry_id,
-                "probe": probe,
+                "source_id": source_id,
+                "path": f"data/raw/{source_id}/{args.capture_date}/source.html",
             }
         )
-
-        raw_dir = RAW_DIR / item["source_id"] / args.capture_date
-        raw_dir.mkdir(parents=True, exist_ok=True)
-        write_json(raw_dir / "folder-probe.json", probe)
-        write_json(
-            raw_dir / "manifest.json",
-            {
-                "source_id": item["source_id"],
-                "capture_id": f"{item['source_id']}__{args.capture_date}",
-                "captured_at": utc_now_iso(),
-                "entry_url": item["folder_url"],
-                "fetch_strategy": "cookie_aware_json",
-                "artifacts": [
-                    {"path": "folder-probe.json", "content_type": "application/json"},
-                ],
-                "notes": [
-                    "Top-level public-records folder linked from the San Rafael disclosures page.",
-                    "Probe captures whether the anonymous Laserfiche folder-listing JSON endpoint yields usable entries or an access/session failure.",
-                ],
-            },
+        candidate_folders.extend(
+            extract_campaign_folder_inventory(election_html, source_id, election_label)
         )
+        ie_resource = extract_ie_resource(election_html, source_id, election_label)
+        if ie_resource is not None:
+            ie_resources.append(ie_resource)
+        ie_filing_folder = extract_ie_filing_folder(election_html, source_id, election_label)
+        if ie_filing_folder is not None:
+            ie_filing_folders.append(ie_filing_folder)
 
+    top_level_probes: list[dict[str, Any]] = []
     sample_child_probe = None
-    if candidate_folders and candidate_folders[0].get("folder_entry_id") is not None:
+    if args.skip_probes:
+        for item in top_level_destinations:
+            probe_path = RAW_DIR / item["source_id"] / args.capture_date / "folder-probe.json"
+            if probe_path.exists():
+                top_level_probes.append(
+                    {
+                        "source_id": item["source_id"],
+                        "folder_entry_id": item.get("folder_entry_id"),
+                        "probe": json.loads(probe_path.read_text()),
+                    }
+                )
+        sample_child_path = EXTRACTED_DIR / f"{args.capture_date}.json"
+        if sample_child_path.exists():
+            prior_payload = json.loads(sample_child_path.read_text())
+            sample_child_probe = prior_payload.get("sample_child_folder_probe")
+    else:
+        probe_client = LaserficheProbeClient()
+        for item in top_level_destinations:
+            entry_id = item.get("folder_entry_id")
+            if entry_id is None:
+                continue
+            probe = probe_client.probe_folder_listing(entry_id)
+            top_level_probes.append(
+                {
+                    "source_id": item["source_id"],
+                    "folder_entry_id": entry_id,
+                    "probe": probe,
+                }
+            )
+
+            raw_dir = RAW_DIR / item["source_id"] / args.capture_date
+            raw_dir.mkdir(parents=True, exist_ok=True)
+            write_json(raw_dir / "folder-probe.json", probe)
+            write_json(
+                raw_dir / "manifest.json",
+                {
+                    "source_id": item["source_id"],
+                    "capture_id": f"{item['source_id']}__{args.capture_date}",
+                    "captured_at": utc_now_iso(),
+                    "entry_url": item["folder_url"],
+                    "fetch_strategy": "cookie_aware_json",
+                    "artifacts": [
+                        {"path": "folder-probe.json", "content_type": "application/json"},
+                    ],
+                    "notes": [
+                        "Top-level public-records folder linked from the San Rafael disclosures page.",
+                        "Probe captures whether the anonymous Laserfiche folder-listing JSON endpoint yields usable entries or an access/session failure.",
+                    ],
+                },
+            )
+
+        if candidate_folders and candidate_folders[0].get("folder_entry_id") is not None:
+            sample = candidate_folders[0]
+            sample_child_probe = {
+                "candidate_name": sample["candidate_name"],
+                "office_label": sample["office_label"],
+                "folder_entry_id": sample["folder_entry_id"],
+                "probe": probe_client.probe_folder_listing(sample["folder_entry_id"]),
+            }
+
+    if sample_child_probe is None and candidate_folders and candidate_folders[0].get("folder_entry_id") is not None:
         sample = candidate_folders[0]
         sample_child_probe = {
             "candidate_name": sample["candidate_name"],
             "office_label": sample["office_label"],
             "folder_entry_id": sample["folder_entry_id"],
-            "probe": probe_client.probe_folder_listing(sample["folder_entry_id"]),
+            "probe": {
+                "status": "skipped",
+                "note": "Reused prior extracted sample-child probe because this run skipped live probes.",
+            },
         }
 
     payload = {
         "capture_date": args.capture_date,
         "captured_at": utc_now_iso(),
-        "derived_from": [
-            {
-                "source_id": DISCLOSURES_SOURCE_ID,
-                "path": f"data/raw/{DISCLOSURES_SOURCE_ID}/{args.capture_date}/source.html",
-            },
-            {
-                "source_id": ELECTION_SOURCE_ID,
-                "path": f"data/raw/{ELECTION_SOURCE_ID}/{args.capture_date}/source.html",
-            },
-        ],
+        "derived_from": derived_from,
         "top_level_destinations": top_level_destinations,
         "top_level_folder_probes": top_level_probes,
         "candidate_folder_inventory": candidate_folders,
         "candidate_folder_count": len(candidate_folders),
-        "independent_expenditure_resource": ie_resource,
+        "independent_expenditure_resources": ie_resources,
+        "independent_expenditure_filing_folders": ie_filing_folders,
         "sample_child_folder_probe": sample_child_probe,
         "notes": [
             "San Rafael city-side campaign filings are publicly routed through the disclosures page and cycle-specific election pages.",
-            "The 2024 election page exposes candidate-specific campaign-finance folder IDs even though anonymous folder-listing probes currently fail.",
+            "The 2020, 2022, and 2024 election pages expose candidate-specific campaign-finance folder IDs even though anonymous folder-listing probes currently fail.",
             "Until Laserfiche folder enumeration becomes reliably accessible, the safest backfill strategy is page-linked folder discovery plus record-level capture where direct document links are exposed.",
         ],
     }
