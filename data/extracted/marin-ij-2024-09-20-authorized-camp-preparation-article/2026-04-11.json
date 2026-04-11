@@ -1,0 +1,81 @@
+{
+  "source_id": "marin-ij-2024-09-20-authorized-camp-preparation-article",
+  "capture_id": "marin-ij-2024-09-20-authorized-camp-preparation-article__2026-04-11",
+  "capture_date": "2026-04-11",
+  "bundle_id": "san-rafael-homelessness-01__bundle-01",
+  "mode": "wp_json_article_body",
+  "generated_at": "2026-04-11T16:14:46Z",
+  "record_id": "record-mij-2024-09-20-prepares-site-authorized-camp",
+  "wp_post_id": 8323796,
+  "publisher": "Marin Independent Journal",
+  "title": "San Rafael prepares site for authorized homeless camp",
+  "canonical_url": "https://www.marinij.com/2024/09/20/san-rafael-prepares-site-for-authorized-homeless-camp/",
+  "published_at": "2024-09-20T20:48:05Z",
+  "excerpt_text": "The northern portion of Mahon Creek Path will offer 47 tent spaces, restrooms, security and access to social services.",
+  "paragraph_count": 26,
+  "selected_paragraphs": [
+    {
+      "id": "P11",
+      "text": "Mel Burnette, the city's housing and homelessness analyst, said everyone living there complied with moving to the southern portion of Mahon Creek Path, allowing city contractors to begin work."
+    },
+    {
+      "id": "P18",
+      "text": "Through the program, the county will oversee outreach and case management services through one full-time outreach worker and three full-time housing case management workers. The sanctioned camp program includes contracting with Defense Block Security, the nonprofit Downtown Streets Team and other case management and service providers."
+    },
+    {
+      "id": "P19",
+      "text": "\"This is a good first step,\" said Mark Shotwell, chief executive officer of the Ritter Center, a nonprofit that provides services to homeless residents and people in need. \"It's not the long-term solution, but it will provide the kind of support people need, and the security and services with minimal impact on the neighborhood.\""
+    },
+    {
+      "id": "P25",
+      "text": "In another court case, a federal judge dismissed a lawsuit on Sept. 4 that blocked the city from evicting a homeless man from his campsite at the Menzies parking lot and Falkirk Cultural Center. Mark Rivera, who filed the suit, was evicted Sept. 9. Camping is prohibited there because the site is within 250 feet of a school."
+    }
+  ],
+  "mention_candidates": [
+    {
+      "id": "mention-mij-2024-09-20-mel-burnette",
+      "mention_type": "named_person",
+      "name_raw": "Mel Burnette",
+      "article_scoped_role_label": "the city's housing and homelessness analyst",
+      "article_scoped_affiliation_label": null,
+      "paragraph_refs": [
+        "P11"
+      ],
+      "candidate_actor_ids": [
+        "actor-mel-burnette"
+      ],
+      "join_status": "resolved_case_actor"
+    },
+    {
+      "id": "mention-mij-2024-09-20-mark-shotwell",
+      "mention_type": "quoted_person",
+      "name_raw": "Mark Shotwell",
+      "article_scoped_role_label": "chief executive officer of the Ritter Center",
+      "article_scoped_affiliation_label": "Ritter Center",
+      "quote_excerpt": "\"This is a good first step,\"",
+      "paragraph_refs": [
+        "P19"
+      ],
+      "candidate_actor_ids": [
+        "actor-mark-shotwell"
+      ],
+      "join_status": "resolved_canonical"
+    },
+    {
+      "id": "mention-mij-2024-09-20-mark-rivera",
+      "mention_type": "named_person",
+      "name_raw": "Mark Rivera",
+      "article_scoped_role_label": "who filed the suit",
+      "article_scoped_affiliation_label": null,
+      "paragraph_refs": [
+        "P25"
+      ],
+      "candidate_actor_ids": [],
+      "join_status": "unresolved"
+    }
+  ],
+  "notes": [
+    "This second article is optimized for recurrence work, not for broad article parsing.",
+    "It overlaps with the first Marin IJ worked example and with official August 19 records."
+  ]
+}

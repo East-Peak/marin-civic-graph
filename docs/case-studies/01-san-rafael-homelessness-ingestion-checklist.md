@@ -188,6 +188,7 @@ The first usable deliverable for this case study should be:
 - [x] one place table
 - [x] one decision chain centered on August 19, 2024
 - [x] one media-attribution sample showing at least one recurring quoted actor pattern if present
+- [x] one multi-article recurrence sample showing how repeated names and organizations should be treated
 
 ## Blocking Questions
 
@@ -213,6 +214,6 @@ Status as of April 10, 2026:
 
 - phases 1 through 6 have a first-pass official-source bundle, extraction set, and normalized candidate bundle
 - the August 19 item `5.a` packet now has a derived child-record layer for ordinance, resolution, four contract exhibits, the site plan, the code of conduct, and correspondence
-- the remaining major gaps are the missing FS Global exhibit, wider Marin IJ recurrence work beyond the first article-body example, and later attribution review
+- the remaining major gaps are the missing FS Global exhibit, wider Marin IJ recurrence work beyond the first two-article example, and later attribution review
 
 That will create the first trustworthy version of the case without over-relying on media before the official spine exists.

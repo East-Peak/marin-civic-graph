@@ -1359,6 +1359,36 @@ sources:
       - First article-body media pressure test for case study 01.
       - Demonstrates that some Marin IJ records can be captured without operator login when the public post API is available.
 
+  - source_id: marin-ij-2024-09-20-authorized-camp-preparation-article
+    label: Marin IJ 2024-09-20 authorized camp preparation article
+    owner_type: external
+    owner_id: marin-independent-journal
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-homelessness-01
+    source_category: media
+    source_type: json_api_record
+    entry_url: https://www.marinij.com/wp-json/wp/v2/posts/8323796?_fields=id,date_gmt,slug,link,title,content,excerpt
+    discovery_urls:
+      - https://www.marinij.com/2024/09/20/san-rafael-prepares-site-for-authorized-homeless-camp/
+    fetch_strategy: json_api
+    browser_required: false
+    auth_required: false
+    paywall_status: mixed_archive
+    expected_objects:
+      - document:article
+      - article_mention
+      - claim
+    cadence: manual
+    history_depth: single_record
+    source_tier_default: C
+    robots_notes: public WordPress post API surfaced from the canonical article page
+    review_risk: medium
+    dedupe_key_strategy: canonical_article_url
+    notes:
+      - Second article-body media capture for case study 01.
+      - Selected specifically for recurrence against official August 19 records and the first Marin IJ article-body example.
+
   - source_id: marin-superior-court-eportal
     label: Marin Superior Court ePortal
     owner_type: institution

@@ -1,0 +1,166 @@
+{
+  "case_study_id": "san-rafael-homelessness-01",
+  "bundle_id": "san-rafael-homelessness-01__bundle-01",
+  "layer_type": "media_recurrence_worked_example",
+  "status": "worked_example",
+  "generated_at": "2026-04-11T16:14:46Z",
+  "record_refs": [
+    {
+      "id": "record-mij-2024-08-24-establish-camp-mahon-creek",
+      "source_artifact_path": "data/raw/marin-ij-2024-08-24-mahon-creek-article/2026-04-11/response.json",
+      "extracted_artifact_path": "data/extracted/marin-ij-2024-08-24-mahon-creek-article/2026-04-11.json"
+    },
+    {
+      "id": "record-mij-2024-09-20-prepares-site-authorized-camp",
+      "source_artifact_path": "data/raw/marin-ij-2024-09-20-authorized-camp-preparation-article/2026-04-11/response.json",
+      "extracted_artifact_path": "data/extracted/marin-ij-2024-09-20-authorized-camp-preparation-article/2026-04-11.json"
+    },
+    {
+      "id": "record-san-rafael-public-comment-ms-2024-08-19",
+      "artifact_path": "data/raw/san-rafael-aug-19-2024-council-meeting/2026-04-10/public-comment-ms.pdf"
+    },
+    {
+      "id": "record-san-rafael-aug-19-minutes-extract",
+      "artifact_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/minutes.txt"
+    },
+    {
+      "id": "record-san-rafael-city-council-2024-08-19-item-5a-report",
+      "artifact_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-report.txt"
+    }
+  ],
+  "recurrence_patterns": [
+    {
+      "id": "recurrence-mark-shotwell-official-media",
+      "pattern_type": "actor_recurrence",
+      "status": "accepted_for_canonical_recurrence",
+      "confidence": "high",
+      "subject_actor_id": "actor-mark-shotwell",
+      "organization_actor_id": "actor-ritter-center",
+      "occurrences": [
+        {
+          "source_kind": "official_public_comment",
+          "record_id": "record-san-rafael-public-comment-ms-2024-08-19",
+          "role_label": "Chief Executive Officer",
+          "affiliation_label": "Ritter Center"
+        },
+        {
+          "source_kind": "media_article",
+          "record_id": "record-mij-2024-09-20-prepares-site-authorized-camp",
+          "mention_id": "mention-mij-2024-09-20-mark-shotwell",
+          "role_label": "chief executive officer of the Ritter Center",
+          "affiliation_label": "Ritter Center"
+        }
+      ],
+      "notes": "This is the first fully corroborated recurring quoted actor pattern across one official record and one Marin IJ article in the homelessness case study."
+    },
+    {
+      "id": "recurrence-mel-burnette-official-media",
+      "pattern_type": "actor_recurrence",
+      "status": "accepted_for_case_recurrence",
+      "confidence": "high",
+      "subject_actor_id": "actor-mel-burnette",
+      "occurrences": [
+        {
+          "source_kind": "official_record",
+          "record_id": "record-san-rafael-city-council-2024-08-19-item-5a-report",
+          "role_label": "Homelessness and Housing Analyst"
+        },
+        {
+          "source_kind": "media_article",
+          "record_id": "record-mij-2024-09-20-prepares-site-authorized-camp",
+          "mention_id": "mention-mij-2024-09-20-mel-burnette",
+          "role_label": "the city's housing and homelessness analyst"
+        }
+      ],
+      "notes": "This is a straightforward official-to-media recurrence for a city staff actor already present in the case-study bundle."
+    },
+    {
+      "id": "recurrence-mark-rivera-media-cluster",
+      "pattern_type": "unresolved_named_person_cluster",
+      "status": "watch_unresolved_cluster",
+      "confidence": "medium",
+      "cluster_label": "Mark Rivera in San Rafael homelessness coverage",
+      "occurrences": [
+        {
+          "source_kind": "media_article",
+          "record_id": "record-mij-2024-08-24-establish-camp-mahon-creek",
+          "mention_id": "mention-mij-2024-08-24-mark-rivera",
+          "role_label": "unhoused resident of San Rafael"
+        },
+        {
+          "source_kind": "official_minutes_speaker_list",
+          "record_id": "record-san-rafael-aug-19-minutes-extract",
+          "snippet": "Speakers: Robbie Powelson, Mark Rivera, Molly Blauvelt, Katie Fleet, Kevin Bruner, Lauren ..."
+        },
+        {
+          "source_kind": "media_article",
+          "record_id": "record-mij-2024-09-20-prepares-site-authorized-camp",
+          "mention_id": "mention-mij-2024-09-20-mark-rivera",
+          "role_label": "who filed the suit"
+        }
+      ],
+      "notes": "The same full name recurs across two Marin IJ articles and one official minutes speaker list on the same issue thread. That is strong enough to track as one unresolved case-scoped person cluster, but not yet strong enough to promote into the canonical seed layer."
+    },
+    {
+      "id": "recurrence-program-partners-media-official",
+      "pattern_type": "organization_recurrence",
+      "status": "accepted_for_case_recurrence",
+      "confidence": "high",
+      "organization_actor_ids": [
+        "actor-defense-block-security",
+        "actor-downtown-streets-team"
+      ],
+      "occurrences": [
+        {
+          "source_kind": "official_record",
+          "record_id": "record-san-rafael-city-council-2024-08-19-item-5a-report",
+          "labels": [
+            "Defense Block Security",
+            "Downtown Streets Team"
+          ]
+        },
+        {
+          "source_kind": "media_article",
+          "record_id": "record-mij-2024-08-24-establish-camp-mahon-creek",
+          "paragraph_refs": [
+            "P9"
+          ],
+          "labels": [
+            "Defense Block Security",
+            "Downtown Streets Team"
+          ]
+        },
+        {
+          "source_kind": "media_article",
+          "record_id": "record-mij-2024-09-20-prepares-site-authorized-camp",
+          "paragraph_refs": [
+            "P18"
+          ],
+          "labels": [
+            "Defense Block Security",
+            "Downtown Streets Team"
+          ]
+        }
+      ],
+      "notes": "This is the first case-study example where contractor and nonprofit program partners recur across official and media records without ambiguity about the underlying organization labels."
+    }
+  ],
+  "methodology_findings": [
+    {
+      "id": "media-recurrence-finding-01",
+      "summary": "A second article should be chosen for overlap, not just chronology. The best recurrence tests are the ones that connect article mentions back to official records already in the bundle."
+    },
+    {
+      "id": "media-recurrence-finding-02",
+      "summary": "Multi-article recurrence can tighten confidence without forcing full canonical promotion. An unresolved person cluster is a valid intermediate object when the same name recurs but the identity is still not strong enough for seed promotion."
+    },
+    {
+      "id": "media-recurrence-finding-03",
+      "summary": "Organizations are often the easiest recurrence bridge because the label remains stable across official records and local media even when individual people are noisier."
+    }
+  ],
+  "notes": [
+    "This file is intentionally cross-record. It exists to test recurrence logic, not to replace the single-article mention pass.",
+    "The Mark Rivera cluster remains unresolved on purpose. Repetition alone is not a license to overpromote identity."
+  ]
+}
