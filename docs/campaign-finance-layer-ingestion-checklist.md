@@ -27,6 +27,7 @@ Capture and manifest these official pages first:
 - FPPC `Statement Of Economic Interests For Candidates`
 - FPPC `Contribution Limits: City And County Candidates`
 - FPPC `Reporting Behested Payments`
+- FPPC `Form 803 Search`
 - FPPC `Where To File Form 460`
 
 Minimum output:
@@ -135,6 +136,7 @@ Safe early promotions:
 - candidate-to-seat relationship when the filing or official page states it clearly
 - disclosure filer, statement type, and filing officer
 - behested-payment amount and recipient when the official disclosure states them
+- local-versus-state Form 803 filing boundary when the official guidance states it clearly
 
 Keep as `Claim` first:
 
@@ -142,6 +144,7 @@ Keep as `Claim` first:
 - family or employer identity inferred from name similarity
 - “influence” conclusions drawn only from contribution adjacency
 - officeholder conflict conclusions that are not explicit in the disclosure surface
+- the existence of a local filed Form 803 report when only guidance or policy text has been captured
 
 ## Phase 5: Review For Model Stress
 

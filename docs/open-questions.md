@@ -138,6 +138,21 @@ Mirror the question here when it affects:
 - `why it matters`: This is the same join problem that will recur across meetings, votes, appointments, and disclosures.
 - `next evidence`: build the first canonical `Person` seeds for San Rafael electeds and map the August 19 records against them.
 
+### OQ-016: San Rafael local Form 803 filing surface
+
+- `status`: open
+- `layer`: disclosure surface discovery
+- `scope`: `campaign-finance-form-803-slice-01`
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/campaign-finance-form-803-slice-01/bundle-01.json)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-disclosures/2026-04-11/source.html)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-sei-netfile-portal/2026-04-11/source.html)
+  - [document.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-governance-protocols-2026/2026-04-11/document.pdf)
+  - [agenda-packet.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-2026-01-20-agenda-packet/2026-04-11/agenda-packet.pdf)
+- `question`: What exact local San Rafael surface exposes filed Form 803 reports for local officials, if any?
+- `why it matters`: The local-versus-state filing rule is now clear, but the project still lacks the first actual local Form 803 filing needed to promote a real behested-payment `Filing` and `MoneyFlow`.
+- `next evidence`: search City Clerk, local public-records surfaces, and later meeting packets for an actual filed Form 803 or posting page.
+
 ### OQ-013: Mary Sackett seat and election boundary
 
 - `status`: resolved
@@ -146,7 +161,7 @@ Mirror the question here when it affects:
 - `source refs`:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
   - [filing.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-mary-sackett-form-497-2026-04-10/2026-04-11/filing.pdf)
-- [source.txt](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-candidate-status-2026-06-02/2026-04-11/source.txt)
+  - [source.txt](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-candidate-status-2026-06-02/2026-04-11/source.txt)
 - `question`: What exact seat, district, and election context should the Mary Sackett committee and candidacy join to?
 - `why it matters`: The current filing title is strong enough to justify a candidate-linked committee and candidacy candidate, but not yet strong enough to safely promote a fully resolved `Seat -> Election -> Candidacy` chain.
 - `resolution note`: Resolved with the official Marin County candidate-status page for the June 2, 2026 Statewide Direct Primary Election. That page lists `Sackett, Mary**` under `County Supervisor - District 1`, with both declaration and candidate statement filed on `2/17/2026`, so the campaign bundle now promotes the `Seat -> Election -> Candidacy` chain for District 1.

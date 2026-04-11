@@ -60,13 +60,35 @@ The goal is to identify the official surfaces that actually emit:
 - URL: https://www.cityofsanrafael.org/disclosures/
 - Why it matters:
   - official city disclosure spine
-  - exposes Form 700, Form 803, and related ethics/disclosure surfaces
+  - clearly exposes Form 700 and related ethics/disclosure surfaces
+  - useful starting point for Form 803 work even though the currently visible page content does not yet show a direct local Form 803 index
 - Expected objects:
   - `economic_interest_disclosure`
   - `filing`
   - `money_flow`
   - `record:form_700`
-  - `record:form_803`
+  - `record:guidance`
+
+### City Council Governance And Communication Protocols
+
+- URL: https://www.cityofsanrafael.org/documents/city-of-san-rafael-city-council-governance-agreements-and-roles-responsibilities-and-communication-protocols/
+- Why it matters:
+  - contains Attachment A guidance for elected officials on charitable solicitations and behested payments
+  - explicitly states the local filing-officer path for Form 803
+- Expected objects:
+  - `record:guidance`
+  - `claim`
+
+### January 20 2026 City Council Agenda Packet
+
+- URL: https://www.cityofsanrafael.org/documents/2026-01-20-agenda-packet/
+- Why it matters:
+  - carries the same behested-payment guidance attachment inside a meeting record
+  - useful for joining the guidance to a concrete city-council process record
+- Expected objects:
+  - `record:packet`
+  - `record:guidance`
+  - `claim`
 
 ## FPPC
 
@@ -98,6 +120,17 @@ The goal is to identify the official surfaces that actually emit:
   - defines what the graph should and should not treat as a behested payment
 - Expected objects:
   - `record:guidance`
+  - `claim`
+
+### Form 803 Search
+
+- URL: https://www.fppc.ca.gov/search-filings/form-800-series-search/form-803/
+- Why it matters:
+  - official state search surface for behested-payment reports
+  - useful for understanding the public-search shape of Form 803 data
+  - important limitation: the page explicitly describes searchable data for Senate, Assembly, and statewide elected officers, not local officials
+- Expected objects:
+  - `record:search_portal`
   - `claim`
 
 ### Where To File Form 460
@@ -154,4 +187,5 @@ Good source family:
 
 - local filing portals and clerk disclosure pages are likely to be the highest-value operational sources
 - FPPC pages are mostly interpretive scaffolding, but they matter because they define filing meaning and timing
+- for Form 803 specifically, the local-agency filing route matters more than the FPPC search page when the target is a local city official
 - campaign and disclosure threads should be joinable back into meetings, permits, procurement, and appointments rather than living as a separate political silo

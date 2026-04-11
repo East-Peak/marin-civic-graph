@@ -35,6 +35,13 @@ The current planning assumption for Marin is:
 - San Rafael exposes Form 700, Form 803, and related disclosure records on the public disclosures page
 - FPPC surfaces the filing rules, contribution-limit context, and disclosure guidance needed to normalize the local records correctly
 
+After the first Form 803 slice, the more precise reading is:
+
+- San Rafael's public disclosure spine is still useful, but the currently visible public page content is primarily a Form 700 / Form 804 / Form 806 surface
+- the public San Rafael SEI NetFile portal is currently a Form 700-oriented search surface, not a visible Form 803 search surface
+- the FPPC Form 803 search page is a state-official search surface, not a local-official filing index
+- for local officials, the governing Form 803 rule is still local-agency filing first
+
 That means the graph should begin with:
 
 - committee and filing portals
@@ -42,6 +49,11 @@ That means the graph should begin with:
 - FPPC guidance pages that define filing meaning and timing
 
 not with the assumption that every interesting contribution or conflict surface is already in one clean API.
+
+This distinction matters for Form 803 work:
+
+- local `Form 803` discovery should begin with the local agency and Clerk-facing records
+- FPPC `Form 803` search should be treated as a state-level reference surface and a schema guide, not as the default local filing source
 
 ## Core Graph Objects
 

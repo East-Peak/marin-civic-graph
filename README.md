@@ -72,6 +72,7 @@ Start narrow:
 - [Campaign Finance Layer Source Bundle](./docs/campaign-finance-layer-source-bundle.md)
 - [Campaign Finance Layer Ingestion Checklist](./docs/campaign-finance-layer-ingestion-checklist.md)
 - [Campaign Finance Sample Basket Selection](./docs/campaign-finance-sample-basket-selection.md)
+- [Campaign Finance Form 803 Slice](./docs/campaign-finance-form-803-slice.md)
 - [Procurement, Grants, Contracts, And Performance Submodel](./docs/procurement-grants-contracts-submodel.md)
 - [Procurement Layer Source Bundle](./docs/procurement-layer-source-bundle.md)
 - [Procurement Layer Ingestion Checklist](./docs/procurement-layer-ingestion-checklist.md)
@@ -109,6 +110,7 @@ Start narrow:
 - [Bundle 01 Normalized Summary](./data/normalized/san-rafael-homelessness-01/bundle-01.json)
 - [Marin IJ Citation Layer](./data/normalized/san-rafael-homelessness-01/marin-ij-citation-layer.json)
 - [Campaign Finance Sample Basket Bundle](./data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
+- [Campaign Finance Form 803 Slice Bundle](./data/normalized/campaign-finance-form-803-slice-01/bundle-01.json)
 - [Item 5.a Split Map](./data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-record-splits.json)
 - [Item 5.a Normalized Record Splits](./data/normalized/san-rafael-homelessness-01/aug-19-item-5a-record-splits.json)
 - [Procurement Sample Basket Bundle](./data/normalized/procurement-sample-basket-01/bundle-01.json)
@@ -143,6 +145,11 @@ This repo started as a planning workspace and now includes the first live implem
   - official June 2, 2026 Marin County candidate-status page used to resolve Mary Sackett to `County Supervisor - District 1`
   - schedule-level extraction from the Resource Conservation PAC Form 460 used to promote sponsor inflows plus candidate and vendor outflows instead of leaving the PAC as a vague outside-money shell
   - Marin Resource Recovery sponsor-name drift resolved conservatively in favor of keeping `Marin Resource Recovery` and `Marin Resource Recovery Center` as separate actors
+  - Form 803 follow-on slice established around San Rafael behested-payment guidance and filing-surface verification:
+    - direct raw captures for the February 5, 2026 City Council governance protocols page/PDF and the January 20, 2026 agenda packet page/PDF
+    - verified that the public San Rafael SEI portal is Form 700-oriented and does not visibly expose a Form 803 filing type
+    - verified the local-versus-state filing boundary: local officials file Form 803 with the local agency, while FPPC's public Form 803 search is state-level
+    - logged the remaining blocker as a first-class open question: the actual local San Rafael surface for filed Form 803 reports
 - procurement-layer schema, source bundle, and checklist for Marin County and San Rafael funding and contract workflows
 - selected first procurement sample basket:
   - county `Board Chambers Audio Visual Refresh / Prime Electric`

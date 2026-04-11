@@ -356,6 +356,32 @@ sources:
     notes:
       - Defines Form 803 meaning and reporting boundary.
 
+  - source_id: fppc-form-803-search
+    label: FPPC Form 803 search
+    owner_type: institution
+    owner_id: california-fair-political-practices-commission
+    jurisdiction_id: california
+    case_study_ids: []
+    source_category: disclosures
+    source_type: search_portal
+    entry_url: https://www.fppc.ca.gov/search-filings/form-800-series-search/form-803/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:search_portal
+      - claim
+    cadence: occasional
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public FPPC search page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Official public FPPC search surface for Form 803 reports.
+      - Search scope is state-level, not a complete local-official filing index.
+
   - source_id: fppc-where-to-file-form-460
     label: FPPC Where To File Form 460
     owner_type: institution
@@ -465,12 +491,11 @@ sources:
       - economic_interest_disclosure
       - filing
       - document:form700
-      - document:form803
       - document:form804
       - document:form806
-      - money_flow:behested_payment
       - actor
       - seat
+      - claim
     cadence: monthly
     history_depth: archive
     source_tier_default: A
@@ -479,7 +504,67 @@ sources:
     dedupe_key_strategy: form_type_plus_year_plus_actor
     notes:
       - Important for official disclosure context.
-      - May expose campaign-adjacent and conflict-of-interest material.
+      - Current visible page content foregrounds Form 700, Form 804, and Form 806.
+      - Behested-payment work currently relies on adjacent city records more than on a direct Form 803 index on this page.
+
+  - source_id: san-rafael-city-council-governance-protocols-2026
+    label: San Rafael City Council governance and communication protocols from February 5 2026
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: disclosures
+    source_type: document_page
+    entry_url: https://www.cityofsanrafael.org/documents/city-of-san-rafael-city-council-governance-agreements-and-roles-responsibilities-and-communication-protocols/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/search-site/?term=behested
+    fetch_strategy: html_plus_pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:guidance
+      - claim
+      - institution
+    cadence: occasional
+    history_depth: record
+    source_tier_default: A
+    robots_notes: public city document page with direct PDF download
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Attachment A contains the city's currently visible behested-payment guidance for elected officials.
+      - Strong local record for the Form 803 filing-officer and posting rules.
+
+  - source_id: san-rafael-city-council-2026-01-20-agenda-packet
+    label: San Rafael City Council agenda packet for January 20 2026
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: meetings
+    source_type: document_page
+    entry_url: https://www.cityofsanrafael.org/documents/2026-01-20-agenda-packet/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/search-site/?term=behested
+    fetch_strategy: html_plus_pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:packet
+      - document:guidance
+      - meeting
+      - claim
+    cadence: record
+    history_depth: record
+    source_tier_default: A
+    robots_notes: public city document page with direct agenda-packet PDF download
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - The packet includes the same behested-payment guidance attachment found in the governance protocols record.
+      - Useful bridge between disclosure guidance and a concrete City Council meeting artifact.
 
   - source_id: marin-resource-recovery-center-home
     label: Marin Resource Recovery Center home page

@@ -102,6 +102,13 @@ Why keep it in reserve:
 - the city disclosure page advertises Form 803 availability
 - useful after the first `Form 700` thread if we want to test behested-payment joins rather than only economic-interest disclosure
 
+Current status after the first follow-on slice:
+
+- local-versus-state filing boundaries are now verified
+- the public San Rafael SEI portal appears to be Form 700-oriented, not a visible Form 803 search surface
+- San Rafael City Council governance records now provide the strongest local public behested-payment guidance records
+- the remaining step is to locate the actual local filed Form 803 surface
+
 ## Why This Basket Is Balanced
 
 Together these three slots cover:
