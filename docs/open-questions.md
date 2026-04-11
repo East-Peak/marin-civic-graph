@@ -166,15 +166,17 @@ Mirror the question here when it affects:
 
 ### OQ-015: Marin Resource Recovery sponsor identity drift
 
-- `status`: watch
+- `status`: resolved
 - `layer`: campaign identity
 - `scope`: `committee-resource-conservation-pac`
 - `source refs`:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
   - [filing.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-resource-conservation-pac-form-460-2026-04-08/2026-04-11/filing.pdf)
+- [report.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/town-of-ross-marin-sanitary-rate-review-2016/2026-04-11/report.pdf)
+- [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-resource-recovery-center-home/2026-04-11/source.html)
 - `question`: Does `Marin Resource Recovery Center` in Schedule A resolve cleanly to the sponsor label `Marin Resource Recovery`, or should they remain distinct actors until a stronger business-identity source is captured?
 - `why it matters`: This is a classic sponsor versus contributor identity-resolution problem. The committee title and the filing schedules do not use the same organization label, and the graph should not silently collapse them.
-- `next evidence`: capture a stronger business-identity source such as the committee registration, corporate identity record, or sponsor disclosure that uses both names explicitly.
+- `resolution note`: Resolved conservatively in favor of keeping them separate. The official Town of Ross rate-review report distinguishes `Marin Resource and Recovery (MRR)` from `the Marin Resource Recovery Center (MRRC)` as separate related entities, and the official MRRC website presents `Marin Resource Recovery Center` as its own facility within the Marin Sanitary family. That is strong enough to reject a silent merge of the two campaign actors.
 
 ### OQ-009: Prime Electric approval packet gap
 

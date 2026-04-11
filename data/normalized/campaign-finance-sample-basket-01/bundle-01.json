@@ -46,6 +46,20 @@
       "artifact_path": "data/raw/marin-county-resource-conservation-pac-form-460-2026-04-08/2026-04-11/filing.pdf"
     },
     {
+      "id": "record-town-of-ross-marin-sanitary-rate-review-2016",
+      "record_class": "administrative_record",
+      "record_type": "rate_review_report",
+      "source_id": "town-of-ross-marin-sanitary-rate-review-2016",
+      "artifact_path": "data/raw/town-of-ross-marin-sanitary-rate-review-2016/2026-04-11/report.pdf"
+    },
+    {
+      "id": "record-marin-resource-recovery-center-home",
+      "record_class": "administrative_record",
+      "record_type": "organization_home_page",
+      "source_id": "marin-resource-recovery-center-home",
+      "artifact_path": "data/raw/marin-resource-recovery-center-home/2026-04-11/source.html"
+    },
+    {
       "id": "record-san-rafael-disclosures-page",
       "record_class": "administrative_record",
       "record_type": "disclosure_index",
@@ -150,7 +164,8 @@
     {
       "id": "actor-marin-resource-recovery",
       "name": "Marin Resource Recovery",
-      "actor_type": "business"
+      "actor_type": "business",
+      "notes": "Kept distinct from Marin Resource Recovery Center. The campaign sponsor label aligns more closely with `MRR` as described in the Town of Ross rate-review report than with `MRRC`."
     },
     {
       "id": "actor-marie-powers",
@@ -160,7 +175,8 @@
     {
       "id": "actor-marin-resource-recovery-center",
       "name": "Marin Resource Recovery Center",
-      "actor_type": "business"
+      "actor_type": "business",
+      "notes": "Treated as a separate actor from Marin Resource Recovery. The official MRRC site presents it as its own facility within the Marin Sanitary family, and the Town of Ross rate-review report distinguishes `MRR` from `MRRC`."
     },
     {
       "id": "actor-damon-connolly",
@@ -429,11 +445,5 @@
       ]
     }
   ],
-  "open_questions": [
-    {
-      "id": "campaign-003",
-      "status": "watch",
-      "question": "Does `Marin Resource Recovery Center` in Schedule A resolve cleanly to the sponsor label `Marin Resource Recovery`, or should they remain distinct actors until a stronger business-identity source is captured?"
-    }
-  ]
+  "open_questions": []
 }

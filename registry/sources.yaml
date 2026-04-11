@@ -194,6 +194,33 @@ sources:
       - Best current official source for resolving local office, district, and candidate filing status.
       - Used to resolve Mary Sackett to County Supervisor District 1 for June 2 2026.
 
+  - source_id: town-of-ross-marin-sanitary-rate-review-2016
+    label: Town of Ross Marin Sanitary rate review report from 2015
+    owner_type: jurisdiction
+    owner_id: town-of-ross
+    jurisdiction_id: ross
+    case_study_ids: []
+    source_category: oversight
+    source_type: report_pdf
+    entry_url: https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/1017/12b._marin_sanitary_hfh_rate_review.pdf
+    fetch_strategy: direct_pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - actor
+      - document:rate_review_report
+      - claim
+    cadence: occasional
+    history_depth: record
+    source_tier_default: A
+    robots_notes: official town PDF
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Useful for identity resolution around Marin Sanitary related entities.
+      - Distinguishes `MRR` and `MRRC` as separate related entities in the 2015 report text.
+
   - source_id: marin-county-campaign-finance-guide
     label: Marin County Campaign Finance Reporting and Information
     owner_type: jurisdiction
@@ -453,6 +480,33 @@ sources:
     notes:
       - Important for official disclosure context.
       - May expose campaign-adjacent and conflict-of-interest material.
+
+  - source_id: marin-resource-recovery-center-home
+    label: Marin Resource Recovery Center home page
+    owner_type: actor
+    owner_id: marin-resource-recovery-center
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: organizations
+    source_type: official_website
+    entry_url: https://marinresourcerecoverycenter.com/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - actor
+      - document:organization_home_page
+      - claim
+    cadence: occasional
+    history_depth: latest_only
+    source_tier_default: B
+    robots_notes: official organization website
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Confirms how Marin Resource Recovery Center presents itself publicly.
+      - Useful as secondary evidence that MRRC is its own facility within the Marin Sanitary family.
 
   - source_id: san-rafael-sei-netfile-portal
     label: San Rafael Statement of Economic Interests NetFile Portal
