@@ -68,6 +68,7 @@ Start narrow:
 - [Actor Resolution Worked Example](./docs/actor-resolution-worked-example.md)
 - [Media Mention And Claim Worked Example](./docs/media-mention-claim-worked-example.md)
 - [Media Recurrence Worked Example](./docs/media-recurrence-worked-example.md)
+- [Media Cross-Domain Worked Example](./docs/media-cross-domain-worked-example.md)
 - [Domain Expansion Matrix](./docs/domain-expansion-matrix.md)
 - [Criminal Justice Submodel](./docs/criminal-justice-submodel.md)
 - [Criminal Sample Basket Source Bundle](./docs/criminal-sample-basket-source-bundle.md)
@@ -115,6 +116,7 @@ Start narrow:
 - [Marin IJ Citation Layer](./data/normalized/san-rafael-homelessness-01/marin-ij-citation-layer.json)
 - [Marin IJ 2024-08-24 Mention/Claim Example](./data/normalized/san-rafael-homelessness-01/marin-ij-2024-08-24-mention-claim-example.json)
 - [Marin IJ Recurrence Example](./data/normalized/san-rafael-homelessness-01/marin-ij-recurrence-example-01.json)
+- [Media Cross-Domain Join Example](./data/normalized/san-rafael-homelessness-01/media-cross-domain-join-example-01.json)
 - [Campaign Finance Sample Basket Bundle](./data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
 - [Campaign Finance Form 803 Slice Bundle](./data/normalized/campaign-finance-form-803-slice-01/bundle-01.json)
 - [San Rafael Canonical Seed Bundle](./data/normalized/canonical-seeds-san-rafael-01.json)
@@ -176,6 +178,7 @@ This repo started as a planning workspace and now includes the first live implem
   - normalized worked example showing one canonical join, two case-scoped joins, and unresolved article-only mentions held in the review layer
   - second direct raw JSON capture of the September 20, 2024 site-preparation Marin IJ article chosen for overlap rather than chronology
   - first recurrence layer showing cross-source recurrence for Mark Shotwell, Mel Burnette, Defense Block Security, and Downtown Streets Team, plus an unresolved repeated Mark Rivera cluster
+  - first cross-domain media join layer connecting `Mark Shotwell / Ritter Center` to official program context and `Downtown Streets Team` to official contract, moneyflow, and decision records
 - procurement-layer schema, source bundle, and checklist for Marin County and San Rafael funding and contract workflows
 - selected first procurement sample basket:
   - county `Board Chambers Audio Visual Refresh / Prime Electric`
