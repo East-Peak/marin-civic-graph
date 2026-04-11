@@ -2275,3 +2275,125 @@ sources:
     dedupe_key_strategy: exact_url
     notes:
       - Tactical Slot B staff report covering the later Noll and Tam and Unger amendments.
+
+  - source_id: marin-county-board-2025-10-21-agenda
+    label: Marin County Board of Supervisors Agenda October 21 2025
+    owner_type: institution
+    owner_id: marin-county-board-of-supervisors
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: meetings
+    source_type: agenda_viewer_page
+    entry_url: https://marin.granicus.com/GeneratedAgendaViewer.php?view_id=36&clip_id=12781
+    discovery_urls:
+      - https://www.marincounty.gov/departments/board/board-supervisors-meetings
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - agenda_item
+      - decision
+      - record:agenda
+      - record:staff_report
+      - record:agreement
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: direct Granicus agenda viewer page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Tactical county meeting surface for the Prime Electric CB-6 approval record set.
+
+  - source_id: marin-county-prime-electric-staff-report
+    label: Marin County Prime Electric CB-6 Staff Report
+    owner_type: institution
+    owner_id: marin-county-board-of-supervisors
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: documents
+    source_type: staff_report_pdf
+    entry_url: https://marin.granicus.com/MetaViewer.php?view_id=36&clip_id=12781&meta_id=1403660
+    discovery_urls:
+      - https://marin.granicus.com/GeneratedAgendaViewer.php?view_id=36&clip_id=12781
+    fetch_strategy: pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - decision
+      - agreement
+      - money_flow
+      - record:staff_report
+      - record:budget_attachment
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: direct Granicus PDF for CB-6
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Staff report for the Prime Electric BOS Chambers AV refresh approval.
+
+  - source_id: marin-county-prime-electric-attachment
+    label: Marin County Prime Electric CB-6 Attachment
+    owner_type: institution
+    owner_id: marin-county-board-of-supervisors
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: documents
+    source_type: attachment_pdf
+    entry_url: https://marin.granicus.com/MetaViewer.php?view_id=36&clip_id=12781&meta_id=1403661
+    discovery_urls:
+      - https://marin.granicus.com/GeneratedAgendaViewer.php?view_id=36&clip_id=12781
+    fetch_strategy: pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - money_flow
+      - record:budget_attachment
+      - claim
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: direct Granicus PDF attachment for CB-6
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - One-page budget and project-cost attachment for the Prime Electric approval.
+
+  - source_id: marin-county-prime-electric-agreement
+    label: Marin County Prime Electric CB-6 Agreement
+    owner_type: institution
+    owner_id: marin-county-board-of-supervisors
+    jurisdiction_id: marin-county
+    case_study_ids:
+      - procurement-sample-basket-01
+    source_category: documents
+    source_type: agreement_pdf
+    entry_url: https://marin.granicus.com/MetaViewer.php?view_id=36&clip_id=12781&meta_id=1403662
+    discovery_urls:
+      - https://marin.granicus.com/GeneratedAgendaViewer.php?view_id=36&clip_id=12781
+    fetch_strategy: pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - agreement
+      - actor
+      - record:agreement
+      - claim
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: direct Granicus PDF agreement for CB-6
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Executed Prime Electric contract package for the BOS Chambers AV refresh approval.

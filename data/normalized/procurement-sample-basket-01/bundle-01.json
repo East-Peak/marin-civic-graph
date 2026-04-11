@@ -1,8 +1,8 @@
 {
   "case_study_id": "procurement-sample-basket-01",
   "bundle_id": "procurement-sample-basket-01__bundle-01",
-  "status": "discovery_capture_plus_city_staff_reports",
-  "generated_at": "2026-04-11T11:45:59Z",
+  "status": "discovery_capture_plus_county_cb6_record_set",
+  "generated_at": "2026-04-11T11:58:59Z",
   "scope": {
     "included": [
       "direct city HTML captures for project, procurement, meeting, and completion surfaces",
@@ -109,6 +109,34 @@
       "record_type": "staff_report",
       "source_id": "san-rafael-downtown-library-second-amendment-staff-report",
       "artifact_path": "data/raw/san-rafael-downtown-library-second-amendment-staff-report/2026-04-11/staff-report.pdf"
+    },
+    {
+      "id": "record-marin-county-board-2025-10-21-agenda",
+      "record_class": "meeting_record",
+      "record_type": "agenda_page",
+      "source_id": "marin-county-board-2025-10-21-agenda",
+      "artifact_path": "data/raw/marin-county-board-2025-10-21-agenda/2026-04-11/source.html"
+    },
+    {
+      "id": "record-prime-electric-staff-report",
+      "record_class": "contract_record",
+      "record_type": "staff_report",
+      "source_id": "marin-county-prime-electric-staff-report",
+      "artifact_path": "data/raw/marin-county-prime-electric-staff-report/2026-04-11/staff-report.pdf"
+    },
+    {
+      "id": "record-prime-electric-budget-attachment",
+      "record_class": "financial_record",
+      "record_type": "budget_attachment",
+      "source_id": "marin-county-prime-electric-attachment",
+      "artifact_path": "data/raw/marin-county-prime-electric-attachment/2026-04-11/attachment.pdf"
+    },
+    {
+      "id": "record-prime-electric-agreement",
+      "record_class": "contract_record",
+      "record_type": "agreement",
+      "source_id": "marin-county-prime-electric-agreement",
+      "artifact_path": "data/raw/marin-county-prime-electric-agreement/2026-04-11/agreement.pdf"
     }
   ],
   "institution_candidates": [
@@ -246,6 +274,14 @@
       "record_ids": [
         "record-srcc-2025-04-07-downtown-library"
       ]
+    },
+    {
+      "id": "meeting-2025-10-21-marin-county-board-of-supervisors",
+      "institution_id": "inst-marin-county-board-of-supervisors",
+      "meeting_date": "2025-10-21",
+      "record_ids": [
+        "record-marin-county-board-2025-10-21-agenda"
+      ]
     }
   ],
   "procurement_candidates": [
@@ -290,8 +326,15 @@
         "agreement-prime-electric-bos-chambers"
       ],
       "evidence_record_ids": [
-        "record-bos-chamber-upgrades-news-release"
-      ]
+        "record-bos-chamber-upgrades-news-release",
+        "record-marin-county-board-2025-10-21-agenda",
+        "record-prime-electric-staff-report",
+        "record-prime-electric-budget-attachment",
+        "record-prime-electric-agreement"
+      ],
+      "meeting_id": "meeting-2025-10-21-marin-county-board-of-supervisors",
+      "agenda_item_ref": "CB-6",
+      "authorized_total_amount": 1144237.0
     },
     {
       "id": "decision-2023-09-18-noll-tam-first-amendment",
@@ -345,10 +388,15 @@
       "procurement_id": "procurement-rfp-2883-bos-chambers-av-refresh",
       "project_id": "project-bos-chambers-av-refresh",
       "status": "approved",
-      "not_to_exceed_amount": 1140000,
+      "not_to_exceed_amount": 994866.17,
       "evidence_record_ids": [
-        "record-bos-chamber-upgrades-news-release"
-      ]
+        "record-bos-chamber-upgrades-news-release",
+        "record-prime-electric-staff-report",
+        "record-prime-electric-agreement",
+        "record-marin-county-board-2025-10-21-agenda"
+      ],
+      "effective_start": "2025-10-21",
+      "effective_end": "2026-06-30"
     },
     {
       "id": "agreement-noll-and-tam-downtown-library",
@@ -456,17 +504,6 @@
   ],
   "money_flow_candidates": [
     {
-      "id": "moneyflow-prime-electric-contract-2025",
-      "flow_type": "obligation",
-      "amount": 1140000,
-      "institution_id": "inst-marin-county-board-of-supervisors",
-      "counterparty_actor_id": "actor-prime-electric",
-      "decision_id": "decision-2025-10-21-prime-electric-approval",
-      "evidence_record_ids": [
-        "record-bos-chamber-upgrades-news-release"
-      ]
-    },
-    {
       "id": "moneyflow-slfrf-legal-aid-of-marin",
       "flow_type": "program_allocation",
       "amount": 258000,
@@ -494,10 +531,43 @@
       "evidence_record_ids": [
         "record-slfrf-program-page"
       ]
+    },
+    {
+      "id": "moneyflow-prime-electric-contract-2025",
+      "flow_type": "obligation",
+      "amount": 994866.17,
+      "institution_id": "inst-marin-county-board-of-supervisors",
+      "counterparty_actor_id": "actor-prime-electric",
+      "decision_id": "decision-2025-10-21-prime-electric-approval",
+      "evidence_record_ids": [
+        "record-prime-electric-staff-report",
+        "record-prime-electric-agreement"
+      ]
+    },
+    {
+      "id": "moneyflow-prime-electric-contingency-2025",
+      "flow_type": "contingency_authorization",
+      "amount": 99487.0,
+      "institution_id": "inst-marin-county-board-of-supervisors",
+      "decision_id": "decision-2025-10-21-prime-electric-approval",
+      "evidence_record_ids": [
+        "record-prime-electric-staff-report",
+        "record-prime-electric-budget-attachment"
+      ]
+    },
+    {
+      "id": "moneyflow-prime-electric-additional-project-costs-2025",
+      "flow_type": "project_cost_allocation",
+      "amount": 49884.0,
+      "institution_id": "inst-marin-county-board-of-supervisors",
+      "decision_id": "decision-2025-10-21-prime-electric-approval",
+      "evidence_record_ids": [
+        "record-prime-electric-staff-report",
+        "record-prime-electric-budget-attachment"
+      ]
     }
   ],
   "open_questions": [
-    "Capture the exact Marin County Board packet and contract record for the October 21, 2025 Prime Electric approval.",
     "Decide whether the Downtown Library architect and construction agreements should stay separate agreement threads or also roll up into a project-level contract family view.",
     "Confirm the underlying California State Library award record before promoting the reopening-page funding statement into a grant relationship.",
     "Replace county proxy text captures with direct binary or raw HTML artifacts if the environment later allows first-party fetches."

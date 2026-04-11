@@ -140,16 +140,20 @@ Mirror the question here when it affects:
 
 ### OQ-009: Prime Electric approval packet gap
 
-- `status`: open
+- `status`: resolved
 - `layer`: procurement joins
 - `scope`: `project-bos-chambers-av-refresh`
 - `source refs`:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/procurement-sample-basket-01/bundle-01.json)
   - [source.txt](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-bos-chamber-upgrades-news-release/2026-04-11/source.txt)
   - [source.txt](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-rfp-2883-bos-chambers-av-refresh/2026-04-11/source.txt)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-board-2025-10-21-agenda/2026-04-11/source.html)
+  - [staff-report.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-prime-electric-staff-report/2026-04-11/staff-report.pdf)
+  - [attachment.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-prime-electric-attachment/2026-04-11/attachment.pdf)
+  - [agreement.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-prime-electric-agreement/2026-04-11/agreement.pdf)
 - `question`: What is the exact Marin County Board record set for the October 21, 2025 Prime Electric approval?
 - `why it matters`: The current county-side chain has the solicitation and a later official release, but it is still missing the meeting packet, staff report, and operative contract record that would anchor the `Decision -> Agreement` join cleanly.
-- `next evidence`: capture the October 21, 2025 Board meeting page, packet, and any linked agreement or staff report.
+- `resolution note`: The October 21, 2025 Granicus agenda page and linked CB-6 staff report, attachment, and agreement are now captured. They show that the approved Prime Electric contract itself is `$994,866.17`, while the authorized project total was `$1,144,237` after adding `$99,487` contingency and `$49,884` in additional project costs.
 
 ### OQ-010: Downtown Library agreement-family boundary
 
