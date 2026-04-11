@@ -1,0 +1,73 @@
+{
+  "case_study_id": "san-rafael-homelessness-01",
+  "bundle_id": "san-rafael-homelessness-01__bundle-01",
+  "layer_type": "media_disclosure_overlap_worked_example",
+  "status": "worked_example",
+  "generated_at": "2026-04-11T16:14:46Z",
+  "overlap_examples": [
+    {
+      "id": "media-disclosure-kate-colin-form803",
+      "join_type": "media_actor_to_disclosure_filing_and_moneyflow",
+      "status": "accepted_for_cross_domain_context",
+      "confidence": "high",
+      "subject_actor_id": "actor-kate-colin",
+      "source_mentions": [
+        {
+          "record_id": "record-mij-2024-09-20-prepares-site-authorized-camp",
+          "source_kind": "media_article",
+          "mention_id": "mention-mij-2024-09-20-kate-colin",
+          "role_label": "San Rafael Mayor"
+        }
+      ],
+      "cross_domain_targets": [
+        {
+          "target_type": "filing",
+          "filing_id": "filing-2025-09-04-kate-colin-form-803",
+          "summary": "Official local Form 803 filing posted through the San Rafael public-records portal."
+        },
+        {
+          "target_type": "seat_service",
+          "seat_id": "seat-san-rafael-mayor-at-large",
+          "seat_service_id": "seatservice-kate-colin-mayor-current",
+          "summary": "Current mayoral seat and seat-service layer already canonical in the San Rafael identity seed bundle."
+        },
+        {
+          "target_type": "moneyflow",
+          "moneyflow_id": "moneyflow-2025-08-08-pge-to-canal-alliance-form-803",
+          "summary": "Behested payment from Pacific Gas and Electric Company to Canal Alliance, requested by Kate Colin."
+        }
+      ],
+      "join_outcome": {
+        "accepted_links": [
+          "media mention mention-mij-2024-09-20-kate-colin -> actor-kate-colin",
+          "actor-kate-colin -> filing-2025-09-04-kate-colin-form-803",
+          "actor-kate-colin -> seatservice-kate-colin-mayor-current",
+          "filing-2025-09-04-kate-colin-form-803 -> moneyflow-2025-08-08-pge-to-canal-alliance-form-803"
+        ],
+        "not_implied": [
+          "The article quote about homelessness policy does not imply that the later behested payment was tied to this homelessness decision chain.",
+          "This example demonstrates overlap of actor identity across media and disclosure layers, not a causal policy-finance claim."
+        ]
+      },
+      "notes": "This is the first direct media-to-disclosure overlap in the repo. It is strong because the article prints the full name and official role, and the later Form 803 is a local official filing for the same canonical actor."
+    }
+  ],
+  "methodology_findings": [
+    {
+      "id": "media-disclosure-finding-01",
+      "summary": "The cleanest media-to-finance joins are often disclosure joins, not campaign joins, because the same officeholder can recur in media and local filing records even when no campaign filing is on the same issue thread."
+    },
+    {
+      "id": "media-disclosure-finding-02",
+      "summary": "A media-to-disclosure overlap should be modeled as actor continuity first. It should not imply that the quoted policy stance and the later disclosed payment are causally connected unless separate evidence supports that claim."
+    },
+    {
+      "id": "media-disclosure-finding-03",
+      "summary": "Seat and SeatService help here because they let the graph connect the media quote, the office held, and the disclosure filing without inventing a new identity layer for each source family."
+    }
+  ],
+  "notes": [
+    "This worked example intentionally uses a disclosure overlap, not a campaign overlap.",
+    "The repo still does not have a similarly clean campaign-finance overlap for this homelessness thread."
+  ]
+}

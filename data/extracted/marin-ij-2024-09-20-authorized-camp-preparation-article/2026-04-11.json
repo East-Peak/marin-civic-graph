@@ -15,6 +15,10 @@
   "paragraph_count": 26,
   "selected_paragraphs": [
     {
+      "id": "P5",
+      "text": "\"San Rafael is confident that the temporary sanctioned camping area is a critical next step to help the homeless folks on Mahon Path move from encampments into permanent supportive housing,\" San Rafael Mayor Kate Colin said. \"The current situation isn't healthy or safe for the people in the encampments and there continues to be a negative impact on the surrounding area.\""
+    },
+    {
       "id": "P11",
       "text": "Mel Burnette, the city's housing and homelessness analyst, said everyone living there complied with moving to the southern portion of Mahon Creek Path, allowing city contractors to begin work."
     },
@@ -32,6 +36,21 @@
     }
   ],
   "mention_candidates": [
+    {
+      "id": "mention-mij-2024-09-20-kate-colin",
+      "mention_type": "quoted_person",
+      "name_raw": "Kate Colin",
+      "article_scoped_role_label": "San Rafael Mayor",
+      "article_scoped_affiliation_label": null,
+      "quote_excerpt": "\"San Rafael is confident that the temporary sanctioned camping area is a critical next step to help the homeless folks on Mahon Path move from encampments into permanent supportive housing,\"",
+      "paragraph_refs": [
+        "P5"
+      ],
+      "candidate_actor_ids": [
+        "actor-kate-colin"
+      ],
+      "join_status": "resolved_canonical"
+    },
     {
       "id": "mention-mij-2024-09-20-mel-burnette",
       "mention_type": "named_person",
