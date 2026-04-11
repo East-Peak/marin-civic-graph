@@ -168,6 +168,18 @@ Mirror the question here when it affects:
 - `why it matters`: The graph can now represent current seat occupancy, but exact term boundaries still matter for historical queries and officeholder overlap analysis.
 - `next evidence`: capture the earlier district-election or canvass materials that seated the current District 2 and District 3 councilmembers, plus any formal council action or protocol that defines the Vice Mayor designation period.
 
+### OQ-019: Marin County BOS source-scope boundary
+
+- `status`: watch
+- `layer`: source-scope integrity
+- `scope`: `marin-county-bos-meetings`
+- `source refs`:
+  - [2026-04-11.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/marin-county-bos-meetings/2026-04-11.json)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-bos-meetings/2026-04-11/source.html)
+- `question`: Should the direct BOS Granicus publisher view keep adjacent upcoming rows like `FLOOD MEETING 260414` and `HOUSING MEETING 260414` inside the source family, or should those rows be filtered into separate special-district source families?
+- `why it matters`: The direct official publisher view is the best county meeting backbone, but its upcoming table may occasionally surface non-BOS governing-board items that could blur source boundaries if they are promoted without an explicit rule.
+- `next evidence`: inspect whether those same adjacent rows recur in the archived year panels or whether they only appear in the upcoming table, then decide whether the source family should preserve them as `other` or carve them into separate district-specific adapters.
+
 ### OQ-016: San Rafael local Form 803 filing surface
 
 - `status`: resolved

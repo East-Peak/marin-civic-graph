@@ -12,6 +12,7 @@ sources:
     entry_url: https://www.marincounty.gov/departments/board/board-supervisors-meetings
     discovery_urls:
       - https://www.marincounty.gov/departments/board/clerk-board
+      - https://marin.granicus.com/ViewPublisher.php?view_id=33
     fetch_strategy: static_html
     browser_required: false
     auth_required: false
@@ -32,6 +33,7 @@ sources:
     notes:
       - High-value county meeting spine.
       - Explicitly advertises reports, minutes, and video.
+      - County shell page is a discovery layer; direct official Granicus publisher view is the actual archive surface.
 
   - source_id: marin-county-campaign-finance-netfile
     label: Marin County Campaign Finance Portal
