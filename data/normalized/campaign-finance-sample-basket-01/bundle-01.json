@@ -1,11 +1,12 @@
 {
   "case_study_id": "campaign-finance-sample-basket-01",
   "bundle_id": "campaign-finance-sample-basket-01__bundle-01",
-  "status": "first_capture",
-  "generated_at": "2026-04-11T13:05:00Z",
+  "status": "join_refined",
+  "generated_at": "2026-04-11T14:20:00Z",
   "scope": [
     "candidate committee discovery",
-    "sponsored committee discovery",
+    "candidate seat and election resolution",
+    "sponsored committee schedule extraction",
     "city Form 700 disclosure discovery"
   ],
   "record_refs": [
@@ -29,6 +30,13 @@
       "record_type": "form_497",
       "source_id": "marin-county-mary-sackett-form-497-2026-04-10",
       "artifact_path": "data/raw/marin-county-mary-sackett-form-497-2026-04-10/2026-04-11/filing.pdf"
+    },
+    {
+      "id": "record-marin-county-candidate-status-2026-06-02",
+      "record_class": "administrative_record",
+      "record_type": "candidate_status_page",
+      "source_id": "marin-county-candidate-status-2026-06-02",
+      "artifact_path": "data/raw/marin-county-candidate-status-2026-06-02/2026-04-11/source.txt"
     },
     {
       "id": "record-resource-conservation-pac-form-460-2026-04-08",
@@ -85,6 +93,11 @@
       "institution_type": "elections_office"
     },
     {
+      "id": "inst-marin-county-board-of-supervisors",
+      "name": "Marin County Board of Supervisors",
+      "institution_type": "board"
+    },
+    {
       "id": "inst-city-of-san-rafael",
       "name": "City of San Rafael",
       "institution_type": "city_government"
@@ -94,6 +107,33 @@
       "name": "San Rafael Fire Department",
       "institution_type": "department",
       "parent_institution_id": "inst-city-of-san-rafael"
+    }
+  ],
+  "seat_candidates": [
+    {
+      "id": "seat-marin-county-supervisor-district-1",
+      "name": "County Supervisor - District 1",
+      "institution_id": "inst-marin-county-board-of-supervisors",
+      "jurisdiction_place_id": "place-marin-county",
+      "district_label": "District 1",
+      "office_type": "county_supervisor",
+      "evidence_record_ids": [
+        "record-marin-county-candidate-status-2026-06-02"
+      ]
+    }
+  ],
+  "election_candidates": [
+    {
+      "id": "election-2026-06-02-marin-county-supervisor-district-1-primary",
+      "jurisdiction_place_id": "place-marin-county",
+      "election_type": "statewide_direct_primary",
+      "election_date": "2026-06-02",
+      "cycle_label": "2026",
+      "seat_id": "seat-marin-county-supervisor-district-1",
+      "status": "scheduled",
+      "evidence_record_ids": [
+        "record-marin-county-candidate-status-2026-06-02"
+      ]
     }
   ],
   "actor_candidates": [
@@ -118,6 +158,31 @@
       "actor_type": "person"
     },
     {
+      "id": "actor-marin-resource-recovery-center",
+      "name": "Marin Resource Recovery Center",
+      "actor_type": "business"
+    },
+    {
+      "id": "actor-damon-connolly",
+      "name": "Damon Connolly",
+      "actor_type": "person"
+    },
+    {
+      "id": "actor-heidi-sanborn",
+      "name": "Heidi Sanborn",
+      "actor_type": "person"
+    },
+    {
+      "id": "actor-josh-fryday",
+      "name": "Josh Fryday",
+      "actor_type": "person"
+    },
+    {
+      "id": "actor-se-owens-and-company",
+      "name": "S.E. Owens & Company",
+      "actor_type": "business"
+    },
+    {
       "id": "actor-quinn-gardner",
       "name": "Quinn Gardner",
       "actor_type": "person"
@@ -131,8 +196,10 @@
       "fppc_id": "1462337",
       "jurisdiction_place_id": "place-marin-county",
       "controlling_actor_id": "actor-mary-sackett",
+      "primary_election_id": "election-2026-06-02-marin-county-supervisor-district-1-primary",
       "evidence_record_ids": [
-        "record-mary-sackett-form-497-2026-04-10"
+        "record-mary-sackett-form-497-2026-04-10",
+        "record-marin-county-candidate-status-2026-06-02"
       ]
     },
     {
@@ -146,18 +213,53 @@
       "evidence_record_ids": [
         "record-resource-conservation-pac-form-460-2026-04-08"
       ]
+    },
+    {
+      "id": "committee-damon-connolly-for-senate-2026",
+      "name": "Damon Connolly for Senate 2026",
+      "committee_type": "candidate_linked_committee",
+      "fppc_id": "1479878",
+      "controlling_actor_id": "actor-damon-connolly",
+      "evidence_record_ids": [
+        "record-resource-conservation-pac-form-460-2026-04-08"
+      ]
+    },
+    {
+      "id": "committee-heidi-sanborn-for-smud-2026",
+      "name": "Heidi Sanborn for SMUD 2026",
+      "committee_type": "candidate_linked_committee",
+      "fppc_id": "1458859",
+      "controlling_actor_id": "actor-heidi-sanborn",
+      "evidence_record_ids": [
+        "record-resource-conservation-pac-form-460-2026-04-08"
+      ]
+    },
+    {
+      "id": "committee-josh-fryday-for-lt-governor-2026",
+      "name": "Josh Fryday for Lt. Governor 2026",
+      "committee_type": "candidate_linked_committee",
+      "fppc_id": "1479464",
+      "controlling_actor_id": "actor-josh-fryday",
+      "evidence_record_ids": [
+        "record-resource-conservation-pac-form-460-2026-04-08"
+      ]
     }
   ],
   "candidacy_candidates": [
     {
-      "id": "candidacy-mary-sackett-supervisor-2026-unresolved-seat",
+      "id": "candidacy-mary-sackett-county-supervisor-district-1-2026",
       "candidate_actor_id": "actor-mary-sackett",
+      "seat_id": "seat-marin-county-supervisor-district-1",
+      "election_id": "election-2026-06-02-marin-county-supervisor-district-1-primary",
       "committee_id": "committee-mary-sackett-for-marin-county-supervisor-2026",
+      "incumbency_status": "incumbent",
+      "declaration_filed_at": "2026-02-17",
+      "candidate_statement_filed_at": "2026-02-17",
       "result_status": "unknown",
       "evidence_record_ids": [
-        "record-mary-sackett-form-497-2026-04-10"
-      ],
-      "notes": "Committee title shows a supervisor run, but the current filing set does not yet resolve district or election context."
+        "record-mary-sackett-form-497-2026-04-10",
+        "record-marin-county-candidate-status-2026-06-02"
+      ]
     }
   ],
   "filing_candidates": [
@@ -181,6 +283,10 @@
       "period_end": "2025-12-31",
       "status": "amended",
       "page_count": 10,
+      "itemized_contributions_received_total": 20000.0,
+      "itemized_payments_total": 10375.0,
+      "unitemized_payments_total": 50.0,
+      "total_payments": 10425.0,
       "evidence_record_ids": [
         "record-resource-conservation-pac-form-460-2026-04-08"
       ]
@@ -215,18 +321,119 @@
       "evidence_record_ids": [
         "record-mary-sackett-form-497-2026-04-10"
       ]
+    },
+    {
+      "id": "moneyflow-2025-09-30-mrr-center-to-resource-conservation-pac",
+      "flow_type": "campaign_contribution",
+      "amount": 10000.0,
+      "flow_date": "2025-09-30",
+      "from_actor_id": "actor-marin-resource-recovery-center",
+      "to_committee_id": "committee-resource-conservation-pac",
+      "filing_id": "filing-2026-04-08-resource-conservation-pac-form-460",
+      "contributor_code": "OTH",
+      "evidence_record_ids": [
+        "record-resource-conservation-pac-form-460-2026-04-08"
+      ]
+    },
+    {
+      "id": "moneyflow-2025-12-24-mrr-center-to-resource-conservation-pac",
+      "flow_type": "campaign_contribution",
+      "amount": 10000.0,
+      "flow_date": "2025-12-24",
+      "from_actor_id": "actor-marin-resource-recovery-center",
+      "to_committee_id": "committee-resource-conservation-pac",
+      "filing_id": "filing-2026-04-08-resource-conservation-pac-form-460",
+      "contributor_code": "OTH",
+      "evidence_record_ids": [
+        "record-resource-conservation-pac-form-460-2026-04-08"
+      ]
+    },
+    {
+      "id": "moneyflow-2025-09-25-resource-conservation-pac-to-damon-connolly-3000",
+      "flow_type": "campaign_contribution",
+      "amount": 3000.0,
+      "flow_date": "2025-09-25",
+      "from_committee_id": "committee-resource-conservation-pac",
+      "to_committee_id": "committee-damon-connolly-for-senate-2026",
+      "beneficiary_actor_id": "actor-damon-connolly",
+      "filing_id": "filing-2026-04-08-resource-conservation-pac-form-460",
+      "payment_code": "CTB",
+      "evidence_record_ids": [
+        "record-resource-conservation-pac-form-460-2026-04-08"
+      ]
+    },
+    {
+      "id": "moneyflow-2025-09-25-resource-conservation-pac-to-damon-connolly-2500",
+      "flow_type": "campaign_contribution",
+      "amount": 2500.0,
+      "flow_date": "2025-09-25",
+      "from_committee_id": "committee-resource-conservation-pac",
+      "to_committee_id": "committee-damon-connolly-for-senate-2026",
+      "beneficiary_actor_id": "actor-damon-connolly",
+      "filing_id": "filing-2026-04-08-resource-conservation-pac-form-460",
+      "payment_code": "CTB",
+      "evidence_record_ids": [
+        "record-resource-conservation-pac-form-460-2026-04-08"
+      ]
+    },
+    {
+      "id": "moneyflow-2025-10-27-resource-conservation-pac-to-heidi-sanborn",
+      "flow_type": "campaign_contribution",
+      "amount": 500.0,
+      "flow_date": "2025-10-27",
+      "from_committee_id": "committee-resource-conservation-pac",
+      "to_committee_id": "committee-heidi-sanborn-for-smud-2026",
+      "beneficiary_actor_id": "actor-heidi-sanborn",
+      "filing_id": "filing-2026-04-08-resource-conservation-pac-form-460",
+      "payment_code": "CTB",
+      "evidence_record_ids": [
+        "record-resource-conservation-pac-form-460-2026-04-08"
+      ]
+    },
+    {
+      "id": "moneyflow-2025-10-07-resource-conservation-pac-to-josh-fryday",
+      "flow_type": "campaign_contribution",
+      "amount": 2500.0,
+      "flow_date": "2025-10-07",
+      "from_committee_id": "committee-resource-conservation-pac",
+      "to_committee_id": "committee-josh-fryday-for-lt-governor-2026",
+      "beneficiary_actor_id": "actor-josh-fryday",
+      "filing_id": "filing-2026-04-08-resource-conservation-pac-form-460",
+      "payment_code": "CTB",
+      "evidence_record_ids": [
+        "record-resource-conservation-pac-form-460-2026-04-08"
+      ]
+    },
+    {
+      "id": "moneyflow-resource-conservation-pac-to-se-owens-1600",
+      "flow_type": "campaign_expenditure",
+      "amount": 1600.0,
+      "from_committee_id": "committee-resource-conservation-pac",
+      "to_actor_id": "actor-se-owens-and-company",
+      "filing_id": "filing-2026-04-08-resource-conservation-pac-form-460",
+      "payment_code": "PRO",
+      "evidence_record_ids": [
+        "record-resource-conservation-pac-form-460-2026-04-08"
+      ]
+    },
+    {
+      "id": "moneyflow-resource-conservation-pac-to-se-owens-275",
+      "flow_type": "campaign_expenditure",
+      "amount": 275.0,
+      "from_committee_id": "committee-resource-conservation-pac",
+      "to_actor_id": "actor-se-owens-and-company",
+      "filing_id": "filing-2026-04-08-resource-conservation-pac-form-460",
+      "payment_code": "PRO",
+      "evidence_record_ids": [
+        "record-resource-conservation-pac-form-460-2026-04-08"
+      ]
     }
   ],
   "open_questions": [
     {
-      "id": "campaign-001",
-      "status": "open",
-      "question": "What exact seat, district, and election should the Mary Sackett committee and candidacy join to?"
-    },
-    {
-      "id": "campaign-002",
+      "id": "campaign-003",
       "status": "watch",
-      "question": "What race, measure, or issue context should the Resource Conservation PAC join to before line-item schedule extraction is complete?"
+      "question": "Does `Marin Resource Recovery Center` in Schedule A resolve cleanly to the sponsor label `Marin Resource Recovery`, or should they remain distinct actors until a stronger business-identity source is captured?"
     }
   ]
 }

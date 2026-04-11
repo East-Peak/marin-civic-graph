@@ -140,19 +140,20 @@ Mirror the question here when it affects:
 
 ### OQ-013: Mary Sackett seat and election boundary
 
-- `status`: open
+- `status`: resolved
 - `layer`: campaign joins
 - `scope`: `committee-mary-sackett-for-marin-county-supervisor-2026`
 - `source refs`:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
   - [filing.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-mary-sackett-form-497-2026-04-10/2026-04-11/filing.pdf)
+- [source.txt](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-candidate-status-2026-06-02/2026-04-11/source.txt)
 - `question`: What exact seat, district, and election context should the Mary Sackett committee and candidacy join to?
 - `why it matters`: The current filing title is strong enough to justify a candidate-linked committee and candidacy candidate, but not yet strong enough to safely promote a fully resolved `Seat -> Election -> Candidacy` chain.
-- `next evidence`: capture an official election listing, committee search result, or candidate declaration surface that states the office and district explicitly.
+- `resolution note`: Resolved with the official Marin County candidate-status page for the June 2, 2026 Statewide Direct Primary Election. That page lists `Sackett, Mary**` under `County Supervisor - District 1`, with both declaration and candidate statement filed on `2/17/2026`, so the campaign bundle now promotes the `Seat -> Election -> Candidacy` chain for District 1.
 
 ### OQ-014: Resource Conservation PAC beneficiary boundary
 
-- `status`: watch
+- `status`: resolved
 - `layer`: campaign methodology
 - `scope`: `committee-resource-conservation-pac`
 - `source refs`:
@@ -161,7 +162,19 @@ Mirror the question here when it affects:
   - [filing.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-resource-conservation-pac-form-460-2026-04-08/2026-04-11/filing.pdf)
 - `question`: What election, measure, or issue thread should the Resource Conservation PAC join to before schedule-level extraction is complete?
 - `why it matters`: The cover page is enough to model the committee, sponsor, treasurer, and filing period, but not enough to safely attach the committee to a specific Marin decision chain without overclaiming.
-- `next evidence`: extract schedule-level transactions and capture any linked election or measure context from official filing or portal records.
+- `resolution note`: Resolved by schedule-level extraction from the April 8, 2026 Form 460. The committee should not be forced into one beneficiary thread. The filing shows multiple itemized outflows: contributions to `Damon Connolly for Senate 2026`, `Josh Fryday for Lt. Governor 2026`, and `Heidi Sanborn for SMUD 2026`, plus professional-services payments to `S.E. Owens & Company`. The graph now treats this as a multi-beneficiary sponsored committee with separate campaign and vendor money flows.
+
+### OQ-015: Marin Resource Recovery sponsor identity drift
+
+- `status`: watch
+- `layer`: campaign identity
+- `scope`: `committee-resource-conservation-pac`
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
+  - [filing.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-county-resource-conservation-pac-form-460-2026-04-08/2026-04-11/filing.pdf)
+- `question`: Does `Marin Resource Recovery Center` in Schedule A resolve cleanly to the sponsor label `Marin Resource Recovery`, or should they remain distinct actors until a stronger business-identity source is captured?
+- `why it matters`: This is a classic sponsor versus contributor identity-resolution problem. The committee title and the filing schedules do not use the same organization label, and the graph should not silently collapse them.
+- `next evidence`: capture a stronger business-identity source such as the committee registration, corporate identity record, or sponsor disclosure that uses both names explicitly.
 
 ### OQ-009: Prime Electric approval packet gap
 

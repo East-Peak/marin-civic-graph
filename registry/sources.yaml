@@ -163,6 +163,37 @@ sources:
       - First sponsored-committee sample for the campaign layer.
       - Cover page exposes sponsor status, treasurer, filing period, and committee ID.
 
+  - source_id: marin-county-candidate-status-2026-06-02
+    label: Marin County status of local candidates for office on June 2 2026
+    owner_type: jurisdiction
+    owner_id: marin-county
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: campaign_finance
+    source_type: candidate_status_page
+    entry_url: https://www.marincounty.gov/departments/elections/june-2-2026-statewide-direct-primary-election/information-and-about-candidates-060226/status-local-candidates-who-have-taken-papers-office-060226
+    discovery_urls:
+      - https://www.marincounty.gov/departments/elections/june-2-2026-statewide-direct-primary-election
+    fetch_strategy: text_proxy
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - election
+      - seat
+      - candidacy
+      - actor
+      - document:candidate_status_page
+    cadence: election_cycle
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: official county elections page; direct HTML fetch may be blocked by Cloudflare in this environment, so proxy-text capture may be required
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Best current official source for resolving local office, district, and candidate filing status.
+      - Used to resolve Mary Sackett to County Supervisor District 1 for June 2 2026.
+
   - source_id: marin-county-campaign-finance-guide
     label: Marin County Campaign Finance Reporting and Information
     owner_type: jurisdiction
