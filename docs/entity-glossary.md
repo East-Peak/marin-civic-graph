@@ -20,7 +20,7 @@ Examples:
 - nonprofit
 - contractor
 - donor
-- PAC
+- sponsoring political organization
 - law firm
 - reporter
 - recurring public commenter
@@ -61,6 +61,38 @@ Why it matters:
 
 - appointments and elections attach cleanly to seats
 - people can rotate through the same seat over time
+
+### Election
+
+A bounded contest context for a seat, office, or measure.
+
+Examples:
+
+- 2026 city-council election
+- 2026 supervisor district election
+
+Rule:
+
+- use `Election` for the contest context
+- use `Seat` for the office being contested
+- use `Candidacy` for one actor in one race
+
+### Committee
+
+A regulated filing entity in campaign-finance and disclosure work.
+
+Examples:
+
+- candidate-controlled committee
+- officeholder committee
+- independent-expenditure committee
+- ballot-measure committee
+
+Rule:
+
+- use `Committee` when the filing system treats the entity as a distinct committee with its own reports, FPPC number, or treasurer
+- use `Actor` for the person, sponsor, or donor around the committee
+- do not collapse the candidate and the committee into one node
 
 ### Meeting
 
@@ -103,6 +135,53 @@ Rule:
 
 - not every agenda item results in a decision
 - not every decision happens inside a meeting
+
+### Candidacy
+
+One actor running for or holding one seat in one election cycle.
+
+Examples:
+
+- one candidate for one council seat
+- one incumbent seeking reelection to the same seat
+
+Rule:
+
+- use `Candidacy` to bind candidate, seat, election, and committee together
+- do not infer candidacy only from campaign money if the filing or official page does not state the office clearly
+
+### Filing
+
+A structured campaign or disclosure filing object, separate from the raw PDF or portal artifact.
+
+Examples:
+
+- Form 460
+- Form 496
+- Form 497
+- Form 501
+
+Rule:
+
+- the filing event/object is a `Filing`
+- the PDF, HTML page, or portal export is a `Record`
+- line-item money and disclosure details can be extracted from the filing without collapsing everything into the file itself
+
+### EconomicInterestDisclosure
+
+A structured Statement of Economic Interests object backed by a Form 700-style filing.
+
+Examples:
+
+- annual Form 700
+- candidate Form 700
+- assuming-office Form 700
+- leaving-office Form 700
+
+Rule:
+
+- use `EconomicInterestDisclosure` for the structured disclosure relationship
+- keep the actual form PDF or clerk-hosted page as a `Record`
 
 ### Procurement
 
@@ -204,6 +283,9 @@ Examples:
 - hearing notice
 - determination letter
 - Form 460
+- Form 496
+- Form 497
+- Form 501
 - Form 700
 - Form 803
 - 990
@@ -240,6 +322,7 @@ A normalized record of money moving from one actor to another, or being obligate
 Examples:
 
 - campaign contribution
+- campaign expenditure
 - independent expenditure
 - city contract
 - county grant
@@ -247,8 +330,8 @@ Examples:
 
 Rule:
 
-- use one broad object first
-- subtype it later if needed
+- keep one broad money object, but do not throw away filing context
+- campaign-side flows often need committee and election joins in addition to actor joins
 
 ### Issue
 

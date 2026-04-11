@@ -153,6 +153,22 @@ Why this matters:
 
 - many of the most important local actions are formalized in ordinance and resolution text, not just staff reports or minutes
 
+### Campaign Finance / Disclosure Pressure Test
+
+Pressure-test the campaign-finance and disclosure layer on one real local basket.
+
+Should include:
+
+- one candidate-controlled committee
+- one outside-money or late-contribution thread
+- one Form 700 or Form 803 disclosure thread
+- joins back to seat, officeholder, and at least one other civic domain
+
+Why this matters:
+
+- this is one of the strongest recurring-actor surfaces in the project
+- it is where donor, committee, officeholder, and disclosure data stop being abstract and start joining back into permits, contracts, meetings, and appointments
+
 ### Exhibit And Attachment Splitting
 
 Split dense packet items into child records rather than leaving everything buried inside one PDF.

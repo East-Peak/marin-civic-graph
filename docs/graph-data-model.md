@@ -25,9 +25,9 @@ That lets the project answer civic questions without pretending every parser out
 
 The graph should store:
 
-- canonical entities like actors, institutions, places, projects, issues, programs, and cases
-- process entities like meetings, agenda items, decisions, applications, permits, determinations, conditions, appeals, votes, comments, appointments, memberships, money flows, proceedings, charges, custody events, release decisions, dispositions, and sentences
-- record nodes for ordinances, minutes, articles, contracts, packets, applications, determinations, and filings
+- canonical entities like actors, institutions, seats, elections, committees, places, projects, issues, programs, and cases
+- process entities like meetings, agenda items, decisions, candidacies, filings, economic-interest disclosures, applications, permits, determinations, conditions, appeals, votes, comments, appointments, memberships, money flows, proceedings, charges, custody events, release decisions, dispositions, and sentences
+- record nodes for ordinances, minutes, articles, contracts, packets, applications, determinations, and campaign or disclosure filings
 - extracted mentions and candidate claims when they are worth reviewing or linking
 - references back to raw and extracted artifacts on disk
 
@@ -53,7 +53,7 @@ Subtypes:
 - person
 - nonprofit
 - business
-- PAC
+- political organization
 - law firm
 - union
 - media outlet
@@ -103,6 +103,49 @@ Key fields:
 - `seat_type`
 - `district?`
 - `appointing_institution_id?`
+
+### Election
+
+Use for one contest context tied to a date and jurisdiction.
+
+Examples:
+
+- one city-council election
+- one supervisor district election
+
+Key fields:
+
+- `id`
+- `jurisdiction_place_id`
+- `election_type`
+- `election_date`
+- `cycle_label?`
+- `seat_id?`
+- `status`
+
+### Committee
+
+Use for a regulated filing entity in campaign-finance and disclosure workflows.
+
+Examples:
+
+- candidate-controlled committee
+- officeholder committee
+- independent-expenditure committee
+- ballot-measure committee
+
+Key fields:
+
+- `id`
+- `name`
+- `committee_type`
+- `fppc_id?`
+- `jurisdiction_place_id?`
+- `controlling_actor_id?`
+- `sponsored_by_actor_id?`
+- `treasurer_actor_id?`
+- `primary_election_id?`
+- `status`
 
 ### Place
 
@@ -533,6 +576,69 @@ Use for board seats, staff roles, treasurers, executives, and other affiliations
 - `started_at?`
 - `ended_at?`
 
+### Candidacy
+
+Use for one actor running for or holding one seat in one election cycle.
+
+- `id`
+- `candidate_actor_id`
+- `seat_id`
+- `election_id`
+- `committee_id?`
+- `incumbency_status?`
+- `declaration_filed_at?`
+- `qualified_at?`
+- `result_status?`
+
+### Filing
+
+Use for one filed campaign or disclosure report.
+
+Examples:
+
+- Form 460
+- Form 496
+- Form 497
+- Form 501
+- local clerk-hosted filing export
+
+Key fields:
+
+- `id`
+- `filing_type`
+- `committee_id?`
+- `filer_actor_id?`
+- `filing_institution_id?`
+- `election_id?`
+- `period_start?`
+- `period_end?`
+- `filed_at`
+- `amended_filing_id?`
+- `status`
+
+### EconomicInterestDisclosure
+
+Use for a structured Statement of Economic Interests object backed by a filing record.
+
+Examples:
+
+- annual Form 700
+- assuming-office Form 700
+- leaving-office Form 700
+- candidate Form 700
+
+Key fields:
+
+- `id`
+- `filer_actor_id`
+- `filing_institution_id`
+- `seat_id?`
+- `disclosure_type`
+- `covering_period_start?`
+- `covering_period_end?`
+- `filed_at`
+- `status`
+
 ### MoneyFlow
 
 Use for money movement or obligation.
@@ -556,12 +662,18 @@ Key fields:
 - `date?`
 - `from_actor_id?`
 - `to_actor_id?`
+- `from_committee_id?`
+- `to_committee_id?`
+- `beneficiary_actor_id?`
 - `from_institution_id?`
 - `to_institution_id?`
 - `decision_id?`
 - `agreement_id?`
 - `amendment_id?`
 - `program_id?`
+- `filing_id?`
+- `election_id?`
+- `support_oppose?`
 
 ### CaseParticipation
 

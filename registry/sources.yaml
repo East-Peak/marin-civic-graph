@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-04-10
+updated_at: 2026-04-11
 sources:
   - source_id: marin-county-bos-meetings
     label: Marin County Board of Supervisors Meetings
@@ -49,10 +49,14 @@ sources:
     auth_required: false
     paywall_status: none
     expected_objects:
+      - committee
+      - filing
       - document:campaign_filing
       - money_flow:campaign_contribution
       - money_flow:campaign_expenditure
+      - money_flow:independent_expenditure
       - actor
+      - election
     cadence: election_cycle
     history_depth: archive
     source_tier_default: A
@@ -62,6 +66,166 @@ sources:
     notes:
       - Primary portal for local campaign disclosure.
       - Likely needs source-specific normalization for committees and filing periods.
+
+  - source_id: marin-county-campaign-finance-guide
+    label: Marin County Campaign Finance Reporting and Information
+    owner_type: jurisdiction
+    owner_id: marin-county
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: campaign_finance
+    source_type: guidance_page
+    entry_url: https://www.marincounty.gov/departments/elections/current-election/candidate-guide/campaign-finance-reporting-and-information
+    discovery_urls:
+      - https://netfile.com/agency/cmar/
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - committee
+      - filing
+      - document:campaign_guide
+      - claim
+    cadence: election_cycle
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public county elections page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Official county filing guide for local committees and candidates.
+      - Useful for interpreting local filing practices before line-item extraction exists.
+
+  - source_id: marin-county-form-700
+    label: Marin County Statement of Economic Interests Form 700
+    owner_type: jurisdiction
+    owner_id: marin-county
+    jurisdiction_id: marin-county
+    case_study_ids: []
+    source_category: disclosures
+    source_type: guidance_page
+    entry_url: https://www.marincounty.gov/departments/elections/campaign-and-candidate-filing-and-information/statement-economic-interests-form-700
+    discovery_urls:
+      - https://www.marincounty.gov/departments/elections/current-election/candidate-guide/campaign-finance-reporting-and-information
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - economic_interest_disclosure
+      - document:form700
+      - actor
+      - seat
+    cadence: annual
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public county elections page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - County disclosure guidance surface for Statement of Economic Interests.
+      - Important bridge between elections and conflict-of-interest records.
+
+  - source_id: fppc-candidate-form-700-guidance
+    label: FPPC Statement of Economic Interests for Candidates
+    owner_type: institution
+    owner_id: california-fair-political-practices-commission
+    jurisdiction_id: california
+    case_study_ids: []
+    source_category: disclosures
+    source_type: guidance_page
+    entry_url: https://www.fppc.ca.gov/learn/campaign-rules/candidate-toolkit/statement-of-economic-interests-for-candidates.html
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:guidance
+      - claim
+    cadence: occasional
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public FPPC guidance page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - State guidance for candidate Form 700 timing and interpretation.
+
+  - source_id: fppc-city-county-contribution-limits
+    label: FPPC Contribution Limits for City and County Candidates
+    owner_type: institution
+    owner_id: california-fair-political-practices-commission
+    jurisdiction_id: california
+    case_study_ids: []
+    source_category: campaign_finance
+    source_type: guidance_page
+    entry_url: https://www.fppc.ca.gov/learn/campaign-rules/contribution-limits/city-county-contribution-limits.html
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:guidance
+      - claim
+    cadence: occasional
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public FPPC guidance page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Canonical state contribution-limit reference for local candidate committees.
+
+  - source_id: fppc-behested-payments
+    label: FPPC Reporting Behested Payments
+    owner_type: institution
+    owner_id: california-fair-political-practices-commission
+    jurisdiction_id: california
+    case_study_ids: []
+    source_category: disclosures
+    source_type: guidance_page
+    entry_url: https://www.fppc.ca.gov/learn/payments-gifts-and-other-benefits/behested-payments/reporting-behested-payments.html
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:guidance
+      - claim
+    cadence: occasional
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public FPPC guidance page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Defines Form 803 meaning and reporting boundary.
+
+  - source_id: fppc-where-to-file-form-460
+    label: FPPC Where To File Form 460
+    owner_type: institution
+    owner_id: california-fair-political-practices-commission
+    jurisdiction_id: california
+    case_study_ids: []
+    source_category: campaign_finance
+    source_type: guidance_page
+    entry_url: https://www.fppc.ca.gov/learn/campaign-rules/campaign-disclosure-manual/where-to-file-form-460.html
+    fetch_strategy: static_html
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - document:guidance
+      - claim
+    cadence: occasional
+    history_depth: latest_only
+    source_tier_default: A
+    robots_notes: public FPPC guidance page
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - Useful for interpreting filing-officer and committee-type differences.
 
   - source_id: san-rafael-city-council-meetings
     label: San Rafael City Council Meetings
@@ -144,11 +308,15 @@ sources:
     auth_required: false
     paywall_status: none
     expected_objects:
+      - economic_interest_disclosure
+      - filing
       - document:form700
       - document:form803
       - document:form804
       - document:form806
+      - money_flow:behested_payment
       - actor
+      - seat
     cadence: monthly
     history_depth: archive
     source_tier_default: A

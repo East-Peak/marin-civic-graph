@@ -82,7 +82,16 @@ These tie process to actors, places, money, programs, and cases.
 
 Examples:
 
+- `committee.controlling_actor_id`
+- `committee.treasurer_actor_id`
+- `candidacy.candidate_actor_id`
+- `candidacy.seat_id`
+- `candidacy.election_id`
+- `filing.committee_id`
+- `filing.filing_institution_id`
+- `economic_interest_disclosure.filer_actor_id`
 - `money_flow.to_actor_id`
+- `money_flow.to_committee_id`
 - `membership.actor_id`
 - `appointment.seat_id`
 - `decision.case_id`
@@ -160,6 +169,8 @@ Use for durable browseable objects:
 - `actor-*`
 - `institution-*`
 - `seat-*`
+- `election-*`
+- `committee-*`
 - `place-*`
 - `issue-*`
 - `project-*`
@@ -175,6 +186,9 @@ Use for things that happened:
 - `meeting-*`
 - `agenda-item-*`
 - `decision-*`
+- `candidacy-*`
+- `filing-*`
+- `disclosure-*`
 - `application-*`
 - `permit-*`
 - `determination-*`

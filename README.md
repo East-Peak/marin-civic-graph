@@ -68,6 +68,9 @@ Start narrow:
 - [Criminal Justice Submodel](./docs/criminal-justice-submodel.md)
 - [Criminal Sample Basket Source Bundle](./docs/criminal-sample-basket-source-bundle.md)
 - [Criminal Sample Basket Ingestion Checklist](./docs/criminal-sample-basket-ingestion-checklist.md)
+- [Campaign Finance And Disclosure Submodel](./docs/campaign-finance-disclosures-submodel.md)
+- [Campaign Finance Layer Source Bundle](./docs/campaign-finance-layer-source-bundle.md)
+- [Campaign Finance Layer Ingestion Checklist](./docs/campaign-finance-layer-ingestion-checklist.md)
 - [Procurement, Grants, Contracts, And Performance Submodel](./docs/procurement-grants-contracts-submodel.md)
 - [Procurement Layer Source Bundle](./docs/procurement-layer-source-bundle.md)
 - [Procurement Layer Ingestion Checklist](./docs/procurement-layer-ingestion-checklist.md)
@@ -121,6 +124,8 @@ This repo started as a planning workspace and now includes the first live implem
 - source registry seeds
 - raw official source captures for case study 01
 - raw criminal-justice source captures for Marin court and sheriff landing surfaces
+- campaign-finance and disclosure layer formalized around `Election`, `Committee`, `Candidacy`, `Filing`, and `EconomicInterestDisclosure`
+- campaign/disclosure source bundle and ingestion checklist for Marin County, San Rafael, and FPPC filing surfaces
 - procurement-layer schema, source bundle, and checklist for Marin County and San Rafael funding and contract workflows
 - selected first procurement sample basket:
   - county `Board Chambers Audio Visual Refresh / Prime Electric`

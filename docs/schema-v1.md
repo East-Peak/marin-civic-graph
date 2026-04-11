@@ -21,7 +21,7 @@ Represents:
 - person
 - nonprofit
 - business
-- PAC
+- political organization
 - law firm
 - union
 - media outlet
@@ -69,6 +69,37 @@ Key fields:
 - `district?`
 - `appointing_authority?`
 
+### Election
+
+Represents a bounded contest for a seat, office, or measure.
+
+Key fields:
+
+- `id`
+- `jurisdiction_id`
+- `election_type`
+- `election_date`
+- `cycle_label?`
+- `seat_id?`
+- `status`
+
+### Committee
+
+Represents a regulated campaign-finance entity.
+
+Key fields:
+
+- `id`
+- `name`
+- `committee_type`
+- `fppc_id?`
+- `jurisdiction_id?`
+- `controlling_actor_id?`
+- `sponsored_by_actor_id?`
+- `treasurer_actor_id?`
+- `primary_election_id?`
+- `status`
+
 ### Meeting
 
 Key fields:
@@ -115,6 +146,56 @@ Key fields:
 - `title`
 - `status`
 - `effective_date?`
+
+### Candidacy
+
+Represents one actor running for or holding one seat in one election cycle.
+
+Key fields:
+
+- `id`
+- `candidate_actor_id`
+- `seat_id`
+- `election_id`
+- `committee_id?`
+- `incumbency_status?`
+- `declaration_filed_at?`
+- `qualified_at?`
+- `result_status?`
+
+### Filing
+
+Represents a structured campaign or disclosure filing object.
+
+Key fields:
+
+- `id`
+- `filing_type`
+- `committee_id?`
+- `filer_actor_id?`
+- `filing_institution_id?`
+- `election_id?`
+- `period_start?`
+- `period_end?`
+- `filed_at`
+- `amended_filing_id?`
+- `status`
+
+### EconomicInterestDisclosure
+
+Represents a structured Statement of Economic Interests object.
+
+Key fields:
+
+- `id`
+- `filer_actor_id`
+- `filing_institution_id`
+- `seat_id?`
+- `disclosure_type`
+- `covering_period_start?`
+- `covering_period_end?`
+- `filed_at`
+- `status`
 
 ### Procurement
 
@@ -233,6 +314,7 @@ Key fields:
 Represents:
 
 - campaign contribution
+- campaign expenditure
 - independent expenditure
 - contract payment
 - grant
@@ -243,12 +325,19 @@ Key fields:
 - `id`
 - `money_type`
 - `amount`
+- `currency?`
 - `date`
 - `from_actor_id?`
 - `to_actor_id?`
-- `related_decision_id?`
+- `from_committee_id?`
+- `to_committee_id?`
+- `beneficiary_actor_id?`
+- `decision_id?`
 - `agreement_id?`
 - `amendment_id?`
+- `filing_id?`
+- `election_id?`
+- `support_oppose?`
 - `related_issue_ids[]`
 
 ### Record
@@ -267,6 +356,9 @@ Represents:
 - hearing notice
 - determination letter
 - Form 460
+- Form 496
+- Form 497
+- Form 501
 - Form 700
 - Form 803
 - 990
@@ -303,7 +395,7 @@ Examples:
 - Marin IJ article = `media_record`
 - ordinance or resolution = `legislative_record`
 - minutes or packet = `meeting_record`
-- Form 460 / 700 / 803 / 990 = `financial_record`
+- Form 460 / 496 / 497 / 501 / 700 / 803 / 990 = `financial_record`
 - booking log entry or sentencing order = `legal_record`
 - planning application, hearing notice, or appeal filing = `administrative_record`
 

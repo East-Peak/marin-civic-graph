@@ -134,6 +134,7 @@ Examples:
 - `pdf_index`
 - `legistar`
 - `campaign_portal`
+- `guidance_page`
 - `article`
 - `article_archive`
 - `document_landing_page`

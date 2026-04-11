@@ -231,23 +231,26 @@ Primary record types:
 
 New graph objects:
 
+- `Election`
 - `Committee`
-- `Contribution`
-- `IndependentExpenditure`
+- `Candidacy`
+- `Filing`
 - `EconomicInterestDisclosure`
-- `BehestedPayment`
+- `MoneyFlow` with campaign and disclosure subtypes
 
 Key joins:
 
 - donor `Actor`
-- recipient candidate or committee `Actor`
+- recipient `Committee`
+- beneficiary candidate or officeholder `Actor`
 - office or `Seat`
+- `Election`
 - related `Issue`
 - recurring appearance in `PublicComment`, `Membership`, or `Record`
 
 Recommended first deliverable:
 
-- one issue-aligned donor and organization recurrence map
+- one candidate committee, one outside-money thread, and one disclosure thread
 
 ### 6. Criminal Justice And Court Supervision
 
