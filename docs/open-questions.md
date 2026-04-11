@@ -129,14 +129,27 @@ Mirror the question here when it affects:
 
 ### OQ-008: San Rafael councilmember seed resolution
 
-- `status`: watch
+- `status`: resolved
 - `layer`: identity resolution
 - `scope`: case study 01
 - `source refs`:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/bundle-01.json)
+  - [canonical-seeds-san-rafael-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/canonical-seeds-san-rafael-01.json)
 - `question`: How should raw councilmember labels from official records resolve into canonical person records without hand-wavy matching?
 - `why it matters`: This is the same join problem that will recur across meetings, votes, appointments, and disclosures.
-- `next evidence`: build the first canonical `Person` seeds for San Rafael electeds and map the August 19 records against them.
+- `resolution note`: Resolved with the first evidence-backed San Rafael canonical seed bundle. The August 19, 2024 official roster labels now resolve to full-name actor seeds such as `actor-kate-colin`, `actor-eli-hill`, `actor-maribeth-bushey`, `actor-rachel-kertz`, and `actor-maika-llorens-gulati`. The role relationship is preserved as a claim, while seat, district, and term structure remain out of scope until stronger election or roster evidence is captured.
+
+### OQ-017: San Rafael elected seat boundary
+
+- `status`: watch
+- `layer`: seat modeling
+- `scope`: `canonical-seeds-san-rafael-01`
+- `source refs`:
+  - [canonical-seeds-san-rafael-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/canonical-seeds-san-rafael-01.json)
+  - [identity-resolution-submodel.md](/Users/tammypais/projects/marin-civic-graph/docs/identity-resolution-submodel.md)
+- `question`: When should San Rafael elected identity seeds graduate into explicit seat and term objects rather than role-only claims?
+- `why it matters`: Vote, election, and disclosure joins will eventually want durable seat objects, but the current seed layer intentionally stops short of forcing district or term boundaries from one meeting packet.
+- `next evidence`: capture an official San Rafael elections or council-roster source that clearly states seat structure, districts if any, and term boundaries.
 
 ### OQ-016: San Rafael local Form 803 filing surface
 

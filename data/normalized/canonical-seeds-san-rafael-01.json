@@ -1,0 +1,412 @@
+{
+  "bundle_id": "canonical-seeds-san-rafael-01",
+  "status": "working",
+  "generated_at": "2026-04-11T18:30:00-07:00",
+  "scope": {
+    "jurisdiction": "San Rafael",
+    "focus": "Evidence-backed canonical actor and institution seeds for cross-slice joins",
+    "seed_boundary": "Promote canonical seeds when identity is explicit in official records or filings. Preserve role and seat uncertainty as claims or constraints instead of forcing weak joins."
+  },
+  "record_refs": [
+    {
+      "id": "record-san-rafael-city-council-2024-08-19-item-5a-report",
+      "record_class": "meeting_record",
+      "record_type": "agenda_report",
+      "source_id": "san-rafael-aug-19-2024-council-meeting",
+      "artifact_path": "data/raw/san-rafael-aug-19-2024-council-meeting/2026-04-10/item-5a-report.pdf"
+    },
+    {
+      "id": "record-san-rafael-boyd-dismissal-release-2024-08-08",
+      "record_class": "media_record",
+      "record_type": "official_news_release",
+      "source_id": "san-rafael-boyd-dismissal-news-release",
+      "artifact_path": "data/raw/san-rafael-boyd-dismissal-news-release/2026-04-10/source.html"
+    },
+    {
+      "id": "record-san-rafael-homelessness-update-2024-06-14",
+      "record_class": "program_record",
+      "record_type": "official_update",
+      "source_id": "san-rafael-homelessness-update-june-2024",
+      "artifact_path": "data/raw/san-rafael-homelessness-update-june-2024/2026-04-10/source.html"
+    },
+    {
+      "id": "record-san-rafael-camping-implementation-plan-2023-12-14",
+      "record_class": "program_record",
+      "record_type": "implementation_update",
+      "source_id": "san-rafael-camping-implementation-plan",
+      "artifact_path": "data/raw/san-rafael-camping-implementation-plan/2026-04-10/source.html"
+    },
+    {
+      "id": "record-san-rafael-library-grants-2022-12-19",
+      "record_class": "meeting_record",
+      "record_type": "agenda_page",
+      "source_id": "san-rafael-city-council-2022-12-19-library-grants",
+      "artifact_path": "data/raw/san-rafael-city-council-2022-12-19-library-grants/2026-04-11/source.html"
+    },
+    {
+      "id": "record-san-rafael-downtown-library-reopening-2025-04-07",
+      "record_class": "program_record",
+      "record_type": "official_update",
+      "source_id": "san-rafael-downtown-library-reopening",
+      "artifact_path": "data/raw/san-rafael-downtown-library-reopening/2026-04-11/source.html"
+    },
+    {
+      "id": "record-kate-colin-form-803-2025-09-04",
+      "record_class": "financial_record",
+      "record_type": "form_803",
+      "source_id": "san-rafael-kate-colin-form-803-2025-09-04",
+      "artifact_path": "data/raw/san-rafael-kate-colin-form-803-2025-09-04/2026-04-11/source.txt"
+    },
+    {
+      "id": "record-san-rafael-public-comment-ms-2024-08-19",
+      "record_class": "meeting_record",
+      "record_type": "public_comment_extract",
+      "source_id": "san-rafael-aug-19-2024-council-meeting",
+      "artifact_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/public-comment-ms.txt"
+    },
+    {
+      "id": "record-san-rafael-contract-defense-block-security-2024-08-19",
+      "record_class": "contract_record",
+      "record_type": "contract_extract",
+      "source_id": "san-rafael-aug-19-2024-council-meeting",
+      "artifact_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-contract-defense-block-security.txt"
+    },
+    {
+      "id": "record-san-rafael-contract-downtown-streets-team-2024-08-19",
+      "record_class": "contract_record",
+      "record_type": "contract_extract",
+      "source_id": "san-rafael-aug-19-2024-council-meeting",
+      "artifact_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-contract-downtown-streets-team.txt"
+    }
+  ],
+  "institution_candidates": [
+    {
+      "id": "inst-city-of-san-rafael",
+      "name": "City of San Rafael",
+      "institution_type": "city_government",
+      "seed_status": "canonical_seed",
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-2024-08-19-item-5a-report",
+        "record-kate-colin-form-803-2025-09-04"
+      ]
+    },
+    {
+      "id": "inst-san-rafael-city-council",
+      "name": "San Rafael City Council",
+      "institution_type": "council",
+      "parent_institution_id": "inst-city-of-san-rafael",
+      "seed_status": "canonical_seed",
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-2024-08-19-item-5a-report",
+        "record-san-rafael-library-grants-2022-12-19"
+      ]
+    },
+    {
+      "id": "inst-san-rafael-city-clerk",
+      "name": "San Rafael City Clerk",
+      "institution_type": "filing_officer",
+      "parent_institution_id": "inst-city-of-san-rafael",
+      "seed_status": "canonical_seed",
+      "evidence_record_ids": [
+        "record-kate-colin-form-803-2025-09-04"
+      ]
+    }
+  ],
+  "actor_candidates": [
+    {
+      "id": "actor-kate-colin",
+      "name": "Kate Colin",
+      "actor_type": "person",
+      "seed_status": "canonical_seed",
+      "observed_labels": [
+        "Kate Colin",
+        "Mayor Kate Colin",
+        "Kate Colin (she/her/hers)"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-2024-08-19-item-5a-report",
+        "record-san-rafael-boyd-dismissal-release-2024-08-08",
+        "record-san-rafael-downtown-library-reopening-2025-04-07",
+        "record-kate-colin-form-803-2025-09-04"
+      ],
+      "resolves_raw_actor_seed_ids": [
+        "actor-mayor-kate"
+      ]
+    },
+    {
+      "id": "actor-eli-hill",
+      "name": "Eli Hill",
+      "actor_type": "person",
+      "seed_status": "canonical_seed",
+      "observed_labels": [
+        "Eli Hill",
+        "Vice Mayor Hill"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-2024-08-19-item-5a-report"
+      ],
+      "resolves_raw_actor_seed_ids": [
+        "actor-vice-mayor-hill"
+      ],
+      "notes": "Promoted from the official August 19, 2024 roster line. No seat or term boundary is inferred here."
+    },
+    {
+      "id": "actor-maribeth-bushey",
+      "name": "Maribeth Bushey",
+      "actor_type": "person",
+      "seed_status": "canonical_seed",
+      "observed_labels": [
+        "Maribeth Bushey",
+        "Councilmember Bushey"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-2024-08-19-item-5a-report"
+      ],
+      "resolves_raw_actor_seed_ids": [
+        "actor-councilmember-bushey"
+      ],
+      "notes": "Promoted from the official August 19, 2024 roster line. No seat or term boundary is inferred here."
+    },
+    {
+      "id": "actor-rachel-kertz",
+      "name": "Rachel Kertz",
+      "actor_type": "person",
+      "seed_status": "canonical_seed",
+      "observed_labels": [
+        "Rachel Kertz",
+        "Councilmember Kertz"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-2024-08-19-item-5a-report"
+      ],
+      "resolves_raw_actor_seed_ids": [
+        "actor-councilmember-kertz"
+      ],
+      "notes": "Promoted from the official August 19, 2024 roster line. No seat or term boundary is inferred here."
+    },
+    {
+      "id": "actor-maika-llorens-gulati",
+      "name": "Maika Llorens Gulati",
+      "actor_type": "person",
+      "seed_status": "canonical_seed",
+      "observed_labels": [
+        "Maika Llorens Gulati",
+        "Councilmember Llorens Gulati"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-2024-08-19-item-5a-report"
+      ],
+      "resolves_raw_actor_seed_ids": [
+        "actor-councilmember-llorens-gulati"
+      ],
+      "notes": "Promoted from the official August 19, 2024 roster line. No seat or term boundary is inferred here."
+    },
+    {
+      "id": "actor-pacific-gas-and-electric-company",
+      "name": "Pacific Gas and Electric Company",
+      "actor_type": "business",
+      "seed_status": "canonical_seed",
+      "aliases": [
+        "PG&E"
+      ],
+      "observed_labels": [
+        "Pacific Gas and Electric Company"
+      ],
+      "evidence_record_ids": [
+        "record-kate-colin-form-803-2025-09-04"
+      ],
+      "notes": "The legal-name actor is seedable from the official Form 803. Acronym-only matches should still stay context-bound."
+    },
+    {
+      "id": "actor-canal-alliance",
+      "name": "Canal Alliance",
+      "actor_type": "nonprofit",
+      "seed_status": "canonical_seed",
+      "observed_labels": [
+        "Canal Alliance"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-library-grants-2022-12-19",
+        "record-san-rafael-city-council-2024-08-19-item-5a-report",
+        "record-kate-colin-form-803-2025-09-04"
+      ]
+    },
+    {
+      "id": "actor-defense-block-security",
+      "name": "Defense Block Security",
+      "actor_type": "business",
+      "seed_status": "canonical_seed",
+      "aliases": [
+        "DBS"
+      ],
+      "observed_labels": [
+        "Defense Block Security",
+        "Defense Block Security (DBS)",
+        "DBS"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-2024-08-19-item-5a-report",
+        "record-san-rafael-contract-defense-block-security-2024-08-19",
+        "record-san-rafael-homelessness-update-2024-06-14"
+      ]
+    },
+    {
+      "id": "actor-downtown-streets-team",
+      "name": "Downtown Streets Team",
+      "actor_type": "nonprofit",
+      "seed_status": "canonical_seed",
+      "aliases": [
+        "DST"
+      ],
+      "observed_labels": [
+        "Downtown Streets Team",
+        "DST"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-2024-08-19-item-5a-report",
+        "record-san-rafael-contract-downtown-streets-team-2024-08-19",
+        "record-san-rafael-camping-implementation-plan-2023-12-14"
+      ]
+    },
+    {
+      "id": "actor-ritter-center",
+      "name": "Ritter Center",
+      "actor_type": "nonprofit",
+      "seed_status": "canonical_seed",
+      "observed_labels": [
+        "Ritter Center"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-2024-08-19-item-5a-report",
+        "record-san-rafael-public-comment-ms-2024-08-19",
+        "record-san-rafael-camping-implementation-plan-2023-12-14"
+      ]
+    },
+    {
+      "id": "actor-mark-shotwell",
+      "name": "Mark Shotwell",
+      "actor_type": "person",
+      "seed_status": "canonical_seed",
+      "observed_labels": [
+        "Mark Shotwell",
+        "Mark Shotwell, Ritter Center"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-public-comment-ms-2024-08-19"
+      ],
+      "notes": "Promoted from a signed public comment preserved in official meeting materials."
+    }
+  ],
+  "claim_candidates": [
+    {
+      "id": "claim-kate-colin-city-council-mayor-2024-08-19",
+      "claim_type": "actor_role_at_institution",
+      "status": "accepted_for_seed",
+      "confidence": "high",
+      "subject_actor_id": "actor-kate-colin",
+      "institution_id": "inst-san-rafael-city-council",
+      "role_label": "Mayor",
+      "effective_date": "2024-08-19",
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-2024-08-19-item-5a-report"
+      ],
+      "notes": "Anchored to the official roster line and signature block on the August 19, 2024 packet. This does not imply a full term boundary."
+    },
+    {
+      "id": "claim-eli-hill-city-council-vice-mayor-2024-08-19",
+      "claim_type": "actor_role_at_institution",
+      "status": "accepted_for_seed",
+      "confidence": "high",
+      "subject_actor_id": "actor-eli-hill",
+      "institution_id": "inst-san-rafael-city-council",
+      "role_label": "Vice Mayor",
+      "effective_date": "2024-08-19",
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-2024-08-19-item-5a-report"
+      ]
+    },
+    {
+      "id": "claim-maribeth-bushey-city-council-member-2024-08-19",
+      "claim_type": "actor_role_at_institution",
+      "status": "accepted_for_seed",
+      "confidence": "high",
+      "subject_actor_id": "actor-maribeth-bushey",
+      "institution_id": "inst-san-rafael-city-council",
+      "role_label": "Councilmember",
+      "effective_date": "2024-08-19",
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-2024-08-19-item-5a-report"
+      ]
+    },
+    {
+      "id": "claim-rachel-kertz-city-council-member-2024-08-19",
+      "claim_type": "actor_role_at_institution",
+      "status": "accepted_for_seed",
+      "confidence": "high",
+      "subject_actor_id": "actor-rachel-kertz",
+      "institution_id": "inst-san-rafael-city-council",
+      "role_label": "Councilmember",
+      "effective_date": "2024-08-19",
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-2024-08-19-item-5a-report"
+      ]
+    },
+    {
+      "id": "claim-maika-llorens-gulati-city-council-member-2024-08-19",
+      "claim_type": "actor_role_at_institution",
+      "status": "accepted_for_seed",
+      "confidence": "high",
+      "subject_actor_id": "actor-maika-llorens-gulati",
+      "institution_id": "inst-san-rafael-city-council",
+      "role_label": "Councilmember",
+      "effective_date": "2024-08-19",
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-2024-08-19-item-5a-report"
+      ]
+    },
+    {
+      "id": "claim-mark-shotwell-affiliation-ritter-center-2024-08-19",
+      "claim_type": "actor_affiliation",
+      "status": "accepted_for_seed",
+      "confidence": "high",
+      "subject_actor_id": "actor-mark-shotwell",
+      "organization_actor_id": "actor-ritter-center",
+      "role_label": "Chief Executive Officer",
+      "effective_date": "2024-08-19",
+      "evidence_record_ids": [
+        "record-san-rafael-public-comment-ms-2024-08-19"
+      ],
+      "notes": "Derived from the sign-off and self-description in the official submitted public comment."
+    }
+  ],
+  "methodology_findings": [
+    {
+      "id": "identity-finding-san-rafael-01",
+      "summary": "The first identity tranche should stabilize actors and institutions first, while leaving seat, term, and district boundaries in the claim or open-question layer unless the supporting election or roster evidence is explicit."
+    },
+    {
+      "id": "identity-finding-san-rafael-02",
+      "summary": "Older normalized bundles already contain raw actor seed placeholders such as `actor-mayor-kate` and `actor-councilmember-bushey`. Canonical seed bundles should resolve those placeholders rather than silently overwriting them."
+    },
+    {
+      "id": "identity-finding-san-rafael-03",
+      "summary": "Alias capture is valuable when official records expand the alias themselves, such as `Defense Block Security (DBS)` and `Downtown Streets Team (DST)`. Acronym-only matches should remain context-bound."
+    }
+  ],
+  "promotion_constraints": [
+    "Do not infer San Rafael council district or seat structure from the August 19, 2024 packet alone.",
+    "Do not backdate or forward-fill officeholder term dates from one roster observation.",
+    "Do not merge actors from title-only labels unless the full name is explicit in the same record or a corroborating official record.",
+    "Do not use media-only framing to mint canonical actors when official records are absent."
+  ],
+  "open_questions": [
+    {
+      "id": "OQ-017",
+      "status": "watch",
+      "layer": "seat modeling",
+      "question": "When should San Rafael elected identity seeds graduate into explicit seat and term objects rather than role-only claims?",
+      "why_it_matters": "Votes, elections, and disclosure joins will eventually want durable seat objects, but this seed bundle does not yet have a strong official district-or-term source for those council roles.",
+      "next_evidence": "Capture an official San Rafael elections or council-roster source that clearly states seat structure, districts if any, and term boundaries."
+    }
+  ]
+}

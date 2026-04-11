@@ -64,6 +64,8 @@ Start narrow:
 - [Schema v1](./docs/schema-v1.md)
 - [Graph Data Model](./docs/graph-data-model.md)
 - [Graph Joins And Identity](./docs/graph-joins-and-identity.md)
+- [Identity Resolution Submodel](./docs/identity-resolution-submodel.md)
+- [Actor Resolution Worked Example](./docs/actor-resolution-worked-example.md)
 - [Domain Expansion Matrix](./docs/domain-expansion-matrix.md)
 - [Criminal Justice Submodel](./docs/criminal-justice-submodel.md)
 - [Criminal Sample Basket Source Bundle](./docs/criminal-sample-basket-source-bundle.md)
@@ -111,6 +113,7 @@ Start narrow:
 - [Marin IJ Citation Layer](./data/normalized/san-rafael-homelessness-01/marin-ij-citation-layer.json)
 - [Campaign Finance Sample Basket Bundle](./data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
 - [Campaign Finance Form 803 Slice Bundle](./data/normalized/campaign-finance-form-803-slice-01/bundle-01.json)
+- [San Rafael Canonical Seed Bundle](./data/normalized/canonical-seeds-san-rafael-01.json)
 - [Item 5.a Split Map](./data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-record-splits.json)
 - [Item 5.a Normalized Record Splits](./data/normalized/san-rafael-homelessness-01/aug-19-item-5a-record-splits.json)
 - [Procurement Sample Basket Bundle](./data/normalized/procurement-sample-basket-01/bundle-01.json)
@@ -154,6 +157,11 @@ This repo started as a planning workspace and now includes the first live implem
     - captured the first real local Form 803 sample, `Form 803 - Kate Colin`
     - promoted the first local `Filing` plus `MoneyFlow: behested_payment` with payor `Pacific Gas and Electric Company`, payee `Canal Alliance`, amount `$5,000`, date `2025-08-08`, and purpose `Affordable Applications Training`
     - codified the Laserfiche capture path in a repeatable script and confirmed that the broader search census still surfaces only one actual filed local Form 803 as of April 11, 2026
+- first canonical identity tranche added:
+  - dedicated identity-resolution submodel and worked-example docs
+  - first evidence-backed San Rafael canonical seed bundle for city institutions, electeds, and recurring organizations
+  - raw councilmember placeholders in earlier bundles now have a documented promotion path into canonical actor IDs instead of staying permanent pseudo-actors
+  - role claims for the August 19, 2024 council roster are accepted as identity claims without forcing weak seat or district joins
 - procurement-layer schema, source bundle, and checklist for Marin County and San Rafael funding and contract workflows
 - selected first procurement sample basket:
   - county `Board Chambers Audio Visual Refresh / Prime Electric`
