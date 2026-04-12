@@ -240,6 +240,20 @@ Mirror the question here when it affects:
 - `current note`: The full visible-history export currently yields `1085` 700-filer rows from `2018-07-02` through `2026-04-08`, with only `16` rows exposing direct document links in the exported HTML. The direct-link layer is therefore materially weaker than the inventory layer.
 - `next evidence`: use the known working targeted historical-search payload to test whether row-level filer/date searches can promote direct `GetDocument.aspx` URLs at scale without relying on the export alone.
 
+### OQ-024: San Rafael city-side campaign office-scope boundary
+
+- `status`: watch
+- `layer`: campaign discovery normalization
+- `scope`: `san-rafael-city-campaign-discovery-01`
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-discovery-01/bundle-01.json)
+  - [2026-04-11.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json)
+  - [campaign-finance-disclosures-submodel.md](/Users/tammypais/projects/marin-civic-graph/docs/campaign-finance-disclosures-submodel.md)
+- `question`: When should the San Rafael city-side campaign discovery layer promote school-board, city-attorney, and clerk-assessor rows into canonical seat and candidacy objects instead of leaving them as discovery-only filing-folder records?
+- `why it matters`: The page-linked filing destinations are real public evidence, but the current canonical seat model only covers San Rafael Mayor and City Council seats. Promoting the other offices early would create joins into the wrong institution layer.
+- `current note`: The discovery bundle now preserves all `27` candidate-folder destinations as `Record` refs, but only the `15` city-office rows from the 2020, 2022, and 2024 mayoral and council races are promoted into `Actor` and `Candidacy` candidates.
+- `next evidence`: add canonical seat and institution coverage for San Rafael school-board, city-attorney, and clerk-assessor offices before promoting those filing-folder rows beyond discovery-only state.
+
 ### OQ-016: San Rafael local Form 803 filing surface
 
 - `status`: resolved

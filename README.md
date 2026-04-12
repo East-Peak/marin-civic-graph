@@ -204,6 +204,11 @@ This repo started as a planning workspace and now includes the first live implem
     - `21` conservative election decision candidates for call, results, cancellation, unopposed-appointment, and initiative-submission actions
     - explicit reuse of the existing canonical 2024 seat-specific election objects only where already proven elsewhere
     - an explicit note that entry `41989` already preserves the 2026 call-election resolution text, so entry `41998` is a completeness gap rather than a blocker for the 2026 election chain
+  - normalized the page-linked campaign discovery layer into a graph-ready discovery bundle with:
+    - `50` record refs spanning the disclosures page, election indices, `9` campaign-bearing election pages, top-level Laserfiche destinations, election-level filing folders, candidate filing folders, IE filing folders, and the repeated IE ordinance record
+    - `11` actor candidates covering the unique city-office candidates currently visible in the `2020`, `2022`, and `2024` mayoral and council races
+    - `15` discovery-stage candidacy candidates tied to existing San Rafael seat IDs and page-level election IDs
+    - an explicit promotion boundary that keeps school-board, city-attorney, and clerk-assessor rows as discovery-only filing-folder records until those institutions and seats have their own canonical layer
 - raw official source captures for case study 01
 - raw criminal-justice source captures for Marin court and sheriff landing surfaces
 - campaign-finance and disclosure layer formalized around `Election`, `Committee`, `Candidacy`, `Filing`, and `EconomicInterestDisclosure`
