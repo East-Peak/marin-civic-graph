@@ -5,9 +5,11 @@ Use this when pressure-testing the graph-materialization proposal.
 ## Import Layer
 
 - Does the importer only materialize normalized bundles, or is it quietly reinterpreting source data?
+- Is there a projection layer between bundle-local JSON and Neo4j, or is the loader absorbing too much semantic work?
 - Are node IDs always coming from normalized files rather than being reinvented during import?
 - Can the import be rerun without changing semantic identity?
 - Is there a clear manifest that says what is in scope for v1?
+- Are discovery-stage bundles and worked examples explicitly excluded from core import?
 
 ## Promotion Boundary
 
@@ -33,6 +35,7 @@ Use this when pressure-testing the graph-materialization proposal.
 - Are we resisting the temptation to import every bundle at once?
 - Is the San Rafael governance spine enough to prove the architecture before permits, procurement, and criminal expansion?
 - Does the importer stop short of doing identity resolution, extraction, or fuzzy matching itself?
+- Are weak OCR-derived actor labels being kept out of the durable actor graph unless a stronger identity source exists?
 
 ## Query Value
 

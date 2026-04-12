@@ -27,6 +27,10 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
   - First live use is San Rafael `Form 460` reconciliation and summary-rollup QA.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-validation-check-layer-for-reconciliation-and-anomaly-work.md`
 
+- **V1 graph materialization should use a projection layer and a narrow core scope**
+  - Keep the first import to the San Rafael governance spine, include `ValidationCheck`, and leave `Mention` / `Claim` and top-level legal / records tabs out of v1.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-v1-materialization-should-use-a-projection-layer-and-a-narrow-core-scope.md`
+
 - **Schedule A QA should anchor on official itemized and unitemized summary totals**
   - Do not compare extracted row sums only to the top-line filing total.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-san-rafael-form460-schedule-a-summary-should-anchor-qa.md`

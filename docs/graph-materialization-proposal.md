@@ -27,24 +27,19 @@ Strong existing import candidates:
 
 - [canonical-seeds-san-rafael-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/canonical-seeds-san-rafael-01.json)
 - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-election-records-01/bundle-01.json)
-- [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-discovery-01/bundle-01.json)
 - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-filings-01/bundle-01.json)
 - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-ie-01/bundle-01.json)
 - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/campaign-finance-form-803-slice-01/bundle-01.json)
 - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
 - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/bundle-01.json)
-- [marin-ij-2024-08-24-mention-claim-example.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/marin-ij-2024-08-24-mention-claim-example.json)
-- [marin-ij-recurrence-example-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/marin-ij-recurrence-example-01.json)
-- [media-cross-domain-join-example-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/media-cross-domain-join-example-01.json)
-- [media-disclosure-overlap-example-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/media-disclosure-overlap-example-01.json)
-- [media-campaign-overlap-example-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/media-campaign-overlap-example-01.json)
+- [aug-19-item-5a-record-splits.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/aug-19-item-5a-record-splits.json)
 
 These are enough to stand up a first graph centered on:
 
 - San Rafael elected structure
 - campaign and disclosure continuity
 - the homelessness / Mahon Creek thread
-- media-to-official cross-domain joins
+- meeting, decision, and filing continuity
 
 ## Proposed Architecture
 
@@ -55,11 +50,17 @@ registry/import-manifest.yaml
 data/normalized/*.json
         |
         v
+scripts/build_graph_projection.py
+        |
+        +--> normalized node envelope
+        +--> normalized edge envelope
+        +--> import report
+        |
+        v
 scripts/load_neo4j_v1.py
         |
         +--> node upsert pass
         +--> relationship materialization pass
-        +--> validation/report pass
         |
         v
 Neo4j
@@ -68,12 +69,35 @@ Neo4j
 query layer / product pages
 ```
 
+### Projection Layer
+
+The projection layer is mandatory.
+
+The current normalized family is not one stable import contract:
+
+- some files are durable bundles
+- some are discovery-stage bundles
+- some are worked examples
+- some contain review-only or candidate-only material that should not land in v1
+
+`build_graph_projection.py` should handle that narrowing before Neo4j sees anything.
+
+It should:
+
+- select importable objects only
+- normalize bundle-local field names into one import envelope
+- attach `source_bundle_id`
+- attach `promotion_state`
+- emit flat node and edge payloads
+- produce an import report with skipped object counts and reasons
+
 ### Import Rules
 
 The importer should be boring.
 
 It should:
 
+- trust the projection output, not bundle-local structure directly
 - trust normalized bundle IDs
 - never re-parse raw HTML or PDFs
 - never run LLM logic
@@ -118,8 +142,6 @@ It should:
 
 ### Review
 
-- `Mention`
-- `Claim`
 - `ValidationCheck`
 
 ## Promotion Boundary
@@ -139,14 +161,13 @@ Recommended rule:
 - allowed values:
   - `canonical`
   - `promoted`
-  - `candidate`
   - `review`
 
 Examples:
 
 - canonical seeds import as `canonical`
 - filing or meeting objects import as `promoted` when the bundle treats them as durable objects
-- `Mention`, `Claim`, and `ValidationCheck` import as `review`
+- `ValidationCheck` imports as `review`
 
 That keeps the graph honest and lets the product filter or expose review material intentionally.
 
@@ -222,42 +243,18 @@ Use for:
 
 This is where donor / vendor / sponsor recurrence becomes visible.
 
-### 5. `Legal & Precedent`
+Do not ship `Legal & Precedent` or `Records` as top-level tabs in v1.
 
-This needs to be explicit.
+Reason:
 
-The legal / precedent work exists in planning and raw captures, but it is not legible enough in the current normalized surface.
+- `Records` is still an evidence mode inside investigation, not a distinct top-level question
+- the legal / precedent lane is architecturally important but still too planning-heavy until one normalized legal bundle exists
 
-Use for:
+Instead:
 
-- cases
-- injunctions
-- dismissals
-- appellate opinions
-- precedent links
-- civil grand jury and oversight findings
-
-This tab should answer:
-
-- what constrained the city
-- what precedent mattered
-- what the city said the precedent meant
-- what the court or oversight body actually did
-
-### 6. `Records`
-
-The evidence index.
-
-Use for:
-
-- minutes
-- packets
-- resolutions
-- filings
-- articles
-- legal records
-
-This is where an evidence-first user can work directly from sources instead of summaries.
+- keep a source / record mode inside `Investigate`
+- expose legal / precedent context as sections on actor and decision pages
+- promote `Legal & Precedent` to a top-level tab only after `legal-precedent-01` exists
 
 ## Legal / Precedent Gap
 
@@ -289,7 +286,7 @@ Minimum scope:
 - official legal-framing records already in case study 01
 - precedent / local-constraint claims preserved explicitly as `Claim`
 
-That is enough to justify the `Legal` tab early without pretending the entire judicial model is done.
+That is enough to justify a later first-class legal lane without pretending the entire judicial model is done.
 
 ## First Import Scope
 
@@ -299,12 +296,25 @@ Start with the San Rafael governance spine:
 
 1. canonical seeds
 2. election records
-3. city campaign discovery / filings / IE / Form 460
-4. Form 803
-5. homelessness case study bundle and media overlap examples
+3. city campaign filings / IE
+4. Form 460 schedules
+5. Form 803
+6. homelessness case study bundle
+7. August 19 item `5.a` record splits
+
+Import only these object classes from those bundles:
+
+- canonical entities and officeholding
+- meetings, agenda items, and decisions
+- committees, filings, and disclosures
+- money flows
+- records
+- `ValidationCheck`
 
 Defer for phase two:
 
+- campaign discovery bundle
+- all media worked-example files
 - permit basket
 - procurement basket
 - criminal sample basket
@@ -312,17 +322,26 @@ Defer for phase two:
 
 ## Main Risks
 
-### Risk 1: Candidate pollution
+### Risk 1: Discovery/demo pollution
 
-If `candidate` and `review` objects are imported without a boundary, the graph will overstate certainty.
+If discovery-stage bundles and worked-example files land in core import, the graph will overstate certainty and mix demo artifacts with durable civic objects.
 
 Mitigation:
 
-- import `promotion_state`
-- default most product views to `canonical` plus `promoted`
-- make `review` visible only in explicit audit views
+- projection layer excludes discovery-stage and worked-example artifacts from v1
+- default v1 import to durable bundle objects only
 
-### Risk 2: Duplicate semantics across bundles
+### Risk 2: OCR actor pollution
+
+Weak OCR-derived donor or vendor labels should not become durable `Actor` nodes in the first import.
+
+Mitigation:
+
+- keep row-level money flows
+- defer weak OCR actor promotion unless a stronger canonical actor already exists
+- allow unresolved labels to remain raw strings in the projection output instead of forced `Actor` nodes
+
+### Risk 3: Duplicate semantics across bundles
 
 The same actor or record can appear in several bundles.
 
@@ -332,38 +351,54 @@ Mitigation:
 - `MERGE` by stable ID only
 - no importer-side fuzzy resolution
 
-### Risk 3: Legal / precedent layer invisibility
+### Risk 4: Legal / precedent layer invisibility
 
 The legal work is present but easy to miss because it has not been normalized as its own family yet.
 
 Mitigation:
 
-- give `Legal & Precedent` a top-level product tab
+- keep legal context visible in the page architecture
 - create `legal-precedent-01` early
+- do not promise a top-level legal tab until that bundle exists
 
-### Risk 4: Overbuilding the importer
+### Risk 5: Overbuilding the importer
 
 If the importer tries to solve extraction, validation, and identity resolution, it will become brittle.
 
 Mitigation:
 
-- importer only materializes normalized bundles
+- importer only materializes projection output
+- projection only normalizes bundle shape and scope
 - extraction stays in extraction scripts
 - identity resolution stays in the normalized layer and seed bundles
 
+## Post-Review Position
+
+After adversarial review, the recommended stance is:
+
+- projection layer first
+- narrow San Rafael governance spine for v1
+- `ValidationCheck` in v1
+- `Mention` and `Claim` out of core v1
+- no top-level `Records` tab in v1
+- no top-level `Legal & Precedent` tab until `legal-precedent-01` exists
+
 ## Adversarial Review Questions
 
-- Are `Decisions` and `Records` both needed as top-level tabs, or should one collapse into the other?
-- Should `ValidationCheck` live in Neo4j, or should it stay in a sidecar QA store until the product needs it directly?
-- Is the `Legal & Precedent` tab premature before `legal-precedent-01` exists?
-- Are we importing too much review-layer material for v1?
-- Should permits and procurement stay out of the first import, or are we leaving too much value on the table?
+- Is the projection layer sufficient to keep bundle-local semantics out of `load_neo4j_v1.py`?
+- Should weak OCR actor labels materialize as nodes, or stay attached to money-flow raw labels until stronger identity exists?
+- Is `ValidationCheck` narrow enough to import now while `Mention` and `Claim` stay out of core v1?
+- Is a top-level `Legal & Precedent` tab premature before `legal-precedent-01` exists?
+- Are permits and procurement better left for phase two until the San Rafael governance spine is proven?
 
 ## Recommended Next Commit
 
 If this proposal survives review, the next implementation tranche should be:
 
 - `registry/import-manifest.yaml`
+- `scripts/build_graph_projection.py`
 - `scripts/load_neo4j_v1.py`
+- `scripts/graph_smoke_checks.py`
 - one import of the San Rafael governance spine
 - one query note showing 3 to 5 real graph traversals
+- one follow-on normalized legal slice for `Boyd` only
