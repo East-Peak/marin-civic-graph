@@ -163,10 +163,13 @@ Mirror the question here when it affects:
   - [canonical-seeds-san-rafael-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/canonical-seeds-san-rafael-01.json)
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-elected-officials/2026-04-11/source.html)
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-page/2026-04-11/source.html)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-8-2022-election/2026-04-11/source.html)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-2022-12-19-special-election-results/2026-04-11/source.html)
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html)
-- `question`: What are the exact start and end dates for the current District 2 and District 3 council seat services, and what is the formal duration of the current Vice Mayor designation?
-- `why it matters`: The graph can now represent current seat occupancy, but exact term boundaries still matter for historical queries and officeholder overlap analysis.
-- `next evidence`: capture the earlier district-election or canvass materials that seated the current District 2 and District 3 councilmembers, plus any formal council action or protocol that defines the Vice Mayor designation period.
+- `question`: What is the formal duration of the current Vice Mayor designation?
+- `why it matters`: The current District 2 and District 3 council seat services are now anchored to the November 8, 2022 election cycle and the December 19, 2022 swear-in meeting, but the Vice Mayor role still needs its own bounded service rule.
+- `current note`: Eli Hill and Maribeth Bushey now have election-backed current `SeatService` objects with `started_at = 2022-12-19`, based on the 2022 election page plus the December 19, 2022 special meeting page that lists them in the swear-in ceremony for newly elected officials.
+- `next evidence`: capture the council action or protocol record that selected the current Vice Mayor and defines how long that designation lasts.
 
 ### OQ-019: Marin County BOS source-scope boundary
 

@@ -1,7 +1,7 @@
 {
   "bundle_id": "canonical-seeds-san-rafael-01",
   "status": "working",
-  "generated_at": "2026-04-11T18:30:00-07:00",
+  "generated_at": "2026-04-11T23:35:00-07:00",
   "scope": {
     "jurisdiction": "San Rafael",
     "focus": "Evidence-backed canonical actor, seat, and institution seeds for cross-slice joins",
@@ -98,6 +98,20 @@
       "record_type": "election_results_page",
       "source_id": "san-rafael-november-5-2024-election",
       "artifact_path": "data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html"
+    },
+    {
+      "id": "record-san-rafael-november-8-2022-election-page",
+      "record_class": "administrative_record",
+      "record_type": "election_page",
+      "source_id": "san-rafael-november-8-2022-election",
+      "artifact_path": "data/raw/san-rafael-november-8-2022-election/2026-04-11/source.html"
+    },
+    {
+      "id": "record-san-rafael-city-council-2022-12-19-special-election-results-page",
+      "record_class": "meeting_record",
+      "record_type": "meeting_page",
+      "source_id": "san-rafael-city-council-2022-12-19-special-election-results",
+      "artifact_path": "data/raw/san-rafael-city-council-2022-12-19-special-election-results/2026-04-11/source.html"
     }
   ],
   "institution_candidates": [
@@ -171,6 +185,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-city-council-2024-08-19-item-5a-report",
+        "record-san-rafael-november-8-2022-election-page",
+        "record-san-rafael-city-council-2022-12-19-special-election-results-page",
         "record-san-rafael-elected-officials-2026-04-11",
         "record-san-rafael-city-council-page-2026-04-11"
       ],
@@ -189,6 +205,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-city-council-2024-08-19-item-5a-report",
+        "record-san-rafael-november-8-2022-election-page",
+        "record-san-rafael-city-council-2022-12-19-special-election-results-page",
         "record-san-rafael-elected-officials-2026-04-11",
         "record-san-rafael-city-council-page-2026-04-11"
       ],
@@ -363,6 +381,8 @@
       "seat_type": "elected",
       "district": "2",
       "evidence_record_ids": [
+        "record-san-rafael-november-8-2022-election-page",
+        "record-san-rafael-city-council-2022-12-19-special-election-results-page",
         "record-san-rafael-elected-officials-2026-04-11",
         "record-san-rafael-city-council-page-2026-04-11"
       ]
@@ -374,6 +394,8 @@
       "seat_type": "elected",
       "district": "3",
       "evidence_record_ids": [
+        "record-san-rafael-november-8-2022-election-page",
+        "record-san-rafael-city-council-2022-12-19-special-election-results-page",
         "record-san-rafael-elected-officials-2026-04-11",
         "record-san-rafael-city-council-page-2026-04-11"
       ]
@@ -392,6 +414,30 @@
     }
   ],
   "election_candidates": [
+    {
+      "id": "election-2022-11-08-san-rafael-council-district-2-general",
+      "jurisdiction_id": "place-san-rafael",
+      "election_type": "general_municipal",
+      "election_date": "2022-11-08",
+      "seat_id": "seat-san-rafael-city-council-district-2",
+      "status": "certified",
+      "evidence_record_ids": [
+        "record-san-rafael-november-8-2022-election-page",
+        "record-san-rafael-city-council-2022-12-19-special-election-results-page"
+      ]
+    },
+    {
+      "id": "election-2022-11-08-san-rafael-council-district-3-general",
+      "jurisdiction_id": "place-san-rafael",
+      "election_type": "general_municipal",
+      "election_date": "2022-11-08",
+      "seat_id": "seat-san-rafael-city-council-district-3",
+      "status": "certified",
+      "evidence_record_ids": [
+        "record-san-rafael-november-8-2022-election-page",
+        "record-san-rafael-city-council-2022-12-19-special-election-results-page"
+      ]
+    },
     {
       "id": "election-2024-11-05-san-rafael-mayor-general",
       "jurisdiction_id": "place-san-rafael",
@@ -463,13 +509,17 @@
       "seat_id": "seat-san-rafael-city-council-district-2",
       "service_type": "elected",
       "institution_id": "inst-san-rafael-city-council",
+      "election_id": "election-2022-11-08-san-rafael-council-district-2-general",
+      "started_at": "2022-12-19",
       "observed_at": "2026-04-11",
       "status": "current",
       "evidence_record_ids": [
+        "record-san-rafael-november-8-2022-election-page",
+        "record-san-rafael-city-council-2022-12-19-special-election-results-page",
         "record-san-rafael-elected-officials-2026-04-11",
         "record-san-rafael-city-council-page-2026-04-11"
       ],
-      "notes": "Current officeholding is explicit on official city pages, but the start date is not yet captured in this bundle."
+      "notes": "The November 8, 2022 election page names Eli Hill as a District 2 candidate, and the December 19, 2022 special meeting page lists him among the newly elected officials sworn in that night."
     },
     {
       "id": "seatservice-maribeth-bushey-d3-current",
@@ -477,13 +527,17 @@
       "seat_id": "seat-san-rafael-city-council-district-3",
       "service_type": "elected",
       "institution_id": "inst-san-rafael-city-council",
+      "election_id": "election-2022-11-08-san-rafael-council-district-3-general",
+      "started_at": "2022-12-19",
       "observed_at": "2026-04-11",
       "status": "current",
       "evidence_record_ids": [
+        "record-san-rafael-november-8-2022-election-page",
+        "record-san-rafael-city-council-2022-12-19-special-election-results-page",
         "record-san-rafael-elected-officials-2026-04-11",
         "record-san-rafael-city-council-page-2026-04-11"
       ],
-      "notes": "Current officeholding is explicit on official city pages, but the start date is not yet captured in this bundle."
+      "notes": "The November 8, 2022 election page names Maribeth Bushey as a District 3 candidate, and the December 19, 2022 special meeting page lists her among the newly elected officials sworn in that night."
     },
     {
       "id": "seatservice-rachel-kertz-d4-current",
