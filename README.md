@@ -81,6 +81,7 @@ Start narrow:
 - [Campaign Finance Sample Basket Selection](./docs/campaign-finance-sample-basket-selection.md)
 - [Campaign Finance Form 803 Slice](./docs/campaign-finance-form-803-slice.md)
 - [Selected San Rafael Form 460 OCR Capture](./docs/campaign-form460-ocr-capture.md)
+- [San Rafael Form 460 Schedule Extraction](./docs/campaign-form460-schedule-extraction.md)
 - [Procurement, Grants, Contracts, And Performance Submodel](./docs/procurement-grants-contracts-submodel.md)
 - [Procurement Layer Source Bundle](./docs/procurement-layer-source-bundle.md)
 - [Procurement Layer Ingestion Checklist](./docs/procurement-layer-ingestion-checklist.md)
@@ -127,6 +128,8 @@ Start narrow:
 - [Media Outside-Money Overlap Example](./data/normalized/san-rafael-homelessness-01/media-outside-money-overlap-example-01.json)
 - [San Rafael City Campaign IE Bundle](./data/normalized/san-rafael-city-campaign-ie-01/bundle-01.json)
 - [San Rafael City Campaign Form 460 OCR Bundle](./data/normalized/san-rafael-city-campaign-form460-ocr-01/bundle-01.json)
+- [San Rafael City Campaign Form 460 Schedule Bundle](./data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
+- [San Rafael City Campaign Form 460 Schedule Extract](./data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json)
 - [Campaign Finance Sample Basket Bundle](./data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
 - [Campaign Finance Form 803 Slice Bundle](./data/normalized/campaign-finance-form-803-slice-01/bundle-01.json)
 - [San Rafael Canonical Seed Bundle](./data/normalized/canonical-seeds-san-rafael-01.json)
@@ -154,6 +157,8 @@ Start narrow:
 - [San Rafael City-Side Campaign Filing Inventory Workflow](./scripts/capture_san_rafael_city_campaign_filing_inventory.py)
 - [San Rafael Election Direct Record Capture Workflow](./scripts/capture_san_rafael_election_direct_records.py)
 - [San Rafael Election Direct Record Normalizer](./scripts/normalize_san_rafael_election_direct_records.py)
+- [San Rafael Form 460 OCR Capture Workflow](./scripts/capture_san_rafael_city_campaign_form460_ocr.py)
+- [San Rafael Form 460 Schedule Extractor](./scripts/extract_san_rafael_city_campaign_form460_schedules.py)
 - [Marin County BOS Archive Capture Workflow](./scripts/capture_marin_county_bos_archive.py)
 - [Marin County Campaign Finance Export Capture Workflow](./scripts/capture_marin_county_campaign_finance_exports.py)
 
@@ -238,6 +243,10 @@ This repo started as a planning workspace and now includes the first live implem
   - first normalized campaign basket linking `Committee`, `Candidacy`, `Filing`, `EconomicInterestDisclosure`, and campaign `MoneyFlow` candidates
   - official June 2, 2026 Marin County candidate-status page used to resolve Mary Sackett to `County Supervisor - District 1`
   - schedule-level extraction from the Resource Conservation PAC Form 460 used to promote sponsor inflows plus candidate and vendor outflows instead of leaving the PAC as a vague outside-money shell
+  - selective city-side `Form 460` OCR capture and first schedule extraction layer:
+    - three OCR-backed San Rafael filings promoted from filing-shell records into row-level extraction artifacts
+    - first city-side schedule bundle with `103` campaign `MoneyFlow` candidates across contributions, one Schedule D candidate contribution, and high-confidence vendor/payee rows
+    - explicit documentation that OCR extraction is usable for joins and recurrence work but still incomplete relative to reported filing totals
   - Marin Resource Recovery sponsor-name drift resolved conservatively in favor of keeping `Marin Resource Recovery` and `Marin Resource Recovery Center` as separate actors
   - Form 803 follow-on slice established around San Rafael behested-payment guidance and filing-surface verification:
     - direct raw captures for the February 5, 2026 City Council governance protocols page/PDF and the January 20, 2026 agenda packet page/PDF

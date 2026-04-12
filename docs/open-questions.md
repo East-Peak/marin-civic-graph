@@ -266,8 +266,8 @@ Mirror the question here when it affects:
   - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-document-probe/2026-04-12.json)
 - `question`: What is the repeatable public path from city-side campaign filing entry ids to raw filing artifacts such as PDF or page-image assets beyond the now-proven metadata / page-count / OCR path?
 - `why it matters`: The project can now preserve selective filing OCR text, but it still lacks a general raw-artifact export path for filing rows.
-- `current note`: The doc-specific warm-step sequence is now proven enough for selective capture. The project has full OCR capture for three schedule-bearing `Form 460` filings (`37677`, `37685`, `37365`) plus metadata and page counts where the services return them. The remaining unresolved boundary is raw PDF / page-image export rather than OCR text itself.
-- `next evidence`: inspect the document-viewer export and download path for a stable public PDF or page-image route, or decide that selective OCR is sufficient for the near-term schedule-extraction layer.
+- `current note`: The doc-specific warm-step sequence is now proven enough for selective capture and conservative schedule extraction. The project has full OCR capture for three schedule-bearing `Form 460` filings (`37677`, `37685`, `37365`) plus the first schedule-level bundle with graph-ready contribution and expenditure rows. The remaining unresolved boundary is raw PDF / page-image export rather than OCR text itself.
+- `next evidence`: inspect the document-viewer export and download path for a stable public PDF or page-image route, or explicitly accept OCR-plus-review as the near-term evidence ceiling for city-side campaign filing work.
 
 ### OQ-026: San Rafael John Gamblin campaign folder dead link
 
@@ -278,6 +278,20 @@ Mirror the question here when it affects:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-discovery-01/bundle-01.json)
   - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-folder-listings/2026-04-12.json)
 - `question`: Why does candidate folder entry `31431` for `John Gamblin` return `Entry not found. [9001]` when the sibling 2020 city-office campaign folders resolve successfully?
+
+### OQ-027: San Rafael Form 460 OCR completeness gap
+
+- `status`: watch
+- `layer`: campaign filing extraction quality
+- `scope`: `san-rafael-city-campaign-form460-schedules-01`
+- `source refs`:
+  - [campaign-form460-schedule-extraction.md](/Users/tammypais/projects/marin-civic-graph/docs/campaign-form460-schedule-extraction.md)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json)
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
+- `question`: How should the project treat OCR-derived schedule extraction when extracted row totals trail the reported filing totals?
+- `why it matters`: The OCR path is now strong enough for many row-level joins, but it is not yet complete enough to support exact full-filing accounting or claims that depend on exhaustive donor or expenditure coverage.
+- `current note`: The first schedule bundle is useful and real, but incomplete. Current extracted itemized contribution totals still trail the reported filing totals for all three filings, and the city-side OCR still drops or mangles some rows.
+- `next evidence`: either recover a stronger raw-artifact path such as PDF or page-image export, or add targeted high-value manual QA rules for the filings the project wants to use for exact accounting.
 - `why it matters`: This is the only city-office candidate folder in the normalized discovery slice that currently blocks promotion from folder destination to real committee and filing objects.
 - `current note`: The city-side filing bundle now promotes `14` city-office committees and `228` filing records from successful public folder listings, but `John Gamblin` remains missing because the folder entry itself no longer resolves through the public Laserfiche listing service.
 - `next evidence`: test whether a replacement folder id or direct record path exists for the Gamblin committee on the public election pages or inside the top-level 2020 campaign filing family.
