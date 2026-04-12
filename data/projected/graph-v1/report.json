@@ -1,6 +1,6 @@
 {
   "projection_id": "graph-v1",
-  "generated_at": "2026-04-12T20:58:46Z",
+  "generated_at": "2026-04-12T21:07:18Z",
   "manifest_path": "/Users/tammypais/projects/marin-civic-graph/registry/import-manifest.yaml",
   "output_dir": "data/projected/graph-v1",
   "bundle_reports": [
@@ -219,6 +219,20 @@
       ]
     },
     {
+      "bundle_id": "san-rafael-city-campaign-records-01__bundle-01",
+      "path": "data/normalized/san-rafael-city-campaign-records-01/bundle-01.json",
+      "sections": [
+        {
+          "section": "record_refs",
+          "mode": "nodes",
+          "input_count": 24,
+          "imported_count": 24,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    },
+    {
       "bundle_id": "campaign-finance-form-803-slice-01__bundle-01",
       "path": "data/normalized/campaign-finance-form-803-slice-01/bundle-01.json",
       "sections": [
@@ -361,7 +375,7 @@
     "Meeting": 26,
     "MoneyFlow": 145,
     "Place": 8,
-    "Record": 315,
+    "Record": 337,
     "Seat": 5,
     "SeatService": 5,
     "ValidationCheck": 12
@@ -375,9 +389,9 @@
     "CONTROLLED_BY_COMMITTEE": 14,
     "DECIDED_AT_MEETING": 23,
     "DECIDED_BY_INSTITUTION": 23,
-    "DERIVED_FROM_RECORD": 25,
+    "DERIVED_FROM_RECORD": 31,
     "DISCLOSED_IN_FILING": 137,
-    "EVIDENCED_BY": 615,
+    "EVIDENCED_BY": 1184,
     "FILED_BY_ACTOR": 166,
     "FILED_BY_COMMITTEE": 232,
     "FILED_DURING_SEAT_SERVICE": 1,
@@ -399,18 +413,18 @@
     "RECORD_EXTRACTS_FROM_RECORD": 10,
     "RECORD_INTRODUCES_DECISION": 1,
     "RELATED_TO_ELECTION": 3,
-    "RELATES_TO_ACTOR": 170,
+    "RELATES_TO_ACTOR": 178,
     "RELATES_TO_AGENDA_ITEM": 10,
     "RELATES_TO_COMMITTEE": 266,
     "RELATES_TO_DECISION": 42,
-    "RELATES_TO_ELECTION": 294,
-    "RELATES_TO_FILING": 3,
+    "RELATES_TO_ELECTION": 312,
+    "RELATES_TO_FILING": 9,
     "RELATES_TO_INSTITUTION": 4,
     "RELATES_TO_MEETING": 45,
     "RELATES_TO_MONEY_FLOW": 4,
     "RELATES_TO_PLACE": 11,
-    "RELATES_TO_RECORD": 3,
-    "RELATES_TO_SEAT": 232,
+    "RELATES_TO_RECORD": 238,
+    "RELATES_TO_SEAT": 246,
     "RELATES_TO_VALIDATIONCHECK": 12,
     "REQUESTED_BY_ACTOR": 1,
     "REQUESTED_BY_SEAT": 1,
@@ -422,9 +436,9 @@
     "TO_TARGET": 106,
     "VALIDATES": 12
   },
-  "total_nodes": 837,
-  "total_edges": 2882,
-  "duplicate_node_merges": 16,
+  "total_nodes": 859,
+  "total_edges": 3738,
+  "duplicate_node_merges": 18,
   "duplicate_edge_merges": 260,
   "node_conflicts": [
     {
@@ -444,98 +458,21 @@
   ],
   "edge_conflicts": [],
   "skipped_edge_reasons": {
-    "missing_target:Actor": 293,
-    "missing_target:Issue": 20,
-    "missing_target:Record": 804
+    "missing_target:Actor": 299,
+    "missing_target:Issue": 20
   },
   "top_skipped_edge_targets": [
     [
-      "record-san-rafael-campaign-ocr-entry-37677",
-      81
-    ],
-    [
-      "record-san-rafael-campaign-pdf-entry-37677",
-      80
-    ],
-    [
-      "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
-      56
-    ],
-    [
-      "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder",
-      56
-    ],
-    [
       "actor-mahmoud-shirazi",
-      52
-    ],
-    [
-      "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder",
-      50
-    ],
-    [
-      "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
-      50
-    ],
-    [
-      "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder",
-      48
-    ],
-    [
-      "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder",
-      44
-    ],
-    [
-      "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder",
-      42
+      54
     ],
     [
       "actor-greg-knell",
-      42
-    ],
-    [
-      "record-san-rafael-campaign-ocr-entry-37685",
-      37
-    ],
-    [
-      "record-san-rafael-campaign-ocr-entry-37365",
-      36
-    ],
-    [
-      "record-san-rafael-campaign-pdf-entry-37685",
-      36
-    ],
-    [
-      "record-san-rafael-campaign-pdf-entry-37365",
-      35
-    ],
-    [
-      "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder",
-      32
+      43
     ],
     [
       "actor-jonathan-frieman",
-      32
-    ],
-    [
-      "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder",
-      28
-    ],
-    [
-      "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder",
-      28
-    ],
-    [
-      "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder",
-      24
-    ],
-    [
-      "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder",
-      16
-    ],
-    [
-      "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder",
-      10
+      33
     ],
     [
       "issue-homelessness",
@@ -548,6 +485,82 @@
     [
       "issue-encampments",
       8
+    ],
+    [
+      "actor-gerrod-herndon",
+      7
+    ],
+    [
+      "actor-mark-galperin",
+      5
+    ],
+    [
+      "actor-four-waters-media-inc",
+      5
+    ],
+    [
+      "actor-pmcohen-public-affairs",
+      5
+    ],
+    [
+      "actor-john-gamblin",
+      4
+    ],
+    [
+      "actor-sr-chamber-of-commerce-pac",
+      4
+    ],
+    [
+      "actor-whine-pac",
+      2
+    ],
+    [
+      "actor-bruce-burtch",
+      2
+    ],
+    [
+      "actor-caran-cuneo",
+      2
+    ],
+    [
+      "actor-paul-jensen",
+      2
+    ],
+    [
+      "actor-diana-maier",
+      2
+    ],
+    [
+      "actor-se-owens-and-company",
+      2
+    ],
+    [
+      "issue-camping-ordinance",
+      2
+    ],
+    [
+      "actor-other-junk-co",
+      2
+    ],
+    [
+      "actor-wehope",
+      2
+    ],
+    [
+      "actor-mayor-kate",
+      1
+    ],
+    [
+      "actor-vice-mayor-hill",
+      1
+    ],
+    [
+      "actor-councilmember-bushey",
+      1
+    ],
+    [
+      "actor-councilmember-kertz",
+      1
     ]
   ]
 }

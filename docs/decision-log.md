@@ -35,6 +35,10 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
   - Keep the importer boring: build a projection manifest, emit uniform node/edge envelopes, generate Cypher, and let smoke checks prove the core San Rafael spine before widening scope.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-graph-v1-materialization-scaffold-should-center-on-projected-jsonl.md`
 
+- **Graph-v1 evidence completeness can be improved with narrow record bundles instead of widening scope**
+  - The right next move after the first projection was not a new ontology tranche. It was a focused campaign-evidence `Record` bundle that promotes OCR, PDF, and folder artifacts already cited by live filings, money flows, and validation checks.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-graph-v1-campaign-evidence-completeness-should-use-a-record-bundle.md`
+
 - **Schedule A QA should anchor on official itemized and unitemized summary totals**
   - Do not compare extracted row sums only to the top-line filing total.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-san-rafael-form460-schedule-a-summary-should-anchor-qa.md`

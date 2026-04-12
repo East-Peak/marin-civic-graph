@@ -299,7 +299,7 @@ Mirror the question here when it affects:
 
 ### OQ-028: Graph-v1 campaign evidence record completeness
 
-- `status`: watch
+- `status`: resolved
 - `layer`: graph materialization / evidence completeness
 - `scope`: `graph-v1`
 - `source refs`:
@@ -307,10 +307,25 @@ Mirror the question here when it affects:
   - [report.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/report.json)
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-filings-01/bundle-01.json)
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-records-01/bundle-01.json)
 - `question`: Should graph-v1 add normalized `Record` nodes for city-side campaign OCR, PDF, and folder artifacts that are already referenced from `Filing`, `MoneyFlow`, and `ValidationCheck` evidence arrays but are not yet promoted as standalone normalized records?
 - `why it matters`: The current projection is structurally correct and the smoke checks pass, but the report still skips a large number of `missing_target:Record` edges because those evidence artifacts exist only as referenced IDs, not as normalized `Record` objects inside the narrowed v1 import scope.
-- `current note`: The current top skipped record targets are city-side campaign OCR/PDF and folder records such as `record-san-rafael-campaign-ocr-entry-37677`, `record-san-rafael-campaign-pdf-entry-37677`, and older folder records like `record-san-rafael-november-3-2020-election-kate-colin-campaign-folder`. This is an evidence-completeness gap, not a core-join failure.
-- `next evidence`: either normalize those OCR/PDF/folder artifacts into explicit `Record` bundles or decide that graph-v1 should tolerate the current evidence-edge drop rate until broader city-side campaign record normalization lands.
+- `resolution note`: Resolved with `san-rafael-city-campaign-records-01`, which promotes `24` durable campaign evidence records drawn from already-referenced OCR, PDF, and folder artifacts. After adding that bundle to graph-v1, the `missing_target:Record` category disappears from the projection report entirely. The remaining graph-v1 completeness work is now actor and issue coverage rather than record coverage.
+
+### OQ-029: Graph-v1 campaign actor and issue completeness
+
+- `status`: watch
+- `layer`: graph materialization / identity completeness
+- `scope`: `graph-v1`
+- `source refs`:
+  - [report.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/report.json)
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-discovery-01/bundle-01.json)
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-ie-01/bundle-01.json)
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/bundle-01.json)
+- `question`: Should graph-v1 now promote a narrow supplemental actor and issue layer so the remaining `missing_target:Actor` and `missing_target:Issue` edges collapse, or should it tolerate those gaps until a stronger canonical expansion lands?
+- `why it matters`: After the campaign evidence-record bundle landed, the main remaining skips are no longer evidence artifacts. They are clean-but-not-yet-promoted city-side campaign actors such as `actor-mahmoud-shirazi`, `actor-greg-knell`, `actor-jonathan-frieman`, plus issue IDs like `issue-homelessness` and `issue-encampments`.
+- `current note`: The current graph-v1 report now shows `missing_target:Actor = 299` and `missing_target:Issue = 20`, with no remaining `missing_target:Record` category.
+- `next evidence`: decide whether to promote a narrow `Actor` supplement from the city-side campaign discovery/IE layers and a minimal canonical `Issue` seed layer before widening into legal or other domain families.
 
 ### OQ-016: San Rafael local Form 803 filing surface
 

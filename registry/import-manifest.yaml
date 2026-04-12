@@ -64,6 +64,12 @@
       ]
     },
     {
+      "path": "data/normalized/san-rafael-city-campaign-records-01/bundle-01.json",
+      "sections": [
+        { "name": "record_refs", "mode": "nodes", "node_type": "Record", "promotion_state": "promoted" }
+      ]
+    },
+    {
       "path": "data/normalized/campaign-finance-form-803-slice-01/bundle-01.json",
       "sections": [
         { "name": "record_refs", "mode": "nodes", "node_type": "Record", "promotion_state": "promoted" },

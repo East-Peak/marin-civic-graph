@@ -144,6 +144,7 @@ Start narrow:
 - [San Rafael City Campaign Form 460 Schedule Extract](./data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json)
 - [Campaign Finance Sample Basket Bundle](./data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
 - [Campaign Finance Form 803 Slice Bundle](./data/normalized/campaign-finance-form-803-slice-01/bundle-01.json)
+- [San Rafael City Campaign Evidence Record Bundle](./data/normalized/san-rafael-city-campaign-records-01/bundle-01.json)
 - [San Rafael Canonical Seed Bundle](./data/normalized/canonical-seeds-san-rafael-01.json)
 - [San Rafael City Council Archive Inventory](./data/extracted/san-rafael-city-council-meetings/2026-04-11.json)
 - [Marin County BOS Archive Inventory](./data/extracted/marin-county-bos-meetings/2026-04-11.json)
@@ -172,6 +173,7 @@ Start narrow:
 - [San Rafael Form 460 OCR Capture Workflow](./scripts/capture_san_rafael_city_campaign_form460_ocr.py)
 - [San Rafael Form 460 PDF Export Workflow](./scripts/capture_san_rafael_city_campaign_form460_pdf_exports.py)
 - [San Rafael Form 460 Schedule Extractor](./scripts/extract_san_rafael_city_campaign_form460_schedules.py)
+- [San Rafael City Campaign Evidence Record Normalizer](./scripts/normalize_san_rafael_city_campaign_records.py)
 - [Graph Projection Helper](./scripts/graph_projection_lib.py)
 - [Graph Projection Builder](./scripts/build_graph_projection.py)
 - [Graph Projection Smoke Checks](./scripts/graph_smoke_checks.py)
@@ -188,8 +190,9 @@ This repo started as a planning workspace and now includes the first live implem
   - projection builder that narrows bundle-local JSON into one graph envelope
   - JSONL node/edge projection plus a generated Cypher loader output under [data/projected](./data/projected/README.md)
   - smoke checks that prove actor, seat-service, filing, money, decision, record, and validation continuity end to end
-  - current graph-v1 projection totals: `837` nodes and `2882` edges
-  - current materialization follow-up made explicit in the projection report: city-side campaign OCR/PDF/folder record references still account for most skipped `missing_target:Record` edges because those evidence artifacts are not yet promoted as normalized `Record` nodes
+  - current graph-v1 projection totals: `859` nodes and `3738` edges
+  - first evidence-completeness follow-up already landed: a dedicated San Rafael city-side campaign evidence-record bundle now promotes OCR/PDF/folder artifacts that were previously only referenced from filings, money flows, and validation checks
+  - the previous `missing_target:Record` problem is gone from graph-v1; the remaining materialization follow-up is now actor and issue completeness rather than record completeness
 - source registry seeds
 - source-registry format now expanded to capture platform family, backfill target, change signal, and source-specific quirks
 - source-adapter operations note added to document municipality/county source idiosyncrasies, historical backfill planning, and recurring sync strategy

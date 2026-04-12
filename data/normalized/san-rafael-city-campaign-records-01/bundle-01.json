@@ -1,0 +1,584 @@
+{
+  "case_study_id": "san-rafael-city-campaign-records-01",
+  "bundle_id": "san-rafael-city-campaign-records-01__bundle-01",
+  "status": "working",
+  "generated_at": "2026-04-12T21:07:03Z",
+  "scope": [
+    "San Rafael city-side campaign folder records referenced from committee, filing, or candidacy objects already included in graph-v1",
+    "San Rafael city-side Form 460 OCR capture records referenced from filing, money-flow, or validation objects already included in graph-v1",
+    "San Rafael city-side Form 460 PDF export records referenced from filing, money-flow, or validation objects already included in graph-v1",
+    "Evidence-completeness promotion only; this bundle adds durable Record nodes without importing discovery-stage actor, candidacy, or committee candidates"
+  ],
+  "record_refs": [
+    {
+      "id": "record-san-rafael-campaign-ocr-entry-37365",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_ocr_capture",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-ocr/2026-04-12/results.json",
+      "capture_status": "captured_via_doc_warm_step",
+      "entry_id": 37365,
+      "title": "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+      "page_count": 10,
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37365",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37365",
+      "available_schedules": [
+        "Schedule A",
+        "Schedule B",
+        "Schedule C",
+        "Schedule D",
+        "Schedule E",
+        "Schedule F",
+        "Schedule H"
+      ]
+    },
+    {
+      "id": "record-san-rafael-campaign-ocr-entry-37677",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_ocr_capture",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-ocr/2026-04-12/results.json",
+      "capture_status": "captured_via_doc_warm_step",
+      "entry_id": 37677,
+      "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+      "page_count": 26,
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37677",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37677",
+      "available_schedules": [
+        "Schedule A",
+        "Schedule B",
+        "Schedule C",
+        "Schedule D",
+        "Schedule E",
+        "Schedule F",
+        "Schedule G",
+        "Schedule H"
+      ]
+    },
+    {
+      "id": "record-san-rafael-campaign-ocr-entry-37685",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_ocr_capture",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-ocr/2026-04-12/results.json",
+      "capture_status": "captured_via_doc_warm_step",
+      "entry_id": 37685,
+      "title": "Form 460 - Rachel Kertz for City Council 2024; preelection",
+      "page_count": 11,
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37685",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37685",
+      "available_schedules": [
+        "Schedule A",
+        "Schedule B",
+        "Schedule C",
+        "Schedule D",
+        "Schedule E",
+        "Schedule F",
+        "Schedule H"
+      ]
+    },
+    {
+      "id": "record-san-rafael-campaign-pdf-entry-37365",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_pdf_capture",
+      "source_id": "san-rafael-city-campaign-form460-pdf-export",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/37365-form-460-rachel-kertz-for-city-council-2024-06-30-24.pdf",
+      "capture_status": "captured_via_public_export_job",
+      "entry_id": 37365,
+      "title": "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+      "content_type": "application/pdf",
+      "byte_size": 500819,
+      "sha256": "b59def3b0fe70c1f408b765e729845b8075f6850c4f74ec5ee838d0980d0f0e7",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37365",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37365"
+    },
+    {
+      "id": "record-san-rafael-campaign-pdf-entry-37677",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_pdf_capture",
+      "source_id": "san-rafael-city-campaign-form460-pdf-export",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/37677-form-460-kate-colin-for-san-rafael-mayor-2024-1st-preelection.pdf",
+      "capture_status": "captured_via_public_export_job",
+      "entry_id": 37677,
+      "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+      "content_type": "application/pdf",
+      "byte_size": 1364077,
+      "sha256": "0093f077be678c20c66ea0e7facebcaaeefe97c8e03dbddbf176a8a955776d70",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37677",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37677"
+    },
+    {
+      "id": "record-san-rafael-campaign-pdf-entry-37685",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_pdf_capture",
+      "source_id": "san-rafael-city-campaign-form460-pdf-export",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/37685-form-460-rachel-kertz-for-city-council-2024-preelection.pdf",
+      "capture_status": "captured_via_public_export_job",
+      "entry_id": 37685,
+      "title": "Form 460 - Rachel Kertz for City Council 2024; preelection",
+      "content_type": "application/pdf",
+      "byte_size": 666440,
+      "sha256": "56190e892a43a132437155c1329910953861218394f0995dbabe587a2ba6661e",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37685",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37685"
+    },
+    {
+      "id": "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_folder",
+      "source_id": "san-rafael-city-side-campaign-filings",
+      "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+      "capture_status": "discovery_only",
+      "label": "Greg Knell campaign filings folder",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31081&dbid=0&repo=CityofSanRafael",
+      "linked_from_source_ids": [
+        "san-rafael-november-3-2020-election"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "entry_id": 31081,
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 4 Candidates",
+      "candidate_name": "Greg Knell",
+      "candidate_actor_ids": [
+        "actor-greg-knell"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-city-council-district-4"
+      ]
+    },
+    {
+      "id": "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder",
+      "record_class": "financial_record",
+      "record_type": "independent_expenditure_filing_folder",
+      "source_id": "san-rafael-city-side-campaign-filings",
+      "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+      "capture_status": "discovery_only",
+      "label": "Independent Expenditure Filings 2020",
+      "folder_url": "http://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=32164&dbid=0&repo=CityofSanRafael",
+      "linked_from_source_ids": [
+        "san-rafael-november-3-2020-election"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "entry_id": 32164,
+      "election_label": "November 3, 2020 Election - San Rafael"
+    },
+    {
+      "id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_folder",
+      "source_id": "san-rafael-city-side-campaign-filings",
+      "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+      "capture_status": "discovery_only",
+      "label": "Kate Colin campaign filings folder",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31079&dbid=0&repo=CityofSanRafael",
+      "linked_from_source_ids": [
+        "san-rafael-november-3-2020-election"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "entry_id": 31079,
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Mayoral Candidates",
+      "candidate_name": "Kate Colin",
+      "candidate_actor_ids": [
+        "actor-kate-colin"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-mayor-at-large"
+      ]
+    },
+    {
+      "id": "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_folder",
+      "source_id": "san-rafael-city-side-campaign-filings",
+      "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+      "capture_status": "discovery_only",
+      "label": "Mahmoud Shirazi campaign filings folder",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31080&dbid=0&repo=CityofSanRafael",
+      "linked_from_source_ids": [
+        "san-rafael-november-3-2020-election"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "entry_id": 31080,
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Mayoral Candidates",
+      "candidate_name": "Mahmoud Shirazi",
+      "candidate_actor_ids": [
+        "actor-mahmoud-shirazi"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-mayor-at-large"
+      ]
+    },
+    {
+      "id": "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_folder",
+      "source_id": "san-rafael-city-side-campaign-filings",
+      "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+      "capture_status": "discovery_only",
+      "label": "Maika Llorens Gulati campaign filings folder",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31093&dbid=0&repo=CityofSanRafael",
+      "linked_from_source_ids": [
+        "san-rafael-november-3-2020-election"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "entry_id": 31093,
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 1 Candidate",
+      "candidate_name": "Maika Llorens Gulati",
+      "candidate_actor_ids": [
+        "actor-maika-llorens-gulati"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-city-council-district-1"
+      ]
+    },
+    {
+      "id": "record-san-rafael-november-3-2020-election-page",
+      "record_class": "administrative_record",
+      "record_type": "election_page",
+      "source_id": "san-rafael-november-3-2020-election",
+      "artifact_path": "data/raw/san-rafael-november-3-2020-election/2026-04-11/source.html",
+      "capture_status": "captured",
+      "title": "November 3, 2020 Election - San Rafael",
+      "entry_url": "https://www.cityofsanrafael.org/november-3-2020-election/",
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ]
+    },
+    {
+      "id": "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_folder",
+      "source_id": "san-rafael-city-side-campaign-filings",
+      "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+      "capture_status": "discovery_only",
+      "label": "Rachel Kertz campaign filings folder",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31082&dbid=0&repo=CityofSanRafael",
+      "linked_from_source_ids": [
+        "san-rafael-november-3-2020-election"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "entry_id": 31082,
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 4 Candidates",
+      "candidate_name": "Rachel Kertz",
+      "candidate_actor_ids": [
+        "actor-rachel-kertz"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-city-council-district-4"
+      ]
+    },
+    {
+      "id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_folder",
+      "source_id": "san-rafael-city-side-campaign-filings",
+      "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+      "capture_status": "discovery_only",
+      "label": "Kate Colin campaign filings folder",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=35554&dbid=0&repo=CityofSanRafael",
+      "linked_from_source_ids": [
+        "san-rafael-november-5-2024-election"
+      ],
+      "election_ids": [
+        "election-2024-11-05-san-rafael-general"
+      ],
+      "entry_id": 35554,
+      "election_label": "November 5, 2024 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Mayoral Candidates",
+      "candidate_name": "Kate Colin",
+      "candidate_actor_ids": [
+        "actor-kate-colin"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-mayor-at-large"
+      ]
+    },
+    {
+      "id": "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_folder",
+      "source_id": "san-rafael-city-side-campaign-filings",
+      "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+      "capture_status": "discovery_only",
+      "label": "Mahmoud Shirazi campaign filings folder",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=36469&dbid=0&repo=CityofSanRafael",
+      "linked_from_source_ids": [
+        "san-rafael-november-5-2024-election"
+      ],
+      "election_ids": [
+        "election-2024-11-05-san-rafael-general"
+      ],
+      "entry_id": 36469,
+      "election_label": "November 5, 2024 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Mayoral Candidates",
+      "candidate_name": "Mahmoud Shirazi",
+      "candidate_actor_ids": [
+        "actor-mahmoud-shirazi"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-mayor-at-large"
+      ]
+    },
+    {
+      "id": "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_folder",
+      "source_id": "san-rafael-city-side-campaign-filings",
+      "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+      "capture_status": "discovery_only",
+      "label": "Maika Llorens Gulati campaign filings folder",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=36529&dbid=0&repo=CityofSanRafael",
+      "linked_from_source_ids": [
+        "san-rafael-november-5-2024-election"
+      ],
+      "election_ids": [
+        "election-2024-11-05-san-rafael-general"
+      ],
+      "entry_id": 36529,
+      "election_label": "November 5, 2024 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 1 Candidate",
+      "candidate_name": "Maika Llorens Gulati",
+      "candidate_actor_ids": [
+        "actor-maika-llorens-gulati"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-city-council-district-1"
+      ]
+    },
+    {
+      "id": "record-san-rafael-november-5-2024-election-mark-galperin-campaign-folder",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_folder",
+      "source_id": "san-rafael-city-side-campaign-filings",
+      "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+      "capture_status": "discovery_only",
+      "label": "Mark Galperin campaign filings folder",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=37449&dbid=0&repo=CityofSanRafael",
+      "linked_from_source_ids": [
+        "san-rafael-november-5-2024-election"
+      ],
+      "election_ids": [
+        "election-2024-11-05-san-rafael-general"
+      ],
+      "entry_id": 37449,
+      "election_label": "November 5, 2024 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 4 Candidates",
+      "candidate_name": "Mark Galperin",
+      "candidate_actor_ids": [
+        "actor-mark-galperin"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-city-council-district-4"
+      ]
+    },
+    {
+      "id": "record-san-rafael-november-5-2024-election-page",
+      "record_class": "administrative_record",
+      "record_type": "election_results_page",
+      "source_id": "san-rafael-november-5-2024-election",
+      "artifact_path": "data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html",
+      "capture_status": "captured",
+      "title": "November 5, 2024 Election - San Rafael",
+      "entry_url": "https://www.cityofsanrafael.org/november-5-2024-election/",
+      "election_ids": [
+        "election-2024-11-05-san-rafael-general"
+      ]
+    },
+    {
+      "id": "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_folder",
+      "source_id": "san-rafael-city-side-campaign-filings",
+      "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+      "capture_status": "discovery_only",
+      "label": "Rachel Kertz campaign filings folder",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=36450&dbid=0&repo=CityofSanRafael",
+      "linked_from_source_ids": [
+        "san-rafael-november-5-2024-election"
+      ],
+      "election_ids": [
+        "election-2024-11-05-san-rafael-general"
+      ],
+      "entry_id": 36450,
+      "election_label": "November 5, 2024 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 4 Candidates",
+      "candidate_name": "Rachel Kertz",
+      "candidate_actor_ids": [
+        "actor-rachel-kertz"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-city-council-district-4"
+      ]
+    },
+    {
+      "id": "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_folder",
+      "source_id": "san-rafael-city-side-campaign-filings",
+      "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+      "capture_status": "discovery_only",
+      "label": "Eli Hill campaign filings folder",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=33055&dbid=0&repo=CityofSanRafael",
+      "linked_from_source_ids": [
+        "san-rafael-november-8-2022-election"
+      ],
+      "election_ids": [
+        "election-2022-11-08-san-rafael-general"
+      ],
+      "entry_id": 33055,
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 2 Candidates:",
+      "candidate_name": "Eli Hill",
+      "candidate_actor_ids": [
+        "actor-eli-hill"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-city-council-district-2"
+      ]
+    },
+    {
+      "id": "record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_folder",
+      "source_id": "san-rafael-city-side-campaign-filings",
+      "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+      "capture_status": "discovery_only",
+      "label": "Gerrod Herndon campaign filings folder",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34870&dbid=0&repo=CityofSanRafael",
+      "linked_from_source_ids": [
+        "san-rafael-november-8-2022-election"
+      ],
+      "election_ids": [
+        "election-2022-11-08-san-rafael-general"
+      ],
+      "entry_id": 34870,
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 2 Candidates:",
+      "candidate_name": "Gerrod Herndon",
+      "candidate_actor_ids": [
+        "actor-gerrod-herndon"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-city-council-district-2"
+      ]
+    },
+    {
+      "id": "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_folder",
+      "source_id": "san-rafael-city-side-campaign-filings",
+      "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+      "capture_status": "discovery_only",
+      "label": "Jonathan Frieman campaign filings folder",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34937&dbid=0&repo=CityofSanRafael",
+      "linked_from_source_ids": [
+        "san-rafael-november-8-2022-election"
+      ],
+      "election_ids": [
+        "election-2022-11-08-san-rafael-general"
+      ],
+      "entry_id": 34937,
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 3 Candidates:",
+      "candidate_name": "Jonathan Frieman",
+      "candidate_actor_ids": [
+        "actor-jonathan-frieman"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-city-council-district-3"
+      ]
+    },
+    {
+      "id": "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_folder",
+      "source_id": "san-rafael-city-side-campaign-filings",
+      "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+      "capture_status": "discovery_only",
+      "label": "Maribeth Bushey campaign filings folder",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34885&dbid=0&repo=CityofSanRafael",
+      "linked_from_source_ids": [
+        "san-rafael-november-8-2022-election"
+      ],
+      "election_ids": [
+        "election-2022-11-08-san-rafael-general"
+      ],
+      "entry_id": 34885,
+      "election_label": "November 8, 2022 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 3 Candidates:",
+      "candidate_name": "Maribeth Bushey",
+      "candidate_actor_ids": [
+        "actor-maribeth-bushey"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-city-council-district-3"
+      ]
+    },
+    {
+      "id": "record-san-rafael-november-8-2022-election-page",
+      "record_class": "administrative_record",
+      "record_type": "election_page",
+      "source_id": "san-rafael-november-8-2022-election",
+      "artifact_path": "data/raw/san-rafael-november-8-2022-election/2026-04-11/source.html",
+      "capture_status": "captured",
+      "title": "November 8, 2022 Election - San Rafael",
+      "entry_url": "https://www.cityofsanrafael.org/november-8-2022-election/",
+      "election_ids": [
+        "election-2022-11-08-san-rafael-general"
+      ]
+    }
+  ],
+  "methodology_findings": [
+    {
+      "id": "method-campaign-records-v1-derived-from-live-references",
+      "summary": "This bundle is derived from record IDs already referenced by the current San Rafael city-side campaign filing, IE, and Form 460 schedule bundles. It only promotes missing evidence records that are already part of the live graph-v1 citation chain."
+    },
+    {
+      "id": "method-campaign-records-v1-source-breakdown",
+      "summary": "Promoted record coverage by source bundle: san-rafael-city-campaign-discovery-01=18, san-rafael-city-campaign-form460-ocr-01=3, san-rafael-city-campaign-form460-pdf-01=3"
+    }
+  ],
+  "open_questions": [
+    {
+      "id": "OQ-028",
+      "status": "resolved",
+      "summary": "Graph-v1 campaign evidence record completeness depends on promoting durable OCR/PDF/folder Record nodes for already-referenced campaign artifacts.",
+      "missing_record_ids": []
+    }
+  ],
+  "notes": [
+    "This bundle does not promote discovery-stage actors, committees, or candidacies from the city-side campaign discovery layer.",
+    "The objective is evidence completeness for graph-v1, not broader campaign ontology expansion.",
+    "If additional missing record IDs appear later, they should be treated as a separate evidence-bundle follow-up rather than folded back into the importer."
+  ]
+}

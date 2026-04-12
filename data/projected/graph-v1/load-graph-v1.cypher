@@ -3010,6 +3010,30 @@ MERGE (n:Imported {id: "record-san-rafael-campaign-form460-schedule-extract-entr
 SET n:Record
 SET n += {artifact_path: "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json", capture_status: "derived_from_ocr_capture", display_label: "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024; preelection", entry_id: 37685, node_type: "Record", ocr_record_id: "record-san-rafael-campaign-ocr-entry-37685", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json\", \"capture_status\": \"derived_from_ocr_capture\", \"entry_id\": 37685, \"id\": \"record-san-rafael-campaign-form460-schedule-extract-entry-37685\", \"ocr_record_id\": \"record-san-rafael-campaign-ocr-entry-37685\", \"record_class\": \"financial_record\", \"record_type\": \"form_460_schedule_extract\", \"source_filing_id\": \"filing-san-rafael-campaign-entry-37685\", \"source_id\": \"san-rafael-city-campaign-form460-ocr\", \"source_record_id\": \"record-san-rafael-campaign-filing-entry-37685\", \"title\": \"Schedule extraction for Form 460 - Rachel Kertz for City Council 2024; preelection\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "form_460_schedule_extract", source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_filing_id: "filing-san-rafael-campaign-entry-37685", source_id: "san-rafael-city-campaign-form460-ocr", source_record_id: "record-san-rafael-campaign-filing-entry-37685", source_sections: ["record_refs"], title: "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024; preelection"};
 
+MERGE (n:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+SET n:Record
+SET n += {artifact_path: "data/raw/san-rafael-city-campaign-form460-ocr/2026-04-12/results.json", available_schedules: ["Schedule A", "Schedule B", "Schedule C", "Schedule D", "Schedule E", "Schedule F", "Schedule H"], capture_status: "captured_via_doc_warm_step", display_label: "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)", entry_id: 37365, node_type: "Record", page_count: 10, payload_json: "{\"artifact_path\": \"data/raw/san-rafael-city-campaign-form460-ocr/2026-04-12/results.json\", \"available_schedules\": [\"Schedule A\", \"Schedule B\", \"Schedule C\", \"Schedule D\", \"Schedule E\", \"Schedule F\", \"Schedule H\"], \"capture_status\": \"captured_via_doc_warm_step\", \"entry_id\": 37365, \"id\": \"record-san-rafael-campaign-ocr-entry-37365\", \"page_count\": 10, \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_ocr_capture\", \"source_filing_id\": \"filing-san-rafael-campaign-entry-37365\", \"source_id\": \"san-rafael-city-campaign-form460-ocr\", \"source_record_id\": \"record-san-rafael-campaign-filing-entry-37365\", \"title\": \"Form 460 - Rachel Kertz for City Council 2024 (06-30-24)\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_ocr_capture", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_filing_id: "filing-san-rafael-campaign-entry-37365", source_id: "san-rafael-city-campaign-form460-ocr", source_record_id: "record-san-rafael-campaign-filing-entry-37365", source_sections: ["record_refs"], title: "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)"};
+
+MERGE (n:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+SET n:Record
+SET n += {artifact_path: "data/raw/san-rafael-city-campaign-form460-ocr/2026-04-12/results.json", available_schedules: ["Schedule A", "Schedule B", "Schedule C", "Schedule D", "Schedule E", "Schedule F", "Schedule G", "Schedule H"], capture_status: "captured_via_doc_warm_step", display_label: "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection", entry_id: 37677, node_type: "Record", page_count: 26, payload_json: "{\"artifact_path\": \"data/raw/san-rafael-city-campaign-form460-ocr/2026-04-12/results.json\", \"available_schedules\": [\"Schedule A\", \"Schedule B\", \"Schedule C\", \"Schedule D\", \"Schedule E\", \"Schedule F\", \"Schedule G\", \"Schedule H\"], \"capture_status\": \"captured_via_doc_warm_step\", \"entry_id\": 37677, \"id\": \"record-san-rafael-campaign-ocr-entry-37677\", \"page_count\": 26, \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_ocr_capture\", \"source_filing_id\": \"filing-san-rafael-campaign-entry-37677\", \"source_id\": \"san-rafael-city-campaign-form460-ocr\", \"source_record_id\": \"record-san-rafael-campaign-filing-entry-37677\", \"title\": \"Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_ocr_capture", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_filing_id: "filing-san-rafael-campaign-entry-37677", source_id: "san-rafael-city-campaign-form460-ocr", source_record_id: "record-san-rafael-campaign-filing-entry-37677", source_sections: ["record_refs"], title: "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection"};
+
+MERGE (n:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+SET n:Record
+SET n += {artifact_path: "data/raw/san-rafael-city-campaign-form460-ocr/2026-04-12/results.json", available_schedules: ["Schedule A", "Schedule B", "Schedule C", "Schedule D", "Schedule E", "Schedule F", "Schedule H"], capture_status: "captured_via_doc_warm_step", display_label: "Form 460 - Rachel Kertz for City Council 2024; preelection", entry_id: 37685, node_type: "Record", page_count: 11, payload_json: "{\"artifact_path\": \"data/raw/san-rafael-city-campaign-form460-ocr/2026-04-12/results.json\", \"available_schedules\": [\"Schedule A\", \"Schedule B\", \"Schedule C\", \"Schedule D\", \"Schedule E\", \"Schedule F\", \"Schedule H\"], \"capture_status\": \"captured_via_doc_warm_step\", \"entry_id\": 37685, \"id\": \"record-san-rafael-campaign-ocr-entry-37685\", \"page_count\": 11, \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_ocr_capture\", \"source_filing_id\": \"filing-san-rafael-campaign-entry-37685\", \"source_id\": \"san-rafael-city-campaign-form460-ocr\", \"source_record_id\": \"record-san-rafael-campaign-filing-entry-37685\", \"title\": \"Form 460 - Rachel Kertz for City Council 2024; preelection\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_ocr_capture", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_filing_id: "filing-san-rafael-campaign-entry-37685", source_id: "san-rafael-city-campaign-form460-ocr", source_record_id: "record-san-rafael-campaign-filing-entry-37685", source_sections: ["record_refs"], title: "Form 460 - Rachel Kertz for City Council 2024; preelection"};
+
+MERGE (n:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+SET n:Record
+SET n += {artifact_path: "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/37365-form-460-rachel-kertz-for-city-council-2024-06-30-24.pdf", byte_size: 500819, capture_status: "captured_via_public_export_job", content_type: "application/pdf", display_label: "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)", entry_id: 37365, node_type: "Record", payload_json: "{\"artifact_path\": \"data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/37365-form-460-rachel-kertz-for-city-council-2024-06-30-24.pdf\", \"byte_size\": 500819, \"capture_status\": \"captured_via_public_export_job\", \"content_type\": \"application/pdf\", \"entry_id\": 37365, \"id\": \"record-san-rafael-campaign-pdf-entry-37365\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_pdf_capture\", \"sha256\": \"b59def3b0fe70c1f408b765e729845b8075f6850c4f74ec5ee838d0980d0f0e7\", \"source_filing_id\": \"filing-san-rafael-campaign-entry-37365\", \"source_id\": \"san-rafael-city-campaign-form460-pdf-export\", \"source_record_id\": \"record-san-rafael-campaign-filing-entry-37365\", \"title\": \"Form 460 - Rachel Kertz for City Council 2024 (06-30-24)\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_pdf_capture", sha256: "b59def3b0fe70c1f408b765e729845b8075f6850c4f74ec5ee838d0980d0f0e7", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_filing_id: "filing-san-rafael-campaign-entry-37365", source_id: "san-rafael-city-campaign-form460-pdf-export", source_record_id: "record-san-rafael-campaign-filing-entry-37365", source_sections: ["record_refs"], title: "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)"};
+
+MERGE (n:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+SET n:Record
+SET n += {artifact_path: "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/37677-form-460-kate-colin-for-san-rafael-mayor-2024-1st-preelection.pdf", byte_size: 1364077, capture_status: "captured_via_public_export_job", content_type: "application/pdf", display_label: "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection", entry_id: 37677, node_type: "Record", payload_json: "{\"artifact_path\": \"data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/37677-form-460-kate-colin-for-san-rafael-mayor-2024-1st-preelection.pdf\", \"byte_size\": 1364077, \"capture_status\": \"captured_via_public_export_job\", \"content_type\": \"application/pdf\", \"entry_id\": 37677, \"id\": \"record-san-rafael-campaign-pdf-entry-37677\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_pdf_capture\", \"sha256\": \"0093f077be678c20c66ea0e7facebcaaeefe97c8e03dbddbf176a8a955776d70\", \"source_filing_id\": \"filing-san-rafael-campaign-entry-37677\", \"source_id\": \"san-rafael-city-campaign-form460-pdf-export\", \"source_record_id\": \"record-san-rafael-campaign-filing-entry-37677\", \"title\": \"Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_pdf_capture", sha256: "0093f077be678c20c66ea0e7facebcaaeefe97c8e03dbddbf176a8a955776d70", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_filing_id: "filing-san-rafael-campaign-entry-37677", source_id: "san-rafael-city-campaign-form460-pdf-export", source_record_id: "record-san-rafael-campaign-filing-entry-37677", source_sections: ["record_refs"], title: "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection"};
+
+MERGE (n:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+SET n:Record
+SET n += {artifact_path: "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/37685-form-460-rachel-kertz-for-city-council-2024-preelection.pdf", byte_size: 666440, capture_status: "captured_via_public_export_job", content_type: "application/pdf", display_label: "Form 460 - Rachel Kertz for City Council 2024; preelection", entry_id: 37685, node_type: "Record", payload_json: "{\"artifact_path\": \"data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/37685-form-460-rachel-kertz-for-city-council-2024-preelection.pdf\", \"byte_size\": 666440, \"capture_status\": \"captured_via_public_export_job\", \"content_type\": \"application/pdf\", \"entry_id\": 37685, \"id\": \"record-san-rafael-campaign-pdf-entry-37685\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_pdf_capture\", \"sha256\": \"56190e892a43a132437155c1329910953861218394f0995dbabe587a2ba6661e\", \"source_filing_id\": \"filing-san-rafael-campaign-entry-37685\", \"source_id\": \"san-rafael-city-campaign-form460-pdf-export\", \"source_record_id\": \"record-san-rafael-campaign-filing-entry-37685\", \"title\": \"Form 460 - Rachel Kertz for City Council 2024; preelection\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_pdf_capture", sha256: "56190e892a43a132437155c1329910953861218394f0995dbabe587a2ba6661e", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_filing_id: "filing-san-rafael-campaign-entry-37685", source_id: "san-rafael-city-campaign-form460-pdf-export", source_record_id: "record-san-rafael-campaign-filing-entry-37685", source_sections: ["record_refs"], title: "Form 460 - Rachel Kertz for City Council 2024; preelection"};
+
 MERGE (n:Imported {id: "record-san-rafael-camping-implementation-plan-2023-12-14"})
 SET n:Record
 SET n += {artifact_path: "data/raw/san-rafael-camping-implementation-plan/2026-04-10/source.html", display_label: "record-san-rafael-camping-implementation-plan-2023-12-14", node_type: "Record", payload_json: "{\"artifact_path\": \"data/raw/san-rafael-camping-implementation-plan/2026-04-10/source.html\", \"id\": \"record-san-rafael-camping-implementation-plan-2023-12-14\", \"record_class\": \"program_record\", \"record_type\": \"implementation_update\", \"source_id\": \"san-rafael-camping-implementation-plan\"}", promotion_state: "canonical", record_class: "program_record", record_type: "implementation_update", source_bundle_ids: ["canonical-seeds-san-rafael-01"], source_id: "san-rafael-camping-implementation-plan", source_sections: ["record_refs"]};
@@ -3246,13 +3270,77 @@ MERGE (n:Imported {id: "record-san-rafael-library-grants-2022-12-19"})
 SET n:Record
 SET n += {artifact_path: "data/raw/san-rafael-city-council-2022-12-19-library-grants/2026-04-11/source.html", display_label: "record-san-rafael-library-grants-2022-12-19", node_type: "Record", payload_json: "{\"artifact_path\": \"data/raw/san-rafael-city-council-2022-12-19-library-grants/2026-04-11/source.html\", \"id\": \"record-san-rafael-library-grants-2022-12-19\", \"record_class\": \"meeting_record\", \"record_type\": \"agenda_page\", \"source_id\": \"san-rafael-city-council-2022-12-19-library-grants\"}", promotion_state: "canonical", record_class: "meeting_record", record_type: "agenda_page", source_bundle_ids: ["canonical-seeds-san-rafael-01"], source_id: "san-rafael-city-council-2022-12-19-library-grants", source_sections: ["record_refs"]};
 
+MERGE (n:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+SET n:Record
+SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", candidate_actor_ids: ["actor-greg-knell"], candidate_name: "Greg Knell", capture_status: "discovery_only", display_label: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder", election_ids: ["election-2020-11-03-san-rafael-general"], election_label: "November 3, 2020 Election - San Rafael", entry_id: 31081, folder_url: "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31081&dbid=0&repo=CityofSanRafael", label: "Greg Knell campaign filings folder", linked_from_source_ids: ["san-rafael-november-3-2020-election"], node_type: "Record", office_label: "Councilmember District 4 Candidates", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"candidate_actor_ids\": [\"actor-greg-knell\"], \"candidate_name\": \"Greg Knell\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2020-11-03-san-rafael-general\"], \"election_label\": \"November 3, 2020 Election - San Rafael\", \"entry_id\": 31081, \"folder_url\": \"https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31081&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-3-2020-election-greg-knell-campaign-folder\", \"label\": \"Greg Knell campaign filings folder\", \"linked_from_source_ids\": [\"san-rafael-november-3-2020-election\"], \"office_label\": \"Councilmember District 4 Candidates\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_folder\", \"seat_ids\": [\"seat-san-rafael-city-council-district-4\"], \"section_label\": \"City of San Rafael Election\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_folder", seat_ids: ["seat-san-rafael-city-council-district-4"], section_label: "City of San Rafael Election", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
+
+MERGE (n:Imported {id: "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"})
+SET n:Record
+SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", capture_status: "discovery_only", display_label: "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder", election_ids: ["election-2020-11-03-san-rafael-general"], election_label: "November 3, 2020 Election - San Rafael", entry_id: 32164, folder_url: "http://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=32164&dbid=0&repo=CityofSanRafael", label: "Independent Expenditure Filings 2020", linked_from_source_ids: ["san-rafael-november-3-2020-election"], node_type: "Record", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2020-11-03-san-rafael-general\"], \"election_label\": \"November 3, 2020 Election - San Rafael\", \"entry_id\": 32164, \"folder_url\": \"http://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=32164&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder\", \"label\": \"Independent Expenditure Filings 2020\", \"linked_from_source_ids\": [\"san-rafael-november-3-2020-election\"], \"record_class\": \"financial_record\", \"record_type\": \"independent_expenditure_filing_folder\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "independent_expenditure_filing_folder", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
+
+MERGE (n:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+SET n:Record
+SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", candidate_actor_ids: ["actor-kate-colin"], candidate_name: "Kate Colin", capture_status: "discovery_only", display_label: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder", election_ids: ["election-2020-11-03-san-rafael-general"], election_label: "November 3, 2020 Election - San Rafael", entry_id: 31079, folder_url: "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31079&dbid=0&repo=CityofSanRafael", label: "Kate Colin campaign filings folder", linked_from_source_ids: ["san-rafael-november-3-2020-election"], node_type: "Record", office_label: "Mayoral Candidates", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"candidate_actor_ids\": [\"actor-kate-colin\"], \"candidate_name\": \"Kate Colin\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2020-11-03-san-rafael-general\"], \"election_label\": \"November 3, 2020 Election - San Rafael\", \"entry_id\": 31079, \"folder_url\": \"https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31079&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-3-2020-election-kate-colin-campaign-folder\", \"label\": \"Kate Colin campaign filings folder\", \"linked_from_source_ids\": [\"san-rafael-november-3-2020-election\"], \"office_label\": \"Mayoral Candidates\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_folder\", \"seat_ids\": [\"seat-san-rafael-mayor-at-large\"], \"section_label\": \"City of San Rafael Election\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_folder", seat_ids: ["seat-san-rafael-mayor-at-large"], section_label: "City of San Rafael Election", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
+
+MERGE (n:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+SET n:Record
+SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", candidate_actor_ids: ["actor-mahmoud-shirazi"], candidate_name: "Mahmoud Shirazi", capture_status: "discovery_only", display_label: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder", election_ids: ["election-2020-11-03-san-rafael-general"], election_label: "November 3, 2020 Election - San Rafael", entry_id: 31080, folder_url: "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31080&dbid=0&repo=CityofSanRafael", label: "Mahmoud Shirazi campaign filings folder", linked_from_source_ids: ["san-rafael-november-3-2020-election"], node_type: "Record", office_label: "Mayoral Candidates", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"candidate_actor_ids\": [\"actor-mahmoud-shirazi\"], \"candidate_name\": \"Mahmoud Shirazi\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2020-11-03-san-rafael-general\"], \"election_label\": \"November 3, 2020 Election - San Rafael\", \"entry_id\": 31080, \"folder_url\": \"https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31080&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder\", \"label\": \"Mahmoud Shirazi campaign filings folder\", \"linked_from_source_ids\": [\"san-rafael-november-3-2020-election\"], \"office_label\": \"Mayoral Candidates\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_folder\", \"seat_ids\": [\"seat-san-rafael-mayor-at-large\"], \"section_label\": \"City of San Rafael Election\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_folder", seat_ids: ["seat-san-rafael-mayor-at-large"], section_label: "City of San Rafael Election", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
+
+MERGE (n:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+SET n:Record
+SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", candidate_actor_ids: ["actor-maika-llorens-gulati"], candidate_name: "Maika Llorens Gulati", capture_status: "discovery_only", display_label: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder", election_ids: ["election-2020-11-03-san-rafael-general"], election_label: "November 3, 2020 Election - San Rafael", entry_id: 31093, folder_url: "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31093&dbid=0&repo=CityofSanRafael", label: "Maika Llorens Gulati campaign filings folder", linked_from_source_ids: ["san-rafael-november-3-2020-election"], node_type: "Record", office_label: "Councilmember District 1 Candidate", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"candidate_actor_ids\": [\"actor-maika-llorens-gulati\"], \"candidate_name\": \"Maika Llorens Gulati\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2020-11-03-san-rafael-general\"], \"election_label\": \"November 3, 2020 Election - San Rafael\", \"entry_id\": 31093, \"folder_url\": \"https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31093&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder\", \"label\": \"Maika Llorens Gulati campaign filings folder\", \"linked_from_source_ids\": [\"san-rafael-november-3-2020-election\"], \"office_label\": \"Councilmember District 1 Candidate\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_folder\", \"seat_ids\": [\"seat-san-rafael-city-council-district-1\"], \"section_label\": \"City of San Rafael Election\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_folder", seat_ids: ["seat-san-rafael-city-council-district-1"], section_label: "City of San Rafael Election", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
+
+MERGE (n:Imported {id: "record-san-rafael-november-3-2020-election-page"})
+SET n:Record
+SET n += {artifact_path: "data/raw/san-rafael-november-3-2020-election/2026-04-11/source.html", capture_status: "captured", display_label: "November 3, 2020 Election - San Rafael", election_ids: ["election-2020-11-03-san-rafael-general"], entry_url: "https://www.cityofsanrafael.org/november-3-2020-election/", node_type: "Record", payload_json: "{\"artifact_path\": \"data/raw/san-rafael-november-3-2020-election/2026-04-11/source.html\", \"capture_status\": \"captured\", \"election_ids\": [\"election-2020-11-03-san-rafael-general\"], \"entry_url\": \"https://www.cityofsanrafael.org/november-3-2020-election/\", \"id\": \"record-san-rafael-november-3-2020-election-page\", \"record_class\": \"administrative_record\", \"record_type\": \"election_page\", \"source_id\": \"san-rafael-november-3-2020-election\", \"title\": \"November 3, 2020 Election - San Rafael\"}", promotion_state: "promoted", record_class: "administrative_record", record_type: "election_page", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-november-3-2020-election", source_sections: ["record_refs"], title: "November 3, 2020 Election - San Rafael"};
+
+MERGE (n:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+SET n:Record
+SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", candidate_actor_ids: ["actor-rachel-kertz"], candidate_name: "Rachel Kertz", capture_status: "discovery_only", display_label: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder", election_ids: ["election-2020-11-03-san-rafael-general"], election_label: "November 3, 2020 Election - San Rafael", entry_id: 31082, folder_url: "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31082&dbid=0&repo=CityofSanRafael", label: "Rachel Kertz campaign filings folder", linked_from_source_ids: ["san-rafael-november-3-2020-election"], node_type: "Record", office_label: "Councilmember District 4 Candidates", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"candidate_actor_ids\": [\"actor-rachel-kertz\"], \"candidate_name\": \"Rachel Kertz\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2020-11-03-san-rafael-general\"], \"election_label\": \"November 3, 2020 Election - San Rafael\", \"entry_id\": 31082, \"folder_url\": \"https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31082&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder\", \"label\": \"Rachel Kertz campaign filings folder\", \"linked_from_source_ids\": [\"san-rafael-november-3-2020-election\"], \"office_label\": \"Councilmember District 4 Candidates\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_folder\", \"seat_ids\": [\"seat-san-rafael-city-council-district-4\"], \"section_label\": \"City of San Rafael Election\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_folder", seat_ids: ["seat-san-rafael-city-council-district-4"], section_label: "City of San Rafael Election", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
+
+MERGE (n:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+SET n:Record
+SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", candidate_actor_ids: ["actor-kate-colin"], candidate_name: "Kate Colin", capture_status: "discovery_only", display_label: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder", election_ids: ["election-2024-11-05-san-rafael-general"], election_label: "November 5, 2024 Election - San Rafael", entry_id: 35554, folder_url: "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=35554&dbid=0&repo=CityofSanRafael", label: "Kate Colin campaign filings folder", linked_from_source_ids: ["san-rafael-november-5-2024-election"], node_type: "Record", office_label: "Mayoral Candidates", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"candidate_actor_ids\": [\"actor-kate-colin\"], \"candidate_name\": \"Kate Colin\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2024-11-05-san-rafael-general\"], \"election_label\": \"November 5, 2024 Election - San Rafael\", \"entry_id\": 35554, \"folder_url\": \"https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=35554&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-5-2024-election-kate-colin-campaign-folder\", \"label\": \"Kate Colin campaign filings folder\", \"linked_from_source_ids\": [\"san-rafael-november-5-2024-election\"], \"office_label\": \"Mayoral Candidates\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_folder\", \"seat_ids\": [\"seat-san-rafael-mayor-at-large\"], \"section_label\": \"City of San Rafael Election\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_folder", seat_ids: ["seat-san-rafael-mayor-at-large"], section_label: "City of San Rafael Election", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
+
+MERGE (n:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+SET n:Record
+SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", candidate_actor_ids: ["actor-mahmoud-shirazi"], candidate_name: "Mahmoud Shirazi", capture_status: "discovery_only", display_label: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder", election_ids: ["election-2024-11-05-san-rafael-general"], election_label: "November 5, 2024 Election - San Rafael", entry_id: 36469, folder_url: "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=36469&dbid=0&repo=CityofSanRafael", label: "Mahmoud Shirazi campaign filings folder", linked_from_source_ids: ["san-rafael-november-5-2024-election"], node_type: "Record", office_label: "Mayoral Candidates", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"candidate_actor_ids\": [\"actor-mahmoud-shirazi\"], \"candidate_name\": \"Mahmoud Shirazi\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2024-11-05-san-rafael-general\"], \"election_label\": \"November 5, 2024 Election - San Rafael\", \"entry_id\": 36469, \"folder_url\": \"https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=36469&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder\", \"label\": \"Mahmoud Shirazi campaign filings folder\", \"linked_from_source_ids\": [\"san-rafael-november-5-2024-election\"], \"office_label\": \"Mayoral Candidates\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_folder\", \"seat_ids\": [\"seat-san-rafael-mayor-at-large\"], \"section_label\": \"City of San Rafael Election\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_folder", seat_ids: ["seat-san-rafael-mayor-at-large"], section_label: "City of San Rafael Election", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
+
+MERGE (n:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+SET n:Record
+SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", candidate_actor_ids: ["actor-maika-llorens-gulati"], candidate_name: "Maika Llorens Gulati", capture_status: "discovery_only", display_label: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder", election_ids: ["election-2024-11-05-san-rafael-general"], election_label: "November 5, 2024 Election - San Rafael", entry_id: 36529, folder_url: "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=36529&dbid=0&repo=CityofSanRafael", label: "Maika Llorens Gulati campaign filings folder", linked_from_source_ids: ["san-rafael-november-5-2024-election"], node_type: "Record", office_label: "Councilmember District 1 Candidate", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"candidate_actor_ids\": [\"actor-maika-llorens-gulati\"], \"candidate_name\": \"Maika Llorens Gulati\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2024-11-05-san-rafael-general\"], \"election_label\": \"November 5, 2024 Election - San Rafael\", \"entry_id\": 36529, \"folder_url\": \"https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=36529&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder\", \"label\": \"Maika Llorens Gulati campaign filings folder\", \"linked_from_source_ids\": [\"san-rafael-november-5-2024-election\"], \"office_label\": \"Councilmember District 1 Candidate\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_folder\", \"seat_ids\": [\"seat-san-rafael-city-council-district-1\"], \"section_label\": \"City of San Rafael Election\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_folder", seat_ids: ["seat-san-rafael-city-council-district-1"], section_label: "City of San Rafael Election", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
+
+MERGE (n:Imported {id: "record-san-rafael-november-5-2024-election-mark-galperin-campaign-folder"})
+SET n:Record
+SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", candidate_actor_ids: ["actor-mark-galperin"], candidate_name: "Mark Galperin", capture_status: "discovery_only", display_label: "record-san-rafael-november-5-2024-election-mark-galperin-campaign-folder", election_ids: ["election-2024-11-05-san-rafael-general"], election_label: "November 5, 2024 Election - San Rafael", entry_id: 37449, folder_url: "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=37449&dbid=0&repo=CityofSanRafael", label: "Mark Galperin campaign filings folder", linked_from_source_ids: ["san-rafael-november-5-2024-election"], node_type: "Record", office_label: "Councilmember District 4 Candidates", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"candidate_actor_ids\": [\"actor-mark-galperin\"], \"candidate_name\": \"Mark Galperin\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2024-11-05-san-rafael-general\"], \"election_label\": \"November 5, 2024 Election - San Rafael\", \"entry_id\": 37449, \"folder_url\": \"https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=37449&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-5-2024-election-mark-galperin-campaign-folder\", \"label\": \"Mark Galperin campaign filings folder\", \"linked_from_source_ids\": [\"san-rafael-november-5-2024-election\"], \"office_label\": \"Councilmember District 4 Candidates\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_folder\", \"seat_ids\": [\"seat-san-rafael-city-council-district-4\"], \"section_label\": \"City of San Rafael Election\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_folder", seat_ids: ["seat-san-rafael-city-council-district-4"], section_label: "City of San Rafael Election", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
+
 MERGE (n:Imported {id: "record-san-rafael-november-5-2024-election-page"})
 SET n:Record
-SET n += {artifact_path: "data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html", display_label: "record-san-rafael-november-5-2024-election-page", node_type: "Record", payload_json: "{\"artifact_path\": \"data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html\", \"id\": \"record-san-rafael-november-5-2024-election-page\", \"record_class\": \"administrative_record\", \"record_type\": \"election_results_page\", \"source_id\": \"san-rafael-november-5-2024-election\"}", promotion_state: "canonical", record_class: "administrative_record", record_type: "election_results_page", source_bundle_ids: ["canonical-seeds-san-rafael-01"], source_id: "san-rafael-november-5-2024-election", source_sections: ["record_refs"]};
+SET n += {artifact_path: "data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html", capture_status: "captured", display_label: "record-san-rafael-november-5-2024-election-page", election_ids: ["election-2024-11-05-san-rafael-general"], entry_url: "https://www.cityofsanrafael.org/november-5-2024-election/", node_type: "Record", payload_json: "{\"artifact_path\": \"data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html\", \"id\": \"record-san-rafael-november-5-2024-election-page\", \"record_class\": \"administrative_record\", \"record_type\": \"election_results_page\", \"source_id\": \"san-rafael-november-5-2024-election\"}", promotion_state: "canonical", record_class: "administrative_record", record_type: "election_results_page", source_bundle_ids: ["canonical-seeds-san-rafael-01", "san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-november-5-2024-election", source_sections: ["record_refs"], title: "November 5, 2024 Election - San Rafael"};
+
+MERGE (n:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+SET n:Record
+SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", candidate_actor_ids: ["actor-rachel-kertz"], candidate_name: "Rachel Kertz", capture_status: "discovery_only", display_label: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder", election_ids: ["election-2024-11-05-san-rafael-general"], election_label: "November 5, 2024 Election - San Rafael", entry_id: 36450, folder_url: "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=36450&dbid=0&repo=CityofSanRafael", label: "Rachel Kertz campaign filings folder", linked_from_source_ids: ["san-rafael-november-5-2024-election"], node_type: "Record", office_label: "Councilmember District 4 Candidates", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"candidate_actor_ids\": [\"actor-rachel-kertz\"], \"candidate_name\": \"Rachel Kertz\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2024-11-05-san-rafael-general\"], \"election_label\": \"November 5, 2024 Election - San Rafael\", \"entry_id\": 36450, \"folder_url\": \"https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=36450&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder\", \"label\": \"Rachel Kertz campaign filings folder\", \"linked_from_source_ids\": [\"san-rafael-november-5-2024-election\"], \"office_label\": \"Councilmember District 4 Candidates\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_folder\", \"seat_ids\": [\"seat-san-rafael-city-council-district-4\"], \"section_label\": \"City of San Rafael Election\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_folder", seat_ids: ["seat-san-rafael-city-council-district-4"], section_label: "City of San Rafael Election", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
+
+MERGE (n:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+SET n:Record
+SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", candidate_actor_ids: ["actor-eli-hill"], candidate_name: "Eli Hill", capture_status: "discovery_only", display_label: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder", election_ids: ["election-2022-11-08-san-rafael-general"], election_label: "November 8, 2022 Election - San Rafael", entry_id: 33055, folder_url: "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=33055&dbid=0&repo=CityofSanRafael", label: "Eli Hill campaign filings folder", linked_from_source_ids: ["san-rafael-november-8-2022-election"], node_type: "Record", office_label: "Councilmember District 2 Candidates:", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"candidate_actor_ids\": [\"actor-eli-hill\"], \"candidate_name\": \"Eli Hill\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2022-11-08-san-rafael-general\"], \"election_label\": \"November 8, 2022 Election - San Rafael\", \"entry_id\": 33055, \"folder_url\": \"https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=33055&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-8-2022-election-eli-hill-campaign-folder\", \"label\": \"Eli Hill campaign filings folder\", \"linked_from_source_ids\": [\"san-rafael-november-8-2022-election\"], \"office_label\": \"Councilmember District 2 Candidates:\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_folder\", \"seat_ids\": [\"seat-san-rafael-city-council-district-2\"], \"section_label\": \"City of San Rafael Election\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_folder", seat_ids: ["seat-san-rafael-city-council-district-2"], section_label: "City of San Rafael Election", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
+
+MERGE (n:Imported {id: "record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder"})
+SET n:Record
+SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", candidate_actor_ids: ["actor-gerrod-herndon"], candidate_name: "Gerrod Herndon", capture_status: "discovery_only", display_label: "record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder", election_ids: ["election-2022-11-08-san-rafael-general"], election_label: "November 8, 2022 Election - San Rafael", entry_id: 34870, folder_url: "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34870&dbid=0&repo=CityofSanRafael", label: "Gerrod Herndon campaign filings folder", linked_from_source_ids: ["san-rafael-november-8-2022-election"], node_type: "Record", office_label: "Councilmember District 2 Candidates:", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"candidate_actor_ids\": [\"actor-gerrod-herndon\"], \"candidate_name\": \"Gerrod Herndon\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2022-11-08-san-rafael-general\"], \"election_label\": \"November 8, 2022 Election - San Rafael\", \"entry_id\": 34870, \"folder_url\": \"https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34870&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder\", \"label\": \"Gerrod Herndon campaign filings folder\", \"linked_from_source_ids\": [\"san-rafael-november-8-2022-election\"], \"office_label\": \"Councilmember District 2 Candidates:\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_folder\", \"seat_ids\": [\"seat-san-rafael-city-council-district-2\"], \"section_label\": \"City of San Rafael Election\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_folder", seat_ids: ["seat-san-rafael-city-council-district-2"], section_label: "City of San Rafael Election", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
+
+MERGE (n:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+SET n:Record
+SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", candidate_actor_ids: ["actor-jonathan-frieman"], candidate_name: "Jonathan Frieman", capture_status: "discovery_only", display_label: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder", election_ids: ["election-2022-11-08-san-rafael-general"], election_label: "November 8, 2022 Election - San Rafael", entry_id: 34937, folder_url: "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34937&dbid=0&repo=CityofSanRafael", label: "Jonathan Frieman campaign filings folder", linked_from_source_ids: ["san-rafael-november-8-2022-election"], node_type: "Record", office_label: "Councilmember District 3 Candidates:", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"candidate_actor_ids\": [\"actor-jonathan-frieman\"], \"candidate_name\": \"Jonathan Frieman\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2022-11-08-san-rafael-general\"], \"election_label\": \"November 8, 2022 Election - San Rafael\", \"entry_id\": 34937, \"folder_url\": \"https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34937&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder\", \"label\": \"Jonathan Frieman campaign filings folder\", \"linked_from_source_ids\": [\"san-rafael-november-8-2022-election\"], \"office_label\": \"Councilmember District 3 Candidates:\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_folder\", \"seat_ids\": [\"seat-san-rafael-city-council-district-3\"], \"section_label\": \"City of San Rafael Election\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_folder", seat_ids: ["seat-san-rafael-city-council-district-3"], section_label: "City of San Rafael Election", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
+
+MERGE (n:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+SET n:Record
+SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", candidate_actor_ids: ["actor-maribeth-bushey"], candidate_name: "Maribeth Bushey", capture_status: "discovery_only", display_label: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder", election_ids: ["election-2022-11-08-san-rafael-general"], election_label: "November 8, 2022 Election - San Rafael", entry_id: 34885, folder_url: "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34885&dbid=0&repo=CityofSanRafael", label: "Maribeth Bushey campaign filings folder", linked_from_source_ids: ["san-rafael-november-8-2022-election"], node_type: "Record", office_label: "Councilmember District 3 Candidates:", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"candidate_actor_ids\": [\"actor-maribeth-bushey\"], \"candidate_name\": \"Maribeth Bushey\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2022-11-08-san-rafael-general\"], \"election_label\": \"November 8, 2022 Election - San Rafael\", \"entry_id\": 34885, \"folder_url\": \"https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=34885&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder\", \"label\": \"Maribeth Bushey campaign filings folder\", \"linked_from_source_ids\": [\"san-rafael-november-8-2022-election\"], \"office_label\": \"Councilmember District 3 Candidates:\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_folder\", \"seat_ids\": [\"seat-san-rafael-city-council-district-3\"], \"section_label\": \"City of San Rafael Election\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_folder", seat_ids: ["seat-san-rafael-city-council-district-3"], section_label: "City of San Rafael Election", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
 
 MERGE (n:Imported {id: "record-san-rafael-november-8-2022-election-page"})
 SET n:Record
-SET n += {artifact_path: "data/raw/san-rafael-november-8-2022-election/2026-04-11/source.html", display_label: "record-san-rafael-november-8-2022-election-page", node_type: "Record", payload_json: "{\"artifact_path\": \"data/raw/san-rafael-november-8-2022-election/2026-04-11/source.html\", \"id\": \"record-san-rafael-november-8-2022-election-page\", \"record_class\": \"administrative_record\", \"record_type\": \"election_page\", \"source_id\": \"san-rafael-november-8-2022-election\"}", promotion_state: "canonical", record_class: "administrative_record", record_type: "election_page", source_bundle_ids: ["canonical-seeds-san-rafael-01"], source_id: "san-rafael-november-8-2022-election", source_sections: ["record_refs"]};
+SET n += {artifact_path: "data/raw/san-rafael-november-8-2022-election/2026-04-11/source.html", capture_status: "captured", display_label: "record-san-rafael-november-8-2022-election-page", election_ids: ["election-2022-11-08-san-rafael-general"], entry_url: "https://www.cityofsanrafael.org/november-8-2022-election/", node_type: "Record", payload_json: "{\"artifact_path\": \"data/raw/san-rafael-november-8-2022-election/2026-04-11/source.html\", \"id\": \"record-san-rafael-november-8-2022-election-page\", \"record_class\": \"administrative_record\", \"record_type\": \"election_page\", \"source_id\": \"san-rafael-november-8-2022-election\"}", promotion_state: "canonical", record_class: "administrative_record", record_type: "election_page", source_bundle_ids: ["canonical-seeds-san-rafael-01", "san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-november-8-2022-election", source_sections: ["record_refs"], title: "November 8, 2022 Election - San Rafael"};
 
 MERGE (n:Imported {id: "record-san-rafael-public-comment-ms-2024-08-19"})
 SET n:Record
@@ -3887,6 +3975,36 @@ MATCH (source:Imported {id: "record-san-rafael-campaign-form460-schedule-extract
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:DERIVED_FROM_RECORD]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["source_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:DERIVED_FROM_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["source_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:DERIVED_FROM_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["source_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:DERIVED_FROM_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["source_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:DERIVED_FROM_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["source_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:DERIVED_FROM_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["source_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:DERIVED_FROM_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["source_record_id"]};
 
 MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-itemized-contributions-reconciliation-check"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract-entry-37365"})
@@ -4839,7 +4957,17 @@ MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {page: 4, source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["evidence"]};
 
 MATCH (source:Imported {id: "candidacy-eli-hill-san-rafael-council-district-2-2022"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "candidacy-eli-hill-san-rafael-council-district-2-2022"})
 MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-page"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "candidacy-gerrod-herndon-san-rafael-council-district-2-2022"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -4848,8 +4976,38 @@ MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-page"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "candidacy-greg-knell-san-rafael-council-district-4-2020"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "candidacy-greg-knell-san-rafael-council-district-4-2020"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-page"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "candidacy-jonathan-frieman-san-rafael-council-district-3-2022"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "candidacy-jonathan-frieman-san-rafael-council-district-3-2022"})
 MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-page"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "candidacy-kate-colin-san-rafael-mayor-2020"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "candidacy-kate-colin-san-rafael-mayor-2020"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-page"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "candidacy-kate-colin-san-rafael-mayor-2024"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -4858,8 +5016,38 @@ MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-page"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "candidacy-mahmoud-shirazi-san-rafael-mayor-2020"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "candidacy-mahmoud-shirazi-san-rafael-mayor-2020"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-page"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "candidacy-mahmoud-shirazi-san-rafael-mayor-2024"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "candidacy-mahmoud-shirazi-san-rafael-mayor-2024"})
 MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-page"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "candidacy-maika-llorens-gulati-san-rafael-council-district-1-2020"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "candidacy-maika-llorens-gulati-san-rafael-council-district-1-2020"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-page"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "candidacy-maika-llorens-gulati-san-rafael-council-district-1-2024"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -4869,7 +5057,17 @@ MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "candidacy-maribeth-bushey-san-rafael-council-district-3-2022"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "candidacy-maribeth-bushey-san-rafael-council-district-3-2022"})
 MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-page"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "candidacy-mark-galperin-san-rafael-council-district-4-2024"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mark-galperin-campaign-folder"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -4878,10 +5076,105 @@ MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-page"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "candidacy-rachel-kertz-san-rafael-council-district-4-2020"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-page"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "candidacy-rachel-kertz-san-rafael-council-district-4-2020"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "candidacy-rachel-kertz-san-rafael-council-district-4-2024"})
 MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-page"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "candidacy-rachel-kertz-san-rafael-council-district-4-2024"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "committee-eli-hill-for-san-rafael-city-council-2022"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "committee-gerrod-herndon-for-san-rafael-city-council-2022"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "committee-greg-knell-for-city-council-2020"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "committee-jonathan-frieman-for-san-rafael-city-council-2022"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "committee-kate-colin-for-mayor-2020"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "committee-kate-colin-for-san-rafael-mayor-2024"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "committee-mahmoud-a-shirazi-for-mayor-2020"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "committee-mahmoud-a-shirazi-for-san-rafael-mayor-2024"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "committee-maika-llorens-gulati-for-san-rafael-city-council-2020"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "committee-maika-llorens-gulati-for-san-rafael-city-council-2024"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "committee-maribeth-bushey-for-city-council-2022"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "committee-mark-galperin-for-city-council-2024"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mark-galperin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "committee-rachel-kertz-for-city-council-2020"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "committee-rachel-kertz-for-san-rafael-city-council-2024"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "committee-sr-chamber-of-commerce-pac-2020-11-03-san-rafael-general-ie"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "committee-whine-pac-2020-11-03-san-rafael-general-ie"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "decision-2010-06-08-san-rafael-library-special-call"})
 MATCH (target:Imported {id: "record-san-rafael-election-entry-15680"})
@@ -5298,840 +5591,1680 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-28439"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28439"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28450"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-28450"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28450"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28528"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-28528"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28528"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28553"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-28553"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28553"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28554"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-28554"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28554"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28597"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-28597"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28597"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28598"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-28598"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28598"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28599"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-28599"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28599"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28600"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-28600"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28600"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28601"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-28601"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28601"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-29042"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-29042"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-29042"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-29043"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-29043"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-29043"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-29290"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-29290"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-29290"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-30962"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-30962"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-30962"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31108"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31108"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31108"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31109"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31109"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31109"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31111"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31111"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31111"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31112"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31112"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31112"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31114"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31114"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31114"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31115"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31115"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31115"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31116"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31116"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31116"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31117"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31117"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31117"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31430"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31430"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31430"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31440"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31440"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31440"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31480"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31480"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31480"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31484"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31484"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31484"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31485"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31485"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31485"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31874"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31874"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31874"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31875"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31875"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31875"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31876"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31876"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31876"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31877"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31877"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31877"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31935"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31935"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31935"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31936"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31936"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31936"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31937"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31937"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31937"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31941"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31941"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31941"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31943"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-31943"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31943"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32103"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32103"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32103"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32132"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32132"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32132"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32161"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32161"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32161"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32163"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32163"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32163"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32221"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32221"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32221"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32223"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32223"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32223"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32224"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32224"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32224"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32225"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32225"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32225"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32228"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32228"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32228"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32254"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32254"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32254"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32255"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32255"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32255"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32256"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32256"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32256"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32273"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32273"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32273"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32274"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32274"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32274"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32278"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32278"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32278"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32288"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32288"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32288"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32291"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32291"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32291"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32293"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32293"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32293"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32294"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32294"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32294"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32297"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32297"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32297"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32298"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32298"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32298"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32326"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32326"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32326"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32339"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32339"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32339"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32340"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32340"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32340"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32418"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32418"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32418"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32419"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32419"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32419"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32470"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32470"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32470"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32473"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32473"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32473"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32474"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32474"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32474"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32515"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32515"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32515"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32516"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32516"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32516"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32517"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32517"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32517"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32518"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32518"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32518"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32521"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32521"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32521"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32633"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32633"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32633"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32634"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32634"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32634"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32635"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32635"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32635"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32677"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32677"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32774"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32774"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32774"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32775"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32775"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32775"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32776"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32776"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32776"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32866"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-32866"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32866"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33056"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-33056"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33056"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33166"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-33166"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33166"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33337"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-33337"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33337"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33340"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-33340"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33340"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33342"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-33342"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33342"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33343"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-33343"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33343"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33344"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-33344"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33344"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33990"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-33990"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33990"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33992"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-33992"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33992"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33997"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-33997"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-33997"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34041"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-34041"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34041"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34841"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-34841"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34841"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34847"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-34847"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34847"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34864"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-34864"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34864"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34865"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-34865"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34865"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34871"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-34871"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34871"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34873"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-34873"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34873"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34874"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-34874"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34874"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34938"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-34938"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34938"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35008"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35008"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35008"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35080"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35080"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35080"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35092"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35092"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35092"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35094"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35094"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35094"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35135"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35135"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35135"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35136"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35136"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35136"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35137"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35137"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35137"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35138"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35138"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35138"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35162"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35162"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35162"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35166"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35166"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35166"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35167"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35167"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35167"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35169"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35169"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35169"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35170"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35170"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35170"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35178"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35178"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35178"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35180"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35180"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35180"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35191"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35191"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35191"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35237"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35237"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35237"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35247"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35247"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35247"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35252"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35252"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35252"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35253"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35253"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35253"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35262"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35262"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35262"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35263"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35263"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35263"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35265"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35265"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35265"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35268"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35268"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35268"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35305"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35305"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35305"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35306"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35306"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35306"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35307"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35307"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35307"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35308"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35308"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35308"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35313"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35313"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35313"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35319"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35319"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35319"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35364"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35364"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35364"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35372"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35372"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35372"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35555"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35555"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35555"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35556"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35556"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35556"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35557"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35557"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35557"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35558"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35558"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35558"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35559"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35559"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35559"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35629"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35629"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35629"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35646"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35646"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35646"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35649"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35649"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35649"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35653"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35653"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35653"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35655"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35655"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35655"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35665"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35665"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35665"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35813"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-35813"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35813"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36094"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36094"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36094"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36095"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36095"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36095"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36096"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36096"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36096"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36100"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36100"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36100"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36101"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36101"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36101"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36105"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36105"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36105"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36131"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36131"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36131"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36141"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36141"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36141"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36142"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36142"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36142"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36144"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36144"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36144"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36146"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36146"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36146"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36196"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36196"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36196"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36197"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36197"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36197"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36198"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36198"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36198"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36201"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36201"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36201"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36251"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36251"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36251"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36410"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36410"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36410"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36459"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36459"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36459"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36468"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36468"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36468"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36470"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36470"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36470"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36530"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36530"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36530"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36558"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36558"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36558"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36561"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36561"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36561"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36574"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36574"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36574"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36921"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-36921"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36921"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37153"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37153"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37153"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37336"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37336"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37336"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37365"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
@@ -6143,85 +7276,180 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37365"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37365"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37365"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37367"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37367"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37367"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37368"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37368"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37368"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37369"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37369"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37369"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37384"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37384"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37384"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37385"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37385"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37385"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37386"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37386"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37386"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37450"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37450"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37450"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mark-galperin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37487"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37487"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37487"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37507"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37507"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37507"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37510"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37510"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37510"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37511"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37511"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37511"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37595"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37595"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37595"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37608"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37608"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37608"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37609"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37609"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37609"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37653"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37653"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37653"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37663"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37663"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37663"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37677"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
@@ -6233,6 +7461,21 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37677"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37677"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37677"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37685"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
@@ -6243,230 +7486,470 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37685"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37685"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37685"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37687"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37687"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37687"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37688"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37688"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37688"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37733"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37733"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37733"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37746"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37746"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37746"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37772"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37772"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37772"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37775"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37775"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37775"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37776"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37776"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37776"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37777"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37777"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37777"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37778"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37778"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37778"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37779"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37779"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37779"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37807"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37807"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37807"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37808"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37808"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37808"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37809"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37809"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37809"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37909"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37909"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37909"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40243"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-40243"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40243"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40247"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-40247"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40247"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40249"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-40249"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40249"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40284"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-40284"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40284"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40286"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-40286"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40286"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40948"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-40948"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40948"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40949"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-40949"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40949"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40950"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-40950"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40950"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40956"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-40956"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40956"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40957"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-40957"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40957"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40958"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-40958"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40958"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40965"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-40965"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40965"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41016"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-41016"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41016"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41017"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-41017"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41017"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41018"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-41018"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41018"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41019"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-41019"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41019"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41020"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-41020"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41020"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41053"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-41053"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41053"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41092"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-41092"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41092"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41093"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-41093"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41093"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41096"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-41096"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41096"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41505"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-41505"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41505"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41506"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-41506"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41506"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41507"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-41507"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41507"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41846"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-41846"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41846"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41858"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-41858"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41858"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41859"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-41859"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41859"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-ie-entry-32165"})
 MATCH (target:Imported {id: "record-san-rafael-ie-filing-entry-32165"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-ie-entry-32165"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-ie-entry-32166"})
 MATCH (target:Imported {id: "record-san-rafael-ie-filing-entry-32166"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-ie-entry-32166"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-ie-entry-32280"})
 MATCH (target:Imported {id: "record-san-rafael-ie-filing-entry-32280"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-ie-entry-32280"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-ie-entry-32292"})
 MATCH (target:Imported {id: "record-san-rafael-ie-filing-entry-32292"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["evidence_record_ids", "record_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-ie-entry-32292"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "inst-city-of-san-rafael"})
 MATCH (target:Imported {id: "record-kate-colin-form-803-2025-09-04"})
@@ -6693,8 +8176,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-06-14-mary-sackett-z-committee-rachel-kertz-for-san-rafael-city-council-2024-1"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-14-mary-sackett-z-committee-rachel-kertz-for-san-rafael-city-council-2024-1"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-06-17-bruce-raful-z-committee-rachel-kertz-for-san-rafael-city-council-2024-3"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-17-bruce-raful-z-committee-rachel-kertz-for-san-rafael-city-council-2024-3"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-17-bruce-raful-z-committee-rachel-kertz-for-san-rafael-city-council-2024-3"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6703,8 +8206,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-06-17-katie-rice-z-committee-rachel-kertz-for-san-rafael-city-council-2024-2"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-17-katie-rice-z-committee-rachel-kertz-for-san-rafael-city-council-2024-2"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-06-18-tamara-hull-z-committee-rachel-kertz-for-san-rafael-city-council-2024-4"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-18-tamara-hull-z-committee-rachel-kertz-for-san-rafael-city-council-2024-4"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-18-tamara-hull-z-committee-rachel-kertz-for-san-rafael-city-council-2024-4"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6713,8 +8236,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-06-19-and-leigh-bakhtiari-committee-rachel-kertz-for-san-rafael-city-council-2024-6"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-19-and-leigh-bakhtiari-committee-rachel-kertz-for-san-rafael-city-council-2024-6"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-06-19-caran-cuneo-z-committee-rachel-kertz-for-san-rafael-city-council-2024-5"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-19-caran-cuneo-z-committee-rachel-kertz-for-san-rafael-city-council-2024-5"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-19-caran-cuneo-z-committee-rachel-kertz-for-san-rafael-city-council-2024-5"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6723,8 +8266,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-06-19-ranjiv-khush-z-committee-rachel-kertz-for-san-rafael-city-council-2024-7"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-19-ranjiv-khush-z-committee-rachel-kertz-for-san-rafael-city-council-2024-7"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-06-20-eric-boales-z-committee-rachel-kertz-for-san-rafael-city-council-2024-8"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-20-eric-boales-z-committee-rachel-kertz-for-san-rafael-city-council-2024-8"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-20-eric-boales-z-committee-rachel-kertz-for-san-rafael-city-council-2024-8"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6733,8 +8296,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-06-20-lisa-doran-z-committee-rachel-kertz-for-san-rafael-city-council-2024-10"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-20-lisa-doran-z-committee-rachel-kertz-for-san-rafael-city-council-2024-10"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-06-20-windi-snarly-0-committee-rachel-kertz-for-san-rafael-city-council-2024-9"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-20-windi-snarly-0-committee-rachel-kertz-for-san-rafael-city-council-2024-9"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-20-windi-snarly-0-committee-rachel-kertz-for-san-rafael-city-council-2024-9"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6743,8 +8326,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-06-21-kim-diamond-committee-rachel-kertz-for-san-rafael-city-council-2024-11"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-21-kim-diamond-committee-rachel-kertz-for-san-rafael-city-council-2024-11"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-06-24-michael-manowski-committee-rachel-kertz-for-san-rafael-city-council-2024-13"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-24-michael-manowski-committee-rachel-kertz-for-san-rafael-city-council-2024-13"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-24-michael-manowski-committee-rachel-kertz-for-san-rafael-city-council-2024-13"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6753,8 +8356,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-06-24-paul-jensen-committee-rachel-kertz-for-san-rafael-city-council-2024-12"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-24-paul-jensen-committee-rachel-kertz-for-san-rafael-city-council-2024-12"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-06-26-catherine-colin-0-committee-rachel-kertz-for-san-rafael-city-council-2024-15"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-26-catherine-colin-0-committee-rachel-kertz-for-san-rafael-city-council-2024-15"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-26-catherine-colin-0-committee-rachel-kertz-for-san-rafael-city-council-2024-15"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6763,8 +8386,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-06-26-resource-conservation-pac-committee-rachel-kertz-for-san-rafael-city-council-2024-14"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-26-resource-conservation-pac-committee-rachel-kertz-for-san-rafael-city-council-2024-14"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-06-27-bruce-burtch-committee-rachel-kertz-for-san-rafael-city-council-2024-16"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-27-bruce-burtch-committee-rachel-kertz-for-san-rafael-city-council-2024-16"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-27-bruce-burtch-committee-rachel-kertz-for-san-rafael-city-council-2024-16"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6773,8 +8416,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-06-27-geza-kadar-0-committee-rachel-kertz-for-san-rafael-city-council-2024-20"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-27-geza-kadar-0-committee-rachel-kertz-for-san-rafael-city-council-2024-20"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-06-27-laurie-dubin-z-committee-rachel-kertz-for-san-rafael-city-council-2024-18"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-27-laurie-dubin-z-committee-rachel-kertz-for-san-rafael-city-council-2024-18"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-27-laurie-dubin-z-committee-rachel-kertz-for-san-rafael-city-council-2024-18"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6783,8 +8446,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-06-27-mary-de-may-0-committee-rachel-kertz-for-san-rafael-city-council-2024-21"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-27-mary-de-may-0-committee-rachel-kertz-for-san-rafael-city-council-2024-21"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-06-27-melissa-prandi-z-committee-rachel-kertz-for-san-rafael-city-council-2024-19"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-27-melissa-prandi-z-committee-rachel-kertz-for-san-rafael-city-council-2024-19"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-27-melissa-prandi-z-committee-rachel-kertz-for-san-rafael-city-council-2024-19"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6793,8 +8476,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-06-27-meredith-parnell-committee-rachel-kertz-for-san-rafael-city-council-2024-22"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-27-meredith-parnell-committee-rachel-kertz-for-san-rafael-city-council-2024-22"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-06-27-millie-anderson-z-committee-rachel-kertz-for-san-rafael-city-council-2024-17"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-27-millie-anderson-z-committee-rachel-kertz-for-san-rafael-city-council-2024-17"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-27-millie-anderson-z-committee-rachel-kertz-for-san-rafael-city-council-2024-17"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6803,8 +8506,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-06-28-richard-pushkin-z-committee-rachel-kertz-for-san-rafael-city-council-2024-24"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-28-richard-pushkin-z-committee-rachel-kertz-for-san-rafael-city-council-2024-24"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-06-28-william-hamamoto-committee-rachel-kertz-for-san-rafael-city-council-2024-23"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-28-william-hamamoto-committee-rachel-kertz-for-san-rafael-city-council-2024-23"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-28-william-hamamoto-committee-rachel-kertz-for-san-rafael-city-council-2024-23"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6813,8 +8536,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-06-29-laura-duffy-committee-rachel-kertz-for-san-rafael-city-council-2024-25"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-29-laura-duffy-committee-rachel-kertz-for-san-rafael-city-council-2024-25"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-06-30-carolyn-kertz-committee-rachel-kertz-for-san-rafael-city-council-2024-26"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-30-carolyn-kertz-committee-rachel-kertz-for-san-rafael-city-council-2024-26"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-30-carolyn-kertz-committee-rachel-kertz-for-san-rafael-city-council-2024-26"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6823,8 +8566,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-06-30-lori-frugoli-w1-committee-rachel-kertz-for-san-rafael-city-council-2024-30"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-30-lori-frugoli-w1-committee-rachel-kertz-for-san-rafael-city-council-2024-30"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-06-30-paul-cohen-z-committee-rachel-kertz-for-san-rafael-city-council-2024-29"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-30-paul-cohen-z-committee-rachel-kertz-for-san-rafael-city-council-2024-29"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-30-paul-cohen-z-committee-rachel-kertz-for-san-rafael-city-council-2024-29"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6833,8 +8596,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-06-30-sandy-magid-z-committee-rachel-kertz-for-san-rafael-city-council-2024-27"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-30-sandy-magid-z-committee-rachel-kertz-for-san-rafael-city-council-2024-27"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-06-30-stephen-isaacs-committee-rachel-kertz-for-san-rafael-city-council-2024-28"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-30-stephen-isaacs-committee-rachel-kertz-for-san-rafael-city-council-2024-28"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-06-30-stephen-isaacs-committee-rachel-kertz-for-san-rafael-city-council-2024-28"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6843,8 +8626,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-01-deborah-strull-committee-kate-colin-for-san-rafael-mayor-2024-44"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-01-deborah-strull-committee-kate-colin-for-san-rafael-mayor-2024-44"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-01-dennis-rodoni-for-supervisor-committee-kate-colin-for-san-rafael-mayor-2024-12"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-01-dennis-rodoni-for-supervisor-committee-kate-colin-for-san-rafael-mayor-2024-12"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-01-dennis-rodoni-for-supervisor-committee-kate-colin-for-san-rafael-mayor-2024-12"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6853,8 +8656,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-01-julie-fingersh-committee-rachel-kertz-for-san-rafael-city-council-2024-4"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-01-julie-fingersh-committee-rachel-kertz-for-san-rafael-city-council-2024-4"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-01-julie-sherman-d-committee-rachel-kertz-for-san-rafael-city-council-2024-3"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-01-julie-sherman-d-committee-rachel-kertz-for-san-rafael-city-council-2024-3"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-01-julie-sherman-d-committee-rachel-kertz-for-san-rafael-city-council-2024-3"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6863,8 +8686,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-01-lora-levin-i-committee-rachel-kertz-for-san-rafael-city-council-2024-2"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-01-lora-levin-i-committee-rachel-kertz-for-san-rafael-city-council-2024-2"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-01-ross-guehring-committee-rachel-kertz-for-san-rafael-city-council-2024-1"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-01-ross-guehring-committee-rachel-kertz-for-san-rafael-city-council-2024-1"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-01-ross-guehring-committee-rachel-kertz-for-san-rafael-city-council-2024-1"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6873,8 +8716,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-02-andrew-deckas-committee-kate-colin-for-san-rafael-mayor-2024-10"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-02-andrew-deckas-committee-kate-colin-for-san-rafael-mayor-2024-10"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-02-ashley-paff-committee-kate-colin-for-san-rafael-mayor-2024-37"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-02-ashley-paff-committee-kate-colin-for-san-rafael-mayor-2024-37"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-02-ashley-paff-committee-kate-colin-for-san-rafael-mayor-2024-37"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6883,8 +8746,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-02-denise-m-lucy-committee-kate-colin-for-san-rafael-mayor-2024-30"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-02-denise-m-lucy-committee-kate-colin-for-san-rafael-mayor-2024-30"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-02-joe-ohehir-committee-kate-colin-for-san-rafael-mayor-2024-36"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-02-joe-ohehir-committee-kate-colin-for-san-rafael-mayor-2024-36"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-02-joe-ohehir-committee-kate-colin-for-san-rafael-mayor-2024-36"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6893,8 +8776,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-02-stephanie-plante-committee-kate-colin-for-san-rafael-mayor-2024-40"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-02-stephanie-plante-committee-kate-colin-for-san-rafael-mayor-2024-40"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-02-thomas-mcinerney-committee-kate-colin-for-san-rafael-mayor-2024-33"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-02-thomas-mcinerney-committee-kate-colin-for-san-rafael-mayor-2024-33"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-02-thomas-mcinerney-committee-kate-colin-for-san-rafael-mayor-2024-33"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6903,8 +8806,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-03-caran-cuneo-committee-kate-colin-for-san-rafael-mayor-2024-8"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-03-caran-cuneo-committee-kate-colin-for-san-rafael-mayor-2024-8"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-03-natutuatagaloa-z-committee-rachel-kertz-for-san-rafael-city-council-2024-5"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-03-natutuatagaloa-z-committee-rachel-kertz-for-san-rafael-city-council-2024-5"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-03-natutuatagaloa-z-committee-rachel-kertz-for-san-rafael-city-council-2024-5"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6913,8 +8836,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-03-stacy-nelson-committee-kate-colin-for-san-rafael-mayor-2024-35"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-03-stacy-nelson-committee-kate-colin-for-san-rafael-mayor-2024-35"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-05-eric-lucan-for-marin-county-supervisor-2026-committee-kate-colin-for-san-rafael-mayor-2024-14"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-05-eric-lucan-for-marin-county-supervisor-2026-committee-kate-colin-for-san-rafael-mayor-2024-14"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-05-eric-lucan-for-marin-county-supervisor-2026-committee-kate-colin-for-san-rafael-mayor-2024-14"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6923,8 +8866,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-05-tracy-case-committee-kate-colin-for-san-rafael-mayor-2024-6"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-05-tracy-case-committee-kate-colin-for-san-rafael-mayor-2024-6"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-06-cheryl-finley-committee-kate-colin-for-san-rafael-mayor-2024-16"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-06-cheryl-finley-committee-kate-colin-for-san-rafael-mayor-2024-16"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-06-cheryl-finley-committee-kate-colin-for-san-rafael-mayor-2024-16"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6933,8 +8896,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-06-chip-vetter-committee-kate-colin-for-san-rafael-mayor-2024-47"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-06-chip-vetter-committee-kate-colin-for-san-rafael-mayor-2024-47"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-06-deborah-ablin-committee-kate-colin-for-san-rafael-mayor-2024-1"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-06-deborah-ablin-committee-kate-colin-for-san-rafael-mayor-2024-1"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-06-deborah-ablin-committee-kate-colin-for-san-rafael-mayor-2024-1"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6943,8 +8926,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-06-dennis-gilardi-committee-kate-colin-for-san-rafael-mayor-2024-18"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-06-dennis-gilardi-committee-kate-colin-for-san-rafael-mayor-2024-18"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-06-jr-family-llc-howar-luria-committee-kate-colin-for-san-rafael-mayor-2024-24"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-06-jr-family-llc-howar-luria-committee-kate-colin-for-san-rafael-mayor-2024-24"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-06-jr-family-llc-howar-luria-committee-kate-colin-for-san-rafael-mayor-2024-24"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6953,8 +8956,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-06-judith-bloomberg-committee-rachel-kertz-for-san-rafael-city-council-2024-6"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-06-judith-bloomberg-committee-rachel-kertz-for-san-rafael-city-council-2024-6"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-06-rick-lewis-committee-kate-colin-for-san-rafael-mayor-2024-29"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-06-rick-lewis-committee-kate-colin-for-san-rafael-mayor-2024-29"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-06-rick-lewis-committee-kate-colin-for-san-rafael-mayor-2024-29"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6963,8 +8986,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-06-wayne-clark-committee-kate-colin-for-san-rafael-mayor-2024-7"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-06-wayne-clark-committee-kate-colin-for-san-rafael-mayor-2024-7"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-07-rita-manowski-committee-kate-colin-for-san-rafael-mayor-2024-32"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-07-rita-manowski-committee-kate-colin-for-san-rafael-mayor-2024-32"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-07-rita-manowski-committee-kate-colin-for-san-rafael-mayor-2024-32"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6973,8 +9016,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-09-ann-morrison-committee-kate-colin-for-san-rafael-mayor-2024-34"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-09-ann-morrison-committee-kate-colin-for-san-rafael-mayor-2024-34"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-09-sushma-taylor-committee-kate-colin-for-san-rafael-mayor-2024-45"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-09-sushma-taylor-committee-kate-colin-for-san-rafael-mayor-2024-45"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-09-sushma-taylor-committee-kate-colin-for-san-rafael-mayor-2024-45"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6983,8 +9046,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-10-heather-allison-committee-kate-colin-for-san-rafael-mayor-2024-2"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-10-heather-allison-committee-kate-colin-for-san-rafael-mayor-2024-2"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-11-barbara-heller-z-committee-rachel-kertz-for-san-rafael-city-council-2024-7"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-11-barbara-heller-z-committee-rachel-kertz-for-san-rafael-city-council-2024-7"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-11-barbara-heller-z-committee-rachel-kertz-for-san-rafael-city-council-2024-7"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -6993,8 +9076,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-11-brian-kelly-committee-kate-colin-for-san-rafael-mayor-2024-26"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-11-brian-kelly-committee-kate-colin-for-san-rafael-mayor-2024-26"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-14-connie-zlot-committee-kate-colin-for-san-rafael-mayor-2024-48"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-14-connie-zlot-committee-kate-colin-for-san-rafael-mayor-2024-48"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-14-connie-zlot-committee-kate-colin-for-san-rafael-mayor-2024-48"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7003,8 +9106,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-17-christopher-hart-committee-kate-colin-for-san-rafael-mayor-2024-20"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-17-christopher-hart-committee-kate-colin-for-san-rafael-mayor-2024-20"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-17-greg-brockbank-committee-kate-colin-for-san-rafael-mayor-2024-4"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-17-greg-brockbank-committee-kate-colin-for-san-rafael-mayor-2024-4"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-17-greg-brockbank-committee-kate-colin-for-san-rafael-mayor-2024-4"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7013,8 +9136,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-17-judy-ferguson-committee-kate-colin-for-san-rafael-mayor-2024-15"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-17-judy-ferguson-committee-kate-colin-for-san-rafael-mayor-2024-15"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-17-matt-samson-committee-kate-colin-for-san-rafael-mayor-2024-42"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-17-matt-samson-committee-kate-colin-for-san-rafael-mayor-2024-42"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-17-matt-samson-committee-kate-colin-for-san-rafael-mayor-2024-42"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7023,8 +9166,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-17-samina-sau-e-committee-kate-colin-for-san-rafael-mayor-2024-43"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-17-samina-sau-e-committee-kate-colin-for-san-rafael-mayor-2024-43"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-18-ali-eghtessadi-committee-kate-colin-for-san-rafael-mayor-2024-13"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-18-ali-eghtessadi-committee-kate-colin-for-san-rafael-mayor-2024-13"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-18-ali-eghtessadi-committee-kate-colin-for-san-rafael-mayor-2024-13"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7033,8 +9196,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-18-bruce-burtch-committee-kate-colin-for-san-rafael-mayor-2024-5"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-18-bruce-burtch-committee-kate-colin-for-san-rafael-mayor-2024-5"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-18-dana-thelen-committee-kate-colin-for-san-rafael-mayor-2024-46"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-18-dana-thelen-committee-kate-colin-for-san-rafael-mayor-2024-46"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-18-dana-thelen-committee-kate-colin-for-san-rafael-mayor-2024-46"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7043,8 +9226,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-19-damon-connoily-tor-assemnly-2024-committee-kate-colin-for-san-rafael-mayor-2024-9"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-19-damon-connoily-tor-assemnly-2024-committee-kate-colin-for-san-rafael-mayor-2024-9"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-21-cathryn-hilliard-0-committee-rachel-kertz-for-san-rafael-city-council-2024-8"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-21-cathryn-hilliard-0-committee-rachel-kertz-for-san-rafael-city-council-2024-8"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-21-cathryn-hilliard-0-committee-rachel-kertz-for-san-rafael-city-council-2024-8"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7053,8 +9256,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-22-steven-romick-committee-kate-colin-for-san-rafael-mayor-2024-41"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-22-steven-romick-committee-kate-colin-for-san-rafael-mayor-2024-41"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-23-ashley-hurd-committee-kate-colin-for-san-rafael-mayor-2024-21"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-23-ashley-hurd-committee-kate-colin-for-san-rafael-mayor-2024-21"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-23-ashley-hurd-committee-kate-colin-for-san-rafael-mayor-2024-21"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7063,8 +9286,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-07-24-dorothy-breiner-committee-kate-colin-for-san-rafael-mayor-2024-3"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-24-dorothy-breiner-committee-kate-colin-for-san-rafael-mayor-2024-3"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-07-24-ross-gue-ring-committee-kate-colin-for-san-rafael-mayor-2024-19"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-24-ross-gue-ring-committee-kate-colin-for-san-rafael-mayor-2024-19"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-07-24-ross-gue-ring-committee-kate-colin-for-san-rafael-mayor-2024-19"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7073,8 +9316,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-08-03-ranjiv-khush-committee-kate-colin-for-san-rafael-mayor-2024-27"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-03-ranjiv-khush-committee-kate-colin-for-san-rafael-mayor-2024-27"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-08-04-matthew-samson-z-committee-rachel-kertz-for-san-rafael-city-council-2024-9"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-04-matthew-samson-z-committee-rachel-kertz-for-san-rafael-city-council-2024-9"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-04-matthew-samson-z-committee-rachel-kertz-for-san-rafael-city-council-2024-9"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7083,8 +9346,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-08-07-daryoush-davidi-committee-rachel-kertz-for-san-rafael-city-council-2024-10"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-07-daryoush-davidi-committee-rachel-kertz-for-san-rafael-city-council-2024-10"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-08-11-paul-jensen-committee-kate-colin-for-san-rafael-mayor-2024-23"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-11-paul-jensen-committee-kate-colin-for-san-rafael-mayor-2024-23"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-11-paul-jensen-committee-kate-colin-for-san-rafael-mayor-2024-23"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7093,8 +9376,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-08-14-mike-ghilotti-committee-kate-colin-for-san-rafael-mayor-2024-17"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-14-mike-ghilotti-committee-kate-colin-for-san-rafael-mayor-2024-17"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-08-17-joy-phoenix-committee-kate-colin-for-san-rafael-mayor-2024-38"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-17-joy-phoenix-committee-kate-colin-for-san-rafael-mayor-2024-38"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-17-joy-phoenix-committee-kate-colin-for-san-rafael-mayor-2024-38"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7103,8 +9406,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-08-18-cathryn-hilliard-committee-rachel-kertz-for-san-rafael-city-council-2024-13"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-18-cathryn-hilliard-committee-rachel-kertz-for-san-rafael-city-council-2024-13"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-08-18-geza-kadar-committee-rachel-kertz-for-san-rafael-city-council-2024-14"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-18-geza-kadar-committee-rachel-kertz-for-san-rafael-city-council-2024-14"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-18-geza-kadar-committee-rachel-kertz-for-san-rafael-city-council-2024-14"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7113,8 +9436,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-08-18-keli-honsberger-committee-rachel-kertz-for-san-rafael-city-council-2024-11"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-18-keli-honsberger-committee-rachel-kertz-for-san-rafael-city-council-2024-11"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-08-18-marilyn-nemzer-committee-rachel-kertz-for-san-rafael-city-council-2024-12"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-18-marilyn-nemzer-committee-rachel-kertz-for-san-rafael-city-council-2024-12"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-18-marilyn-nemzer-committee-rachel-kertz-for-san-rafael-city-council-2024-12"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7158,6 +9501,16 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-08-19-pamela-harlem-committee-rachel-kertz-for-san-rafael-city-council-2024-15"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-19-pamela-harlem-committee-rachel-kertz-for-san-rafael-city-council-2024-15"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-08-19-startup-costs"})
 MATCH (target:Imported {id: "doc-2024-08-19-item-5a-report"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
@@ -7173,8 +9526,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-08-20-brian-mcleran-committee-rachel-kertz-for-san-rafael-city-council-2024-16"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-20-brian-mcleran-committee-rachel-kertz-for-san-rafael-city-council-2024-16"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-08-30-committee-rachel-kertz-for-san-rafael-city-council-2024-cathryn-hilliard-southern-marin-fire-district-schedule-d-1"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-30-committee-rachel-kertz-for-san-rafael-city-council-2024-cathryn-hilliard-southern-marin-fire-district-schedule-d-1"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-08-30-committee-rachel-kertz-for-san-rafael-city-council-2024-cathryn-hilliard-southern-marin-fire-district-schedule-d-1"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7183,8 +9556,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-09-13-diana-maier-committee-rachel-kertz-for-san-rafael-city-council-2024-17"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-13-diana-maier-committee-rachel-kertz-for-san-rafael-city-council-2024-17"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-09-13-jenni-er-knoll-committee-kate-colin-for-san-rafael-mayor-2024-28"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-13-jenni-er-knoll-committee-kate-colin-for-san-rafael-mayor-2024-28"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-13-jenni-er-knoll-committee-kate-colin-for-san-rafael-mayor-2024-28"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7193,8 +9586,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-09-16-mark-kamena-committee-kate-colin-for-san-rafael-mayor-2024-25"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-16-mark-kamena-committee-kate-colin-for-san-rafael-mayor-2024-25"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-09-17-mike-mcguire-for-insurance-commissioner-2026-committee-rachel-kertz-for-san-rafael-city-council-2024-19"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-17-mike-mcguire-for-insurance-commissioner-2026-committee-rachel-kertz-for-san-rafael-city-council-2024-19"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-17-mike-mcguire-for-insurance-commissioner-2026-committee-rachel-kertz-for-san-rafael-city-council-2024-19"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7203,8 +9616,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-09-17-moulton-peters-for-supervisor-2028-committee-committee-rachel-kertz-for-san-rafael-city-council-2024-18"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-17-moulton-peters-for-supervisor-2028-committee-committee-rachel-kertz-for-san-rafael-city-council-2024-18"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-09-19-aaron-lamstein-m-committee-rachel-kertz-for-san-rafael-city-council-2024-20"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-19-aaron-lamstein-m-committee-rachel-kertz-for-san-rafael-city-council-2024-20"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-19-aaron-lamstein-m-committee-rachel-kertz-for-san-rafael-city-council-2024-20"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7213,8 +9646,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-09-20-democratic-central-committee-of-marin-id-committee-kate-colin-for-san-rafael-mayor-2024-11"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-20-democratic-central-committee-of-marin-id-committee-kate-colin-for-san-rafael-mayor-2024-11"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-09-20-kevin-jacobs-committee-kate-colin-for-san-rafael-mayor-2024-22"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-20-kevin-jacobs-committee-kate-colin-for-san-rafael-mayor-2024-22"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-20-kevin-jacobs-committee-kate-colin-for-san-rafael-mayor-2024-22"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7223,8 +9676,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-09-21-barry-moss-i-committee-rachel-kertz-for-san-rafael-city-council-2024-23"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-21-barry-moss-i-committee-rachel-kertz-for-san-rafael-city-council-2024-23"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-09-21-barry-moss-z-committee-rachel-kertz-for-san-rafael-city-council-2024-22"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-21-barry-moss-z-committee-rachel-kertz-for-san-rafael-city-council-2024-22"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-21-barry-moss-z-committee-rachel-kertz-for-san-rafael-city-council-2024-22"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7233,8 +9706,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-09-21-democratic-central-committee-of-marin-committee-rachel-kertz-for-san-rafael-city-council-2024-24"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-21-democratic-central-committee-of-marin-committee-rachel-kertz-for-san-rafael-city-council-2024-24"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-09-21-diana-maier-committee-kate-colin-for-san-rafael-mayor-2024-31"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-21-diana-maier-committee-kate-colin-for-san-rafael-mayor-2024-31"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-21-diana-maier-committee-kate-colin-for-san-rafael-mayor-2024-31"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7243,8 +9736,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-2024-09-21-mary-de-may-committee-rachel-kertz-for-san-rafael-city-council-2024-21"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-21-mary-de-may-committee-rachel-kertz-for-san-rafael-city-council-2024-21"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-2024-09-21-scott-pinsky-committee-kate-colin-for-san-rafael-mayor-2024-39"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-21-scott-pinsky-committee-kate-colin-for-san-rafael-mayor-2024-39"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-2024-09-21-scott-pinsky-committee-kate-colin-for-san-rafael-mayor-2024-39"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7258,8 +9771,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-ac-hotel-san-rafael-mtg-1"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-ac-hotel-san-rafael-mtg-1"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-10"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-10"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-10"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7268,8 +9801,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-2"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-2"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-3"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-3"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-3"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7278,8 +9831,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-4"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-4"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-5"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-5"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-5"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7288,8 +9861,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-6"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-6"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-7"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-7"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-7"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7298,8 +9891,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-8"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-8"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-9"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-9"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-9"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7308,8 +9921,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-caran-cuneo-mtg-13"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-caran-cuneo-mtg-13"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-city-of-san-rafael-fil-11"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-city-of-san-rafael-fil-11"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-city-of-san-rafael-fil-11"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7318,8 +9951,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-cornerstone-printing-pos-12"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-cornerstone-printing-pos-12"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-donor-stack-llc-web-14"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-donor-stack-llc-web-14"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-donor-stack-llc-web-14"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7328,8 +9981,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cmp-17"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cmp-17"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-16"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-16"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-16"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7338,8 +10011,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-19"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-19"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-web-15"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-web-15"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-web-15"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7348,8 +10041,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-web-18"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-web-18"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-cns-20"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-cns-20"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-cns-20"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7358,8 +10071,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-cns-21"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-cns-21"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-cns-24"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-cns-24"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-cns-24"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7368,8 +10101,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-uncoded-23"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-uncoded-23"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-web-22"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-web-22"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-web-22"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7378,8 +10131,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-s-e-owens-company-pro-25"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-s-e-owens-company-pro-25"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-s-e-owens-company-pro-26"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-s-e-owens-company-pro-26"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-s-e-owens-company-pro-26"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7388,8 +10161,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-venturepad-mtg-27"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-venturepad-mtg-27"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-actblue-ofc-6"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-actblue-ofc-6"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-actblue-ofc-6"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7398,8 +10191,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-andre-charles-cns-2"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-andre-charles-cns-2"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-firefighters-printing-lit-5"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-firefighters-printing-lit-5"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-firefighters-printing-lit-5"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7408,8 +10221,28 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-north-bay-labor-council-prt-1"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-north-bay-labor-council-prt-1"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-pacific-print-resources-lit-4"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-pacific-print-resources-lit-4"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-pacific-print-resources-lit-4"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7418,6 +10251,16 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-political-data-inc-pol-3"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-political-data-inc-pol-3"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "seat-san-rafael-city-council-district-1"})
 MATCH (target:Imported {id: "record-san-rafael-city-council-page-2026-04-11"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
@@ -7598,6 +10441,16 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-itemized-contributions-reconciliation-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-itemized-contributions-reconciliation-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-total-contributions-rollup-summary-consistency-check"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
@@ -7605,6 +10458,16 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bu
 
 MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-total-contributions-rollup-summary-consistency-check"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-total-contributions-rollup-summary-consistency-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-total-contributions-rollup-summary-consistency-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7618,6 +10481,16 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-itemized-payments-reconciliation-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-itemized-payments-reconciliation-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-total-payments-rollup-summary-consistency-check"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
@@ -7628,6 +10501,16 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-total-payments-rollup-summary-consistency-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-total-payments-rollup-summary-consistency-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-itemized-contributions-reconciliation-check"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
@@ -7635,6 +10518,16 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bu
 
 MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-itemized-contributions-reconciliation-check"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-itemized-contributions-reconciliation-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-itemized-contributions-reconciliation-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7648,6 +10541,16 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-total-contributions-rollup-summary-consistency-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-total-contributions-rollup-summary-consistency-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-itemized-payments-reconciliation-check"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
@@ -7655,6 +10558,16 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bu
 
 MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-itemized-payments-reconciliation-check"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-itemized-payments-reconciliation-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-itemized-payments-reconciliation-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7668,6 +10581,16 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-total-payments-rollup-summary-consistency-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-total-payments-rollup-summary-consistency-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-itemized-contributions-reconciliation-check"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
@@ -7675,6 +10598,16 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bu
 
 MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-itemized-contributions-reconciliation-check"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-itemized-contributions-reconciliation-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-itemized-contributions-reconciliation-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -7688,6 +10621,16 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-total-contributions-rollup-summary-consistency-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-total-contributions-rollup-summary-consistency-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-itemized-payments-reconciliation-check"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
@@ -7698,6 +10641,16 @@ MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-itemized-payments-reconciliation-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-itemized-payments-reconciliation-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-total-payments-rollup-summary-consistency-check"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
@@ -7705,6 +10658,16 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bu
 
 MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-total-payments-rollup-summary-consistency-check"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-total-payments-rollup-summary-consistency-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-total-payments-rollup-summary-consistency-check"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
@@ -12453,6 +15416,46 @@ MATCH (target:Imported {id: "actor-rachel-kertz"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["target_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MATCH (target:Imported {id: "actor-rachel-kertz"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MATCH (target:Imported {id: "actor-rachel-kertz"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MATCH (target:Imported {id: "actor-eli-hill"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MATCH (target:Imported {id: "actor-maribeth-bushey"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-2024-08-19-contract-defense-block-security"})
 MATCH (target:Imported {id: "agenda-item-2024-08-19-5a"})
 MERGE (source)-[r:RELATES_TO_AGENDA_ITEM]->(target)
@@ -15513,6 +18516,96 @@ MATCH (target:Imported {id: "election-2020-11-03-san-rafael-general"})
 MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["election_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MATCH (target:Imported {id: "election-2020-11-03-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"})
+MATCH (target:Imported {id: "election-2020-11-03-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MATCH (target:Imported {id: "election-2020-11-03-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MATCH (target:Imported {id: "election-2020-11-03-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MATCH (target:Imported {id: "election-2020-11-03-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-page"})
+MATCH (target:Imported {id: "election-2020-11-03-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MATCH (target:Imported {id: "election-2020-11-03-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MATCH (target:Imported {id: "election-2024-11-05-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MATCH (target:Imported {id: "election-2024-11-05-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MATCH (target:Imported {id: "election-2024-11-05-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-mark-galperin-campaign-folder"})
+MATCH (target:Imported {id: "election-2024-11-05-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-page"})
+MATCH (target:Imported {id: "election-2024-11-05-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MATCH (target:Imported {id: "election-2024-11-05-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MATCH (target:Imported {id: "election-2022-11-08-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder"})
+MATCH (target:Imported {id: "election-2022-11-08-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MATCH (target:Imported {id: "election-2022-11-08-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MATCH (target:Imported {id: "election-2022-11-08-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-8-2022-election-page"})
+MATCH (target:Imported {id: "election-2022-11-08-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-form460-schedule-extract-entry-37365"})
 MATCH (target:Imported {id: "filing-san-rafael-campaign-entry-37365"})
 MERGE (source)-[r:RELATES_TO_FILING]->(target)
@@ -15527,6 +18620,36 @@ MATCH (source:Imported {id: "record-san-rafael-campaign-form460-schedule-extract
 MATCH (target:Imported {id: "filing-san-rafael-campaign-entry-37685"})
 MERGE (source)-[r:RELATES_TO_FILING]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["source_filing_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MATCH (target:Imported {id: "filing-san-rafael-campaign-entry-37365"})
+MERGE (source)-[r:RELATES_TO_FILING]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["source_filing_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MATCH (target:Imported {id: "filing-san-rafael-campaign-entry-37677"})
+MERGE (source)-[r:RELATES_TO_FILING]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["source_filing_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MATCH (target:Imported {id: "filing-san-rafael-campaign-entry-37685"})
+MERGE (source)-[r:RELATES_TO_FILING]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["source_filing_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-pdf-entry-37365"})
+MATCH (target:Imported {id: "filing-san-rafael-campaign-entry-37365"})
+MERGE (source)-[r:RELATES_TO_FILING]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["source_filing_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-pdf-entry-37677"})
+MATCH (target:Imported {id: "filing-san-rafael-campaign-entry-37677"})
+MERGE (source)-[r:RELATES_TO_FILING]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["source_filing_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-pdf-entry-37685"})
+MATCH (target:Imported {id: "filing-san-rafael-campaign-entry-37685"})
+MERGE (source)-[r:RELATES_TO_FILING]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["source_filing_id"]};
 
 MATCH (source:Imported {id: "inst-san-rafael-city-clerk"})
 MATCH (target:Imported {id: "inst-city-of-san-rafael"})
@@ -15862,6 +18985,1181 @@ MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37685"})
 MATCH (target:Imported {id: "record-san-rafael-campaign-form460-schedule-extract-entry-37685"})
 MERGE (source)-[r:RELATES_TO_RECORD]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["schedule_extract_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-28439"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-28450"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-28528"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-28553"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-28554"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-28597"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-28598"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-28599"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-28600"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-28601"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-29042"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-29043"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-29290"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-30962"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31108"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31109"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31111"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31112"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31114"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31115"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31116"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31117"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31430"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31440"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31480"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31484"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31485"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31874"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31875"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31876"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31877"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31935"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31936"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31937"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31941"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31943"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32103"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32132"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32161"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32163"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32221"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32223"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32224"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32225"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32228"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32254"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32255"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32256"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32273"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32274"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32278"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32288"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32291"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32293"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32294"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32297"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32298"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32326"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32339"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32340"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32418"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32419"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32470"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32473"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32474"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32515"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32516"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32517"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32518"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32521"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32633"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32634"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32635"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32677"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32774"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32775"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32776"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32866"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-33056"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-33166"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-33337"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-33340"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-33342"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-33343"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-33344"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-33990"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-33992"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-33997"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-34041"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-34841"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-34847"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-34864"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-34865"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-34871"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-34873"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-34874"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-34938"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35008"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35080"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35092"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35094"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35135"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35136"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35137"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35138"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35162"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35166"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35167"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35169"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35170"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35178"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35180"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35191"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35237"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35247"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35252"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35253"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35262"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35263"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35265"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35268"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35305"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35306"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35307"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35308"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35313"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35319"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35364"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35372"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35555"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35556"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35557"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35558"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35559"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35629"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35646"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35649"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35653"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35655"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35665"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35813"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36094"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36095"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36096"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36100"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36101"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36105"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36131"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36141"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36142"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36144"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36146"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36196"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36197"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36198"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36201"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36251"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36410"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36459"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36468"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36470"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36530"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36558"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36561"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36574"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36921"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37153"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37336"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37365"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37367"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37368"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37369"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37384"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37385"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37386"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37450"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mark-galperin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37487"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37507"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37510"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37511"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37595"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37608"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37609"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37653"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37663"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37677"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37685"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37687"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37688"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37733"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37746"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37772"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37775"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37776"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37777"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37778"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37779"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37807"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37808"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37809"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37909"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40243"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40247"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40249"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40284"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40286"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40948"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40949"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40950"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40956"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40957"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40958"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40965"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-41016"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-41017"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-41018"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-41019"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-41020"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-41053"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-41092"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-41093"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-41096"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-41505"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-41506"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-41507"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-41846"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-41858"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-41859"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-form460-schedule-extract-entry-37365"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37365"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["ocr_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-form460-schedule-extract-entry-37677"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37677"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["ocr_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-form460-schedule-extract-entry-37685"})
+MATCH (target:Imported {id: "record-san-rafael-campaign-ocr-entry-37685"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-form460-schedules-01__bundle-01"], source_fields: ["ocr_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-ie-filing-entry-32165"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-ie-filing-entry-32166"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-ie-filing-entry-32280"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["folder_record_id"]};
+
+MATCH (source:Imported {id: "record-san-rafael-ie-filing-entry-32292"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"})
+MERGE (source)-[r:RELATES_TO_RECORD]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["folder_record_id"]};
 
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-28439"})
 MATCH (target:Imported {id: "seat-san-rafael-mayor-at-large"})
@@ -17022,6 +21320,76 @@ MATCH (source:Imported {id: "record-san-rafael-ie-filing-entry-32292"})
 MATCH (target:Imported {id: "seat-san-rafael-city-council-district-4"})
 MERGE (source)-[r:RELATES_TO_SEAT]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["seat_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MATCH (target:Imported {id: "seat-san-rafael-city-council-district-4"})
+MERGE (source)-[r:RELATES_TO_SEAT]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["seat_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
+MATCH (target:Imported {id: "seat-san-rafael-mayor-at-large"})
+MERGE (source)-[r:RELATES_TO_SEAT]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["seat_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MATCH (target:Imported {id: "seat-san-rafael-mayor-at-large"})
+MERGE (source)-[r:RELATES_TO_SEAT]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["seat_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder"})
+MATCH (target:Imported {id: "seat-san-rafael-city-council-district-1"})
+MERGE (source)-[r:RELATES_TO_SEAT]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["seat_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder"})
+MATCH (target:Imported {id: "seat-san-rafael-city-council-district-4"})
+MERGE (source)-[r:RELATES_TO_SEAT]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["seat_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"})
+MATCH (target:Imported {id: "seat-san-rafael-mayor-at-large"})
+MERGE (source)-[r:RELATES_TO_SEAT]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["seat_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MATCH (target:Imported {id: "seat-san-rafael-mayor-at-large"})
+MERGE (source)-[r:RELATES_TO_SEAT]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["seat_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
+MATCH (target:Imported {id: "seat-san-rafael-city-council-district-1"})
+MERGE (source)-[r:RELATES_TO_SEAT]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["seat_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-mark-galperin-campaign-folder"})
+MATCH (target:Imported {id: "seat-san-rafael-city-council-district-4"})
+MERGE (source)-[r:RELATES_TO_SEAT]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["seat_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"})
+MATCH (target:Imported {id: "seat-san-rafael-city-council-district-4"})
+MERGE (source)-[r:RELATES_TO_SEAT]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["seat_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
+MATCH (target:Imported {id: "seat-san-rafael-city-council-district-2"})
+MERGE (source)-[r:RELATES_TO_SEAT]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["seat_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder"})
+MATCH (target:Imported {id: "seat-san-rafael-city-council-district-2"})
+MERGE (source)-[r:RELATES_TO_SEAT]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["seat_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MATCH (target:Imported {id: "seat-san-rafael-city-council-district-3"})
+MERGE (source)-[r:RELATES_TO_SEAT]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["seat_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder"})
+MATCH (target:Imported {id: "seat-san-rafael-city-council-district-3"})
+MERGE (source)-[r:RELATES_TO_SEAT]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["seat_ids"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37365"})
 MATCH (target:Imported {id: "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-itemized-contributions-reconciliation-check"})
