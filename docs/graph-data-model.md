@@ -28,7 +28,7 @@ The graph should store:
 - canonical entities like actors, institutions, seats, elections, committees, places, projects, issues, programs, and cases
 - process entities like meetings, agenda items, decisions, candidacies, filings, economic-interest disclosures, applications, permits, determinations, conditions, appeals, votes, comments, appointments, memberships, money flows, proceedings, charges, custody events, release decisions, dispositions, and sentences
 - record nodes for ordinances, minutes, articles, contracts, packets, applications, determinations, and campaign or disclosure filings
-- extracted mentions and candidate claims when they are worth reviewing or linking
+- extracted mentions, candidate claims, and validation checks when they are worth reviewing or linking
 - references back to raw and extracted artifacts on disk
 
 The graph should not store:
@@ -996,6 +996,49 @@ Recommended status values:
 - `rejected`
 - `needs_review`
 
+### ValidationCheck
+
+Use for machine-verifiable QA against a record-backed graph object.
+
+Examples:
+
+- extracted itemized contribution rows versus the official summary subtotal
+- summary-line rollup versus the reported total on the same filing
+- later cross-source amount checks between a staff report and an approved agreement
+
+Key fields:
+
+- `id`
+- `check_type`
+- `subject_node_id`
+- `subject_node_type`
+- `metric_name`
+- `measured_value_number?`
+- `measured_value_label?`
+- `reference_value_number?`
+- `reference_value_label?`
+- `delta_value_number?`
+- `absolute_delta_value_number?`
+- `delta_direction?`
+- `status`
+- `severity`
+- `confidence`
+- `derived_from_record_id`
+- `derived_from_segment_id?`
+
+Recommended status values:
+
+- `reconciled`
+- `partially_reconciled`
+- `extraction_gap`
+- `source_inconsistency`
+- `needs_review`
+
+Rule:
+
+- use `ValidationCheck` to separate parser gaps from source inconsistency
+- do not treat a failed validation check as proof of misconduct on its own
+
 ### Lead
 
 Use for pointers that are useful for research but too weak for the main graph.
@@ -1058,6 +1101,7 @@ The primary truth should still live in:
 - `PublicComment`
 - `Record`
 - `Claim`
+- `ValidationCheck`
 
 ## Record Ingestion Patterns
 

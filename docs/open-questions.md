@@ -289,11 +289,12 @@ Mirror the question here when it affects:
 - `scope`: `san-rafael-city-campaign-form460-schedules-01`
 - `source refs`:
   - [campaign-form460-schedule-extraction.md](/Users/tammypais/projects/marin-civic-graph/docs/campaign-form460-schedule-extraction.md)
+  - [reconciliation-and-anomaly-model.md](/Users/tammypais/projects/marin-civic-graph/docs/reconciliation-and-anomaly-model.md)
   - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json)
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
 - `question`: How should the project treat the remaining contribution-side gap when `37685` and `37365` now reconcile exactly to the official `Schedule A Summary` itemized totals, but `37677` still trails its itemized summary by `$1,000.00`?
 - `why it matters`: The project can now trust the payment-side extraction and most of the contribution-side extraction much more than before, but it still should not claim exact full-filing donor coverage on the Kate Colin filing without a tighter row parser.
-- `current note`: The current schedule bundle now reconciles itemized Schedule E totals to the PDF summaries for `37677` and `37685`. On the contribution side, `37685` and `37365` now reconcile exactly to their official `Schedule A Summary` itemized totals, while `37677` improves to `$14,992.00` extracted itemized contributions against `$15,992.00` reported itemized contributions, with `$400.00` explicitly preserved as unitemized contributions.
+- `current note`: The current schedule bundle now emits explicit `ValidationCheck` objects. `37677` remains the only contribution-side `extraction_gap`; the other filing-level reconciliation and summary-rollup checks reconcile cleanly. On the contribution side, `37677` improves to `$14,992.00` extracted itemized contributions against `$15,992.00` reported itemized contributions, with `$400.00` explicitly preserved as unitemized contributions.
 - `next evidence`: add a page-specific patch for the remaining malformed Kate Colin `Schedule A` rows or introduce a stronger PDF-assisted parser for first-row and bad-date OCR edge cases before making exact-accounting or exhaustive-donor claims.
 
 ### OQ-016: San Rafael local Form 803 filing surface

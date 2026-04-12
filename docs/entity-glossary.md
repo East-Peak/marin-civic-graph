@@ -722,6 +722,23 @@ Rule:
 - claims should be promotable or rejectable based on evidence tier
 - article-based affiliation claims should usually require corroboration unless the affiliation is explicit in the article itself
 
+### ValidationCheck
+
+A machine-verifiable QA result attached to a filing, record, decision, or other graph object.
+
+Examples:
+
+- extracted `Schedule A` subtotal versus official itemized contribution subtotal
+- extracted `Schedule E` subtotal versus official itemized payment subtotal
+- summary-line rollup versus the source's own reported total
+
+Rule:
+
+- use `ValidationCheck` to record whether the numbers tie out
+- use `Claim` for factual assertions the system thinks it found
+- do not collapse validation failure into a misconduct claim
+- anomaly views should be derived from repeated or high-signal `ValidationCheck` patterns plus supporting records
+
 ### Evidence Tier
 
 Evidence quality ranking used to decide what becomes graph truth.

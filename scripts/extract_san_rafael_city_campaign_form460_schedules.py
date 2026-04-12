@@ -1044,6 +1044,74 @@ def build_money_flow_id(parts: list[str]) -> str:
     return f"moneyflow-{slugify('-'.join(part for part in parts if part))}"
 
 
+def build_validation_check_id(parts: list[str]) -> str:
+    return f"validationcheck-{slugify('-'.join(part for part in parts if part))}"
+
+
+def build_validation_check(
+    *,
+    check_id: str,
+    check_type: str,
+    subject_node_id: str,
+    subject_node_type: str,
+    metric_name: str,
+    measured_value_number: float | None,
+    measured_value_label: str,
+    reference_value_number: float | None,
+    reference_value_label: str,
+    derived_from_record_id: str,
+    evidence_record_ids: list[str],
+) -> dict[str, Any]:
+    delta_value_number: float | None = None
+    absolute_delta_value_number: float | None = None
+    delta_direction: str | None = None
+    status = "needs_review"
+    severity = "warn"
+    confidence = "medium"
+
+    if measured_value_number is not None and reference_value_number is not None:
+        confidence = "high"
+        delta_value_number = round(measured_value_number - reference_value_number, 2)
+        absolute_delta_value_number = round(abs(delta_value_number), 2)
+        if absolute_delta_value_number == 0:
+            status = "reconciled"
+            severity = "info"
+            delta_direction = "equal"
+        elif delta_value_number < 0:
+            status = "extraction_gap"
+            delta_direction = "reference_gt_measured"
+        else:
+            status = "source_inconsistency"
+            delta_direction = "measured_gt_reference"
+
+    notes: list[str] = []
+    if status == "extraction_gap":
+        notes.append("Measured value trails the official or reference value.")
+    elif status == "source_inconsistency":
+        notes.append("Measured value exceeds the official or reference value and needs review.")
+
+    return {
+        "id": check_id,
+        "check_type": check_type,
+        "subject_node_id": subject_node_id,
+        "subject_node_type": subject_node_type,
+        "metric_name": metric_name,
+        "measured_value_number": measured_value_number,
+        "measured_value_label": measured_value_label,
+        "reference_value_number": reference_value_number,
+        "reference_value_label": reference_value_label,
+        "delta_value_number": delta_value_number,
+        "absolute_delta_value_number": absolute_delta_value_number,
+        "delta_direction": delta_direction,
+        "status": status,
+        "severity": severity,
+        "confidence": confidence,
+        "derived_from_record_id": derived_from_record_id,
+        "evidence_record_ids": evidence_record_ids,
+        "notes": notes,
+    }
+
+
 def dedupe_schedule_rows(rows: list[dict[str, Any]], keys: list[str]) -> list[dict[str, Any]]:
     seen: set[tuple[Any, ...]] = set()
     deduped: list[dict[str, Any]] = []
@@ -1065,6 +1133,7 @@ def main() -> None:
     actor_candidates_by_id: dict[str, dict[str, Any]] = {}
     filing_candidates: list[dict[str, Any]] = []
     money_flow_candidates: list[dict[str, Any]] = []
+    validation_check_candidates: list[dict[str, Any]] = []
     record_refs: list[dict[str, Any]] = []
     extracted_filings: list[dict[str, Any]] = []
 
@@ -1211,6 +1280,70 @@ def main() -> None:
             }
         )
 
+        validation_check_ids: list[str] = []
+        validation_specs = [
+            {
+                "check_type": "reconciliation_check",
+                "metric_name": "schedule_a_itemized_contributions",
+                "measured_value_number": extracted_contributions_total,
+                "measured_value_label": "extracted_itemized_contributions_total",
+                "reference_value_number": schedule_a_summary.get("reported_itemized_contributions"),
+                "reference_value_label": "reported_itemized_contributions",
+            },
+            {
+                "check_type": "summary_consistency_check",
+                "metric_name": "schedule_a_total_contributions_rollup",
+                "measured_value_number": round(
+                    (schedule_a_summary.get("reported_itemized_contributions") or 0.0)
+                    + (schedule_a_summary.get("reported_unitemized_contributions") or 0.0),
+                    2,
+                ),
+                "measured_value_label": "reported_itemized_plus_unitemized_contributions",
+                "reference_value_number": schedule_a_summary.get("reported_total_contributions"),
+                "reference_value_label": "reported_total_contributions",
+            },
+            {
+                "check_type": "reconciliation_check",
+                "metric_name": "schedule_e_itemized_payments",
+                "measured_value_number": extracted_payments_total,
+                "measured_value_label": "extracted_itemized_payments_total",
+                "reference_value_number": schedule_e_summary.get("reported_itemized_payments"),
+                "reference_value_label": "reported_itemized_payments",
+            },
+            {
+                "check_type": "summary_consistency_check",
+                "metric_name": "schedule_e_total_payments_rollup",
+                "measured_value_number": round(
+                    (schedule_e_summary.get("reported_itemized_payments") or 0.0)
+                    + (schedule_e_summary.get("reported_unitemized_payments") or 0.0)
+                    + (schedule_e_summary.get("reported_interest_paid") or 0.0),
+                    2,
+                ),
+                "measured_value_label": "reported_itemized_plus_unitemized_plus_interest_payments",
+                "reference_value_number": schedule_e_summary.get("reported_total_payments"),
+                "reference_value_label": "reported_total_payments",
+            },
+        ]
+
+        for spec in validation_specs:
+            check = build_validation_check(
+                check_id=build_validation_check_id(
+                    [target["filing_id"], spec["metric_name"], spec["check_type"]]
+                ),
+                check_type=spec["check_type"],
+                subject_node_id=target["filing_id"],
+                subject_node_type="Filing",
+                metric_name=spec["metric_name"],
+                measured_value_number=spec["measured_value_number"],
+                measured_value_label=spec["measured_value_label"],
+                reference_value_number=spec["reference_value_number"],
+                reference_value_label=spec["reference_value_label"],
+                derived_from_record_id=filing_record_id,
+                evidence_record_ids=evidence_record_ids + [filing_record_id],
+            )
+            validation_check_candidates.append(check)
+            validation_check_ids.append(check["id"])
+
         filing_candidates.append(
             {
                 "id": target["filing_id"],
@@ -1232,6 +1365,7 @@ def main() -> None:
                 "reported_payments_made": filing_summary.get("reported_payments_made"),
                 "reported_itemized_payments": schedule_e_summary.get("reported_itemized_payments"),
                 "reported_unitemized_payments": schedule_e_summary.get("reported_unitemized_payments"),
+                "validation_check_ids": validation_check_ids,
                 "evidence_record_ids": evidence_record_ids + [filing_record_id],
             }
         )
@@ -1359,21 +1493,23 @@ def main() -> None:
             "Selected San Rafael 2024 Form 460 filings with schedule-level OCR extraction",
             "Promotion of itemized contribution and expenditure rows into graph-ready MoneyFlow candidates where OCR is strong enough",
             "Reuse of existing filing and committee IDs instead of inventing a parallel campaign namespace",
+            "Automatic filing-level validation checks against official itemized and rollup summary values",
         ],
         "record_refs": sorted(record_refs, key=lambda item: item["entry_id"]),
         "actor_candidates": sorted(actor_candidates_by_id.values(), key=lambda item: item["id"]),
         "filing_candidates": sorted(filing_candidates, key=lambda item: item["id"]),
         "money_flow_candidates": money_flow_candidates,
+        "validation_check_candidates": sorted(validation_check_candidates, key=lambda item: item["id"]),
         "open_questions": [
             {
                 "id": "OQ-027",
                 "status": "watch",
-                "question": "How should the project treat schedule extraction when row-level totals still trail reported filing totals even after the raw PDFs are preserved?",
+                "question": "How should the project treat schedule extraction when validation checks still show a bounded contribution-side extraction gap after the raw PDFs are preserved?",
             }
         ],
         "notes": [
             "This bundle intentionally promotes only row-level facts that are legible from the current OCR or PDF text capture.",
-            "The filing totals are preserved as filing-level enrichments so later validations can compare reported totals against extracted row sums.",
+            "The filing totals are preserved as filing-level enrichments and now emit explicit ValidationCheck candidates so later anomaly work can distinguish extraction gaps from filing-level inconsistencies.",
             "Committee-contributor rows are currently normalized through actor candidates unless a stronger committee identity already exists elsewhere in the graph.",
         ],
     }

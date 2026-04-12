@@ -16,6 +16,7 @@ Derived outputs:
 
 - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json)
 - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
+- [Reconciliation And Anomaly Model](./reconciliation-and-anomaly-model.md)
 
 ## What This Produced
 
@@ -23,7 +24,13 @@ The current pass promotes:
 
 - `3` enriched `Filing` candidates
 - `114` actor candidates or actor joins
-- `137` `MoneyFlow` candidates
+- `136` `MoneyFlow` candidates
+- `12` `ValidationCheck` candidates
+
+Validation status:
+
+- `11` `reconciled`
+- `1` `extraction_gap`
 
 Per filing:
 
@@ -64,6 +71,7 @@ Per filing:
 - Schedule E summary values now preserve unitemized payments even when a filing has no itemized Schedule E rows.
 - The contribution side is now exact on `37685` and `37365` when compared against the extracted `Schedule A Summary` itemized totals.
 - The extractor now preserves `Schedule A Summary` itemized and unitemized contribution totals as explicit QA targets instead of only comparing row sums against the full filing total.
+- The normalized bundle now emits explicit `ValidationCheck` objects for both extraction-vs-summary reconciliation and summary-rollup consistency.
 - Existing city-side `Committee` and `Filing` IDs can be reused instead of inventing a parallel campaign namespace.
 
 ## Current Boundary
@@ -76,7 +84,7 @@ It does **not** mean:
 - contribution-side extraction is complete
 - the parser is strong enough to replace manual review for every row
 
-The remaining gap is now narrow and specific. Two of the three sample filings reconcile exactly on the contribution side, but `37677` still trails the reported itemized contribution summary by `$1,000.00`. The main remaining issue is malformed first-row and date/amount OCR on a handful of Kate Colin `Schedule A` pages, not a general failure of the extraction layer.
+The remaining gap is now narrow and specific. Two of the three sample filings reconcile exactly on the contribution side, but `37677` still trails the reported itemized contribution summary by `$1,000.00`. The main remaining issue is malformed first-row and date/amount OCR on a handful of Kate Colin `Schedule A` pages, not a general failure of the extraction layer. The new validation layer preserves that as a bounded `extraction_gap`, not as a generic anomaly claim.
 
 ## Interpretation Rule
 

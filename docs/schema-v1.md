@@ -866,6 +866,42 @@ Key fields:
 - `confidence`
 - `derived_from_record_id`
 
+### ValidationCheck
+
+Represents a machine-verifiable QA or reconciliation result attached to a graph object.
+
+Examples:
+
+- extracted `Schedule A` itemized contributions versus the official itemized summary
+- extracted `Schedule E` itemized payments versus the official itemized summary
+- a filing summary rollup that does or does not add up internally
+
+Key fields:
+
+- `id`
+- `check_type`
+- `subject_node_id`
+- `subject_node_type`
+- `metric_name`
+- `measured_value_number?`
+- `measured_value_label?`
+- `reference_value_number?`
+- `reference_value_label?`
+- `delta_value_number?`
+- `absolute_delta_value_number?`
+- `delta_direction?`
+- `status`
+- `severity`
+- `confidence`
+- `derived_from_record_id`
+
+Recommended `check_type` values:
+
+- `reconciliation_check`
+- `summary_consistency_check`
+- `cross_source_consistency_check`
+- `coverage_check`
+
 ### Lead
 
 Represents a useful but unverified pointer.
@@ -888,6 +924,7 @@ Examples:
 - decision `IMPLEMENTS` program
 - case `INVOLVES` actor / institution
 - record `EVIDENCES` meeting / agenda_item / decision / money_flow / comment / claim
+- validation_check `VALIDATES` filing / record / money_flow / decision
 - record `ATTACHED_TO` record
 - record_segment `PART_OF` record
 - actor `MADE` public_comment
