@@ -1,0 +1,56 @@
+{
+  "source_id": "san-rafael-boyd-preliminary-injunction-order",
+  "capture_id": "san-rafael-boyd-preliminary-injunction-order__2026-04-12",
+  "capture_date": "2026-04-12",
+  "entry_url": "https://clearinghouse-umich-production.s3.amazonaws.com/media/doc/154950.pdf",
+  "fetch_strategy": "direct_pdf_from_public_filed_order_copy",
+  "generated_at": "2026-04-12T21:42:01Z",
+  "artifacts": [
+    {
+      "artifact_path": "data/raw/san-rafael-boyd-preliminary-injunction-order/2026-04-12/order.pdf",
+      "content_type": "application/pdf",
+      "artifact_type": "pdf",
+      "title": "Order Granting in Part and Denying in Part Plaintiffs' Motion for Preliminary Injunction",
+      "published_at": "2023-10-19",
+      "page_count": 50,
+      "court_name": "U.S. District Court, Northern District of California",
+      "docket_number": "23-cv-04085-EMC",
+      "text_path": "data/extracted/san-rafael-boyd-preliminary-injunction-order/order.txt",
+      "word_count": 21967
+    }
+  ],
+  "candidate_signals": {
+    "actor_hits": [
+      "Boyd et al.",
+      "City of San Rafael et al.",
+      "Camp Integrity",
+      "San Rafael Homeless Union"
+    ],
+    "place_hits": [
+      "San Rafael",
+      "Mahon Creek Path"
+    ],
+    "issue_hits": [
+      "homelessness",
+      "encampments",
+      "camping ordinance",
+      "Americans with Disabilities Act",
+      "due process",
+      "state-created-danger doctrine"
+    ],
+    "legal_refs": [
+      "Case No. 23-cv-04085-EMC",
+      "Document 98",
+      "preliminary injunction",
+      "Martin v. City of Boise"
+    ],
+    "procedural_dates": [
+      "2023-09-06 preliminary injunction hearing",
+      "2023-10-19 preliminary injunction order"
+    ]
+  },
+  "notes": [
+    "Public filed-order copy surfaced through the Civil Rights Litigation Clearinghouse document page for ECF 98.",
+    "Strong enough for substantive injunction terms and legal reasoning, but not a court-hosted artifact."
+  ]
+}

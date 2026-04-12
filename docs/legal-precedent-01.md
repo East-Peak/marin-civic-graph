@@ -6,7 +6,9 @@ It starts narrowly with `Boyd v. City of San Rafael` and is meant to prove the l
 
 ## What It Contains
 
-- one court-origin `dismissal_order` record:
+- three strong Boyd order records:
+  - August 16, 2023 `Order Granting Plaintiffs' Motion for a Temporary Restraining Order`
+  - October 19, 2023 `Order Granting in Part and Denying in Part Plaintiffs' Motion for Preliminary Injunction`
   - August 7, 2024 `Order Granting Defendant's Motion to Dismiss`
 - linked city-side legal context records:
   - Boyd dismissal release
@@ -26,7 +28,7 @@ This bundle is intentionally not the whole judicial pressure-test basket.
 The repo now has a real local legal bundle, but the stronger architectural move is:
 
 1. prove the case/proceeding/program/decision joins on `Boyd`
-2. preserve the missing TRO / preliminary-injunction court-order gap explicitly
+2. preserve the remaining provenance gap explicitly
 3. widen only after the first local legal slice is clean
 
 ## Current Boundary
@@ -35,12 +37,14 @@ The bundle is normalized and durable, but it is not yet part of the narrowed `gr
 
 That is deliberate. The legal lane now has a real bundle, but it still needs:
 
-- direct TRO and preliminary-injunction order capture
+- a better court-hosted provenance path for the TRO and preliminary-injunction orders if one proves accessible
 - one follow-on import decision for `Case`, `Proceeding`, and `CaseParticipation`
 - later comparison against `Grants Pass` and other external constraint sources
 
 ## Primary Artifacts
 
 - [Boyd legal bundle](../data/normalized/legal-precedent-01/bundle-01.json)
+- [Boyd TRO extract](../data/extracted/san-rafael-boyd-tro-order/2026-04-12.json)
+- [Boyd preliminary-injunction extract](../data/extracted/san-rafael-boyd-preliminary-injunction-order/2026-04-12.json)
 - [Boyd dismissal-order extract](../data/extracted/san-rafael-boyd-dismissal-order/2026-04-12.json)
 - [Boyd dismissal-order text](../data/extracted/san-rafael-boyd-dismissal-order/order.txt)

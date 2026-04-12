@@ -1,0 +1,54 @@
+{
+  "source_id": "san-rafael-boyd-tro-order",
+  "capture_id": "san-rafael-boyd-tro-order__2026-04-12",
+  "capture_date": "2026-04-12",
+  "entry_url": "https://clearinghouse-umich-production.s3.amazonaws.com/media/doc/154946.pdf",
+  "fetch_strategy": "direct_pdf_from_public_filed_order_copy",
+  "generated_at": "2026-04-12T21:42:01Z",
+  "artifacts": [
+    {
+      "artifact_path": "data/raw/san-rafael-boyd-tro-order/2026-04-12/order.pdf",
+      "content_type": "application/pdf",
+      "artifact_type": "pdf",
+      "title": "Order Granting Plaintiffs' Motion for a Temporary Restraining Order",
+      "published_at": "2023-08-16",
+      "page_count": 16,
+      "court_name": "U.S. District Court, Northern District of California",
+      "docket_number": "23-cv-04085-EMC",
+      "text_path": "data/extracted/san-rafael-boyd-tro-order/order.txt",
+      "word_count": 6775
+    }
+  ],
+  "candidate_signals": {
+    "actor_hits": [
+      "Boyd et al.",
+      "City of San Rafael et al.",
+      "Camp Integrity"
+    ],
+    "place_hits": [
+      "San Rafael",
+      "Mahon Creek Path"
+    ],
+    "issue_hits": [
+      "homelessness",
+      "encampments",
+      "camping ordinance",
+      "Eighth Amendment"
+    ],
+    "legal_refs": [
+      "Case No. 23-cv-04085-EMC",
+      "Document 19",
+      "temporary restraining order",
+      "Mahon Creek Path"
+    ],
+    "procedural_dates": [
+      "2023-08-11 complaint filed",
+      "2023-08-15 TRO hearing",
+      "2023-08-16 TRO order entered"
+    ]
+  },
+  "notes": [
+    "Public filed-order copy surfaced through the Civil Rights Litigation Clearinghouse document page for ECF 19.",
+    "Strong enough for substantive TRO terms and procedural sequencing, but not a court-hosted artifact."
+  ]
+}

@@ -1,0 +1,5794 @@
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 1 of 50
+
+1
+2
+3
+4
+
+UNITED STATES DISTRICT COURT
+
+5
+
+NORTHERN DISTRICT OF CALIFORNIA
+
+6
+7
+
+BOYD ET AL,
+Plaintiff,
+
+8
+9
+10
+
+United States District Court
+Northern District of California
+
+11
+
+Case No. 23-cv-04085-EMC
+
+v.
+CITY OF SAN RAFAEL ET AL,
+Defendant.
+
+ORDER GRANTING IN PART AND
+DENYING IN PART PLAINTIFFS’
+MOTION FOR PRELIMINARY
+INJUNCTION
+Docket No. 1
+
+12
+13
+14
+
+Like many cities across our state, the City of San Rafael (the “City”) is faced with a
+
+15
+
+problem with its unhoused citizens. The City concedes the number of unhoused on the streets
+
+16
+
+exceeds the number of available shelter beds. Thus, consistent with Martin v. City of Boise, 920
+
+17
+
+F.3d 584 (9th Cir. 2019), the City understands it cannot criminalize those who are involuntarily
+
+18
+
+unhoused. To address a large and growing encampment and health and safety concerns
+
+19
+
+accompanying large encampments, the City, rather than establishing a safe sanctioned
+
+20
+
+encampment area or taking an incremental approach to addressing its concerns, enacted an
+
+21
+
+ordinance (the “Ordinance”) which wholly disperses the unhoused to campsites which, as a
+
+22
+
+practical matter, can accommodate only one to two campers; these campsites must be separated by
+
+23
+
+200 feet, i.e., nearly two thirds of the length of a football field. Although Martin, does not
+
+24
+
+eliminate a city’s discretion to determine where unhoused persons may camp within the city, there
+
+25
+
+are constitutional and statutory requirements that assure citizens, including the unhoused, due
+
+26
+
+process, that require consideration of reasonable accommodation to those with disabilities, and
+
+27
+
+that prevent citizens from being exposed to unreasonable dangers affirmatively created by
+
+28
+
+governmental actors.
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 2 of 50
+
+For the reasons stated below, the Court concludes that full enforcement of the Ordinance is
+
+1
+2
+
+likely to inflict irreparable harm upon the Plaintiffs and threatens to impinge upon certain legal
+
+3
+
+rights. On the other hand, maintaining a blanket injunction and leaving the encampment in place
+
+4
+
+would impose significant hardships upon the City and threaten its valid interest in safeguarding
+
+5
+
+public health and safety. The Court will lift the broad temporary restraining order and issue a
+
+6
+
+narrowly tailored preliminary injunction which permits enforcement of the Ordinance under
+
+7
+
+limited conditions, conditions which accommodate the competing interests of both parties while
+
+8
+
+minimizing their respective hardships.
+
+9
+
+I.
+
+The case at bar concerns the recent enactment and adoption of an ordinance by the City of
+
+10
+
+United States District Court
+Northern District of California
+
+BACKGROUND
+
+11
+
+San Rafael that prohibits camping, including sleeping, on certain public property without
+
+12
+
+exception and imposes size, density, and proximity limitations on campsites. The Plaintiffs in this
+
+13
+
+action include “Camp Integrity,” a self-named community of campers located in part of San
+
+14
+
+Rafael’s Mahon Creek Path (“MCP”), the San Rafael Homeless Union (the “Union”), and thirteen
+
+15
+
+residents at the MCP encampment1. The MCP encampment is comprised of over 30 tents and
+
+16
+
+offers a communal bathroom, handwashing station, and other resources. Plaintiffs seek a
+
+17
+
+preliminary injunction preventing the Ordinance from going into effect. Defendants include the
+
+18
+
+City and certain of its officials.
+San Rafael’s former anti-camping scheme prohibited camping in parks, buildings, or
+
+19
+20
+
+parking lots, but included an exception if the individual had no alternative shelter. (San Rafael
+
+21
+
+Municipal Code (“SMC”) Section 19.20.080(C)). The City manager could absolutely prohibit
+
+22
+
+camping in specific parks if there was a threat to public, health, safety, or welfare by
+
+23
+
+administrative order. Id. The new statute, SMC section 19.50, designates certain, identified land
+
+24
+
+in San Rafael as camping-prohibited, without exception. For all other land, an exception allows
+
+25
+
+camping when the person camping has no alternative shelter. When camping is allowed, each
+
+26
+
+campsite must be 200 feet apart and limited to100 square feet for one person or 200 square feet for
+
+27
+28
+
+The encampment along the Mahon Creek Path (“MCP encampment”) is sometimes referred to as
+“Camp Integrity” throughout this Order.
+2
+1
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 3 of 50
+
+1
+
+all others—including belongings. Camping in violation of the statute is criminally punishable by
+
+2
+
+up to six months in jail and/or a $500 fine.
+
+United States District Court
+Northern District of California
+
+3
+
+On August 15, 2023, Judge Thompson issued a temporary restraining order to halt the
+
+4
+
+Ordinance from going into effect as planned on August 16, 2023, until a hearing on the
+
+5
+
+preliminary injunction. She found that serious questions were raised as to the merits of Plaintiffs’
+
+6
+
+claim that the Ordinance violates the Eighth Amendment’s Cruel and Unusual Punishment Clause,
+
+7
+
+as interpreted by the Ninth Circuit in Martin, 920 F.3d 584. See Docket No. 19, at 14–15, 15 n.2.
+
+8
+
+Specifically, she found serious doubt as to whether any areas in San Rafael remained available for
+
+9
+
+persons with no alternative shelter to camp, i.e., sleep lawfully under the new Ordinance—thus
+
+10
+
+impermissibly criminalizing the status of homelessness under Martin. Id. Judge Thompson
+
+11
+
+declined to reach Plaintiffs’ other claims. Id. at 15 n.4.
+
+12
+
+The City has since submitted a map identifying areas where camping remains lawful in
+
+13
+
+San Rafael, which abates much concern regarding a simple violation of Martin. However, the
+
+14
+
+Ordinance poses significant danger to Plaintiffs, implicating their due process rights and rights
+
+15
+
+under the Americans with Disabilities Act, among others. Namely, the Ordinance effectively
+
+16
+
+limits campsites to one or two campers and isolates each campsite from the next by 200 feet,
+
+17
+
+depriving campers who need, for various reasons, some community to safely survive. Forced
+
+18
+
+isolation exposes unhoused women who have experienced victimization to sexual, domestic, or
+
+19
+
+other violence. It separates disabled Plaintiffs from caretakers upon whom they rely. It prevents
+
+20
+
+neighbors from administering aid in a medical emergency such as a drug overdose, something that
+
+21
+
+has occurred more than once in this campsite. Moreover, the Ordinance leaves the unhoused on
+
+22
+
+their own to find permissible places to camp, under circumstances where such campsites may be
+
+23
+
+relatively scarce. Further, unhoused persons face an indefinite risk of eviction and prosecution
+
+24
+
+were someone else to set up a camp near them, violating the mandated buffer zone, regardless of
+
+25
+
+knowledge or control. The City does not have a plan to mitigate these harms and resists
+
+26
+
+implementing any administrative scheme to assure an orderly allocation, assignment, or
+
+27
+
+registration of permissible campsites, leaving the unhoused displaced under the Ordinance to play
+
+28
+
+a game of musical chairs.
+3
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 4 of 50
+
+1
+2
+
+posed by large, concentrated encampments that the City seeks to abate via the Ordinance,
+
+3
+
+including risk of fire, accumulation of refuse, and proliferation of criminal activity.
+
+4
+
+United States District Court
+Northern District of California
+
+At the same time, the Court is acutely aware of the important health and safety concerns
+
+Thus, having considered the irreparable harm with which Plaintiffs are threatened, the
+
+5
+
+balance of hardships considering a narrowly tailored injunction, and the strength of the Plaintiffs’
+
+6
+
+showing on the merits, the Court hereby GRANTS in part and DENIES in part Plaintiffs’ motion
+
+7
+
+for a preliminary injunction. The City may enforce SMC Section 19.50 at the Mahon Creek Path
+
+8
+
+encampment and against Plaintiffs in this action, but with conditions which permit Plaintiffs to
+
+9
+
+maintain some semblance of community, affording them an opportunity for mutual protection and
+
+10
+
+assistance while preserving the City’s goal of breaking up large encampments. Specifically, while
+
+11
+
+the City is permitted to break up the encampment at issue, the City must allow 400 square-foot
+
+12
+
+encampments, housing up to four people, and may impose a 100-foot buffer between campsites
+
+13
+
+instead of 200-foot buffer. The City must also ensure there is a process clearly identifying
+
+14
+
+permissible sites and an orderly process by which such sites may be allocated or claimed. This
+
+15
+
+injunction relates only to those who have brought this suit, i.e., the individual Plaintiffs with
+
+16
+
+standing and residents of the Mahon Creek Path encampment represented in this action by the
+
+17
+
+Plaintiff San Rafael Homeless Union.
+
+18
+19
+
+II.
+
+PROCEDURAL HISTORY
+
+Camp Integrity and ten individual plaintiffs filed their complaint and ex parte application
+
+20
+
+for a temporary restraining order and preliminary injunction on Friday, August 11, 2023. See
+
+21
+
+Docket No. 1. Defendants include the City of San Rafael, as well as the City Manager, Chief of
+
+22
+
+Police, Assistant City Manager, Director of Public Works, Mayor of the City, and City Council
+
+23
+
+Persons. Id. at 11–12. The City was personally served at the City Clerk’s Office at 1400 Fifth
+
+24
+
+Street, San Rafael CA 94901 around 1:00 pm on August 11th. Id. at 40. The same day, the Court
+
+25
+
+filed a briefing schedule that was served on all parties via email. See Docket No. 14. Judge
+
+26
+
+Thompson held a hearing regarding Plaintiffs’ motion for temporary restraining order on Tuesday,
+
+27
+
+August 15, 2023, via Zoom Videoconference. Judge Thompson granted Plaintiffs’ request for
+
+28
+
+temporary restraining order. See Docket No. 19.
+4
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 5 of 50
+
+1
+
+Subsequently, the parties filed additional briefs addressing Plaintiffs’ request for a
+
+2
+
+preliminary injunction. Defendants filed an opposition and supporting declarations, Docket Nos.
+
+3
+
+24–30, and Plaintiffs filed a reply in further support of their motion and supporting declarations,
+
+4
+
+Docket No. 32. A hearing was held by this Court on Wednesday, September 6, 2023, via Zoom
+
+5
+
+Videoconference. At that time, Defendants consented to extension of the TRO until parties could
+
+6
+
+brief supplemental issues and the Court could hear additional oral argument. The parties
+
+7
+
+submitted additional papers in support and opposition of the motion. See Docket Nos. 72, 74, 76.
+
+8
+
+Plaintiffs filed a First Amended Complaint (“FAC”) on September 26, 2023, adding three
+
+9
+
+individual Plaintiffs and the San Rafael Homeless Union as Plaintiffs. Docket No. 77 (“FAC”).
+
+10
+
+The complaint was otherwise nearly identical. Compare Docket No. 1 with Docket No. 77. The
+
+11
+
+Court again held oral argument on October 2, 2023. At that time, the parties put on live witnesses
+
+12
+
+and the Court heard additional argument on October 3, 2023.
+
+13
+
+III.
+
+FACTUAL BACKGROUND
+
+Individual Plaintiffs in this action are thirteen residents of Camp Integrity who do not
+
+14
+15
+
+otherwise have stable housing, along with the entities Camp Integrity and the San Rafael
+
+16
+
+Homeless Union. Docket No. 1 ¶ 1; FAC at 10, 12. The MCP encampment where Plaintiffs2
+
+17
+
+reside receives donations of water, food, and blankets, and features a communal handwashing
+
+18
+
+station and cooling center. See Docket No. 1 at 10, ¶ 102. There were about 33 tents in Plaintiffs’
+
+19
+
+encampment, which is in part of the Mahon Creek Path in San Rafael, at the outset of this
+
+20
+
+litigation. Docket No. 16-2 at 3. The City now estimates that there are 61 tents at the Path. The
+
+21
+
+encampment has grown in recent months following closure of other encampments in the City.
+
+22
+
+Defendants recognize that the City of San Rafael is presently unable to provide adequate
+
+23
+
+shelter to its homeless population. See id. at 2–3. Specifically, the City acknowledges that “units
+
+24
+
+and shelters available in the city are typically full, except occasional turnover averaging two beds
+
+25
+
+per week.” Id. at 2. A 2022 Point in Time (“PIT”) count of the homeless population in Marin
+
+26
+
+County conducted by the City, as was required by the Department of Housing and Urban
+
+27
+28
+
+2
+
+Hereinafter “Plaintiffs” refers to the Individual Plaintiffs unless otherwise specified.
+5
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 6 of 50
+
+1
+
+Development (“HUD”), found that there were 348 homeless individuals in San Rafael and 241
+
+2
+
+were unsheltered. Id. at 2; Docket No. 24 at 5. The City believes this figure is overinclusive
+
+3
+
+because the PIT count of 348 people included those living on public property, private property,
+
+4
+
+and offshore areas. Docket No. 24 at 5. The City now estimates that 120 persons are unsheltered
+
+5
+
+and living on public property in San Rafael. Id.; Murphy Decl. ¶ 5. The City does not explain
+
+6
+
+why the PIT estimation of 241 unsheltered persons in San Rafael is not accurate. Regardless,
+
+7
+
+under either scenario, shelter space is insufficient to house the unsheltered population in San
+
+8
+
+Rafael at present. Many of the Plaintiffs have submitted requests to the City for shelter placement
+
+9
+
+and all assert that they want long-term housing. See Docket No. 1 ¶ 1; Docket No. 1-2, Boyd
+
+10
+
+Decl., Ex. A, Metz Decl., Ex. B Nelson Decl., Ex. C, Barrow Decl., Ex. B, Cook Decl., Ex. B;
+
+11
+
+Docket No. 1-3, Aardalen Decl., Ex. B; Docket No. 1-4, Hensley Decl., Ex. A, Mendoza Decl.,
+
+12
+
+Ex. B.
+
+13
+
+The City’s current response was to enact an ordinance designed to break up large
+
+14
+
+encampments like the encampment at the Mahon Creek Path and disperse unhoused individuals
+
+15
+
+throughout the City. At the center of this litigation is the City’s evident intent to enforce the new
+
+16
+
+Ordinance against the MCP encampment.
+
+17
+
+A.
+
+18
+
+Statutory Scheme
+The previous anti-camping statute in San Rafael prohibited camping in any park, building,
+
+19
+
+or portion thereof, including the parking lot of any such area. SMC § 19.20.080(C)(1). The
+
+20
+
+statute included an exception allowing camping in all of these areas when no alternative shelter
+
+21
+
+was available to the person camping. SMC § 19.20.080(C)(3).
+
+22
+
+The new statute identifies certain areas where camping is banned without exception
+
+23
+
+(Section 19.50.030); for all other land, camping is allowed under an exception for persons who
+
+24
+
+have no alternative shelter available (Section 19.50.040(A)–(B)).
+
+25
+
+To this end, Section 19.50.030 prohibits camping absolutely at:
+
+26
+
+•
+
+Open space property. (“Any parcel or area of land or water which is essentially
+
+27
+
+unimproved natural landscape area, such as rivers, streams, watershed and shoreline
+
+28
+
+lands, forest and agricultural lands, ridges, hilltops, canyons and other scenic areas,
+6
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 7 of 50
+
+1
+
+acquired and/or leased by the city for open space purposes.”). SMC §§ 19.50.020(E),
+
+2
+
+19.10.020.
+
+3
+
+Public rights-of-way and sidewalks, “or portion[s] thereof.” (“Public right-of-way” is
+
+4
+
+defined as “land which by written instrument, usage or process of law is owned by,
+
+5
+
+reserved for or dedicated to the public use for street or highway purposes, or other
+
+6
+
+transportation purposes, whether or not such land is actually being used or developed
+
+7
+
+specifically for those purposes.”). SMC §§ 19.50.020(I), 11.04.020.
+
+8
+
+•
+
+Public facilities. (“Any building, structure, or area enclosed by a fence located on
+
+9
+
+public property, whether secured, unsecured, locked, unlocked, open, or enclosed.”).
+
+10
+
+SMC § 19.50.020(G).
+
+11
+
+United States District Court
+Northern District of California
+
+•
+
+•
+
+Within 10 feet of any public utility. (“Public bathrooms, and electrical boxes, fire
+
+12
+
+hydrants, and similar equipment . . . but does not include light or electrical poles.”).
+
+13
+
+SMC § 19.50.020(J) .
+
+14
+
+•
+
+Within 100 feet of any playground.
+
+15
+
+•
+
+City-owned parking garages.
+
+16
+
+•
+
+Any public property “determined to be a threat to the public health, safety, or welfare,”
+
+17
+
+when designated as such by the city council or city manager via administrative order or
+
+18
+
+resolution. SMC § 19.50.030(B).
+
+19
+
+The new statute also introduces size, density, and proximity limitations when camping is
+
+20
+
+allowed in section 19.50.040(C). Campsites may not extend beyond 100 square feet for one
+
+21
+
+person or 200 square feet for two or more people. SMC §§ 19.50.040(C)(2), 19.50.020(D). All
+
+22
+
+items must be kept within the campsites and if not, will be treated as abandoned property and may
+
+23
+
+be discarded. SMC § 19.50.040(C)(2)(a)–(b). Campsites may not be within 200 feet of any other
+
+24
+
+campsite. SMC § 19.50.040(C)(4).
+
+25
+
+Key definitions including an updated definition of the term “camp” or “camping,” are in
+
+26
+
+SMC section 19.50.020. Further, the Ordinance allows for punishment of up to six months in jail
+
+27
+
+and/or a $500 fine if found to be camping in violation of the statute. SMC §§ 19.20.110, 1.42.010.
+
+28
+7
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 8 of 50
+
+United States District Court
+Northern District of California
+
+1
+
+B.
+
+Harm to Plaintiffs if the Ordinance is Enforced in Full
+
+2
+
+Plaintiffs explain that (1) they rely on other, proximate campers and communal resources
+
+3
+
+for survival and (2) they fear isolation imposed by the Ordinance will expose them to serious and,
+
+4
+
+in some cases, life-threatening harms. Docket No. 1 ¶¶ 78–104.
+
+5
+
+Caretakers and resources for physically disabled Plaintiffs. Certain Plaintiffs have
+
+6
+
+suffered physical injuries causing them to rely on others to get food, water, and shade and to move
+
+7
+
+around. Id. ¶¶ 78–80, ¶¶ 86–87. Plaintiff Anker Aardalen mostly uses a wheelchair due to a
+
+8
+
+dislocated knee. Docket No. 1-3, Aardalen Decl., Ex. I ¶¶ 11–12. Mr. Aardalen relies on nearby
+
+9
+
+campers to get access to food, water, and other resources. Id.; Docket No. 1 ¶¶ 86–87. Plaintiff
+
+10
+
+Eddy Metz has a torn meniscus in his left knee, aggravated by a previous camp eviction. Docket
+
+11
+
+No. 1-2, Metz Decl., Ex. E ¶ 6. This injury makes it difficult for Mr. Metz to walk. Id.
+
+12
+
+Accordingly, Mr. Metz “rel[ies] heavily” on neighbors at Camp Integrity to bring him water and
+
+13
+
+food each day. Id. ¶¶ 9–10. Plaintiff Brian Nelson suffers from sleep apnea and relies upon a
+
+14
+
+CPAP machine; he needs access to electricity, which is more available in a communal campsite.
+
+15
+
+Docket No. 1 ¶ 80; Docket No. 1-2, Nelson Decl., Ex. C at 74–75. All Plaintiffs with disabilities
+
+16
+
+expect to lose critical assistance in gaining access to food, water, shade, and housing services if
+
+17
+
+they are forced to camp away from their community. Docket No. 1 ¶ 87.
+
+18
+
+Protection from gender-based violence and crime. Other Plaintiffs rely on fellow
+
+19
+
+campers for protection against sexual and domestic violence and human trafficking; safe campsites
+
+20
+
+provide space away from abusers and camping in a group offers protection from attacks. See, e.g.,
+
+21
+
+Docket No. 1-3, Schonberg Decl., Ex. K ¶¶ 1–24, Huff Decl., Ex. J ¶¶ 8–11; Docket No. 1-4,
+
+22
+
+Mendoza Decl., Ex. N ¶¶ 15, 17. Ms. Mendoza, who was a childhood victim of sexual abuse has
+
+23
+
+been attacked while living on the street and relies on others she trusts to protect her. Docket No.
+
+24
+
+1-4, Mendoza Decl., Ex. N ¶¶ 13, 16–17. In one instance, Ms. Mendoza was defended against a
+
+25
+
+stalker by fellow members of the MCP encampment who persuaded the man to leave her alone.
+
+26
+
+Id. ¶¶ 15, 17. Another Plaintiff, Ms. Huff, is a victim of domestic violence and has been raped
+
+27
+
+multiple times while living on the street. Docket No. 1-3, Huff Decl., Ex. J ¶¶ 3, 8–11. Ms. Huff
+
+28
+
+has also survived human trafficking at the hands of a prison gang that continues to threaten her
+8
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 9 of 50
+
+1
+
+and sometimes watches or follows her in San Rafael. Id. ¶ 8. Ms. Huff relies on nearby campers
+
+2
+
+to protect her from these former abusers and to prevent future attacks. Id. ¶ 10. She explains the
+
+3
+
+MCP encampment “is one of the few places that [she] feel[s] safe.” Id. ¶ 11. For these women
+
+4
+
+and others, camping communally appears to be vital. As Plaintiff Shaleeta Boyd explained in her
+
+5
+
+testimony, there are no locks on tents, and they can be cut open; being a woman in this situation is
+
+6
+
+terrifying.
+
+United States District Court
+Northern District of California
+
+7
+
+In support of the above, Dr. Jeffrey Schonberg, Ph.D., a researcher focusing on people
+
+8
+
+experiencing homelessness in the Bay Area, has offered an expert report analyzing the impact of
+
+9
+
+SMC Section 19.50 on unhoused persons. See Docket No. 1-3, Schonberg Decl., Ex. K. Dr.
+
+10
+
+Schonberg explains the Ordinance will “significantly increase the risk of sexual assault, domestic
+
+11
+
+violence, and human trafficking perpetrated against women who are unhoused.” Id. ¶ 12. This is
+
+12
+
+because the statute decreases women’s access to capable guardians and increases exposure to
+
+13
+
+offenders—key factors in victimization of unhoused women. Id. ¶¶ 13–14. Being afforded
+
+14
+
+sufficient protection from abusers is particularly important because 39% of unsheltered women
+
+15
+
+report intimate partner violence while living on the street. Id. ¶ 14. Women are also susceptible to
+
+16
+
+attack by strangers; 49% of attacks of unsheltered persons are committed by someone the person
+
+17
+
+does not know. Id. ¶ 15. Because, under the Ordinance, unsheltered women would not have a
+
+18
+
+central location to access resources, they must travel more often to obtain food, water, and other
+
+19
+
+necessities, increasing the opportunity to be attacked. Id. ¶¶ 16–17. At oral argument, even Lynn
+
+20
+
+Murphy, the City’s mental health liaison, agreed in her testimony that camping in isolation could
+
+21
+
+be devastating to an unhoused person. Specifically, Ms. Murphy stated, “I completely agree with
+
+22
+
+Dr. Schonberg that isolation can be devastating, [as is] a lack of social connectiveness.” Ms.
+
+23
+
+Murphy continued that she believes that that connectiveness “can exist in a group of three or four
+
+24
+
+people.”
+
+25
+
+Protection against theft. Similarly, the Plaintiffs camp in groups to offer protection from
+
+26
+
+crime including theft. Mr. Nelson explained that he relies on nearby campers to protect his
+
+27
+
+belongings, including his medical machines, from being stolen if he needs to be away from camp.
+
+28
+
+Docket No. 1-2, Nelson Decl., Ex. C at 75. Similarly, Ms. Boyd testified that her tent and all of
+9
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 10 of 50
+
+1
+
+her belongings were stolen while she was camping away from most tents on the Mahon Creek
+
+2
+
+Path. Though there was one tent across the path from her, that person did not offer her protection.
+
+3
+
+However, her items and tent have not been stolen since she moved to the larger cluster of tents.
+
+4
+
+Needs of those with potential psychological disabilities. Several Plaintiffs suffer from
+
+5
+
+psychological disabilities because of violence they have endured and thus rely on nearby campers
+
+6
+
+to feel safe and to manage these disabilities. Ms. Mendoza states she suffers from PTSD from
+
+7
+
+childhood sexual abuse. Docket No. 1-3, Mendoza Decl., Ex. N ¶¶ 11, 13. Accordingly, Ms.
+
+8
+
+Mendoza must camp near multiple people that she trusts to fall asleep and prevent mental health
+
+9
+
+episodes. Docket No. 1-4, Mendoza Decl., Ex. A at 151–52. Ms. Huff similarly is a survivor of
+
+10
+
+childhood sexual abuse and has complex PTSD as a result. Docket No. 1-3, Huff Decl., Ex. J ¶ 5.
+
+11
+
+Ms. Huff relies upon sleeping near people that will protect her from her abusers so she can feel
+
+12
+
+and be safe. Id. ¶¶ 9–10. Mr. Nelson was attacked by knife earlier this year. Docket No. 1 ¶ 80;
+
+13
+
+Docket No. 1-2, Nelson Decl., Ex. C at 77. He was stabbed by someone that he did not know
+
+14
+
+sixteen times. Id. As a result of this event, Mr. Nelson suffers from PTSD that is triggered when
+
+15
+
+he is not around familiar people. Id. at 74, 77. Plaintiff Amanda Binkley suffers from anxiety,
+
+16
+
+PTSD, and depression that would be aggravated by being isolated in an atomized campsite. FAC
+
+17
+
+¶ 87. Similarly, Plaintiff Anthony Tringali suffers from depression that would be aggravated by
+
+18
+
+social isolation. Id. ¶ 88.
+
+19
+
+Plaintiffs that suffer from physical and psychological disabilities have submitted requests
+
+20
+
+for reasonable accommodation to the City to no avail. Plaintiffs Amalia Mendoza, Brian Nelson,
+
+21
+
+Christie Marie Cook, Eddy Metz, and Anker Aardalen submitted Requests for Reasonable
+
+22
+
+Accommodations to the City. Docket No. 1-4, Mendoza Decl., Ex. A; Docket No. 1-2, Nelson
+
+23
+
+Decl., Ex. C; Docket No. 1-2, Cook Decl., Ex. A; Docket No. 1-2, Metz Decl., Ex. B; Docket No.
+
+24
+
+1-3, Aardalen Decl., Ex. C (“Accommodation Requests”). In addition to requesting housing,
+
+25
+
+Plaintiffs request the ability to camp near others. Id. Namely, Mr. Aardalen who cannot walk
+
+26
+
+easily requests the ability to remain near other campers and resources so he can have continued
+
+27
+
+access to food, water, shade, and other life-sustaining resources. Docket No. 1 ¶¶ 79, 86. Ms.
+
+28
+
+Mendoza and Ms. Huff request the ability to sleep near other safe campers to prevent mental
+10
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 11 of 50
+
+1
+
+health episodes caused by PTSD from sexual trauma. Docket No. 1-4, Mendoza Decl., Ex. A at
+
+2
+
+22–23; Docket No. 1-3, Huff Decl., Ex. J ¶¶ 10–11. Mr. Nelson requests the ability to camp
+
+3
+
+communally to allow access to electricity as is needed for his CPAP machine and to accommodate
+
+4
+
+PTSD from the stabbing attack that he endured. See Docket No. 1-2, Nelson Decl., Ex. C at 74–
+
+5
+
+75. The requests were submitted, at the latest, in mid-August. See Accommodation Requests. At
+
+6
+
+present, the City has not engaged in an interactive process with Plaintiffs to discuss
+
+7
+
+accommodations despite its policy requiring that the City respond to requests within fifteen days
+
+8
+
+of its receipt. Docket No. 72, Jeppson Decl. ¶ 2. The City has not expressed any intention to
+
+9
+
+respond to Plaintiffs’ requests.
+
+10
+
+Prevention of drug overdose and help in emergency situations. Other Plaintiffs fear
+
+11
+
+being separated from neighbors who could save them by administering Narcan or adrenaline in
+
+12
+
+case of an accidental drug overdose. Docket No. 1 ¶¶ 92–97; Docket No. 1-3, Aardalen Decl., Ex.
+
+13
+
+I ¶ 6; Docket No. 1-2, Nelson Decl., Ex. F ¶¶ 9–11. Mr. Aardalen was saved from an accidental
+
+14
+
+overdose recently by a nearby camper. Docket No. 1-3, Aardalen Decl., Ex. I ¶ 6; Docket No. 1 ¶
+
+15
+
+92. Brian Nelson attests that his training as a veterinary technician makes him able to administer
+
+16
+
+adrenaline effectively, and that he has revived four people during overdoses. Docket No. 1-2,
+
+17
+
+Nelson Dec., Ex. F ¶¶ 9–12. At oral argument on October 2, 2023, Plaintiffs indicated that there
+
+18
+
+was recently another overdose at the MCP encampment and an incident where an individual
+
+19
+
+suffered an epileptic seizure and received emergency care from nearby campers. Dr. Schonberg
+
+20
+
+explained in his testimony that in emergency situations such as these, time and proximity is of the
+
+21
+
+essence and campers rely on each other for help. Ms. Murphy agreed in her testimony that using
+
+22
+
+drugs in a group instead of isolation offers protection; she testified that an effective tactic is to
+
+23
+
+have one person remain sober with Narcan available while other campers use drugs to prevent
+
+24
+
+mortal outcomes. Dr. Schonberg estimates that the Ordinance, if enforced, will result in a 15%-
+
+25
+
+25% increase in drug overdose deaths because “one of the single largest risk factors of overdose is
+
+26
+
+using in isolation.” Docket No. 1-3, Schonberg Decl., Ex. K ¶ 21.
+
+27
+
+Hindered access to community support and resources. As a general matter, Plaintiffs
+
+28
+
+allege that communal camping is vital for access to food, water, shelter, and resources including
+11
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 12 of 50
+
+1
+
+handwashing stations, bathrooms, and air-cooling stations. See Docket No. 1 at 10, ¶¶ 91, 102,
+
+2
+
+104. Further, a centralized encampment provides a singular location where volunteers drop off
+
+3
+
+donations of water, food, blankets, and other necessities. See id. ¶ 102. Ms. Murphy testified that
+
+4
+
+she cannot state with certainty whether the volunteer organizations that visit the now larger,
+
+5
+
+centralized encampments have the means to conduct visits and/or outreach to all campsites in San
+
+6
+
+Rafael if dispersed. One vital resource for Plaintiffs that would be jeopardized, as explained at
+
+7
+
+oral argument, is access to phone charging stations; without a phone Plaintiffs cannot make phone
+
+8
+
+calls for help in case of emergency or conduct calls to make appointments, seek employment,
+
+9
+
+receive medical care, or pursue housing opportunities. Ms. Murphy testified that solar charging
+
+10
+
+stations are sometimes distributed in encampments. It is not clear whether campers would have
+
+11
+
+access to these chargers if scattered, and Plaintiffs may also be hindered from sharing mobile
+
+12
+
+devices in emergencies if separated.
+
+13
+
+In general, Dr. Schonberg explains that the Ordinance is also dangerous because it breaks
+
+14
+
+up “essential survival strategies based on community acts of obligation and reciprocation.”
+
+15
+
+Docket No. 1-3, Schonberg Decl., Ex. K ¶ 11. In other words, unhoused persons establish a
+
+16
+
+communal framework whereby they exchange favors to stay alive. Dr. Schonberg testified that
+
+17
+
+the Ordinance’s disallowance of community encampments interferes with the acquisition and
+
+18
+
+exchange of “informal social capital” through the maintenance of relationships with others on the
+
+19
+
+streets. This informal social capital is the currency by which unhoused people gain protection,
+
+20
+
+support, and resources to survive, i.e., by having one another’s backs. The Ordinance hinders this
+
+21
+
+mutual exchange of assistance. The Ordinance also disrupts this delicate and important communal
+
+22
+
+framework in other ways. As one example, Jason Sarris, member of the County of Marin
+
+23
+
+Homeless Policy Steering Committee (“HPSC”) warns that the Ordinance “pit[s] the unhoused
+
+24
+
+against one another” because of the need to self-police a 200-foot buffer around each campsite.
+
+25
+
+Docket No. 32-12, Sarris Decl. ¶ 9(c).
+
+26
+
+The eventualities of isolation for unhoused persons in vulnerable categories is particularly
+
+27
+
+important because many unhoused persons fit this description. Dr. Schonberg testified that a large
+
+28
+
+portion of the unhoused population suffers from mental health or substance abuse issues and
+12
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 13 of 50
+
+United States District Court
+Northern District of California
+
+1
+
+nearly all unhoused persons suffer insecurity of access to food and other necessities.
+
+2
+
+Instability and uncertainty for the unhoused. In addition to disrupting the communal
+
+3
+
+frameworks on which Plaintiffs rely, the Ordinance introduces chaos into an already unsafe and
+
+4
+
+unpredictable situation (homelessness). The City has prepared a street level map showing how
+
+5
+
+many campsites can be accommodated in the City in identified parks and public spaces. See
+
+6
+
+Docket No. 74, Ahuja Decl., Ex. A. However, the map does not show where those campsites can
+
+7
+
+be maintained with any precision. See id. at 17. The City has asserted in its filings and at oral
+
+8
+
+argument that it does not intend to set forth an allocation process, e.g., establishing designated
+
+9
+
+campsites or assigning land on, for example, a first-come-first-serve or need basis. See Docket
+
+10
+
+No. 72 at 16 (“To be clear, allowable space will not be allotted.”). The Ordinance does not
+
+11
+
+establish any system for designating space for campers, for resolving competing claims for space,
+
+12
+
+or establish how intrusion by a third-party camper into the required buffer space is to be resolved.
+
+13
+
+Indeed, the City explains that it may evict all campers regardless of who maintained their campsite
+
+14
+
+first. See id. (“But if [who was there first] is uncertain or disputed, everyone is going to have to
+
+15
+
+leave.”). The City also does not offer any assistance or explanation of how campers are to
+
+16
+
+physically move their tents and sleeping gear if forced out of their campsite. Accordingly, the
+
+17
+
+Plaintiffs face uncertainty as to where to go, how to get there, along with continued, unpredictable
+
+18
+
+eviction and the ensuing hardship of relocation. This hardship may fall disproportionately upon
+
+19
+
+more vulnerable persons (e.g., those with physical disabilities or women) who are unable to
+
+20
+
+effectively self-police their campsite buffer. The hardship will be exacerbated if the number of
+
+21
+
+unsheltered persons in San Rafael is 241 as the per the City’s 2022 PIT estimate compared to its
+
+22
+
+present estimate of 120 persons which would make available permissible campsites scarcer.
+
+23
+
+Compare Docket No. 24 at 5 with Docket No. 16-2 at 2–3.
+
+24
+
+C.
+
+Harm to the City
+
+25
+
+On the other hand, the City has identified substantial health and safety problems with the
+
+26
+
+current encampment as large as it is, and which appears to be growing. The City asserts that the
+
+27
+
+Mahon Creek Path encampment and large encampments pose increased risk of fire, harm to
+
+28
+
+neighboring businesses, increased levels of criminal activity, increased level of emergency
+13
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 14 of 50
+
+1
+
+response calls, safety concerns for middle school students using the Mahon Creek Path to get to
+
+2
+
+school, waste and refuse issues, and hindrance on outreach.
+
+United States District Court
+Northern District of California
+
+3
+
+Fire hazards. Fire Chief of the San Rafael and Marinwood Fire Departments, Darin
+
+4
+
+White, identified fire risks at the MCP encampment including unsafely rigged generators at the
+
+5
+
+campsites. Docket No. 24 at 9; Docket No. 16, White Decl. ¶¶ 2–3. Chief White testified at oral
+
+6
+
+argument that larger encampments present heightened fire risk because of accumulation of
+
+7
+
+flammable materials such as cardboard, wooden pallets—which are often made of dried instead of
+
+8
+
+fresh wood—and plywood. Further, modern tents are made of highly flammable materials
+
+9
+
+including polyester. Chief White explained that as a general matter, there is an increased risk of
+
+10
+
+fire in large encampments because tents close together are especially prone to ignition and rapid
+
+11
+
+spread, and also because campers tend to accumulate debris between tents that can spread fire.
+
+12
+
+Docket No. 16, White Decl. ¶¶ 4–5. In some other areas in San Rafael aside from the MCP
+
+13
+
+encampment, there are risks of wildfires. See id. ¶ 6. Chief White further testified at oral
+
+14
+
+argument that the presence of dried vegetation, gas canisters, cigarettes, improper wiring, and use
+
+15
+
+of indoor outlets outside. At the MCP encampment, a lamp post electrical wiring had been tapped
+
+16
+
+into, presenting fire risk.
+
+17
+
+Chief White also explained that cooking near a tent poses fire risks. Chief White testified
+
+18
+
+that it would be unsafe to have two to three tents within a 200 square foot space, both because of
+
+19
+
+proximity of the tents and because using any sort of cooking mechanism in that amount of space
+
+20
+
+would not allow sufficient distance between the tent and the cooking apparatus. Chief White also
+
+21
+
+testified that although fire risks are posed by singular tents, smaller clusters, as well as large
+
+22
+
+encampments, the larger the encampment, the larger the fire risk. Chief White also explained that
+
+23
+
+100 feet of distance between tents would provide a safe fire buffer.
+
+24
+
+Harm to neighboring businesses. Carl Huber, Lieutenant in the San Rafael Police
+
+25
+
+Department (“SRPD”) attests that employees no longer feel safe working near the encampment
+
+26
+
+and two employees quit. Docket No. 28, Huber Decl. ¶ 11. Lieutenant Huber further attests an
+
+27
+
+occupant of the MCP encampment (not party to this suit) attempted to sexually assault the
+
+28
+
+manager of a nearby food retailer and masturbated in front of her; this occurred approximately 100
+14
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 15 of 50
+
+United States District Court
+Northern District of California
+
+1
+
+feet away from the camp. Id. ¶ 12.
+
+2
+
+Increase in criminal activity and safety calls and the “interior-exterior” problem.
+
+3
+
+Lieutenant Huber attests that large encampments have higher levels of criminal activity in and
+
+4
+
+around the campsite compared to individual encampments. Huber Decl. ¶¶ 4–10. The tents on the
+
+5
+
+exterior act as a barrier to internal areas, providing a greater ability to conceal criminal activity
+
+6
+
+and posing difficulty for emergency responders to get into the camp. Id. ¶ 16. Further, as the
+
+7
+
+MCP encampment grew, there was a notable increase in criminal cases and calls to the police,
+
+8
+
+particularly for theft. Id. ¶¶ 10, 12. There was likewise an increase in safety calls. Id. ¶ 6. One
+
+9
+
+Plaintiff was arrested for selling methamphetamine at the MCP encampment, though he denies
+
+10
+
+that allegation.
+
+11
+
+The City emphasizes the difficulties posed specifically by larger encampments. Namely,
+
+12
+
+Lieutenant Huber testified in his declaration that “larger concentrated encampments” suffer from
+
+13
+
+increased levels of violence, criminality, impacts to surrounding neighbors, and non-emergency
+
+14
+
+and emergency calls as compared to “isolated individual or small encampments.” Id. ¶ 4.
+
+15
+
+Similarly, Ms. Murphy testified at oral argument that large encampments generally come with a
+
+16
+
+sense of lawlessness. Ms. Murphy further testified that at a nearby encampment, the Menzies Lot,
+
+17
+
+a shooting occurred after the encampment grew somewhere around three to six tents, and a camper
+
+18
+
+self-started a fire at the encampment.
+
+19
+
+Safety risks to students using the path to go to school. Students at San Rafael’s
+
+20
+
+Davidson Middle School use the Mahon Creek Path to travel from the San Rafael Transit Center
+
+21
+
+to school. Id. ¶ 13. Parents expressed concern as the school year commenced. Id.
+
+22
+
+Waste and refuse. The City also asserts that the MCP encampment presents waste issues,
+
+23
+
+including an increased burden on the City in collecting trash. Docket No. 25, Montes Decl. ¶ 5;
+
+24
+
+Docket No. 27, Murphy Decl. ¶ 12. Although it is obvious that unhoused campers, even if
+
+25
+
+separated, would produce refuse as any human would, the City contends that campers tend to
+
+26
+
+accumulate more things and produce more waste in the aggregate when there are large
+
+27
+
+encampments. To this end, Fire Chief White testified that in large encampments, campers tend to
+
+28
+
+fill space between tents with debris and accumulated items. On the other hand, the City and
+15
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 16 of 50
+
+1
+
+Plaintiffs have each submitted filings showing that residents at the MCP encampment want to and
+
+2
+
+do engage in regular cleanings of their campsite—including having lobbied the City for trash
+
+3
+
+pickups, and there is an argument that centralized collection of trash is more efficient than
+
+4
+
+collecting refuse from individual and small encampments spread throughout the City. See, e.g.,
+
+5
+
+Docket No. 32-1, Ex. B at 13; Docket No. 16-2 at 4; Docket No. 32 ¶ 6.
+Making things too comfortable for the unhoused. At oral argument Ms. Murphy also
+
+United States District Court
+Northern District of California
+
+6
+7
+
+testified that larger encampments make the unhoused too comfortable and social with one another
+
+8
+
+and thus hinder pursuit of alternative housing. She explained some people do not want to leave
+
+9
+
+camp to go to the DMV to obtain an ID or to go to housing appointments, preventing their ability
+
+10
+
+to get access to housing long-term. See also Docket No. 72-5, Murphy Supp. Decl. ¶ 7. The City,
+
+11
+
+however, did not present any specific evidence that this was the case with the Plaintiffs.
+
+12
+
+Hindrance on outreach. The City also asserts that community groups are intimidated by
+
+13
+
+having to approach large, concentrated camps, hindering outreach. Docket No. 27, Murphy Decl.
+
+14
+
+¶ 17. Notably, however, there is no evidence that social workers have actually been hindered in
+
+15
+
+their outreach to unhoused campers at Camp Integrity. Moreover, it seems obvious that it is more
+
+16
+
+efficient to have unhoused individuals proximate to organized and identified areas rather than
+
+17
+
+scheduled throughout the City.
+IV.
+
+18
+19
+
+A.
+
+DISCUSSION
+
+Justiciability
+
+20
+
+1.
+
+Standing
+
+21
+
+“To establish Article III standing, an injury must be concrete, particularized, and actual or
+
+22
+
+imminent; fairly traceable to the challenged action; and redressable by a favorable ruling.”
+
+23
+
+Clapper v. Amnesty Int’l USA, 568 U.S. 398, 409 (2013). The injury must not be “too
+
+24
+
+speculative.” Id. “A plaintiff need not, however, await an arrest or prosecution to have standing
+
+25
+
+to challenge the constitutionality of a criminal statute.” Martin, 920 F.3d at 609 (finding claims
+
+26
+
+by unhoused people seeking prospective relief against future enforcement of an allegedly
+
+27
+
+unconstitutional anti-camping statue were justiciable). Rather,
+
+28
+
+[w]hen the plaintiff has alleged an intention to engage in a course of
+16
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 17 of 50
+
+2
+
+conduct arguably affected with a constitutional interest, but
+proscribed by a statute, and there exists a credible threat of
+prosecution thereunder, he should not be required to await and
+undergo a criminal prosecution as the sole means of seeking relief.
+
+3
+
+Id. (quoting Babbitt v. United Farm Workers Nat'l Union, 442 U.S. 289, 298 (1979)). In assessing
+
+4
+
+threat of prosecution, the court should consider whether plaintiffs have a concrete plan to violate
+
+5
+
+the law in question and whether prosecuting authorities have communicated a specific warning or
+
+6
+
+threat to initiate proceedings. Teter v. Lopez, 76 F.4th 938, 946 (9th Cir. 2023) (citing Unified
+
+7
+
+Data Servs., LLC v. FTC, 39 F.4th 1200, 1210 (9th Cir. 2022)).
+
+1
+
+United States District Court
+Northern District of California
+
+8
+
+a.
+
+Individual Plaintiffs
+
+9
+
+Except for two people, the individual Plaintiffs here have established standing. As
+
+10
+
+explained in depth in assessing irreparable harm, individual Plaintiffs assert an actual and concrete
+
+11
+
+injury caused by the City’s Ordinance; Plaintiffs have met standing requirements.
+
+12
+
+Additionally, there is at least a credible threat of prosecution here, as is required to
+
+13
+
+establish standing in the pre-enforcement posture. The MCP encampment as it exists violates San
+
+14
+
+Rafael’s new anti-camping scheme, leaving its residents subject to prosecution. See Docket No. 3,
+
+15
+
+Powelson Decl. Ex. L ¶ 6. Plaintiffs’ encampment is comprised of individual camps close to one
+
+16
+
+another, violating, at a minimum, the Ordinance’s prohibition of multiple encampments within
+
+17
+
+200 feet of each other. Plaintiffs are thus currently engaging in behavior proscribed by the statute,
+
+18
+
+i.e., residing at the MCP encampment. See, e.g., Docket No. 1 ¶ 53; Docket No. 1-2, Nelson
+
+19
+
+Decl., Ex. A ¶¶ 11–13; Docket No. 1-4, Mendoza Decl., Ex. C at 28. The City, for its part, has
+
+20
+
+communicated its intent to enforce the Ordinance against residents of the MCP encampment. City
+
+21
+
+officials have stated “[w]e know that at the Mahon Creek Path, individuals camping there will be
+
+22
+
+displaced” due to the Ordinance. Docket No. 1-3, Powelson Decl., Ex. A. Further, Defendant
+
+23
+
+Christopher Hess acknowledged that, “[t]he city’s primary concern [for implementation] is the
+
+24
+
+Mahon Creek Path Encampment [Camp Integrity] where we have 30 to 35 campsites currently.”
+
+25
+
+Powelson Decl., Ex. L ¶ 6. The Agenda Report for adoption of the Ordinance is almost entirely
+
+26
+
+focused upon the Mahon Creek Path, suggesting campers on the path are the primary target of the
+
+27
+
+Ordinance. See Docket No. 16-2 at 3–4, 6, 8. Accordingly, for the individual Plaintiffs that
+
+28
+
+continue to reside at the Mahon Creek Path, a credible threat of prosecution exists under the
+17
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 18 of 50
+
+1
+
+challenged Ordinance.
+On the other hand, some individual Plaintiffs no longer reside at the MCP encampment.
+
+United States District Court
+Northern District of California
+
+2
+3
+
+Namely, Shaleeta Boyd testified at oral argument on October 2, 2023, that she has alternative
+
+4
+
+housing and is no longer living at the Mahon Creek Path. Further, Lynn Murphy testified at oral
+
+5
+
+argument on October 2, 2023, that Plaintiff Eddy Metz has moved out of the MCP encampment
+
+6
+
+and is now residing upon a nearby street. Plaintiffs did not originally dispute this assertion at oral
+
+7
+
+argument. However, subsequently, Mr. Metz contends that he remains part of “Camp Integrity”
+
+8
+
+though he has moved outside of the nuclear cluster of tents on the Mahon Creek Path. See Docket
+
+9
+
+No. 97. As the record contains sparce information about the characteristics of encampments along
+
+10
+
+the street where Mr. Metz is currently residing, and at present the City has not evidenced an intent
+
+11
+
+to enforce the new statute or former anti-camping ordinance3 beyond the large cluster of tents on
+
+12
+
+the Mahon Creek Path, Mr. Metz lacks standing to challenge the Ordinance currently. Ms. Boyd
+
+13
+
+likewise lacks standing as she is presently housed and does not reside at the Path.4
+b.
+
+14
+
+Organizational Plaintiffs
+
+15
+
+“The doctrine of associational standing permits an organization to ‘sue to redress its
+
+16
+
+members’ injuries, even without a showing of injury to the association itself.’” Or. Advocacy Ctr.
+
+17
+
+v. Mink, 332 F.3d 1101, 1109 (9th Cir. 2003) (quoting United Food & Comm. Workers Union Loc.
+
+18
+
+751 v. Brown Group, Inc., 517 U.S. 544, 552 (1996)). An association has standing to sue on behalf
+
+19
+
+of its members when: “(1) its members would otherwise have standing to sue in their own right;
+
+20
+21
+22
+23
+24
+25
+26
+27
+28
+
+The City has provided notice of its intent to enforce SMC § 19.020.080(R) – a section of the San
+Rafael Municipal Code in existence prior to adoption of the Ordinance that is separate from the
+previous anti-camping statute (which is SMC § 19.020.080(C)) at the Lindaro street encampments.
+See Docket No. 94. This subsection prohibits erecting buildings on public land and the City
+intends to enforce SMC § 19.020.080(R) by removing wooden pallets at the encampment and
+providing tents to those affected. Id. In other words, the City is not enforcing the anti-camping
+statutes at issue in this suit (SMC § 19.020.080(C) and § 19.50) at campsites on Lindaro street.
+Should the City endeavor to enforce the former anti-camping statute or new Ordinance against the
+Lindaro street encampment (i.e. require the eviction or dispersal of residents), the standing
+calculus for Mr. Metz would change.
+3
+
+4
+
+While Courtney Huff explains that she lives in an apartment occasionally, she testified that she
+resides at the MCP encampment for periods of time due to safety concerns. This may undermine
+success on her Eighth Amendment claim, which provides protections for those who are
+involuntarily homeless, but this does not entirely negate her having standing at this juncture.
+Voluntarily or not, Ms. Huff intends to violate the ordinance by residing at the MCP encampment.
+18
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 19 of 50
+
+1
+
+(2) the interests it seeks to protect are germane to the organization’s purpose; and (3) neither the
+
+2
+
+claim asserted nor the relief requested requires the participation of individual members in the
+
+3
+
+lawsuit.” Am. Unites for Kids v. Rousseau, 985 F.3d 1075, 1096 (9th Cir. 2021) (citing Hunt v.
+
+4
+
+Wash. State Apple Advert. Comm’n, 432 U.S. 333, 343 (1977)). The third prong is a “judicially
+
+5
+
+fashioned and prudentially imposed” question, as opposed to a constitutional requirement of
+
+6
+
+standing. Mink, 322 F.3d at 1113 (citing United Food & Comm. Workers Union Loc. 751, 517
+
+7
+
+U.S. at 557 (“[T]he third prong of the associational standing test is best seen as focusing on these
+
+8
+
+matters of administrative convenience and efficiency, not on elements of a case or controversy
+
+9
+
+within the meaning of the Constitution.”).
+
+United States District Court
+Northern District of California
+
+10
+
+Under the first prong, the organization is “not required to identify individual Constituents
+
+11
+
+who satisfy each element of standing.” Disability Rts. Cal. v. Cnty. of Alameda, 2021 WL
+
+12
+
+212900, at *7 (N.D. Cal. Jan. 21, 2021) (citing Mink, 322 F.3d at 1112). Rather, the question is
+
+13
+
+whether the organization has established that “at least one” of its constituents “would have had
+
+14
+
+standing.” Id. (citing Mink, 322 F.3d at 1112). The Union’s members include residents of the
+
+15
+
+MCP encampment. FAC at 10. As explained above, at least one of the Union’s members, i.e.,
+
+16
+
+individual Plaintiffs, have standing to sue, establishing the first prong of standing. See G.G. by &
+
+17
+
+through A.G. v. Meneses, 638 F. Supp. 3d 1231, 1241 (W.D. Wash. 2022) (finding first prong
+
+18
+
+satisfied where individual plaintiffs that were members of the organization had standing).
+
+19
+
+As to the second prong, there is no doubt the interests the Union seeks to protect here are
+
+20
+
+germane to its purpose. See Am. Unites for Kids, 985 F.3d at 1096. The Union’s defined mission
+
+21
+
+is to “organize, represent, advocate for, and support” its members. FAC at 10. Protecting the
+
+22
+
+constitutional rights of unhoused persons and ensuring that unhoused persons have continued
+
+23
+
+access to food, shelter, water, and safety fall squarely within the Union’s stated purpose. See Am.
+
+24
+
+Unites for Kids, 985 F.3d at 1097 (explaining that where there is a close connection between the
+
+25
+
+organization’s mission and the interests of others it seeks to represent, organizational standing is
+
+26
+
+appropriate); G.G. by & through A.G., 638 F. Supp. 3d at 1241 (finding nonprofit disability rights
+
+27
+
+organization had associational standing to bring claims on behalf of disabled members as rights of
+
+28
+
+people with developmental disabilities was an interest the organization sought to protect).
+19
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 20 of 50
+
+1
+
+As to the third prong, this is a prudential consideration “designed to promote efficiency in
+
+2
+
+adjudication.” Cent. Delta Water Agency v. United States, 306 F.3d 938, 951 n.9 (9th Cir. 2002).
+
+3
+
+Here, allowing the Union to assert claims on behalf of its members promotes judicial efficiency by
+
+4
+
+avoiding multiple, individual lawsuits being filed on behalf of each resident of the encampment.
+
+5
+
+Further, the nature of the claims asserted do not counsel against associational standing. See
+
+6
+
+Laborers Int’l Union Loc. 261 v. City & Cnty. of San Francisco, 2022 WL 2528602, at *6 (N.D.
+
+7
+
+Cal. July 6, 2022) (explaining that unlike claims seeking damages which requires individualized
+
+8
+
+proof, claims seeking injunctive relief are well-suited for adjudication by organizational plaintiff)
+
+9
+
+(citing Comm. for Immigrant Rts. of Sonoma Cnty. v. Cnty. of Sonoma, 644 F. Supp. 2d 1177,
+
+10
+
+1194 (N.D. Cal. 2009)). Thus, the Court sees no need to find that the organization lacks standing
+
+11
+
+as a matter of prudence. The Union has established organizational standing.
+
+12
+
+On the other hand, “Camp Integrity,” is not properly before the Court because it is not
+
+13
+
+represented by counsel. See Local Rule 3-9(b); In re Am. W. Airlines, 40 F.3d 1058, 1059 (9th
+
+14
+
+Cir. 1994) (“Corporations and other unincorporated associations must appear in court through an
+
+15
+
+attorney.”). Accordingly, the San Rafael Homeless Union and the individual Plaintiffs, apart from
+
+16
+
+Eddy Metz and Shaleeta Boyd who no longer reside along the Mahon Creek Path, have
+
+17
+
+established standing and may properly pursue the claims asserted in this action.
+
+18
+
+2.
+
+Nature of claims (facial versus as applied)
+
+19
+
+Defendants argue that the Plaintiffs may only assert a facial claim to the Ordinance, and
+
+20
+
+thus this claim is completely meritless because to prevail, the Plaintiffs must meet the rigorous
+
+21
+
+burden of demonstrating that the Ordinance is unlawful in all circumstances. Docket No. 24 at
+
+22
+
+20–21 (citing United States v. Salerno, 481 U.S. 739, 745 (1987)). Though Plaintiffs allege that
+
+23
+
+the statute is facially unconstitutional e.g., for violating the First Amendment, see Docket No. 77
+
+24
+
+¶¶ 57–71, Plaintiffs also allege that the statute is unconstitutional as applied to them because of
+
+25
+
+circumstances rendering them particularly vulnerable. See id. ¶¶ 17, 75–104. Plaintiffs may assert
+
+26
+
+claims challenging the validity of a statute as applied to a subset of the population in a pre-
+
+27
+
+enforcement posture. See, e.g., Johnson v. City of Grants Pass, 72 F.4th 868, 883 n.15, 883–84,
+
+28
+
+890 (9th Cir. 2023) (finding statute unconstitutional under Eighth Amendment as applied to
+20
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 21 of 50
+
+1
+
+involuntarily homeless plaintiffs where standing was premised on credible risk of future
+
+2
+
+enforcement of statute); Isaacson v. Horne, 716 F.3d 1213, 1230 n.15 (9th Cir. 2013) (“That the
+
+3
+
+statute has not yet been applied to any of the plaintiffs does not preclude them from bringing a pre-
+
+4
+
+enforcement, as-applied challenge. Many such challenges have been entertained in the past.”)
+
+5
+
+(collecting cases). As in Grants Pass, Plaintiffs here assert constitutional violations upon
+
+6
+
+enforcement of the Ordinance against a subset of the unhoused population including those with
+
+7
+
+vulnerabilities and/or disabilities. 72 F.4th at 883–84.
+
+8
+
+Defendants also argue that as to an as-applied challenge, such a challenge is premature
+
+9
+
+because no enforcement action has been taken against Plaintiffs. See Docket No. 24 at 21 n.4.
+
+10
+
+However, the threat of enforcement against the MCP encampment is concrete and substantial. The
+
+11
+
+San Rafael City Council Agenda Report, which ultimately recommends adoption and enactment of
+
+12
+
+SMC Section 19.50, explained explicitly that the Ordinance was needed because of circumstances
+
+13
+
+at the MCP encampments. See Docket No. 16-2 at 3–4. The Report explains that it had received
+
+14
+
+growing complaints related to “growing encampments at the Mahon Creek Path,” among other
+
+15
+
+encampments. Id. at 3. The Report continues: “By far the majority of complaints and San Rafael
+
+16
+
+Police Department calls for service come from the encampments of approximately 33 tents (as of
+
+17
+
+June 28, 2023) at the Mahon Path (also known in the community as the ‘Mahon Creek Path.’” Id.
+
+18
+
+The Report goes on to outline additional, specific conditions at the MCP encampment, and
+
+19
+
+ultimately recommends the adoption of the Ordinance to curb the concerns due to this
+
+20
+
+encampment. See id. at 3–6. The legislative record makes clear the City’s intent to enforce the
+
+21
+
+Ordinance against the encampment at the Mahon Creek Path. The City has not disclaimed such
+
+22
+
+intent in this litigation. To the contrary, the City hosted an event on August 7, 2023, and August
+
+23
+
+14, 2023, at the Mahon Creek Path encampment to prepare for enforcement of the Ordinance that
+
+24
+
+was originally to go into effect on August 16, 2023; the City distributed a flyer explaining how the
+
+25
+
+camp had to change per the size and proximity limitations. See Docket No. 30 ¶ 8, Ex. 14. And in
+
+26
+
+an email between Christopher Hess, the Assistant Director of Community Development for San
+
+27
+
+Rafael, and an advocate for Plaintiffs, Mr. Hess stated that per SMC Section 19.50, “[w]e know
+
+28
+
+that at the Mahon Creek Path, individuals camping there will be displaced.” Docket No. 1-3 at
+21
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 22 of 50
+
+1
+
+128.
+Thus, Plaintiffs may properly challenge the Ordinance though it has not yet been enforced
+
+United States District Court
+Northern District of California
+
+2
+3
+
+against them. See Grants Pass, 72 F.4th at 883–84; see also Robinson v. Att’y Gen., 957 F.3d
+
+4
+
+1171, 1177 (11th Cir. 2020) (“[A] plaintiff may establish standing to bring an as-applied/pre-
+
+5
+
+enforcement challenge by showing that either ‘(1) [she] was threatened with prosecution; (2)
+
+6
+
+prosecution is likely; or (3) there is a credible threat of prosecution.’”) (quoting Am. Charities for
+
+7
+
+Reasonable Fundraising Regulation, Inc. v. Pinellas Cnty., 221 F.3d 1211, 1214 (11th Cir. 2000)).
+
+8
+
+B.
+
+Preliminary Injunction
+
+9
+
+Under Federal Rule of Civil Procedure 65, the Court has the authority to issue a
+
+10
+
+preliminary injunction. A party seeking such preliminary relief must meet one of two variants of
+
+11
+
+the same standard. The traditional Winter standard requires the movant to show that (1) it “is
+
+12
+
+likely to succeed on the merits;” (2) it “is likely to suffer irreparable harm in the absence of
+
+13
+
+preliminary relief;” (3) “the balance of equities tips in [its] favor;” and (4) “an injunction is in the
+
+14
+
+public interest.” Winter v. Natural Res. Def. Council, Inc., 555 U.S. 7, 20 (2008). Under the
+
+15
+
+“sliding scale” variant of the same standard, “if a plaintiff can only show that there are ‘serious
+
+16
+
+questions going to the merits’—a lesser showing than likelihood of success on the merits—then a
+
+17
+
+preliminary injunction may still issue if the ‘balance of hardships tips sharply in the plaintiff’s
+
+18
+
+favor,’ and the other two Winter factors are satisfied.” All. for the Wild Rockies v. Peña, 865 F.3d
+
+19
+
+1211, 1217 (9th Cir. 2017) (emphasis in original) (quoting Shell Offshore, Inc. v. Greenpeace,
+
+20
+
+Inc., 709 F.3d 1281, 1291 (9th Cir. 2013)).
+
+21
+
+1.
+
+Irreparable Harm
+
+22
+
+Irreparable harm is traditionally defined as harm for which there is no adequate legal
+
+23
+
+remedy, such as an award of damages. Ariz. Dream Act Coal. v. Brewer, 757 F.3d 1053, 1068
+
+24
+
+(9th Cir. 2014). The harm must be likely to occur not merely possible. Winter, 555 U.S. at 22.
+
+25
+
+Where, as here, the threat alleged is sufficiently serious the requisite likelihood of harm is
+
+26
+
+lowered. See, e.g., Roman v. Wolf, 977 F.3d 935, 944 (9th Cir. 2020) (finding likelihood of
+
+27
+
+irreparable harm based on risk of death from COVID-19 which was approximately one percent at
+
+28
+
+that time according to the Center for Disease Control and Prevention).
+22
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 23 of 50
+
+1
+
+As detailed, above, Plaintiffs allege serious risk of harm caused by the imposition of
+
+2
+
+isolated camping by unhoused persons as prescribed by the Ordinance. These harms include
+
+3
+
+increased risk of psychological harm from isolation; exacerbation of drug use, enhanced risk of
+
+4
+
+drug overdose, and possibly death in the absence of intervention by neighbors; exposure to sexual
+
+5
+
+and domestic violence and human trafficking; and at the very least a credible fear in those
+
+6
+
+previously victimized. “[T]he threat of physical danger and harm absent injunctive relief qualifies
+
+7
+
+as irreparable.” Al Otro Lado, Inc. v. Mayorkas, 619 F. Supp. 3d 1029, 1041 (S.D. Cal. 2022)
+
+8
+
+(citing Leiva-Perez v. Holder, 640 F.3d 962, 969 (9th Cir. 2011). See also Sacramento Homeless
+
+9
+
+Union v. Cnty. of Sacramento, 2022 WL 4022093, at *8 (E.D. Cal. Sept. 2, 2022) (exposure to
+
+10
+
+excessive heat due to clearing of an encampment during a heat wave presented irreparable harm);
+
+11
+
+L.A. All. for Human Rights v. City of L.A., 2020 WL 2615741 (C.D. Cal. May 22, 2020) vacated
+
+12
+
+per stipulation, 2020 WL 3421782 (C.D. Cal. June 18, 2020) (exposure to toxic fumes and
+
+13
+
+hazardous waste was irreparable harm).
+The City argues, however, that Plaintiffs have “simply not shown that they will suffer such
+
+14
+15
+
+harms merely by being required to distance their campsites 200 feet from one another.” Docket
+
+16
+
+No. 24 at 30. Defendants also note that the City’s regulations do not disallow multiple people to
+
+17
+
+camp together in one campsite, abating risks. Id. at 31.
+Plaintiffs outline the importance of having campers in close proximity. Plaintiffs include
+
+18
+19
+
+women who rely on camping next to other people they trust to deter instances of domestic
+
+20
+
+violence, rape, and other gender-based crime. Docket No. 1-3, Huff Decl., Ex. J ¶¶ 8–11; Docket
+
+21
+
+No. 1-4, Mendoza Decl., Ex. N ¶¶ 15, 17. As Plaintiff Shaleeta Boyd explained in her testimony,
+
+22
+
+there are no locks on tents, and they can be cut open; being a woman in this situation is terrifying.
+
+23
+
+Plaintiffs similarly rely on camping near others to deter theft—including of important items such
+
+24
+
+as medical machines. See Docket No. 1-2, Nelson Decl., Ex. C at 75. Indeed, Plaintiff Shaleeta
+
+25
+
+Boyd suffered theft when camping away from the large MCP encampment but did not have items
+
+26
+
+stolen once she moved closer to a larger cluster of tents along the Path.5 Plaintiffs with physical
+
+27
+28
+
+5
+
+While Ms. Boyd lacks standing her testimony exemplifies the harm other Plaintiffs face if the
+Ordinance goes into effect.
+23
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 24 of 50
+
+1
+
+disabilities rely upon nearby campers to get access to food, water, and other resources. See, e.g.,
+
+2
+
+Docket No. 1-3, Aardalen Decl., Ex. I ¶¶ 11–12. Other Plaintiffs rely upon nearby campers to
+
+3
+
+help them in emergency situations, including in the event of overdose. See Docket No. 1 ¶¶ 92–
+
+4
+
+97; Docket No. 1-3, Aardalen Decl., Ex. I ¶ 6; Docket No. 1-2, Nelson Decl., Ex. F ¶¶ 10–12.
+
+5
+
+Indeed, Plaintiff Aardalen was saved from an accidental overdose by a nearby camper. Docket
+
+6
+
+No. 1-3, Aardalen Decl., Ex. I ¶ 6; Docket No. 1 ¶ 92. And at oral argument, Plaintiffs explained
+
+7
+
+that another camper recently suffered an epileptic seizure but was helped by a person camping
+
+8
+
+nearby.
+
+9
+
+The Ordinance effectively limits campsites to one or two campers. While the Ordinance
+
+10
+
+theoretically allows more than one person per campsite, it limits the size of each campsite to 200
+
+11
+
+square feet and requires all belongings be stored therein or discarded. See SMC §§
+
+12
+
+19.50.040(C)(2), 19.50.020, 19.50.040(C)(2)(a)–(b). This effectively limits the number of
+
+13
+
+campers per campsite to two persons. The Ordinance recognizes that 100 square feet is the
+
+14
+
+benchmark for an individual camper. See SMC §§ 19.50.040(C)(2), 19.50.020 (“A camping area
+
+15
+
+occupied by one person shall not exceed 10ft. by 10ft., (100 sq. ft. total), inclusive of camp
+
+16
+
+facilities, camp paraphernalia, and personal property.”). Though the Ordinance phrases the square
+
+17
+
+footage in terms of maximum size, the benchmark reflects an estimation of a common size of an
+
+18
+
+existing, single-person campsite.6 Further, Chief White testified that fire risks are posed by
+
+19
+
+cooking or having any source of radiant heat next to a tent. Crowding more than two persons
+
+20
+
+within 200 square feet, along with their belongings and cooking apparatuses, increases the risk of
+
+21
+
+fire posed to a campsite’s occupants. Although the Court makes no ruling on this record as to
+
+22
+
+whether allotment of less than 100 square feet is habitable for a single camper, having more than
+
+23
+
+two persons within 200 square feet could well present a significant risk to safety.7
+
+24
+25
+26
+27
+28
+
+6
+
+This estimation of 100 square feet per camper is in line with, though slightly below, that of the
+U.S. Forest Service’s estimation of a typical campsite space, which is 10 by 12 feet or 120 square
+feet. See Accessibility Guidebook for Outdoor Recreation and Trails, USDA, U.S. FOREST
+SERVICE (April 2006) https://www.fs.usda.gov/t-d/pubs/htmlpubs/htm06232801/page15.htm.
+7
+
+There is a further problem with the square footage for campsites. The City assumes, in counting
+the number of campsites that are available in San Rafael under the Ordinance, that many campsites
+will be comprised of 50 square feet. See Docket No. 74, Ahuja Decl., ¶ 5. At oral argument,
+24
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 25 of 50
+
+United States District Court
+Northern District of California
+
+1
+
+Thus, in effect, the Ordinance limits encampments to one to two persons, separated by at
+
+2
+
+least 200 feet. Separating solo campers or a pair of campers by 200 feet between campsites
+
+3
+
+prevents this vital proximity; 200 feet is over half of a football field, limiting the ability of a
+
+4
+
+neighbor to know of or respond to a drug overdose or to act as a deterrent to thefts or gender-based
+
+5
+
+violence. This distance dilutes the effect of collectiveness that affords mutual protection and
+
+6
+
+support discussed above.
+
+7
+
+The expert report submitted by Dr. Schonberg summarizes the harm caused by the
+
+8
+
+Ordinance because of its “explicit focus on isolating unsheltered people into small, decentralized
+
+9
+
+campsites.” Docket No. 1-3, Ex. K. Schonberg Decl. ¶ 14. This isolation is detrimental because
+
+10
+
+“the single largest risk factors for overdose is using in isolation,” and because limited access to
+
+11
+
+“capable guardians” is a key factor in likelihood of victimization of unhoused women. Id. ¶¶ 1–3,
+
+12
+
+13, 19–24. Further, the Ordinance reduces the number of proximate people that can offer help and
+
+13
+
+pool resources. Id. ¶ 15. Access to limited resources also increases the need to stray from camp,
+
+14
+
+exposing unhoused women to attacks by strangers. Id. ¶¶ 15–16. Dr. Schonberg further explains
+
+15
+
+that establishing a larger network of relationships based on reciprocating favors and obligations is
+
+16
+
+vital to unhoused people, and this network of support would be hindered under the statute. Id. ¶¶
+
+17
+
+14, 18. Ultimately, Dr. Schonberg concludes that “communities of more than two, isolated
+
+18
+
+peoples are essential for survival.” Id. ¶ 18.
+
+19
+
+Accordingly, the Ordinance imposes the kind of isolation (i.e., campsites comprised of
+
+20
+
+only two, isolated people) which presents the substantial risk of harms posed by isolation
+
+21
+
+described by the Plaintiffs and Dr. Schonberg.
+
+22
+
+And these harms are not speculative, as the City alleges. Specifically, as to drug overdose,
+
+23
+
+the City argues that “Plaintiffs have not shown that any of them are individually at risk for [death
+
+24
+
+due to drug overdose], which is entirely speculative.” Docket No. 24 at 31 (emphasis in original).
+
+25
+26
+27
+28
+
+counsel for Defendants estimated that at least half of the available campsites in San Rafael are
+limited to 50 square feet. At the same time, at the hearing, the City’s counsel indicated that it
+expected most campsites would be permitted to occupy 100 square feet. This raises a question of
+how many camp sites which accommodate 100 square feet per camper are truly available. The
+record is unclear.
+25
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 26 of 50
+
+1
+
+However, one Plaintiff was recently saved from an accidental drug overdose by a nearby camper.
+
+2
+
+Docket No. 1-3, Aardalen Decl., Ex. I ¶ 6; Docket No. 1 ¶ 92. Another Plaintiff saved numerous
+
+3
+
+lives of others at Camp Integrity by administering adrenaline during overdoses. Docket No. 1-2,
+
+4
+
+Nelson Decl., Ex. F ¶¶ 10–11. At oral argument, Plaintiffs explained that yet another overdose
+
+5
+
+recently occurred at the encampment, prompting emergency response from nearby campers.
+
+6
+
+Given that Plaintiffs have already saved and been saved, the prevalence of drug addiction among
+
+7
+
+the unhoused as reflected in the testimony of Dr. Schonberg, and the assessment of Dr. Schonberg
+
+8
+
+as to risk of overdose, the risk of harm is not “entirely speculative” as Defendants assert. Docket
+
+9
+
+No. 24 at 31. And for reasons stated above, the risk of physical and psychological harm to victims
+
+10
+
+of sexual and domestic violence resulting from isolation is not speculative based on the record
+
+11
+
+thus far. Nor is the harm to those with disabilities who rely on others for assistance speculative.
+
+12
+
+In addition to the physical harms that Plaintiffs face under the Ordinance due to isolation,
+
+13
+
+Plaintiffs also face severe instability and uncertainty under its enforcement. Namely, and as
+
+14
+
+discussed in detail below, campers lack notice and clarity as to what space remains available to
+
+15
+
+them for camping. Although the City provided a map outlining available campsites, this map does
+
+16
+
+nothing to show which areas are already occupied; a Plaintiff could manage to transport all their
+
+17
+
+items to a camping-permissible area, only to learn it is already housing other campers. Further,
+
+18
+
+without any sort of allocation or designation process, Plaintiffs are subject to eviction and even
+
+19
+
+criminal prosecution if a third party sets up a campsite impermissibly close to Plaintiffs’ tents.
+
+20
+
+Thus, even if Plaintiffs find an unoccupied space to camp, Plaintiffs face a never-ending threat of
+
+21
+
+displacement and criminal prosecution at no fault of their own.
+
+22
+
+Finally, and in addition to the above harms, the Ordinance presents irreparable harm to
+
+23
+
+Plaintiffs because of the potential constitutional injuries posed as discussed below. The Ninth
+
+24
+
+Circuit has recognized that “an alleged constitutional infringement will often alone constitute
+
+25
+
+irreparable harm.” Associated Gen. Contractors of Cal., Inc. v. Coal. of Econ. Equity, 950 F.2d
+
+26
+
+1401, 1412 (9th Cir. 1991). As discussed below, Plaintiffs here have set forth meritorious claims
+
+27
+
+as to violations of their constitutional rights under the Fourteenth Amendment among other federal
+
+28
+
+statutes.
+26
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 27 of 50
+
+1
+
+United States District Court
+Northern District of California
+
+2
+
+Accordingly, Plaintiffs have made an adequate showing that the Ordinance exposes them
+to serious, irreparable harm. See Winter, 555 U.S. at 22.
+
+3
+
+2.
+
+Balance of Hardships
+
+4
+
+If the Court were to consider only a choice between enjoining the enforcement in toto and
+
+5
+
+denying any injunctive relief, the balance of hardships would tilt slightly but not decidedly in
+
+6
+
+favor of Plaintiffs, in view of the substantial concerns of the City with the current encampment.
+
+7
+
+There is a serious risk of hardship and harm to Plaintiffs if injunctive relief were denied in whole,
+
+8
+
+including risk of grave bodily injury (rape, domestic violence, and other forms of victimization),
+
+9
+
+malnourishment, and even death. See, e.g., Docket No. 1-3, Schonberg Decl., Ex. K ¶¶ 1–24;
+
+10
+
+Docket No. 1-3, Huff Decl., Ex. J ¶¶ 8–11, Docket No. 1-4, Mendoza Decl., Ex. N ¶¶ 15, 17,
+
+11
+
+Docket No. 1-3, Aardalen Decl., Ex. I ¶ 6; Docket No. 1 ¶ 92, Docket No. 1-2, Nelson Decl., Ex.
+
+12
+
+F ¶¶ 10–12. However, there are substantial health and safety risks to the City were the Court to
+
+13
+
+grant a complete injunction, leaving the encampment as-is. Indeed, the encampment has grown
+
+14
+
+since the onset of the litigation, as has accumulated waste and refuse in the area. Docket No. 25,
+
+15
+
+Montes Decl. ¶ 5; Docket No. 27, Murphy Decl. ¶ 12. The testimony of City officials by way of
+
+16
+
+declaration and at oral argument establishes that there are fire risks posed by the encampments that
+
+17
+
+are difficult to mitigate. See Docket No. 15; White Decl. ¶¶ 2–5. There has also been an increase
+
+18
+
+in safety calls and criminal activity at the encampment, incidents of harassment against
+
+19
+
+neighboring businesses and workers, and threats posed to students wishing to utilize the path to
+
+20
+
+get to school. Docket No. 28, Huber Decl. ¶¶ 4–10, 12, 16. Further, larger encampments can pose
+
+21
+
+an “interior-exterior” problem where tents on the exterior act as a barrier to internal areas,
+
+22
+
+promoting criminal activity on the interior and hindering emergency responders from getting into
+
+23
+
+the camp – although there is no specific evidence this is the case with the current configuration of
+
+24
+
+Camp Integrity. Id. ¶ 16. Ms. Murphy testified that, in a similar vein, large encampments come
+
+25
+
+with a sense of lawlessness. In short, the City faces substantial hardship if an injunction fully
+
+26
+
+enjoins the Ordinance; the Plaintiffs face substantial hardships if no injunction issues and the
+
+27
+
+Ordinance is fully enforced.
+
+28
+
+However, a more limited injunction narrowly tailored to the interests of the parties could
+27
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 28 of 50
+
+1
+
+be issued which requires the City: (1) to permit clusters of up to four persons, occupying up to 400
+
+2
+
+square feet, separated by a distance of 100 feet; (2) to adopt a system of designating and allocating
+
+3
+
+campsites; (3) to offer limited support in case of relocation including transportation to the new site
+
+4
+
+upon eviction, and provision of new tents if the existing structure cannot be transported or
+
+5
+
+accommodated at the new site; and (4) to prevent relocation of an individual who has requested an
+
+6
+
+accommodation on account of disability until the City has engaged in the interactive process with
+
+7
+
+that individual. “When deciding whether to issue a narrowly tailored injunction, district courts
+
+8
+
+must assess the harms pertaining to injunctive relief in the context of that narrow injunction.”
+
+9
+
+Sierra Forest Legacy v. Rey, 577 F.3d 1015, 1022 (9th Cir. 2009). Under such a limited
+
+10
+
+injunction, the balance of hardships shifts.
+
+11
+
+Under the narrower injunction, much of the harm imposed upon the City is
+
+12
+
+eliminated. Requiring that four persons be permitted to exist within 400 square feet, but
+
+13
+
+permitting enforcement of the Ordinance generally, allows the City to abate nearly all harm posed
+
+14
+
+by encampments. As to the risk of fire, Chief White testified at oral argument that the bigger the
+
+15
+
+encampment the greater the risk of fire. Conversely, allowing the City to pare down the MCP
+
+16
+
+encampment from sixty-or-so tents to a cluster of four would substantially mitigate the risk of fire.
+
+17
+
+Allowing 400 square feet instead of 200 square feet per campsite also provides fire safety benefits.
+
+18
+
+Specifically, Chief White testified that housing four tents within 200 square feet would pose risk
+
+19
+
+of fire, yet there is no limit on the number of campers or tents per campsite under the Ordinance.
+
+20
+
+Accordingly, permitting 400 square feet for four persons would temper risk of fire by allowing
+
+21
+
+some space amongst tents and between tents and ignition sources within a given campsite.8
+As to criminal activity and safety concerns, applying the City’s logic that criminal activity
+
+22
+23
+
+and safety issues grow commensurately with the encampment, Docket No. 28, Huber Decl., ¶ 4
+
+24
+
+(“As an encampment grows in size, the opportunity for conflict within the encampment between
+
+25
+26
+27
+28
+
+8
+
+Further, increasing the square footage would allow campsites to remain accessible by leaving
+space for clear floor or ground space around the tents. See Accessibility Guidebook for Outdoor
+Recreation and Trails, USDA, U.S. FOREST SERVICE (April 2006) https://www.fs.usda.gov/td/pubs/htmlpubs/htm06232801/page15.htm (“A minimum 48-inch (1,220-millimeter) clear floor
+or ground space must be provided on all sides of the tent [and] on tent pads and platforms that are
+required to be accessible.”).
+28
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 29 of 50
+
+1
+
+encampment members and with the surrounding public increases exponentially.”), it follows that
+
+2
+
+reducing an encampment from sixty-or-so tents to four would vastly reduce the concerns regarding
+
+3
+
+criminality and safety. Separately, Ms. Murphy testified that large encampments come with a
+
+4
+
+sense of lawlessness. However, there is nothing in the record to show that four tents within a 400
+
+5
+
+square foot space compared to four tents within a 200 square foot space would pose increased
+
+6
+
+lawlessness. Finally, there can be no “interior-exterior” problem in a four-tent cluster because, as
+
+7
+
+a matter of geometry, each tent would be on the exterior. Thus—an injunction requiring 400
+
+8
+
+square feet per campsite imposes little, if any hardship upon the City, and serves to reduce fire
+
+9
+
+risks. For Plaintiffs, however, this difference is meaningful. Namely, it ensures that Plaintiffs can
+
+10
+
+remain in groups of three to four, which is essential for survival, without having to crowd into the
+
+11
+
+space in a way that is unsafe.
+
+12
+
+Nothing in the record suggests requiring a 100-foot buffer between campsites instead of a
+
+13
+
+200-foot buffer would interfere with any of the health and safety goals of the City. As a general
+
+14
+
+matter, the City’s goal is to break up large, highly concentrated encampments. See Docket No. 24
+
+15
+
+at 34. Imposing a 100-foot buffer (one-third of a football field) between campsites that contain
+
+16
+
+one to four campers achieves that goal. Further, as to fire safety, Chief White testified at the
+
+17
+
+evidentiary hearing that 100 feet between tents is a good fire buffer. Another of the City’s concern
+
+18
+
+is that debris tends to accumulate between tents if they are placed close together. However, the
+
+19
+
+Ordinance allows the City to clear items left beyond the bounds of each campsite. SMC
+
+20
+
+§ 19.50.040(C)(2)(b) (“Items stored, kept, discarded, or otherwise existing outside of the camping
+
+21
+
+area shall be presumed to be unattended personal property or trash or debris and may be stored or
+
+22
+
+discarded according to city policy.”). Given that 100 feet is a substantial distance, any items left
+
+23
+
+or discarded between campsites remain easily identifiable as distinct from the campsite and can be
+
+24
+
+cleared by the City as appropriate.
+
+25
+
+Importantly, at oral argument, counsel for Defendants conceded that it could not identify
+
+26
+
+any meaningful difference for the City in imposing a buffer of say 150 feet compared to 200 feet
+
+27
+
+in abating crime or other concerns posed by large encampments. To be sure, at some point the
+
+28
+
+reduced distance between tents would cease to “break up” the large encampment. But there is
+29
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 30 of 50
+
+1
+
+nothing in the record to suggest that 100 feet, like 150 feet, is meaningfully different from 200 feet
+
+2
+
+in accomplishing the City’s goals. Indeed, the Ordinance utilizes a 100-foot buffer between
+
+3
+
+campsites and playgrounds, 19.50.030(A)(4), implying that 100 feet is indeed a sufficient buffer
+
+4
+
+around a given campsite. All in all, imposing a 100-foot instead of a 200-foot buffer would not
+
+5
+
+impose any significant hardship upon the City. On the other hand, the Plaintiffs’ hardships would
+
+6
+
+be greatly reduced by this change. Specifically, a 100-foot buffer, instead of 200-foot buffer
+
+7
+
+allows campers to remain in shouting distance of one another and allows neighboring campers to
+
+8
+
+keep a watchful eye on each other’s campsites—both which are helpful in an emergency and for
+
+9
+
+deterrence purposes.
+
+10
+
+United States District Court
+Northern District of California
+
+11
+
+Accordingly, under this limited injunction, the hardships imposed upon the City are
+greatly reduced in terms of the health and safety risks that are posed by encampments.
+
+12
+
+To be sure, the City resists establishing some kind of orderly means of allocating camping
+
+13
+
+sites. See Docket No. 72 at 16. Particularly, the City’s counsel and Ms. Murphy expressed at oral
+
+14
+
+argument that the City does not want to be viewed as having sanctioned camping in any area.
+
+15
+
+However, the City has not demonstrated that adopting an allocation process is not feasible or
+
+16
+
+administrable. Other cities wishing to enforce anti-camping measures have been able to do so.
+
+17
+
+Indeed, at oral argument counsel for the San Rafael Homeless Union explained that such an
+
+18
+
+approach was effectively taken by the cities of Novato and Sausalito. See also Sausalito/Marin
+
+19
+
+Cnty. Chapter of Cal. Homeless Union v. City of Sausalito, 522 F. Supp. 3d 648, 652 (N.D. Cal.
+
+20
+
+2021), modified in part sub nom. Sausalito/Marin Cnty. Chapter of Cal. Homeless Union v. City of
+
+21
+
+Sausalito, No. 21-CV-01143-EMC, 2021 WL 2141323 (N.D. Cal. May 26, 2021) (relocating
+
+22
+
+campers from one park to allocated spaces set up in a nearby park). And the notion that the City
+
+23
+
+might be seen as officially sanctioning camping by the unhoused is illusory, as this action would
+
+24
+
+be ordered by the Court, not enacted by the City.
+
+25
+
+Under this arrangement, the balance of hardships imposed upon Plaintiffs in the absence of
+
+26
+
+injunctive relief, compared to the hardships imposed upon Defendants under a limited injunction
+
+27
+
+tips sharply in Plaintiffs’ favor. See Ahlman v. Barnes, 445 F. Supp. 3d 671, 693 (C.D. Cal. 2020)
+
+28
+
+(“Faced with . . . preventable human suffering, the Ninth Circuit has little difficulty concluding
+30
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 31 of 50
+
+1
+
+that the balance of hardships tips decidedly in plaintiffs’ favor.”); Sacramento Homeless Union,
+
+2
+
+2022 WL 4022093, at *6 (city’s interests were “far outweighed by the Plaintiffs’ interest in their
+
+3
+
+own health and welfare”); Le Van Hung v. Schaaf, 2019 WL 1779584, at *7 (N.D. Cal. Apr. 23,
+
+4
+
+2019) (residents of encampments are members of the community, and “their interests, too, must be
+
+5
+
+included in assessing the public interest”).
+
+6
+
+United States District Court
+Northern District of California
+
+7
+
+Thus, a limited injunction is warranted if Plaintiffs raise at least “serious questions” on the
+merits of their legal claims, and if the injunction is supported by the public interest.
+
+8
+
+3.
+
+Likelihood of Success or Serious Questions as to the Merits
+
+9
+
+Plaintiffs assert claims including violation of the Fourteenth Amendment “state-created
+
+10
+
+danger” doctrine, Due Process, Americans with Disabilities Act (“ADA”), and the Eighth
+
+11
+
+Amendment. Plaintiffs raise at least “serious questions” under the Fourteenth Amendment “state-
+
+12
+
+created danger” doctrine and due process clause and under the ADA.
+
+13
+
+a.
+
+Fourteenth Amendment state-created danger
+
+14
+
+The Ninth Circuit recognizes a substantive due process violation under the Fourteenth
+
+15
+
+Amendment where a state actor “affirmatively place[s] an individual in danger by acting with
+
+16
+
+deliberate indifference to [a] known or obvious danger in subjecting the plaintiff to it.” Kennedy
+
+17
+
+v. City of Ridgefield, 439 F.3d 1055, 1062 (9th Cir. 2006). Deliberate indifference exists where
+
+18
+
+the defendant “disregard[s] a known or obvious consequence of [its] action.” Patel v. Kent Sch.
+
+19
+
+Dist., 648 F.3d 965, 974 (9th Cir. 2011).
+
+20
+
+The City argues that, as a threshold matter, Plaintiffs’ claim is not viable because it rests
+
+21
+
+upon prospective harm (as opposed to retrospective harm) and a legislative act (as opposed to
+
+22
+
+conduct by an individual state actor). These arguments fail at this preliminary stage of litigation.
+
+23
+
+The Ninth Circuit has recognized a viable state-created danger claim where the plaintiff
+
+24
+
+fears future harm and seeks prospective, injunctive relief. Specifically, the Ninth Circuit has held
+
+25
+
+that “[t]he state-created danger doctrine may also be invoked to enjoin deportation” where the
+
+26
+
+plaintiff faces risk of torture or harm in their home country. Morgan v. Gonzales, 495 F.3d 1084,
+
+27
+
+1093 (9th Cir. 2007) (citing Wang v. Reno, 81 F.3d 808, 818-19 (9th Cir. 1996)). In Wang, the
+
+28
+
+court granted such an injunction to prevent the deportation of the plaintiff where he faced a high
+31
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 32 of 50
+
+1
+
+likelihood of harm at the hands of the Chinese government based upon the United States
+
+2
+
+government’s act. 81 F.3d t 818–19. Cf. Hernandez v. Barr, 804 F. App'x 566, 569 (9th Cir. 2020)
+
+3
+
+(no state-created danger by deportation where harm upon return was not sufficiently likely).
+
+4
+
+There is no basis for the proposition that a party threatened with real harm stemming from a
+
+5
+
+constitutional violation, must await a violation and injury and then sue for retrospective damages,
+
+6
+
+rather than sue prospectively to prevent it, so long as the requisites for standing for injunctive
+
+7
+
+relief are met. In this regard, the due process against the infliction of state created danger is no
+
+8
+
+different from other constitutional rights.
+
+9
+
+It is therefore not surprising that this Court has rejected the argument that such claims
+
+10
+
+cannot rest upon future harms. Navarro v. City of Mountain View, 2021 WL 5205598, at *5 (N.D.
+
+11
+
+Cal. Nov. 9, 2021) (finding plausible state-created danger claim premised upon future harms
+
+12
+
+imposed by anti-parking Ordinance enforced against the unhoused). And thus, this Court and
+
+13
+
+others regularly grant prospective, injunctive relief to prevent such future harm. Sacramento
+
+14
+
+Homeless Union, 617 F. Supp. 3d at 1198–99 (enjoining clearing of encampment during extreme
+
+15
+
+heat waved based upon risk of harm, i.e., heat-related illness or death); Santa Cruz Homeless
+
+16
+
+Union v. Bernal, 514 F. Supp. 3d 1136, 1143, 1146 (N.D. Cal. 2021) (enjoining enforcement of a
+
+17
+
+COVID-19 Executive Order allowing closure and clearing of homeless encampment based upon
+
+18
+
+greater risk of contracting the virus); Mary’s Kitchen v. City of Orange, 2021 WL 6103368, at
+
+19
+
+*11–12 (C.D. Cal. Nov. 2, 2021) (enjoining eviction of kitchen feeding homeless during period of
+
+20
+
+strong winds and harsh winter based upon risk of harm to homeless population); Jeremiah v.
+
+21
+
+Sutter Cnty., 2018 WL 1367541, at *5–6 (E.D. Cal. Mar. 16, 2018) (enjoining enforcement of
+
+22
+
+anti-camping Ordinance during winter months based upon risk from cold weather upon eviction).
+
+23
+
+Further, the Ninth Circuit has not limited application of the doctrine to tortious behavior of
+
+24
+
+individual state actors. Rather, the Ninth Circuit has recognized that a state-created danger claim
+
+25
+
+may rest on city-wide policy, so long as the harm posed is sufficiently particularized to a group of
+
+26
+
+plaintiffs. See, e.g., Sinclair v. City of Seattle, 61 F.4th 674, 681 (9th Cir. 2023) (recognizing
+
+27
+
+viability of state-created danger claim based upon policy adopted by the city in face of mass
+
+28
+
+protests (“CHOP”) but finding no state-created danger where plaintiff failed to show particularized
+32
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 33 of 50
+
+1
+
+harm to plaintiff).9 In Sinclair, the court distinguished Hunters Capital LLC v. City of Seattle,
+
+2
+
+another CHOP case, that found plaintiff stated a state-created danger claim. 499 F. Supp. 3d 888,
+
+3
+
+902 (W.D. Wash. 2020). The Sinclair court explained that in Hunters Capital, the plaintiffs
+
+4
+
+involved a group that lived or owned businesses within the CHOP zone, “significantly narrowing
+
+5
+
+the class of persons exposed to the alleged state-created danger,” meeting requirements of
+
+6
+
+particularity. Sinclair, 61 F.4th at 683 (citing Hunters Capital, 499 F. Supp. at 902).
+
+7
+
+District courts in the circuit have found that a state-created danger claim can support the
+
+8
+
+enjoinment of city ordinances and eviction actions against homeless persons. See, e.g., Navarro,
+
+9
+
+2021 WL 5205598, at *5 (denying motion to dismiss state-created danger claim seeking
+
+10
+
+enjoinment of anti-parking ordinance preventing parking RVs); Jeremiah, 2018 WL 1367541, at
+
+11
+
+*5 (enjoining anti-camping ordinance based on state-created danger doctrine).
+Accordingly, the question is whether Plaintiffs have shown sufficient levels of particularity
+
+12
+13
+
+to render their state-created claim viable. Here, the facts are very similar to those in Navarro,
+
+14
+
+where this Court found sufficient particularity as to a class of unhoused persons impacted by an
+
+15
+
+anti-parking ordinance. 2021 WL 5205598, at *5. The Court there distinguished the case from
+
+16
+
+Bologna v. City and County of San Francisco, where Judge Illston declined to apply the doctrine
+
+17
+
+to the entire “population of a city.” 2009 U.S. Dist. LEXIS 69985, at *16 (N.D. Cal. Aug. 11,
+
+18
+
+2019). Rather, the doctrine applies “when a state actor creates a risk that is specific to a small
+
+19
+
+group of individuals, rather than to the general public.” Navarro, 2021 WL 5205598, at *5.
+Here, unlike in Sinclair where the city’s CHOP policy impacted all city residents equally,
+
+20
+21
+
+the Ordinance poses dangers specific to unhoused persons at Camp Integrity and who have
+
+22
+
+standing as discussed above. 61 F.4th at 683. This is more like Hunters Capital, where the
+
+23
+24
+25
+26
+27
+28
+
+9
+
+See also Henry A. v. Willden, 678 F.3d 991, 1003 (9th Cir. 2012) (finding claim asserting
+systemic policies and failure to train by municipality could support state-created danger claim but
+affirming dismissal with leave to amend to cure errors in complaint); Brazda v. City of Reno, 105
+F.3d 664 (9th Cir. 1997) (implicitly recognizing state-created danger claim may rest on policy of
+City Police Department by finding claim failed because plaintiff did not offer evidence to support
+the policy’s existence); Pleasant v. Miranda, 2022 WL 2304221, at *2 (9th Cir. June 27, 2022)
+(finding that city custom of allowing deputies to give courtesy ride to plaintiff did not support
+state-created danger claim because the harm did not occur during the ride and thus did not cause
+the danger posed).
+33
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 34 of 50
+
+1
+
+plaintiffs included a narrow subset of the population (people who lived or owned businesses in the
+
+2
+
+CHOP area) than like Sinclair. Id. (citing Hunters Capital, 499 F. Supp. 3d at 902). Further, in
+
+3
+
+Sinclair the Ninth Circuit found it relevant that the city had never known of the plaintiff before the
+
+4
+
+harm befell him in finding lack of particularity. 61 F.4th at 682. Dissimilarly here, the City’s
+
+5
+
+mental health liaison, Lynn Murphy, knows the Plaintiffs and has interacted with them on several
+
+6
+
+occasions. See Docket No. 27, Murphy Decl ¶ 24. Defendants have taken several trips to the
+
+7
+
+MCP encampment. See Docket No. 71. And further, the City Council Agenda Report proposing
+
+8
+
+adoption of the Ordinance at issue specifically discussed the MCP encampment in recommending
+
+9
+
+the Ordinance be adopted. See Docket. No. 16-2 at 3–6. Thus, there is a particularized danger and
+
+10
+
+action directed at Plaintiffs here. Given that the relief Plaintiffs seek has not been foreclosed by
+
+11
+
+the Ninth Circuit, there is no threshold per se bar to Plaintiffs’ claims at this preliminary injunction
+
+12
+
+phase.
+
+13
+
+Turning to the substance of Plaintiffs’ claim: there is substantial evidence in the record
+
+14
+
+establishing that the City’s new statutory scheme places Plaintiffs in danger of sexual and
+
+15
+
+domestic violence, victimization as to crime, death due to drug overdose, and inability to access
+
+16
+
+food, water, and shelter. Docket No. 32-6, Schonberg Supp. Decl. ¶¶ 7–27. The statute is
+
+17
+
+expected to increase drug overdose deaths by 15-25% in San Rafael because of the risks posed by
+
+18
+
+using in isolation and other consequences of breaking up encampments, including involuntary
+
+19
+
+displacement. Id. ¶¶ 21–25 (citing Barocas et al., Population-Level Health Effects of Involuntary
+
+20
+
+Displacement of People Experiencing Unsheltered Homelessness Who Inject Drugs in US Cities,
+
+21
+
+JAMA (2023)). Unhoused women face a significant increase of violence under the Ordinance. Id.
+
+22
+
+¶¶ 23–27. Dr. Schonberg concludes that “communities of more than two, isolated peoples are
+
+23
+
+essential for survival,” which as explained above is not truly viable under the Ordinance. Id. ¶ 18.
+
+24
+
+Further, the Ordinance stands to destabilize the communal frameworks on which individuals rely
+
+25
+
+for survival due to the need to self-police a large area around each campsite and hinders exchange
+
+26
+
+of informal social capital. See Docket No. 32-12, Sarris Decl. ¶ 9(c).
+
+27
+28
+
+In addition to the evidence presented by Dr. Schonberg, Mr. Sarris, and the testimony of
+the individual Plaintiffs, the City’s mental health liaison, Lynn Murphy, conceded at oral
+34
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 35 of 50
+
+1
+
+argument on October 2, 2023, that camping in isolation poses devastating risk to unhoused
+
+2
+
+persons. And further, Dr. Schonberg testified that a large portion of the unhoused population have
+
+3
+
+vulnerabilities including physical disabilities or substance use or abuse. This increases the danger
+
+4
+
+posed to this population.
+
+United States District Court
+Northern District of California
+
+5
+
+District courts recognize that the clearing of homeless encampments may present a state-
+
+6
+
+created danger claim when residents are exposed to increased risk of harm due to its clearing. See,
+
+7
+
+e.g., Janosko v. City of Oakland, 2023 WL 187499, at *3 (N.D. Cal. Jan. 13, 2023) (finding
+
+8
+
+eviction of residents of encampment during severe rainstorms and pandemic presented serious
+
+9
+
+questions on merits of state-created danger claim, as removing residents would affirmatively
+
+10
+
+expose unhoused to harsher, more dangerous conditions compared to remaining at the camp);
+
+11
+
+Sanchez v. City of Fresno, 914 F. Supp. 2d 1079, 1102 (E.D. Cal. 2012) (similar); Jeremiah, 2018
+
+12
+
+WL 1367541, at *5 (similar).
+
+13
+
+Significantly, the Ninth Circuit has found a due process violation under the state-created
+
+14
+
+danger theory in other contexts where the defendant makes conditions worse for the plaintiff, even
+
+15
+
+where exposure to harm already existed. See Martinez v. City of Clovis, 943 F.3d 1260, 1272 (9th
+
+16
+
+Cir. 2019) (finding state-created danger where officer provoked abuser which led to another
+
+17
+
+instance of domestic violence). The Ninth Circuit has also held that exposing the plaintiff to crime
+
+18
+
+constitutes a state-created danger. See Wood v. Ostrander, 879 F.2d 583, 590 (9th Cir. 1989)
+
+19
+
+(finding state-created danger where officer impounded the car plaintiff was in and left her alone in
+
+20
+
+high-crime area at 2:30 a.m.). Similarly, when a state actor cuts off access to life-sustaining
+
+21
+
+resources this may constitute a state-created danger. Penilla v. Huntington, 115 F.3d 707, 710
+
+22
+
+(9th Cir. 1997) (cancelling call to paramedics where an individual needed medical care constituted
+
+23
+
+substantive due process violation).
+
+24
+
+With respect to the requirement that the City be determined to act with deliberate
+
+25
+
+indifference, the harms to vulnerable campers described above, including women victimized by
+
+26
+
+violence and those whom require assistance of others, seem obvious. To the extent they were not
+
+27
+
+apparent to the City, that risk has now been made clear by way of the declarations, reports,
+
+28
+35
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 36 of 50
+
+United States District Court
+Northern District of California
+
+1
+
+testimony, and other evidence presented in this litigation.10
+
+2
+
+To be sure, the Ninth Circuit has yet to definitively rule on the application of the doctrine
+
+3
+
+to situations where a city endeavors to clear homeless encampments, thus leaving the unhoused in
+
+4
+
+more vulnerable and dangerous conditions. And the Circuit has not addressed the situation where
+
+5
+
+there is specific evidence of substantial risk of harm to vulnerable, unhoused individuals should
+
+6
+
+they be forced into isolated campsites. LA Alliance for Human Rights v. County of Los Angeles
+
+7
+
+addresses the general subject matter of homelessness but does not speak to these precise issues.
+
+8
+
+14 F.4th 947, 958 (9th Cir. 2021). There, plaintiffs including business and property owners,
+
+9
+
+landlords, and housed residents of the Skid Row area sued the County for numerous policies and
+
+10
+
+practices regarding homelessness that allegedly resulted in unsafe conditions posed to residents
+
+11
+
+and business owners in the Skid Row area. Id. at 952–53. The court granted an extensive
+
+12
+
+preliminary injunction requiring, among other things, that the County offer housing to all
+
+13
+
+unhoused persons in the Skid Row area in an effort to clear the encampments and the escrow of
+
+14
+
+one billion dollars to address homelessness. Id. at 955–56 The Circuit overturned the injunction,
+
+15
+
+in part because plaintiffs lacked standing as the injunction was premised upon race-based harms,
+
+16
+
+including state-created danger posed to Black families in the area, yet plaintiffs did not offer
+
+17
+
+evidence establishing their race. Id. at 957–58.11
+Thus, the contours of the doctrine in the present context remain ill-defined. Testing its
+
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+
+Plaintiffs are not the only ones that have brought harms posed by the Ordinance to the City’s
+attention. In a letter penned by some members of the Lived Experiences Advisory Board
+(“LEAB”) on which certain Defendants in this suit sit, to the San Rafael City Council, the LEAB
+identified numerous harms that the Ordinance would impose upon the unhoused. Docket No. 3212, Sarris Decl. ¶¶ 6, 9 & Ex. A (“[W]e have found the ordinance unacceptable and contrary to
+requirements [of the] United States Interagency Council on Homelessness.”). The LEAB further
+implored the San Rafael City Council to engage in mitigation efforts, including designating
+sanctioned encampments and offering central locations for support. Id. ¶¶ 5–7. Such a
+collaborative approach has been taken by the City of Novato, for example, and would serve to
+mitigate the harm to Plaintiffs while meeting needs of the City. The City has declined to engage
+in such efforts, supporting a finding of deliberate indifference. See Polanco v. Diaz, 76 F.4th 918,
+926 (9th Cir. 2023) (finding transfer of inmates during pandemic while declining to engage in
+mitigation efforts presented a state-created danger).
+10
+
+11
+
+Though not precisely on point, LA Alliance for Human Rights implicitly recognizes that a statecreated danger claim based upon policies and practices pertaining to the homeless is viable,
+provided plaintiffs have standing and the remedy redresses the harms. 14 F.4th at 958.
+36
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 37 of 50
+
+1
+
+outer limits, the City asks whether the doctrine would prevent eviction of a squatter who would be
+
+2
+
+forced out into the elements upon eviction. Docket No. 72 at 11. (The City does not posit the
+
+3
+
+additional scenarios of whether the state might bear some constitutional responsibility if, for
+
+4
+
+example, the squatter is forced out into subzero temperatures with no available shelter.) Such a
+
+5
+
+hypothetical raises the question, inter alia, what is the appropriate baseline by which to measure
+
+6
+
+whether the state has caused an increase in danger? That question is raised inferentially here:
+
+7
+
+since this suit was filed, more campers have joined the MCP encampment. The precise baseline is
+
+8
+
+not entirely clear. Cf. Arizona Dream Act Coal. v. Brewer, 757 F.3d 1053, 1060–61 (9th Cir.
+
+9
+
+2014) (defining the “status quo” amongst parties for purposes of a preliminary injunction as the
+
+10
+
+“legally relevant relationship between the parties before the controversy arose”). While some
+
+11
+
+residents of the MCP may have stronger claims of endangerment than others, the Ordinance treats
+
+12
+
+all residents the same, disregarding the dangers it poses particularly to those who are especially
+
+13
+
+vulnerable; it sets forth no real procedures to determine who needs to be accommodated and how
+
+14
+
+their need to be free from serious danger can be met. The Ordinance ignores the realities facing
+
+15
+
+each individual and instead imposes a blanket restriction on density which effectively isolates
+
+16
+
+unhoused campers regardless of their needs.
+
+17
+
+In summation, although the contours of the doctrine in this context have not been decided
+
+18
+
+by the Ninth Circuit, the cases thus far decided by the Circuit establish the general due process
+
+19
+
+proposition advanced by Plaintiffs. Given the logic of the doctrine and the body of district court
+
+20
+
+cases applying it to similar situations involving the treatment of unhoused individuals and groups,
+
+21
+
+the Court concludes the Plaintiffs have raised at least serious questions on the merits of this due
+
+22
+
+process claim at this preliminary juncture.
+
+23
+24
+
+b.
+
+Americans with Disabilities Act
+
+Title II of the ADA provides that “no qualified individual with a disability shall, by reason
+
+25
+
+of such disability, be excluded from participation in or be denied the benefits of the services,
+
+26
+
+programs, or activities of a public entity, or be subjected to discrimination by any such entity.” 42
+
+27
+
+U.S.C. § 12132. Its implementing regulations require state agencies to “make reasonable
+
+28
+
+modifications in policies, practices, or procedures when the modifications are necessary to avoid
+37
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 38 of 50
+
+1
+
+discrimination on the basis of disability, unless the public entity can demonstrate that making the
+
+2
+
+modifications would fundamentally alter the nature of the service, program, or activity.” 28
+
+3
+
+C.F.R. § 35.130(b)(7)(i).
+
+4
+
+Plaintiffs establish that the statute forces them to camp in ways that are incompatible with
+
+5
+
+their disabilities including physical injury, PTSD from childhood sexual trauma, sleep apnea, and
+
+6
+
+schizophrenia. Docket No. 1 ¶¶ 76–88. To this end, Plaintiffs Amalia Mendoza, Brian Nelson,
+
+7
+
+Christie Marie Cook, and Anker Aardalen submitted Requests for Reasonable Accommodations to
+
+8
+
+the City. See Accommodation Requests. In addition to requesting housing, Plaintiffs request the
+
+9
+
+ability to camp near others. Id. Namely, Plaintiff Amalia Mendoza attests that because of her past
+
+10
+
+childhood sexual trauma and PTSD she cannot sleep unless she is close to multiple other people
+
+11
+
+that she trusts. Docket No. 1-4, Mendoza Decl., Ex. A at 22–23; Docket No. 1 ¶ 82. This
+
+12
+
+provides protection and prevention of mental health episodes. Docket No. 1-4, Mendoza Decl.,
+
+13
+
+Ex. A at 22–23. Mr. Aardalen has a dislocated knee and needs nearby caretakers to get access to
+
+14
+
+food and water because he cannot walk easily. Docket No. 32 ¶¶ 79, 86. Further, Mr. Nelson has
+
+15
+
+sleep apnea and requires use of a “CPAP” machine, and thus needs access to electricity. Docket
+
+16
+
+No. 1-2, Nelson Decl., Ex. C. Mr. Nelson also suffers from PTSD from a stabbing attack he
+
+17
+
+suffered which is aggravated when not near familiar people. Id. Similarly, Ms. Binkley and Mr.
+
+18
+
+Tringali suffer from anxiety, PTSD, and depression (due to severe domestic violence suffered in
+
+19
+
+the case of Ms. Binkley) that is aggravated by isolation. See Docket No. 77 ¶¶ 87–99, 102.
+
+20
+
+Defendants argue adjudicating the claim is premature unless and until Plaintiffs submit
+
+21
+
+reasonable requests for accommodation and those requests are denied. Docket. No. 72 at 12–16.
+
+22
+
+However, Plaintiffs submitted requests for accommodation in mid-August. See Accommodation
+
+23
+
+Requests. But the City has not engaged in an interactive process with Plaintiffs despite its policy
+
+24
+
+requiring a response within fifteen days. Docket No. 72-2, Jeppson Decl. ¶ 2(b). The refusal to
+
+25
+
+engage in the accommodation process may constitute a denial of a request. Whitehead v. Pacifica
+
+26
+
+Senior Living Mgmt. LLC, 2022 WL 313844, at *2 (9th Cir. Feb. 2, 2022) (finding that in the
+
+27
+
+context of the Fair Employment and Housing Act, “[a]n employer’s refusal to engage in good faith
+
+28
+
+in an interactive process with the employee to provide the requested accommodation” may violate
+38
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 39 of 50
+
+1
+
+the Act); Groome Res., Ltd. v. Par. of Jefferson, 234 F.3d 192, 197–98 (5th Cir. 2000) (finding
+
+2
+
+inaction and delay in context of considering accommodation to Fair Housing Act may constitute
+
+3
+
+denial); McCray v. Wilkie, 966 F.3d 616, 621 (7th Cir. 2020) (holding delay in providing
+
+4
+
+accommodation in the employment context can amount to failure to accommodate).
+
+5
+
+Furthermore, the Ordinance makes no specific or special recognition of the unhoused and
+
+6
+
+the urgency of their need for accommodation should they be faced with imminent eviction from
+
+7
+
+the current campsites which are accommodating their needs. Relying solely on the current ADA
+
+8
+
+grievance process which, taking it through the internal appeals process, could take two months or
+
+9
+
+more, does not address the specific needs of those facing an imminent housing crisis.
+
+United States District Court
+Northern District of California
+
+10
+
+On the merits of this claim, there is a threshold issue of what constitutes a “program”
+
+11
+
+within the meaning of the statute and whether Plaintiffs’ disabilities are impacted by the
+
+12
+
+Ordinance. Defendants argue that there is no “program” here giving rise to an ADA claim.
+
+13
+
+Docket No. 16 at 8. However, this argument is incompatible with Where Do We Go Berkely,
+
+14
+
+which explained: “the ADA’s prohibition on discrimination in public programs ‘brings within its
+
+15
+
+scope anything a public entity does,’” including the way that government entities enforce their
+
+16
+
+laws. 32 F.4th 852, 861 (9th Cir. 2022) (citing Barden v. City of Sacramento, 292 F.3d 1073,
+
+17
+
+1076 (9th Cir. 2002)) (clearing of encampment constituted a program under the ADA).
+
+18
+
+To be sure, the Ninth Circuit in Where Do We Go Berkeley made clear that to analyze an
+
+19
+
+ADA claim, the scope and function of the “program” at issue must be clearly defined. 32 F.4th at
+
+20
+
+861–82. Precisely what constitutes the scope of an applicable “program” appears nebulous. In
+
+21
+
+Where Do We Go Berkeley, the court narrowly defined the “program” as clearing “level 1” (i.e.,
+
+22
+
+high risk encampments) with “72 hours’ notice before clearing and possible coordination with
+
+23
+
+local partners.” Id. at 862. This definition contrasts with that in LA Alliance for Human Rights v.
+
+24
+
+County of Los Angeles, where the court defined the “program” broadly: “Skid Row area sidewalks
+
+25
+
+are a service, program, or activity of the City within the meaning of Title II of the ADA.” 14
+
+26
+
+F.4th 947, 959 (9th Cir. 2021). The scope of the definition of the applicable program informs
+
+27
+
+whether any proposed alternation is fundamental; the broader the definition, the more extensive
+
+28
+
+the alteration for accommodation may be before it may be deemed fundamental.
+39
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 40 of 50
+
+1
+
+Here, to the extent there is a program – and there undoubtedly is – the City narrowly
+
+2
+
+defines its program as “breaking up the two large, concentrated encampments . . . (Mahon Creek
+
+3
+
+Path and Andersen Boulevard), by giving the occupants several weeks’ notice and providing them
+
+4
+
+with relocation assistance and access to support services.” Docket No. 24 at 29. Even assuming
+
+5
+
+the City’s narrow description of its program is appropriate, there are viable modifications available
+
+6
+
+here that can accommodate the ADA needs of disabled campers. To determine if the modification
+
+7
+
+fundamentally alters the program, the court should consider if it changes the “essential nature” of
+
+8
+
+the program. Reed v. City of Emeryville, 568 F. Supp. 3d 1029, 1043 (N.D. Cal. 2021). This
+
+9
+
+includes how the modification impacts the goals of the program and if it hinders addressing public
+
+10
+
+risks the program targets. See Where Do We Go Berkeley, 32 F.4th at 862.
+
+11
+
+Allowing smaller tent clusters (four or fewer persons within 400 square feet) maintains the
+
+12
+
+program’s central purpose of breaking up large and highly concentrated encampments filled with
+
+13
+
+dozens of tents—which is the City’s stated focus. See Docket No. 24 at 29. For example,
+
+14
+
+Lieutenant Huber explains that large encampments are dangerous because they impose a barrier of
+
+15
+
+tents on the outside, creating an inaccessible and unmonitored interior where criminal activity can
+
+16
+
+thrive. Docket No. 28, Huber Decl. ¶ 16. Establishing smaller clusters is still congruent with the
+
+17
+
+City’s goal and does not pose the same interior-exterior problem of large encampments (since an
+
+18
+
+encampment of four persons cannot by geometric definition have an interior section). Similarly,
+
+19
+
+Lieutenant Huber testified that the rise of violence, criminality, emergency calls, and impacts on
+
+20
+
+the surrounding community are problematic in “larger concentrated encampments,” as compared
+
+21
+
+to “isolated individual or small encampments.” Docket No. 28, Huber Decl. ¶¶ 4, 16. Likewise,
+
+22
+
+Ms. Murphy defines “smaller encampments,” i.e., safer encampments in the City’s view as those
+
+23
+
+that are “under four people.” Docket No. 72-5, Murphy Supp. Decl. ¶ 9. A one-person increase in
+
+24
+
+the number of campers (four vs. three) and increase in square footage to accommodate such
+
+25
+
+clusters (400 square feet vs. 200 square feet) is a minimal adjustment and would be one of degree,
+
+26
+
+and not kind, and certainly is not fundamental alteration. Cf. Rose v. Rhorer, 2014 WL 1881623,
+
+27
+
+at *4 (N.D. Cal. May 9, 2014) (finding automatic extension of shelter bed reservations for disabled
+
+28
+
+would fundamentally alter program from short-term facility for all to long-term facility for the
+40
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 41 of 50
+
+1
+
+United States District Court
+Northern District of California
+
+2
+
+disabled).
+Finally, Defendants argue that the Plaintiffs have failed to “connect the dots” by showing
+
+3
+
+how Plaintiffs’ disabilities are impacted by the “program” or how they have been otherwise
+
+4
+
+discriminated against in its implementation. Docket No. 16 at 8. However, Plaintiffs have
+
+5
+
+established that the Ordinance in its present form does not accommodate Plaintiffs’ disabilities.
+
+6
+
+Mr. Aardalen who has difficulty walking would be separated from caretakers that bring him food
+
+7
+
+and water. Docket No. 1 ¶¶ 79, 86. The Ordinance prevents Ms. Mendoza from sleeping near
+
+8
+
+multiple other people that she trusts to avoid triggering mental health episodes caused by PTSD
+
+9
+
+from sexual trauma. Docket No. 1-4, Mendoza Decl., Ex. A at 22–23; Docket No. 1 ¶ 82. Mr.
+
+10
+
+Nelson relies upon a CPAP machine to treat sleep apnea and would not be able to find a source of
+
+11
+
+electricity if separated from his communal encampment. Docket No. 1-2, Nelson Decl., Ex. C at
+
+12
+
+27–28. Mr. Nelson, Mr. Tringali, and Ms. Binkley also have asserted that their psychological
+
+13
+
+disabilities including depression, PTSD, and anxiety (caused from prior domestic violence and
+
+14
+
+physical assault) are aggravated by being forced to camp in isolation. See Docket No. 77 ¶¶ 89,
+
+15
+
+90, 103; Docket No. 1-2, Nelson Decl., Ex. C. Given the evidence of the prevalence of special
+
+16
+
+needs among the unhoused as Dr. Schonberg describes, there are likely others in the camp who
+
+17
+
+require some accommodation. Thus, the Plaintiffs have shown that their disabilities are impacted
+
+18
+
+by the “program,” i.e., the clearing of the encampment. Nor has the City engaged the Plaintiffs in
+
+19
+
+an interactive process to see what specific accommodations can be afforded.
+
+20
+
+Accordingly, Plaintiffs have raised a serious question as to whether their rights under the
+
+21
+
+ADA would be violated in the absence of at least narrow preliminary injunctive relief requiring
+
+22
+
+that unhoused individuals be allowed to camp in a cluster of up to four people within 100 feet of
+
+23
+
+other encampments and requiring the City engage in the interactive process before enforcing the
+
+24
+
+Ordinance against Plaintiffs.
+
+25
+
+c.
+
+Fourteenth Amendment due process
+
+26
+
+Plaintiffs also raise additional due process concerns. First, our jurisprudence recognizes
+
+27
+
+the fundamental maxim that “[g]uilt is personal.” Scales v. United States, 367 U.S. 203 (1961).
+
+28
+
+See St. Ann v. Palisi, 495 F.2d 423, 425–26 (5th Cir. 1974) (explaining that the due process clause
+41
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 42 of 50
+
+1
+
+of Fourteenth Amendment protects an individual’s right to be punished only on basis of personal
+
+2
+
+guilt); Levy v. Louisiana, 391 U.S. 68 (1968) (denying illegitimate children the ability to pursue
+
+3
+
+wrongful death claims under state statute violates constitution as children are not to be deprived
+
+4
+
+due to the indiscretion of their parents). Imposing penalties for someone else’s conduct conflicts
+
+5
+
+with due process. In a similar vein, mens rea is typically a required element of a crime. See
+
+6
+
+Staples v. United States, 511 U.S. 600, 605 (1994) (“The existence of a mens rea is the rule of,
+
+7
+
+rather than the exception to, the principles of Anglo–American criminal jurisprudence.”) (citing
+
+8
+
+United States v. United States Gypsum Co., 438 U.S. 422, 436–437 (1978)). Otherwise, criminal
+
+9
+
+sanctions may improperly be imposed upon persons whose mental state made their actions entirely
+
+10
+
+innocent. See id. at 606–15.
+
+United States District Court
+Northern District of California
+
+11
+
+Here, because of the strict density limits imposed by the Ordinance severely restricting
+
+12
+
+where unhoused individuals can camp, the unregulated nature of the designation and allocation of
+
+13
+
+those limited permissible campsites for the unhoused leaves Plaintiffs exposed to being evicted
+
+14
+
+and/or criminally prosecuted as a result of actions taken not by them but by a third party. See
+
+15
+
+SMC § 19.50.040(C)(4). Specifically, the Ordinance makes it illegal to maintain a campsite
+
+16
+
+within 200 feet of another campsite without limitation. Id. The City has asserted in its filings and
+
+17
+
+at oral argument that it does not intend to set forth an allocation process, e.g., establishing
+
+18
+
+designated campsites or assigning land on e.g. a first-come-first serve or need basis. See Docket
+
+19
+
+No. 72 at 16 (“To be clear, allowable space will not be allotted.”). Rather, the unhoused will be
+
+20
+
+left to find space to camp adhering to the specific proximity requirements of the Ordinance on
+
+21
+
+their own, and to self-police the space around their tent to remain compliant. Thus, unhoused
+
+22
+
+persons are subject to potential eviction or prosecution for violating the Ordinance if a camp is set
+
+23
+
+up by someone else within 200 feet, regardless of consent and even awareness (e.g., if a tent is set
+
+24
+
+up nearby while the person is sleeping or away from camp) of the camper. While the City simply
+
+25
+
+says if there is a conflict, the police may be called to resolve the conflict, there is no procedural
+
+26
+
+due process attached to that process. To make matters worse, the City says if the policy cannot
+
+27
+
+determine who is right, both campers will be subject to eviction. Docket No. 72 at 17. While the
+
+28
+
+City analogizes this as two people wanting to sit on the same public bench, see id., the decision as
+42
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 43 of 50
+
+1
+
+to where one can camp and claim things necessary for survival is far more consequential. Where
+
+2
+
+the essentials to survival are potentially scarce, the unhoused cannot simply be relegated to a game
+
+3
+
+of musical chairs.
+
+United States District Court
+Northern District of California
+
+4
+
+There is another due process problem regarding fair notice. Specifically, without an
+
+5
+
+allocation or registration process the unhoused will not know which spaces remain unoccupied
+
+6
+
+throughout the City because of proximity requirements (relative to both other campers and City
+
+7
+
+structures such as playgrounds) and thus where they can camp lawfully under the Ordinance. This
+
+8
+
+makes it particularly difficult for persons with health or safety concerns, or limited mobility to
+
+9
+
+find suitable space (e.g., space big enough to house multi-person site, or close to proximity) and
+
+10
+
+avoid violating the Ordinance. Again, as noted above, this problem can be particularly acute if
+
+11
+
+there is a relative scarcity of available campsites insofar as the number of unsheltered persons in
+
+12
+
+San Rafael is better approximated by the 2022 PIT estimate of 241 unsheltered persons as opposed
+
+13
+
+to the City’s current count of 120 unsheltered persons. Compare, Dkt. No. 24 at 5 with Docket
+
+14
+
+No. 16-2 at 2–3.
+
+15
+16
+17
+18
+
+For these reasons, Plaintiffs have raised at least “serious questions” as to the merits of their
+claims that the Ordinance violates constitutional principles of due process.
+d.
+
+Eighth Amendment
+
+Plaintiffs also assert that SMC section 19.50 violates the Eighth Amendment’s Cruel and
+
+19
+
+Unusual Punishment Clause for impermissibly criminalizing involuntary acts and status. The
+
+20
+
+Eighth Amendment states that, “[e]xcessive bail shall not be required, nor excessive fines
+
+21
+
+imposed, nor cruel and unusual punishments inflicted.” U.S. Const., amend. VIII. The latter
+
+22
+
+clause has been interpreted as including substantive limits upon what conduct may be
+
+23
+
+criminalized. Martin, 920 F.3d at 615. Specifically, the state may not criminally punish an
+
+24
+
+“involuntary act or condition if it is the unavoidable consequence of one’s status or being.” Id. at
+
+25
+
+616. The Martin court explained that “[h]uman beings are biologically compelled to rest,” and
+
+26
+
+doing so in public is unavoidable if a person is unhoused and has nowhere else to go. Id. at 617.
+
+27
+
+Accordingly, an ordinance would be unconstitutional “insofar as it imposes criminal sanctions
+
+28
+
+against homeless individuals for sleeping outdoors, on public property, when no alternative shelter
+43
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 44 of 50
+
+1
+
+is available to them.” Id. at 604. In Grants Pass, the Ninth Circuit affirmed the holding of
+
+2
+
+Martin, and clarified that the protection applied to individuals that are involuntarily unhoused. 72
+
+3
+
+F.4th at 896.
+
+4
+
+Previously, Judge Thompson issued a temporary restraining order to halt the enforcement
+
+5
+
+of the Ordinance, finding that at least “serious questions” were raised as to the merits of Plaintiffs’
+
+6
+
+claim that the Ordinance violates the Eighth Amendment’s Cruel and Unusual Punishment Clause,
+
+7
+
+as interpreted by the Ninth Circuit Court of Appeals in Martin, 920 F.3d 584. See Docket No. 19.
+
+8
+
+Specifically, the Court found that the anti-camping exception in the ordinance, designating some
+
+9
+
+land as camping-permissible appeared to be non-viable, given the broad categories of exception-
+
+10
+
+prohibited property, lack of clarification by the City as to where camping was permitted, and the
+
+11
+
+requirement that campsites be 200 feet apart to be lawful. Id. at 12–15, 15 n.2. Subsequently,
+
+12
+
+Defendants submitted a map into evidence identifying camping-permissible land. Docket No. 74,
+
+13
+
+Ahuja Decl., Ex. A.
+
+14
+
+Under Martin, some regulation of camping by the City is permissible so long as there are
+
+15
+
+still areas where the unhoused can sleep throughout the City. The Martin court wrote “we in no
+
+16
+
+way dictate to the City that it must . . . allow anyone who wishes to sit, lie, or sleep on the streets .
+
+17
+
+. . at any time and at any place.” 920 F.3d at 617; see also Sausalito/Marin Cnty. Chapter of
+
+18
+
+California Homeless Union v. City of Sausalito, 2021 WL 5889370, at *2 (N.D. Cal. Dec. 13,
+
+19
+
+2021) (“Martin prohibits a ban on all camping, not the proper designation of permissible areas.”).
+
+20
+
+Accordingly, courts applying Martin find it constitutional to impose geographical limits on
+
+21
+
+camping so long as there is somewhere else that an unhoused person can sleep within city limits.
+
+22
+
+For example, in Gomes v. County of Kauai, the court found no Martin violation where camping
+
+23
+
+was disallowed in one park in the city. 481 F. Supp. 3d 1104, 1109 (D. Haw. 2020); see also
+
+24
+
+Boring v. Murillo, 2022 U.S. Dist. LEXIS 198089, at *14–15 (C.D. Cal. Aug. 11, 2022) (finding
+
+25
+
+statute sound if moving unhoused from downtown to residential areas).
+
+26
+
+Section 19.50.030 prohibits camping absolutely in: open space property; public facilities;
+
+27
+
+public rights-of-way; within 10 feet within public utility infrastructure; within 100 feet of
+
+28
+
+playgrounds; City parking garages; and anywhere the City council or City manager designates as a
+44
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 45 of 50
+
+1
+
+health/safety risk.
+The exception allowing for camping in all other areas includes no illustrative language.
+
+United States District Court
+Northern District of California
+
+2
+3
+
+SMC § 19.50.040. However, the City has submitted a map into evidence identifying where
+
+4
+
+camping remains permissible within the City of San Rafael. Docket No. 74, Ahuja Decl., Ex. A.
+
+5
+
+The City argues that County land should be considered in determining if there is adequate space in
+
+6
+
+San Rafael for camping. Docket No. 72 at 7.
+
+7
+
+However, County land is not properly considered in the calculation as the County rejects
+
+8
+
+the City’s assertion that County land is regularly available for camping. See Docket. No. 86, Ex.
+
+9
+
+A (Letter from Brian Washington, County of Marin Counsel). Setting aside County land, the
+
+10
+
+City’s map expresses that camp-friendly land in the City, in consideration of the distancing
+
+11
+
+restrictions and features including buildings, playgrounds, and ball fields, allows 262 campsites to
+
+12
+
+be maintained. 12 Id. ¶ 5. Based on the City’s estimate, there are approximately 120 unsheltered
+
+13
+
+persons in the City of San Rafael; however, the City’s 2022 PIT survey of Marin County estimated
+
+14
+
+241 unsheltered persons in San Rafael. Compare, Docket No. 24 at 5 with Docket No. 16-2 at 2–
+
+15
+
+3. Under either estimation, there seems to be enough campsites to literally house the unsheltered
+
+16
+
+population in San Rafael, though the City will near its capacity according to the PIT estimation.
+However, while there appears to be an adequate number of campsites, the matter is not free
+
+17
+18
+
+from doubt. As noted above, many residents will need to live in a small community of four
+
+19
+
+campers who, according to the evidence, will need, e.g., 400 square feet per campsite. The City’s
+
+20
+
+map does not indicate how many such clusters may be accommodated. Also, there is a question
+
+21
+
+whether all single campers who need more than 50 square feet may be accommodated, and at this
+
+22
+
+juncture, there is no evidence that 50 square feet is sufficient for all single campers. As discussed
+
+23
+24
+25
+26
+27
+28
+
+12
+
+The City also argues that the estimation is underinclusive because sidewalks and rights of way
+remain available but are too numerous to be mapped by the City. This is not persuasive because
+the text of the statute provides: “No person or persons shall camp in or on any public right-of-way
+or sidewalk, or portion thereof, or in a manner that obstructs, blocks, or otherwise interferes with
+use of or access to a public right-of-way or sidewalk.” 19.50.020(A)(6) (emphasis added). The
+City’s interpretation that this leaves open camping on portions of sidewalks if not obstructing the
+path is untethered from its language. See, e.g., Wills v. City of Monterey, 617 F. Supp. 3d 1107,
+1120–21 (N.D. Cal. 2022) (finding city’s interpretation of sidewalk ordinance was not supported
+by language used in the statute).
+45
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 46 of 50
+
+1
+
+above, the Court has some skepticism since it appeared that based on experience, 100 square feet
+
+2
+
+is the typical size of the average camper. As the City indicated at oral argument, more than half of
+
+3
+
+the identified sites will accommodate only 50 square feet of camping. If the number of unhoused
+
+4
+
+persons in San Rafael is 241 per the PIT estimate, there remains a question whether there are a
+
+5
+
+sufficient number of permissible camp sites for the unhoused in San Rafael. Nonetheless, the
+
+6
+
+Plaintiffs have not presented any evidence suggesting that the designated campsites are not
+
+7
+
+adequate, and thus the Court finds that at this juncture, the Plaintiffs have not raised serious
+
+8
+
+questions that there is a basic violation of Martin, provided the City demonstrates in a revised
+
+9
+
+map, consistent with the conditions imposed, that there are enough campsites for the unhoused.
+
+10
+
+It should be further noted that district courts applying Martin require that land where
+
+11
+
+camping remains available be sufficiently habitable qualitatively to satisfy the Eighth Amendment.
+
+12
+
+In Warren v. City of Chico, the court found a temporary shelter facility on an airport tarmac could
+
+13
+
+not be considered alternative shelter sufficient to satisfy the Eighth Amendment. 2021 WL
+
+14
+
+2894648, at *7–8 (E.D. Cal. July 8, 2021). The court explained that “[the site is] asphalt tarmac
+
+15
+
+with no roof and no walls, no water and no electricity . . . It affords no real cover or protection to
+
+16
+
+anyone.” Id. The Plaintiffs do not raise any specific issues with the areas identified as camp-
+
+17
+
+friendly by the City in Plaintiffs’ latest filings. See Docket No. 76 at ¶¶ 21–28. Thus, based on
+
+18
+
+the present record, Plaintiffs’ claims do not raise serious questions as to the merits of a Martin
+
+19
+
+claim based upon the quality of camping-permissive land in San Rafael.
+
+20
+
+However, the Court notes that Grants Pass establishes that cities cannot enforce anti-
+
+21
+
+camping ordinances to the extent that they prohibit “the most rudimentary precautions” a homeless
+
+22
+
+person might take against the elements, i.e., bedding or tents. 72 F.4th at 891. So, while there are
+
+23
+
+not serious questions presented as to the Eighth Amendment claim, there are constitutional
+
+24
+
+concerns imposed to the extent that Defendants plan to confiscate Plaintiffs’ tents that do not fit
+
+25
+
+within spaces available under the Ordinance (as modified by this preliminary injunction) without
+
+26
+
+replacing such rudimentary needs as bedding and a tent. Defendants expressed some willingness
+
+27
+
+to replace tents at oral argument on October 2, 2023, though it is not clear the precise
+
+28
+46
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 47 of 50
+
+United States District Court
+Northern District of California
+
+1
+
+circumstances in which the City intends to do so.13
+
+2
+
+4.
+
+Public interest
+
+3
+
+As discussed above, the primary risks imposed upon the public are abated under the
+
+4
+
+Court’s narrow injunction which limits encampments to up to a maximum of four persons within a
+
+5
+
+400 square foot area and requires campsites to be separated by 100 feet. This narrow injunction
+
+6
+
+largely abates risk of fire, increased criminal activity, safety calls, and incidents of harassment to
+
+7
+
+the surrounding public which arguably grow commensurately with the number of tents in an
+
+8
+
+encampment. See, e.g., Docket No. 28, Huber Decl. ¶ 4 (“As an encampment grows in size, the
+
+9
+
+opportunity for conflict within the encampment between encampment members and with the
+
+10
+
+surrounding public increases exponentially.”); Docket No. 72-5, Murphy Supp. Decl. ¶¶ 6–9
+
+11
+
+(similar). This is also supported by the testimony of Chief White at oral argument that the more
+
+12
+
+tents in an encampment, the greater the fire risk.
+
+13
+
+Conversely, implementation of the Ordinance in full may impair the public’s interest. The
+
+14
+
+statute makes it harder for community organizations to find the unhoused and offer help. Docket
+
+15
+
+No. 32-12, Sarris Decl. ¶ 9(e). This may further entrench homelessness in the community. Id.
+
+16
+
+Ms. Murphy recognized this concern, as she testified that unhoused persons rely on Narcan and
+
+17
+
+solar charging stations being distributed throughout campsites, but she could not confirm that the
+
+18
+
+volunteer organizations have the resources to visit dispersed campsites in San Rafael (as opposed
+
+19
+
+to a few, central encampments as they currently stand). The public also does not benefit from
+
+20
+
+facilitating sexual and domestic violence within its borders. Further, where, as here, Plaintiffs
+
+21
+
+establish a potential violation of the United States Constitution, “[p]laintiffs have also established
+
+22
+
+that both the public interest and the balance of the equities favor a preliminary injunction” because
+
+23
+
+the public has an interest in upholding the federal law. Ariz. Dream Act Coal., 757 F.3d at 1069.
+
+24
+
+A narrowly tailored injunction protects the public’s interest in helping to provide meaningful
+
+25
+26
+27
+28
+
+13
+
+In addition to the above claims, Plaintiffs also assert claims under the Fourteenth Amendment
+void-for-vagueness doctrine, the First Amendment, violation of the Fourteenth Amendment’s
+equal protection clause, and an impermissible Bill of Attainder, under U.S. Const. Art. 1 § 9 cl. 3.
+Given that Plaintiffs have shown serious questions as to certain of their claims, the Court declines
+to address the balance of Plaintiffs’ claims at this juncture.
+47
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 48 of 50
+
+1
+
+degree of safety and health to some of the City’s most vulnerable citizens. In short, the public
+
+2
+
+interest favors a narrowly tailored preliminary injunction.
+V.
+
+3
+4
+
+Because the Court finds that there is a likelihood of irreparable harm, the balance of
+
+5
+
+hardships tip sharply in Plaintiffs favor, Plaintiffs raise serious questions on the merits of
+
+6
+
+Plaintiffs’ Fourteenth Amendment, Due Process, and ADA claims, and the public interest is
+
+7
+
+served by a narrowly tailored preliminary injunction, a preliminary injunction may properly be
+
+8
+
+issued here.
+
+9
+
+United States District Court
+Northern District of California
+
+CONCLUSION
+
+Although an injunction is warranted, the Court is careful to issue injunctive relief only as
+
+10
+
+broad as is necessary to remedy the harm posed to Plaintiffs. See City & Cnty. of San Francisco v.
+
+11
+
+Trump, 897 F.3d 1225, 1244 (9th Cir. 2018) (injunctive relief should be “narrowly tailored to
+
+12
+
+remedy the specific harm shown”). Accordingly, the Court is prepared to lift the blanket
+
+13
+
+injunction and permit the City to enforce the Ordinance in large part but with some narrow
+
+14
+
+limitations and conditions necessary to prevent irreparable harm and to minimize hardship to both
+
+15
+
+parties. See, e.g., Hernandez v. Sessions, 872 F.3d 976, 999–1000 (9th Cir. 2017) (“[The] infinite
+
+16
+
+variety of situations in which [a] court of equity may be called upon for interlocutory injunctive
+
+17
+
+relief requires that court have considerable discretion in fashioning such relief.”); Cobine v. City of
+
+18
+
+Eureka, 2016 WL 1730084, at *8 (N.D. Cal. May 2, 2016) (allowing enforcement of anti-camping
+
+19
+
+ordinance so long as conditions were met by the city including storage of belongings of unhoused
+
+20
+
+persons and providing emergency shelter); Sausalito/Marin Cnty. Chapter of California Homeless
+
+21
+
+Union v. City of Sausalito, 2021 WL 5889370, at *4 (N.D. Cal. Dec. 13, 2021) (allowing
+
+22
+
+relocation of encampment by the city provided conditions abating danger, including provision of
+
+23
+
+wooden platforms, afforded).
+
+24
+
+For the reasons stated above, based on the current record, the Court finds that the City
+
+25
+
+may, during the pendency of the litigation or until further ordered, enforce SMC Section 19.50
+
+26
+
+with the following modifications and conditions. For individual Plaintiffs in this action that have
+
+27
+
+established standing and members of the San Rafael Homeless Union that reside at the Mahon
+
+28
+
+Creek Path encampment, the City must:
+48
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 49 of 50
+
+1
+
+•
+
+Allow 400 square feet campsites (instead of 200 square feet) housing up to four people.
+
+2
+
+•
+
+Campsites may be separated by 100 feet (rather than a 200-foot) buffer.
+
+3
+
+•
+
+To the extent Plaintiffs identified above do not have tents and bedding that can fit
+within the space compliant with the Ordinance, the City must provide replacements.
+
+4
+5
+
+•
+
+The City must provide assistance to campers who need to move to a designated space.
+
+6
+
+•
+
+The City must designate the permissible campsites which complies with the Ordinance
+
+7
+
+as modified by this preliminary injunction on street level maps. The map shall identify
+
+8
+
+each allowable campsite by size and number of allowed occupants. The City shall also
+
+9
+
+visibly designate at each site, the boundaries of each permissible campsite so that
+
+10
+
+campers will have clear notice in order to comply with the Ordinance.
+
+United States District Court
+Northern District of California
+
+11
+
+•
+
+an orderly process by which campers can find permitted campsites.
+
+12
+13
+
+The City must establish some kind of allocation and registration process so that there is
+
+•
+
+The City shall not evict or prosecute any Plaintiff who has submitted a request for
+
+14
+
+reasonable accommodation based on disability unless and until it completes an
+
+15
+
+interactive process (including administrative appeals) with that Plaintiff to address the
+
+16
+
+need for reasonable accommodation.
+
+17
+
+Before the current injunction is lifted and the narrower preliminary injunction herein goes
+
+18
+
+into effect permitting the City to enforce the Ordinance with limitations, the City shall file for the
+
+19
+
+Court’s review the revised map and a description of the process by which campsites may be
+
+20
+
+allocated or claimed.
+
+21
+
+To be clear, this preliminary injunction does not prevent the City from currently enforcing
+
+22
+
+its conventional fire and safety codes which are generally applicable so long as Plaintiffs are not
+
+23
+
+displaced. And because this action is brought as an as-applied challenge on behalf of a limited
+
+24
+
+group of persons, this preliminary injunction applies only to residents of the Mahon Creek Path
+
+25
+
+encampment who have standing either as individually named plaintiffs herein or via the San
+
+26
+
+Rafael Homeless Union.
+
+27
+
+//
+
+28
+
+//
+49
+
+Case 3:23-cv-04085-EMC Document 98 Filed 10/19/23 Page 50 of 50
+
+1
+
+The Courts sets a remote status conference for November 1, 2023 at 4:00 p.m.
+
+2
+3
+
+IT IS SO ORDERED.
+
+4
+5
+
+Dated: October 19, 2023
+
+6
+7
+8
+
+______________________________________
+EDWARD M. CHEN
+United States District Judge
+
+9
+10
+
+United States District Court
+Northern District of California
+
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+50
+
+

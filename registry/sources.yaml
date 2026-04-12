@@ -1206,6 +1206,72 @@ sources:
     notes:
       - Key source for the city's litigation timeline summary.
 
+  - source_id: san-rafael-boyd-tro-order
+    label: Boyd v. City of San Rafael TRO Order
+    owner_type: external
+    owner_id: civil-rights-litigation-clearinghouse
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-homelessness-01
+      - legal-precedent-01
+    source_category: litigation
+    source_type: court_order_public_copy
+    entry_url: https://clearinghouse-umich-production.s3.amazonaws.com/media/doc/154946.pdf
+    discovery_urls:
+      - https://clearinghouse.net/doc/154946/
+      - https://clearinghouse.net/case/45858/
+    fetch_strategy: direct_pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - record:legal_record
+      - case
+      - proceeding
+      - case_participation
+    cadence: manual
+    history_depth: single_record
+    source_tier_default: A
+    robots_notes: public filed-order copy surfaced by the Civil Rights Litigation Clearinghouse
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Strong substantive legal record for ECF 19.
+      - Public copy rather than a court-hosted docket artifact.
+
+  - source_id: san-rafael-boyd-preliminary-injunction-order
+    label: Boyd v. City of San Rafael Preliminary Injunction Order
+    owner_type: external
+    owner_id: civil-rights-litigation-clearinghouse
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-homelessness-01
+      - legal-precedent-01
+    source_category: litigation
+    source_type: court_order_public_copy
+    entry_url: https://clearinghouse-umich-production.s3.amazonaws.com/media/doc/154950.pdf
+    discovery_urls:
+      - https://clearinghouse.net/doc/154950/
+      - https://clearinghouse.net/case/45858/
+    fetch_strategy: direct_pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - record:legal_record
+      - case
+      - proceeding
+      - case_participation
+    cadence: manual
+    history_depth: single_record
+    source_tier_default: A
+    robots_notes: public filed-order copy surfaced by the Civil Rights Litigation Clearinghouse
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Strong substantive legal record for ECF 98.
+      - Public copy rather than a court-hosted docket artifact.
+
   - source_id: san-rafael-boyd-dismissal-order
     label: Boyd v. City of San Rafael Dismissal Order
     owner_type: external

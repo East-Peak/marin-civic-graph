@@ -10,15 +10,37 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
-BOYD_ORDER_PDF = (
+BOYD_DISMISSAL_ORDER_PDF = (
     ROOT / "data" / "raw" / "san-rafael-boyd-dismissal-order" / "2026-04-12" / "order.pdf"
 )
-BOYD_ORDER_MANIFEST = (
+BOYD_DISMISSAL_ORDER_MANIFEST = (
     ROOT / "data" / "raw" / "san-rafael-boyd-dismissal-order" / "2026-04-12" / "manifest.json"
 )
-BOYD_ORDER_TEXT = ROOT / "data" / "extracted" / "san-rafael-boyd-dismissal-order" / "order.txt"
-BOYD_ORDER_EXTRACT = (
+BOYD_DISMISSAL_ORDER_TEXT = (
+    ROOT / "data" / "extracted" / "san-rafael-boyd-dismissal-order" / "order.txt"
+)
+BOYD_DISMISSAL_ORDER_EXTRACT = (
     ROOT / "data" / "extracted" / "san-rafael-boyd-dismissal-order" / "2026-04-12.json"
+)
+BOYD_TRO_ORDER_MANIFEST = (
+    ROOT / "data" / "raw" / "san-rafael-boyd-tro-order" / "2026-04-12" / "manifest.json"
+)
+BOYD_TRO_ORDER_TEXT = ROOT / "data" / "extracted" / "san-rafael-boyd-tro-order" / "order.txt"
+BOYD_TRO_ORDER_EXTRACT = (
+    ROOT / "data" / "extracted" / "san-rafael-boyd-tro-order" / "2026-04-12.json"
+)
+BOYD_PI_ORDER_MANIFEST = (
+    ROOT / "data" / "raw" / "san-rafael-boyd-preliminary-injunction-order" / "2026-04-12" / "manifest.json"
+)
+BOYD_PI_ORDER_TEXT = (
+    ROOT / "data" / "extracted" / "san-rafael-boyd-preliminary-injunction-order" / "order.txt"
+)
+BOYD_PI_ORDER_EXTRACT = (
+    ROOT
+    / "data"
+    / "extracted"
+    / "san-rafael-boyd-preliminary-injunction-order"
+    / "2026-04-12.json"
 )
 
 BOYD_RELEASE_EXTRACT = (
@@ -57,13 +79,27 @@ def write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, indent=2) + "\n")
 
 
-def build_boyd_order_extract() -> dict:
-    manifest = load_json(BOYD_ORDER_MANIFEST)
-    text = BOYD_ORDER_TEXT.read_text()
+def build_order_extract(
+    *,
+    source_id: str,
+    manifest_path: Path,
+    text_path: Path,
+    artifact_path: str,
+    title: str,
+    published_at: str,
+    page_count: int,
+    notes: list[str],
+    actor_hits: list[str],
+    issue_hits: list[str],
+    legal_refs: list[str],
+    procedural_dates: list[str],
+) -> dict:
+    manifest = load_json(manifest_path)
+    text = text_path.read_text()
     word_count = len(text.split())
 
     return {
-        "source_id": "san-rafael-boyd-dismissal-order",
+        "source_id": source_id,
         "capture_id": manifest["capture_id"],
         "capture_date": "2026-04-12",
         "entry_url": manifest["entry_url"],
@@ -72,56 +108,29 @@ def build_boyd_order_extract() -> dict:
         "artifacts": [
             {
                 "artifact_path": "data/raw/san-rafael-boyd-dismissal-order/2026-04-12/order.pdf",
+                "artifact_path": artifact_path,
                 "content_type": "application/pdf",
                 "artifact_type": "pdf",
-                "title": "Order Granting Defendant's Motion to Dismiss",
-                "published_at": "2024-08-07",
-                "page_count": 9,
+                "title": title,
+                "published_at": published_at,
+                "page_count": page_count,
                 "court_name": "U.S. District Court, Northern District of California",
                 "docket_number": "23-cv-04085-EMC",
-                "text_path": "data/extracted/san-rafael-boyd-dismissal-order/order.txt",
+                "text_path": str(text_path.relative_to(ROOT)),
                 "word_count": word_count,
             }
         ],
         "candidate_signals": {
-            "actor_hits": [
-                "Shaleeta Boyd, et al.",
-                "City of San Rafael, et al.",
-                "Camp Integrity",
-                "San Rafael Homeless Union",
-            ],
+            "actor_hits": actor_hits,
             "place_hits": [
                 "San Rafael",
                 "Mahon Creek Path",
             ],
-            "issue_hits": [
-                "homelessness",
-                "encampments",
-                "camping ordinance",
-                "public property",
-                "Americans with Disabilities Act",
-                "state-created-danger doctrine",
-            ],
-            "legal_refs": [
-                "Case No. 23-cv-04085-EMC",
-                "Chapter 19.50",
-                "temporary restraining order",
-                "preliminary injunction",
-                "motion to dismiss",
-            ],
-            "procedural_dates": [
-                "2023-08-11 complaint filed",
-                "2023-08-15 temporary restraining order granted",
-                "2023-10-19 preliminary injunction granted in part",
-                "2024-05-10 motion to dismiss filed",
-                "2024-07-15 motion hearing",
-                "2024-08-07 dismissal order",
-            ],
+            "issue_hits": issue_hits,
+            "legal_refs": legal_refs,
+            "procedural_dates": procedural_dates,
         },
-        "notes": [
-            "Direct court order PDF linked from the official San Rafael Boyd dismissal news release.",
-            "This is the strongest court-origin Boyd record currently held in the repo.",
-        ],
+        "notes": notes,
     }
 
 
@@ -140,7 +149,7 @@ def build_bundle() -> dict:
         "generated_at": utc_now_iso(),
         "scope": [
             "Boyd v. City of San Rafael as the first normalized local legal-constraint bundle",
-            "one court-origin dismissal order plus official city-side legal response records",
+            "three public filed-order records for the TRO, preliminary injunction, and dismissal stages plus official city-side legal response records",
             "joins back into the August 19, 2024 ordinance / resolution / sanctioned-camping chain",
             "Grants Pass included only as linked official precedent context already cited by San Rafael",
         ],
@@ -163,6 +172,56 @@ def build_bundle() -> dict:
             },
         ],
         "record_refs": [
+            {
+                "id": "record-san-rafael-boyd-tro-order-2023-08-16",
+                "record_class": "legal_record",
+                "record_type": "temporary_restraining_order",
+                "title": "Order Granting Plaintiffs' Motion for a Temporary Restraining Order",
+                "source_id": "san-rafael-boyd-tro-order",
+                "artifact_path": "data/raw/san-rafael-boyd-tro-order/2026-04-12/order.pdf",
+                "text_path": "data/extracted/san-rafael-boyd-tro-order/order.txt",
+                "published_at": "2023-08-16",
+                "court_name": "U.S. District Court, Northern District of California",
+                "docket_number": "23-cv-04085-EMC",
+                "page_count": 16,
+                "case_ids": [
+                    "case-boyd-v-city-of-san-rafael",
+                ],
+                "issue_ids": [
+                    "issue-homelessness",
+                    "issue-encampments",
+                    "issue-camping-ordinance",
+                ],
+                "place_ids": [
+                    "place-san-rafael",
+                    "place-mahon-creek-path",
+                ],
+            },
+            {
+                "id": "record-san-rafael-boyd-preliminary-injunction-order-2023-10-19",
+                "record_class": "legal_record",
+                "record_type": "preliminary_injunction_order",
+                "title": "Order Granting in Part and Denying in Part Plaintiffs' Motion for Preliminary Injunction",
+                "source_id": "san-rafael-boyd-preliminary-injunction-order",
+                "artifact_path": "data/raw/san-rafael-boyd-preliminary-injunction-order/2026-04-12/order.pdf",
+                "text_path": "data/extracted/san-rafael-boyd-preliminary-injunction-order/order.txt",
+                "published_at": "2023-10-19",
+                "court_name": "U.S. District Court, Northern District of California",
+                "docket_number": "23-cv-04085-EMC",
+                "page_count": 50,
+                "case_ids": [
+                    "case-boyd-v-city-of-san-rafael",
+                ],
+                "issue_ids": [
+                    "issue-homelessness",
+                    "issue-encampments",
+                    "issue-camping-ordinance",
+                ],
+                "place_ids": [
+                    "place-san-rafael",
+                    "place-mahon-creek-path",
+                ],
+            },
             {
                 "id": "record-san-rafael-boyd-dismissal-order-2024-08-07",
                 "record_class": "legal_record",
@@ -242,6 +301,8 @@ def build_bundle() -> dict:
                 "institution_type": "municipality",
                 "jurisdiction_place_id": "place-san-rafael",
                 "evidence_record_ids": [
+                    "record-san-rafael-boyd-tro-order-2023-08-16",
+                    "record-san-rafael-boyd-preliminary-injunction-order-2023-10-19",
                     "doc-2024-08-08-boyd-dismissal-release",
                     "record-san-rafael-boyd-dismissal-order-2024-08-07",
                 ],
@@ -252,6 +313,8 @@ def build_bundle() -> dict:
                 "institution_type": "court",
                 "jurisdiction_place_id": "place-california",
                 "evidence_record_ids": [
+                    "record-san-rafael-boyd-tro-order-2023-08-16",
+                    "record-san-rafael-boyd-preliminary-injunction-order-2023-10-19",
                     "record-san-rafael-boyd-dismissal-order-2024-08-07",
                 ],
             },
@@ -272,12 +335,24 @@ def build_bundle() -> dict:
                 ],
             },
             {
+                "id": "actor-trina-l-thompson",
+                "name": "Trina L. Thompson",
+                "roles": [
+                    "judge",
+                ],
+                "evidence_record_ids": [
+                    "record-san-rafael-boyd-tro-order-2023-08-16",
+                ],
+            },
+            {
                 "id": "actor-edward-m-chen",
                 "name": "Edward M. Chen",
                 "roles": [
                     "judge",
                 ],
                 "evidence_record_ids": [
+                    "record-san-rafael-boyd-tro-order-2023-08-16",
+                    "record-san-rafael-boyd-preliminary-injunction-order-2023-10-19",
                     "doc-2024-08-08-boyd-dismissal-release",
                     "record-san-rafael-boyd-dismissal-order-2024-08-07",
                 ],
@@ -321,6 +396,8 @@ def build_bundle() -> dict:
                 "filed_at": "2023-08-11",
                 "closed_at": "2024-08-07",
                 "record_ids": [
+                    "record-san-rafael-boyd-tro-order-2023-08-16",
+                    "record-san-rafael-boyd-preliminary-injunction-order-2023-10-19",
                     "record-san-rafael-boyd-dismissal-order-2024-08-07",
                     "doc-2024-08-08-boyd-dismissal-release",
                     "doc-2024-08-19-item-5a-report",
@@ -346,7 +423,7 @@ def build_bundle() -> dict:
                     "program-san-rafael-sanctioned-camping",
                 ],
                 "notes": [
-                    "The first legal bundle centers on the dismissal-side court order and the city's own official summaries of the injunction, amendment, and implementation chain.",
+                    "The first legal bundle now includes public filed-order copies for the TRO, preliminary injunction, and dismissal stages, plus the city's own official summaries of the amendment and implementation chain.",
                     "City records consistently say the operative Boyd injunction was grounded in ADA and Fourteenth Amendment state-created-danger theories, not the Eighth Amendment or Grants Pass directly.",
                 ],
             }
@@ -368,11 +445,9 @@ def build_bundle() -> dict:
                 "proceeding_type": "temporary_restraining_order",
                 "occurred_at": "2023-08-15",
                 "status": "granted",
+                "judge_actor_id": "actor-trina-l-thompson",
                 "evidence_record_ids": [
-                    "record-san-rafael-boyd-dismissal-order-2024-08-07",
-                ],
-                "notes": [
-                    "Order text says Judge Thompson granted the TRO four days after the August 11 complaint filing.",
+                    "record-san-rafael-boyd-tro-order-2023-08-16",
                 ],
             },
             {
@@ -381,9 +456,9 @@ def build_bundle() -> dict:
                 "proceeding_type": "preliminary_injunction_order",
                 "occurred_at": "2023-10-19",
                 "status": "granted_in_part",
+                "judge_actor_id": "actor-edward-m-chen",
                 "evidence_record_ids": [
-                    "record-san-rafael-boyd-dismissal-order-2024-08-07",
-                    "doc-2024-08-19-item-5a-report",
+                    "record-san-rafael-boyd-preliminary-injunction-order-2023-10-19",
                 ],
             },
             {
@@ -444,7 +519,7 @@ def build_bundle() -> dict:
         "methodology_findings": [
             {
                 "id": "method-legal-precedent-01-court-origin-boundary",
-                "summary": "The first legal bundle now includes one true court-origin Boyd record: the August 7, 2024 dismissal order PDF linked directly from the official San Rafael dismissal release. Earlier TRO and preliminary injunction stages are still modeled from later official summaries and the dismissal order's procedural history, not from separately captured court orders."
+                "summary": "The first legal bundle now includes three strong public filed-order copies for the TRO, preliminary injunction, and dismissal stages. The remaining provenance gap is no longer missing order text; it is that the TRO and preliminary injunction are held as public copied filings rather than court-hosted captures."
             },
             {
                 "id": "method-legal-precedent-01-bounded-precedent-context",
@@ -479,10 +554,10 @@ def build_bundle() -> dict:
         "open_questions": [
             {
                 "id": "OQ-030",
-                "status": "open",
-                "summary": "The repo still lacks the operative August 2023 TRO order and the October 19, 2023 preliminary injunction order as direct court-origin records.",
-                "why_it_matters": "The current Boyd timeline is strong enough for case, proceeding, and decision joins, but the most important constraint-side orders are still represented through later city summaries and the dismissal order's procedural history instead of their original court texts.",
-                "next_evidence": "Capture a clean public docket or direct order surface for Docket Nos. 19 and 98, then replace summary-backed proceeding detail with direct court-order records.",
+                "status": "watch",
+                "summary": "The Boyd TRO and preliminary-injunction texts are now captured as public filed-order copies, but not yet from a direct court-hosted docket surface.",
+                "why_it_matters": "The legal lane now has the substantive order text it needs for `Case` and `Proceeding` joins. The remaining question is provenance strength, not whether the operative order texts are missing.",
+                "next_evidence": "If a stable public court-hosted docket or order path becomes available, replace the copied-file provenance with direct court captures while keeping the same semantic record IDs.",
             }
         ],
         "notes": [
@@ -496,7 +571,129 @@ def build_bundle() -> dict:
 
 
 def main() -> None:
-    write_json(BOYD_ORDER_EXTRACT, build_boyd_order_extract())
+    write_json(
+        BOYD_TRO_ORDER_EXTRACT,
+        build_order_extract(
+            source_id="san-rafael-boyd-tro-order",
+            manifest_path=BOYD_TRO_ORDER_MANIFEST,
+            text_path=BOYD_TRO_ORDER_TEXT,
+            artifact_path="data/raw/san-rafael-boyd-tro-order/2026-04-12/order.pdf",
+            title="Order Granting Plaintiffs' Motion for a Temporary Restraining Order",
+            published_at="2023-08-16",
+            page_count=16,
+            notes=[
+                "Public filed-order copy surfaced through the Civil Rights Litigation Clearinghouse document page for ECF 19.",
+                "Strong enough for substantive TRO terms and procedural sequencing, but not a court-hosted artifact.",
+            ],
+            actor_hits=[
+                "Boyd et al.",
+                "City of San Rafael et al.",
+                "Camp Integrity",
+            ],
+            issue_hits=[
+                "homelessness",
+                "encampments",
+                "camping ordinance",
+                "Eighth Amendment",
+            ],
+            legal_refs=[
+                "Case No. 23-cv-04085-EMC",
+                "Document 19",
+                "temporary restraining order",
+                "Mahon Creek Path",
+            ],
+            procedural_dates=[
+                "2023-08-11 complaint filed",
+                "2023-08-15 TRO hearing",
+                "2023-08-16 TRO order entered",
+            ],
+        ),
+    )
+    write_json(
+        BOYD_PI_ORDER_EXTRACT,
+        build_order_extract(
+            source_id="san-rafael-boyd-preliminary-injunction-order",
+            manifest_path=BOYD_PI_ORDER_MANIFEST,
+            text_path=BOYD_PI_ORDER_TEXT,
+            artifact_path="data/raw/san-rafael-boyd-preliminary-injunction-order/2026-04-12/order.pdf",
+            title="Order Granting in Part and Denying in Part Plaintiffs' Motion for Preliminary Injunction",
+            published_at="2023-10-19",
+            page_count=50,
+            notes=[
+                "Public filed-order copy surfaced through the Civil Rights Litigation Clearinghouse document page for ECF 98.",
+                "Strong enough for substantive injunction terms and legal reasoning, but not a court-hosted artifact.",
+            ],
+            actor_hits=[
+                "Boyd et al.",
+                "City of San Rafael et al.",
+                "Camp Integrity",
+                "San Rafael Homeless Union",
+            ],
+            issue_hits=[
+                "homelessness",
+                "encampments",
+                "camping ordinance",
+                "Americans with Disabilities Act",
+                "due process",
+                "state-created-danger doctrine",
+            ],
+            legal_refs=[
+                "Case No. 23-cv-04085-EMC",
+                "Document 98",
+                "preliminary injunction",
+                "Martin v. City of Boise",
+            ],
+            procedural_dates=[
+                "2023-09-06 preliminary injunction hearing",
+                "2023-10-19 preliminary injunction order",
+            ],
+        ),
+    )
+    write_json(
+        BOYD_DISMISSAL_ORDER_EXTRACT,
+        build_order_extract(
+            source_id="san-rafael-boyd-dismissal-order",
+            manifest_path=BOYD_DISMISSAL_ORDER_MANIFEST,
+            text_path=BOYD_DISMISSAL_ORDER_TEXT,
+            artifact_path="data/raw/san-rafael-boyd-dismissal-order/2026-04-12/order.pdf",
+            title="Order Granting Defendant's Motion to Dismiss",
+            published_at="2024-08-07",
+            page_count=9,
+            notes=[
+                "Direct court order PDF linked from the official San Rafael Boyd dismissal news release.",
+                "This is the strongest court-origin Boyd record currently held in the repo.",
+            ],
+            actor_hits=[
+                "Shaleeta Boyd, et al.",
+                "City of San Rafael, et al.",
+                "Camp Integrity",
+                "San Rafael Homeless Union",
+            ],
+            issue_hits=[
+                "homelessness",
+                "encampments",
+                "camping ordinance",
+                "public property",
+                "Americans with Disabilities Act",
+                "state-created-danger doctrine",
+            ],
+            legal_refs=[
+                "Case No. 23-cv-04085-EMC",
+                "Chapter 19.50",
+                "temporary restraining order",
+                "preliminary injunction",
+                "motion to dismiss",
+            ],
+            procedural_dates=[
+                "2023-08-11 complaint filed",
+                "2023-08-15 temporary restraining order granted",
+                "2023-10-19 preliminary injunction granted in part",
+                "2024-05-10 motion to dismiss filed",
+                "2024-07-15 motion hearing",
+                "2024-08-07 dismissal order",
+            ],
+        ),
+    )
     write_json(OUTPUT_PATH, build_bundle())
 
 

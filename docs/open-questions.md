@@ -336,6 +336,8 @@ Mirror the question here when it affects:
 - `scope`: `legal-precedent-01`
 - `source refs`:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/legal-precedent-01/bundle-01.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-boyd-tro-order/2026-04-12.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-boyd-preliminary-injunction-order/2026-04-12.json)
   - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-boyd-dismissal-order/2026-04-12.json)
   - [order.txt](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-boyd-dismissal-order/order.txt)
   - [judicial-pressure-test-basket-ingestion-checklist.md](/Users/tammypais/projects/marin-civic-graph/docs/judicial-pressure-test-basket-ingestion-checklist.md)

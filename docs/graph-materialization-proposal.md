@@ -280,29 +280,29 @@ But it is still not yet a first-class import surface.
 The current bundle proves the local legal lane with:
 
 - `case-boyd-v-city-of-san-rafael`
-- one direct court-origin dismissal order
+- the Boyd TRO, preliminary-injunction, and dismissal orders
 - normalized `Proceeding` and `CaseParticipation` objects
 - explicit crosswalks back to the August 19, 2024 San Rafael decision chain
 
 The current remaining gap is also explicit:
 
-- the operative Boyd TRO and preliminary-injunction orders are still not captured directly
+- the TRO and preliminary-injunction orders are public filed-order copies rather than court-hosted captures
 
 ### Proposal
 
-Treat `legal-precedent-01` as the first real legal normalization slice, but keep it outside core v1 import until the direct-order coverage is stronger.
+Treat `legal-precedent-01` as the first real legal normalization slice, but keep it outside core v1 import until the provenance and surrounding comparison set are stronger.
 
 Minimum scope:
 
 - `case-boyd-v-city-of-san-rafael`
-- one direct court-origin Boyd order
+- Boyd order coverage across TRO, preliminary injunction, and dismissal
 - case participation where public and named
 - official legal-framing records already in case study 01
 - explicit local crosswalk back to decision and program nodes
 
 After that, the next legal follow-on should be:
 
-1. direct TRO / preliminary-injunction order capture for `Boyd`
+1. improve TRO / preliminary-injunction provenance if a stable court-hosted path becomes available
 2. only then `Grants Pass` and the broader pressure-test basket
 
 That is enough to justify a later first-class legal lane without pretending the entire judicial model is done.
