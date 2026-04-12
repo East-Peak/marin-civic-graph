@@ -1206,6 +1206,38 @@ sources:
     notes:
       - Key source for the city's litigation timeline summary.
 
+  - source_id: san-rafael-boyd-dismissal-order
+    label: Boyd v. City of San Rafael Dismissal Order
+    owner_type: external
+    owner_id: us-district-court-ndca
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-homelessness-01
+      - legal-precedent-01
+    source_category: litigation
+    source_type: court_order_pdf
+    entry_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/08/show_temp.pl_.pdf
+    discovery_urls:
+      - https://www.cityofsanrafael.org/news-release-federal-judge-dismisses-lawsuit-limiting-city-regulation-of-camping-on-public-property/
+    fetch_strategy: direct_pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - record:legal_record
+      - case
+      - proceeding
+      - case_participation
+    cadence: manual
+    history_depth: single_record
+    source_tier_default: A
+    robots_notes: direct public PDF linked from the official city dismissal release
+    review_risk: low
+    dedupe_key_strategy: exact_url
+    notes:
+      - First court-origin Boyd artifact captured in the repo.
+      - Strongest current source for the complaint, TRO, preliminary-injunction, dismissal-motion, hearing, and dismissal timeline.
+
   - source_id: sf-city-attorney-grants-pass-amicus
     label: San Francisco City Attorney Grants Pass Amicus Post
     owner_type: external

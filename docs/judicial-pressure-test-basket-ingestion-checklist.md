@@ -66,10 +66,10 @@ The first pass covers:
 
 ### Boyd / San Rafael
 
-- [ ] capture the San Rafael `Boyd` dismissal release as raw HTML
-- [ ] identify whether the release links to or references the operative dismissal order
-- [ ] isolate the August 19 staff-report passages that summarize the case
-- [ ] tie those passages back to already captured item `5.a` records
+- [x] capture the San Rafael `Boyd` dismissal release as raw HTML
+- [x] identify whether the release links to or references the operative dismissal order
+- [x] isolate the August 19 staff-report passages that summarize the case
+- [x] tie those passages back to already captured item `5.a` records
 
 ### Grants Pass
 
@@ -97,11 +97,11 @@ The first pass covers:
 
 ### Legal Records
 
-- [ ] create `Record` candidates for each captured page / PDF
-- [ ] classify them as:
+- [x] create `Record` candidates for each captured page / PDF
+- [x] classify them as:
   - complaint / petition / motion / order / opinion / settlement / official statement
-- [ ] extract dates, titles, and named parties
-- [ ] preserve links between public explainers and any attached orders or briefs
+- [x] extract dates, titles, and named parties
+- [x] preserve links between public explainers and any attached orders or briefs
 
 ### Oversight Records
 
@@ -115,11 +115,11 @@ The first pass covers:
 
 ### Boyd
 
-- [ ] create `Case`
-- [ ] create initial `CaseParticipation` candidates
+- [x] create `Case`
+- [x] create initial `CaseParticipation` candidates
 - [ ] create `Claim` candidates for the injunction / dismissal timeline
-- [ ] connect the case to the August 19 ordinance / resolution decisions
-- [ ] connect the case to the sanctioned camping program records
+- [x] connect the case to the August 19 ordinance / resolution decisions
+- [x] connect the case to the sanctioned camping program records
 
 ### Grants Pass
 
@@ -175,6 +175,7 @@ The first usable legal / oversight deliverable should be:
 - [ ] one `Case` page-worth of data for `Grants Pass`
 - [ ] one `Case` page-worth of data for `Coalition on Homelessness`
 - [ ] one `OversightReport` page-worth of data for the Marin Civil Grand Jury sample
+- [x] one `Case` page-worth of data for `Boyd`
 - [ ] one cross-case timeline showing how external legal constraints fed into local San Rafael action
 - [ ] one clear example of a `Claim` that remains unpromoted because the public record is too ambiguous
 

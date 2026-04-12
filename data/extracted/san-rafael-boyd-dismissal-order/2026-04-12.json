@@ -1,0 +1,61 @@
+{
+  "source_id": "san-rafael-boyd-dismissal-order",
+  "capture_id": "san-rafael-boyd-dismissal-order__2026-04-12",
+  "capture_date": "2026-04-12",
+  "entry_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2024/08/show_temp.pl_.pdf",
+  "fetch_strategy": "direct_pdf_linked_from_official_release",
+  "generated_at": "2026-04-12T21:34:49Z",
+  "artifacts": [
+    {
+      "artifact_path": "data/raw/san-rafael-boyd-dismissal-order/2026-04-12/order.pdf",
+      "content_type": "application/pdf",
+      "artifact_type": "pdf",
+      "title": "Order Granting Defendant's Motion to Dismiss",
+      "published_at": "2024-08-07",
+      "page_count": 9,
+      "court_name": "U.S. District Court, Northern District of California",
+      "docket_number": "23-cv-04085-EMC",
+      "text_path": "data/extracted/san-rafael-boyd-dismissal-order/order.txt",
+      "word_count": 3483
+    }
+  ],
+  "candidate_signals": {
+    "actor_hits": [
+      "Shaleeta Boyd, et al.",
+      "City of San Rafael, et al.",
+      "Camp Integrity",
+      "San Rafael Homeless Union"
+    ],
+    "place_hits": [
+      "San Rafael",
+      "Mahon Creek Path"
+    ],
+    "issue_hits": [
+      "homelessness",
+      "encampments",
+      "camping ordinance",
+      "public property",
+      "Americans with Disabilities Act",
+      "state-created-danger doctrine"
+    ],
+    "legal_refs": [
+      "Case No. 23-cv-04085-EMC",
+      "Chapter 19.50",
+      "temporary restraining order",
+      "preliminary injunction",
+      "motion to dismiss"
+    ],
+    "procedural_dates": [
+      "2023-08-11 complaint filed",
+      "2023-08-15 temporary restraining order granted",
+      "2023-10-19 preliminary injunction granted in part",
+      "2024-05-10 motion to dismiss filed",
+      "2024-07-15 motion hearing",
+      "2024-08-07 dismissal order"
+    ]
+  },
+  "notes": [
+    "Direct court order PDF linked from the official San Rafael Boyd dismissal news release.",
+    "This is the strongest court-origin Boyd record currently held in the repo."
+  ]
+}

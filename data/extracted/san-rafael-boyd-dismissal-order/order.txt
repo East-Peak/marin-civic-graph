@@ -1,0 +1,1039 @@
+Case 3:23-cv-04085-EMC Document 190 Filed 08/07/24 Page 1 of 9
+
+1
+2
+3
+4
+
+UNITED STATES DISTRICT COURT
+
+5
+
+NORTHERN DISTRICT OF CALIFORNIA
+
+6
+7
+
+SHALEETA BOYD, et al.,
+Plaintiffs,
+
+8
+9
+10
+
+United States District Court
+Northern District of California
+
+11
+
+Case No. 23-cv-04085-EMC
+ORDER GRANTING DEFENDANT’S
+MOTION TO DISMISS
+
+v.
+CITY OF SAN RAFAEL, et al.,
+
+Docket No. 190
+
+Defendants.
+
+12
+13
+14
+
+I.
+
+INTRODUCTION AND BACKGROUND
+
+To address a growing encampment of unhoused individuals and related health and safety
+
+15
+
+concerns, Defendant City of San Rafael enacted an ordinance (“Chapter 19.50”) that limited
+
+16
+
+campsite sizes and their locations. Plaintiffs brought suit alleging the ordinance violated various
+
+17
+
+statutory and constitutional rights.
+
+18
+
+After considering the likelihood of irreparable injury, the balance of hardships and the
+
+19
+
+questions raised on the merits, this Court granted a preliminary injunction limiting enforcement of
+
+20
+
+the ordinance. The preliminary injunction required that campsites with up to four persons could
+
+21
+
+take up to 400 square feet and the required separation between campsites be limited to 100 feet.
+
+22
+
+The preliminary injunction required certain assistance be provided to campers, and that any
+
+23
+
+Plaintiff who submitted a request for disability accommodations not be evicted until that request
+
+24
+
+was addressed. The Court provided a substantive analysis of the legal claims, indicating certain
+
+25
+
+aspects of the ordinance raised serious legal questions.
+
+26
+
+In response to the issues raised by the preliminary injunction, Defendant amended Chapter
+
+27
+
+19.50. The amendments allowed campsites up to 200 square feet for one individual and up to 400
+
+28
+
+square feet for four individuals, and rather than requiring each camp site be separated by 200 feet
+
+Case 3:23-cv-04085-EMC Document 190 Filed 08/07/24 Page 2 of 9
+
+1
+
+from another, the amendments imposed a simple 10-foot setback from other campsites, public
+
+2
+
+utilities, and private property. There also is a mens rea requirement for violating camping
+
+3
+
+regulations.
+Defendant now moves to dismiss Plaintiffs’ complaint on grounds of mootness and
+
+4
+5
+
+alternatively moves to dissolve the preliminary injunction.
+II.
+
+6
+
+United States District Court
+Northern District of California
+
+7
+
+A.
+
+FACTUAL AND PROCEDURAL BACKGROUND
+
+Factual Background
+
+8
+
+The case concerns an amended ordinance by Defendant the City of San Rafael. Defendant
+
+9
+
+previously enacted San Rafael Municipal Code (“SMC”) 19.50 (“Chapter 19.50”) that prohibited
+
+10
+
+camping, including sleeping, on certain public property without exception and imposed size,
+
+11
+
+density, and proximity limitations on campsites. Docket No. 98 at 2:10-12. Chapter 19.50
+
+12
+
+identified certain land in San Rafael as camping-prohibited with no exception, while all other
+
+13
+
+lands permit camping if there is no alterative shelter. Id. at 2:24-26. Plaintiffs in the case at bar
+
+14
+
+include “Camp Integrity,” a community of campers located in San Rafael’s Mahon Creek Path, the
+
+15
+
+San Rafael Homeless Union, and thirteen residents of the Mahon Creek Path. Id. at 2:12-14.
+
+16
+
+To address the large and growing encampment, Defendant implemented the Chapter 19.50
+
+17
+
+ordinance, which proposed to break up large encampments such as Camp Integrity in Mahon
+
+18
+
+Creek Path and dispersed individuals throughout San Rafael. Id. at 6:13-15. Chapter 19.50
+
+19
+
+limited campsites to one or two individuals and isolated each campsite by requiring a 200 feet
+
+20
+
+separation between each. Id. at 2:25-26. Those who violated Chapter 19.50 were punishable with
+
+21
+
+up to six months in jail and/or a $500 fine. Id. at 3:1-2. At the start of litigation, Defendant noted
+
+22
+
+there were about 33 tents in the Plaintiffs’ encampment. Docket No. 98 at 5:18-19. As of October
+
+23
+
+2023, there were 61 tents. Id. at 5:18-19. As of July 2024, there are 67. See Docket No. 187-1 at
+
+24
+
+¶ 5 (Hess Decl.).
+
+25
+
+The Court issued a preliminary injunction after determining that: Chapter 19.50 was likely
+
+26
+
+to cause irreparable harm, the balance of hardships tipped sharply in Plaintiffs favor, Plaintiffs
+
+27
+
+raised serious questions on the merits of their legal rights, and the public interest was served by a
+
+28
+
+narrowly tailored preliminary injunction. Docket No. 98 at 48. The preliminary injunction limited
+2
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 190 Filed 08/07/24 Page 3 of 9
+
+1
+
+and modified Defendant’s ability to enforce the ordinance. Id. at 48:24-26. For individuals who
+
+2
+
+established standing and reside in the Mahon Creek Path encampment: Defendant must allow
+
+3
+
+them to have up to 400 square feet campsites for up to four individuals. The maximum required
+
+4
+
+separation between campsites would be 100 feet. Defendant must help campers who need to move
+
+5
+
+to a designated space, designate permissible campsites, provide a process for campers to find
+
+6
+
+permitted campsites, and not evict individuals who submitted reasonable requests for
+
+7
+
+accommodations. Id. at 48:24 and 49:16.
+
+8
+
+After the preliminary injunction went into effect, the San Rafael City Council voted to
+
+9
+
+amend Chapter 19.50 to address issues raised in the Court’s order. See Docket No. 152 at 8:14-15.
+
+10
+
+On May 6, 2024, Defendant amended Chapter 19.50 to allow campsites of 200 square feet for one
+
+11
+
+person and 400 square feet for four individuals, a 10-foot setback from other campsites (rather
+
+12
+
+than a 100 feet distance requirement), and a mens rea requirement for violating camping
+
+13
+
+regulations. Id. at 8:18-27 and 9:1-7.
+
+14
+
+B.
+
+15
+
+Procedural Background
+On August 11, 2023, Camp Integrity and ten individual plaintiffs filed their complaint and
+
+16
+
+moved for a temporary restraining order and preliminary injunction. See Docket No. 1.
+
+17
+
+Defendants includes the City of San Rafael, as well as City Manager, Chief of Police, Assistant
+
+18
+
+City Manager, Director of Public Works, Mayor of the City, and City Council Persons. Id. at 11-
+
+19
+
+12. Four days later, Judge Thompson granted Plaintiffs’ request for a temporary restraining order
+
+20
+
+halting enforcement of the ordinance. See Docket No. 19. The TRO was later extended. See
+
+21
+
+Docket No. 98 at 5:5-6.
+
+22
+
+On October 19, 2023, the Court granted in part and denied in part Plaintiffs’ motion for a
+
+23
+
+preliminary injunction. See Docket No. 98. In response, on May 10, 2024, Defendant filed a
+
+24
+
+notice for a motion to dismiss or in the alternative to dissolve the preliminary injunction. See
+
+25
+
+Docket No. 152.
+
+26
+
+Now pending is Defendant’s motion to dismiss Plaintiffs’ complaint pursuant to Fed. R.
+
+27
+
+Civ. P. 12(b)(1) for lack of subject matter jurisdiction and in the alternative a motion to dissolve
+
+28
+
+the preliminary injunction. See Docket No. 152. Plaintiffs contend that Defendant failed to abide
+3
+
+Case 3:23-cv-04085-EMC Document 190 Filed 08/07/24 Page 4 of 9
+
+1
+
+by the injunction and oppose the amended version of the ordinance due to its burden on the
+
+2
+
+unhoused population. See Docket No. 161 at 14:17-20.
+
+3
+
+At the July 15, 2024 motion hearing, the Court ordered Defendant to file supplemental
+
+4
+
+briefing including an updated map to clarify the factual dispute of space alongside the Mahon
+
+5
+
+Creek Path. See Docket No. 186 (“Minute Order”). Defendant submitted an updated map and a
+
+6
+
+supporting declaration, Docket No. 187, and Plaintiffs failed to file a response to the updated map.
+III.
+
+7
+
+United States District Court
+Northern District of California
+
+8
+
+A.
+
+LEGAL STANDARDS
+
+Motion to Dismiss
+
+9
+
+Under Rule 12(b)(1), a party may move to dismiss for lack of subject matter jurisdiction.
+
+10
+
+“[L]ack of Article III standing requires dismissal for lack of subject matter jurisdiction under [Rule]
+
+11
+
+12(b)(1).”
+
+12
+
+constitutional minimum” of standing requires that a “plaintiff must have (1) suffered an injury in
+
+13
+
+fact, (2) that is fairly traceable to the challenged conduct of the Defendants, and (3) that is likely to
+
+14
+
+be redressed by a favorable judicial decision.” Spokeo, Inc. v. Robins (“Spokeo II”), 136 S. Ct. 1540,
+
+15
+
+1547 (2016). These three elements are referred to as, respectively, injury-in-fact, causation, and
+
+16
+
+redressability. Planned Parenthood of Greater Was. & N. Idaho v. U.S. Dep't of Health & Human
+
+17
+
+Servs., 946 F.3d 1100, 1108 (9th Cir. 2020).
+
+18
+
+jurisdiction, bears the burden of establishing these elements,” which at the pleadings stage means
+
+19
+
+“clearly . . . alleg[ing] facts demonstrating each element.” Spokeo II, 136 S. Ct. at 1547 (quoting
+
+20
+
+Warth v. Seldin, 422 U.S. 490, 518 (1975)). In deciding the motion, “it is within the trial court’s
+
+21
+
+power to allow or to require the plaintiff to supply, by amendment to the complaint or by affidavits,
+
+22
+
+further particularized allegations of fact deemed supportive of plaintiff’s standing.” Warth, 422
+
+23
+
+U.S. at 501; see also Table Bluff Reservation (Wiyot Tribe) v. Philip Morris, Inc., 256 F.3d 879, 882
+
+24
+
+(9th Cir. 2001) (in assessing standing, the Court may consider “the complaint and any other
+
+25
+
+particularized allegations of fact in affidavits or in amendments to the complaint”).
+
+26
+
+B.
+
+Maya v. Centex Corp., 658 F.3d 1060, 1067 (9th Cir. 2011).
+
+The “irreducible
+
+“The plaintiff, as the party invoking federal
+
+Motion to Dissolve Preliminary Injunction
+
+27
+
+The party moving to dissolve the preliminary injunction bears the burden of establishing a
+
+28
+
+significant change in facts or law warrants dissolution of the injunction. Sharp v. Weston, 233 F.3d
+4
+
+Case 3:23-cv-04085-EMC Document 190 Filed 08/07/24 Page 5 of 9
+
+1
+
+1166, 1170 (9th Cir. 2000). If this showing has been made, the court must then address whether
+
+2
+
+this change “warrants…dissolution of the injunction.” Id. The latter inquiry is guided by the same
+
+3
+
+criteria that governs the issuance of a preliminary injunction. Karnoski v. Trump, 926 F.3d 1180,
+
+4
+
+1198 (9th Cir. 2019).
+IV.
+
+5
+
+United States District Court
+Northern District of California
+
+6
+
+A.
+
+DISCUSSION
+
+Mootness
+
+7
+
+Defendant argues that the Court should grant its motion to dismiss because the
+
+8
+
+amendments to Chapter 19.50 render the Plaintiffs’ lawsuit moot. Docket No. 152 at 11:2-3.
+
+9
+
+Specifically, amended Chapter 19.50 addresses all issues in the First Amended Complaint
+
+10
+
+(“FAC”). Id. at 11:18-19. Defendant further argues that changes to the ordinance eliminate
+
+11
+
+potential Fourteenth Amendment issues because unhoused individuals will be able to camp even
+
+12
+
+closer together than the preliminary injunction previously allowed. Id. at 11:7-10.
+
+13
+
+Plaintiffs oppose the motion and assert that Defendant failed to establish mootness for
+
+14
+
+three reasons. Docket No. 161 at 9:26. First, the new anti-camping ordinance is as objectionable
+
+15
+
+today as it was when it first began. Id. at 11:1-2. Second, there is a reasonable expectation that
+
+16
+
+the legislative body will reenact the challenged provision. Id. at 9:18-23. Third, to the extent that
+
+17
+
+Defendant has given Plaintiffs space for encampments, much is far away from the center of the
+
+18
+
+City of San Rafael, which cuts off meaningful access to necessary resources. Id. at 11:16-22.
+
+19
+
+The Court GRANTS Defendant’s motion to dismiss for the reasons below.
+
+20
+
+A case is presumed to be moot when there is repeal, amendment, or expiration of
+
+21
+
+legislation, unless there is a reasonable expectation that the legislative body is likely to enact the
+
+22
+
+same or similar legislation in the future. Board of Trustees of Glazing Health and Welfare Trust v.
+
+23
+
+Chambers, 941 F.3d 1195, 1197 (9th Cir. 2019). Reasonable expectation has been interpreted to
+
+24
+
+mean something more than a mere possibility or theoretical possibility in the record. Brach v.
+
+25
+
+Newsom, 38 F.4th 6, 14 (9th Cir. 2022) (mere possibility of an activity occurring is too remote to
+
+26
+
+evade mootness).
+
+27
+
+1.
+
+28
+
+Amendments to the Chapter 19.50 ordinance that address Plaintiffs’ previous complaints
+
+Presumption of Mootness
+
+5
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 190 Filed 08/07/24 Page 6 of 9
+
+1
+
+establish a presumption of mootness. The original ordinance that was the subject of the FAC is no
+
+2
+
+longer law. The presumption of mootness obtains.
+
+3
+
+2.
+
+4
+
+The party challenging the presumption of mootness must demonstrate there is a reasonable
+
+5
+
+expectation that the law will be reenacted; although the plaintiff need not show that the enactment
+
+6
+
+of an identical or similar legislation is “virtually certain,” more than a mere speculation is
+
+7
+
+required. City of Mesquite v. Aladdin’s Castle Inc., 455 U.S. 283, 289 (1982); see also Rentberry,
+
+8
+
+Inc. v. City of Seattle, 814 Fed. Appx. 309, 309 (9th Cir. 2020) (appellants failed to show a
+
+9
+
+reasonable expectation that Seattle will enact an identical or similar ordinance in the future);
+
+10
+
+Cocina Cultura LLC v. Oregon Dep’t of Admin. Servs., No. 3:20-cv-01866-IM, 2021 WL 3836840
+
+11
+
+at *6, 2021 U.S. Dist. LEXIS 162629 (D. Or. Aug. 27, 2021) (enactment of a one-time emergency
+
+12
+
+fund is insufficient to show a reasonable expectation). The burden is on the plaintiff to show a
+
+13
+
+reasonable expectation that the government will reenact its regulation.
+
+14
+
+No Reasonable Expectation of Reenactment
+
+Plaintiffs are unable to show a reasonable expectation of reenactment of the original
+
+15
+
+Chapter 19.50. The amended ordinance was duly enacted, and it is comprehensive and clearly
+
+16
+
+designed to address the legal concerns raised by the Court. At the Court’s request, Defendant has
+
+17
+
+provided a map showing implementation of the amendment. See Docket No. 161 at 11:1-5. In
+
+18
+
+particular, Defendant has provided a clear map showing 203 spaces available for the 67 tents. See
+
+19
+
+Docket No. 187-1 at ¶ 5 (Hess Decl.). Defendant’s behavior since enacting the amended Chapter
+
+20
+
+19.50 indicates no expectation of reenacting the original Chapter 19.50.
+
+21
+
+If a Defendant breaks a pattern of previous behavior, that generally is sufficient to show
+
+22
+
+there is no reasonable expectation of reenactment. See California Rental Housing Association v.
+
+23
+
+Newsom, No. 2:21-cv-01394-JAM-JDP, 2022 WL 7099722, *1 (E.D. Cal. 2022). In California
+
+24
+
+Rental Housing Association, the Court held that Assembly Bill 2179 broke a previous pattern of
+
+25
+
+Assembly Bills which extended the moratorium on the enforcement of unlawful detainer eviction
+
+26
+
+orders against renters affected by COVID-19 “on and on in an unbroken train.” Id. Since the
+
+27
+
+State enacted Assembly Bill 2179, it allowed earlier bills to expire and “suggests, therefore, that it
+
+28
+
+is unlikely to renew similar restrictions in the future.” Id.
+6
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 190 Filed 08/07/24 Page 7 of 9
+
+1
+
+As in California Rental Housing Association, here, there is no reasonable expectation of
+
+2
+
+reenactment of the original Chapter 19.50 ordinance. Similar to how Assembly Bill 2179 broke
+
+3
+
+the State’s previous behaviors, the amended Chapter 19.50 does the same here. Amended Chapter
+
+4
+
+19.50 removes the strict distance requirements, allots habitable space on a map for the unhoused,
+
+5
+
+and implements changes per the preliminary injunction. See Docket No. 152 at 8:18-27 and 9:1-
+
+6
+
+13. Thus, amended Chapter 19.50 and its break from Defendant’s previous patterns serves as
+
+7
+
+proof of there being no reasonable expectation of reenactment.
+
+8
+
+Defendant’s past actions do not suggest that Defendant will reinstate its original ordinance
+
+9
+
+or specific provisions within, nor is there any indication that it would do so now. The instant case
+
+10
+
+is unlike City of Mesquite v. Aladdin’s Castle, Inc., 455 U.S. 283, 289 (1982). In City of Mesquite
+
+11
+
+v. Aladdin’s Castle, Inc., there, a City licensing ordinance prohibited a licensee from allowing
+
+12
+
+children under 17 years of age to operate amusement devices unless accompanied by a parent or
+
+13
+
+legal guardian. Id. at 186. The ordinance also required consideration of whether a license
+
+14
+
+applicant had any “connections with criminal elements.” Id. Despite initially exempting the
+
+15
+
+parent company of the coin-operated amusement establishment called Aladdin’s Castle from the
+
+16
+
+age prohibition, the City of Mesquite then refused to grant the license because the chief of police
+
+17
+
+concluded that it was connected to criminal elements. Id. at 287. Aladdin then obtained an
+
+18
+
+injunction requiring the City of Mesquite to issue it a license. Id. at 286-87. Less than a month
+
+19
+
+later, the City of Mesquite adopted a new ordinance repealing Aladdin’s exemption, reinstating the
+
+20
+
+17-age requirement, and later while the case was on appeal, eliminating the phrase “connections
+
+21
+
+with criminal elements.” Id. at 288-89. The Supreme Court observed that even though the City of
+
+22
+
+Mesquite removed the phrase “connections with criminal elements,” it could “reenact precisely the
+
+23
+
+same provision again” because it did so with respect to the age prohibition. Id. Therefore, the
+
+24
+
+case was not moot. Id.
+
+25
+
+Unlike in City of Mesquite, here there is no historical evidence that Defendant has
+
+26
+
+reinstated its original ordinances or specific provisions within, nor is there any indication that it
+
+27
+
+would do so here. In City of Mesquite, City of Mesquite had reenacted the age restrictions that it
+
+28
+
+previously removed, which casted doubt on its later actions. Id. In contrast, here, Defendant has
+7
+
+United States District Court
+Northern District of California
+
+Case 3:23-cv-04085-EMC Document 190 Filed 08/07/24 Page 8 of 9
+
+1
+
+explicitly stated that it will not revert to its old ordinance. Defendant’s City Manager asserted that
+
+2
+
+“The City has no intention of reverting to the prior version of Chapter 19.50 should the Court lift
+
+3
+
+its Preliminary Injunction.” See Docket No. 152 at ¶ 3 (Alilovich Decl.). While Plaintiffs contend
+
+4
+
+that the Mayor’s recent statements of having “additional options to address homelessness in our
+
+5
+
+community,” nothing points to a plan of reimplementation. See Docket No. 185 at 2:10-15. To
+
+6
+
+the extent the Mayor’s comments were informed by the Supreme Court’s recent decision in City of
+
+7
+
+Grants Pass, Oregon v. Johnson, 144 S. Ct. 2202, 2218 (2024) rejecting the Eighth Amendment
+
+8
+
+claim asserted by the unhoused in that case, here, the parties are well aware that the legal concerns
+
+9
+
+expressed by this Court do not rely on the Eighth Amendment. Previously, the Court held that
+
+10
+
+Plaintiffs’ Eighth Amendment claim under Martin v. City of Boise, 920 F.3d 584, 617 (9th Cir.
+
+11
+
+2019) was insufficient to raise serious questions. See Docket No. 98 at 46:7-9. Instead, the Court
+
+12
+
+addressed other bases: the ADA, the Fourteenth Amendment’s state created danger doctrine, and
+
+13
+
+Fourteenth Amendment due process rights. Id. at 31 at 9-12. Defendant is aware those issues
+
+14
+
+would remain at play were it to reenact the former ordinance.
+
+15
+
+3.
+
+The Amended Ordinance Does Not Raise the Same Issues
+
+16
+
+Although Plaintiffs claim the amended Chapter 19.50 is just as objectionable as the
+
+17
+
+original ordinance, that is not the case. The amended ordinance allows for clustering of
+
+18
+
+individuals and campsites in a manner which mitigates the dangers potentially facing isolated
+
+19
+
+unhoused individuals. It also imports a mens rea requirement: only individuals who willfully
+
+20
+
+violate the ordinance can be charged. This addresses the due process concerns identified by the
+
+21
+
+Court. And there is no showing that the amended ordinance negates the rights of individuals with
+
+22
+
+disabilities access to reasonable accommodations. See Docket No. 152 at 7:1-14. Also, the map
+
+23
+
+shows that there are ample campsites proximate to the city center. Defendant’s updated map
+
+24
+
+reveals sufficient space for the unhoused to “cluster” within blue areas. See Docket No. 187-1 at ¶
+
+25
+
+5 (Hess Decl.). It shows that under the amended ordinance, there are 203 spaces in the City of San
+
+26
+
+Rafael for the unhoused population to occupy and maintain a close community. Id. at ¶ 6.
+
+27
+
+Plaintiffs do not contest the sufficiency of the updated map.
+
+28
+
+In short, the legal concerns identified by the Court in response to the original ordinance
+8
+
+Case 3:23-cv-04085-EMC Document 190 Filed 08/07/24 Page 9 of 9
+
+1
+
+and the FAC have been addressed, and the case based on those concerns is moot.
+
+2
+
+4.
+
+Dissolution of the Preliminary Injunction
+
+3
+
+Defendant has established a significant change in facts or law which warrants dissolution
+
+4
+
+of the injunction. Sharp v. Weston, 233 F.3d 1166, 1170 (9th Cir. 2000). In particular, the case is
+
+5
+
+now moot, and thus the Court no longer has jurisdiction to maintain the preliminary injunction
+
+6
+
+which was based on the now moot FAC. Moreover, where an amended ordinance gives the relief
+
+7
+
+that was sought from the original ordinance and moots the case, the preliminary injunction is
+
+8
+
+rendered moot as well. Amawi v. Paxton, 956 F.3d 816, 821 (5th Cir. 2020) (holding that a
+
+9
+
+preliminary injunction was moot because of revisions to a challenged statute gave plaintiff the
+
+10
+
+very relief their original lawsuit sought).
+V.
+
+United States District Court
+Northern District of California
+
+11
+12
+
+CONCLUSION
+
+The Court GRANTS the City’s motion to dismiss and dissolves the preliminary injunction.
+
+13
+14
+
+IT IS SO ORDERED.
+
+15
+16
+
+Dated: August 7, 2024
+
+17
+18
+19
+
+______________________________________
+EDWARD M. CHEN
+United States District Judge
+
+20
+21
+22
+23
+24
+25
+26
+27
+28
+9
+
+

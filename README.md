@@ -99,6 +99,7 @@ Start narrow:
 - [Judicial And Oversight Extension](./docs/judicial-and-oversight-extension.md)
 - [Judicial Pressure-Test Basket Source Bundle](./docs/judicial-pressure-test-basket-source-bundle.md)
 - [Judicial Pressure-Test Basket Ingestion Checklist](./docs/judicial-pressure-test-basket-ingestion-checklist.md)
+- [Legal Precedent 01](./docs/legal-precedent-01.md)
 - [Entity Glossary](./docs/entity-glossary.md)
 - [Jurisdiction Source Map](./docs/jurisdiction-source-map.md)
 - [Ingestion Agents](./docs/ingestion-agents.md)
@@ -160,6 +161,8 @@ Start narrow:
 - [Procurement Sample Basket Bundle](./data/normalized/procurement-sample-basket-01/bundle-01.json)
 - [Permit Sample Basket Bundle](./data/normalized/permit-sample-basket-01/bundle-01.json)
 - [P4134 Appeal Chain Split](./data/normalized/permit-sample-basket-01/p4134-appeal-chain.json)
+- [Boyd Dismissal-Order Extract](./data/extracted/san-rafael-boyd-dismissal-order/2026-04-12.json)
+- [Legal Precedent 01 Bundle](./data/normalized/legal-precedent-01/bundle-01.json)
 
 ## Scripts
 
@@ -177,6 +180,7 @@ Start narrow:
 - [San Rafael Form 460 Schedule Extractor](./scripts/extract_san_rafael_city_campaign_form460_schedules.py)
 - [San Rafael City Campaign Evidence Record Normalizer](./scripts/normalize_san_rafael_city_campaign_records.py)
 - [San Rafael City Campaign Actor Supplement Normalizer](./scripts/normalize_san_rafael_city_campaign_actors.py)
+- [Boyd Legal Bundle Normalizer](./scripts/normalize_legal_precedent_boyd.py)
 - [Graph Projection Helper](./scripts/graph_projection_lib.py)
 - [Graph Projection Builder](./scripts/build_graph_projection.py)
 - [Graph Projection Smoke Checks](./scripts/graph_smoke_checks.py)
@@ -198,6 +202,12 @@ This repo started as a planning workspace and now includes the first live implem
   - a narrow actor and issue supplement now lands `8` conservative campaign actors and `3` canonical issues without widening into discovery-stage review material
   - the current projection report now shows only `missing_target:Actor = 147`; `Issue` and `Record` completeness gaps are no longer part of graph-v1
   - the first live local Neo4j load and query pass has been run successfully against the projected graph, proving end-to-end continuity for actor, seat-service, filing, money, decision, issue, and validation queries
+- first normalized legal bundle now exists as `legal-precedent-01`:
+  - captured the August 7, 2024 Boyd dismissal order as a direct court-origin PDF
+  - extracted a durable court-timeline surface for complaint, TRO, preliminary injunction, dismissal-motion, hearing, and dismissal stages
+  - normalized the first `Case`, `Proceeding`, and `CaseParticipation` objects for `Boyd v. City of San Rafael`
+  - tied that case back into the August 19, 2024 item `5.a` ordinance / resolution chain and the sanctioned-camping program
+  - preserved the remaining missing-order gap explicitly: the operative TRO and preliminary-injunction court orders are still not captured directly
 - source registry seeds
 - source-registry format now expanded to capture platform family, backfill target, change signal, and source-specific quirks
 - source-adapter operations note added to document municipality/county source idiosyncrasies, historical backfill planning, and recurring sync strategy

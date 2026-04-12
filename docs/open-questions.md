@@ -329,6 +329,21 @@ Mirror the question here when it affects:
 - `current note`: The current graph-v1 report now shows `missing_target:Actor = 147`, with no remaining `missing_target:Issue` or `missing_target:Record` categories. The highest-repeat skipped actor IDs are `actor-anedot`, `actor-four-waters-media-inc`, `actor-pmcohen-public-affairs`, and a small cluster of council role aliases from the homelessness bundle.
 - `next evidence`: decide whether the next follow-up is a narrow actor-alias cleanup for existing official officeholders, a vendor/platform supplement for campaign finance analytics, or a stricter parser cleanup that keeps OCR-tainted actors out of graph-v1 entirely.
 
+### OQ-030: Boyd operative-order gap
+
+- `status`: open
+- `layer`: legal / precedent normalization
+- `scope`: `legal-precedent-01`
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/legal-precedent-01/bundle-01.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-boyd-dismissal-order/2026-04-12.json)
+  - [order.txt](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-boyd-dismissal-order/order.txt)
+  - [judicial-pressure-test-basket-ingestion-checklist.md](/Users/tammypais/projects/marin-civic-graph/docs/judicial-pressure-test-basket-ingestion-checklist.md)
+- `question`: Where can the project capture the operative August 2023 TRO order and the October 19, 2023 preliminary-injunction order as direct court-origin records for `Boyd v. City of San Rafael`?
+- `why it matters`: The first normalized legal bundle is now real and the dismissal-side court order is captured directly, but the strongest constraint-side orders are still represented through the dismissal order's procedural history and later city summaries instead of their own court texts.
+- `current note`: `legal-precedent-01` is good enough for `Case`, `Proceeding`, `CaseParticipation`, and crosswalk joins back to the August 19 San Rafael decisions and sanctioned-camping program. It is not yet good enough for full injunction-order analytics.
+- `next evidence`: capture a clean public docket or direct order surface for the TRO and preliminary injunction, then promote those orders as separate `legal_record` nodes and tighten the proceeding detail to direct-order evidence.
+
 ### OQ-016: San Rafael local Form 803 filing surface
 
 - `status`: resolved

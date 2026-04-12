@@ -248,13 +248,13 @@ Do not ship `Legal & Precedent` or `Records` as top-level tabs in v1.
 Reason:
 
 - `Records` is still an evidence mode inside investigation, not a distinct top-level question
-- the legal / precedent lane is architecturally important but still too planning-heavy until one normalized legal bundle exists
+- the legal / precedent lane is architecturally important but should stay out of core import until the first normalized legal bundle is stronger than one local case plus follow-on gaps
 
 Instead:
 
 - keep a source / record mode inside `Investigate`
 - expose legal / precedent context as sections on actor and decision pages
-- promote `Legal & Precedent` to a top-level tab only after `legal-precedent-01` exists
+- promote `Legal & Precedent` to a top-level tab only after `legal-precedent-01` matures beyond the current Boyd-only slice
 
 ## Legal / Precedent Gap
 
@@ -270,21 +270,40 @@ The repo already has legal planning and raw captures:
 - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-grants-pass-statement/2026-04-10/source.html)
 - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-boyd-dismissal-news-release/2026-04-10/source.html)
 
-But it does **not** yet have a clearly named normalized legal bundle the way campaign, disclosure, permit, and procurement do.
+It now has a clearly named normalized legal bundle:
 
-That means the legal layer exists conceptually, but not yet as a first-class import surface.
+- [legal-precedent-01.md](/Users/tammypais/projects/marin-civic-graph/docs/legal-precedent-01.md)
+- [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/legal-precedent-01/bundle-01.json)
+
+But it is still not yet a first-class import surface.
+
+The current bundle proves the local legal lane with:
+
+- `case-boyd-v-city-of-san-rafael`
+- one direct court-origin dismissal order
+- normalized `Proceeding` and `CaseParticipation` objects
+- explicit crosswalks back to the August 19, 2024 San Rafael decision chain
+
+The current remaining gap is also explicit:
+
+- the operative Boyd TRO and preliminary-injunction orders are still not captured directly
 
 ### Proposal
 
-Make `legal-precedent-01` the next normalized bundle after the import skeleton exists.
+Treat `legal-precedent-01` as the first real legal normalization slice, but keep it outside core v1 import until the direct-order coverage is stronger.
 
 Minimum scope:
 
 - `case-boyd-v-city-of-san-rafael`
-- `case-city-of-grants-pass-v-johnson`
+- one direct court-origin Boyd order
 - case participation where public and named
 - official legal-framing records already in case study 01
-- precedent / local-constraint claims preserved explicitly as `Claim`
+- explicit local crosswalk back to decision and program nodes
+
+After that, the next legal follow-on should be:
+
+1. direct TRO / preliminary-injunction order capture for `Boyd`
+2. only then `Grants Pass` and the broader pressure-test basket
 
 That is enough to justify a later first-class legal lane without pretending the entire judicial model is done.
 
@@ -351,15 +370,15 @@ Mitigation:
 - `MERGE` by stable ID only
 - no importer-side fuzzy resolution
 
-### Risk 4: Legal / precedent layer invisibility
+### Risk 4: Legal / precedent layer still looks thinner than it really is
 
-The legal work is present but easy to miss because it has not been normalized as its own family yet.
+The legal work is now normalized, but still easy to miss because the first bundle is narrow and stays outside core graph-v1 import.
 
 Mitigation:
 
 - keep legal context visible in the page architecture
-- create `legal-precedent-01` early
-- do not promise a top-level legal tab until that bundle exists
+- keep `legal-precedent-01` visible as a real lane
+- do not promise a top-level legal tab until the bundle is stronger than the current Boyd-only slice
 
 ### Risk 5: Overbuilding the importer
 
@@ -381,14 +400,14 @@ After adversarial review, the recommended stance is:
 - `ValidationCheck` in v1
 - `Mention` and `Claim` out of core v1
 - no top-level `Records` tab in v1
-- no top-level `Legal & Precedent` tab until `legal-precedent-01` exists
+- no top-level `Legal & Precedent` tab until `legal-precedent-01` matures beyond the current Boyd-only slice
 
 ## Adversarial Review Questions
 
 - Is the projection layer sufficient to keep bundle-local semantics out of `load_neo4j_v1.py`?
 - Should weak OCR actor labels materialize as nodes, or stay attached to money-flow raw labels until stronger identity exists?
 - Is `ValidationCheck` narrow enough to import now while `Mention` and `Claim` stay out of core v1?
-- Is a top-level `Legal & Precedent` tab premature before `legal-precedent-01` exists?
+- Is a top-level `Legal & Precedent` tab still premature while `legal-precedent-01` is only a Boyd-first slice with an unresolved TRO / injunction gap?
 - Are permits and procurement better left for phase two until the San Rafael governance spine is proven?
 
 ## Recommended Next Commit

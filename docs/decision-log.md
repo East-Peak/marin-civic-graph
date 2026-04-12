@@ -18,6 +18,11 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-12
 
+- **The first legal bundle should start with one local case and one court-origin order**
+  - `legal-precedent-01` starts with `Boyd v. City of San Rafael`, centered on the August 7, 2024 dismissal order plus the city's own linked legal-response and implementation records.
+  - Keep the bundle normalized and durable now, but do not widen graph-v1 import scope until the legal lane has stronger direct-order coverage for the TRO and preliminary-injunction stages.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-first-normalized-boyd-legal-bundle.md`
+
 - **Active projects need a repo-local running decision index**
   - Keep a compact `docs/decision-log.md` in the repo, with detailed rationale still living in workspace decisions.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-active-projects-need-repo-local-decision-log.md`
