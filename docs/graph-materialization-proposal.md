@@ -222,7 +222,7 @@ Use for:
 
 This is where donor / vendor / sponsor recurrence becomes visible.
 
-### 5. `Legal`
+### 5. `Legal & Precedent`
 
 This needs to be explicit.
 
@@ -332,13 +332,13 @@ Mitigation:
 - `MERGE` by stable ID only
 - no importer-side fuzzy resolution
 
-### Risk 3: Legal layer invisibility
+### Risk 3: Legal / precedent layer invisibility
 
 The legal work is present but easy to miss because it has not been normalized as its own family yet.
 
 Mitigation:
 
-- give `Legal` a top-level product tab
+- give `Legal & Precedent` a top-level product tab
 - create `legal-precedent-01` early
 
 ### Risk 4: Overbuilding the importer
@@ -355,7 +355,7 @@ Mitigation:
 
 - Are `Decisions` and `Records` both needed as top-level tabs, or should one collapse into the other?
 - Should `ValidationCheck` live in Neo4j, or should it stay in a sidecar QA store until the product needs it directly?
-- Is the `Legal` tab premature before `legal-precedent-01` exists?
+- Is the `Legal & Precedent` tab premature before `legal-precedent-01` exists?
 - Are we importing too much review-layer material for v1?
 - Should permits and procurement stay out of the first import, or are we leaving too much value on the table?
 
