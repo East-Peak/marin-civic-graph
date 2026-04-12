@@ -65,6 +65,8 @@ Start narrow:
 - [Graph Data Model](./docs/graph-data-model.md)
 - [Graph Materialization Proposal](./docs/graph-materialization-proposal.md)
 - [Architecture Review Checklist](./docs/architecture-review-checklist.md)
+- [Controlled Breadth Sprint Proposal](./docs/breadth-sprint-proposal.md)
+- [Controlled Breadth Sprint Adversarial Review Checklist](./docs/breadth-sprint-review-checklist.md)
 - [Decision Log](./docs/decision-log.md)
 - [Graph Joins And Identity](./docs/graph-joins-and-identity.md)
 - [Identity Resolution Submodel](./docs/identity-resolution-submodel.md)
