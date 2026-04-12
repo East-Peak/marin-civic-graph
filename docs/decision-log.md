@@ -39,6 +39,14 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
   - The right next move after the first projection was not a new ontology tranche. It was a focused campaign-evidence `Record` bundle that promotes OCR, PDF, and folder artifacts already cited by live filings, money flows, and validation checks.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-graph-v1-campaign-evidence-completeness-should-use-a-record-bundle.md`
 
+- **Graph-v1 should use narrow actor and issue supplements before broader canonical expansion**
+  - Promote only the strongest campaign actors and canonical issues needed to close obvious graph-v1 gaps. Leave OCR-tainted, platform-like, and alias-heavy actors out of the core import until the identity layer is stronger.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-graph-v1-should-use-narrow-actor-and-issue-supplements-before-broader-canonical-expansion.md`
+
+- **The first live local Neo4j load should follow projection smoke checks, not replace them**
+  - Keep the projected JSONL layer and smoke checks as the gate, then run a real local load/query pass to prove the graph is actually usable before widening scope.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-first-live-local-neo4j-load-should-follow-projection-smoke-checks.md`
+
 - **Schedule A QA should anchor on official itemized and unitemized summary totals**
   - Do not compare extracted row sums only to the top-line filing total.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-san-rafael-form460-schedule-a-summary-should-anchor-qa.md`

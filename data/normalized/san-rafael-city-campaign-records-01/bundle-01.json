@@ -2,11 +2,12 @@
   "case_study_id": "san-rafael-city-campaign-records-01",
   "bundle_id": "san-rafael-city-campaign-records-01__bundle-01",
   "status": "working",
-  "generated_at": "2026-04-12T21:07:03Z",
+  "generated_at": "2026-04-12T21:16:59Z",
   "scope": [
     "San Rafael city-side campaign folder records referenced from committee, filing, or candidacy objects already included in graph-v1",
     "San Rafael city-side Form 460 OCR capture records referenced from filing, money-flow, or validation objects already included in graph-v1",
     "San Rafael city-side Form 460 PDF export records referenced from filing, money-flow, or validation objects already included in graph-v1",
+    "San Rafael city-side campaign folder records referenced from the narrow promoted campaign actor supplement included in graph-v1",
     "Evidence-completeness promotion only; this bundle adds durable Record nodes without importing discovery-stage actor, candidacy, or committee candidates"
   ],
   "record_refs": [
@@ -166,6 +167,33 @@
       ],
       "entry_id": 32164,
       "election_label": "November 3, 2020 Election - San Rafael"
+    },
+    {
+      "id": "record-san-rafael-november-3-2020-election-john-gamblin-campaign-folder",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_folder",
+      "source_id": "san-rafael-city-side-campaign-filings",
+      "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+      "capture_status": "discovery_only",
+      "label": "John Gamblin campaign filings folder",
+      "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31431&dbid=0&repo=CityofSanRafael",
+      "linked_from_source_ids": [
+        "san-rafael-november-3-2020-election"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "entry_id": 31431,
+      "election_label": "November 3, 2020 Election - San Rafael",
+      "section_label": "City of San Rafael Election",
+      "office_label": "Councilmember District 4 Candidates",
+      "candidate_name": "John Gamblin",
+      "candidate_actor_ids": [
+        "actor-john-gamblin"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-city-council-district-4"
+      ]
     },
     {
       "id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
@@ -565,7 +593,7 @@
     },
     {
       "id": "method-campaign-records-v1-source-breakdown",
-      "summary": "Promoted record coverage by source bundle: san-rafael-city-campaign-discovery-01=18, san-rafael-city-campaign-form460-ocr-01=3, san-rafael-city-campaign-form460-pdf-01=3"
+      "summary": "Promoted record coverage by source bundle: san-rafael-city-campaign-discovery-01=19, san-rafael-city-campaign-form460-ocr-01=3, san-rafael-city-campaign-form460-pdf-01=3"
     }
   ],
   "open_questions": [

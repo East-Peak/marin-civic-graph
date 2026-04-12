@@ -22,9 +22,29 @@ MERGE (n:Imported {id: "actor-eli-hill"})
 SET n:Actor
 SET n += {actor_type: "person", display_label: "Eli Hill", evidence_record_ids: ["record-san-rafael-city-council-2024-08-19-item-5a-report", "record-san-rafael-november-8-2022-election-page", "record-san-rafael-city-council-2022-12-19-special-election-results-page", "record-san-rafael-elected-officials-2026-04-11", "record-san-rafael-city-council-page-2026-04-11"], name: "Eli Hill", node_type: "Actor", observed_labels: ["Eli Hill", "Vice Mayor Hill"], payload_json: "{\"actor_type\": \"person\", \"evidence_record_ids\": [\"record-san-rafael-city-council-2024-08-19-item-5a-report\", \"record-san-rafael-november-8-2022-election-page\", \"record-san-rafael-city-council-2022-12-19-special-election-results-page\", \"record-san-rafael-elected-officials-2026-04-11\", \"record-san-rafael-city-council-page-2026-04-11\"], \"id\": \"actor-eli-hill\", \"name\": \"Eli Hill\", \"observed_labels\": [\"Eli Hill\", \"Vice Mayor Hill\"], \"resolves_raw_actor_seed_ids\": [\"actor-vice-mayor-hill\"], \"seed_status\": \"canonical_seed\"}", promotion_state: "canonical", resolves_raw_actor_seed_ids: ["actor-vice-mayor-hill"], seed_status: "canonical_seed", source_bundle_ids: ["canonical-seeds-san-rafael-01"], source_sections: ["actor_candidates"]};
 
+MERGE (n:Imported {id: "actor-gerrod-herndon"})
+SET n:Actor
+SET n += {actor_type: "person", display_label: "Gerrod Herndon", evidence_record_ids: ["record-san-rafael-november-8-2022-election-page", "record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder"], name: "Gerrod Herndon", node_type: "Actor", payload_json: "{\"actor_type\": \"person\", \"evidence_record_ids\": [\"record-san-rafael-november-8-2022-election-page\", \"record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder\"], \"id\": \"actor-gerrod-herndon\", \"name\": \"Gerrod Herndon\", \"promotion_basis\": \"page_backed_candidate_actor\", \"status\": \"promoted_from_discovery\"}", promotion_basis: "page_backed_candidate_actor", promotion_state: "promoted", source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_sections: ["actor_candidates"], source_status: "promoted_from_discovery", status: "promoted_from_discovery"};
+
+MERGE (n:Imported {id: "actor-greg-knell"})
+SET n:Actor
+SET n += {actor_type: "person", display_label: "Greg Knell", evidence_record_ids: ["record-san-rafael-november-3-2020-election-page", "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"], name: "Greg Knell", node_type: "Actor", payload_json: "{\"actor_type\": \"person\", \"evidence_record_ids\": [\"record-san-rafael-november-3-2020-election-page\", \"record-san-rafael-november-3-2020-election-greg-knell-campaign-folder\"], \"id\": \"actor-greg-knell\", \"name\": \"Greg Knell\", \"promotion_basis\": \"page_backed_candidate_actor\", \"status\": \"promoted_from_discovery\"}", promotion_basis: "page_backed_candidate_actor", promotion_state: "promoted", source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_sections: ["actor_candidates"], source_status: "promoted_from_discovery", status: "promoted_from_discovery"};
+
+MERGE (n:Imported {id: "actor-john-gamblin"})
+SET n:Actor
+SET n += {actor_type: "person", display_label: "John Gamblin", evidence_record_ids: ["record-san-rafael-november-3-2020-election-page", "record-san-rafael-november-3-2020-election-john-gamblin-campaign-folder"], name: "John Gamblin", node_type: "Actor", payload_json: "{\"actor_type\": \"person\", \"evidence_record_ids\": [\"record-san-rafael-november-3-2020-election-page\", \"record-san-rafael-november-3-2020-election-john-gamblin-campaign-folder\"], \"id\": \"actor-john-gamblin\", \"name\": \"John Gamblin\", \"promotion_basis\": \"page_backed_candidate_actor\", \"status\": \"promoted_from_discovery\"}", promotion_basis: "page_backed_candidate_actor", promotion_state: "promoted", source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_sections: ["actor_candidates"], source_status: "promoted_from_discovery", status: "promoted_from_discovery"};
+
+MERGE (n:Imported {id: "actor-jonathan-frieman"})
+SET n:Actor
+SET n += {actor_type: "person", display_label: "Jonathan Frieman", evidence_record_ids: ["record-san-rafael-november-8-2022-election-page", "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"], name: "Jonathan Frieman", node_type: "Actor", payload_json: "{\"actor_type\": \"person\", \"evidence_record_ids\": [\"record-san-rafael-november-8-2022-election-page\", \"record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder\"], \"id\": \"actor-jonathan-frieman\", \"name\": \"Jonathan Frieman\", \"promotion_basis\": \"page_backed_candidate_actor\", \"status\": \"promoted_from_discovery\"}", promotion_basis: "page_backed_candidate_actor", promotion_state: "promoted", source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_sections: ["actor_candidates"], source_status: "promoted_from_discovery", status: "promoted_from_discovery"};
+
 MERGE (n:Imported {id: "actor-kate-colin"})
 SET n:Actor
 SET n += {actor_type: "person", display_label: "Kate Colin", evidence_record_ids: ["record-san-rafael-city-council-2024-08-19-item-5a-report", "record-san-rafael-boyd-dismissal-release-2024-08-08", "record-san-rafael-downtown-library-reopening-2025-04-07", "record-kate-colin-form-803-2025-09-04", "record-san-rafael-elected-officials-2026-04-11", "record-san-rafael-city-council-page-2026-04-11", "record-san-rafael-november-5-2024-election-page"], name: "Kate Colin", node_type: "Actor", observed_labels: ["Kate Colin", "Mayor Kate Colin", "Kate Colin (she/her/hers)"], payload_json: "{\"actor_type\": \"person\", \"evidence_record_ids\": [\"record-san-rafael-city-council-2024-08-19-item-5a-report\", \"record-san-rafael-boyd-dismissal-release-2024-08-08\", \"record-san-rafael-downtown-library-reopening-2025-04-07\", \"record-kate-colin-form-803-2025-09-04\", \"record-san-rafael-elected-officials-2026-04-11\", \"record-san-rafael-city-council-page-2026-04-11\", \"record-san-rafael-november-5-2024-election-page\"], \"id\": \"actor-kate-colin\", \"name\": \"Kate Colin\", \"observed_labels\": [\"Kate Colin\", \"Mayor Kate Colin\", \"Kate Colin (she/her/hers)\"], \"resolves_raw_actor_seed_ids\": [\"actor-mayor-kate\"], \"seed_status\": \"canonical_seed\"}", promotion_state: "canonical", resolves_raw_actor_seed_ids: ["actor-mayor-kate"], seed_status: "canonical_seed", source_bundle_ids: ["campaign-finance-form-803-slice-01__bundle-01", "canonical-seeds-san-rafael-01"], source_sections: ["actor_candidates"]};
+
+MERGE (n:Imported {id: "actor-mahmoud-shirazi"})
+SET n:Actor
+SET n += {actor_type: "person", display_label: "Mahmoud Shirazi", evidence_record_ids: ["record-san-rafael-november-5-2024-election-page", "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder", "record-san-rafael-november-3-2020-election-page", "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"], name: "Mahmoud Shirazi", node_type: "Actor", payload_json: "{\"actor_type\": \"person\", \"evidence_record_ids\": [\"record-san-rafael-november-5-2024-election-page\", \"record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder\", \"record-san-rafael-november-3-2020-election-page\", \"record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder\"], \"id\": \"actor-mahmoud-shirazi\", \"name\": \"Mahmoud Shirazi\", \"promotion_basis\": \"page_backed_candidate_actor\", \"status\": \"promoted_from_discovery\"}", promotion_basis: "page_backed_candidate_actor", promotion_state: "promoted", source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_sections: ["actor_candidates"], source_status: "promoted_from_discovery", status: "promoted_from_discovery"};
 
 MERGE (n:Imported {id: "actor-maika-llorens-gulati"})
 SET n:Actor
@@ -33,6 +53,10 @@ SET n += {actor_type: "person", display_label: "Maika Llorens Gulati", evidence_
 MERGE (n:Imported {id: "actor-maribeth-bushey"})
 SET n:Actor
 SET n += {actor_type: "person", display_label: "Maribeth Bushey", evidence_record_ids: ["record-san-rafael-city-council-2024-08-19-item-5a-report", "record-san-rafael-november-8-2022-election-page", "record-san-rafael-city-council-2022-12-19-special-election-results-page", "record-san-rafael-elected-officials-2026-04-11", "record-san-rafael-city-council-page-2026-04-11"], name: "Maribeth Bushey", node_type: "Actor", observed_labels: ["Maribeth Bushey", "Councilmember Bushey"], payload_json: "{\"actor_type\": \"person\", \"evidence_record_ids\": [\"record-san-rafael-city-council-2024-08-19-item-5a-report\", \"record-san-rafael-november-8-2022-election-page\", \"record-san-rafael-city-council-2022-12-19-special-election-results-page\", \"record-san-rafael-elected-officials-2026-04-11\", \"record-san-rafael-city-council-page-2026-04-11\"], \"id\": \"actor-maribeth-bushey\", \"name\": \"Maribeth Bushey\", \"observed_labels\": [\"Maribeth Bushey\", \"Councilmember Bushey\"], \"resolves_raw_actor_seed_ids\": [\"actor-councilmember-bushey\"], \"seed_status\": \"canonical_seed\"}", promotion_state: "canonical", resolves_raw_actor_seed_ids: ["actor-councilmember-bushey"], seed_status: "canonical_seed", source_bundle_ids: ["canonical-seeds-san-rafael-01"], source_sections: ["actor_candidates"]};
+
+MERGE (n:Imported {id: "actor-mark-galperin"})
+SET n:Actor
+SET n += {actor_type: "person", display_label: "Mark Galperin", evidence_record_ids: ["record-san-rafael-november-5-2024-election-page", "record-san-rafael-november-5-2024-election-mark-galperin-campaign-folder"], name: "Mark Galperin", node_type: "Actor", payload_json: "{\"actor_type\": \"person\", \"evidence_record_ids\": [\"record-san-rafael-november-5-2024-election-page\", \"record-san-rafael-november-5-2024-election-mark-galperin-campaign-folder\"], \"id\": \"actor-mark-galperin\", \"name\": \"Mark Galperin\", \"promotion_basis\": \"page_backed_candidate_actor\", \"status\": \"promoted_from_discovery\"}", promotion_basis: "page_backed_candidate_actor", promotion_state: "promoted", source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_sections: ["actor_candidates"], source_status: "promoted_from_discovery", status: "promoted_from_discovery"};
 
 MERGE (n:Imported {id: "actor-mark-shotwell"})
 SET n:Actor
@@ -49,6 +73,14 @@ SET n += {actor_type: "person", display_label: "Rachel Kertz", evidence_record_i
 MERGE (n:Imported {id: "actor-ritter-center"})
 SET n:Actor
 SET n += {actor_type: "nonprofit", display_label: "Ritter Center", evidence_record_ids: ["record-san-rafael-city-council-2024-08-19-item-5a-report", "record-san-rafael-public-comment-ms-2024-08-19", "record-san-rafael-camping-implementation-plan-2023-12-14"], name: "Ritter Center", node_type: "Actor", observed_labels: ["Ritter Center"], payload_json: "{\"actor_type\": \"nonprofit\", \"evidence_record_ids\": [\"record-san-rafael-city-council-2024-08-19-item-5a-report\", \"record-san-rafael-public-comment-ms-2024-08-19\", \"record-san-rafael-camping-implementation-plan-2023-12-14\"], \"id\": \"actor-ritter-center\", \"name\": \"Ritter Center\", \"observed_labels\": [\"Ritter Center\"], \"seed_status\": \"canonical_seed\"}", promotion_state: "canonical", seed_status: "canonical_seed", source_bundle_ids: ["canonical-seeds-san-rafael-01"], source_sections: ["actor_candidates"]};
+
+MERGE (n:Imported {id: "actor-sr-chamber-of-commerce-pac"})
+SET n:Actor
+SET n += {actor_type: "political_committee", display_label: "SR Chamber of Commerce PAC", evidence_record_ids: ["record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"], name: "SR Chamber of Commerce PAC", node_type: "Actor", payload_json: "{\"actor_type\": \"political_committee\", \"evidence_record_ids\": [\"record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder\"], \"id\": \"actor-sr-chamber-of-commerce-pac\", \"name\": \"SR Chamber of Commerce PAC\", \"promotion_basis\": \"outside_spending_committee_title_layer\", \"source_committee_id\": \"committee-sr-chamber-of-commerce-pac-2020-11-03-san-rafael-general-ie\", \"status\": \"promoted_from_ie_title_layer\"}", promotion_basis: "outside_spending_committee_title_layer", promotion_state: "promoted", source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_committee_id: "committee-sr-chamber-of-commerce-pac-2020-11-03-san-rafael-general-ie", source_sections: ["actor_candidates"], source_status: "promoted_from_ie_title_layer", status: "promoted_from_ie_title_layer"};
+
+MERGE (n:Imported {id: "actor-whine-pac"})
+SET n:Actor
+SET n += {actor_type: "political_committee", display_label: "WHINE PAC", evidence_record_ids: ["record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"], name: "WHINE PAC", node_type: "Actor", payload_json: "{\"actor_type\": \"political_committee\", \"evidence_record_ids\": [\"record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder\"], \"id\": \"actor-whine-pac\", \"name\": \"WHINE PAC\", \"promotion_basis\": \"outside_spending_committee_title_layer\", \"source_committee_id\": \"committee-whine-pac-2020-11-03-san-rafael-general-ie\", \"status\": \"promoted_from_ie_title_layer\"}", promotion_basis: "outside_spending_committee_title_layer", promotion_state: "promoted", source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_committee_id: "committee-whine-pac-2020-11-03-san-rafael-general-ie", source_sections: ["actor_candidates"], source_status: "promoted_from_ie_title_layer", status: "promoted_from_ie_title_layer"};
 
 MERGE (n:Imported {id: "agenda-item-2024-08-19-5a"})
 SET n:AgendaItem
@@ -1289,6 +1321,18 @@ SET n += {display_label: "San Rafael City Clerk", evidence_record_ids: ["record-
 MERGE (n:Imported {id: "inst-san-rafael-city-council"})
 SET n:Institution
 SET n += {display_label: "San Rafael City Council", evidence_record_ids: ["record-san-rafael-city-council-2024-08-19-item-5a-report", "record-san-rafael-library-grants-2022-12-19", "record-san-rafael-elected-officials-2026-04-11", "record-san-rafael-city-council-page-2026-04-11"], institution_type: "council", name: "San Rafael City Council", node_type: "Institution", parent_institution_id: "inst-city-of-san-rafael", payload_json: "{\"evidence_record_ids\": [\"record-san-rafael-city-council-2024-08-19-item-5a-report\", \"record-san-rafael-library-grants-2022-12-19\", \"record-san-rafael-elected-officials-2026-04-11\", \"record-san-rafael-city-council-page-2026-04-11\"], \"id\": \"inst-san-rafael-city-council\", \"institution_type\": \"council\", \"name\": \"San Rafael City Council\", \"parent_institution_id\": \"inst-city-of-san-rafael\", \"seed_status\": \"canonical_seed\"}", promotion_state: "canonical", seed_status: "canonical_seed", source_bundle_ids: ["campaign-finance-form-803-slice-01__bundle-01", "canonical-seeds-san-rafael-01", "san-rafael-election-records-01__bundle-01", "san-rafael-homelessness-01__bundle-01"], source_sections: ["institution_candidates", "institutions"]};
+
+MERGE (n:Imported {id: "issue-camping-ordinance"})
+SET n:Issue
+SET n += {aliases: ["Chapter 19.50 amendments", "camping ordinance amendments"], display_label: "Camping Ordinance", evidence_record_ids: ["doc-2024-08-19-item-5a-report", "record-2024-08-19-ordinance-2040-text"], issue_type: "policy_issue", name: "Camping Ordinance", node_type: "Issue", payload_json: "{\"aliases\": [\"Chapter 19.50 amendments\", \"camping ordinance amendments\"], \"evidence_record_ids\": [\"doc-2024-08-19-item-5a-report\", \"record-2024-08-19-ordinance-2040-text\"], \"id\": \"issue-camping-ordinance\", \"issue_type\": \"policy_issue\", \"name\": \"Camping Ordinance\", \"seed_status\": \"canonical_seed\"}", promotion_state: "canonical", seed_status: "canonical_seed", source_bundle_ids: ["canonical-issues-01__bundle-01"], source_sections: ["issue_candidates"]};
+
+MERGE (n:Imported {id: "issue-encampments"})
+SET n:Issue
+SET n += {aliases: ["encampment management", "sanctioned camping"], display_label: "Encampments", evidence_record_ids: ["doc-2024-08-19-item-5a-report"], issue_type: "policy_issue", name: "Encampments", node_type: "Issue", payload_json: "{\"aliases\": [\"encampment management\", \"sanctioned camping\"], \"evidence_record_ids\": [\"doc-2024-08-19-item-5a-report\"], \"id\": \"issue-encampments\", \"issue_type\": \"policy_issue\", \"name\": \"Encampments\", \"seed_status\": \"canonical_seed\"}", promotion_state: "canonical", seed_status: "canonical_seed", source_bundle_ids: ["canonical-issues-01__bundle-01"], source_sections: ["issue_candidates"]};
+
+MERGE (n:Imported {id: "issue-homelessness"})
+SET n:Issue
+SET n += {aliases: ["homelessness services", "homelessness response"], display_label: "Homelessness", evidence_record_ids: ["doc-2024-08-19-item-5a-report"], issue_type: "policy_issue", name: "Homelessness", node_type: "Issue", payload_json: "{\"aliases\": [\"homelessness services\", \"homelessness response\"], \"evidence_record_ids\": [\"doc-2024-08-19-item-5a-report\"], \"id\": \"issue-homelessness\", \"issue_type\": \"policy_issue\", \"name\": \"Homelessness\", \"seed_status\": \"canonical_seed\"}", promotion_state: "canonical", seed_status: "canonical_seed", source_bundle_ids: ["canonical-issues-01__bundle-01"], source_sections: ["issue_candidates"]};
 
 MERGE (n:Imported {id: "meeting-2010-02-16-san-rafael-city-council"})
 SET n:Meeting
@@ -3278,6 +3322,10 @@ MERGE (n:Imported {id: "record-san-rafael-november-3-2020-election-independent-e
 SET n:Record
 SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", capture_status: "discovery_only", display_label: "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder", election_ids: ["election-2020-11-03-san-rafael-general"], election_label: "November 3, 2020 Election - San Rafael", entry_id: 32164, folder_url: "http://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=32164&dbid=0&repo=CityofSanRafael", label: "Independent Expenditure Filings 2020", linked_from_source_ids: ["san-rafael-november-3-2020-election"], node_type: "Record", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2020-11-03-san-rafael-general\"], \"election_label\": \"November 3, 2020 Election - San Rafael\", \"entry_id\": 32164, \"folder_url\": \"http://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=32164&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder\", \"label\": \"Independent Expenditure Filings 2020\", \"linked_from_source_ids\": [\"san-rafael-november-3-2020-election\"], \"record_class\": \"financial_record\", \"record_type\": \"independent_expenditure_filing_folder\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "independent_expenditure_filing_folder", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
 
+MERGE (n:Imported {id: "record-san-rafael-november-3-2020-election-john-gamblin-campaign-folder"})
+SET n:Record
+SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", candidate_actor_ids: ["actor-john-gamblin"], candidate_name: "John Gamblin", capture_status: "discovery_only", display_label: "record-san-rafael-november-3-2020-election-john-gamblin-campaign-folder", election_ids: ["election-2020-11-03-san-rafael-general"], election_label: "November 3, 2020 Election - San Rafael", entry_id: 31431, folder_url: "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31431&dbid=0&repo=CityofSanRafael", label: "John Gamblin campaign filings folder", linked_from_source_ids: ["san-rafael-november-3-2020-election"], node_type: "Record", office_label: "Councilmember District 4 Candidates", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"candidate_actor_ids\": [\"actor-john-gamblin\"], \"candidate_name\": \"John Gamblin\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2020-11-03-san-rafael-general\"], \"election_label\": \"November 3, 2020 Election - San Rafael\", \"entry_id\": 31431, \"folder_url\": \"https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31431&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-3-2020-election-john-gamblin-campaign-folder\", \"label\": \"John Gamblin campaign filings folder\", \"linked_from_source_ids\": [\"san-rafael-november-3-2020-election\"], \"office_label\": \"Councilmember District 4 Candidates\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_folder\", \"seat_ids\": [\"seat-san-rafael-city-council-district-4\"], \"section_label\": \"City of San Rafael Election\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_folder", seat_ids: ["seat-san-rafael-city-council-district-4"], section_label: "City of San Rafael Election", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
+
 MERGE (n:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
 SET n:Record
 SET n += {artifact_path: "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json", candidate_actor_ids: ["actor-kate-colin"], candidate_name: "Kate Colin", capture_status: "discovery_only", display_label: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder", election_ids: ["election-2020-11-03-san-rafael-general"], election_label: "November 3, 2020 Election - San Rafael", entry_id: 31079, folder_url: "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31079&dbid=0&repo=CityofSanRafael", label: "Kate Colin campaign filings folder", linked_from_source_ids: ["san-rafael-november-3-2020-election"], node_type: "Record", office_label: "Mayoral Candidates", payload_json: "{\"artifact_path\": \"data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json\", \"candidate_actor_ids\": [\"actor-kate-colin\"], \"candidate_name\": \"Kate Colin\", \"capture_status\": \"discovery_only\", \"election_ids\": [\"election-2020-11-03-san-rafael-general\"], \"election_label\": \"November 3, 2020 Election - San Rafael\", \"entry_id\": 31079, \"folder_url\": \"https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31079&dbid=0&repo=CityofSanRafael\", \"id\": \"record-san-rafael-november-3-2020-election-kate-colin-campaign-folder\", \"label\": \"Kate Colin campaign filings folder\", \"linked_from_source_ids\": [\"san-rafael-november-3-2020-election\"], \"office_label\": \"Mayoral Candidates\", \"record_class\": \"financial_record\", \"record_type\": \"campaign_filing_folder\", \"seat_ids\": [\"seat-san-rafael-mayor-at-large\"], \"section_label\": \"City of San Rafael Election\", \"source_id\": \"san-rafael-city-side-campaign-filings\"}", promotion_state: "promoted", record_class: "financial_record", record_type: "campaign_filing_folder", seat_ids: ["seat-san-rafael-mayor-at-large"], section_label: "City of San Rafael Election", source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_id: "san-rafael-city-side-campaign-filings", source_sections: ["record_refs"]};
@@ -3486,6 +3534,21 @@ MATCH (target:Imported {id: "actor-eli-hill"})
 MERGE (source)-[r:CANDIDATE_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_id"]};
 
+MATCH (source:Imported {id: "candidacy-gerrod-herndon-san-rafael-council-district-2-2022"})
+MATCH (target:Imported {id: "actor-gerrod-herndon"})
+MERGE (source)-[r:CANDIDATE_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_id"]};
+
+MATCH (source:Imported {id: "candidacy-greg-knell-san-rafael-council-district-4-2020"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:CANDIDATE_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_id"]};
+
+MATCH (source:Imported {id: "candidacy-jonathan-frieman-san-rafael-council-district-3-2022"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:CANDIDATE_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_id"]};
+
 MATCH (source:Imported {id: "candidacy-kate-colin-san-rafael-mayor-2020"})
 MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:CANDIDATE_ACTOR]->(target)
@@ -3493,6 +3556,16 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "candidacy-kate-colin-san-rafael-mayor-2024"})
 MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:CANDIDATE_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_id"]};
+
+MATCH (source:Imported {id: "candidacy-mahmoud-shirazi-san-rafael-mayor-2020"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:CANDIDATE_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_id"]};
+
+MATCH (source:Imported {id: "candidacy-mahmoud-shirazi-san-rafael-mayor-2024"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:CANDIDATE_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_id"]};
 
@@ -3508,6 +3581,11 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "candidacy-maribeth-bushey-san-rafael-council-district-3-2022"})
 MATCH (target:Imported {id: "actor-maribeth-bushey"})
+MERGE (source)-[r:CANDIDATE_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_id"]};
+
+MATCH (source:Imported {id: "candidacy-mark-galperin-san-rafael-council-district-4-2024"})
+MATCH (target:Imported {id: "actor-mark-galperin"})
 MERGE (source)-[r:CANDIDATE_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_id"]};
 
@@ -3571,8 +3649,33 @@ MATCH (target:Imported {id: "decision-2024-08-19-resolution-15336"})
 MERGE (source)-[r:CAST_VOTE_ON]->(target)
 SET r += {seat_id: "seat-san-rafael-city-council-district-4", seat_service_id: "seatservice-rachel-kertz-d4-current", source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["votes"], vote: "aye"};
 
+MATCH (source:Imported {id: "committee-sr-chamber-of-commerce-pac-2020-11-03-san-rafael-general-ie"})
+MATCH (target:Imported {id: "actor-sr-chamber-of-commerce-pac"})
+MERGE (source)-[r:COMMITTEE_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["actor_candidate_id"]};
+
+MATCH (source:Imported {id: "committee-whine-pac-2020-11-03-san-rafael-general-ie"})
+MATCH (target:Imported {id: "actor-whine-pac"})
+MERGE (source)-[r:COMMITTEE_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["actor_candidate_id"]};
+
 MATCH (source:Imported {id: "committee-eli-hill-for-san-rafael-city-council-2022"})
 MATCH (target:Imported {id: "actor-eli-hill"})
+MERGE (source)-[r:CONTROLLED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["controlling_actor_id"]};
+
+MATCH (source:Imported {id: "committee-gerrod-herndon-for-san-rafael-city-council-2022"})
+MATCH (target:Imported {id: "actor-gerrod-herndon"})
+MERGE (source)-[r:CONTROLLED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["controlling_actor_id"]};
+
+MATCH (source:Imported {id: "committee-greg-knell-for-city-council-2020"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:CONTROLLED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["controlling_actor_id"]};
+
+MATCH (source:Imported {id: "committee-jonathan-frieman-for-san-rafael-city-council-2022"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
 MERGE (source)-[r:CONTROLLED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["controlling_actor_id"]};
 
@@ -3583,6 +3686,16 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "committee-kate-colin-for-san-rafael-mayor-2024"})
 MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:CONTROLLED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["controlling_actor_id"]};
+
+MATCH (source:Imported {id: "committee-mahmoud-a-shirazi-for-mayor-2020"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:CONTROLLED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["controlling_actor_id"]};
+
+MATCH (source:Imported {id: "committee-mahmoud-a-shirazi-for-san-rafael-mayor-2024"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:CONTROLLED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["controlling_actor_id"]};
 
@@ -3598,6 +3711,11 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "committee-maribeth-bushey-for-city-council-2022"})
 MATCH (target:Imported {id: "actor-maribeth-bushey"})
+MERGE (source)-[r:CONTROLLED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["controlling_actor_id"]};
+
+MATCH (source:Imported {id: "committee-mark-galperin-for-city-council-2024"})
+MATCH (target:Imported {id: "actor-mark-galperin"})
 MERGE (source)-[r:CONTROLLED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["controlling_actor_id"]};
 
@@ -4821,6 +4939,46 @@ MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-page"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["canonical-seeds-san-rafael-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "actor-gerrod-herndon"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "actor-gerrod-herndon"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-page"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "actor-greg-knell"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "actor-greg-knell"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-page"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "actor-john-gamblin"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-john-gamblin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "actor-john-gamblin"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-page"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "actor-jonathan-frieman"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "actor-jonathan-frieman"})
+MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-page"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "actor-kate-colin"})
 MATCH (target:Imported {id: "record-kate-colin-form-803-2025-09-04"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
@@ -4855,6 +5013,26 @@ MATCH (source:Imported {id: "actor-kate-colin"})
 MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-page"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["canonical-seeds-san-rafael-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "actor-mahmoud-shirazi"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "actor-mahmoud-shirazi"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-page"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "actor-mahmoud-shirazi"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "actor-mahmoud-shirazi"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-page"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "actor-maika-llorens-gulati"})
 MATCH (target:Imported {id: "record-san-rafael-city-council-2024-08-19-item-5a-report"})
@@ -4901,6 +5079,16 @@ MATCH (target:Imported {id: "record-san-rafael-november-8-2022-election-page"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["canonical-seeds-san-rafael-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "actor-mark-galperin"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-mark-galperin-campaign-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "actor-mark-galperin"})
+MATCH (target:Imported {id: "record-san-rafael-november-5-2024-election-page"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "actor-mark-shotwell"})
 MATCH (target:Imported {id: "record-san-rafael-public-comment-ms-2024-08-19"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
@@ -4945,6 +5133,16 @@ MATCH (source:Imported {id: "actor-ritter-center"})
 MATCH (target:Imported {id: "record-san-rafael-public-comment-ms-2024-08-19"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["canonical-seeds-san-rafael-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "actor-sr-chamber-of-commerce-pac"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "actor-whine-pac"})
+MATCH (target:Imported {id: "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["evidence_record_ids"]};
 
 MATCH (source:Imported {id: "agenda-item-2024-08-19-5a"})
 MATCH (target:Imported {id: "doc-2024-08-19-item-5a-report"})
@@ -7991,6 +8189,26 @@ MATCH (target:Imported {id: "record-san-rafael-library-grants-2022-12-19"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
 SET r += {source_bundle_ids: ["canonical-seeds-san-rafael-01"], source_fields: ["evidence_record_ids"]};
 
+MATCH (source:Imported {id: "issue-camping-ordinance"})
+MATCH (target:Imported {id: "doc-2024-08-19-item-5a-report"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["canonical-issues-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "issue-camping-ordinance"})
+MATCH (target:Imported {id: "record-2024-08-19-ordinance-2040-text"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["canonical-issues-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "issue-encampments"})
+MATCH (target:Imported {id: "doc-2024-08-19-item-5a-report"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["canonical-issues-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
+MATCH (source:Imported {id: "issue-homelessness"})
+MATCH (target:Imported {id: "doc-2024-08-19-item-5a-report"})
+MERGE (source)-[r:EVIDENCED_BY]->(target)
+SET r += {source_bundle_ids: ["canonical-issues-01__bundle-01"], source_fields: ["evidence_record_ids"]};
+
 MATCH (source:Imported {id: "meeting-2010-02-16-san-rafael-city-council"})
 MATCH (target:Imported {id: "record-san-rafael-election-entry-15680"})
 MERGE (source)-[r:EVIDENCED_BY]->(target)
@@ -10681,6 +10899,11 @@ MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28528"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28553"})
 MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
@@ -10726,8 +10949,23 @@ MATCH (target:Imported {id: "actor-rachel-kertz"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-29290"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-30962"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31108"})
 MATCH (target:Imported {id: "actor-rachel-kertz"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31109"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
@@ -10766,6 +11004,11 @@ MATCH (target:Imported {id: "actor-rachel-kertz"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31440"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31480"})
 MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
@@ -10783,6 +11026,21 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31874"})
 MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31875"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31876"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-31877"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
@@ -10811,6 +11069,11 @@ MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32103"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32132"})
 MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
@@ -10818,6 +11081,26 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32161"})
 MATCH (target:Imported {id: "actor-rachel-kertz"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32163"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32221"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32223"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32224"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
@@ -10841,6 +11124,21 @@ MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32256"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32273"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32274"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32278"})
 MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
@@ -10851,6 +11149,11 @@ MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32291"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32293"})
 MATCH (target:Imported {id: "actor-rachel-kertz"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
@@ -10858,6 +11161,46 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32294"})
 MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32297"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32298"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32326"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32339"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32340"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32418"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32419"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32470"})
+MATCH (target:Imported {id: "actor-greg-knell"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
@@ -10886,8 +11229,18 @@ MATCH (target:Imported {id: "actor-rachel-kertz"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32518"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32521"})
 MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32633"})
+MATCH (target:Imported {id: "actor-greg-knell"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
@@ -10903,6 +11256,26 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32677"})
 MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32774"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32775"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32776"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-32866"})
+MATCH (target:Imported {id: "actor-greg-knell"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
@@ -10981,6 +11354,11 @@ MATCH (target:Imported {id: "actor-rachel-kertz"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34871"})
+MATCH (target:Imported {id: "actor-gerrod-herndon"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34873"})
 MATCH (target:Imported {id: "actor-maribeth-bushey"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
@@ -10988,6 +11366,11 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34874"})
 MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-34938"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
@@ -11011,13 +11394,43 @@ MATCH (target:Imported {id: "actor-maribeth-bushey"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35135"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35136"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35137"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35138"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35162"})
 MATCH (target:Imported {id: "actor-maribeth-bushey"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35166"})
+MATCH (target:Imported {id: "actor-gerrod-herndon"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35167"})
 MATCH (target:Imported {id: "actor-maribeth-bushey"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35169"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
@@ -11046,13 +11459,28 @@ MATCH (target:Imported {id: "actor-maribeth-bushey"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35247"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35252"})
 MATCH (target:Imported {id: "actor-eli-hill"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35253"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35262"})
 MATCH (target:Imported {id: "actor-maribeth-bushey"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35263"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
@@ -11083,6 +11511,16 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35308"})
 MATCH (target:Imported {id: "actor-rachel-kertz"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35313"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35319"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
@@ -11118,6 +11556,11 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35559"})
 MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-35629"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
@@ -11166,6 +11609,16 @@ MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36100"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36101"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36105"})
 MATCH (target:Imported {id: "actor-maribeth-bushey"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
@@ -11206,6 +11659,11 @@ MATCH (target:Imported {id: "actor-rachel-kertz"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36198"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36201"})
 MATCH (target:Imported {id: "actor-eli-hill"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
@@ -11223,6 +11681,11 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36459"})
 MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-36468"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
@@ -11276,6 +11739,11 @@ MATCH (target:Imported {id: "actor-eli-hill"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37368"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37369"})
 MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
@@ -11293,6 +11761,11 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37386"})
 MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37450"})
+MATCH (target:Imported {id: "actor-mark-galperin"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
@@ -11321,6 +11794,11 @@ MATCH (target:Imported {id: "actor-rachel-kertz"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37608"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37609"})
 MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
@@ -11328,6 +11806,11 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37653"})
 MATCH (target:Imported {id: "actor-rachel-kertz"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37663"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
@@ -11376,6 +11859,11 @@ MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37777"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37778"})
 MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
@@ -11386,8 +11874,23 @@ MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37807"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37808"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37809"})
 MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-37909"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
@@ -11406,6 +11909,16 @@ MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40284"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40286"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40948"})
 MATCH (target:Imported {id: "actor-maribeth-bushey"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
@@ -11418,6 +11931,21 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40950"})
 MATCH (target:Imported {id: "actor-rachel-kertz"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40956"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40957"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-40958"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
 
@@ -11500,6 +12028,26 @@ MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-41859"})
 MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:FILED_BY_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["filer_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-ie-entry-32165"})
+MATCH (target:Imported {id: "actor-sr-chamber-of-commerce-pac"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["committee_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-ie-entry-32166"})
+MATCH (target:Imported {id: "actor-sr-chamber-of-commerce-pac"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["committee_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-ie-entry-32280"})
+MATCH (target:Imported {id: "actor-sr-chamber-of-commerce-pac"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["committee_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-ie-entry-32292"})
+MATCH (target:Imported {id: "actor-whine-pac"})
+MERGE (source)-[r:FILED_BY_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["committee_actor_id"]};
 
 MATCH (source:Imported {id: "filing-san-rafael-campaign-entry-28439"})
 MATCH (target:Imported {id: "committee-kate-colin-for-mayor-2020"})
@@ -14586,6 +15134,11 @@ MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-28528"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-28553"})
 MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
@@ -14631,8 +15184,23 @@ MATCH (target:Imported {id: "actor-rachel-kertz"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-29290"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-30962"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31108"})
 MATCH (target:Imported {id: "actor-rachel-kertz"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31109"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -14671,6 +15239,11 @@ MATCH (target:Imported {id: "actor-rachel-kertz"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31440"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31480"})
 MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
@@ -14688,6 +15261,21 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31874"})
 MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31875"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31876"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-31877"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -14716,6 +15304,11 @@ MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32103"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32132"})
 MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
@@ -14723,6 +15316,26 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32161"})
 MATCH (target:Imported {id: "actor-rachel-kertz"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32163"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32221"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32223"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32224"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -14746,6 +15359,21 @@ MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32256"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32273"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32274"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32278"})
 MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
@@ -14756,6 +15384,11 @@ MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32291"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32293"})
 MATCH (target:Imported {id: "actor-rachel-kertz"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
@@ -14763,6 +15396,46 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32294"})
 MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32297"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32298"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32326"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32339"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32340"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32418"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32419"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32470"})
+MATCH (target:Imported {id: "actor-greg-knell"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -14791,8 +15464,18 @@ MATCH (target:Imported {id: "actor-rachel-kertz"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32518"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32521"})
 MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32633"})
+MATCH (target:Imported {id: "actor-greg-knell"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -14808,6 +15491,26 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32677"})
 MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32774"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32775"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32776"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-32866"})
+MATCH (target:Imported {id: "actor-greg-knell"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -14886,6 +15589,11 @@ MATCH (target:Imported {id: "actor-rachel-kertz"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-34871"})
+MATCH (target:Imported {id: "actor-gerrod-herndon"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-34873"})
 MATCH (target:Imported {id: "actor-maribeth-bushey"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
@@ -14893,6 +15601,11 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-34874"})
 MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-34938"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -14916,13 +15629,43 @@ MATCH (target:Imported {id: "actor-maribeth-bushey"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35135"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35136"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35137"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35138"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35162"})
 MATCH (target:Imported {id: "actor-maribeth-bushey"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35166"})
+MATCH (target:Imported {id: "actor-gerrod-herndon"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35167"})
 MATCH (target:Imported {id: "actor-maribeth-bushey"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35169"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -14951,13 +15694,28 @@ MATCH (target:Imported {id: "actor-maribeth-bushey"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35247"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35252"})
 MATCH (target:Imported {id: "actor-eli-hill"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35253"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35262"})
 MATCH (target:Imported {id: "actor-maribeth-bushey"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35263"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -14988,6 +15746,16 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35308"})
 MATCH (target:Imported {id: "actor-rachel-kertz"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35313"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35319"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -15023,6 +15791,11 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35559"})
 MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-35629"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -15071,6 +15844,16 @@ MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36100"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36101"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36105"})
 MATCH (target:Imported {id: "actor-maribeth-bushey"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
@@ -15111,6 +15894,11 @@ MATCH (target:Imported {id: "actor-rachel-kertz"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36198"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36201"})
 MATCH (target:Imported {id: "actor-eli-hill"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
@@ -15128,6 +15916,11 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36459"})
 MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-36468"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -15181,6 +15974,11 @@ MATCH (target:Imported {id: "actor-eli-hill"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37368"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37369"})
 MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
@@ -15198,6 +15996,11 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37386"})
 MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37450"})
+MATCH (target:Imported {id: "actor-mark-galperin"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -15226,6 +16029,11 @@ MATCH (target:Imported {id: "actor-rachel-kertz"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37608"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37609"})
 MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
@@ -15233,6 +16041,11 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37653"})
 MATCH (target:Imported {id: "actor-rachel-kertz"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37663"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -15281,6 +16094,11 @@ MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37777"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37778"})
 MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
@@ -15291,8 +16109,23 @@ MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37807"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37808"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37809"})
 MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-37909"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -15311,6 +16144,16 @@ MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40284"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40286"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40948"})
 MATCH (target:Imported {id: "actor-maribeth-bushey"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
@@ -15323,6 +16166,21 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"],
 
 MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40950"})
 MATCH (target:Imported {id: "actor-rachel-kertz"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40956"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40957"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-campaign-filing-entry-40958"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -15406,8 +16264,18 @@ MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-filings-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-ie-filing-entry-32165"})
+MATCH (target:Imported {id: "actor-john-gamblin"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["target_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-ie-filing-entry-32166"})
 MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["target_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-ie-filing-entry-32280"})
+MATCH (target:Imported {id: "actor-john-gamblin"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["target_actor_ids"]};
 
@@ -15416,8 +16284,23 @@ MATCH (target:Imported {id: "actor-rachel-kertz"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["target_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder"})
+MATCH (target:Imported {id: "actor-greg-knell"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-john-gamblin-campaign-folder"})
+MATCH (target:Imported {id: "actor-john-gamblin"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
 MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -15436,8 +16319,18 @@ MATCH (target:Imported {id: "actor-kate-colin"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder"})
+MATCH (target:Imported {id: "actor-mahmoud-shirazi"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder"})
 MATCH (target:Imported {id: "actor-maika-llorens-gulati"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-5-2024-election-mark-galperin-campaign-folder"})
+MATCH (target:Imported {id: "actor-mark-galperin"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -15448,6 +16341,16 @@ SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"],
 
 MATCH (source:Imported {id: "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"})
 MATCH (target:Imported {id: "actor-eli-hill"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder"})
+MATCH (target:Imported {id: "actor-gerrod-herndon"})
+MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
+
+MATCH (source:Imported {id: "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder"})
+MATCH (target:Imported {id: "actor-jonathan-frieman"})
 MERGE (source)-[r:RELATES_TO_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["candidate_actor_ids"]};
 
@@ -15505,6 +16408,16 @@ MATCH (source:Imported {id: "record-2024-08-19-sanctioned-camp-site-plan"})
 MATCH (target:Imported {id: "agenda-item-2024-08-19-5a"})
 MERGE (source)-[r:RELATES_TO_AGENDA_ITEM]->(target)
 SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["agenda_item_id"]};
+
+MATCH (source:Imported {id: "actor-sr-chamber-of-commerce-pac"})
+MATCH (target:Imported {id: "committee-sr-chamber-of-commerce-pac-2020-11-03-san-rafael-general-ie"})
+MERGE (source)-[r:RELATES_TO_COMMITTEE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["source_committee_id"]};
+
+MATCH (source:Imported {id: "actor-whine-pac"})
+MATCH (target:Imported {id: "committee-whine-pac-2020-11-03-san-rafael-general-ie"})
+MERGE (source)-[r:RELATES_TO_COMMITTEE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-actors-01__bundle-01"], source_fields: ["source_committee_id"]};
 
 MATCH (source:Imported {id: "moneyflow-2024-08-30-committee-rachel-kertz-for-san-rafael-city-council-2024-cathryn-hilliard-southern-marin-fire-district-schedule-d-1"})
 MATCH (target:Imported {id: "committee-rachel-kertz-for-san-rafael-city-council-2024"})
@@ -18526,6 +19439,11 @@ MATCH (target:Imported {id: "election-2020-11-03-san-rafael-general"})
 MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-john-gamblin-campaign-folder"})
+MATCH (target:Imported {id: "election-2020-11-03-san-rafael-general"})
+MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["election_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
 MATCH (target:Imported {id: "election-2020-11-03-san-rafael-general"})
 MERGE (source)-[r:RELATES_TO_ELECTION]->(target)
@@ -18670,6 +19588,106 @@ MATCH (source:Imported {id: "moneyflow-2025-08-08-pge-to-canal-alliance-form-803
 MATCH (target:Imported {id: "inst-city-of-san-rafael"})
 MERGE (source)-[r:RELATES_TO_INSTITUTION]->(target)
 SET r += {source_bundle_ids: ["campaign-finance-form-803-slice-01__bundle-01"], source_fields: ["related_institution_id"]};
+
+MATCH (source:Imported {id: "agenda-item-2024-08-19-5a"})
+MATCH (target:Imported {id: "issue-camping-ordinance"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "agenda-item-2024-08-19-5a"})
+MATCH (target:Imported {id: "issue-encampments"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "agenda-item-2024-08-19-5a"})
+MATCH (target:Imported {id: "issue-homelessness"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-contract-defense-block-security"})
+MATCH (target:Imported {id: "issue-encampments"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-contract-defense-block-security"})
+MATCH (target:Imported {id: "issue-homelessness"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-contract-downtown-streets-team"})
+MATCH (target:Imported {id: "issue-homelessness"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-contract-other-junk-co"})
+MATCH (target:Imported {id: "issue-encampments"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-contract-other-junk-co"})
+MATCH (target:Imported {id: "issue-homelessness"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-contract-wehope"})
+MATCH (target:Imported {id: "issue-homelessness"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-item-5a-correspondence-packet"})
+MATCH (target:Imported {id: "issue-encampments"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-item-5a-correspondence-packet"})
+MATCH (target:Imported {id: "issue-homelessness"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-ordinance-2040-text"})
+MATCH (target:Imported {id: "issue-camping-ordinance"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-ordinance-2040-text"})
+MATCH (target:Imported {id: "issue-encampments"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-ordinance-2040-text"})
+MATCH (target:Imported {id: "issue-homelessness"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-resolution-15336-text"})
+MATCH (target:Imported {id: "issue-encampments"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-resolution-15336-text"})
+MATCH (target:Imported {id: "issue-homelessness"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-sanctioned-camp-code-of-conduct"})
+MATCH (target:Imported {id: "issue-encampments"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-sanctioned-camp-code-of-conduct"})
+MATCH (target:Imported {id: "issue-homelessness"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-sanctioned-camp-site-plan"})
+MATCH (target:Imported {id: "issue-encampments"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
+
+MATCH (source:Imported {id: "record-2024-08-19-sanctioned-camp-site-plan"})
+MATCH (target:Imported {id: "issue-homelessness"})
+MERGE (source)-[r:RELATES_TO_ISSUE]->(target)
+SET r += {source_bundle_ids: ["san-rafael-homelessness-01__bundle-01"], source_fields: ["issue_ids"]};
 
 MATCH (source:Imported {id: "record-2024-08-19-contract-defense-block-security"})
 MATCH (target:Imported {id: "meeting-2024-08-19-san-rafael-city-council"})
@@ -21326,6 +22344,11 @@ MATCH (target:Imported {id: "seat-san-rafael-city-council-district-4"})
 MERGE (source)-[r:RELATES_TO_SEAT]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["seat_ids"]};
 
+MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-john-gamblin-campaign-folder"})
+MATCH (target:Imported {id: "seat-san-rafael-city-council-district-4"})
+MERGE (source)-[r:RELATES_TO_SEAT]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-records-01__bundle-01"], source_fields: ["seat_ids"]};
+
 MATCH (source:Imported {id: "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"})
 MATCH (target:Imported {id: "seat-san-rafael-mayor-at-large"})
 MERGE (source)-[r:RELATES_TO_SEAT]->(target)
@@ -21516,8 +22539,18 @@ MATCH (target:Imported {id: "inst-san-rafael-city-council"})
 MERGE (source)-[r:SERVES_IN_INSTITUTION]->(target)
 SET r += {source_bundle_ids: ["canonical-seeds-san-rafael-01"], source_fields: ["institution_id"]};
 
+MATCH (source:Imported {id: "filing-san-rafael-ie-entry-32165"})
+MATCH (target:Imported {id: "actor-john-gamblin"})
+MERGE (source)-[r:TARGETS_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["target_actor_id"]};
+
 MATCH (source:Imported {id: "filing-san-rafael-ie-entry-32166"})
 MATCH (target:Imported {id: "actor-kate-colin"})
+MERGE (source)-[r:TARGETS_ACTOR]->(target)
+SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["target_actor_id"]};
+
+MATCH (source:Imported {id: "filing-san-rafael-ie-entry-32280"})
+MATCH (target:Imported {id: "actor-john-gamblin"})
 MERGE (source)-[r:TARGETS_ACTOR]->(target)
 SET r += {source_bundle_ids: ["san-rafael-city-campaign-ie-01__bundle-01"], source_fields: ["target_actor_id"]};
 

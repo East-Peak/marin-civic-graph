@@ -310,22 +310,24 @@ Mirror the question here when it affects:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-records-01/bundle-01.json)
 - `question`: Should graph-v1 add normalized `Record` nodes for city-side campaign OCR, PDF, and folder artifacts that are already referenced from `Filing`, `MoneyFlow`, and `ValidationCheck` evidence arrays but are not yet promoted as standalone normalized records?
 - `why it matters`: The current projection is structurally correct and the smoke checks pass, but the report still skips a large number of `missing_target:Record` edges because those evidence artifacts exist only as referenced IDs, not as normalized `Record` objects inside the narrowed v1 import scope.
-- `resolution note`: Resolved with `san-rafael-city-campaign-records-01`, which promotes `24` durable campaign evidence records drawn from already-referenced OCR, PDF, and folder artifacts. After adding that bundle to graph-v1, the `missing_target:Record` category disappears from the projection report entirely. The remaining graph-v1 completeness work is now actor and issue coverage rather than record coverage.
+- `resolution note`: Resolved with `san-rafael-city-campaign-records-01`, which now promotes `25` durable campaign evidence records drawn from already-referenced OCR, PDF, and folder artifacts. After adding that bundle to graph-v1 and folding in the John Gamblin folder record referenced by the actor supplement, the projection report no longer has a `missing_target:Record` category.
 
-### OQ-029: Graph-v1 campaign actor and issue completeness
+### OQ-029: Graph-v1 actor completeness after the issue supplement
 
 - `status`: watch
 - `layer`: graph materialization / identity completeness
 - `scope`: `graph-v1`
 - `source refs`:
   - [report.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/report.json)
+  - [canonical-issues-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/canonical-issues-01.json)
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-actors-01/bundle-01.json)
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-discovery-01/bundle-01.json)
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-ie-01/bundle-01.json)
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/bundle-01.json)
-- `question`: Should graph-v1 now promote a narrow supplemental actor and issue layer so the remaining `missing_target:Actor` and `missing_target:Issue` edges collapse, or should it tolerate those gaps until a stronger canonical expansion lands?
-- `why it matters`: After the campaign evidence-record bundle landed, the main remaining skips are no longer evidence artifacts. They are clean-but-not-yet-promoted city-side campaign actors such as `actor-mahmoud-shirazi`, `actor-greg-knell`, `actor-jonathan-frieman`, plus issue IDs like `issue-homelessness` and `issue-encampments`.
-- `current note`: The current graph-v1 report now shows `missing_target:Actor = 299` and `missing_target:Issue = 20`, with no remaining `missing_target:Record` category.
-- `next evidence`: decide whether to promote a narrow `Actor` supplement from the city-side campaign discovery/IE layers and a minimal canonical `Issue` seed layer before widening into legal or other domain families.
+- `question`: After promoting a narrow actor and issue supplement, which remaining `Actor` misses deserve first-class graph-v1 nodes, and which should stay out until a stronger canonical or parser-cleanup layer exists?
+- `why it matters`: The issue side is now clean, but the graph still skips a material number of actor edges. Most of the remaining misses are not strong canonical targets. They are OCR-tainted vendors, payment platforms, PAC labels, or older raw role placeholders like `actor-mayor-kate`.
+- `current note`: The current graph-v1 report now shows `missing_target:Actor = 147`, with no remaining `missing_target:Issue` or `missing_target:Record` categories. The highest-repeat skipped actor IDs are `actor-anedot`, `actor-four-waters-media-inc`, `actor-pmcohen-public-affairs`, and a small cluster of council role aliases from the homelessness bundle.
+- `next evidence`: decide whether the next follow-up is a narrow actor-alias cleanup for existing official officeholders, a vendor/platform supplement for campaign finance analytics, or a stricter parser cleanup that keeps OCR-tainted actors out of graph-v1 entirely.
 
 ### OQ-016: San Rafael local Form 803 filing surface
 

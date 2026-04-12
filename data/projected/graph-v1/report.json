@@ -1,9 +1,23 @@
 {
   "projection_id": "graph-v1",
-  "generated_at": "2026-04-12T21:07:18Z",
+  "generated_at": "2026-04-12T21:16:59Z",
   "manifest_path": "/Users/tammypais/projects/marin-civic-graph/registry/import-manifest.yaml",
   "output_dir": "data/projected/graph-v1",
   "bundle_reports": [
+    {
+      "bundle_id": "canonical-issues-01__bundle-01",
+      "path": "data/normalized/canonical-issues-01.json",
+      "sections": [
+        {
+          "section": "issue_candidates",
+          "mode": "nodes",
+          "input_count": 3,
+          "imported_count": 3,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    },
     {
       "bundle_id": "canonical-seeds-san-rafael-01",
       "path": "data/normalized/canonical-seeds-san-rafael-01.json",
@@ -219,14 +233,28 @@
       ]
     },
     {
+      "bundle_id": "san-rafael-city-campaign-actors-01__bundle-01",
+      "path": "data/normalized/san-rafael-city-campaign-actors-01/bundle-01.json",
+      "sections": [
+        {
+          "section": "actor_candidates",
+          "mode": "nodes",
+          "input_count": 8,
+          "imported_count": 8,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    },
+    {
       "bundle_id": "san-rafael-city-campaign-records-01__bundle-01",
       "path": "data/normalized/san-rafael-city-campaign-records-01/bundle-01.json",
       "sections": [
         {
           "section": "record_refs",
           "mode": "nodes",
-          "input_count": 24,
-          "imported_count": 24,
+          "input_count": 25,
+          "imported_count": 25,
           "skipped_count": 0,
           "skip_reasons": {}
         }
@@ -364,7 +392,7 @@
     }
   ],
   "node_type_counts": {
-    "Actor": 11,
+    "Actor": 19,
     "AgendaItem": 1,
     "Candidacy": 14,
     "Committee": 16,
@@ -372,10 +400,11 @@
     "Election": 18,
     "Filing": 233,
     "Institution": 5,
+    "Issue": 3,
     "Meeting": 26,
     "MoneyFlow": 145,
     "Place": 8,
-    "Record": 337,
+    "Record": 338,
     "Seat": 5,
     "SeatService": 5,
     "ValidationCheck": 12
@@ -383,16 +412,17 @@
   "edge_type_counts": {
     "ABOUT_AGENDA_ITEM": 2,
     "BELONGS_TO_INSTITUTION": 5,
-    "CANDIDATE_ACTOR": 8,
+    "CANDIDATE_ACTOR": 14,
     "CAST_VOTE_ON": 10,
-    "CONTROLLED_BY_ACTOR": 8,
+    "COMMITTEE_ACTOR": 2,
+    "CONTROLLED_BY_ACTOR": 14,
     "CONTROLLED_BY_COMMITTEE": 14,
     "DECIDED_AT_MEETING": 23,
     "DECIDED_BY_INSTITUTION": 23,
     "DERIVED_FROM_RECORD": 31,
     "DISCLOSED_IN_FILING": 137,
-    "EVIDENCED_BY": 1184,
-    "FILED_BY_ACTOR": 166,
+    "EVIDENCED_BY": 1204,
+    "FILED_BY_ACTOR": 232,
     "FILED_BY_COMMITTEE": 232,
     "FILED_DURING_SEAT_SERVICE": 1,
     "FILED_FOR_ELECTION": 232,
@@ -413,31 +443,32 @@
     "RECORD_EXTRACTS_FROM_RECORD": 10,
     "RECORD_INTRODUCES_DECISION": 1,
     "RELATED_TO_ELECTION": 3,
-    "RELATES_TO_ACTOR": 178,
+    "RELATES_TO_ACTOR": 249,
     "RELATES_TO_AGENDA_ITEM": 10,
-    "RELATES_TO_COMMITTEE": 266,
+    "RELATES_TO_COMMITTEE": 268,
     "RELATES_TO_DECISION": 42,
-    "RELATES_TO_ELECTION": 312,
+    "RELATES_TO_ELECTION": 313,
     "RELATES_TO_FILING": 9,
     "RELATES_TO_INSTITUTION": 4,
+    "RELATES_TO_ISSUE": 20,
     "RELATES_TO_MEETING": 45,
     "RELATES_TO_MONEY_FLOW": 4,
     "RELATES_TO_PLACE": 11,
     "RELATES_TO_RECORD": 238,
-    "RELATES_TO_SEAT": 246,
+    "RELATES_TO_SEAT": 247,
     "RELATES_TO_VALIDATIONCHECK": 12,
     "REQUESTED_BY_ACTOR": 1,
     "REQUESTED_BY_SEAT": 1,
     "REQUESTED_BY_SEAT_SERVICE": 1,
     "RESULT_OF_ELECTION": 5,
     "SERVES_IN_INSTITUTION": 5,
-    "TARGETS_ACTOR": 2,
+    "TARGETS_ACTOR": 4,
     "TARGETS_SEAT": 4,
     "TO_TARGET": 106,
     "VALIDATES": 12
   },
-  "total_nodes": 859,
-  "total_edges": 3738,
+  "total_nodes": 871,
+  "total_edges": 3935,
   "duplicate_node_merges": 18,
   "duplicate_edge_merges": 260,
   "node_conflicts": [
@@ -458,41 +489,12 @@
   ],
   "edge_conflicts": [],
   "skipped_edge_reasons": {
-    "missing_target:Actor": 299,
-    "missing_target:Issue": 20
+    "missing_target:Actor": 147
   },
   "top_skipped_edge_targets": [
     [
-      "actor-mahmoud-shirazi",
-      54
-    ],
-    [
-      "actor-greg-knell",
-      43
-    ],
-    [
-      "actor-jonathan-frieman",
-      33
-    ],
-    [
-      "issue-homelessness",
-      10
-    ],
-    [
       "actor-anedot",
       9
-    ],
-    [
-      "issue-encampments",
-      8
-    ],
-    [
-      "actor-gerrod-herndon",
-      7
-    ],
-    [
-      "actor-mark-galperin",
-      5
     ],
     [
       "actor-four-waters-media-inc",
@@ -501,18 +503,6 @@
     [
       "actor-pmcohen-public-affairs",
       5
-    ],
-    [
-      "actor-john-gamblin",
-      4
-    ],
-    [
-      "actor-sr-chamber-of-commerce-pac",
-      4
-    ],
-    [
-      "actor-whine-pac",
-      2
     ],
     [
       "actor-bruce-burtch",
@@ -532,10 +522,6 @@
     ],
     [
       "actor-se-owens-and-company",
-      2
-    ],
-    [
-      "issue-camping-ordinance",
       2
     ],
     [
@@ -560,6 +546,50 @@
     ],
     [
       "actor-councilmember-kertz",
+      1
+    ],
+    [
+      "actor-councilmember-llorens-gulati",
+      1
+    ],
+    [
+      "actor-deborah-ablin",
+      1
+    ],
+    [
+      "actor-heather-allison",
+      1
+    ],
+    [
+      "actor-dorothy-breiner",
+      1
+    ],
+    [
+      "actor-greg-brockbank",
+      1
+    ],
+    [
+      "actor-tracy-case",
+      1
+    ],
+    [
+      "actor-wayne-clark",
+      1
+    ],
+    [
+      "actor-damon-connoily-tor-assemnly-2024",
+      1
+    ],
+    [
+      "actor-andrew-deckas",
+      1
+    ],
+    [
+      "actor-democratic-central-committee-of-marin-id",
+      1
+    ],
+    [
+      "actor-dennis-rodoni-for-supervisor",
       1
     ]
   ]

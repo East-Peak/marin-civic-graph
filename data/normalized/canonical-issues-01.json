@@ -1,0 +1,61 @@
+{
+  "bundle_id": "canonical-issues-01__bundle-01",
+  "status": "working",
+  "generated_at": "2026-04-12T00:00:00Z",
+  "scope": {
+    "jurisdiction": "San Rafael",
+    "purpose": "Minimal canonical issue seed layer for graph-v1 joins already present in the homelessness case study",
+    "promotion_rule": "Only issues already used as stable IDs in promoted San Rafael homelessness objects are included"
+  },
+  "issue_candidates": [
+    {
+      "id": "issue-homelessness",
+      "name": "Homelessness",
+      "issue_type": "policy_issue",
+      "seed_status": "canonical_seed",
+      "aliases": [
+        "homelessness services",
+        "homelessness response"
+      ],
+      "evidence_record_ids": [
+        "doc-2024-08-19-item-5a-report"
+      ]
+    },
+    {
+      "id": "issue-encampments",
+      "name": "Encampments",
+      "issue_type": "policy_issue",
+      "seed_status": "canonical_seed",
+      "aliases": [
+        "encampment management",
+        "sanctioned camping"
+      ],
+      "evidence_record_ids": [
+        "doc-2024-08-19-item-5a-report"
+      ]
+    },
+    {
+      "id": "issue-camping-ordinance",
+      "name": "Camping Ordinance",
+      "issue_type": "policy_issue",
+      "seed_status": "canonical_seed",
+      "aliases": [
+        "Chapter 19.50 amendments",
+        "camping ordinance amendments"
+      ],
+      "evidence_record_ids": [
+        "doc-2024-08-19-item-5a-report",
+        "record-2024-08-19-ordinance-2040-text"
+      ]
+    }
+  ],
+  "methodology_findings": [
+    {
+      "id": "method-canonical-issues-v1-minimal",
+      "summary": "This seed layer is intentionally narrow. It only canonicalizes issue IDs already used by promoted San Rafael homelessness objects in graph-v1."
+    }
+  ],
+  "notes": [
+    "This is a minimal issue seed layer for graph-v1 completeness, not a full issue ontology."
+  ]
+}

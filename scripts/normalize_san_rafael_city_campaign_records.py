@@ -19,6 +19,9 @@ CAMPAIGN_IE_BUNDLE_PATH = (
 CAMPAIGN_FORM460_SCHEDULE_BUNDLE_PATH = (
     ROOT / "data" / "normalized" / "san-rafael-city-campaign-form460-schedules-01" / "bundle-01.json"
 )
+CAMPAIGN_ACTOR_BUNDLE_PATH = (
+    ROOT / "data" / "normalized" / "san-rafael-city-campaign-actors-01" / "bundle-01.json"
+)
 
 CAMPAIGN_DISCOVERY_BUNDLE_PATH = (
     ROOT / "data" / "normalized" / "san-rafael-city-campaign-discovery-01" / "bundle-01.json"
@@ -68,6 +71,7 @@ def main() -> None:
     campaign_filings_bundle = load_json(CAMPAIGN_FILING_BUNDLE_PATH)
     campaign_ie_bundle = load_json(CAMPAIGN_IE_BUNDLE_PATH)
     form460_schedule_bundle = load_json(CAMPAIGN_FORM460_SCHEDULE_BUNDLE_PATH)
+    campaign_actor_bundle = load_json(CAMPAIGN_ACTOR_BUNDLE_PATH)
 
     discovery_bundle = load_json(CAMPAIGN_DISCOVERY_BUNDLE_PATH)
     ocr_bundle = load_json(CAMPAIGN_FORM460_OCR_BUNDLE_PATH)
@@ -80,6 +84,7 @@ def main() -> None:
         campaign_filings_bundle,
         campaign_ie_bundle,
         form460_schedule_bundle,
+        campaign_actor_bundle,
     ]
     for bundle in already_imported_bundles:
         for record_ref in bundle.get("record_refs", []):
@@ -120,6 +125,7 @@ def main() -> None:
             "San Rafael city-side campaign folder records referenced from committee, filing, or candidacy objects already included in graph-v1",
             "San Rafael city-side Form 460 OCR capture records referenced from filing, money-flow, or validation objects already included in graph-v1",
             "San Rafael city-side Form 460 PDF export records referenced from filing, money-flow, or validation objects already included in graph-v1",
+            "San Rafael city-side campaign folder records referenced from the narrow promoted campaign actor supplement included in graph-v1",
             "Evidence-completeness promotion only; this bundle adds durable Record nodes without importing discovery-stage actor, candidacy, or committee candidates",
         ],
         "record_refs": promoted_record_refs,

@@ -4,6 +4,18 @@
   "output_dir": "data/projected/graph-v1",
   "bundles": [
     {
+      "path": "data/normalized/canonical-issues-01.json",
+      "sections": [
+        {
+          "name": "issue_candidates",
+          "mode": "nodes",
+          "node_type": "Issue",
+          "promotion_state": "canonical",
+          "filters": { "seed_status": ["canonical_seed"] }
+        }
+      ]
+    },
+    {
       "path": "data/normalized/canonical-seeds-san-rafael-01.json",
       "sections": [
         { "name": "record_refs", "mode": "nodes", "node_type": "Record", "promotion_state": "canonical" },
@@ -61,6 +73,12 @@
         { "name": "filing_candidates", "mode": "nodes", "node_type": "Filing", "promotion_state": "promoted" },
         { "name": "money_flow_candidates", "mode": "nodes", "node_type": "MoneyFlow", "promotion_state": "promoted" },
         { "name": "validation_check_candidates", "mode": "nodes", "node_type": "ValidationCheck", "promotion_state": "review" }
+      ]
+    },
+    {
+      "path": "data/normalized/san-rafael-city-campaign-actors-01/bundle-01.json",
+      "sections": [
+        { "name": "actor_candidates", "mode": "nodes", "node_type": "Actor", "promotion_state": "promoted" }
       ]
     },
     {
