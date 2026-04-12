@@ -183,7 +183,7 @@ Mirror the question here when it affects:
 
 ### OQ-020: San Rafael city-side campaign folder enumeration boundary
 
-- `status`: watch
+- `status`: resolved
 - `layer`: source adapter / campaign backfill
 - `scope`: `san-rafael-public-records-financial-filings-folder`, `san-rafael-public-records-independent-expenditures-folder`
 - `source refs`:
@@ -196,13 +196,13 @@ Mirror the question here when it affects:
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-3-2020-election/2026-04-11/source.html)
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-8-2022-election/2026-04-11/source.html)
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html)
-- `question`: Should the city-side campaign backfill adapter rely permanently on election-page child-folder discovery, or is there a stable anonymous Laserfiche listing path for the top-level filing folders that we have not found yet?
-- `why it matters`: This determines whether historical city-side campaign backfill is `page-linked` or truly `folder-enumerated`, which affects how much year-by-year election-page recovery we need before cron sync starts.
-- `next evidence`: the city `elections` and `past-elections` pages are now the stable discovery backbone. They expose `13` election landing pages from `2010` through `2026`, and `9` of those pages are campaign-bearing. The remaining work is narrower: test whether the top-level Laserfiche folder endpoints ever expose a stable anonymous listing path outside the current `[9030]` session-limit failure, or treat page-linked discovery as the permanent operating path.
+- `question`: Should the city-side campaign backfill adapter rely permanently on election-page child-folder discovery, or is there a stable anonymous Laserfiche listing path for the filing folders themselves?
+- `why it matters`: This determines whether historical city-side campaign backfill is `page-linked` only or can graduate into actual folder-enumerated filing capture.
+- `resolution note`: Resolved in favor of a stable anonymous folder-listing path. The public Laserfiche Angular browse app uses `FolderListingService.aspx/GetFolderListing2` with a bootstrapped anonymous `WebLinkSession` cookie and the payload `{ repoName, folderId, getNewListing, start, end, sortColumn, sortAscending }`. That path now yields real folder contents for the city-side campaign filing folders, including city-office candidate folders, older shared committee folders, and the 2020/2022 independent-expenditure folders.
 
 ### OQ-021: San Rafael 2018 election filing URL typo
 
-- `status`: watch
+- `status`: resolved
 - `layer`: source hygiene
 - `scope`: `san-rafael-november-6-2018-election`
 - `source refs`:
@@ -210,7 +210,7 @@ Mirror the question here when it affects:
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-6-2018-election/2026-04-11/source.html)
 - `question`: The 2018 election page publishes a `Financial Filings` browse URL with `repo=CityofSanRafaelv` instead of `repo=CityofSanRafael`. Should the adapter preserve that raw URL only, or canonicalize the repo parameter while keeping the same folder ID (`31078`)?
 - `why it matters`: This is a source-quality issue rather than a graph-model blocker, but it affects whether later replay or browser automation should trust the page URL verbatim.
-- `next evidence`: test whether the same folder ID works with the canonical repo parameter in a browser-visible session and keep the raw published URL as provenance either way.
+- `resolution note`: Resolved by separating provenance from execution. Preserve the raw published URL in the discovery record, but canonicalize the repo parameter to `CityofSanRafael` for actual Laserfiche service calls. Folder entry `31078` captures successfully through the canonical repo name and returns the shared committee folder contents.
 
 ### OQ-022: San Rafael election direct-record holdout
 
@@ -253,6 +253,33 @@ Mirror the question here when it affects:
 - `why it matters`: The page-linked filing destinations are real public evidence, but the current canonical seat model only covers San Rafael Mayor and City Council seats. Promoting the other offices early would create joins into the wrong institution layer.
 - `current note`: The discovery bundle now preserves all `27` candidate-folder destinations as `Record` refs, but only the `15` city-office rows from the 2020, 2022, and 2024 mayoral and council races are promoted into `Actor` and `Candidacy` candidates.
 - `next evidence`: add canonical seat and institution coverage for San Rafael school-board, city-attorney, and clerk-assessor offices before promoting those filing-folder rows beyond discovery-only state.
+
+### OQ-025: San Rafael city-side campaign direct-document recovery boundary
+
+- `status`: watch
+- `layer`: campaign filing evidence depth
+- `scope`: `san-rafael-city-campaign-filings-01`
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-filings-01/bundle-01.json)
+  - [folder-listings.json](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-folder-listings/2026-04-12.json)
+- `question`: What is the repeatable public path from city-side campaign filing entry ids to raw filing artifacts such as PDF, OCR text, or stable document metadata beyond the folder listing itself?
+- `why it matters`: The folder listing service is strong enough to promote real `Committee` and `Filing` objects, but the project still lacks a general raw-artifact capture path for those filing rows.
+- `current note`: The public folder listing exposes real filing titles, entry ids, page counts, and creation dates, which is enough for a first filing layer. The direct `DocView` route is still login-gated in ordinary CLI fetches, and the lightweight document-info service is too weak to substitute for real artifact capture.
+- `next evidence`: inspect the document-viewer app and service calls for a stable public download, OCR, or document-metadata route that works from the filing entry ids exposed by the folder listing.
+
+### OQ-026: San Rafael John Gamblin campaign folder dead link
+
+- `status`: watch
+- `layer`: campaign discovery integrity
+- `scope`: `record-san-rafael-november-3-2020-election-john-gamblin-campaign-folder`
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-discovery-01/bundle-01.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-folder-listings/2026-04-12.json)
+- `question`: Why does candidate folder entry `31431` for `John Gamblin` return `Entry not found. [9001]` when the sibling 2020 city-office campaign folders resolve successfully?
+- `why it matters`: This is the only city-office candidate folder in the normalized discovery slice that currently blocks promotion from folder destination to real committee and filing objects.
+- `current note`: The city-side filing bundle now promotes `14` city-office committees and `228` filing records from successful public folder listings, but `John Gamblin` remains missing because the folder entry itself no longer resolves through the public Laserfiche listing service.
+- `next evidence`: test whether a replacement folder id or direct record path exists for the Gamblin committee on the public election pages or inside the top-level 2020 campaign filing family.
 
 ### OQ-016: San Rafael local Form 803 filing surface
 

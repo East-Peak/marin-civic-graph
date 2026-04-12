@@ -1,0 +1,862 @@
+{
+  "captured_at": "2026-04-12T16:00:05Z",
+  "capture_date": "2026-04-12",
+  "derived_from": [
+    "data/normalized/san-rafael-city-campaign-discovery-01/bundle-01.json"
+  ],
+  "target_folder_count": 37,
+  "successful_folder_count": 33,
+  "failed_folder_count": 4,
+  "total_listed_documents": 331,
+  "folder_summaries": [
+    {
+      "folder_record_id": "record-san-rafael-june-7-2016-election-campaign-finance-disclosures-folder",
+      "entry_id": 31078,
+      "record_type": "campaign_filing_folder",
+      "label": "Campaign Finance Disclosures",
+      "candidate_name": null,
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2016-06-07-san-rafael-library-special"
+      ],
+      "success": true,
+      "folder_name": "03-05-04 Campaign Statements  - Committees",
+      "total_entries": 3,
+      "result_count": 3,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "_Closed Committees",
+        "San Rafael Police Association PAC",
+        "Yes on K - Save Library Services"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-3-2015-election-campaign-finance-disclosure-folder",
+      "entry_id": 31078,
+      "record_type": "campaign_filing_folder",
+      "label": "Campaign Finance Disclosure",
+      "candidate_name": null,
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2015-11-03-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "03-05-04 Campaign Statements  - Committees",
+      "total_entries": 3,
+      "result_count": 3,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "_Closed Committees",
+        "San Rafael Police Association PAC",
+        "Yes on K - Save Library Services"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-3-2020-election-gina-daly-campaign-folder",
+      "entry_id": 31435,
+      "record_type": "campaign_filing_folder",
+      "label": "Gina Daly campaign filings folder",
+      "candidate_name": "Gina Daly",
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Gina Daly for Board of Education Trustee 2020",
+      "total_entries": 15,
+      "result_count": 15,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410- Gina Daly for Board of Education Trustee 2020; 07-28-20",
+        "Form 410- Gina Daly for Board of Education Trustee 2020; 08-15-20",
+        "Form 410- Gina Daly for Board of Education Trustee 2020; 08-15-20; State",
+        "Form 410- Gina Daly for Board of Education Trustee 2020; Amendment",
+        "Form 410- Gina Daly for Board of Education Trustee 2020; Amendment #1"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder",
+      "entry_id": 31081,
+      "record_type": "campaign_filing_folder",
+      "label": "Greg Knell campaign filings folder",
+      "candidate_name": "Greg Knell",
+      "candidate_actor_ids": [
+        "actor-greg-knell"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Greg Knell for City Council 2020",
+      "total_entries": 20,
+      "result_count": 20,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410- Greg Knell for City Council 2020",
+        "Form 410- Greg Knell for City Council 2020 (02-18-21) Termination",
+        "Form 410- Greg Knell for City Council 2020 (02-18-21) Termination (State)",
+        "Form 410- Greg Knell for City Council 2020 (State)",
+        "Form 460- Greg Knell for City Council 2020 (02-18-21) Termination"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder",
+      "entry_id": 32164,
+      "record_type": "independent_expenditure_filing_folder",
+      "label": "Independent Expenditure Filings 2020",
+      "candidate_name": null,
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "2020",
+      "total_entries": 4,
+      "result_count": 4,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 496 - SR Chamber of Commerce PAC Supporting John Gamblin (10-05-2020)",
+        "Form 496 - SR Chamber of Commerce PAC Supporting John Gamblin (10-28-2020)",
+        "Form 496 - SR Chamber of Commerce PAC Supporting Kate Colin (10-05-2020)",
+        "Form 496- WHINE PAC Supporting Rachel Kertz (11-02-2020)"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-3-2020-election-john-gamblin-campaign-folder",
+      "entry_id": 31431,
+      "record_type": "campaign_filing_folder",
+      "label": "John Gamblin campaign filings folder",
+      "candidate_name": "John Gamblin",
+      "candidate_actor_ids": [
+        "actor-john-gamblin"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "success": false,
+      "folder_name": null,
+      "total_entries": 0,
+      "result_count": 0,
+      "failed": true,
+      "err_msg": "Entry not found. [9001]",
+      "sample_document_names": []
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+      "entry_id": 31079,
+      "record_type": "campaign_filing_folder",
+      "label": "Kate Colin campaign filings folder",
+      "candidate_name": "Kate Colin",
+      "candidate_actor_ids": [
+        "actor-kate-colin"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Kate Colin for Mayor 2020",
+      "total_entries": 27,
+      "result_count": 27,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410 - Kate Colin for San Rafael Mayor 2020 (State)",
+        "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 1",
+        "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 1 (State)",
+        "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 2",
+        "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 2 (State)"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-3-2020-election-linda-jackson-campaign-folder",
+      "entry_id": 31438,
+      "record_type": "campaign_filing_folder",
+      "label": "Linda Jackson campaign filings folder",
+      "candidate_name": "Linda Jackson",
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Linda Jackson for Board of Education Trustee 2020",
+      "total_entries": 2,
+      "result_count": 2,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 470- Linda Jackson for Board of Education Trustee 2020",
+        "Form 510- Linda Jackson for Board of Education Trustee 2020"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder",
+      "entry_id": 31080,
+      "record_type": "campaign_filing_folder",
+      "label": "Mahmoud Shirazi campaign filings folder",
+      "candidate_name": "Mahmoud Shirazi",
+      "candidate_actor_ids": [
+        "actor-mahmoud-shirazi"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Mahmoud A. Shirazi for Mayor 2020",
+      "total_entries": 11,
+      "result_count": 11,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410- Mahmoud A. Shirazi for Mayor 2020",
+        "Form 410- Mahmoud A. Shirazi for Mayor 2020; 2",
+        "Form 410- Mahmoud A. Shirazi for Mayor 2020; 2 State",
+        "Form 410- Mahmoud A.Shirazi for Mayor 2020; Termination",
+        "Form 410- Mahmoud A.Shirazi for Mayor 2020; Termination State"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder",
+      "entry_id": 31093,
+      "record_type": "campaign_filing_folder",
+      "label": "Maika Llorens Gulati campaign filings folder",
+      "candidate_name": "Maika Llorens Gulati",
+      "candidate_actor_ids": [
+        "actor-maika-llorens-gulati"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Maika Llorens Gulati for San Rafael City Council 2020",
+      "total_entries": 23,
+      "result_count": 23,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410 - Maika Llorens Gulati for City Council 2020",
+        "Form 410 - Maika Llorens Gulati for City Council 2020 (State)",
+        "Form 410 - Maika Llorens Gulati for City Council 2020; Amendment",
+        "Form 410 - Maika Llorens Gulati for City Council 2020; Amendment (2020-12-31)",
+        "Form 410 - Maika Llorens Gulati for City Council 2020; Amendment (2020-12-31) State"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-3-2020-election-marina-palma-campaign-folder",
+      "entry_id": 31477,
+      "record_type": "campaign_filing_folder",
+      "label": "Marina Palma campaign filings folder",
+      "candidate_name": "Marina Palma",
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Marina Palma for Board of Education Trustee 2020",
+      "total_entries": 2,
+      "result_count": 2,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 470- Marina Palma for Board of Education Trustee 2020",
+        "Form 501- Marina Palma for Board of Education Trustee 2020"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder",
+      "entry_id": 31082,
+      "record_type": "campaign_filing_folder",
+      "label": "Rachel Kertz campaign filings folder",
+      "candidate_name": "Rachel Kertz",
+      "candidate_actor_ids": [
+        "actor-rachel-kertz"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Rachel Kertz for City Council 2020",
+      "total_entries": 21,
+      "result_count": 21,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410- Rachel Kertz for City Council 2020",
+        "Form 410- Rachel Kertz for City Council 2020 (State)",
+        "Form 410- Rachel Kertz for City Council 2020; Amendment 08-13-20",
+        "Form 410- Rachel Kertz for City Council 2020; Amendment 08-13-20 State",
+        "Form 410- Rachel Kertz for City Council 2020; termination"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-5-2013-election-campaign-finance-reporting-folder",
+      "entry_id": 24866,
+      "record_type": "campaign_filing_folder",
+      "label": "Campaign Finance Reporting",
+      "candidate_name": null,
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2013-11-05-san-rafael-general"
+      ],
+      "success": false,
+      "folder_name": null,
+      "total_entries": 0,
+      "result_count": 0,
+      "failed": true,
+      "err_msg": "Entry not found. [9001]",
+      "sample_document_names": []
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-5-2024-election-isai-rodas-campaign-folder",
+      "entry_id": 37459,
+      "record_type": "campaign_filing_folder",
+      "label": "Isai Rodas campaign filings folder",
+      "candidate_name": "Isai Rodas",
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2024-11-05-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Isai Rodas for Board of Education Trustee 2024",
+      "total_entries": 1,
+      "result_count": 1,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Isai Rodas - Form 470"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+      "entry_id": 35554,
+      "record_type": "campaign_filing_folder",
+      "label": "Kate Colin campaign filings folder",
+      "candidate_name": "Kate Colin",
+      "candidate_actor_ids": [
+        "actor-kate-colin"
+      ],
+      "election_ids": [
+        "election-2024-11-05-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Kate Colin for San Rafael Mayor 2024",
+      "total_entries": 24,
+      "result_count": 24,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment",
+        "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment (11-16-23)",
+        "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment (11-16-23) State",
+        "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment (State)",
+        "Form 410 - Kate Colin for San Rafael Mayor 2024; Initial"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-5-2024-election-lindsay-lara-campaign-folder",
+      "entry_id": 37451,
+      "record_type": "campaign_filing_folder",
+      "label": "Lindsay Lara campaign filings folder",
+      "candidate_name": "Lindsay Lara",
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2024-11-05-san-rafael-general"
+      ],
+      "success": false,
+      "folder_name": null,
+      "total_entries": 0,
+      "result_count": 0,
+      "failed": true,
+      "err_msg": "Entry not found. [9001]",
+      "sample_document_names": []
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder",
+      "entry_id": 36469,
+      "record_type": "campaign_filing_folder",
+      "label": "Mahmoud Shirazi campaign filings folder",
+      "candidate_name": "Mahmoud Shirazi",
+      "candidate_actor_ids": [
+        "actor-mahmoud-shirazi"
+      ],
+      "election_ids": [
+        "election-2024-11-05-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Mahmoud A. Shirazi for San Rafael Mayor 2024",
+      "total_entries": 13,
+      "result_count": 13,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410 - Mahmoud A. Shirazi",
+        "Form 410 - Mahmoud A. Shirazi; State",
+        "Form 410 - Mahmoud A. Shirazi; State 1",
+        "Form 410 - Mahmoud A. Shirazi; State 2",
+        "Form 410 - Mahmoud A. Shirazi; State 3"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder",
+      "entry_id": 36529,
+      "record_type": "campaign_filing_folder",
+      "label": "Maika Llorens Gulati campaign filings folder",
+      "candidate_name": "Maika Llorens Gulati",
+      "candidate_actor_ids": [
+        "actor-maika-llorens-gulati"
+      ],
+      "election_ids": [
+        "election-2024-11-05-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Maika Llorens Gulati for San Rafael City Council 2024",
+      "total_entries": 7,
+      "result_count": 7,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410 - Maika Llorens Gulati for City Council 2024 (State)",
+        "Form 410 - Maika Llorens Gulati for City Council 2024; termination",
+        "Form 460 - Maika Llorens Gulati for City Council 2024 (2024-06-30)",
+        "Form 460 - Maika Llorens Gulati for City Council 2024; preelection",
+        "Form 460 - Maika Llorens Gulati for City Council 2024; termination"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-5-2024-election-mark-galperin-campaign-folder",
+      "entry_id": 37449,
+      "record_type": "campaign_filing_folder",
+      "label": "Mark Galperin campaign filings folder",
+      "candidate_name": "Mark Galperin",
+      "candidate_actor_ids": [
+        "actor-mark-galperin"
+      ],
+      "election_ids": [
+        "election-2024-11-05-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Mark Galperin for City Council 2024",
+      "total_entries": 1,
+      "result_count": 1,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 470 - Mark Galperin for City Council 2024"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-5-2024-election-mark-koerner-campaign-folder",
+      "entry_id": 37259,
+      "record_type": "campaign_filing_folder",
+      "label": "Mark Koerner campaign filings folder",
+      "candidate_name": "Mark Koerner",
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2024-11-05-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Mark Koerner for Board of Education Trustee 2024",
+      "total_entries": 1,
+      "result_count": 1,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 501 - Mark Koerner for Board of Education Trustee 2024"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-5-2024-election-maureen-mo-de-nieva-marsh-campaign-folder",
+      "entry_id": 37376,
+      "record_type": "campaign_filing_folder",
+      "label": "Maureen 'Mo' de Nieva-Marsh campaign filings folder",
+      "candidate_name": "Maureen 'Mo' de Nieva-Marsh",
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2024-11-05-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Maureen de Nieva-Marsh for San Rafael Board of Education Trustee 2024",
+      "total_entries": 7,
+      "result_count": 7,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410 - Maureen de Nieva-Marsh; Initial",
+        "Form 410 - Maureen de Nieva-Marsh; Initial (State)",
+        "Form 460 - Maureen de Nieva-Marsh for San Rafael Board of Education Trustee 2024; 06-30-25",
+        "Form 460 - Maureen de Nieva-Marsh for San Rafael Board of Education Trustee 2024; 12-31-24",
+        "Form 460 - Maureen de Nieva-Marsh for San Rafael Board of Education Trustee 2024; 12-31-25"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder",
+      "entry_id": 36450,
+      "record_type": "campaign_filing_folder",
+      "label": "Rachel Kertz campaign filings folder",
+      "candidate_name": "Rachel Kertz",
+      "candidate_actor_ids": [
+        "actor-rachel-kertz"
+      ],
+      "election_ids": [
+        "election-2024-11-05-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Rachel Kertz for San Rafael City Council 2024",
+      "total_entries": 13,
+      "result_count": 13,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410 - Rachel Kertz for City Council 2024",
+        "Form 410 - Rachel Kertz for City Council 2024; State",
+        "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+        "Form 460 - Rachel Kertz for City Council 2024 (06-30-25)",
+        "Form 460 - Rachel Kertz for City Council 2024 (12-31-24)"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-5-2024-election-robert-epstein-campaign-folder",
+      "entry_id": 37362,
+      "record_type": "campaign_filing_folder",
+      "label": "Robert Epstein campaign filings folder",
+      "candidate_name": "Robert Epstein",
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2024-11-05-san-rafael-general"
+      ],
+      "success": false,
+      "folder_name": null,
+      "total_entries": 0,
+      "result_count": 0,
+      "failed": true,
+      "err_msg": "Entry not found. [9001]",
+      "sample_document_names": []
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-6-2018-election-financial-filings-folder",
+      "entry_id": 31078,
+      "record_type": "campaign_filing_folder",
+      "label": "Financial Filings",
+      "candidate_name": null,
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2018-11-06-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "03-05-04 Campaign Statements  - Committees",
+      "total_entries": 3,
+      "result_count": 3,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "_Closed Committees",
+        "San Rafael Police Association PAC",
+        "Yes on K - Save Library Services"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-7-2017-election-campaign-finance-disclosure-folder",
+      "entry_id": 31078,
+      "record_type": "campaign_filing_folder",
+      "label": "Campaign Finance Disclosure",
+      "candidate_name": null,
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2017-11-07-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "03-05-04 Campaign Statements  - Committees",
+      "total_entries": 3,
+      "result_count": 3,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "_Closed Committees",
+        "San Rafael Police Association PAC",
+        "Yes on K - Save Library Services"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-8-2011-election-campaign-finance-disclosure-folder",
+      "entry_id": 31078,
+      "record_type": "campaign_filing_folder",
+      "label": "Campaign Finance Disclosure",
+      "candidate_name": null,
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2011-11-08-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "03-05-04 Campaign Statements  - Committees",
+      "total_entries": 3,
+      "result_count": 3,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "_Closed Committees",
+        "San Rafael Police Association PAC",
+        "Yes on K - Save Library Services"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-8-2022-election-carolina-martin-campaign-folder",
+      "entry_id": 34627,
+      "record_type": "campaign_filing_folder",
+      "label": "Carolina Martin campaign filings folder",
+      "candidate_name": "Carolina Martin",
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2022-11-08-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Carolina Martin for San Rafael Board of Education Trustee 2022",
+      "total_entries": 19,
+      "result_count": 19,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410 - Carolina Martin for San Rafael School Board Trustee 2022",
+        "Form 410 - Carolina Martin for San Rafael School Board Trustee 2022 (State)",
+        "Form 410 - Carolina Martin for San Rafael School Board Trustee 2022; Amendment",
+        "Form 410 - Carolina Martin for San Rafael School Board Trustee 2022; Amendment (State)",
+        "Form 410 - Carolina Martin for San Rafael School Board Trustee 2022; Amendment 01-31-24"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder",
+      "entry_id": 33055,
+      "record_type": "campaign_filing_folder",
+      "label": "Eli Hill campaign filings folder",
+      "candidate_name": "Eli Hill",
+      "candidate_actor_ids": [
+        "actor-eli-hill"
+      ],
+      "election_ids": [
+        "election-2022-11-08-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Eli Hill for San Rafael City Council 2022",
+      "total_entries": 27,
+      "result_count": 27,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410 - Eli Hill for San Rafael City Council D2 2022",
+        "Form 410 - Eli Hill for San Rafael City Council D2 2022 (State)",
+        "Form 410 - Eli Hill for San Rafael City Council D2 2022; (Termination State)",
+        "Form 410 - Eli Hill for San Rafael City Council D2 2022; (Termination)",
+        "Form 450 - Eli Hill for San Rafael City Council D2; 06-30-24 (Amendment)"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-8-2022-election-faye-bourret-campaign-folder",
+      "entry_id": 34411,
+      "record_type": "campaign_filing_folder",
+      "label": "Faye Bourret campaign filings folder",
+      "candidate_name": "Faye Bourret",
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2022-11-08-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Faye Bourret for Board of Education 2022",
+      "total_entries": 10,
+      "result_count": 10,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410 - Faye Bourret for Board of Education 2022",
+        "Form 410 - Faye Bourret for Board of Education 2022 (State)",
+        "Form 410 - Faye Bourret for Board of Education 2022; Termination (State)",
+        "Form 460 - Faye Bourret for Board of Education 2022; 06-30-22",
+        "Form 460 - Faye Bourret for Board of Education 2022; 09-30-22"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-8-2022-election-gerrod-herndon-campaign-folder",
+      "entry_id": 34870,
+      "record_type": "campaign_filing_folder",
+      "label": "Gerrod Herndon campaign filings folder",
+      "candidate_name": "Gerrod Herndon",
+      "candidate_actor_ids": [
+        "actor-gerrod-herndon"
+      ],
+      "election_ids": [
+        "election-2022-11-08-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Gerrod Herndon for San Rafael City Council 2022",
+      "total_entries": 2,
+      "result_count": 2,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 470- Gerrod Herndon",
+        "Form 501- Gerrod Herndon"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-8-2022-election-independent-expenditure-filings-folder",
+      "entry_id": 34126,
+      "record_type": "independent_expenditure_filing_folder",
+      "label": "Independent Expenditure Filings 2022",
+      "candidate_name": null,
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2022-11-08-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "2022",
+      "total_entries": 0,
+      "result_count": 0,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": []
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder",
+      "entry_id": 34937,
+      "record_type": "campaign_filing_folder",
+      "label": "Jonathan Frieman campaign filings folder",
+      "candidate_name": "Jonathan Frieman",
+      "candidate_actor_ids": [
+        "actor-jonathan-frieman"
+      ],
+      "election_ids": [
+        "election-2022-11-08-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Jonathan Frieman for San Rafael City Council 2022",
+      "total_entries": 15,
+      "result_count": 15,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410 - Jonathan Frieman for City Council D3 2022 (Initial)",
+        "Form 410 - Jonathan Frieman for City Council D3 2022 (Initial); State",
+        "Form 410 - Jonathan Frieman for City Council D3 2022; termination",
+        "Form 410 - Jonathan Frieman for City Council D3 2022; termination state",
+        "Form 460 - Jonathan Frieman for City Council D3 2022; 06-30-23 termination"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-8-2022-election-lisa-longnecker-campaign-folder",
+      "entry_id": 34939,
+      "record_type": "campaign_filing_folder",
+      "label": "Lisa Longnecker campaign filings folder",
+      "candidate_name": "Lisa Longnecker",
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2022-11-08-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Lisa Longnecker for Board of Education 2022",
+      "total_entries": 3,
+      "result_count": 3,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 470 - Lisa Longnecker",
+        "Form 501 - Lisa Longnecker",
+        "Form 501 - Lisa Longnecker; Amendment"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-8-2022-election-lucia-martel-dow-campaign-folder",
+      "entry_id": 33988,
+      "record_type": "campaign_filing_folder",
+      "label": "Lucia Martel Dow campaign filings folder",
+      "candidate_name": "Lucia Martel Dow",
+      "candidate_actor_ids": [],
+      "election_ids": [
+        "election-2022-11-08-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Lucia Martel Dow for San Rafael Board of Education Trustee 2022",
+      "total_entries": 14,
+      "result_count": 14,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410- Lucia Martel Dow for San Rafael School Board 2022",
+        "Form 410- Lucia Martel Dow for San Rafael School Board 2022; Amendment",
+        "Form 410- Lucia Martel Dow for San Rafael School Board 2022; Amendment State",
+        "Form 410- Lucia Martel Dow for San Rafael School Board 2022; Termination",
+        "Form 410- Lucia Martel Dow for San Rafael School Board 2022; Termination (State) 03-10-23"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder",
+      "entry_id": 34885,
+      "record_type": "campaign_filing_folder",
+      "label": "Maribeth Bushey campaign filings folder",
+      "candidate_name": "Maribeth Bushey",
+      "candidate_actor_ids": [
+        "actor-maribeth-bushey"
+      ],
+      "election_ids": [
+        "election-2022-11-08-san-rafael-general"
+      ],
+      "success": true,
+      "folder_name": "Maribeth Bushey for City Council 2022",
+      "total_entries": 24,
+      "result_count": 24,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "Form 410 - Maribeth Bushey for City Council D3 2022 (amend)",
+        "Form 410 - Maribeth Bushey for City Council D3 2022 (amend) State",
+        "Form 410 - Maribeth Bushey for City Council D3 2022 (termination)",
+        "Form 410 - Maribeth Bushey; 08/16/2022",
+        "Form 410 - Maribeth Bushey; 08/16/2022 State"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-public-records-financial-filings-folder",
+      "entry_id": 31076,
+      "record_type": "campaign_filing_folder",
+      "label": "View Financial Filings",
+      "candidate_name": null,
+      "candidate_actor_ids": [],
+      "election_ids": [],
+      "success": true,
+      "folder_name": "03-05-00 Fair Political Practices Commission Materials",
+      "total_entries": 6,
+      "result_count": 6,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "03-05 Upcoming Election (TBD)",
+        "03-05-02 Campaign Statements  - Elected",
+        "03-05-03 Campaign Statements  - Unsuccessful",
+        "03-05-04 Campaign Statements  - Committees",
+        "03-05-09 Form 800s"
+      ]
+    },
+    {
+      "folder_record_id": "record-san-rafael-public-records-independent-expenditures-folder",
+      "entry_id": 25358,
+      "record_type": "campaign_filing_folder",
+      "label": "View Independent Expenditures Filings",
+      "candidate_name": null,
+      "candidate_actor_ids": [],
+      "election_ids": [],
+      "success": true,
+      "folder_name": "Independent Expenditures",
+      "total_entries": 4,
+      "result_count": 4,
+      "failed": false,
+      "err_msg": null,
+      "sample_document_names": [
+        "2011",
+        "2013",
+        "2020",
+        "2022"
+      ]
+    }
+  ]
+}

@@ -173,7 +173,7 @@ Sources:
 
 Target:
 
-- backfill city-side campaign filings from `2019-01-01` forward using the city election indices as the discovery backbone and election landing pages as the current child-folder discovery surface, with direct folder enumeration only where anonymous Laserfiche listing actually works
+- backfill city-side campaign filings from `2019-01-01` forward using the city election indices as the discovery backbone, election landing pages as the folder-discovery surface, and the public Laserfiche folder-listing service as the actual filing-list capture path
 - practical current reach is better than the original floor: campaign-bearing election pages currently run from `2011` through `2024`, plus the June 7, 2016 special-election page
 
 Expected graph yield:
@@ -187,9 +187,10 @@ Expected graph yield:
 Reason:
 
 - this is the missing city-side campaign surface needed for true local media-to-campaign overlaps
-- the current working discovery pattern is `elections / past-elections -> election landing page -> campaign filing destination`
+- the current working pattern is `elections / past-elections -> election landing page -> campaign filing destination -> public folder listing`
 - within that pattern, pre-2020 campaign-bearing pages expose election-level folder IDs, while `2020+` pages expose candidate-specific folder IDs
-- those same election pages also expose direct `DocView` records that can be captured as first-class election records even when folder enumeration remains flaky
+- those same election pages also expose direct `DocView` records that can be captured as first-class election records
+- the remaining boundary is raw per-filing document capture from the folder-listed entry ids, not filing discovery
 
 ## Wave 01 Exclusions
 

@@ -209,6 +209,12 @@ This repo started as a planning workspace and now includes the first live implem
     - `11` actor candidates covering the unique city-office candidates currently visible in the `2020`, `2022`, and `2024` mayoral and council races
     - `15` discovery-stage candidacy candidates tied to existing San Rafael seat IDs and page-level election IDs
     - an explicit promotion boundary that keeps school-board, city-attorney, and clerk-assessor rows as discovery-only filing-folder records until those institutions and seats have their own canonical layer
+  - promoted the discovery layer into real public folder-listing capture and first filing objects:
+    - added a repeatable Laserfiche folder-listing adapter for San Rafael campaign folders
+    - captured `37` filing-folder listing responses with `33` successful public folder listings and `331` listed document rows
+    - confirmed the stronger source boundary: anonymous folder listing is a real public capture path, not just page-linked discovery
+    - normalized the city-office subset into `14` candidate-linked committees, `228` filing records, and `14` committee-enriched candidacy records
+    - narrowed the remaining gap to direct raw filing-document recovery from the exposed entry ids
 - raw official source captures for case study 01
 - raw criminal-justice source captures for Marin court and sheriff landing surfaces
 - campaign-finance and disclosure layer formalized around `Election`, `Committee`, `Candidacy`, `Filing`, and `EconomicInterestDisclosure`
@@ -253,6 +259,7 @@ This repo started as a planning workspace and now includes the first live implem
   - first recurrence layer showing cross-source recurrence for Mark Shotwell, Mel Burnette, Defense Block Security, and Downtown Streets Team, plus an unresolved repeated Mark Rivera cluster
   - first cross-domain media join layer connecting `Mark Shotwell / Ritter Center` to official program context and `Downtown Streets Team` to official contract, moneyflow, and decision records
   - first media-to-disclosure overlap linking `San Rafael Mayor Kate Colin` in the September 20, 2024 Marin IJ article to her later local Form 803 filing and normalized behested-payment moneyflow, explicitly modeled as identity continuity rather than a causal policy-finance claim
+  - first media-to-campaign overlap linking `Rachel Kertz` in the August 24, 2024 Marin IJ article to her public 2024 San Rafael campaign committee, candidacy, and filing trail, explicitly modeled as actor continuity rather than a causal policy-finance claim
 - procurement-layer schema, source bundle, and checklist for Marin County and San Rafael funding and contract workflows
 - selected first procurement sample basket:
   - county `Board Chambers Audio Visual Refresh / Prime Electric`

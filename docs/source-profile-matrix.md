@@ -37,8 +37,8 @@ The key questions are:
 | Major planning projects / applications | `san-rafael-major-planning-projects`, `san-rafael-opengov-planning-category`, `san-rafael-apply-to-planning-online` | mixed `wordpress_proudcity` + external planning system | mixed public pages with external destination | project-by-project, not one clean archive | `2020-01-01` | `weekly` | partial | Discovery is on city pages; operative records may live elsewhere |
 | Form 700 disclosures | `san-rafael-sei-netfile-portal`, `san-rafael-sei-rss-feed` | `netfile_campaign_portal` | public portal + RSS + direct filing image | filing history by filer / period | `2019-01-01` | `weekly` | strong | Public NetFile export now gives a full visible-history 700-filer inventory; direct document coverage is still sparser than the metadata layer |
 | Form 803 disclosures | `san-rafael-public-records-form-803-search`, `san-rafael-kate-colin-form-803-2025-09-04` | `laserfiche_public_records` | `cookie_aware_json` | searchable public-records corpus | `2019-01-01` | `weekly` | first live slice | Strong example of filing family living outside NetFile |
-| Campaign financial filings | `san-rafael-public-records-financial-filings-folder` | `laserfiche_public_records` | `cookie_aware_json` probe + page-linked discovery | top-level folder plus child candidate folders | `2019-01-01` | `weekly` | partial | Destination confirmed; anonymous folder enumeration currently fails, so election pages are the current discovery backbone |
-| Independent expenditures | `san-rafael-public-records-independent-expenditures-folder` | `laserfiche_public_records` | `cookie_aware_json` probe + page-linked discovery | folder-style archive plus source-linked direct records | `2019-01-01` | `weekly` | partial | Separate official destination from campaign filing folder; top-level listing currently does not yield a usable anonymous inventory |
+| Campaign financial filings | `san-rafael-public-records-financial-filings-folder` | `laserfiche_public_records` | page-linked discovery + anonymous folder-listing service | top-level folder plus child candidate folders | `2019-01-01` | `weekly` | strong | Discovery still starts on city election pages, but public `GetFolderListing2` now yields real folder contents for most candidate and shared filing folders |
+| Independent expenditures | `san-rafael-public-records-independent-expenditures-folder` | `laserfiche_public_records` | page-linked discovery + anonymous folder-listing service | folder-style archive plus source-linked direct records | `2019-01-01` | `weekly` | usable | Separate official destination from campaign filing folder; the public folder-listing service now yields the 2020 IE filing rows and the empty-but-readable 2022 IE folder shell |
 | Procurement / bids / project awards | `san-rafael-bids-and-proposals`, city council meeting records, Downtown Library thread | mixed `wordpress_proudcity` + council packets | public page + linked packet PDFs | mixed archive / project pages | `2020-01-01` | `weekly` | usable | Actual agreement lineage often lives in council packets, not procurement page alone |
 | Election / canvass pages | `san-rafael-elections-index`, `san-rafael-past-elections`, `san-rafael-june-8-2010-election`, `san-rafael-november-2-2010-election`, `san-rafael-november-8-2011-election`, `san-rafael-november-5-2013-election`, `san-rafael-november-3-2015-election`, `san-rafael-june-7-2016-election`, `san-rafael-november-7-2017-election`, `san-rafael-june-5-2018-special-municipal-election`, `san-rafael-november-6-2018-election`, `san-rafael-november-3-2020-election`, `san-rafael-november-8-2022-election`, `san-rafael-november-5-2024-election`, `san-rafael-june-2-2026-special-municipal-election` | `wordpress_proudcity` | `static_public_page` | election-index pages plus election-specific landing pages | `2010-01-01` for discovery, `2011-01-01` for campaign-bearing pages | `manual` | strong | City election indices are now the discovery backbone; older pages mostly expose election-level finance folders, while 2020+ pages expose candidate-specific folder IDs |
 
@@ -50,12 +50,18 @@ The key questions are:
   - campaign financial filings appear to live in a different Laserfiche folder
   - independent expenditures appear to live in yet another Laserfiche folder
 - The public election pages can expose candidate-specific campaign-finance folder IDs even when the top-level Laserfiche browse URLs do not yield usable anonymous listings.
+- The stronger rule is now:
+  - city pages remain the discovery backbone
+  - the public Laserfiche folder-listing service is the actual filing-list capture path
 - The city's own `elections` and `past-elections` pages are the stable discovery backbone for historical election landing pages.
 - The campaign-filing shape changes over time:
   - `2011` through `2018` pages plus the June 7, 2016 page expose election-level filing folders
   - `2020` through `2024` pages expose candidate-specific filing folders
   - `2010`, June 5, 2018 special, and June 2, 2026 special pages do not currently expose campaign-filing destinations
 - The election pages also expose page-linked `DocView` records such as election-call resolutions, canvass/results resolutions, initiative records, and the independent-expenditure ordinance; those direct records are a stronger public capture path than anonymous folder enumeration.
+- Folder-listing capture and direct document capture are different boundaries:
+  - public folder listing now works for most campaign folders
+  - raw per-filing document capture is still a separate problem
 - The public disclosures page is a routing surface, not the real data store.
 - The San Rafael NetFile Form 700 surface has two materially different behaviors:
   - a full visible-history export that is good for mass filing inventory
