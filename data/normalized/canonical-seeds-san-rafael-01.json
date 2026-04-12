@@ -1,7 +1,7 @@
 {
   "bundle_id": "canonical-seeds-san-rafael-01",
   "status": "working",
-  "generated_at": "2026-04-11T23:35:00-07:00",
+  "generated_at": "2026-04-12T08:03:35-07:00",
   "scope": {
     "jurisdiction": "San Rafael",
     "focus": "Evidence-backed canonical actor, seat, and institution seeds for cross-slice joins",
@@ -91,6 +91,27 @@
       "record_type": "department_page",
       "source_id": "san-rafael-city-council-page",
       "artifact_path": "data/raw/san-rafael-city-council-page/2026-04-11/source.html"
+    },
+    {
+      "id": "record-san-rafael-city-council-governance-protocols-2026",
+      "record_class": "administrative_record",
+      "record_type": "governance_protocols",
+      "source_id": "san-rafael-city-council-governance-protocols-2026",
+      "artifact_path": "data/raw/san-rafael-city-council-governance-protocols-2026/2026-04-11/document.pdf"
+    },
+    {
+      "id": "record-san-rafael-city-council-2025-12-15-meeting-page",
+      "record_class": "meeting_record",
+      "record_type": "meeting_page",
+      "source_id": "san-rafael-city-council-2025-12-15-meeting-page",
+      "artifact_path": "data/raw/san-rafael-city-council-2025-12-15-meeting-page/2026-04-12/source.html"
+    },
+    {
+      "id": "record-san-rafael-city-council-2025-12-15-minutes",
+      "record_class": "meeting_record",
+      "record_type": "minutes",
+      "source_id": "san-rafael-city-council-2025-12-15-meeting-page",
+      "artifact_path": "data/raw/san-rafael-city-council-2025-12-15-meeting-page/2026-04-12/cc-minutes-2025-12-15.pdf"
     },
     {
       "id": "record-san-rafael-november-5-2024-election-page",
@@ -637,18 +658,22 @@
       "notes": "Derived from the sign-off and self-description in the official submitted public comment."
     },
     {
-      "id": "claim-rachel-kertz-city-council-vice-mayor-2026-04-11",
+      "id": "claim-rachel-kertz-city-council-vice-mayor-2025-12-15",
       "claim_type": "actor_role_at_institution",
       "status": "accepted_for_seed",
       "confidence": "high",
       "subject_actor_id": "actor-rachel-kertz",
       "institution_id": "inst-san-rafael-city-council",
       "role_label": "Vice Mayor",
-      "effective_date": "2026-04-11",
+      "effective_date": "2025-12-15",
+      "effective_end": "2026-12-31",
       "evidence_record_ids": [
+        "record-san-rafael-city-council-2025-12-15-meeting-page",
+        "record-san-rafael-city-council-2025-12-15-minutes",
+        "record-san-rafael-city-council-governance-protocols-2026",
         "record-san-rafael-city-council-page-2026-04-11"
       ],
-      "notes": "The official City Council page presents Rachel Kertz as Vice Mayor while also listing District 4 as the underlying elected seat. This should remain a role claim, not a separate seat."
+      "notes": "The December 15, 2025 meeting page and official minutes show that the Council elected Rachel Kertz as Vice Mayor for 2026. The January 2026 governance protocols state that the Vice Mayor role rotates on an annual basis. This remains a bounded role claim layered on top of her District 4 seat service, not a separate seat."
     }
   ],
   "methodology_findings": [
@@ -666,7 +691,7 @@
     },
     {
       "id": "identity-finding-san-rafael-04",
-      "summary": "San Rafael's current official structure is an at-large Mayor plus four district council seats. `Vice Mayor` is better modeled as a role claim layered on top of a district seat service, not as a separate elected seat."
+      "summary": "San Rafael's current official structure is an at-large Mayor plus four district council seats. `Vice Mayor` is better modeled as an annually rotating role claim layered on top of a district seat service, not as a separate elected seat."
     }
   ],
   "promotion_constraints": [
@@ -679,11 +704,11 @@
   "open_questions": [
     {
       "id": "OQ-018",
-      "status": "watch",
+      "status": "resolved",
       "layer": "term-boundary modeling",
-      "question": "What are the exact start and end dates for the current District 2 and District 3 council seat services, and what is the formal duration of the current Vice Mayor designation?",
-      "why_it_matters": "This bundle now supports explicit seat and current officeholding objects, but the exact start and end dates for the current District 2 and District 3 seat services are still missing.",
-      "next_evidence": "Capture the earlier San Rafael election or canvass materials that seated the current District 2 and District 3 councilmembers, and capture any formal source defining the duration of the Vice Mayor designation."
+      "question": "What is the formal duration of the current Vice Mayor designation?",
+      "why_it_matters": "The bundle now has explicit current `SeatService` objects for the sitting councilmembers, but the transient `Vice Mayor` designation still needed a bounded service rule.",
+      "resolution_note": "Resolved with the December 15, 2025 San Rafael City Council meeting page and official minutes, plus the January 2026 governance protocols. San Rafael states that the Vice Mayor role rotates on an annual basis, and the Council elected Rachel Kertz as Vice Mayor for 2026 at the December 15, 2025 meeting. The graph should keep this as a bounded role claim layered on top of her District 4 `SeatService`, not as a separate seat."
     }
   ]
 }

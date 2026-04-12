@@ -156,20 +156,18 @@ Mirror the question here when it affects:
 
 ### OQ-018: San Rafael current council term boundaries
 
-- `status`: watch
+- `status`: resolved
 - `layer`: term-boundary modeling
 - `scope`: `canonical-seeds-san-rafael-01`
 - `source refs`:
   - [canonical-seeds-san-rafael-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/canonical-seeds-san-rafael-01.json)
-  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-elected-officials/2026-04-11/source.html)
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-page/2026-04-11/source.html)
-  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-8-2022-election/2026-04-11/source.html)
-  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-2022-12-19-special-election-results/2026-04-11/source.html)
-  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html)
+  - [document.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-governance-protocols-2026/2026-04-11/document.pdf)
+  - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-2025-12-15-meeting-page/2026-04-12/source.html)
+  - [cc-minutes-2025-12-15.pdf](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-council-2025-12-15-meeting-page/2026-04-12/cc-minutes-2025-12-15.pdf)
 - `question`: What is the formal duration of the current Vice Mayor designation?
-- `why it matters`: The current District 2 and District 3 council seat services are now anchored to the November 8, 2022 election cycle and the December 19, 2022 swear-in meeting, but the Vice Mayor role still needs its own bounded service rule.
-- `current note`: Eli Hill and Maribeth Bushey now have election-backed current `SeatService` objects with `started_at = 2022-12-19`, based on the 2022 election page plus the December 19, 2022 special meeting page that lists them in the swear-in ceremony for newly elected officials.
-- `next evidence`: capture the council action or protocol record that selected the current Vice Mayor and defines how long that designation lasts.
+- `why it matters`: The underlying council seats are now stable enough that the remaining risk was overloading `Vice Mayor` as if it were a free-floating office instead of a bounded leadership designation layered on top of a current `SeatService`.
+- `resolution note`: Resolved with the January 2026 City Council governance protocols and the December 15, 2025 regular City Council meeting materials. The governance protocols state that the Vice Mayor role rotates on an annual basis, and the December 15, 2025 meeting page and official minutes show that the Council elected Rachel Kertz as Vice Mayor for 2026. The graph should model this as an annual role claim layered on top of her District 4 `SeatService`, not as a separate seat.
 
 ### OQ-019: Marin County BOS source-scope boundary
 
