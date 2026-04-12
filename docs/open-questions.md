@@ -291,13 +291,10 @@ Mirror the question here when it affects:
   - [campaign-form460-schedule-extraction.md](/Users/tammypais/projects/marin-civic-graph/docs/campaign-form460-schedule-extraction.md)
   - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json)
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
-- `question`: How should the project treat schedule extraction when contribution-side row totals still trail the reported filing totals even after the raw PDFs are preserved and Schedule E has been reconciled?
-- `why it matters`: The project can now trust the payment-side extraction much more than before, but it still does not have exhaustive contribution coverage for exact full-filing accounting.
-- `current note`: The current schedule bundle now reconciles itemized Schedule E totals to the PDF summaries for `37677` and `37685`, and preserves the unitemized-only payment case for `37365`. The main remaining completeness gap is contribution-side extraction.
-- `next evidence`: use the preserved PDFs for targeted Schedule A QA or a stronger contribution-side parser before making exact-accounting or exhaustive-donor claims.
-- `why it matters`: This is the only city-office candidate folder in the normalized discovery slice that currently blocks promotion from folder destination to real committee and filing objects.
-- `current note`: The city-side filing bundle now promotes `14` city-office committees and `228` filing records from successful public folder listings, but `John Gamblin` remains missing because the folder entry itself no longer resolves through the public Laserfiche listing service.
-- `next evidence`: test whether a replacement folder id or direct record path exists for the Gamblin committee on the public election pages or inside the top-level 2020 campaign filing family.
+- `question`: How should the project treat the remaining contribution-side gap when `37685` and `37365` now reconcile exactly to the official `Schedule A Summary` itemized totals, but `37677` still trails its itemized summary by `$1,000.00`?
+- `why it matters`: The project can now trust the payment-side extraction and most of the contribution-side extraction much more than before, but it still should not claim exact full-filing donor coverage on the Kate Colin filing without a tighter row parser.
+- `current note`: The current schedule bundle now reconciles itemized Schedule E totals to the PDF summaries for `37677` and `37685`. On the contribution side, `37685` and `37365` now reconcile exactly to their official `Schedule A Summary` itemized totals, while `37677` improves to `$14,992.00` extracted itemized contributions against `$15,992.00` reported itemized contributions, with `$400.00` explicitly preserved as unitemized contributions.
+- `next evidence`: add a page-specific patch for the remaining malformed Kate Colin `Schedule A` rows or introduce a stronger PDF-assisted parser for first-row and bad-date OCR edge cases before making exact-accounting or exhaustive-donor claims.
 
 ### OQ-016: San Rafael local Form 803 filing surface
 

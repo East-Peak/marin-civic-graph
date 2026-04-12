@@ -22,33 +22,36 @@ Derived outputs:
 The current pass promotes:
 
 - `3` enriched `Filing` candidates
-- `103` actor candidates or actor joins
-- `130` `MoneyFlow` candidates
+- `114` actor candidates or actor joins
+- `137` `MoneyFlow` candidates
 
 Per filing:
 
 - `37677`
-  - `45` Schedule A rows
+  - `48` Schedule A rows
   - `27` Schedule E rows
-  - extracted itemized contributions: `$13,793.00`
-  - reported monetary contributions: `$16,392.00`
+  - extracted itemized contributions: `$14,992.00`
+  - reported itemized contributions: `$15,992.00`
+  - reported unitemized contributions: `$400.00`
   - extracted itemized payments: `$23,337.66`
   - reported unitemized payments: `$57.30`
 
 - `37685`
-  - `23` Schedule A rows
+  - `24` Schedule A rows
   - `1` Schedule D row
   - `6` Schedule E rows
-  - extracted itemized contributions: `$6,625.00`
-  - reported monetary contributions: `$7,265.00`
+  - extracted itemized contributions: `$6,775.00`
+  - reported itemized contributions: `$6,775.00`
+  - reported unitemized contributions: `$490.00`
   - extracted itemized payments: `$3,576.26`
   - reported unitemized payments: `$249.73`
   - reported payments made: `$3,925.99`
 
 - `37365`
-  - `28` Schedule A rows
-  - extracted itemized contributions: `$5,648.00`
-  - reported monetary contributions: `$6,915.00`
+  - `30` Schedule A rows
+  - extracted itemized contributions: `$6,048.00`
+  - reported itemized contributions: `$6,048.00`
+  - reported unitemized contributions: `$867.00`
   - no itemized Schedule E rows
   - reported unitemized payments: `$183.29`
 
@@ -59,6 +62,8 @@ Per filing:
 - Schedule E is materially stronger now that the extractor prefers the PDF text layer when the raw export exists.
 - The `37677` and `37685` itemized Schedule E row sums now match the PDF summary totals exactly.
 - Schedule E summary values now preserve unitemized payments even when a filing has no itemized Schedule E rows.
+- The contribution side is now exact on `37685` and `37365` when compared against the extracted `Schedule A Summary` itemized totals.
+- The extractor now preserves `Schedule A Summary` itemized and unitemized contribution totals as explicit QA targets instead of only comparing row sums against the full filing total.
 - Existing city-side `Committee` and `Filing` IDs can be reused instead of inventing a parallel campaign namespace.
 
 ## Current Boundary
@@ -71,7 +76,7 @@ It does **not** mean:
 - contribution-side extraction is complete
 - the parser is strong enough to replace manual review for every row
 
-The remaining gap is narrower now. Payment-side extraction is substantially better, but contribution-side totals still trail the reported filing totals, so the project still should not treat these filings as exhaustively parsed.
+The remaining gap is now narrow and specific. Two of the three sample filings reconcile exactly on the contribution side, but `37677` still trails the reported itemized contribution summary by `$1,000.00`. The main remaining issue is malformed first-row and date/amount OCR on a handful of Kate Colin `Schedule A` pages, not a general failure of the extraction layer.
 
 ## Interpretation Rule
 
@@ -87,3 +92,5 @@ Do not use it yet for:
 - exact full-filing accounting
 - contribution-limit enforcement claims
 - “all donors” or “all expenditures” analytics without review
+
+The exception is bounded QA on the two reconciled Rachel Kertz filings. Those now support stronger itemized-contribution recurrence work because the extracted row totals match the official `Schedule A Summary` itemized totals exactly.

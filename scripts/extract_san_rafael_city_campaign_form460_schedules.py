@@ -32,6 +32,9 @@ BUNDLE_ID = f"{CASE_STUDY_ID}__bundle-01"
 EXTRACTED_ARTIFACT_PATH = "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json"
 
 DATE_LINE_RE = re.compile(r"^\s*\d{1,2}(?:[^0-9]+)\d{1,2}(?:[^0-9]+)\d{2,4}\s*$")
+LEADING_DATE_FRAGMENT_RE = re.compile(
+    r"^\s*(?P<prefix>\d[\dA-Za-z()/\s]{3,14}\d)(?P<rest>\s+.*)?$"
+)
 AMOUNT_RE = re.compile(r"-?\d{1,3}(?:,\d{3})*(?:\.\d{1,2})")
 SPACED_AMOUNT_RE = re.compile(r"-?\d{1,3}(?:[ ,]\d{3})*(?:\.\s?\d{1,2})?")
 STATE_ZIP_RE = re.compile(r"\b[A-Z]{2}\s+\d{5}(?:-\d{4})?$")
@@ -129,6 +132,18 @@ def extract_strict_amounts_from_line(value: str) -> list[float]:
 
 
 def parse_date_line(value: str) -> str | None:
+    value = value.translate(
+        str.maketrans(
+            {
+                "O": "0",
+                "o": "0",
+                "I": "1",
+                "l": "1",
+                "S": "5",
+                "s": "5",
+            }
+        )
+    )
     cleaned = re.sub(r"[^0-9]+", "/", value).strip("/")
     parts = cleaned.split("/")
     if len(parts) != 3:
@@ -140,6 +155,87 @@ def parse_date_line(value: str) -> str | None:
         return datetime(int(year), int(month), int(day)).date().isoformat()
     except ValueError:
         return None
+
+
+def normalize_year_token(value: str) -> int | None:
+    digits = re.sub(r"[^0-9]", "", value)
+    if not digits:
+        return None
+    if len(digits) >= 4:
+        digits = digits[-4:]
+    else:
+        digits = digits[-2:]
+        digits = f"20{digits}"
+    year = int(digits)
+    if year < 100:
+        year += 2000
+    if 2000 <= year <= 2100:
+        return year
+    return None
+
+
+def parse_date_line_loose(value: str) -> str | None:
+    parsed = parse_date_line(value)
+    if parsed is not None:
+        return parsed
+
+    groups = re.findall(r"\d+", value)
+    if not groups:
+        return None
+
+    month: int | None = None
+    day: int | None = None
+    year: int | None = None
+
+    if len(groups) >= 3:
+        year = normalize_year_token(groups[2])
+        day_digits = groups[1][-2:]
+        if day_digits.isdigit():
+            day = int(day_digits)
+        month_candidates = [groups[0], groups[0][-1:], groups[0][:1]]
+        for candidate in month_candidates:
+            if candidate.isdigit():
+                candidate_int = int(candidate)
+                if 1 <= candidate_int <= 12:
+                    month = candidate_int
+                    break
+    elif len(groups) == 2:
+        year = normalize_year_token(groups[1])
+        prefix = groups[0]
+        if len(prefix) >= 3:
+            day_digits = prefix[-2:]
+            if day_digits.isdigit():
+                day = int(day_digits)
+            month_candidates = []
+            if len(prefix) >= 4:
+                month_candidates.append(prefix[:2])
+            month_candidates.extend([prefix[:1], prefix[1:2], prefix[-3:-2]])
+            for candidate in month_candidates:
+                if candidate and candidate.isdigit():
+                    candidate_int = int(candidate)
+                    if 1 <= candidate_int <= 12:
+                        month = candidate_int
+                        break
+
+    if month is None or day is None or year is None:
+        return None
+
+    try:
+        return datetime(year, month, day).date().isoformat()
+    except ValueError:
+        return None
+
+
+def extract_leading_date_parts(line: str) -> tuple[str | None, str | None, str | None]:
+    match = LEADING_DATE_FRAGMENT_RE.match(line)
+    if not match:
+        return None, None, None
+    prefix = match.group("prefix").strip()
+    rest = (match.group("rest") or "").strip()
+    parsed = parse_date_line_loose(prefix)
+    if parsed is None:
+        return None, None, None
+    return parsed, prefix, rest or None
 
 
 def line_is_amountish(value: str) -> bool:
@@ -253,9 +349,9 @@ def split_date_blocks(lines: list[str]) -> list[list[str]]:
         if "SUBTOTAL" in line.upper():
             if current:
                 blocks.append(current)
-                current = []
             break
-        if DATE_LINE_RE.fullmatch(line):
+        date_received, _, _ = extract_leading_date_parts(line)
+        if date_received is not None:
             if current:
                 blocks.append(current)
             current = [line]
@@ -265,6 +361,21 @@ def split_date_blocks(lines: list[str]) -> list[list[str]]:
     if current:
         blocks.append(current)
     return blocks
+
+
+def split_line_on_contributor_code(line: str, selected_code: str) -> tuple[str, str]:
+    match = re.search(selected_code, line, re.IGNORECASE)
+    if match is None:
+        return line, ""
+    prefix = line[: match.start()].strip(" -")
+    suffix = line[match.end() :].strip(" -")
+    return prefix, suffix
+
+
+def clean_code_prefix(value: str) -> str:
+    value = re.sub(r"(?:\s+[®©❑●•◉0ZWIElm/]+)+$", "", value).strip()
+    value = re.sub(r"\s{2,}", " ", value)
+    return value
 
 
 def extract_section_lines(page_text: str) -> list[str]:
@@ -308,13 +419,13 @@ def page_subtotal(page_text: str) -> float | None:
 def parse_schedule_a_block(block_lines: list[str], page_num: int) -> dict[str, Any] | None:
     if not block_lines:
         return None
-    date_received = parse_date_line(block_lines[0])
+    date_received, date_received_raw, first_line_rest = extract_leading_date_parts(block_lines[0])
     if date_received is None:
         return None
-
+    content_lines = ([first_line_rest] if first_line_rest else []) + block_lines[1:]
     code_index = None
     selected_code = None
-    for index, line in enumerate(block_lines[1:], start=1):
+    for index, line in enumerate(content_lines):
         code = extract_selected_code([line]) or extract_first_code_token(line)
         if code:
             code_index = index
@@ -323,7 +434,12 @@ def parse_schedule_a_block(block_lines: list[str], page_num: int) -> dict[str, A
     if code_index is None:
         return None
 
-    name_lines = [line for line in block_lines[1:code_index] if not line_is_address(line)]
+    code_line = content_lines[code_index]
+    code_line_prefix, code_line_suffix = split_line_on_contributor_code(code_line, selected_code)
+    code_line_prefix = clean_code_prefix(code_line_prefix)
+    name_lines = [line for line in content_lines[:code_index] if not line_is_address(line)]
+    if code_line_prefix and not line_is_address(code_line_prefix):
+        name_lines.append(code_line_prefix)
     contributor_name = clean_contributor_name(" ".join(name_lines))
     if not contributor_name:
         return None
@@ -331,7 +447,8 @@ def parse_schedule_a_block(block_lines: list[str], page_num: int) -> dict[str, A
     descriptor_lines: list[str] = []
     address_lines: list[str] = []
     numeric_values: list[float] = []
-    for line in block_lines[code_index + 1 :]:
+    tail_lines = ([code_line_suffix] if code_line_suffix else []) + content_lines[code_index + 1 :]
+    for line in tail_lines:
         if line_is_checkbox(line) or line_is_per_election(line):
             amounts = extract_strict_amounts_from_line(line)
             if amounts:
@@ -354,6 +471,10 @@ def parse_schedule_a_block(block_lines: list[str], page_num: int) -> dict[str, A
         if line and len(line) > 1:
             descriptor_lines.append(line)
 
+    meaningful_values = [value for value in numeric_values if value >= 10]
+    if meaningful_values:
+        numeric_values = meaningful_values
+
     amount_received = numeric_values[0] if len(numeric_values) >= 1 else None
     cumulative_to_date = numeric_values[1] if len(numeric_values) >= 2 else None
     per_election_to_date = numeric_values[2] if len(numeric_values) >= 3 else None
@@ -365,6 +486,7 @@ def parse_schedule_a_block(block_lines: list[str], page_num: int) -> dict[str, A
         "page_num": page_num,
         "row_type": "schedule_a_itemized_contribution",
         "date_received": date_received,
+        "date_received_raw": date_received_raw,
         "contributor_name": contributor_name,
         "contributor_name_raw": " ".join(name_lines),
         "contributor_code": selected_code,
@@ -375,6 +497,28 @@ def parse_schedule_a_block(block_lines: list[str], page_num: int) -> dict[str, A
         "per_election_to_date": per_election_to_date,
         "parse_confidence": parse_confidence,
         "raw_block_text": "\n".join(block_lines),
+    }
+
+
+def parse_schedule_a_summary_page(page_text: str) -> dict[str, float | None]:
+    lines = extract_section_lines(page_text)
+    summary_index = next((index for index, line in enumerate(lines) if "SCHEDULE A SUMMARY" in line.upper()), None)
+    if summary_index is None:
+        return {}
+    summary_amounts: list[float] = []
+    for line in lines[summary_index + 1 : summary_index + 18]:
+        upper = line.upper()
+        if "CONTRIBUTOR CODES" in upper or upper.startswith("FPPC "):
+            break
+        amount = extract_last_amount_from_line(line)
+        if amount is not None and amount >= 100:
+            summary_amounts.append(amount)
+    if len(summary_amounts) < 3:
+        return {}
+    return {
+        "reported_itemized_contributions": summary_amounts[-3],
+        "reported_unitemized_contributions": summary_amounts[-2],
+        "reported_total_contributions": summary_amounts[-1],
     }
 
 
@@ -900,6 +1044,18 @@ def build_money_flow_id(parts: list[str]) -> str:
     return f"moneyflow-{slugify('-'.join(part for part in parts if part))}"
 
 
+def dedupe_schedule_rows(rows: list[dict[str, Any]], keys: list[str]) -> list[dict[str, Any]]:
+    seen: set[tuple[Any, ...]] = set()
+    deduped: list[dict[str, Any]] = []
+    for row in rows:
+        key = tuple(row.get(field) for field in keys)
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(row)
+    return deduped
+
+
 def main() -> None:
     raw_capture = json.loads(RAW_CAPTURE_PATH.read_text())
     known_actor_map = load_known_actor_map()
@@ -934,6 +1090,7 @@ def main() -> None:
         schedule_d_rows: list[dict[str, Any]] = []
         schedule_e_rows: list[dict[str, Any]] = []
         schedule_a_page_subtotals: list[float] = []
+        schedule_a_summary: dict[str, float | None] = {}
         schedule_e_summary: dict[str, float | None] = {}
 
         for page in capture["pages"]:
@@ -947,6 +1104,7 @@ def main() -> None:
                 subtotal = page_subtotal(page_text)
                 if subtotal is not None:
                     schedule_a_page_subtotals.append(subtotal)
+                schedule_a_summary.update(parse_schedule_a_summary_page(page_text))
             elif is_schedule_d_page(lines):
                 blocks = split_date_blocks(lines)
                 schedule_d_rows.extend(
@@ -962,6 +1120,15 @@ def main() -> None:
                     schedule_e_rows.extend(parse_schedule_e_page_from_pdf_layout(page_text, page_num))
                 if "Schedule E Summary" in page_text:
                     schedule_e_summary.update(parse_schedule_e_summary_page(page_text))
+
+        schedule_a_rows = dedupe_schedule_rows(
+            schedule_a_rows,
+            ["page_num", "date_received", "contributor_name", "amount_received_this_period"],
+        )
+        schedule_d_rows = dedupe_schedule_rows(
+            schedule_d_rows,
+            ["page_num", "date_received", "target_name", "amount_this_period", "payment_type"],
+        )
 
         extracted_contributions_total = round(
             sum(row["amount_received_this_period"] for row in schedule_a_rows if row["amount_received_this_period"] is not None),
@@ -979,6 +1146,9 @@ def main() -> None:
         if schedule_e_summary.get("reported_total_payments") is not None:
             filing_summary["reported_payments_made"] = schedule_e_summary["reported_total_payments"]
             filing_summary["reported_total_expenditures_made"] = schedule_e_summary["reported_total_payments"]
+        if schedule_a_summary.get("reported_total_contributions") is not None:
+            filing_summary["reported_monetary_contributions"] = schedule_a_summary["reported_total_contributions"]
+            filing_summary["reported_total_contributions_received"] = schedule_a_summary["reported_total_contributions"]
 
         filing_summary["reported_loans_received"] = None
         if (
@@ -1007,6 +1177,7 @@ def main() -> None:
                 "schedule_e_rows": schedule_e_rows,
                 "reported_totals": {
                     **filing_summary,
+                    **schedule_a_summary,
                     "schedule_a_page_subtotals_sum": round(sum(schedule_a_page_subtotals), 2) if schedule_a_page_subtotals else None,
                     **schedule_e_summary,
                 },
@@ -1055,6 +1226,8 @@ def main() -> None:
                 "extracted_itemized_contributions_total": extracted_contributions_total,
                 "extracted_schedule_d_total": extracted_schedule_d_total,
                 "extracted_itemized_payments_total": extracted_payments_total,
+                "reported_itemized_contributions": schedule_a_summary.get("reported_itemized_contributions"),
+                "reported_unitemized_contributions": schedule_a_summary.get("reported_unitemized_contributions"),
                 "reported_monetary_contributions": filing_summary.get("reported_monetary_contributions"),
                 "reported_payments_made": filing_summary.get("reported_payments_made"),
                 "reported_itemized_payments": schedule_e_summary.get("reported_itemized_payments"),
