@@ -17,14 +17,14 @@ Use this when pressure-testing the graph-materialization proposal.
 
 ## Product Tabs
 
-- Is `Legal` explicit enough, or is legal / precedent still buried?
+- Is `Legal & Precedent` explicit enough, or is legal / precedent still buried?
 - Are `Decisions` and `Records` both necessary as top-level tabs?
 - Is the graph itself correctly treated as an internal engine rather than a primary nav surface?
 - Does each tab answer a real user question instead of reflecting backend implementation convenience?
 
 ## Legal / Precedent
 
-- Is the proposed `Legal` tab backed by a real normalized bundle plan?
+- Is the proposed `Legal & Precedent` tab backed by a real normalized bundle plan?
 - Are precedent, local legal framing, and local case constraint separated clearly?
 - Is the first legal import scope narrow enough to be real but broad enough to prove the model?
 
