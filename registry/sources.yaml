@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-04-11
+updated_at: 2026-04-12
 sources:
   - source_id: marin-county-bos-meetings
     label: Marin County Board of Supervisors Meetings
@@ -646,7 +646,7 @@ sources:
     entry_url: https://public.netfile.com/pub/?AID=raf
     discovery_urls:
       - https://www.cityofsanrafael.org/disclosures/
-    fetch_strategy: static_html
+    fetch_strategy: aspnet_form_post
     browser_required: false
     auth_required: false
     paywall_status: none
@@ -664,6 +664,8 @@ sources:
     dedupe_key_strategy: filer_plus_filed_at_plus_document
     notes:
       - Primary public search surface for San Rafael Form 700 records.
+      - Public ASP.NET form-post export yields the current visible 700-filer history in one capture.
+      - Search surface also supports targeted historical lookups, but mass direct-document recovery is still weaker than the inventory layer.
       - Exposes statement types and direct RSS feed access.
 
   - source_id: san-rafael-sei-rss-feed

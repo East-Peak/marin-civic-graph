@@ -226,6 +226,20 @@ Mirror the question here when it affects:
 - `current note`: The first normalized election-record bundle can still promote the 2026 call-election chain because sibling entry `41989` already includes the staff report, Resolution `15511`, and the full text of the measure. Entry `41998` is now a completeness gap, not a blocker for the 2026 election decision.
 - `next evidence`: retest entry `41998` with browser-visible session state and compare it to sibling entry `41989`, which was captured from the same June 2, 2026 special-election page.
 
+### OQ-023: San Rafael Form 700 direct-document recovery boundary
+
+- `status`: watch
+- `layer`: disclosure adapter / evidence depth
+- `scope`: `san-rafael-sei-netfile-portal`
+- `source refs`:
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-sei-netfile-portal/2026-04-12.json)
+  - [manifest.json](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-sei-netfile-portal/2026-04-12/manifest.json)
+  - [form700-700-filers-export.xls](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-sei-netfile-portal/2026-04-12/form700-700-filers-export.xls)
+- `question`: Is there a repeatable public path to mass direct-document recovery for historical San Rafael Form 700 filings, or does the NetFile export remain a metadata-first inventory while targeted filer/date searches are used only for selective document fetches?
+- `why it matters`: The full-history export is strong enough for filing inventory, actor recurrence, and disclosure counts, but it only exposes direct document URLs on a small minority of rows. That is good enough for graph backfill, but not yet good enough for one-shot raw-PDF preservation of the whole visible archive.
+- `current note`: The full visible-history export currently yields `1085` 700-filer rows from `2018-07-02` through `2026-04-08`, with only `16` rows exposing direct document links in the exported HTML. The direct-link layer is therefore materially weaker than the inventory layer.
+- `next evidence`: use the known working targeted historical-search payload to test whether row-level filer/date searches can promote direct `GetDocument.aspx` URLs at scale without relying on the export alone.
+
 ### OQ-016: San Rafael local Form 803 filing surface
 
 - `status`: resolved

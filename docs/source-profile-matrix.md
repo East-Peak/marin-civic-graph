@@ -35,7 +35,7 @@ The key questions are:
 | Boards and commissions | `san-rafael-boards-and-commissions-index` | `wordpress_proudcity` | `static_public_page` | broad index, likely split by body | `2020-01-01` | `weekly` | discovery only | Needs body-by-body expansion |
 | Planning commission / zoning administrator | `san-rafael-planning-commission-meetings`, `san-rafael-zoning-administrator-hearings` | `wordpress_proudcity` | `static_public_page` + linked records | archive-style meeting pages | `2020-01-01` | `weekly` | seeded | Good next-tier decision layer after council/BOS |
 | Major planning projects / applications | `san-rafael-major-planning-projects`, `san-rafael-opengov-planning-category`, `san-rafael-apply-to-planning-online` | mixed `wordpress_proudcity` + external planning system | mixed public pages with external destination | project-by-project, not one clean archive | `2020-01-01` | `weekly` | partial | Discovery is on city pages; operative records may live elsewhere |
-| Form 700 disclosures | `san-rafael-sei-netfile-portal`, `san-rafael-sei-rss-feed` | `netfile_campaign_portal` | public portal + RSS + direct filing image | filing history by filer / period | `2019-01-01` | `weekly` | strong | Best current city filing surface for structured disclosure backfill |
+| Form 700 disclosures | `san-rafael-sei-netfile-portal`, `san-rafael-sei-rss-feed` | `netfile_campaign_portal` | public portal + RSS + direct filing image | filing history by filer / period | `2019-01-01` | `weekly` | strong | Public NetFile export now gives a full visible-history 700-filer inventory; direct document coverage is still sparser than the metadata layer |
 | Form 803 disclosures | `san-rafael-public-records-form-803-search`, `san-rafael-kate-colin-form-803-2025-09-04` | `laserfiche_public_records` | `cookie_aware_json` | searchable public-records corpus | `2019-01-01` | `weekly` | first live slice | Strong example of filing family living outside NetFile |
 | Campaign financial filings | `san-rafael-public-records-financial-filings-folder` | `laserfiche_public_records` | `cookie_aware_json` probe + page-linked discovery | top-level folder plus child candidate folders | `2019-01-01` | `weekly` | partial | Destination confirmed; anonymous folder enumeration currently fails, so election pages are the current discovery backbone |
 | Independent expenditures | `san-rafael-public-records-independent-expenditures-folder` | `laserfiche_public_records` | `cookie_aware_json` probe + page-linked discovery | folder-style archive plus source-linked direct records | `2019-01-01` | `weekly` | partial | Separate official destination from campaign filing folder; top-level listing currently does not yield a usable anonymous inventory |
@@ -57,6 +57,10 @@ The key questions are:
   - `2010`, June 5, 2018 special, and June 2, 2026 special pages do not currently expose campaign-filing destinations
 - The election pages also expose page-linked `DocView` records such as election-call resolutions, canvass/results resolutions, initiative records, and the independent-expenditure ordinance; those direct records are a stronger public capture path than anonymous folder enumeration.
 - The public disclosures page is a routing surface, not the real data store.
+- The San Rafael NetFile Form 700 surface has two materially different behaviors:
+  - a full visible-history export that is good for mass filing inventory
+  - targeted search results that are better for row-level direct document recovery
+- In current testing, the full export behaves more like a whole visible archive than a date-bounded report, so the adapter should filter to the project floor locally instead of assuming the posted date window is enforced.
 - Many city policy, procurement, and implementation records are easiest to recover through council packets rather than program pages.
 - San Rafael is a good first municipality precisely because it exposes this fragmentation in a manageable way.
 

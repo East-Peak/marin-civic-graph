@@ -128,6 +128,7 @@ Start narrow:
 - [San Rafael City Council Archive Inventory](./data/extracted/san-rafael-city-council-meetings/2026-04-11.json)
 - [Marin County BOS Archive Inventory](./data/extracted/marin-county-bos-meetings/2026-04-11.json)
 - [Marin County Campaign Finance Yearly Export Inventory](./data/extracted/marin-county-campaign-finance-yearly-exports/2026-04-11.json)
+- [San Rafael Form 700 Backfill Inventory](./data/extracted/san-rafael-sei-netfile-portal/2026-04-12.json)
 - [San Rafael City-Side Campaign Filing Inventory](./data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json)
 - [San Rafael Election Direct Records](./data/extracted/san-rafael-election-direct-records/2026-04-11.json)
 - [San Rafael Election Record Bundle](./data/normalized/san-rafael-election-records-01/bundle-01.json)
@@ -141,6 +142,7 @@ Start narrow:
 
 - [Case Study 01 Extractor](./scripts/extract_case_study_01_bundle.py)
 - [San Rafael Form 803 Capture Workflow](./scripts/capture_san_rafael_form803.py)
+- [San Rafael Form 700 Backfill Workflow](./scripts/capture_san_rafael_form700_backfill.py)
 - [San Rafael Election Page Discovery Helpers](./scripts/san_rafael_election_pages.py)
 - [San Rafael Election Page Capture Workflow](./scripts/capture_san_rafael_election_pages.py)
 - [San Rafael City Council Archive Capture Workflow](./scripts/capture_san_rafael_city_council_archive.py)
@@ -174,7 +176,13 @@ This repo started as a planning workspace and now includes the first live implem
   - captured amended-only yearly export ZIPs for `2019` through `2026`
   - recorded portal year coverage back to `1997` and current election-tree labels for public election context
   - confirmed the operating split: yearly export is the historical backfill surface, while RSS remains the near-real-time change feed
-- fourth wave-01 source execution started for `San Rafael city-side campaign filings`:
+- fourth wave-01 source execution completed for `San Rafael Form 700`:
+  - added a dedicated ASP.NET form-post adapter against the public San Rafael NetFile portal
+  - captured a full visible-history `700 filers` export plus the live portal shell
+  - extracted `1085` filing rows spanning `2018-07-02` through `2026-04-08`
+  - confirmed the wave-01 promotion floor yields `1078` in-scope filings from `2019` forward
+  - confirmed the current platform split: the export is strong for mass filing inventory, while direct document URLs are exposed on only `16` rows in the exported HTML
+- fifth wave-01 source execution started for `San Rafael city-side campaign filings`:
   - added a discovery-aware election-page capture workflow that starts from the city's own `elections` and `past-elections` index pages
   - added a derived inventory workflow that uses the San Rafael disclosures page plus those discovered election landing pages to enumerate city-side campaign filing destinations
   - captured `13` election landing pages spanning `2010` through `2026`

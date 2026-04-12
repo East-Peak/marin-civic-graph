@@ -134,6 +134,11 @@ Reason:
 
 - direct overlap with officeholders, boards, departments, and later actor-resolution work
 
+Implementation note:
+
+- the current working historical surface is the public NetFile `700 filers` export
+- that export currently behaves as a full visible-history inventory, so wave 01 should filter to `2019-01-01` in extraction rather than assuming the posted date window is enforced by the server
+
 ### Track E: San Rafael Form 803
 
 Sources:
