@@ -65,10 +65,9 @@ This is still a conservative extraction layer.
 It does **not** mean:
 
 - full filing completeness is solved
-- raw PDF or page-image export is solved
 - OCR is strong enough to replace manual review for every row
 
-The extracted row totals still trail the reported filing totals in all three filings. That is the main evidence that the OCR path is usable but incomplete.
+The extracted row totals still trail the reported filing totals in all three filings. That is the main evidence that the OCR path is usable but incomplete. Raw PDF export is now solved separately, but the parser still needs stronger QA and row recovery.
 
 ## Interpretation Rule
 

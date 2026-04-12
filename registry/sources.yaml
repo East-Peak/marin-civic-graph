@@ -29,7 +29,36 @@ sources:
     dedupe_key_strategy: exact_entry_id
     notes:
       - Supports selective metadata, page count, and OCR capture for known filing entry ids.
-      - Raw PDF or page-image export remains unresolved.
+      - Selective raw PDF export is now handled by the paired export-job source entry.
+
+  - source_id: san-rafael-city-campaign-form460-pdf-export
+    label: San Rafael Selected Form 460 PDF Export Path
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: campaign_finance
+    source_type: document_export_capture
+    entry_url: https://publicrecords.cityofsanrafael.org/WebLink/
+    discovery_urls:
+      - https://publicrecords.cityofsanrafael.org/WebLink/
+    fetch_strategy: doc_warm_step_plus_export_job
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - filing
+      - document:campaign_filing_pdf
+      - record:financial_record
+    cadence: selective
+    history_depth: targeted_records
+    source_tier_default: A
+    robots_notes: public city Laserfiche export path requires a doc-specific warm step before the export-job token flow works reliably
+    review_risk: medium
+    dedupe_key_strategy: exact_entry_id
+    notes:
+      - Supports selective raw PDF export for known filing entry ids.
+      - Current repo proof set covers three high-value 2024 Form 460 filings.
 
   - source_id: marin-county-bos-meetings
     label: Marin County Board of Supervisors Meetings

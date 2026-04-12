@@ -9756,16 +9756,10 @@
       "committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024"
     }
   ],
-  "open_questions": [
-    {
-      "id": "OQ-025",
-      "status": "watch",
-      "question": "What is the repeatable public path from city-side campaign filing entry ids to raw filing artifacts such as PDF, OCR text, or stable document metadata beyond the folder listing itself?"
-    }
-  ],
+  "open_questions": [],
   "notes": [
     "This bundle promotes only city-office candidate folders where both the candidate and the seat boundary are already known from the discovery layer.",
     "School-board, city-attorney, clerk-assessor, election-level folder, and independent-expenditure folder rows remain outside this filing bundle until their office or committee boundaries are clearer.",
-    "The filing records currently rest on public folder-listing evidence plus derived DocView paths; direct filing-document capture is a separate next step."
+    "The filing records currently rest on public folder-listing evidence plus derived DocView paths; selective direct filing-document capture is now proven for the high-value Form 460 subset."
   ]
 }

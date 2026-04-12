@@ -1,0 +1,106 @@
+{
+  "case_study_id": "san-rafael-city-campaign-form460-pdf-01",
+  "bundle_id": "san-rafael-city-campaign-form460-pdf-01__bundle-01",
+  "status": "working",
+  "generated_at": "2026-04-12T19:15:14Z",
+  "scope": [
+    "Selected schedule-bearing San Rafael city-side Form 460 filings captured as raw PDFs through the public Laserfiche export path",
+    "Actual PDF exports for three high-value 2024 filings using StartExport, CheckExportStatus, and ExportJobHandler",
+    "Raw-artifact evidence for later exact-accounting QA and stronger filing preservation"
+  ],
+  "record_refs": [
+    {
+      "id": "record-san-rafael-campaign-pdf-entry-37677",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_pdf_capture",
+      "source_id": "san-rafael-city-campaign-form460-pdf-export",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/37677-form-460-kate-colin-for-san-rafael-mayor-2024-1st-preelection.pdf",
+      "capture_status": "captured_via_public_export_job",
+      "entry_id": 37677,
+      "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+      "content_type": "application/pdf",
+      "byte_size": 1364077,
+      "sha256": "0093f077be678c20c66ea0e7facebcaaeefe97c8e03dbddbf176a8a955776d70",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37677",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37677"
+    },
+    {
+      "id": "record-san-rafael-campaign-pdf-entry-37685",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_pdf_capture",
+      "source_id": "san-rafael-city-campaign-form460-pdf-export",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/37685-form-460-rachel-kertz-for-city-council-2024-preelection.pdf",
+      "capture_status": "captured_via_public_export_job",
+      "entry_id": 37685,
+      "title": "Form 460 - Rachel Kertz for City Council 2024; preelection",
+      "content_type": "application/pdf",
+      "byte_size": 666440,
+      "sha256": "56190e892a43a132437155c1329910953861218394f0995dbabe587a2ba6661e",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37685",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37685"
+    },
+    {
+      "id": "record-san-rafael-campaign-pdf-entry-37365",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_pdf_capture",
+      "source_id": "san-rafael-city-campaign-form460-pdf-export",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/37365-form-460-rachel-kertz-for-city-council-2024-06-30-24.pdf",
+      "capture_status": "captured_via_public_export_job",
+      "entry_id": 37365,
+      "title": "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+      "content_type": "application/pdf",
+      "byte_size": 500819,
+      "sha256": "b59def3b0fe70c1f408b765e729845b8075f6850c4f74ec5ee838d0980d0f0e7",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37365",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37365"
+    }
+  ],
+  "filing_capture_candidates": [
+    {
+      "id": "filing-pdf-capture-37677",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37677",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37677",
+      "pdf_record_id": "record-san-rafael-campaign-pdf-entry-37677",
+      "status": "captured",
+      "capture_method": "doc_warm_step_plus_zip_export_job",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/37677-form-460-kate-colin-for-san-rafael-mayor-2024-1st-preelection.pdf",
+      "export_rights_confirmed": true,
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "filing-pdf-capture-37685",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37685",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37685",
+      "pdf_record_id": "record-san-rafael-campaign-pdf-entry-37685",
+      "status": "captured",
+      "capture_method": "doc_warm_step_plus_zip_export_job",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/37685-form-460-rachel-kertz-for-city-council-2024-preelection.pdf",
+      "export_rights_confirmed": true,
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
+      ]
+    },
+    {
+      "id": "filing-pdf-capture-37365",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37365",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37365",
+      "pdf_record_id": "record-san-rafael-campaign-pdf-entry-37365",
+      "status": "captured",
+      "capture_method": "doc_warm_step_plus_zip_export_job",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/37365-form-460-rachel-kertz-for-city-council-2024-06-30-24.pdf",
+      "export_rights_confirmed": true,
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    }
+  ],
+  "notes": [
+    "This bundle proves a repeatable raw PDF export path for selected city-side campaign filings.",
+    "The public export route now exists independently of the OCR capture path."
+  ]
+}

@@ -256,7 +256,7 @@ Mirror the question here when it affects:
 
 ### OQ-025: San Rafael city-side campaign direct-document recovery boundary
 
-- `status`: watch
+- `status`: resolved
 - `layer`: campaign filing evidence depth
 - `scope`: `san-rafael-city-campaign-filings-01`
 - `source refs`:
@@ -264,10 +264,13 @@ Mirror the question here when it affects:
   - [folder-listings.json](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json)
   - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-folder-listings/2026-04-12.json)
   - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-document-probe/2026-04-12.json)
+  - [campaign-form460-pdf-export.md](/Users/tammypais/projects/marin-civic-graph/docs/campaign-form460-pdf-export.md)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-form460-pdf-export/2026-04-12.json)
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-form460-pdf-01/bundle-01.json)
 - `question`: What is the repeatable public path from city-side campaign filing entry ids to raw filing artifacts such as PDF or page-image assets beyond the now-proven metadata / page-count / OCR path?
-- `why it matters`: The project can now preserve selective filing OCR text, but it still lacks a general raw-artifact export path for filing rows.
-- `current note`: The doc-specific warm-step sequence is now proven enough for selective capture and conservative schedule extraction. The project has full OCR capture for three schedule-bearing `Form 460` filings (`37677`, `37685`, `37365`) plus the first schedule-level bundle with graph-ready contribution and expenditure rows. The remaining unresolved boundary is raw PDF / page-image export rather than OCR text itself.
-- `next evidence`: inspect the document-viewer export and download path for a stable public PDF or page-image route, or explicitly accept OCR-plus-review as the near-term evidence ceiling for city-side campaign filing work.
+- `why it matters`: Exact accounting and stronger evidence preservation are better with raw filing artifacts than with OCR text alone.
+- `current note`: The repeatable public path is now proven for selected filings. A warmed anonymous session can start an export with `ZipEntriesHandler.aspx/StartExport`, poll `CheckExportStatus`, and download the actual filing PDF from `ExportJobHandler.aspx/GetExportJob`. The three selected Form 460 filings (`37677`, `37685`, `37365`) are now preserved as raw PDFs in the repo.
+- `next evidence`: expand the same export workflow to broader city-side filing families when the project needs exact-accounting QA beyond the current high-value subset.
 
 ### OQ-026: San Rafael John Gamblin campaign folder dead link
 
@@ -290,8 +293,8 @@ Mirror the question here when it affects:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
 - `question`: How should the project treat OCR-derived schedule extraction when extracted row totals trail the reported filing totals?
 - `why it matters`: The OCR path is now strong enough for many row-level joins, but it is not yet complete enough to support exact full-filing accounting or claims that depend on exhaustive donor or expenditure coverage.
-- `current note`: The first schedule bundle is useful and real, but incomplete. Current extracted itemized contribution totals still trail the reported filing totals for all three filings, and the city-side OCR still drops or mangles some rows.
-- `next evidence`: either recover a stronger raw-artifact path such as PDF or page-image export, or add targeted high-value manual QA rules for the filings the project wants to use for exact accounting.
+- `current note`: The first schedule bundle is useful and real, but incomplete. Current extracted itemized contribution totals still trail the reported filing totals for all three filings, and the city-side OCR still drops or mangles some rows even though the raw PDFs are now preserved for the same filings.
+- `next evidence`: use the captured raw PDFs for targeted QA, row reconciliation, or stronger secondary extraction before making exact-accounting claims.
 - `why it matters`: This is the only city-office candidate folder in the normalized discovery slice that currently blocks promotion from folder destination to real committee and filing objects.
 - `current note`: The city-side filing bundle now promotes `14` city-office committees and `228` filing records from successful public folder listings, but `John Gamblin` remains missing because the folder entry itself no longer resolves through the public Laserfiche listing service.
 - `next evidence`: test whether a replacement folder id or direct record path exists for the Gamblin committee on the public election pages or inside the top-level 2020 campaign filing family.

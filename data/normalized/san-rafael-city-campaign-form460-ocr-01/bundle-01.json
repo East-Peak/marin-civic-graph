@@ -6,7 +6,7 @@
   "scope": [
     "Selected schedule-bearing San Rafael city-side Form 460 filings captured through the doc-specific warm-step path",
     "Metadata, page count, and full OCR text preservation for three high-value 2024 filings",
-    "Support for later schedule extraction without claiming raw PDF export is solved"
+    "Support for later schedule extraction alongside the separate raw-PDF export path"
   ],
   "record_refs": [
     {
@@ -148,6 +148,6 @@
   ],
   "notes": [
     "This bundle proves a repeatable OCR-text path for selected filings after a doc-specific warm step.",
-    "It does not claim that raw PDF export or page-image download is publicly solved."
+    "This OCR bundle is no longer the raw-artifact ceiling; selective raw PDF export is now preserved in the paired PDF export bundle."
   ]
 }

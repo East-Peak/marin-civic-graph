@@ -3211,9 +3211,9 @@
   ],
   "open_questions": [
     {
-      "id": "OQ-025",
+      "id": "OQ-027",
       "status": "watch",
-      "question": "What is the repeatable public path from city-side campaign filing entry ids to raw filing artifacts such as PDF or page-image assets beyond the now-proven metadata / page-count / OCR path?"
+      "question": "How should the project treat OCR-derived schedule extraction when extracted row totals trail the reported filing totals even after the raw PDFs are preserved?"
     }
   ],
   "notes": [

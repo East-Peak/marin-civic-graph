@@ -81,6 +81,7 @@ Start narrow:
 - [Campaign Finance Sample Basket Selection](./docs/campaign-finance-sample-basket-selection.md)
 - [Campaign Finance Form 803 Slice](./docs/campaign-finance-form-803-slice.md)
 - [Selected San Rafael Form 460 OCR Capture](./docs/campaign-form460-ocr-capture.md)
+- [San Rafael Form 460 PDF Export Capture](./docs/campaign-form460-pdf-export.md)
 - [San Rafael Form 460 Schedule Extraction](./docs/campaign-form460-schedule-extraction.md)
 - [Procurement, Grants, Contracts, And Performance Submodel](./docs/procurement-grants-contracts-submodel.md)
 - [Procurement Layer Source Bundle](./docs/procurement-layer-source-bundle.md)
@@ -128,7 +129,9 @@ Start narrow:
 - [Media Outside-Money Overlap Example](./data/normalized/san-rafael-homelessness-01/media-outside-money-overlap-example-01.json)
 - [San Rafael City Campaign IE Bundle](./data/normalized/san-rafael-city-campaign-ie-01/bundle-01.json)
 - [San Rafael City Campaign Form 460 OCR Bundle](./data/normalized/san-rafael-city-campaign-form460-ocr-01/bundle-01.json)
+- [San Rafael City Campaign Form 460 PDF Bundle](./data/normalized/san-rafael-city-campaign-form460-pdf-01/bundle-01.json)
 - [San Rafael City Campaign Form 460 Schedule Bundle](./data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
+- [San Rafael City Campaign Form 460 PDF Extract](./data/extracted/san-rafael-city-campaign-form460-pdf-export/2026-04-12.json)
 - [San Rafael City Campaign Form 460 Schedule Extract](./data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json)
 - [Campaign Finance Sample Basket Bundle](./data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
 - [Campaign Finance Form 803 Slice Bundle](./data/normalized/campaign-finance-form-803-slice-01/bundle-01.json)
@@ -158,6 +161,7 @@ Start narrow:
 - [San Rafael Election Direct Record Capture Workflow](./scripts/capture_san_rafael_election_direct_records.py)
 - [San Rafael Election Direct Record Normalizer](./scripts/normalize_san_rafael_election_direct_records.py)
 - [San Rafael Form 460 OCR Capture Workflow](./scripts/capture_san_rafael_city_campaign_form460_ocr.py)
+- [San Rafael Form 460 PDF Export Workflow](./scripts/capture_san_rafael_city_campaign_form460_pdf_exports.py)
 - [San Rafael Form 460 Schedule Extractor](./scripts/extract_san_rafael_city_campaign_form460_schedules.py)
 - [Marin County BOS Archive Capture Workflow](./scripts/capture_marin_county_bos_archive.py)
 - [Marin County Campaign Finance Export Capture Workflow](./scripts/capture_marin_county_campaign_finance_exports.py)
@@ -203,6 +207,7 @@ This repo started as a planning workspace and now includes the first live implem
   - confirmed that the June 8, 2010, November 2, 2010, June 5, 2018 special, and June 2, 2026 special pages are useful election-context records but do not currently expose campaign-filing destinations
   - recorded the current adapter boundary explicitly: anonymous Laserfiche folder-listing probes for both top-level campaign folders and a sampled child folder currently fail with session-limit error `[9030]`
   - confirmed the current working discovery pattern is `elections / past-elections -> election landing page -> campaign filing destination`, with Laserfiche browse probing kept as a secondary experiment rather than the primary discovery path
+  - selective raw PDF export is now proven for the high-value city-side `Form 460` subset through the public Laserfiche export-job path
   - added a direct-record follow-on capture workflow for page-linked `DocView` records exposed on the election pages
   - captured `37` unique page-linked election records from the San Rafael election pages
   - fully extracted `36` of those records through the public Laserfiche metadata, document-info, and OCR-text endpoints
