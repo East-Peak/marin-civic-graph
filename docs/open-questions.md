@@ -222,6 +222,7 @@ Mirror the question here when it affects:
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-june-2-2026-special-municipal-election/2026-04-11/source.html)
 - `question`: Why does entry `41998` (`Resolution Calling Election`) still return HTTP 500 on the public Laserfiche JSON follow-up path when `36` other election-linked `DocView` records captured successfully?
 - `why it matters`: The direct `DocView` path is now the best page-linked record-capture route for San Rafael election pages, so understanding the single remaining holdout will tell us whether the gap is document-specific or a broader current-cycle edge case.
+- `current note`: The first normalized election-record bundle can still promote the 2026 call-election chain because sibling entry `41989` already includes the staff report, Resolution `15511`, and the full text of the measure. Entry `41998` is now a completeness gap, not a blocker for the 2026 election decision.
 - `next evidence`: retest entry `41998` with browser-visible session state and compare it to sibling entry `41989`, which was captured from the same June 2, 2026 special-election page.
 
 ### OQ-016: San Rafael local Form 803 filing surface
