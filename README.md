@@ -207,7 +207,8 @@ This repo started as a planning workspace and now includes the first live implem
   - confirmed that the June 8, 2010, November 2, 2010, June 5, 2018 special, and June 2, 2026 special pages are useful election-context records but do not currently expose campaign-filing destinations
   - recorded the current adapter boundary explicitly: anonymous Laserfiche folder-listing probes for both top-level campaign folders and a sampled child folder currently fail with session-limit error `[9030]`
   - confirmed the current working discovery pattern is `elections / past-elections -> election landing page -> campaign filing destination`, with Laserfiche browse probing kept as a secondary experiment rather than the primary discovery path
-  - selective raw PDF export is now proven for the high-value city-side `Form 460` subset through the public Laserfiche export-job path
+- selective raw PDF export is now proven for the high-value city-side `Form 460` subset through the public Laserfiche export-job path
+  - the schedule extractor now uses that PDF text layer to reconcile itemized `Schedule E` payments for the selected filings
   - added a direct-record follow-on capture workflow for page-linked `DocView` records exposed on the election pages
   - captured `37` unique page-linked election records from the San Rafael election pages
   - fully extracted `36` of those records through the public Laserfiche metadata, document-info, and OCR-text endpoints

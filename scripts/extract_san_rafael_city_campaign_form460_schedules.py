@@ -5,6 +5,7 @@ from __future__ import annotations
 import html
 import json
 import re
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -22,6 +23,9 @@ EXTRACTED_DIR = ROOT / "data" / "extracted" / "san-rafael-city-campaign-form460-
 EXTRACTED_PATH = EXTRACTED_DIR / "2026-04-12.json"
 NORMALIZED_DIR = ROOT / "data" / "normalized" / "san-rafael-city-campaign-form460-schedules-01"
 NORMALIZED_PATH = NORMALIZED_DIR / "bundle-01.json"
+PDF_EXPORT_EXTRACTED_PATH = (
+    ROOT / "data" / "extracted" / "san-rafael-city-campaign-form460-pdf-export" / "2026-04-12.json"
+)
 
 CASE_STUDY_ID = "san-rafael-city-campaign-form460-schedules-01"
 BUNDLE_ID = f"{CASE_STUDY_ID}__bundle-01"
@@ -29,6 +33,7 @@ EXTRACTED_ARTIFACT_PATH = "data/extracted/san-rafael-city-campaign-form460-sched
 
 DATE_LINE_RE = re.compile(r"^\s*\d{1,2}(?:[^0-9]+)\d{1,2}(?:[^0-9]+)\d{2,4}\s*$")
 AMOUNT_RE = re.compile(r"-?\d{1,3}(?:,\d{3})*(?:\.\d{1,2})")
+SPACED_AMOUNT_RE = re.compile(r"-?\d{1,3}(?:[ ,]\d{3})*(?:\.\s?\d{1,2})?")
 STATE_ZIP_RE = re.compile(r"\b[A-Z]{2}\s+\d{5}(?:-\d{4})?$")
 PER_ELECTION_RE = re.compile(r"(?:[GSP]\s*)?20\d{2}\s*\$?\s*-?\d", re.IGNORECASE)
 SELECTED_CODE_PATTERNS = [
@@ -43,8 +48,19 @@ PAYMENT_CODE_RE = re.compile(
     r"\b(CMP|CNS|CTB|CVC|FIL|FND|IND|LEG|LIT|MBR|MTG|OFC|PET|PHO|POL|POS|PRT|PRO|RAD|RFD|SAL|TEL|TRC|TRS|TSF|VOT|WEB)\b",
     re.IGNORECASE,
 )
+PAYMENT_CODE_GROUP = "CMP|CNS|CTB|CVC|FIL|FND|IND|LEG|LIT|MBR|MTG|OFC|PET|PHO|POL|POS|PRT|PRO|RAD|RFD|SAL|TEL|TRC|TRS|TSF|VOT|WEB"
 SUMMARY_AMOUNT_RE = re.compile(r"\$?\s*(-?\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?)")
 CONTRIBUTOR_CODE_TOKEN_RE = re.compile(r"\b(IND|COM|OTH|PTY|SCC)\b", re.IGNORECASE)
+SCHEDULE_E_DESCRIPTION_HINTS = [
+    "Printing of literature",
+    "Campaign consultant",
+    "Political data",
+    "Software",
+    "Campaign kickoff reception.",
+    "Venue for",
+    "Venue rental for",
+    "Voter Data",
+]
 
 
 def utc_now_iso() -> str:
@@ -70,6 +86,15 @@ def clean_line(value: str) -> str:
     return value.strip()
 
 
+def normalize_numeric_spacing(value: str) -> str:
+    old_value = None
+    while old_value != value:
+        old_value = value
+        value = re.sub(r"(?<=\d)[ \t]+(?=[\d,\.])", "", value)
+        value = re.sub(r"(?<=[,\.])[ \t]+(?=\d)", "", value)
+    return value
+
+
 def normalize_name_key(value: str) -> str:
     value = value.lower()
     value = value.replace("&", "and")
@@ -84,6 +109,23 @@ def parse_float(value: str | None) -> float | None:
         return float(value.replace(",", ""))
     except ValueError:
         return None
+
+
+def extract_last_amount_from_line(value: str) -> float | None:
+    normalized = normalize_numeric_spacing(value)
+    matches = list(SPACED_AMOUNT_RE.finditer(normalized))
+    if not matches:
+        return None
+    token = matches[-1].group(0).replace(" ", "").replace(",", "")
+    return parse_float(token)
+
+
+def extract_strict_amounts_from_line(value: str) -> list[float]:
+    return [
+        parse_float(match.group(0))
+        for match in AMOUNT_RE.finditer(value)
+        if parse_float(match.group(0)) is not None
+    ]
 
 
 def parse_date_line(value: str) -> str | None:
@@ -101,8 +143,8 @@ def parse_date_line(value: str) -> str | None:
 
 
 def line_is_amountish(value: str) -> bool:
-    value = value.strip().replace("$", "")
-    return bool(re.fullmatch(r"-?\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?", value))
+    normalized = normalize_numeric_spacing(value.strip().replace("$", ""))
+    return bool(re.fullmatch(r"-?\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?", normalized))
 
 
 def line_is_address(value: str) -> bool:
@@ -118,7 +160,14 @@ def line_is_per_election(value: str) -> bool:
 
 
 def extract_amounts_from_line(value: str) -> list[float]:
-    return [parse_float(match.group(0)) for match in AMOUNT_RE.finditer(value) if parse_float(match.group(0)) is not None]
+    normalized = normalize_numeric_spacing(value)
+    amounts = []
+    for match in SPACED_AMOUNT_RE.finditer(normalized):
+        token = match.group(0).replace(" ", "").replace(",", "")
+        parsed = parse_float(token)
+        if parsed is not None:
+            amounts.append(parsed)
+    return amounts
 
 
 def extract_selected_code(lines: list[str]) -> str | None:
@@ -246,9 +295,13 @@ def is_schedule_e_page(lines: list[str]) -> bool:
 
 
 def page_subtotal(page_text: str) -> float | None:
-    match = re.search(r"SUBTOTAL\s*\$?\s*(-?\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?)", page_text, re.IGNORECASE)
-    if match:
-        return parse_float(match.group(1))
+    lines = extract_section_lines(page_text)
+    for line in lines:
+        if "SUBTOTAL" not in line.upper():
+            continue
+        amount = extract_last_amount_from_line(line)
+        if amount is not None:
+            return amount
     return None
 
 
@@ -280,7 +333,7 @@ def parse_schedule_a_block(block_lines: list[str], page_num: int) -> dict[str, A
     numeric_values: list[float] = []
     for line in block_lines[code_index + 1 :]:
         if line_is_checkbox(line) or line_is_per_election(line):
-            amounts = extract_amounts_from_line(line)
+            amounts = extract_strict_amounts_from_line(line)
             if amounts:
                 numeric_values.extend(amounts)
             continue
@@ -294,7 +347,7 @@ def parse_schedule_a_block(block_lines: list[str], page_num: int) -> dict[str, A
             continue
         if any(token in line.lower() for token in ("fppc form", "contributor codes", "www.", "http")):
             continue
-        amounts = extract_amounts_from_line(line)
+        amounts = extract_strict_amounts_from_line(line)
         if amounts and PAYMENT_CODE_RE.search(line) is None:
             numeric_values.extend(amounts)
             continue
@@ -327,6 +380,11 @@ def parse_schedule_a_block(block_lines: list[str], page_num: int) -> dict[str, A
 
 def parse_schedule_d_block(block_lines: list[str], page_num: int) -> dict[str, Any] | None:
     if not block_lines:
+        return None
+    if any(
+        token in "\n".join(block_lines).upper()
+        for token in ("NAME OF CANDIDATE", "CANDIDATES, MEASURES AND COMMITTEES")
+    ):
         return None
     flow_date = parse_date_line(block_lines[0])
     if flow_date is None:
@@ -363,7 +421,7 @@ def parse_schedule_d_block(block_lines: list[str], page_num: int) -> dict[str, A
             if amount is not None:
                 amounts.append(amount)
             continue
-        for amount in extract_amounts_from_line(line):
+        for amount in extract_strict_amounts_from_line(line):
             amounts.append(amount)
         if STATE_ZIP_RE.search(line):
             continue
@@ -580,6 +638,221 @@ def parse_schedule_e_page(page_text: str, page_num: int) -> list[dict[str, Any]]
     return rows
 
 
+def load_pdf_export_map() -> dict[int, str]:
+    if not PDF_EXPORT_EXTRACTED_PATH.exists():
+        return {}
+    payload = json.loads(PDF_EXPORT_EXTRACTED_PATH.read_text())
+    return {item["entry_id"]: item["artifact_path"] for item in payload.get("items", [])}
+
+
+def load_pdf_layout_pages(pdf_path: str) -> list[str]:
+    output = subprocess.check_output(["pdftotext", "-layout", pdf_path, "-"])
+    return [page for page in output.decode("utf-8", "ignore").split("\f") if page.strip()]
+
+
+def extract_schedule_e_body_lines(page_text: str) -> list[str]:
+    lines = extract_section_lines(page_text)
+    start_index = None
+    for index, line in enumerate(lines):
+        if "IF COMMITTEE, ALSO ENTER I. D. NUMBER" in line:
+            start_index = index + 1
+            break
+    if start_index is None:
+        return []
+
+    body_lines: list[str] = []
+    for line in lines[start_index:]:
+        upper = line.upper()
+        if (
+            upper.startswith("PAYMENTS THAT ARE CONTRIBUTIONS")
+            or upper.startswith("SCHEDULE E SUMMARY")
+            or upper.startswith("FPPC FORM 460")
+            or upper.startswith("FPPC ADVICE")
+            or upper.startswith("WWW.")
+        ):
+            break
+        body_lines.append(line)
+    return body_lines
+
+
+def looks_like_schedule_e_row_start(line: str) -> bool:
+    if extract_last_amount_from_line(line) is None:
+        return False
+    if PAYMENT_CODE_RE.search(line):
+        return True
+    return any(hint in line for hint in SCHEDULE_E_DESCRIPTION_HINTS)
+
+
+def split_schedule_e_payee_and_description(value: str) -> tuple[str, str | None]:
+    for hint in SCHEDULE_E_DESCRIPTION_HINTS:
+        index = value.find(hint)
+        if index > 0:
+            return clean_contributor_name(value[:index].strip()), value[index:].strip()
+    return clean_contributor_name(value), None
+
+
+def parse_schedule_e_page_from_pdf_layout(page_text: str, page_num: int) -> list[dict[str, Any]]:
+    lines = extract_schedule_e_body_lines(page_text)
+    rows: list[dict[str, Any]] = []
+    index = 0
+
+    while index < len(lines):
+        line = lines[index]
+
+        code_only_match = re.match(
+            rf"^(?P<code>{PAYMENT_CODE_GROUP})\b(?P<rest>.*)$",
+            line,
+            re.IGNORECASE,
+        )
+        if code_only_match:
+            code = code_only_match.group("code").upper()
+            amount_paid = extract_last_amount_from_line(line)
+            payee_name_raw = None
+            description_raw = None
+            next_index = index + 1
+            if next_index < len(lines):
+                payee_name_raw = lines[next_index]
+                next_index += 1
+                if (
+                    next_index < len(lines)
+                    and not line_is_address(lines[next_index])
+                    and not looks_like_schedule_e_row_start(lines[next_index])
+                ):
+                    description_raw = lines[next_index]
+                    next_index += 1
+            address_raw = lines[next_index] if next_index < len(lines) and line_is_address(lines[next_index]) else None
+            if address_raw is not None:
+                next_index += 1
+            payee_name, inferred_description = split_schedule_e_payee_and_description(payee_name_raw or "")
+            if inferred_description and not description_raw:
+                description_raw = inferred_description
+            rows.append(
+                {
+                    "page_num": page_num,
+                    "row_type": "schedule_e_payment",
+                    "payee_name": payee_name,
+                    "payee_name_raw": payee_name_raw or payee_name,
+                    "address_raw": address_raw,
+                    "payment_code": code,
+                    "description_raw": description_raw,
+                    "amount_paid": amount_paid,
+                    "parse_confidence": "medium",
+                    "raw_block_text": "\n".join(
+                        [part for part in [line, payee_name_raw, description_raw, address_raw] if part]
+                    ),
+                }
+            )
+            index = next_index
+            continue
+
+        combined_match = re.match(
+            rf"^(?P<payee>.+?)\s+(?P<code>{PAYMENT_CODE_GROUP})\b(?P<rest>.*)$",
+            line,
+            re.IGNORECASE,
+        )
+        if combined_match:
+            payee_name_raw = combined_match.group("payee").strip()
+            code = combined_match.group("code").upper()
+            rest = combined_match.group("rest").strip()
+            amount_paid = extract_last_amount_from_line(rest or line)
+            description_raw = normalize_numeric_spacing(rest)
+            if amount_paid is not None:
+                description_raw = re.sub(
+                    r"-?\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?\s*$",
+                    "",
+                    description_raw,
+                ).strip(" .")
+            next_index = index + 1
+            while (
+                next_index < len(lines)
+                and not line_is_address(lines[next_index])
+                and not looks_like_schedule_e_row_start(lines[next_index])
+            ):
+                description_raw = f"{description_raw} {lines[next_index]}".strip() if description_raw else lines[next_index]
+                next_index += 1
+            address_raw = lines[next_index] if next_index < len(lines) and line_is_address(lines[next_index]) else None
+            if address_raw is not None:
+                next_index += 1
+            rows.append(
+                {
+                    "page_num": page_num,
+                    "row_type": "schedule_e_payment",
+                    "payee_name": clean_contributor_name(payee_name_raw),
+                    "payee_name_raw": payee_name_raw,
+                    "address_raw": address_raw,
+                    "payment_code": code,
+                    "description_raw": description_raw or None,
+                    "amount_paid": amount_paid,
+                    "parse_confidence": "high",
+                    "raw_block_text": "\n".join(
+                        [part for part in [line, description_raw or None, address_raw] if part]
+                    ),
+                }
+            )
+            index = next_index
+            continue
+
+        # Fallback for lines that preserve payee + description + amount but lose the exact code token.
+        if extract_last_amount_from_line(line) is not None:
+            payee_name, description_raw = split_schedule_e_payee_and_description(
+                re.sub(r"-?\d{1,3}(?:[ ,]\d{3})*(?:\.\s?\d{1,2})?\s*$", "", line).strip()
+            )
+            if payee_name:
+                next_index = index + 1
+                address_raw = lines[next_index] if next_index < len(lines) and line_is_address(lines[next_index]) else None
+                if address_raw is not None:
+                    next_index += 1
+                rows.append(
+                    {
+                        "page_num": page_num,
+                        "row_type": "schedule_e_payment",
+                        "payee_name": payee_name,
+                        "payee_name_raw": payee_name,
+                        "address_raw": address_raw,
+                        "payment_code": None,
+                        "description_raw": description_raw,
+                        "amount_paid": extract_last_amount_from_line(line),
+                        "parse_confidence": "medium",
+                        "raw_block_text": "\n".join(
+                            [part for part in [line, address_raw] if part]
+                        ),
+                    }
+                )
+                index = next_index
+                continue
+
+        index += 1
+
+    return rows
+
+
+def parse_schedule_e_summary_page(page_text: str) -> dict[str, float | None]:
+    lines = extract_section_lines(page_text)
+    if "Schedule E Summary" not in lines:
+        return {}
+
+    summary: dict[str, float | None] = {
+        "reported_itemized_payments": None,
+        "reported_unitemized_payments": None,
+        "reported_interest_paid": None,
+        "reported_total_payments": None,
+    }
+    previous_amount = None
+    for line in lines:
+        current_amount = extract_last_amount_from_line(line)
+        if "1. Itemized payments made this period." in line:
+            summary["reported_itemized_payments"] = previous_amount if previous_amount is not None else current_amount
+        elif "2. Unitemized payments made this period" in line:
+            summary["reported_unitemized_payments"] = previous_amount if previous_amount is not None else current_amount
+        elif "3. Total interest paid this period on loans." in line:
+            summary["reported_interest_paid"] = previous_amount if previous_amount is not None else current_amount
+        elif "4. Total payments made this period." in line:
+            summary["reported_total_payments"] = previous_amount if previous_amount is not None else current_amount
+        if current_amount is not None:
+            previous_amount = current_amount
+    return summary
+
+
 def parse_filing_summary_page(page_text: str) -> dict[str, float | None]:
     lines = extract_section_lines(page_text)
     normalized_lines = [line.upper() for line in lines]
@@ -588,10 +861,10 @@ def parse_filing_summary_page(page_text: str) -> dict[str, float | None]:
         for index, line in enumerate(normalized_lines):
             if anchor not in line:
                 continue
-            for lookahead in lines[index : index + 12]:
-                amounts = extract_amounts_from_line(lookahead)
+            for lookahead in lines[index + 1 : index + 12]:
+                amounts = extract_strict_amounts_from_line(lookahead)
                 if amounts:
-                    return amounts[0]
+                    return amounts[-1]
         return None
 
     summary = {
@@ -630,6 +903,7 @@ def build_money_flow_id(parts: list[str]) -> str:
 def main() -> None:
     raw_capture = json.loads(RAW_CAPTURE_PATH.read_text())
     known_actor_map = load_known_actor_map()
+    pdf_export_map = load_pdf_export_map()
     generated_at = utc_now_iso()
 
     actor_candidates_by_id: dict[str, dict[str, Any]] = {}
@@ -646,7 +920,12 @@ def main() -> None:
         filing_candidate = target["filing_candidate"]
         source_record_id = target["record_id"]
         ocr_record_id = f"record-san-rafael-campaign-ocr-entry-{target['entry_id']}"
+        pdf_record_id = f"record-san-rafael-campaign-pdf-entry-{target['entry_id']}"
+        pdf_path = pdf_export_map.get(target["entry_id"])
+        pdf_pages = load_pdf_layout_pages(pdf_path) if pdf_path else []
         evidence_record_ids = [source_record_id, ocr_record_id]
+        if pdf_path:
+            evidence_record_ids.append(pdf_record_id)
 
         summary_page = next((page for page in capture["pages"] if page["page_num"] == 3), None)
         filing_summary = parse_filing_summary_page(summary_page["text"]) if summary_page else {}
@@ -655,6 +934,7 @@ def main() -> None:
         schedule_d_rows: list[dict[str, Any]] = []
         schedule_e_rows: list[dict[str, Any]] = []
         schedule_a_page_subtotals: list[float] = []
+        schedule_e_summary: dict[str, float | None] = {}
 
         for page in capture["pages"]:
             page_text = page["text"]
@@ -672,9 +952,16 @@ def main() -> None:
                 schedule_d_rows.extend(
                     [row for block in blocks if (row := parse_schedule_d_block(block, page["page_num"])) is not None]
                 )
-            elif is_schedule_e_page(lines):
-                parsed_rows = parse_schedule_e_page(page_text, page["page_num"])
-                schedule_e_rows.extend(parsed_rows)
+            elif is_schedule_e_page(lines) and not pdf_pages:
+                schedule_e_rows.extend(parse_schedule_e_page(page_text, page["page_num"]))
+
+        if pdf_pages:
+            for page_num, page_text in enumerate(pdf_pages, start=1):
+                pdf_lines = extract_section_lines(page_text)
+                if is_schedule_e_page(pdf_lines):
+                    schedule_e_rows.extend(parse_schedule_e_page_from_pdf_layout(page_text, page_num))
+                if "Schedule E Summary" in page_text:
+                    schedule_e_summary.update(parse_schedule_e_summary_page(page_text))
 
         extracted_contributions_total = round(
             sum(row["amount_received_this_period"] for row in schedule_a_rows if row["amount_received_this_period"] is not None),
@@ -688,6 +975,10 @@ def main() -> None:
             sum(row["amount_paid"] for row in schedule_e_rows if row["amount_paid"] is not None),
             2,
         )
+
+        if schedule_e_summary.get("reported_total_payments") is not None:
+            filing_summary["reported_payments_made"] = schedule_e_summary["reported_total_payments"]
+            filing_summary["reported_total_expenditures_made"] = schedule_e_summary["reported_total_payments"]
 
         filing_summary["reported_loans_received"] = None
         if (
@@ -717,6 +1008,7 @@ def main() -> None:
                 "reported_totals": {
                     **filing_summary,
                     "schedule_a_page_subtotals_sum": round(sum(schedule_a_page_subtotals), 2) if schedule_a_page_subtotals else None,
+                    **schedule_e_summary,
                 },
                 "counts": {
                     "schedule_a_row_count": len(schedule_a_rows),
@@ -765,6 +1057,8 @@ def main() -> None:
                 "extracted_itemized_payments_total": extracted_payments_total,
                 "reported_monetary_contributions": filing_summary.get("reported_monetary_contributions"),
                 "reported_payments_made": filing_summary.get("reported_payments_made"),
+                "reported_itemized_payments": schedule_e_summary.get("reported_itemized_payments"),
+                "reported_unitemized_payments": schedule_e_summary.get("reported_unitemized_payments"),
                 "evidence_record_ids": evidence_record_ids + [filing_record_id],
             }
         )
@@ -853,7 +1147,7 @@ def main() -> None:
                         [
                             filing_candidate["committee_id"],
                             row["payee_name"],
-                            row["payment_code"],
+                            row["payment_code"] or "uncoded",
                             str(index),
                         ]
                     ),
@@ -878,8 +1172,8 @@ def main() -> None:
         "source_id": "san-rafael-city-campaign-form460-ocr",
         "filing_extracts": extracted_filings,
         "notes": [
-            "This is a conservative schedule extractor over the OCR bundle, not a claim that raw PDF recovery is solved.",
-            "Schedule A rows are the strongest output in this pass. Schedule D and Schedule E are promoted only where the OCR preserves enough row structure to avoid inventing fields.",
+            "This is a conservative schedule extractor over the OCR bundle plus the selective raw-PDF evidence path.",
+            "Schedule A and Schedule D still primarily depend on the OCR capture. Schedule E now prefers the PDF text layer when the raw export exists.",
         ],
     }
 
@@ -899,13 +1193,13 @@ def main() -> None:
         "money_flow_candidates": money_flow_candidates,
         "open_questions": [
             {
-                "id": "OQ-025",
+                "id": "OQ-027",
                 "status": "watch",
-                "question": "What is the repeatable public path from city-side campaign filing entry ids to raw filing artifacts such as PDF or page-image assets beyond the now-proven metadata / page-count / OCR path?",
+                "question": "How should the project treat schedule extraction when row-level totals still trail reported filing totals even after the raw PDFs are preserved?",
             }
         ],
         "notes": [
-            "This bundle intentionally promotes only row-level facts that are legible from the current OCR capture.",
+            "This bundle intentionally promotes only row-level facts that are legible from the current OCR or PDF text capture.",
             "The filing totals are preserved as filing-level enrichments so later validations can compare reported totals against extracted row sums.",
             "Committee-contributor rows are currently normalized through actor candidates unless a stronger committee identity already exists elsewhere in the graph.",
         ],

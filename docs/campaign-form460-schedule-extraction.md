@@ -2,7 +2,7 @@
 
 Verified: April 12, 2026
 
-This note records the first schedule-level extraction pass over the selected San Rafael city-side `Form 460` OCR bundle.
+This note records the current schedule-level extraction pass over the selected San Rafael city-side `Form 460` filings, using OCR for contribution-heavy pages and the preserved PDF text layer for `Schedule E` payment pages.
 
 ## Scope
 
@@ -19,43 +19,46 @@ Derived outputs:
 
 ## What This Produced
 
-The first pass promotes:
+The current pass promotes:
 
 - `3` enriched `Filing` candidates
-- `94` actor candidates or actor joins
-- `103` `MoneyFlow` candidates
+- `103` actor candidates or actor joins
+- `130` `MoneyFlow` candidates
 
 Per filing:
 
 - `37677`
   - `45` Schedule A rows
-  - `3` Schedule E rows
+  - `27` Schedule E rows
   - extracted itemized contributions: `$13,793.00`
   - reported monetary contributions: `$16,392.00`
-  - extracted itemized payments: `$3,935.76`
+  - extracted itemized payments: `$23,337.66`
+  - reported unitemized payments: `$57.30`
 
 - `37685`
   - `23` Schedule A rows
   - `1` Schedule D row
-  - `3` Schedule E rows
+  - `6` Schedule E rows
   - extracted itemized contributions: `$6,625.00`
   - reported monetary contributions: `$7,265.00`
-  - extracted itemized payments: `$2,400.00`
+  - extracted itemized payments: `$3,576.26`
+  - reported unitemized payments: `$249.73`
   - reported payments made: `$3,925.99`
 
 - `37365`
   - `28` Schedule A rows
   - extracted itemized contributions: `$5,648.00`
   - reported monetary contributions: `$6,915.00`
-  - no itemized Schedule E rows captured from the current OCR
+  - no itemized Schedule E rows
+  - reported unitemized payments: `$183.29`
 
 ## What Works
 
 - Schedule A OCR is strong enough to promote many itemized contribution rows.
 - Schedule D can support small, high-confidence rows when the page keeps the payment type and stance legible.
-- Schedule E can support a mixed parser:
-  - one path for column-preserved payee / code / amount sections
-  - one path for OCR lines that collapse payee, code, description, and amount into one line
+- Schedule E is materially stronger now that the extractor prefers the PDF text layer when the raw export exists.
+- The `37677` and `37685` itemized Schedule E row sums now match the PDF summary totals exactly.
+- Schedule E summary values now preserve unitemized payments even when a filing has no itemized Schedule E rows.
 - Existing city-side `Committee` and `Filing` IDs can be reused instead of inventing a parallel campaign namespace.
 
 ## Current Boundary
@@ -65,9 +68,10 @@ This is still a conservative extraction layer.
 It does **not** mean:
 
 - full filing completeness is solved
-- OCR is strong enough to replace manual review for every row
+- contribution-side extraction is complete
+- the parser is strong enough to replace manual review for every row
 
-The extracted row totals still trail the reported filing totals in all three filings. That is the main evidence that the OCR path is usable but incomplete. Raw PDF export is now solved separately, but the parser still needs stronger QA and row recovery.
+The remaining gap is narrower now. Payment-side extraction is substantially better, but contribution-side totals still trail the reported filing totals, so the project still should not treat these filings as exhaustively parsed.
 
 ## Interpretation Rule
 

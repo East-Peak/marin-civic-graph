@@ -2,7 +2,7 @@
   "case_study_id": "san-rafael-city-campaign-form460-schedules-01",
   "bundle_id": "san-rafael-city-campaign-form460-schedules-01__bundle-01",
   "status": "working",
-  "generated_at": "2026-04-12T19:07:19Z",
+  "generated_at": "2026-04-12T19:35:46Z",
   "scope": [
     "Selected San Rafael 2024 Form 460 filings with schedule-level OCR extraction",
     "Promotion of itemized contribution and expenditure rows into graph-ready MoneyFlow candidates where OCR is strong enough",
@@ -59,7 +59,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -71,7 +72,21 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "actor-actblue",
+      "name": "ActBlue",
+      "actor_type": "organization",
+      "observed_labels": [
+        "ActBlue"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37685",
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -83,7 +98,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -95,7 +111,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -107,7 +124,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -119,7 +137,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -131,7 +150,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -143,7 +163,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -155,7 +176,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -167,7 +189,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -179,7 +202,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -191,7 +215,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -203,7 +228,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -215,7 +241,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -228,8 +255,10 @@
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677",
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -241,7 +270,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -253,7 +283,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -265,7 +296,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -277,7 +309,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -289,7 +322,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -301,7 +335,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -313,7 +348,21 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "actor-city-of-san-rafael",
+      "name": "City of San Rafael",
+      "actor_type": "organization",
+      "observed_labels": [
+        "City of San Rafael"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -325,7 +374,21 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "actor-cornerstone-printing",
+      "name": "Cornerstone Printing",
+      "actor_type": "organization",
+      "observed_labels": [
+        "Cornerstone Printing"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -337,7 +400,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -349,7 +413,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -361,7 +426,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -373,7 +439,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -385,7 +452,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -397,7 +465,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -409,7 +478,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -421,7 +491,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -433,7 +504,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -445,7 +517,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -458,8 +531,23 @@
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677",
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
+      ]
+    },
+    {
+      "id": "actor-donor-stack-llc",
+      "name": "Donor Stack, LLC",
+      "actor_type": "business",
+      "observed_labels": [
+        "Donor Stack, LLC"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -471,7 +559,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -483,7 +572,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -495,7 +585,34 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "actor-firefighters-printing-printing-of-literature",
+      "name": "Firefighters Printing Printing of literature",
+      "actor_type": "organization",
+      "observed_labels": [
+        "Firefighters Printing Printing of literature"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37685",
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
+      ]
+    },
+    {
+      "id": "actor-four-waters-media-inc",
+      "name": "four waters media, inc.",
+      "actor_type": "business",
+      "observed_labels": [
+        "four waters media, inc."
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -508,8 +625,10 @@
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
         "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685",
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -521,7 +640,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -533,7 +653,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -545,7 +666,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -557,7 +679,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -569,7 +692,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -581,7 +705,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -593,7 +718,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -605,7 +731,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -617,7 +744,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -629,7 +757,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -641,7 +770,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -653,7 +783,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -665,7 +796,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -677,7 +809,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -689,7 +822,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -701,7 +835,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -713,7 +848,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -725,7 +861,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -737,7 +874,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -749,7 +887,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -761,7 +900,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -773,7 +913,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -785,7 +926,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -797,7 +939,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -809,7 +952,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -821,7 +965,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -833,7 +978,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -845,7 +991,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -857,7 +1004,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -869,7 +1017,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -881,7 +1030,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -893,7 +1043,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -905,7 +1056,21 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
+      ]
+    },
+    {
+      "id": "actor-pacific-print-resources",
+      "name": "Pacific Print Resources",
+      "actor_type": "political_organization",
+      "observed_labels": [
+        "Pacific Print Resources"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37685",
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -917,7 +1082,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -929,7 +1095,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -942,8 +1109,23 @@
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677",
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "actor-pmcohen-public-affairs",
+      "name": "PMCohen Public Affairs",
+      "actor_type": "organization",
+      "observed_labels": [
+        "PMCohen Public Affairs"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -955,7 +1137,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -968,8 +1151,10 @@
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677",
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -981,7 +1166,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -993,7 +1179,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -1005,7 +1192,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1017,7 +1205,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1029,7 +1218,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1041,7 +1231,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -1053,7 +1244,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1065,7 +1257,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -1077,7 +1270,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1089,7 +1283,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1101,7 +1296,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1113,7 +1309,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -1125,7 +1322,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1137,7 +1335,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1149,7 +1348,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -1161,7 +1361,21 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "actor-venturepad",
+      "name": "VenturePad",
+      "actor_type": "organization",
+      "observed_labels": [
+        "VenturePad"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1173,7 +1387,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1185,7 +1400,8 @@
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     }
   ],
@@ -1206,9 +1422,12 @@
       "extracted_itemized_payments_total": 0,
       "reported_monetary_contributions": 6915.0,
       "reported_payments_made": 183.29,
+      "reported_itemized_payments": 0.0,
+      "reported_unitemized_payments": 183.29,
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
         "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365",
         "record-san-rafael-campaign-form460-schedule-extract-entry-37365"
       ]
     },
@@ -1222,15 +1441,18 @@
       "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37677",
       "schedule_a_row_count": 45,
       "schedule_d_row_count": 0,
-      "schedule_e_row_count": 3,
+      "schedule_e_row_count": 27,
       "extracted_itemized_contributions_total": 13793.0,
       "extracted_schedule_d_total": 0,
-      "extracted_itemized_payments_total": 3935.76,
+      "extracted_itemized_payments_total": 23337.66,
       "reported_monetary_contributions": 16392.0,
-      "reported_payments_made": null,
+      "reported_payments_made": 23394.96,
+      "reported_itemized_payments": 23337.66,
+      "reported_unitemized_payments": 57.3,
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677",
         "record-san-rafael-campaign-form460-schedule-extract-entry-37677"
       ]
     },
@@ -1244,15 +1466,18 @@
       "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37685",
       "schedule_a_row_count": 23,
       "schedule_d_row_count": 1,
-      "schedule_e_row_count": 3,
+      "schedule_e_row_count": 6,
       "extracted_itemized_contributions_total": 6625.0,
       "extracted_schedule_d_total": 100.0,
-      "extracted_itemized_payments_total": 2400.0,
+      "extracted_itemized_payments_total": 3576.26,
       "reported_monetary_contributions": 7265.0,
-      "reported_payments_made": 3925.99,
+      "reported_payments_made": 3825.99,
+      "reported_itemized_payments": 3576.26,
+      "reported_unitemized_payments": 249.73,
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
         "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685",
         "record-san-rafael-campaign-form460-schedule-extract-entry-37685"
       ]
     }
@@ -1274,7 +1499,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1293,7 +1519,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1312,7 +1539,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1331,7 +1559,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1350,7 +1579,8 @@
       "address_raw": "Novato, CA 94949",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1369,7 +1599,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1388,7 +1619,8 @@
       "address_raw": "Oakland, CA 94607",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1407,7 +1639,8 @@
       "address_raw": "Wayzata, MN 55391",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1426,7 +1659,8 @@
       "address_raw": "Sacramento, CA 95841",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1445,7 +1679,8 @@
       "address_raw": "Olema, CA 94950",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1464,7 +1699,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1483,7 +1719,8 @@
       "address_raw": "Novato, CA 94947",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1502,7 +1739,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1521,7 +1759,8 @@
       "address_raw": "San Anselmo, CA 94960",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1540,7 +1779,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1559,7 +1799,8 @@
       "address_raw": "Larkspur, CA 94939",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1578,7 +1819,8 @@
       "address_raw": "Novato, CA 94947",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1597,7 +1839,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1616,7 +1859,8 @@
       "address_raw": "Novato, CA 94945",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1635,7 +1879,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1654,7 +1899,8 @@
       "address_raw": "Healdsburg, CA 95448",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1673,7 +1919,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1692,7 +1939,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1711,7 +1959,8 @@
       "address_raw": "San Anselmo, CA 94960",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1730,7 +1979,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1749,7 +1999,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1768,7 +2019,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1787,7 +2039,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1806,7 +2059,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1825,7 +2079,8 @@
       "address_raw": "San Anselmo, CA 94960",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1844,7 +2099,8 @@
       "address_raw": "Larkspur, CA 94939",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1863,7 +2119,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1882,7 +2139,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1901,7 +2159,8 @@
       "address_raw": "Kentfield, CA 94904",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1920,7 +2179,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1939,7 +2199,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1958,7 +2219,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1977,7 +2239,8 @@
       "address_raw": "Los Angeles, CA 90049",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1996,7 +2259,8 @@
       "address_raw": "San Rafael, CA 94903-2344",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -2015,7 +2279,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -2034,7 +2299,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -2053,7 +2319,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -2072,7 +2339,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -2091,7 +2359,8 @@
       "address_raw": "Kentfield, CA 94904",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -2110,7 +2379,8 @@
       "address_raw": "Kentfield, CA 94904",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -2121,14 +2391,15 @@
       "to_actor_id": "actor-ac-hotel-san-rafael",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "MTG",
-      "description_raw": "07/18/24: Campaign kickoff reception. Candidate in attendance.",
+      "description_raw": "07/ 18/ 24: Campaign kickoff reception. Candidate in attendance.",
       "address_raw": "San Rafael, CA 94901",
       "source_schedule": "schedule_e",
       "source_page_num": 15,
       "parse_confidence": "high",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -2146,7 +2417,8 @@
       "parse_confidence": "high",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -2164,7 +2436,464 @@
       "parse_confidence": "high",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677"
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-4",
+      "flow_type": "campaign_expenditure",
+      "amount": 61.8,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-anedot",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "FND",
+      "description_raw": null,
+      "address_raw": "New Orleans, LA 70112",
+      "source_schedule": "schedule_e",
+      "source_page_num": 16,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-5",
+      "flow_type": "campaign_expenditure",
+      "amount": 71.18,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-anedot",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "FND",
+      "description_raw": null,
+      "address_raw": "New Orleans, LA 70112",
+      "source_schedule": "schedule_e",
+      "source_page_num": 16,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-6",
+      "flow_type": "campaign_expenditure",
+      "amount": 20.7,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-anedot",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "FND",
+      "description_raw": null,
+      "address_raw": "New Orleans, LA 70112",
+      "source_schedule": "schedule_e",
+      "source_page_num": 16,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-7",
+      "flow_type": "campaign_expenditure",
+      "amount": 2.3,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-anedot",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "FND",
+      "description_raw": null,
+      "address_raw": "New Orleans, LA 70112",
+      "source_schedule": "schedule_e",
+      "source_page_num": 16,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-8",
+      "flow_type": "campaign_expenditure",
+      "amount": 4.3,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-anedot",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "FND",
+      "description_raw": null,
+      "address_raw": "New Orleans, LA 70112",
+      "source_schedule": "schedule_e",
+      "source_page_num": 16,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-9",
+      "flow_type": "campaign_expenditure",
+      "amount": 12.6,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-anedot",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "FND",
+      "description_raw": null,
+      "address_raw": "New Orleans, LA 70112",
+      "source_schedule": "schedule_e",
+      "source_page_num": 17,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-10",
+      "flow_type": "campaign_expenditure",
+      "amount": 4.3,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-anedot",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "FND",
+      "description_raw": null,
+      "address_raw": "New Orleans, LA 70112",
+      "source_schedule": "schedule_e",
+      "source_page_num": 17,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-city-of-san-rafael-fil-11",
+      "flow_type": "campaign_expenditure",
+      "amount": 1150.0,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-city-of-san-rafael",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "FIL",
+      "description_raw": "1400 Fifth Avenue",
+      "address_raw": "San Rafael, CA 94901",
+      "source_schedule": "schedule_e",
+      "source_page_num": 17,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-cornerstone-printing-pos-12",
+      "flow_type": "campaign_expenditure",
+      "amount": 4099.49,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-cornerstone-printing",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "POS",
+      "description_raw": null,
+      "address_raw": "Novato, CA 94949",
+      "source_schedule": "schedule_e",
+      "source_page_num": 17,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-caran-cuneo-mtg-13",
+      "flow_type": "campaign_expenditure",
+      "amount": 186.0,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-caran-cuneo",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "MTG",
+      "description_raw": "09/ 21/ 24: Venue for meet and greet. Candidate in attendance.",
+      "address_raw": "San Rafael, CA 94903",
+      "source_schedule": "schedule_e",
+      "source_page_num": 17,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-donor-stack-llc-web-14",
+      "flow_type": "campaign_expenditure",
+      "amount": 1014.23,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-donor-stack-llc",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "WEB",
+      "description_raw": null,
+      "address_raw": "Oakland, CA 94607",
+      "source_schedule": "schedule_e",
+      "source_page_num": 18,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-web-15",
+      "flow_type": "campaign_expenditure",
+      "amount": 370.0,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-four-waters-media-inc",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "WEB",
+      "description_raw": null,
+      "address_raw": "West Sacramento, CA 95691",
+      "source_schedule": "schedule_e",
+      "source_page_num": 18,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-16",
+      "flow_type": "campaign_expenditure",
+      "amount": 1574.0,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-four-waters-media-inc",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "CNS",
+      "description_raw": null,
+      "address_raw": "West Sacramento, CA 95691",
+      "source_schedule": "schedule_e",
+      "source_page_num": 18,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cmp-17",
+      "flow_type": "campaign_expenditure",
+      "amount": 450.0,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-four-waters-media-inc",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "CMP",
+      "description_raw": null,
+      "address_raw": "West Sacramento, CA 95691",
+      "source_schedule": "schedule_e",
+      "source_page_num": 18,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-web-18",
+      "flow_type": "campaign_expenditure",
+      "amount": 370.0,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-four-waters-media-inc",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "WEB",
+      "description_raw": null,
+      "address_raw": "West Sacramento, CA 95691",
+      "source_schedule": "schedule_e",
+      "source_page_num": 18,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-19",
+      "flow_type": "campaign_expenditure",
+      "amount": 4291.0,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-four-waters-media-inc",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "CNS",
+      "description_raw": null,
+      "address_raw": "West Sacramento, CA 95691",
+      "source_schedule": "schedule_e",
+      "source_page_num": 19,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-cns-20",
+      "flow_type": "campaign_expenditure",
+      "amount": 750.0,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-pmcohen-public-affairs",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "CNS",
+      "description_raw": null,
+      "address_raw": "San Rafael, CA 94901",
+      "source_schedule": "schedule_e",
+      "source_page_num": 19,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-cns-21",
+      "flow_type": "campaign_expenditure",
+      "amount": 1000.0,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-pmcohen-public-affairs",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "CNS",
+      "description_raw": null,
+      "address_raw": "San Rafael, CA 94901",
+      "source_schedule": "schedule_e",
+      "source_page_num": 19,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-web-22",
+      "flow_type": "campaign_expenditure",
+      "amount": 95.0,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-pmcohen-public-affairs",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "WEB",
+      "description_raw": null,
+      "address_raw": "San Rafael, CA 94901",
+      "source_schedule": "schedule_e",
+      "source_page_num": 19,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-uncoded-23",
+      "flow_type": "campaign_expenditure",
+      "amount": 1625.0,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-pmcohen-public-affairs",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": null,
+      "description_raw": "Voter Data 1,",
+      "address_raw": "San Rafael, CA 94901",
+      "source_schedule": "schedule_e",
+      "source_page_num": 19,
+      "parse_confidence": "medium",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-cns-24",
+      "flow_type": "campaign_expenditure",
+      "amount": 1000.0,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-pmcohen-public-affairs",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "CNS",
+      "description_raw": null,
+      "address_raw": "San Rafael, CA 94901",
+      "source_schedule": "schedule_e",
+      "source_page_num": 20,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-s-e-owens-company-pro-25",
+      "flow_type": "campaign_expenditure",
+      "amount": 250.0,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-se-owens-and-company",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "PRO",
+      "description_raw": null,
+      "address_raw": "Oakland, CA 94607",
+      "source_schedule": "schedule_e",
+      "source_page_num": 20,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-s-e-owens-company-pro-26",
+      "flow_type": "campaign_expenditure",
+      "amount": 850.0,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-se-owens-and-company",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "PRO",
+      "description_raw": null,
+      "address_raw": "Oakland, CA 94607",
+      "source_schedule": "schedule_e",
+      "source_page_num": 20,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-venturepad-mtg-27",
+      "flow_type": "campaign_expenditure",
+      "amount": 150.0,
+      "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "to_actor_id": "actor-venturepad",
+      "filing_id": "filing-san-rafael-campaign-entry-37677",
+      "payment_code": "MTG",
+      "description_raw": "09/ 19/ 24: Venue rental for Meet - and - Greet event Candidate in attendance.",
+      "address_raw": "San Rafael, CA 94901",
+      "source_schedule": "schedule_e",
+      "source_page_num": 20,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -2183,7 +2912,8 @@
       "address_raw": "Novato, CA 94947",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2202,7 +2932,8 @@
       "address_raw": "Napa, CA 94558",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2221,7 +2952,8 @@
       "address_raw": "Petaluma, CA 94954",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2240,7 +2972,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2259,7 +2992,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2278,7 +3012,8 @@
       "address_raw": "San Rafael, CA 94915",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2297,7 +3032,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2316,7 +3052,8 @@
       "address_raw": "Mill Valley, CA 94941",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2335,7 +3072,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2354,7 +3092,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2373,7 +3112,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2392,7 +3132,8 @@
       "address_raw": "Tiburon, CA 94920",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2411,7 +3152,8 @@
       "address_raw": "Mill Valley, CA 94941",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2430,7 +3172,8 @@
       "address_raw": "Santa Rosa, CA 95404",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2449,7 +3192,8 @@
       "address_raw": null,
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2468,7 +3212,8 @@
       "address_raw": "Novato, CA 94948",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2487,7 +3232,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2506,7 +3252,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2525,7 +3272,8 @@
       "address_raw": "Oakland, CA 94607",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2544,7 +3292,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2563,7 +3312,8 @@
       "address_raw": "Tiburon, CA 94920",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2582,7 +3332,8 @@
       "address_raw": "Tiburon, CA 94920",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2601,7 +3352,8 @@
       "address_raw": "Sacramento, CA 95841",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2618,7 +3370,8 @@
       "stance": "support",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ],
       "flow_type": "campaign_contribution"
     },
@@ -2637,7 +3390,8 @@
       "parse_confidence": "high",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2649,13 +3403,14 @@
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "payment_code": "CNS",
       "description_raw": "Campaign consultant",
-      "address_raw": null,
+      "address_raw": "Fullerton, CA 92831",
       "source_schedule": "schedule_e",
       "source_page_num": 10,
       "parse_confidence": "high",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2667,13 +3422,71 @@
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "payment_code": "POL",
       "description_raw": "Political data",
-      "address_raw": null,
+      "address_raw": "Norwalk, CA 90652",
       "source_schedule": "schedule_e",
       "source_page_num": 10,
       "parse_confidence": "high",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685"
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-pacific-print-resources-lit-4",
+      "flow_type": "campaign_expenditure",
+      "amount": 286.84,
+      "from_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "to_actor_id": "actor-pacific-print-resources",
+      "filing_id": "filing-san-rafael-campaign-entry-37685",
+      "payment_code": "LIT",
+      "description_raw": "Printing of literature",
+      "address_raw": "Emeryville, CA 94608",
+      "source_schedule": "schedule_e",
+      "source_page_num": 11,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37685",
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-firefighters-printing-lit-5",
+      "flow_type": "campaign_expenditure",
+      "amount": 739.42,
+      "from_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "to_actor_id": "actor-firefighters-printing-printing-of-literature",
+      "filing_id": "filing-san-rafael-campaign-entry-37685",
+      "payment_code": "LIT",
+      "description_raw": "Printing of literature",
+      "address_raw": "Sacramento, CA 95833",
+      "source_schedule": "schedule_e",
+      "source_page_num": 11,
+      "parse_confidence": "medium",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37685",
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-actblue-ofc-6",
+      "flow_type": "campaign_expenditure",
+      "amount": 150.0,
+      "from_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "to_actor_id": "actor-actblue",
+      "filing_id": "filing-san-rafael-campaign-entry-37685",
+      "payment_code": "OFC",
+      "description_raw": "Software",
+      "address_raw": "Somerville, MA 02144",
+      "source_schedule": "schedule_e",
+      "source_page_num": 11,
+      "parse_confidence": "high",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37685",
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
@@ -2692,7 +3505,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -2711,7 +3525,8 @@
       "address_raw": "San Anselmo, CA 94979",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -2730,7 +3545,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -2749,7 +3565,8 @@
       "address_raw": "Novato, CA 94945",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -2768,7 +3585,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -2787,7 +3605,8 @@
       "address_raw": "San Anselmo, CA 94960",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -2806,7 +3625,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -2825,7 +3645,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -2844,7 +3665,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -2863,7 +3685,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -2882,7 +3705,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -2901,7 +3725,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -2920,7 +3745,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -2939,7 +3765,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -2958,7 +3785,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -2977,7 +3805,8 @@
       "address_raw": "Guerneville, CA 95446",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -2996,7 +3825,8 @@
       "address_raw": "Larkspur, CA 94939",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -3015,7 +3845,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -3034,7 +3865,8 @@
       "address_raw": "Santa Rosa, CA 95404",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -3053,7 +3885,8 @@
       "address_raw": "Mill Valley, CA 94941",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -3072,7 +3905,8 @@
       "address_raw": "San Anselmo, CA 94960, San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -3091,7 +3925,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -3110,7 +3945,8 @@
       "address_raw": "San Rafael, CA 94903",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -3129,7 +3965,8 @@
       "address_raw": "San Mateo, CA 94402",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -3148,7 +3985,8 @@
       "address_raw": "Novato, CA 94945",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -3167,7 +4005,8 @@
       "address_raw": "Greenbrae, CA 94904",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -3186,7 +4025,8 @@
       "address_raw": "San Rafael, CA 94901",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     },
     {
@@ -3205,7 +4045,8 @@
       "address_raw": "Novato, CA 94947",
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365"
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     }
   ],
@@ -3213,11 +4054,11 @@
     {
       "id": "OQ-027",
       "status": "watch",
-      "question": "How should the project treat OCR-derived schedule extraction when extracted row totals trail the reported filing totals even after the raw PDFs are preserved?"
+      "question": "How should the project treat schedule extraction when row-level totals still trail reported filing totals even after the raw PDFs are preserved?"
     }
   ],
   "notes": [
-    "This bundle intentionally promotes only row-level facts that are legible from the current OCR capture.",
+    "This bundle intentionally promotes only row-level facts that are legible from the current OCR or PDF text capture.",
     "The filing totals are preserved as filing-level enrichments so later validations can compare reported totals against extracted row sums.",
     "Committee-contributor rows are currently normalized through actor candidates unless a stronger committee identity already exists elsewhere in the graph."
   ]

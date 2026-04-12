@@ -1,6 +1,6 @@
 {
   "capture_date": "2026-04-12",
-  "extracted_at": "2026-04-12T19:07:19Z",
+  "extracted_at": "2026-04-12T19:35:46Z",
   "source_id": "san-rafael-city-campaign-form460-ocr",
   "filing_extracts": [
     {
@@ -696,10 +696,10 @@
           "payee_name_raw": "AC Hotel San Rafael",
           "address_raw": "San Rafael, CA 94901",
           "payment_code": "MTG",
-          "description_raw": "07/18/24: Campaign kickoff reception. Candidate in attendance.",
+          "description_raw": "07/ 18/ 24: Campaign kickoff reception. Candidate in attendance.",
           "amount_paid": 2659.56,
           "parse_confidence": "high",
-          "raw_block_text": "AC Hotel San Rafael\nMTG\n07/18/24: Campaign kickoff reception. Candidate in attendance.\n2659.56"
+          "raw_block_text": "AC Hotel San Rafael MTG 07/ 18/ 24: Campaign kickoff reception. Candidate in 2, 659. 56\n07/ 18/ 24: Campaign kickoff reception. Candidate in attendance.\nSan Rafael, CA 94901"
         },
         {
           "page_num": 15,
@@ -711,7 +711,7 @@
           "description_raw": null,
           "amount_paid": 1010.8,
           "parse_confidence": "high",
-          "raw_block_text": "Anedot\nFND\n\n1010.8"
+          "raw_block_text": "Anedot FND 1, 010. 8\nNew Orleans, LA 70112"
         },
         {
           "page_num": 15,
@@ -723,26 +723,318 @@
           "description_raw": null,
           "amount_paid": 265.4,
           "parse_confidence": "high",
-          "raw_block_text": "Anedot\nFND\n\n265.4"
+          "raw_block_text": "Anedot FND 265. 40\nNew Orleans. LA 70112"
+        },
+        {
+          "page_num": 16,
+          "row_type": "schedule_e_payment",
+          "payee_name": "Anedot",
+          "payee_name_raw": "Anedot",
+          "address_raw": "New Orleans, LA 70112",
+          "payment_code": "FND",
+          "description_raw": null,
+          "amount_paid": 61.8,
+          "parse_confidence": "high",
+          "raw_block_text": "Anedot FND 61. 80\nNew Orleans, LA 70112"
+        },
+        {
+          "page_num": 16,
+          "row_type": "schedule_e_payment",
+          "payee_name": "Anedot",
+          "payee_name_raw": "Anedot",
+          "address_raw": "New Orleans, LA 70112",
+          "payment_code": "FND",
+          "description_raw": null,
+          "amount_paid": 71.18,
+          "parse_confidence": "high",
+          "raw_block_text": "Anedot FND 71. 18\nNew Orleans, LA 70112"
+        },
+        {
+          "page_num": 16,
+          "row_type": "schedule_e_payment",
+          "payee_name": "Anedot",
+          "payee_name_raw": "Anedot",
+          "address_raw": "New Orleans, LA 70112",
+          "payment_code": "FND",
+          "description_raw": null,
+          "amount_paid": 20.7,
+          "parse_confidence": "high",
+          "raw_block_text": "Anedot FND 20. 70\nNew Orleans, LA 70112"
+        },
+        {
+          "page_num": 16,
+          "row_type": "schedule_e_payment",
+          "payee_name": "Anedot",
+          "payee_name_raw": "Anedot",
+          "address_raw": "New Orleans, LA 70112",
+          "payment_code": "FND",
+          "description_raw": null,
+          "amount_paid": 2.3,
+          "parse_confidence": "high",
+          "raw_block_text": "Anedot FND 2. 30\nNew Orleans, LA 70112"
+        },
+        {
+          "page_num": 16,
+          "row_type": "schedule_e_payment",
+          "payee_name": "Anedot",
+          "payee_name_raw": "Anedot",
+          "address_raw": "New Orleans, LA 70112",
+          "payment_code": "FND",
+          "description_raw": null,
+          "amount_paid": 4.3,
+          "parse_confidence": "high",
+          "raw_block_text": "Anedot FND 4. 30\nNew Orleans, LA 70112"
+        },
+        {
+          "page_num": 17,
+          "row_type": "schedule_e_payment",
+          "payee_name": "Anedot",
+          "payee_name_raw": "Anedot",
+          "address_raw": "New Orleans, LA 70112",
+          "payment_code": "FND",
+          "description_raw": null,
+          "amount_paid": 12.6,
+          "parse_confidence": "high",
+          "raw_block_text": "Anedot FND 12. 60\nNew Orleans, LA 70112"
+        },
+        {
+          "page_num": 17,
+          "row_type": "schedule_e_payment",
+          "payee_name": "Anedot",
+          "payee_name_raw": "Anedot",
+          "address_raw": "New Orleans, LA 70112",
+          "payment_code": "FND",
+          "description_raw": null,
+          "amount_paid": 4.3,
+          "parse_confidence": "high",
+          "raw_block_text": "Anedot FND 4. 30\nNew Orleans, LA 70112"
+        },
+        {
+          "page_num": 17,
+          "row_type": "schedule_e_payment",
+          "payee_name": "City of San Rafael",
+          "payee_name_raw": "City of San Rafael",
+          "address_raw": "San Rafael, CA 94901",
+          "payment_code": "FIL",
+          "description_raw": "1400 Fifth Avenue",
+          "amount_paid": 1150.0,
+          "parse_confidence": "high",
+          "raw_block_text": "City of San Rafael FIL 1, 150. 00\n1400 Fifth Avenue\nSan Rafael, CA 94901"
+        },
+        {
+          "page_num": 17,
+          "row_type": "schedule_e_payment",
+          "payee_name": "Cornerstone Printing",
+          "payee_name_raw": "Cornerstone Printing",
+          "address_raw": "Novato, CA 94949",
+          "payment_code": "POS",
+          "description_raw": null,
+          "amount_paid": 4099.49,
+          "parse_confidence": "high",
+          "raw_block_text": "Cornerstone Printing POS 4, 099. 49\nNovato, CA 94949"
+        },
+        {
+          "page_num": 17,
+          "row_type": "schedule_e_payment",
+          "payee_name": "Caran Cuneo",
+          "payee_name_raw": "Caran Cuneo",
+          "address_raw": "San Rafael, CA 94903",
+          "payment_code": "MTG",
+          "description_raw": "09/ 21/ 24: Venue for meet and greet. Candidate in attendance.",
+          "amount_paid": 186.0,
+          "parse_confidence": "high",
+          "raw_block_text": "Caran Cuneo MTG 09/ 21/ 24: Venue for meet and greet. Candidate in 186. 00\n09/ 21/ 24: Venue for meet and greet. Candidate in attendance.\nSan Rafael, CA 94903"
+        },
+        {
+          "page_num": 18,
+          "row_type": "schedule_e_payment",
+          "payee_name": "Donor Stack, LLC",
+          "payee_name_raw": "Donor Stack, LLC",
+          "address_raw": "Oakland, CA 94607",
+          "payment_code": "WEB",
+          "description_raw": null,
+          "amount_paid": 1014.23,
+          "parse_confidence": "high",
+          "raw_block_text": "Donor Stack, LLC WEB 1, 014. 23\nOakland, CA 94607"
+        },
+        {
+          "page_num": 18,
+          "row_type": "schedule_e_payment",
+          "payee_name": "four waters media, inc.",
+          "payee_name_raw": "four waters media, inc.",
+          "address_raw": "West Sacramento, CA 95691",
+          "payment_code": "WEB",
+          "description_raw": null,
+          "amount_paid": 370.0,
+          "parse_confidence": "high",
+          "raw_block_text": "four waters media, inc. WEB 370. 00\nWest Sacramento, CA 95691"
+        },
+        {
+          "page_num": 18,
+          "row_type": "schedule_e_payment",
+          "payee_name": "four waters media, inc.",
+          "payee_name_raw": "four waters media, inc.",
+          "address_raw": "West Sacramento, CA 95691",
+          "payment_code": "CNS",
+          "description_raw": null,
+          "amount_paid": 1574.0,
+          "parse_confidence": "high",
+          "raw_block_text": "four waters media, inc. CNS 1, 574. 00\nWest Sacramento, CA 95691"
+        },
+        {
+          "page_num": 18,
+          "row_type": "schedule_e_payment",
+          "payee_name": "four waters media, inc.",
+          "payee_name_raw": "four waters media, inc.",
+          "address_raw": "West Sacramento, CA 95691",
+          "payment_code": "CMP",
+          "description_raw": null,
+          "amount_paid": 450.0,
+          "parse_confidence": "high",
+          "raw_block_text": "four waters media, inc. CMP 450. 00\nWest Sacramento, CA 95691"
+        },
+        {
+          "page_num": 18,
+          "row_type": "schedule_e_payment",
+          "payee_name": "four waters media, inc.",
+          "payee_name_raw": "four waters media, inc.",
+          "address_raw": "West Sacramento, CA 95691",
+          "payment_code": "WEB",
+          "description_raw": null,
+          "amount_paid": 370.0,
+          "parse_confidence": "high",
+          "raw_block_text": "four waters media, inc. WEB 370. 00\nWest Sacramento, CA 95691"
+        },
+        {
+          "page_num": 19,
+          "row_type": "schedule_e_payment",
+          "payee_name": "four waters media, inc.",
+          "payee_name_raw": "four waters media, inc.",
+          "address_raw": "West Sacramento, CA 95691",
+          "payment_code": "CNS",
+          "description_raw": null,
+          "amount_paid": 4291.0,
+          "parse_confidence": "high",
+          "raw_block_text": "four waters media, inc. CNS 4, 291. 00\nWest Sacramento, CA 95691"
+        },
+        {
+          "page_num": 19,
+          "row_type": "schedule_e_payment",
+          "payee_name": "PMCohen Public Affairs",
+          "payee_name_raw": "PMCohen Public Affairs",
+          "address_raw": "San Rafael, CA 94901",
+          "payment_code": "CNS",
+          "description_raw": null,
+          "amount_paid": 750.0,
+          "parse_confidence": "high",
+          "raw_block_text": "PMCohen Public Affairs CNS 750. 00\nSan Rafael, CA 94901"
+        },
+        {
+          "page_num": 19,
+          "row_type": "schedule_e_payment",
+          "payee_name": "PMCohen Public Affairs",
+          "payee_name_raw": "PMCohen Public Affairs",
+          "address_raw": "San Rafael, CA 94901",
+          "payment_code": "CNS",
+          "description_raw": null,
+          "amount_paid": 1000.0,
+          "parse_confidence": "high",
+          "raw_block_text": "PMCohen Public Affairs CNS 1, 000. 00\nSan Rafael, CA 94901"
+        },
+        {
+          "page_num": 19,
+          "row_type": "schedule_e_payment",
+          "payee_name": "PMCohen Public Affairs",
+          "payee_name_raw": "PMCohen Public Affairs",
+          "address_raw": "San Rafael, CA 94901",
+          "payment_code": "WEB",
+          "description_raw": null,
+          "amount_paid": 95.0,
+          "parse_confidence": "high",
+          "raw_block_text": "PMCohen Public Affairs WEB 95. 00\nSan Rafael, CA 94901"
+        },
+        {
+          "page_num": 19,
+          "row_type": "schedule_e_payment",
+          "payee_name": "PMCohen Public Affairs",
+          "payee_name_raw": "PMCohen Public Affairs",
+          "address_raw": "San Rafael, CA 94901",
+          "payment_code": null,
+          "description_raw": "Voter Data 1,",
+          "amount_paid": 1625.0,
+          "parse_confidence": "medium",
+          "raw_block_text": "PMCohen Public Affairs Voter Data 1, 625. 00\nSan Rafael, CA 94901"
+        },
+        {
+          "page_num": 20,
+          "row_type": "schedule_e_payment",
+          "payee_name": "PMCohen Public Affairs",
+          "payee_name_raw": "PMCohen Public Affairs",
+          "address_raw": "San Rafael, CA 94901",
+          "payment_code": "CNS",
+          "description_raw": null,
+          "amount_paid": 1000.0,
+          "parse_confidence": "high",
+          "raw_block_text": "PMCohen Public Affairs CNS 1, 000. 00\nSan Rafael, CA 94901"
+        },
+        {
+          "page_num": 20,
+          "row_type": "schedule_e_payment",
+          "payee_name": "S. E. Owens & Company",
+          "payee_name_raw": "S. E. Owens & Company",
+          "address_raw": "Oakland, CA 94607",
+          "payment_code": "PRO",
+          "description_raw": null,
+          "amount_paid": 250.0,
+          "parse_confidence": "high",
+          "raw_block_text": "S. E. Owens & Company PRO 250. 00\nOakland, CA 94607"
+        },
+        {
+          "page_num": 20,
+          "row_type": "schedule_e_payment",
+          "payee_name": "S. E. Owens & Company",
+          "payee_name_raw": "S. E. Owens & Company",
+          "address_raw": "Oakland, CA 94607",
+          "payment_code": "PRO",
+          "description_raw": null,
+          "amount_paid": 850.0,
+          "parse_confidence": "high",
+          "raw_block_text": "S. E. Owens & Company PRO 850. 00\nOakland, CA 94607"
+        },
+        {
+          "page_num": 20,
+          "row_type": "schedule_e_payment",
+          "payee_name": "VenturePad",
+          "payee_name_raw": "VenturePad",
+          "address_raw": "San Rafael, CA 94901",
+          "payment_code": "MTG",
+          "description_raw": "09/ 19/ 24: Venue rental for Meet - and - Greet event Candidate in attendance.",
+          "amount_paid": 150.0,
+          "parse_confidence": "high",
+          "raw_block_text": "VenturePad MTG 09/ 19/ 24: Venue rental for Meet - and - Greet event. 150. 00\n09/ 19/ 24: Venue rental for Meet - and - Greet event Candidate in attendance.\nSan Rafael, CA 94901"
         }
       ],
       "reported_totals": {
         "reported_monetary_contributions": 16392.0,
         "reported_loans_received": null,
         "reported_total_contributions_received": 16392.0,
-        "reported_payments_made": null,
-        "reported_total_expenditures_made": null,
-        "schedule_a_page_subtotals_sum": 8846.0
+        "reported_payments_made": 23394.96,
+        "reported_total_expenditures_made": 23394.96,
+        "schedule_a_page_subtotals_sum": 13892.0,
+        "reported_itemized_payments": 23337.66,
+        "reported_unitemized_payments": 57.3,
+        "reported_interest_paid": 0.0,
+        "reported_total_payments": 23394.96
       },
       "counts": {
         "schedule_a_row_count": 45,
         "schedule_d_row_count": 0,
-        "schedule_e_row_count": 3
+        "schedule_e_row_count": 27
       },
       "extracted_totals": {
         "itemized_contributions_total": 13793.0,
         "schedule_d_total": 0,
-        "itemized_payments_total": 3935.76
+        "itemized_payments_total": 23337.66
       }
     },
     {
@@ -1127,50 +1419,90 @@
           "description_raw": "Advertising",
           "amount_paid": 200.0,
           "parse_confidence": "high",
-          "raw_block_text": "North Bay Labor Council\nPRT\nAdvertising\n200.0"
+          "raw_block_text": "North Bay Labor Council PRT Advertising 200. 00\nAdvertising\nSanta Rosa, CA 95405"
         },
         {
           "page_num": 10,
           "row_type": "schedule_e_payment",
           "payee_name": "Andre Charles",
           "payee_name_raw": "Andre Charles",
-          "address_raw": null,
+          "address_raw": "Fullerton, CA 92831",
           "payment_code": "CNS",
           "description_raw": "Campaign consultant",
           "amount_paid": 1000.0,
           "parse_confidence": "high",
-          "raw_block_text": "Andre Charles CNS Campaign consultant 1,000.00"
+          "raw_block_text": "Andre Charles CNS Campaign consultant 1, 000. 00\nCampaign consultant\nFullerton, CA 92831"
         },
         {
           "page_num": 10,
           "row_type": "schedule_e_payment",
           "payee_name": "Political Data Inc.",
           "payee_name_raw": "Political Data Inc.",
-          "address_raw": null,
+          "address_raw": "Norwalk, CA 90652",
           "payment_code": "POL",
           "description_raw": "Political data",
           "amount_paid": 1200.0,
           "parse_confidence": "high",
-          "raw_block_text": "Political Data Inc. POL Political data 1,200.00"
+          "raw_block_text": "Political Data Inc. POL Political data 1, 200. 00\nPolitical data\nNorwalk, CA 90652"
+        },
+        {
+          "page_num": 11,
+          "row_type": "schedule_e_payment",
+          "payee_name": "Pacific Print Resources",
+          "payee_name_raw": "Pacific Print Resources",
+          "address_raw": "Emeryville, CA 94608",
+          "payment_code": "LIT",
+          "description_raw": "Printing of literature",
+          "amount_paid": 286.84,
+          "parse_confidence": "high",
+          "raw_block_text": "Pacific Print Resources LIT 286. 84\nPrinting of literature\nEmeryville, CA 94608"
+        },
+        {
+          "page_num": 11,
+          "row_type": "schedule_e_payment",
+          "payee_name": "Firefighters Printing",
+          "payee_name_raw": "Firefighters Printing Printing of literature",
+          "address_raw": "Sacramento, CA 95833",
+          "payment_code": "LIT",
+          "description_raw": "Printing of literature",
+          "amount_paid": 739.42,
+          "parse_confidence": "medium",
+          "raw_block_text": "LIT 739. 42\nFirefighters Printing Printing of literature\nPrinting of literature\nSacramento, CA 95833"
+        },
+        {
+          "page_num": 11,
+          "row_type": "schedule_e_payment",
+          "payee_name": "ActBlue",
+          "payee_name_raw": "ActBlue",
+          "address_raw": "Somerville, MA 02144",
+          "payment_code": "OFC",
+          "description_raw": "Software",
+          "amount_paid": 150.0,
+          "parse_confidence": "high",
+          "raw_block_text": "ActBlue OFC Software 150. 00\nSoftware\nSomerville, MA 02144"
         }
       ],
       "reported_totals": {
         "reported_monetary_contributions": 7265.0,
         "reported_loans_received": null,
         "reported_total_contributions_received": 7265.0,
-        "reported_payments_made": 3925.99,
-        "reported_total_expenditures_made": 3925.99,
-        "schedule_a_page_subtotals_sum": 6775.0
+        "reported_payments_made": 3825.99,
+        "reported_total_expenditures_made": 3825.99,
+        "schedule_a_page_subtotals_sum": 6775.0,
+        "reported_itemized_payments": 3576.26,
+        "reported_unitemized_payments": 249.73,
+        "reported_interest_paid": 0.0,
+        "reported_total_payments": 3825.99
       },
       "counts": {
         "schedule_a_row_count": 23,
         "schedule_d_row_count": 1,
-        "schedule_e_row_count": 3
+        "schedule_e_row_count": 6
       },
       "extracted_totals": {
         "itemized_contributions_total": 6625.0,
         "schedule_d_total": 100.0,
-        "itemized_payments_total": 2400.0
+        "itemized_payments_total": 3576.26
       }
     },
     {
@@ -1610,7 +1942,11 @@
         "reported_total_contributions_received": 6915.0,
         "reported_payments_made": 183.29,
         "reported_total_expenditures_made": 183.29,
-        "schedule_a_page_subtotals_sum": 6048.0
+        "schedule_a_page_subtotals_sum": 6048.0,
+        "reported_itemized_payments": 0.0,
+        "reported_unitemized_payments": 183.29,
+        "reported_interest_paid": 0.0,
+        "reported_total_payments": 183.29
       },
       "counts": {
         "schedule_a_row_count": 28,
@@ -1625,7 +1961,7 @@
     }
   ],
   "notes": [
-    "This is a conservative schedule extractor over the OCR bundle, not a claim that raw PDF recovery is solved.",
-    "Schedule A rows are the strongest output in this pass. Schedule D and Schedule E are promoted only where the OCR preserves enough row structure to avoid inventing fields."
+    "This is a conservative schedule extractor over the OCR bundle plus the selective raw-PDF evidence path.",
+    "Schedule A and Schedule D still primarily depend on the OCR capture. Schedule E now prefers the PDF text layer when the raw export exists."
   ]
 }
