@@ -297,6 +297,21 @@ Mirror the question here when it affects:
 - `current note`: The current schedule bundle now emits explicit `ValidationCheck` objects. `37677` remains the only contribution-side `extraction_gap`; the other filing-level reconciliation and summary-rollup checks reconcile cleanly. On the contribution side, `37677` improves to `$14,992.00` extracted itemized contributions against `$15,992.00` reported itemized contributions, with `$400.00` explicitly preserved as unitemized contributions.
 - `next evidence`: add a page-specific patch for the remaining malformed Kate Colin `Schedule A` rows or introduce a stronger PDF-assisted parser for first-row and bad-date OCR edge cases before making exact-accounting or exhaustive-donor claims.
 
+### OQ-028: Graph-v1 campaign evidence record completeness
+
+- `status`: watch
+- `layer`: graph materialization / evidence completeness
+- `scope`: `graph-v1`
+- `source refs`:
+  - [import-manifest.yaml](/Users/tammypais/projects/marin-civic-graph/registry/import-manifest.yaml)
+  - [report.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/report.json)
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-filings-01/bundle-01.json)
+- `question`: Should graph-v1 add normalized `Record` nodes for city-side campaign OCR, PDF, and folder artifacts that are already referenced from `Filing`, `MoneyFlow`, and `ValidationCheck` evidence arrays but are not yet promoted as standalone normalized records?
+- `why it matters`: The current projection is structurally correct and the smoke checks pass, but the report still skips a large number of `missing_target:Record` edges because those evidence artifacts exist only as referenced IDs, not as normalized `Record` objects inside the narrowed v1 import scope.
+- `current note`: The current top skipped record targets are city-side campaign OCR/PDF and folder records such as `record-san-rafael-campaign-ocr-entry-37677`, `record-san-rafael-campaign-pdf-entry-37677`, and older folder records like `record-san-rafael-november-3-2020-election-kate-colin-campaign-folder`. This is an evidence-completeness gap, not a core-join failure.
+- `next evidence`: either normalize those OCR/PDF/folder artifacts into explicit `Record` bundles or decide that graph-v1 should tolerate the current evidence-edge drop rate until broader city-side campaign record normalization lands.
+
 ### OQ-016: San Rafael local Form 803 filing surface
 
 - `status`: resolved

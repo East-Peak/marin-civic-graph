@@ -31,6 +31,10 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
   - Keep the first import to the San Rafael governance spine, include `ValidationCheck`, and leave `Mention` / `Claim` and top-level legal / records tabs out of v1.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-v1-materialization-should-use-a-projection-layer-and-a-narrow-core-scope.md`
 
+- **Graph v1 should materialize from projected JSONL, not directly from bundle-local JSON**
+  - Keep the importer boring: build a projection manifest, emit uniform node/edge envelopes, generate Cypher, and let smoke checks prove the core San Rafael spine before widening scope.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-graph-v1-materialization-scaffold-should-center-on-projected-jsonl.md`
+
 - **Schedule A QA should anchor on official itemized and unitemized summary totals**
   - Do not compare extracted row sums only to the top-line filing total.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-san-rafael-form460-schedule-a-summary-should-anchor-qa.md`

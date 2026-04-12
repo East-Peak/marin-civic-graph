@@ -16,6 +16,7 @@ It should stay:
 ## Files
 
 - [sources.yaml](./sources.yaml) — current seed registry
+- [import-manifest.yaml](./import-manifest.yaml) — narrowed v1 graph-materialization scope
 
 ## Current Scope
 

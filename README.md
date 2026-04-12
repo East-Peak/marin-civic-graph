@@ -123,6 +123,11 @@ Start narrow:
 - [Raw Artifacts](./data/raw/README.md)
 - [Extracted Outputs](./data/extracted/README.md)
 - [Normalized Outputs](./data/normalized/README.md)
+- [Projected Outputs](./data/projected/README.md)
+- [Graph V1 Projection Report](./data/projected/graph-v1/report.json)
+- [Graph V1 Node Projection](./data/projected/graph-v1/nodes.jsonl)
+- [Graph V1 Edge Projection](./data/projected/graph-v1/edges.jsonl)
+- [Graph V1 Cypher Loader Output](./data/projected/graph-v1/load-graph-v1.cypher)
 - [Bundle 01 Extracted Summary](./data/extracted/san-rafael-homelessness-01/bundle-01-summary.json)
 - [Bundle 01 Normalized Summary](./data/normalized/san-rafael-homelessness-01/bundle-01.json)
 - [Marin IJ Citation Layer](./data/normalized/san-rafael-homelessness-01/marin-ij-citation-layer.json)
@@ -167,6 +172,10 @@ Start narrow:
 - [San Rafael Form 460 OCR Capture Workflow](./scripts/capture_san_rafael_city_campaign_form460_ocr.py)
 - [San Rafael Form 460 PDF Export Workflow](./scripts/capture_san_rafael_city_campaign_form460_pdf_exports.py)
 - [San Rafael Form 460 Schedule Extractor](./scripts/extract_san_rafael_city_campaign_form460_schedules.py)
+- [Graph Projection Helper](./scripts/graph_projection_lib.py)
+- [Graph Projection Builder](./scripts/build_graph_projection.py)
+- [Graph Projection Smoke Checks](./scripts/graph_smoke_checks.py)
+- [Neo4j V1 Loader](./scripts/load_neo4j_v1.py)
 - [Marin County BOS Archive Capture Workflow](./scripts/capture_marin_county_bos_archive.py)
 - [Marin County Campaign Finance Export Capture Workflow](./scripts/capture_marin_county_campaign_finance_exports.py)
 
@@ -174,6 +183,13 @@ Start narrow:
 
 This repo started as a planning workspace and now includes the first live implementation slice:
 
+- first graph-materialization scaffold for the narrowed San Rafael governance spine:
+  - explicit import manifest at [import-manifest.yaml](./registry/import-manifest.yaml)
+  - projection builder that narrows bundle-local JSON into one graph envelope
+  - JSONL node/edge projection plus a generated Cypher loader output under [data/projected](./data/projected/README.md)
+  - smoke checks that prove actor, seat-service, filing, money, decision, record, and validation continuity end to end
+  - current graph-v1 projection totals: `837` nodes and `2882` edges
+  - current materialization follow-up made explicit in the projection report: city-side campaign OCR/PDF/folder record references still account for most skipped `missing_target:Record` edges because those evidence artifacts are not yet promoted as normalized `Record` nodes
 - source registry seeds
 - source-registry format now expanded to capture platform family, backfill target, change signal, and source-specific quirks
 - source-adapter operations note added to document municipality/county source idiosyncrasies, historical backfill planning, and recurring sync strategy

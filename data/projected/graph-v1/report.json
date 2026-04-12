@@ -1,0 +1,553 @@
+{
+  "projection_id": "graph-v1",
+  "generated_at": "2026-04-12T20:58:46Z",
+  "manifest_path": "/Users/tammypais/projects/marin-civic-graph/registry/import-manifest.yaml",
+  "output_dir": "data/projected/graph-v1",
+  "bundle_reports": [
+    {
+      "bundle_id": "canonical-seeds-san-rafael-01",
+      "path": "data/normalized/canonical-seeds-san-rafael-01.json",
+      "sections": [
+        {
+          "section": "record_refs",
+          "mode": "nodes",
+          "input_count": 18,
+          "imported_count": 18,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "institution_candidates",
+          "mode": "nodes",
+          "input_count": 3,
+          "imported_count": 3,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "actor_candidates",
+          "mode": "nodes",
+          "input_count": 11,
+          "imported_count": 11,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "seat_candidates",
+          "mode": "nodes",
+          "input_count": 5,
+          "imported_count": 5,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "election_candidates",
+          "mode": "nodes",
+          "input_count": 5,
+          "imported_count": 5,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "seat_service_candidates",
+          "mode": "nodes",
+          "input_count": 5,
+          "imported_count": 5,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    },
+    {
+      "bundle_id": "san-rafael-election-records-01__bundle-01",
+      "path": "data/normalized/san-rafael-election-records-01/bundle-01.json",
+      "sections": [
+        {
+          "section": "record_refs",
+          "mode": "nodes",
+          "input_count": 37,
+          "imported_count": 37,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "place_candidates",
+          "mode": "nodes",
+          "input_count": 1,
+          "imported_count": 1,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "institution_candidates",
+          "mode": "nodes",
+          "input_count": 3,
+          "imported_count": 3,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "meeting_candidates",
+          "mode": "nodes",
+          "input_count": 25,
+          "imported_count": 25,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "election_candidates",
+          "mode": "nodes",
+          "input_count": 13,
+          "imported_count": 13,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "decision_candidates",
+          "mode": "nodes",
+          "input_count": 21,
+          "imported_count": 21,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    },
+    {
+      "bundle_id": "san-rafael-city-campaign-filings-01__bundle-01",
+      "path": "data/normalized/san-rafael-city-campaign-filings-01/bundle-01.json",
+      "sections": [
+        {
+          "section": "record_refs",
+          "mode": "nodes",
+          "input_count": 228,
+          "imported_count": 228,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "committee_candidates",
+          "mode": "nodes",
+          "input_count": 14,
+          "imported_count": 14,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "filing_candidates",
+          "mode": "nodes",
+          "input_count": 228,
+          "imported_count": 228,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "candidacy_candidates",
+          "mode": "nodes",
+          "input_count": 14,
+          "imported_count": 14,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    },
+    {
+      "bundle_id": "san-rafael-city-campaign-ie-01__bundle-01",
+      "path": "data/normalized/san-rafael-city-campaign-ie-01/bundle-01.json",
+      "sections": [
+        {
+          "section": "record_refs",
+          "mode": "nodes",
+          "input_count": 4,
+          "imported_count": 4,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "committee_candidates",
+          "mode": "nodes",
+          "input_count": 2,
+          "imported_count": 2,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "filing_candidates",
+          "mode": "nodes",
+          "input_count": 4,
+          "imported_count": 4,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    },
+    {
+      "bundle_id": "san-rafael-city-campaign-form460-schedules-01__bundle-01",
+      "path": "data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json",
+      "sections": [
+        {
+          "section": "record_refs",
+          "mode": "nodes",
+          "input_count": 3,
+          "imported_count": 3,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "filing_candidates",
+          "mode": "nodes",
+          "input_count": 3,
+          "imported_count": 3,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "money_flow_candidates",
+          "mode": "nodes",
+          "input_count": 136,
+          "imported_count": 136,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "validation_check_candidates",
+          "mode": "nodes",
+          "input_count": 12,
+          "imported_count": 12,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    },
+    {
+      "bundle_id": "campaign-finance-form-803-slice-01__bundle-01",
+      "path": "data/normalized/campaign-finance-form-803-slice-01/bundle-01.json",
+      "sections": [
+        {
+          "section": "record_refs",
+          "mode": "nodes",
+          "input_count": 8,
+          "imported_count": 8,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "institution_candidates",
+          "mode": "nodes",
+          "input_count": 4,
+          "imported_count": 4,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "actor_candidates",
+          "mode": "nodes",
+          "input_count": 3,
+          "imported_count": 3,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "filing_candidates",
+          "mode": "nodes",
+          "input_count": 1,
+          "imported_count": 1,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "money_flow_candidates",
+          "mode": "nodes",
+          "input_count": 1,
+          "imported_count": 1,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    },
+    {
+      "bundle_id": "san-rafael-homelessness-01__bundle-01",
+      "path": "data/normalized/san-rafael-homelessness-01/bundle-01.json",
+      "sections": [
+        {
+          "section": "document_refs",
+          "mode": "nodes",
+          "input_count": 8,
+          "imported_count": 8,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "institutions",
+          "mode": "nodes",
+          "input_count": 3,
+          "imported_count": 3,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "meeting_candidates",
+          "mode": "nodes",
+          "input_count": 1,
+          "imported_count": 1,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "agenda_item_candidates",
+          "mode": "nodes",
+          "input_count": 1,
+          "imported_count": 1,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "decision_candidates",
+          "mode": "nodes",
+          "input_count": 2,
+          "imported_count": 2,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "money_flow_candidates",
+          "mode": "nodes",
+          "input_count": 8,
+          "imported_count": 8,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "place_candidates",
+          "mode": "nodes",
+          "input_count": 8,
+          "imported_count": 8,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    },
+    {
+      "bundle_id": "san-rafael-homelessness-01__bundle-01",
+      "path": "data/normalized/san-rafael-homelessness-01/aug-19-item-5a-record-splits.json",
+      "sections": [
+        {
+          "section": "record_refs",
+          "mode": "nodes",
+          "input_count": 10,
+          "imported_count": 10,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "record_relationships",
+          "mode": "relationship_passthrough",
+          "input_count": 20,
+          "imported_count": 20,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    }
+  ],
+  "node_type_counts": {
+    "Actor": 11,
+    "AgendaItem": 1,
+    "Candidacy": 14,
+    "Committee": 16,
+    "Decision": 23,
+    "Election": 18,
+    "Filing": 233,
+    "Institution": 5,
+    "Meeting": 26,
+    "MoneyFlow": 145,
+    "Place": 8,
+    "Record": 315,
+    "Seat": 5,
+    "SeatService": 5,
+    "ValidationCheck": 12
+  },
+  "edge_type_counts": {
+    "ABOUT_AGENDA_ITEM": 2,
+    "BELONGS_TO_INSTITUTION": 5,
+    "CANDIDATE_ACTOR": 8,
+    "CAST_VOTE_ON": 10,
+    "CONTROLLED_BY_ACTOR": 8,
+    "CONTROLLED_BY_COMMITTEE": 14,
+    "DECIDED_AT_MEETING": 23,
+    "DECIDED_BY_INSTITUTION": 23,
+    "DERIVED_FROM_RECORD": 25,
+    "DISCLOSED_IN_FILING": 137,
+    "EVIDENCED_BY": 615,
+    "FILED_BY_ACTOR": 166,
+    "FILED_BY_COMMITTEE": 232,
+    "FILED_DURING_SEAT_SERVICE": 1,
+    "FILED_FOR_ELECTION": 232,
+    "FILED_FOR_SEAT": 1,
+    "FILED_WITH_INSTITUTION": 1,
+    "FILED_WITH_OFFICER": 1,
+    "FOR_ELECTION": 14,
+    "FOR_SEAT": 24,
+    "FROM_SOURCE": 1,
+    "HELD_BY_ACTOR": 5,
+    "HELD_BY_INSTITUTION": 26,
+    "IN_JURISDICTION": 34,
+    "OFFICIAL_FILER": 1,
+    "PART_OF_MEETING": 1,
+    "PRIMARY_FOR_ELECTION": 16,
+    "RECORD_ATTACHED_TO_RECORD": 8,
+    "RECORD_AUTHORIZES_DECISION": 1,
+    "RECORD_EXTRACTS_FROM_RECORD": 10,
+    "RECORD_INTRODUCES_DECISION": 1,
+    "RELATED_TO_ELECTION": 3,
+    "RELATES_TO_ACTOR": 170,
+    "RELATES_TO_AGENDA_ITEM": 10,
+    "RELATES_TO_COMMITTEE": 266,
+    "RELATES_TO_DECISION": 42,
+    "RELATES_TO_ELECTION": 294,
+    "RELATES_TO_FILING": 3,
+    "RELATES_TO_INSTITUTION": 4,
+    "RELATES_TO_MEETING": 45,
+    "RELATES_TO_MONEY_FLOW": 4,
+    "RELATES_TO_PLACE": 11,
+    "RELATES_TO_RECORD": 3,
+    "RELATES_TO_SEAT": 232,
+    "RELATES_TO_VALIDATIONCHECK": 12,
+    "REQUESTED_BY_ACTOR": 1,
+    "REQUESTED_BY_SEAT": 1,
+    "REQUESTED_BY_SEAT_SERVICE": 1,
+    "RESULT_OF_ELECTION": 5,
+    "SERVES_IN_INSTITUTION": 5,
+    "TARGETS_ACTOR": 2,
+    "TARGETS_SEAT": 4,
+    "TO_TARGET": 106,
+    "VALIDATES": 12
+  },
+  "total_nodes": 837,
+  "total_edges": 2882,
+  "duplicate_node_merges": 16,
+  "duplicate_edge_merges": 260,
+  "node_conflicts": [
+    {
+      "id": "inst-san-rafael-city-council",
+      "bundle_id": "san-rafael-homelessness-01__bundle-01",
+      "fields": [
+        "institution_type"
+      ]
+    },
+    {
+      "id": "place-san-rafael",
+      "bundle_id": "san-rafael-homelessness-01__bundle-01",
+      "fields": [
+        "place_type"
+      ]
+    }
+  ],
+  "edge_conflicts": [],
+  "skipped_edge_reasons": {
+    "missing_target:Actor": 293,
+    "missing_target:Issue": 20,
+    "missing_target:Record": 804
+  },
+  "top_skipped_edge_targets": [
+    [
+      "record-san-rafael-campaign-ocr-entry-37677",
+      81
+    ],
+    [
+      "record-san-rafael-campaign-pdf-entry-37677",
+      80
+    ],
+    [
+      "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+      56
+    ],
+    [
+      "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder",
+      56
+    ],
+    [
+      "actor-mahmoud-shirazi",
+      52
+    ],
+    [
+      "record-san-rafael-november-8-2022-election-maribeth-bushey-campaign-folder",
+      50
+    ],
+    [
+      "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+      50
+    ],
+    [
+      "record-san-rafael-november-3-2020-election-maika-llorens-gulati-campaign-folder",
+      48
+    ],
+    [
+      "record-san-rafael-november-3-2020-election-rachel-kertz-campaign-folder",
+      44
+    ],
+    [
+      "record-san-rafael-november-3-2020-election-greg-knell-campaign-folder",
+      42
+    ],
+    [
+      "actor-greg-knell",
+      42
+    ],
+    [
+      "record-san-rafael-campaign-ocr-entry-37685",
+      37
+    ],
+    [
+      "record-san-rafael-campaign-ocr-entry-37365",
+      36
+    ],
+    [
+      "record-san-rafael-campaign-pdf-entry-37685",
+      36
+    ],
+    [
+      "record-san-rafael-campaign-pdf-entry-37365",
+      35
+    ],
+    [
+      "record-san-rafael-november-8-2022-election-jonathan-frieman-campaign-folder",
+      32
+    ],
+    [
+      "actor-jonathan-frieman",
+      32
+    ],
+    [
+      "record-san-rafael-november-5-2024-election-mahmoud-shirazi-campaign-folder",
+      28
+    ],
+    [
+      "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder",
+      28
+    ],
+    [
+      "record-san-rafael-november-3-2020-election-mahmoud-shirazi-campaign-folder",
+      24
+    ],
+    [
+      "record-san-rafael-november-5-2024-election-maika-llorens-gulati-campaign-folder",
+      16
+    ],
+    [
+      "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder",
+      10
+    ],
+    [
+      "issue-homelessness",
+      10
+    ],
+    [
+      "actor-anedot",
+      9
+    ],
+    [
+      "issue-encampments",
+      8
+    ]
+  ]
+}
