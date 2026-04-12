@@ -153,6 +153,8 @@ Start narrow:
 - [Canonical Issue Seed Bundle](./data/normalized/canonical-issues-01.json)
 - [San Rafael Canonical Seed Bundle](./data/normalized/canonical-seeds-san-rafael-01.json)
 - [San Rafael City Council Archive Inventory](./data/extracted/san-rafael-city-council-meetings/2026-04-11.json)
+- [San Rafael City Council Meeting Page Capture](./data/extracted/san-rafael-city-council-meeting-pages/2026-04-12.json)
+- [San Rafael City Council Backbone Bundle](./data/normalized/san-rafael-city-council-backbone-01/bundle-01.json)
 - [Marin County BOS Archive Inventory](./data/extracted/marin-county-bos-meetings/2026-04-11.json)
 - [Marin County Campaign Finance Yearly Export Inventory](./data/extracted/marin-county-campaign-finance-yearly-exports/2026-04-11.json)
 - [San Rafael Form 700 Backfill Inventory](./data/extracted/san-rafael-sei-netfile-portal/2026-04-12.json)
@@ -183,6 +185,8 @@ Start narrow:
 - [San Rafael Election Page Discovery Helpers](./scripts/san_rafael_election_pages.py)
 - [San Rafael Election Page Capture Workflow](./scripts/capture_san_rafael_election_pages.py)
 - [San Rafael City Council Archive Capture Workflow](./scripts/capture_san_rafael_city_council_archive.py)
+- [San Rafael City Council Meeting Page Capture Workflow](./scripts/capture_san_rafael_city_council_pages.py)
+- [San Rafael City Council Backbone Normalizer](./scripts/normalize_san_rafael_city_council_backbone.py)
 - [San Rafael City-Side Campaign Filing Inventory Workflow](./scripts/capture_san_rafael_city_campaign_filing_inventory.py)
 - [San Rafael Election Direct Record Capture Workflow](./scripts/capture_san_rafael_election_direct_records.py)
 - [San Rafael Election Direct Record Normalizer](./scripts/normalize_san_rafael_election_direct_records.py)
@@ -209,10 +213,11 @@ This repo started as a planning workspace and now includes the first live implem
   - projection builder that narrows bundle-local JSON into one graph envelope
   - JSONL node/edge projection plus a generated Cypher loader output under [data/projected](./data/projected/README.md)
   - smoke checks that prove actor, seat-service, filing, money, decision, record, and validation continuity end to end
-  - current graph-v1 projection totals: `871` nodes and `3935` edges
+  - current graph-v1 projection totals: `1390` nodes and `4975` edges
   - evidence completeness is now backed by a dedicated San Rafael city-side campaign evidence-record bundle that promotes OCR/PDF/folder artifacts already referenced from filings, money flows, validation checks, and the narrow actor supplement
   - a narrow actor and issue supplement now lands `8` conservative campaign actors and `3` canonical issues without widening into discovery-stage review material
-  - the current projection report now shows only `missing_target:Actor = 147`; `Issue` and `Record` completeness gaps are no longer part of graph-v1
+  - the first breadth-sprint council slice now adds `263` citywide `Meeting` nodes and `264` council `Record` nodes backed by captured meeting pages
+  - the current projection report still shows `missing_target:Actor = 147`; `Issue` and `Record` completeness gaps are no longer part of graph-v1
   - the first live local Neo4j load and query pass has been run successfully against the projected graph, proving end-to-end continuity for actor, seat-service, filing, money, decision, issue, and validation queries
 - first normalized legal bundle now exists as `legal-precedent-01`:
   - captured the Boyd TRO, preliminary-injunction, and dismissal orders as durable PDF-backed legal records
@@ -236,6 +241,13 @@ This repo started as a planning workspace and now includes the first live implem
   - extracted inventory of `263` meeting rows spanning `2019` through `2026`
   - meeting-type classification across `regular`, `special`, `closed_session`, `special_closed_session`, `special_retreat`, `study_session`, and `cancelled`
   - artifact-availability tracking for agenda, packet, minutes, and video tabs
+- first narrowed breadth-sprint execution slice completed for `San Rafael City Council 2019+`:
+  - added a repeatable council meeting-page capture workflow over the full archive inventory
+  - captured raw HTML for all `263` meeting pages referenced by the `2019+` archive
+  - extracted direct meeting-page continuity for starts-at time, agenda/packet/minutes/video URLs, and lightweight agenda metadata
+  - normalized a citywide council backbone bundle with `263` `Meeting` nodes and `264` `Record` nodes
+  - widened graph-v1 import scope to include that council backbone without inventing citywide `Decision` or `VoteCast` objects prematurely
+  - made the remaining boundary explicit: citywide agenda-item, decision, and vote extraction is a second pass on the captured meeting pages and linked minutes, not part of the archive-only meeting spine
 - second wave-01 source execution completed for `Marin County Board of Supervisors meetings`:
   - direct raw HTML capture of the official Granicus publisher archive at `view_id=33`
   - extracted `317` archived meetings spanning `2019` through `2026`, plus `3` currently listed upcoming events

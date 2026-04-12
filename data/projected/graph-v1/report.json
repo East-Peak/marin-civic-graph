@@ -1,6 +1,6 @@
 {
   "projection_id": "graph-v1",
-  "generated_at": "2026-04-12T21:16:59Z",
+  "generated_at": "2026-04-12T23:49:51Z",
   "manifest_path": "/Users/tammypais/projects/marin-civic-graph/registry/import-manifest.yaml",
   "output_dir": "data/projected/graph-v1",
   "bundle_reports": [
@@ -121,6 +121,28 @@
           "mode": "nodes",
           "input_count": 21,
           "imported_count": 21,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    },
+    {
+      "bundle_id": "san-rafael-city-council-backbone-01__bundle-01",
+      "path": "data/normalized/san-rafael-city-council-backbone-01/bundle-01.json",
+      "sections": [
+        {
+          "section": "record_refs",
+          "mode": "nodes",
+          "input_count": 264,
+          "imported_count": 264,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "meeting_candidates",
+          "mode": "nodes",
+          "input_count": 263,
+          "imported_count": 263,
           "skipped_count": 0,
           "skip_reasons": {}
         }
@@ -401,10 +423,10 @@
     "Filing": 233,
     "Institution": 5,
     "Issue": 3,
-    "Meeting": 26,
+    "Meeting": 283,
     "MoneyFlow": 145,
     "Place": 8,
-    "Record": 338,
+    "Record": 600,
     "Seat": 5,
     "SeatService": 5,
     "ValidationCheck": 12
@@ -421,7 +443,7 @@
     "DECIDED_BY_INSTITUTION": 23,
     "DERIVED_FROM_RECORD": 31,
     "DISCLOSED_IN_FILING": 137,
-    "EVIDENCED_BY": 1204,
+    "EVIDENCED_BY": 1726,
     "FILED_BY_ACTOR": 232,
     "FILED_BY_COMMITTEE": 232,
     "FILED_DURING_SEAT_SERVICE": 1,
@@ -433,7 +455,7 @@
     "FOR_SEAT": 24,
     "FROM_SOURCE": 1,
     "HELD_BY_ACTOR": 5,
-    "HELD_BY_INSTITUTION": 26,
+    "HELD_BY_INSTITUTION": 283,
     "IN_JURISDICTION": 34,
     "OFFICIAL_FILER": 1,
     "PART_OF_MEETING": 1,
@@ -451,7 +473,7 @@
     "RELATES_TO_FILING": 9,
     "RELATES_TO_INSTITUTION": 4,
     "RELATES_TO_ISSUE": 20,
-    "RELATES_TO_MEETING": 45,
+    "RELATES_TO_MEETING": 306,
     "RELATES_TO_MONEY_FLOW": 4,
     "RELATES_TO_PLACE": 11,
     "RELATES_TO_RECORD": 238,
@@ -467,11 +489,87 @@
     "TO_TARGET": 106,
     "VALIDATES": 12
   },
-  "total_nodes": 871,
-  "total_edges": 3935,
-  "duplicate_node_merges": 18,
-  "duplicate_edge_merges": 260,
+  "total_nodes": 1390,
+  "total_edges": 4975,
+  "duplicate_node_merges": 26,
+  "duplicate_edge_merges": 272,
   "node_conflicts": [
+    {
+      "id": "record-2023-05-08-san-rafael-city-council-special-page",
+      "bundle_id": "san-rafael-city-council-backbone-01__bundle-01",
+      "fields": [
+        "source_url",
+        "title",
+        "modified_at",
+        "agenda_download_url",
+        "minutes_download_url"
+      ]
+    },
+    {
+      "id": "record-2025-03-17-san-rafael-city-council-special-page",
+      "bundle_id": "san-rafael-city-council-backbone-01__bundle-01",
+      "fields": [
+        "source_url",
+        "title",
+        "modified_at",
+        "video_url"
+      ]
+    },
+    {
+      "id": "meeting-2020-06-15-san-rafael-city-council",
+      "bundle_id": "san-rafael-city-council-backbone-01__bundle-01",
+      "fields": [
+        "meeting_type",
+        "status"
+      ]
+    },
+    {
+      "id": "meeting-2020-12-07-san-rafael-city-council",
+      "bundle_id": "san-rafael-city-council-backbone-01__bundle-01",
+      "fields": [
+        "meeting_type",
+        "status"
+      ]
+    },
+    {
+      "id": "meeting-2023-05-08-san-rafael-city-council-special",
+      "bundle_id": "san-rafael-city-council-backbone-01__bundle-01",
+      "fields": [
+        "meeting_page_url",
+        "archive_meeting_page_url",
+        "agenda_pdf_url",
+        "minutes_url",
+        "has_agenda_packet_tab",
+        "has_video_tab",
+        "starts_at"
+      ]
+    },
+    {
+      "id": "meeting-2024-06-03-san-rafael-city-council",
+      "bundle_id": "san-rafael-city-council-backbone-01__bundle-01",
+      "fields": [
+        "meeting_type",
+        "status"
+      ]
+    },
+    {
+      "id": "meeting-2025-03-17-san-rafael-city-council-special",
+      "bundle_id": "san-rafael-city-council-backbone-01__bundle-01",
+      "fields": [
+        "meeting_page_url",
+        "archive_meeting_page_url",
+        "video_url",
+        "has_agenda_packet_tab"
+      ]
+    },
+    {
+      "id": "meeting-2026-02-17-san-rafael-city-council",
+      "bundle_id": "san-rafael-city-council-backbone-01__bundle-01",
+      "fields": [
+        "meeting_type",
+        "status"
+      ]
+    },
     {
       "id": "inst-san-rafael-city-council",
       "bundle_id": "san-rafael-homelessness-01__bundle-01",

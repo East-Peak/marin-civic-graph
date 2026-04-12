@@ -46,6 +46,11 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
     - `~/.openclaw/workspace/decisions/2026-04-12-next-phase-should-be-a-controlled-breadth-sprint.md`
     - `~/.openclaw/workspace/decisions/2026-04-12-controlled-breadth-sprint-should-be-san-rafael-first-and-join-density-led.md`
 
+- **The first breadth-sprint execution slice should start with a meeting-page-backed council spine**
+  - Capture the full San Rafael City Council `2019+` meeting-page layer and promote `Meeting` plus `Record` nodes first.
+  - Do not pretend the citywide decision timeline is solved yet; agenda-item, decision, and vote extraction remain a second pass on the captured meeting pages and linked minutes.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-san-rafael-council-breadth-slice-should-start-with-meeting-page-backed-meeting-and-record-nodes.md`
+
 - **Active projects need a repo-local running decision index**
   - Keep a compact `docs/decision-log.md` in the repo, with detailed rationale still living in workspace decisions.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-active-projects-need-repo-local-decision-log.md`

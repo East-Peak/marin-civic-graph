@@ -499,6 +499,19 @@ Mirror the question here when it affects:
 - `why it matters`: The current procurement slice is honest about using text proxies, but the graph needs a stable way to replace proxies with raw HTML/PDF artifacts later.
 - `resolution note`: The replacement convention is now explicit. Keep `source_id` and graph `record_id` stable when the newer artifact is the same semantic record; create a new `capture_id`, keep the older proxy capture in `data/raw/`, rerun extraction, and update the preferred normalized `artifact_path` only after review. Mint a new `record-*` node only when the improved artifact reveals a different object boundary.
 
+### OQ-033: San Rafael council decision/vote depth after citywide meeting capture
+
+- `status`: open
+- `layer`: breadth sprint / council backbone
+- `scope`: `san-rafael-city-council-backbone-01`
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-council-backbone-01/bundle-01.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-council-meeting-pages/2026-04-12.json)
+  - [report.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/report.json)
+- `question`: What is the clean second-pass extraction path for agenda items, decisions, and votes across the now-captured San Rafael City Council meeting-page corpus?
+- `why it matters`: The first breadth-sprint council slice now gives the graph a real citywide meeting and evidence-record backbone, but the fixed query pack still needs deeper decision and vote extraction before the council timeline is truly citywide.
+- `resolution note`: Not resolved yet. The current bundle intentionally stops at meeting-page-backed `Meeting` and `Record` objects plus linked packet/minutes/video URLs. The next council deepening pass should parse linked minutes and page-backed agenda content rather than inventing decision nodes from archive metadata alone.
+
 ## Maintenance
 
 When a question is answered:

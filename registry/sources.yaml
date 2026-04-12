@@ -541,6 +541,38 @@ sources:
       - High-value city meeting spine.
       - Strong candidate for first production fetcher.
 
+  - source_id: san-rafael-city-council-meeting-pages
+    label: San Rafael City Council Meeting Pages
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: meetings
+    source_type: html_pages
+    entry_url: https://www.cityofsanrafael.org/city-council-meetings/
+    discovery_urls:
+      - https://www.cityofsanrafael.org/city-council-meetings/
+    fetch_strategy: archive_inventory_to_page_capture
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - document:meeting_page
+      - document:agenda
+      - document:packet
+      - document:minutes
+      - document:video
+    cadence: weekly
+    history_depth: archive
+    source_tier_default: A
+    robots_notes: public city WordPress meeting pages
+    review_risk: low
+    dedupe_key_strategy: canonical_meeting_page_url
+    notes:
+      - Derived from the 2019+ archive inventory, then expanded into one page capture per meeting.
+      - Strong page-backed backbone for later agenda-item, decision, and vote extraction.
+
   - source_id: san-rafael-boards-and-commissions-index
     label: San Rafael Boards and Commissions Index
     owner_type: jurisdiction

@@ -74,6 +74,10 @@ def main() -> None:
     missing_types = [node_type for node_type in required_types if node_type_counts[node_type] == 0]
     if missing_types:
         raise AssertionError(f"Missing expected node types: {missing_types}")
+    if node_type_counts["Meeting"] < 200:
+        raise AssertionError(
+            f"Expected the San Rafael council breadth slice to lift Meeting density above 200, found {node_type_counts['Meeting']}"
+        )
 
     dangling_edges = [
         edge
@@ -104,6 +108,16 @@ def main() -> None:
         adjacency,
         "decision-2024-08-19-resolution-15336",
         "record-2024-08-19-resolution-15336-text",
+    )
+    assert_path(
+        adjacency,
+        "meeting-2026-03-16-san-rafael-city-council",
+        "record-2026-03-16-san-rafael-city-council-page",
+    )
+    assert_path(
+        adjacency,
+        "meeting-2026-03-16-san-rafael-city-council",
+        "inst-san-rafael-city-council",
     )
 
     validation_nodes = [
