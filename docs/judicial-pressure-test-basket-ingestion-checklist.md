@@ -73,10 +73,10 @@ The first pass covers:
 
 ### Grants Pass
 
-- [ ] capture the Supreme Court docket page as raw HTML
-- [ ] capture the linked opinion PDF or official opinion page
-- [ ] capture the SF City Attorney `Grants Pass` amicus page
-- [ ] tie San Rafael's statement and explainer pages into the same legal thread
+- [x] capture the Supreme Court docket page as raw HTML
+- [x] capture the linked opinion PDF or official opinion page
+- [x] capture the SF City Attorney `Grants Pass` amicus page
+- [x] tie San Rafael's statement and explainer pages into the same legal thread
 
 ### Coalition On Homelessness
 
@@ -123,11 +123,11 @@ The first pass covers:
 
 ### Grants Pass
 
-- [ ] create `Case`
-- [ ] create `CaseParticipation` for city/amicus actors where explicit
-- [ ] create a `Record` for the opinion
+- [x] create `Case`
+- [x] create `CaseParticipation` for city/amicus actors where explicit
+- [x] create a `Record` for the opinion
 - [ ] create `Claim` candidates describing the local legal effect only where explicit in official records
-- [ ] connect San Rafael and SF response records back to the case
+- [x] connect San Rafael and SF response records back to the case
 
 ### Coalition On Homelessness
 
@@ -172,7 +172,7 @@ The first pass covers:
 The first usable legal / oversight deliverable should be:
 
 - [ ] one `Case` page-worth of data for `Boyd`
-- [ ] one `Case` page-worth of data for `Grants Pass`
+- [x] one `Case` page-worth of data for `Grants Pass`
 - [ ] one `Case` page-worth of data for `Coalition on Homelessness`
 - [ ] one `OversightReport` page-worth of data for the Marin Civil Grand Jury sample
 - [x] one `Case` page-worth of data for `Boyd`
@@ -182,7 +182,7 @@ The first usable legal / oversight deliverable should be:
 ## Blocking Questions
 
 - [ ] can we find a clean public docket or order source for the operative `Boyd` injunction and dismissal order?
-- [ ] should the Supreme Court opinion PDF for `Grants Pass` be its own `source_id` or just a docket-discovered artifact?
+- [x] should the Supreme Court opinion PDF for `Grants Pass` be its own `source_id` or just a docket-discovered artifact?
 - [ ] how much of `Coalition on Homelessness` can be modeled from official city-attorney pages before deeper docket work is necessary?
 - [ ] where are Marin agency responses to the homelessness-related grand-jury report surfaced publicly?
 - [ ] do we need a dedicated `oversight_record` subclass later, or is `legal_record` / `program_record` enough for v1?
@@ -202,6 +202,9 @@ If doing this manually first, the order should be:
 
 - the source basket and registry seeds now exist
 - the San Rafael side of the legal context is already partially captured through case study 01
-- the remaining work is the first true legal / oversight extraction pass and the join back into the civic graph
+- the repo now has two real normalized legal bundles:
+  - `legal-precedent-01` for `Boyd v. City of San Rafael`
+  - `legal-precedent-02` for `City of Grants Pass v. Johnson`
+- the remaining work is deeper legal comparison, lower-court chain capture, and the eventual join back into the civic graph
 
 This checklist should be the first legal / oversight implementation slice after the current San Rafael official bundle.

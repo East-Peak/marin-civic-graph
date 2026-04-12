@@ -1,0 +1,56 @@
+{
+  "source_id": "scotus-grants-pass-docket",
+  "capture_id": "scotus-grants-pass-docket__2026-04-10",
+  "capture_date": "2026-04-12",
+  "entry_url": "https://www.supremecourt.gov/docket/docketfiles/html/public/23-175.html",
+  "fetch_strategy": "static_html_manual_bundle",
+  "generated_at": "2026-04-12T21:56:11Z",
+  "artifacts": [
+    {
+      "artifact_path": "data/raw/scotus-grants-pass-docket/2026-04-10/source.html",
+      "content_type": "text/html",
+      "artifact_type": "html",
+      "title": "City of Grants Pass, Oregon, Petitioner v. Johnson et al. - Supreme Court Docket",
+      "published_at": null,
+      "text_path": "data/extracted/scotus-grants-pass-docket/source.txt",
+      "word_count": 6300,
+      "docket_number": "23-175",
+      "linked_opinion_url": "https://www.supremecourt.gov/opinions/23pdf/23-175_19m2.pdf"
+    }
+  ],
+  "candidate_signals": {
+    "actor_hits": [
+      "City of Grants Pass, Oregon, Petitioner",
+      "Gloria Johnson, et al., on Behalf of Themselves and All Others Similarly Situated"
+    ],
+    "place_hits": [
+      "Grants Pass",
+      "Oregon"
+    ],
+    "issue_hits": [
+      "homelessness",
+      "encampments",
+      "camping ordinance",
+      "public property",
+      "Eighth Amendment"
+    ],
+    "legal_refs": [
+      "No. 23-175",
+      "petition for a writ of certiorari",
+      "certiorari granted",
+      "oral argument",
+      "Judgment REVERSED and case REMANDED",
+      "Martin v. Boise"
+    ],
+    "procedural_dates": [
+      "2023-08-22 petition for certiorari filed",
+      "2024-01-12 petition granted",
+      "2024-04-22 oral argument",
+      "2024-06-28 judgment reversed and remanded"
+    ]
+  },
+  "notes": [
+    "Official Supreme Court docket landing page captured as the proceeding and filing discovery surface for City of Grants Pass v. Johnson.",
+    "This record anchors the cert petition, cert grant, oral argument, and opinion-release timeline without relying on secondary summaries."
+  ]
+}

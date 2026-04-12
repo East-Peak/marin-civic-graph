@@ -331,7 +331,7 @@ Mirror the question here when it affects:
 
 ### OQ-030: Boyd operative-order gap
 
-- `status`: open
+- `status`: resolved
 - `layer`: legal / precedent normalization
 - `scope`: `legal-precedent-01`
 - `source refs`:
@@ -342,9 +342,23 @@ Mirror the question here when it affects:
   - [order.txt](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-boyd-dismissal-order/order.txt)
   - [judicial-pressure-test-basket-ingestion-checklist.md](/Users/tammypais/projects/marin-civic-graph/docs/judicial-pressure-test-basket-ingestion-checklist.md)
 - `question`: Where can the project capture the operative August 2023 TRO order and the October 19, 2023 preliminary-injunction order as direct court-origin records for `Boyd v. City of San Rafael`?
-- `why it matters`: The first normalized legal bundle is now real and the dismissal-side court order is captured directly, but the strongest constraint-side orders are still represented through the dismissal order's procedural history and later city summaries instead of their own court texts.
-- `current note`: `legal-precedent-01` is good enough for `Case`, `Proceeding`, `CaseParticipation`, and crosswalk joins back to the August 19 San Rafael decisions and sanctioned-camping program. It is not yet good enough for full injunction-order analytics.
-- `next evidence`: capture a clean public docket or direct order surface for the TRO and preliminary injunction, then promote those orders as separate `legal_record` nodes and tighten the proceeding detail to direct-order evidence.
+- `why it matters`: The first normalized legal bundle needed the actual operative order texts for the injunction stages, not just later city summaries.
+- `resolution note`: Resolved well enough for the current legal lane. `legal-precedent-01` now includes separate TRO and preliminary-injunction `legal_record` nodes backed by strong public filed-order copies, plus the direct city-linked dismissal order. The remaining Boyd issue is provenance strength, not missing order text.
+
+### OQ-031: Grants Pass lower-court chain depth
+
+- `status`: watch
+- `layer`: legal / precedent normalization
+- `scope`: `legal-precedent-02`
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/legal-precedent-02/bundle-01.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/scotus-grants-pass-docket/2026-04-12.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/scotus-grants-pass-opinion/2026-04-12.json)
+  - [legal-precedent-02.md](/Users/tammypais/projects/marin-civic-graph/docs/legal-precedent-02.md)
+- `question`: Should the repo pull the district-court injunction and Ninth Circuit opinion that the Supreme Court reversed and remanded into the same Grants Pass bundle, or leave them for a lower-court companion bundle?
+- `why it matters`: The current Grants Pass slice is already strong enough for controlling-precedent and local-posture joins, but deeper doctrinal comparison still wants the lower-court chain.
+- `current note`: `legal-precedent-02` now has the official Supreme Court docket and slip opinion plus official San Rafael and San Francisco response records. The remaining question is where to draw the object boundary for the lower-court chain.
+- `next evidence`: capture the district-court injunction and the Ninth Circuit opinion, then decide whether they should live inside `legal-precedent-02` or in a separate lower-court companion slice.
 
 ### OQ-016: San Rafael local Form 803 filing surface
 

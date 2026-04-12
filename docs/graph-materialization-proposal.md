@@ -248,13 +248,13 @@ Do not ship `Legal & Precedent` or `Records` as top-level tabs in v1.
 Reason:
 
 - `Records` is still an evidence mode inside investigation, not a distinct top-level question
-- the legal / precedent lane is architecturally important but should stay out of core import until the first normalized legal bundle is stronger than one local case plus follow-on gaps
+- the legal / precedent lane is architecturally important but should stay out of core import until the first legal comparison set is stronger than one local case plus one precedent bundle with unresolved lower-court gaps
 
 Instead:
 
 - keep a source / record mode inside `Investigate`
 - expose legal / precedent context as sections on actor and decision pages
-- promote `Legal & Precedent` to a top-level tab only after `legal-precedent-01` matures beyond the current Boyd-only slice
+- promote `Legal & Precedent` to a top-level tab only after the legal lane matures beyond the current `Boyd + Grants Pass` normalized pair
 
 ## Legal / Precedent Gap
 
@@ -274,36 +274,44 @@ It now has a clearly named normalized legal bundle:
 
 - [legal-precedent-01.md](/Users/tammypais/projects/marin-civic-graph/docs/legal-precedent-01.md)
 - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/legal-precedent-01/bundle-01.json)
+- [legal-precedent-02.md](/Users/tammypais/projects/marin-civic-graph/docs/legal-precedent-02.md)
+- [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/legal-precedent-02/bundle-01.json)
 
 But it is still not yet a first-class import surface.
 
-The current bundle proves the local legal lane with:
+The current legal pair proves:
 
 - `case-boyd-v-city-of-san-rafael`
+- `case-city-of-grants-pass-v-johnson`
 - the Boyd TRO, preliminary-injunction, and dismissal orders
-- normalized `Proceeding` and `CaseParticipation` objects
+- the official Grants Pass Supreme Court docket and slip opinion
+- normalized `Proceeding` and `CaseParticipation` objects in both bundles
 - explicit crosswalks back to the August 19, 2024 San Rafael decision chain
 
 The current remaining gap is also explicit:
 
-- the TRO and preliminary-injunction orders are public filed-order copies rather than court-hosted captures
+- the Boyd TRO and preliminary-injunction orders are public filed-order copies rather than court-hosted captures
+- the Grants Pass lower-court district and Ninth Circuit chain is not yet normalized
 
 ### Proposal
 
-Treat `legal-precedent-01` as the first real legal normalization slice, but keep it outside core v1 import until the provenance and surrounding comparison set are stronger.
+Treat `legal-precedent-01` and `legal-precedent-02` as the first real legal normalization pair, but keep them outside core v1 import until the provenance and surrounding comparison set are stronger.
 
 Minimum scope:
 
 - `case-boyd-v-city-of-san-rafael`
+- `case-city-of-grants-pass-v-johnson`
 - Boyd order coverage across TRO, preliminary injunction, and dismissal
+- official Grants Pass docket and Supreme Court opinion coverage
 - case participation where public and named
 - official legal-framing records already in case study 01
 - explicit local crosswalk back to decision and program nodes
 
 After that, the next legal follow-on should be:
 
-1. improve TRO / preliminary-injunction provenance if a stable court-hosted path becomes available
-2. only then `Grants Pass` and the broader pressure-test basket
+1. improve Boyd TRO / preliminary-injunction provenance if a stable court-hosted path becomes available
+2. capture the Grants Pass lower-court district and Ninth Circuit chain
+3. only then widen into the broader pressure-test basket
 
 That is enough to justify a later first-class legal lane without pretending the entire judicial model is done.
 
@@ -372,13 +380,13 @@ Mitigation:
 
 ### Risk 4: Legal / precedent layer still looks thinner than it really is
 
-The legal work is now normalized, but still easy to miss because the first bundle is narrow and stays outside core graph-v1 import.
+The legal work is now normalized, but still easy to miss because the legal pair stays outside core graph-v1 import.
 
 Mitigation:
 
 - keep legal context visible in the page architecture
-- keep `legal-precedent-01` visible as a real lane
-- do not promise a top-level legal tab until the bundle is stronger than the current Boyd-only slice
+- keep `legal-precedent-01` and `legal-precedent-02` visible as a real lane
+- do not promise a top-level legal tab until the lane is stronger than the current `Boyd + Grants Pass` pair
 
 ### Risk 5: Overbuilding the importer
 
@@ -400,14 +408,14 @@ After adversarial review, the recommended stance is:
 - `ValidationCheck` in v1
 - `Mention` and `Claim` out of core v1
 - no top-level `Records` tab in v1
-- no top-level `Legal & Precedent` tab until `legal-precedent-01` matures beyond the current Boyd-only slice
+- no top-level `Legal & Precedent` tab until the current `Boyd + Grants Pass` pair is widened with the relevant lower-court chain and stronger provenance
 
 ## Adversarial Review Questions
 
 - Is the projection layer sufficient to keep bundle-local semantics out of `load_neo4j_v1.py`?
 - Should weak OCR actor labels materialize as nodes, or stay attached to money-flow raw labels until stronger identity exists?
 - Is `ValidationCheck` narrow enough to import now while `Mention` and `Claim` stay out of core v1?
-- Is a top-level `Legal & Precedent` tab still premature while `legal-precedent-01` is only a Boyd-first slice with an unresolved TRO / injunction gap?
+- Is a top-level `Legal & Precedent` tab still premature while the legal lane still lacks the Grants Pass lower-court chain and stronger Boyd provenance?
 - Are permits and procurement better left for phase two until the San Rafael governance spine is proven?
 
 ## Recommended Next Commit

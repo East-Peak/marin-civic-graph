@@ -1,0 +1,54 @@
+{
+  "source_id": "scotus-grants-pass-opinion",
+  "capture_id": "scotus-grants-pass-opinion__2026-04-12",
+  "capture_date": "2026-04-12",
+  "entry_url": "https://www.supremecourt.gov/opinions/23pdf/23-175_19m2.pdf",
+  "fetch_strategy": "direct_pdf_linked_from_official_docket",
+  "generated_at": "2026-04-12T21:56:11Z",
+  "artifacts": [
+    {
+      "artifact_path": "data/raw/scotus-grants-pass-opinion/2026-04-12/opinion.pdf",
+      "content_type": "application/pdf",
+      "artifact_type": "pdf",
+      "title": "23-175 City of Grants Pass v. Johnson (06/28/2024)",
+      "published_at": "2024-06-28",
+      "page_count": 74,
+      "court_name": "Supreme Court of the United States",
+      "docket_number": "23-175",
+      "text_path": "data/extracted/scotus-grants-pass-opinion/opinion.txt",
+      "word_count": 24636
+    }
+  ],
+  "candidate_signals": {
+    "actor_hits": [
+      "City of Grants Pass, Oregon",
+      "Johnson et al.",
+      "Gorsuch, J."
+    ],
+    "place_hits": [
+      "Grants Pass",
+      "Oregon"
+    ],
+    "issue_hits": [
+      "homelessness",
+      "encampments",
+      "camping ordinance",
+      "public property",
+      "Eighth Amendment"
+    ],
+    "legal_refs": [
+      "No. 23-175",
+      "certiorari to the United States Court of Appeals for the Ninth Circuit",
+      "Martin v. Boise",
+      "reversed and remanded"
+    ],
+    "procedural_dates": [
+      "2024-04-22 argued",
+      "2024-06-28 decided"
+    ]
+  },
+  "notes": [
+    "Official Supreme Court slip opinion PDF captured directly from the docket-linked opinion URL.",
+    "This is the controlling precedent record for the repo's Grants Pass legal bundle."
+  ]
+}

@@ -1,0 +1,2926 @@
+(Slip Opinion)              OCTOBER TERM, 2023                                       1
+
+                                       Syllabus
+
+         NOTE: Where it is feasible, a syllabus (headnote) will be released, as is
+       being done in connection with this case, at the time the opinion is issued.
+       The syllabus constitutes no part of the opinion of the Court but has been
+       prepared by the Reporter of Decisions for the convenience of the reader.
+       See United States v. Detroit Timber & Lumber Co., 200 U. S. 321, 337.
+
+
+SUPREME COURT OF THE UNITED STATES
+
+                                       Syllabus
+
+ CITY OF GRANTS PASS, OREGON v. JOHNSON ET AL.,
+  ON BEHALF OF THEMSELVES AND ALL OTHERS
+             SIMILARLY SITUATED
+
+CERTIORARI TO THE UNITED STATES COURT OF APPEALS FOR
+                  THE NINTH CIRCUIT
+
+       No. 23–175.      Argued April 22, 2024—Decided June 28, 2024
+
+
+Grants Pass, Oregon, is home to roughly 38,000 people, about 600 of
+ whom are estimated to experience homelessness on a given day. Like
+ many local governments across the Nation, Grants Pass has public-
+ camping laws that restrict encampments on public property. The
+ Grants Pass Municipal Code prohibits activities such as camping on
+ public property or parking overnight in the city’s parks. See
+ §§5.61.030, 6.46.090(A)–(B). Initial violations can trigger a fine, while
+ multiple violations can result in imprisonment. In a prior decision,
+ Martin v. Boise, the Ninth Circuit held that the Eighth Amendment’s
+ Cruel and Unusual Punishments Clause bars cities from enforcing
+ public-camping ordinances like these against homeless individuals
+ whenever the number of homeless individuals in a jurisdiction exceeds
+ the number of “practically available” shelter beds. 920 F. 3d 584, 617.
+ After Martin, suits against Western cities like Grants Pass prolifer-
+ ated.
+    Plaintiffs (respondents here) filed a putative class action on behalf
+ of homeless people living in Grants Pass, claiming that the city’s ordi-
+ nances against public camping violated the Eighth Amendment. The
+ district court certified the class and entered a Martin injunction pro-
+ hibiting Grants Pass from enforcing its laws against homeless individ-
+ uals in the city. App. to Pet. for Cert. 182a–183a. Applying Martin’s
+ reasoning, the district court found everyone without shelter in Grants
+ Pass was “involuntarily homeless” because the city’s total homeless
+ population outnumbered its “practically available” shelter beds. App.
+2                 CITY OF GRANTS PASS v. JOHNSON
+
+                                  Syllabus
+
+    to Pet. for Cert. 179a, 216a. The beds at Grants Pass’s charity-run
+    shelter did not qualify as “available” in part because that shelter has
+    rules requiring residents to abstain from smoking and to attend reli-
+    gious services. App. to Pet. for Cert. 179a–180a. A divided panel of
+    the Ninth Circuit affirmed the district court’s Martin injunction in rel-
+    evant part. 72 F. 4th 868, 874–896. Grants Pass filed a petition for
+    certiorari. Many States, cities, and counties from across the Ninth Cir-
+    cuit urged the Court to grant review to assess Martin.
+Held: The enforcement of generally applicable laws regulating camping
+ on public property does not constitute “cruel and unusual punishment”
+ prohibited by the Eighth Amendment. Pp. 15–35.
+    (a) The Eighth Amendment’s Cruel and Unusual Punishments
+ Clause “has always been considered, and properly so, to be directed at
+ the method or kind of punishment” a government may “impos[e] for
+ the violation of criminal statutes.” Powell v. Texas, 392 U. S. 514, 531–
+ 532 (plurality opinion). It was adopted to ensure that the new Nation
+ would never resort to certain “formerly tolerated” punishments consid-
+ ered “cruel” because they were calculated to “ ‘superad[d]’ ” “ ‘terror,
+ pain, or disgrace,’ ” and considered “unusual” because, by the time of
+ the Amendment’s adoption, they had “long fallen out of use.” Bucklew
+ v. Precythe, 587 U. S 119, 130. All that would seem to make the Eighth
+ Amendment a poor foundation on which to rest the kind of decree the
+ plaintiffs seek in this case and the Ninth Circuit has endorsed since
+ Martin. The Cruel and Unusual Punishments Clause focuses on the
+ question what “method or kind of punishment” a government may im-
+ pose after a criminal conviction, not on the question whether a govern-
+ ment may criminalize particular behavior in the first place. Powell,
+ 392 U. S., at 531–532.
+    The Court cannot say that the punishments Grants Pass imposes
+ here qualify as cruel and unusual. The city imposes only limited fines
+ for first-time offenders, an order temporarily barring an individual
+ from camping in a public park for repeat offenders, and a maximum
+ sentence of 30 days in jail for those who later violate an order. See
+ Ore. Rev. Stat. §§164.245, 161.615(3). Such punishments do not qual-
+ ify as cruel because they are not designed to “superad[d]” “terror, pain,
+ or disgrace.” Bucklew, 587 U. S., at 130 (internal quotation marks
+ omitted). Nor are they unusual, because similarly limited fines and
+ jail terms have been and remain among “the usual mode[s]” for pun-
+ ishing criminal offenses throughout the country. Pervear v. Common-
+ wealth, 5 Wall. 475, 480. Indeed, cities and States across the country
+ have long employed similar punishments for similar offenses. Pp. 15–
+ 17.
+    (b) Plaintiffs do not meaningfully dispute that, on its face, the Cruel
+ and Unusual Punishments Clause does not speak to questions like
+                    Cite as: 603 U. S. ____ (2024)                       3
+
+                               Syllabus
+
+what a State may criminalize or how it may go about securing a con-
+viction. Like the Ninth Circuit in Martin, plaintiffs point to Robinson
+v. California, 370 U. S. 660, as a notable exception. In Robinson, the
+Court held that under the Cruel and Unusual Punishments Clause,
+California could not enforce a law providing that “‘[n]o person shall . . .
+be addicted to the use of narcotics.’” Id., at 660, n 1. While California
+could not make “the ‘status’ of narcotic addiction a criminal offense,”
+id., at 666, the Court emphasized that it did not mean to cast doubt on
+the States’ “broad power” to prohibit behavior even by those, like the
+defendant, who suffer from addiction. Id., at 664, 667–668. The prob-
+lem, as the Court saw it, was that California’s law made the status of
+being an addict a crime. Id., at 666–667 The Court read the Cruel and
+Unusual Punishments Clause (in a way unprecedented in 1962) to im-
+pose a limit on what a State may criminalize. In dissent, Justice White
+lamented that the majority had embraced an “application of ‘cruel and
+unusual punishment’ so novel that” it could not possibly be “ascribe[d]
+to the Framers of the Constitution.” 370 U. S., at 689. The Court has
+not applied Robinson in that way since.
+   Whatever its persuasive force as an interpretation of the Eighth
+Amendment, Robinson cannot sustain the Ninth Circuit’s Martin pro-
+ject. Robinson expressly recognized the “broad power” States enjoy
+over the substance of their criminal laws, stressing that they may
+criminalize knowing or intentional drug use even by those suffering
+from addiction. 370 U. S., at 664, 666. The Court held that California’s
+statute offended the Eighth Amendment only because it criminalized
+addiction as a status. Ibid.
+   Grants Pass’s public-camping ordinances do not criminalize status.
+The public-camping laws prohibit actions undertaken by any person,
+regardless of status. It makes no difference whether the charged de-
+fendant is currently a person experiencing homelessness, a backpacker
+on vacation, or a student who abandons his dorm room to camp out in
+protest on the lawn of a municipal building. See Tr. of Oral Arg. 159.
+Because the public-camping laws in this case do not criminalize status,
+Robinson is not implicated. Pp. 17–21.
+   (c) Plaintiffs insist the Court should extend Robinson to prohibit the
+enforcement of laws that proscribe certain acts that are in some sense
+“involuntary,” because some homeless individuals cannot help but do
+what the law forbids. See Brief for Respondents 24–25, 29, 32. The
+Ninth Circuit pursued this line of thinking below and in Martin, but
+this Court already rejected it in Powell v. Texas, 392 U. S. 514. In
+Powell, the Court confronted a defendant who had been convicted un-
+der a Texas statute making it a crime to “ ‘get drunk or be found in a
+state of intoxication in any public place.’ ” Id., at 517 (plurality opin-
+ion). Like the plaintiffs here, Powell argued that his drunkenness was
+4                  CITY OF GRANTS PASS v. JOHNSON
+
+                                   Syllabus
+
+    an “‘involuntary’” byproduct of his status as an alcoholic. Id., at 533.
+    The Court did not agree that Texas’s law effectively criminalized Pow-
+    ell’s status as an alcoholic. Writing for a plurality, Justice Marshall
+    observed that Robinson’s “very small” intrusion “into the substantive
+    criminal law” prevents States only from enforcing laws that criminal-
+    ize “a mere status.” Id., at 532–533. It does nothing to curtail a State’s
+    authority to secure a conviction when “the accused has committed
+    some act . . . society has an interest in preventing.” Id., at 533. That
+    remains true, Justice Marshall continued, even if the defendant’s con-
+    duct might, “in some sense” be described as “ ‘involuntary’ or ‘occa-
+    sioned by’” a particular status. Ibid.
+       This case is no different. Just as in Powell, plaintiffs here seek to
+    extend Robinson’s rule beyond laws addressing “mere status” to laws
+    addressing actions that, even if undertaken with the requisite mens
+    rea, might “in some sense” qualify as “ ‘involuntary.’ ” And as in Pow-
+    ell, the Court can find nothing in the Eighth Amendment permitting
+    that course. Instead, a variety of other legal doctrines and constitu-
+    tional provisions work to protect those in the criminal justice system
+    from a conviction. Pp. 21–24.
+       (d) Powell not only declined to extend Robinson to “involuntary” acts
+    but also stressed the dangers of doing so. Extending Robinson to cover
+    involuntary acts would, Justice Marshall observed,             effectively
+    “impe[l]” this Court “into defining” something akin to a new “insanity
+    test in constitutional terms.” Powell, 392 U. S., at 536. That is because
+    an individual like the defendant in Powell does not dispute that he has
+    committed an otherwise criminal act with the requisite mens rea, yet
+    he seeks to be excused from “moral accountability” because of his “‘con-
+    dition. ’” Id., at 535–536. Instead, Justice Marshall reasoned, such
+    matters should be left for resolution through the democratic process,
+    and not by “freez[ing]” any particular, judicially preferred approach
+    “into a rigid constitutional mold.” Id., at 537. The Court echoed that
+    last point in Kahler v. Kansas, 589 U. S. 271, in which the Court
+    stressed that questions about whether an individual who committed a
+    proscribed act with the requisite mental state should be “reliev[ed of]
+    responsibility,” id., at 283, due to a lack of “moral culpability,” id., at
+    286, are generally best resolved by the people and their elected repre-
+    sentatives.
+       Though doubtless well intended, the Ninth Circuit’s Martin experi-
+    ment defied these lessons. Answers to questions such as what consti-
+    tutes “involuntarily” homelessness or when a shelter is “practically
+    available” cannot be found in the Cruel and Unusual Punishments
+    Clause. Nor do federal judges enjoy any special competence to provide
+    them. Cities across the West report that the Ninth Circuit’s involun-
+                     Cite as: 603 U. S. ____ (2024)                     5
+
+                                Syllabus
+
+  tariness test has created intolerable uncertainty for them. By extend-
+  ing Robinson beyond the narrow class of pure status crimes, the Ninth
+  Circuit has created a right that has proven “impossible” for judges to
+  delineate except “by fiat.” Powell, 392 U. S., at 534. As Justice Mar-
+  shall anticipated in Powell, the Ninth Circuit’s rules have produced
+  confusion and they have interfered with “essential considerations of
+  federalism,” by taking from the people and their elected leaders diffi-
+  cult questions traditionally “thought to be the[ir] province.” Id., at
+  535–536. Pp. 24–34.
+     (e) Homelessness is complex. Its causes are many. So may be the
+  public policy responses required to address it. The question this case
+  presents is whether the Eighth Amendment grants federal judges pri-
+  mary responsibility for assessing those causes and devising those re-
+  sponses. A handful of federal judges cannot begin to “match” the col-
+  lective wisdom the American people possess in deciding “how best to
+  handle” a pressing social question like homelessness. Robinson, 370
+  U. S., at 689 (White, J., dissenting). The Constitution’s Eighth Amend-
+  ment serves many important functions, but it does not authorize fed-
+  eral judges to wrest those rights and responsibilities from the Ameri-
+  can people and in their place dictate this Nation’s homelessness policy.
+  Pp. 34–35.
+72 F. 4th 868, reversed and remanded.
+
+  GORSUCH, J., delivered the opinion of the Court, in which ROBERTS,
+C. J., and THOMAS, ALITO, KAVANAUGH, and BARRETT, JJ., joined.
+THOMAS, J., filed a concurring opinion. SOTOMAYOR, J., filed a dissenting
+opinion, in which KAGAN and JACKSON, JJ., joined.
+                        Cite as: 603 U. S. ____ (2024)                              1
+
+                             Opinion of the Court
+
+     NOTICE: This opinion is subject to formal revision before publication in the
+     United States Reports. Readers are requested to notify the Reporter of
+     Decisions, Supreme Court of the United States, Washington, D. C. 20543,
+     pio@supremecourt.gov, of any typographical or other formal errors.
+
+
+SUPREME COURT OF THE UNITED STATES
+                                   _________________
+
+                                   No. 23–175
+                                   _________________
+
+
+  CITY OF GRANTS PASS, OREGON, PETITIONER v.
+        GLORIA JOHNSON, ET AL., ON BEHALF
+                 OF THEMSELVES AND ALL OTHERS
+                      SIMILARLY SITUATED
+
+ ON WRIT OF CERTIORARI TO THE UNITED STATES COURT OF
+            APPEALS FOR THE NINTH CIRCUIT
+                                 [June 28, 2024]
+
+  JUSTICE GORSUCH delivered the opinion of the Court.
+  Many cities across the American West face a homeless-
+ness crisis. The causes are varied and complex, the appro-
+priate public policy responses perhaps no less so. Like
+many local governments, the city of Grants Pass, Oregon,
+has pursued a multifaceted approach. Recently, it adopted
+various policies aimed at “protecting the rights, dignity[,]
+and private property of the homeless.” App. 152. It ap-
+pointed a “homeless community liaison” officer charged
+with ensuring the homeless receive information about “as-
+sistance programs and other resources” available to them
+through the city and its local shelter. Id., at 152–153; Brief
+for Grants Pass Gospel Rescue Mission as Amicus Curiae
+2–3. And it adopted certain restrictions against encamp-
+ments on public property. App. 155–156. The Ninth Cir-
+cuit, however, held that the Eighth Amendment’s Cruel and
+Unusual Punishments Clause barred that last measure.
+With support from States and cities across the country,
+Grants Pass urged this Court to review the Ninth Circuit’s
+decision. We take up that task now.
+2            CITY OF GRANTS PASS v. JOHNSON
+
+                     Opinion of the Court
+
+                               I
+                              A
+   Some suggest that homelessness may be the “defining
+public health and safety crisis in the western United
+States” today. 72 F. 4th 868, 934 (CA9 2023) (Smith, J.,
+dissenting from denial of rehearing en banc). According to
+the federal government, homelessness in this country has
+reached its highest levels since the government began re-
+porting data on the subject in 2007. Dept. of Housing and
+Urban Development, Office of Community Planning & De-
+velopment, T. de Sousa et al., The 2023 Annual Homeless
+Assessment Report (AHAR) to Congress 2–3 (2023). Cali-
+fornia alone is home to around half of those in this Nation
+living without shelter on a given night. Id., at 30. And each
+of the five States with the highest rates of unsheltered
+homelessness in the country—California, Oregon, Hawaii,
+Arizona, and Nevada—lies in the American West. Id., at
+17.
+   Those experiencing homelessness may be as diverse as
+the Nation itself—they are young and old and belong to all
+races and creeds. People become homeless for a variety of
+reasons, too, many beyond their control. Some have been
+affected by economic conditions, rising housing costs, or
+natural disasters. Id., at 37; see Brief for United States as
+Amicus Curiae 2–3. Some have been forced from their
+homes to escape domestic violence and other forms of ex-
+ploitation. Ibid. And still others struggle with drug addic-
+tion and mental illness. By one estimate, perhaps 78 per-
+cent of the unsheltered suffer from mental-health issues,
+while 75 percent struggle with substance abuse. See J.
+Rountree, N. Hess, & A. Lyke, Health Conditions Among
+Unsheltered Adults in the U. S., Calif. Policy Lab, Policy
+Brief 5 (2019).
+   Those living without shelter often live together. L.
+Dunton et al., Dept. of Housing and Urban Development,
+                 Cite as: 603 U. S. ____ (2024)            3
+
+                     Opinion of the Court
+
+Office of Policy Development & Research, Exploring Home-
+lessness Among People Living in Encampments and Asso-
+ciated Cost 1 (2020) (2020 HUD Report). As the number of
+homeless individuals has grown, the number of homeless
+encampments across the country has increased as well, “in
+numbers not seen in almost a century.” Ibid. The unshel-
+tered may coalesce in these encampments for a range of rea-
+sons. Some value the “freedom” encampment living pro-
+vides compared with submitting to the rules shelters
+impose. Dept. of Housing and Urban Development, Office
+of Policy Development and Research, R. Cohen, W. Yetvin,
+& J. Khadduri, Understanding Encampments of People Ex-
+periencing Homelessness and Community Responses 5
+(2019). Others report that encampments offer a “sense of
+community.” Id., at 7. And still others may seek them out
+for “dependable access to illegal drugs.” Ibid. In brief, the
+reasons why someone will go without shelter on a given
+night vary widely by the person and by the day. See ibid.
+   As the number and size of these encampments have
+grown, so have the challenges they can pose for the home-
+less and others. We are told, for example, that the “expo-
+nential increase in . . . encampments in recent years has re-
+sulted in an increase in crimes both against the homeless
+and by the homeless.” Brief for California State Sheriffs’
+Associations et al. as Amici Curiae 21 (California Sheriffs
+Brief ). California’s Governor reports that encampment in-
+habitants face heightened risks of “sexual assault” and
+“subjugation to sex work.” Brief for California Governor G.
+Newsom as Amicus Curiae 11 (California Governor Brief ).
+And by one estimate, more than 40 percent of the shootings
+in Seattle in early 2022 were linked to homeless encamp-
+ments. Brief for Washington State Association of Sheriffs
+and Police Chiefs as Amicus Curiae on Pet. for Cert. 10
+(Washington Sheriffs Brief ).
+   Other challenges have arisen as well. Some city officials
+indicate that encampments facilitate the distribution of
+4            CITY OF GRANTS PASS v. JOHNSON
+
+                      Opinion of the Court
+
+drugs like heroin and fentanyl, which have claimed the
+lives of so many Americans in recent years. Brief for Office
+of the San Diego County District Attorney as Amicus Curiae
+17–19. Without running water or proper sanitation facili-
+ties, too, diseases can sometimes spread in encampments
+and beyond them. Various States say that they have seen
+typhus, shigella, trench fever, and other diseases reemerge
+on their city streets. California Governor Brief 12; Brief for
+Idaho et al. as Amici Curiae 7 (States Brief ).
+   Nor do problems like these affect everyone equally. Of-
+ten, encampments are found in a city’s “poorest and most
+vulnerable neighborhoods.” Brief for City and County of
+San Francisco et al. as Amici Curiae on Pet. for Cert. 5 (San
+Francisco Cert. Brief ); see also 2020 HUD Report 9. With
+encampments dotting neighborhood sidewalks, adults and
+children in these communities are sometimes forced to nav-
+igate around used needles, human waste, and other haz-
+ards to make their way to school, the grocery store, or work.
+San Francisco Cert. Brief 5; States Brief 8; California Gov-
+ernor Brief 11–12. Those with physical disabilities report
+this can pose a special challenge for them, as they may lack
+the mobility to maneuver safely around the encampments.
+San Francisco Cert. Brief 5; see also Brief for Tiana Tozer
+et al. as Amici Curiae 1–6 (Tozer Brief ).
+   Communities of all sizes are grappling with how best to
+address challenges like these. As they have throughout the
+Nation’s history, charitable organizations “serve as the
+backbone of the emergency shelter system in this country,”
+accounting for roughly 40 percent of the country’s shelter
+beds for single adults on a given night. See National Alli-
+ance To End Homelessness, Faith-Based Organizations:
+Fundamental Partners in Ending Homelessness 1 (2017).
+Many private organizations, city officials, and States have
+worked, as well, to increase the availability of affordable
+housing in order to provide more permanent shelter for
+those in need. See Brief for Local Government Legal Center
+                  Cite as: 603 U. S. ____ (2024)             5
+
+                      Opinion of the Court
+
+et al. as Amici Curiae 4, 32 (Cities Brief ). But many, too,
+have come to the conclusion that, as they put it, “[j]ust
+building more shelter beds and public housing options is al-
+most certainly not the answer by itself.” Id., at 11.
+   As many cities see it, even as they have expanded shelter
+capacity and other public services, their unsheltered popu-
+lations have continued to grow. Id., at 9–11. The city of
+Seattle, for example, reports that roughly 60 percent of its
+offers of shelter have been rejected in a recent year. See id.,
+at 28, and n. 26. Officials in Portland, Oregon, indicate
+that, between April 2022 and January 2024, over 70 percent
+of their approximately 3,500 offers of shelter beds to home-
+less individuals were declined. Brief for League of Oregon
+Cities et al. as Amici Curiae 5 (Oregon Cities Brief ). Other
+cities tell us that “the vast majority of their homeless popu-
+lations are not actively seeking shelter and refuse all ser-
+vices.” Brief for Thirteen California Cities as Amici Curiae
+3. Surveys cited by the Department of Justice suggest that
+only “25–41 percent” of “homeless encampment residents”
+“willingly” accept offers of shelter beds. See Dept. of Jus-
+tice, Office of Community Oriented Policing Services, S.
+Chamard, Homeless Encampments 36 (2010).
+   The reasons why the unsheltered sometimes reject offers
+of assistance may themselves be many and complex. Some
+may reject shelter because accepting it would take them
+further from family and local ties. See Brief for 57 Social
+Scientists as Amici Curiae 20. Some may decline offers of
+assistance because of concerns for their safety or the rules
+some shelters impose regarding curfews, drug use, or reli-
+gious practices. Id., at 22; see Cities Brief 29. Other factors
+may also be at play. But whatever the causes, local govern-
+ments say, this dynamic significantly complicates their ef-
+forts to address the challenges of homelessness. See id., at
+11.
+   Rather than focus on a single policy to meet the chal-
+6            CITY OF GRANTS PASS v. JOHNSON
+
+                     Opinion of the Court
+
+lenges associated with homelessness, many States and cit-
+ies have pursued a range of policies and programs. See
+2020 HUD Report 14–20. Beyond expanding shelter and
+affordable housing opportunities, some have reinvested in
+mental-health and substance-abuse treatment programs.
+See Brief for California State Association of Counties et al.
+as Amici Curiae 20, 25; see also 2020 HUD Report 23. Some
+have trained their employees in outreach tactics designed
+to improve relations between governments and the home-
+less they serve. Ibid. And still others have chosen to pair
+these efforts with the enforcement of laws that restrict
+camping in public places, like parks, streets, and sidewalks.
+Cities Brief 11.
+   Laws like those are commonplace. By one count, “a ma-
+jority of cities have laws restricting camping in public
+spaces,” and nearly forty percent “have one or more laws
+prohibiting camping citywide.” See Brief for Western Re-
+gional Advocacy Project as Amicus Curiae 7, n. 15 (empha-
+sis deleted). Some have argued that the enforcement of
+these laws can create a “revolving door that circulates indi-
+viduals experiencing homelessness from the street to the
+criminal justice system and back.” U. S. Interagency Coun-
+cil on Homelessness, Searching Out Solutions 6 (2012). But
+many cities take a different view. According to the National
+League of Cities (a group that represents more than 19,000
+American cities and towns), the National Association of
+Counties (which represents the Nation’s 3,069 counties)
+and others across the American West, these public-camping
+regulations are not usually deployed as a front-line re-
+sponse “to criminalize homelessness.” Cities Brief 11. In-
+stead, they are used to provide city employees with the legal
+authority to address “encampments that pose significant
+health and safety risks” and to encourage their inhabitants
+to accept other alternatives like shelters, drug treatment
+programs, and mental-health facilities. Ibid.
+                  Cite as: 603 U. S. ____ (2024)             7
+
+                      Opinion of the Court
+
+  Cities are not alone in pursuing this approach. The fed-
+eral government also restricts “the storage of . . . sleeping
+bags,” as well as other “sleeping activities,” on park lands.
+36 CFR §§7.96(i), (j)(1) (2023). And it, too, has exercised
+that authority to clear certain “dangerous” encampments.
+National Park Service, Record of Determination for Clear-
+ing the Unsheltered Encampment at McPherson Square
+and Temporary Park Closure for Rehabilitation (Feb. 13,
+2023).
+  Different governments may use these laws in different
+ways and to varying degrees. See Cities Brief 11. But many
+broadly agree that “policymakers need access to the full
+panoply of tools in the policy toolbox” to “tackle the compli-
+cated issues of housing and homelessness.” California Gov-
+ernor Brief 16; accord, Cities Brief 11; Oregon Cities Brief
+17.
+                                B
+   Five years ago, the U. S. Court of Appeals for the Ninth
+Circuit took one of those tools off the table. In Martin v.
+Boise, 920 F. 3d 584 (2019), that court considered a public-
+camping ordinance in Boise, Idaho, that made it a misde-
+meanor to use “streets, sidewalks, parks, or public places”
+for “camping.” Id., at 603 (internal quotation marks omit-
+ted). According to the Ninth Circuit, the Eighth Amend-
+ment’s Cruel and Unusual Punishments Clause barred
+Boise from enforcing its public-camping ordinance against
+homeless individuals who lacked “access to alternative
+shelter.” Id., at 615. That “access” was lacking, the court
+said, whenever “ ‘there is a greater number of homeless in-
+dividuals in a jurisdiction than the number of available
+beds in shelters.’ ” Id., at 617 (alterations omitted). Accord-
+ing to the Ninth Circuit, nearly three quarters of Boise’s
+shelter beds were not “practically available” because the
+city’s charitable shelters had a “religious atmosphere.” Id.,
+at 609–610, 618. Boise was thus enjoined from enforcing
+8             CITY OF GRANTS PASS v. JOHNSON
+
+                      Opinion of the Court
+
+its camping laws against the plaintiffs. Ibid.
+   No other circuit has followed Martin’s lead with respect
+to public-camping laws. Nor did the decision go unre-
+marked within the Ninth Circuit. When the full court de-
+nied rehearing en banc, several judges wrote separately to
+note their dissent. In one statement, Judge Bennett argued
+that Martin was inconsistent with the Cruel and Unusual
+Punishments Clause. That provision, Judge Bennett con-
+tended, prohibits certain methods of punishment a govern-
+ment may impose after a criminal conviction, but it does not
+“impose [any] substantive limits on what conduct a state
+may criminalize.” 920 F. 3d, at 599–602. In another state-
+ment, Judge Smith lamented that Martin had “shackle[d]
+the hands of public officials trying to redress the serious so-
+cietal concern of homelessness.” Id., at 590. He predicted
+the decision would “wrea[k] havoc on local governments,
+residents, and businesses” across the American West. Ibid.
+   After Martin, similar suits proliferated against Western
+cities within the Ninth Circuit. As Judge Smith put it, “[i]f
+one picks up a map of the western United States and points
+to a city that appears on it, there is a good chance that city
+has already faced” a judicial injunction based on Martin or
+the threat of one “in the few short years since [the Ninth
+Circuit] initiated its Martin experiment.” 72 F. 4th, at 940;
+see, e.g., Boyd v. San Rafael, 2023 WL 7283885, *1–*2 (ND
+Cal., Nov. 2, 2023); Fund for Empowerment v. Phoenix, 646
+F. Supp. 3d 1117, 1132 (Ariz. 2022); Warren v. Chico, 2021
+WL 2894648, *3 (ED Cal., July 8, 2021).
+   Consider San Francisco, where each night thousands
+sleep “in tents and other makeshift structures.” Brief for
+City and County of San Francisco et al. as Amici Curiae 8
+(San Francisco Brief ). Applying Martin, a district court en-
+tered an injunction barring the city from enforcing “laws
+and ordinances to prohibit involuntarily homeless individ-
+uals from sitting, lying, or sleeping on public property.” Co-
+alition on Homelessness v. San Francisco, 647 F. Supp. 3d
+                  Cite as: 603 U. S. ____ (2024)              9
+
+                      Opinion of the Court
+
+806, 841 (ND Cal. 2022). That “misapplication of this
+Court’s Eighth Amendment precedents,” the Mayor tells us,
+has “severely constrained San Francisco’s ability to address
+the homelessness crisis.” San Francisco Brief 7. The city
+“uses enforcement of its laws prohibiting camping” not to
+criminalize homelessness, but “as one important tool
+among others to encourage individuals experiencing home-
+lessness to accept services and to help ensure safe and ac-
+cessible sidewalks and public spaces.” Id., at 7–8. Judicial
+intervention restricting the use of that tool, the Mayor con-
+tinues, “has led to painful results on the streets and in
+neighborhoods.” Id., at 8. “San Francisco has seen over half
+of its offers of shelter and services rejected by unhoused in-
+dividuals, who often cite” the Martin order against the city
+“as their justification to permanently occupy and block pub-
+lic sidewalks.” Id., at 8–9.
+   An exceptionally large number of cities and States have
+filed briefs in this Court reporting experiences like San
+Francisco’s. In the judgment of many of them, the Ninth
+Circuit has inappropriately “limit[ed] the tools available to
+local governments for tackling [what is a] complex and dif-
+ficult human issue.” Oregon Cities Brief 2. The threat of
+Martin injunctions, they say, has “paralyze[d]” even com-
+monsense and good-faith efforts at addressing homeless-
+ness. Brief for City of Phoenix et al. as Amici Curiae 36
+(Phoenix Brief ). The Ninth Circuit’s intervention, they in-
+sist, has prevented local governments from pursuing “effec-
+tive solutions to this humanitarian crisis while simultane-
+ously protecting the remaining community’s right to safely
+enjoy public spaces.” Brief for International Municipal
+Lawyers Association et al. as Amici Curiae on Pet. for Cert.
+27 (Cities Cert. Brief ); States Brief 11 (“State and local gov-
+ernments in the Ninth Circuit have attempted a variety of
+solutions to address the problems that public encampments
+inflict on their communities,” only to have those “efforts . . .
+shut down by federal courts”).
+10            CITY OF GRANTS PASS v. JOHNSON
+
+                       Opinion of the Court
+
+    Many cities further report that, rather than help allevi-
+ate the homelessness crisis, Martin injunctions have inad-
+vertently contributed to it. The numbers of “[u]nsheltered
+homelessness,” they represent, have “increased dramati-
+cally in the Ninth Circuit since Martin.” Brief for League
+of Oregon Cities et al. as Amici Curiae on Pet. for Cert. 7
+(boldface and capitalization deleted). And, they say, Martin
+injunctions have contributed to this trend by “weaken[ing]”
+the ability of public officials “to persuade persons experienc-
+ing homelessness to accept shelter beds and [other] ser-
+vices.” Brief for Ten California Cities as Amici Curiae on
+Pet. for Cert. 2. In Portland, for example, residents report
+some unsheltered persons “often return within days” of an
+encampment’s clearing, on the understanding that “Martin
+. . . and its progeny prohibit the [c]ity from implementing
+more efficacious strategies.” Tozer Brief 5; Washington
+Sheriffs Brief 14 (Martin divests officers of the “ability to
+compel [unsheltered] persons to leave encampments and
+obtain necessary services”). In short, they say, Martin
+“make[s] solving this crisis harder.” Cities Cert. Brief 3.
+    All acknowledge “[h]omelessness is a complex and serious
+social issue that cries out for effective . . . responses.” Ibid.
+But many States and cities believe “it is crucial” for local
+governments to “have the latitude” to experiment and find
+effective responses. Id., at 27; States Brief 13–17. “Injunc-
+tions and the threat of federal litigation,” they insist, “im-
+pede this democratic process,” undermine local govern-
+ments, and do not well serve the homeless or others who
+live in the Ninth Circuit. Cities Cert. Brief 27–28.
+                              C
+  The case before us arises from a Martin injunction issued
+against the city of Grants Pass. Located on the banks of the
+Rogue River in southwestern Oregon, the city is home to
+roughly 38,000 people. Among them are an estimated 600
+individuals who experience homelessness on a given day.
+                  Cite as: 603 U. S. ____ (2024)             11
+
+                      Opinion of the Court
+
+72 F. 4th, at 874; App. to Pet. for Cert. 167a–168a; 212a–
+213a.
+   Like many American cities, Grants Pass has laws re-
+stricting camping in public spaces. Three are relevant here.
+The first prohibits sleeping “on public sidewalks, streets, or
+alleyways.” Grants Pass Municipal Code §5.61.020(A)
+(2023); App. to Pet. for Cert. 221a. The second prohibits
+“[c]amping” on public property. §5.61.030; App. to Pet. for
+Cert. 222a (boldface deleted). Camping is defined as
+“set[ting] up . . . or remain[ing] in or at a campsite,” and a
+“[c]ampsite” is defined as “any place where bedding, sleep-
+ing bag[s], or other material used for bedding purposes, or
+any stove or fire is placed . . . for the purpose of maintaining
+a temporary place to live.” §§5.61.010(A)–(B); App. to Pet.
+for Cert. 221a. The third prohibits “[c]amping” and “[o]ver-
+night parking” in the city’s parks. §§6.46.090(A)–(B); 72
+F. 4th, at 876. Penalties for violating these ordinances es-
+calate stepwise. An initial violation may trigger a fine.
+§§1.36.010(I)–(J). Those who receive multiple citations may
+be subject to an order barring them from city parks for 30
+days. §6.46.350; App. to Pet. for Cert. 174a. And, in turn,
+violations of those orders can constitute criminal trespass,
+punishable by a maximum of 30 days in prison and a $1,250
+fine. Ore. Rev. Stat. §§164.245, 161.615(3), 161.635(1)(c)
+(2023).
+   Neither of the named plaintiffs before us has been sub-
+jected to an order barring them from city property or to
+criminal trespass charges. Perhaps that is because the city
+has traditionally taken a light-touch approach to enforce-
+ment. The city’s officers are directed “to provide law en-
+forcement services to all members of the community while
+protecting the rights, dignity[,] and private property of the
+homeless.” App. 152, Grants Pass Dept. of Public Safety
+Policy Manual ¶428.1.1 (Dec. 17, 2018). Officers are in-
+structed that “[h]omelessness is not a crime.” Ibid. And
+they are “encouraged” to render “aid” and “support” to the
+12               CITY OF GRANTS PASS v. JOHNSON
+
+                           Opinion of the Court
+
+homeless whenever possible. Id., at 153, ¶428.3.1
+  Still, shortly after the panel decision in Martin, two
+homeless individuals, Gloria Johnson and John Logan, filed
+suit challenging the city’s public-camping laws. App. 37,
+Third Amended Complaint ¶¶6–7. They claimed, among
+other things, that the city’s ordinances violated the Eighth
+Amendment’s Cruel and Unusual Punishments Clause.
+Id., at 51, ¶66. And they sought to pursue their claim on
+behalf of a class encompassing “all involuntarily homeless
+people living in Grants Pass.” Id., at 48, ¶52.2
+  The district court certified the class action and enjoined
+the city from enforcing its public-camping laws against the
+homeless. While Ms. Johnson and Mr. Logan generally
+sleep in their vehicles, the court held, they could adequately
+represent the class, for sleeping in a vehicle can sometimes
+count as unlawful “ ‘camping’ ” under the relevant ordi-
+nances. App. to Pet. for Cert. 219a (quoting Grants Pass
+Municipal Code §5.61.010). And, the court found, everyone
+——————
+   1 The dissent cites minutes from a community roundtable meeting to
+
+suggest that officials in Grants Pass harbored only punitive motives
+when adopting their camping ban. Post, at 13–14 (opinion of SOTOMAYOR,
+J.). But the dissent tells at best half the story about that meeting. In
+his opening remarks, the Mayor stressed that the city’s goal was to “find
+a balance between providing the help [homeless] people need and not en-
+abling . . . aggressive negative behavior” some community members had
+experienced. App. 112. And, by all accounts, the “purpose” of the meet-
+ing was to “develo[p ] strategies to . . . connect [homeless] people to ser-
+vices.” Ibid. The city manager and others explained that the city was
+dealing with problems of “harassment” and “defecation in public places”
+by those who seemingly “do not want to receive services.” Id., at 113,
+118–120. At the same time, they celebrated “the strong commitment”
+from “faith-based entities” and a “huge number of people” in the city, who
+have “come together for projects” to support the homeless, including by
+securing “funding for a sobering center.” Id., at 115, 123.
+   2 Another named plaintiff, Debra Blake, passed away while this case
+
+was pending in the Ninth Circuit, and her claims are not before us. 72
+F. 4th 868, 880, n. 12 (2023). Before us, the city does not dispute that
+the remaining named plaintiffs face a credible threat of sanctions under
+its ordinances.
+                  Cite as: 603 U. S. ____ (2024)             13
+
+                      Opinion of the Court
+
+without shelter in Grants Pass was “involuntarily home-
+less” because the city’s total homeless population outnum-
+bered its “ ‘practically available’ ” shelter beds. App. to Pet.
+for Cert. 179a, 216a. In fact, the court ruled, none of the
+beds at Grants Pass’s charity-run shelter qualified as
+“available.” They did not, the court said, both because that
+shelter offers something closer to transitional housing than
+“temporary emergency shelter,” and because the shelter
+has rules requiring residents to abstain from smoking and
+attend religious services. Id., at 179a–180a. The Eighth
+Amendment, the district court thus concluded, prohibited
+Grants Pass from enforcing its laws against homeless indi-
+viduals in the city. Id., at 182a–183a.
+   A divided panel of the Ninth Circuit affirmed in relevant
+part. 72 F. 4th, at 874–896. The majority agreed with the
+district court that all unsheltered individuals in Grants
+Pass qualify as “involuntarily homeless” because the city’s
+homeless population exceeds “available” shelter beds. Id.,
+at 894. And the majority further agreed that, under Mar-
+tin, the homeless there cannot be punished for camping
+with “rudimentary forms of protection from the elements.”
+72 F. 4th, at 896. In dissent, Judge Collins questioned Mar-
+tin’s consistency with the Eighth Amendment and la-
+mented its “dire practical consequences” for the city and
+others like it. 72 F. 4th, at 914 (internal quotation marks
+omitted).
+   The city sought rehearing en banc, which the court de-
+nied over the objection of 17 judges who joined five separate
+opinions. Id., at 869, 924–945. Judge O’Scannlain, joined
+by 14 judges, criticized Martin’s “jurisprudential experi-
+ment” as “egregiously flawed and deeply damaging—at war
+with the constitutional text, history, and tradition.” 72
+F. 4th, at 925, 926, n. 2. Judge Bress, joined by 11 judges,
+contended that Martin has “add[ed] enormous and unjusti-
+fied complication to an already extremely complicated set
+of circumstances.” 72 F. 4th, at 945. And Judge Smith,
+14               CITY OF GRANTS PASS v. JOHNSON
+
+                           Opinion of the Court
+
+joined by several others, described in painstaking detail the
+ways in which, in his view, Martin had thwarted good-faith
+attempts by cities across the West, from Phoenix to Sacra-
+mento, to address homelessness. 72 F. 4th, at 934, 940–
+943.
+   Grants Pass filed a petition for certiorari. A large num-
+ber of States, cities, and counties from across the Ninth Cir-
+cuit and the country joined Grants Pass in urging the Court
+to grant review to assess the Martin experiment. See Part
+I–B, supra. We agreed to do so. 601 U. S. ___ (2024).3
+
+——————
+   3 Supporters of Grants Pass’s petition for certiorari included: The cities
+
+of Albuquerque, Anchorage, Chico, Chino, Colorado Springs, Fillmore,
+Garden Grove, Glendora, Henderson, Honolulu, Huntington Beach, Las
+Vegas, Los Angeles, Milwaukee, Murrieta, Newport Beach, Orange,
+Phoenix, Placentia, Portland, Providence, Redondo Beach, Roseville,
+Saint Paul, San Clemente, San Diego, San Francisco, San Juan Ca-
+pistrano, Seattle, Spokane, Tacoma, and Westminster; the National
+League of Cities, representing more than 19,000 American cities and
+towns; the League of California Cities, representing 477 California cities;
+the League of Oregon Cities, representing Oregon’s 241 cities; the Asso-
+ciation of Idaho Cities, representing Idaho’s 199 cities; the League of Ar-
+izona Cities and Towns, representing all 91 incorporated Arizona munic-
+ipalities; the North Dakota League of Cities, comprising 355 cities; the
+Counties of Honolulu, San Bernardino, San Francisco, and Orange; the
+National Association of Counties, which represents the Nation’s 3,069
+counties; the California State Association of Counties, representing Cal-
+ifornia’s 58 counties; the Special Districts Association of Oregon, repre-
+senting all of Oregon’s special districts; the Washington State Associa-
+tion of Municipal Attorneys, a nonprofit corporation comprising
+attorneys representing Washington’s 281 cities and towns; the Interna-
+tional Municipal Lawyers Association, the largest association of attor-
+neys representing municipalities, counties, and special districts across
+the country; the District Attorneys of Sacramento and San Diego Coun-
+ties, the California State Sheriffs’ Association, the California Police
+Chiefs Association, and the Washington State Association of Sheriffs and
+Police Chiefs; California Governor Gavin Newsom and San Francisco
+Mayor London Breed; and a group of 20 States: Alabama, Alaska, Ar-
+kansas, Florida, Idaho, Indiana, Kansas, Louisiana, Mississippi, Mis-
+souri, Montana, Nebraska, North Dakota, Oklahoma, South Carolina,
+South Dakota, Texas, Utah, Virginia, and West Virginia.
+                  Cite as: 603 U. S. ____ (2024)           15
+
+                      Opinion of the Court
+
+                               II
+                               A
+   The Constitution and its Amendments impose a number
+of limits on what governments in this country may declare
+to be criminal behavior and how they may go about enforc-
+ing their criminal laws. Familiarly, the First Amendment
+prohibits governments from using their criminal laws to
+abridge the rights to speak, worship, assemble, petition,
+and exercise the freedom of the press. The Equal Protection
+Clause of the Fourteenth Amendment prevents govern-
+ments from adopting laws that invidiously discriminate be-
+tween persons. The Due Process Clauses of the Fifth and
+Fourteenth Amendments ensure that officials may not dis-
+place certain rules associated with criminal liability that
+are “so old and venerable,” “ ‘so rooted in the traditions and
+conscience of our people[,] as to be ranked as fundamental.’ ”
+Kahler v. Kansas, 589 U. S. 271, 279 (2020) (quoting Leland
+v. Oregon, 343 U. S. 790, 798 (1952)). The Fifth and Sixth
+Amendments require prosecutors and courts to observe var-
+ious procedures before denying any person of his liberty,
+promising for example that every person enjoys the right to
+confront his accusers and have serious criminal charges re-
+solved by a jury of his peers. One could go on.
+   But if many other constitutional provisions address what
+a government may criminalize and how it may go about se-
+curing a conviction, the Eighth Amendment’s prohibition
+against “cruel and unusual punishments” focuses on what
+happens next. That Clause “has always been considered,
+and properly so, to be directed at the method or kind of pun-
+ishment” a government may “impos[e] for the violation of
+criminal statutes.” Powell v. Texas, 392 U. S. 514, 531–532
+(1968) (plurality opinion).
+   We have previously discussed the Clause’s origins and
+meaning. In the 18th century, English law still “formally
+tolerated” certain barbaric punishments like “disembowel-
+ing, quartering, public dissection, and burning alive,” even
+16           CITY OF GRANTS PASS v. JOHNSON
+
+                      Opinion of the Court
+
+though those practices had by then “fallen into disuse.”
+Bucklew v. Precythe, 587 U. S. 119, 130 (2019) (citing 4 W.
+Blackstone, Commentaries on the Laws of England 370
+(1769) (Blackstone)). The Cruel and Unusual Punishments
+Clause was adopted to ensure that the new Nation would
+never resort to any of those punishments or others like
+them. Punishments like those were “cruel” because they
+were calculated to “ ‘superad[d]’ ” “ ‘terror, pain, or dis-
+grace.’ ” 587 U. S., at 130 (quoting 4 Blackstone 370). And
+they were “unusual” because, by the time of the Amend-
+ment’s adoption, they had “long fallen out of use.” 587 U. S.,
+at 130. Perhaps some of those who framed our Constitution
+thought, as Justice Story did, that a guarantee against
+those kinds of “atrocious” punishments would prove “unnec-
+essary” because no “free government” would ever employ
+anything like them. 3 J. Story, Commentaries on the Con-
+stitution of the United States §1896, p. 750 (1833). But in
+adopting the Eighth Amendment, the framers took no
+chances.
+   All that would seem to make the Eighth Amendment a
+poor foundation on which to rest the kind of decree the
+plaintiffs seek in this case and the Ninth Circuit has en-
+dorsed since Martin. The Cruel and Unusual Punishments
+Clause focuses on the question what “method or kind of
+punishment” a government may impose after a criminal
+conviction, not on the question whether a government may
+criminalize particular behavior in the first place or how it
+may go about securing a conviction for that offense. Powell,
+392 U. S., at 531–532. To the extent the Constitution
+speaks to those other matters, it does so, as we have seen,
+in other provisions.
+   Nor, focusing on the criminal punishments Grant Pass
+imposes, can we say they qualify as cruel and unusual. Re-
+call that, under the city’s ordinances, an initial offense may
+trigger a civil fine. Repeat offenses may trigger an order
+temporarily barring an individual from camping in a public
+                     Cite as: 603 U. S. ____ (2024)                   17
+
+                          Opinion of the Court
+
+park. Only those who later violate an order like that may
+face a criminal punishment of up to 30 days in jail and a
+larger fine. See Part I–C, supra. None of the city’s sanc-
+tions qualifies as cruel because none is designed to “su-
+perad[d]” “terror, pain, or disgrace.” Bucklew, 587 U. S., at
+130 (internal quotation marks omitted). Nor are the city’s
+sanctions unusual, because similar punishments have been
+and remain among “the usual mode[s]” for punishing of-
+fenses throughout the country. Pervear v. Commonwealth,
+5 Wall. 475, 480 (1867); see 4 Blackstone 371–372; Timbs v.
+Indiana, 586 U. S. 146, 165 (2019) (Thomas J., concurring
+in judgment) (describing fines as “ ‘the drudge-horse of
+criminal justice, probably the most common form of punish-
+ment’ ” (some internal quotation marks omitted)). In fact,
+large numbers of cities and States across the country have
+long employed, and today employ, similar punishments for
+similar offenses. See Part I–A, supra; Brief for Professor
+John F. Stinneford as Amicus Curiae 7–13 (collecting his-
+torical and contemporary examples). Notably, neither the
+plaintiffs nor the dissent meaningfully contests any of this.
+See Brief for Respondents 40.4
+                               B
+   Instead, the plaintiffs and the dissent pursue an entirely
+different theory. They do not question that, by its terms,
+the Cruel and Unusual Punishments Clause speaks to the
+question what punishments may follow a criminal convic-
+tion, not to antecedent questions like what a State may
+criminalize or how it may go about securing a conviction.
+Yet, echoing the Ninth Circuit in Martin, they insist one
+notable exception exists.
+——————
+  4 This Court has never held that the Cruel and Unusual Punishments
+
+Clause extends beyond criminal punishments to civil fines and orders,
+see Ingraham v. Wright, 430 U. S. 651, 666–668 (1977), nor does this case
+present any occasion to do so for none of the city’s sanctions defy the
+Clause.
+18            CITY OF GRANTS PASS v. JOHNSON
+
+                      Opinion of the Court
+
+   In Robinson v. California, 370 U. S. 660 (1962), the plain-
+tiffs and the dissent observe, this Court addressed a chal-
+lenge to a criminal conviction under a California statute
+providing that “ ‘[n]o person shall . . . be addicted to the use
+of narcotics.’ ” Ibid., n. 1. In response to that challenge, the
+Court invoked the Cruel and Unusual Punishments Clause
+to hold that California could not enforce its law making “the
+‘status’ of narcotic addiction a criminal offense.” Id., at 666.
+The Court recognized that “imprisonment for ninety days is
+not, in the abstract, a punishment which is either cruel or
+unusual.” Id., at 667. But, the Court reasoned, when pun-
+ishing “ ‘status,’ ” “[e]ven one day in prison would be . . .
+cruel and unusual.” Id., at 666–667.
+   In doing so, the Court stressed the limits of its decision.
+It would have ruled differently, the Court said, if California
+had sought to convict the defendant for, say, the knowing
+or intentional “use of narcotics, for their purchase, sale, or
+possession, or for antisocial or disorderly behavior resulting
+from their administration.” Id., at 666. In fact, the Court
+took pains to emphasize that it did not mean to cast doubt
+on the States’ “broad power” to prohibit behavior like that,
+even by those, like the defendant, who suffered from addic-
+tion. Id., at 664, 667–668. The only problem, as the Court
+saw it, was that California’s law did not operate that way.
+Instead, it made the mere status of being an addict a crime.
+Id., at 666–667. And it was that feature of the law, the
+Court held, that went too far.
+   Reaching that conclusion under the banner of the Eighth
+Amendment may have come as a surprise to the litigants.
+Mr. Robinson challenged his conviction principally on the
+ground that it offended the Fourteenth Amendment’s guar-
+antee of due process of law. As he saw it, California’s law
+violated due process because it purported to make unlawful
+a “status” rather than the commission of any “volitional
+act.” See Brief for Appellant in Robinson v. California,
+O. T. 1961, No. 61–554, p. 13 (Robinson Brief ).
+                  Cite as: 603 U. S. ____ (2024)             19
+
+                      Opinion of the Court
+
+   That framing may have made some sense. Our due pro-
+cess jurisprudence has long taken guidance from the “set-
+tled usage[s] . . . in England and in this country.” Hurtado
+v. California, 110 U. S. 516, 528 (1884); see also Kahler, 589
+U. S., at 279. And, historically, crimes in England and this
+country have usually required proof of some act (or actus
+reus) undertaken with some measure of volition (mens rea).
+At common law, “a complete crime” generally required
+“both a will and an act.” 4 Blackstone 21. This view “took
+deep and early root in American soil” where, to this day, a
+crime ordinarily arises “only from concurrence of an evil-
+meaning mind with an evil-doing hand.” Morissette v.
+United States, 342 U. S. 246, 251–252 (1952). Measured
+against these standards, California’s law was an anomaly,
+as it required proof of neither of those things.
+   Mr. Robinson’s resort to the Eighth Amendment was
+comparatively brief. He referenced it only in passing, and
+only for the proposition that forcing a drug addict like him-
+self to go “ ‘cold turkey’ ” in a jail cell after conviction en-
+tailed such “intense mental and physical torment” that it
+was akin to “the burning of witches at the stake.” Robinson
+Brief 30. The State responded to that argument with barely
+a paragraph of analysis, Brief for Appellee in Robinson v.
+California, O. T. 1961, No. 61–554, pp. 22–23, and it re-
+ceived virtually no attention at oral argument. By almost
+every indication, then, Robinson was set to be a case about
+the scope of the Due Process Clause, or perhaps an Eighth
+Amendment case about whether forcing an addict to with-
+draw from drugs after conviction qualified as cruel and un-
+usual punishment.
+   Of course, the case turned out differently. Bypassing Mr.
+Robinson’s primary Due Process Clause argument, the
+Court charted its own course, reading the Cruel and Unu-
+sual Punishments Clause to impose a limit not just on what
+punishments may follow a criminal conviction but what a
+20            CITY OF GRANTS PASS v. JOHNSON
+
+                       Opinion of the Court
+
+State may criminalize to begin with. It was a view unprec-
+edented in the history of the Court before 1962. In dissent,
+Justice White lamented that the majority had embraced an
+“application of ‘cruel and unusual punishment’ so novel
+that” it could not possibly be “ascribe[d] to the Framers of
+the Constitution.” 370 U. S., at 689. Nor, in the 62 years
+since Robinson, has this Court once invoked it as authority
+to decline the enforcement of any criminal law, leaving the
+Eighth Amendment instead to perform its traditional func-
+tion of addressing the punishments that follow a criminal
+conviction.
+   Still, no one has asked us to reconsider Robinson. Nor do
+we see any need to do so today. Whatever its persuasive
+force as an interpretation of the Eighth Amendment, it can-
+not sustain the Ninth Circuit’s course since Martin. In Rob-
+inson, the Court expressly recognized the “broad power”
+States enjoy over the substance of their criminal laws,
+stressing that they may criminalize knowing or intentional
+drug use even by those suffering from addiction. 370 U. S.,
+at 664, 666. The Court held only that a State may not crim-
+inalize the “ ‘status’ ” of being an addict. Id., at 666. In crim-
+inalizing a mere status, Robinson stressed, California had
+taken a historically anomalous approach toward criminal
+liability. One, in fact, this Court has not encountered since
+Robinson itself.
+   Public camping ordinances like those before us are noth-
+ing like the law at issue in Robinson. Rather than crimi-
+nalize mere status, Grants Pass forbids actions like “oc-
+cupy[ing] a campsite” on public property “for the purpose of
+maintaining a temporary place to live.” Grants Pass Mu-
+nicipal Code §§5.61.030, 5.61.010; App. to Pet. for Cert.
+221a–222a. Under the city’s laws, it makes no difference
+whether the charged defendant is homeless, a backpacker
+on vacation passing through town, or a student who aban-
+dons his dorm room to camp out in protest on the lawn of a
+municipal building. See Part I–C, supra; Blake v. Grants
+                     Cite as: 603 U. S. ____ (2024)                   21
+
+                          Opinion of the Court
+
+Pass, No. 1:18–cv–01823 (D Ore.), ECF Doc. 63–4, pp. 2, 16;
+Tr. of Oral Arg. 159. In that respect, the city’s laws parallel
+those found in countless jurisdictions across the country.
+See Part I–A, supra. And because laws like these do not
+criminalize mere status, Robinson is not implicated.5
+                                C
+   If Robinson does not control this case, the plaintiffs and
+the dissent argue, we should extend it so that it does. Per-
+haps a person does not violate ordinances like Grants Pass’s
+simply by being homeless but only by engaging in certain
+acts (actus rei) with certain mental states (mentes reae).
+Still, the plaintiffs and the dissent insist, laws like these
+seek to regulate actions that are in some sense “involun-
+tary,” for some homeless persons cannot help but do what
+the law forbids. See Brief for Respondents 24–25, 29, 32;
+post, at 16–17 (opinion of SOTOMAYOR, J.). And, the plain-
+tiffs and the dissent continue, we should extend Robinson
+to prohibit the enforcement of laws that operate this way—
+laws that don’t proscribe status as such but that proscribe
+acts, even acts undertaken with some required mental
+state, the defendant cannot help but undertake. Post, at
+16–17. To rule otherwise, the argument goes, would “ ‘effec-
+tively’ ” allow cities to punish a person because of his status.
+Post, at 25. The Ninth Circuit pursued just this line of
+thinking below and in Martin.
+   The problem is, this Court has already rejected that view.
+——————
+   5 At times, the dissent seems to suggest, mistakenly, that laws like
+
+Grants Pass’s apply only to the homeless. See post, at 13. That view
+finds no support in the laws before us. Perhaps the dissent means to
+suggest that some cities selectively “enforce” their public-camping laws
+only against homeless persons. See post, at 17–19. But if that’s the dis-
+sent’s theory, it is not one that arises under the Eighth Amendment’s
+Cruel and Unusual Punishments Clause. Instead, if anything, it may
+implicate due process and our precedents regarding selective prosecu-
+tion. See, e.g., United States v. Armstrong, 517 U. S. 456 (1996). No
+claim like that is before us in this case.
+22            CITY OF GRANTS PASS v. JOHNSON
+
+                      Opinion of the Court
+
+In Powell v. Texas, 392 U. S. 514 (1968), the Court con-
+fronted a defendant who had been convicted under a Texas
+statute making it a crime to “ ‘get drunk or be found in a
+state of intoxication in any public place.’ ” Id., at 517 (plu-
+rality opinion). Like the plaintiffs here, Mr. Powell argued
+that his drunkenness was an “ ‘involuntary’ ” byproduct of
+his status as an alcoholic. Id., at 533. Yes, the statute re-
+quired proof of an act (becoming drunk or intoxicated and
+then proceeding into public), and perhaps some associated
+mental state (for presumably the defendant knew he was
+drinking and maybe even knew he made his way to a public
+place). Still, Mr. Powell contended, Texas’s law effectively
+criminalized his status as an alcoholic because he could not
+help but doing as he did. Ibid. Justice Fortas embraced
+that view, but only in dissent: He would have extended
+Robinson to cover conduct that flows from any “condition
+[the defendant] is powerless to change.” 392 U. S., at 567
+(Fortas, J., dissenting).
+  The Court did not agree. Writing for a plurality, Justice
+Marshall observed that Robinson had authorized “a very
+small” intrusion by courts “into the substantive criminal
+law” “under the aegis of the Cruel and Unusual Punish-
+ment[s] Clause.” 392 U. S., at 533. That small intrusion,
+Justice Marshall said, prevents States only from enforcing
+laws that criminalize “a mere status.” Id., at 532. It does
+nothing to curtail a State’s authority to secure a conviction
+when “the accused has committed some act . . . society has
+an interest in preventing.” Id., at 533. That remains true,
+Justice Marshall continued, regardless whether the defend-
+ant’s act “in some sense” might be described as “ ‘involun-
+tary’ or ‘occasioned by’ ” a particular status. Ibid. (emphasis
+added). In this, Justice Marshall echoed Robinson itself,
+where the Court emphasized that California remained free
+to criminalize intentional or knowing drug use even by ad-
+dicts whose conduct, too, in some sense could be considered
+involuntary. See Robinson, 370 U. S., at 664, 666. Based
+                      Cite as: 603 U. S. ____ (2024)                     23
+
+                           Opinion of the Court
+
+on all this, Justice Marshall concluded, because the defend-
+ant before the Court had not been convicted “for being” an
+“alcoholic, but for [engaging in the act of] being in public
+while drunk on a particular occasion,” Robinson did not ap-
+ply. Powell, 392 U. S., at 532.6
+   This case is no different from Powell. Just as there, the
+plaintiffs here seek to expand Robinson’s “small” intrusion
+“into the substantive criminal law.” Just as there, the
+plaintiffs here seek to extend its rule beyond laws address-
+ing “mere status” to laws addressing actions that, even if
+undertaken with the requisite mens rea, might “in some
+sense” qualify as “ ‘involuntary.’ ” And just as Powell could
+find nothing in the Eighth Amendment permitting that
+course, neither can we. As we have seen, Robinson already
+sits uneasily with the Amendment’s terms, original mean-
+ing, and our precedents. Its holding is restricted to laws
+that criminalize “mere status.” Nothing in the decision
+called into question the “broad power” of States to regulate
+acts undertaken with some mens rea. And, just as in Pow-
+ell, we discern nothing in the Eighth Amendment that
+might provide us with lawful authority to extend Robinson
+beyond its narrow holding.
+
+——————
+  6 Justice White, who cast the fifth vote upholding the conviction, con-
+
+curred in the result. Writing only for himself, Justice White expressed
+some sympathy for Justice Fortas’s theory, but ultimately deemed that
+“novel construction” of the Eighth Amendment “unnecessary to pursue”
+because the defendant hadn’t proven that his alcoholism made him “un-
+able to stay off the streets on the night in question.” 392 U. S., at 552,
+n. 4, 553–554 (White, J., concurring in result). In Martin, the Ninth Cir-
+cuit suggested Justice White’s solo concurrence somehow rendered the
+Powell dissent controlling and the plurality a dissent. See Martin v.
+Boise, 920 F. 3d 584, 616–617 (2019). Before us, neither the plaintiffs
+nor the dissent defend that theory, and for good reason: In the years
+since Powell, this Court has repeatedly relied on Justice Marshall’s opin-
+ion, as we do today. See, e.g., Kahler v. Kansas, 589 U. S. 271, 280 (2020);
+Clark v. Arizona, 548 U. S. 735, 768, n. 38 (2006); Jones v. United States,
+463 U. S. 354, 365, n. 13 (1983).
+24           CITY OF GRANTS PASS v. JOHNSON
+
+                      Opinion of the Court
+
+   To be sure, and once more, a variety of other legal doc-
+trines and constitutional provisions work to protect those in
+our criminal justice system from a conviction. Like some
+other jurisdictions, Oregon recognizes a “necessity ” defense
+to certain criminal charges. It may be that defense extends
+to charges for illegal camping when it comes to those with
+nowhere else to go. See State v. Barrett, 302 Ore. App. 23,
+28, 460 P. 3d 93, 96 (2020) (citing Ore. Rev. Stat. §161.200).
+Insanity, diminished-capacity, and duress defenses also
+may be available in many jurisdictions. See Powell, 392
+U. S., at 536. States and cities are free as well to add addi-
+tional substantive protections. Since this litigation began,
+for example, Oregon itself has adopted a law specifically ad-
+dressing how far its municipalities may go in regulating
+public camping. See, e.g., Ore. Rev. Stat. §195.530(2)
+(2023). For that matter, nothing in today’s decision pre-
+vents States, cities, and counties from going a step further
+and declining to criminalize public camping altogether. For
+its part, the Constitution provides many additional limits
+on state prosecutorial power, promising fair notice of the
+laws and equal treatment under them, forbidding selective
+prosecutions, and much more besides. See Part II–A, supra;
+and n. 5, supra. All this represents only a small sample of
+the legion protections our society affords a presumptively
+free individual from a criminal conviction. But aside from
+Robinson, a case directed to a highly unusual law that con-
+demned status alone, this Court has never invoked the
+Eighth Amendment’s Cruel and Unusual Punishments
+Clause to perform that function.
+                              D
+  Not only did Powell decline to extend Robinson to “invol-
+untary” acts, it stressed the dangers that would likely at-
+tend any attempt to do so. Were the Court to pursue that
+path in the name of the Eighth Amendment, Justice Mar-
+shall warned, “it is difficult to see any limiting principle
+                  Cite as: 603 U. S. ____ (2024)             25
+
+                      Opinion of the Court
+
+that would serve to prevent this Court from becoming . . .
+the ultimate arbiter of the standards of criminal responsi-
+bility, in diverse areas of the criminal law, throughout the
+country.” Powell, 392 U. S., at 533. After all, nothing in the
+Amendment’s text or history exists to “confine” or guide our
+review. Id., at 534. Unaided by those sources, we would be
+left “to write into the Constitution” our own “formulas,”
+many of which would likely prove unworkable in practice.
+Id., at 537. Along the way, we would interfere with “essen-
+tial considerations of federalism” that reserve to the States
+primary responsibility for drafting their own criminal laws.
+Id., at 535.
+   In particular, Justice Marshall observed, extending Rob-
+inson to cover involuntary acts would effectively “impe[l]”
+this Court “into defining” something akin to a new “insanity
+test in constitutional terms.” 392 U. S., at 536. It would
+because an individual like the defendant in Powell does not
+dispute that he has committed an otherwise criminal act
+with the requisite mens rea, yet he seeks to be excused from
+“moral accountability” because of his “ ‘condition.’ ” Id., at
+535–536. And “[n]othing,” Justice Marshall said, “could be
+less fruitful than for this Court” to try to resolve for the Na-
+tion profound questions like that under a provision of the
+Constitution that does not speak to them. Id., at 536. In-
+stead, Justice Marshall reasoned, such matters are gener-
+ally left to be resolved through “productive” democratic “di-
+alogue” and “experimentation,” not by “freez[ing]” any
+particular, judicially preferred approach “into a rigid con-
+stitutional mold.” Id., at 537.
+   We recently reemphasized that last point in Kahler v.
+Kansas in the context of a Due Process Clause challenge.
+Drawing on Justice Marshall’s opinion in Powell, we
+acknowledged that “a state rule about criminal liability”
+may violate due process if it departs from a rule “so rooted
+in the traditions” of this Nation that it might be said to
+26            CITY OF GRANTS PASS v. JOHNSON
+
+                       Opinion of the Court
+
+“ran[k] as fundamental.” 589 U. S., at 279 (internal quota-
+tion marks omitted). But, we stressed, questions about
+whether an individual who has committed a proscribed act
+with the requisite mental state should be “reliev[ed of] re-
+sponsibility,” id., at 283, due to a lack of “moral culpability,”
+id., at 286, are generally best resolved by the people and
+their elected representatives. Those are questions, we said,
+“of recurrent controversy” to which history supplies few “en-
+trenched” answers, and on which the Constitution gener-
+ally commands “no one view.” Id., at 296.
+   The Ninth Circuit’s Martin experiment defied these les-
+sons. Under Martin, judges take from elected representa-
+tives the questions whether and when someone who has
+committed a proscribed act with a requisite mental state
+should be “relieved of responsibility” for lack of “moral cul-
+pability.” 598 U. S., at 283, 286. And Martin exemplifies
+much of what can go wrong when courts try to resolve mat-
+ters like those unmoored from any secure guidance in the
+Constitution.
+   Start with this problem. Under Martin, cities must allow
+public camping by those who are “involuntarily” homeless.
+72 F. 4th, at 877 (citing Martin, 920 F. 3d, at 617, n. 8). But
+how are city officials and law enforcement officers to know
+what it means to be “involuntarily” homeless, or whether
+any particular person meets that standard? Posing the
+questions may be easy; answering them is not. Is it enough
+that a homeless person has turned down an offer of shelter?
+Or does it matter why? Cities routinely confront individu-
+als who decline offers of shelter for any number of reasons,
+ranging from safety concerns to individual preferences. See
+Part I–A, supra. How are cities and their law enforcement
+officers on the ground to know which of these reasons are
+sufficiently weighty to qualify a person as “involuntarily”
+homeless?
+   If there are answers to those questions, they cannot be
+found in the Cruel and Unusual Punishments Clause. Nor
+                  Cite as: 603 U. S. ____ (2024)            27
+
+                      Opinion of the Court
+
+do federal judges enjoy any special competence to provide
+them. Cities across the West report that the Ninth Circuit’s
+ill-defined involuntariness test has proven “unworkable.”
+Oregon Cities Brief 3; see Phoenix Brief 11. The test, they
+say, has left them “with little or no direction as to the scope
+of their authority in th[eir] day-to-day policing contacts,”
+California Sheriffs Brief 6, and under “threat of federal lit-
+igation . . . at all times and in all circumstances,” Oregon
+Cities Brief 6–7.
+   To be sure, Martin attempted to head off these complexi-
+ties through some back-of-the-envelope arithmetic. The
+Ninth Circuit said a city needs to consider individuals “in-
+voluntarily” homeless (and thus entitled to camp on public
+property) only when the overall homeless population ex-
+ceeds the total number of “adequate” and “practically avail-
+able” shelter beds. See 920 F. 3d, at 617–618, and n. 8. But
+as sometimes happens with abstract rules created by those
+far from the front lines, that test has proven all but impos-
+sible to administer in practice.
+   City officials report that it can be “monumentally diffi-
+cult” to keep an accurate accounting of those experiencing
+homelessness on any given day. Los Angeles Cert. Brief 14.
+Often, a city’s homeless population “fluctuate[s] dramati-
+cally,” in part because homelessness is an inherently dy-
+namic status. Brief for City of San Clemente as Amicus Cu-
+riae 16 (San Clemente Brief ). While cities sometimes make
+rough estimates based on a single point-in-time count, they
+say it would be “impossibly expensive and difficult” to un-
+dertake that effort with any regularity. Id., at 17. In Los
+Angeles, for example, it takes three days to count the home-
+less population block-by-block—even with the participation
+of thousands of volunteers. Martin, 920 F. 3d, at 595
+(Smith, J., dissenting from denial of rehearing en banc).
+   Beyond these complexities, more await. Suppose even
+large cities could keep a running tally of their homeless cit-
+izens forevermore. And suppose further that they could
+28            CITY OF GRANTS PASS v. JOHNSON
+
+                      Opinion of the Court
+
+keep a live inventory of available shelter beds. Even so, cit-
+ies face questions over which shelter beds count as “ade-
+quate” and “available” under Martin. Id., at 617, and n. 8.
+Rather than resolve the challenges associated with defining
+who qualifies as “involuntarily” homeless, these standards
+more nearly return us to them. Is a bed “available” to a
+smoker if the shelter requires residents to abstain from nic-
+otine, as the shelter in Grants Pass does? 72 F. 4th, at 896;
+App. 39, Third Amended Complaint ¶13. Is a bed “availa-
+ble” to an atheist if the shelter includes “religious” messag-
+ing? 72 F. 4th, at 877. And how is a city to know whether
+the accommodations it provides will prove “adequate” in
+later litigation? 920 F. 3d, at 617, n. 8. Once more, a large
+number of cities in the Ninth Circuit tell us they have no
+way to be sure. See, e.g., Phoenix Brief 28; San Clemente
+Brief 8–12; Brief for City of Los Angeles as Amicus Curiae
+22–23 (“What may be available, appropriate, or actually
+beneficial to one [homeless] person, might not be so to an-
+other”).
+  Consider an example. The city of Chico, California,
+thought it was complying with Martin when it constructed
+an outdoor shelter facility at its municipal airport to accom-
+modate its homeless population. Warren v. Chico, 2021 WL
+2894648, *3 (ED Cal., July 8, 2021). That shelter, we are
+told, included “protective fencing, large water totes, hand-
+washing stations, portable toilets, [and] a large canopy for
+shade.” Brief for City of Chico as Amicus Curiae on Pet. for
+Cert. 16. Still, a district court enjoined the city from enforc-
+ing its public-camping ordinance. Why? Because, in that
+court’s view, “appropriate” shelter requires “ ‘indoo[r],’ ” not
+outdoor, spaces. Warren, 2021 WL 2894648, *3 (quoting
+Martin, 920 F. 3d, at 617). One federal court in Los Angeles
+ruled, during the COVID pandemic, that “adequate” shelter
+must also include nursing staff, testing for communicable
+diseases, and on-site security, among other things. See LA
+Alliance for Hum. Rights v. Los Angeles, 2020 WL 2512811,
+                  Cite as: 603 U. S. ____ (2024)           29
+
+                      Opinion of the Court
+
+*4 (CD Cal., May 15, 2020). By imbuing the availability of
+shelter with constitutional significance in this way, many
+cities tell us, Martin and its progeny have “paralyzed” com-
+munities and prevented them from implementing even pol-
+icies designed to help the homeless while remaining sensi-
+tive to the limits of their resources and the needs of other
+citizens. Cities Cert. Brief 4 (boldface and capitalization
+deleted).
+   There are more problems still. The Ninth Circuit held
+that “involuntarily” homeless individuals cannot be pun-
+ished for camping with materials “necessary to protect
+themselves from the elements.” 72 F. 4th, at 896. It sug-
+gested, too, that cities cannot proscribe “life-sustaining
+act[s]” that flow necessarily from homelessness. 72 F. 4th,
+at 921 (joint statement of Silver and Gould, JJ., regarding
+denial of rehearing). But how far does that go? The plain-
+tiffs before us suggest a blanket is all that is required in
+Grants Pass. Brief for Respondents 14. But might a colder
+climate trigger a right to permanent tent encampments and
+fires for warmth? Because the contours of this judicial right
+are so “uncertai[n],” cities across the West have been left to
+guess whether Martin forbids their officers from removing
+everything from tents to “portable heaters” on city side-
+walks. Brief for City of Phoenix et al. on Pet. for Cert. 19,
+29 (Phoenix Cert. Brief ). There is uncertainty, as well, over
+whether Martin requires cities to tolerate other acts no less
+“attendant [to] survival” than sleeping, such as starting
+fires to cook food and “public urination [and] defecation.”
+Phoenix Cert. Brief 29–30; see also Mahoney v. Sacramento,
+2020 WL 616302, *3 (ED Cal., Feb. 10, 2020) (indicating
+that “the [c]ity may not prosecute or otherwise penalize the
+[homeless] for eliminating in public if there is no alterna-
+tive to doing so”). By extending Robinson beyond the nar-
+row class of status crimes, the Ninth Circuit has created a
+right that has proven “impossible” for judges to delineate
+except “by fiat.” Powell, 392 U. S., at 534.
+30               CITY OF GRANTS PASS v. JOHNSON
+
+                           Opinion of the Court
+
+   Doubtless, the Ninth Circuit’s intervention in Martin was
+well-intended. But since the trial court entered its injunc-
+tion against Grants Pass, the city shelter reports that utili-
+zation of its resources has fallen by roughly 40 percent. See
+Brief for Grants Pass Gospel Rescue Mission as Amicus Cu-
+riae 4–5. Many other cities offer similar accounts about
+their experiences after Martin, telling us the decision has
+made it more difficult, not less, to help the homeless accept
+shelter off city streets. See Part I–B, supra (recounting ex-
+amples). Even when “policymakers would prefer to invest
+in more permanent” programs and policies designed to ben-
+efit homeless and other citizens, Martin has forced these
+“overwhelmed jurisdictions to concentrate public resources
+on temporary shelter beds.” Cities Brief 25; see Oregon Cit-
+ies Brief 17–20; States Brief 16–17. As a result, cities re-
+port, Martin has undermined their efforts to balance con-
+flicting public needs and mired them in litigation at a time
+when the homelessness crisis calls for action. See States
+Brief 16–17.
+   All told, the Martin experiment is perhaps just what Jus-
+tice Marshall anticipated ones like it would be. The Eighth
+Amendment provides no guidance to “confine” judges in de-
+ciding what conduct a State or city may or may not pro-
+scribe. Powell, 392 U. S., at 534. Instead of encouraging
+“productive dialogue” and “experimentation” through our
+democratic institutions, courts have frozen in place their
+own “formulas” by “fiat.” Id., at 534, 537. Issued by federal
+courts removed from realities on the ground, those rules
+have produced confusion. And they have interfered with
+“essential considerations of federalism,” taking from the
+people and their elected leaders difficult questions tradi-
+tionally “thought to be the[ir] province.” Id., at 535–536.7
+——————
+   7 The dissent suggests we cite selectively to the amici and “see only
+
+what [we] wan[t]” in their briefs. Post, at 24. In fact, all the States,
+cities, and counties listed above (n. 3, supra) asked us to review this case.
+Among them all, the dissent purports to identify just two public officials
+                      Cite as: 603 U. S. ____ (2024)                    31
+
+                          Opinion of the Court
+
+                             E
+   Rather than address what we have actually said, the dis-
+sent accuses us of extending to local governments an “un-
+fettered freedom to punish,” post, at 25, and stripping away
+any protections “the Constitution” has against “criminaliz-
+ing sleeping,” post, at 5. “Either stay awake,” the dissent
+warns, “or be arrested.” Post, at 2. That is gravely mis-
+taken. We hold nothing of the sort. As we have stressed,
+cities and States are not bound to adopt public-camping
+laws. They may also choose to narrow such laws (as Oregon
+itself has recently). Beyond all that, many substantive le-
+gal protections and provisions of the Constitution may have
+important roles to play when States and cities seek to en-
+force their laws against the homeless. See Parts II–A, II–
+C, supra. The only question we face is whether one specific
+provision of the Constitution—the Cruel and Unusual Pun-
+ishments Clause of the Eighth Amendment—prohibits the
+enforcement of public-camping laws.
+   Nor does the dissent meaningfully engage with the rea-
+sons we have offered for our conclusion on that question. It
+claims that we “gratuitously” treat Robinson “as an outlier.”
+Post, at 12, and n. 2. But the dissent does not dispute that
+
+——————
+and two cities that, according to the dissent, support its view. Post, at
+24–25. But even among that select group, the dissent overlooks the fact
+that each expresses strong dissatisfaction with how Martin has been ap-
+plied in practice. See San Francisco Brief 15, 26 (“[T]he Ninth Circuit
+and its lower courts have repeatedly misapplied and overextended the
+Eighth Amendment” and “hamstrung San Francisco’s balanced approach
+to addressing the homelessness crisis”); Brief for City of Los Angeles as
+Amicus Curiae 6 (“[T]he sweeping rationale in Martin . . . calls into ques-
+tion whether cities can enforce public health and safety laws”); California
+Governor Brief 3 (“In the wake of Martin, lower courts have blocked ef-
+forts to clear encampments while micromanaging what qualifies as a
+suitable offer of shelter”). And for all the reasons we have explored and
+so many other cities have suggested, we see no principled basis under
+the Eighth Amendment for federal judges to administer anything like
+Martin.
+32            CITY OF GRANTS PASS v. JOHNSON
+
+                      Opinion of the Court
+
+the law Robinson faced was an anomaly, punishing mere
+status. The dissent does not dispute that Robinson’s deci-
+sion to address that law under the rubric of the Eighth
+Amendment is itself hard to square with the Amendment’s
+text and this Court’s other precedents interpreting it. And
+the dissent all but ignores Robinson’s own insistence that a
+different result would have obtained in that case if the law
+there had proscribed an act rather than status alone.
+   Tellingly, too, the dissent barely mentions Justice Mar-
+shall’s opinion in Powell. There, reasoning exactly as we do
+today, Justice Marshall refused to extend Robinson to ac-
+tions undertaken, “in some sense, ‘involuntar[ily].’ ” 392
+U. S., at 533. Rather than confront any of this, the dissent
+brusquely calls Powell a “strawman” and seeks to distin-
+guish it on the inscrutable ground that Grants Pass penal-
+izes “status[-defining]” (rather than “involuntary”) conduct.
+Post, at 23. But whatever that might mean, it is no answer
+to the reasoning Justice Marshall offered, to its obvious rel-
+evance here, or to the fact this Court has since endorsed
+Justice Marshall’s reasoning as correct in cases like Kahler
+and Jones, cases that go undiscussed in the dissent. See
+n. 6, supra. The only extraordinary result we might reach
+in this case is one that would defy Powell, ignore the histor-
+ical reach of the Eighth Amendment, and transform Robin-
+son’s narrow holding addressing a peculiar law punishing
+status alone into a new rule that would bar the enforcement
+of laws that are, as the dissent puts it, “ ‘pervasive’ ”
+throughout the country. Post, at 15; Part I–A, supra.
+   To be sure, the dissent seeks to portray the new rule it
+advocates as a modest, “limited,” and “narrow” one address-
+ing only those who wish to fulfill a “biological necessity” and
+“keep warm outside with a blanket” when they have no
+other “adequate” place “to go.” Post, at 1, 5, 10, 21, 24. But
+that reply blinks the difficult questions that necessarily fol-
+low and the Ninth Circuit has been forced to confront:
+What does it mean to be “involuntarily” homeless with “no
+                      Cite as: 603 U. S. ____ (2024)                      33
+
+                           Opinion of the Court
+
+place to go”? What kind of “adequate” shelter must a city
+provide to avoid being forced to allow people to camp in its
+parks and on its sidewalks? And what are people entitled
+to do and use in public spaces to “keep warm” and fulfill
+other “biological necessities”?8
+   Those unavoidable questions have plunged courts and
+cities across the Ninth Circuit into waves of litigation. And
+without anything in the Eighth Amendment to guide them,
+any answers federal judges can offer (and have offered)
+come, as Justice Marshall foresaw, only by way of “fiat.”
+Powell, 392 U. S., at 534. The dissent cannot escape that
+hard truth. Nor can it escape the fact that, far from nar-
+rowing Martin, it would expand its experiment from one cir-
+cuit to the entire country—a development without any prec-
+edent in this Court’s history. One that would authorize
+
+——————
+  8 The dissent brushes aside these questions, declaring that “available
+
+answers” exist in the decisions below. Post, at 22. But the dissent misses
+the point. The problem, as Justice Marshall discussed, is not that it is
+impossible for someone to dictate answers to these questions. The prob-
+lem is that nothing in the Eighth Amendment gives federal judges the
+authority or guidance they need to answer them in a principled way.
+Take just two examples. First, the dissent says, a city seeking to ban
+camping must provide “adequate” shelter for those with “no place to go.”
+Post, at 21–22. But it never says what qualifies as “adequate” shelter.
+Ibid. And, as we have seen, cities and courts across the Ninth Circuit
+have struggled mightily with that question, all with nothing in the
+Eighth Amendment to guide their work. Second, the dissent seems to
+think that, if a city lacks enough “adequate” shelter, it must permit “ ‘bed-
+ding’ ” in public spaces, but not campfires, tents, or “ ‘public urination or
+defecation.’ ” Post, at 15, 21–22, 24. But where does that rule come from,
+the federal register? See post, at 22. After Martin, again as we have
+seen, many courts have taken a very different view. The dissent never
+explains why it disagrees with those courts. Instead, it merely quotes
+the district court’s opinion in this case that announced a rule it seems
+the dissent happens to prefer. By elevating Martin over our own prece-
+dents and the Constitution’s original public meaning, the dissent faces
+difficult choices that cannot be swept under the rug—ones that it can
+resolve not by anything found in the Eighth Amendment, only by fiat.
+34            CITY OF GRANTS PASS v. JOHNSON
+
+                      Opinion of the Court
+
+federal judges to freeze into place their own rules on mat-
+ters long “thought to be the province” of state and local lead-
+ers, id., at 536, and one that would deny communities the
+“wide latitude” and “flexibility” even the dissent acknowl-
+edges they need to address the homelessness crisis, post, at
+2, 5.
+                                III
+   Homelessness is complex. Its causes are many. So may
+be the public policy responses required to address it. At
+bottom, the question this case presents is whether the
+Eighth Amendment grants federal judges primary respon-
+sibility for assessing those causes and devising those re-
+sponses. It does not. Almost 200 years ago, a visitor to this
+country remarked upon the “extreme skill with which the
+inhabitants of the United States succeed in proposing a
+common object to the exertions of a great many men, and in
+getting them voluntarily to pursue it.” 2 A. de Tocqueville,
+Democracy in America 129 (H. Reeve transl. 1961). If the
+multitude of amicus briefs before us proves one thing, it is
+that the American people are still at it. Through their vol-
+untary associations and charities, their elected representa-
+tives and appointed officials, their police officers and men-
+tal health professionals, they display that same energy and
+skill today in their efforts to address the complexities of the
+homelessness challenge facing the most vulnerable among
+us.
+   Yes, people will disagree over which policy responses are
+best; they may experiment with one set of approaches only
+to find later another set works better; they may find certain
+responses more appropriate for some communities than
+others. But in our democracy, that is their right. Nor can
+a handful of federal judges begin to “match” the collective
+wisdom the American people possess in deciding “how best
+to handle” a pressing social question like homelessness.
+Robinson, 370 U. S., at 689 (White, J., dissenting). The
+                 Cite as: 603 U. S. ____ (2024)                 35
+
+                     Opinion of the Court
+
+Constitution’s Eighth Amendment serves many important
+functions, but it does not authorize federal judges to wrest
+those rights and responsibilities from the American people
+and in their place dictate this Nation’s homelessness policy.
+The judgment below is reversed, and the case is remanded
+for further proceedings consistent with this opinion.
+
+                                                  It is so ordered.
+                  Cite as: 603 U. S. ____ (2024)            1
+
+                     THOMAS, J., concurring
+
+SUPREME COURT OF THE UNITED STATES
+                          _________________
+
+                           No. 23–175
+                          _________________
+
+
+  CITY OF GRANTS PASS, OREGON, PETITIONER v.
+        GLORIA JOHNSON, ET AL., ON BEHALF
+             OF THEMSELVES AND ALL OTHERS
+                  SIMILARLY SITUATED
+
+ ON WRIT OF CERTIORARI TO THE UNITED STATES COURT OF
+            APPEALS FOR THE NINTH CIRCUIT
+                         [June 28, 2024]
+
+   JUSTICE THOMAS, concurring.
+   I join the Court’s opinion in full because it correctly re-
+jects the respondents’ claims under the Cruel and Unusual
+Punishments Clause. As the Court observes, that Clause
+“focuses on the question what method or kind of punish-
+ment a government may impose after a criminal convic-
+tion.” Ante, at 16 (internal quotation marks omitted). The
+respondents, by contrast, ask whether Grants Pass “may
+criminalize particular behavior in the first place.” Ibid. I
+write separately to make two additional observations about
+the respondents’ claims.
+   First, the precedent that the respondents primarily rely
+upon, Robinson v. California, 370 U. S. 660 (1962), was
+wrongly decided. In Robinson, the Court held that the
+Cruel and Unusual Punishments Clause prohibits the en-
+forcement of laws criminalizing a person’s status. Id., at
+666. That holding conflicts with the plain text and history
+of the Cruel and Unusual Punishments Clause. See ante,
+at 15–16. That fact is unsurprising given that the Robinson
+Court made no attempt to analyze the Eighth Amendment’s
+text or discern its original meaning. Instead, Robinson’s
+holding rested almost entirely on the Court’s understand-
+ing of public opinion: The Robinson Court observed that “in
+2            CITY OF GRANTS PASS v. JOHNSON
+
+                     THOMAS, J., concurring
+
+the light of contemporary human knowledge, a law which
+made a criminal offense of . . . a disease [such as narcotics
+addiction] would doubtless be universally thought to be an
+infliction of cruel and unusual punishment in violation of
+the Eighth and Fourteenth Amendments.” 370 U. S., at
+666. Modern public opinion is not an appropriate metric for
+interpreting the Cruel and Unusual Punishments Clause—
+or any provision of the Constitution for that matter.
+   Much of the Court’s other Eighth Amendment precedents
+make the same mistake. Rather than interpret our written
+Constitution, the Court has at times “proclaim[ed] itself
+sole arbiter of our Nation’s moral standards,” Roper v. Sim-
+mons, 543 U. S. 551, 608 (2005) (Scalia, J., dissenting), and
+has set out to enforce “evolving standards of decency,” Trop
+v. Dulles, 356 U. S. 86, 101 (1958) (plurality opinion). “In a
+system based upon constitutional and statutory text demo-
+cratically adopted, the concept of ‘law’ ordinarily signifies
+that particular words have a fixed meaning.” Roper, 543
+U. S., at 629 (opinion of Scalia, J.). I continue to believe
+that we should adhere to the Cruel and Unusual Punish-
+ments Clause’s fixed meaning in resolving any challenge
+brought under it.
+   To be sure, we need not reconsider Robinson to resolve
+this case. As the Court explains, the challenged ordinances
+regulate conduct, not status, and thus do not implicate Rob-
+inson. Ante, at 20–21. Moreover, it is unclear what, if any,
+weight Robinson carries. The Court has not once applied
+Robinson’s interpretation of the Cruel and Unusual Pun-
+ishments Clause. And, today the Court rightly questions
+the decision’s “persuasive force.” Ante, at 20. Still, rather
+than let Robinson’s erroneous holding linger in the back-
+ground of our Eighth Amendment jurisprudence, we should
+dispose of it once and for all. In an appropriate case, the
+Court should certainly correct this error.
+   Second, the respondents have not established that their
+claims implicate the Cruel and Unusual Punishments
+                   Cite as: 603 U. S. ____ (2024)              3
+
+                      THOMAS, J., concurring
+
+Clause in the first place. The challenged ordinances are en-
+forced through the imposition of civil fines and civil park
+exclusion orders, as well as through criminal trespass
+charges. But, “[a]t the time the Eighth Amendment was
+ratified, the word ‘punishment’ referred to the penalty im-
+posed for the commission of a crime.” Helling v. McKinney,
+509 U. S. 25, 38 (1993) (THOMAS, J., dissenting); see ante,
+at 15–16. The respondents have yet to explain how the civil
+fines and park exclusion orders constitute a “penalty im-
+posed for the commission of a crime.” Helling, 509 U. S., at
+38.
+   For its part, the Court of Appeals concluded that the
+Cruel and Unusual Punishments Clause governs these civil
+penalties because they can “later . . . become criminal of-
+fenses.” 72 F. 4th 868, 890 (CA9 2023). But, that theory
+rests on layer upon layer of speculation. It requires reason-
+ing that because violating one of the ordinances “could re-
+sult in civil citations and fines, [and] repeat violators could
+be excluded from specified City property, and . . . violating
+an exclusion order could subject a violator to criminal tres-
+pass prosecution,” civil fines and park exclusion orders
+therefore must be governed by the Cruel and Unusual Pun-
+ishments Clause. Id., at 926 (O’Scannlain, J., statement
+respecting denial of rehearing en banc) (emphasis added).
+And, if this case is any indication, the possibility that a civil
+fine turns into a criminal trespass charge is a remote one.
+The respondents assert that they have been involuntarily
+homeless in Grants Pass for years, yet they have never re-
+ceived a park exclusion order, much less a criminal trespass
+charge. See ante, at 11.
+   Because the respondents’ claims fail either way, the
+Court does not address the merits of the Court of Appeals’
+theory. See ante, at 16–17, and n. 4. Suffice it to say, we
+have never endorsed such a broad view of the Cruel and
+Unusual Punishments Clause. Both this Court and lower
+courts should be wary of expanding the Clause beyond its
+4           CITY OF GRANTS PASS v. JOHNSON
+
+                   THOMAS, J., concurring
+
+text and original meaning.
+                  Cite as: 603 U. S. ____ (2024)            1
+
+                   SOTOMAYOR, J., dissenting
+
+SUPREME COURT OF THE UNITED STATES
+                          _________________
+
+                           No. 23–175
+                          _________________
+
+
+  CITY OF GRANTS PASS, OREGON, PETITIONER v.
+        GLORIA JOHNSON, ET AL., ON BEHALF
+             OF THEMSELVES AND ALL OTHERS
+                  SIMILARLY SITUATED
+
+ ON WRIT OF CERTIORARI TO THE UNITED STATES COURT OF
+            APPEALS FOR THE NINTH CIRCUIT
+                         [June 28, 2024]
+
+   JUSTICE SOTOMAYOR, with whom JUSTICE KAGAN and
+JUSTICE JACKSON join, dissenting.
+   Sleep is a biological necessity, not a crime. For some peo-
+ple, sleeping outside is their only option. The City of Grants
+Pass jails and fines those people for sleeping anywhere in
+public at any time, including in their cars, if they use as
+little as a blanket to keep warm or a rolled-up shirt as a
+pillow. For people with no access to shelter, that punishes
+them for being homeless. That is unconscionable and un-
+constitutional. Punishing people for their status is “cruel
+and unusual” under the Eighth Amendment. See Robinson
+v. California, 370 U. S. 660 (1962).
+   Homelessness is a reality for too many Americans. On
+any given night, over half a million people across the coun-
+try lack a fixed, regular, and adequate nighttime residence.
+Many do not have access to shelters and are left to sleep in
+cars, sidewalks, parks, and other public places. They expe-
+rience homelessness due to complex and interconnected is-
+sues, including crippling debt and stagnant wages; domes-
+tic and sexual abuse; physical and psychiatric disabilities;
+and rising housing costs coupled with declining affordable
+housing options.
+2             CITY OF GRANTS PASS v. JOHNSON
+
+                    SOTOMAYOR, J., dissenting
+
+  At the same time, States and cities face immense chal-
+lenges in responding to homelessness. To address these
+challenges and provide for public health and safety, local
+governments need wide latitude, including to regulate
+when, where, and how homeless people sleep in public. The
+decision below did, in fact, leave cities free to punish “litter-
+ing, public urination or defecation, obstruction of roadways,
+possession or distribution of illicit substances, harassment,
+or violence.” App. to Pet. for Cert. 200a. The only question
+for the Court today is whether the Constitution permits
+punishing homeless people with no access to shelter for
+sleeping in public with as little as a blanket to keep warm.
+  It is possible to acknowledge and balance the issues fac-
+ing local governments, the humanity and dignity of home-
+less people, and our constitutional principles. Instead, the
+majority focuses almost exclusively on the needs of local
+governments and leaves the most vulnerable in our society
+with an impossible choice: Either stay awake or be arrested.
+The Constitution provides a baseline of rights for all Amer-
+icans rich and poor, housed and unhoused. This Court must
+safeguard those rights even when, and perhaps especially
+when, doing so is uncomfortable or unpopular. Otherwise,
+“the words of the Constitution become little more than good
+advice.” Trop v. Dulles, 356 U. S. 86, 104 (1958) (plurality
+opinion).
+                              I
+  The causes, consequences, and experiences of homeless-
+ness are complex and interconnected. The majority paints
+a picture of “cities across the American West” in “crisis”
+that are using criminalization as a last resort. Ante, at 1.
+That narrative then animates the majority’s reasoning.
+This account, however, fails to engage seriously with the
+precipitating causes of homelessness, the damaging effects
+of criminalization, and the myriad legitimate reasons peo-
+ple may lack or decline shelter.
+                 Cite as: 603 U. S. ____ (2024)            3
+
+                   SOTOMAYOR, J., dissenting
+
+                              A
+   Over 600,000 people experience homelessness in America
+on any given night, meaning that they lack “a fixed, regu-
+lar, and adequate nighttime residence.” Dept. of Housing
+and Urban Development, T. de Sousa et al., The 2023 An-
+nual Homeless Assessment Report to Congress 4 (2023
+AHAR). These people experience homelessness in different
+ways. Although 6 in 10 are able to secure shelter beds, the
+remaining 4 in 10 are unsheltered, sleeping “in places not
+meant for human habitation,” such as sidewalks, aban-
+doned buildings, bus or train stations, camping grounds,
+and parked vehicles. See id., at 2. “Some sleep alone in
+public places, without any physical structures (like tents or
+shacks) or connection to services. Others stay in encamp-
+ments, which generally refer to groups of people living sem-
+ipermanently in tents or other temporary structures in a
+public space.” Brief for California as Amicus Curiae 6 (Cal-
+ifornia Brief ) (citation omitted). This is in part because
+there has been a national “shortage of 188,000 shelter beds
+for individual adults.” Brief for Service Providers as Amici
+Curiae 8 (Service Providers Brief ).
+   People become homeless for many reasons, including
+some beyond their control. “[S]tagnant wages and the lack
+of affordable housing” can mean some people are one unex-
+pected medical bill away from being unable to pay rent.
+Brief for Public Health Professionals and Organizations as
+Amici Curiae 3. Every “$100 increase in median rental
+price” is “associated with about a 9 percent increase in the
+estimated homelessness rate.” GAO, A. Cackley, Homeless-
+ness: Better HUD Oversight of Data Collection Could Im-
+prove Estimates of Homeless Populations 30 (GAO–20–433,
+2020). Individuals with disabilities, immigrants, and vet-
+erans face policies that increase housing instability. See
+California Brief 7. Natural disasters also play a role, in-
+cluding in Oregon, where increasing numbers of people
+4            CITY OF GRANTS PASS v. JOHNSON
+
+                   SOTOMAYOR, J., dissenting
+
+“have lost housing because of climate events such as ex-
+treme wildfires across the state, floods in the coastal areas,
+[and] heavy snowstorms.” 2023 AHAR 52. Further, “men-
+tal and physical health challenges,” and family and domes-
+tic “violence and abuse” can be precipitating causes of
+homelessness. California Brief 7.
+   People experiencing homelessness are young and old, live
+in families and as individuals, and belong to all races, cul-
+tures, and creeds. Given the complex web of causes, it is
+unsurprising that the burdens of homelessness fall dispro-
+portionately on the most vulnerable in our society. People
+already in precarious positions with mental and physical
+health, trauma, or abuse may have nowhere else to go if
+forced to leave their homes. Veterans, victims of domestic
+violence, teenagers, and people with disabilities are all at
+an increased risk of homelessness. For veterans, “those
+with a history of mental health conditions, including post-
+traumatic stress disorder (PTSD) . . . are at greater risk of
+homelessness.” Brief for American Psychiatric Association
+et al. as Amici Curiae 6. For women, almost 60% of those
+experiencing homelessness report that fleeing domestic vi-
+olence was the “immediate cause.” Brief for Advocates for
+Survivors of Gender-Based Violence as Amici Curiae 9. For
+young people, “family dysfunction and rejection, sexual
+abuse, juvenile legal system involvement, ‘aging out’ of the
+foster care system, and economic hardship” make them par-
+ticularly vulnerable to homelessness. Brief for Juvenile
+Law Center et al. as Amici Curiae 2. For American Indians,
+“policies of removal and resettlement in tribal lands” have
+caused displacement, resulting in “a disproportionately
+high rate of housing insecurity and unsheltered homeless-
+ness.” Brief for StrongHearts Native Helpline et al. as
+Amici Curiae 10, 24. For people with disabilities, “[l]ess
+than 5% of housing in the United States is accessible for
+moderate mobility disabilities, and less than 1% is accessi-
+                  Cite as: 603 U. S. ____ (2024)            5
+
+                   SOTOMAYOR, J., dissenting
+
+ble for wheelchair use.” Brief for Disability Rights Educa-
+tion and Defense Fund et al. as Amici Curiae 2 (Disability
+Rights Brief ).
+                              B
+   States and cities responding to the homelessness crisis
+face the difficult task of addressing the underlying causes
+of homelessness while also providing for public health and
+safety. This includes, for example, dealing with the hazards
+posed by encampments, such as “a heightened risk of dis-
+ease associated with living outside without bathrooms or
+wash basins,” “deadly fires” from efforts to “prepare food
+and create heat sources,” violent crime, and drug distribu-
+tion and abuse. California Brief 12.
+   Local governments need flexibility in responding to
+homelessness with effective and thoughtful solutions. See
+infra, at 19–21. Almost all of these policy solutions are be-
+yond the scope of this case. The only question here is
+whether the Constitution permits criminalizing sleeping
+outside when there is nowhere else to go. That question is
+increasingly relevant because many local governments
+have made criminalization a frontline response to home-
+lessness. “[L]ocal measures to criminalize ‘acts of living’ ”
+by “prohibit[ing] sleeping, eating, sitting, or panhandling in
+public spaces” have recently proliferated. U. S. Interagency
+Council on Homelessness, Searching Out Solutions 1
+(2012).
+   Criminalizing homelessness can cause a destabilizing
+cascade of harm. “Rather than helping people to regain
+housing, obtain employment, or access needed treatment
+and services, criminalization creates a costly revolving door
+that circulates individuals experiencing homelessness from
+the street to the criminal justice system and back.” Id., at
+6. When a homeless person is arrested or separated from
+their property, for example, “items frequently destroyed in-
+6             CITY OF GRANTS PASS v. JOHNSON
+
+                    SOTOMAYOR, J., dissenting
+
+clude personal documents needed for accessing jobs, hous-
+ing, and services such as IDs, driver’s licenses, financial
+documents, birth certificates, and benefits cards; items re-
+quired for work such as clothing and uniforms, bicycles,
+tools, and computers; and irreplaceable mementos.” Brief
+for 57 Social Scientists as Amici Curiae 17–18 (Social Sci-
+entists Brief ). Consider Erin Spencer, a disabled Marine
+Corps veteran who stores items he uses to make a living,
+such as tools and bike parts, in a cart. He was arrested
+repeatedly for illegal lodging. Each time, his cart and be-
+longings were gone once he returned to the sidewalk. “[T]he
+massive number of times the City or State has taken all I
+possess leaves me in a vacuous déjà vu.” Brief for National
+Coalition for Homeless Veterans et al. as Amici Curiae 28.
+   Incarceration and warrants from unpaid fines can also
+result in the loss of employment, benefits, and housing op-
+tions. See Social Scientists Brief 13, 17 (incarceration and
+warrants can lead to “termination of federal health benefits
+such as Social Security, Medicare, or Medicaid,” the “loss of
+a shelter bed,” or disqualification from “public housing and
+Section 8 vouchers”). Finally, criminalization can lead
+homeless people to “avoid calling the police in the face of
+abuse or theft for fear of eviction from public space.” Id., at
+27. Consider the tragic story of a homeless woman “who
+was raped almost immediately following a police move-
+along order that pushed her into an unfamiliar area in the
+dead of night.” Id., at 26. She described her hesitation in
+calling for help: “What’s the point? If I called them, they
+would have made all of us move [again].” Ibid.
+   For people with nowhere else to go, fines and jail time do
+not deter behavior, reduce homelessness, or increase public
+safety. In one study, 91% of homeless people who were sur-
+veyed “reported remaining outdoors, most often just moving
+two to three blocks away” when they received a move-along
+order. Id., at 23. Police officers in these cities recognize as
+much: “ ‘Look we’re not really solving anybody’s problem.
+                 Cite as: 603 U. S. ____ (2024)            7
+
+                   SOTOMAYOR, J., dissenting
+
+This is a big game of whack-a-mole.’ ” Id., at 24. Consider
+Jerry Lee, a Grants Pass resident who sleeps in a van. Over
+the course of three days, he was woken up and cited six
+times for “camping in the city limits” just because he was
+sleeping in the van. App. 99 (capitalization omitted). Lee
+left the van each time only to return later to sleep. Police
+reports eventually noted that he “continues to disregard the
+city ordinance and returns to the van to sleep as soon as
+police leave the area. Dayshift needs to check on the van
+this morning and . . . follow up for tow.” Ibid. (same).
+   Shelter beds that are available in theory may be practi-
+cally unavailable because of “restrictions based on gender,
+age, income, sexuality, religious practice, curfews that con-
+flict with employment obligations, and time limits on
+stays.” Social Scientists Brief 22. Studies have shown,
+however, that the “vast majority of those who are unshel-
+tered would move inside if safe and affordable options were
+available.” Service Providers Brief 8 (collecting studies).
+Consider CarrieLynn Hill. She cannot stay at Gospel Res-
+cue Mission, the only entity in Grants Pass offering tempo-
+rary beds, because “she would have to check her nebulizer
+in as medical equipment and, though she must use it at
+least once every four hours, would not be able to use it in
+her room.” Disability Rights Brief 18. Similarly, Debra
+Blake’s “disabilities prevent her from working, which
+means she cannot comply with the Gospel Rescue Mission’s
+requirement that its residents work 40-hour work weeks.”
+Ibid.
+   Before I move on, consider one last example of a Nashville
+man who experienced homelessness for nearly 20 years.
+When an outreach worker tried to help him secure housing,
+the worker had difficulty finding him for his appointments
+because he was frequently arrested for being homeless. He
+was arrested 198 times and had over 250 charged citations,
+all for petty offenses. The outreach worker made him a t-
+shirt that read “Please do not arrest me, my outreach
+8               CITY OF GRANTS PASS v. JOHNSON
+
+                      SOTOMAYOR, J., dissenting
+
+worker is working on my housing.” Service Providers Brief
+16. Once the worker was able to secure him stable housing,
+he “had no further encounters with the police, no citations,
+and no arrests.” Ibid.
+  These and countless other stories reflect the reality of
+criminalizing sleeping outside when people have no other
+choice.
+                              II
+   Grants Pass, a city of 38,000 people in southern Oregon,
+adopted three ordinances (Ordinances) that effectively
+make it unlawful to sleep anywhere in public, including in
+your car, at any time, with as little as a blanket or a rolled-
+up shirt as a pillow. The Ordinances prohibit “[c]amping”
+on “any sidewalk, street, alley, lane, public right of way,
+park, bench, or any other publicly-owned property or under
+any bridge or viaduct.” Grants Pass, Ore. Municipal Code
+§5.61.030 (2024). A “[c]ampsite” is defined as “any place
+where bedding, sleeping bag, or other material used for bed-
+ding purposes, or any stove or fire is placed, established, or
+maintained for the purposes of maintaining a temporary
+place to live.” §5.61.010(B). Relevant here, the definition
+of “campsite” includes sleeping in “any vehicle.” Ibid. The
+Ordinances also prohibit camping in public parks, including
+the “[o]vernight parking” of any vehicle. §6.46.090(B).1
+   The City enforces these Ordinances with fines starting at
+$295 and increasing to $537.60 if unpaid. Once a person is
+cited twice for violating park regulations within a 1-year
+period, city officers can issue an exclusion order barring
+that person from the park for 30 days. See §6.46.350. A
+——————
+  1 The City’s “sleeping” ordinance prohibits sleeping “on public side-
+
+walks, streets, or alleyways at any time as a matter of individual and
+public safety.” §5.61.020(A). That ordinance is not before the Court to-
+day because, after the only class representative with standing to chal-
+lenge this ordinance died, the Ninth Circuit remanded to the District
+Court “to determine whether a substitute representative is available as
+to that challenge alone.” 72 F. 4th 868, 884 (2023).
+                  Cite as: 603 U. S. ____ (2024)            9
+
+                   SOTOMAYOR, J., dissenting
+
+person who camps in a park after receiving that order com-
+mits criminal trespass, which is punishable by a maximum
+of 30 days in jail and a $1,250 fine. Ore. Rev. Stat. §164.245
+(2023); see §§161.615(3), 161.635(1)(c).
+   In 2019, the Ninth Circuit held that “ ‘the Eighth Amend-
+ment prohibits the imposition of criminal penalties for sit-
+ting, sleeping, or lying outside on public property for home-
+less individuals who cannot obtain shelter.’ ” Martin v.
+Boise, 920 F. 3d 584, 616, cert. denied, 589 U. S. ___ (2019).
+Considering an ordinance from Boise, Idaho, that made it a
+misdemeanor to use “streets, sidewalks, parks, or public
+places” for “camping,” 920 F. 3d, at 603, the court concluded
+that “as long as there is no option of sleeping indoors, the
+government cannot criminalize indigent, homeless people
+for sleeping outdoors, on public property,” id., at 617.
+   Respondents here, two longtime residents of Grants Pass
+who are homeless and sleep in their cars, sued on behalf of
+themselves and all other involuntarily homeless people in
+the City, seeking to enjoin enforcement of the Ordinances.
+The District Court eventually certified a class and granted
+summary judgment to respondents. “As was the case in
+Martin, Grants Pass has far more homeless people than
+‘practically available’ shelter beds.” App. to Pet. for Cert.
+179a. The City had “zero emergency shelter beds,” and even
+counting the beds at the Gospel Rescue Mission (GRM),
+which is “the only entity in Grants Pass that offers any sort
+of temporary program for some class members,” “GRM’s 138
+beds would not be nearly enough to accommodate the at
+least 602 homeless individuals in Grants Pass.” Id., at
+179a–180a. Thus, “the only way for homeless people to le-
+gally sleep on public property within the City is if they lay
+on the ground with only the clothing on their backs and
+without their items near them.” Id., at 178a.
+   The District Court entered a narrow injunction. It con-
+cluded that Grants Pass could “implement time and place
+restrictions for when homeless individuals may use their
+10            CITY OF GRANTS PASS v. JOHNSON
+
+                    SOTOMAYOR, J., dissenting
+
+belongings to keep warm and dry and when they must have
+their belonging[s] packed up.” Id., at 199a. The City could
+also “ban the use of tents in public parks,” as long as it did
+not “ban people from using any bedding type materials to
+keep warm and dry while they sleep.” Id., at 199a–200a.
+Further, Grants Pass could continue to “enforce laws that
+actually further public health and safety, such as laws re-
+stricting littering, public urination or defecation, obstruc-
+tion of roadways, possession or distribution of illicit sub-
+stances, harassment, or violence.” Id., at 200a.
+   The Ninth Circuit largely agreed that the Ordinances vi-
+olated the Eighth Amendment because they punished peo-
+ple who lacked “some place, such as [a] shelter, they can
+lawfully sleep.” 72 F. 4th 868, 894 (2023). It further nar-
+rowed the District Court’s already-limited injunction. The
+Ninth Circuit noted that, beyond prohibiting bedding, “the
+ordinances also prohibit the use of stoves or fires, as well as
+the erection of any structures.” Id., at 895. Because the
+record did not “establis[h that] the fire, stove, and structure
+prohibitions deprive homeless persons of sleep or ‘the most
+rudimentary precautions’ against the elements,” the court
+remanded for the District Court “to craft a narrower injunc-
+tion recognizing Plaintiffs’ limited right to protection
+against the elements, as well as limitations when a shelter
+bed is available.” Ibid.
+                              III
+  The Eighth Amendment prohibits the infliction of “cruel
+and unusual punishments.”          Amdt. 8 (Punishments
+Clause). This prohibition, which is not limited to medieval
+tortures, places “ ‘limitations’ on ‘the power of those en-
+trusted with the criminal-law function of government.’ ”
+Timbs v. Indiana, 586 U. S. 146, 151 (2019). The Punish-
+ments Clause “circumscribes the criminal process in three
+ways: First, it limits the kinds of punishment that can be
+imposed on those convicted of crimes; second, it proscribes
+                  Cite as: 603 U. S. ____ (2024)             11
+
+                    SOTOMAYOR, J., dissenting
+
+punishment grossly disproportionate to the severity of the
+crime; and third, it imposes substantive limits on what can
+be made criminal and punished as such.” Ingraham v.
+Wright, 430 U. S. 651, 667 (1977) (citations omitted).
+   In Robinson v. California, this Court detailed one sub-
+stantive limitation on criminal punishment. Lawrence
+Robinson was convicted under a California statute for
+“ ‘be[ing] addicted to the use of narcotics’ ” and faced a man-
+datory 90-day jail sentence. 370 U. S., at 660. The Califor-
+nia statute did not “punis[h] a person for the use of narcot-
+ics, for their purchase, sale or possession, or for antisocial
+or disorderly behavior resulting from their administration.”
+Id., at 666. Instead, it made “the ‘status’ of narcotic addic-
+tion a criminal offense, for which the offender may be pros-
+ecuted ‘at any time before he reforms.’ ” Ibid.
+    The Court held that, because it criminalized the “ ‘status’
+of narcotic addiction,” ibid., the California law “inflict[ed] a
+cruel and unusual punishment in violation” of the Punish-
+ments Clause, id., at 667. Importantly, the Court did not
+limit that holding to the status of narcotic addiction alone.
+It began by reasoning that the criminalization of the “men-
+tally ill, or a leper, or [those] afflicted with a venereal dis-
+ease” “would doubtless be universally thought to be an in-
+fliction of cruel and unusual punishment.” Id., at 666. It
+extended that same reasoning to the status of being an ad-
+dict, because “narcotic addiction is an illness” “which may
+be contracted innocently or involuntarily.” Id., at 667.
+    Unlike the majority, see ante, at 15–17, the Robinson
+Court did not rely on the harshness of the criminal penalty
+itself. It understood that “imprisonment for ninety days is
+not, in the abstract, a punishment which is either cruel or
+unusual.” 370 U. S., at 667. Instead, it reasoned that, when
+imposed because of a person’s status, “[e]ven one day in
+prison would be a cruel and unusual punishment.” Ibid.
+    Robinson did not prevent States from using a variety of
+tools, including criminal law, to address harmful conduct
+12             CITY OF GRANTS PASS v. JOHNSON
+
+                      SOTOMAYOR, J., dissenting
+
+related to a particular status. The Court candidly recog-
+nized the “vicious evils of the narcotics traffic” and acknowl-
+edged the “countless fronts on which those evils may be le-
+gitimately attacked.” Id., at 667–668. It left untouched the
+“broad power of a State to regulate the narcotic drugs traffic
+within its borders,” including the power to “impose criminal
+sanctions . . . against the unauthorized manufacture, pre-
+scription, sale, purchase, or possession of narcotics,” and
+the power to establish “a program of compulsory treatment
+for those addicted to narcotics.” Id., at 664–665.
+   This Court has repeatedly cited Robinson for the proposi-
+tion that the “Eighth Amendment . . . imposes a substantive
+limit on what can be made criminal and punished as such.”
+Rhodes v. Chapman, 452 U. S. 337, 346, n. 12 (1981); see
+also Gregg v. Georgia, 428 U. S. 153, 172 (1976) (joint opin-
+ion of Stewart, Powell, and Stevens, JJ.) (“The substantive
+limits imposed by the Eighth Amendment on what can be
+made criminal and punished were discussed in Robinson”).
+Though it casts aspersions on Robinson and mistakenly
+treats it as an outlier, the majority does not overrule or re-
+consider that decision.2 Nor does the majority cast doubt
+on this Court’s firmly rooted principle that inflicting “un-
+necessary suffering” that is “grossly disproportionate to the
+severity of the crime” or that serves no “penological pur-
+pose” violates the Punishments Clause. Estelle v. Gamble,
+429 U. S. 97, 103, and n. 7 (1976). Instead, the majority
+sees this case as requiring an application or extension of
+Robinson. The majority’s understanding of Robinson, how-
+ever, is plainly wrong.
+——————
+  2 See ante, at 20 (“[N]o one has asked us to reconsider Robinson. Nor
+
+do we see any need to do so today”); but see ante, at 23 (gratuitously
+noting that Robinson “sits uneasily with the Amendment’s terms, origi-
+nal meaning, and our precedents”). The most important takeaway from
+these unnecessary swipes at Robinson is just that. They are unneces-
+sary. Robinson remains binding precedent, no matter how incorrectly
+the majority applies it to these facts.
+                  Cite as: 603 U. S. ____ (2024)            13
+
+                    SOTOMAYOR, J., dissenting
+
+                             IV
+   Grants Pass’s Ordinances criminalize being homeless.
+The status of being homeless (lacking available shelter) is
+defined by the very behavior singled out for punishment
+(sleeping outside). The majority protests that the Ordi-
+nances “do not criminalize mere status.” Ante, at 21. Say-
+ing so does not make it so. Every shred of evidence points
+the other way. The Ordinances’ purpose, text, and enforce-
+ment confirm that they target status, not conduct. For
+someone with no available shelter, the only way to comply
+with the Ordinances is to leave Grants Pass altogether.
+                                A
+   Start with their purpose. The Ordinances, as enforced,
+are intended to criminalize being homeless. The Grants
+Pass City Council held a public meeting in 2013 to “ ‘identify
+solutions to current vagrancy problems.’ ” App. to Pet. for
+Cert. 168a. The council discussed the City’s previous efforts
+to banish homeless people by “buying the person a bus
+ticket to a specific destination,” or transporting them to a
+different jurisdiction and “leaving them there.” App. 113–
+114. That was unsuccessful, so the council discussed other
+ideas, including a “ ‘do not serve’ ” list or “a ‘most unwanted
+list’ made by taking pictures of the offenders . . . and then
+disseminating it to all the service agencies.” Id., at 121.
+The council even contemplated denying basic services such
+as “food, clothing, bedding, hygiene, and those types of
+things.” Ibid.
+   The idea was deterrence, not altruism. “[U]ntil the pain
+of staying the same outweighs the pain of changing, people
+will not change; and some people need an external source
+to motivate that needed change.” Id., at 119. One coun-
+cilmember opined that “[m]aybe they aren’t hungry enough
+or cold enough . . . to make a change in their behavior.” Id.,
+at 122. The council president summed up the goal suc-
+cinctly: “ ‘[T]he point is to make it uncomfortable enough for
+14              CITY OF GRANTS PASS v. JOHNSON
+
+                       SOTOMAYOR, J., dissenting
+
+[homeless people] in our city so they will want to move on
+down the road.’ ” Id., at 114.3
+  One action item from this meeting was the “ ‘targeted en-
+forcement of illegal camping’ ” against homeless people.
+App. to Pet. for Cert. 169a. “The year following the [public
+meeting] saw a significant increase in enforcement of the
+City’s anti-sleeping and anti-camping ordinances. From
+2013 through 2018, the City issued a steady stream of tick-
+ets under the ordinances.” 72 F. 4th, at 876–877.
+                              B
+   Next consider the text. The Ordinances by their terms
+single out homeless people. They define “campsite” as “any
+place where bedding, sleeping bag, or other material used
+for bedding purposes” is placed “for the purpose of main-
+taining a temporary place to live.” §5.61.010. The majority
+claims that it “makes no difference whether the charged de-
+fendant is homeless.” Ante, at 20. Yet the Ordinances do
+not apply unless bedding is placed to maintain a temporary
+place to live. Thus, “what separates prohibited conduct
+from permissible conduct is a person’s intent to ‘live’ in pub-
+lic spaces. Infants napping in strollers, Sunday afternoon
+picnickers, and nighttime stargazers may all engage in the
+same conduct of bringing blankets to public spaces [and
+sleeping], but they are exempt from punishment because
+they have a separate ‘place to live’ to which they presuma-
+
+——————
+   3 The majority does not contest that the Ordinances, as enforced, are
+
+intended to target homeless people. The majority observes, however,
+that the council also discussed other ways to handle homelessness in
+Grants Pass. See ante, at 12, n. 1. That is true. Targeted enforcement
+of the Ordinances to criminalize homelessness was only one solution dis-
+cussed at the meeting. See App. 131–132 (listing “[a]ctions to move for-
+ward,” including increasing police presence, exclusion zones, “zero toler-
+ance” signs, “do not serve” or “most unwanted” lists, trespassing letters,
+and building a sobering center or youth center (internal quotation marks
+omitted)).
+                 Cite as: 603 U. S. ____ (2024)           15
+
+                   SOTOMAYOR, J., dissenting
+
+bly intend to return.” Brief for Criminal Law and Punish-
+ment Scholars as Amici Curiae 12.
+   Put another way, the Ordinances single out for punish-
+ment the activities that define the status of being homeless.
+By most definitions, homeless individuals are those that
+lack “a fixed, regular, and adequate nighttime residence.”
+42 U. S. C. §11434a(2)(A); 24 CFR §§582.5, 578.3 (2023).
+Permitting Grants Pass to criminalize sleeping outside
+with as little as a blanket permits Grants Pass to criminal-
+ize homelessness. “There is no . . . separation between be-
+ing without available indoor shelter and sleeping in pub-
+lic—they are opposite sides of the same coin.” Brief for
+United States as Amicus Curiae 25. The Ordinances use
+the definition of “campsite” as a proxy for homelessness be-
+cause those lacking “a fixed, regular, and adequate
+nighttime residence” are those who need to sleep in public
+to “maintai[n] a temporary place to live.”
+   Take the respondents here, two longtime homeless resi-
+dents of Grants Pass who sleep in their cars. The Ordi-
+nances define “campsite” to include “any vehicle.”
+§5.61.010(B). For respondents, the Ordinances as applied
+do not criminalize any behavior or conduct related to en-
+campments (such as fires or tents). Instead, the Ordinances
+target respondents’ status as people without any other form
+of shelter. Under the majority’s logic, cities cannot crimi-
+nalize the status of being homeless, but they can criminal-
+ize the conduct that defines that status. The Constitution
+cannot be evaded by such formalistic distinctions.
+   The Ordinances’ definition of “campsite” creates a situa-
+tion where homeless people necessarily break the law just
+by existing. “[U]nsheltered people have no private place to
+survive, so they are virtually guaranteed to violate these
+pervasive laws.” S. Rankin, Hiding Homelessness: The
+Transcarceration of Homelessness, 109 Cal. L. Rev. 559,
+561 (2021); see also Disability Rights Brief 2 (“[T]he mem-
+bers of Grants Pass’s homeless community do not choose to
+16           CITY OF GRANTS PASS v. JOHNSON
+
+                   SOTOMAYOR, J., dissenting
+
+be homeless. Instead, in a city with no public shelters, they
+have no alternative but to sleep in parks or on the street”).
+Every human needs to sleep at some point. Even if home-
+less people with no available shelter options can exist for a
+few days in Grants Pass without sleeping, they eventually
+must leave or be criminally punished.
+   The majority resists this understanding, arguing that the
+Ordinances criminalize the conduct of being homeless in
+Grants Pass while sleeping with as little as a blanket.
+Therefore, the argument goes, “[r]ather than criminalize
+mere status, Grants Pass forbids actions.” Ante, at 20.
+With no discussion about what it means to criminalize “sta-
+tus” or “conduct,” the majority’s analysis consists of a few
+sentences repeating its conclusion again and again in hopes
+that it will become true. See ante, at 20–21 (proclaiming
+that the Ordinances “forbi[d] actions” “[r]ather than crimi-
+nalize mere status”; and that they “do not criminalize mere
+status”). The best the majority can muster is the following
+tautology: The Ordinances criminalize conduct, not pure
+status, because they apply to conduct, not status.
+   The flaw in this conclusion is evident. The majority coun-
+tenances the criminalization of status as long as the City
+tacks on an essential bodily function—blinking, sleeping,
+eating, or breathing. That is just another way to ban the
+person. By this logic, the majority would conclude that the
+ordinance deemed unconstitutional in Robinson criminaliz-
+ing “being an addict” would be constitutional if it criminal-
+ized “being an addict and breathing.” Or take the example
+in Robinson: “Even one day in prison would be a cruel and
+unusual punishment for the ‘crime’ of having a common
+cold.” 370 U. S., at 667. According to the majority, although
+it is cruel and unusual to punish someone for having a com-
+mon cold, it is not cruel and unusual to punish them for
+sniffling or coughing because of that cold. See Manning v.
+Caldwell, 930 F. 3d 264, 290 (CA4 2019) (Wilkinson, J., dis-
+senting) (“In the rare case where the Eighth Amendment
+                  Cite as: 603 U. S. ____ (2024)           17
+
+                   SOTOMAYOR, J., dissenting
+
+was found to invalidate a criminal law, the law in question
+sought to punish persons merely for their need to eat or
+sleep, which are essential bodily functions. This is simply
+a variation of Robinson’s command that the state identify
+conduct in crafting its laws, rather than punish a person’s
+mere existence” (citation omitted)).
+                             C
+  The Ordinances are enforced exactly as intended: to crim-
+inalize the status of being homeless. City officials sought
+to use the Ordinances to drive homeless people out of town.
+See supra, at 13–14. The message to homeless residents is
+clear. As Debra Blake, a named plaintiff who passed away
+while this case was pending, see n. 1, supra, shared:
+      “I have been repeatedly told by Grants Pass police
+    that I must ‘move along’ and that there is nowhere in
+    Grants Pass that I can legally sit or rest. I have been
+    repeatedly awakened by Grants Pass police while
+    sleeping and told that I need to get up and move. I have
+    been told by Grants Pass police that I should leave
+    town.
+      Because I have no choice but to live outside and have
+    no place else to go, I have gotten tickets, fines and have
+    been criminally prosecuted for being homeless.” App.
+    180–181.
+Debra Blake’s heartbreaking message captures the cruelty
+of criminalizing someone for their status: “I am afraid at all
+times in Grants Pass that I could be arrested, ticketed and
+prosecuted for sleeping outside or for covering myself with
+a blanket to stay warm.” Id., at 182. So, at times, when she
+could, Blake “slept outside of the city.” Ibid. Blake, who
+was disabled, unemployed, and elderly, “owe[d] the City of
+Grants Pass more than $5000 in fines for crimes and viola-
+tions related directly to [her] involuntary homelessness and
+the fact that there is no affordable housing or emergency
+18           CITY OF GRANTS PASS v. JOHNSON
+
+                   SOTOMAYOR, J., dissenting
+
+shelters in Grants Pass where [she could] stay.” Ibid.
+   Another homeless individual was found outside a non-
+profit “in severe distress outside in the frigid air.” Id., at
+109. “[H]e could not breathe and he was experiencing acute
+pain,” and he “disclosed fear that he would be arrested and
+trespassed again for being outside.” Ibid. Another, Carri-
+eLynn Hill, whose story you read earlier, see supra, at 7,
+was ticketed for “lying down on a friend’s mat” and “lying
+down under a tarp to stay warm.” App. 134. She was “con-
+stantly afraid” of being “cited and arrested for being outside
+in Grants Pass.” Ibid. She is unable to stay at the only
+shelter in the City because she cannot keep her nebulizer,
+which she needs throughout the night, in her room. So she
+does “not know of anywhere in the city of Grants Pass
+where [she] can safely sleep or rest without being arrested,
+trespassed, or moved along.” Id., at 135. As she put it: “The
+only way I have figured out how to get by is try to stay out
+of sight and out of mind.” Ibid. Stories like these fill the
+record and confirm the City’s success in targeting the status
+of being homeless.
+   The majority proclaims, with no citation, that “it makes
+no difference whether the charged defendant is homeless, a
+backpacker on vacation passing through town, or a student
+who abandons his dorm room to camp out in protest.” Ante,
+at 20. That describes a fantasy. In reality, the deputy chief
+of police operations acknowledged that he was not aware of
+“any non-homeless person ever getting a ticket for illegal
+camping in Grants Pass.” Tr. of Jim Hamilton in Blake v.
+Grants Pass, No. 1:18–cr–01823 (D Ore., Oct. 16, 2019),
+ECF Doc. 63–4, p. 16. Officers testified that “laying on a
+blanket enjoying the park” would not violate the ordi-
+nances, ECF Doc. 63–7, at 2; and that bringing a sleeping
+bag to “look at stars” would not be punished, ECF Doc. 63–
+5, at 5. Instead, someone violates the Ordinance only if he
+or she does not “have another home to go to.” Id., at 6. That
+is the definition of being homeless. The majority does not
+                  Cite as: 603 U. S. ____ (2024)            19
+
+                    SOTOMAYOR, J., dissenting
+
+contest any of this. So much for the Ordinances applying to
+backpackers and students.
+                             V
+  Robinson should squarely resolve this case. Indeed, the
+majority seems to agree that an ordinance that fined and
+jailed “homeless” people would be unconstitutional. See
+ante, at 21 (disclaiming that the Ordinances “criminalize
+mere status”). The majority resists a straightforward ap-
+plication of Robinson by speculating about policy consider-
+ations and fixating on extensions of the Ninth Circuit’s nar-
+row rule in Martin.
+  The majority is wrong on all accounts. First, no one con-
+tests the power of local governments to address homeless-
+ness. Second, the majority overstates the line-drawing
+problems that this case presents. Third, a straightforward
+application of Robinson does not conflict with Powell v.
+Texas, 392 U. S. 514 (1968). Finally, the majority draws the
+wrong message from the various amici requesting this
+Court’s guidance.
+                               A
+  No one contests that local governments can regulate the
+time, place, and manner of public sleeping pursuant to their
+power to “enact regulations in the interest of the public
+safety, health, welfare or convenience.” Schneider v. State
+(Town of Irvington), 308 U. S. 147, 160 (1939). This power
+includes controlling “the use of public streets and side-
+walks, over which a municipality must rightfully exercise a
+great deal of control in the interest of traffic regulation and
+public safety.” Shuttlesworth v. Birmingham, 394 U. S.
+147, 152 (1969). When exercising that power, however, reg-
+ulations still “may not abridge the individual liberties se-
+cured by the Constitution.” Schneider, 308 U. S., at 160.
+  The Ninth Circuit in Martin provided that “an ordinance
+20              CITY OF GRANTS PASS v. JOHNSON
+
+                      SOTOMAYOR, J., dissenting
+
+violates the Eighth Amendment insofar as it imposes crim-
+inal sanctions against homeless individuals for sleeping
+outdoors, on public property, when no alternative shelter is
+available to them.” 920 F. 3d, at 604. Martin was narrow.4
+Consider these qualifications:
+     “[O]ur holding does not cover individuals who do have
+     access to adequate temporary shelter, whether because
+     they have the means to pay for it or because it is real-
+     istically available to them for free, but who choose not
+     to use it. Nor do we suggest that a jurisdiction with
+     insufficient shelter can never criminalize the act of
+     sleeping outside. Even where shelter is unavailable, an
+     ordinance prohibiting sitting, lying, or sleeping outside
+     at particular times or in particular locations might well
+     be constitutionally permissible. So, too, might an ordi-
+     nance barring the obstruction of public rights of way or
+     the erection of certain structures.” Id., at 617, n. 8 (ci-
+     tation omitted).
+Upholding Martin does not call into question all the other
+tools that a city has to deal with homelessness. “Some cities
+have established approved encampments on public prop-
+erty with security, services, and other resources; others
+have sought to impose geographic and time-limited bans on
+public sleeping; and others have worked to clear and clean
+particularly dangerous encampments after providing notice
+and reminders to those who lived there.” California Brief
+14. Others might “limit the use of fires, whether for cooking
+or other purposes” or “ban (or enforce already-existing bans
+on) particular conduct that negatively affects other people,
+including harassment of passersby, illegal drug use, and lit-
+tering.” Brief for Maryland et al. as Amici Curiae 12. All
+——————
+   4 Some district courts have since interpreted Martin broadly, relying
+
+on it to enjoin time, place, and manner restrictions on camping outside.
+See ante, at 7–10, 28–29. This Court is not asked today to consider any
+of these interpretations or extensions of Martin.
+                  Cite as: 603 U. S. ____ (2024)            21
+
+                    SOTOMAYOR, J., dissenting
+
+of these tools remain available to localities seeking to ad-
+dress homelessness within constitutional bounds.
+                               B
+   The scope of this dispute is narrow. Respondents do not
+challenge the City’s “restrictions on the use of tents or other
+camping gear,” “encampment clearances,” “time and place
+restrictions on sleeping outside,” or “the imposition of fines
+or jail time on homeless people who decline accessible shel-
+ter options.” Brief for Respondents 18.
+   That means the majority does not need to answer most of
+the hypotheticals it poses. The City’s hypotheticals, echoed
+throughout the majority opinion, concern “violent crime,
+drug overdoses, disease, fires, and hazardous waste.” Brief
+for Petitioner 47. For the most part, these concerns are not
+implicated in this case. The District Court’s injunction, for
+example, permits the City to prohibit “littering, public uri-
+nation or defecation, obstruction of roadways, possession or
+distribution of illicit substances, harassment, or violence.”
+App. to Pet. for Cert. 200a. The majority’s framing of the
+problem as one involving drugs, diseases, and fires instead
+of one involving people trying to keep warm outside with a
+blanket just provides the Court with cover to permit the
+criminalization of homeless people.
+   The majority also overstates the line-drawing problems
+that a baseline Eighth Amendment standard presents.
+Consider the “unavoidable” “difficult questions” that dis-
+combobulate the majority. Ante, at 32–33. Courts answer
+such factual questions every day. For example, the major-
+ity asks: “What does it mean to be ‘involuntarily’ homeless
+with ‘no place to go’?” Ibid. Martin’s answer was clear: It
+is when “ ‘there is a greater number of homeless individuals
+in [a city] than the number of available beds [in shelters,]’ ”
+not including “individuals who do have access to adequate
+temporary shelter, whether because they have the means
+to pay for it or because it is realistically available to them
+22            CITY OF GRANTS PASS v. JOHNSON
+
+                    SOTOMAYOR, J., dissenting
+
+for free.” 920 F. 3d, at 617, and n. 8. The District Court
+here found that Grants Pass had “zero emergency shelter
+beds” and that Gospel Rescue Mission’s “138 beds would not
+be nearly enough to accommodate the at least 602 homeless
+individuals in Grants Pass.” App. to Pet. for Cert. 179a–
+180a. The majority also asks: “[W]hat are people entitled
+to do and use in public spaces to ‘keep warm’ ”? Ante, at 33.
+The District Court’s opinion also provided a clear answer:
+They are permitted “bedding type materials to keep warm
+and dry,” but cities can still “implement time and place re-
+strictions for when homeless individuals . . . must have
+their belonging[s] packed up.” App. to Pet. for Cert. 199a.
+Ultimately, these are not metaphysical questions but fac-
+tual ones. See, e.g., 42 U. S. C. §11302 (defining “homeless,”
+“homeless individual,” and “homeless person”); 24 CFR
+§582.5 (defining “[a]n individual or family who lacks a fixed,
+regular, and adequate nighttime residence”).
+  Just because the majority can list difficult questions that
+require answers, see ante, at 33, n. 8, does not absolve fed-
+eral judges of the responsibility to interpret and enforce the
+substantive bounds of the Constitution. The majority pro-
+claims that this dissent “blinks the difficult questions.”
+Ante, at 32. The majority should open its eyes to available
+answers instead of throwing up its hands in defeat.
+                               C
+  The majority next spars with a strawman in its discus-
+sion of Powell v. Texas. The Court in Powell considered the
+distinction between status and conduct but could not agree
+on a controlling rationale. Four Justices concluded that
+Robinson covered any “condition [the defendant] is power-
+less to change,” 392 U. S., at 567 (Fortas, J., dissenting),
+and four Justices rejected that view. Justice White, casting
+the decisive fifth vote, left the question open because the
+defendant had “made no showing that he was unable to stay
+off the streets on the night in question.” Id., at 554 (opinion
+                     Cite as: 603 U. S. ____ (2024)                   23
+
+                       SOTOMAYOR, J., dissenting
+
+concurring in judgment). So, in his view, it was “unneces-
+sary to pursue at this point the further definition of the cir-
+cumstances or the state of intoxication which might bar
+conviction of a chronic alcoholic for being drunk in a public
+place.” Id., at 553.
+   This case similarly called for a straightforward applica-
+tion of Robinson. The majority finds it telling that this dis-
+sent “barely mentions” Justice Marshall’s opinion in Powell.
+Ante, at 32.5 The majority completely misses the point.
+Even Justice Marshall’s plurality opinion in Powell agreed
+that Robinson prohibited enforcing laws criminalizing “a
+mere status.” 392 U. S., at 532. The Powell Court consid-
+ered a statute that criminalized voluntary conduct (getting
+drunk) that could be rendered involuntary by a status (al-
+coholism); here, the Ordinances criminalize conduct (sleep-
+ing outside) that defines a particular status (homelessness).
+So unlike the debate in Powell, this case does not turn on
+whether the criminalized actions are “ ‘involuntary’ or ‘oc-
+casioned by’ ” a particular status. Id., at 533 (Marshall, J.,
+dissenting). For all the reasons discussed above, see supra,
+at 13–19, these Ordinances criminalize status and are thus
+unconstitutional under any of the opinions in Powell.
+                               D
+  The majority does not let the reader forget that “a large
+number of States, cities, and counties” all “urg[ed] the
+Court to grant review.” Ante, at 14; see also ante, at 9 (“An
+exceptionally large number of cities and States have filed
+briefs in this Court”); ante, at 34 (noting the “multitude of
+——————
+   5 The majority claims that this dissent does not dispute that Robinson
+
+is “hard to square” with the Eighth Amendment’s “text and this Court’s
+other precedents.” Ante, at 32. That is wrong. See supra, at 12 (recog-
+nizing Robinson’s well-established rule). The majority also claims that
+this dissent “ignores Robinson’s own insistence that a different result
+would have obtained in that case if the law there had proscribed an act
+rather than status alone.” Ante, at 32. That too is wrong. See supra, at
+11–12 (discussing Robinson’s distinction between status and conduct).
+24            CITY OF GRANTS PASS v. JOHNSON
+
+                    SOTOMAYOR, J., dissenting
+
+amicus briefs before us”); ante, at 14, n. 3 (listing certiorari-
+stage amici). No one contests that States, cities, and coun-
+ties could benefit from this Court’s guidance. Yet the ma-
+jority relies on these amici to shift the goalposts and focus
+on policy questions beyond the scope of this case. It first
+declares that “[t]he only question we face is whether one
+specific provision of the Constitution . . . prohibits the en-
+forcement of public-camping laws.” Ante, at 31. Yet it
+quickly shifts gears and claims that “the question this case
+presents is whether the Eighth Amendment grants federal
+judges primary responsibility for assessing those causes [of
+homelessness] and devising those responses.” Ante, at 34.
+This sleight of hand allows the majority to abdicate its re-
+sponsibility to answer the first (legal) question by declining
+to answer the second (policy) one.
+   The majority cites various amicus briefs to amplify
+Grants Pass’s belief that its homelessness crisis is intracta-
+ble absent the ability to criminalize homelessness. In so
+doing, the majority chooses to see only what it wants. Many
+of those stakeholders support the narrow rule in Martin.
+See, e.g., Brief for City and County of San Francisco et al.
+as Amici Curiae 4 (“[U]nder the Eighth Amendment . . . a
+local municipality may not prohibit sleeping—a biological
+necessity—in all public spaces at all times and under all
+conditions, if there is no alternative space available in the
+jurisdiction for unhoused people to sleep”); Brief for City of
+Los Angeles as Amicus Curiae 1 (“The City agrees with the
+broad premise underlying the Martin and Johnson deci-
+sions: when a person has no other place to sleep, sleeping
+at night in a public space should not be a crime leading to
+an arrest, criminal conviction, or jail”); California Brief 2–3
+(“[T]he Constitution does not allow the government to pun-
+ish people for the status of being homeless. Nor should it
+allow the government to effectively punish the status of be-
+ing homeless by making it a crime in all events for someone
+with no other options to sleep outside on public property at
+                  Cite as: 603 U. S. ____ (2024)            25
+
+                    SOTOMAYOR, J., dissenting
+
+night”).
+   Even the Federal Government, which restricts some
+sleeping activities on park lands, see ante, at 7, has for
+nearly three decades “taken the position that laws prohib-
+iting sleeping in public at all times and in all places violate
+the Robinson principle as applied to individuals who have
+no access to shelter.” Brief for United States as Amicus Cu-
+riae 14. The same is true of States across the Nation. See
+Brief for Maryland et al. as Amici Curiae 3–4 (“Taking
+these policies [criminalizing homelessness] off the table
+does not interfere with our ability to address homelessness
+(including the effects of homelessness on surrounding com-
+munities) using other policy tools, nor does it amount to an
+undue intrusion on state sovereignty”).
+   Nothing in today’s decision prevents these States, cities,
+and counties from declining to criminalize people for sleep-
+ing in public when they have no available shelter. Indeed,
+although the majority describes Martin as adopting an un-
+workable rule, the elected representatives in Oregon codi-
+fied that very rule. See infra, at 26. The majority does
+these localities a disservice by ascribing to them a demand
+for unfettered freedom to punish that many do not seek.
+                              VI
+  The Court wrongly concludes that the Eighth Amend-
+ment permits Ordinances that effectively criminalize being
+homeless. Grants Pass’s Ordinances may still raise a host
+of other legal issues. Perhaps recognizing the untenable
+position it adopts, the majority stresses that “many sub-
+stantive legal protections and provisions of the Constitution
+may have important roles to play when States and cities
+seek to enforce their laws against the homeless.” Ante, at
+31. That is true. Although I do not prejudge the merits of
+these other issues, I detail some here so that people experi-
+encing homelessness and their advocates do not take the
+26              CITY OF GRANTS PASS v. JOHNSON
+
+                      SOTOMAYOR, J., dissenting
+
+Court’s decision today as closing the door on such claims.6
+                              A
+    The Court today does not decide whether the Ordinances
+are valid under a new Oregon law that codifies Martin. In
+2021, Oregon passed a law that constrains the ability of mu-
+nicipalities to punish homeless residents for public sleep-
+ing. “Any city or county law that regulates the acts of sit-
+ting, lying, sleeping or keeping warm and dry outdoors on
+public property that is open to the public must be objec-
+tively reasonable as to time, place and manner with regards
+to persons experiencing homelessness.” Ore. Rev. Stat.
+§195.530(2). The law also grants persons “experiencing
+homelessness” a cause of action to “bring suit for injunctive
+or declaratory relief to challenge the objective reasonable-
+ness” of an ordinance. §195.530(4). This law was meant to
+“ ‘ensure that individuals experiencing homelessness are
+protected from fines or arrest for sleeping or camping on
+public property when there are no other options.’ ” Brief in
+Opposition 35 (quoting Speaker T. Kotek, Hearing on H. B.
+3115 before the House Committee on the Judiciary, 2021
+Reg. Sess. (Ore., Mar. 9, 2021)). The panel below already
+concluded that “[t]he city ordinances addressed in Grants
+Pass will be superseded, to some extent,” by this new law.
+72 F. 4th, at 924, n. 7. Courts may need to determine
+whether and how the new law limits the City’s enforcement
+of its Ordinances.
+                           B
+  The Court today also does not decide whether the Ordi-
+nances violate the Eighth Amendment’s Excessive Fines
+Clause. That Clause separately “limits the government’s
+
+——————
+  6 The majority does not address whether the Eighth Amendment re-
+
+quires a more particularized inquiry into the circumstances of the indi-
+viduals subject to the City’s ordinances. See Brief for United States as
+Amicus Curiae 27. I therefore do not discuss that issue here.
+                  Cite as: 603 U. S. ____ (2024)             27
+
+                    SOTOMAYOR, J., dissenting
+
+power to extract payments, whether in cash or in kind, as
+punishment for some offense.” United States v. Bajakajian,
+524 U. S. 321, 328 (1998) (internal quotation marks omit-
+ted). “The touchstone of the constitutional inquiry under
+the Excessive Fines Clause is the principle of proportional-
+ity: The amount of the forfeiture must bear some relation-
+ship to the gravity of the offense that it is designed to pun-
+ish.” Id., at 334.
+   The District Court in this case concluded that the fines
+here serve “no remedial purpose” but rather are “intended
+to deter homeless individuals from residing in Grants
+Pass.” App. to Pet. for Cert. 189a. Because it concluded
+that the fines are punitive, it went on to determine that the
+fines are “ ‘grossly disproportionate to the gravity of the of-
+fense’ ” and thus excessive. Ibid. The Ninth Circuit de-
+clined to consider this holding because the City presented
+“no meaningful argument on appeal regarding the exces-
+sive fines issue.” 72 F. 4th, at 895. On remand, the Ninth
+Circuit is free to consider whether the City forfeited its ap-
+peal on this ground and, if not, whether this issue has
+merit.
+                               C
+  Finally, the Court does not decide whether the Ordi-
+nances violate the Due Process Clause. “The Due Process
+Clauses of the Fifth and Fourteenth Amendments ensure
+that officials may not displace certain rules associated with
+criminal liability that are ‘so old and venerable,’ ‘ “so rooted
+in the traditions and conscience of our people[,] as to be
+ranked as fundamental.” ’ ” Ante, at 15 (quoting Kahler v.
+Kansas, 589 U. S. 271, 279 (2020)). The majority notes that
+due process arguments in Robinson “may have made some
+sense.” Ante, at 19. On that score, I agree. “[H]istorically,
+crimes in England and this country have usually required
+proof of some act (or actus reus) undertaken with some
+measure of volition (mens rea).” Ibid. “This view ‘took deep
+28            CITY OF GRANTS PASS v. JOHNSON
+
+                    SOTOMAYOR, J., dissenting
+
+and early root in American soil’ where, to this day, a crime
+ordinarily arises ‘only from concurrence of an evil-meaning
+mind with an evil-doing hand.’ Morissette v. United States,
+342 U. S. 246, 251–252 (1952).” Ibid. Yet the law at issue
+in Robinson “was an anomaly, as it required proof of neither
+of those things.” Ante, at 19.
+   Relatedly, this Court has concluded that some vagrancy
+laws are unconstitutionally vague. See, e.g., Kolender v.
+Lawson, 461 U. S. 352, 361–362 (1983) (invalidating Cali-
+fornia law that required people who loiter or wander on the
+street to provide identification and account for their pres-
+ence); Papachristou v. Jacksonville, 405 U. S. 156, 161–162
+(1972) (concluding that vagrancy law employing “ ‘archaic
+language’ ” in its definition was “void for vagueness”); ac-
+cord, Desertrain v. Los Angeles, 754 F. 3d 1147, 1155–1157
+(CA9 2014) (holding that an ordinance prohibiting the use
+of a vehicle as “ ‘living quarters’ ” was void for vagueness be-
+cause the ordinance did not define “living quarters”). Other
+potentially relevant due process precedents abound. See,
+e.g., Winters v. New York, 333 U. S. 507, 520 (1948) (“Where
+a statute is so vague as to make criminal an innocent act, a
+conviction under it cannot be sustained”); Chicago v. Mo-
+rales, 527 U. S. 41, 57 (1999) (opinion of Stevens, J.) (inval-
+idating ordinance that failed “to distinguish between inno-
+cent conduct and conduct threatening harm”).
+   The Due Process Clause may well place constitutional
+limits on anti-homelessness ordinances. See, e.g., Memorial
+Hospital v. Maricopa County, 415 U. S. 250, 263–264 (1974)
+(considering statute that denied people medical care de-
+pending on duration of residency and concluding that “to
+the extent the purpose of the [statute] is to inhibit the im-
+migration of indigents generally, that goal is constitution-
+ally impermissible”); Pottinger v. Miami, 810 F. Supp. 1551,
+1580 (SD Fla. 1992) (concluding that “enforcement of laws
+that prevent homeless individuals who have no place to go
+from sleeping” might also unconstitutionally “burde[n]
+                  Cite as: 603 U. S. ____ (2024)             29
+
+                    SOTOMAYOR, J., dissenting
+
+their right to travel”); see also ante, at 21, n. 5 (noting that
+these Ordinances “may implicate due process and our prec-
+edents regarding selective prosecution”).
+                              D
+   The Ordinances might also implicate other legal issues.
+See, e.g., Trop, 356 U. S., at 101 (plurality opinion) (con-
+cluding that a law that banishes people threatens “the total
+destruction of the individual’s status in organized society”);
+Brief for United States as Amicus Curiae 21 (describing the
+Ordinances here as “akin to a form of banishment, a meas-
+ure that is now generally recognized as contrary to our Na-
+tion’s legal tradition”); Lavan v. Los Angeles, 693 F. 3d
+1022, 1029 (CA9 2012) (holding that a city violated home-
+less plaintiffs’ Fourth Amendment rights by seizing and de-
+stroying property in an encampment, because “[v]iolation of
+a City ordinance does not vitiate the Fourth Amendment’s
+protection of one’s property”).
+   The Court’s misstep today is confined to its application of
+Robinson. It is quite possible, indeed likely, that these and
+similar ordinances will face more days in court.
+                         *     *    *
+  Homelessness in America is a complex and heartbreaking
+crisis. People experiencing homelessness face immense
+challenges, as do local and state governments. Especially
+in the face of these challenges, this Court has an obligation
+to apply the Constitution faithfully and evenhandedly.
+  The Eighth Amendment prohibits punishing homeless-
+ness by criminalizing sleeping outside when an individual
+has nowhere else to go. It is cruel and unusual to apply any
+penalty “selectively to minorities whose numbers are few,
+who are outcasts of society, and who are unpopular, but
+whom society is willing to see suffer though it would not
+countenance general application of the same penalty across
+the board.” Furman v. Georgia, 408 U. S. 238, 245 (1972)
+30            CITY OF GRANTS PASS v. JOHNSON
+
+                    SOTOMAYOR, J., dissenting
+
+(Douglas, J., concurring).
+  I remain hopeful that our society will come together “to
+address the complexities of the homelessness challenge fac-
+ing the most vulnerable among us.” Ante, at 34. That re-
+sponsibility is shared by those vulnerable populations, the
+States and cities in which they reside, and each and every
+one of us. “It is only after we begin to see a street as our
+street, a public park as our park, a school as our school, that
+we can become engaged citizens, dedicating our time and
+resources for worthwhile causes.” M. Desmond, Evicted:
+Property and Profit in the American City 294 (2016).
+  This Court, too, has a role to play in faithfully enforcing
+the Constitution to prohibit punishing the very existence of
+those without shelter. I remain hopeful that someday in
+the near future, this Court will play its role in safeguarding
+constitutional liberties for the most vulnerable among us.
+Because the Court today abdicates that role, I respectfully
+dissent.
+

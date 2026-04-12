@@ -990,6 +990,7 @@ sources:
     jurisdiction_id: san-rafael
     case_study_ids:
       - san-rafael-homelessness-01
+      - legal-precedent-02
     source_category: official_communications
     source_type: article
     entry_url: https://www.cityofsanrafael.org/city-of-san-rafael-statement-on-grants-pass-decision/
@@ -1017,6 +1018,7 @@ sources:
     jurisdiction_id: san-rafael
     case_study_ids:
       - san-rafael-homelessness-01
+      - legal-precedent-02
     source_category: official_communications
     source_type: article
     entry_url: https://www.cityofsanrafael.org/supreme-courts-grants-pass-ruling-its-effect-on-san-rafaels-encampment-policy/
@@ -1311,6 +1313,7 @@ sources:
     jurisdiction_id: san-francisco
     case_study_ids:
       - san-rafael-homelessness-01
+      - legal-precedent-02
     source_category: litigation
     source_type: article
     entry_url: https://sfcityattorney.org/san-francisco-files-amicus-brief-with-u-s-supreme-court-in-grants-pass/
@@ -1338,6 +1341,7 @@ sources:
     jurisdiction_id: united-states
     case_study_ids:
       - san-rafael-homelessness-01
+      - legal-precedent-02
     source_category: litigation
     source_type: html_index
     entry_url: https://www.supremecourt.gov/docket/docketfiles/html/public/23-175.html
@@ -1363,6 +1367,38 @@ sources:
     notes:
       - Primary official source surface for the Grants Pass case.
       - Use this as the discovery point for the opinion and docket-linked PDFs.
+
+  - source_id: scotus-grants-pass-opinion
+    label: Supreme Court Opinion for City of Grants Pass v. Johnson
+    owner_type: external
+    owner_id: united-states-supreme-court
+    jurisdiction_id: united-states
+    case_study_ids:
+      - legal-precedent-02
+    source_category: litigation
+    source_type: pdf
+    entry_url: https://www.supremecourt.gov/opinions/23pdf/23-175_19m2.pdf
+    discovery_urls:
+      - https://www.supremecourt.gov/docket/docketfiles/html/public/23-175.html
+      - https://www.supremecourt.gov/opinions/23pdf/23-175_19m2.pdf
+    fetch_strategy: direct_pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - case
+      - proceeding
+      - document:opinion
+      - case_participation
+    cadence: manual
+    history_depth: single_record
+    source_tier_default: A
+    robots_notes: public Supreme Court slip-opinion PDF
+    review_risk: low
+    dedupe_key_strategy: docket_number_plus_decision_date
+    notes:
+      - Official slip opinion PDF linked directly from the public docket page.
+      - This is the controlling-precedent record for the Grants Pass bundle.
 
   - source_id: sf-city-attorney-coalition-injunction-appeal
     label: SF City Attorney Opening Brief Post in Coalition on Homelessness Appeal

@@ -1,0 +1,1444 @@
+Docket for 23-175
+(window.BOOMR_mq=window.BOOMR_mq||[]).push(["addVar",{"rua.upush":"false","rua.cpush":"false","rua.upre":"false","rua.cpre":"false","rua.uprl":"false","rua.cprl":"false","rua.cprf":"false","rua.trans":"","rua.cook":"false","rua.ims":"false","rua.ufprl":"false","rua.cfprl":"false","rua.isuxp":"false","rua.texp":"norulematch","rua.ceh":"false","rua.ueh":"false","rua.ieh.st":"0"}]);
+!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="T5V7Y-Q8M8U-BKDFY-XWX7C-XPH3U",function(){function e(){if(!o){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,i.parentNode.appendChild(e),o=!0}}function t(e){o=!0;var n,t,a,r,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(i.parentNode,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",r=(a.frameElement||a).style,r.width=0,r.height=0,r.border=0,r.display="none",i.parentNode.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void(0);",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=12,window.BOOMR.url=n+"T5V7Y-Q8M8U-BKDFY-XWX7C-XPH3U";var i=document.currentScript||document.getElementsByTagName("script")[0],o=!1,r=document.createElement("link");if(r.relList&&"function"==typeof r.relList.supports&&r.relList.supports("preload")&&"as"in r)window.BOOMR.snippetMethod="p",r.href=window.BOOMR.url,r.rel="preload",r.as="script",r.addEventListener("load",e),r.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!o)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),i.parentNode.appendChild(r);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="misq77ix3ckza2oznejq-f-5b0cc1836-clientnsv4-s.akamaihd.net",i="false"=="true"?2:1,o={"ak.v":"39","ak.cp":"81816","ak.ai":parseInt("165722",10),"ak.ol":"0","ak.cr":18,"ak.ipv":4,"ak.proto":"h2","ak.rid":"17ba3ad5","ak.r":43973,"ak.a2":n,"ak.m":"dsca","ak.n":"essl","ak.bpcip":"98.37.15.0","ak.cport":65164,"ak.gh":"23.216.148.144","ak.quicv":"","ak.tlsv":"tls1.3","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"","ak.t":"1775855891","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==1IDpr1JCO99O+DbbvRJnOwZtOaXPzDN+sb4CklgIBvEj6XdAPDPHk6l+8HxtVuZ7oSgMJ6a/i0hmhEoMYrxN7VKzum0nb/ZEwvSEQUzhjcphtfpV9HHYJp5/G3B5vwz5ejMkZOvXLDPplbsy7AHy6LdeWkGBFm2oenITkDavxmvkOs6t7ZXboet3Y9kOwy+9wba98rA3y2Sn6tDEbka58QF3eVbmce+NkrTkUIIOCZiit1Nn1RyKHqoH0uY52c7jwTS61AkYLWu9plVpWV+famkPgjY8knV/CDSNu0uTjbOjvC0NtKHfNiX9zCZEyU2sSLmo5LJ1KrLl7A1DlXDVhgZHlQ6i4Sd8oy3YQMLVyUQ955fPVtbDil7kliqAx56q73MtEJ55h6jfydoZJChZdknwMWBuiC3XchltaaEVtZM=","ak.pv":"156","ak.dpoabenc":"","ak.tf":i};if(""!==t)o["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))o["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(o)},rv:function(){var e=["ak.bpcip","ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:o,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);
+No. 23-175
+Title:
+City of Grants Pass, Oregon, Petitioner
+v.
+Gloria Johnson, et al., on Behalf of Themselves and All Others Similarly Situated
+Docketed:
+August 25, 2023
+Lower Ct:
+United States Court of Appeals for the Ninth Circuit
+Case Numbers:
+(20-35752, 20-35881)
+Decision Date:
+September 28, 2022
+Rehearing Denied:
+July 5, 2023
+Questions Presented
+Proceedings and Orders
+Aug 22 2023
+Petition for a writ of certiorari filed. (Response due September 25, 2023)
+Petition
+Appendix
+Certificate of Word Count
+Proof of Service
+Sep 11 2023
+Brief amici curiae of Freddy Brown, et al. filed.
+Main Document
+Proof of Service
+Certificate of Word Count
+Sep 19 2023
+Brief amici curiae of California State Association of Counties filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Sep 19 2023
+Brief amicus curiae of Goldwater Institute filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Sep 20 2023
+Waiver of right of respondent Gloria Johnson, et al. to respond filed.
+Main Document
+Sep 20 2023
+Brief amicus curiae of District Attorney of Sacramento County filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Sep 20 2023
+Brief amici curiae of Speaker of the Arizona House of Representatives Ben Toma, et al. filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Sep 20 2023
+Brief amici curiae of California State Sheriffs' Association, et al. filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Sep 21 2023
+Brief amicus curiae of Pacific Legal Foundation and California Business Properties Association filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Sep 21 2023
+Brief amicus curiae of Office of San Diego County District Attorney filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Sep 22 2023
+Brief amici curiae of League of Oregon Cities, et al. filed.
+Main Document
+Proof of Service
+Certificate of Word Count
+Sep 22 2023
+Brief amicus curiae of California Governor Gavin Newsom filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Sep 22 2023
+Brief amicus curiae of Brentwood Community Council filed.
+Main Document
+Proof of Service
+Certificate of Word Count
+Other
+Sep 25 2023
+Brief amici curiae of City and County of San Francisco, et al. filed
+Main Document
+Certificate of Word Count
+Proof of Service
+Sep 25 2023
+Brief amici curiae of LA Alliance for Human Rights, et al. filed.
+Main Document
+Proof of Service
+Certificate of Word Count
+Sep 25 2023
+Brief amici curiae of Idaho, et al. filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Sep 25 2023
+Brief amici curiae of Los Angeles Area Chamber of Commerce, et al. filed.
+Main Document
+Proof of Service
+Certificate of Word Count
+Sep 25 2023
+Brief amicus curiae of Venice Stakeholders Association filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Sep 25 2023
+Brief amici curiae of City of Phoenix, et al. filed.
+Main Document
+Proof of Service
+Certificate of Word Count
+Sep 25 2023
+Brief amicus curiae of City of Los Angeles filed.
+Main Document
+Proof of Service
+Certificate of Word Count
+Sep 25 2023
+Brief amicus curiae of Washington State Association of Sheriffs and Police Chiefs filed.
+Main Document
+Proof of Service
+Certificate of Word Count
+Sep 25 2023
+Brief amici curiae of Ten California Cities and The County of Orange filed.
+Main Document
+Proof of Service
+Certificate of Word Count
+Sep 25 2023
+Brief amici curiae of Bay Area Council, et al. filed.
+Main Document
+Proof of Service
+Certificate of Word Count
+Sep 25 2023
+Brief amici curiae of Neighbors for a Better San Francisco, et al. filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Sep 25 2023
+Brief amici curiae of International Municipal Lawyers Association, et al. filed.
+Main Document
+Proof of Service
+Certificate of Word Count
+Sep 25 2023
+Brief amicus curiae of Criminal Justice Legal Foundation filed.
+Main Document
+Proof of Service
+Certificate of Word Count
+Oct 04 2023
+DISTRIBUTED for Conference of 10/27/2023.
+Oct 05 2023
+Response Requested. (Due November 6, 2023)
+Oct 10 2023
+Motion to extend the time to file a response from November 6, 2023 to December 6, 2023, submitted to The Clerk.
+Main Document
+Oct 12 2023
+Motion to extend the time to file a response is granted and the time is extended to and including December 6, 2023.
+Nov 03 2023
+Brief amicus curiae of City of Chico filed.
+Main Document
+Proof of Service
+Certificate of Word Count
+Dec 06 2023
+Brief of respondents Gloria Johnson, et al. in opposition filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Dec 20 2023
+DISTRIBUTED for Conference of 1/5/2024.
+Dec 20 2023
+Reply of petitioner City of Grants Pass filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Jan 08 2024
+DISTRIBUTED for Conference of 1/12/2024.
+Jan 12 2024
+Petition GRANTED.
+Feb 16 2024
+SET FOR ARGUMENT on Monday, April 22, 2024.
+Feb 21 2024
+Record requested from the United States Court of Appeals for the Ninth Circuit.
+Feb 26 2024
+Brief of petitioner City of Grants Pass filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Feb 26 2024
+Joint appendix filed. (Statement of costs filed)
+Main Document
+Proof of Service
+Feb 26 2024
+Amicus brief of County of Orange, California not accepted for filing. (March 4, 2024--Corrected verison to be submitted.)
+Feb 26 2024
+Brief amicus curiae of County of Orange, California filed (March 8, 2024).
+Main Document
+Proof of Service
+Certificate of Word Count
+Feb 27 2024
+Brief amici curiae of Professors Peter W. Low and Joel S. Johnson supporting neither party filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Feb 29 2024
+Amicus brief of Venice Stakeholders Association not accepted for filing. (March 05, 2024--Corrected verison to be submitted.)
+Feb 29 2024
+Brief amicus curiae of Venice Stakeholders Association filed (March 8, 2024).
+Main Document
+Certificate of Word Count
+Proof of Service
+Feb 29 2024
+Amicus brief of California State Sheriffs' Association, et al. not accepted for filing. (March 4, 2024--Corrected efiling to be submitted.)
+Feb 29 2024
+Brief amici curiae of California State Sheriffs' Association, et al. filed (March 7, 2024).
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 01 2024
+Brief amici curiae of State of Idaho, Montana, and 22 Other States filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 01 2024
+Brief amici curiae of California State Association of Counties, et al. filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 01 2024
+Brief amicus curiae of District Attorney of San Diego County filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 01 2024
+Brief amici curiae of City and County of San Francisco, et al. in support of neither party filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 01 2024
+Brief amici curiae of Pacific Legal Foundation, et al. filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 01 2024
+Brief amicus curiae of District Attorney of Sacramento County filed.
+Main Document
+Other
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of Grants Pass Gospel Rescue Mission filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Amicus brief of Thirteen California Cities not accepted for filing (March 6, 2024--brief to be recovered).
+Mar 04 2024
+Brief amici curiae of Thirteen California Cities filed (March 11, 2024).
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of Professor Michael J.Z. Mannheimer filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of California Governor Gavin Newsom in support of neither party filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of Goldwater Institute filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amici curiae of Tiana Tozer, Philip Rhodes, Barbara Jacobsen, Dane Southard, Lorien Ilena Welchoff, Pauline Long, Mark Barnhill, Steve Jackson, Keith Martin and Steven Rebischke filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amici curiae of Los Angeles Area Chamber of Commerce and Central City Association of Los Angeles filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amici curiae of Retail Litigation Center, Inc. and Retail Industry Leaders Association filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Amicus brief of League of Oregon Cities et al. not accepted for filing. (March 06, 2024--Corrected verison to be submitted.)
+Mar 04 2024
+Brief amici curiae of League of Oregon Cities et al. (March 11, 2024) filed.
+Main Document
+Other
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of The Becket Fund for Religious Liberty in support of neither party filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of City of San Clemente filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of Brentwood Community Council filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amici curiae of The Chamber of Commerce of the United State of America, et al. filed.
+Main Document
+Certificate of Word Count
+Certificate of Word Count
+Mar 04 2024
+Brief amici curiae of Neighbors for a Better San Francisco et al. filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of California in support of neither party filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amici curiae of Manhattan Institute, Stephen Eide, and Judge Glock filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of City of Chico filed.
+Main Document
+Certificate of Word Count
+Certificate of Word Count
+Mar 04 2024
+Brief amicus curiae of San Bernardino County, California filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of United States in support of neither party filed.
+Main Document
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of Professor John F. Stinneford filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of LONANG Institute filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amici curiae of Members of Congress filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of Pacific Research Institute filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of Cicero Institute filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amici curiae of Local Government Legal Center, et al. filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amici curiae of Bay Area Council et al. filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amici curiae of City of Phoenix, et al. filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of City of Los Angeles in support of neither party filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of Criminal Justice Legal Foundation filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amicus curiae of County of Los Angeles in support of neither party filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amici curiae of International Downtown Association, et al. filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 04 2024
+Brief amici curiae of Speaker of the Arizona House of Representatives Ben Toma, et al. filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 19 2024
+Brief amici curiae of Oregon Quakers, et al. filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 22 2024
+Brief amicus curiae of National Coalition for Men filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Mar 27 2024
+CIRCULATED
+Mar 27 2024
+Brief of respondents Gloria Johnson, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 01 2024
+Motion of the Solicitor General for leave to participate in oral argument as amicus curiae, for divided argument, and for enlargement of time for oral argument filed.
+Main Document
+Proof of Service
+Apr 02 2024
+Brief amici curiae of Chicago Coalition for the Homeless, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 02 2024
+Brief amicus curiae of Advocates for Empowerment CA filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 02 2024
+Brief amici curiae of Los Angeles Catholic Worker, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 02 2024
+Brief amici curiae of Current & Former San Francisco Officials and Civic Organizations filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 02 2024
+Brief amici curiae of Local Progress Impact Lab, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 02 2024
+Brief amici curiae of Advocates for Survivors of Gender-Based Violence filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 02 2024
+Brief amici curiae of Western Regional Advocacy Project filed. (Distributed)
+Main Document
+Proof of Service
+Certificate of Word Count
+Apr 03 2024
+Brief amici curiae of Oregon Food Bank, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of Southern Poverty Law Center, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of Criminal Law and Punishment Scholars filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of American Civil Liberties Union and Nineteen Affiliates filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of Services Providers filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amicus curiae of Constitutional Accountability Center filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of Kairos Center for Religions, Rights and Social Justice, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of Lawyers’ Committee for Civil Rights Under Law, et al. filed. (Distributed)
+Main Document
+Proof of Service
+Certificate of Word Count
+Apr 03 2024
+Brief amici curiae of The Disability Rights Education and Defense Fund et al. filed.
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of Juvenile Law Center, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of The Center for Constitutional Rights, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amicus curiae of Fund for Empowerment filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of American Psychiatric Association, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amicus curiae of The National Homelessness Law Center filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of National Women's Shelter Network, Inc, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amicus curiae of United States Conference of Catholic Bishops filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of Formerly Incarcerated, Convicted People and Families Movement, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of Corporation for Supportive Housing, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of State of Maryland, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of Fines and Fees Justice Center, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of Matthew Doherty, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of Public Health Professionals and Organizations filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of National Alliance to End Homelessness, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of StrongHearts Native Helpline, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of 57 Social Scientists with Published Research on Homelessness filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of The National Police Accountability Project, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of Better Days Ahead Outreach Inc., et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of Professors William P. Quigley, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amicus curiae of Emory Civil Rights Society filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of Current U.N. Special Rapporteurs filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amicus curiae of Safety Net Project of the Urban Justice Center filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of National Coalition for Homeless Veterans, et al. filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 03 2024
+Brief amici curiae of Congressional Amici Curiae filed. (Distributed)
+Main Document
+Certificate of Word Count
+Proof of Service
+Apr 10 2024
+Record received from the United States Court of Appeals for the Ninth Circuit on March 6, 2024. The record is electronic and is available on PACER.
+Apr 12 2024
+Motion of the Solicitor General for leave to participate in oral argument as amicus curiae, for divided argument, and for enlargement of time for oral argument GRANTED.
+Apr 12 2024
+Reply of petitioner City of Grants Pass filed. (Distributed)
+Main Document
+Other
+Certificate of Word Count
+Proof of Service
+Apr 22 2024
+Argued. For petitioner: Theane D. Evangelis, Los Angeles, Cal. For United States, as amicus curiae: Edwin S. Kneedler, Deputy Solicitor General, Department of Justice, Washington, D. C. For respondents: Kelsi B. Corkran, Washington, D. C.
+Jun 28 2024
+Judgment REVERSED and case REMANDED. Gorsuch, J., delivered the
+opinion
+of the Court, in which Roberts, C. J., and Thomas, Alito, Kavanaugh, and Barrett, JJ., joined. Thomas, J., filed a concurring opinion. Sotomayor, J., filed a dissenting opinion, in which Kagan and Jackson, JJ., joined.
+Jul 30 2024
+Judgment Issued.
+Main Document
+Attorneys
+Attorneys for Petitioners
+Theane D. Evangelis
+Counsel of Record
+Gibson, Dunn & Crutcher LLP
+333 South Grand Avenue
+Los Angeles, CA 90071
+TEVANGELIS@GIBSONDUNN.COM
+Ph: (213) 229-7000
+Party name: City of Grants Pass
+Attorneys for Respondents
+Kelsi Brown Corkran
+Counsel of Record
+Institute for Constitutional Advocacy & Protection
+600 New Jersey Ave NW
+Washington, DC 20001
+KBC74@GEORGETOWN.EDU
+Ph: 202-661-6728
+Party name: Gloria Johnson, et al.
+Edward Beman Johnson
+Oregon Law Center
+522 SW Fifth Avenue. Suite 812
+Portland, OR 97204
+ejohnson@oregonlawcenter.org
+Ph: 503-998-2133
+Party name: Gloria Johnson, et al.
+Other Attorneys
+Elizabeth B. Prelogar
+Counsel of Record
+Solicitor General
+United States Department of Justice
+950 Pennsylvania Avenue, NW
+Washington, DC 20530-0001
+SUPREMECTBRIEFS@USDOJ.GOV
+Ph: 202-514-2217
+Party name: United States
+Michael Patrick Abate
+Counsel of Record
+Kaplan Johnson Abate & Bird LLP
+710 W. Main St. 4th Floor
+Louisville, KY 40202
+mabate@kaplanjohnsonlaw.com
+Ph: 502 540-8280
+Party name: Local Progress Impact Lab and 156 Current and Former Local Elected Officials
+Kirsten Anderson
+Counsel of Record
+Southern Poverty Law Center
+P. O. Box 10788
+Tallahassee, FL 32302
+kirsten.anderson@splcenter.org
+Ph: (352) 318-7284
+Party name: Southern Poverty Law Center, et al.
+Leslie A. Bailey
+Counsel of Record
+Public Justice
+1620 L Street NW
+Suite 630
+Washington, DC 20036
+lbailey@publicjustice.net
+Ph: (510) 622-8150
+Party name: 57 SOCIAL SCIENTISTS WITH PUBLISHED RESEARCH ON HOMELESSNESS
+Steven Paul Blonder
+Counsel of Record
+Much Shelist, PC
+191 N. Wacker Drive, Suite 1800
+Chicago, IL 60606
+sblonder@muchlaw.com
+Ph: 312 521-2402
+Party name: Chicago Coalition for the Homeless, et al.
+Ricardo Joel Bonilla
+Counsel of Record
+Fish & Richardson, P.C.
+1717 Main St. Ste 5000
+Dallas, TX 75201
+rbonilla@fr.com
+Ph: 214-747-5070
+Party name: MATTHEW DOHERTY, SHAUN DONOVAN, FRED KARNAS, AND BARBARA POPPE
+Eric Samuel Boorstin
+Counsel of Record
+Horvitz & Levy, LLP
+3601 W. Olive Avenue, 8th Floor
+Burbank, CA 91505
+eboorstin@horvitzlevy.com
+Ph: 8189950800
+Party name: Los Angeles Area Chamber of Commerce and Central City Association of Los Angeles
+David Ryan Carpenter
+Counsel of Record
+Sidley Austin LLP
+555 West Fifth Street, Suite 4000
+Los Angeles, CA 90013
+drcarpenter@sidley.com
+Ph: 213-896-6000
+Party name: California Governor Gavin Newsom
+David Carrillo Casarrubias
+Counsel of Record
+Hanson Bridgett LLP
+425 Market Street, 26th Floor
+San Francisco, CA 94105
+dcasarrubias@hansonbridgett.com
+Ph: 415-995-5893
+Party name: Bay Area Council et al.
+Brigid Finnerty Cech Samole
+Counsel of Record
+Greenberg Traurig, P.A.
+333 S.E. 2nd Avenue
+Miami, FL 33131
+Brigid.CechSamole@gtlaw.com
+Ph: 305-579-0500
+Party name: National Women's Shelter Network, Inc. and National Organization for Women Foundation
+David J. Chizewer
+Counsel of Record
+Goldberg Kohn Ltd.
+55 East Monroe Street
+Suite 3300
+Chicago, IL 60603
+david.chizewer@goldbergkohn.com
+Ph: 312-201-4000
+Party name: Formerly Incarcerated, Convicted People and Families Movement, The Shriver Center on Poverty Law, and National Consumer Law Center
+David Brandon Conrad
+Counsel of Record
+Fish & Richardson P.C.
+1717 Main Street, Suite 5000
+Dallas, TX 75201
+conrad@fr.com
+Ph: 214-747-5070
+Party name: Oregon Food Bank, et al.
+Gregory Cui
+Counsel of Record
+Roderick & Solange MacArthur Justice Center
+501 H Street NE, Suite 275
+Washington, DC 20002
+gregory.cui@macarthurjustice.org
+Ph: 202-869-3434
+Party name: Criminal Law and Punishment Scholars
+James Patrick Davy
+Counsel of Record
+All Rise Trial & Appellate
+P.O. Box 15216
+Philadelphia, PA 19125
+jimdavy@allriselaw.org
+Ph: (215) 792-3579
+Party name: The National Police Accountability Project and The Law Enforcement Action Partnership
+John DiLorenzo Jr.
+Counsel of Record
+Davis Wright Tremaine LLP
+560 SW Tenth Ave
+Suite 700
+Portland, OR 97205
+johndilorenzo@dwt.com
+Ph: 5037785216
+Party name: Tiana Tozer, Philip Rhodes, Barbara Jacobsen, Dane Southard, Lorien Ilena Welchoff, Pauline Long, Mark Barnhill, Steve Jackson, Keith Martin and Steven Rebischke
+Robert Edward Dunn
+Counsel of Record
+Eimer Stahl LLP
+1999 S. Bascom Ave. Suite 1025
+Campbell, CA 95008
+RDUNN@EIMERSTAHL.COM
+Ph: 4088891690
+Party name: The Chamber of Commerce of the United State of America, Arizona Chamber of Commerce and Industry, California Chamber of Commerce, Montana Chamber of Commerce, and Oregon Business and Industry
+Andrea Chinyere Ezie
+Counsel of Record
+Center for Constitutional Rights
+666 Broadway 7th Floor
+New York, NY 10012
+cezie@ccrjustice.org
+Ph: (212) 614-6464
+Party name: The Center for Constitutional Rights, et al.
+William F. Gary
+Counsel of Record
+Harrang Long P.C.
+497 Oakway Rd., Ste 380
+Eugene, OR 97401
+william.f.gary@harrang.com
+Ph: 541-485-0220
+Party name: Grants Pass Gospel Rescue Mission
+Brianne Jenna Gorod
+Counsel of Record
+Constitutional Accountability Center
+1200 18th Street, NW
+Suite 501
+Washington, DC 20036
+BRIANNE@THEUSCONSTITUTION.ORG
+Ph: 202 296 6889
+Party name: Constitutional Accountability Center
+Deborah Elizabeth Greenspan
+Counsel of Record
+Blank Rome LLP
+1825 Eye Street, N.W.
+Washington, DC 20006
+deborah.greenspan@blankrome.com
+Ph: 202 420 2200
+Party name: Amici Curiae STRONGHEARTS NATIVE HELPLINE AND ADDITIONAL TRIBAL ADVOCACY ORGANIZATIONS
+Jeffrey Matthew Harris
+Counsel of Record
+Consovoy McCarthy PLLC
+1600 Wilson Blvd.
+Suite 700
+Arlington, VA 22209
+JEFF@CONSOVOYMCCARTHY.COM
+Ph: (703) 243-9423
+Party name: Cicero Institute
+Jennifer Mira Hashmall
+Counsel of Record
+Miller Barondess, LLP
+2121 Avenue of the Stars, Suite 2600
+Los Angeles, CA 90067
+MHASHMALL@MILLERBARONDESS.COM
+Ph: 3105524400
+Party name: County of Los Angeles
+Fred D. Heather
+Counsel of Record
+Glaser Weil Fink Jordan Avchen & Shapiro LLP
+10250 Constellation Blvd.
+19th Floor
+Los Angeles, CA 90067
+fheather@glaserweil.com
+Ph: 310.553.3000
+Party name: Brentwood Community Council
+Jennifer Bacon Henning
+Counsel of Record
+County Counsels' Association of California
+1100 K Street, Suite 101
+Sacramento, CA 95814
+jhenning@counties.org
+Ph: 916-327-7535
+Party name: California State Association of Counties
+Thien Ho
+Counsel of Record
+Sacramento County District Attorney's Office
+901 G Street
+Sacramento, CA 95814
+hot@sacda.org
+Ph: 916-874-7000
+Party name: Sacramento County District Attorney's Office
+Hyland Hunt
+Counsel of Record
+Deutsch Hunt, PLLC
+300 New Jersey Ave. NW
+Suite 900
+Washington, DC 20001
+HHUNT@DEUTSCHHUNT.COM
+Ph: 2028686915
+Party name: Fines and Fees Justice Center, Rutherford Institute, and Street Democracy
+Alan Michael Hurst
+Counsel of Record
+Idaho Office of the Attorney General
+700 W. Jefferson Street
+Boise, ID 83720-0010
+alan.hurst@ag.idaho.gov
+Ph: 2089990910
+Party name: State of Idaho, Montana, and Other States
+Carmen Gloria Iguina Gonzalez
+Counsel of Record
+Howard University School of Law Civil Rights Clini
+2900 Van Ness Street NW
+Washington , DC 20008
+Carmen.IguinaGonz@howard.edu
+Ph: 917-270-5940
+Party name: Professors William P. Quigley, et al.
+Tiffany Joy Israel
+Counsel of Record
+Aleshire & Wynder LLP
+1 Park Plaza
+Suite 1000
+Irvine, CA 92614
+tisrael@awattorneys.com
+Ph: (949) 223-1170
+Party name: Thirteen California Cities
+Tiffany Joy Israel
+Counsel of Record
+Aleshire & Wynder LLP
+1 Park Plaza. Suite 1000
+Irvine, CA 92614
+tisrael@awattorneys.com
+Ph: (949) 223-1170
+Party name: Ten California Cities and The County of Orange
+Caleb Adam Jaffe
+Counsel of Record
+Environmental Law and Community Engagement Clinic
+University of Virginia School of Law
+580 Massie Road
+Charlottesville, VA 22903
+cjaffe@law.virginia.edu
+Ph: 4349244776
+Party name: San Bernardino County, California
+Erik S. Jaffe
+Counsel of Record
+Schaerr | Jaffe LLP
+1717 K Street, N.W., Suite 900
+Washington, DC 20006
+EJAFFE@SCHAERR-JAFFE.COM
+Ph: 202-787-1060
+Party name: Pacific Research Institute
+Ronald Alan Jakob
+Counsel of Record
+Office of the District Attorney
+330 West Broadway
+Suite 860
+San Diego, CA 92101-3827
+Ronald.Jakob@sdcda.org
+Ph: 619-531-3671
+Party name: District Attorney of San Diego County
+Anit Kumar Jindal
+Counsel of Record
+Markowitz Herbold PC
+1455 SW Broadway, Suite 1900
+Portland, OR 97201
+anitjindal@markowitzherbold.com
+Ph: (503) 295-3085
+Party name: League of Oregon Cities et al.
+Joel Stephen Johnson
+Counsel of Record
+Pepperdine Caruso School of Law
+24255 E. Pacific Coast Hwy.
+Malibu, CA 90263
+joel.johnson@pepperdine.edu
+Ph: 3105067531
+Party name: Professors Peter W. Low and Joel S. Johnson
+Michelle Shane Kallen
+Counsel of Record
+Jenner & Block LLP
+1099 New York Ave., NW
+Suite 900
+Washington, DC 20001
+MKallen@jenner.com
+Ph: 202-639-6093
+Party name: Retail Litigation Center, Inc. and Retail Industry Leaders Association
+Andrew Kim
+Counsel of Record
+Goodwin Procter LLP
+1900 N Street NW
+Washington, , DC 20036
+AndrewKim@goodwinlaw.com
+Ph: 202-346-4165
+Party name: Fund for Empowerment
+Laura Dianne Knapp
+Counsel of Record
+Orange County Counsel
+400 W. Civic Center Dr., Suite 202
+Santa Ana, CA 92701
+laura.knapp@coco.ocgov.com
+Ph: 714-834-3300
+Party name: County of Orange, California
+William Henry Knight
+Counsel of Record
+National Homelessness Law Center.
+1400 16th Street NW, Suite 425
+Washington, DC 20036
+wknight@homelesslaw.org
+Ph: (202) 638-2535
+Party name: Congressional Amici Curiae
+Paul Robert Koster
+Counsel of Record
+Supreme Court Advocacy Program
+1301 Clifton Road
+Atlanta, GA 30322
+PAUL.KOSTER@EMORY.EDU
+Ph: 4047273957
+Party name: Emory Civil Rights Society
+Marsha Levick
+Counsel of Record
+Juvenile Law Center
+1800 JFK Blvd., Ste. 1900B
+Philadelphia, PA 19103
+mlevick@jlc.org
+Ph: 215-625-0551
+Party name: Juvenile Law Center, Lambda Legal Defense & Education Fund, Inc., and 223 Experts on Unhoused Youth
+Jeffrey Lewis
+Counsel of Record
+Jeff Lewis Law, APC
+827 Deep Valley Drive
+Suite 209
+Rolling Hills Estates, CA 90274
+Jeff@JeffLewisLaw.com
+Ph: (310) 935-4001
+Party name: Venice Stakeholders Association
+Angela Marie Liu
+Counsel of Record
+Dechert LLP
+35 West Wacker Drive
+Suite 3400
+Chicago, IL 60601
+angela.liu@dechert.com
+Ph: 312-646-5800
+Party name: The National Homelessness Law Center
+James Elliot Lobsenz
+Counsel of Record
+Carney Badley Spellman, P.S.
+701 Fifth Avenue
+Suite 3600
+Seattle, WA 98104
+lobsenz@carneylaw.com
+Ph: (206) 622-8020
+Party name: Oregon Quakers, et al.
+Robert E. Mack
+Counsel of Record
+Smith Alling, P.S.
+1501 Dock Street
+Tacoma, WA 98402
+rmack@smithalling.com
+Ph: (253) 627-1091
+Party name: Washington State Association of Sheriffs and Police Chiefs
+Christopher George Michel
+Counsel of Record
+Quinn Emanuel Urquhart & Sullivan, LLP
+1300 I St. NW
+Suite 900
+Washington, DC 20005
+CHRISTOPHERMICHEL@QUINNEMANUEL.COM
+Ph: 2025388308
+Party name: Neighbors for a Better San Francisco et al.
+Lila Rebecca Miller
+Counsel of Record
+Relman Colfax PLLC
+1225 19th Street NW, Suite 600
+Washington, DC 20036
+lmiller@relmanlaw.com
+Ph: 202-728-1888
+Party name: Services Providers
+Mark Miller
+Counsel of Record
+Pacific Legal Foundation
+4440 PGA Blvd.
+Suite 307
+Palm Beach Gardens, FL 33410
+mark@pacificlegal.org
+Ph: 916-503-9001
+Party name: Pacific Legal Foundation and California Business Properties Association
+Kerry Lee Morgan
+Counsel of Record
+Kerry L. Morgan
+2915 Biddle Avenue
+Suite 200
+Wyandotte, MI 48192
+kmorgan@pck-law.com
+Ph: 7342817100
+Party name: LONANG Institute
+Michelle Nicole Pallak Movahed
+Counsel of Record
+McCarter & English, LLP,
+100 Mulberry Street
+Newark, NJ 07102
+mpallak@mccarter.com
+Ph: 973-849-4034
+Party name: Corporation for Supportive Housing, et al.
+Justin Patrick Olson
+Counsel of Record
+Bergman Oslund Udo Little, PLLC
+520 Pike Street, Suite 1125
+Seattle, WA 98101
+justin@bergmanlegal.com
+Ph: (206) 957-9510
+Party name: Western Regional Advocacy Project
+Aaron M. Panner
+Counsel of Record
+Kellogg, Hansen, Todd, Figel & Frederick, P.L.L.C.
+1615 M Street, NW
+Suite 400
+Washington, DC 20036-3209
+apanner@kellogghansen.com
+Ph: 2023267921
+Party name: American Psychiatric Association, National Alliance on Mental Illness, National Association for Rural Mental Health, National Association of Social Workers, and The Judge David L. Bazelon Center for Mental Health Law
+Justin Scott Pierce
+Counsel of Record
+Pierce Coleman PLLC
+7730 E. Greenway Road, Suite 105
+Scottsdale, AZ 85260
+Justin@piercecoleman.com
+Ph: (602) 772-5506
+Party name: City of Phoenix & the League of Arizona Cities and Towns
+Laura Elizabeth Powell
+Counsel of Record
+WilmerHale
+2100 Pennsylvania Avenue NW
+Washington, DC 20037
+laura.powell@wilmerhale.com
+Ph: 2026636000
+Party name: Public Health Professionals and Organizations
+James E. Preston
+Counsel of Record
+Hauf & Forsythe
+712 H. Street NE
+Suite 739
+Washington, DC 20002
+jep@prestonlawintnl.com
+Ph: 202-643-3917
+Party name: National Coalition for Men
+Randolph Hunter Pyle
+Counsel of Record
+Hunter Pyle Law
+505 14th Street
+Suite 600
+Oakland, CA 94612
+hunter@hunterpylelaw.com
+Ph: 5104444400
+Party name: Advocates for Empowerment CA
+Brandon Michael Rain
+Counsel of Record
+Seattle City Attorney
+701 Fifth Avenue, Suite 2050
+Seattle, WA 98104
+brandon.rain@seattle.gov
+Ph: 206-684-8200
+Party name: Local Government Legal Center, the National Association of Counties, National League of Cities, International Municipal Lawyers Association, North Dakota League of Cities, Cities of Albuquerque, Anaheim, Anchorage, Colorado Springs, Henderson, Lake Oswego, Las Vegas, Redondo Beach, Sacramento, Seattle, and Topeka, the City and County of Honolulu, and Louisville-Jefferson County Metro
+Brandon Michael Rain
+Counsel of Record
+Seattle City Attorney's Office
+701 Fifth Avenue, Suite 2050
+Seattle, WA 98104
+brandon.rain@seattle.gov
+Ph: 206-684-8200
+Party name: International Municipal Lawyers Association, National League of Cities, National Association of Counties, North Dakota League of Cities, Cities of Albuquerque, Anchorage, Colorado Springs, Henderson, Las Vegas, Milwaukee, Providence, Redondo Beach, Saint Paul, San Diego, Seattle, Spokane, and Tacoma, the City and County of Honolulu, and the County of San Bernardino
+Eric Christopher Rassbach
+Counsel of Record
+The Becket Fund for Religious Liberty
+1919 Pennsylvania Avenue, NW
+Suite 400
+Washington, DC 20006
+ERASSBACH@BECKETLAW.ORG
+Ph: 2029550095
+Party name: The Becket Fund for Religious Liberty
+Teresa Alexandra Reed Dippo
+Counsel of Record
+California Department of Justice
+455 Golden Gate Avenue
+Suite 11000
+San Francisco, CA 94102
+TERESA.REEDDIPPO@DOJ.CA.GOV
+Ph: (415) 510-3896
+Party name: State of California
+John Michael Reeves Jr.
+Counsel of Record
+Reeves Law LLC
+7733 Forsyth Blvd.
+Suite 1100 - #1192
+St. Louis, MO 63105
+reeves@appealsfirm.com
+Ph: 314-775-6985
+Party name: Members of Congress
+Denise Lynn Rocawich
+Jones & Mayer
+3777 N. Harbor Blvd.
+Fullerton, CA 92835
+dlr@jones-mayer.com
+Ph: 714446-1400
+Party name: California State Sheriffs' Association, et al.
+Jonathan Rosenberg
+Counsel of Record
+O'Melveny & Myers LLP
+Times Square Tower
+7 Times Square
+New York, NY 10036
+jrosenberg@omm.com
+Ph: 2123262000
+Party name: The Disability Rights Education and Defense Fund et al.
+Jacob Moshe Roth
+Counsel of Record
+Jones Day
+51 Louisiana Avenue NW
+Washington, DC 20001
+yroth@jonesday.com
+Ph: 202-879-3939
+Party name: City of San Clemente
+Brunn Wall Roysden III
+Counsel of Record
+Fusion Law, PLLC
+7600 N. 15th St., Suite 150
+Phoenix, AZ 85020
+beau@fusion.law
+Ph: 6023157545
+Party name: Speaker of the Arizona House of Representatives Ben Toma and President of the Arizona State Senate Warren Petersen
+Eric Golas Salbert
+Counsel of Record
+Alvarez-Glasman & Colvin
+13181 Crossroads Parkway North - West Tower, Suite 400
+City of Industry, CA 91746
+esalbert@agclawfirm.com
+Ph: 562-699-5500
+Party name: City of Chico
+Timothy Mason Sandefur
+Counsel of Record
+Goldwater Institute
+500 E. Coronado Road
+Phoenix, AZ 85004
+TSANDEFUR@GOLDWATERINSTITUTE.ORG
+Ph: 6024625000
+Party name: Goldwater Institute
+Jaime Ann Santos
+Goodwin Procter LLP
+1900 N St. NW
+Washington, DC 20036
+JSANTOS@GOODWINLAW.COM
+Ph: 2023464034
+Party name: United States Conference of Catholic Bishops as Amicus Curiae
+Nadia Ann Sarkis
+Miller Barondess, LLP
+2121 Avenue of the Stars
+26th Floor
+Los Angeles, CA 90067
+nsarkis@millerbarondess.com
+Ph: 310-552-4400
+Party name: County of Los Angeles
+Kent S. Scheidegger
+Counsel of Record
+Criminal Justice Legal Fdtn.
+2131 L Street
+Sacramento, CA 95816
+briefs@cjlf.org
+Ph: 9164460345
+Party name: Criminal Justice Legal Foundation
+Matthew A. Schwartz
+Counsel of Record
+Sullivan and Cromwell LLP
+125 Broad Street
+New York, NY 10004
+schwartzmatthew@sullcrom.com
+Ph: (212) 558-4197
+Party name: Professor John F. Stinneford
+Joshua Morris Segal
+Counsel of Record
+Office of the Attorney General
+200 Saint Paul Place
+Baltimore, MD 21202
+jsegal@oag.state.md.us
+Ph: 410-576-6446
+Party name: State of Maryland, et al.
+Ilya Shapiro
+Counsel of Record
+Manhattan Institute
+52 Vanderbilt Ave.
+New York, NY 10017
+ishapiro@manhattan-institute.org
+Ph: 212599-7000
+Party name: Manhattan Institute, Stephen Eide, and Judge Glock
+Rachel Anne Sheridan
+Counsel of Record
+Lawyers Committee for Civil Rights
+131 Steuart Street, Suite 400
+San Francisco, CA 94105
+rsheridan@lccrsf.org
+Ph: 4155439444
+Party name: Current & Former San Francisco Officials and Civic Organizations
+Thomas Samuel Silverstein
+Counsel of Record
+Lawyers' Committee for Civil Rights Under Law
+1500 K Street, NW Suite 900
+Washington, DC 20005
+TSILVERSTEIN@LAWYERSCOMMITTEE.ORG
+Ph: (202) 662-8600
+Party name: Lawyers’ Committee for Civil Rights Under Law, Center On Budget and Policy Priorities, and National Low Income Housing Coalition
+Richard A. Simpson
+Counsel of Record
+Wiley Rein, LLP
+2050 M Street, NW
+Washington, DC 20036
+RSIMPSON@WILEY.LAW
+Ph: 202-719-7000
+Party name: Professor Michael J.Z. Mannheimer
+Clifford M. Sloan
+Counsel of Record
+Georgetown University Law Center
+600 New Jersey Ave., N.W.
+Washington, DC 20001
+Cliff.Sloan@georgetown.edu
+Ph: 202-662-9000
+Party name: United States Conference of Catholic Bishops
+Charles F. Smith Jr.
+Counsel of Record
+Skadden, Arps, Slate, et al.
+155 North Wacker Drive
+Chicago, IL 60606
+charles.smith@skadden.com
+Ph: (312) 407-0700
+Party name: Kairos Center for Religions, Rights and Social Justice and Other Religious Organizations
+Carol A. Sobel
+Counsel of Record
+Law Office of Carol A. Sobel
+2632 Wilshire Blvd.
+#552
+Santa Monica, CA 90403
+carolsobellaw@gmail.com
+Ph: 13103933055
+Party name: Los Angeles Catholic Worker, CANGRESS, Venice Justice Committee, Inner City Law Center
+Tara Michelle Steeley
+Counsel of Record
+Office of the City Attorney
+City Hall, Room 234, 1 Dr. Carlton B. Goodlett
+San Francisco, CA 94102
+Tara.steeley@sfcityatty.org
+Ph: 4155544655
+Party name: City and County of San Francisco and Mayor London Breed
+Mary Hirth Tolbert
+Counsel of Record
+Steptoe & Johnson PLLC
+101 N. Robinson Ave
+Suite 500
+Oklahoma City, OK 73102
+molly.tolbert@steptoe-johnson.com
+Ph: 405-930-5155
+Party name: Better Days Ahead Outreach Inc.; Homeless Advocacy Project; Regional Housing Legal Services; Morgantown RAMP; Project Rainbow; Kanawha Valley Collective; and SOAR
+James R. Touchstone
+Counsel of Record
+Jones & Mayer
+3777 North Harbor Boulevard
+Fullerton, CA 92835
+jrt@jones-mayer.com
+Ph: 714-446-1400
+Party name: California State Sheriffs' Association, et al.
+Joshua Nathaniel Turner
+Counsel of Record
+ldaho Attorney General's Office
+700 W Jefferson Street
+Boise, ID 83720
+josh.turner@ag.idaho.gov
+Ph: 2083323548
+Party name: States of Idaho, Montana, et. al.
+Matthew Donald Umhofer
+Counsel of Record
+Umhofer, Mitchell & King LLP
+767 S. Alameda St.
+Suite 270
+Los Angeles, CA 90021
+matthew@umklaw.com
+Ph: 213-394-7979
+Party name: International Downtown Association, et al.
+David Ray Venderbush
+Counsel of Record
+Alston & Bird LLP
+90 Park Avenue
+New York, NY 10016
+david.venderbush@alston.com
+Ph: 2122109532
+Party name: National Coalition for Homeless Veterans, UCLA Veterans’ Legal Clinic and 43 Other Veterans’ Service Providers
+David Ray Venderbush
+Counsel of Record
+Alston & Bird LLP
+90 Park Avenue
+New York, NY 10016
+david.venderbush@alston.com
+Ph: 2122109532
+Party name: Safety Net Project of the Urban Justice Center
+David Ray Venderbush
+Counsel of Record
+Alston & Bird LLP
+90 Park Avenue
+New York, NY 10016
+david.venderbush@alston.com
+Ph: 2122109532
+Party name: Current U.N. Special Rapporteurs
+Michael Martin Walsh
+Counsel of Record
+City of Los Angeles, City Attorney
+200 North Spring Street, 14th Floor
+Los Angeles, CA 90012
+michael.walsh@lacity.org
+Ph: (213) 978-2209
+Party name: City of Los Angeles
+Katherine Elizabeth Walz
+Counsel of Record
+National Housing Law Project
+1275 K St. NW, Suite 300
+Washington, DC 20005
+kwalz@nhlp.org
+Ph: (312) 345-5104
+Party name: Advocates for Survivors of Gender-Based Violence
+Jennifer Alicia Wedekind
+Counsel of Record
+American Civil Liberties Union
+915 15th Street NW
+Washington, DC 20005
+jwedekind@aclu.org
+Ph: 202-548-6610
+Party name: American Civil Liberties Union and Nineteen Affiliates
+Ilan Wurman
+Counsel of Record
+Tully Bailey LLP
+11811 N. Tatum Blvd. Suite 3031
+Phoenix, AZ 85028
+iwurman@tullybailey.com
+Ph: 4809652245
+Party name: Freddy Brown, et al.
+Lauren Willard Zehmer
+Counsel of Record
+Covington & Burling LLP
+850 Tenth Street NW
+Washington, DC 20001
+lzehmer@cov.com
+Ph: (202) 662-6000
+Party name: National Alliance to End Homelessness, Funders Together to End Homelessness, and Enterprise Community Partners, Inc.
+// no longer needed // var lms_id = "" // if (lms_id.length === 0) { // document.getElementById("dip").hidden = true; // console.log("This is an empty string!"); // }

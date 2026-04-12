@@ -100,6 +100,7 @@ Start narrow:
 - [Judicial Pressure-Test Basket Source Bundle](./docs/judicial-pressure-test-basket-source-bundle.md)
 - [Judicial Pressure-Test Basket Ingestion Checklist](./docs/judicial-pressure-test-basket-ingestion-checklist.md)
 - [Legal Precedent 01](./docs/legal-precedent-01.md)
+- [Legal Precedent 02](./docs/legal-precedent-02.md)
 - [Entity Glossary](./docs/entity-glossary.md)
 - [Jurisdiction Source Map](./docs/jurisdiction-source-map.md)
 - [Ingestion Agents](./docs/ingestion-agents.md)
@@ -165,6 +166,9 @@ Start narrow:
 - [Boyd TRO Extract](./data/extracted/san-rafael-boyd-tro-order/2026-04-12.json)
 - [Boyd Preliminary-Injunction Extract](./data/extracted/san-rafael-boyd-preliminary-injunction-order/2026-04-12.json)
 - [Legal Precedent 01 Bundle](./data/normalized/legal-precedent-01/bundle-01.json)
+- [Grants Pass Docket Extract](./data/extracted/scotus-grants-pass-docket/2026-04-12.json)
+- [Grants Pass Opinion Extract](./data/extracted/scotus-grants-pass-opinion/2026-04-12.json)
+- [Legal Precedent 02 Bundle](./data/normalized/legal-precedent-02/bundle-01.json)
 
 ## Scripts
 
@@ -183,6 +187,7 @@ Start narrow:
 - [San Rafael City Campaign Evidence Record Normalizer](./scripts/normalize_san_rafael_city_campaign_records.py)
 - [San Rafael City Campaign Actor Supplement Normalizer](./scripts/normalize_san_rafael_city_campaign_actors.py)
 - [Boyd Legal Bundle Normalizer](./scripts/normalize_legal_precedent_boyd.py)
+- [Grants Pass Legal Bundle Normalizer](./scripts/normalize_legal_precedent_grants_pass.py)
 - [Graph Projection Helper](./scripts/graph_projection_lib.py)
 - [Graph Projection Builder](./scripts/build_graph_projection.py)
 - [Graph Projection Smoke Checks](./scripts/graph_smoke_checks.py)
@@ -211,6 +216,11 @@ This repo started as a planning workspace and now includes the first live implem
   - normalized the first `Case`, `Proceeding`, and `CaseParticipation` objects for `Boyd v. City of San Rafael`
   - tied that case back into the August 19, 2024 item `5.a` ordinance / resolution chain and the sanctioned-camping program
   - preserved the remaining provenance gap explicitly: the TRO and preliminary-injunction orders are captured as public filed-order copies, not yet from a court-hosted docket surface
+- second normalized legal bundle now exists as `legal-precedent-02`:
+  - captured the official Supreme Court docket and slip opinion for `City of Grants Pass v. Johnson`
+  - normalized the first external controlling-precedent `Case`, `Proceeding`, and `CaseParticipation` objects
+  - tied San Rafael's June 28 statement, September 2 explainer, and the August 19 response chain back to the Supreme Court precedent through an explicit crosswalk
+  - preserved the next legal comparison gap explicitly: the district-court and Ninth Circuit Grants Pass chain is not yet normalized
 - source registry seeds
 - source-registry format now expanded to capture platform family, backfill target, change signal, and source-specific quirks
 - source-adapter operations note added to document municipality/county source idiosyncrasies, historical backfill planning, and recurring sync strategy

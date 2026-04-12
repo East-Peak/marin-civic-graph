@@ -25,6 +25,11 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
     - `~/.openclaw/workspace/decisions/2026-04-12-first-normalized-boyd-legal-bundle.md`
     - `~/.openclaw/workspace/decisions/2026-04-12-boyd-injunction-orders-can-start-as-public-filed-order-copies.md`
 
+- **The legal lane should widen from Boyd to one official controlling-precedent bundle before import**
+  - `legal-precedent-02` adds `City of Grants Pass v. Johnson` as the first external controlling-precedent bundle, anchored on the official Supreme Court docket and slip opinion plus official San Rafael and San Francisco response records.
+  - Keep the legal lane normalized-only for now; the next real gap is lower-court chain depth, not whether the controlling precedent record exists.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-grants-pass-should-enter-the-legal-lane-as-an-official-precedent-bundle.md`
+
 - **Active projects need a repo-local running decision index**
   - Keep a compact `docs/decision-log.md` in the repo, with detailed rationale still living in workspace decisions.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-active-projects-need-repo-local-decision-log.md`
