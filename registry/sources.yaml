@@ -1,6 +1,36 @@
 version: 1
 updated_at: 2026-04-12
 sources:
+  - source_id: san-rafael-city-campaign-form460-ocr
+    label: San Rafael Selected Form 460 OCR Capture Path
+    owner_type: jurisdiction
+    owner_id: san-rafael
+    jurisdiction_id: san-rafael
+    case_study_ids: []
+    source_category: campaign_finance
+    source_type: document_service_capture
+    entry_url: https://publicrecords.cityofsanrafael.org/WebLink/
+    discovery_urls:
+      - https://publicrecords.cityofsanrafael.org/WebLink/
+    fetch_strategy: doc_warm_step_plus_json_services
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - filing
+      - document:campaign_filing_ocr
+      - record:financial_record
+      - claim
+    cadence: selective
+    history_depth: targeted_records
+    source_tier_default: A
+    robots_notes: public city Laserfiche services require a doc-specific warm step before metadata and OCR endpoints respond reliably
+    review_risk: medium
+    dedupe_key_strategy: exact_entry_id
+    notes:
+      - Supports selective metadata, page count, and OCR capture for known filing entry ids.
+      - Raw PDF or page-image export remains unresolved.
+
   - source_id: marin-county-bos-meetings
     label: Marin County Board of Supervisors Meetings
     owner_type: institution

@@ -264,10 +264,10 @@ Mirror the question here when it affects:
   - [folder-listings.json](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json)
   - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-folder-listings/2026-04-12.json)
   - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-document-probe/2026-04-12.json)
-- `question`: What is the repeatable public path from city-side campaign filing entry ids to raw filing artifacts such as PDF, OCR text, or stable document metadata beyond the folder listing itself?
-- `why it matters`: The folder listing service is strong enough to promote real `Committee` and `Filing` objects, but the project still lacks a general raw-artifact capture path for those filing rows.
-- `current note`: The public folder listing exposes real filing titles, entry ids, page counts, and creation dates, which is enough for a first filing layer. The April 12 main-path probe against selected high-value `Form 460` and `Form 496` entry ids still lands at a listing-only boundary: `DocView` resolves to a sign-in page with `[9030]`, `GetBasicDocumentInfo` returns only the entry id with `pageCount=0`, and the richer document / metadata / text services return HTTP `500`. A side exploration reported a possible doc-specific warm-step path for metadata and OCR, but that has not yet been reproduced cleanly in the main adapter path.
-- `next evidence`: if this matters enough later, re-test the reported doc-specific warm-step sequence in a controlled single-session adapter before promoting any direct-document or OCR capture as stable.
+- `question`: What is the repeatable public path from city-side campaign filing entry ids to raw filing artifacts such as PDF or page-image assets beyond the now-proven metadata / page-count / OCR path?
+- `why it matters`: The project can now preserve selective filing OCR text, but it still lacks a general raw-artifact export path for filing rows.
+- `current note`: The doc-specific warm-step sequence is now proven enough for selective capture. The project has full OCR capture for three schedule-bearing `Form 460` filings (`37677`, `37685`, `37365`) plus metadata and page counts where the services return them. The remaining unresolved boundary is raw PDF / page-image export rather than OCR text itself.
+- `next evidence`: inspect the document-viewer export and download path for a stable public PDF or page-image route, or decide that selective OCR is sufficient for the near-term schedule-extraction layer.
 
 ### OQ-026: San Rafael John Gamblin campaign folder dead link
 

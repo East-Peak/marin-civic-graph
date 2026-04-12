@@ -1,0 +1,153 @@
+{
+  "case_study_id": "san-rafael-city-campaign-form460-ocr-01",
+  "bundle_id": "san-rafael-city-campaign-form460-ocr-01__bundle-01",
+  "status": "working",
+  "generated_at": "2026-04-12T16:34:37Z",
+  "scope": [
+    "Selected schedule-bearing San Rafael city-side Form 460 filings captured through the doc-specific warm-step path",
+    "Metadata, page count, and full OCR text preservation for three high-value 2024 filings",
+    "Support for later schedule extraction without claiming raw PDF export is solved"
+  ],
+  "record_refs": [
+    {
+      "id": "record-san-rafael-campaign-ocr-entry-37677",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_ocr_capture",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-ocr/2026-04-12/results.json",
+      "capture_status": "captured_via_doc_warm_step",
+      "entry_id": 37677,
+      "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+      "page_count": 26,
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37677",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37677",
+      "available_schedules": [
+        "Schedule A",
+        "Schedule B",
+        "Schedule C",
+        "Schedule D",
+        "Schedule E",
+        "Schedule F",
+        "Schedule G",
+        "Schedule H"
+      ]
+    },
+    {
+      "id": "record-san-rafael-campaign-ocr-entry-37685",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_ocr_capture",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-ocr/2026-04-12/results.json",
+      "capture_status": "captured_via_doc_warm_step",
+      "entry_id": 37685,
+      "title": "Form 460 - Rachel Kertz for City Council 2024; preelection",
+      "page_count": 11,
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37685",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37685",
+      "available_schedules": [
+        "Schedule A",
+        "Schedule B",
+        "Schedule C",
+        "Schedule D",
+        "Schedule E",
+        "Schedule F",
+        "Schedule H"
+      ]
+    },
+    {
+      "id": "record-san-rafael-campaign-ocr-entry-37365",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_ocr_capture",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-ocr/2026-04-12/results.json",
+      "capture_status": "captured_via_doc_warm_step",
+      "entry_id": 37365,
+      "title": "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+      "page_count": 10,
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37365",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37365",
+      "available_schedules": [
+        "Schedule A",
+        "Schedule B",
+        "Schedule C",
+        "Schedule D",
+        "Schedule E",
+        "Schedule F",
+        "Schedule H"
+      ]
+    }
+  ],
+  "filing_capture_candidates": [
+    {
+      "id": "filing-capture-37677",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37677",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37677",
+      "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37677",
+      "status": "captured",
+      "capture_method": "doc_warm_step_plus_document_service",
+      "page_count": 26,
+      "available_schedules": [
+        "Schedule A",
+        "Schedule B",
+        "Schedule C",
+        "Schedule D",
+        "Schedule E",
+        "Schedule F",
+        "Schedule G",
+        "Schedule H"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677"
+      ]
+    },
+    {
+      "id": "filing-capture-37685",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37685",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37685",
+      "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37685",
+      "status": "captured",
+      "capture_method": "doc_warm_step_plus_document_service",
+      "page_count": 11,
+      "available_schedules": [
+        "Schedule A",
+        "Schedule B",
+        "Schedule C",
+        "Schedule D",
+        "Schedule E",
+        "Schedule F",
+        "Schedule H"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37685",
+        "record-san-rafael-campaign-ocr-entry-37685"
+      ]
+    },
+    {
+      "id": "filing-capture-37365",
+      "source_filing_id": "filing-san-rafael-campaign-entry-37365",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-37365",
+      "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37365",
+      "status": "captured",
+      "capture_method": "doc_warm_step_plus_document_service",
+      "page_count": 10,
+      "available_schedules": [
+        "Schedule A",
+        "Schedule B",
+        "Schedule C",
+        "Schedule D",
+        "Schedule E",
+        "Schedule F",
+        "Schedule H"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365"
+      ]
+    }
+  ],
+  "notes": [
+    "This bundle proves a repeatable OCR-text path for selected filings after a doc-specific warm step.",
+    "It does not claim that raw PDF export or page-image download is publicly solved."
+  ]
+}
