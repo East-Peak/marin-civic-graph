@@ -224,6 +224,35 @@ Why this matters:
 
 - the graph needs an ongoing operating model, not just one-time data grabs
 
+### Gated Court Surface Viability Review
+
+Review which “public but gated” court surfaces are actually usable with:
+
+- free registration
+- API authorization
+- browser-session capture
+- operator-assisted export
+
+Initial targets:
+
+- CourtListener docket pages and API
+- Justia federal case pages
+- other RECAP-backed or court-adjacent public docket surfaces
+
+Why this matters:
+
+- some legal surfaces are publicly visible in theory but blocked from headless CLI capture by Cloudflare, auth requirements, or anti-bot controls
+- the project should distinguish `public but gated here` from `actually unavailable`
+- this needs to be an adapter/provenance review, not an ad hoc scramble each time a legal source is blocked
+
+Desired output:
+
+- per-surface access classification
+- whether registration is enough
+- whether an API key is enough
+- whether browser automation is required
+- whether the surface is worth operationalizing for backfill and cron
+
 ### Exhibit And Attachment Splitting
 
 Split dense packet items into child records rather than leaving everything buried inside one PDF.
