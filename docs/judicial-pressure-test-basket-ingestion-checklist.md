@@ -76,6 +76,8 @@ The first pass covers:
 - [x] capture the Supreme Court docket page as raw HTML
 - [x] capture the linked opinion PDF or official opinion page
 - [x] capture the SF City Attorney `Grants Pass` amicus page
+- [x] capture the District of Oregon opinion and judgment
+- [x] capture the official Ninth Circuit amended opinion
 - [x] tie San Rafael's statement and explainer pages into the same legal thread
 
 ### Coalition On Homelessness
@@ -126,6 +128,7 @@ The first pass covers:
 - [x] create `Case`
 - [x] create `CaseParticipation` for city/amicus actors where explicit
 - [x] create a `Record` for the opinion
+- [x] create district / appellate / Supreme Court case-lineage objects
 - [ ] create `Claim` candidates describing the local legal effect only where explicit in official records
 - [x] connect San Rafael and SF response records back to the case
 
@@ -205,6 +208,6 @@ If doing this manually first, the order should be:
 - the repo now has two real normalized legal bundles:
   - `legal-precedent-01` for `Boyd v. City of San Rafael`
   - `legal-precedent-02` for `City of Grants Pass v. Johnson`
-- the remaining work is deeper legal comparison, lower-court chain capture, and the eventual join back into the civic graph
+- the remaining work is deeper legal comparison beyond the first Grants Pass lower-court chain, stronger supporting provenance, and the eventual join back into the civic graph
 
 This checklist should be the first legal / oversight implementation slice after the current San Rafael official bundle.

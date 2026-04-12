@@ -291,7 +291,7 @@ The current legal pair proves:
 The current remaining gap is also explicit:
 
 - the Boyd TRO and preliminary-injunction orders are public filed-order copies rather than court-hosted captures
-- the Grants Pass lower-court district and Ninth Circuit chain is not yet normalized
+- the Grants Pass lower-court chain is now normalized, but supporting provenance is still thinner than the core Supreme Court and Ninth Circuit record surfaces
 
 ### Proposal
 
@@ -310,7 +310,7 @@ Minimum scope:
 After that, the next legal follow-on should be:
 
 1. improve Boyd TRO / preliminary-injunction provenance if a stable court-hosted path becomes available
-2. capture the Grants Pass lower-court district and Ninth Circuit chain
+2. strengthen the Grants Pass supporting-provenance layer with the amicus brief PDF and, if feasible, a free district docket surface
 3. only then widen into the broader pressure-test basket
 
 That is enough to justify a later first-class legal lane without pretending the entire judicial model is done.
@@ -408,7 +408,7 @@ After adversarial review, the recommended stance is:
 - `ValidationCheck` in v1
 - `Mention` and `Claim` out of core v1
 - no top-level `Records` tab in v1
-- no top-level `Legal & Precedent` tab until the current `Boyd + Grants Pass` pair is widened with the relevant lower-court chain and stronger provenance
+- no top-level `Legal & Precedent` tab until the current `Boyd + Grants Pass` pair has stronger provenance and at least one additional comparison case beyond the current pair
 
 ## Adversarial Review Questions
 

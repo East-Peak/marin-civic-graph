@@ -37,6 +37,45 @@ GRANTS_PASS_OPINION_EXTRACT = (
     ROOT / "data" / "extracted" / "scotus-grants-pass-opinion" / "2026-04-12.json"
 )
 
+DISTRICT_OPINION_PDF = (
+    ROOT / "data" / "raw" / "grants-pass-district-opinion-order" / "2026-04-12" / "order.pdf"
+)
+DISTRICT_OPINION_MANIFEST = (
+    ROOT / "data" / "raw" / "grants-pass-district-opinion-order" / "2026-04-12" / "manifest.json"
+)
+DISTRICT_OPINION_TEXT = (
+    ROOT / "data" / "extracted" / "grants-pass-district-opinion-order" / "order.txt"
+)
+DISTRICT_OPINION_EXTRACT = (
+    ROOT / "data" / "extracted" / "grants-pass-district-opinion-order" / "2026-04-12.json"
+)
+
+DISTRICT_JUDGMENT_PDF = (
+    ROOT / "data" / "raw" / "grants-pass-district-judgment" / "2026-04-12" / "order.pdf"
+)
+DISTRICT_JUDGMENT_MANIFEST = (
+    ROOT / "data" / "raw" / "grants-pass-district-judgment" / "2026-04-12" / "manifest.json"
+)
+DISTRICT_JUDGMENT_TEXT = (
+    ROOT / "data" / "extracted" / "grants-pass-district-judgment" / "order.txt"
+)
+DISTRICT_JUDGMENT_EXTRACT = (
+    ROOT / "data" / "extracted" / "grants-pass-district-judgment" / "2026-04-12.json"
+)
+
+NINTH_OPINION_PDF = (
+    ROOT / "data" / "raw" / "ninth-circuit-grants-pass-amended-opinion" / "2026-04-12" / "opinion.pdf"
+)
+NINTH_OPINION_MANIFEST = (
+    ROOT / "data" / "raw" / "ninth-circuit-grants-pass-amended-opinion" / "2026-04-12" / "manifest.json"
+)
+NINTH_OPINION_TEXT = (
+    ROOT / "data" / "extracted" / "ninth-circuit-grants-pass-amended-opinion" / "opinion.txt"
+)
+NINTH_OPINION_EXTRACT = (
+    ROOT / "data" / "extracted" / "ninth-circuit-grants-pass-amended-opinion" / "2026-04-12.json"
+)
+
 SAN_RAFAEL_GRANTS_PASS_STATEMENT_EXTRACT = (
     ROOT / "data" / "extracted" / "san-rafael-grants-pass-statement" / "2026-04-10.json"
 )
@@ -118,7 +157,7 @@ def extract_opinion_url(html_text: str) -> str:
     return match.group(0)
 
 
-def build_docket_extract() -> dict:
+def build_html_extract() -> dict:
     manifest = load_json(GRANTS_PASS_DOCKET_MANIFEST)
     html_text = GRANTS_PASS_DOCKET_HTML.read_text()
     text = ensure_docket_text()
@@ -148,10 +187,7 @@ def build_docket_extract() -> dict:
         ],
         "candidate_signals": {
             "actor_hits": [petitioner, respondent],
-            "place_hits": [
-                "Grants Pass",
-                "Oregon",
-            ],
+            "place_hits": ["Grants Pass", "Oregon"],
             "issue_hits": [
                 "homelessness",
                 "encampments",
@@ -181,13 +217,30 @@ def build_docket_extract() -> dict:
     }
 
 
-def build_opinion_extract() -> dict:
-    manifest = load_json(GRANTS_PASS_OPINION_MANIFEST)
-    info = pdfinfo_map(GRANTS_PASS_OPINION_PDF)
-    text = GRANTS_PASS_OPINION_TEXT.read_text()
+def build_pdf_extract(
+    *,
+    source_id: str,
+    manifest_path: Path,
+    pdf_path: Path,
+    text_path: Path,
+    artifact_path: str,
+    title: str,
+    published_at: str,
+    court_name: str,
+    docket_number: str,
+    notes: list[str],
+    actor_hits: list[str],
+    place_hits: list[str],
+    issue_hits: list[str],
+    legal_refs: list[str],
+    procedural_dates: list[str],
+) -> dict:
+    manifest = load_json(manifest_path)
+    info = pdfinfo_map(pdf_path)
+    text = text_path.read_text()
 
     return {
-        "source_id": "scotus-grants-pass-opinion",
+        "source_id": source_id,
         "capture_id": manifest["capture_id"],
         "capture_date": "2026-04-12",
         "entry_url": manifest["entry_url"],
@@ -195,50 +248,26 @@ def build_opinion_extract() -> dict:
         "generated_at": utc_now_iso(),
         "artifacts": [
             {
-                "artifact_path": "data/raw/scotus-grants-pass-opinion/2026-04-12/opinion.pdf",
+                "artifact_path": artifact_path,
                 "content_type": "application/pdf",
                 "artifact_type": "pdf",
-                "title": info.get("Title", "23-175 City of Grants Pass v. Johnson (06/28/2024)"),
-                "published_at": "2024-06-28",
+                "title": title,
+                "published_at": published_at,
                 "page_count": int(info["Pages"]),
-                "court_name": "Supreme Court of the United States",
-                "docket_number": "23-175",
-                "text_path": "data/extracted/scotus-grants-pass-opinion/opinion.txt",
+                "court_name": court_name,
+                "docket_number": docket_number,
+                "text_path": str(text_path.relative_to(ROOT)),
                 "word_count": len(text.split()),
             }
         ],
         "candidate_signals": {
-            "actor_hits": [
-                "City of Grants Pass, Oregon",
-                "Johnson et al.",
-                "Gorsuch, J.",
-            ],
-            "place_hits": [
-                "Grants Pass",
-                "Oregon",
-            ],
-            "issue_hits": [
-                "homelessness",
-                "encampments",
-                "camping ordinance",
-                "public property",
-                "Eighth Amendment",
-            ],
-            "legal_refs": [
-                "No. 23-175",
-                "certiorari to the United States Court of Appeals for the Ninth Circuit",
-                "Martin v. Boise",
-                "reversed and remanded",
-            ],
-            "procedural_dates": [
-                "2024-04-22 argued",
-                "2024-06-28 decided",
-            ],
+            "actor_hits": actor_hits,
+            "place_hits": place_hits,
+            "issue_hits": issue_hits,
+            "legal_refs": legal_refs,
+            "procedural_dates": procedural_dates,
         },
-        "notes": [
-            "Official Supreme Court slip opinion PDF captured directly from the docket-linked opinion URL.",
-            "This is the controlling precedent record for the repo's Grants Pass legal bundle.",
-        ],
+        "notes": notes,
     }
 
 
@@ -256,17 +285,13 @@ def build_bundle() -> dict:
         "status": "working",
         "generated_at": utc_now_iso(),
         "scope": [
-            "City of Grants Pass v. Johnson as the first normalized external controlling-precedent bundle",
-            "official Supreme Court docket and slip-opinion records plus official San Rafael and San Francisco response records",
-            "crosswalk from national precedent into San Rafael's June 28 and September 2 legal posture records and the August 19, 2024 decision chain",
-            "local Boyd constraints remain separate and are referenced as related local context rather than collapsed into the Supreme Court case itself",
+            "City of Grants Pass v. Johnson as the first normalized external controlling-precedent bundle with lower-court lineage",
+            "district-court opinion and judgment, official Ninth Circuit amended opinion, official Supreme Court docket and slip opinion, plus official San Rafael and San Francisco response records",
+            "crosswalk from the district/appellate/supreme chain into San Rafael's June 28 and September 2 legal posture records and the August 19, 2024 decision chain",
+            "local Boyd constraints remain separate and are referenced only where San Rafael's own response records connect the cases",
         ],
         "place_candidates": [
-            {
-                "id": "place-united-states",
-                "name": "United States",
-                "place_type": "country",
-            },
+            {"id": "place-united-states", "name": "United States", "place_type": "country"},
             {
                 "id": "place-oregon",
                 "name": "Oregon",
@@ -300,6 +325,66 @@ def build_bundle() -> dict:
         ],
         "record_refs": [
             {
+                "id": "record-grants-pass-district-opinion-order-2020-07-22",
+                "record_class": "legal_record",
+                "record_type": "opinion_and_order",
+                "title": "Opinion and Order",
+                "source_id": "grants-pass-district-opinion-order",
+                "artifact_path": "data/raw/grants-pass-district-opinion-order/2026-04-12/order.pdf",
+                "text_path": "data/extracted/grants-pass-district-opinion-order/order.txt",
+                "published_at": "2020-07-22",
+                "court_name": "U.S. District Court, District of Oregon",
+                "docket_number": "1:18-cv-01823-CL",
+                "page_count": 35,
+                "case_ids": ["case-blake-v-city-of-grants-pass"],
+                "issue_ids": [
+                    "issue-homelessness",
+                    "issue-encampments",
+                    "issue-camping-ordinance",
+                ],
+                "place_ids": ["place-grants-pass-oregon", "place-oregon"],
+            },
+            {
+                "id": "record-grants-pass-district-judgment-2020-08-26",
+                "record_class": "legal_record",
+                "record_type": "judgment",
+                "title": "Judgment",
+                "source_id": "grants-pass-district-judgment",
+                "artifact_path": "data/raw/grants-pass-district-judgment/2026-04-12/order.pdf",
+                "text_path": "data/extracted/grants-pass-district-judgment/order.txt",
+                "published_at": "2020-08-26",
+                "court_name": "U.S. District Court, District of Oregon",
+                "docket_number": "1:18-cv-01823-CL",
+                "page_count": 3,
+                "case_ids": ["case-blake-v-city-of-grants-pass"],
+                "issue_ids": [
+                    "issue-homelessness",
+                    "issue-encampments",
+                    "issue-camping-ordinance",
+                ],
+                "place_ids": ["place-grants-pass-oregon", "place-oregon"],
+            },
+            {
+                "id": "record-ninth-circuit-grants-pass-amended-opinion-2023-07-05",
+                "record_class": "legal_record",
+                "record_type": "amended_opinion",
+                "title": "Order and Amended Opinion",
+                "source_id": "ninth-circuit-grants-pass-amended-opinion",
+                "artifact_path": "data/raw/ninth-circuit-grants-pass-amended-opinion/2026-04-12/opinion.pdf",
+                "text_path": "data/extracted/ninth-circuit-grants-pass-amended-opinion/opinion.txt",
+                "published_at": "2023-07-05",
+                "court_name": "U.S. Court of Appeals for the Ninth Circuit",
+                "docket_number": "20-35752 / 20-35881",
+                "page_count": 155,
+                "case_ids": ["case-johnson-v-city-of-grants-pass"],
+                "issue_ids": [
+                    "issue-homelessness",
+                    "issue-encampments",
+                    "issue-camping-ordinance",
+                ],
+                "place_ids": ["place-grants-pass-oregon", "place-oregon"],
+            },
+            {
                 "id": "record-scotus-grants-pass-docket-23-175",
                 "record_class": "legal_record",
                 "record_type": "docket_page",
@@ -310,18 +395,13 @@ def build_bundle() -> dict:
                 "published_at": None,
                 "court_name": "Supreme Court of the United States",
                 "docket_number": "23-175",
-                "case_ids": [
-                    "case-city-of-grants-pass-v-johnson",
-                ],
+                "case_ids": ["case-city-of-grants-pass-v-johnson"],
                 "issue_ids": [
                     "issue-homelessness",
                     "issue-encampments",
                     "issue-camping-ordinance",
                 ],
-                "place_ids": [
-                    "place-grants-pass-oregon",
-                    "place-oregon",
-                ],
+                "place_ids": ["place-grants-pass-oregon", "place-oregon"],
             },
             {
                 "id": "record-scotus-grants-pass-opinion-2024-06-28",
@@ -335,18 +415,13 @@ def build_bundle() -> dict:
                 "court_name": "Supreme Court of the United States",
                 "docket_number": "23-175",
                 "page_count": 74,
-                "case_ids": [
-                    "case-city-of-grants-pass-v-johnson",
-                ],
+                "case_ids": ["case-city-of-grants-pass-v-johnson"],
                 "issue_ids": [
                     "issue-homelessness",
                     "issue-encampments",
                     "issue-camping-ordinance",
                 ],
-                "place_ids": [
-                    "place-grants-pass-oregon",
-                    "place-oregon",
-                ],
+                "place_ids": ["place-grants-pass-oregon", "place-oregon"],
             },
             {
                 "id": "record-sf-city-attorney-grants-pass-amicus-post-2024-03-01",
@@ -357,21 +432,35 @@ def build_bundle() -> dict:
                 "artifact_path": "data/raw/sf-city-attorney-grants-pass-amicus/2026-04-10/source.html",
                 "text_path": "data/extracted/sf-city-attorney-grants-pass-amicus/source.txt",
                 "published_at": "2024-03-01",
-                "case_ids": [
-                    "case-city-of-grants-pass-v-johnson",
-                ],
+                "case_ids": ["case-city-of-grants-pass-v-johnson"],
                 "issue_ids": [
                     "issue-homelessness",
                     "issue-encampments",
                     "issue-camping-ordinance",
                 ],
-                "place_ids": [
-                    "place-san-francisco",
-                    "place-california",
-                ],
+                "place_ids": ["place-san-francisco", "place-california"],
             },
         ],
         "institution_candidates": [
+            {
+                "id": "inst-us-district-court-d-oregon",
+                "name": "U.S. District Court, District of Oregon",
+                "institution_type": "court",
+                "jurisdiction_place_id": "place-oregon",
+                "evidence_record_ids": [
+                    "record-grants-pass-district-opinion-order-2020-07-22",
+                    "record-grants-pass-district-judgment-2020-08-26",
+                ],
+            },
+            {
+                "id": "inst-us-court-of-appeals-ninth-circuit",
+                "name": "U.S. Court of Appeals for the Ninth Circuit",
+                "institution_type": "court",
+                "jurisdiction_place_id": "place-united-states",
+                "evidence_record_ids": [
+                    "record-ninth-circuit-grants-pass-amended-opinion-2023-07-05",
+                ],
+            },
             {
                 "id": "inst-united-states-supreme-court",
                 "name": "Supreme Court of the United States",
@@ -388,6 +477,9 @@ def build_bundle() -> dict:
                 "institution_type": "municipality",
                 "jurisdiction_place_id": "place-grants-pass-oregon",
                 "evidence_record_ids": [
+                    "record-grants-pass-district-opinion-order-2020-07-22",
+                    "record-grants-pass-district-judgment-2020-08-26",
+                    "record-ninth-circuit-grants-pass-amended-opinion-2023-07-05",
                     "record-scotus-grants-pass-docket-23-175",
                     "record-scotus-grants-pass-opinion-2024-06-28",
                 ],
@@ -414,25 +506,43 @@ def build_bundle() -> dict:
         ],
         "actor_candidates": [
             {
+                "id": "actor-debra-blake-gloria-johnson-john-logan-plaintiff-group",
+                "name": "Debra Blake, Gloria Johnson, and John Logan, on behalf of themselves and all others similarly situated",
+                "roles": ["plaintiff_group"],
+                "evidence_record_ids": [
+                    "record-grants-pass-district-opinion-order-2020-07-22",
+                    "record-grants-pass-district-judgment-2020-08-26",
+                ],
+                "notes": [
+                    "Conservative lower-court plaintiff-group actor for the District of Oregon phase.",
+                ],
+            },
+            {
                 "id": "actor-gloria-johnson-et-al",
                 "name": "Gloria Johnson, et al.",
-                "roles": [
-                    "respondent_group",
-                ],
+                "roles": ["respondent_group"],
                 "evidence_record_ids": [
                     "record-scotus-grants-pass-docket-23-175",
                     "record-scotus-grants-pass-opinion-2024-06-28",
+                    "record-ninth-circuit-grants-pass-amended-opinion-2023-07-05",
                 ],
                 "notes": [
-                    "Conservative respondent-group actor for the first Grants Pass bundle; the full certified class roster is intentionally out of scope here.",
+                    "Conservative Supreme Court respondent-group actor for the first Grants Pass bundle; the full certified class roster remains out of scope.",
+                ],
+            },
+            {
+                "id": "actor-mark-d-clarke",
+                "name": "Mark D. Clarke",
+                "roles": ["judge"],
+                "evidence_record_ids": [
+                    "record-grants-pass-district-opinion-order-2020-07-22",
+                    "record-grants-pass-district-judgment-2020-08-26",
                 ],
             },
             {
                 "id": "actor-neil-m-gorsuch",
                 "name": "Neil M. Gorsuch",
-                "roles": [
-                    "justice",
-                ],
+                "roles": ["justice"],
                 "evidence_record_ids": [
                     "record-scotus-grants-pass-opinion-2024-06-28",
                     "record-scotus-grants-pass-docket-23-175",
@@ -440,6 +550,65 @@ def build_bundle() -> dict:
             },
         ],
         "case_candidates": [
+            {
+                "id": "case-blake-v-city-of-grants-pass",
+                "name": "Blake v. City of Grants Pass",
+                "aliases": ["Johnson v. City of Grants Pass"],
+                "case_type": "district_court_public_camping_challenge",
+                "court_name": "U.S. District Court, District of Oregon",
+                "court_institution_id": "inst-us-district-court-d-oregon",
+                "docket_number": "1:18-cv-01823-CL",
+                "status": "judgment_entered_and_appealed",
+                "filed_at": "2018-10-15",
+                "closed_at": "2020-08-26",
+                "record_ids": [
+                    "record-grants-pass-district-opinion-order-2020-07-22",
+                    "record-grants-pass-district-judgment-2020-08-26",
+                ],
+                "issue_ids": [
+                    "issue-homelessness",
+                    "issue-encampments",
+                    "issue-camping-ordinance",
+                ],
+                "place_ids": ["place-grants-pass-oregon", "place-oregon"],
+                "related_case_ids": [
+                    "case-johnson-v-city-of-grants-pass",
+                    "case-city-of-grants-pass-v-johnson",
+                ],
+                "notes": [
+                    "Lower-court district case underlying the Ninth Circuit and Supreme Court chain.",
+                    "The district record phase preserves the original Blake-caption posture before the later Johnson-caption appellate posture.",
+                ],
+            },
+            {
+                "id": "case-johnson-v-city-of-grants-pass",
+                "name": "Johnson v. City of Grants Pass",
+                "aliases": ["Blake v. City of Grants Pass"],
+                "case_type": "ninth_circuit_public_camping_precedent",
+                "court_name": "U.S. Court of Appeals for the Ninth Circuit",
+                "court_institution_id": "inst-us-court-of-appeals-ninth-circuit",
+                "docket_number": "20-35752 / 20-35881",
+                "status": "affirmed_in_part_vacated_in_part_and_remanded",
+                "filed_at": "2020-08-26",
+                "closed_at": "2023-07-05",
+                "record_ids": [
+                    "record-ninth-circuit-grants-pass-amended-opinion-2023-07-05",
+                ],
+                "issue_ids": [
+                    "issue-homelessness",
+                    "issue-encampments",
+                    "issue-camping-ordinance",
+                ],
+                "place_ids": ["place-grants-pass-oregon", "place-oregon"],
+                "related_case_ids": [
+                    "case-blake-v-city-of-grants-pass",
+                    "case-city-of-grants-pass-v-johnson",
+                ],
+                "notes": [
+                    "Appellate phase preserving the final amended Ninth Circuit opinion that the Supreme Court later reviewed.",
+                    "The official PDF text says 'Filed September 28, 2022; Amended July 5, 2023.'",
+                ],
+            },
             {
                 "id": "case-city-of-grants-pass-v-johnson",
                 "name": "City of Grants Pass v. Johnson",
@@ -462,9 +631,10 @@ def build_bundle() -> dict:
                     "issue-encampments",
                     "issue-camping-ordinance",
                 ],
-                "place_ids": [
-                    "place-grants-pass-oregon",
-                    "place-oregon",
+                "place_ids": ["place-grants-pass-oregon", "place-oregon"],
+                "related_case_ids": [
+                    "case-blake-v-city-of-grants-pass",
+                    "case-johnson-v-city-of-grants-pass",
                 ],
                 "related_decision_ids": [
                     "decision-2024-08-19-ordinance-2040-introduction",
@@ -474,12 +644,45 @@ def build_bundle() -> dict:
                     "program-san-rafael-sanctioned-camping",
                 ],
                 "notes": [
-                    "This bundle treats the Supreme Court docket and slip opinion as the authoritative Grants Pass precedent layer.",
+                    "This bundle treats the Supreme Court docket and slip opinion as the authoritative controlling-precedent layer.",
                     "San Rafael's own June 28 statement and September 2 explainer are preserved as local response records, not as substitutes for the Supreme Court opinion.",
                 ],
-            }
+            },
         ],
         "proceeding_candidates": [
+            {
+                "id": "proceeding-grants-pass-district-opinion-order-2020-07-22",
+                "case_id": "case-blake-v-city-of-grants-pass",
+                "proceeding_type": "opinion_and_order",
+                "occurred_at": "2020-07-22",
+                "status": "granted_in_part_denied_in_part",
+                "judge_actor_id": "actor-mark-d-clarke",
+                "evidence_record_ids": [
+                    "record-grants-pass-district-opinion-order-2020-07-22",
+                ],
+            },
+            {
+                "id": "proceeding-grants-pass-district-judgment-2020-08-26",
+                "case_id": "case-blake-v-city-of-grants-pass",
+                "proceeding_type": "judgment_and_injunction",
+                "occurred_at": "2020-08-26",
+                "status": "entered",
+                "judge_actor_id": "actor-mark-d-clarke",
+                "evidence_record_ids": [
+                    "record-grants-pass-district-judgment-2020-08-26",
+                    "record-grants-pass-district-opinion-order-2020-07-22",
+                ],
+            },
+            {
+                "id": "proceeding-grants-pass-ninth-circuit-amended-opinion-2023-07-05",
+                "case_id": "case-johnson-v-city-of-grants-pass",
+                "proceeding_type": "amended_opinion",
+                "occurred_at": "2023-07-05",
+                "status": "affirmed_in_part_vacated_in_part_and_remanded",
+                "evidence_record_ids": [
+                    "record-ninth-circuit-grants-pass-amended-opinion-2023-07-05",
+                ],
+            },
             {
                 "id": "proceeding-grants-pass-cert-petition-filed-2023-08-22",
                 "case_id": "case-city-of-grants-pass-v-johnson",
@@ -526,6 +729,48 @@ def build_bundle() -> dict:
         ],
         "case_participation_candidates": [
             {
+                "id": "casepart-grants-pass-district-plaintiff-group",
+                "case_id": "case-blake-v-city-of-grants-pass",
+                "actor_id": "actor-debra-blake-gloria-johnson-john-logan-plaintiff-group",
+                "role": "plaintiff",
+                "start_date": "2018-10-15",
+                "evidence_record_ids": [
+                    "record-grants-pass-district-opinion-order-2020-07-22",
+                    "record-grants-pass-district-judgment-2020-08-26",
+                ],
+            },
+            {
+                "id": "casepart-grants-pass-district-city-defendant",
+                "case_id": "case-blake-v-city-of-grants-pass",
+                "institution_id": "inst-city-of-grants-pass",
+                "role": "defendant",
+                "start_date": "2018-10-15",
+                "evidence_record_ids": [
+                    "record-grants-pass-district-opinion-order-2020-07-22",
+                    "record-grants-pass-district-judgment-2020-08-26",
+                ],
+            },
+            {
+                "id": "casepart-grants-pass-appellate-city-appellant",
+                "case_id": "case-johnson-v-city-of-grants-pass",
+                "institution_id": "inst-city-of-grants-pass",
+                "role": "appellant",
+                "start_date": "2020-08-26",
+                "evidence_record_ids": [
+                    "record-ninth-circuit-grants-pass-amended-opinion-2023-07-05",
+                ],
+            },
+            {
+                "id": "casepart-grants-pass-appellate-plaintiff-group-appellee",
+                "case_id": "case-johnson-v-city-of-grants-pass",
+                "actor_id": "actor-gloria-johnson-et-al",
+                "role": "appellee",
+                "start_date": "2020-08-26",
+                "evidence_record_ids": [
+                    "record-ninth-circuit-grants-pass-amended-opinion-2023-07-05",
+                ],
+            },
+            {
                 "id": "casepart-grants-pass-petitioner-city",
                 "case_id": "case-city-of-grants-pass-v-johnson",
                 "institution_id": "inst-city-of-grants-pass",
@@ -560,24 +805,46 @@ def build_bundle() -> dict:
         ],
         "methodology_findings": [
             {
+                "id": "method-legal-precedent-02-case-lineage",
+                "summary": "The Grants Pass lane should preserve district, appellate, and Supreme Court phases as separate but related case objects. That keeps appeal lineage explicit and avoids pretending one district docket and one Supreme Court petition are the same case."
+            },
+            {
                 "id": "method-legal-precedent-02-opinion-first",
-                "summary": "The first external precedent bundle starts from the official Supreme Court docket and slip opinion rather than from municipal explainers. That keeps the controlling rule and the local reaction records separate."
+                "summary": "The controlling-precedent layer starts from official court records where possible: official Supreme Court docket and slip opinion, plus the official Ninth Circuit amended opinion. The district-court opinion and judgment currently enter through strong public RECAP-backed copies surfaced by the Clearinghouse."
             },
             {
                 "id": "method-legal-precedent-02-response-record-boundary",
-                "summary": "San Rafael's statement and explainer and San Francisco's amicus announcement are modeled as institutional response records. They help explain local posture and advocacy, but they are not the precedent itself."
+                "summary": "San Rafael's statement and explainer and San Francisco's amicus announcement are institutional response records. They help explain local posture and advocacy, but they are not the precedent itself."
             },
             {
                 "id": "method-legal-precedent-02-san-rafael-crosswalk",
-                "summary": "The bundle crosswalks Grants Pass back into San Rafael only through official local records that explicitly discuss the case, then points forward into the August 19 ordinance, resolution, and sanctioned-camping response chain."
+                "summary": "The bundle crosswalks the legal chain back into San Rafael only through official local records that explicitly discuss Grants Pass, then points forward into the August 19 ordinance, resolution, and sanctioned-camping response chain."
             },
         ],
         "crosswalks": [
+            {
+                "id": "crosswalk-grants-pass-case-lineage",
+                "related_case_ids": [
+                    "case-blake-v-city-of-grants-pass",
+                    "case-johnson-v-city-of-grants-pass",
+                    "case-city-of-grants-pass-v-johnson",
+                ],
+                "evidence_record_ids": [
+                    "record-grants-pass-district-opinion-order-2020-07-22",
+                    "record-grants-pass-district-judgment-2020-08-26",
+                    "record-ninth-circuit-grants-pass-amended-opinion-2023-07-05",
+                    "record-scotus-grants-pass-docket-23-175",
+                    "record-scotus-grants-pass-opinion-2024-06-28",
+                ],
+                "summary": "The Grants Pass litigation chain runs from the District of Oregon class-action case, through the Ninth Circuit appeals, into the Supreme Court petition and opinion. The bundle keeps those phases distinct but explicitly related."
+            },
             {
                 "id": "crosswalk-grants-pass-to-san-rafael-posture",
                 "case_id": "case-city-of-grants-pass-v-johnson",
                 "related_case_ids": [
                     "case-boyd-v-city-of-san-rafael",
+                    "case-johnson-v-city-of-grants-pass",
+                    "case-blake-v-city-of-grants-pass",
                 ],
                 "meeting_id": "meeting-2024-08-19-san-rafael-city-council",
                 "agenda_item_id": "agenda-item-2024-08-19-5a",
@@ -595,30 +862,204 @@ def build_bundle() -> dict:
                     "doc-2024-08-19-item-5a-report",
                 ],
                 "summary": "San Rafael's June 28 statement and September 2 explainer treat Grants Pass as the Eighth Amendment posture change that cleared one Ninth Circuit obstacle, while the August 19 package shows the City still routing its local implementation through Boyd-specific ADA and state-created-danger constraints."
-            }
+            },
         ],
         "open_questions": [
             {
-                "id": "OQ-031",
+                "id": "OQ-032",
                 "status": "watch",
-                "summary": "The Grants Pass bundle has the official Supreme Court docket and slip opinion, but it does not yet include the lower-court district and Ninth Circuit orders that the Supreme Court reversed and remanded.",
-                "why_it_matters": "The current bundle is strong enough for precedent and local-posture joins. The remaining gap is comparison depth inside the underlying Martin-era lower-court chain, not whether the controlling Supreme Court record is missing.",
-                "next_evidence": "Capture the district-court injunction and the Ninth Circuit opinion, then decide whether they should live in this bundle or a later lower-court companion bundle."
-            }
+                "summary": "The Grants Pass bundle now has district, appellate, and Supreme Court precedent records, but it does not yet include the San Francisco amicus brief PDF itself or a direct district-court docket capture.",
+                "why_it_matters": "The current bundle is strong enough for legal-lineage and local-response joins. The remaining gap is completeness of supporting advocacy and docket surfaces, not the core precedent chain.",
+                "next_evidence": "Capture the public amicus brief PDF linked from the SF City Attorney page and, if a stable free district docket surface proves available, add it without disturbing the current case and record IDs."
+            },
         ],
         "notes": [
-            f"Supreme Court docket extract artifact: {GRANTS_PASS_DOCKET_EXTRACT.relative_to(ROOT)}",
+            f"District opinion extract artifact: {DISTRICT_OPINION_EXTRACT.relative_to(ROOT)}",
+            f"District judgment extract artifact: {DISTRICT_JUDGMENT_EXTRACT.relative_to(ROOT)}",
+            f"Ninth Circuit amended opinion extract artifact: {NINTH_OPINION_EXTRACT.relative_to(ROOT)}",
             f"Supreme Court opinion extract artifact: {GRANTS_PASS_OPINION_EXTRACT.relative_to(ROOT)}",
             f"San Rafael statement artifact: {Path(statement['artifacts'][0]['artifact_path'])}",
             f"San Rafael explainer title: {explainer_title}",
-            "This bundle is normalized-only for now. It widens the legal lane from one local constraint case to one local case plus one controlling Supreme Court precedent.",
+            "This bundle is normalized-only for now. It widens the legal lane from one local constraint case plus one Supreme Court precedent into an explicit lower-court-to-Supreme Court lineage bundle.",
         ],
     }
 
 
 def main() -> None:
-    write_json(GRANTS_PASS_DOCKET_EXTRACT, build_docket_extract())
-    write_json(GRANTS_PASS_OPINION_EXTRACT, build_opinion_extract())
+    write_json(GRANTS_PASS_DOCKET_EXTRACT, build_html_extract())
+    write_json(
+        DISTRICT_OPINION_EXTRACT,
+        build_pdf_extract(
+            source_id="grants-pass-district-opinion-order",
+            manifest_path=DISTRICT_OPINION_MANIFEST,
+            pdf_path=DISTRICT_OPINION_PDF,
+            text_path=DISTRICT_OPINION_TEXT,
+            artifact_path="data/raw/grants-pass-district-opinion-order/2026-04-12/order.pdf",
+            title="Opinion and Order",
+            published_at="2020-07-22",
+            court_name="U.S. District Court, District of Oregon",
+            docket_number="1:18-cv-01823-CL",
+            notes=[
+                "District of Oregon opinion and order captured from the Clearinghouse document page for document 111.",
+                "The Clearinghouse page marks the source as RECAP, so this is a strong public filed-order copy rather than a court-hosted free docket artifact.",
+            ],
+            actor_hits=[
+                "Debra Blake",
+                "Gloria Johnson",
+                "John Logan",
+                "City of Grants Pass",
+                "Mark D. Clarke",
+            ],
+            place_hits=["Grants Pass", "Oregon"],
+            issue_hits=[
+                "homelessness",
+                "encampments",
+                "camping ordinance",
+                "public property",
+                "Eighth Amendment",
+                "procedural due process",
+            ],
+            legal_refs=[
+                "Case No. 1:18-cv-01823-CL",
+                "2020 WL 4209227",
+                "summary judgment",
+                "Eighth Amendment",
+                "procedural due process",
+            ],
+            procedural_dates=[
+                "2020-07-22 opinion and order",
+            ],
+        ),
+    )
+    write_json(
+        DISTRICT_JUDGMENT_EXTRACT,
+        build_pdf_extract(
+            source_id="grants-pass-district-judgment",
+            manifest_path=DISTRICT_JUDGMENT_MANIFEST,
+            pdf_path=DISTRICT_JUDGMENT_PDF,
+            text_path=DISTRICT_JUDGMENT_TEXT,
+            artifact_path="data/raw/grants-pass-district-judgment/2026-04-12/order.pdf",
+            title="Judgment",
+            published_at="2020-08-26",
+            court_name="U.S. District Court, District of Oregon",
+            docket_number="1:18-cv-01823-CL",
+            notes=[
+                "District of Oregon judgment captured from the Clearinghouse document page for document 114.",
+                "The judgment is short, but it directly enters the injunction terms and ties back to Opinion and Order 111.",
+            ],
+            actor_hits=[
+                "Debra Blake",
+                "Gloria Johnson",
+                "John Logan",
+                "City of Grants Pass",
+                "Mark D. Clarke",
+            ],
+            place_hits=["Grants Pass", "Oregon"],
+            issue_hits=[
+                "homelessness",
+                "encampments",
+                "camping ordinance",
+                "public property",
+                "Eighth Amendment",
+                "park exclusion ordinance",
+            ],
+            legal_refs=[
+                "Case No. 1:18-cv-01823-CL",
+                "Judgment",
+                "court enjoins defendant",
+                "GPMC 5.61.020",
+                "GPMC 5.61.030",
+                "GPMC 6.46.090",
+            ],
+            procedural_dates=[
+                "2020-08-26 judgment entered",
+            ],
+        ),
+    )
+    write_json(
+        NINTH_OPINION_EXTRACT,
+        build_pdf_extract(
+            source_id="ninth-circuit-grants-pass-amended-opinion",
+            manifest_path=NINTH_OPINION_MANIFEST,
+            pdf_path=NINTH_OPINION_PDF,
+            text_path=NINTH_OPINION_TEXT,
+            artifact_path="data/raw/ninth-circuit-grants-pass-amended-opinion/2026-04-12/opinion.pdf",
+            title="Order and Amended Opinion",
+            published_at="2023-07-05",
+            court_name="U.S. Court of Appeals for the Ninth Circuit",
+            docket_number="20-35752 / 20-35881",
+            notes=[
+                "Official Ninth Circuit PDF for the Grants Pass appeals.",
+                "The PDF text says 'Filed September 28, 2022; Amended July 5, 2023.' The bundle uses the amended date as the controlling appellate-opinion date.",
+            ],
+            actor_hits=[
+                "Gloria Johnson",
+                "John Logan",
+                "City of Grants Pass",
+            ],
+            place_hits=["Grants Pass", "Oregon"],
+            issue_hits=[
+                "homelessness",
+                "encampments",
+                "camping ordinance",
+                "public property",
+                "Eighth Amendment",
+                "Martin v. Boise",
+            ],
+            legal_refs=[
+                "20-35752",
+                "20-35881",
+                "72 F.4th 868",
+                "50 F.4th 787",
+                "Order and Amended Opinion",
+            ],
+            procedural_dates=[
+                "2022-09-28 original opinion filed",
+                "2023-07-05 amended opinion",
+            ],
+        ),
+    )
+    write_json(
+        GRANTS_PASS_OPINION_EXTRACT,
+        build_pdf_extract(
+            source_id="scotus-grants-pass-opinion",
+            manifest_path=GRANTS_PASS_OPINION_MANIFEST,
+            pdf_path=GRANTS_PASS_OPINION_PDF,
+            text_path=GRANTS_PASS_OPINION_TEXT,
+            artifact_path="data/raw/scotus-grants-pass-opinion/2026-04-12/opinion.pdf",
+            title="23-175 City of Grants Pass v. Johnson (06/28/2024)",
+            published_at="2024-06-28",
+            court_name="Supreme Court of the United States",
+            docket_number="23-175",
+            notes=[
+                "Official Supreme Court slip opinion PDF captured directly from the docket-linked opinion URL.",
+                "This is the controlling precedent record for the repo's Grants Pass bundle.",
+            ],
+            actor_hits=[
+                "City of Grants Pass, Oregon",
+                "Johnson et al.",
+                "Gorsuch, J.",
+            ],
+            place_hits=["Grants Pass", "Oregon"],
+            issue_hits=[
+                "homelessness",
+                "encampments",
+                "camping ordinance",
+                "public property",
+                "Eighth Amendment",
+            ],
+            legal_refs=[
+                "No. 23-175",
+                "certiorari to the United States Court of Appeals for the Ninth Circuit",
+                "Martin v. Boise",
+                "reversed and remanded",
+            ],
+            procedural_dates=[
+                "2024-04-22 argued",
+                "2024-06-28 decided",
+            ],
+        ),
+    )
     write_json(OUTPUT_PATH, build_bundle())
 
 

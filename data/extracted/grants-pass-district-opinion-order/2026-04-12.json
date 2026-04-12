@@ -1,0 +1,57 @@
+{
+  "source_id": "grants-pass-district-opinion-order",
+  "capture_id": "grants-pass-district-opinion-order__2026-04-12",
+  "capture_date": "2026-04-12",
+  "entry_url": "https://clearinghouse.net/doc/136123/",
+  "fetch_strategy": "direct_pdf_from_clearinghouse_doc_page",
+  "generated_at": "2026-04-12T22:12:09Z",
+  "artifacts": [
+    {
+      "artifact_path": "data/raw/grants-pass-district-opinion-order/2026-04-12/order.pdf",
+      "content_type": "application/pdf",
+      "artifact_type": "pdf",
+      "title": "Opinion and Order",
+      "published_at": "2020-07-22",
+      "page_count": 35,
+      "court_name": "U.S. District Court, District of Oregon",
+      "docket_number": "1:18-cv-01823-CL",
+      "text_path": "data/extracted/grants-pass-district-opinion-order/order.txt",
+      "word_count": 12151
+    }
+  ],
+  "candidate_signals": {
+    "actor_hits": [
+      "Debra Blake",
+      "Gloria Johnson",
+      "John Logan",
+      "City of Grants Pass",
+      "Mark D. Clarke"
+    ],
+    "place_hits": [
+      "Grants Pass",
+      "Oregon"
+    ],
+    "issue_hits": [
+      "homelessness",
+      "encampments",
+      "camping ordinance",
+      "public property",
+      "Eighth Amendment",
+      "procedural due process"
+    ],
+    "legal_refs": [
+      "Case No. 1:18-cv-01823-CL",
+      "2020 WL 4209227",
+      "summary judgment",
+      "Eighth Amendment",
+      "procedural due process"
+    ],
+    "procedural_dates": [
+      "2020-07-22 opinion and order"
+    ]
+  },
+  "notes": [
+    "District of Oregon opinion and order captured from the Clearinghouse document page for document 111.",
+    "The Clearinghouse page marks the source as RECAP, so this is a strong public filed-order copy rather than a court-hosted free docket artifact."
+  ]
+}

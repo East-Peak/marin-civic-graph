@@ -1,0 +1,1897 @@
+        Case 1:18-cv-01823-CL         Document 111      Filed 07/22/20     Page 1 of 35
+
+
+
+
+                        IN THE UNITED STATES DISTRICT COURT
+
+                               FOR THE DISTRICT OF OREGON
+
+                                     MEDFORD DIVISION
+
+
+
+DEBRA BLAKE, GLORIA JOHNSON,
+JOHN LOGAN, individuals, on behalf of
+themselves and all others similarly situated, ·                      Case No. 1:18-cv-01823-CL
+
+                       Plaintiffs,
+
+               v.
+                                                                         OPINION AND ORDER
+
+CITY OF GRANTS PASS,
+
+                       Defendant.
+
+CLARKE, Magistrate Judge.
+
+       This case involves a certified class of homeless individuals residing in and around .Grants
+
+Pass, Oregon. The class members allege that the City of Grants Pass has a web of ordinances,
+
+customs, and practices that, in combination, punish people based on their status of being
+
+involuntarily homeless. This case comes before the Court on cross-motions for summary
+
+judgment. The Court has also considered amicus briefs submitted by League of Oregon Cities
+
+and the National Law Center on Homelessness and Poverty. For the reasons below, Plaintiffs'
+
+Page 1 of 35 OPINION AND ORDER
+        Case 1:18-cv-01823-CL           Document 111         Filed 07/22/20      Page 2 of 35
+
+
+
+
+Motion for Summary Judgment (Dkt. No. 62) is GRANTED in part and DENIED in part, and
+
+Defendant's Motion for Summary Judgment (Dkt. No. 80) is DENIED. 1
+
+                                    STANDARD OF REVIEW
+
+       Summary judgment shall be granted when the record sµows that there is no genuine
+
+dispute as to any material facts and the moving party is entitled to judgment as a matter of law.
+
+Fed. R. Civ. P. 56(a); Anderson v. Liberty Lobby, Inc., 477 U.S. 242,247 (1986). The moving
+
+party has the initial burden of showing that no genuine issue of material fact exists. Celotex
+
+Corp. v. Catrett, 477 U.S. 317,323 (1986); Devereaux v. Abbey, 263 F.3d 1070, 1076 (9th Cir.
+
+2001) (en bane). The court cannot weigh the evidence or determine the truth but may only
+
+determine whether there is a genuine issue of fact. Playboy Enters., Inc. v. Welles, 279 F.3d 796,
+
+800 (9th Cir. 2002). An issue of fact is genuine "if the evidence is such that a reasonable jury
+                         '
+could return a verdict for the nonmoving party." Anderson, 477 U.S. at 248.
+
+       When a properly supported motion for summary judgment is made, the burden shifts to
+
+the opposing party to set forth specific facts showing that there is a genuine issue for trial. Id. at
+
+250. Conclusory allegations unsupported by factual material are insufficient to defeat a motion
+
+for summary judgment. Taylor v. List, 880 F.2d 1040, 1045 (9th Cir. 1989). Instead, the .
+
+opposing party must, by affidavit or as otherwise provided by Rule 56, designate specific facts
+
+which show there is a genuine issue for trial. Devereaux, 263 F .3d at 1076. In assessing whether
+
+aparty has met its burden, the court views the evidence in the light most favorable to the non-
+moving party. Allen v. City of Los Angeles, 66 F.3d 1052, 1056 (9th Cir. 1995).
+
+
+
+
+1 The parties have consented to Magistrate Judge jurisdiction pursuant to 28 U.S.C. § 636(c)(l).
+
+
+Page 2 of35 OPINION AND ORDER
+            Case 1:18-cv-01823-CL         Document 111       Filed 07/22/20     Page 3 of 35
+
+
+
+
+                                            BACKGROUND
+            This case is about respecting the dignity of homeless individuals and the City of Grants
+
+Pass' ability to protect the safety and welfare of its citizens. Unsheltered homelessness is an
+
+ever-growing crisis nationwide, and the overwhelming majority of homeless individuals are not
+
+living that way by choice. According to the United States Department of Housing and Urban
+
+Development ("HUD"), there were an estimated 533,000 homeless individuals in the United
+
+States in 2018; more than a third of whom were "unsheltered homeless," meaning, individuals
+
+"whose primary nighttime location [wa]s a public or private place not designed for or ordinarily
+
+used as a regular sleeping accommodation for human beings, including a car, park, ... or
+
+camping ground." 2 HUD's figures are obtained using what is known as a "point-in-time" or
+
+"PIT" count, which, as its name suggests, is arrived at by counting the number of people in a city
+
+or county who are homeless on a particular night. 3 HUD requires local homelessness assistance
+
+and prevention networks to conduct a PIT count each year as a condition of federal funding. A
+
+2001 administrative study found that the true size of a homeless population may be anywhere
+
+between 2.5 to 10 times larger than what can be estimated by a PIT count. 4 As the Ninth Circuit
+
+recognized in Martin v. City of Boise, there are many reasons for this undercount: ·
+
+            It is widely recognized that a one-night point in time count will undercount the
+            homeless population, as many homeless individuals may have access to temporary
+            housing on a given night, and as weather conditions may affect the number of
+            available volunteers and the number of homeless people staying at shelters or
+            accessing services on the night of the count.         ·
+
+
+
+
+        .                       .
+2
+  National Law Center on Homelessness & Poverty, Housing Notilandcuffs 2019: Ending the
+Criminalization of Homelessness in U.S. Cities 28 n. 15 (2019),                .
+http://nlchp.org/wpcontent/uploads/2019/12/HOUSING-NOT-HANDCUFFS-2019-FINAL.pdf .
+[hereinafter Housing Not Handcuffs].
+3
+  Id. at 28.
+4 Id.
+
+Page 3 of35 OPINION AND ORDER
+          Case 1:18-cv-01823-CL          Document 111        Filed 07/22/20      Page 4 of 35
+
+
+
+
+. 920 F.3d 584, 604 (9th Cir.), cert. denied sub nom. City of Boise, Idaho v. Martin, 140 S. Ct.
+
+ 674, (2019).
+
+        To combat the homeless crisis, many local governments have created ordinances-such
+
+ as the ones challenged by Plaintiffs in this case-that ban "camping" or similar activities in all or
+
+ parts of a city. These ordinances are often referred to as "quality of life laws. " 5 Enforcing
+
+ quality oflife laws is an expensive endeavor nationwide. For example, the City of Los Angeles
+
+ spends $50 million annually policing criminal and civil quality of life laws. 6 By contrast, the
+
+ City of Los Angeles spends only $13 million on providing housing and services to the country's
+
+. largest homeless population. 7 Likewise, a Seattle University study found that the cost to the City
+
+ of Seattl~ for enforcing just one of its six quality of life laws was $2.3 million over five years. 8
+
+         The.City of Grants Pass, Oregon, the city involved in this case, had a population of
+                                                                                                         I
+                                                                                                         I
+
+ 23,000 people according to the 2000 census, and it is now estimated to have more than 38,000
+
+ people. 9 The development of affordable housing in Grants Pass has not kept up with the
+
+ population growth~ City Manager Aaron Cubic confirmed in his deposition that Grants Pass has
+                                                                                                         I
+ a vacancy rate of 1% and that "essentially means that there's no vacancy." Edward Johnson
+                                                                                                         I
+ Deel., Ex. 1, Cubic Depo. at p. 49, lines 1-10 (Dkt. #63-1). Kelly Wessels, the Chief Operating         I
+                                                                                                         I
+                                                                                                         I
+ Officer of the Community Action Agency that serves Grants Pass testified that "Grants Pass'             I
+
+ 5
+    See Joshua Howard et al., At What Cost: The Minimum Cost of Criminalizing Homelessness in Seattle
+  and Spokane, HOMELESS RIGHTS ADVOCACY PROJECT 10 (2015),
+· https://digitalcommons.law .seattleu.edu/hrap/10.
+  6
+    Gale Holland; L.A. Spends $100 Million a Year on Homelessness, City Report Finds, LOS ANGELES
+  TIMES, Apr. 16, 2015, https://www .latimes.com/local/lanow/la-me-lh-homeless-caoreport-20150416-
+  story .html.
+  1
+    Housing Not Handcuffs, supra note 2, at 71.
+  8
+    See Joshua Howard et al., At What Cost: The Minimum Cost of Criminalizing Homelessness in Seattle
+  and Spokane, HOMELESS RIGHTS ADVOCACY PROJECT iii (2015),
+  https://digitalcommons.law.seattleu.edu/hrap/10.
+  9
+    http://worldpopulationreview.com/us-cities/grants-passor-population/.
+
+
+ Page 4 of35 OPINION AND ORDER
+        Case 1:18-cv-01823-CL          Document 111        Filed 07/22/20     Page 5 of 35
+
+
+
+
+stock of affordable housing has dwindled to almost zero. Landlords routinely require an
+
+applicant to have an income that is three times the monthly rent. Rental units that cost less than
+
+$1,000/month are virtually unheard of in Grants Pass." Kelly Wessels Deel. ,r 7 (Dkt. #42).
+
+       A point-in-time count of homeless individuals was conducted by the United Community
+
+Action Network ("UCAN") on January 30, 2019, in Grants Pass. UCAN counted 602 homeless
+
+individuals in Grants Pass. Wessels DecL ,r 6 (Dkt. #42). Another 1,045 individuals were
+
+counted as "precariously housed," meaning that they were sleeping at the home of somebody
+
+else, or "couch surfing." Id.
+
+       In.March 2013, the Grants Pass City Council hosted a Community Roundtable,
+
+hereinafter referred to as the "2013 Roundtable Meeting," to "identify solutions to current
+
+vagrancy problems." Wessels Deel. ,r 8, Ex. 1 (minutes of public roundtable) (Dkt #65).
+
+Minutes from this meeting show that the City Council President stated, "the point is to make it
+
+uncomfortable enough for them in our city so they [referring to homeless individuals] will want·
+
+to move on do';Vll the road." Wessels Deel., Ex. 1 at 2 (Dkt. #65~1). At the end of the meeting, a
+
+list of"actions to move forward on" was created. These action items included (i) ways to
+
+increase police presence downtown; (ii) create an exclusion zone and possibly have a blanket
+
+trespassing regulation; (iii) specific amount of misdemeanors leading to prosecution; (iv) not
+
+feeding in parks or other specific areas in the city; (v) posting "zero tolerance" signs stating
+
+certain ordinances will be strictly enforced; (vi) look into the possibility of creating a "do not
+
+serve" or "most unwanted" list; (vii) pass out the trespassing letters and get word out to have
+
+them signed; and (viii) provide assistance in constructing safe areas at agencies to protect
+
+. volunteers from aggressive behavior. Id at 13. City Manager Aaron Cubic confirmed that the
+
+action items from the 2013. Roundtable Meeting were copied into the City's strategic plans in the
+
+
+
+Page 5 of35 OPINION AND ORDER
+               Case 1:18-cv-01823-CL          Document 111        Filed 07/22/20     Page 6 of 35
+
+
+
+
+       form of an objective to "address the vagrancy issue" starting with the 2013-14 Grants Pass
+                                                                                                             I
+       Strategic Plan up to the current 2019 Grants Pass Strategic Plan. Edward Johnson Deel., Ex. 1,        I
+                                                                                                             I
+       Cubic Depo. at p. 29 lines 11-16; p. 46 line 20 to p. 48 line 10. (Dkt. #63-1 ). The City Manager
+                                                                                                             I
+       also confirmed that one of the action items related to this objective was the "targeted
+                                                                                                             I
+       enforcement of illegal camping." Id. at p. 36 line 16 top. 37 line 5.
+
+              There are no homeless shelters in Grants Pass that qualify as "shelters" under the criteria
+
+       provided by HUD. The housing option cited by the City that most resembles a shelter is the
+
+       Gospel Rescue Mission ("GRM"), which operates transitional housing programs in Grants Pass.
+
+       GRM Director of Resident Services, Brian Bouteller, te.stified that GRM offers 30-day
+
+       transitional housing in two facilities: one facility is for women and children with capacity for 60
+
+       people and the other for men with 78 spaces. Edward Johnson Deel., Ex. 2, Bouteller Depo. p.
+
+       18 lines 10-15 (Dkt. #63-2). There is no program for men with children or unaccompanied
+
+       minors. Id. at Bouteller Depo. p. 19, lines 5-8. Homeless individuals in these programs are
+
+       required to work six-hour days, six days a week in exchange for a bunk for 30 days. Id. at
+
+       Bouteller Depo. p. 48 line 23-p. 51 line 5. During this 30-day period, people are not permitted to
+
+       look for outside work. Id. at Bouteller Depo. at p. 51 line 25-p. 52 line 4. It is mandatory that
+
+I      GRM residents attend a traditional Christian Chapel twice a day and go to a Christian Church ,
+I .
+       that follows the Nicene and Apostle's Creed ~very week. Id. atBou!eller Depo. at p. 33 line 10-
+
+       p. 35 line 3. Before a person is considered for admission at GRM, they must agree to comply
+
+       with a lengthy list of rules. For example, if you have serious or chronic medical or mental health
+
+       issues that preventyou from participating in daily GRM life, you may not be able to stay at the
+
+       GRM; you are to remain nicotine free during your stay at GRM; all intimate relationships other
+
+      · than legal/biblical marriage, regardless of gender, either on or off Mission property are strictly
+
+
+
+       Page 6 of35 OPINION AND ORDER
+        Case 1:18-cv-01823-CL         Document 111        Filed 07/22/20     Page 7 of 35
+
+
+
+
+forbidden. Edward Johnson Deel., Ex 3 (Dkt. #63-3). GRM has avoided seeking government
+
+funding so that it can maintain these restrictive rules. Johnson Deel., Ex 2, Bouteller Depo. p.
+
+15 lines 15-23 (Dkt. #63-2).
+
+       The class of involuntarily homeless people living in and around Grants Pass, Oregon was .
+
+certified by this Court on August 7, 2019. (Dkt. #4 7). The class is defined as all involuntarily
+
+homeless individuals living in Grants Pass, Oregon, including homeless individuals who
+
+sometimes sleep outside city limits to avoid harassment and punishment by Defendant City of
+
+Grants Pass as addressed in this lawsuit. The class representatives allege that each of their
+
+situations fall under the definition of homelessness adopted by HUD. 24 C.F.R § 582.5 (2012).
+
+HUD's definition encompasses a variety of living situations, including youth homelessness, id §
+
+582.5(3); individuals fleeing domestic violence, id. § 582.5(4); individuals "living in a
+
+supervised publicly or privately operated shelter designed to provide temporary living
+
+arrangements," id § 582.5(1)(ii); and individuals whose primary nighttime residence "is a public
+
+or private place not designed for or ordinarily used as a regular sleeping accommodation for
+
+human beings, including a car, park, abandoned building, bus or train station, or camping
+
+ground, id. § 582.5(1)(i).
+
+       Class representatives allege that their situations are just three representations of modem
+
+homelessness in the United States. Class representative, Debra Blake, lost her job and housing
+
+approximately ten years ago and has been involuntarily homeless in Grants Pass ever since.
+
+Blake Deel. ,r 3 (Dkt. #90). At the time of class certification, Ms. Blake was living in temporary
+
+transitional housing, but her ninety-day stay expired and she has returned to sleeping outside. As
+
+recently as September 11, 2019, Ms. Blake was cited for illegal camping and "prohibited
+
+conduct" in Riverside Park in Grants Pass because she was laying in the park in a sleeping bag at
+
+7:30 a.m. Id. ,r 7. Ms. Blake was convicted and fined $590. Later that same morning, the same
+
+Page 7 of35 OPINION AND ORDER
+        Case 1:18-cv-01823-CL          Document 111        Filed 07/22/20     Page 8 of 35
+
+
+
+
+officer wrote Ms. Blake a citation for "c.riminal trespass on City property" with an associated
+
+fine of $295. Id. Ms. Blake was also issued· a park exclusion on September 11, 2019. Id., 8.
+
+Ms. Blake filed an appeal and the exclusion was lifted without explanation after she had already
+
+been excluded from all Grants Pass parks for two weeks. Id. Currently, Ms. Blake owes the City
+
+over $5,000 in unpaid fines related to enforcement of the ordinances at issue while living outside
+
+in Grants Pass. Class representative, John Logan, has been intermittently homeless in Grants
+
+Pass for the last ten years. Mr. Logan currently sleeps in his truck at a rest stop north of Grants
+
+Pass because he fears being awakened and ticketed ifhe sleeps in his truck within the City.
+
+Logan Deel. , 2 (Dkt. #67). Mr. Logan is a licensed home care provider and his clients have
+
+allowed him to sleep on a mattress in a room they use for storage approximately four to five
+
+      a
+nights week. Id. , 3. However, that job ended in October or November 2019. Id Class
+
+representative, Gloria Johnson, has been living out of her van since at least before this litigation
+
+began. Johnson Deel., 2 (Dkt. #91). Ms. Johnson has parked her van to sleep outside of town
+
+on both BLM land and county roads. She claims that she has been asked to move along several
+
+times. Id ,, 3-5. While their exact circumstances and stories may vary, the three class
+
+representatives all share the need to conduct the life sustaining activities of resting, sleeping, and
+
+seeking shelter from the elements while living in Grants Pass without a permanent home.
+
+       Through their appointed class representatives, Plaintiffs move for summary judgment on
+
+each of their claims. Plaintiffs allege that the City of Grants Pass, through a combination of
+
+ordinances, customs, and policies, has unconstitutionally punished them for conducting life-
+
+sustaining activities and criminalized their existence as homeless individuals. Plaintiffs seek an•.
+
+order from this Court declaring that the City's enforcement of Grants Pass Municipal Codes
+
+("GPMC") 5.61.020 (the "anti-sleeping ordinance"); GPMC 5.61.030 and GPMC 6.46.090 (the
+
+"anti-camping ordinances"), GPMC 6.46.350 (the "park exclusion ordinance") and criminal ·
+
+trespass laws stemming from violations of those ordinances are uncqnstitutional as applied to the
+
+
+Page 8 of35 OPINION AND ORDER
+        Case 1:18-cv-01823-CL         Document 111         Filed 07/22/20     Page 9 of 35
+
+
+
+
+plaintiff class. Plaintiffs also seek an injunction prohibiting the City from enforcing those
+
+ordinances and related criminal trespass laws against the plaintiff class unless and until members
+
+of the class have the opportunity to obtain shelter within the City. The exact language of the
+
+ordinances at issue are as follows:
+
+       5.61.010 Definitions
+       A. "To Camp" means to set up or to remain in or at a campsite.
+       B. "Campsite" means any place where bedding, sleeping b~g, or other material used
+       for bedding purposes, or any stove or fire is placed, established, or maintained for
+       the purpose of maintaining a temporary place to live, whether or not such place
+       incorporates the use of any tent, lean-to, shack, or any other structure, or any vehicle
+       01· part thereof.
+
+
+
+       5.61.020 Sleeping on Sidewalks, Streets, Alleys, or Within Doorways
+       Prohibited
+       A. No person may sleep on public sidewalks, streets, or alleyways at any time as a
+       matter of individual and public safety.
+       B. No person may sleep in any pedestrian or vehicular entrance to public or private
+       property abutting a public sidewalk.
+       C. Iri addition to any other remedy provided by law, any person found in violation
+       of this section may be immediately removed from the premises.
+
+       5.61.030 Camping Prohibited
+       No person may occupy a campsite in or upon any sidewalk, street, alley, lane,
+       public right of way, park, bench, or any other publicly-owned property or under
+       any bridge or viaduct, unless (i) otherwise specifically authorized by this Code, (ii)
+       by a formal declaration of the City Manager in emergency circumstances, or (iii)
+       upon Council resolution, the Council may exempt- a special event from the
+       prohibitions of this section, if the Council finds such exemption to be in the public
+       interest and consistent with Council goals and notices and in accordance with
+       conditions imposed by the Parks and Community Services Director. Any conditions
+       imposed· will include a condition requiring that the applicant provide evidence of
+       adequate· insurance coverage and agree to indemnify the City for any liability,
+       damage or expense incurred by the City as a result of activities of the applicant.
+       Any findings by the Counsel shall specify the exact dates and location covered by
+       the exemption.
+
+
+
+
+Page 9 of 35 OPINION AND ORDER
+             Case 1:18-cv-01823-CL         Document 111        Filed 07/22/20      Page 10 of 35
+
+
+
+
+             6.46.090 Camping in Parks
+             A. It is unlawful for any person to camp, as defined in GPMC Title 5, within the
+             boundaries of the City parks.
+             B. Overnight parking of vehicles shall be unlawful. For the purposes of this section,
+             anyone who parks or leaves a vehicle parked for two consecutive hours or who
+             remains within one of the parks as herein defined for purposes of camping as
+             defined in this section for two consecutiv~ hours, without permission from the City
+             Council, between the hours of midnight and 6:00am shall be considered in violation
+             of this Chapter.
+
+             6.46.350 Temporary Exclusion from City Park Properties
+             An individual inay be issued a written exclusion order by a police officer of the
+             Public Safety Department barring said individual from all City Park properties for
+             a period of 30 days, if within a one-year period the individual:
+             A. Is issued 2 or more citations for violating regulations related to City Park
+             properties, or                                _
+             B. Is issued one or more citations for violating any state law(s) while on City Park
+             property.
+
+             Plaintiffs also challenge the appeal process for park exclusions as violating their
+
+      procedural due process rights. The language detailing the appeal procedures are found in GPMC
+
+      6.46.355:
+
+              6.46.355 Appeal and Hearing
+              If the individual who is issued a written exclusion order files a written objection to
+I             the exclusion with the City Manager within 2 business days, the matter shall be
+I
+I .           placed on the City Council's agenda not earlier than 2 days after receiving the
+I
+I
+              objection. The objection may be heard by the Council at its discretion at a regular
+              meeting, at a Council workshop, or at a special meeting. The exclusion order shall
+              remain in effect pending the hearing and decision of the Council. At the hearing the
+              staff shall provide the Council with information regarding the exclusion order and
+            · the individual shall be allowed to present relevant evidence. The staff shall have
+              the burden of proof by a preponderance of evidence.
+
+             The two camping ordinances carry a mandatory fine of $295. The fine for illegal .
+
+      sleeping is $75. GPMC 1.36.010. When unpaid, the fines increase to $537.60 and $160
+
+      respectively due to "collection fees." Johnson Deel., Ex. 9 at 5-6 (Dkt. #63-9). Plaintiffs were
+
+      provided 615 citations and 541 incident reports issued pursuant to three of these ordinances:
+
+
+
+      Page 10 of35 OPINION AND ORDER,
+         Case 1:18-cv-01823-CL        Document 111        Filed 07/22/20      Page 11 of 35
+
+
+
+
+ GPMC 5.61.020 (the anti-sleeping ordina,nc~), GPMC 5.61.030 (the anti-camping ordinance),
+
+ GPMC 6.46.090 (the anti-camping in parks ordinance). Inessa Wurscher Deel. ,, 4-5 (Dkt.
+
+. #64). Of the 615 tickets, 313 were for illegal sleeping, 129 were for illegal camping in the parks
+
+ and 182 were for illegal camping. Id., 5 (some citations were for more than one offense). The
+
+ number of citations rose from 24 tickets in 2012 to 228 tickets in 2014, a significant increase
+
+ following the 2013 Roundtable Meeting. Id.
+
+                                           DISCUSSION
+
+ I.      Grants Pass' policy and practice of punishing homelessness violates the Cruel and
+         Unusual Punishment Clause of the Eighth Amendment.
+
+             a. Martin v. Boise is controlling precedent.
+
+         The United States Constitution prohibits punishing people for engaging in unavoidable
+
+ human acts, such as sleeping or resting outside when they. have no access to shelter. Martin v.
+
+ Boise, 920 F.3d 584 (9th Cir. 2019) cert. denied2019 U.S.~LEXIS 7571 (Dec. 16, 2019). In
+
+ Martin, the Ninth Circuit held that "so long as there is a greater number of homeless individuals
+
+ in [a city] than the number of available beds [in shelters]," a city cannot punish homeless
+
+ individuals for "involuntarily sitting, lying, and sleeping in public." Id. at 617. That is, as long
+
+ as there are no emergency shelter beds available to homeless individuals, "the government
+
+ cannot criminalize indigent, homeless people for sleeping outdoors, on public property, on the
+
+ false premise they had a choice in the matter." Id. (quoting Jones v. City ofLos Angeles, 444
+
+ F.3d 1118, 1138 (9th Cir. 2006);vacated on other grounds; 505 F.3d 1006 (9th Cir. 2007)).
+
+         Martin is binding precedent on this Court. In Martin, six plaintiffs who were or had
+
+ recently been homeless residents of Boise, Idaho challenged two city ordinances that punished
+
+ homeless people for sleeping or camping in public spaces. The Boise ~•camping ordinance"
+
+ prohibited and punished the "use of 'any street~, sidewalks, parks, or public places as a camping
+
+
+  Page 11 of 35 OPINION AND ORDER.
+       Case 1:18-cv-01823-CL          Document 111       Filed 07/22/20     Page 12 of 35
+
+
+
+
+place at any time."' Id at 603. Camping was defined as "the use of public property as a
+
+temporary or permanent place of dwelling, lodging, or residence." Id. at 603-604. The Boise
+
+"disorderly conduct ordinance" prohibited "occupying, lodging, or sleeping in any building,
+
+structure, or public place, whether public or private ... without the permission of the owner or
+
+person entitled to possession or in control thereof." Id. at 604.
+
+       In this case, Grants Pass' two anti-camping ordinances prohibit "occupying a campsite"
+
+on "any publicly-owned property" in the City of Grants Pass. GPMC 5.61.030; GPMC 6.46.090.
+
+"Campsite" is defined as "any place where bedding, sleeping bag, or other material used for
+
+bedding purposes ... is placed ... for the purpose of maintaining a temporary place to live."
+
+GPMC 5.61.01 0(B). The camping ordinances apply to all public spaces in Grants Pass at all
+
+times, including parks. The camping ordinances also prohibit anyone from sleeping in their c~s
+
+for two consecutive hours within any Grants Pass park parking lot between the hours ,of midnight
+
+and 6:00 a.m. GPMC 6.46.090(B). The anti-sleeping ordinance prohibits sleeping "on public
+
+sidewalks, streets, or alleyways at any time .... " GPMC 5.61.020. Additionally, "[n]o person
+
+may sleep in any pedestrian or vehicular entrance to public or private property abutting a public
+
+sidewalk." Id These ordinances, in combination, prohibit individuals from sleeping in any
+
+public space in Grarits Pass while usint:; any type of item that falls into the category of"bedding"
+
+or is used as "bedding."
+
+       Grants Pass takes the position that Martin simply confirms that a city cannot criminalize
+
+the unavoidable act of sleeping outside when there are not enough shelter beds available. Grants
+
+Pass argues that the City amended its anti-camping ordinances to remove the word "sleeping"
+
+after Martin. On January 2, 2019, the City amended GPMC 6.46.090 by removing the word
+
+"sleeping" so that the act of "sleeping" was to be distinguished from the prohibited conduct of
+
+
+Page 12 of35 OPINION AND ORDER
+              Case 1:18-cv-01823-CL          Document 111       Filed 07/22/20      Page 13 of 35
+
+
+
+
+       "camping" under the City's Camping in the Parks Ordinance. Aaron Hisel Deel. 1112, 13, Exs.
+
+       11, 12 (Dkt. #81). The City's intent for making this change "was to make it clear that those
+
+       without shelter could engage in the involuntary acts of sleeping or resting in the City's parks but
+
+       would still be prohibited from the voluntary conduct of maintaining a 'campsite' in the parks as a
+
+       'place to live."' Defendant's Motion at 35 (Dkt. #80) (emphasis in original). The Court
+
+       appreciates the City's attempt to comply with Martin. However, Grants Pass ignores the basic
+
+       life sustaining need to keep warm and dry while sleeping in order to survive the elements. Under
+
+       the Grants Pass ordnances, if a homeless person sleeps on public property with so much as a
+
+       flattened cardboard box to separate himself from the wet cold ground, he risks being punished
+
+       under the anti-camping ordinance. Grants Pass cannot credibly argue that its ordinances allow
+
+'I .
+       sleeping in public without punishment when, in reality, the only way for homeless people to
+
+       legally sleep on public property within the City is if they lay on the ground with orily the clothing
+
+       on their backs and without their items near them. That cannot be what Martin had in mind.
+
+       Maintaining a practice where the City allows a person to "sleep" on public property, but punishes
+
+       him as a "camper" ifhe so much as uses a bundled up item of clothing as a pillow, is cruel and
+
+       unusual punishment. Therefore, this Court finds that it is not enough under the Eight
+
+       Amendment to simply allow sleeping in public spaces; the Eight Amendment also prohibits a
+
+       City from punishing homeless people for taking necessary minimal measures to keep themselves
+
+       warm and dry while sleeping when there are no alternative forms of shelter available.
+
+              As was the case in Martin, Grants Pass has far more homeless people than "practically            I
+                                                                                                               1
+                                                                                                               I
+                 1
+       available" shelter beds. In Martin, the Ninth Circuit's math reflected 867 homeless individuals         I
+       in Ada County Idaho (an unknown number. in Boise) while Boise had 354 emergency shelter
+
+       beds and 92 overflow mats. Martin 920 F.3d at 604,606. On January 30, 2019, the Point in
+
+
+
+       Page 13 of 35 OPINION AND ORDER
+        Case 1:18-cv-01823-CL          Document 111        Filed 07/22/20     Page 14 of 35
+
+
+
+
+Time Count 10 in Grants Pass counted 1,673 unduplicated individuals, 602 of whom were
+
+"homeless" and the rest of whom were ''p~ecariously housed or doubled up." Wessels Deel. ,r,r
+
+5-6 (0kt. #42). The mathematical ratio in the record as it currently stands is 602 homeless
+
+people (with another 1,071 on the verge of homelessness) in Grants Pass and, on the other side of
+
+the ledger, zero emergency shelter beds. The numbers here are clear, overwhelming, and
+
+decisive.
+
+        The Gospel Rescue Mission ("GRM") is the only entity in-Grants Pass that offers any
+
+sort of temporary program for some class members year-round.· However, GRM cannot be
+
+included in the mathematical ratio of homeless people to shelter beds because GRM has lost its
+
+designation as a HUD certified emergency shelter. Wessels Deel. ,r 12 (Dkt. #29). GRM is also
+
+considerably less accessible than even the shelters in Martin because it does not offer temporary
+
+emergency shelter and has substantial religious requirements and other restrictive rules. GRM
+
+. does not offer "emergency shelter," only a "30-day Residential Program." Bouteller Depo. p. 27
+
+lines 11-18. This program offers extended stays and is more akin to a transitional housing
+
+program than a homeless shelter. Bouteller Depo. p. 18 lines 10-15; Wessels Deel. ,r 12 (Dkt.               II
+                                                                                                          . I
+#29). Additionally, there are several strict rules for residents of GRM, including remaining                I
+
+
+
+nicotine free while_ on or off the premises and mandatory attendance to Christian church and
+
+other church affiliated activities. Even without these rules, GRM's 138 beds would not be nearly
+
+enough to accommodate the at least 602 homeless individuals in Grants Pass.
+
+       · Grants· Pass argues that Plaintiffs have alternative "realistically available" shelter outside
+
+the City on federal BLM land, Josephine County land, or state rest stops. This remarkable
+
+
+
+ 10
+   The Ninth Circuit in Martin also used PIT Counts to determine the number of homeless people in the
+ area and commented that PIT Counts typically undercount the homeless population in a community
+ because of difficulty in locating people, weather and volunteer issues. Martin at 604. ·
+ Page 14 of35 OPINION AND ORDER
+        Case 1:18-cv-01823-CL         Document 111        Filed 07/22/20     Page 15 of 35
+
+
+
+
+ argument not only fails under Martin, but it also sheds light on the City's attitude towards its
+
+ homeless citizens. Essentially, Grants Pass argues that it should be permitted to continue to
+
+ punish its homeless population because Plaintiffs have the option to just leave the City. The
+
+ City's suggestion that because it is geographically smaller than Boise or other cities, it should be
+
+ allowed to drive its homeless population onto "nearby" federal, state, or Josephine County land,
+
+ is not supported by Martin. Additionally, the record does not support the suggestion that
+
+ homeless people are welcome to live without interruption by law enforcement at these locations.
+
+ BLM land is available for recreational camping, not as a space for emergency shelter. Fed. Reg.
+
+ Vol. 70, No. 159 (Aug. 18, 2005). The campsites cost money. Aaron Hisel Deel., Ex. 1 at 52
+
+ (Dkt. #81-1). Living, establishing occupancy, or using this land for "residential purposes" is
+
+ specifically prohibited, and there are limits on how long a person can stay. Fed. Reg. Vol. 70,
+
+ No. 159; See also Gloria Johnson Deel. ,r,r 3-5; Blake Deel. ,r 15. Homeless people who attempt
+
+ to live on BLM land are subject to trespass prosecution under 43 C.F.R. 2808.10, fined $330, and
+
+ summoned to this Court. Likewise, Josephine County does not welcome non~recreational
+
+ camping in its parks. The County issued a letter from its Parks Director on November 12, 2019,
+
+ stating that "County Parks are not a good alternative for nonrecreationalcampers-individuals or
+
+ families who need a place to sleep, due to not having a permenant [sic] residents [sic]." Wessels
+
+· Deel., Ex. 1 (Dkt. #89-1). This letter urges homeless services providers not to pay for campsites
+
+ for homeless individuals in County Parks. Wessels Deel. ,r 8 (Dkt. #89). Similarly, camping,
+
+ setting up a tent, or remaining in a rest stop for more than 12 hours in a 24-hour period are
+
+ explicitly prohibited. 0 AR 734-030-0010(18).
+
+        Finally, the City lists three services offen~d within Grants Pass that similarly do not
+
+ change the equation under Martin. In February 2020, the Umpqua Community Action Network
+
+
+
+ Page 15 of 35 OPINION AND ORDER
+             Case 1:18-cv-01823-CL         Document 111        Filed 07/22/20     Page 16 of 35
+
+
+
+
+      (UCAN) opened a warming center that may hold up to 40 individuals on nights when the
+
+      temperature is either below 30 degrees or below 32 degrees with snow. Wessels Deel. ,i 9 (Dkt.
+
+     ·. #89). From the record, it appears 131 different people have stayed at the warming center since.it
+
+      opened. ld. ,i,i 9-11. As of the filing of Plaintiffs' Reply Brief, the center had been open sixteen
+
+      nights and reached capacity on every night except the first night it opened, when it had 32
+
+      occupants. Id. ,i 11. While the opening of a warming shelter is positive for the City, this
+
+      emergency warming facility is not a shelter for the purposes of the Martin analysis because the .
+
+      facility does not have beds and is not available consistently throughout the year. Id. ,i 9. Even if
+
+      the warming center did count as a shelter under HUD, the capacity of the warming center is not
+
+      large enough to accommodate the amount of homeless people in Grants Pass.
+
+              The City also referenced a "sobering center" where intoxicated individuals may be
+
+     . temporarily held and a youth shelt~r. Response Br. at 13 (Dkt. #80). The sobering centeris not a
+
+      shelter. It allows for temporary placement for "highly intoxicated" individuals while they sober
+
+      up, and for individuals who are creating a nuisance but "do not warrant a trip to jail." Aaron ·
+
+      Hisel Deel., Ex. 1 at 33 (Dkt #81-1 ). Plaintiffs claim that the sobering center has no beds and
+
+      consists of a chair with restraints and 12 locked rooms with toilets where people can sober up for
+
+      several hours. Edward Johnson Deel., Ex. 2 (Dkt. #92-2)'. Hearts with a Mission Youth Shelter
+
+      runs an 18-bed facility where minors aged 10-1 7 may stay for 72 hours,. unless they have
+
+      parental consent to stay longer. Edward Johnson Deel. ,i 4 (Dkt. #92). This shelter does not
+
+      have enough beds to serve the number of homeless individuals in Grants Pass and is not
+
+      "practically available" to class members in this case b.ecause it is reserved for minors. The
+
+      record is undisputed that Grants Pass has far more homeless individuals than it has practically
+
+      available shelter beds.
+
+
+1
+'.
+       Page 16 of35 OPINION AND ORDER
+       Case 1:18-cv-01823-CL         Document 111        Filed 07/22/20     Page 17 of 35
+
+
+
+
+       This case cannot be distinguished from the.holding in Martin. The alternative shelters
+
+suggested by the City do not change the equation set out in Martin. Because Grants Pass lacks
+
+adequate shelter for its homeless population, its practice of punishing people who have no access
+
+to shelter for the act of sleeping OF resting outside while having a blanket or other bedding to stay
+
+warm and dry constitutes cruel and unusual punishment in violation of the Eighth Amendment.
+
+           b. The Eighth Amendment prohibits cruel and unusual punishment whether
+              the punishment is designated as civil or criminal.
+
+       Grants Pass argues that the Eighth Amendment analysis does not apply to the ordinances
+
+at issue in this case because they are designated as violations and, therefore, not criminal matters.
+
+To support this assertion, Grants Pass quotes the Oregon Court of Appeals, which found "[a]
+
+violation is not a crime." State v. Dahl, 185 Or App 149, 152-56 (2002) (analyzing Oregon's
+
+statutory distinctions between crimes and civil offenses and holding, among other things, that the
+
+Fifth Amendment does not apply to violations precisely because they are not crimes). However,
+
+the label of crime or violation is not dispositive where the Eighth Amendment is concerned. The
+
+focus, for Eighth Amendment purposes, is the punishment associated with the crime, violation,
+
+or civil penalty. Even though Grants Pass labels the ordinances as violations, offenders of these
+
+violations are still subject to punishment. As the United States Supreme Court has held,
+
+       The purpose of the Eighth Amendment ... was to limit the government's power to
+       punish. See Browning-Ferris, 492 U.S. at 266-267, 275. The Cruel and Unusual
+       Punishments Clause is self-evidently concerned with punishment. 'The notion of
+       punishment, as we commonly understand it, cuts across the division between the
+       civil and the criminal law.' United States v. Halper, 490 U.S. 435, 447-448, (1989).
+
+Austin v. United States, 509 U.S. 602, 609-610 (1993).
+
+       Unlike the Fifth Amendment's Self-Incrimination Clause, the Eighth Amendment's
+
+prohibition on punishing an involuntary act or condition applies to punishment beyond
+
+"criminal" cases. Again, the Supreme Court made clear,
+
+
+Page 17 of35 OPINION AND ORDER.
+            Case 1:18-cv-01823-CL         Document 111        Filed 07/22/20     Page 18 of 35
+
+
+
+
+            [The United States] further suggests that the Eighth Amendment cannot apply to a
+            civil proceeding unless that proceeding is so punitive that it must be considered
+            criminal [citations omitted]. We disagree. Some provisions of the Bill of Rights are
+            expressly limited to criminal cases. The Fifth Amendment's Self-Incrimination
+            Clause, for example, provides: "No person ... shall be compelled in any criminal
+            case to be a witness against himself." The protections provided by the Sixth
+            Amendment are explicitly confined to "criminal prosecutions." [Citation omitted].
+            The text of the Eighth Amendment includes no similar limitation. Nor does the
+            history of the Eighth Amendment require such a limitation ...
+
+     Austin, 509 U.S. at 608.
+
+            The Supreme Court further opined that provisions of civil forfeiture were punitive-
+
+     because "a civil sanction that cannot fairly be said soiely to serve a remedial purpose, but rather
+
+     cah only be explained as also serving either retributive or deterrent purposes, is punishment, as
+
+     we have come to understand the term." Id. at 610 (emphasis in original). Ultimately, the
+
+     Supreme Court held that civil forfeiture constitutes "payments to a sovereign as punishment for
+
+     some offense, and, as such, is subjectto the limitations of the Eighth Amendment excessive fines
+
+     clause." Id. at 622.
+
+            The Court's reasoning and holding in Austin has been affirmed by subsequent decisions.
+
+     Most recently, in Timbs v. Indiana, the Supreme Court declined to overrule Austin: "We thus
+
+     decline the State's invitation to reconsider our unanimous judgment in Austin that civil in
+
+     rem forfeitures are fines for purposes .of the Eighth Amendment when they are at least partially
+II
+     punitive." Timbs v. Indiana, 139 S. Ct. 682,690 (2019).
+
+I           Violations of the Boise ordinances analyzed in Martin were misdemeanors, 920 F.3d at
+
+I    603, so the.Ninth Circuit at times used the word "criminal" in its analysis. However, a careful
+
+     reading of Martin shows that this language was not a limitation on when the Eighth
+
+     Amendment's prohibition on cruel and unusual punishment applies. The Ninth Circuit stated the
+
+     broad question that it was addressing was "[D]oes the Cruel ahd Unusual Punishments Clause of
+
+
+
+     Page 18 of35 OPINION AND ORDER
+       Case 1:18-cv-01823-CL         Document 111        Filed 07/22/20     Page 19 of 35
+
+
+
+
+·the Eighth Amendment preclude the enforcement of a statute prohibiting sleeping outside against
+
+homeless individuals with no access to alternative shelter?" Id at 615. The Ninth Circuit held
+
+that it does, quoting Jones, "the Eighth Amendment prohibits the state from punishing an
+
+involuntary act or condition if it is the unavoidable consequence of one's status or being." Id. at
+
+616. It is the punishment of a person's unavoidable status that violates the constitution, not
+
+whether that punishment is designated civil or criminal. See id The main difference between
+
+Grants Pass' punishment scheme and that of Boise's in Martin is that Grants Pass first issues
+
+fines for violations and then either issues a trespass order or excludes persons from all parks
+
+before a person is charged with misdemeanor criminal trespass. This makes no difference for
+
+Eight Amendment purposes because the result, in Boise and Grants Pass, is identical:
+
+involuntarily homeless people are punished for engaging in the unavoidable acts of sleeping or
+
+resting in a public place when they have nowhere else to go.
+
+       Additionally, as the Supreme Court noted, "whether a particular statutorily defined
+
+penalty is civil or criminal is a matter of statutory construction." United States v. Ward, 448 U.S.
+
+242, 248 (1980). In Oregon, violations are defined as criminal actions and are prosecuted in
+
+criminal proceedings. ORS 131.005(6)-(7). The Grants Pass Municipal Code uses the language
+
+and procedures of criminal law, discussing those "guilty" of code violations. GPMC
+
+1.36.0l0(A). The violations are prosecuted in the Josephine County Circuit Court by the
+
+Josephine County District Attorney's office. ORS 153.076(6). As in a criminal trial, a
+
+defendant may not be compelled to testify and the same pretrial discovery that applies in
+
+misdemeanor and felony cases applies. ORS 153.076(3)-(4). The judgment from a camping
+
+violation in Grants Pass reads, "[t]he court finds the defendant GUILTY of the charges
+
+
+
+
+Page 19 of35 OPINION AND ORDER
+       Case 1:18-cv-01823-CL          Document 111            Filed 07/22/20   Page 20 of 35
+
+
+
+
+designated CONVICTED in the section below." Edward Johnson Deel., Ex. 9 at 3-4 (Dkt#63-
+
+9).
+
+       Moreover, even if Martin and the Eighth Amendment were limited to "criminal"
+
+punishments, which they are.not, Grants Pass' enforcement scheme involves criminal
+
+punishment. Violations fqr sleeping and "camping" are an element offuture Criminal Trespass
+
+II arrests and initiate the criminal process in two common circumstances: (1) after a person is
+
+"trespassed" from an area for "camping" and either.does not leave or returns, or (2) after an
+
+officer excludes a person from a park for prohibited camping. In either situation, if that person
+
+does not move along or returns to the location, they are subject to arrest and prosecution for
+
+Criminal Trespass II. The criminalprocess is initiated w,ith the original citation and that citation
+
+is an element of the subsequent criminal trespass charge once the person is trespassed or
+
+excluded under threat of arrest for criminal 'trespassing·.
+
+       Therefore, Grants Pass' enforcement scheme is subJect to Eighth Amendment analysis.
+
+Under such analysis, the ordinances at issue and their enforcement, as applied to plaintiff class
+
+members, violate the Cruel and Unusual Punishment Clause of the Eighth Amendment.
+
+II.    Grants Pass' policy and practice of enforcing the ordinances at issue violates the
+       Excessive Fines Clause of the Eight Amendment.
+
+       Grants Pass' enforcement of the ordinances at issue also violates the Excessive Fines
+
+Clause of the Eighth Amendment. The Supreme Court has found that the phrase "nor excessive.
+
+fines imposed," in the Eighth Amendment "limits the government's power to extract payments,
+
+whether in cash or in kind, 'as punishment for some offense."' Timbs v. Indiana, 139 S.Ct. 682,
+
+687 (2019) citing United States v. Bajakajian, 524 U.S. 321, 327-328, (1998). There is a two-
+
+step inquiry in analyzing an excessive fines claim: (1) is the fine punitive, and if so, (2) is it
+
+.excessive? Bajakajian, 524 U.S. at 334.
+
+Page 20 of 35 OPINION AND ORDER
+       Case 1:18-cv-01823-CL          Document 111        Filed 07/22/20      Page 21 of 35
+
+
+
+
+       To determine when a fine is punitive, courts look to whether the fine is tied to
+
+punishment and prohibited conduct. Bajakajian, 524 U.S. at 328; Austin, 509 U.S. at 619-22;
+
+See also U.S. v. Mackby, 339 F.3d 1013 (9th Cir. 2003) (assuming a statutory fine under the False
+
+Claims Act imposed after a finding of liability in a civil trial was punitive). It does not matter if
+
+the fine imposed is characterized as criminal or civil, the salient inquiry is whether the fine at
+
+least partially serves the traditional punitive functions of retribution and deterrence. Austin, 509
+
+U.S. at 610. For example, in Wright v. Rive land, the Ninth Circuit held that a 5% deduction for
+
+the Crime Victim's Compensation Fund was punitive because there was no relationship between
+
+the deduction and the harm the defendant caused. Wright v. Riveland, 219 F.3d 905,915 (9 th Cir.
+
+2000); see also Dept. of Revenue of Montana v. Kurth Ranch, 511 U.S. 767, 778 (1994)
+
+(observing the similarities between civil and criminal punishment, the court held "Criminal fines,
+
+civil penalties, civil forfeitures, and taxes all share certain features: They generate government
+
+revenues, impose fiscal burdens on individuals, and deter certain behavior."). The Supreme
+
+Court has held that all civil penalties have some deterrent effect. U.S. v Hudson, 522 U.S. 93,
+
+102 (1997).
+
+       In this case, the Court finds that the fines imposed for violating the ordinances at issue
+
+are punitive. According to the record, the two camping ordinances carry a mandatory fine of
+
+$295. The fine for illegal sleeping is $75. When unpaid, the fines increase to $537.60 and $160
+
+respectively because of additional "collection fees." Johnson Deel., Ex. 9 at 5-6 (Dkt. #63-9).
+
+Officers have the discretion to issue warnings prior to issuing a citation, but once a citation is
+
+issued, officers have no discretion over the amount of the fine, which is "autofilled" into all
+
+camping citations. Johnson Deel., Ex. 6, Burge Depo. at 20, lines 15-21 (Dkt. #63-6); Ex. 4,
+
+Hamilton Depo at p. 84 line 23 top. 85 line 5 (Dkt. #63-4). Based on the record and minutes
+
+
+
+Page 21 of35 OPINION AND ORDER
+        Case 1:18-cv-01823-CL           Document 111         Filed 07/22/20      Page 22 of 35
+
+
+
+
+from the 2013 Roundtable Meeting, these statutory fines serve no remedial purpose and w~re
+
+intended to deter homeless individuals from residing in Grants Pass. Moreover, the ordinances
+
+themselves describe these fines as punishment. Compare GPMC 1.36.0l0(c) ("MAXIMUM
+
+FINE: except in cases where a different punishment is prescribed by any provision of this ·
+
+Code ... '') with GPMC 1.36.0I0(e) (allowing for restitutiop. to any person, or business, including
+
+the city, who has been damaged by the defendant's conduct).
+
+       Because the fines are punitive, the inquiry turns to whether the fines are excessive. The
+
+Supreme Court held that a fine violates the excessiveness standard of the Eighth Amendment if
+
+the amount of the fine is "grossly disproportionate to the gravity of the offense." Bajakajian, 524
+
+U.S. at 324, 334 ("The touchstone of the constitutional inquiry under the Excessive Fines Clause
+
+is the principle of proportionality: The amount of the forfeiture must bear some relationship to
+
+the gravity of the offense that it is designed to punish."); see also Wright v. Riveland, 219 'F .3d
+
+905, 916 (9th Cir. 2000) (following Bajakajian). In applying this standard, courts have looked to
+
+a non-exhaustive list,of several factors, including the nature of the offense, whether the violation
+
+was related to other illegal activity, and other penalties that may be imposed. 11 See generally
+
+U.S. v. Mackby, 3.39 F.3d 1013 (9th Cir. 2003).
+
+       Here, the decisiv~ consideration is that Plaintiffs are being punished for engaging in the
+
+unavoidable, biological, life-sustaining acts of sleeping and resting while also trying to stay
+
+warm and dry. Plaintiffs do not have enough money to obtain shelter, so they likely cannot pay
+
+these fines. When the fines remain unpaid, the additional collection fees are applied and the
+                                                                                        _;
+
+
+fines still remain unpaid; subjecting plaintiffs to collection efforts, the threat of driver license
+
+
+ll The Supreme Court has left open the question of whether the ability to pay the fine would be relevant to ·
+the excessiveness inquiry. Bajakajian at 340, n.15; see also Timbs at 688 quoting 4 W. Blackstone,
+Commentaries on the Laws of England 372 (1769) "[N]o man shall have a larger amercement imposed
+upon him, than his circumstances or personal estate will bear .... "
+· Page 22 of 35 OPINION AND ORDER
+            Case 1:18-cv-01823-CL          Document 111      Filed 07/22/20     Page 23 of 35
+
+
+
+
+     suspensions (Johnson Deel., Ex. 9 at 3-4 (Dkt. #63-9)), and damaged credit that makes it even
+
+    · more difficult for them to find housing, exacerbating the homeless problem in Grants Pass
+
+     (Wessels Dec. ,r11 (Dkt #65)). As the Supreme Court recognized in the cruel and unusual
+
+     punishment context, "even one day in prison would be cruel and unusual punishment for the
+
+     'crime' of having a common cold." Robinson v. California, 370 U.S. 660,667 (1962). So too
+
+     here. Fining a homeless person in Grants Pass who must sleep outside beneath a l;,lanket because
+
+     they cannot find shelter $295 ($537.60 after collection fees are inevitably assessed) is grossly
+
+     disproportionate to the "gravity of the offense." Any fine is excessive if it is imposed on the
+
+     basis of status and not conduct. For Plaintiffs, the conduct for which they face punishment is
+
+     inseparable from their status as homeless individuals, and therefore, beyond what the City may
+
+     constitutionally punish. The fines associated with violating the ordinances at issue, as applied to
+
+     Plaintiffs, are unconstitutionally excessive.
+
+            Having found that the ordinances violate the Cruel and Unusual Punishment Clause as
+
+     well as the Excessive Fines Clause of the Eight Amendment, the Court declines to decide
+
+     whether the ordinances are also unconstitutionally vague.
+
+     III.   ·The appeal process for park exclusions in Grants Pass violates procedural due
+             process rights.
+
+                a. Plaintiffs' claim that park exclusions violate procedural due process was
+                   · adequately pied and standing bas been established.
+
+            Grants Pass does not challenge the merits of plaintiffs' procedural due process claim
+
+     regarding the City's park exclusion ordinance in its response to Plaintiffs' motion for summary
+
+     judgment. Instead, Grants Pass argues that this claim was not properly pled in the operative
+
+     complaint. The Court disagrees. This claim seems to be the sole reason for the Third Amended
+
+     Complaint filed on November 13, 2019. (Dkt. #50). The only changes from the Second
+
+
+I
+!
+     Amended Complaint were to add the allegation.at paragraph 87 that, "Plaintiffs have been
+
+     Page 23 of 35 OPINION AND ORDER
+         Case 1:18-cv-01823-CL         Document 111        Filed 07/22/20     Page 24 of 35
+
+
+
+
+· excluded from Grants Pass parks without due process oflaw" and to specifically add "GPMC
+
+ 6.46.350 (the park exclusion ordinance)" to the injunctive and declaratory relief sought in this
+
+ case. Third Amended Complaint ,r 87, Prayer ,r,r 3-4 (Dkt. #50). Although the City correctly
+
+ points out that GPMC 6.46.355 (the ordinance that explains the appeal procedure) is missing
+
+ from the operative complaint, Plaintiffs made clear that they were challenging park exclusions
+
+ under the Procedural Due Process Clause. The City did not object to the amendment or ask that
+
+ it be clarified or made more specific. Therefore, the claim was pled, and the City was on notice.
+
+        Second, Grants Pass argues that if the claim was ·pled, it should be dismissed because
+
+ Plaintiffs have. not alleged or sufficiently established standing. The City argues, "plaintiffs do
+
+ not even attempt to produce a plaintiff or rely upon any individual's standing." Response at 51
+
+ (Dkt. #80). The Court disagrees. The record shows that of the 59 park exclusions produced to
+
+ Plaintiffs by the City, all were issued to homeless individuals and 42 were issued for illegal
+
+ camping. Pltf.s' Motion at 22 (Dkt. #62); Inessa Wurscher Deel. ,r 7 (Dkt. #64). Class
+
+ representative Debra Blake was issued an exclusion on September 11, 2019, after she was found
+
+ sleeping in a City Park, and a copy of that exclusion order has been provided in the record.
+
+ Johnson Deel., Ex. 9- at 7 (Dkt. #63-9). Debra Blake filed a written objection to her September
+
+ 11, 2019 banishment from all parks. The ban was "lifted" without explanation on September 25,
+
+ 2019, after half of the exclusion period had expired. Blake Deel. ,r 8 (Dkt. #90). Additionally,.
+
+ class member Dolores Nevin was excluded from all parks after being found sleeping in Riverside
+
+ Park on December 31, 2019. Wurscher Deel., Ex. 1 at 33-35 (Dkt. #64-1). Moreover, Plaintiffs
+
+ provided evidence that a park exclusion goes into effect immediately and is not stayed when
+
+ appealed. Johnson Deel., Ex. 5, McGinnis Depo p. 28 line 23 top. 29 line 5 (Dkt. #63-5); Ex. 4,
+
+
+
+
+ Page 24 of 35 OPINION AND ORDER
+       Case 1:18-cv-01823-CL         Document 111       Filed 07/22/20     Page 25 of 35
+
+
+
+
+Hamilton Depo. at p.117 lines 11-14 (Dkt. #63-4). Therefore, Plaintiffs have standing to seek
+
+prospective declaratory and injunctive relief regarding the park exclusion appeal process.
+
+       Finally, Grants Pass argues in a footnote that if the claim was pled and plaintiffs do have
+
+standing, the claim is "moot" because the current practice of the Grants Pass Department of
+                                                                                       '
+Public Safety is to not issue park exclusions until City Council "has made appropriate revisions."
+
+Response at 51, n.8 (Dkt. #80). Evidence presented by Grants Pass to show this policy change
+
+consists of a sworn declaration from Jim Hamilton, the Deputy Chief for the City of Grants Pass
+
+Department of Public Safety, in which he declares, "The current practice is that there are.no park
+
+exclusions being issued by anyone in the Grants Pass Department of Public Safety by way of
+
+written Order from me. Unless and until a revised version of the park exclusion ordinance is
+
+adopted by the City council and the related forms revised, they will not be issued." Hamilton
+
+Deel. 13 (Dkt. #83). The written order issued to the department was not attached as an exhibit.
+
+However, even if it was, policy changes not reflected in a change to statutes or ordinances does
+
+not render.a claim moot. Rosebrock, 745 F.3d at 971-72. The doctrine of voluntary cessation .
+
+has been interpreted to apply generally in cases in which an injunction is sought. "Such cases do .
+
+not become moot 'merely because the [defendant's] conduct immediately complained of has
+
+terminated, if there is a possibility of a recurrence which would be within the terms of a proper
+
+decree."' Armster v. US. District Court for the Central District of California, 806 F.2d 1347,
+
+1357 (9th Cir. 1986) (quoting P. Bator, P. Mishkin, D. Shapiro & H. Wechsler, Hart &
+
+Wechsler's The Federal Courts and the Federal System 110 (2d ed. 1973)). This is particularly
+
+true, whereas here, the "new policy... could be easily abandoned or altered in the future." Bell,
+
+709 F.3d at 901. If a municipal defendant could moot out claims simply by announcing in its
+
+cross-motion for summary judgment that it has decided not to enforce the offending ordinance,
+
+
+
+Page 25 of 35 OPINION AND ORDER
+       Case 1:18-cv-01823-CL          Document 111        Filed 07/22/20     Page 26 of 35
+
+
+
+
+the doctrine of voluntary cessation would be rendered meaningless. Plaintiffs
+                                                                   .
+                                                                              pled this claim,
+                                                                                            .
+                                                                                                         Il
+have standing to assert it, and Grants Pass cannot mo.ot this claim by asserting that it has
+
+temporarily stopped issuing park exclusions.                                                             I
+                                                                                                         I
+                                                                                                         I
+           b. Plaintiffs are entitled to summary judgment on this claim.
+                                                                                                         I
+       Under Grants Pass' enforcement scheme, police officers may issue a written exclusion
+
+order barring an individual "from all city park properties for a period of 30 days, if within a one-
+
+year period the individual is issued two or more citations for violating regulations related to city
+
+park properties, or is iss_ued one or more citations for violating any state law(s) while on city park
+
+property." GPMC·6.46.350. A park exclusion goes into effect immediately upon being issued
+
+and is not stayed while a person appeals. Johnson Deel., Ex. 5, McGinnis Depo p. 28 line 23 to
+
+p. 29 line 5 (Dkt. #63-5); Ex. 4, Hamilton Depo. at p.117 lines 11-14 (Dkt. #63-4); GPMC
+
+6.46.355. The appeal period is "within two business days" and the method of appeal is by
+
+"written objection" to the City Manager, at which point the objection will be placed on the City
+
+Council's agenda. GPMC 6._46.355.
+
+        Sixteen years ago, this Court found a substantially identical appeal process in Portland's
+
+park exclusion ordinance to violate procedural due process rights ..
+
+         The risk of erroneous deprivation is compounded by PCC 20.12:265's deficient
+         appeal procedures and lack of a pre-deprivation hearing. An exclusion takes effect
+         immediately upon issuance and is not stayed pending ·appeal. Thus, a person
+       · excluded from a park is subject to ·arrest for reentry as soon as she receives the
+         exclusion notice. An appeal may be filed within. five days, but the individual
+         continues to be excluded from the parks. Thus, even if the exclusion is ultimately
+         found t0 be invalid, the individual has been kept from the public park(s) for at.least
+         a significant portion of the thirty days.
+
+Yeakle v, City of Portland, 322 F. Supp. 2d 1119, 1130 (D. Or. 2004). For the same reasons,
+
+Grants Pass' park exclusion ordinance is also unconstitutional and violates the procedural
+
+protections of the due process clause.
+
+Page 26 of35 OPINION AND ORDER
+       Case 1:18-cv-01823-CL          Document 111        Filed 07/22/20      Page 27 of 35
+
+
+
+
+       The Yeakle court applied the three-part balancing test from Mathews v. Eldridge, 424
+
+U.S. 319, 335 (1976) to Portland's functionally identical park exclusion appeal process. The
+
+court found that excluded individuals have a strong liberty interest in avoiding unjust exclusion
+
+because of the importance of public parks as a "treasured and unmatched resource" for members
+
+of the public. 322 F. Supp 2d at 1129. In this case, that interestis even greater for Plaintiffs
+
+because several parks in Grants Pass contain benches, tables and restrooms that homeless
+
+individuals may use for basic activities of daily life when they have no alternative place to dwell.
+
+The court also found that "the risk of erroneous deprivation under the present procedure is
+
+considerable" given the lack of pre-deprivation process and the lack of "any evidentiary
+
+standard." Id at 1130. The same is true here. There is no requirement in the ordinance that the
+
+Grants Pass police officer have enough evidepce or reasonable suspicion of the excludable
+
+conduct to issue an exclusion or make an arrest. The officer need not witness the violation or
+
+have any other reliable information that a violation occurred under the language of the ordinance.
+
+Further, just like in Yeakle, "a person is subject to arrest for reentry as soon as she receives the
+
+exclusion notice" and "even if the exclusion is ultimately found to be invalid, the individual has
+
+
+                                                                   .
+been kept from the public parks for at least a significant portion of the thirty days." Id. The
+
+Yeakle Court concluded that "a pre-deprivation hearing or other procedural safeguard would not
+
+unduly burden the government" and "there would be no additional burden on the City if the park
+
+exclusions were simply stayed in the event that an individual filed an appeal." Id at 1131. For
+
+the same reasons, the procedures for appealing park exclusions in Grants Pass violatePlaintiffs'
+
+procedural due process rights.
+
+
+
+
+Page 27 of35 OPINION AND ORDER
+        Case 1:18-cv-01823-CL         Document 111        Filed 07/22/20     Page 28 of 35
+
+
+
+
+ IV.    Plaintiffs are denied summary judgment on their Equal Protection Claim.
+
+        The Equal Protection Clause guarantees that "all persons similarly circumstanced shall be
+
+ treated alike." Plyler v. Doe, 457 U.S. 202,216 (1982). Plaintiffs allege selective enforcement
+
+ of the ordinances at issue. As such, they "must demcmstrate that enforcement_ had a
+
+. discriminatory effect and the police were motivated by a discriminatory purpose." Rosenbaum v.
+
+ City and County ofSan Francisco, 484 F.3d 1142, 1152 (9th Cir. 2007). Further, because the
+
+ class seeks to enjoin enforcement, they must demonstrate that the selective enforcement "is part
+
+ of a 'policy, plan, or a pervasive pattern."' Id. at 1153 (quoting Thomas v. County ofLos ·
+
+ Angeles, 978 F.2d 504, 509 (9th Cir. 1993)).
+
+        Plaintiffs did not carry their burden of demonstrating that the City's ordinances were
+
+ selectively enforced and that enforcement was motivated by a discriminatory purpose under the
+
+ summary judgment standard. The evidence relied on by Plaintiffs to prove this claim are the
+                                                                                                    ·I
+ minutes from the 2013 Roundtable Meeting and deposition testimony from two Grants Pass              i
+                                                                                                     I
+ police officers. The City disputes this evidence as proof of selective enforcement. The City
+
+ argues that deposition testimony from two knowledgeable police officers that they "could not
+
+ remember" enforcing these ordinances against a non-homeless individual is not enough for the
+
+ Court to conclude that these ordinances were selectively enforced as a matter of law. The Court
+
+ agrees. Moreover, the City provided its Department of Public Safety Policy Manual, which
+
+ specifically includes instructions to officers to not discriminate against homeless individuals.
+
+ See Hamilton Deel., Ex. 1 (Dkt. #83-1). Therefore, facts surrounding the issues of whether the
+
+ City's enforcement scheme had a discriminatory effect and whether the police were motivated by
+
+ a discriminatory purpose are in dispute. As a result, Plaintiffs are denied summary judgment on
+
+· their equal protection claim.
+
+
+
+ Page 28 of35 OPINION AND ORDER
+       Case 1:18-cv-01823-CL          Document 111        Filed 07/22/20     Page 29 of 35
+
+
+
+
+V.     Plaintifrs are denied summary judgment on their Substantive Due Process Claim.
+
+       The substantive due process clause of the Fourteenth Amendment forbids the government
+
+from depriving a person oflife, liberty, or property when the government acts with deliberate
+
+indifference or reckless disregard for that person's fundamental rights. Tennison v. City &
+
+County ofS.F., 570 F.3d 1078, 1089 (9th Cir. 2009); Porter v. Osborn, 546 F.3d 1131, 1137-39
+
+(9th Cir. 2008). A plaintiff establishes a substantive due process violation by showing the
+
+defendant deprived him of his life, liberty, or property and engaged in "conscience shocking.
+
+behavior." Brittain v. Hansen, 451 F.3d 982,991 (9th Cir.. 2006). An official's conduct may
+
+shock the conscience where the official acts with deliberate indifference or reckless disregard for
+
+the plaintiff's rights in situations where the official had the opportunity to deliberate. Tennison,
+
+570 F.3d at 1089; Porter, 546 F.3d atl 137-39.
+
+       Plaintiffs argue they have a protected liberty interest in being present in public spaces in
+
+Grants Pass. Plaintiffs cite Morales, which found "it is apparent that an individual's decision to
+
+remain in a public place of his choice is as much a part of his liberty as the freedom of movement
+
+inside frontiers that is 'a part of our heritage,' or the right to move 'to whatsoever place one's
+
+own inclination may direct' identified in Blackstone's Commentaries." 27 U.S. at 53:.54 (citing
+
+Williams v. Fears, 179 U.S. 270,274 (1900); Papachristou v. Jacksonville, 405 U.S. 156, 164
+
+(1972); Kentv: Dulles, 357 U.S. 116, 126 (1958); 1 W. Blackstone, Commentaries on the Laws
+
+of England 130 (1765)). At least three Courts of Appeals have followed Morales and
+
+acknowledged a Hberty interest to remain in a place open to the public. See Vincent v. City of
+
+Sulphur, 805 F.3d 543, 548 (5th Cir. 2015) ("Supreme Court decisions amply support the
+
+proposition that there is a general right to go to or remain on public property for lawful purposes
+
+...."); Catron v. City ofSt. Petersburg, 658 F.3d 1260, 1266 (11th Cir. 2011) ("Plaintiffs have a
+
+
+
+Page 29 of35 OPINION AND ORDER
+       Case 1:18-cv-01823-CL          Document 111        Filed 07/22/20      Page 30 of 35
+
+
+
+
+constitutionally protected liberty interest to be in parks or on other city lands of their choosing
+
+that are open to the public generally."); Kennedy v. City of Cincinnati, 595 F.3d 327, 336 (6th
+
+Cir. 2010) ("[I]t is clear
+                        . that Kennedy had a liberty interest
+                                                      .
+                                                              'to remain in a public place of his
+
+choice' and that defendants interfered with this interest.").
+
+       However, even if this Court were to find that Plaintiffs have a liberty interest to remain in
+
+City parks or other City lands that are open to the public generally, Plaintiffs have not provided
+
+this Court with controlling authority to convince the Court that Plaintiffs have a liberty interest to
+
+sleep or camp in a public place. Moreover, Plaintiffs have not carried their burden of showing
+
+that the City engaged in "conscience shocking behavior" under the summary judgment standard.
+
+This Court's holding that the enforcement of Grants Pass' ordinances violate the Eight
+
+Amendment does not automatically translate to a finding that Grants Pass officials acted with
+
+deliberate indifference or reckless disregard for Plaintiffs' fundamental rights. Whether Grants
+
+Pass' conduct shocks_ the conscience is a question of material fact. Therefore, Plaintiffs are
+                                                                                                         i
+denied summary judgment on their substantive due process claim. ·
+                                                                                                         I
+VI.    Conclusion                                                                                        I
+       The holding in this case does not say that Grants Pass must allow homeless camps to be
+
+set up at all times in public parks. Just like in Martin, this holding in no way dictates to a local
+                                                                                                         '
+government that it must provide sufficient shelter for the homeless,. or allow anyone who wishes
+
+to sit, lie, or sleep on the street at any time and at any place. See Martin, 920 F.3d 584, 6_17. Nor
+
+does this holding "cover individuals who do have access to adequate temporary shelter, whether
+
+they have the means to pay for it or because it is realistically available to them for free, but who
+
+choose not to use it." Id at n. 8. The City may implement time and place restrictions for when
+
+homeless individuals may use their belongings to keep warm and dry and when they must have
+
+their belonging packed up.· The City may also implement an anti-camping ordinance that is more
+
+Page 30 of 35 OPINION AND ORDER
+       Case 1:18-cv-01823-CL           Document 111       Filed 07/22/20     Page 31 of 35
+
+
+
+
+specific than the one in place now. For example, the City may ban the use of tents in public
+
+parks without going so far as to ban people from using any bedding type materials to keep warm
+
+and dry while they sleep. The City may also consider limiting the amount of bedding type
+
+materials allowed per individual in public places. Moreover, this holding does not limit Grants
+
+Pass' ability to enforce laws that actually further public health and safety, such as laws restricting
+
+littering, public urination or defecation, obstruction of roadways, possession or distribution of
+
+illicit substances, harassment, or violence. Grants Pass would retain a large toolbox for.
+
+regulating public space without violating the Eight Amendment.
+
+       There is no doubt that homelessness is a serious public health concern. Homeless
+
+individuals have higher rates of chronic physical and mental health conditions, increased rates of
+
+mortality, and related diseases and co-occurring disorders. 12 With the lack of access to the most
+
+basic of human needs, including running water, toilets, and trash disposal, infectious diseases-
+
+like COVID-19-can spread quickly. Uprooting homeless individuals, without providing them
+
+with basic sanitation and waste disposal needs, does nothing more than shift a public health crisis
+
+from one location to another, potentially endangering the health of the public in both locations.
+
+This concern is particularly acute during the current COVID-19 pandemic. As the U.S. Centers
+
+for Disease Control and Prevention (the "CDC") explained in its Interim Guidance/or
+
+Responding to Coronavirus Disease 2019 (COVID-19) among People Experiencing Unsheltered
+
+Homelessness: Unless individual housing units are available, do not clear encampments during
+
+community spread of COVID-19 .
+
+      . The Court encourages Grants Pass to work with local homeless services experts and
+
+mental health professionals to develop training programs that cover techniques and tools for
+
+
+
+12 Housing Not Handcuffs, supra note 2 at 68.
+
+
+Page 31 of 35 OPIN10N AND ORDER
+                Case 1:18-cv-01823-CL        Document 111         Filed 07/22/20      Page 32 of 35
+
+
+
+
+      interacting with homeless individuals and for deescalating mental health crises. For example, the
+
+      City of Eugene, Oregon has used the services from an organization called CAHOOTS ("Crisis
+
+      Assistance Helping Out on the Streets") to provide free "immediate stabilization in cases of
+
+     · urgentmedical need or psychological crisis, assessment, information referral, advocacy [and] (in
+
+      some cases) transportation to the next step in treatment" to the people of Eugene, Oregon. 13 As
+
+      The Wall Street Journal...noted, Gary Marshall, a 64-year-old who previously lived on the streets
+
+      of Eugene, said the police approach was "name, serial number and up against the van:" In
+
+      contrast, when he was having one of his frequent panic attacks, CAHOOTS counselors would
+l.
+     · bring the him inside and talk him down, he said. 14
+
+                Such trainings have also been proven to be effective in Miami-Dade County, Florida.
+
+I
+I.
+      Specifically, "providing mental health de-escalation training to [its] police officers and 911
+
+      dispatchers enabled [the county] to divert more than 10,000 people to services or safely
+
+      stabilizing situations without arrest." 15 The number of people in jail, in turn, fell by nearly 49%,
+
+      which allowed the county to close an entire jail facility, thereby saving nearly $12 million a
+
+      year.16
+
+            · The City of Medford, Oregon, has also developed new strategies for addressing the
+
+      homeless crisis in its community. The City of Medford worked with Rogue Retreat, a nonprofit
+
+      group, to open Hope Village in November 2017. 17 Hope Village is the first tiny homes
+
+
+      13 CAHOOTS, https://whitebirdclinic.org/cahoots/ (last visited Mar. 26, 2020); Mobile Crisis Services in
+
+      Eugene and Springfield, White Bird Clinic CAHOOTS, https://whitebirdclinic.org/wp-
+      content/uploads/2019/04/11 x8.5 _ trifold_brochure_cahoots.pdf. · .
+      14 Zusha Elinson, When Mental-Health Experts, Not Police, Are ihe .First Responders, THEWALL
+
+      STREET JOURNAL (Nov. 24, 2018), https://www.wsj.com/articles/when-mental-healthexperts-not-
+      police-are-the-first-responders-·1543071600.
+      15
+         Housing Not Handcuffs, supra note 2 at 98.
+      16 Jd
+      17 Rogue Retreat, Hope Village, https://www.rogueretreat.com/housing-programs/hope-village/ (last
+
+      visited Jul. 17, 2020). ·
+      Page 32 of35 OPINION AND ORDER
+         Case 1:18-cv-01823-CL           Document 111         Filed 07/22/20       Page 33 of 35
+
+
+
+
+.community in Southern Oregon that provides short term transitional shelter and case
+
+managem.ent for individuals and families to help move from homelessness into long term
+
+housing. 18 The idea of Hope Village was created in 20J3, when Rogue Retreat, St. Vincent
+
+DePaul, and the Jackson County Homeless Taskforce began researching and visiting other
+
+viHages in Oregon to find creative ways to serve the homeless in Jackson County. 19 Hope
+
+Village started with 14 units, each 8 feet by IO feet, plus a communal kitchen, laundry and
+
+shower facilities. Hope Village began operating under a one-year agreement with the city, and in
+
+less than a year, the Medford City Council approved doubling the size of the village and signed a
+
+new, two-year agreement with Rogue Retreat. 20 Medford city officials didn't create the project,
+
+didn't build the units, and doesn't operate the village. However, city leaders supported the
+                                                                       .                    .
+
+concept from the beginning, offering a city-owned property for the village. 21 When neighboring
+
+businesses and other property owners objected to that location, the City of Medford continued.to
+
+offer support and encouragement, culminating in a new'location. 22 Hope Village now sits on
+
+property owned by the City of Medford ~d another property leased by Rogue Retreat. 23
+
+Residents of Hope Village are required to attend case .management meetings, counseling
+
+sessions, and work on permanent ways to stay off of the streets. Rogue Retreat says the average
+
+
+
+ts Id.
+19 Id.
+20 Mail Tribune Editorial Board, Medford can be proud ofHope Village, THE MAIL TRIBUNE (Aug. 4,
+2019), https://mailtribune.com/opinion/editorials/medford-can-be-proud-of-hope-village.
+21 Id.
+22
+   Id; see also April Ehrlich, Law Enforcement Officials Argue Rural Homeless Services Worsen
+Problem, NPR (Jan. 21, 2020), https ://www.npr.org/2020/01/21/797 497926/law-enforcement-officials-:-
+argue-rural-homeless-services-worsen-problem ("Hope Village in Oregon faced some pushback in its
+early stages a few years ago. Some people feared that it would increase crime and generate litter. But
+resident Buckshot Cunningham says those fears proved to be wrong. 'Look at this place,' he says,
+motioning to the neat row of cottages. 'It's clean; it's beautiful. And it stays that way seven days a week,
+all year round. It's pretty simple."').
+23
+   Mail Tribune Editorial Board, Medford can be proud of Hope Village, THE MAIL TRIBUNE (Aug. 4,
+2019), https://mailtribune.com/opinion/editorials/medford-can-be-proud-of-hope-village.
+Page 33 of35 OPINION AND ORDER
+         Case 1:18-cv-01823-CL        Document 111        Filed 07/22/20     Page 34 of 35
+
+
+
+
+stay at Hope Village is around four months, and the program has a 62 percent success rate.
+
+According to Rogue Retreat, this means 6 out of 10 people in the program successfully move
+
+away from homelessness. 24
+
+         As the League of Oregon Cities noted in its amicus brief, "Oregon~ s cities are obligated
+
+to provide safe and livable communities for all residents." Cities Br. at 2 (Dkt. #87). Laws that
+
+punish people because they are unhoused and have no other place to go undermine cities' ability
+
+to fulfill this obligation. Indeed, enforcement of such "quality of life laws" do nothing to cure
+
+the homeless crisis in this country. Arresting the homeless is almost never an adequate solution
+
+because, apart from the constitutional impediments, it is expensive, not rehabilitating, often a
+
+waste of limited public re~ources, and does nothing to serve those homeless individuals who
+    .-                                 .
+
+
+suffer from mental illness and substance abuse addiction.
+
+         Quality of life laws erode the little trust that remains between homeless individuals and
+
+law enforcement officials. This erosion of trust not only increases the risk of confrontations
+
+between law enforcement and homeless individuals, but it also makes it less likely that homeless
+
+individuals wiH cooperate with law enforcement. 25 -Moreover, quality of life laws, even civil
+
+citations, contribute to a cycle of incarceration and recidivism. Indeed, civil citations requiring
+
+appearance in court can lead to warrants for failure to appear when homeless people, who lack a
+
+physical address or phone number, do not receive notice ofrelevant hearings and wind up
+
+incarcerated as a result. 26 Moreover, unpaid civil citations can impact a person's credit history
+
+and be a direct bar to housing access in competitive rental markets where credit history is a factor
+
+
+
+
+24 Madison LaBerge, New tiny home village in Grants Pass for homeless population, FOX 26 (June 10,
+
+2020), https://fox26medford.com/new-tiny-home-village-in-grants-pass-for-homeless-population/
+25
+   H9using Not Handcuffs, supra note 2 at 65.
+26
+   Id at 52. ·
+Page 34 of 35 OPINION AND ORDER
+            Case 1:18-cv-01823-CL         Document 111        Filed 07/22/20     Page 35 of 35
+
+
+
+
+     in tenant selection. In this way, civil penalties can prevent homeless people from accessing the
+
+     very housing that they need to move from outdoor public spaces to indoor private ones.
+
+            There are many options available to Grants Pass to prevent the erection of encampments
+
+     that cause public health and safety concerns without violating the Eight Amendment. The Court
+
+     reminds governing bodies of the importance pf empathy and thinking outside the box. We must
+
+     try harder to pi:otect our most vulnerable citizens. Let us not forget that homeless individuals are
+
+     citizens just as much as those fortunate enough to have a secure living space.
+
+                                                  ORDER
+            For the foregoing reasons, Plaintiffs' Motion for Summary Judgment (Dkt. No. 62) is
+
+     GRANTED in part and DENIED in part, and Defendant's Motion for Summary Judgment (Dkt.
+
+     No. 80) is DENIED.
+
+            IT IS SO ORDERED and DATED this 22 nd day of July, 2020:
+
+
+
+
+                                                   /s/ Mark D. Clarke
+                                                   MARK D. CLARKE
+                                                   United States Magistrate Judge
+
+
+
+
+     Page 35 of 35 OPINION AND ORDER
+l
+I
+I.
+1I
+

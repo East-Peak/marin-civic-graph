@@ -1,0 +1,56 @@
+{
+  "source_id": "ninth-circuit-grants-pass-amended-opinion",
+  "capture_id": "ninth-circuit-grants-pass-amended-opinion__2026-04-12",
+  "capture_date": "2026-04-12",
+  "entry_url": "https://cdn.ca9.uscourts.gov/datastore/opinions/2023/07/05/20-35752.pdf",
+  "fetch_strategy": "direct_pdf_official",
+  "generated_at": "2026-04-12T22:12:09Z",
+  "artifacts": [
+    {
+      "artifact_path": "data/raw/ninth-circuit-grants-pass-amended-opinion/2026-04-12/opinion.pdf",
+      "content_type": "application/pdf",
+      "artifact_type": "pdf",
+      "title": "Order and Amended Opinion",
+      "published_at": "2023-07-05",
+      "page_count": 155,
+      "court_name": "U.S. Court of Appeals for the Ninth Circuit",
+      "docket_number": "20-35752 / 20-35881",
+      "text_path": "data/extracted/ninth-circuit-grants-pass-amended-opinion/opinion.txt",
+      "word_count": 45085
+    }
+  ],
+  "candidate_signals": {
+    "actor_hits": [
+      "Gloria Johnson",
+      "John Logan",
+      "City of Grants Pass"
+    ],
+    "place_hits": [
+      "Grants Pass",
+      "Oregon"
+    ],
+    "issue_hits": [
+      "homelessness",
+      "encampments",
+      "camping ordinance",
+      "public property",
+      "Eighth Amendment",
+      "Martin v. Boise"
+    ],
+    "legal_refs": [
+      "20-35752",
+      "20-35881",
+      "72 F.4th 868",
+      "50 F.4th 787",
+      "Order and Amended Opinion"
+    ],
+    "procedural_dates": [
+      "2022-09-28 original opinion filed",
+      "2023-07-05 amended opinion"
+    ]
+  },
+  "notes": [
+    "Official Ninth Circuit PDF for the Grants Pass appeals.",
+    "The PDF text says 'Filed September 28, 2022; Amended July 5, 2023.' The bundle uses the amended date as the controlling appellate-opinion date."
+  ]
+}

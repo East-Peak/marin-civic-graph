@@ -166,6 +166,9 @@ Start narrow:
 - [Boyd TRO Extract](./data/extracted/san-rafael-boyd-tro-order/2026-04-12.json)
 - [Boyd Preliminary-Injunction Extract](./data/extracted/san-rafael-boyd-preliminary-injunction-order/2026-04-12.json)
 - [Legal Precedent 01 Bundle](./data/normalized/legal-precedent-01/bundle-01.json)
+- [Grants Pass District Opinion Extract](./data/extracted/grants-pass-district-opinion-order/2026-04-12.json)
+- [Grants Pass District Judgment Extract](./data/extracted/grants-pass-district-judgment/2026-04-12.json)
+- [Grants Pass Ninth Circuit Extract](./data/extracted/ninth-circuit-grants-pass-amended-opinion/2026-04-12.json)
 - [Grants Pass Docket Extract](./data/extracted/scotus-grants-pass-docket/2026-04-12.json)
 - [Grants Pass Opinion Extract](./data/extracted/scotus-grants-pass-opinion/2026-04-12.json)
 - [Legal Precedent 02 Bundle](./data/normalized/legal-precedent-02/bundle-01.json)
@@ -217,10 +220,10 @@ This repo started as a planning workspace and now includes the first live implem
   - tied that case back into the August 19, 2024 item `5.a` ordinance / resolution chain and the sanctioned-camping program
   - preserved the remaining provenance gap explicitly: the TRO and preliminary-injunction orders are captured as public filed-order copies, not yet from a court-hosted docket surface
 - second normalized legal bundle now exists as `legal-precedent-02`:
-  - captured the official Supreme Court docket and slip opinion for `City of Grants Pass v. Johnson`
-  - normalized the first external controlling-precedent `Case`, `Proceeding`, and `CaseParticipation` objects
+  - captured the District of Oregon opinion and judgment, the official Ninth Circuit amended opinion, and the official Supreme Court docket and slip opinion for `City of Grants Pass v. Johnson`
+  - normalized district, appellate, and Supreme Court `Case`, `Proceeding`, and `CaseParticipation` objects plus an explicit case-lineage crosswalk
   - tied San Rafael's June 28 statement, September 2 explainer, and the August 19 response chain back to the Supreme Court precedent through an explicit crosswalk
-  - preserved the next legal comparison gap explicitly: the district-court and Ninth Circuit Grants Pass chain is not yet normalized
+  - preserved the remaining supporting-provenance gap explicitly: the San Francisco amicus brief PDF and a direct district-court docket surface are not yet captured
 - source registry seeds
 - source-registry format now expanded to capture platform family, backfill target, change signal, and source-specific quirks
 - source-adapter operations note added to document municipality/county source idiosyncrasies, historical backfill planning, and recurring sync strategy

@@ -347,18 +347,33 @@ Mirror the question here when it affects:
 
 ### OQ-031: Grants Pass lower-court chain depth
 
-- `status`: watch
+- `status`: resolved
 - `layer`: legal / precedent normalization
 - `scope`: `legal-precedent-02`
 - `source refs`:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/legal-precedent-02/bundle-01.json)
-  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/scotus-grants-pass-docket/2026-04-12.json)
-  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/scotus-grants-pass-opinion/2026-04-12.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/grants-pass-district-opinion-order/2026-04-12.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/grants-pass-district-judgment/2026-04-12.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/ninth-circuit-grants-pass-amended-opinion/2026-04-12.json)
   - [legal-precedent-02.md](/Users/tammypais/projects/marin-civic-graph/docs/legal-precedent-02.md)
 - `question`: Should the repo pull the district-court injunction and Ninth Circuit opinion that the Supreme Court reversed and remanded into the same Grants Pass bundle, or leave them for a lower-court companion bundle?
-- `why it matters`: The current Grants Pass slice is already strong enough for controlling-precedent and local-posture joins, but deeper doctrinal comparison still wants the lower-court chain.
-- `current note`: `legal-precedent-02` now has the official Supreme Court docket and slip opinion plus official San Rafael and San Francisco response records. The remaining question is where to draw the object boundary for the lower-court chain.
-- `next evidence`: capture the district-court injunction and the Ninth Circuit opinion, then decide whether they should live inside `legal-precedent-02` or in a separate lower-court companion slice.
+- `why it matters`: The legal lane needed a stable way to represent district, appellate, and Supreme Court phases without collapsing them into one case node.
+- `resolution note`: Resolved in favor of keeping the lower-court chain inside `legal-precedent-02` as separate but related `Case` objects. The bundle now includes the District of Oregon opinion and judgment, the official Ninth Circuit amended opinion, and a case-lineage crosswalk through the Supreme Court phase.
+
+### OQ-032: Grants Pass supporting-provenance gap
+
+- `status`: watch
+- `layer`: legal / precedent completeness
+- `scope`: `legal-precedent-02`
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/legal-precedent-02/bundle-01.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/grants-pass-district-opinion-order/2026-04-12.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/grants-pass-district-judgment/2026-04-12.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/ninth-circuit-grants-pass-amended-opinion/2026-04-12.json)
+  - [legal-precedent-02.md](/Users/tammypais/projects/marin-civic-graph/docs/legal-precedent-02.md)
+- `question`: Do we need the San Francisco amicus brief PDF itself or a direct district-court docket surface before `legal-precedent-02` is strong enough for import?
+- `why it matters`: The core precedent chain is now real, so the remaining question is provenance and completeness of supporting advocacy and docket surfaces rather than whether the legal model works.
+- `next evidence`: capture the public amicus-brief PDF linked from the SF City Attorney page and, if a stable free district docket path is available, add it without disturbing the current case and record IDs.
 
 ### OQ-016: San Rafael local Form 803 filing surface
 

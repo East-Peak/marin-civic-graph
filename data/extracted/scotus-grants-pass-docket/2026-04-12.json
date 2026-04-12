@@ -4,7 +4,7 @@
   "capture_date": "2026-04-12",
   "entry_url": "https://www.supremecourt.gov/docket/docketfiles/html/public/23-175.html",
   "fetch_strategy": "static_html_manual_bundle",
-  "generated_at": "2026-04-12T21:56:11Z",
+  "generated_at": "2026-04-12T22:12:09Z",
   "artifacts": [
     {
       "artifact_path": "data/raw/scotus-grants-pass-docket/2026-04-10/source.html",

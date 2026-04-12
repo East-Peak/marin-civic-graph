@@ -4,7 +4,7 @@
   "capture_date": "2026-04-12",
   "entry_url": "https://www.supremecourt.gov/opinions/23pdf/23-175_19m2.pdf",
   "fetch_strategy": "direct_pdf_linked_from_official_docket",
-  "generated_at": "2026-04-12T21:56:11Z",
+  "generated_at": "2026-04-12T22:12:09Z",
   "artifacts": [
     {
       "artifact_path": "data/raw/scotus-grants-pass-opinion/2026-04-12/opinion.pdf",
@@ -49,6 +49,6 @@
   },
   "notes": [
     "Official Supreme Court slip opinion PDF captured directly from the docket-linked opinion URL.",
-    "This is the controlling precedent record for the repo's Grants Pass legal bundle."
+    "This is the controlling precedent record for the repo's Grants Pass bundle."
   ]
 }

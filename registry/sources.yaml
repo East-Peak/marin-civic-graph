@@ -1400,6 +1400,102 @@ sources:
       - Official slip opinion PDF linked directly from the public docket page.
       - This is the controlling-precedent record for the Grants Pass bundle.
 
+  - source_id: grants-pass-district-opinion-order
+    label: Grants Pass District of Oregon Opinion and Order
+    owner_type: external
+    owner_id: district-of-oregon
+    jurisdiction_id: oregon
+    case_study_ids:
+      - legal-precedent-02
+    source_category: litigation
+    source_type: pdf
+    entry_url: https://clearinghouse.net/doc/136123/
+    discovery_urls:
+      - https://clearinghouse.net/case/43966/
+      - https://clearinghouse.net/doc/136123/
+    fetch_strategy: direct_pdf_from_clearinghouse_doc_page
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - case
+      - proceeding
+      - document:opinion_and_order
+      - case_participation
+    cadence: manual
+    history_depth: single_record
+    source_tier_default: A
+    robots_notes: public Clearinghouse document page backed by RECAP-sourced filed-order copy
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - District of Oregon July 22, 2020 opinion and order underlying the later Ninth Circuit and Supreme Court phases.
+      - Strong public filed-order copy, but not yet a direct free court-hosted docket capture.
+
+  - source_id: grants-pass-district-judgment
+    label: Grants Pass District of Oregon Judgment
+    owner_type: external
+    owner_id: district-of-oregon
+    jurisdiction_id: oregon
+    case_study_ids:
+      - legal-precedent-02
+    source_category: litigation
+    source_type: pdf
+    entry_url: https://clearinghouse.net/doc/136482/
+    discovery_urls:
+      - https://clearinghouse.net/case/43966/
+      - https://clearinghouse.net/doc/136482/
+    fetch_strategy: direct_pdf_from_clearinghouse_doc_page
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - case
+      - proceeding
+      - document:judgment
+      - case_participation
+    cadence: manual
+    history_depth: single_record
+    source_tier_default: A
+    robots_notes: public Clearinghouse document page backed by RECAP-sourced filed-order copy
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - District of Oregon August 26, 2020 judgment entering the injunction terms tied to the Grants Pass district case.
+      - Strong public filed-order copy, but not yet a direct free court-hosted docket capture.
+
+  - source_id: ninth-circuit-grants-pass-amended-opinion
+    label: Ninth Circuit Order and Amended Opinion in Johnson v. City of Grants Pass
+    owner_type: external
+    owner_id: ninth-circuit
+    jurisdiction_id: united-states
+    case_study_ids:
+      - legal-precedent-02
+    source_category: litigation
+    source_type: pdf
+    entry_url: https://cdn.ca9.uscourts.gov/datastore/opinions/2023/07/05/20-35752.pdf
+    discovery_urls:
+      - https://cdn.ca9.uscourts.gov/datastore/opinions/2023/07/05/20-35752.pdf
+      - https://clearinghouse.net/case/43966/
+    fetch_strategy: direct_pdf_official
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - case
+      - proceeding
+      - document:amended_opinion
+      - case_participation
+    cadence: manual
+    history_depth: single_record
+    source_tier_default: A
+    robots_notes: official Ninth Circuit PDF datastore path
+    review_risk: low
+    dedupe_key_strategy: docket_number_plus_amended_date
+    notes:
+      - Official Ninth Circuit order and amended opinion PDF for the Grants Pass appeals.
+      - The opinion text says the appeal was filed September 28, 2022 and amended July 5, 2023; use the amended date for the controlling appellate record.
+
   - source_id: sf-city-attorney-coalition-injunction-appeal
     label: SF City Attorney Opening Brief Post in Coalition on Homelessness Appeal
     owner_type: external

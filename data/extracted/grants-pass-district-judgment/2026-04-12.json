@@ -1,0 +1,58 @@
+{
+  "source_id": "grants-pass-district-judgment",
+  "capture_id": "grants-pass-district-judgment__2026-04-12",
+  "capture_date": "2026-04-12",
+  "entry_url": "https://clearinghouse.net/doc/136482/",
+  "fetch_strategy": "direct_pdf_from_clearinghouse_doc_page",
+  "generated_at": "2026-04-12T22:12:09Z",
+  "artifacts": [
+    {
+      "artifact_path": "data/raw/grants-pass-district-judgment/2026-04-12/order.pdf",
+      "content_type": "application/pdf",
+      "artifact_type": "pdf",
+      "title": "Judgment",
+      "published_at": "2020-08-26",
+      "page_count": 3,
+      "court_name": "U.S. District Court, District of Oregon",
+      "docket_number": "1:18-cv-01823-CL",
+      "text_path": "data/extracted/grants-pass-district-judgment/order.txt",
+      "word_count": 499
+    }
+  ],
+  "candidate_signals": {
+    "actor_hits": [
+      "Debra Blake",
+      "Gloria Johnson",
+      "John Logan",
+      "City of Grants Pass",
+      "Mark D. Clarke"
+    ],
+    "place_hits": [
+      "Grants Pass",
+      "Oregon"
+    ],
+    "issue_hits": [
+      "homelessness",
+      "encampments",
+      "camping ordinance",
+      "public property",
+      "Eighth Amendment",
+      "park exclusion ordinance"
+    ],
+    "legal_refs": [
+      "Case No. 1:18-cv-01823-CL",
+      "Judgment",
+      "court enjoins defendant",
+      "GPMC 5.61.020",
+      "GPMC 5.61.030",
+      "GPMC 6.46.090"
+    ],
+    "procedural_dates": [
+      "2020-08-26 judgment entered"
+    ]
+  },
+  "notes": [
+    "District of Oregon judgment captured from the Clearinghouse document page for document 114.",
+    "The judgment is short, but it directly enters the injunction terms and ties back to Opinion and Order 111."
+  ]
+}

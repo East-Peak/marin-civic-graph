@@ -30,6 +30,11 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
   - Keep the legal lane normalized-only for now; the next real gap is lower-court chain depth, not whether the controlling precedent record exists.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-grants-pass-should-enter-the-legal-lane-as-an-official-precedent-bundle.md`
 
+- **The Grants Pass lower-court chain should stay inside `legal-precedent-02` as separate related cases**
+  - Keep the District of Oregon phase, the Ninth Circuit phase, and the Supreme Court phase in one precedent bundle, but preserve them as separate `Case` objects connected by lineage rather than flattening them into one docket identity.
+  - Treat the district opinion and judgment as strong public filed-order copies, the Ninth Circuit amended opinion as official court-origin, and the remaining gap as supporting-provenance completeness rather than core precedent absence.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-grants-pass-lower-court-chain-should-live-inside-legal-precedent-02.md`
+
 - **Active projects need a repo-local running decision index**
   - Keep a compact `docs/decision-log.md` in the repo, with detailed rationale still living in workspace decisions.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-active-projects-need-repo-local-decision-log.md`
