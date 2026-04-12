@@ -263,10 +263,11 @@ Mirror the question here when it affects:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-filings-01/bundle-01.json)
   - [folder-listings.json](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json)
   - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-folder-listings/2026-04-12.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-document-probe/2026-04-12.json)
 - `question`: What is the repeatable public path from city-side campaign filing entry ids to raw filing artifacts such as PDF, OCR text, or stable document metadata beyond the folder listing itself?
 - `why it matters`: The folder listing service is strong enough to promote real `Committee` and `Filing` objects, but the project still lacks a general raw-artifact capture path for those filing rows.
-- `current note`: The public folder listing exposes real filing titles, entry ids, page counts, and creation dates, which is enough for a first filing layer. The direct `DocView` route is still login-gated in ordinary CLI fetches, and the lightweight document-info service is too weak to substitute for real artifact capture.
-- `next evidence`: inspect the document-viewer app and service calls for a stable public download, OCR, or document-metadata route that works from the filing entry ids exposed by the folder listing.
+- `current note`: The public folder listing exposes real filing titles, entry ids, page counts, and creation dates, which is enough for a first filing layer. The April 12 main-path probe against selected high-value `Form 460` and `Form 496` entry ids still lands at a listing-only boundary: `DocView` resolves to a sign-in page with `[9030]`, `GetBasicDocumentInfo` returns only the entry id with `pageCount=0`, and the richer document / metadata / text services return HTTP `500`. A side exploration reported a possible doc-specific warm-step path for metadata and OCR, but that has not yet been reproduced cleanly in the main adapter path.
+- `next evidence`: if this matters enough later, re-test the reported doc-specific warm-step sequence in a controlled single-session adapter before promoting any direct-document or OCR capture as stable.
 
 ### OQ-026: San Rafael John Gamblin campaign folder dead link
 

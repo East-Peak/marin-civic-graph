@@ -1,0 +1,222 @@
+{
+  "case_study_id": "san-rafael-city-campaign-ie-01",
+  "bundle_id": "san-rafael-city-campaign-ie-01__bundle-01",
+  "status": "working",
+  "generated_at": "2026-04-12T16:20:01Z",
+  "scope": [
+    "San Rafael page-linked independent expenditure filing folders with successful public folder-listing capture",
+    "outside-spending committee promotion from explicit Form 496 filing titles",
+    "target-candidate and target-seat joins where the IE title matches an existing San Rafael city-office candidacy"
+  ],
+  "record_refs": [
+    {
+      "id": "record-san-rafael-ie-filing-entry-32165",
+      "entry_id": 32165,
+      "record_class": "financial_record",
+      "record_type": "form_496",
+      "source_id": "san-rafael-city-campaign-folder-listings",
+      "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+      "capture_status": "captured_from_folder_listing",
+      "title": "Form 496 - SR Chamber of Commerce PAC Supporting John Gamblin (10-05-2020)",
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=32165&dbid=0&repo=CityofSanRafael",
+      "page_count": 4,
+      "template_name": "FPPC Materials",
+      "folder_record_id": "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder",
+      "committee_ids": [
+        "committee-sr-chamber-of-commerce-pac-2020-11-03-san-rafael-general-ie"
+      ],
+      "target_actor_ids": [
+        "actor-john-gamblin"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-city-council-district-4"
+      ]
+    },
+    {
+      "id": "record-san-rafael-ie-filing-entry-32166",
+      "entry_id": 32166,
+      "record_class": "financial_record",
+      "record_type": "form_496",
+      "source_id": "san-rafael-city-campaign-folder-listings",
+      "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+      "capture_status": "captured_from_folder_listing",
+      "title": "Form 496 - SR Chamber of Commerce PAC Supporting Kate Colin (10-05-2020)",
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=32166&dbid=0&repo=CityofSanRafael",
+      "page_count": 4,
+      "template_name": "FPPC Materials",
+      "folder_record_id": "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder",
+      "committee_ids": [
+        "committee-sr-chamber-of-commerce-pac-2020-11-03-san-rafael-general-ie"
+      ],
+      "target_actor_ids": [
+        "actor-kate-colin"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-mayor-at-large"
+      ]
+    },
+    {
+      "id": "record-san-rafael-ie-filing-entry-32280",
+      "entry_id": 32280,
+      "record_class": "financial_record",
+      "record_type": "form_496",
+      "source_id": "san-rafael-city-campaign-folder-listings",
+      "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+      "capture_status": "captured_from_folder_listing",
+      "title": "Form 496 - SR Chamber of Commerce PAC Supporting John Gamblin (10-28-2020)",
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=32280&dbid=0&repo=CityofSanRafael",
+      "page_count": 4,
+      "template_name": "FPPC Materials",
+      "folder_record_id": "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder",
+      "committee_ids": [
+        "committee-sr-chamber-of-commerce-pac-2020-11-03-san-rafael-general-ie"
+      ],
+      "target_actor_ids": [
+        "actor-john-gamblin"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-city-council-district-4"
+      ]
+    },
+    {
+      "id": "record-san-rafael-ie-filing-entry-32292",
+      "entry_id": 32292,
+      "record_class": "financial_record",
+      "record_type": "form_496",
+      "source_id": "san-rafael-city-campaign-folder-listings",
+      "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+      "capture_status": "captured_from_folder_listing",
+      "title": "Form 496- WHINE PAC Supporting Rachel Kertz (11-02-2020)",
+      "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=32292&dbid=0&repo=CityofSanRafael",
+      "page_count": 8,
+      "template_name": "FPPC Materials",
+      "folder_record_id": "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder",
+      "committee_ids": [
+        "committee-whine-pac-2020-11-03-san-rafael-general-ie"
+      ],
+      "target_actor_ids": [
+        "actor-rachel-kertz"
+      ],
+      "election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "seat_ids": [
+        "seat-san-rafael-city-council-district-4"
+      ]
+    }
+  ],
+  "committee_candidates": [
+    {
+      "id": "committee-sr-chamber-of-commerce-pac-2020-11-03-san-rafael-general-ie",
+      "name": "SR Chamber of Commerce PAC",
+      "committee_type": "outside_spending_committee",
+      "actor_candidate_id": "actor-sr-chamber-of-commerce-pac",
+      "jurisdiction_place_id": "place-san-rafael",
+      "primary_election_id": "election-2020-11-03-san-rafael-general",
+      "source_system_ref": "laserfiche-folder:32164",
+      "evidence_record_ids": [
+        "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"
+      ]
+    },
+    {
+      "id": "committee-whine-pac-2020-11-03-san-rafael-general-ie",
+      "name": "WHINE PAC",
+      "committee_type": "outside_spending_committee",
+      "actor_candidate_id": "actor-whine-pac",
+      "jurisdiction_place_id": "place-san-rafael",
+      "primary_election_id": "election-2020-11-03-san-rafael-general",
+      "source_system_ref": "laserfiche-folder:32164",
+      "evidence_record_ids": [
+        "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder"
+      ]
+    }
+  ],
+  "filing_candidates": [
+    {
+      "id": "filing-san-rafael-ie-entry-32165",
+      "filing_type": "form_496",
+      "committee_id": "committee-sr-chamber-of-commerce-pac-2020-11-03-san-rafael-general-ie",
+      "committee_actor_id": "actor-sr-chamber-of-commerce-pac",
+      "election_id": "election-2020-11-03-san-rafael-general",
+      "target_actor_id": "actor-john-gamblin",
+      "target_seat_id": "seat-san-rafael-city-council-district-4",
+      "stance": "support",
+      "posted_at": "2020-10-08",
+      "status": "captured_from_public_folder_listing",
+      "record_id": "record-san-rafael-ie-filing-entry-32165",
+      "title": "Form 496 - SR Chamber of Commerce PAC Supporting John Gamblin (10-05-2020)",
+      "evidence_record_ids": [
+        "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder",
+        "record-san-rafael-ie-filing-entry-32165"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-ie-entry-32166",
+      "filing_type": "form_496",
+      "committee_id": "committee-sr-chamber-of-commerce-pac-2020-11-03-san-rafael-general-ie",
+      "committee_actor_id": "actor-sr-chamber-of-commerce-pac",
+      "election_id": "election-2020-11-03-san-rafael-general",
+      "target_actor_id": "actor-kate-colin",
+      "target_seat_id": "seat-san-rafael-mayor-at-large",
+      "stance": "support",
+      "posted_at": "2020-10-08",
+      "status": "captured_from_public_folder_listing",
+      "record_id": "record-san-rafael-ie-filing-entry-32166",
+      "title": "Form 496 - SR Chamber of Commerce PAC Supporting Kate Colin (10-05-2020)",
+      "evidence_record_ids": [
+        "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder",
+        "record-san-rafael-ie-filing-entry-32166"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-ie-entry-32280",
+      "filing_type": "form_496",
+      "committee_id": "committee-sr-chamber-of-commerce-pac-2020-11-03-san-rafael-general-ie",
+      "committee_actor_id": "actor-sr-chamber-of-commerce-pac",
+      "election_id": "election-2020-11-03-san-rafael-general",
+      "target_actor_id": "actor-john-gamblin",
+      "target_seat_id": "seat-san-rafael-city-council-district-4",
+      "stance": "support",
+      "posted_at": "2020-10-29",
+      "status": "captured_from_public_folder_listing",
+      "record_id": "record-san-rafael-ie-filing-entry-32280",
+      "title": "Form 496 - SR Chamber of Commerce PAC Supporting John Gamblin (10-28-2020)",
+      "evidence_record_ids": [
+        "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder",
+        "record-san-rafael-ie-filing-entry-32280"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-ie-entry-32292",
+      "filing_type": "form_496",
+      "committee_id": "committee-whine-pac-2020-11-03-san-rafael-general-ie",
+      "committee_actor_id": "actor-whine-pac",
+      "election_id": "election-2020-11-03-san-rafael-general",
+      "target_actor_id": "actor-rachel-kertz",
+      "target_seat_id": "seat-san-rafael-city-council-district-4",
+      "stance": "support",
+      "posted_at": "2020-11-03",
+      "status": "captured_from_public_folder_listing",
+      "record_id": "record-san-rafael-ie-filing-entry-32292",
+      "title": "Form 496- WHINE PAC Supporting Rachel Kertz (11-02-2020)",
+      "evidence_record_ids": [
+        "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder",
+        "record-san-rafael-ie-filing-entry-32292"
+      ]
+    }
+  ],
+  "notes": [
+    "This bundle is title-level independent-expenditure normalization, not schedule-level amount extraction.",
+    "The current public filing layer supports committee-target overlap and filing chronology, but not yet raw artifact recovery or contribution/expenditure amount parsing.",
+    "Only city-office targets with known candidate and seat joins are promoted here."
+  ]
+}

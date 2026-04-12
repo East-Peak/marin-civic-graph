@@ -1,0 +1,115 @@
+{
+  "case_study_id": "san-rafael-homelessness-01",
+  "bundle_id": "san-rafael-homelessness-01__bundle-01",
+  "layer_type": "media_outside_money_overlap_worked_example",
+  "status": "worked_example",
+  "generated_at": "2026-04-12T16:25:00Z",
+  "overlap_examples": [
+    {
+      "id": "media-outside-money-kate-colin-2020",
+      "join_type": "media_actor_to_outside_spending_committee_and_filing",
+      "status": "accepted_for_cross_domain_context",
+      "confidence": "high",
+      "subject_actor_id": "actor-kate-colin",
+      "source_mentions": [
+        {
+          "record_id": "record-mij-2024-09-20-prepares-site-authorized-camp",
+          "source_kind": "media_article",
+          "mention_id": "mention-mij-2024-09-20-kate-colin",
+          "role_label": "Mayor"
+        }
+      ],
+      "cross_domain_targets": [
+        {
+          "target_type": "candidacy",
+          "candidacy_id": "candidacy-kate-colin-san-rafael-mayor-2020",
+          "summary": "Discovery-stage 2020 mayoral candidacy tying Kate Colin to the San Rafael general election and mayoral seat."
+        },
+        {
+          "target_type": "committee",
+          "committee_id": "committee-sr-chamber-of-commerce-pac-2020-11-03-san-rafael-general-ie",
+          "summary": "Outside-spending committee promoted from the public 2020 independent-expenditure folder."
+        },
+        {
+          "target_type": "filing",
+          "filing_id": "filing-san-rafael-ie-entry-32166",
+          "summary": "Public Form 496 title showing SR Chamber of Commerce PAC supporting Kate Colin."
+        }
+      ],
+      "join_outcome": {
+        "accepted_links": [
+          "media mention mention-mij-2024-09-20-kate-colin -> actor-kate-colin",
+          "actor-kate-colin -> candidacy-kate-colin-san-rafael-mayor-2020",
+          "committee-sr-chamber-of-commerce-pac-2020-11-03-san-rafael-general-ie -> filing-san-rafael-ie-entry-32166",
+          "filing-san-rafael-ie-entry-32166 -> actor-kate-colin"
+        ],
+        "not_implied": [
+          "The 2020 outside-money filing does not imply that Kate Colin's 2024 homelessness comments were caused by that earlier campaign support.",
+          "The public title-level filing row does not expose the expenditure amount or underlying donor chain."
+        ]
+      }
+    },
+    {
+      "id": "media-outside-money-rachel-kertz-2020",
+      "join_type": "media_actor_to_outside_spending_committee_and_filing",
+      "status": "accepted_for_cross_domain_context",
+      "confidence": "high",
+      "subject_actor_id": "actor-rachel-kertz",
+      "source_mentions": [
+        {
+          "record_id": "record-mij-2024-08-24-establish-camp-mahon-creek",
+          "source_kind": "media_article",
+          "mention_id": "mention-mij-2024-08-24-rachel-kertz",
+          "role_label": "Councilmember"
+        }
+      ],
+      "cross_domain_targets": [
+        {
+          "target_type": "candidacy",
+          "candidacy_id": "candidacy-rachel-kertz-san-rafael-council-district-4-2020",
+          "summary": "Discovery-stage 2020 District 4 candidacy tying Rachel Kertz to the San Rafael general election and District 4 seat."
+        },
+        {
+          "target_type": "committee",
+          "committee_id": "committee-whine-pac-2020-11-03-san-rafael-general-ie",
+          "summary": "Outside-spending committee promoted from the public 2020 independent-expenditure folder."
+        },
+        {
+          "target_type": "filing",
+          "filing_id": "filing-san-rafael-ie-entry-32292",
+          "summary": "Public Form 496 title showing WHINE PAC supporting Rachel Kertz."
+        }
+      ],
+      "join_outcome": {
+        "accepted_links": [
+          "media mention mention-mij-2024-08-24-rachel-kertz -> actor-rachel-kertz",
+          "actor-rachel-kertz -> candidacy-rachel-kertz-san-rafael-council-district-4-2020",
+          "committee-whine-pac-2020-11-03-san-rafael-general-ie -> filing-san-rafael-ie-entry-32292",
+          "filing-san-rafael-ie-entry-32292 -> actor-rachel-kertz"
+        ],
+        "not_implied": [
+          "The 2020 outside-money filing does not imply that Rachel Kertz's 2024 statements about the Mahon Creek sanctioned camp were caused by that earlier campaign support.",
+          "The public title-level filing row does not expose the expenditure amount or vendor trail."
+        ]
+      }
+    }
+  ],
+  "methodology_findings": [
+    {
+      "id": "media-outside-money-finding-01",
+      "summary": "Public Form 496 titles are already strong enough to preserve spender committee, target candidate, and support direction even when raw filing artifacts remain unavailable."
+    },
+    {
+      "id": "media-outside-money-finding-02",
+      "summary": "The outside-money overlap layer can advance before amount-level donor or expenditure parsing, as long as the graph keeps the scope to actor, committee, filing, and target continuity."
+    },
+    {
+      "id": "media-outside-money-finding-03",
+      "summary": "Temporal distance matters. A later media quote can join to an earlier campaign-support record as identity continuity without implying causation."
+    }
+  ],
+  "notes": [
+    "This worked example is intentionally narrower than a true donor or expenditure schedule analysis.",
+    "It uses city-side public folder-listing evidence plus previously accepted canonical actor joins."
+  ]
+}
