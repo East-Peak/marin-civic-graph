@@ -2,28 +2,39 @@
 
 Verified: April 12, 2026
 
-This proposal defines the next project phase.
+This proposal defines the next project phase after adversarial review.
 
-The goal is to widen coverage across source families that already have working adapters and stable graph objects, without widening the ontology again.
+The goal is no longer "widen all proven source families at once." The goal is to improve graph density on one strong local loop before opening broader county lanes.
 
-## Why This Phase
+## Why This Phase Still Matters
 
-The project is no longer blocked on basic architecture.
+The project is not blocked on ontology.
 
-It now has:
+It already has:
 
 - stable IDs and explicit join rules
 - a working projection layer and live Neo4j load
 - durable normalized bundles across meetings, campaign finance, disclosures, legal, permits, procurement, and media
 - a repo-local and workspace-level decision trail
 
-The new risk is not missing ontology. The new risk is fragmentation:
+The new bottleneck is join density, not raw material.
 
-- too many good slices
-- not enough density across the same source families
-- not enough repeated actors, committees, records, and decisions to test the real graph product
+Current graph-v1 already contains:
 
-So the next move should be breadth across the existing backbone, not another tranche of model invention.
+- `338` `Record` nodes
+- `233` `Filing` nodes
+- `145` `MoneyFlow` nodes
+
+But it only contains:
+
+- `19` `Actor` nodes
+- `26` `Meeting` nodes
+- `23` `Decision` nodes
+- `5` `SeatService` nodes
+
+And it is still skipping `147` edges because the actor side is too thin.
+
+That means the wrong next move is a broad five-track backfill that mostly creates more filings and records without materially strengthening the graph questions we care about.
 
 ## Phase Rule
 
@@ -31,7 +42,8 @@ During this sprint:
 
 - freeze schema by default
 - avoid new domain tranches
-- prefer more data over more modeling
+- prefer join density over document volume
+- treat county-wide expansion as conditional, not automatic
 
 A new node type is only justified if:
 
@@ -41,7 +53,7 @@ A new node type is only justified if:
 
 ## Objective
 
-Build enough repeated coverage across the existing San Rafael and Marin County backbone that graph-v1 can answer recurring-actor, recurring-money, recurring-decision, and validation questions without leaning on one-off worked examples.
+Build a denser San Rafael civic spine so graph-v1 can answer recurring officeholder, decision, disclosure, campaign, and validation questions across multiple years without leaning on one-off examples.
 
 ## In Scope
 
@@ -49,8 +61,8 @@ Build enough repeated coverage across the existing San Rafael and Marin County b
 
 Goal:
 
-- complete the meeting spine from `2019-01-01` forward
-- keep packet / minutes / agenda / video availability explicit
+- build the durable meeting / agenda / decision / vote backbone from `2019-01-01` forward
+- keep agenda, packet, minutes, and video availability explicit
 
 Expected yield:
 
@@ -62,72 +74,16 @@ Expected yield:
 
 Why:
 
-- strongest city-side decision backbone
-- best place to densify decisions, records, and future recurring actors
+- this is the cleanest path to more `Meeting`, `Decision`, and evidence density
+- it directly addresses the current graph imbalance
+- it is the strongest local decision spine for later joins into money, media, procurement, and legal constraints
 
-### Track B: Marin County Board of Supervisors `2019+`
-
-Goal:
-
-- complete the county meeting spine from `2019-01-01` forward
-
-Expected yield:
-
-- `Meeting`
-- `AgendaItem`
-- `Decision`
-- `VoteCast`
-- `Record`
-
-Why:
-
-- county-side equivalent of the city backbone
-
-### Track C: Marin County Campaign Finance `2019+`
+### Track B: San Rafael Elected Disclosure Continuity
 
 Goal:
 
-- operationalize yearly exports plus current change feed
-
-Expected yield:
-
-- `Committee`
-- `Filing`
-- `MoneyFlow`
-- `Election`
-- `Candidacy`
-
-Why:
-
-- strong official surface
-- high recurring-actor value
-
-### Track D: San Rafael City-Side Campaign Filings `2019+`
-
-Goal:
-
-- move from selected high-value filings to broader cycle coverage
-- keep discovery, folder listing, OCR, and PDF export paths separate but coordinated
-
-Expected yield:
-
-- `Committee`
-- `Filing`
-- `MoneyFlow`
-- `Candidacy`
-- `Record`
-- `ValidationCheck`
-
-Why:
-
-- this is the strongest path to true local media-to-campaign and local decision-to-finance overlap
-
-### Track E: San Rafael Form `700` and Form `803`
-
-Goal:
-
-- backfill visible Form `700` inventory from `2019-01-01`
-- census all visible local Form `803` records and keep the low-volume path current
+- keep local Form `803` current
+- backfill only the Form `700` slice that resolves cleanly to existing canonical officeholders and `SeatService` objects
 
 Expected yield:
 
@@ -137,108 +93,188 @@ Expected yield:
 - `Actor`
 - `Seat`
 - `SeatService`
+- `Record`
+
+Boundary:
+
+- do not import the full visible Form `700` archive across all `261` filers
+- do not promote broad staff / commission disclosure volume until the elected-officeholder layer is denser
 
 Why:
 
-- clean officeholder continuity layer
-- joins directly into elected structure already in graph-v1
+- this is the cleanest disclosure continuity path
+- it improves officeholder dossier queries without creating a large unresolved actor-resolution burden
+- Form `803` stays in scope because it is high-signal, but it is a maintenance lane, not an equal-volume backfill lane
+
+### Track C: San Rafael City-Office Campaign Filing Backbone
+
+Goal:
+
+- deepen the city mayor / council filing spine for `2020`, `2022`, and `2024`
+- broaden `Record`, `Filing`, `Committee`, and `Candidacy` coverage for city-office races
+- keep broad row-level campaign money normalized-only unless it is already QA-backed
+
+Expected yield:
+
+- `Record`
+- `Filing`
+- `Committee`
+- `Candidacy`
+- `Election`
+- `ValidationCheck`
+
+Boundary:
+
+- broader schedule-level `MoneyFlow` extraction stays normalized-only for now
+- the current QA-backed `Form 460` sample remains usable in graph-v1
+- non-city-office rows stay out
+
+Why:
+
+- this is the strongest path to actual local decision-to-finance overlap
+- it improves committee / filing recurrence without forcing low-quality OCR actors into the core graph
+- it gives the product a real city-election spine before county-wide expansion
+
+## Conditional Later-Phase Candidate
+
+Only after the fixed query pack improves materially:
+
+- one normalized-only Marin County campaign-finance pilot
+
+This is a checkpoint candidate, not part of the core sprint.
 
 ## Out Of Scope
 
-Do not widen into these during the breadth sprint unless a source directly forces it:
+Do not widen into these during this sprint:
 
+- Marin County BOS `2019+` as a core sprint track
+- Marin County campaign finance broad import
+- full Form `700` archive import across all filers
+- broad row-level city-side or county-side campaign `MoneyFlow` import beyond the current QA-backed sample
+- non-city-office San Rafael campaign rows
 - new legal case families beyond the current `Boyd` + `Grants Pass` pair
-- criminal-case expansion
 - broader permit backfill
 - broader procurement backfill
+- criminal expansion
 - new media methodology
 - new jurisdictions
 - new major node families
 
 These are valid later targets. They are not the current bottleneck.
 
-## Execution Shape
+## Execution Order
 
-### Step 1: Coverage First
+1. San Rafael City Council `2019+`
+2. San Rafael Form `803` plus elected-officeholder Form `700`
+3. San Rafael city-office campaign filing backbone
+4. Stop and rerun the fixed query pack
+5. Only if the graph improves materially, consider one normalized-only Marin County campaign-finance pilot
 
-For each in-scope track:
+Marin County BOS moves to the next phase unless the city-side checkpoint proves the current graph still needs more meeting density before more finance density.
 
-- capture or complete historical inventory
-- normalize into durable bundles
-- add to projection/import only when the objects are stable
+## Fixed Query Pack
 
-### Step 2: Query Benchmarks
+Use the same query pack after each major checkpoint. Do not change the queries mid-sprint just to make the results look better.
 
-At the end of each track checkpoint, rerun a fixed query set:
+### Q1: `actor-kate-colin` Dossier
 
-- actor dossier
-- decision dossier
-- committee / donor recurrence
-- officeholder disclosure continuity
-- validation / unreconciled filing queue
+Return:
 
-The graph should get denser, not just bigger.
+- actor
+- seat service
+- council records
+- city-side committees / filings
+- local Form `803`
+- imported Form `700` filings
 
-### Step 3: Import Scope Gate
+Pass condition:
 
-Do not automatically widen graph-v1 import scope just because a new bundle exists.
+- spans multiple filing families and more than one year
 
-Each new bundle family must answer:
+### Q2: Current Elected Disclosure Coverage
 
-- is it durable
-- is it repeated enough to matter
-- does it improve the fixed query set
+Start from all current San Rafael `SeatService` nodes and return every imported Form `700` / `803` filing since `2019`.
+
+Pass condition:
+
+- every imported disclosure resolves to an existing canonical actor and `SeatService`
+
+### Q3: San Rafael Council Decision Timeline
+
+Return all San Rafael City Council `Decision` nodes since `2019` with meeting date, vote links, and evidence records.
+
+Pass condition:
+
+- the result is a real timeline, not just the August 19, 2024 worked example
+
+### Q4: San Rafael Election Money Spine
+
+For San Rafael mayor / council elections in `2020`, `2022`, and `2024`, return:
+
+- committees
+- filings
+- IE filings
+- only QA-backed money flows
+
+Pass condition:
+
+- recurrence appears across more than one cycle without importing noisy OCR actors as durable canonical people or orgs
+
+### Q5: Validation Queue
+
+Return every `ValidationCheck` and its subject filing, especially `filing-san-rafael-campaign-entry-37677`.
+
+Pass condition:
+
+- the queue stays bounded and legible instead of exploding with low-quality imports
 
 ## Deliverables
 
-Minimum deliverables for the sprint:
+Minimum sprint deliverables:
 
-- complete or materially deepen the `2019+` inventory for all five in-scope tracks
-- promote that coverage into normalized bundles, not just raw captures
-- keep graph-v1 projection and smoke checks passing
-- produce one before/after query pack showing how recurrence improved
+- materially deepen the San Rafael council timeline from `2019-01-01`
+- materially improve current elected disclosure continuity
+- materially improve the San Rafael city-office campaign filing backbone
+- rerun the fixed query pack and record before/after results
+- keep graph-v1 projection, smoke checks, and live Neo4j load healthy
 
 ## Success Criteria
 
-This sprint is successful if the graph can answer these with density rather than one-off examples:
+This sprint is successful if:
 
-- show all records, filings, officeholding, and disclosure continuity tied to one officeholder
-- show recurring committees, donors, and outside-spending records across cycles
-- show recurring actors and orgs across meetings, records, and money
-- show validation failures and partially reconciled filing objects
-- show decision continuity over time rather than one isolated case study
+- the fixed query pack gets denser and more legible
+- more imported filings and records resolve cleanly to existing actors, seats, and seat services
+- the council decision timeline becomes a real multi-year spine
+- the validation queue remains small enough to inspect directly
+- graph-v1 improves by query usefulness, not just by node count
 
 ## Failure Modes To Watch
 
-- too much new schema
-- too many new domains
-- too much time spent on one stubborn adapter edge case
-- widening import scope before bundle quality is stable
-- confusing “more files” with “more graph value”
+- treating all source families as equal-volume sprint lanes
+- mistaking more filings for better joins
+- full Form `700` import before the officeholder identity layer is ready
+- broad campaign `MoneyFlow` import before OCR actor pollution is under control
+- spending the sprint on county surfaces before the city loop is dense enough to judge product value
+- widening import scope before the fixed query pack actually improves
 
 ## Recommended Next Slice
 
-Start with a narrow planning and review checkpoint, then execute in this order:
-
-1. San Rafael City Council `2019+`
-2. Marin County BOS `2019+`
-3. Marin County campaign finance `2019+`
-4. San Rafael Form `700` / `803`
-5. San Rafael city-side campaign filings `2019+`
+Start with San Rafael City Council `2019+`.
 
 Reason:
 
-- decision spines first
-- then county money
-- then officeholder disclosure continuity
-- then the more brittle city-side campaign surfaces
+- it is the strongest direct fix for the current graph imbalance
+- it densifies `Meeting`, `Decision`, and evidence objects first
+- it creates the best base for the later disclosure and campaign layers to land on
+
+Do not open county-wide breadth again until that checkpoint proves we are getting graph value rather than just more artifacts.
 
 ## Decision Gate After Sprint
 
-After the breadth sprint, decide one of:
+After the sprint checkpoint, decide one of:
 
-- widen graph-v1 import to include the legal pair
-- widen graph-v1 import to include one procurement thread
-- widen graph-v1 import to include one permit thread
+- keep widening the San Rafael civic spine
+- add one normalized-only Marin County campaign-finance pilot
+- move BOS into the next phase
 
-That decision should follow observed query value, not instinct.
+That decision should follow the fixed query pack results, not instinct.

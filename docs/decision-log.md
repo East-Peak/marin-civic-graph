@@ -35,10 +35,16 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
   - Treat the district opinion and judgment as strong public filed-order copies, the Ninth Circuit amended opinion as official court-origin, and the remaining gap as supporting-provenance completeness rather than core precedent absence.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-grants-pass-lower-court-chain-should-live-inside-legal-precedent-02.md`
 
-- **The next phase should be a controlled breadth sprint, not another ontology tranche**
-  - Freeze schema by default, widen across the existing San Rafael / Marin backbone, and judge success by graph-query density rather than by how many new node families or documents appear.
-  - Keep the sprint focused on the already-proven source families: San Rafael council, Marin BOS, Marin County campaign finance, San Rafael Form `700` / `803`, and San Rafael city-side campaign filings.
-  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-next-phase-should-be-a-controlled-breadth-sprint.md`
+- **The next phase should be a controlled breadth sprint, but narrowed to the dense San Rafael loop first**
+  - Freeze schema by default and judge success by query density rather than by how many new files appear.
+  - After adversarial review, narrow the first breadth phase to:
+    - San Rafael City Council `2019+`
+    - San Rafael Form `803` plus elected-officeholder Form `700`
+    - San Rafael city-office campaign filing backbone
+  - Keep Marin County BOS and broad Marin County campaign finance out of the first phase unless the city-side query checkpoint proves the graph still needs them next.
+  - Detailed notes:
+    - `~/.openclaw/workspace/decisions/2026-04-12-next-phase-should-be-a-controlled-breadth-sprint.md`
+    - `~/.openclaw/workspace/decisions/2026-04-12-controlled-breadth-sprint-should-be-san-rafael-first-and-join-density-led.md`
 
 - **Active projects need a repo-local running decision index**
   - Keep a compact `docs/decision-log.md` in the repo, with detailed rationale still living in workspace decisions.
