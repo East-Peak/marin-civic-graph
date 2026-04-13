@@ -1576,6 +1576,151 @@ def aggregate_pressure_from_decision_explanations(
     }
 
 
+def aggregate_pressure_from_money_flow_nodes(
+    flow_nodes: list[dict[str, Any]],
+    *,
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    money_flow_amounts: dict[str, float] = {}
+    flow_type_counts = Counter()
+    counterparty_buckets: dict[str, dict[str, Any]] = {}
+
+    explained_flows = []
+    for flow in sort_nodes(flow_nodes):
+        flow_id = flow.get("id")
+        if not flow_id:
+            continue
+        amount = flow.get("properties", {}).get("amount")
+        if not isinstance(amount, (int, float)):
+            amount = 0.0
+        amount = float(amount)
+        flow_type = (
+            flow.get("properties", {}).get("flow_type")
+            or flow.get("properties", {}).get("money_type")
+            or "unknown"
+        )
+        links = money_flow_link_summaries(flow, node_by_id=node_by_id, outgoing=outgoing)
+        evidence_records = money_flow_evidence_summaries(flow, node_by_id=node_by_id, outgoing=outgoing)
+
+        if flow_id not in money_flow_amounts:
+            money_flow_amounts[flow_id] = amount
+            flow_type_counts[flow_type] += 1
+
+        for link in links:
+            node = link.get("node")
+            if not node:
+                continue
+            key = node["id"]
+            bucket = counterparty_buckets.setdefault(
+                key,
+                {
+                    "node": node,
+                    "relationship_types": set(),
+                    "flow_ids": set(),
+                    "total_amount": 0.0,
+                },
+            )
+            bucket["relationship_types"].add(link.get("relationship_type") or "linked")
+            if flow_id not in bucket["flow_ids"]:
+                bucket["flow_ids"].add(flow_id)
+                bucket["total_amount"] += amount
+
+        explained_flows.append(
+            {
+                "money_flow": node_summary(flow),
+                "flow_type": flow_type,
+                "amount": amount,
+                "links": links,
+                "evidence_records": evidence_records,
+            }
+        )
+
+    top_counterparties = []
+    for bucket in counterparty_buckets.values():
+        top_counterparties.append(
+            {
+                "node": bucket["node"],
+                "relationship_types": sorted(bucket["relationship_types"]),
+                "flow_count": len(bucket["flow_ids"]),
+                "total_amount": bucket["total_amount"],
+            }
+        )
+    top_counterparties.sort(
+        key=lambda item: (
+            -item["total_amount"],
+            -item["flow_count"],
+            item["node"]["node_type"],
+            item["node"]["id"],
+        )
+    )
+
+    return {
+        "money_flow_ids": set(money_flow_amounts.keys()),
+        "money_flow_amounts": money_flow_amounts,
+        "linked_money_total_amount": sum(money_flow_amounts.values()),
+        "flow_type_counts": dict(sorted(flow_type_counts.items())),
+        "top_counterparties": top_counterparties,
+        "linked_money_flows": explained_flows,
+    }
+
+
+def merge_pressure_summaries(pressures: list[dict[str, Any]]) -> dict[str, Any]:
+    money_flow_amounts: dict[str, float] = {}
+    flow_type_counts = Counter()
+    counterparty_buckets: dict[str, dict[str, Any]] = {}
+
+    for pressure in pressures:
+        for flow_id, amount in (pressure.get("money_flow_amounts") or {}).items():
+            if flow_id not in money_flow_amounts:
+                money_flow_amounts[flow_id] = float(amount)
+        for flow_type, count in (pressure.get("flow_type_counts") or {}).items():
+            flow_type_counts[flow_type] += count
+        for item in pressure.get("top_counterparties", []):
+            node = item.get("node")
+            if not node:
+                continue
+            bucket = counterparty_buckets.setdefault(
+                node["id"],
+                {
+                    "node": node,
+                    "relationship_types": set(),
+                    "flow_count": 0,
+                    "total_amount": 0.0,
+                },
+            )
+            bucket["relationship_types"].update(item.get("relationship_types") or [])
+            bucket["flow_count"] += int(item.get("flow_count") or 0)
+            bucket["total_amount"] += float(item.get("total_amount") or 0.0)
+
+    top_counterparties = []
+    for bucket in counterparty_buckets.values():
+        top_counterparties.append(
+            {
+                "node": bucket["node"],
+                "relationship_types": sorted(bucket["relationship_types"]),
+                "flow_count": bucket["flow_count"],
+                "total_amount": bucket["total_amount"],
+            }
+        )
+    top_counterparties.sort(
+        key=lambda item: (
+            -item["total_amount"],
+            -item["flow_count"],
+            item["node"]["node_type"],
+            item["node"]["id"],
+        )
+    )
+
+    return {
+        "money_flow_ids": set(money_flow_amounts.keys()),
+        "money_flow_amounts": money_flow_amounts,
+        "linked_money_total_amount": sum(money_flow_amounts.values()),
+        "flow_type_counts": dict(sorted(flow_type_counts.items())),
+        "top_counterparties": top_counterparties,
+    }
+
+
 def filter_counterparties_for_display(
     counterparties: list[dict[str, Any]],
     *,
@@ -1692,6 +1837,140 @@ def program_local_pressure_summary(
     }
 
 
+def election_local_pressure_rollup(
+    *,
+    election_id: str,
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    election = node_by_id[election_id]
+    jurisdiction_place = node_by_id.get(election.get("properties", {}).get("jurisdiction_id"))
+
+    committees = unique_nodes(
+        sort_nodes(
+            edge_sources(
+                incoming,
+                node_by_id,
+                election_id,
+                relationship_type="PRIMARY_FOR_ELECTION",
+                source_node_type="Committee",
+            )
+        )
+    )
+    candidacies = unique_nodes(
+        sort_nodes(
+            edge_sources(
+                incoming,
+                node_by_id,
+                election_id,
+                relationship_type="FOR_ELECTION",
+                source_node_type="Candidacy",
+            )
+        )
+    )
+    filings = unique_nodes(
+        sort_nodes(
+            edge_sources(
+                incoming,
+                node_by_id,
+                election_id,
+                relationship_type="FILED_FOR_ELECTION",
+                source_node_type="Filing",
+            )
+        )
+    )
+
+    money_flows = []
+    for committee in committees:
+        money_flows.extend(
+            edge_sources(
+                incoming,
+                node_by_id,
+                committee["id"],
+                relationship_type="RELATES_TO_COMMITTEE",
+                source_node_type="MoneyFlow",
+            )
+        )
+        money_flows.extend(
+            edge_sources(
+                incoming,
+                node_by_id,
+                committee["id"],
+                relationship_type="TO_TARGET",
+                source_node_type="MoneyFlow",
+            )
+        )
+    money_flows = unique_nodes(sort_nodes(money_flows))
+    pressure = aggregate_pressure_from_money_flow_nodes(
+        money_flows,
+        node_by_id=node_by_id,
+        outgoing=outgoing,
+    )
+
+    evidence_records = []
+    evidence_records.extend(
+        edge_targets(
+            outgoing,
+            node_by_id,
+            election_id,
+            relationship_type="EVIDENCED_BY",
+            target_node_type="Record",
+        )
+    )
+    for committee in committees:
+        evidence_records.extend(
+            edge_targets(
+                outgoing,
+                node_by_id,
+                committee["id"],
+                relationship_type="EVIDENCED_BY",
+                target_node_type="Record",
+            )
+        )
+    for filing in filings:
+        evidence_records.extend(
+            edge_targets(
+                outgoing,
+                node_by_id,
+                filing["id"],
+                relationship_type="EVIDENCED_BY",
+                target_node_type="Record",
+            )
+        )
+    evidence_records = unique_node_summaries(sort_nodes(evidence_records))
+
+    return {
+        "id": f"election-{slugify_subject(election_id)}-local-pressure-rollup",
+        "title": f"Election local pressure rollup: {node_title(election)}",
+        "view_type": "election_local_pressure_rollup",
+        "subject_id": election_id,
+        "subject_node_type": "Election",
+        "contract_version": 1,
+        "generated_at": iso_now(),
+        "election": node_summary(election),
+        "jurisdiction_place": node_summary(jurisdiction_place),
+        "metrics": {
+            "committee_count": len(committees),
+            "candidacy_count": len(candidacies),
+            "linked_filing_count": len(filings),
+            "linked_money_flow_count": len(pressure["money_flow_ids"]),
+            "linked_money_total_amount": pressure["linked_money_total_amount"],
+            "linked_case_count": 0,
+            "shared_issue_count": 0,
+            "evidence_record_count": len(evidence_records),
+            "top_counterparty_count": len(pressure["top_counterparties"]),
+            "flow_type_counts": pressure["flow_type_counts"],
+        },
+        "committees": unique_node_summaries(committees),
+        "candidacies": unique_node_summaries(candidacies),
+        "filings": unique_node_summaries(filings),
+        "linked_money_flows": pressure["linked_money_flows"],
+        "top_counterparties": pressure["top_counterparties"][:10],
+        "evidence_records": evidence_records,
+    }
+
+
 def jurisdiction_local_pressure_comparison(
     *,
     place_id: str,
@@ -1733,13 +2012,28 @@ def jurisdiction_local_pressure_comparison(
             )
         )
     )
+    elections = unique_nodes(
+        sort_nodes(
+            [
+                node
+                for node in edge_sources(
+                    incoming,
+                    node_by_id,
+                    place_id,
+                    relationship_type="IN_JURISDICTION",
+                    source_node_type="Election",
+                )
+                if node.get("properties", {}).get("election_type") == "general_municipal"
+            ]
+        )
+    )
 
     thread_rollups = []
     all_case_ids: set[str] = set()
     all_decision_ids: set[str] = set()
     all_shared_issue_ids: set[str] = set()
     all_evidence_records: list[dict[str, Any]] = []
-    all_decision_explanations: list[dict[str, Any]] = []
+    all_pressure_rollups: list[dict[str, Any]] = []
 
     for program in programs:
         payload = program_local_pressure_summary(
@@ -1757,7 +2051,9 @@ def jurisdiction_local_pressure_comparison(
             for issue in item["issues"]
         )
         all_evidence_records.extend(payload["evidence_records"])
-        all_decision_explanations.extend(payload["decision_explanations"])
+        all_pressure_rollups.append(
+            aggregate_pressure_from_decision_explanations(payload["decision_explanations"])
+        )
         thread_rollups.append(
             {
                 "thread_type": "program",
@@ -1832,7 +2128,7 @@ def jurisdiction_local_pressure_comparison(
         all_shared_issue_ids.update(thread_issue_ids)
         all_evidence_records.extend(payload["evidence_records"])
         all_evidence_records.extend(payload["related_records"])
-        all_decision_explanations.extend(decision_explanations)
+        all_pressure_rollups.append(pressure)
         thread_rollups.append(
             {
                 "thread_type": "project",
@@ -1862,6 +2158,55 @@ def jurisdiction_local_pressure_comparison(
             }
         )
 
+    for election in elections:
+        payload = election_local_pressure_rollup(
+            election_id=election["id"],
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
+        if payload["metrics"]["linked_money_flow_count"] == 0:
+            continue
+        all_evidence_records.extend(payload["evidence_records"])
+        all_pressure_rollups.append(
+            {
+                "money_flow_ids": {item["money_flow"]["id"] for item in payload["linked_money_flows"]},
+                "money_flow_amounts": {
+                    item["money_flow"]["id"]: float(item.get("amount") or 0.0)
+                    for item in payload["linked_money_flows"]
+                    if item.get("money_flow", {}).get("id")
+                },
+                "linked_money_total_amount": payload["metrics"]["linked_money_total_amount"],
+                "flow_type_counts": payload["metrics"]["flow_type_counts"],
+                "top_counterparties": payload["top_counterparties"],
+            }
+        )
+        thread_rollups.append(
+            {
+                "thread_type": "election",
+                "subject": payload["election"],
+                "context": payload["jurisdiction_place"],
+                "metrics": payload["metrics"],
+                "pressure_flags": {
+                    "has_money_pressure": payload["metrics"]["linked_money_flow_count"] > 0,
+                    "has_legal_pressure": False,
+                    "has_shared_issue_pressure": False,
+                    "has_committee_lineage": payload["metrics"]["committee_count"] > 0,
+                    "has_filing_lineage": payload["metrics"]["linked_filing_count"] > 0,
+                },
+                "linked_decisions": [],
+                "linked_cases": [],
+                "top_counterparties": filter_counterparties_for_display(
+                    payload["top_counterparties"],
+                    excluded_ids={
+                        payload["election"]["id"],
+                        *( [payload["jurisdiction_place"]["id"]] if payload["jurisdiction_place"] else [] ),
+                        *(item["id"] for item in payload["committees"]),
+                    },
+                )[:3],
+            }
+        )
+
     thread_rollups.sort(
         key=lambda item: (
             -(item["metrics"].get("linked_money_total_amount") or 0),
@@ -1871,7 +2216,7 @@ def jurisdiction_local_pressure_comparison(
         )
     )
     all_evidence_records = unique_summary_items(all_evidence_records)
-    overall_pressure = aggregate_pressure_from_decision_explanations(all_decision_explanations)
+    overall_pressure = merge_pressure_summaries(all_pressure_rollups)
     filtered_overall_counterparties = filter_counterparties_for_display(
         overall_pressure["top_counterparties"],
         excluded_ids={item["subject"]["id"] for item in thread_rollups} | {place_id},
@@ -1890,6 +2235,7 @@ def jurisdiction_local_pressure_comparison(
             "thread_count": len(thread_rollups),
             "program_thread_count": len([item for item in thread_rollups if item["thread_type"] == "program"]),
             "project_thread_count": len([item for item in thread_rollups if item["thread_type"] == "project"]),
+            "election_thread_count": len([item for item in thread_rollups if item["thread_type"] == "election"]),
             "money_pressure_thread_count": len([item for item in thread_rollups if item["pressure_flags"]["has_money_pressure"]]),
             "legal_pressure_thread_count": len([item for item in thread_rollups if item["pressure_flags"]["has_legal_pressure"]]),
             "linked_decision_count": len(all_decision_ids),
@@ -1974,6 +2320,10 @@ def jurisdiction_local_pressure_explanation(
             explanation_points.append({"code": "agreement_lineage", "label": "Agreement lineage", "value": True})
         if item["pressure_flags"].get("has_amendment_lineage"):
             explanation_points.append({"code": "amendment_lineage", "label": "Amendment lineage", "value": True})
+        if item["pressure_flags"].get("has_committee_lineage"):
+            explanation_points.append({"code": "committee_lineage", "label": "Committee lineage", "value": True})
+        if item["pressure_flags"].get("has_filing_lineage"):
+            explanation_points.append({"code": "filing_lineage", "label": "Filing lineage", "value": True})
 
         thread_explanations.append(
             {
@@ -2734,7 +3084,7 @@ def write_markdown_summary(output_dir: Path, views: list[dict[str, Any]]) -> Non
         )
     if jurisdiction_pressure_views:
         lines.append(
-            f"- Jurisdiction local pressure comparisons now cover `{len(jurisdiction_pressure_views)}` targets, including `{jurisdiction_pressure_views[0]['jurisdiction_place']['display_label']}` with `{jurisdiction_pressure_views[0]['metrics']['thread_count']}` threads, `{jurisdiction_pressure_views[0]['metrics']['linked_case_count']}` linked cases, and `${jurisdiction_pressure_views[0]['metrics']['linked_money_total_amount']:,.2f}` in linked money."
+            f"- Jurisdiction local pressure comparisons now cover `{len(jurisdiction_pressure_views)}` targets, including `{jurisdiction_pressure_views[0]['jurisdiction_place']['display_label']}` with `{jurisdiction_pressure_views[0]['metrics']['thread_count']}` threads (`{jurisdiction_pressure_views[0]['metrics'].get('election_thread_count', 0)}` election-backed), `{jurisdiction_pressure_views[0]['metrics']['linked_case_count']}` linked cases, and `${jurisdiction_pressure_views[0]['metrics']['linked_money_total_amount']:,.2f}` in linked money."
         )
     if jurisdiction_pressure_explanation_views:
         lines.append(

@@ -307,7 +307,7 @@ Each thread rollup currently includes:
 
 Current note:
 
-- this is a bounded comparison layer over the current in-scope program and project threads for one jurisdiction
+- this is a bounded comparison layer over the current in-scope program, project, and QA-backed election threads for one jurisdiction
 - it is intended to answer a harder product question than a single dossier: which local delivery threads currently carry the most combined money pressure, legal pressure, and evidence density
 - it still derives pressure from existing read models and graph paths; it does not mint new graph truth edges
 
@@ -345,7 +345,7 @@ Current note:
 
 - this is the explanatory layer over `jurisdiction_local_pressure_comparison`
 - it is intended to answer why one local thread ranks above another, not just that it does
-- it stays bounded to existing graph/read-model signals: money pressure, legal pressure, decision density, evidence density, and counterparty concentration
+- it stays bounded to existing graph/read-model signals: money pressure, legal pressure, decision density, evidence density, counterparty concentration, and existing committee/filing lineage
 
 ### `jurisdiction_legal_constraint_summary`
 

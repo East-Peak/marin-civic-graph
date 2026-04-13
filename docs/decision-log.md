@@ -25,6 +25,12 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
   - Result: the current north-star question is now explicit, centered on which San Rafael local threads carry the most combined money pressure and legal pressure, and future ingest can be judged against whether it materially improves that answer.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-the-next-graph-phase-should-be-driven-by-a-bounded-question-set.md`
 
+- **QX-001 should widen through bounded election pressure before any new ingest lane**
+  - Once the north-star question existed, the next cheapest way to improve it was not another source family. It was to use the already-imported San Rafael city-office election, committee, filing, and QA-backed money layers as additional local thread types.
+  - The pressure comparison and explanation layers now include the `2020` and `2024` San Rafael general municipal elections as bounded election threads, alongside the sanctioned-camping program and Downtown Library project.
+  - Result: the current north-star answer is no longer only two threads deep. It now spans `4` local threads and preserves the right next ingest trigger: do not widen again until the graph needs a second legally constrained local thread or a materially different counterparty pattern.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-bounded-election-pressure-can-strengthen-qx-001-without-new-ingest.md`
+
 - **Jurisdiction pressure explanations should explain why one thread ranks above another**
   - Once the San Rafael pressure comparison existed, the next missing product question was explanatory rather than comparative: why does one local thread rank above another on the current graph.
   - The right bounded answer is still `place-san-rafael`, reusing the comparison layer and adding explicit ranking method, per-thread explanation points, and pairwise deltas instead of reopening ingest.

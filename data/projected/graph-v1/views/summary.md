@@ -1,6 +1,6 @@
 # Graph View Summary
 
-Generated: 2026-04-13T13:29:23Z
+Generated: 2026-04-13T13:47:12Z
 
 ## Included Views
 
@@ -35,8 +35,8 @@ Generated: 2026-04-13T13:29:23Z
 - Decision money rollups now cover `1` targets, including `San Rafael` with `4` money-linked decisions and `$8,069,336.82` in linked flow volume.
 - Decision money explanations now cover `1` targets, including `San Rafael` with `4` explained decisions and `$8,069,336.82` in explained linked flow volume.
 - Program local pressure summaries now cover `1` targets, including `San Rafael sanctioned camping program` with `1` linked decisions, `2` linked cases, and `$4,758,800.00` in linked money.
-- Jurisdiction local pressure comparisons now cover `1` targets, including `San Rafael` with `2` threads, `2` linked cases, and `$8,069,336.82` in linked money.
-- Jurisdiction local pressure explanations now cover `1` targets, including `San Rafael` with `2` ranked thread explanations and `1` pairwise comparisons.
+- Jurisdiction local pressure comparisons now cover `1` targets, including `San Rafael` with `4` threads (`2` election-backed), `2` linked cases, and `$8,124,666.74` in linked money.
+- Jurisdiction local pressure explanations now cover `1` targets, including `San Rafael` with `4` ranked thread explanations and `1` pairwise comparisons.
 - Jurisdiction legal summaries now cover `1` targets, including `San Rafael` with `2` cases, `2` linked local decisions, and `0` in-scope case-lineage links.
 - The graph currently materializes `152` money flows across `9` flow types.
 - The legal lane currently includes `4` cases and links back to `2` San Rafael local decisions.

@@ -12,8 +12,8 @@
         "jurisdiction-san-rafael-local-pressure-comparison",
         "jurisdiction-san-rafael-local-pressure-explanation"
       ],
-      "pass_signal": "At least two local threads rank cleanly with explicit counterparties and bounded legal context.",
-      "next_ingest_trigger": "Add another bounded local thread only if the current comparison is too thin to be representative."
+      "pass_signal": "At least four bounded local threads rank cleanly, including multiple thread types and explicit counterparties with bounded legal context.",
+      "next_ingest_trigger": "Add another bounded local thread only if the current comparison still lacks a second legally constrained thread or a materially different counterparty pattern."
     },
     {
       "id": "QX-002",

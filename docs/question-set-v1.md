@@ -37,12 +37,15 @@ Current answer surfaces:
 
 Current answer boundary:
 
-- only `2` local threads are in scope today
-- the answer is real, but still thin
+- `4` local threads are now in scope today:
+  - `1` program thread
+  - `1` project thread
+  - `2` QA-backed city-election threads
+- the answer is materially better than before, but it still has only one legal-pressure-bearing local thread
 
 Next ingest trigger:
 
-- widen only when the graph needs a third or fourth local thread to make this comparison more representative
+- widen only when the graph needs a second legally constrained local thread or a materially different counterparty pattern to make this comparison more representative
 
 ## Supporting Questions
 
