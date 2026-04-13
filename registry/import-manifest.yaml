@@ -144,6 +144,31 @@
         { "name": "record_refs", "mode": "nodes", "node_type": "Record", "promotion_state": "promoted" },
         { "name": "record_relationships", "mode": "relationship_passthrough" }
       ]
+    },
+    {
+      "path": "data/normalized/legal-precedent-01/bundle-01.json",
+      "sections": [
+        { "name": "place_candidates", "mode": "nodes", "node_type": "Place", "promotion_state": "promoted" },
+        { "name": "record_refs", "mode": "nodes", "node_type": "Record", "promotion_state": "promoted" },
+        { "name": "institution_candidates", "mode": "nodes", "node_type": "Institution", "promotion_state": "promoted" },
+        { "name": "actor_candidates", "mode": "nodes", "node_type": "Actor", "promotion_state": "promoted" },
+        { "name": "program_candidates", "mode": "nodes", "node_type": "Program", "promotion_state": "promoted" },
+        { "name": "case_candidates", "mode": "nodes", "node_type": "Case", "promotion_state": "promoted" },
+        { "name": "proceeding_candidates", "mode": "nodes", "node_type": "Proceeding", "promotion_state": "promoted" },
+        { "name": "case_participation_candidates", "mode": "nodes", "node_type": "CaseParticipation", "promotion_state": "promoted" }
+      ]
+    },
+    {
+      "path": "data/normalized/legal-precedent-02/bundle-01.json",
+      "sections": [
+        { "name": "place_candidates", "mode": "nodes", "node_type": "Place", "promotion_state": "promoted" },
+        { "name": "record_refs", "mode": "nodes", "node_type": "Record", "promotion_state": "promoted" },
+        { "name": "institution_candidates", "mode": "nodes", "node_type": "Institution", "promotion_state": "promoted" },
+        { "name": "actor_candidates", "mode": "nodes", "node_type": "Actor", "promotion_state": "promoted" },
+        { "name": "case_candidates", "mode": "nodes", "node_type": "Case", "promotion_state": "promoted" },
+        { "name": "proceeding_candidates", "mode": "nodes", "node_type": "Proceeding", "promotion_state": "promoted" },
+        { "name": "case_participation_candidates", "mode": "nodes", "node_type": "CaseParticipation", "promotion_state": "promoted" }
+      ]
     }
   ]
 }

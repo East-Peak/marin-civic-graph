@@ -1,10 +1,10 @@
 # Graph Query Pack Report
 
-- `generated_at`: 2026-04-13T11:28:23Z
+- `generated_at`: 2026-04-13T11:41:54Z
 - `engine`: projection_jsonl
 - `projection_id`: graph-v1
-- `nodes`: 6098
-- `edges`: 20422
+- `nodes`: 6154
+- `edges`: 20667
 - `queries_passed`: 5/5
 
 ## Q1: actor-kate-colin dossier
@@ -46,6 +46,16 @@
   - The validation queue remains small enough to review directly.
   - The known Kate Colin 2024 Schedule A extraction gap remains visible in the queue and is still the main carried-forward reconciliation issue.
   - This query checks whether new breadth work is creating a manageable validation surface instead of a noisy anomaly dump.
+
+## Supplemental Queries
+
+### L1: legal constraint chain
+
+- `pass`: yes
+- `metrics`: {"boyd_present": true, "grants_pass_lineage_case_count": 3, "grants_pass_present": true, "legal_node_count": 26, "legal_record_count": 15, "linked_local_decision_count": 2, "shared_issue_count": 3, "shared_program_count": 1}
+- `notes`:
+  - This is a supplemental query, not part of the fixed five-query breadth gate.
+  - It checks whether the first local-case plus controlling-precedent pair is materialized well enough to show a real legal constraint chain back into San Rafael decisions and programs.
 
 ## Recommendation
 

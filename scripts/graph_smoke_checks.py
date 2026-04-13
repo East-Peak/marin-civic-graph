@@ -58,6 +58,8 @@ def main() -> None:
     node_type_counts = Counter(node["node_type"] for node in nodes)
     required_types = [
         "Actor",
+        "Case",
+        "CaseParticipation",
         "Institution",
         "Seat",
         "SeatService",
@@ -69,6 +71,8 @@ def main() -> None:
         "Decision",
         "Filing",
         "MoneyFlow",
+        "Proceeding",
+        "Program",
         "Record",
         "ValidationCheck",
     ]
@@ -148,6 +152,26 @@ def main() -> None:
         "meeting-2026-03-16-san-rafael-city-council",
         "inst-san-rafael-city-council",
     )
+    assert_path(
+        adjacency,
+        "case-boyd-v-city-of-san-rafael",
+        "decision-2024-08-19-resolution-15336",
+    )
+    assert_path(
+        adjacency,
+        "case-boyd-v-city-of-san-rafael",
+        "program-san-rafael-sanctioned-camping",
+    )
+    assert_path(
+        adjacency,
+        "case-city-of-grants-pass-v-johnson",
+        "decision-2024-08-19-resolution-15336",
+    )
+    assert_path(
+        adjacency,
+        "case-blake-v-city-of-grants-pass",
+        "case-city-of-grants-pass-v-johnson",
+    )
 
     validation_nodes = [
         node["id"]
@@ -167,6 +191,7 @@ def main() -> None:
             "node_type_counts": dict(sorted(node_type_counts.items())),
             "validation_check": validation_nodes[0],
             "decision_sample": node_by_id["decision-2024-08-19-resolution-15336"]["display_label"],
+            "legal_case_sample": node_by_id["case-city-of-grants-pass-v-johnson"]["display_label"],
         },
     )
 

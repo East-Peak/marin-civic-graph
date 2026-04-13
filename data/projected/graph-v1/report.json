@@ -1,6 +1,6 @@
 {
   "projection_id": "graph-v1",
-  "generated_at": "2026-04-13T11:28:23Z",
+  "generated_at": "2026-04-13T11:38:54Z",
   "manifest_path": "/Users/tammypais/projects/marin-civic-graph/registry/import-manifest.yaml",
   "output_dir": "data/projected/graph-v1",
   "bundle_reports": [
@@ -479,23 +479,159 @@
           "skip_reasons": {}
         }
       ]
+    },
+    {
+      "bundle_id": "legal-precedent-01__bundle-01",
+      "path": "data/normalized/legal-precedent-01/bundle-01.json",
+      "sections": [
+        {
+          "section": "place_candidates",
+          "mode": "nodes",
+          "input_count": 3,
+          "imported_count": 3,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "record_refs",
+          "mode": "nodes",
+          "input_count": 5,
+          "imported_count": 5,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "institution_candidates",
+          "mode": "nodes",
+          "input_count": 2,
+          "imported_count": 2,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "actor_candidates",
+          "mode": "nodes",
+          "input_count": 3,
+          "imported_count": 3,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "program_candidates",
+          "mode": "nodes",
+          "input_count": 1,
+          "imported_count": 1,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "case_candidates",
+          "mode": "nodes",
+          "input_count": 1,
+          "imported_count": 1,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "proceeding_candidates",
+          "mode": "nodes",
+          "input_count": 6,
+          "imported_count": 6,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "case_participation_candidates",
+          "mode": "nodes",
+          "input_count": 2,
+          "imported_count": 2,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    },
+    {
+      "bundle_id": "legal-precedent-02__bundle-01",
+      "path": "data/normalized/legal-precedent-02/bundle-01.json",
+      "sections": [
+        {
+          "section": "place_candidates",
+          "mode": "nodes",
+          "input_count": 6,
+          "imported_count": 6,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "record_refs",
+          "mode": "nodes",
+          "input_count": 6,
+          "imported_count": 6,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "institution_candidates",
+          "mode": "nodes",
+          "input_count": 6,
+          "imported_count": 6,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "actor_candidates",
+          "mode": "nodes",
+          "input_count": 4,
+          "imported_count": 4,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "case_candidates",
+          "mode": "nodes",
+          "input_count": 3,
+          "imported_count": 3,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "proceeding_candidates",
+          "mode": "nodes",
+          "input_count": 7,
+          "imported_count": 7,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "case_participation_candidates",
+          "mode": "nodes",
+          "input_count": 7,
+          "imported_count": 7,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
     }
   ],
   "node_type_counts": {
-    "Actor": 21,
+    "Actor": 28,
     "AgendaItem": 2970,
     "Candidacy": 14,
+    "Case": 4,
+    "CaseParticipation": 9,
     "Committee": 16,
     "Decision": 1472,
     "EconomicInterestDisclosure": 21,
     "Election": 21,
     "Filing": 254,
-    "Institution": 5,
+    "Institution": 11,
     "Issue": 3,
     "Meeting": 283,
     "MoneyFlow": 147,
-    "Place": 8,
-    "Record": 834,
+    "Place": 13,
+    "Proceeding": 13,
+    "Program": 1,
+    "Record": 845,
     "Seat": 5,
     "SeatService": 8,
     "ValidationCheck": 16
@@ -512,7 +648,7 @@
     "DECIDED_BY_INSTITUTION": 1472,
     "DERIVED_FROM_RECORD": 47,
     "DISCLOSED_IN_FILING": 160,
-    "EVIDENCED_BY": 6238,
+    "EVIDENCED_BY": 6324,
     "FILED_BY_ACTOR": 253,
     "FILED_BY_COMMITTEE": 232,
     "FILED_DURING_SEAT_SERVICE": 43,
@@ -523,10 +659,16 @@
     "FOR_ELECTION": 14,
     "FOR_SEAT": 30,
     "FROM_SOURCE": 1,
+    "HEARD_BY_JUDGE": 7,
+    "HEARD_IN_COURT": 4,
     "HELD_BY_ACTOR": 8,
     "HELD_BY_INSTITUTION": 283,
-    "IN_JURISDICTION": 37,
+    "INVOLVES_ACTOR": 4,
+    "INVOLVES_INSTITUTION": 5,
+    "IN_JURISDICTION": 38,
     "OFFICIAL_FILER": 22,
+    "OPERATED_BY_INSTITUTION": 1,
+    "PART_OF_CASE": 22,
     "PART_OF_MEETING": 2970,
     "PRIMARY_FOR_ELECTION": 16,
     "RECORD_ATTACHED_TO_RECORD": 8,
@@ -536,15 +678,17 @@
     "RELATED_TO_ELECTION": 6,
     "RELATES_TO_ACTOR": 249,
     "RELATES_TO_AGENDA_ITEM": 10,
+    "RELATES_TO_CASE": 18,
     "RELATES_TO_COMMITTEE": 269,
-    "RELATES_TO_DECISION": 369,
+    "RELATES_TO_DECISION": 375,
     "RELATES_TO_ELECTION": 313,
     "RELATES_TO_FILING": 21,
     "RELATES_TO_INSTITUTION": 4,
-    "RELATES_TO_ISSUE": 20,
+    "RELATES_TO_ISSUE": 64,
     "RELATES_TO_MEETING": 524,
     "RELATES_TO_MONEY_FLOW": 4,
-    "RELATES_TO_PLACE": 11,
+    "RELATES_TO_PLACE": 55,
+    "RELATES_TO_PROGRAM": 3,
     "RELATES_TO_RECORD": 250,
     "RELATES_TO_SEAT": 247,
     "RELATES_TO_VALIDATIONCHECK": 16,
@@ -558,10 +702,10 @@
     "TO_TARGET": 107,
     "VALIDATES": 16
   },
-  "total_nodes": 6098,
-  "total_edges": 20422,
-  "duplicate_node_merges": 250,
-  "duplicate_edge_merges": 785,
+  "total_nodes": 6154,
+  "total_edges": 20667,
+  "duplicate_node_merges": 256,
+  "duplicate_edge_merges": 786,
   "node_conflicts": [
     {
       "id": "record-2023-05-08-san-rafael-city-council-special-page",
@@ -2186,6 +2330,20 @@
       "bundle_id": "san-rafael-homelessness-01__bundle-01",
       "fields": [
         "place_type"
+      ]
+    },
+    {
+      "id": "inst-city-of-san-rafael",
+      "bundle_id": "legal-precedent-01__bundle-01",
+      "fields": [
+        "institution_type"
+      ]
+    },
+    {
+      "id": "inst-city-of-san-rafael",
+      "bundle_id": "legal-precedent-02__bundle-01",
+      "fields": [
+        "institution_type"
       ]
     }
   ],

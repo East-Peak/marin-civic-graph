@@ -1,26 +1,30 @@
 {
-  "generated_at": "2026-04-13T11:28:23Z",
+  "generated_at": "2026-04-13T11:41:54Z",
   "engine": "projection_jsonl",
   "projection_id": "graph-v1",
-  "projection_report_generated_at": "2026-04-13T11:28:23Z",
+  "projection_report_generated_at": "2026-04-13T11:38:54Z",
   "projection_counts": {
-    "nodes": 6098,
-    "edges": 20422,
+    "nodes": 6154,
+    "edges": 20667,
     "node_type_counts": {
-      "Actor": 21,
+      "Actor": 28,
       "AgendaItem": 2970,
       "Candidacy": 14,
+      "Case": 4,
+      "CaseParticipation": 9,
       "Committee": 16,
       "Decision": 1472,
       "EconomicInterestDisclosure": 21,
       "Election": 21,
       "Filing": 254,
-      "Institution": 5,
+      "Institution": 11,
       "Issue": 3,
       "Meeting": 283,
       "MoneyFlow": 147,
-      "Place": 8,
-      "Record": 834,
+      "Place": 13,
+      "Proceeding": 13,
+      "Program": 1,
+      "Record": 845,
       "Seat": 5,
       "SeatService": 8,
       "ValidationCheck": 16
@@ -513,6 +517,61 @@
         "The validation queue remains small enough to review directly.",
         "The known Kate Colin 2024 Schedule A extraction gap remains visible in the queue and is still the main carried-forward reconciliation issue.",
         "This query checks whether new breadth work is creating a manageable validation surface instead of a noisy anomaly dump."
+      ]
+    }
+  ],
+  "supplemental_queries": [
+    {
+      "id": "L1",
+      "title": "legal constraint chain",
+      "pass": true,
+      "metrics": {
+        "boyd_present": true,
+        "grants_pass_present": true,
+        "grants_pass_lineage_case_count": 3,
+        "shared_issue_count": 3,
+        "shared_program_count": 1,
+        "linked_local_decision_count": 2,
+        "legal_record_count": 15,
+        "legal_node_count": 26
+      },
+      "samples": {
+        "grants_pass_lineage_case_ids": [
+          "case-blake-v-city-of-grants-pass",
+          "case-johnson-v-city-of-grants-pass",
+          "case-city-of-grants-pass-v-johnson"
+        ],
+        "shared_issue_ids": [
+          "issue-camping-ordinance",
+          "issue-encampments",
+          "issue-homelessness"
+        ],
+        "shared_program_ids": [
+          "program-san-rafael-sanctioned-camping"
+        ],
+        "linked_local_decision_ids": [
+          "decision-2024-08-19-ordinance-2040-introduction",
+          "decision-2024-08-19-resolution-15336"
+        ],
+        "legal_record_ids": [
+          "doc-2024-06-28-grants-pass-statement",
+          "doc-2024-08-08-boyd-dismissal-release",
+          "doc-2024-08-19-item-5a-report",
+          "doc-2024-08-19-staff-report",
+          "record-grants-pass-district-judgment-2020-08-26",
+          "record-grants-pass-district-opinion-order-2020-07-22",
+          "record-ninth-circuit-grants-pass-amended-opinion-2023-07-05",
+          "record-san-rafael-boyd-dismissal-order-2024-08-07",
+          "record-san-rafael-boyd-preliminary-injunction-order-2023-10-19",
+          "record-san-rafael-boyd-tro-order-2023-08-16",
+          "record-san-rafael-grants-pass-explainer-2024-09-02",
+          "record-san-rafael-sanctioned-camping-area-page",
+          "... (+3 more)"
+        ]
+      },
+      "notes": [
+        "This is a supplemental query, not part of the fixed five-query breadth gate.",
+        "It checks whether the first local-case plus controlling-precedent pair is materialized well enough to show a real legal constraint chain back into San Rafael decisions and programs."
       ]
     }
   ],

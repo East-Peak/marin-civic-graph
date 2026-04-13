@@ -633,6 +633,80 @@ def run_q5(
     return result
 
 
+def run_l1(
+    nodes: list[dict[str, Any]],
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    boyd_id = "case-boyd-v-city-of-san-rafael"
+    grants_supreme_id = "case-city-of-grants-pass-v-johnson"
+    grants_lineage_ids = [
+        "case-blake-v-city-of-grants-pass",
+        "case-johnson-v-city-of-grants-pass",
+        "case-city-of-grants-pass-v-johnson",
+    ]
+    legal_nodes = [node for node in nodes if node["node_type"] in {"Case", "Proceeding", "CaseParticipation"}]
+
+    boyd_present = boyd_id in node_by_id
+    grants_supreme_present = grants_supreme_id in node_by_id
+    grants_lineage_present = [case_id for case_id in grants_lineage_ids if case_id in node_by_id]
+
+    shared_program_ids = sorted(
+        set(edge["target_id"] for edge in outgoing.get(boyd_id, []) if edge["relationship_type"] == "RELATES_TO_PROGRAM")
+        & set(edge["target_id"] for edge in outgoing.get(grants_supreme_id, []) if edge["relationship_type"] == "RELATES_TO_PROGRAM")
+    )
+    linked_local_decision_ids = sorted(
+        set(edge["target_id"] for edge in outgoing.get(boyd_id, []) if edge["relationship_type"] == "RELATES_TO_DECISION")
+        | set(edge["target_id"] for edge in outgoing.get(grants_supreme_id, []) if edge["relationship_type"] == "RELATES_TO_DECISION")
+    )
+    shared_issue_ids = sorted(
+        set(edge["target_id"] for edge in outgoing.get(boyd_id, []) if edge["relationship_type"] == "RELATES_TO_ISSUE")
+        & set(edge["target_id"] for edge in outgoing.get(grants_supreme_id, []) if edge["relationship_type"] == "RELATES_TO_ISSUE")
+    )
+    legal_record_ids = sorted(
+        {
+            edge["target_id"]
+            for case_id in [boyd_id, *grants_lineage_ids]
+            for edge in outgoing.get(case_id, [])
+            if edge["relationship_type"] == "EVIDENCED_BY"
+        }
+    )
+
+    passed = (
+        boyd_present
+        and grants_supreme_present
+        and len(grants_lineage_present) == len(grants_lineage_ids)
+        and (bool(shared_program_ids) or len(linked_local_decision_ids) >= 2)
+    )
+
+    return {
+        "id": "L1",
+        "title": "legal constraint chain",
+        "pass": passed,
+        "metrics": {
+            "boyd_present": boyd_present,
+            "grants_pass_present": grants_supreme_present,
+            "grants_pass_lineage_case_count": len(grants_lineage_present),
+            "shared_issue_count": len(shared_issue_ids),
+            "shared_program_count": len(shared_program_ids),
+            "linked_local_decision_count": len(linked_local_decision_ids),
+            "legal_record_count": len(legal_record_ids),
+            "legal_node_count": len(legal_nodes),
+        },
+        "samples": {
+            "grants_pass_lineage_case_ids": grants_lineage_present,
+            "shared_issue_ids": shared_issue_ids,
+            "shared_program_ids": shared_program_ids,
+            "linked_local_decision_ids": linked_local_decision_ids,
+            "legal_record_ids": format_ids(legal_record_ids, limit=12),
+        },
+        "notes": [
+            "This is a supplemental query, not part of the fixed five-query breadth gate.",
+            "It checks whether the first local-case plus controlling-precedent pair is materialized well enough to show a real legal constraint chain back into San Rafael decisions and programs.",
+        ],
+    }
+
+
 def build_markdown(report: dict[str, Any]) -> str:
     lines = [
         "# Graph Query Pack Report",
@@ -659,6 +733,22 @@ def build_markdown(report: dict[str, Any]) -> str:
             for note in query["notes"]:
                 lines.append(f"  - {note}")
         lines.append("")
+    if report.get("supplemental_queries"):
+        lines.extend(["## Supplemental Queries", ""])
+        for query in report["supplemental_queries"]:
+            lines.extend(
+                [
+                    f"### {query['id']}: {query['title']}",
+                    "",
+                    f"- `pass`: {'yes' if query['pass'] else 'no'}",
+                    f"- `metrics`: {json.dumps(query['metrics'], sort_keys=True)}",
+                ]
+            )
+            if query.get("notes"):
+                lines.append("- `notes`:")
+                for note in query["notes"]:
+                    lines.append(f"  - {note}")
+            lines.append("")
     lines.extend(
         [
             "## Recommendation",
@@ -699,6 +789,9 @@ def main() -> None:
         run_q4(nodes, node_by_id, outgoing, incoming),
         run_q5(nodes, node_by_id),
     ]
+    supplemental_queries = [
+        run_l1(nodes, node_by_id, outgoing),
+    ]
 
     passed = sum(1 for query in queries if query["pass"])
     failed = [query["id"] for query in queries if not query["pass"]]
@@ -729,6 +822,7 @@ def main() -> None:
             "failed_query_ids": failed,
         },
         "queries": queries,
+        "supplemental_queries": supplemental_queries,
         "next_recommendation": next_recommendation,
     }
 

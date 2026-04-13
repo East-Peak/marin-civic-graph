@@ -18,6 +18,8 @@ The query pack is the gate that keeps the sprint honest:
 
 Run the same five queries after each major breadth checkpoint and compare the results.
 
+Supplemental queries can be added for adjacent lanes, but they do not change the breadth gate unless we deliberately change the sprint rules.
+
 ## Current Engine
 
 The canonical runner is:
@@ -108,3 +110,23 @@ As of the first formal run, the expected interpretation is:
 
 - Q1, Q2, Q3, and Q5 should pass if the San Rafael governance spine is healthy
 - Q4 is the likely gating failure until multi-cycle QA-backed campaign money coverage improves
+
+## Supplemental Queries
+
+### L1: legal constraint chain
+
+Return:
+
+- the Boyd local case
+- the full Grants Pass district -> Ninth Circuit -> Supreme Court lineage
+- shared issue overlap
+- shared program and local-decision links back into San Rafael
+- legal record coverage across the pair
+
+Pass condition:
+
+- Boyd exists
+- the full Grants Pass lineage exists
+- the pair links back into the San Rafael sanctioned-camping / August 19, 2024 constraint posture through a shared program or at least two linked local decisions
+
+This query is informational and product-facing, but it is not part of the fixed breadth gate.

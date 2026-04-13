@@ -371,9 +371,26 @@ Mirror the question here when it affects:
   - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/grants-pass-district-judgment/2026-04-12.json)
   - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/ninth-circuit-grants-pass-amended-opinion/2026-04-12.json)
   - [legal-precedent-02.md](/Users/tammypais/projects/marin-civic-graph/docs/legal-precedent-02.md)
-- `question`: Do we need the San Francisco amicus brief PDF itself or a direct district-court docket surface before `legal-precedent-02` is strong enough for import?
-- `why it matters`: The core precedent chain is now real, so the remaining question is provenance and completeness of supporting advocacy and docket surfaces rather than whether the legal model works.
+  - [query-pack-report.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/query-pack-report.json)
+- `question`: Do we still need the San Francisco amicus brief PDF itself or a direct district-court docket surface now that the Boyd / Grants Pass pair is already strong enough to enter graph-v1 as a supplemental legal lane?
+- `why it matters`: The remaining issue is now provenance and completeness of supporting advocacy and docket surfaces, not whether the legal model is importable or queryable.
+- `current note`: No longer a graph-v1 blocker. The legal pair now imports cleanly and the supplemental legal query passes, but the lane would still benefit from direct amicus-PDF and district-docket provenance.
 - `next evidence`: capture the public amicus-brief PDF linked from the SF City Attorney page and, if a stable free district docket path is available, add it without disturbing the current case and record IDs.
+
+### OQ-035: Graph-v1 campaign evidence completeness after the 2020 money batch
+
+- `status`: watch
+- `layer`: graph materialization / evidence completeness
+- `scope`: `graph-v1`
+- `source refs`:
+  - [report.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/report.json)
+  - [query-pack-report.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/query-pack-report.json)
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-records-01/bundle-01.json)
+- `question`: Should graph-v1 widen `san-rafael-city-campaign-records-01` again so the older OCR/PDF evidence artifacts introduced by the accepted 2020 Ralph-loop batch stop surfacing as `missing_target:Record` skips?
+- `why it matters`: The fixed breadth gate now passes, but the projection report has reintroduced `missing_target:Record = 44`, concentrated in older city-side Form 460 OCR/PDF record IDs that were not part of the first campaign-record bundle.
+- `current note`: This is not blocking the current legal import or the fixed query pack. It is a cleanup and evidence-completeness follow-up on the campaign-money lane.
+- `next evidence`: normalize the highest-repeat missing record IDs from the projection report, starting with `record-san-rafael-campaign-ocr-entry-28450`, `record-san-rafael-campaign-pdf-entry-28450`, `record-san-rafael-campaign-ocr-entry-33340`, and `record-san-rafael-campaign-pdf-entry-33340`.
 
 ### OQ-016: San Rafael local Form 803 filing surface
 

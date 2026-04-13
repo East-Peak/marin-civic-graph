@@ -248,7 +248,7 @@ Do not ship `Legal & Precedent` or `Records` as top-level tabs in v1.
 Reason:
 
 - `Records` is still an evidence mode inside investigation, not a distinct top-level question
-- the legal / precedent lane is architecturally important but should stay out of core import until the first legal comparison set is stronger than one local case plus one precedent bundle with unresolved lower-court gaps
+- the legal / precedent lane is architecturally important, but should stay out of the fixed breadth gate until it proves queryable as a supplemental lane
 
 Instead:
 
@@ -277,7 +277,7 @@ It now has a clearly named normalized legal bundle:
 - [legal-precedent-02.md](/Users/tammypais/projects/marin-civic-graph/docs/legal-precedent-02.md)
 - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/legal-precedent-02/bundle-01.json)
 
-But it is still not yet a first-class import surface.
+It is now strong enough to be imported as a supplemental graph-v1 lane, but not strong enough to change the fixed breadth gate or justify a top-level legal product surface by itself.
 
 The current legal pair proves:
 
@@ -295,7 +295,7 @@ The current remaining gap is also explicit:
 
 ### Proposal
 
-Treat `legal-precedent-01` and `legal-precedent-02` as the first real legal normalization pair, but keep them outside core v1 import until the provenance and surrounding comparison set are stronger.
+Treat `legal-precedent-01` and `legal-precedent-02` as the first real legal normalization pair and bring them into graph-v1 now as a supplemental import lane.
 
 Minimum scope:
 
@@ -307,13 +307,15 @@ Minimum scope:
 - official legal-framing records already in case study 01
 - explicit local crosswalk back to decision and program nodes
 
+Keep the fixed breadth gate unchanged at `Q1` through `Q5`, and use one supplemental legal constraint query to verify that the pair is actually connected back into the San Rafael decision/program spine.
+
 After that, the next legal follow-on should be:
 
 1. improve Boyd TRO / preliminary-injunction provenance if a stable court-hosted path becomes available
 2. strengthen the Grants Pass supporting-provenance layer with the amicus brief PDF and, if feasible, a free district docket surface
 3. only then widen into the broader pressure-test basket
 
-That is enough to justify a later first-class legal lane without pretending the entire judicial model is done.
+That is enough to justify a supplemental legal lane now without pretending the entire judicial model is done.
 
 ## First Import Scope
 
@@ -345,7 +347,7 @@ Defer for phase two:
 - permit basket
 - procurement basket
 - criminal sample basket
-- broader legal/oversight bundle beyond the first named precedent set
+- broader legal/oversight bundle beyond the imported Boyd / Grants Pass pair
 
 ## Main Risks
 
@@ -378,14 +380,14 @@ Mitigation:
 - `MERGE` by stable ID only
 - no importer-side fuzzy resolution
 
-### Risk 4: Legal / precedent layer still looks thinner than it really is
+### Risk 4: Legal / precedent layer is still thin relative to the governance spine
 
-The legal work is now normalized, but still easy to miss because the legal pair stays outside core graph-v1 import.
+The legal work now imports, but it is still much thinner than the San Rafael governance spine and should not silently become a core breadth gate or top-level product promise.
 
 Mitigation:
 
-- keep legal context visible in the page architecture
-- keep `legal-precedent-01` and `legal-precedent-02` visible as a real lane
+- keep legal context visible through a supplemental query and supporting page sections
+- keep `legal-precedent-01` and `legal-precedent-02` visible as a real imported lane
 - do not promise a top-level legal tab until the lane is stronger than the current `Boyd + Grants Pass` pair
 
 ### Risk 5: Overbuilding the importer

@@ -18,6 +18,12 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **The Boyd and Grants Pass pair can enter graph-v1 as a supplemental legal lane**
+  - Import `legal-precedent-01` and `legal-precedent-02` into graph-v1 now that the local case plus controlling-precedent pair is normalized enough to support stable `Case`, `Proceeding`, `CaseParticipation`, `Program`, and legal `Record` nodes.
+  - Keep the fixed breadth gate unchanged at `Q1` through `Q5`; add the legal constraint chain only as a supplemental query so the San Rafael breadth sprint does not silently change scope.
+  - Treat the remaining Grants Pass amicus/district-docket gap as provenance completeness work, not as a blocker on graph-v1 import.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-legal-precedent-pair-can-enter-graph-v1-as-a-supplemental-lane.md`
+
 - **Current-officeholder disclosure continuity should widen through explicit prior term windows before older seat structures**
   - Add only the historical seat-service windows that are directly anchored by explicit 2020 election and swear-in evidence for the current mayor, District 1, and District 4 officeholders.
   - Use those windows to widen the Form `700` continuity bundle from current-term-only to current-plus-2020-2024 continuity, while keeping pre-2020 / pre-district rows out of graph-v1.
@@ -53,7 +59,7 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 - **The legal lane should widen from Boyd to one official controlling-precedent bundle before import**
   - `legal-precedent-02` adds `City of Grants Pass v. Johnson` as the first external controlling-precedent bundle, anchored on the official Supreme Court docket and slip opinion plus official San Rafael and San Francisco response records.
-  - Keep the legal lane normalized-only for now; the next real gap is lower-court chain depth, not whether the controlling precedent record exists.
+  - At the time this bundle landed, keep the legal lane normalized-only while the next real gap is still lower-court chain depth. That lower-court gap is now resolved, and the legal pair later enters graph-v1 as a supplemental lane.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-grants-pass-should-enter-the-legal-lane-as-an-official-precedent-bundle.md`
 
 - **The Grants Pass lower-court chain should stay inside `legal-precedent-02` as separate related cases**
