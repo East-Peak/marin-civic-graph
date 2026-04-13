@@ -1,6 +1,6 @@
 {
   "projection_id": "graph-v1",
-  "generated_at": "2026-04-13T11:38:54Z",
+  "generated_at": "2026-04-13T11:43:59Z",
   "manifest_path": "/Users/tammypais/projects/marin-civic-graph/registry/import-manifest.yaml",
   "output_dir": "data/projected/graph-v1",
   "bundle_reports": [
@@ -313,8 +313,8 @@
         {
           "section": "record_refs",
           "mode": "nodes",
-          "input_count": 25,
-          "imported_count": 25,
+          "input_count": 45,
+          "imported_count": 45,
           "skipped_count": 0,
           "skip_reasons": {}
         }
@@ -631,7 +631,7 @@
     "Place": 13,
     "Proceeding": 13,
     "Program": 1,
-    "Record": 845,
+    "Record": 865,
     "Seat": 5,
     "SeatService": 8,
     "ValidationCheck": 16
@@ -646,9 +646,9 @@
     "CONTROLLED_BY_COMMITTEE": 14,
     "DECIDED_AT_MEETING": 1472,
     "DECIDED_BY_INSTITUTION": 1472,
-    "DERIVED_FROM_RECORD": 47,
+    "DERIVED_FROM_RECORD": 67,
     "DISCLOSED_IN_FILING": 160,
-    "EVIDENCED_BY": 6324,
+    "EVIDENCED_BY": 6356,
     "FILED_BY_ACTOR": 253,
     "FILED_BY_COMMITTEE": 232,
     "FILED_DURING_SEAT_SERVICE": 43,
@@ -682,14 +682,14 @@
     "RELATES_TO_COMMITTEE": 269,
     "RELATES_TO_DECISION": 375,
     "RELATES_TO_ELECTION": 313,
-    "RELATES_TO_FILING": 21,
+    "RELATES_TO_FILING": 41,
     "RELATES_TO_INSTITUTION": 4,
     "RELATES_TO_ISSUE": 64,
     "RELATES_TO_MEETING": 524,
     "RELATES_TO_MONEY_FLOW": 4,
     "RELATES_TO_PLACE": 55,
     "RELATES_TO_PROGRAM": 3,
-    "RELATES_TO_RECORD": 250,
+    "RELATES_TO_RECORD": 262,
     "RELATES_TO_SEAT": 247,
     "RELATES_TO_VALIDATIONCHECK": 16,
     "REQUESTED_BY_ACTOR": 1,
@@ -702,8 +702,8 @@
     "TO_TARGET": 107,
     "VALIDATES": 16
   },
-  "total_nodes": 6154,
-  "total_edges": 20667,
+  "total_nodes": 6174,
+  "total_edges": 20751,
   "duplicate_node_merges": 256,
   "duplicate_edge_merges": 786,
   "node_conflicts": [
@@ -2374,21 +2374,12 @@
     }
   ],
   "skipped_edge_reasons": {
-    "missing_target:Actor": 149,
-    "missing_target:Record": 44
+    "missing_target:Actor": 149
   },
   "top_skipped_edge_targets": [
     [
       "actor-anedot",
       9
-    ],
-    [
-      "record-san-rafael-campaign-ocr-entry-28450",
-      6
-    ],
-    [
-      "record-san-rafael-campaign-pdf-entry-28450",
-      5
     ],
     [
       "actor-four-waters-media-inc",
@@ -2397,54 +2388,6 @@
     [
       "actor-pmcohen-public-affairs",
       5
-    ],
-    [
-      "record-san-rafael-campaign-ocr-entry-33340",
-      4
-    ],
-    [
-      "record-san-rafael-campaign-pdf-entry-33340",
-      3
-    ],
-    [
-      "record-san-rafael-campaign-ocr-entry-31112",
-      2
-    ],
-    [
-      "record-san-rafael-campaign-ocr-entry-31115",
-      2
-    ],
-    [
-      "record-san-rafael-campaign-ocr-entry-31430",
-      2
-    ],
-    [
-      "record-san-rafael-campaign-ocr-entry-31440",
-      2
-    ],
-    [
-      "record-san-rafael-campaign-ocr-entry-31935",
-      2
-    ],
-    [
-      "record-san-rafael-campaign-ocr-entry-31936",
-      2
-    ],
-    [
-      "record-san-rafael-campaign-ocr-entry-31937",
-      2
-    ],
-    [
-      "record-san-rafael-campaign-ocr-entry-32103",
-      2
-    ],
-    [
-      "record-san-rafael-campaign-ocr-entry-32326",
-      2
-    ],
-    [
-      "record-san-rafael-campaign-ocr-entry-32521",
-      2
     ],
     [
       "actor-paul-jensen",
@@ -2476,6 +2419,62 @@
     ],
     [
       "actor-mayor-kate",
+      1
+    ],
+    [
+      "actor-vice-mayor-hill",
+      1
+    ],
+    [
+      "actor-councilmember-bushey",
+      1
+    ],
+    [
+      "actor-councilmember-kertz",
+      1
+    ],
+    [
+      "actor-councilmember-llorens-gulati",
+      1
+    ],
+    [
+      "actor-jim-milligan",
+      1
+    ],
+    [
+      "actor-1",
+      1
+    ],
+    [
+      "actor-mary-sackett-z",
+      1
+    ],
+    [
+      "actor-katie-rice-z",
+      1
+    ],
+    [
+      "actor-bruce-raful-z",
+      1
+    ],
+    [
+      "actor-tamara-hull-z",
+      1
+    ],
+    [
+      "actor-caran-cuneo-z",
+      1
+    ],
+    [
+      "actor-and-leigh-bakhtiari",
+      1
+    ],
+    [
+      "actor-ranjiv-khush-z",
+      1
+    ],
+    [
+      "actor-eric-boales-z",
       1
     ]
   ]

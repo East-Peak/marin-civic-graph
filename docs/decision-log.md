@@ -18,6 +18,12 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **Campaign evidence bundles should be regenerated after accepted Ralph-loop batches**
+  - The accepted 2020 city-office Form `460` batch widened the live filing / money / validation chain enough to introduce older OCR/PDF evidence IDs that the earlier campaign-record bundle did not yet promote.
+  - The right fix was not another schema change. It was to regenerate `san-rafael-city-campaign-records-01`, widen it from `25` to `45` record nodes, and rebuild graph-v1 so `missing_target:Record` returned to zero.
+  - Result: graph-v1 is now back to actor-only completeness gaps while the fixed breadth gate stays `5/5` passing and the supplemental legal query still passes.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-campaign-evidence-bundles-should-be-regenerated-after-accepted-loop-batches.md`
+
 - **The Boyd and Grants Pass pair can enter graph-v1 as a supplemental legal lane**
   - Import `legal-precedent-01` and `legal-precedent-02` into graph-v1 now that the local case plus controlling-precedent pair is normalized enough to support stable `Case`, `Proceeding`, `CaseParticipation`, `Program`, and legal `Record` nodes.
   - Keep the fixed breadth gate unchanged at `Q1` through `Q5`; add the legal constraint chain only as a supplemental query so the San Rafael breadth sprint does not silently change scope.

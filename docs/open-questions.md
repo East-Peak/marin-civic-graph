@@ -326,8 +326,21 @@ Mirror the question here when it affects:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/bundle-01.json)
 - `question`: After promoting a narrow actor and issue supplement, which remaining `Actor` misses deserve first-class graph-v1 nodes, and which should stay out until a stronger canonical or parser-cleanup layer exists?
 - `why it matters`: The issue side is now clean, but the graph still skips a material number of actor edges. Most of the remaining misses are not strong canonical targets. They are OCR-tainted vendors, payment platforms, PAC labels, or older raw role placeholders like `actor-mayor-kate`.
-- `current note`: The current graph-v1 report now shows `missing_target:Actor = 147`, with no remaining `missing_target:Issue` or `missing_target:Record` categories. The highest-repeat skipped actor IDs are `actor-anedot`, `actor-four-waters-media-inc`, `actor-pmcohen-public-affairs`, and a small cluster of council role aliases from the homelessness bundle.
+- `current note`: The current graph-v1 report now shows `missing_target:Actor = 149`, with no remaining `missing_target:Issue` or `missing_target:Record` categories. The highest-repeat skipped actor IDs are `actor-anedot`, `actor-four-waters-media-inc`, `actor-pmcohen-public-affairs`, and a small cluster of council role aliases from the homelessness bundle.
 - `next evidence`: decide whether the next follow-up is a narrow actor-alias cleanup for existing official officeholders, a vendor/platform supplement for campaign finance analytics, or a stricter parser cleanup that keeps OCR-tainted actors out of graph-v1 entirely.
+
+### OQ-035: Graph-v1 campaign evidence completeness after the 2020 money batch
+
+- `status`: resolved
+- `layer`: graph materialization / evidence completeness
+- `scope`: `graph-v1`
+- `source refs`:
+  - [report.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/report.json)
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-records-01/bundle-01.json)
+  - [query-pack-report.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/query-pack-report.json)
+- `question`: Should graph-v1 widen `san-rafael-city-campaign-records-01` again so the older OCR/PDF evidence artifacts introduced by the accepted 2020 Ralph-loop batch stop surfacing as `missing_target:Record` skips?
+- `why it matters`: The accepted 2020 money batch introduced additional older OCR/PDF evidence IDs into the live filing / money / validation chain. Leaving those IDs unpromoted would keep the projection structurally incomplete even though the fixed breadth gate passed.
+- `resolution note`: Resolved by regenerating `san-rafael-city-campaign-records-01` after the accepted Ralph-loop batch. The bundle now promotes `45` campaign evidence records, graph-v1 is back to zero `missing_target:Record` skips, and the remaining completeness problem is `missing_target:Actor = 149`.
 
 ### OQ-030: Boyd operative-order gap
 
