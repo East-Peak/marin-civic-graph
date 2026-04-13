@@ -29,6 +29,12 @@ EXTRACTED_DIR = ROOT / "data" / "extracted" / "san-rafael-city-campaign-form460-
 NORMALIZED_DIR = ROOT / "data" / "normalized" / "san-rafael-city-campaign-form460-schedules-01"
 NORMALIZED_PATH = NORMALIZED_DIR / "bundle-01.json"
 PDF_EXPORT_BASE_DIR = ROOT / "data" / "raw" / "san-rafael-city-campaign-form460-pdf-export"
+CAMPAIGN_ACTOR_SUPPLEMENT_PATH = (
+    ROOT / "data" / "normalized" / "san-rafael-city-campaign-actors-01" / "bundle-01.json"
+)
+ACTOR_COMPLETENESS_PATH = (
+    ROOT / "data" / "normalized" / "san-rafael-actor-completeness-01" / "bundle-01.json"
+)
 
 CASE_STUDY_ID = "san-rafael-city-campaign-form460-schedules-01"
 BUNDLE_ID = f"{CASE_STUDY_ID}__bundle-01"
@@ -297,6 +303,24 @@ def clean_contributor_name(value: str) -> str:
     return value.strip(" ,;")
 
 
+def clean_actor_label(value: str) -> str:
+    value = clean_contributor_name(value)
+    value = value.replace("®", " ").replace("❑", " ").replace("□", " ").replace("☐", " ")
+    value = re.sub(r"^\s*and\s+", "", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s{2,}", " ", value).strip(" ,;:-")
+
+    parts = value.split()
+    while parts and (
+        len(parts[-1]) == 1
+        or re.fullmatch(r"[0-9]", parts[-1]) is not None
+        or re.fullmatch(r"[^A-Za-z0-9]+", parts[-1]) is not None
+    ):
+        parts.pop()
+    value = " ".join(parts)
+    value = re.sub(r"\s{2,}", " ", value).strip(" ,;:-")
+    return value
+
+
 def infer_actor_type(name: str, code: str | None, default: str = "organization") -> str:
     if code == "IND":
         return "person"
@@ -312,18 +336,36 @@ def infer_actor_type(name: str, code: str | None, default: str = "organization")
     return default
 
 
+def should_emit_actor_reference(
+    cleaned_name: str,
+    known_actor_map: dict[str, dict[str, Any]],
+    observed_name_counts: dict[str, int],
+) -> bool:
+    if not cleaned_name:
+        return False
+    key = normalize_name_key(cleaned_name)
+    if not key or key.isdigit() or len(key) < 3:
+        return False
+    if known_actor_map.get(key) is not None:
+        return True
+    return observed_name_counts.get(key, 0) > 1
+
+
 def resolve_actor(
     raw_name: str,
     actor_type: str,
     known_actor_map: dict[str, dict[str, Any]],
     actor_candidates_by_id: dict[str, dict[str, Any]],
     evidence_record_ids: list[str],
-) -> str:
-    cleaned_name = clean_contributor_name(raw_name)
+    observed_name_counts: dict[str, int],
+) -> tuple[str | None, str]:
+    cleaned_name = clean_actor_label(raw_name)
     key = normalize_name_key(cleaned_name)
+    if not should_emit_actor_reference(cleaned_name, known_actor_map, observed_name_counts):
+        return None, cleaned_name
     known = known_actor_map.get(key)
     if known is not None:
-        return known["id"]
+        return known["id"], cleaned_name
 
     actor_id = f"actor-{slugify(cleaned_name)}"
     candidate = actor_candidates_by_id.setdefault(
@@ -341,7 +383,7 @@ def resolve_actor(
     for record_id in evidence_record_ids:
         if record_id not in candidate["evidence_record_ids"]:
             candidate["evidence_record_ids"].append(record_id)
-    return actor_id
+    return actor_id, cleaned_name
 
 
 def split_date_blocks(lines: list[str]) -> list[list[str]]:
@@ -1040,12 +1082,16 @@ def parse_filing_summary_page(page_text: str) -> dict[str, float | None]:
 
 
 def load_known_actor_map() -> dict[str, dict[str, Any]]:
-    bundles = [
-        json.loads(CANONICAL_SEEDS_PATH.read_text()),
-        json.loads(CAMPAIGN_SAMPLE_BUNDLE_PATH.read_text()),
+    bundle_paths = [
+        CANONICAL_SEEDS_PATH,
+        CAMPAIGN_ACTOR_SUPPLEMENT_PATH,
+        ACTOR_COMPLETENESS_PATH,
     ]
     actor_map: dict[str, dict[str, Any]] = {}
-    for bundle in bundles:
+    for bundle_path in bundle_paths:
+        if not bundle_path.exists():
+            continue
+        bundle = json.loads(bundle_path.read_text())
         for actor in bundle.get("actor_candidates", []):
             actor_id = actor["id"]
             names = [actor.get("name")]
@@ -1064,6 +1110,27 @@ def build_money_flow_id(parts: list[str]) -> str:
 
 def build_validation_check_id(parts: list[str]) -> str:
     return f"validationcheck-{slugify('-'.join(part for part in parts if part))}"
+
+
+def build_observed_actor_name_counts(extracted_filings: list[dict[str, Any]]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for filing in extracted_filings:
+        for row in filing.get("schedule_a_rows", []):
+            cleaned = clean_actor_label(row.get("contributor_name_raw") or row.get("contributor_name") or "")
+            key = normalize_name_key(cleaned)
+            if key:
+                counts[key] = counts.get(key, 0) + 1
+        for row in filing.get("schedule_d_rows", []):
+            cleaned = clean_actor_label(row.get("target_name_raw") or row.get("target_name") or "")
+            key = normalize_name_key(cleaned)
+            if key:
+                counts[key] = counts.get(key, 0) + 1
+        for row in filing.get("schedule_e_rows", []):
+            cleaned = clean_actor_label(row.get("payee_name_raw") or row.get("payee_name") or "")
+            key = normalize_name_key(cleaned)
+            if key:
+                counts[key] = counts.get(key, 0) + 1
+    return counts
 
 
 def build_validation_check(
@@ -1262,6 +1329,8 @@ def main() -> None:
                 "filing_id": target["filing_id"],
                 "record_id": source_record_id,
                 "ocr_record_id": ocr_record_id,
+                "evidence_record_ids": evidence_record_ids,
+                "committee_id": filing_candidate["committee_id"],
                 "label": target["label"],
                 "page_count": len(capture["pages"]),
                 "schedule_a_rows": schedule_a_rows,
@@ -1395,53 +1464,60 @@ def main() -> None:
             }
         )
 
-        for index, row in enumerate(schedule_a_rows, start=1):
-            actor_id = resolve_actor(
+    observed_name_counts = build_observed_actor_name_counts(extracted_filings)
+
+    for filing in extracted_filings:
+        evidence_record_ids = filing["evidence_record_ids"]
+        for index, row in enumerate(filing["schedule_a_rows"], start=1):
+            actor_id, cleaned_name = resolve_actor(
                 row["contributor_name_raw"],
                 infer_actor_type(row["contributor_name"], row["contributor_code"], default="person"),
                 known_actor_map,
                 actor_candidates_by_id,
                 evidence_record_ids,
-            )
-            money_flow_candidates.append(
-                {
-                    "id": build_money_flow_id(
-                        [
-                            row["date_received"] or "undated",
-                            row["contributor_name"],
-                            filing_candidate["committee_id"],
-                            str(index),
-                        ]
-                    ),
-                    "flow_type": "campaign_contribution",
-                    "amount": row["amount_received_this_period"],
-                    "flow_date": row["date_received"],
-                    "from_actor_id": actor_id,
-                    "to_committee_id": filing_candidate["committee_id"],
-                    "filing_id": target["filing_id"],
-                    "contributor_code": row["contributor_code"],
-                    "source_schedule": "schedule_a",
-                    "source_page_num": row["page_num"],
-                    "parse_confidence": row["parse_confidence"],
-                    "occupation_employer_raw": row["occupation_employer_raw"],
-                    "address_raw": row["address_raw"],
-                    "evidence_record_ids": evidence_record_ids,
-                }
-            )
-
-        for index, row in enumerate(schedule_d_rows, start=1):
-            actor_id = resolve_actor(
-                row["target_name_raw"],
-                "person",
-                known_actor_map,
-                actor_candidates_by_id,
-                evidence_record_ids,
+                observed_name_counts,
             )
             money_flow = {
                 "id": build_money_flow_id(
                     [
                         row["date_received"] or "undated",
-                        filing_candidate["committee_id"],
+                        row["contributor_name"],
+                        filing["committee_id"],
+                        str(index),
+                    ]
+                ),
+                "flow_type": "campaign_contribution",
+                "amount": row["amount_received_this_period"],
+                "flow_date": row["date_received"],
+                "from_actor_label": cleaned_name or row["contributor_name"],
+                "to_committee_id": filing["committee_id"],
+                "filing_id": filing["filing_id"],
+                "contributor_code": row["contributor_code"],
+                "source_schedule": "schedule_a",
+                "source_page_num": row["page_num"],
+                "parse_confidence": row["parse_confidence"],
+                "occupation_employer_raw": row["occupation_employer_raw"],
+                "address_raw": row["address_raw"],
+                "evidence_record_ids": evidence_record_ids,
+            }
+            if actor_id is not None:
+                money_flow["from_actor_id"] = actor_id
+            money_flow_candidates.append(money_flow)
+
+        for index, row in enumerate(filing["schedule_d_rows"], start=1):
+            actor_id, cleaned_name = resolve_actor(
+                row["target_name_raw"],
+                "person",
+                known_actor_map,
+                actor_candidates_by_id,
+                evidence_record_ids,
+                observed_name_counts,
+            )
+            money_flow = {
+                "id": build_money_flow_id(
+                    [
+                        row["date_received"] or "undated",
+                        filing["committee_id"],
                         row["target_name"],
                         "schedule-d",
                         str(index),
@@ -1449,9 +1525,9 @@ def main() -> None:
                 ),
                 "amount": row["amount_this_period"],
                 "flow_date": row["date_received"],
-                "from_committee_id": filing_candidate["committee_id"],
-                "beneficiary_actor_id": actor_id,
-                "filing_id": target["filing_id"],
+                "from_committee_id": filing["committee_id"],
+                "beneficiary_actor_label": cleaned_name or row["target_name"],
+                "filing_id": filing["filing_id"],
                 "source_schedule": "schedule_d",
                 "source_page_num": row["page_num"],
                 "parse_confidence": row["parse_confidence"],
@@ -1459,44 +1535,48 @@ def main() -> None:
                 "stance": row["stance"],
                 "evidence_record_ids": evidence_record_ids,
             }
+            if actor_id is not None:
+                money_flow["beneficiary_actor_id"] = actor_id
             if row["payment_type"] == "independent_expenditure":
                 money_flow["flow_type"] = "campaign_independent_expenditure"
             else:
                 money_flow["flow_type"] = "campaign_contribution"
             money_flow_candidates.append(money_flow)
 
-        for index, row in enumerate(schedule_e_rows, start=1):
-            actor_id = resolve_actor(
+        for index, row in enumerate(filing["schedule_e_rows"], start=1):
+            actor_id, cleaned_name = resolve_actor(
                 row["payee_name_raw"],
                 infer_actor_type(row["payee_name"], None, default="organization"),
                 known_actor_map,
                 actor_candidates_by_id,
                 evidence_record_ids,
+                observed_name_counts,
             )
-            money_flow_candidates.append(
-                {
-                    "id": build_money_flow_id(
-                        [
-                            filing_candidate["committee_id"],
-                            row["payee_name"],
-                            row["payment_code"] or "uncoded",
-                            str(index),
-                        ]
-                    ),
-                    "flow_type": "campaign_expenditure",
-                    "amount": row["amount_paid"],
-                    "from_committee_id": filing_candidate["committee_id"],
-                    "to_actor_id": actor_id,
-                    "filing_id": target["filing_id"],
-                    "payment_code": row["payment_code"],
-                    "description_raw": row["description_raw"],
-                    "address_raw": row["address_raw"],
-                    "source_schedule": "schedule_e",
-                    "source_page_num": row["page_num"],
-                    "parse_confidence": row["parse_confidence"],
-                    "evidence_record_ids": evidence_record_ids,
-                }
-            )
+            money_flow = {
+                "id": build_money_flow_id(
+                    [
+                        filing["committee_id"],
+                        row["payee_name"],
+                        row["payment_code"] or "uncoded",
+                        str(index),
+                    ]
+                ),
+                "flow_type": "campaign_expenditure",
+                "amount": row["amount_paid"],
+                "from_committee_id": filing["committee_id"],
+                "to_actor_label": cleaned_name or row["payee_name"],
+                "filing_id": filing["filing_id"],
+                "payment_code": row["payment_code"],
+                "description_raw": row["description_raw"],
+                "address_raw": row["address_raw"],
+                "source_schedule": "schedule_e",
+                "source_page_num": row["page_num"],
+                "parse_confidence": row["parse_confidence"],
+                "evidence_record_ids": evidence_record_ids,
+            }
+            if actor_id is not None:
+                money_flow["to_actor_id"] = actor_id
+            money_flow_candidates.append(money_flow)
 
     extracted_payload = {
         "capture_date": capture_date,

@@ -27,19 +27,35 @@ BUNDLE_ID = f"{CASE_STUDY_ID}__bundle-01"
 
 FORM460_TARGET_IDS = {
     "actor-anedot",
-    "actor-four-waters-media-inc",
-    "actor-pmcohen-public-affairs",
-    "actor-paul-jensen",
+    "actor-barry-moss",
     "actor-bruce-burtch",
     "actor-caran-cuneo",
+    "actor-cathryn-hilliard",
     "actor-diana-maier",
+    "actor-four-waters-media-inc",
+    "actor-geza-kadar",
+    "actor-mary-de-may",
+    "actor-paul-jensen",
+    "actor-pmcohen-public-affairs",
+    "actor-ranjiv-khush",
 }
 CAMPAIGN_FINANCE_TARGET_IDS = {
     "actor-se-owens-and-company",
 }
 HOMELESSNESS_TARGET_IDS = {
+    "actor-fs-global-solutions",
     "actor-other-junk-co",
     "actor-wehope",
+}
+
+HOMELESSNESS_MANUAL_ACTORS = {
+    "actor-cal-ich": {
+        "name": "Cal ICH",
+        "actor_type": "institutional_actor",
+        "observed_labels": ["Cal ICH"],
+        "evidence_record_ids": ["doc-2024-08-19-item-5a-report"],
+        "promotion_basis": "official_grant_award_counterparty",
+    }
 }
 
 HOMELESSNESS_EVIDENCE_OVERRIDES = {
@@ -70,11 +86,64 @@ def write_json(path: Path, payload: Any) -> None:
 def build_money_flow_evidence_index(bundle: dict[str, Any]) -> dict[str, list[str]]:
     evidence_by_actor: dict[str, set[str]] = {}
     for flow in bundle.get("money_flow_candidates", []):
-        target_id = flow.get("to_actor_id")
-        if not target_id:
-            continue
-        evidence_by_actor.setdefault(target_id, set()).update(flow.get("evidence_record_ids", []))
+        for field_name in ("from_actor_id", "to_actor_id", "beneficiary_actor_id"):
+            target_id = flow.get(field_name)
+            if not target_id:
+                continue
+            evidence_by_actor.setdefault(target_id, set()).update(flow.get("evidence_record_ids", []))
     return {actor_id: sorted(record_ids) for actor_id, record_ids in evidence_by_actor.items()}
+
+
+def infer_actor_type_from_label(name: str, contributor_code: str | None = None) -> str:
+    if contributor_code == "IND":
+        return "person"
+    if contributor_code in {"COM", "PTY", "SCC"}:
+        return "political_organization"
+    lowered = name.lower()
+    if any(token in lowered for token in ("pac", "committee", "party")):
+        return "political_organization"
+    if any(token in lowered for token in ("inc", "llc", "company", "public affairs", "media", "solutions", "anedot")):
+        return "business"
+    return "person"
+
+
+def build_schedule_actor_lookup(bundle: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    lookup: dict[str, dict[str, Any]] = {}
+    for actor in bundle.get("actor_candidates", []):
+        lookup[actor["id"]] = {
+            "id": actor["id"],
+            "name": clean_name(actor["name"]),
+            "actor_type": actor["actor_type"],
+            "observed_labels": actor.get("observed_labels", []),
+            "evidence_record_ids": actor.get("evidence_record_ids", []),
+        }
+
+    for flow in bundle.get("money_flow_candidates", []):
+        for id_field, label_field in (
+            ("from_actor_id", "from_actor_label"),
+            ("to_actor_id", "to_actor_label"),
+            ("beneficiary_actor_id", "beneficiary_actor_label"),
+        ):
+            actor_id = flow.get(id_field)
+            if not actor_id:
+                continue
+            label = clean_name(flow.get(label_field) or actor_id.replace("actor-", "").replace("-", " "))
+            entry = lookup.setdefault(
+                actor_id,
+                {
+                    "id": actor_id,
+                    "name": label,
+                    "actor_type": infer_actor_type_from_label(label, flow.get("contributor_code")),
+                    "observed_labels": [],
+                    "evidence_record_ids": [],
+                },
+            )
+            if label and label not in entry["observed_labels"]:
+                entry["observed_labels"].append(label)
+            for record_id in flow.get("evidence_record_ids", []):
+                if record_id not in entry["evidence_record_ids"]:
+                    entry["evidence_record_ids"].append(record_id)
+    return lookup
 
 
 def clean_name(name: str) -> str:
@@ -97,18 +166,20 @@ def main() -> None:
 
     canonical_actor_ids = {row["id"] for row in canonical_seeds.get("actor_candidates", [])}
     schedule_evidence_by_actor = build_money_flow_evidence_index(form460_schedule_bundle)
+    schedule_actor_lookup = build_schedule_actor_lookup(form460_schedule_bundle)
 
     actor_candidates: list[dict[str, Any]] = []
 
-    for actor in form460_schedule_bundle.get("actor_candidates", []):
-        if actor["id"] in canonical_actor_ids or actor["id"] not in FORM460_TARGET_IDS:
+    for actor_id in sorted(FORM460_TARGET_IDS):
+        actor = schedule_actor_lookup.get(actor_id)
+        if actor is None or actor_id in canonical_actor_ids:
             continue
         evidence_record_ids = sorted(
-            set(actor.get("evidence_record_ids", [])) | set(schedule_evidence_by_actor.get(actor["id"], []))
+            set(actor.get("evidence_record_ids", [])) | set(schedule_evidence_by_actor.get(actor_id, []))
         )
         actor_candidates.append(
             {
-                "id": actor["id"],
+                "id": actor_id,
                 "name": clean_name(actor["name"]),
                 "actor_type": actor["actor_type"],
                 "status": "promoted_for_graph_completeness",
@@ -147,6 +218,21 @@ def main() -> None:
                 "observed_labels": [actor["name"]],
                 "evidence_record_ids": HOMELESSNESS_EVIDENCE_OVERRIDES.get(actor["id"], []),
                 "promotion_basis": "official_contract_counterparty_seed",
+            }
+        )
+
+    for actor_id, actor in HOMELESSNESS_MANUAL_ACTORS.items():
+        if actor_id in canonical_actor_ids:
+            continue
+        actor_candidates.append(
+            {
+                "id": actor_id,
+                "name": actor["name"],
+                "actor_type": actor["actor_type"],
+                "status": "promoted_for_graph_completeness",
+                "observed_labels": actor["observed_labels"],
+                "evidence_record_ids": actor["evidence_record_ids"],
+                "promotion_basis": actor["promotion_basis"],
             }
         )
 

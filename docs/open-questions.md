@@ -314,20 +314,20 @@ Mirror the question here when it affects:
 
 ### OQ-029: Graph-v1 actor completeness after the issue supplement
 
-- `status`: watch
+- `status`: resolved
 - `layer`: graph materialization / identity completeness
 - `scope`: `graph-v1`
 - `source refs`:
   - [report.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/report.json)
   - [canonical-issues-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/canonical-issues-01.json)
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-actors-01/bundle-01.json)
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-actor-completeness-01/bundle-01.json)
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-discovery-01/bundle-01.json)
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-ie-01/bundle-01.json)
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/bundle-01.json)
 - `question`: After promoting a narrow actor and issue supplement, which remaining `Actor` misses deserve first-class graph-v1 nodes, and which should stay out until a stronger canonical or parser-cleanup layer exists?
 - `why it matters`: The issue side is now clean, but the graph still skips a material number of actor edges. Most of the remaining misses are not strong canonical targets. They are OCR-tainted vendors, payment platforms, PAC labels, or older raw role placeholders like `actor-mayor-kate`.
-- `current note`: The current graph-v1 report now shows `missing_target:Actor = 111`, with no remaining `missing_target:Issue` or `missing_target:Record` categories. The repeated high-value misses are no longer vendor platforms or raw officeholder aliases. They were resolved through a narrow actor supplement plus projection-time alias remap. The remaining misses are mostly one-off OCR-tainted donor labels, malformed committee/person strings, or weak actor candidates that do not yet justify durable graph-v1 nodes.
-- `next evidence`: decide whether the next follow-up is stricter parser suppression for one-off OCR-tainted actor labels, or a second tiny supplement only for repeated actor IDs that clearly improve product queries.
+- `resolution note`: Resolved by combining three tactics instead of broad actor import: a narrow actor supplement, projection-time alias remap through canonical actors' `resolves_raw_actor_seed_ids`, and stricter Form `460` parser suppression that keeps one-off unresolved row actors as labels on `MoneyFlow` nodes unless they are already known or recur. The current graph-v1 report now shows no `missing_target:Actor`, `missing_target:Issue`, or `missing_target:Record` categories.
 
 ### OQ-035: Graph-v1 campaign evidence completeness after the 2020 money batch
 

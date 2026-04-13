@@ -1,6 +1,6 @@
 {
   "capture_date": "2026-04-13",
-  "extracted_at": "2026-04-13T11:18:14Z",
+  "extracted_at": "2026-04-13T11:59:46Z",
   "source_id": "san-rafael-city-campaign-form460-ocr",
   "filing_extracts": [
     {
@@ -8,6 +8,12 @@
       "filing_id": "filing-san-rafael-campaign-entry-28450",
       "record_id": "record-san-rafael-campaign-filing-entry-28450",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-28450",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-28450",
+        "record-san-rafael-campaign-ocr-entry-28450",
+        "record-san-rafael-campaign-pdf-entry-28450"
+      ],
+      "committee_id": "committee-kate-colin-for-mayor-2020",
       "label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)",
       "page_count": 5,
       "schedule_a_rows": [
@@ -71,6 +77,12 @@
       "filing_id": "filing-san-rafael-campaign-entry-31112",
       "record_id": "record-san-rafael-campaign-filing-entry-31112",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-31112",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31112",
+        "record-san-rafael-campaign-ocr-entry-31112",
+        "record-san-rafael-campaign-pdf-entry-31112"
+      ],
+      "committee_id": "committee-maika-llorens-gulati-for-san-rafael-city-council-2020",
       "label": "Form 460 - Maika Llorens Gulati for City Council 2020 (2020-06-30)",
       "page_count": 4,
       "schedule_a_rows": [],
@@ -100,6 +112,12 @@
       "filing_id": "filing-san-rafael-campaign-entry-31115",
       "record_id": "record-san-rafael-campaign-filing-entry-31115",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-31115",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31115",
+        "record-san-rafael-campaign-ocr-entry-31115",
+        "record-san-rafael-campaign-pdf-entry-31115"
+      ],
+      "committee_id": "committee-kate-colin-for-mayor-2020",
       "label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2020-06-30)",
       "page_count": 19,
       "schedule_a_rows": [],
@@ -129,6 +147,12 @@
       "filing_id": "filing-san-rafael-campaign-entry-31430",
       "record_id": "record-san-rafael-campaign-filing-entry-31430",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-31430",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31430",
+        "record-san-rafael-campaign-ocr-entry-31430",
+        "record-san-rafael-campaign-pdf-entry-31430"
+      ],
+      "committee_id": "committee-rachel-kertz-for-city-council-2020",
       "label": "Form 460- Rachel Kertz for City Council 2020 (2020-06-30)",
       "page_count": 4,
       "schedule_a_rows": [],
@@ -158,6 +182,12 @@
       "filing_id": "filing-san-rafael-campaign-entry-31440",
       "record_id": "record-san-rafael-campaign-filing-entry-31440",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-31440",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31440",
+        "record-san-rafael-campaign-ocr-entry-31440",
+        "record-san-rafael-campaign-pdf-entry-31440"
+      ],
+      "committee_id": "committee-greg-knell-for-city-council-2020",
       "label": "Form 460- Greg Knell for City Council 2020 (06-30-20)",
       "page_count": 8,
       "schedule_a_rows": [],
@@ -187,6 +217,11 @@
       "filing_id": "filing-san-rafael-campaign-entry-31935",
       "record_id": "record-san-rafael-campaign-filing-entry-31935",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-31935",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31935",
+        "record-san-rafael-campaign-ocr-entry-31935"
+      ],
+      "committee_id": "committee-kate-colin-for-mayor-2020",
       "label": "Form 460 - Kate Colin for San Rafael Mayor 2020 1st Preelection",
       "page_count": 24,
       "schedule_a_rows": [],
@@ -216,6 +251,11 @@
       "filing_id": "filing-san-rafael-campaign-entry-31936",
       "record_id": "record-san-rafael-campaign-filing-entry-31936",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-31936",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31936",
+        "record-san-rafael-campaign-ocr-entry-31936"
+      ],
+      "committee_id": "committee-rachel-kertz-for-city-council-2020",
       "label": "Form 460- Rachel Kertz for City Council 2020 1st Preelection",
       "page_count": 17,
       "schedule_a_rows": [],
@@ -245,6 +285,11 @@
       "filing_id": "filing-san-rafael-campaign-entry-31937",
       "record_id": "record-san-rafael-campaign-filing-entry-31937",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-31937",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31937",
+        "record-san-rafael-campaign-ocr-entry-31937"
+      ],
+      "committee_id": "committee-maika-llorens-gulati-for-san-rafael-city-council-2020",
       "label": "Form 460 - Maika Llorens Gulati for City Council 2020 (2020-09-24)",
       "page_count": 8,
       "schedule_a_rows": [],
@@ -274,6 +319,11 @@
       "filing_id": "filing-san-rafael-campaign-entry-32103",
       "record_id": "record-san-rafael-campaign-filing-entry-32103",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-32103",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-32103",
+        "record-san-rafael-campaign-ocr-entry-32103"
+      ],
+      "committee_id": "committee-greg-knell-for-city-council-2020",
       "label": "Form 460- Greg Knell for City Council 2020 1st Preelection",
       "page_count": 17,
       "schedule_a_rows": [],
@@ -303,6 +353,12 @@
       "filing_id": "filing-san-rafael-campaign-entry-32326",
       "record_id": "record-san-rafael-campaign-filing-entry-32326",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-32326",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-32326",
+        "record-san-rafael-campaign-ocr-entry-32326",
+        "record-san-rafael-campaign-pdf-entry-32326"
+      ],
+      "committee_id": "committee-mahmoud-a-shirazi-for-mayor-2020",
       "label": "Form 460- Mahmoud A.Shirazi for Mayor 2020; Amendment",
       "page_count": 3,
       "schedule_a_rows": [],
@@ -332,6 +388,12 @@
       "filing_id": "filing-san-rafael-campaign-entry-32521",
       "record_id": "record-san-rafael-campaign-filing-entry-32521",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-32521",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-32521",
+        "record-san-rafael-campaign-ocr-entry-32521",
+        "record-san-rafael-campaign-pdf-entry-32521"
+      ],
+      "committee_id": "committee-kate-colin-for-mayor-2020",
       "label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2020-12-31)",
       "page_count": 12,
       "schedule_a_rows": [],
@@ -361,6 +423,12 @@
       "filing_id": "filing-san-rafael-campaign-entry-33340",
       "record_id": "record-san-rafael-campaign-filing-entry-33340",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-33340",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-33340",
+        "record-san-rafael-campaign-ocr-entry-33340",
+        "record-san-rafael-campaign-pdf-entry-33340"
+      ],
+      "committee_id": "committee-kate-colin-for-mayor-2020",
       "label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2021-06-30)",
       "page_count": 6,
       "schedule_a_rows": [],
@@ -394,6 +462,12 @@
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "record_id": "record-san-rafael-campaign-filing-entry-37365",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37365",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ],
+      "committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "label": "Rachel Kertz 2024 semiannual Form 460",
       "page_count": 10,
       "schedule_a_rows": [
@@ -911,6 +985,12 @@
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "record_id": "record-san-rafael-campaign-filing-entry-37677",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37677",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ],
+      "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "label": "Kate Colin 2024 first preelection Form 460",
       "page_count": 26,
       "schedule_a_rows": [
@@ -2041,6 +2121,12 @@
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "record_id": "record-san-rafael-campaign-filing-entry-37685",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37685",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37685",
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37685"
+      ],
+      "committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "label": "Rachel Kertz 2024 preelection Form 460",
       "page_count": 11,
       "schedule_a_rows": [

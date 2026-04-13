@@ -1,6 +1,6 @@
 {
   "projection_id": "graph-v1",
-  "generated_at": "2026-04-13T11:55:45Z",
+  "generated_at": "2026-04-13T12:02:19Z",
   "manifest_path": "/Users/tammypais/projects/marin-civic-graph/registry/import-manifest.yaml",
   "output_dir": "data/projected/graph-v1",
   "bundle_reports": [
@@ -313,8 +313,8 @@
         {
           "section": "actor_candidates",
           "mode": "nodes",
-          "input_count": 10,
-          "imported_count": 10,
+          "input_count": 17,
+          "imported_count": 17,
           "skipped_count": 0,
           "skip_reasons": {}
         }
@@ -628,7 +628,7 @@
     }
   ],
   "node_type_counts": {
-    "Actor": 38,
+    "Actor": 45,
     "AgendaItem": 2970,
     "Candidacy": 14,
     "Case": 4,
@@ -662,7 +662,7 @@
     "DECIDED_BY_INSTITUTION": 1472,
     "DERIVED_FROM_RECORD": 67,
     "DISCLOSED_IN_FILING": 160,
-    "EVIDENCED_BY": 6393,
+    "EVIDENCED_BY": 6421,
     "FILED_BY_ACTOR": 253,
     "FILED_BY_COMMITTEE": 232,
     "FILED_DURING_SEAT_SERVICE": 43,
@@ -672,7 +672,7 @@
     "FILED_WITH_OFFICER": 1,
     "FOR_ELECTION": 14,
     "FOR_SEAT": 30,
-    "FROM_SOURCE": 8,
+    "FROM_SOURCE": 20,
     "HEARD_BY_JUDGE": 7,
     "HEARD_IN_COURT": 4,
     "HELD_BY_ACTOR": 8,
@@ -713,11 +713,11 @@
     "SERVES_IN_INSTITUTION": 8,
     "TARGETS_ACTOR": 4,
     "TARGETS_SEAT": 4,
-    "TO_TARGET": 131,
+    "TO_TARGET": 132,
     "VALIDATES": 16
   },
-  "total_nodes": 6184,
-  "total_edges": 20826,
+  "total_nodes": 6191,
+  "total_edges": 20867,
   "duplicate_node_merges": 256,
   "duplicate_edge_merges": 786,
   "actor_alias_edge_remaps": 5,
@@ -2388,109 +2388,6 @@
       ]
     }
   ],
-  "skipped_edge_reasons": {
-    "missing_target:Actor": 111
-  },
-  "top_skipped_edge_targets": [
-    [
-      "actor-jim-milligan",
-      1
-    ],
-    [
-      "actor-1",
-      1
-    ],
-    [
-      "actor-mary-sackett-z",
-      1
-    ],
-    [
-      "actor-katie-rice-z",
-      1
-    ],
-    [
-      "actor-bruce-raful-z",
-      1
-    ],
-    [
-      "actor-tamara-hull-z",
-      1
-    ],
-    [
-      "actor-caran-cuneo-z",
-      1
-    ],
-    [
-      "actor-and-leigh-bakhtiari",
-      1
-    ],
-    [
-      "actor-ranjiv-khush-z",
-      1
-    ],
-    [
-      "actor-eric-boales-z",
-      1
-    ],
-    [
-      "actor-windi-snarly-0",
-      1
-    ],
-    [
-      "actor-lisa-doran-z",
-      1
-    ],
-    [
-      "actor-kim-diamond",
-      1
-    ],
-    [
-      "actor-michael-manowski",
-      1
-    ],
-    [
-      "actor-resource-conservation-pac",
-      1
-    ],
-    [
-      "actor-catherine-colin-0",
-      1
-    ],
-    [
-      "actor-millie-anderson-z",
-      1
-    ],
-    [
-      "actor-laurie-dubin-z",
-      1
-    ],
-    [
-      "actor-melissa-prandi-z",
-      1
-    ],
-    [
-      "actor-geza-kadar-0",
-      1
-    ],
-    [
-      "actor-mary-de-may-0",
-      1
-    ],
-    [
-      "actor-meredith-parnell",
-      1
-    ],
-    [
-      "actor-william-hamamoto",
-      1
-    ],
-    [
-      "actor-richard-pushkin-z",
-      1
-    ],
-    [
-      "actor-laura-duffy",
-      1
-    ]
-  ]
+  "skipped_edge_reasons": {},
+  "top_skipped_edge_targets": []
 }

@@ -18,11 +18,18 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **Row-level campaign actors should stay label-only unless they are known or repeated**
+  - The first actor-completeness pass proved that the remaining misses were concentrated in `Form 460` row actors, not in the core civic spine.
+  - The right fix was to tighten `extract_san_rafael_city_campaign_form460_schedules.py` so unresolved one-off row actors keep normalized label fields on `MoneyFlow` nodes, but do not emit actor edges unless they already resolve to an imported actor or recur across the schedule bundle.
+  - That cleanup then made the remaining actor tail small and predictable enough for the narrow supplement to finish. Result: graph-v1 is now at `6191` nodes / `20867` edges with `45` `Actor` nodes and zero `missing_target:Actor`.
+  - Boundary: do **not** interpret this as permission to import all donor names. One-off row actors can stay label-only until a real recurrence or product query justifies promotion.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-row-level-campaign-actors-should-stay-label-only-unless-known-or-repeated.md`
+
 - **Actor completeness should use a narrow supplement plus alias remap, not broad donor import**
   - The repeated actor misses in graph-v1 were no longer a general data-coverage problem. They were a small set of recurring vendor/platform nodes plus raw officeholder aliases like `actor-mayor-kate`.
-  - The right fix was two-part: add a narrow supplemental actor bundle for recurring high-value campaign actors, and teach the projection builder to remap actor-edge endpoints through canonical actors' `resolves_raw_actor_seed_ids`.
-  - Result: graph-v1 moved from `28` to `38` `Actor` nodes, `missing_target:Actor` fell from `149` to `111`, repeated vendor/platform misses were resolved, and no remaining `Record` or `Issue` completeness gap was reintroduced.
-  - Boundary: do **not** broaden this into a donor-wide OCR actor import. The remaining misses are mostly one-off OCR-tainted labels or weak candidates that belong in parser cleanup before graph-v1.
+  - The right fix started as two-part: add a narrow supplemental actor bundle for recurring high-value campaign actors, and teach the projection builder to remap actor-edge endpoints through canonical actors' `resolves_raw_actor_seed_ids`.
+  - The final version also required parser cleanup in the `Form 460` schedule extractor so one-off unresolved row actors stay label-only. Result: graph-v1 moved from `28` to `45` `Actor` nodes and all `missing_target:Actor` skips are now gone, with no remaining `Record` or `Issue` completeness gap.
+  - Boundary: do **not** broaden this into a donor-wide OCR actor import. The surviving row-level promotion rule is still narrow: known or repeated only.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-actor-completeness-should-use-a-narrow-supplement-plus-alias-remap.md`
 
 - **Campaign evidence bundles should be regenerated after accepted Ralph-loop batches**

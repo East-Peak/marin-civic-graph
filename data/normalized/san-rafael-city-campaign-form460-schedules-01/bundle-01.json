@@ -2,7 +2,7 @@
   "case_study_id": "san-rafael-city-campaign-form460-schedules-01",
   "bundle_id": "san-rafael-city-campaign-form460-schedules-01__bundle-01",
   "status": "working",
-  "generated_at": "2026-04-13T11:18:14Z",
+  "generated_at": "2026-04-13T11:59:46Z",
   "scope": [
     "Selected San Rafael Form 460 filings with schedule-level OCR and PDF-backed extraction across multiple city-office cycles",
     "Promotion of itemized contribution and expenditure rows into graph-ready MoneyFlow candidates where OCR is strong enough",
@@ -208,179 +208,11 @@
   ],
   "actor_candidates": [
     {
-      "id": "actor-1",
-      "name": "1",
-      "actor_type": "organization",
-      "observed_labels": [
-        "1"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-28450",
-        "record-san-rafael-campaign-ocr-entry-28450",
-        "record-san-rafael-campaign-pdf-entry-28450"
-      ]
-    },
-    {
-      "id": "actor-aaron-lamstein-m",
-      "name": "Aaron Lamstein m",
+      "id": "actor-barry-moss",
+      "name": "Barry Moss",
       "actor_type": "person",
       "observed_labels": [
-        "Aaron Lamstein m"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-ac-hotel-san-rafael",
-      "name": "AC Hotel San Rafael",
-      "actor_type": "organization",
-      "observed_labels": [
-        "AC Hotel San Rafael"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-actblue",
-      "name": "ActBlue",
-      "actor_type": "organization",
-      "observed_labels": [
-        "ActBlue"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-ali-eghtessadi",
-      "name": "Ali Eghtessadi \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Ali Eghtessadi \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-and-leigh-bakhtiari",
-      "name": "and Leigh Bakhtiari",
-      "actor_type": "person",
-      "observed_labels": [
-        "and Leigh Bakhtiari"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-andre-charles",
-      "name": "Andre Charles",
-      "actor_type": "organization",
-      "observed_labels": [
-        "Andre Charles"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-andrew-deckas",
-      "name": "Andrew Deckas \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Andrew Deckas \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-anedot",
-      "name": "Anedot",
-      "actor_type": "organization",
-      "observed_labels": [
-        "Anedot"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-ann-morrison",
-      "name": "Ann Morrison \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Ann Morrison \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-ashley-hurd",
-      "name": "Ashley Hurd \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Ashley Hurd \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-ashley-paff",
-      "name": "Ashley Paff \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Ashley Paff \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-barbara-heller-z",
-      "name": "Barbara Heller Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "Barbara Heller Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-barry-moss-i",
-      "name": "Barry Moss \u2751I",
-      "actor_type": "person",
-      "observed_labels": [
+        "Barry Moss Z",
         "Barry Moss \u2751I"
       ],
       "evidence_record_ids": [
@@ -390,132 +222,11 @@
       ]
     },
     {
-      "id": "actor-barry-moss-z",
-      "name": "Barry Moss Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "Barry Moss Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-brian-kelly",
-      "name": "Brian Kelly \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Brian Kelly \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-brian-mcleran",
-      "name": "Brian McLeran \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Brian McLeran \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-bruce-burtch",
-      "name": "Bruce Burtch \u2751\ufffd",
-      "actor_type": "person",
-      "observed_labels": [
-        "Bruce Burtch \u2751\ufffd",
-        "Bruce Burtch\u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365",
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-bruce-raful-z",
-      "name": "Bruce Raful Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "Bruce Raful Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-caran-cuneo",
-      "name": "Caran Cuneo \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Caran Cuneo \u00ae",
-        "Caran Cuneo"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-caran-cuneo-z",
-      "name": "Caran Cuneo Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "Caran Cuneo Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-carolyn-kertz",
-      "name": "Carolyn Kertz \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Carolyn Kertz \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-catherine-colin-0",
-      "name": "Catherine Colin 0",
-      "actor_type": "person",
-      "observed_labels": [
-        "Catherine Colin 0"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
       "id": "actor-cathryn-hilliard",
-      "name": "Cathryn Hilliard \u00ae",
+      "name": "Cathryn Hilliard",
       "actor_type": "person",
       "observed_labels": [
+        "Cathryn Hilliard 0",
         "Cathryn Hilliard \u00ae"
       ],
       "evidence_record_ids": [
@@ -525,873 +236,46 @@
       ]
     },
     {
-      "id": "actor-cathryn-hilliard-0",
-      "name": "Cathryn Hilliard 0",
-      "actor_type": "person",
-      "observed_labels": [
-        "Cathryn Hilliard 0"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-cathryn-hilliard-southern-marin-fire-district",
-      "name": "Cathryn Hilliard, Southern Marin Fire District",
-      "actor_type": "person",
-      "observed_labels": [
-        "Cathryn Hilliard, Southern Marin Fire District"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-cheryl-finley",
-      "name": "Cheryl Finley \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Cheryl Finley \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-chip-vetter",
-      "name": "Chip Vetter \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Chip Vetter \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-christopher-hart",
-      "name": "Christopher Hart \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Christopher Hart \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-city-of-san-rafael",
-      "name": "City of San Rafael",
-      "actor_type": "organization",
-      "observed_labels": [
-        "City of San Rafael"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-connie-zlot",
-      "name": "Connie Zlot \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Connie Zlot \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-cornerstone-printing",
-      "name": "Cornerstone Printing",
-      "actor_type": "organization",
-      "observed_labels": [
-        "Cornerstone Printing"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-damon-connoily-tor-assemnly-2024",
-      "name": "Damon Connoily tor ASsemnly 2024 \u2751",
-      "actor_type": "person",
-      "observed_labels": [
-        "Damon Connoily tor ASsemnly 2024 (ID# 1458544 \u2751"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-dana-thelen",
-      "name": "Dana Thelen \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Dana Thelen \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-daryoush-davidi",
-      "name": "Daryoush Davidi \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Daryoush Davidi \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-deborah-ablin",
-      "name": "Deborah Ablin \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Deborah Ablin \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-deborah-strull",
-      "name": "Deborah Strull \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Deborah Strull \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-democratic-central-committee-of-marin",
-      "name": "Democratic Central Committee of Marin \u2751",
-      "actor_type": "person",
-      "observed_labels": [
-        "Democratic Central Committee of Marin \u2751"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-democratic-central-committee-of-marin-id",
-      "name": "Democratic Central Committee of Marin (ID# \u2751",
-      "actor_type": "person",
-      "observed_labels": [
-        "Democratic Central Committee of Marin (ID# \u2751"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-denise-m-lucy",
-      "name": "Denise M Lucy \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Denise M Lucy \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-dennis-gilardi",
-      "name": "Dennis Gilardi \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Dennis Gilardi \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-dennis-rodoni-for-supervisor",
-      "name": "Dennis Rodoni For Supervisor \u2751",
-      "actor_type": "person",
-      "observed_labels": [
-        "Dennis Rodoni For Supervisor (ID# 1454722) \u2751"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-diana-maier",
-      "name": "Diana Maier \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Diana Maier \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677",
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-donor-stack-llc",
-      "name": "Donor Stack, LLC",
-      "actor_type": "business",
-      "observed_labels": [
-        "Donor Stack, LLC"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-dorothy-breiner",
-      "name": "Dorothy Breiner \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Dorothy Breiner \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-eric-boales-z",
-      "name": "Eric Boales Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "Eric Boales Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-eric-lucan-for-marin-county-supervisor-2026",
-      "name": "Eric Lucan For Marin County Supervisor 2026 \u2751",
-      "actor_type": "person",
-      "observed_labels": [
-        "Eric Lucan For Marin County Supervisor 2026 \u2751"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-firefighters-printing-printing-of-literature",
-      "name": "Firefighters Printing Printing of literature",
-      "actor_type": "organization",
-      "observed_labels": [
-        "Firefighters Printing Printing of literature"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-four-waters-media-inc",
-      "name": "four waters media, inc.",
-      "actor_type": "business",
-      "observed_labels": [
-        "four waters media, inc."
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
       "id": "actor-geza-kadar",
-      "name": "Geza Kadar \u00ae",
+      "name": "Geza Kadar",
       "actor_type": "person",
       "observed_labels": [
+        "Geza Kadar 0",
         "Geza Kadar \u00ae"
       ],
       "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365",
         "record-san-rafael-campaign-filing-entry-37685",
         "record-san-rafael-campaign-ocr-entry-37685",
         "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-geza-kadar-0",
-      "name": "Geza Kadar 0",
-      "actor_type": "person",
-      "observed_labels": [
-        "Geza Kadar 0"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-greg-brockbank",
-      "name": "Greg Brockbank \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Greg Brockbank \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-heather-allison",
-      "name": "Heather Allison \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Heather Allison \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-jenni-er-knoll",
-      "name": "Jenni er Knoll \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Jenni er Knoll \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-jim-milligan",
-      "name": "Jim Milligan \u2751",
-      "actor_type": "political_organization",
-      "observed_labels": [
-        "Jim Milligan \u2751"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-28450",
-        "record-san-rafael-campaign-ocr-entry-28450",
-        "record-san-rafael-campaign-pdf-entry-28450"
-      ]
-    },
-    {
-      "id": "actor-joe-ohehir",
-      "name": "Joe OHehir \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Joe OHehir \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-joy-phoenix",
-      "name": "Joy Phoenix \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Joy Phoenix \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-jr-family-llc-howar-luria",
-      "name": "Jr. Family LLC Howar Luria \u2751",
-      "actor_type": "person",
-      "observed_labels": [
-        "Jr. Family LLC Howar Luria \u2751"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-judith-bloomberg",
-      "name": "Judith Bloomberg",
-      "actor_type": "person",
-      "observed_labels": [
-        "Judith Bloomberg"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-judy-ferguson",
-      "name": "Judy Ferguson \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Judy Ferguson \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-julie-fingersh",
-      "name": "Julie Fingersh \u00a9",
-      "actor_type": "person",
-      "observed_labels": [
-        "Julie Fingersh \u00a9"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-julie-sherman-d",
-      "name": "Julie Sherman \u2751d",
-      "actor_type": "person",
-      "observed_labels": [
-        "Julie Sherman \u2751d"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-katie-rice-z",
-      "name": "Katie Rice Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "Katie Rice Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-keli-honsberger",
-      "name": "Keli Honsberger \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Keli Honsberger \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-kevin-jacobs",
-      "name": "Kevin Jacobs \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Kevin Jacobs \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-kim-diamond",
-      "name": "Kim Diamond",
-      "actor_type": "person",
-      "observed_labels": [
-        "Kim Diamond"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-laura-duffy",
-      "name": "Laura Duffy",
-      "actor_type": "person",
-      "observed_labels": [
-        "Laura Duffy"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-laurie-dubin-z",
-      "name": "Laurie Dubin Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "Laurie Dubin Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-lisa-doran-z",
-      "name": "Lisa Doran Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "Lisa Doran Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-lora-levin-i",
-      "name": "Lora Levin \u2751I",
-      "actor_type": "person",
-      "observed_labels": [
-        "Lora Levin \u2751I"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-lori-frugoli-w1",
-      "name": "Lori Frugoli W1",
-      "actor_type": "person",
-      "observed_labels": [
-        "Lori Frugoli W1"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-marilyn-nemzer",
-      "name": "Marilyn Nemzer \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Marilyn Nemzer \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-mark-kamena",
-      "name": "Mark Kamena \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Mark Kamena \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
       "id": "actor-mary-de-may",
-      "name": "Mary De May \u2751\ufffd/",
+      "name": "Mary De May",
       "actor_type": "person",
       "observed_labels": [
+        "Mary De May 0",
         "Mary De May \u2751\ufffd/"
       ],
       "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-mary-de-may-0",
-      "name": "Mary De May 0",
-      "actor_type": "person",
-      "observed_labels": [
-        "Mary De May 0"
-      ],
-      "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
         "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-mary-sackett-z",
-      "name": "Mary Sackett Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "Mary Sackett Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-matt-samson",
-      "name": "Matt Samson \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Matt Samson \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-matthew-samson-z",
-      "name": "Matthew Samson Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "Matthew Samson Z"
-      ],
-      "evidence_record_ids": [
+        "record-san-rafael-campaign-pdf-entry-37365",
         "record-san-rafael-campaign-filing-entry-37685",
         "record-san-rafael-campaign-ocr-entry-37685",
         "record-san-rafael-campaign-pdf-entry-37685"
       ]
     },
     {
-      "id": "actor-melissa-prandi-z",
-      "name": "Melissa Prandi Z",
+      "id": "actor-ranjiv-khush",
+      "name": "Ranjiv Khush",
       "actor_type": "person",
       "observed_labels": [
-        "Melissa Prandi Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-meredith-parnell",
-      "name": "Meredith Parnell \u2751",
-      "actor_type": "person",
-      "observed_labels": [
-        "Meredith Parnell \u2751"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-michael-manowski",
-      "name": "Michael Manowski \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Michael Manowski \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-mike-ghilotti",
-      "name": "Mike Ghilotti \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Mike Ghilotti \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-mike-mcguire-for-insurance-commissioner-2026",
-      "name": "Mike McGuire for Insurance Commissioner 2026 \u2751",
-      "actor_type": "person",
-      "observed_labels": [
-        "Mike McGuire for Insurance Commissioner 2026 \u2751"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-millie-anderson-z",
-      "name": "Millie Anderson Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "Millie Anderson Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-moulton-peters-for-supervisor-2028-committee",
-      "name": "Moulton -Peters for Supervisor 2028 Committee \u2751",
-      "actor_type": "person",
-      "observed_labels": [
-        "Moulton -Peters for Supervisor 2028 Committee \u2751"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-natutuatagaloa-z",
-      "name": "NatuTuatagaloa Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "NatuTuatagaloa Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-north-bay-labor-council",
-      "name": "North Bay Labor Council",
-      "actor_type": "organization",
-      "observed_labels": [
-        "North Bay Labor Council"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-pacific-print-resources",
-      "name": "Pacific Print Resources",
-      "actor_type": "political_organization",
-      "observed_labels": [
-        "Pacific Print Resources"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-pamela-harlem",
-      "name": "Pamela Harlem \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Pamela Harlem \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-paul-cohen-z",
-      "name": "Paul Cohen Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "Paul Cohen Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-paul-jensen",
-      "name": "Paul Jensen",
-      "actor_type": "person",
-      "observed_labels": [
-        "Paul Jensen",
-        "Paul Jensen \u00ae"
+        "Ranjiv Khush Z",
+        "Ranjiv Khush \u00ae"
       ],
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
@@ -1400,331 +284,6 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-pmcohen-public-affairs",
-      "name": "PMCohen Public Affairs",
-      "actor_type": "organization",
-      "observed_labels": [
-        "PMCohen Public Affairs"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-political-data-inc",
-      "name": "Political Data Inc.",
-      "actor_type": "business",
-      "observed_labels": [
-        "Political Data Inc."
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-ranjiv-khush",
-      "name": "Ranjiv Khush \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Ranjiv Khush \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-ranjiv-khush-z",
-      "name": "Ranjiv Khush Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "Ranjiv Khush Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-resource-conservation-pac",
-      "name": "Resource Conservation PAC \u2751",
-      "actor_type": "person",
-      "observed_labels": [
-        "Resource Conservation PAC #123886 \u2751"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-richard-pushkin-z",
-      "name": "Richard Pushkin Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "Richard Pushkin Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-rick-lewis",
-      "name": "Rick Lewis \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Rick Lewis \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-rita-manowski",
-      "name": "Rita Manowski \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Rita Manowski \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-ross-gue-ring",
-      "name": "Ross Gue ring \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Ross Gue ring \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-ross-guehring",
-      "name": "Ross Guehring \u2751\u2713",
-      "actor_type": "person",
-      "observed_labels": [
-        "Ross Guehring \u2751\u2713"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37685",
-        "record-san-rafael-campaign-ocr-entry-37685",
-        "record-san-rafael-campaign-pdf-entry-37685"
-      ]
-    },
-    {
-      "id": "actor-samina-sau-e",
-      "name": "Samina Sau e \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Samina Sau e \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-sandy-magid-z",
-      "name": "Sandy Magid Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "Sandy Magid Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-scott-pinsky",
-      "name": "Scott Pinsky \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Scott Pinsky \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-stacy-nelson",
-      "name": "Stacy Nelson \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Stacy Nelson \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-stephanie-plante",
-      "name": "Stephanie Plante \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Stephanie Plante \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-stephen-isaacs",
-      "name": "Stephen Isaacs \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Stephen Isaacs \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-steven-romick",
-      "name": "Steven Romick \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Steven Romick \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-sushma-taylor",
-      "name": "Sushma Taylor \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Sushma Taylor \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-tamara-hull-z",
-      "name": "Tamara Hull Z",
-      "actor_type": "person",
-      "observed_labels": [
-        "Tamara Hull Z"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-thomas-mcinerney",
-      "name": "Thomas McInerney \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Thomas McInerney \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-tracy-case",
-      "name": "Tracy Case \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Tracy Case \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-venturepad",
-      "name": "VenturePad",
-      "actor_type": "organization",
-      "observed_labels": [
-        "VenturePad"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-wayne-clark",
-      "name": "Wayne Clark \u00ae",
-      "actor_type": "person",
-      "observed_labels": [
-        "Wayne Clark \u00ae"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677"
-      ]
-    },
-    {
-      "id": "actor-william-hamamoto",
-      "name": "William Hamamoto \u00a9",
-      "actor_type": "person",
-      "observed_labels": [
-        "William Hamamoto \u00a9"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "actor-windi-snarly-0",
-      "name": "Windi Snarly 0",
-      "actor_type": "person",
-      "observed_labels": [
-        "Windi Snarly 0"
-      ],
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
       ]
     }
   ],
@@ -2173,7 +732,7 @@
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2020-12-18",
-      "from_actor_id": "actor-jim-milligan",
+      "from_actor_label": "Jim Milligan",
       "to_committee_id": "committee-kate-colin-for-mayor-2020",
       "filing_id": "filing-san-rafael-campaign-entry-28450",
       "contributor_code": "COM",
@@ -2193,7 +752,7 @@
       "flow_type": "campaign_expenditure",
       "amount": 1.0,
       "from_committee_id": "committee-kate-colin-for-mayor-2020",
-      "to_actor_id": "actor-1",
+      "to_actor_label": "1",
       "filing_id": "filing-san-rafael-campaign-entry-28450",
       "payment_code": null,
       "description_raw": null,
@@ -2212,7 +771,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-06-14",
-      "from_actor_id": "actor-mary-sackett-z",
+      "from_actor_label": "Mary Sackett",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2232,7 +791,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-06-17",
-      "from_actor_id": "actor-katie-rice-z",
+      "from_actor_label": "Katie Rice",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2252,7 +811,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-06-17",
-      "from_actor_id": "actor-bruce-raful-z",
+      "from_actor_label": "Bruce Raful",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2272,7 +831,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-06-18",
-      "from_actor_id": "actor-tamara-hull-z",
+      "from_actor_label": "Tamara Hull",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2292,7 +851,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-06-19",
-      "from_actor_id": "actor-caran-cuneo-z",
+      "from_actor_label": "Caran Cuneo",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2305,14 +864,15 @@
         "record-san-rafael-campaign-filing-entry-37365",
         "record-san-rafael-campaign-ocr-entry-37365",
         "record-san-rafael-campaign-pdf-entry-37365"
-      ]
+      ],
+      "from_actor_id": "actor-caran-cuneo"
     },
     {
       "id": "moneyflow-2024-06-19-and-leigh-bakhtiari-committee-rachel-kertz-for-san-rafael-city-council-2024-6",
       "flow_type": "campaign_contribution",
       "amount": 300.0,
       "flow_date": "2024-06-19",
-      "from_actor_id": "actor-and-leigh-bakhtiari",
+      "from_actor_label": "Leigh Bakhtiari",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2332,7 +892,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-06-19",
-      "from_actor_id": "actor-ranjiv-khush-z",
+      "from_actor_label": "Ranjiv Khush",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2345,14 +905,15 @@
         "record-san-rafael-campaign-filing-entry-37365",
         "record-san-rafael-campaign-ocr-entry-37365",
         "record-san-rafael-campaign-pdf-entry-37365"
-      ]
+      ],
+      "from_actor_id": "actor-ranjiv-khush"
     },
     {
       "id": "moneyflow-2024-06-20-eric-boales-z-committee-rachel-kertz-for-san-rafael-city-council-2024-8",
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2024-06-20",
-      "from_actor_id": "actor-eric-boales-z",
+      "from_actor_label": "Eric Boales",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2372,7 +933,7 @@
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2024-06-20",
-      "from_actor_id": "actor-windi-snarly-0",
+      "from_actor_label": "Windi Snarly",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2392,7 +953,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-06-20",
-      "from_actor_id": "actor-lisa-doran-z",
+      "from_actor_label": "Lisa Doran",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2412,7 +973,7 @@
       "flow_type": "campaign_contribution",
       "amount": 200.0,
       "flow_date": "2024-06-21",
-      "from_actor_id": "actor-kim-diamond",
+      "from_actor_label": "Kim Diamond",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2432,7 +993,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-06-24",
-      "from_actor_id": "actor-paul-jensen",
+      "from_actor_label": "Paul Jensen",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2445,14 +1006,15 @@
         "record-san-rafael-campaign-filing-entry-37365",
         "record-san-rafael-campaign-ocr-entry-37365",
         "record-san-rafael-campaign-pdf-entry-37365"
-      ]
+      ],
+      "from_actor_id": "actor-paul-jensen"
     },
     {
       "id": "moneyflow-2024-06-24-michael-manowski-committee-rachel-kertz-for-san-rafael-city-council-2024-13",
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-06-24",
-      "from_actor_id": "actor-michael-manowski",
+      "from_actor_label": "Michael Manowski",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2472,7 +1034,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-06-26",
-      "from_actor_id": "actor-resource-conservation-pac",
+      "from_actor_label": "Resource Conservation PAC",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2492,7 +1054,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-06-26",
-      "from_actor_id": "actor-catherine-colin-0",
+      "from_actor_label": "Catherine Colin",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2512,7 +1074,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-06-27",
-      "from_actor_id": "actor-bruce-burtch",
+      "from_actor_label": "Bruce Burtch",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2525,14 +1087,15 @@
         "record-san-rafael-campaign-filing-entry-37365",
         "record-san-rafael-campaign-ocr-entry-37365",
         "record-san-rafael-campaign-pdf-entry-37365"
-      ]
+      ],
+      "from_actor_id": "actor-bruce-burtch"
     },
     {
       "id": "moneyflow-2024-06-27-millie-anderson-z-committee-rachel-kertz-for-san-rafael-city-council-2024-17",
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-06-27",
-      "from_actor_id": "actor-millie-anderson-z",
+      "from_actor_label": "Millie Anderson",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2552,7 +1115,7 @@
       "flow_type": "campaign_contribution",
       "amount": 118.0,
       "flow_date": "2024-06-27",
-      "from_actor_id": "actor-laurie-dubin-z",
+      "from_actor_label": "Laurie Dubin",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2572,7 +1135,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-06-27",
-      "from_actor_id": "actor-melissa-prandi-z",
+      "from_actor_label": "Melissa Prandi",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2592,7 +1155,7 @@
       "flow_type": "campaign_contribution",
       "amount": 200.0,
       "flow_date": "2024-06-27",
-      "from_actor_id": "actor-geza-kadar-0",
+      "from_actor_label": "Geza Kadar",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2605,14 +1168,15 @@
         "record-san-rafael-campaign-filing-entry-37365",
         "record-san-rafael-campaign-ocr-entry-37365",
         "record-san-rafael-campaign-pdf-entry-37365"
-      ]
+      ],
+      "from_actor_id": "actor-geza-kadar"
     },
     {
       "id": "moneyflow-2024-06-27-mary-de-may-0-committee-rachel-kertz-for-san-rafael-city-council-2024-21",
       "flow_type": "campaign_contribution",
       "amount": 180.0,
       "flow_date": "2024-06-27",
-      "from_actor_id": "actor-mary-de-may-0",
+      "from_actor_label": "Mary De May",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2625,14 +1189,15 @@
         "record-san-rafael-campaign-filing-entry-37365",
         "record-san-rafael-campaign-ocr-entry-37365",
         "record-san-rafael-campaign-pdf-entry-37365"
-      ]
+      ],
+      "from_actor_id": "actor-mary-de-may"
     },
     {
       "id": "moneyflow-2024-06-27-meredith-parnell-committee-rachel-kertz-for-san-rafael-city-council-2024-22",
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-06-27",
-      "from_actor_id": "actor-meredith-parnell",
+      "from_actor_label": "Meredith Parnell",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2652,7 +1217,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-06-28",
-      "from_actor_id": "actor-william-hamamoto",
+      "from_actor_label": "William Hamamoto",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2672,7 +1237,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-06-28",
-      "from_actor_id": "actor-richard-pushkin-z",
+      "from_actor_label": "Richard Pushkin",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2692,7 +1257,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-06-29",
-      "from_actor_id": "actor-laura-duffy",
+      "from_actor_label": "Laura Duffy",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2712,7 +1277,7 @@
       "flow_type": "campaign_contribution",
       "amount": 200.0,
       "flow_date": "2024-06-30",
-      "from_actor_id": "actor-carolyn-kertz",
+      "from_actor_label": "Carolyn Kertz",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2732,7 +1297,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-06-30",
-      "from_actor_id": "actor-sandy-magid-z",
+      "from_actor_label": "Sandy Magid",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2752,7 +1317,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-06-30",
-      "from_actor_id": "actor-stephen-isaacs",
+      "from_actor_label": "Stephen Isaacs",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2772,7 +1337,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-06-30",
-      "from_actor_id": "actor-paul-cohen-z",
+      "from_actor_label": "Paul Cohen",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2792,7 +1357,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-06-30",
-      "from_actor_id": "actor-lori-frugoli-w1",
+      "from_actor_label": "Lori Frugoli W1",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37365",
       "contributor_code": "IND",
@@ -2812,7 +1377,7 @@
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2024-07-06",
-      "from_actor_id": "actor-deborah-ablin",
+      "from_actor_label": "Deborah Ablin",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -2832,7 +1397,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-07-10",
-      "from_actor_id": "actor-heather-allison",
+      "from_actor_label": "Heather Allison",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -2852,7 +1417,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-07-24",
-      "from_actor_id": "actor-dorothy-breiner",
+      "from_actor_label": "Dorothy Breiner",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -2872,7 +1437,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-07-17",
-      "from_actor_id": "actor-greg-brockbank",
+      "from_actor_label": "Greg Brockbank",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -2892,7 +1457,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-07-18",
-      "from_actor_id": "actor-bruce-burtch",
+      "from_actor_label": "Bruce Burtch",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -2905,14 +1470,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "from_actor_id": "actor-bruce-burtch"
     },
     {
       "id": "moneyflow-2024-07-05-tracy-case-committee-kate-colin-for-san-rafael-mayor-2024-6",
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-07-05",
-      "from_actor_id": "actor-tracy-case",
+      "from_actor_label": "Tracy Case",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -2932,7 +1498,7 @@
       "flow_type": "campaign_contribution",
       "amount": 1000.0,
       "flow_date": "2024-07-06",
-      "from_actor_id": "actor-wayne-clark",
+      "from_actor_label": "Wayne Clark",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -2952,7 +1518,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-07-03",
-      "from_actor_id": "actor-caran-cuneo",
+      "from_actor_label": "Caran Cuneo",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -2965,14 +1531,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "from_actor_id": "actor-caran-cuneo"
     },
     {
       "id": "moneyflow-2024-07-19-damon-connoily-tor-assemnly-2024-committee-kate-colin-for-san-rafael-mayor-2024-9",
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2024-07-19",
-      "from_actor_id": "actor-damon-connoily-tor-assemnly-2024",
+      "from_actor_label": "Damon Connoily tor ASsemnly 2024",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -2992,7 +1559,7 @@
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2024-07-02",
-      "from_actor_id": "actor-andrew-deckas",
+      "from_actor_label": "Andrew Deckas",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3012,7 +1579,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-09-20",
-      "from_actor_id": "actor-democratic-central-committee-of-marin-id",
+      "from_actor_label": "Democratic Central Committee of Marin (ID#",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3032,7 +1599,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-07-01",
-      "from_actor_id": "actor-dennis-rodoni-for-supervisor",
+      "from_actor_label": "Dennis Rodoni For Supervisor",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3052,7 +1619,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-07-18",
-      "from_actor_id": "actor-ali-eghtessadi",
+      "from_actor_label": "Ali Eghtessadi",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3072,7 +1639,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-07-05",
-      "from_actor_id": "actor-eric-lucan-for-marin-county-supervisor-2026",
+      "from_actor_label": "Eric Lucan For Marin County Supervisor 2026",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3092,7 +1659,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-07-17",
-      "from_actor_id": "actor-judy-ferguson",
+      "from_actor_label": "Judy Ferguson",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3112,7 +1679,7 @@
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2024-07-06",
-      "from_actor_id": "actor-cheryl-finley",
+      "from_actor_label": "Cheryl Finley",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3132,7 +1699,7 @@
       "flow_type": "campaign_contribution",
       "amount": -250.0,
       "flow_date": "2024-08-14",
-      "from_actor_id": "actor-mike-ghilotti",
+      "from_actor_label": "Mike Ghilotti",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3152,7 +1719,7 @@
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2024-07-06",
-      "from_actor_id": "actor-dennis-gilardi",
+      "from_actor_label": "Dennis Gilardi",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3172,7 +1739,7 @@
       "flow_type": "campaign_contribution",
       "amount": 245.0,
       "flow_date": "2024-07-24",
-      "from_actor_id": "actor-ross-gue-ring",
+      "from_actor_label": "Ross Gue ring",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3192,7 +1759,7 @@
       "flow_type": "campaign_contribution",
       "amount": 247.0,
       "flow_date": "2024-07-17",
-      "from_actor_id": "actor-christopher-hart",
+      "from_actor_label": "Christopher Hart",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3212,7 +1779,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-07-23",
-      "from_actor_id": "actor-ashley-hurd",
+      "from_actor_label": "Ashley Hurd",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3232,7 +1799,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-09-20",
-      "from_actor_id": "actor-kevin-jacobs",
+      "from_actor_label": "Kevin Jacobs",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3252,7 +1819,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-08-11",
-      "from_actor_id": "actor-paul-jensen",
+      "from_actor_label": "Paul Jensen",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3265,14 +1832,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "from_actor_id": "actor-paul-jensen"
     },
     {
       "id": "moneyflow-2024-07-06-jr-family-llc-howar-luria-committee-kate-colin-for-san-rafael-mayor-2024-24",
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2024-07-06",
-      "from_actor_id": "actor-jr-family-llc-howar-luria",
+      "from_actor_label": "Jr. Family LLC Howar Luria",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3292,7 +1860,7 @@
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2024-09-16",
-      "from_actor_id": "actor-mark-kamena",
+      "from_actor_label": "Mark Kamena",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3312,7 +1880,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-07-11",
-      "from_actor_id": "actor-brian-kelly",
+      "from_actor_label": "Brian Kelly",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3332,7 +1900,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-08-03",
-      "from_actor_id": "actor-ranjiv-khush",
+      "from_actor_label": "Ranjiv Khush",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3345,14 +1913,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "from_actor_id": "actor-ranjiv-khush"
     },
     {
       "id": "moneyflow-2024-09-13-jenni-er-knoll-committee-kate-colin-for-san-rafael-mayor-2024-28",
       "flow_type": "campaign_contribution",
       "amount": 1000.0,
       "flow_date": "2024-09-13",
-      "from_actor_id": "actor-jenni-er-knoll",
+      "from_actor_label": "Jenni er Knoll",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3372,7 +1941,7 @@
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2024-07-06",
-      "from_actor_id": "actor-rick-lewis",
+      "from_actor_label": "Rick Lewis",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3392,7 +1961,7 @@
       "flow_type": "campaign_contribution",
       "amount": 1000.0,
       "flow_date": "2024-07-02",
-      "from_actor_id": "actor-denise-m-lucy",
+      "from_actor_label": "Denise M Lucy",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3412,7 +1981,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-09-21",
-      "from_actor_id": "actor-diana-maier",
+      "from_actor_label": "Diana Maier",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3425,14 +1994,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "from_actor_id": "actor-diana-maier"
     },
     {
       "id": "moneyflow-2024-07-07-rita-manowski-committee-kate-colin-for-san-rafael-mayor-2024-32",
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-07-07",
-      "from_actor_id": "actor-rita-manowski",
+      "from_actor_label": "Rita Manowski",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3452,7 +2022,7 @@
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2024-07-02",
-      "from_actor_id": "actor-thomas-mcinerney",
+      "from_actor_label": "Thomas McInerney",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3472,7 +2042,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-07-09",
-      "from_actor_id": "actor-ann-morrison",
+      "from_actor_label": "Ann Morrison",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3492,7 +2062,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-07-03",
-      "from_actor_id": "actor-stacy-nelson",
+      "from_actor_label": "Stacy Nelson",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3512,7 +2082,7 @@
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2024-07-02",
-      "from_actor_id": "actor-joe-ohehir",
+      "from_actor_label": "Joe OHehir",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3532,7 +2102,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-07-02",
-      "from_actor_id": "actor-ashley-paff",
+      "from_actor_label": "Ashley Paff",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3552,7 +2122,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-08-17",
-      "from_actor_id": "actor-joy-phoenix",
+      "from_actor_label": "Joy Phoenix",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3572,7 +2142,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-09-21",
-      "from_actor_id": "actor-scott-pinsky",
+      "from_actor_label": "Scott Pinsky",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3592,7 +2162,7 @@
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2024-07-02",
-      "from_actor_id": "actor-stephanie-plante",
+      "from_actor_label": "Stephanie Plante",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3612,7 +2182,7 @@
       "flow_type": "campaign_contribution",
       "amount": 150.0,
       "flow_date": "2024-07-22",
-      "from_actor_id": "actor-steven-romick",
+      "from_actor_label": "Steven Romick",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3632,7 +2202,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-07-17",
-      "from_actor_id": "actor-matt-samson",
+      "from_actor_label": "Matt Samson",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3652,7 +2222,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-07-17",
-      "from_actor_id": "actor-samina-sau-e",
+      "from_actor_label": "Samina Sau",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3672,7 +2242,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-07-01",
-      "from_actor_id": "actor-deborah-strull",
+      "from_actor_label": "Deborah Strull",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3692,7 +2262,7 @@
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2024-07-09",
-      "from_actor_id": "actor-sushma-taylor",
+      "from_actor_label": "Sushma Taylor",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3712,7 +2282,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-07-18",
-      "from_actor_id": "actor-dana-thelen",
+      "from_actor_label": "Dana Thelen",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3732,7 +2302,7 @@
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2024-07-06",
-      "from_actor_id": "actor-chip-vetter",
+      "from_actor_label": "Chip Vetter",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3752,7 +2322,7 @@
       "flow_type": "campaign_contribution",
       "amount": 150.0,
       "flow_date": "2024-07-14",
-      "from_actor_id": "actor-connie-zlot",
+      "from_actor_label": "Connie Zlot",
       "to_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "contributor_code": "IND",
@@ -3772,7 +2342,7 @@
       "flow_type": "campaign_expenditure",
       "amount": 2659.56,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-ac-hotel-san-rafael",
+      "to_actor_label": "AC Hotel San Rafael",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "MTG",
       "description_raw": "07/ 18/ 24: Campaign kickoff reception. Candidate in attendance.",
@@ -3791,7 +2361,7 @@
       "flow_type": "campaign_expenditure",
       "amount": 1010.8,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-anedot",
+      "to_actor_label": "Anedot",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "FND",
       "description_raw": null,
@@ -3803,14 +2373,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-anedot"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-3",
       "flow_type": "campaign_expenditure",
       "amount": 265.4,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-anedot",
+      "to_actor_label": "Anedot",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "FND",
       "description_raw": null,
@@ -3822,14 +2393,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-anedot"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-4",
       "flow_type": "campaign_expenditure",
       "amount": 61.8,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-anedot",
+      "to_actor_label": "Anedot",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "FND",
       "description_raw": null,
@@ -3841,14 +2413,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-anedot"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-5",
       "flow_type": "campaign_expenditure",
       "amount": 71.18,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-anedot",
+      "to_actor_label": "Anedot",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "FND",
       "description_raw": null,
@@ -3860,14 +2433,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-anedot"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-6",
       "flow_type": "campaign_expenditure",
       "amount": 20.7,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-anedot",
+      "to_actor_label": "Anedot",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "FND",
       "description_raw": null,
@@ -3879,14 +2453,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-anedot"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-7",
       "flow_type": "campaign_expenditure",
       "amount": 2.3,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-anedot",
+      "to_actor_label": "Anedot",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "FND",
       "description_raw": null,
@@ -3898,14 +2473,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-anedot"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-8",
       "flow_type": "campaign_expenditure",
       "amount": 4.3,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-anedot",
+      "to_actor_label": "Anedot",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "FND",
       "description_raw": null,
@@ -3917,14 +2493,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-anedot"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-9",
       "flow_type": "campaign_expenditure",
       "amount": 12.6,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-anedot",
+      "to_actor_label": "Anedot",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "FND",
       "description_raw": null,
@@ -3936,14 +2513,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-anedot"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-10",
       "flow_type": "campaign_expenditure",
       "amount": 4.3,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-anedot",
+      "to_actor_label": "Anedot",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "FND",
       "description_raw": null,
@@ -3955,14 +2533,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-anedot"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-city-of-san-rafael-fil-11",
       "flow_type": "campaign_expenditure",
       "amount": 1150.0,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-city-of-san-rafael",
+      "to_actor_label": "City of San Rafael",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "FIL",
       "description_raw": "1400 Fifth Avenue",
@@ -3981,7 +2560,7 @@
       "flow_type": "campaign_expenditure",
       "amount": 4099.49,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-cornerstone-printing",
+      "to_actor_label": "Cornerstone Printing",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "POS",
       "description_raw": null,
@@ -4000,7 +2579,7 @@
       "flow_type": "campaign_expenditure",
       "amount": 186.0,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-caran-cuneo",
+      "to_actor_label": "Caran Cuneo",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "MTG",
       "description_raw": "09/ 21/ 24: Venue for meet and greet. Candidate in attendance.",
@@ -4012,14 +2591,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-caran-cuneo"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-donor-stack-llc-web-14",
       "flow_type": "campaign_expenditure",
       "amount": 1014.23,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-donor-stack-llc",
+      "to_actor_label": "Donor Stack, LLC",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "WEB",
       "description_raw": null,
@@ -4038,7 +2618,7 @@
       "flow_type": "campaign_expenditure",
       "amount": 370.0,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-four-waters-media-inc",
+      "to_actor_label": "four waters media, inc.",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "WEB",
       "description_raw": null,
@@ -4050,14 +2630,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-four-waters-media-inc"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-16",
       "flow_type": "campaign_expenditure",
       "amount": 1574.0,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-four-waters-media-inc",
+      "to_actor_label": "four waters media, inc.",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "CNS",
       "description_raw": null,
@@ -4069,14 +2650,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-four-waters-media-inc"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cmp-17",
       "flow_type": "campaign_expenditure",
       "amount": 450.0,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-four-waters-media-inc",
+      "to_actor_label": "four waters media, inc.",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "CMP",
       "description_raw": null,
@@ -4088,14 +2670,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-four-waters-media-inc"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-web-18",
       "flow_type": "campaign_expenditure",
       "amount": 370.0,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-four-waters-media-inc",
+      "to_actor_label": "four waters media, inc.",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "WEB",
       "description_raw": null,
@@ -4107,14 +2690,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-four-waters-media-inc"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-19",
       "flow_type": "campaign_expenditure",
       "amount": 4291.0,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-four-waters-media-inc",
+      "to_actor_label": "four waters media, inc.",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "CNS",
       "description_raw": null,
@@ -4126,14 +2710,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-four-waters-media-inc"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-cns-20",
       "flow_type": "campaign_expenditure",
       "amount": 750.0,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-pmcohen-public-affairs",
+      "to_actor_label": "PMCohen Public Affairs",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "CNS",
       "description_raw": null,
@@ -4145,14 +2730,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-pmcohen-public-affairs"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-cns-21",
       "flow_type": "campaign_expenditure",
       "amount": 1000.0,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-pmcohen-public-affairs",
+      "to_actor_label": "PMCohen Public Affairs",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "CNS",
       "description_raw": null,
@@ -4164,14 +2750,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-pmcohen-public-affairs"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-web-22",
       "flow_type": "campaign_expenditure",
       "amount": 95.0,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-pmcohen-public-affairs",
+      "to_actor_label": "PMCohen Public Affairs",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "WEB",
       "description_raw": null,
@@ -4183,14 +2770,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-pmcohen-public-affairs"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-uncoded-23",
       "flow_type": "campaign_expenditure",
       "amount": 1625.0,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-pmcohen-public-affairs",
+      "to_actor_label": "PMCohen Public Affairs",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": null,
       "description_raw": "Voter Data 1,",
@@ -4202,14 +2790,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-pmcohen-public-affairs"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-cns-24",
       "flow_type": "campaign_expenditure",
       "amount": 1000.0,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-pmcohen-public-affairs",
+      "to_actor_label": "PMCohen Public Affairs",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "CNS",
       "description_raw": null,
@@ -4221,14 +2810,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-pmcohen-public-affairs"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-s-e-owens-company-pro-25",
       "flow_type": "campaign_expenditure",
       "amount": 250.0,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-se-owens-and-company",
+      "to_actor_label": "S. E. Owens & Company",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "PRO",
       "description_raw": null,
@@ -4240,14 +2830,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-se-owens-and-company"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-s-e-owens-company-pro-26",
       "flow_type": "campaign_expenditure",
       "amount": 850.0,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-se-owens-and-company",
+      "to_actor_label": "S. E. Owens & Company",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "PRO",
       "description_raw": null,
@@ -4259,14 +2850,15 @@
         "record-san-rafael-campaign-filing-entry-37677",
         "record-san-rafael-campaign-ocr-entry-37677",
         "record-san-rafael-campaign-pdf-entry-37677"
-      ]
+      ],
+      "to_actor_id": "actor-se-owens-and-company"
     },
     {
       "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-venturepad-mtg-27",
       "flow_type": "campaign_expenditure",
       "amount": 150.0,
       "from_committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-      "to_actor_id": "actor-venturepad",
+      "to_actor_label": "VenturePad",
       "filing_id": "filing-san-rafael-campaign-entry-37677",
       "payment_code": "MTG",
       "description_raw": "09/ 19/ 24: Venue rental for Meet - and - Greet event Candidate in attendance.",
@@ -4285,7 +2877,7 @@
       "flow_type": "campaign_contribution",
       "amount": 225.0,
       "flow_date": "2024-07-01",
-      "from_actor_id": "actor-ross-guehring",
+      "from_actor_label": "Ross Guehring",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4305,7 +2897,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-07-01",
-      "from_actor_id": "actor-lora-levin-i",
+      "from_actor_label": "Lora Levin",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4325,7 +2917,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-07-01",
-      "from_actor_id": "actor-julie-sherman-d",
+      "from_actor_label": "Julie Sherman",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4345,7 +2937,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-07-01",
-      "from_actor_id": "actor-julie-fingersh",
+      "from_actor_label": "Julie Fingersh",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4365,7 +2957,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-07-03",
-      "from_actor_id": "actor-natutuatagaloa-z",
+      "from_actor_label": "NatuTuatagaloa",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4385,7 +2977,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-07-06",
-      "from_actor_id": "actor-judith-bloomberg",
+      "from_actor_label": "Judith Bloomberg",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4405,7 +2997,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-07-11",
-      "from_actor_id": "actor-barbara-heller-z",
+      "from_actor_label": "Barbara Heller",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4425,7 +3017,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-07-21",
-      "from_actor_id": "actor-cathryn-hilliard-0",
+      "from_actor_label": "Cathryn Hilliard",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4438,14 +3030,15 @@
         "record-san-rafael-campaign-filing-entry-37685",
         "record-san-rafael-campaign-ocr-entry-37685",
         "record-san-rafael-campaign-pdf-entry-37685"
-      ]
+      ],
+      "from_actor_id": "actor-cathryn-hilliard"
     },
     {
       "id": "moneyflow-2024-08-04-matthew-samson-z-committee-rachel-kertz-for-san-rafael-city-council-2024-9",
       "flow_type": "campaign_contribution",
       "amount": 1000.0,
       "flow_date": "2024-08-04",
-      "from_actor_id": "actor-matthew-samson-z",
+      "from_actor_label": "Matthew Samson",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4465,7 +3058,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-08-07",
-      "from_actor_id": "actor-daryoush-davidi",
+      "from_actor_label": "Daryoush Davidi",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4485,7 +3078,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-08-18",
-      "from_actor_id": "actor-keli-honsberger",
+      "from_actor_label": "Keli Honsberger",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4505,7 +3098,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-08-18",
-      "from_actor_id": "actor-marilyn-nemzer",
+      "from_actor_label": "Marilyn Nemzer",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4525,7 +3118,7 @@
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-08-18",
-      "from_actor_id": "actor-cathryn-hilliard",
+      "from_actor_label": "Cathryn Hilliard",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4538,14 +3131,15 @@
         "record-san-rafael-campaign-filing-entry-37685",
         "record-san-rafael-campaign-ocr-entry-37685",
         "record-san-rafael-campaign-pdf-entry-37685"
-      ]
+      ],
+      "from_actor_id": "actor-cathryn-hilliard"
     },
     {
       "id": "moneyflow-2024-08-18-geza-kadar-committee-rachel-kertz-for-san-rafael-city-council-2024-14",
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-08-18",
-      "from_actor_id": "actor-geza-kadar",
+      "from_actor_label": "Geza Kadar",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4558,14 +3152,15 @@
         "record-san-rafael-campaign-filing-entry-37685",
         "record-san-rafael-campaign-ocr-entry-37685",
         "record-san-rafael-campaign-pdf-entry-37685"
-      ]
+      ],
+      "from_actor_id": "actor-geza-kadar"
     },
     {
       "id": "moneyflow-2024-08-19-pamela-harlem-committee-rachel-kertz-for-san-rafael-city-council-2024-15",
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-08-19",
-      "from_actor_id": "actor-pamela-harlem",
+      "from_actor_label": "Pamela Harlem",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4585,7 +3180,7 @@
       "flow_type": "campaign_contribution",
       "amount": 500.0,
       "flow_date": "2024-08-20",
-      "from_actor_id": "actor-brian-mcleran",
+      "from_actor_label": "Brian McLeran",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4605,7 +3200,7 @@
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-09-13",
-      "from_actor_id": "actor-diana-maier",
+      "from_actor_label": "Diana Maier",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4618,14 +3213,15 @@
         "record-san-rafael-campaign-filing-entry-37685",
         "record-san-rafael-campaign-ocr-entry-37685",
         "record-san-rafael-campaign-pdf-entry-37685"
-      ]
+      ],
+      "from_actor_id": "actor-diana-maier"
     },
     {
       "id": "moneyflow-2024-09-17-moulton-peters-for-supervisor-2028-committee-committee-rachel-kertz-for-san-rafael-city-council-2024-18",
       "flow_type": "campaign_contribution",
       "amount": 150.0,
       "flow_date": "2024-09-17",
-      "from_actor_id": "actor-moulton-peters-for-supervisor-2028-committee",
+      "from_actor_label": "Moulton -Peters for Supervisor 2028 Committee",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4645,7 +3241,7 @@
       "flow_type": "campaign_contribution",
       "amount": 1000.0,
       "flow_date": "2024-09-17",
-      "from_actor_id": "actor-mike-mcguire-for-insurance-commissioner-2026",
+      "from_actor_label": "Mike McGuire for Insurance Commissioner 2026",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4665,7 +3261,7 @@
       "flow_type": "campaign_contribution",
       "amount": 1000.0,
       "flow_date": "2024-09-19",
-      "from_actor_id": "actor-aaron-lamstein-m",
+      "from_actor_label": "Aaron Lamstein",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4685,7 +3281,7 @@
       "flow_type": "campaign_contribution",
       "amount": 150.0,
       "flow_date": "2024-09-21",
-      "from_actor_id": "actor-mary-de-may",
+      "from_actor_label": "Mary De May",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4698,14 +3294,15 @@
         "record-san-rafael-campaign-filing-entry-37685",
         "record-san-rafael-campaign-ocr-entry-37685",
         "record-san-rafael-campaign-pdf-entry-37685"
-      ]
+      ],
+      "from_actor_id": "actor-mary-de-may"
     },
     {
       "id": "moneyflow-2024-09-21-barry-moss-z-committee-rachel-kertz-for-san-rafael-city-council-2024-22",
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-09-21",
-      "from_actor_id": "actor-barry-moss-z",
+      "from_actor_label": "Barry Moss",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4718,14 +3315,15 @@
         "record-san-rafael-campaign-filing-entry-37685",
         "record-san-rafael-campaign-ocr-entry-37685",
         "record-san-rafael-campaign-pdf-entry-37685"
-      ]
+      ],
+      "from_actor_id": "actor-barry-moss"
     },
     {
       "id": "moneyflow-2024-09-21-barry-moss-i-committee-rachel-kertz-for-san-rafael-city-council-2024-23",
       "flow_type": "campaign_contribution",
       "amount": 100.0,
       "flow_date": "2024-09-21",
-      "from_actor_id": "actor-barry-moss-i",
+      "from_actor_label": "Barry Moss",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4738,14 +3336,15 @@
         "record-san-rafael-campaign-filing-entry-37685",
         "record-san-rafael-campaign-ocr-entry-37685",
         "record-san-rafael-campaign-pdf-entry-37685"
-      ]
+      ],
+      "from_actor_id": "actor-barry-moss"
     },
     {
       "id": "moneyflow-2024-09-21-democratic-central-committee-of-marin-committee-rachel-kertz-for-san-rafael-city-council-2024-24",
       "flow_type": "campaign_contribution",
       "amount": 250.0,
       "flow_date": "2024-09-21",
-      "from_actor_id": "actor-democratic-central-committee-of-marin",
+      "from_actor_label": "Democratic Central Committee of Marin",
       "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "contributor_code": "IND",
@@ -4765,7 +3364,7 @@
       "amount": 100.0,
       "flow_date": "2024-08-30",
       "from_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "beneficiary_actor_id": "actor-cathryn-hilliard-southern-marin-fire-district",
+      "beneficiary_actor_label": "Cathryn Hilliard, Southern Marin Fire District",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "source_schedule": "schedule_d",
       "source_page_num": 9,
@@ -4784,7 +3383,7 @@
       "flow_type": "campaign_expenditure",
       "amount": 200.0,
       "from_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "to_actor_id": "actor-north-bay-labor-council",
+      "to_actor_label": "North Bay Labor Council",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "payment_code": "PRT",
       "description_raw": "Advertising",
@@ -4803,7 +3402,7 @@
       "flow_type": "campaign_expenditure",
       "amount": 1000.0,
       "from_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "to_actor_id": "actor-andre-charles",
+      "to_actor_label": "Andre Charles",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "payment_code": "CNS",
       "description_raw": "Campaign consultant",
@@ -4822,7 +3421,7 @@
       "flow_type": "campaign_expenditure",
       "amount": 1200.0,
       "from_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "to_actor_id": "actor-political-data-inc",
+      "to_actor_label": "Political Data Inc.",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "payment_code": "POL",
       "description_raw": "Political data",
@@ -4841,7 +3440,7 @@
       "flow_type": "campaign_expenditure",
       "amount": 286.84,
       "from_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "to_actor_id": "actor-pacific-print-resources",
+      "to_actor_label": "Pacific Print Resources",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "payment_code": "LIT",
       "description_raw": "Printing of literature",
@@ -4860,7 +3459,7 @@
       "flow_type": "campaign_expenditure",
       "amount": 739.42,
       "from_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "to_actor_id": "actor-firefighters-printing-printing-of-literature",
+      "to_actor_label": "Firefighters Printing Printing of literature",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "payment_code": "LIT",
       "description_raw": "Printing of literature",
@@ -4879,7 +3478,7 @@
       "flow_type": "campaign_expenditure",
       "amount": 150.0,
       "from_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "to_actor_id": "actor-actblue",
+      "to_actor_label": "ActBlue",
       "filing_id": "filing-san-rafael-campaign-entry-37685",
       "payment_code": "OFC",
       "description_raw": "Software",
