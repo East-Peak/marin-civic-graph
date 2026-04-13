@@ -18,6 +18,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **Jurisdiction pressure explanations should explain why one thread ranks above another**
+  - Once the San Rafael pressure comparison existed, the next missing product question was explanatory rather than comparative: why does one local thread rank above another on the current graph.
+  - The right bounded answer is still `place-san-rafael`, reusing the comparison layer and adding explicit ranking method, per-thread explanation points, and pairwise deltas instead of reopening ingest.
+  - The projected view pack now emits `jurisdiction-san-rafael-local-pressure-explanation.json`.
+  - Result: the current explanation layer shows why the sanctioned-camping thread outranks the Downtown Library thread on combined money and legal pressure, while preserving the lower-ranked thread's stronger decision and agreement lineage.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-jurisdiction-pressure-explanations-should-explain-why-one-thread-ranks-above-another.md`
+
 - **Jurisdiction pressure comparisons should rank local threads before we reopen ingest**
   - Once the sanctioned-camping local-pressure summary existed, the next missing product question was comparative rather than thread-specific: which current San Rafael threads carry the most combined legal pressure, linked money, and evidence density.
   - The right bounded answer is still `place-san-rafael`, using only the current in-scope program and project threads rather than importing more data first.

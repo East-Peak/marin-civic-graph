@@ -531,6 +531,64 @@ function renderJurisdictionLocalPressureComparison(data) {
   );
 }
 
+function renderExplanationPoint(item) {
+  const wrapper = el("article", "list-card");
+  wrapper.append(
+    el("p", "eyebrow", item.code || "reason"),
+    el("h4", null, item.label || "Explanation point")
+  );
+  if (item.value !== undefined) {
+    wrapper.append(renderProperties({ value: typeof item.value === "object" ? JSON.stringify(item.value) : item.value }));
+  }
+  return wrapper;
+}
+
+function renderPairwiseComparison(data) {
+  const wrapper = el("section", "panel");
+  wrapper.append(
+    el("h3", null, `${data.higher_rank_thread?.subject?.display_label || "Higher"} vs ${data.lower_rank_thread?.subject?.display_label || "Lower"}`),
+    renderProperties(data.metric_deltas || {})
+  );
+  if (data.distinguishing_factors?.length) {
+    wrapper.append(renderListSection("Distinguishing Factors", data.distinguishing_factors, renderExplanationPoint, { open: true }));
+  }
+  return wrapper;
+}
+
+function renderPressureThreadExplanation(item) {
+  const wrapper = el("section", "panel");
+  wrapper.append(
+    el("p", "eyebrow", `${item.thread_type || "thread"} · rank ${item.rank}`),
+    el("h3", null, item.subject?.display_label || "Unnamed thread"),
+    renderProperties(item.pressure_flags || {})
+  );
+  if (item.context) {
+    wrapper.append(el("p", "muted", item.context.display_label));
+  }
+  if (item.dominant_flow_types?.length) {
+    wrapper.append(renderProperties({
+      dominant_flow_types: item.dominant_flow_types.map((flow) => `${flow.flow_type}:${flow.count}`).join(", "),
+    }));
+  }
+  if (item.explanation_points?.length) {
+    wrapper.append(renderListSection("Explanation Points", item.explanation_points, renderExplanationPoint, { open: true }));
+  }
+  if (item.top_counterparties?.length) {
+    wrapper.append(renderListSection("Top Counterparties", item.top_counterparties, renderCounterpartyItem));
+  }
+  return wrapper;
+}
+
+function renderJurisdictionLocalPressureExplanation(data) {
+  contentEl.append(
+    renderListSection("Jurisdiction", [data.jurisdiction_place], renderNodeCard, { open: true }),
+    renderListSection("Thread Explanations", data.thread_explanations || [], renderPressureThreadExplanation, { open: true }),
+    renderListSection("Pairwise Comparisons", data.pairwise_comparisons || [], renderPairwiseComparison, { open: true }),
+    renderListSection("Top Counterparties", data.top_counterparties || [], renderCounterpartyItem),
+    renderListSection("Evidence Records", data.evidence_records || []),
+  );
+}
+
 function renderView(data) {
   clearChildren(contentEl);
   createMetricCards(data.metrics || {});
@@ -581,6 +639,10 @@ function renderView(data) {
   }
   if (data.view_type === "jurisdiction_local_pressure_comparison") {
     renderJurisdictionLocalPressureComparison(data);
+    return;
+  }
+  if (data.view_type === "jurisdiction_local_pressure_explanation") {
+    renderJurisdictionLocalPressureExplanation(data);
     return;
   }
   if (data.view_type === "jurisdiction_legal_constraint_summary") {

@@ -1907,6 +1907,203 @@ def jurisdiction_local_pressure_comparison(
     }
 
 
+def jurisdiction_local_pressure_explanation(
+    *,
+    place_id: str,
+    nodes: list[dict[str, Any]],
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    comparison = jurisdiction_local_pressure_comparison(
+        place_id=place_id,
+        nodes=nodes,
+        node_by_id=node_by_id,
+        outgoing=outgoing,
+        incoming=incoming,
+    )
+    thread_rollups = comparison["thread_rollups"]
+    max_money = max((item["metrics"].get("linked_money_total_amount") or 0.0) for item in thread_rollups) if thread_rollups else 0.0
+    max_case_count = max((item["metrics"].get("linked_case_count") or 0) for item in thread_rollups) if thread_rollups else 0
+    max_decision_count = max((item["metrics"].get("linked_decision_count") or 0) for item in thread_rollups) if thread_rollups else 0
+    max_evidence_count = max((item["metrics"].get("evidence_record_count") or 0) for item in thread_rollups) if thread_rollups else 0
+
+    thread_explanations = []
+    for index, item in enumerate(thread_rollups, start=1):
+        metrics = item["metrics"]
+        flow_type_counts = metrics.get("flow_type_counts") or {}
+        dominant_flow_types = [
+            {"flow_type": flow_type, "count": count}
+            for flow_type, count in sorted(flow_type_counts.items(), key=lambda kv: (-kv[1], kv[0]))
+        ]
+        explanation_points = []
+        money_total = metrics.get("linked_money_total_amount") or 0.0
+        case_count = metrics.get("linked_case_count") or 0
+        decision_count = metrics.get("linked_decision_count") or 0
+        evidence_count = metrics.get("evidence_record_count") or 0
+
+        if money_total == max_money and money_total > 0:
+            explanation_points.append(
+                {"code": "highest_linked_money", "label": "Highest linked money", "value": money_total}
+            )
+        elif money_total > 0:
+            explanation_points.append(
+                {"code": "linked_money_present", "label": "Linked money present", "value": money_total}
+            )
+        if case_count == max_case_count and case_count > 0:
+            explanation_points.append(
+                {"code": "highest_legal_pressure", "label": "Highest legal pressure", "value": case_count}
+            )
+        elif case_count > 0:
+            explanation_points.append(
+                {"code": "legal_pressure_present", "label": "Legal pressure present", "value": case_count}
+            )
+        if decision_count == max_decision_count and decision_count > 0:
+            explanation_points.append(
+                {"code": "highest_decision_density", "label": "Highest decision density", "value": decision_count}
+            )
+        if evidence_count == max_evidence_count and evidence_count > 0:
+            explanation_points.append(
+                {"code": "highest_evidence_density", "label": "Highest evidence density", "value": evidence_count}
+            )
+        if item["pressure_flags"].get("has_shared_issue_pressure"):
+            explanation_points.append(
+                {"code": "shared_issue_pressure", "label": "Shared issue pressure", "value": metrics.get("shared_issue_count") or 0}
+            )
+        if item["pressure_flags"].get("has_agreement_lineage"):
+            explanation_points.append({"code": "agreement_lineage", "label": "Agreement lineage", "value": True})
+        if item["pressure_flags"].get("has_amendment_lineage"):
+            explanation_points.append({"code": "amendment_lineage", "label": "Amendment lineage", "value": True})
+
+        thread_explanations.append(
+            {
+                "rank": index,
+                "thread_type": item["thread_type"],
+                "subject": item["subject"],
+                "context": item["context"],
+                "metrics": metrics,
+                "pressure_flags": item["pressure_flags"],
+                "dominant_flow_types": dominant_flow_types[:3],
+                "top_counterparties": item.get("top_counterparties", []),
+                "explanation_points": explanation_points,
+                "linked_decisions": item.get("linked_decisions", []),
+                "linked_cases": item.get("linked_cases", []),
+            }
+        )
+
+    pairwise_comparisons = []
+    if len(thread_explanations) >= 2:
+        higher = thread_explanations[0]
+        lower = thread_explanations[1]
+        higher_metrics = higher["metrics"]
+        lower_metrics = lower["metrics"]
+        distinguishing_factors = []
+        money_delta = (higher_metrics.get("linked_money_total_amount") or 0.0) - (
+            lower_metrics.get("linked_money_total_amount") or 0.0
+        )
+        decision_delta = (higher_metrics.get("linked_decision_count") or 0) - (
+            lower_metrics.get("linked_decision_count") or 0
+        )
+        case_delta = (higher_metrics.get("linked_case_count") or 0) - (
+            lower_metrics.get("linked_case_count") or 0
+        )
+        evidence_delta = (higher_metrics.get("evidence_record_count") or 0) - (
+            lower_metrics.get("evidence_record_count") or 0
+        )
+
+        if money_delta > 0:
+            distinguishing_factors.append(
+                {
+                    "code": "higher_rank_has_more_linked_money",
+                    "label": "Higher-ranked thread has more linked money",
+                    "value": money_delta,
+                }
+            )
+        if case_delta > 0:
+            distinguishing_factors.append(
+                {
+                    "code": "higher_rank_has_more_legal_pressure",
+                    "label": "Higher-ranked thread has more legal pressure",
+                    "value": case_delta,
+                }
+            )
+        if decision_delta < 0:
+            distinguishing_factors.append(
+                {
+                    "code": "lower_rank_has_more_decision_lineage",
+                    "label": "Lower-ranked thread has more decision lineage",
+                    "value": abs(decision_delta),
+                }
+            )
+        if evidence_delta < 0:
+            distinguishing_factors.append(
+                {
+                    "code": "lower_rank_has_more_evidence_density",
+                    "label": "Lower-ranked thread has more evidence density",
+                    "value": abs(evidence_delta),
+                }
+            )
+        if lower["pressure_flags"].get("has_agreement_lineage"):
+            distinguishing_factors.append(
+                {
+                    "code": "lower_rank_has_agreement_lineage",
+                    "label": "Lower-ranked thread has agreement lineage",
+                    "value": True,
+                }
+            )
+        pairwise_comparisons.append(
+            {
+                "higher_rank_thread": {
+                    "rank": higher["rank"],
+                    "subject": higher["subject"],
+                    "thread_type": higher["thread_type"],
+                },
+                "lower_rank_thread": {
+                    "rank": lower["rank"],
+                    "subject": lower["subject"],
+                    "thread_type": lower["thread_type"],
+                },
+                "metric_deltas": {
+                    "linked_money_total_amount_delta": money_delta,
+                    "linked_case_count_delta": case_delta,
+                    "linked_decision_count_delta": decision_delta,
+                    "evidence_record_count_delta": evidence_delta,
+                },
+                "distinguishing_factors": distinguishing_factors,
+            }
+        )
+
+    return {
+        "id": f"jurisdiction-{slugify_subject(place_id)}-local-pressure-explanation",
+        "title": f"Jurisdiction local pressure explanation: {comparison['jurisdiction_place']['display_label']}",
+        "view_type": "jurisdiction_local_pressure_explanation",
+        "subject_id": place_id,
+        "subject_node_type": "Place",
+        "contract_version": 1,
+        "generated_at": iso_now(),
+        "jurisdiction_place": comparison["jurisdiction_place"],
+        "metrics": comparison["metrics"],
+        "ranking_method": {
+            "sort_priority": [
+                "linked_money_total_amount desc",
+                "linked_case_count desc",
+                "linked_decision_count desc",
+            ],
+            "explanation_basis": [
+                "money pressure",
+                "legal pressure",
+                "decision density",
+                "evidence density",
+                "counterparty concentration",
+            ],
+        },
+        "thread_explanations": thread_explanations,
+        "pairwise_comparisons": pairwise_comparisons,
+        "top_counterparties": comparison["top_counterparties"],
+        "evidence_records": comparison["evidence_records"],
+    }
+
+
 def jurisdiction_legal_constraint_summary(
     *,
     place_id: str,
@@ -2415,6 +2612,14 @@ def build_view_from_target(
             outgoing=outgoing,
             incoming=incoming,
         )
+    if view_type == "jurisdiction_local_pressure_explanation":
+        return jurisdiction_local_pressure_explanation(
+            place_id=subject_id,
+            nodes=nodes,
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
     if view_type == "jurisdiction_legal_constraint_summary":
         return jurisdiction_legal_constraint_summary(
             place_id=subject_id,
@@ -2476,6 +2681,9 @@ def write_markdown_summary(output_dir: Path, views: list[dict[str, Any]]) -> Non
     jurisdiction_pressure_views = [
         payload for payload in views if payload["view_type"] == "jurisdiction_local_pressure_comparison"
     ]
+    jurisdiction_pressure_explanation_views = [
+        payload for payload in views if payload["view_type"] == "jurisdiction_local_pressure_explanation"
+    ]
     jurisdiction_legal_views = [
         payload for payload in views if payload["view_type"] == "jurisdiction_legal_constraint_summary"
     ]
@@ -2527,6 +2735,10 @@ def write_markdown_summary(output_dir: Path, views: list[dict[str, Any]]) -> Non
     if jurisdiction_pressure_views:
         lines.append(
             f"- Jurisdiction local pressure comparisons now cover `{len(jurisdiction_pressure_views)}` targets, including `{jurisdiction_pressure_views[0]['jurisdiction_place']['display_label']}` with `{jurisdiction_pressure_views[0]['metrics']['thread_count']}` threads, `{jurisdiction_pressure_views[0]['metrics']['linked_case_count']}` linked cases, and `${jurisdiction_pressure_views[0]['metrics']['linked_money_total_amount']:,.2f}` in linked money."
+        )
+    if jurisdiction_pressure_explanation_views:
+        lines.append(
+            f"- Jurisdiction local pressure explanations now cover `{len(jurisdiction_pressure_explanation_views)}` targets, including `{jurisdiction_pressure_explanation_views[0]['jurisdiction_place']['display_label']}` with `{len(jurisdiction_pressure_explanation_views[0]['thread_explanations'])}` ranked thread explanations and `{len(jurisdiction_pressure_explanation_views[0]['pairwise_comparisons'])}` pairwise comparisons."
         )
     if jurisdiction_legal_views:
         lines.append(

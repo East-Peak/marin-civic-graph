@@ -311,6 +311,42 @@ Current note:
 - it is intended to answer a harder product question than a single dossier: which local delivery threads currently carry the most combined money pressure, legal pressure, and evidence density
 - it still derives pressure from existing read models and graph paths; it does not mint new graph truth edges
 
+### `jurisdiction_local_pressure_explanation`
+
+Subject:
+
+- one jurisdictional `Place`
+
+Current shape:
+
+- `jurisdiction_place`
+- `metrics`
+- `ranking_method`
+- `thread_explanations`
+- `pairwise_comparisons`
+- `top_counterparties`
+- `evidence_records`
+
+Each thread explanation currently includes:
+
+- `rank`
+- `thread_type`
+- `subject`
+- `context`
+- `metrics`
+- `pressure_flags`
+- `dominant_flow_types`
+- `top_counterparties`
+- `explanation_points`
+- `linked_decisions`
+- `linked_cases`
+
+Current note:
+
+- this is the explanatory layer over `jurisdiction_local_pressure_comparison`
+- it is intended to answer why one local thread ranks above another, not just that it does
+- it stays bounded to existing graph/read-model signals: money pressure, legal pressure, decision density, evidence density, and counterparty concentration
+
 ### `jurisdiction_legal_constraint_summary`
 
 Subject:

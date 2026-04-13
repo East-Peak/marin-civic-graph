@@ -3,7 +3,7 @@
   "title": "Validation queue",
   "view_type": "validation_queue",
   "contract_version": 1,
-  "generated_at": "2026-04-13T13:24:10Z",
+  "generated_at": "2026-04-13T13:29:23Z",
   "metrics": {
     "validation_check_count": 16,
     "by_status": {

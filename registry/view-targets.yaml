@@ -54,6 +54,10 @@
       "subject_id": "place-san-rafael"
     },
     {
+      "view_type": "jurisdiction_local_pressure_explanation",
+      "subject_id": "place-san-rafael"
+    },
+    {
       "view_type": "jurisdiction_legal_constraint_summary",
       "subject_id": "place-san-rafael"
     },

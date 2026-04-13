@@ -198,6 +198,18 @@ Current scope:
 - overall top counterparties across those threads
 - bounded comparison over the current graph, not new ingest
 
+### Jurisdiction local pressure explanation
+
+- [jurisdiction-san-rafael-local-pressure-explanation.json](../data/projected/graph-v1/views/jurisdiction-san-rafael-local-pressure-explanation.json)
+
+Current scope:
+
+- one jurisdictional place
+- ranked explanations for each in-scope thread
+- explicit ranking method
+- pairwise deltas between the top-ranked threads
+- bounded explanation over the current comparison layer, not new ingest
+
 ### Jurisdiction legal constraint summary
 
 - [jurisdiction-san-rafael-legal-constraint-summary.json](../data/projected/graph-v1/views/jurisdiction-san-rafael-legal-constraint-summary.json)
