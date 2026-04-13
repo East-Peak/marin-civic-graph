@@ -18,6 +18,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **Decision-money explanations should make the rollup legible before we widen finance further**
+  - The first decision-money rollup proved ranking, but not explanation. The next useful pressure test was whether the graph could explain why a decision ranked high without adding more source data.
+  - The right bounded follow-on is still `place-san-rafael`: reuse the existing decision-money paths and add flow-type breakdowns, counterparties, and agreement/program/project/case context.
+  - The projected view pack now emits `decision-money-san-rafael-explanation.json`.
+  - Result: the current explanation layer still covers `4` decisions and `$8,069,336.82` in linked flow volume, but now shows counterparties like Defense Block Security and the specific flow mix behind the top-ranked decisions.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-decision-money-explanations-should-make-the-rollup-legible.md`
+
 - **Jurisdiction legal summaries should explain multi-case local constraint pressure**
   - After the decision-to-money rollup, the next missing product question was legal rather than financial: which imported cases actually constrain this jurisdiction, why they are in scope, and how they overlap on local programs and decisions.
   - The right bounded test is still `place-san-rafael`, using the existing Boyd / Grants Pass legal lane plus San Rafael program and decision links instead of widening legal ingestion again.

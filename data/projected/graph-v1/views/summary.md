@@ -1,6 +1,6 @@
 # Graph View Summary
 
-Generated: 2026-04-13T13:05:02Z
+Generated: 2026-04-13T13:12:32Z
 
 ## Included Views
 
@@ -14,6 +14,7 @@ Generated: 2026-04-13T13:05:02Z
 - Project dossier: Downtown Library Renovation Project (`project_dossier`)
 - Jurisdiction delivery summary: San Rafael (`jurisdiction_delivery_summary`)
 - Decision money rollup: San Rafael (`decision_money_rollup`)
+- Decision money explanation: San Rafael (`decision_money_explanation`)
 - Jurisdiction legal constraint summary: San Rafael (`jurisdiction_legal_constraint_summary`)
 - Money overlap summary (`money_overlap_summary`)
 - Legal constraint view (`legal_constraint_view`)
@@ -29,6 +30,7 @@ Generated: 2026-04-13T13:05:02Z
 - Project dossiers now cover `1` targets, including `Downtown Library Renovation Project` with `5` agreements and `5` linked money flows.
 - Jurisdiction delivery summaries now cover `1` targets, including `San Rafael` with `1` programs, `1` projects, and `12` linked money flows.
 - Decision money rollups now cover `1` targets, including `San Rafael` with `4` money-linked decisions and `$8,069,336.82` in linked flow volume.
+- Decision money explanations now cover `1` targets, including `San Rafael` with `4` explained decisions and `$8,069,336.82` in explained linked flow volume.
 - Jurisdiction legal summaries now cover `1` targets, including `San Rafael` with `2` cases, `2` linked local decisions, and `0` in-scope case-lineage links.
 - The graph currently materializes `152` money flows across `9` flow types.
 - The legal lane currently includes `4` cases and links back to `2` San Rafael local decisions.
@@ -46,6 +48,7 @@ Generated: 2026-04-13T13:05:02Z
 - `project-downtown-library-renovation-dossier.json`
 - `jurisdiction-san-rafael-delivery-summary.json`
 - `decision-money-san-rafael-rollup.json`
+- `decision-money-san-rafael-explanation.json`
 - `jurisdiction-san-rafael-legal-constraint-summary.json`
 - `money-overlap-summary.json`
 - `legal-constraint-view.json`

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-13T13:05:02Z",
+  "generated_at": "2026-04-13T13:12:32Z",
   "projection_dir": "data/projected/graph-v1",
   "contract_version": 1,
   "views": [
@@ -82,6 +82,14 @@
       "subject_id": "place-san-rafael",
       "subject_node_type": "Place",
       "path": "data/projected/graph-v1/views/decision-money-san-rafael-rollup.json"
+    },
+    {
+      "id": "decision-money-san-rafael-explanation",
+      "title": "Decision money explanation: San Rafael",
+      "view_type": "decision_money_explanation",
+      "subject_id": "place-san-rafael",
+      "subject_node_type": "Place",
+      "path": "data/projected/graph-v1/views/decision-money-san-rafael-explanation.json"
     },
     {
       "id": "jurisdiction-san-rafael-legal-constraint-summary",

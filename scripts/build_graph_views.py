@@ -246,8 +246,56 @@ def linked_money_flows_for_decisions(
                 relationship_type="RELATES_TO_DECISION",
                 source_node_type="MoneyFlow",
             )
-        )
+    )
     return sort_nodes(flows)
+
+
+def money_flow_link_summaries(
+    flow: dict[str, Any],
+    *,
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
+    skip_relationship_types = {"RELATES_TO_DECISION", "EVIDENCED_BY"}
+    items = []
+    for edge in outgoing.get(flow["id"], []):
+        if edge["relationship_type"] in skip_relationship_types:
+            continue
+        target = node_by_id.get(edge["target_id"])
+        if target is None:
+            continue
+        items.append(
+            {
+                "relationship_type": edge["relationship_type"],
+                "node": node_summary(target),
+            }
+        )
+    items.sort(
+        key=lambda item: (
+            item["relationship_type"],
+            item["node"]["node_type"],
+            item["node"]["display_label"],
+            item["node"]["id"],
+        )
+    )
+    return items
+
+
+def money_flow_evidence_summaries(
+    flow: dict[str, Any],
+    *,
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
+    return unique_node_summaries(
+        edge_targets(
+            outgoing,
+            node_by_id,
+            flow["id"],
+            relationship_type="EVIDENCED_BY",
+            target_node_type="Record",
+        )
+    )
 
 
 def linked_cases_from_records(
@@ -1305,6 +1353,162 @@ def decision_money_rollup(
     }
 
 
+def decision_money_explanation(
+    *,
+    place_id: str,
+    nodes: list[dict[str, Any]],
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    rollup = decision_money_rollup(
+        place_id=place_id,
+        nodes=nodes,
+        node_by_id=node_by_id,
+        outgoing=outgoing,
+        incoming=incoming,
+    )
+
+    explanation_items = []
+    for item in rollup["decision_rollups"]:
+        decision_id = item["decision"]["id"]
+        flow_nodes = unique_nodes(
+            sort_nodes(
+                edge_sources(
+                    incoming,
+                    node_by_id,
+                    decision_id,
+                    relationship_type="RELATES_TO_DECISION",
+                    source_node_type="MoneyFlow",
+                )
+            )
+        )
+        counterparty_buckets: dict[str, dict[str, Any]] = {}
+        flow_breakdown: dict[str, dict[str, Any]] = {}
+        linked_agreement_ids: set[str] = set()
+        linked_actor_ids: set[str] = set()
+        linked_institution_ids: set[str] = set()
+
+        explained_flows = []
+        for flow in flow_nodes:
+            flow_type = (
+                flow.get("properties", {}).get("flow_type")
+                or flow.get("properties", {}).get("money_type")
+                or "unknown"
+            )
+            amount = flow.get("properties", {}).get("amount")
+            if not isinstance(amount, (int, float)):
+                amount = 0.0
+            links = money_flow_link_summaries(flow, node_by_id=node_by_id, outgoing=outgoing)
+            evidence = money_flow_evidence_summaries(flow, node_by_id=node_by_id, outgoing=outgoing)
+
+            bucket = flow_breakdown.setdefault(flow_type, {"count": 0, "total_amount": 0.0})
+            bucket["count"] += 1
+            bucket["total_amount"] += float(amount)
+
+            for link in links:
+                node = link["node"]
+                key = node["id"]
+                counterparty = counterparty_buckets.setdefault(
+                    key,
+                    {
+                        "node": node,
+                        "relationship_types": set(),
+                        "flow_ids": set(),
+                        "total_amount": 0.0,
+                    },
+                )
+                counterparty["relationship_types"].add(link["relationship_type"])
+                counterparty["flow_ids"].add(flow["id"])
+                counterparty["total_amount"] += float(amount)
+                if node["node_type"] == "Agreement":
+                    linked_agreement_ids.add(node["id"])
+                if node["node_type"] == "Actor":
+                    linked_actor_ids.add(node["id"])
+                if node["node_type"] == "Institution":
+                    linked_institution_ids.add(node["id"])
+
+            explained_flows.append(
+                {
+                    "money_flow": node_summary(flow),
+                    "amount": float(amount),
+                    "flow_type": flow_type,
+                    "links": links,
+                    "evidence_records": evidence,
+                }
+            )
+
+        counterparties = []
+        for bucket in counterparty_buckets.values():
+            counterparties.append(
+                {
+                    "node": bucket["node"],
+                    "relationship_types": sorted(bucket["relationship_types"]),
+                    "flow_count": len(bucket["flow_ids"]),
+                    "total_amount": bucket["total_amount"],
+                }
+            )
+        counterparties.sort(
+            key=lambda item: (
+                -item["total_amount"],
+                -item["flow_count"],
+                item["node"]["node_type"],
+                item["node"]["id"],
+            )
+        )
+
+        explained_flows.sort(
+            key=lambda entry: (
+                -entry["amount"],
+                entry["money_flow"]["display_label"],
+                entry["money_flow"]["id"],
+            )
+        )
+
+        explanation_items.append(
+            {
+                "decision": item["decision"],
+                "meeting": item["meeting"],
+                "agenda_items": item["agenda_items"],
+                "metrics": item["metrics"],
+                "flow_breakdown": {
+                    key: {
+                        "count": value["count"],
+                        "total_amount": value["total_amount"],
+                    }
+                    for key, value in sorted(flow_breakdown.items())
+                },
+                "counterparties": counterparties,
+                "linked_programs": item["linked_programs"],
+                "linked_projects": item["linked_projects"],
+                "linked_cases": item["linked_cases"],
+                "linked_money_flows": explained_flows,
+                "evidence_records": item["evidence_records"],
+                "explanation_flags": {
+                    "has_agreement_links": bool(linked_agreement_ids),
+                    "has_actor_counterparties": bool(linked_actor_ids),
+                    "has_institution_counterparties": bool(linked_institution_ids),
+                    "has_project_context": bool(item["linked_projects"]),
+                    "has_program_context": bool(item["linked_programs"]),
+                    "has_case_context": bool(item["linked_cases"]),
+                },
+            }
+        )
+
+    return {
+        "id": f"decision-money-{slugify_subject(place_id)}-explanation",
+        "title": f"Decision money explanation: {node_title(node_by_id[place_id])}",
+        "view_type": "decision_money_explanation",
+        "subject_id": place_id,
+        "subject_node_type": "Place",
+        "contract_version": 1,
+        "generated_at": iso_now(),
+        "jurisdiction_place": rollup["jurisdiction_place"],
+        "metrics": rollup["metrics"],
+        "decision_explanations": explanation_items,
+    }
+
+
 def jurisdiction_legal_constraint_summary(
     *,
     place_id: str,
@@ -1789,6 +1993,14 @@ def build_view_from_target(
             outgoing=outgoing,
             incoming=incoming,
         )
+    if view_type == "decision_money_explanation":
+        return decision_money_explanation(
+            place_id=subject_id,
+            nodes=nodes,
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
     if view_type == "jurisdiction_legal_constraint_summary":
         return jurisdiction_legal_constraint_summary(
             place_id=subject_id,
@@ -1843,6 +2055,9 @@ def write_markdown_summary(output_dir: Path, views: list[dict[str, Any]]) -> Non
     project_views = [payload for payload in views if payload["view_type"] == "project_dossier"]
     jurisdiction_views = [payload for payload in views if payload["view_type"] == "jurisdiction_delivery_summary"]
     decision_money_views = [payload for payload in views if payload["view_type"] == "decision_money_rollup"]
+    decision_money_explanation_views = [
+        payload for payload in views if payload["view_type"] == "decision_money_explanation"
+    ]
     jurisdiction_legal_views = [
         payload for payload in views if payload["view_type"] == "jurisdiction_legal_constraint_summary"
     ]
@@ -1882,6 +2097,10 @@ def write_markdown_summary(output_dir: Path, views: list[dict[str, Any]]) -> Non
     if decision_money_views:
         lines.append(
             f"- Decision money rollups now cover `{len(decision_money_views)}` targets, including `{decision_money_views[0]['jurisdiction_place']['display_label']}` with `{decision_money_views[0]['metrics']['decision_count']}` money-linked decisions and `${decision_money_views[0]['metrics']['linked_money_total_amount']:,.2f}` in linked flow volume."
+        )
+    if decision_money_explanation_views:
+        lines.append(
+            f"- Decision money explanations now cover `{len(decision_money_explanation_views)}` targets, including `{decision_money_explanation_views[0]['jurisdiction_place']['display_label']}` with `{len(decision_money_explanation_views[0]['decision_explanations'])}` explained decisions and `${decision_money_explanation_views[0]['metrics']['linked_money_total_amount']:,.2f}` in explained linked flow volume."
         )
     if jurisdiction_legal_views:
         lines.append(

@@ -224,6 +224,38 @@ Current note:
 - this is a bounded read model over existing `Decision -> MoneyFlow`, `Decision -> Project`, `Program -> Decision`, and `Case -> Decision` graph paths
 - it is intended to answer: which local decisions are currently driving the most linked money, and what program/project/case context travels with them
 
+### `decision_money_explanation`
+
+Subject:
+
+- one jurisdictional `Place`
+
+Current shape:
+
+- `jurisdiction_place`
+- `metrics`
+- `decision_explanations`
+
+Each explanation currently includes:
+
+- `decision`
+- `meeting`
+- `agenda_items`
+- `metrics`
+- `flow_breakdown`
+- `counterparties`
+- `linked_programs`
+- `linked_projects`
+- `linked_cases`
+- `linked_money_flows`
+- `evidence_records`
+- `explanation_flags`
+
+Current note:
+
+- this is a richer explanatory layer over the existing `decision_money_rollup`
+- it is intended to answer not just which decisions rank high, but why they do: by showing flow-type mix, counterparties, and agreement/program/project/case context
+
 ### `jurisdiction_legal_constraint_summary`
 
 Subject:

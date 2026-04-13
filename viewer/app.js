@@ -332,6 +332,35 @@ function renderDecisionMoneyRollupItem(item) {
   return wrapper;
 }
 
+function renderCounterpartyItem(item) {
+  const wrapper = el("article", "list-card");
+  wrapper.append(
+    el("p", "eyebrow", item.node?.node_type || "Counterparty"),
+    el("h4", null, item.node?.display_label || "Unnamed")
+  );
+  const pills = el("div", "pill-row");
+  pills.append(badge(`$${formatNumber(item.total_amount || 0)}`, "ok"));
+  pills.append(badge(`${formatNumber(item.flow_count || 0)} flows`));
+  (item.relationship_types || []).forEach((value) => pills.append(badge(value)));
+  wrapper.append(pills);
+  return wrapper;
+}
+
+function renderExplainedMoneyFlow(item) {
+  const wrapper = el("article", "list-card");
+  wrapper.append(
+    el("p", "eyebrow", item.flow_type || "money flow"),
+    el("h4", null, item.money_flow?.display_label || "Unnamed flow")
+  );
+  const pills = el("div", "pill-row");
+  pills.append(badge(`$${formatNumber(item.amount || 0)}`, "ok"));
+  (item.links || []).forEach((link) => {
+    pills.append(badge(`${link.relationship_type}: ${link.node.display_label}`));
+  });
+  wrapper.append(pills);
+  return wrapper;
+}
+
 function renderLegalConstraint(data) {
   const panel = el("section", "panel");
   panel.append(el("h3", null, "Case Views"));
@@ -383,6 +412,36 @@ function renderDecisionMoneyRollup(data) {
   contentEl.append(
     renderListSection("Jurisdiction", [data.jurisdiction_place], renderNodeCard, { open: true }),
     renderListSection("Decision Rollups", data.decision_rollups || [], renderDecisionMoneyRollupItem, { open: true })
+  );
+}
+
+function renderDecisionMoneyExplanationItem(item) {
+  const wrapper = el("section", "panel");
+  wrapper.append(
+    el("h3", null, item.decision?.display_label || "Unnamed decision"),
+    renderProperties({
+      meeting: item.meeting?.display_label || item.meeting?.id || "—",
+      linked_money_total_amount: `$${formatNumber(item.metrics?.linked_money_total_amount || 0)}`,
+      linked_money_flow_count: item.metrics?.linked_money_flow_count || 0,
+      flow_type_counts: JSON.stringify(item.metrics?.flow_type_counts || {}),
+    })
+  );
+  if (item.agenda_items?.length) {
+    wrapper.append(renderListSection("Agenda Items", item.agenda_items, renderNodeCard));
+  }
+  if (item.counterparties?.length) {
+    wrapper.append(renderListSection("Counterparties", item.counterparties, renderCounterpartyItem, { open: true }));
+  }
+  if (item.linked_money_flows?.length) {
+    wrapper.append(renderListSection("Explained Money Flows", item.linked_money_flows, renderExplainedMoneyFlow));
+  }
+  return wrapper;
+}
+
+function renderDecisionMoneyExplanation(data) {
+  contentEl.append(
+    renderListSection("Jurisdiction", [data.jurisdiction_place], renderNodeCard, { open: true }),
+    renderListSection("Decision Explanations", data.decision_explanations || [], renderDecisionMoneyExplanationItem, { open: true })
   );
 }
 
@@ -462,6 +521,10 @@ function renderView(data) {
   }
   if (data.view_type === "decision_money_rollup") {
     renderDecisionMoneyRollup(data);
+    return;
+  }
+  if (data.view_type === "decision_money_explanation") {
+    renderDecisionMoneyExplanation(data);
     return;
   }
   if (data.view_type === "jurisdiction_legal_constraint_summary") {

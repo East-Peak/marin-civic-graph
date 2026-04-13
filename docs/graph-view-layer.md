@@ -162,6 +162,18 @@ Current scope:
 - linked programs, projects, and cases
 - linked money flows and evidence records
 
+### Decision money explanation
+
+- [decision-money-san-rafael-explanation.json](../data/projected/graph-v1/views/decision-money-san-rafael-explanation.json)
+
+Current scope:
+
+- one jurisdictional place
+- explained money-linked decisions
+- flow-type breakdowns
+- counterparties and agreement/program/project context
+- linked money flows with evidence records
+
 ### Jurisdiction legal constraint summary
 
 - [jurisdiction-san-rafael-legal-constraint-summary.json](../data/projected/graph-v1/views/jurisdiction-san-rafael-legal-constraint-summary.json)
