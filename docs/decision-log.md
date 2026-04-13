@@ -18,6 +18,12 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-12
 
+- **The fixed five-query pack now gates breadth-sprint decisions**
+  - Run the checkpoint against the projected `graph-v1` payload, not just a live Neo4j session, so the sprint can be judged consistently from repo state alone.
+  - The first formal run now passes `Q1`, `Q2`, `Q3`, and `Q5`, while `Q4` still fails because the San Rafael campaign money layer has QA-backed recurrence only in `2024`.
+  - That means the next highest-leverage breadth move is still the San Rafael city-office campaign filing backbone, but specifically the multi-cycle QA-backed money path rather than county widening or more schema work.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-fixed-query-pack-should-gate-breadth-sprint-checkpoints.md`
+
 - **The first legal bundle should start with one local case and one court-origin order**
   - `legal-precedent-01` starts with `Boyd v. City of San Rafael`, then grows by adding the TRO and preliminary-injunction orders as strong public filed-order copies while keeping the same normalized case spine.
   - Keep the bundle normalized and durable now, but do not widen graph-v1 import scope until the legal lane has stronger provenance and broader comparison coverage.

@@ -1,0 +1,495 @@
+{
+  "generated_at": "2026-04-13T01:22:28Z",
+  "engine": "projection_jsonl",
+  "projection_id": "graph-v1",
+  "projection_report_generated_at": "2026-04-13T01:09:51Z",
+  "projection_counts": {
+    "nodes": 6050,
+    "edges": 20177,
+    "node_type_counts": {
+      "Actor": 21,
+      "AgendaItem": 2970,
+      "Candidacy": 14,
+      "Committee": 16,
+      "Decision": 1472,
+      "EconomicInterestDisclosure": 9,
+      "Election": 18,
+      "Filing": 242,
+      "Institution": 5,
+      "Issue": 3,
+      "Meeting": 283,
+      "MoneyFlow": 145,
+      "Place": 8,
+      "Record": 822,
+      "Seat": 5,
+      "SeatService": 5,
+      "ValidationCheck": 12
+    }
+  },
+  "summary": {
+    "total": 5,
+    "passed": 4,
+    "failed": 1,
+    "failed_query_ids": [
+      "Q4"
+    ]
+  },
+  "queries": [
+    {
+      "id": "Q1",
+      "title": "actor-kate-colin dossier",
+      "pass": true,
+      "metrics": {
+        "seat_service_count": 1,
+        "committee_count": 2,
+        "filing_count": 53,
+        "filing_family_counts": {
+          "form_410": 17,
+          "form_460": 21,
+          "form_496": 1,
+          "form_497": 8,
+          "form_501": 3,
+          "form_700": 1,
+          "form_803": 2
+        },
+        "filing_years": [
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025,
+          2026
+        ],
+        "council_decision_count": 564,
+        "council_meeting_count": 167,
+        "council_record_count": 167
+      },
+      "samples": {
+        "seat_service_ids": [
+          "seatservice-kate-colin-mayor-current"
+        ],
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020",
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "form700_filing_ids": [
+          "filing-san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council"
+        ],
+        "form803_filing_ids": [
+          "filing-2025-09-04-kate-colin-form-803",
+          "filing-san-rafael-campaign-entry-41053"
+        ],
+        "campaign_filing_ids": [
+          "filing-san-rafael-campaign-entry-28439",
+          "filing-san-rafael-campaign-entry-28450",
+          "filing-san-rafael-campaign-entry-28597",
+          "filing-san-rafael-campaign-entry-28598",
+          "filing-san-rafael-campaign-entry-28599",
+          "filing-san-rafael-campaign-entry-28600",
+          "filing-san-rafael-campaign-entry-28601",
+          "filing-san-rafael-campaign-entry-31114",
+          "filing-san-rafael-campaign-entry-31115",
+          "filing-san-rafael-campaign-entry-31116",
+          "filing-san-rafael-campaign-entry-31117",
+          "filing-san-rafael-campaign-entry-31874",
+          "filing-san-rafael-campaign-entry-31935",
+          "filing-san-rafael-campaign-entry-31941",
+          "filing-san-rafael-campaign-entry-32132",
+          "filing-san-rafael-campaign-entry-32225",
+          "filing-san-rafael-campaign-entry-32228",
+          "filing-san-rafael-campaign-entry-32278",
+          "filing-san-rafael-campaign-entry-32288",
+          "filing-san-rafael-campaign-entry-32521",
+          "filing-san-rafael-campaign-entry-32634",
+          "filing-san-rafael-campaign-entry-33340",
+          "filing-san-rafael-campaign-entry-33990",
+          "filing-san-rafael-campaign-entry-34864",
+          "filing-san-rafael-campaign-entry-35555",
+          "filing-san-rafael-campaign-entry-35556",
+          "filing-san-rafael-campaign-entry-35557",
+          "filing-san-rafael-campaign-entry-35558",
+          "filing-san-rafael-campaign-entry-35559",
+          "filing-san-rafael-campaign-entry-35646",
+          "filing-san-rafael-campaign-entry-35813",
+          "filing-san-rafael-campaign-entry-36094",
+          "filing-san-rafael-campaign-entry-36095",
+          "filing-san-rafael-campaign-entry-36096",
+          "filing-san-rafael-campaign-entry-36144",
+          "filing-san-rafael-campaign-entry-36410",
+          "filing-san-rafael-campaign-entry-36459",
+          "filing-san-rafael-campaign-entry-36561",
+          "filing-san-rafael-campaign-entry-37369",
+          "filing-san-rafael-campaign-entry-37487",
+          "filing-san-rafael-campaign-entry-37609",
+          "filing-san-rafael-campaign-entry-37677",
+          "filing-san-rafael-campaign-entry-37733",
+          "filing-san-rafael-campaign-entry-37775",
+          "filing-san-rafael-campaign-entry-37776",
+          "filing-san-rafael-campaign-entry-37809",
+          "filing-san-rafael-campaign-entry-40249",
+          "filing-san-rafael-campaign-entry-40949",
+          "filing-san-rafael-campaign-entry-41858",
+          "filing-san-rafael-campaign-entry-41859"
+        ],
+        "first_council_decision_ids": [
+          "decision-2019-01-22-san-rafael-city-council-4-consent-calendar-approval",
+          "decision-2019-01-22-san-rafael-city-council-6a-resolution-adoption-14626",
+          "decision-2019-01-22-san-rafael-city-council-7a-resolution-adoption-14627-14628-14629-14630",
+          "decision-2019-01-22-san-rafael-city-council-7b-acceptance-accepted-informational-report-on-draft-action-plan",
+          "decision-2019-02-04-san-rafael-city-council-4-consent-calendar-approval"
+        ],
+        "last_council_decision_ids": [
+          "decision-2026-03-16-san-rafael-city-council-2-consent-calendar-approval",
+          "decision-2026-03-16-san-rafael-city-council-3a-ordinance-introduction-introduced-the-ordinance-waived-further-reading-and-referred-to-it-by-title-on",
+          "decision-2026-03-16-san-rafael-city-council-3b-acceptance-accepted-the-general-plan-and-housing-element-annual-progress-report-for-2025-an",
+          "decision-2026-03-16-san-rafael-city-council-4a-direction-or-receipt-received-the-project-update-and-provided-direction-regarding-the-operational-fra",
+          "decision-2026-03-16-san-rafael-city-council-4b-resolution-adoption-15527"
+        ]
+      },
+      "notes": [
+        "Kate Colin now spans council voting, campaign committees, campaign filings, a local Form 803 filing, and imported Form 700 continuity.",
+        "The dossier crosses more than one year and more than one filing family, so it satisfies the fixed breadth-sprint threshold."
+      ]
+    },
+    {
+      "id": "Q2",
+      "title": "current elected disclosure coverage",
+      "pass": true,
+      "metrics": {
+        "current_seat_service_count": 5,
+        "imported_disclosure_filing_count": 10,
+        "resolved_disclosure_filing_count": 10,
+        "unresolved_disclosure_filing_count": 0
+      },
+      "samples": {
+        "seat_service_coverage": [
+          {
+            "seat_service_id": "seatservice-eli-hill-d2-current",
+            "actor_id": "actor-eli-hill",
+            "filing_count": 3,
+            "filing_ids": [
+              "filing-san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council",
+              "filing-san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council",
+              "filing-san-rafael-form700-2025-03-31-hill-elias-annual-city-council-member-city-council"
+            ],
+            "resolved_count": 3
+          },
+          {
+            "seat_service_id": "seatservice-kate-colin-mayor-current",
+            "actor_id": "actor-kate-colin",
+            "filing_count": 2,
+            "filing_ids": [
+              "filing-2025-09-04-kate-colin-form-803",
+              "filing-san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council"
+            ],
+            "resolved_count": 2
+          },
+          {
+            "seat_service_id": "seatservice-maika-llorens-gulati-d1-current",
+            "actor_id": "actor-maika-llorens-gulati",
+            "filing_count": 1,
+            "filing_ids": [
+              "filing-san-rafael-form700-2025-03-28-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy"
+            ],
+            "resolved_count": 1
+          },
+          {
+            "seat_service_id": "seatservice-maribeth-bushey-d3-current",
+            "actor_id": "actor-maribeth-bushey",
+            "filing_count": 3,
+            "filing_ids": [
+              "filing-san-rafael-form700-2023-04-03-bushey-maribeth-annual-city-council-member-city-council",
+              "filing-san-rafael-form700-2024-04-02-bushey-maribeth-annual-city-council-member-city-council",
+              "filing-san-rafael-form700-2025-03-31-bushey-maribeth-annual-city-council-member-city-council"
+            ],
+            "resolved_count": 3
+          },
+          {
+            "seat_service_id": "seatservice-rachel-kertz-d4-current",
+            "actor_id": "actor-rachel-kertz",
+            "filing_count": 1,
+            "filing_ids": [
+              "filing-san-rafael-form700-2025-03-23-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district"
+            ],
+            "resolved_count": 1
+          }
+        ],
+        "unresolved_filing_ids": []
+      },
+      "notes": [
+        "This query only tracks the narrow imported disclosure lane: current San Rafael elected seat services plus imported Form 700/Form 803 filings since 2019.",
+        "The pass condition is strict: every imported disclosure filing must resolve to both a canonical actor and a current seat service."
+      ]
+    },
+    {
+      "id": "Q3",
+      "title": "San Rafael council decision timeline",
+      "pass": true,
+      "metrics": {
+        "decision_count": 1454,
+        "meeting_count": 175,
+        "year_span": [
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025,
+          2026
+        ],
+        "decisions_with_votes": 564,
+        "decisions_with_evidence": 1454
+      },
+      "samples": {
+        "first_five": [
+          {
+            "id": "decision-2019-01-22-san-rafael-city-council-1a-report-acceptance-accepted-report",
+            "title": "Accepted report",
+            "meeting_id": "meeting-2019-01-22-san-rafael-city-council",
+            "meeting_date": "2019-01-22",
+            "vote_count": 0,
+            "evidence_record_ids": [
+              "record-2019-01-22-san-rafael-city-council-minutes"
+            ]
+          },
+          {
+            "id": "decision-2019-01-22-san-rafael-city-council-4-consent-calendar-approval",
+            "title": "approve Consent Calendar Items:",
+            "meeting_id": "meeting-2019-01-22-san-rafael-city-council",
+            "meeting_date": "2019-01-22",
+            "vote_count": 5,
+            "evidence_record_ids": [
+              "record-2019-01-22-san-rafael-city-council-minutes"
+            ]
+          },
+          {
+            "id": "decision-2019-01-22-san-rafael-city-council-4a-minutes-approval-approved-as-submitted",
+            "title": "Approved as submitted",
+            "meeting_id": "meeting-2019-01-22-san-rafael-city-council",
+            "meeting_date": "2019-01-22",
+            "vote_count": 0,
+            "evidence_record_ids": [
+              "record-2019-01-22-san-rafael-city-council-minutes"
+            ]
+          },
+          {
+            "id": "decision-2019-01-22-san-rafael-city-council-4b-staff-recommendation-approval-approved-staff-recommendation",
+            "title": "Approved staff recommendation",
+            "meeting_id": "meeting-2019-01-22-san-rafael-city-council",
+            "meeting_date": "2019-01-22",
+            "vote_count": 0,
+            "evidence_record_ids": [
+              "record-2019-01-22-san-rafael-city-council-minutes"
+            ]
+          },
+          {
+            "id": "decision-2019-01-22-san-rafael-city-council-4c-staff-recommendation-approval-approved-staff-recommendation",
+            "title": "Approved staff recommendation",
+            "meeting_id": "meeting-2019-01-22-san-rafael-city-council",
+            "meeting_date": "2019-01-22",
+            "vote_count": 0,
+            "evidence_record_ids": [
+              "record-2019-01-22-san-rafael-city-council-minutes"
+            ]
+          }
+        ],
+        "last_five": [
+          {
+            "id": "decision-2026-03-16-san-rafael-city-council-2d-resolution-adoption-15526",
+            "title": "Adopted Resolution 15526",
+            "meeting_id": "meeting-2026-03-16-san-rafael-city-council",
+            "meeting_date": "2026-03-16",
+            "vote_count": 0,
+            "evidence_record_ids": [
+              "record-2026-03-16-san-rafael-city-council-minutes"
+            ]
+          },
+          {
+            "id": "decision-2026-03-16-san-rafael-city-council-3a-ordinance-introduction-introduced-the-ordinance-waived-further-reading-and-referred-to-it-by-title-on",
+            "title": "Introduced the Ordinance, waived further reading, and referred to it by title only",
+            "meeting_id": "meeting-2026-03-16-san-rafael-city-council",
+            "meeting_date": "2026-03-16",
+            "vote_count": 5,
+            "evidence_record_ids": [
+              "record-2026-03-16-san-rafael-city-council-minutes"
+            ]
+          },
+          {
+            "id": "decision-2026-03-16-san-rafael-city-council-3b-acceptance-accepted-the-general-plan-and-housing-element-annual-progress-report-for-2025-an",
+            "title": "Accepted the General Plan and Housing Element Annual Progress Report for 2025 and directed",
+            "meeting_id": "meeting-2026-03-16-san-rafael-city-council",
+            "meeting_date": "2026-03-16",
+            "vote_count": 5,
+            "evidence_record_ids": [
+              "record-2026-03-16-san-rafael-city-council-minutes"
+            ]
+          },
+          {
+            "id": "decision-2026-03-16-san-rafael-city-council-4a-direction-or-receipt-received-the-project-update-and-provided-direction-regarding-the-operational-fra",
+            "title": "Received the project update and provided direction regarding the operational framework for the",
+            "meeting_id": "meeting-2026-03-16-san-rafael-city-council",
+            "meeting_date": "2026-03-16",
+            "vote_count": 5,
+            "evidence_record_ids": [
+              "record-2026-03-16-san-rafael-city-council-minutes"
+            ]
+          },
+          {
+            "id": "decision-2026-03-16-san-rafael-city-council-4b-resolution-adoption-15527",
+            "title": "Adopted Resolution 15527",
+            "meeting_id": "meeting-2026-03-16-san-rafael-city-council",
+            "meeting_date": "2026-03-16",
+            "vote_count": 5,
+            "evidence_record_ids": [
+              "record-2026-03-16-san-rafael-city-council-minutes"
+            ]
+          }
+        ]
+      },
+      "notes": [
+        "This is the first fixed-query-pack check that directly measures whether the council breadth pass created an actual multi-year decision timeline.",
+        "The result is now a real 2019+ council decision spine rather than one worked-example branch."
+      ]
+    },
+    {
+      "id": "Q4",
+      "title": "San Rafael election money spine",
+      "pass": false,
+      "metrics": {
+        "cycle_rollup": {
+          "2020": {
+            "committee_count": 7,
+            "filing_count": 66,
+            "ie_filing_count": 4,
+            "qa_money_flow_count": 0
+          },
+          "2022": {
+            "committee_count": 7,
+            "filing_count": 44,
+            "ie_filing_count": 0,
+            "qa_money_flow_count": 0
+          },
+          "2024": {
+            "committee_count": 8,
+            "filing_count": 42,
+            "ie_filing_count": 0,
+            "qa_money_flow_count": 136
+          }
+        },
+        "committee_count": 16,
+        "filing_count": 152,
+        "ie_filing_count": 4,
+        "qa_money_flow_count": 136,
+        "qa_money_flow_years": [
+          2024
+        ],
+        "imported_noisy_actor_count": 0
+      },
+      "samples": {
+        "committee_ids": [
+          "committee-eli-hill-for-san-rafael-city-council-2022",
+          "committee-gerrod-herndon-for-san-rafael-city-council-2022",
+          "committee-greg-knell-for-city-council-2020",
+          "committee-jonathan-frieman-for-san-rafael-city-council-2022",
+          "committee-kate-colin-for-mayor-2020",
+          "committee-kate-colin-for-san-rafael-mayor-2024",
+          "committee-mahmoud-a-shirazi-for-mayor-2020",
+          "committee-mahmoud-a-shirazi-for-san-rafael-mayor-2024",
+          "committee-maika-llorens-gulati-for-san-rafael-city-council-2020",
+          "committee-maika-llorens-gulati-for-san-rafael-city-council-2024",
+          "committee-maribeth-bushey-for-city-council-2022",
+          "committee-mark-galperin-for-city-council-2024",
+          "... (+4 more)"
+        ],
+        "ie_filing_ids": [
+          "filing-san-rafael-ie-entry-32165",
+          "filing-san-rafael-ie-entry-32166",
+          "filing-san-rafael-ie-entry-32280",
+          "filing-san-rafael-ie-entry-32292"
+        ],
+        "qa_money_flow_samples": [
+          "moneyflow-2024-06-14-mary-sackett-z-committee-rachel-kertz-for-san-rafael-city-council-2024-1",
+          "moneyflow-2024-06-17-bruce-raful-z-committee-rachel-kertz-for-san-rafael-city-council-2024-3",
+          "moneyflow-2024-06-17-katie-rice-z-committee-rachel-kertz-for-san-rafael-city-council-2024-2",
+          "moneyflow-2024-06-18-tamara-hull-z-committee-rachel-kertz-for-san-rafael-city-council-2024-4",
+          "moneyflow-2024-06-19-and-leigh-bakhtiari-committee-rachel-kertz-for-san-rafael-city-council-2024-6",
+          "moneyflow-2024-06-19-caran-cuneo-z-committee-rachel-kertz-for-san-rafael-city-council-2024-5",
+          "moneyflow-2024-06-19-ranjiv-khush-z-committee-rachel-kertz-for-san-rafael-city-council-2024-7",
+          "moneyflow-2024-06-20-eric-boales-z-committee-rachel-kertz-for-san-rafael-city-council-2024-8",
+          "moneyflow-2024-06-20-lisa-doran-z-committee-rachel-kertz-for-san-rafael-city-council-2024-10",
+          "moneyflow-2024-06-20-windi-snarly-0-committee-rachel-kertz-for-san-rafael-city-council-2024-9",
+          "moneyflow-2024-06-21-kim-diamond-committee-rachel-kertz-for-san-rafael-city-council-2024-11",
+          "moneyflow-2024-06-24-michael-manowski-committee-rachel-kertz-for-san-rafael-city-council-2024-13",
+          "... (+124 more)"
+        ],
+        "noisy_actor_ids": []
+      },
+      "notes": [
+        "Committees and filings now span 2020, 2022, and 2024, but the QA-backed money layer still effectively lives in the 2024 Form 460 sample.",
+        "That is the core reason this query still fails: the graph has campaign filing breadth, but not multi-cycle QA-backed money recurrence yet."
+      ]
+    },
+    {
+      "id": "Q5",
+      "title": "validation queue",
+      "pass": true,
+      "metrics": {
+        "validation_check_count": 12,
+        "subject_filing_count": 3,
+        "status_counts": {
+          "extraction_gap": 1,
+          "reconciled": 11
+        }
+      },
+      "samples": {
+        "subjects": [
+          {
+            "subject_node_id": "filing-san-rafael-campaign-entry-37365",
+            "subject_display_label": "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+            "check_count": 4,
+            "status_counts": {
+              "reconciled": 4
+            },
+            "max_absolute_delta_value_number": 0.0
+          },
+          {
+            "subject_node_id": "filing-san-rafael-campaign-entry-37677",
+            "subject_display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+            "check_count": 4,
+            "status_counts": {
+              "extraction_gap": 1,
+              "reconciled": 3
+            },
+            "max_absolute_delta_value_number": 1000.0
+          },
+          {
+            "subject_node_id": "filing-san-rafael-campaign-entry-37685",
+            "subject_display_label": "Form 460 - Rachel Kertz for City Council 2024; preelection",
+            "check_count": 4,
+            "status_counts": {
+              "reconciled": 4
+            },
+            "max_absolute_delta_value_number": 0.0
+          }
+        ],
+        "focus_subject": {
+          "subject_node_id": "filing-san-rafael-campaign-entry-37677",
+          "subject_display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+          "check_count": 4,
+          "status_counts": {
+            "extraction_gap": 1,
+            "reconciled": 3
+          },
+          "max_absolute_delta_value_number": 1000.0
+        }
+      },
+      "notes": [
+        "The queue remains small enough to review directly, and the remaining non-reconciled item is still the known $1,000 Kate Colin Schedule A extraction gap.",
+        "This is the first query that checks whether new breadth work is creating a manageable validation surface instead of a noisy anomaly dump."
+      ]
+    }
+  ],
+  "next_recommendation": "Continue the San Rafael city-office campaign filing backbone, but focus specifically on multi-cycle QA-backed money extraction and validation rather than opening county tracks or adding more schema."
+}

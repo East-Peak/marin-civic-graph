@@ -65,6 +65,7 @@ Start narrow:
 - [Graph Data Model](./docs/graph-data-model.md)
 - [Graph Materialization Proposal](./docs/graph-materialization-proposal.md)
 - [Architecture Review Checklist](./docs/architecture-review-checklist.md)
+- [Graph Query Pack](./docs/graph-query-pack.md)
 - [Controlled Breadth Sprint Proposal](./docs/breadth-sprint-proposal.md)
 - [Controlled Breadth Sprint Adversarial Review Checklist](./docs/breadth-sprint-review-checklist.md)
 - [Decision Log](./docs/decision-log.md)
@@ -132,6 +133,8 @@ Start narrow:
 - [Graph V1 Node Projection](./data/projected/graph-v1/nodes.jsonl)
 - [Graph V1 Edge Projection](./data/projected/graph-v1/edges.jsonl)
 - [Graph V1 Cypher Loader Output](./data/projected/graph-v1/load-graph-v1.cypher)
+- [Graph Query Pack Report](./data/projected/graph-v1/query-pack-report.json)
+- [Graph Query Pack Summary](./data/projected/graph-v1/query-pack-report.md)
 - [Bundle 01 Extracted Summary](./data/extracted/san-rafael-homelessness-01/bundle-01-summary.json)
 - [Bundle 01 Normalized Summary](./data/normalized/san-rafael-homelessness-01/bundle-01.json)
 - [Marin IJ Citation Layer](./data/normalized/san-rafael-homelessness-01/marin-ij-citation-layer.json)
@@ -206,6 +209,7 @@ Start narrow:
 - [Graph Projection Helper](./scripts/graph_projection_lib.py)
 - [Graph Projection Builder](./scripts/build_graph_projection.py)
 - [Graph Projection Smoke Checks](./scripts/graph_smoke_checks.py)
+- [Graph Query Pack Runner](./scripts/run_graph_query_pack.py)
 - [Neo4j V1 Loader](./scripts/load_neo4j_v1.py)
 - [Marin County BOS Archive Capture Workflow](./scripts/capture_marin_county_bos_archive.py)
 - [Marin County Campaign Finance Export Capture Workflow](./scripts/capture_marin_county_campaign_finance_exports.py)
@@ -218,6 +222,7 @@ This repo started as a planning workspace and now includes the first live implem
   - explicit import manifest at [import-manifest.yaml](./registry/import-manifest.yaml)
   - projection builder that narrows bundle-local JSON into one graph envelope
   - JSONL node/edge projection plus a generated Cypher loader output under [data/projected](./data/projected/README.md)
+  - fixed five-query checkpoint now runs directly against the projected graph payload, so breadth decisions can be gated without relying on a live Neo4j session
   - smoke checks that prove actor, seat-service, filing, money, decision, record, and validation continuity end to end
   - evidence completeness is now backed by a dedicated San Rafael city-side campaign evidence-record bundle that promotes OCR/PDF/folder artifacts already referenced from filings, money flows, validation checks, and the narrow actor supplement
   - a narrow actor and issue supplement now lands `8` conservative campaign actors and `3` canonical issues without widening into discovery-stage review material
@@ -226,8 +231,8 @@ This repo started as a planning workspace and now includes the first live implem
   - graph-v1 is now at `6050` nodes and `20177` edges, with `1472` `Decision` nodes and `2970` `AgendaItem` nodes after projection merging
   - consent votes are now modeled conservatively: one section-level voted decision, with subitem outcomes linked back to that consent action instead of pretending each subitem had its own roll call
   - the elected-disclosure breadth slice now adds `9` current-officeholder Form `700` filings and `9` `EconomicInterestDisclosure` nodes backed by the public NetFile export and explicit current `SeatService` start dates
-  - current graph-v1 projection totals: `1410` nodes and `5082` edges
   - the current projection report still shows `missing_target:Actor = 147`; `Issue` and `Record` completeness gaps are no longer part of graph-v1
+  - the first formal fixed-query-pack run now passes `Q1`, `Q2`, `Q3`, and `Q5`, while `Q4` fails because QA-backed campaign money recurrence still only exists in the `2024` city-office sample
   - the first live local Neo4j load and query pass has been run successfully against the projected graph, proving end-to-end continuity for actor, seat-service, filing, money, decision, issue, and validation queries
 - first normalized legal bundle now exists as `legal-precedent-01`:
   - captured the Boyd TRO, preliminary-injunction, and dismissal orders as durable PDF-backed legal records

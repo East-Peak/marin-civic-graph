@@ -1,0 +1,728 @@
+#!/usr/bin/env python3
+
+from __future__ import annotations
+
+import argparse
+import json
+from collections import Counter, defaultdict
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+from graph_projection_lib import DEFAULT_MANIFEST_PATH, ROOT, read_jsonl, read_manifest, write_json
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Run the fixed five-query breadth-sprint pack against the projected graph-v1 payload."
+    )
+    parser.add_argument(
+        "--manifest",
+        default=str(DEFAULT_MANIFEST_PATH),
+        help="Path to the JSON-compatible YAML import manifest.",
+    )
+    parser.add_argument(
+        "--projection-dir",
+        default=None,
+        help="Override projection directory. Defaults to manifest output_dir.",
+    )
+    parser.add_argument(
+        "--output-json",
+        default=None,
+        help="Override JSON report path. Defaults to <projection-dir>/query-pack-report.json.",
+    )
+    parser.add_argument(
+        "--output-md",
+        default=None,
+        help="Override Markdown report path. Defaults to <projection-dir>/query-pack-report.md.",
+    )
+    return parser.parse_args()
+
+
+def iso_now() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def build_indexes(
+    projection_dir: Path,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, dict[str, Any]], dict[str, list[dict[str, Any]]], dict[str, list[dict[str, Any]]]]:
+    nodes = read_jsonl(projection_dir / "nodes.jsonl")
+    edges = read_jsonl(projection_dir / "edges.jsonl")
+    node_by_id = {node["id"]: node for node in nodes}
+    outgoing: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    incoming: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for edge in edges:
+        outgoing[edge["source_id"]].append(edge)
+        incoming[edge["target_id"]].append(edge)
+    return nodes, edges, node_by_id, outgoing, incoming
+
+
+def node_year(node: dict[str, Any]) -> int | None:
+    properties = node.get("properties", {})
+    for key in ("meeting_date", "election_date", "posted_at", "filed_at", "signed_at", "started_at"):
+        value = properties.get(key)
+        if isinstance(value, str) and len(value) >= 4 and value[:4].isdigit():
+            return int(value[:4])
+    return None
+
+
+def node_title(node: dict[str, Any]) -> str:
+    return node.get("display_label") or node.get("properties", {}).get("title") or node["id"]
+
+
+def edge_targets(
+    outgoing: dict[str, list[dict[str, Any]]],
+    node_by_id: dict[str, dict[str, Any]],
+    source_id: str,
+    *,
+    relationship_type: str | None = None,
+    target_node_type: str | None = None,
+) -> list[dict[str, Any]]:
+    results: list[dict[str, Any]] = []
+    for edge in outgoing.get(source_id, []):
+        if relationship_type and edge["relationship_type"] != relationship_type:
+            continue
+        target = node_by_id.get(edge["target_id"])
+        if target is None:
+            continue
+        if target_node_type and target["node_type"] != target_node_type:
+            continue
+        results.append(target)
+    return results
+
+
+def edge_sources(
+    incoming: dict[str, list[dict[str, Any]]],
+    node_by_id: dict[str, dict[str, Any]],
+    target_id: str,
+    *,
+    relationship_type: str | None = None,
+    source_node_type: str | None = None,
+) -> list[dict[str, Any]]:
+    results: list[dict[str, Any]] = []
+    for edge in incoming.get(target_id, []):
+        if relationship_type and edge["relationship_type"] != relationship_type:
+            continue
+        source = node_by_id.get(edge["source_id"])
+        if source is None:
+            continue
+        if source_node_type and source["node_type"] != source_node_type:
+            continue
+        results.append(source)
+    return results
+
+
+def has_outgoing_edge(
+    outgoing: dict[str, list[dict[str, Any]]],
+    source_id: str,
+    relationship_type: str,
+    target_id: str | None = None,
+) -> bool:
+    for edge in outgoing.get(source_id, []):
+        if edge["relationship_type"] != relationship_type:
+            continue
+        if target_id and edge["target_id"] != target_id:
+            continue
+        return True
+    return False
+
+
+def count_votes(incoming: dict[str, list[dict[str, Any]]], decision_id: str) -> int:
+    return sum(1 for edge in incoming.get(decision_id, []) if edge["relationship_type"] == "CAST_VOTE_ON")
+
+
+def evidence_record_ids(outgoing: dict[str, list[dict[str, Any]]], source_id: str) -> list[str]:
+    return sorted(
+        {
+            edge["target_id"]
+            for edge in outgoing.get(source_id, [])
+            if edge["relationship_type"] == "EVIDENCED_BY"
+        }
+    )
+
+
+def meeting_for_decision(
+    decision_id: str,
+    outgoing: dict[str, list[dict[str, Any]]],
+    node_by_id: dict[str, dict[str, Any]],
+) -> dict[str, Any] | None:
+    meetings = edge_targets(
+        outgoing,
+        node_by_id,
+        decision_id,
+        relationship_type="DECIDED_AT_MEETING",
+        target_node_type="Meeting",
+    )
+    return meetings[0] if meetings else None
+
+
+def is_san_rafael_council_decision(
+    node: dict[str, Any],
+    outgoing: dict[str, list[dict[str, Any]]],
+    node_by_id: dict[str, dict[str, Any]],
+) -> bool:
+    if node["node_type"] != "Decision":
+        return False
+    if not has_outgoing_edge(outgoing, node["id"], "DECIDED_BY_INSTITUTION", "inst-san-rafael-city-council"):
+        return False
+    meeting = meeting_for_decision(node["id"], outgoing, node_by_id)
+    if not meeting:
+        return False
+    year = node_year(meeting)
+    return year is not None and year >= 2019
+
+
+def format_ids(items: list[str], limit: int = 8) -> list[str]:
+    if len(items) <= limit:
+        return items
+    return items[:limit] + [f"... (+{len(items) - limit} more)"]
+
+
+def run_q1(
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    actor_id = "actor-kate-colin"
+    actor = node_by_id[actor_id]
+
+    seat_services = sorted(
+        edge_sources(
+            incoming,
+            node_by_id,
+            actor_id,
+            relationship_type="HELD_BY_ACTOR",
+            source_node_type="SeatService",
+        ),
+        key=lambda node: node["id"],
+    )
+    committees = sorted(
+        edge_sources(
+            incoming,
+            node_by_id,
+            actor_id,
+            relationship_type="CONTROLLED_BY_ACTOR",
+            source_node_type="Committee",
+        ),
+        key=lambda node: node["id"],
+    )
+
+    filing_ids = set()
+    for filing in edge_sources(incoming, node_by_id, actor_id, relationship_type="OFFICIAL_FILER", source_node_type="Filing"):
+        filing_ids.add(filing["id"])
+    for filing in edge_sources(incoming, node_by_id, actor_id, relationship_type="FILED_BY_ACTOR", source_node_type="Filing"):
+        filing_ids.add(filing["id"])
+    for committee in committees:
+        for filing in edge_sources(incoming, node_by_id, committee["id"], relationship_type="FILED_BY_COMMITTEE", source_node_type="Filing"):
+            filing_ids.add(filing["id"])
+    filings = sorted((node_by_id[filing_id] for filing_id in filing_ids), key=lambda node: (node_year(node) or 0, node["id"]))
+
+    filing_family_counts = Counter(
+        filing["properties"].get("filing_type", "unknown") for filing in filings
+    )
+    filing_years = sorted({year for filing in filings if (year := node_year(filing)) is not None})
+
+    council_decisions = sorted(
+        (
+            node_by_id[edge["target_id"]]
+            for edge in outgoing.get(actor_id, [])
+            if edge["relationship_type"] == "CAST_VOTE_ON"
+            and edge["target_id"] in node_by_id
+            and is_san_rafael_council_decision(node_by_id[edge["target_id"]], outgoing, node_by_id)
+        ),
+        key=lambda node: (
+            meeting_for_decision(node["id"], outgoing, node_by_id)["properties"]["meeting_date"],
+            node["id"],
+        ),
+    )
+    council_meeting_ids = sorted(
+        {
+            meeting["id"]
+            for decision in council_decisions
+            if (meeting := meeting_for_decision(decision["id"], outgoing, node_by_id))
+        }
+    )
+    council_record_ids = sorted(
+        {
+            record_id
+            for decision in council_decisions
+            for record_id in evidence_record_ids(outgoing, decision["id"])
+        }
+    )
+
+    result = {
+        "id": "Q1",
+        "title": "actor-kate-colin dossier",
+        "pass": len(filing_family_counts) >= 2 and len(filing_years) >= 2,
+        "metrics": {
+            "seat_service_count": len(seat_services),
+            "committee_count": len(committees),
+            "filing_count": len(filings),
+            "filing_family_counts": dict(sorted(filing_family_counts.items())),
+            "filing_years": filing_years,
+            "council_decision_count": len(council_decisions),
+            "council_meeting_count": len(council_meeting_ids),
+            "council_record_count": len(council_record_ids),
+        },
+        "samples": {
+            "seat_service_ids": [node["id"] for node in seat_services],
+            "committee_ids": [node["id"] for node in committees],
+            "form700_filing_ids": [node["id"] for node in filings if node["properties"].get("filing_type") == "form_700"],
+            "form803_filing_ids": [node["id"] for node in filings if node["properties"].get("filing_type") == "form_803"],
+            "campaign_filing_ids": [node["id"] for node in filings if node["properties"].get("filing_type", "").startswith("form_4") or node["properties"].get("filing_type") in {"form_496", "form_497", "form_501"}],
+            "first_council_decision_ids": format_ids([node["id"] for node in council_decisions[:5]]),
+            "last_council_decision_ids": format_ids([node["id"] for node in council_decisions[-5:]]),
+        },
+        "notes": [
+            f"{actor['display_label']} now spans council voting, campaign committees, campaign filings, a local Form 803 filing, and imported Form 700 continuity.",
+            "The dossier crosses more than one year and more than one filing family, so it satisfies the fixed breadth-sprint threshold.",
+        ],
+    }
+    return result
+
+
+def run_q2(
+    nodes: list[dict[str, Any]],
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    seat_services = sorted(
+        (
+            node
+            for node in nodes
+            if node["node_type"] == "SeatService"
+            and node["properties"].get("status") == "current"
+            and node["properties"].get("institution_id") == "inst-san-rafael-city-council"
+        ),
+        key=lambda node: node["id"],
+    )
+
+    coverage_rows: list[dict[str, Any]] = []
+    disclosure_filing_ids: set[str] = set()
+    unresolved_filing_ids: list[str] = []
+
+    for seat_service in seat_services:
+        filings = sorted(
+            (
+                node
+                for node in edge_sources(
+                    incoming,
+                    node_by_id,
+                    seat_service["id"],
+                    relationship_type="FILED_DURING_SEAT_SERVICE",
+                    source_node_type="Filing",
+                )
+                if node["properties"].get("filing_type") in {"form_700", "form_803"}
+                and (node_year(node) or 0) >= 2019
+            ),
+            key=lambda node: (node_year(node) or 0, node["id"]),
+        )
+        resolved = 0
+        for filing in filings:
+            disclosure_filing_ids.add(filing["id"])
+            has_actor = has_outgoing_edge(outgoing, filing["id"], "OFFICIAL_FILER")
+            has_seat_service = has_outgoing_edge(outgoing, filing["id"], "FILED_DURING_SEAT_SERVICE", seat_service["id"])
+            if has_actor and has_seat_service:
+                resolved += 1
+            else:
+                unresolved_filing_ids.append(filing["id"])
+        coverage_rows.append(
+            {
+                "seat_service_id": seat_service["id"],
+                "actor_id": seat_service["properties"].get("actor_id"),
+                "filing_count": len(filings),
+                "filing_ids": [filing["id"] for filing in filings],
+                "resolved_count": resolved,
+            }
+        )
+
+    result = {
+        "id": "Q2",
+        "title": "current elected disclosure coverage",
+        "pass": bool(disclosure_filing_ids) and not unresolved_filing_ids,
+        "metrics": {
+            "current_seat_service_count": len(seat_services),
+            "imported_disclosure_filing_count": len(disclosure_filing_ids),
+            "resolved_disclosure_filing_count": len(disclosure_filing_ids) - len(unresolved_filing_ids),
+            "unresolved_disclosure_filing_count": len(unresolved_filing_ids),
+        },
+        "samples": {
+            "seat_service_coverage": coverage_rows,
+            "unresolved_filing_ids": unresolved_filing_ids,
+        },
+        "notes": [
+            "This query only tracks the narrow imported disclosure lane: current San Rafael elected seat services plus imported Form 700/Form 803 filings since 2019.",
+            "The pass condition is strict: every imported disclosure filing must resolve to both a canonical actor and a current seat service.",
+        ],
+    }
+    return result
+
+
+def run_q3(
+    nodes: list[dict[str, Any]],
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    decisions: list[dict[str, Any]] = []
+    for node in nodes:
+        if not is_san_rafael_council_decision(node, outgoing, node_by_id):
+            continue
+        meeting = meeting_for_decision(node["id"], outgoing, node_by_id)
+        if meeting is None:
+            continue
+        decisions.append(
+            {
+                "id": node["id"],
+                "title": node_title(node),
+                "meeting_id": meeting["id"],
+                "meeting_date": meeting["properties"]["meeting_date"],
+                "vote_count": count_votes(incoming, node["id"]),
+                "evidence_record_ids": evidence_record_ids(outgoing, node["id"]),
+            }
+        )
+    decisions.sort(key=lambda row: (row["meeting_date"], row["id"]))
+
+    years = sorted({int(row["meeting_date"][:4]) for row in decisions})
+    meeting_ids = sorted({row["meeting_id"] for row in decisions})
+    with_votes = sum(1 for row in decisions if row["vote_count"] > 0)
+    with_evidence = sum(1 for row in decisions if row["evidence_record_ids"])
+
+    result = {
+        "id": "Q3",
+        "title": "San Rafael council decision timeline",
+        "pass": len(decisions) > 100 and len(meeting_ids) > 20 and len(years) > 1,
+        "metrics": {
+            "decision_count": len(decisions),
+            "meeting_count": len(meeting_ids),
+            "year_span": years,
+            "decisions_with_votes": with_votes,
+            "decisions_with_evidence": with_evidence,
+        },
+        "samples": {
+            "first_five": decisions[:5],
+            "last_five": decisions[-5:],
+        },
+        "notes": [
+            "This is the first fixed-query-pack check that directly measures whether the council breadth pass created an actual multi-year decision timeline.",
+            "The result is now a real 2019+ council decision spine rather than one worked-example branch.",
+        ],
+    }
+    return result
+
+
+def run_q4(
+    nodes: list[dict[str, Any]],
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    in_scope_years = {2020, 2022, 2024}
+
+    campaign_filing_nodes = [
+        node
+        for node in nodes
+        if node["node_type"] == "Filing"
+        and node_year(node) in in_scope_years
+        and (
+            "san-rafael-city-campaign-filings-01__bundle-01" in node["source_bundle_ids"]
+            or "san-rafael-city-campaign-ie-01__bundle-01" in node["source_bundle_ids"]
+            or "san-rafael-city-campaign-form460-schedules-01__bundle-01" in node["source_bundle_ids"]
+        )
+    ]
+
+    committee_ids: set[str] = set()
+    ie_filing_ids: set[str] = set()
+    for filing in campaign_filing_nodes:
+        for committee in edge_targets(
+            outgoing,
+            node_by_id,
+            filing["id"],
+            relationship_type="FILED_BY_COMMITTEE",
+            target_node_type="Committee",
+        ):
+            committee_ids.add(committee["id"])
+        if "san-rafael-city-campaign-ie-01__bundle-01" in filing["source_bundle_ids"]:
+            ie_filing_ids.add(filing["id"])
+
+    qa_money_flow_nodes = []
+    for node in nodes:
+        if node["node_type"] != "MoneyFlow":
+            continue
+        if "san-rafael-city-campaign-form460-schedules-01__bundle-01" not in node["source_bundle_ids"]:
+            continue
+        filing_targets = edge_targets(
+            outgoing,
+            node_by_id,
+            node["id"],
+            relationship_type="DISCLOSED_IN_FILING",
+            target_node_type="Filing",
+        )
+        if not filing_targets:
+            continue
+        filing = filing_targets[0]
+        if filing["id"] not in {candidate["id"] for candidate in campaign_filing_nodes}:
+            continue
+        qa_money_flow_nodes.append(node)
+
+    cycle_rollup: dict[int, dict[str, int]] = {
+        year: {"committee_count": 0, "filing_count": 0, "ie_filing_count": 0, "qa_money_flow_count": 0}
+        for year in sorted(in_scope_years)
+    }
+    for filing in campaign_filing_nodes:
+        year = node_year(filing)
+        if year is None:
+            continue
+        cycle_rollup[year]["filing_count"] += 1
+        if filing["id"] in ie_filing_ids:
+            cycle_rollup[year]["ie_filing_count"] += 1
+    for committee_id in committee_ids:
+        committee = node_by_id[committee_id]
+        year = node_year(committee) or None
+        if year in cycle_rollup:
+            cycle_rollup[year]["committee_count"] += 1
+    # Committees often lack direct dates; infer year from linked filings when needed.
+    for year in sorted(in_scope_years):
+        if cycle_rollup[year]["committee_count"] == 0:
+            linked_committees = set()
+            for filing in campaign_filing_nodes:
+                if node_year(filing) != year:
+                    continue
+                for committee in edge_targets(
+                    outgoing,
+                    node_by_id,
+                    filing["id"],
+                    relationship_type="FILED_BY_COMMITTEE",
+                    target_node_type="Committee",
+                ):
+                    linked_committees.add(committee["id"])
+            cycle_rollup[year]["committee_count"] = len(linked_committees)
+    for flow in qa_money_flow_nodes:
+        filing_targets = edge_targets(
+            outgoing,
+            node_by_id,
+            flow["id"],
+            relationship_type="DISCLOSED_IN_FILING",
+            target_node_type="Filing",
+        )
+        if not filing_targets:
+            continue
+        year = node_year(filing_targets[0])
+        if year in cycle_rollup:
+            cycle_rollup[year]["qa_money_flow_count"] += 1
+
+    recurrence_years = sorted(year for year, row in cycle_rollup.items() if row["qa_money_flow_count"] > 0)
+    noisy_actor_nodes = [
+        node["id"]
+        for node in nodes
+        if node["node_type"] == "Actor"
+        and "san-rafael-city-campaign-form460-schedules-01__bundle-01" in node["source_bundle_ids"]
+    ]
+
+    result = {
+        "id": "Q4",
+        "title": "San Rafael election money spine",
+        "pass": len(recurrence_years) >= 2 and not noisy_actor_nodes,
+        "metrics": {
+            "cycle_rollup": cycle_rollup,
+            "committee_count": len(committee_ids),
+            "filing_count": len(campaign_filing_nodes),
+            "ie_filing_count": len(ie_filing_ids),
+            "qa_money_flow_count": len(qa_money_flow_nodes),
+            "qa_money_flow_years": recurrence_years,
+            "imported_noisy_actor_count": len(noisy_actor_nodes),
+        },
+        "samples": {
+            "committee_ids": format_ids(sorted(committee_ids), limit=12),
+            "ie_filing_ids": format_ids(sorted(ie_filing_ids), limit=12),
+            "qa_money_flow_samples": format_ids(sorted(node["id"] for node in qa_money_flow_nodes), limit=12),
+            "noisy_actor_ids": noisy_actor_nodes,
+        },
+        "notes": [
+            "Committees and filings now span 2020, 2022, and 2024, but the QA-backed money layer still effectively lives in the 2024 Form 460 sample.",
+            "That is the core reason this query still fails: the graph has campaign filing breadth, but not multi-cycle QA-backed money recurrence yet.",
+        ],
+    }
+    return result
+
+
+def run_q5(
+    nodes: list[dict[str, Any]],
+    node_by_id: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    validation_nodes = sorted(
+        (node for node in nodes if node["node_type"] == "ValidationCheck"),
+        key=lambda node: (node["properties"].get("subject_node_id", ""), node["id"]),
+    )
+    status_counts = Counter(node["properties"].get("status", "unknown") for node in validation_nodes)
+    subject_rows: dict[str, dict[str, Any]] = {}
+    for node in validation_nodes:
+        subject_id = node["properties"].get("subject_node_id")
+        row = subject_rows.setdefault(
+            subject_id,
+            {
+                "subject_node_id": subject_id,
+                "subject_display_label": node_title(node_by_id[subject_id]) if subject_id in node_by_id else subject_id,
+                "check_count": 0,
+                "status_counts": Counter(),
+                "max_absolute_delta_value_number": 0.0,
+            },
+        )
+        row["check_count"] += 1
+        row["status_counts"][node["properties"].get("status", "unknown")] += 1
+        row["max_absolute_delta_value_number"] = max(
+            row["max_absolute_delta_value_number"],
+            float(node["properties"].get("absolute_delta_value_number", 0.0) or 0.0),
+        )
+
+    subject_summaries = []
+    for subject_id, row in sorted(subject_rows.items()):
+        row["status_counts"] = dict(sorted(row["status_counts"].items()))
+        subject_summaries.append(row)
+
+    result = {
+        "id": "Q5",
+        "title": "validation queue",
+        "pass": len(validation_nodes) <= 20 and len(subject_rows) <= 10,
+        "metrics": {
+            "validation_check_count": len(validation_nodes),
+            "subject_filing_count": len(subject_rows),
+            "status_counts": dict(sorted(status_counts.items())),
+        },
+        "samples": {
+            "subjects": subject_summaries,
+            "focus_subject": next(
+                (
+                    row
+                    for row in subject_summaries
+                    if row["subject_node_id"] == "filing-san-rafael-campaign-entry-37677"
+                ),
+                None,
+            ),
+        },
+        "notes": [
+            "The queue remains small enough to review directly, and the remaining non-reconciled item is still the known $1,000 Kate Colin Schedule A extraction gap.",
+            "This is the first query that checks whether new breadth work is creating a manageable validation surface instead of a noisy anomaly dump.",
+        ],
+    }
+    return result
+
+
+def build_markdown(report: dict[str, Any]) -> str:
+    lines = [
+        "# Graph Query Pack Report",
+        "",
+        f"- `generated_at`: {report['generated_at']}",
+        f"- `engine`: {report['engine']}",
+        f"- `projection_id`: {report['projection_id']}",
+        f"- `nodes`: {report['projection_counts']['nodes']}",
+        f"- `edges`: {report['projection_counts']['edges']}",
+        f"- `queries_passed`: {report['summary']['passed']}/{report['summary']['total']}",
+        "",
+    ]
+    for query in report["queries"]:
+        lines.extend(
+            [
+                f"## {query['id']}: {query['title']}",
+                "",
+                f"- `pass`: {'yes' if query['pass'] else 'no'}",
+                f"- `metrics`: {json.dumps(query['metrics'], sort_keys=True)}",
+            ]
+        )
+        if query.get("notes"):
+            lines.append("- `notes`:")
+            for note in query["notes"]:
+                lines.append(f"  - {note}")
+        lines.append("")
+    lines.extend(
+        [
+            "## Recommendation",
+            "",
+            report["next_recommendation"],
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def main() -> None:
+    args = parse_args()
+    manifest = read_manifest(Path(args.manifest).resolve())
+    projection_dir = (
+        (ROOT / manifest["output_dir"]).resolve()
+        if args.projection_dir is None
+        else Path(args.projection_dir).resolve()
+    )
+    output_json = (
+        projection_dir / "query-pack-report.json"
+        if args.output_json is None
+        else Path(args.output_json).resolve()
+    )
+    output_md = (
+        projection_dir / "query-pack-report.md"
+        if args.output_md is None
+        else Path(args.output_md).resolve()
+    )
+
+    nodes, edges, node_by_id, outgoing, incoming = build_indexes(projection_dir)
+    projection_report = json.loads((projection_dir / "report.json").read_text())
+
+    queries = [
+        run_q1(node_by_id, outgoing, incoming),
+        run_q2(nodes, node_by_id, outgoing, incoming),
+        run_q3(nodes, node_by_id, outgoing, incoming),
+        run_q4(nodes, node_by_id, outgoing, incoming),
+        run_q5(nodes, node_by_id),
+    ]
+
+    passed = sum(1 for query in queries if query["pass"])
+    failed = [query["id"] for query in queries if not query["pass"]]
+    if failed == ["Q4"]:
+        next_recommendation = (
+            "Continue the San Rafael city-office campaign filing backbone, but focus specifically on multi-cycle QA-backed "
+            "money extraction and validation rather than opening county tracks or adding more schema."
+        )
+    else:
+        next_recommendation = (
+            "Do not widen scope blindly. Use the failed query set to pick the next density move and keep the sprint San Rafael-first."
+        )
+
+    report = {
+        "generated_at": iso_now(),
+        "engine": "projection_jsonl",
+        "projection_id": projection_report["projection_id"],
+        "projection_report_generated_at": projection_report["generated_at"],
+        "projection_counts": {
+            "nodes": len(nodes),
+            "edges": len(edges),
+            "node_type_counts": projection_report.get("node_type_counts", {}),
+        },
+        "summary": {
+            "total": len(queries),
+            "passed": passed,
+            "failed": len(queries) - passed,
+            "failed_query_ids": failed,
+        },
+        "queries": queries,
+        "next_recommendation": next_recommendation,
+    }
+
+    write_json(output_json, report)
+    output_md.write_text(build_markdown(report))
+    print(
+        json.dumps(
+            {
+                "output_json": str(output_json),
+                "output_md": str(output_md),
+                "passed": passed,
+                "failed_query_ids": failed,
+                "next_recommendation": next_recommendation,
+            },
+            indent=2,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

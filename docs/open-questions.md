@@ -526,6 +526,20 @@ Mirror the question here when it affects:
 - `current note`: The first officeholder-disclosure bundle now imports `9` Form 700 filings and `9` `EconomicInterestDisclosure` nodes for `Kate Colin`, `Maika Llorens Gulati`, `Eli Hill`, `Maribeth Bushey`, and `Rachel Kertz`. Earlier rows remain in the extracted Form 700 inventory but stay out of graph-v1 until historical seat-service lineage is modeled more explicitly.
 - `next evidence`: extend San Rafael election and swearing-in coverage far enough backward to support older term-boundary objects, then widen the disclosure bundle from current-service continuity to historical officeholder continuity.
 
+### OQ-035: San Rafael multi-cycle QA-backed campaign money coverage
+
+- `status`: watch
+- `layer`: breadth sprint / campaign money
+- `scope`: `san-rafael-city-campaign-filings-01`, `san-rafael-city-campaign-form460-schedules-01`
+- `source refs`:
+  - [query-pack-report.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/query-pack-report.json)
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-filings-01/bundle-01.json)
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
+- `question`: When should the San Rafael city-office campaign lane graduate from a single-cycle QA-backed money sample into true multi-cycle money recurrence across `2020`, `2022`, and `2024`?
+- `why it matters`: The first formal fixed-query-pack run now passes `Q1`, `Q2`, `Q3`, and `Q5`, but `Q4` still fails. Committees and filings span all three cycles, yet the QA-backed `MoneyFlow` layer still lives only in the `2024` Form 460 sample. That means the next breadth decision should still be San Rafael campaign deepening, not county widening.
+- `current note`: The current query-pack report shows `2020` with `66` filings and `4` IE filings, `2022` with `44` filings, and `2024` with `42` filings plus all `136` imported QA-backed money flows. No noisy OCR-born `Actor` nodes were imported into graph-v1, so the gating gap is cycle coverage, not actor pollution in core import.
+- `next evidence`: recover one or more additional QA-backed city-office money layers from `2020` or `2022`, rerun the fixed query pack, and only then decide whether county breadth is the next best move.
+
 ## Maintenance
 
 When a question is answered:
