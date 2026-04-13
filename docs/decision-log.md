@@ -18,6 +18,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **Actor completeness should use a narrow supplement plus alias remap, not broad donor import**
+  - The repeated actor misses in graph-v1 were no longer a general data-coverage problem. They were a small set of recurring vendor/platform nodes plus raw officeholder aliases like `actor-mayor-kate`.
+  - The right fix was two-part: add a narrow supplemental actor bundle for recurring high-value campaign actors, and teach the projection builder to remap actor-edge endpoints through canonical actors' `resolves_raw_actor_seed_ids`.
+  - Result: graph-v1 moved from `28` to `38` `Actor` nodes, `missing_target:Actor` fell from `149` to `111`, repeated vendor/platform misses were resolved, and no remaining `Record` or `Issue` completeness gap was reintroduced.
+  - Boundary: do **not** broaden this into a donor-wide OCR actor import. The remaining misses are mostly one-off OCR-tainted labels or weak candidates that belong in parser cleanup before graph-v1.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-actor-completeness-should-use-a-narrow-supplement-plus-alias-remap.md`
+
 - **Campaign evidence bundles should be regenerated after accepted Ralph-loop batches**
   - The accepted 2020 city-office Form `460` batch widened the live filing / money / validation chain enough to introduce older OCR/PDF evidence IDs that the earlier campaign-record bundle did not yet promote.
   - The right fix was not another schema change. It was to regenerate `san-rafael-city-campaign-records-01`, widen it from `25` to `45` record nodes, and rebuild graph-v1 so `missing_target:Record` returned to zero.

@@ -159,6 +159,7 @@ Start narrow:
 - [San Rafael Officeholder Disclosure Bundle](./data/normalized/san-rafael-officeholder-disclosures-01/bundle-01.json)
 - [San Rafael City Campaign Evidence Record Bundle](./data/normalized/san-rafael-city-campaign-records-01/bundle-01.json)
 - [San Rafael City Campaign Actor Supplement Bundle](./data/normalized/san-rafael-city-campaign-actors-01/bundle-01.json)
+- [San Rafael Actor Completeness Bundle](./data/normalized/san-rafael-actor-completeness-01/bundle-01.json)
 - [Canonical Issue Seed Bundle](./data/normalized/canonical-issues-01.json)
 - [San Rafael Canonical Seed Bundle](./data/normalized/canonical-seeds-san-rafael-01.json)
 - [San Rafael City Council Archive Inventory](./data/extracted/san-rafael-city-council-meetings/2026-04-11.json)
@@ -210,6 +211,7 @@ Start narrow:
 - [San Rafael City Campaign Loop Helper](./scripts/san_rafael_city_campaign_loop_lib.py)
 - [San Rafael City Campaign Evidence Record Normalizer](./scripts/normalize_san_rafael_city_campaign_records.py)
 - [San Rafael City Campaign Actor Supplement Normalizer](./scripts/normalize_san_rafael_city_campaign_actors.py)
+- [San Rafael Actor Completeness Normalizer](./scripts/normalize_san_rafael_actor_completeness.py)
 - [Boyd Legal Bundle Normalizer](./scripts/normalize_legal_precedent_boyd.py)
 - [Grants Pass Legal Bundle Normalizer](./scripts/normalize_legal_precedent_grants_pass.py)
 - [Graph Projection Helper](./scripts/graph_projection_lib.py)
@@ -230,14 +232,14 @@ This repo started as a planning workspace and now includes the first live implem
   - JSONL node/edge projection plus a generated Cypher loader output under [data/projected](./data/projected/README.md)
   - fixed five-query checkpoint now runs directly against the projected graph payload, so breadth decisions can be gated without relying on a live Neo4j session
   - smoke checks that prove actor, seat-service, filing, money, decision, record, and validation continuity end to end
-  - evidence completeness is now backed by a dedicated San Rafael city-side campaign evidence-record bundle that promotes OCR/PDF/folder artifacts already referenced from filings, money flows, validation checks, and the narrow actor supplement
-  - a narrow actor and issue supplement now lands `8` conservative campaign actors and `3` canonical issues without widening into discovery-stage review material
+  - evidence completeness is now backed by a dedicated San Rafael city-side campaign evidence-record bundle that promotes OCR/PDF/folder artifacts already referenced from filings, money flows, validation checks, and the actor-completeness layer
+  - actor completeness now uses a narrow supplement plus projection-time alias remap, so raw officeholder placeholders like `actor-mayor-kate` resolve onto canonical actors and repeated campaign vendor/platform actors can enter graph-v1 without widening into broad OCR donor import
   - the first breadth-sprint council slice now adds `263` citywide `Meeting` nodes and `264` council `Record` nodes backed by captured meeting pages
   - the second breadth-sprint council slice now adds `220` captured minutes `Record` nodes plus a conservative citywide minutes-first decision layer with `3175` `AgendaItem` candidates and `1453` `Decision` candidates
-  - graph-v1 is now at `6174` nodes and `20751` edges, with `1472` `Decision` nodes, `2970` `AgendaItem` nodes, `147` `MoneyFlow` nodes, `21` `EconomicInterestDisclosure` nodes, `8` `SeatService` nodes, `4` `Case` nodes, `13` `Proceeding` nodes, `9` `CaseParticipation` nodes, `1` `Program` node, `865` `Record` nodes, and `16` bounded `ValidationCheck` nodes after projection merging
+  - graph-v1 is now at `6184` nodes and `20826` edges, with `38` `Actor` nodes, `1472` `Decision` nodes, `2970` `AgendaItem` nodes, `147` `MoneyFlow` nodes, `21` `EconomicInterestDisclosure` nodes, `8` `SeatService` nodes, `4` `Case` nodes, `13` `Proceeding` nodes, `9` `CaseParticipation` nodes, `1` `Program` node, `865` `Record` nodes, and `16` bounded `ValidationCheck` nodes after projection merging
   - consent votes are now modeled conservatively: one section-level voted decision, with subitem outcomes linked back to that consent action instead of pretending each subitem had its own roll call
   - the elected-disclosure breadth slice now adds `21` officeholder Form `700` filings and `21` `EconomicInterestDisclosure` nodes backed by the public NetFile export plus explicit current and 2020-2024 historical `SeatService` windows for the current mayor, District 1, and District 4 officeholders
-  - the current projection report still shows `missing_target:Actor = 149`; `Issue` and `Record` completeness gaps are no longer part of graph-v1
+  - the current projection report now shows `missing_target:Actor = 111`, with `5` actor-alias edge remaps; `Issue` and `Record` completeness gaps are no longer part of graph-v1
   - the current fixed-query-pack run still passes all five queries after the legal import widening pass
   - the fixed five-query breadth gate stays unchanged at `Q1` through `Q5`, and the graph now also passes a supplemental legal constraint query covering `Boyd` plus the full `Grants Pass` district -> Ninth Circuit -> Supreme Court lineage
   - the campaign evidence-record bundle has now been regenerated after the accepted 2020 Ralph-loop batch, widening from `25` to `45` campaign evidence `Record` nodes so older OCR/PDF artifacts no longer surface as `missing_target:Record` skips

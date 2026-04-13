@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-04-13T11:45:07Z",
+  "generated_at": "2026-04-13T11:55:52Z",
   "engine": "projection_jsonl",
   "projection_id": "graph-v1",
-  "projection_report_generated_at": "2026-04-13T11:43:59Z",
+  "projection_report_generated_at": "2026-04-13T11:55:45Z",
   "projection_counts": {
-    "nodes": 6174,
-    "edges": 20751,
+    "nodes": 6184,
+    "edges": 20826,
     "node_type_counts": {
-      "Actor": 28,
+      "Actor": 38,
       "AgendaItem": 2970,
       "Candidacy": 14,
       "Case": 4,

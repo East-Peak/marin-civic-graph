@@ -98,6 +98,12 @@
       ]
     },
     {
+      "path": "data/normalized/san-rafael-actor-completeness-01/bundle-01.json",
+      "sections": [
+        { "name": "actor_candidates", "mode": "nodes", "node_type": "Actor", "promotion_state": "promoted" }
+      ]
+    },
+    {
       "path": "data/normalized/san-rafael-city-campaign-records-01/bundle-01.json",
       "sections": [
         { "name": "record_refs", "mode": "nodes", "node_type": "Record", "promotion_state": "promoted" }

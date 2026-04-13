@@ -509,6 +509,29 @@ def finalize_edge_for_output(edge: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def build_actor_alias_map(nodes_by_id: dict[str, dict[str, Any]]) -> dict[str, str]:
+    alias_map: dict[str, str] = {}
+    for node in nodes_by_id.values():
+        if node["node_type"] != "Actor":
+            continue
+        for alias_id in node.get("properties", {}).get("resolves_raw_actor_seed_ids", []) or []:
+            if isinstance(alias_id, str) and alias_id.startswith("actor-"):
+                alias_map[alias_id] = node["id"]
+    return alias_map
+
+
+def remap_actor_aliases(edge: dict[str, Any], alias_map: dict[str, str]) -> tuple[dict[str, Any], bool]:
+    remapped = dict(edge)
+    changed = False
+    if remapped["source_node_type"] == "Actor" and remapped["source_id"] in alias_map:
+        remapped["source_id"] = alias_map[remapped["source_id"]]
+        changed = True
+    if remapped["target_node_type"] == "Actor" and remapped["target_id"] in alias_map:
+        remapped["target_id"] = alias_map[remapped["target_id"]]
+        changed = True
+    return remapped, changed
+
+
 def main() -> None:
     args = parse_args()
     manifest_path = Path(args.manifest).resolve()
@@ -603,8 +626,13 @@ def main() -> None:
         bundle_reports.append(bundle_report)
 
     known_node_ids = set(nodes_by_id)
+    actor_alias_map = build_actor_alias_map(nodes_by_id)
     edges_by_key: dict[tuple[str, str, str], dict[str, Any]] = {}
+    actor_alias_edge_remaps = 0
     for edge in raw_edges:
+        edge, remapped = remap_actor_aliases(edge, actor_alias_map)
+        if remapped:
+            actor_alias_edge_remaps += 1
         if edge["source_id"] not in known_node_ids:
             skipped_edge_reasons["missing_source"] += 1
             skipped_edge_targets[edge["source_id"]] += 1
@@ -652,6 +680,7 @@ def main() -> None:
         "total_edges": len(edges),
         "duplicate_node_merges": duplicate_node_count,
         "duplicate_edge_merges": duplicate_edge_count,
+        "actor_alias_edge_remaps": actor_alias_edge_remaps,
         "node_conflicts": node_conflicts,
         "edge_conflicts": edge_conflicts,
         "skipped_edge_reasons": dict(sorted(skipped_edge_reasons.items())),

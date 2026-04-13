@@ -1,6 +1,6 @@
 {
   "projection_id": "graph-v1",
-  "generated_at": "2026-04-13T11:43:59Z",
+  "generated_at": "2026-04-13T11:55:45Z",
   "manifest_path": "/Users/tammypais/projects/marin-civic-graph/registry/import-manifest.yaml",
   "output_dir": "data/projected/graph-v1",
   "bundle_reports": [
@@ -301,6 +301,20 @@
           "mode": "nodes",
           "input_count": 8,
           "imported_count": 8,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    },
+    {
+      "bundle_id": "san-rafael-actor-completeness-01__bundle-01",
+      "path": "data/normalized/san-rafael-actor-completeness-01/bundle-01.json",
+      "sections": [
+        {
+          "section": "actor_candidates",
+          "mode": "nodes",
+          "input_count": 10,
+          "imported_count": 10,
           "skipped_count": 0,
           "skip_reasons": {}
         }
@@ -614,7 +628,7 @@
     }
   ],
   "node_type_counts": {
-    "Actor": 28,
+    "Actor": 38,
     "AgendaItem": 2970,
     "Candidacy": 14,
     "Case": 4,
@@ -648,7 +662,7 @@
     "DECIDED_BY_INSTITUTION": 1472,
     "DERIVED_FROM_RECORD": 67,
     "DISCLOSED_IN_FILING": 160,
-    "EVIDENCED_BY": 6356,
+    "EVIDENCED_BY": 6393,
     "FILED_BY_ACTOR": 253,
     "FILED_BY_COMMITTEE": 232,
     "FILED_DURING_SEAT_SERVICE": 43,
@@ -658,7 +672,7 @@
     "FILED_WITH_OFFICER": 1,
     "FOR_ELECTION": 14,
     "FOR_SEAT": 30,
-    "FROM_SOURCE": 1,
+    "FROM_SOURCE": 8,
     "HEARD_BY_JUDGE": 7,
     "HEARD_IN_COURT": 4,
     "HELD_BY_ACTOR": 8,
@@ -676,7 +690,7 @@
     "RECORD_EXTRACTS_FROM_RECORD": 10,
     "RECORD_INTRODUCES_DECISION": 1,
     "RELATED_TO_ELECTION": 6,
-    "RELATES_TO_ACTOR": 249,
+    "RELATES_TO_ACTOR": 256,
     "RELATES_TO_AGENDA_ITEM": 10,
     "RELATES_TO_CASE": 18,
     "RELATES_TO_COMMITTEE": 269,
@@ -699,13 +713,14 @@
     "SERVES_IN_INSTITUTION": 8,
     "TARGETS_ACTOR": 4,
     "TARGETS_SEAT": 4,
-    "TO_TARGET": 107,
+    "TO_TARGET": 131,
     "VALIDATES": 16
   },
-  "total_nodes": 6174,
-  "total_edges": 20751,
+  "total_nodes": 6184,
+  "total_edges": 20826,
   "duplicate_node_merges": 256,
   "duplicate_edge_merges": 786,
+  "actor_alias_edge_remaps": 5,
   "node_conflicts": [
     {
       "id": "record-2023-05-08-san-rafael-city-council-special-page",
@@ -2374,69 +2389,9 @@
     }
   ],
   "skipped_edge_reasons": {
-    "missing_target:Actor": 149
+    "missing_target:Actor": 111
   },
   "top_skipped_edge_targets": [
-    [
-      "actor-anedot",
-      9
-    ],
-    [
-      "actor-four-waters-media-inc",
-      5
-    ],
-    [
-      "actor-pmcohen-public-affairs",
-      5
-    ],
-    [
-      "actor-paul-jensen",
-      2
-    ],
-    [
-      "actor-bruce-burtch",
-      2
-    ],
-    [
-      "actor-caran-cuneo",
-      2
-    ],
-    [
-      "actor-diana-maier",
-      2
-    ],
-    [
-      "actor-se-owens-and-company",
-      2
-    ],
-    [
-      "actor-other-junk-co",
-      2
-    ],
-    [
-      "actor-wehope",
-      2
-    ],
-    [
-      "actor-mayor-kate",
-      1
-    ],
-    [
-      "actor-vice-mayor-hill",
-      1
-    ],
-    [
-      "actor-councilmember-bushey",
-      1
-    ],
-    [
-      "actor-councilmember-kertz",
-      1
-    ],
-    [
-      "actor-councilmember-llorens-gulati",
-      1
-    ],
     [
       "actor-jim-milligan",
       1
@@ -2475,6 +2430,66 @@
     ],
     [
       "actor-eric-boales-z",
+      1
+    ],
+    [
+      "actor-windi-snarly-0",
+      1
+    ],
+    [
+      "actor-lisa-doran-z",
+      1
+    ],
+    [
+      "actor-kim-diamond",
+      1
+    ],
+    [
+      "actor-michael-manowski",
+      1
+    ],
+    [
+      "actor-resource-conservation-pac",
+      1
+    ],
+    [
+      "actor-catherine-colin-0",
+      1
+    ],
+    [
+      "actor-millie-anderson-z",
+      1
+    ],
+    [
+      "actor-laurie-dubin-z",
+      1
+    ],
+    [
+      "actor-melissa-prandi-z",
+      1
+    ],
+    [
+      "actor-geza-kadar-0",
+      1
+    ],
+    [
+      "actor-mary-de-may-0",
+      1
+    ],
+    [
+      "actor-meredith-parnell",
+      1
+    ],
+    [
+      "actor-william-hamamoto",
+      1
+    ],
+    [
+      "actor-richard-pushkin-z",
+      1
+    ],
+    [
+      "actor-laura-duffy",
       1
     ]
   ]

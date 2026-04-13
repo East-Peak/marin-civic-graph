@@ -1,0 +1,190 @@
+{
+  "case_study_id": "san-rafael-actor-completeness-01",
+  "bundle_id": "san-rafael-actor-completeness-01__bundle-01",
+  "status": "working",
+  "generated_at": "2026-04-13T11:55:43Z",
+  "scope": [
+    "Recurring city-side campaign vendor/platform actors and a small set of repeated clean donor names referenced by live Form 460 money-flow edges",
+    "High-signal contract counterparties already referenced by the San Rafael homelessness decision chain",
+    "Graph-v1 completeness supplement only; no broad OCR donor promotion and no new alias person nodes"
+  ],
+  "actor_candidates": [
+    {
+      "id": "actor-anedot",
+      "name": "Anedot",
+      "actor_type": "organization",
+      "status": "promoted_for_graph_completeness",
+      "observed_labels": [
+        "Anedot"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ],
+      "promotion_basis": "recurring_form460_vendor_platform_or_donor"
+    },
+    {
+      "id": "actor-bruce-burtch",
+      "name": "Bruce Burtch",
+      "actor_type": "person",
+      "status": "promoted_for_graph_completeness",
+      "observed_labels": [
+        "Bruce Burtch \u2751\ufffd",
+        "Bruce Burtch\u00ae"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ],
+      "promotion_basis": "recurring_form460_vendor_platform_or_donor"
+    },
+    {
+      "id": "actor-caran-cuneo",
+      "name": "Caran Cuneo",
+      "actor_type": "person",
+      "status": "promoted_for_graph_completeness",
+      "observed_labels": [
+        "Caran Cuneo \u00ae",
+        "Caran Cuneo"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ],
+      "promotion_basis": "recurring_form460_vendor_platform_or_donor"
+    },
+    {
+      "id": "actor-diana-maier",
+      "name": "Diana Maier",
+      "actor_type": "person",
+      "status": "promoted_for_graph_completeness",
+      "observed_labels": [
+        "Diana Maier \u00ae"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-filing-entry-37685",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37685",
+        "record-san-rafael-campaign-pdf-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37685"
+      ],
+      "promotion_basis": "recurring_form460_vendor_platform_or_donor"
+    },
+    {
+      "id": "actor-four-waters-media-inc",
+      "name": "four waters media, inc.",
+      "actor_type": "business",
+      "status": "promoted_for_graph_completeness",
+      "observed_labels": [
+        "four waters media, inc."
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ],
+      "promotion_basis": "recurring_form460_vendor_platform_or_donor"
+    },
+    {
+      "id": "actor-other-junk-co",
+      "name": "Other Junk Co.",
+      "actor_type": "business",
+      "status": "promoted_for_graph_completeness",
+      "observed_labels": [
+        "Other Junk Co."
+      ],
+      "evidence_record_ids": [
+        "record-2024-08-19-contract-other-junk-co",
+        "doc-2024-08-19-item-5a-report"
+      ],
+      "promotion_basis": "official_contract_counterparty_seed"
+    },
+    {
+      "id": "actor-paul-jensen",
+      "name": "Paul Jensen",
+      "actor_type": "person",
+      "status": "promoted_for_graph_completeness",
+      "observed_labels": [
+        "Paul Jensen",
+        "Paul Jensen \u00ae"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ],
+      "promotion_basis": "recurring_form460_vendor_platform_or_donor"
+    },
+    {
+      "id": "actor-pmcohen-public-affairs",
+      "name": "PMCohen Public Affairs",
+      "actor_type": "organization",
+      "status": "promoted_for_graph_completeness",
+      "observed_labels": [
+        "PMCohen Public Affairs"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ],
+      "promotion_basis": "recurring_form460_vendor_platform_or_donor"
+    },
+    {
+      "id": "actor-se-owens-and-company",
+      "name": "S.E. Owens & Company",
+      "actor_type": "business",
+      "status": "promoted_for_graph_completeness",
+      "observed_labels": [
+        "S.E. Owens & Company"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
+      ],
+      "promotion_basis": "campaign_finance_sample_vendor"
+    },
+    {
+      "id": "actor-wehope",
+      "name": "WeHope",
+      "actor_type": "nonprofit",
+      "status": "promoted_for_graph_completeness",
+      "observed_labels": [
+        "WeHope"
+      ],
+      "evidence_record_ids": [
+        "record-2024-08-19-contract-wehope",
+        "doc-2024-08-19-item-5a-report"
+      ],
+      "promotion_basis": "official_contract_counterparty_seed"
+    }
+  ],
+  "methodology_findings": [
+    {
+      "id": "method-actor-completeness-v1-selected-recurring-orgs",
+      "summary": "This supplement only promotes explicit recurring organization/business/nonprofit actors plus a very small set of repeated clean donor names that already sit inside live graph-v1 money-flow or contract edges. It does not widen into one-off OCR donors or role-alias placeholders."
+    }
+  ],
+  "open_questions": [
+    {
+      "id": "OQ-029",
+      "status": "watch",
+      "summary": "After the narrow supplement and actor-alias remap, the remaining actor misses should be judged one by one for suppression, canonical promotion, or future vendor/platform expansion."
+    }
+  ],
+  "notes": [
+    "Raw officeholder alias IDs such as actor-mayor-kate should resolve through the canonical seed layer, not by adding duplicate alias actor nodes.",
+    "This bundle is intentionally explicit and small so graph-v1 gains completeness without importing OCR-tainted actor noise."
+  ]
+}
