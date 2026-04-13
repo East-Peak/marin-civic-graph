@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import html
 import http.cookiejar
@@ -14,15 +15,18 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from san_rafael_city_campaign_loop_lib import (
+    ROOT,
+    current_capture_date,
+    load_batch_filing_ids,
+    load_latest_captures_by_entry,
+    select_targets_from_filing_ids,
+    write_json,
+)
 
-ROOT = Path(__file__).resolve().parent.parent
-FILING_BUNDLE_PATH = (
-    ROOT / "data" / "normalized" / "san-rafael-city-campaign-filings-01" / "bundle-01.json"
-)
-RAW_DIR = ROOT / "data" / "raw" / "san-rafael-city-campaign-form460-pdf-export" / "2026-04-12"
-EXTRACTED_PATH = (
-    ROOT / "data" / "extracted" / "san-rafael-city-campaign-form460-pdf-export" / "2026-04-12.json"
-)
+
+RAW_BASE_DIR = ROOT / "data" / "raw" / "san-rafael-city-campaign-form460-pdf-export"
+EXTRACTED_DIR = ROOT / "data" / "extracted" / "san-rafael-city-campaign-form460-pdf-export"
 NORMALIZED_PATH = (
     ROOT / "data" / "normalized" / "san-rafael-city-campaign-form460-pdf-01" / "bundle-01.json"
 )
@@ -35,35 +39,15 @@ JSON_HEADERS = {
     "X-Lf-Suppress-Login-Redirect": "1",
 }
 
-TARGETS = [
-    {
-        "entry_id": 37677,
-        "record_id": "record-san-rafael-campaign-filing-entry-37677",
-        "filing_id": "filing-san-rafael-campaign-entry-37677",
-        "label": "Kate Colin 2024 first preelection Form 460",
-    },
-    {
-        "entry_id": 37685,
-        "record_id": "record-san-rafael-campaign-filing-entry-37685",
-        "filing_id": "filing-san-rafael-campaign-entry-37685",
-        "label": "Rachel Kertz 2024 preelection Form 460",
-    },
-    {
-        "entry_id": 37365,
-        "record_id": "record-san-rafael-campaign-filing-entry-37365",
-        "filing_id": "filing-san-rafael-campaign-entry-37365",
-        "label": "Rachel Kertz 2024 semiannual Form 460",
-    },
+DEFAULT_FILING_IDS = [
+    "filing-san-rafael-campaign-entry-37677",
+    "filing-san-rafael-campaign-entry-37685",
+    "filing-san-rafael-campaign-entry-37365",
 ]
 
 
 def utc_now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-
-
-def write_json(path: Path, payload: Any) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2) + "\n")
 
 
 def slugify(value: str) -> str:
@@ -133,17 +117,40 @@ class LaserficheClient:
         return body, headers
 
 
-def select_targets() -> list[dict[str, Any]]:
-    filing_bundle = json.loads(FILING_BUNDLE_PATH.read_text())
-    record_refs = {item["entry_id"]: item for item in filing_bundle["record_refs"]}
-    filing_candidates = {item["record_id"]: item for item in filing_bundle["filing_candidates"]}
-    targets = []
-    for target in TARGETS:
-        merged = dict(target)
-        merged["record_ref"] = record_refs[target["entry_id"]]
-        merged["filing_candidate"] = filing_candidates[target["record_id"]]
-        targets.append(merged)
-    return targets
+def safe_post_json(
+    client: LaserficheClient,
+    endpoint: str,
+    payload: dict[str, Any],
+    retries: int = 2,
+    delay: float = 0.75,
+) -> dict[str, Any]:
+    last_error = None
+    for _ in range(retries):
+        try:
+            return client.post_json(endpoint, payload)
+        except Exception as exc:  # noqa: BLE001
+            last_error = exc
+            time.sleep(delay)
+    if last_error is not None:
+        raise last_error
+    raise RuntimeError("safe_post_json exhausted without response")
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--loop-manifest", type=Path)
+    parser.add_argument("--batch-id")
+    parser.add_argument("--target-filing-id", action="append", default=[])
+    parser.add_argument("--capture-date", default=current_capture_date())
+    return parser.parse_args()
+
+
+def resolve_filing_ids(args: argparse.Namespace) -> list[str]:
+    if args.loop_manifest and args.batch_id:
+        return load_batch_filing_ids(args.loop_manifest, args.batch_id)
+    if args.target_filing_id:
+        return list(args.target_filing_id)
+    return list(DEFAULT_FILING_IDS)
 
 
 def wait_for_export(
@@ -163,63 +170,99 @@ def wait_for_export(
     raise RuntimeError(f"export timeout for token {token}")
 
 
-def capture_target(target: dict[str, Any], captured_at: str) -> dict[str, Any]:
-    client = LaserficheClient()
-    entry_id = target["entry_id"]
-    client.warm_document(entry_id)
-    export_rights = client.post_json(
-        "FolderListingService.aspx/GetExportRights", {"repoName": "CityofSanRafael"}
-    )
-    start_export = client.post_json(
-        "ZipEntriesHandler.aspx/StartExport",
-        {
-            "vdirName": "WebLink",
-            "repoName": "CityofSanRafael",
-            "ids": [str(entry_id)],
-            "key": -1,
-            "watermarkIdx": -1,
-        },
-    )
-    start_payload = start_export.get("data", {})
-    if start_payload.get("errorMessage"):
-        raise RuntimeError(start_payload["errorMessage"])
-    if start_payload.get("needAuditReason") or start_payload.get("needWatermarkSelection"):
-        raise RuntimeError(f"unexpected audit/watermark prompt for {entry_id}")
-    token = start_payload.get("token")
-    if not token:
-        raise RuntimeError(f"missing export token for {entry_id}")
+def capture_target(
+    target: dict[str, Any],
+    captured_at: str,
+    raw_dir: Path,
+    capture_date: str,
+    max_attempts: int = 5,
+) -> dict[str, Any]:
+    last_error = None
+    for attempt in range(1, max_attempts + 1):
+        try:
+            client = LaserficheClient()
+            entry_id = target["entry_id"]
+            client.warm_document(entry_id)
+            export_rights = safe_post_json(
+                client,
+                "FolderListingService.aspx/GetExportRights",
+                {"repoName": "CityofSanRafael"},
+                retries=3,
+                delay=1.0,
+            )
+            start_export = safe_post_json(
+                client,
+                "ZipEntriesHandler.aspx/StartExport",
+                {
+                    "vdirName": "WebLink",
+                    "repoName": "CityofSanRafael",
+                    "ids": [str(entry_id)],
+                    "key": -1,
+                    "watermarkIdx": -1,
+                },
+                retries=3,
+                delay=1.0,
+            )
+            start_payload = start_export.get("data", {})
+            if start_payload.get("errorMessage"):
+                raise RuntimeError(start_payload["errorMessage"])
+            if start_payload.get("needAuditReason") or start_payload.get("needWatermarkSelection"):
+                raise RuntimeError(f"unexpected audit/watermark prompt for {entry_id}")
+            token = start_payload.get("token")
+            if not token:
+                raise RuntimeError(f"missing export token for {entry_id}")
 
-    polls = wait_for_export(client, token)
-    body, download_headers = client.download_bytes(
-        BASE_URL + f"ExportJobHandler.aspx/GetExportJob/?token={token}"
-    )
-    filename = parse_filename(
-        download_headers.get("content_disposition"),
-        target["record_ref"]["title"],
-        entry_id,
-    )
-    pdf_path = RAW_DIR / filename
-    pdf_path.parent.mkdir(parents=True, exist_ok=True)
-    pdf_path.write_bytes(body)
+            polls = wait_for_export(client, token)
+            body, download_headers = client.download_bytes(
+                BASE_URL + f"ExportJobHandler.aspx/GetExportJob/?token={token}"
+            )
+            filename = parse_filename(
+                download_headers.get("content_disposition"),
+                target["record_ref"]["title"],
+                entry_id,
+            )
+            pdf_path = raw_dir / filename
+            pdf_path.parent.mkdir(parents=True, exist_ok=True)
+            pdf_path.write_bytes(body)
 
+            return {
+                "captured_at": captured_at,
+                "capture_date": capture_date,
+                "status": "captured",
+                "attempt_count": attempt,
+                "target": target,
+                "export_rights": export_rights.get("data", {}),
+                "start_export": start_payload,
+                "status_polls": polls,
+                "download": {
+                    "artifact_path": str(pdf_path.relative_to(ROOT)),
+                    "filename": filename,
+                    "byte_size": len(body),
+                    "sha256": sha256_bytes(body),
+                    **download_headers,
+                },
+            }
+        except Exception as exc:  # noqa: BLE001
+            last_error = repr(exc)
+            time.sleep(1.0)
     return {
         "captured_at": captured_at,
-        "status": "captured",
+        "capture_date": capture_date,
+        "status": "failed",
+        "attempt_count": max_attempts,
         "target": target,
-        "export_rights": export_rights.get("data", {}),
-        "start_export": start_payload,
-        "status_polls": polls,
-        "download": {
-            "artifact_path": str(pdf_path.relative_to(ROOT)),
-            "filename": filename,
-            "byte_size": len(body),
-            "sha256": sha256_bytes(body),
-            **download_headers,
-        },
+        "error": last_error,
     }
 
 
 def summarize_capture(capture: dict[str, Any]) -> dict[str, Any]:
+    if capture["status"] != "captured":
+        return {
+            "entry_id": capture["target"]["entry_id"],
+            "label": capture["target"]["label"],
+            "status": "failed",
+            "error": capture.get("error"),
+        }
     target = capture["target"]
     record_ref = target["record_ref"]
     filing_candidate = target["filing_candidate"]
@@ -231,11 +274,13 @@ def summarize_capture(capture: dict[str, Any]) -> dict[str, Any]:
         "source_record_id": record_ref["id"],
         "committee_ids": record_ref.get("committee_ids", []),
         "candidate_actor_ids": record_ref.get("candidate_actor_ids", []),
+        "status": "captured",
         "artifact_path": capture["download"]["artifact_path"],
         "content_type": capture["download"]["content_type"],
         "content_disposition": capture["download"]["content_disposition"],
         "byte_size": capture["download"]["byte_size"],
         "sha256": capture["download"]["sha256"],
+        "attempt_count": capture.get("attempt_count"),
         "export_polls": len(capture["status_polls"]),
         "export_completion": capture["status_polls"][-1].get("completion"),
     }
@@ -245,8 +290,11 @@ def build_normalized_bundle(extracted_summary: dict[str, Any], results: list[dic
     record_refs = []
     capture_candidates = []
     for capture in results:
+        if capture["status"] != "captured":
+            continue
         summary = summarize_capture(capture)
         target = capture["target"]
+        capture_date = capture["capture_date"]
         record_refs.append(
             {
                 "id": f"record-san-rafael-campaign-pdf-entry-{target['entry_id']}",
@@ -300,20 +348,25 @@ def build_normalized_bundle(extracted_summary: dict[str, Any], results: list[dic
 
 
 def main() -> None:
+    args = parse_args()
     captured_at = utc_now_iso()
-    targets = select_targets()
-    results = [capture_target(target, captured_at) for target in targets]
+    capture_date = args.capture_date
+    raw_dir = RAW_BASE_DIR / capture_date
+    extracted_path = EXTRACTED_DIR / f"{capture_date}.json"
+
+    targets = select_targets_from_filing_ids(resolve_filing_ids(args))
+    results = [capture_target(target, captured_at, raw_dir, capture_date) for target in targets]
 
     raw_results = {
         "captured_at": captured_at,
-        "capture_date": "2026-04-12",
+        "capture_date": capture_date,
         "source_id": "san-rafael-city-campaign-form460-pdf-export",
         "captures": results,
     }
-    write_json(RAW_DIR / "results.json", raw_results)
+    write_json(raw_dir / "results.json", raw_results)
 
     manifest = {
-        "capture_date": "2026-04-12",
+        "capture_date": capture_date,
         "captured_at": captured_at,
         "source_id": "san-rafael-city-campaign-form460-pdf-export",
         "derived_from": [
@@ -321,7 +374,7 @@ def main() -> None:
         ],
         "artifacts": [
             {
-                "path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/results.json",
+                "path": f"data/raw/san-rafael-city-campaign-form460-pdf-export/{capture_date}/results.json",
                 "description": "Export-token workflow results and download metadata for selected San Rafael Form 460 filing PDFs.",
             },
             *[
@@ -330,20 +383,30 @@ def main() -> None:
                     "description": f"Raw PDF export for entry {capture['target']['entry_id']}.",
                 }
                 for capture in results
+                if capture["status"] == "captured"
             ],
         ],
     }
-    write_json(RAW_DIR / "manifest.json", manifest)
+    write_json(raw_dir / "manifest.json", manifest)
 
     summary = {
         "captured_at": captured_at,
-        "capture_date": "2026-04-12",
+        "capture_date": capture_date,
         "source_id": "san-rafael-city-campaign-form460-pdf-export",
-        "successful_exports": len(results),
+        "successful_exports": sum(1 for item in results if item["status"] == "captured"),
         "items": [summarize_capture(capture) for capture in results],
     }
-    write_json(EXTRACTED_PATH, summary)
-    write_json(NORMALIZED_PATH, build_normalized_bundle(summary, results))
+    write_json(extracted_path, summary)
+
+    aggregate_results = list(load_latest_captures_by_entry(RAW_BASE_DIR).values())
+    aggregate_summary = {
+        "captured_at": captured_at,
+        "capture_date": capture_date,
+        "source_id": "san-rafael-city-campaign-form460-pdf-export",
+        "successful_exports": sum(1 for item in aggregate_results if item["status"] == "captured"),
+        "items": [summarize_capture(capture) for capture in aggregate_results],
+    }
+    write_json(NORMALIZED_PATH, build_normalized_bundle(aggregate_summary, aggregate_results))
 
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import html
 import http.cookiejar
 import json
@@ -12,15 +13,18 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from san_rafael_city_campaign_loop_lib import (
+    ROOT,
+    current_capture_date,
+    load_batch_filing_ids,
+    load_latest_captures_by_entry,
+    select_targets_from_filing_ids,
+    write_json,
+)
 
-ROOT = Path(__file__).resolve().parent.parent
-FILING_BUNDLE_PATH = (
-    ROOT / "data" / "normalized" / "san-rafael-city-campaign-filings-01" / "bundle-01.json"
-)
-RAW_DIR = ROOT / "data" / "raw" / "san-rafael-city-campaign-form460-ocr" / "2026-04-12"
-EXTRACTED_PATH = (
-    ROOT / "data" / "extracted" / "san-rafael-city-campaign-form460-ocr" / "2026-04-12.json"
-)
+
+RAW_BASE_DIR = ROOT / "data" / "raw" / "san-rafael-city-campaign-form460-ocr"
+EXTRACTED_DIR = ROOT / "data" / "extracted" / "san-rafael-city-campaign-form460-ocr"
 NORMALIZED_PATH = (
     ROOT / "data" / "normalized" / "san-rafael-city-campaign-form460-ocr-01" / "bundle-01.json"
 )
@@ -33,25 +37,10 @@ JSON_HEADERS = {
     "X-Lf-Suppress-Login-Redirect": "1",
 }
 
-TARGETS = [
-    {
-        "entry_id": 37677,
-        "record_id": "record-san-rafael-campaign-filing-entry-37677",
-        "filing_id": "filing-san-rafael-campaign-entry-37677",
-        "label": "Kate Colin 2024 first preelection Form 460",
-    },
-    {
-        "entry_id": 37685,
-        "record_id": "record-san-rafael-campaign-filing-entry-37685",
-        "filing_id": "filing-san-rafael-campaign-entry-37685",
-        "label": "Rachel Kertz 2024 preelection Form 460",
-    },
-    {
-        "entry_id": 37365,
-        "record_id": "record-san-rafael-campaign-filing-entry-37365",
-        "filing_id": "filing-san-rafael-campaign-entry-37365",
-        "label": "Rachel Kertz 2024 semiannual Form 460",
-    },
+DEFAULT_FILING_IDS = [
+    "filing-san-rafael-campaign-entry-37677",
+    "filing-san-rafael-campaign-entry-37685",
+    "filing-san-rafael-campaign-entry-37365",
 ]
 
 SCHEDULE_PATTERN = re.compile(r"\bSchedule\s+([A-I])\b", re.IGNORECASE)
@@ -60,11 +49,6 @@ FORM_PATTERN = re.compile(r"\bForm\s+(\d+[A-Z]?)\b", re.IGNORECASE)
 
 def utc_now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-
-
-def write_json(path: Path, payload: Any) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2) + "\n")
 
 
 def clean_text(value: str) -> str:
@@ -101,19 +85,21 @@ class LaserficheClient:
             return json.loads(response.read().decode("utf-8", "ignore"))
 
 
-def select_targets() -> list[dict[str, Any]]:
-    filing_bundle = json.loads(FILING_BUNDLE_PATH.read_text())
-    record_refs = {item["entry_id"]: item for item in filing_bundle["record_refs"]}
-    filing_candidates = {item["record_id"]: item for item in filing_bundle["filing_candidates"]}
-    targets = []
-    for target in TARGETS:
-        record_ref = record_refs[target["entry_id"]]
-        filing_candidate = filing_candidates[target["record_id"]]
-        merged = dict(target)
-        merged["record_ref"] = record_ref
-        merged["filing_candidate"] = filing_candidate
-        targets.append(merged)
-    return targets
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--loop-manifest", type=Path)
+    parser.add_argument("--batch-id")
+    parser.add_argument("--target-filing-id", action="append", default=[])
+    parser.add_argument("--capture-date", default=current_capture_date())
+    return parser.parse_args()
+
+
+def resolve_filing_ids(args: argparse.Namespace) -> list[str]:
+    if args.loop_manifest and args.batch_id:
+        return load_batch_filing_ids(args.loop_manifest, args.batch_id)
+    if args.target_filing_id:
+        return list(args.target_filing_id)
+    return list(DEFAULT_FILING_IDS)
 
 
 def safe_post_json(
@@ -265,13 +251,14 @@ def build_normalized_bundle(captures: list[dict[str, Any]], generated_at: str) -
             continue
         target = capture["target"]
         summary = summarize_capture(capture)
+        capture_date = capture["capture_date"]
         record_refs.append(
             {
                 "id": f"record-san-rafael-campaign-ocr-entry-{target['entry_id']}",
                 "record_class": "financial_record",
                 "record_type": "campaign_filing_ocr_capture",
                 "source_id": "san-rafael-city-campaign-form460-ocr",
-                "artifact_path": "data/raw/san-rafael-city-campaign-form460-ocr/2026-04-12/results.json",
+                "artifact_path": f"data/raw/san-rafael-city-campaign-form460-ocr/{capture_date}/results.json",
                 "capture_status": "captured_via_doc_warm_step",
                 "entry_id": target["entry_id"],
                 "title": summary["title"],
@@ -305,8 +292,8 @@ def build_normalized_bundle(captures: list[dict[str, Any]], generated_at: str) -
         "generated_at": generated_at,
         "scope": [
             "Selected schedule-bearing San Rafael city-side Form 460 filings captured through the doc-specific warm-step path",
-            "Metadata, page count, and full OCR text preservation for three high-value 2024 filings",
-            "Support for later schedule extraction without claiming raw PDF export is solved",
+            "Metadata, page count, and full OCR text preservation across multiple San Rafael city-office cycles",
+            "Support for later schedule extraction without claiming raw PDF export is globally solved",
         ],
         "record_refs": record_refs,
         "filing_capture_candidates": filing_capture_candidates,
@@ -318,19 +305,24 @@ def build_normalized_bundle(captures: list[dict[str, Any]], generated_at: str) -
 
 
 def main() -> None:
-    targets = select_targets()
+    args = parse_args()
+    capture_date = args.capture_date
+    raw_dir = RAW_BASE_DIR / capture_date
+    extracted_path = EXTRACTED_DIR / f"{capture_date}.json"
+
+    targets = select_targets_from_filing_ids(resolve_filing_ids(args))
     captured_at = utc_now_iso()
     captures = [capture_target(target) for target in targets]
 
     raw_payload = {
         "captured_at": captured_at,
-        "capture_date": "2026-04-12",
+        "capture_date": capture_date,
         "source_id": "san-rafael-city-campaign-form460-ocr",
         "captures": captures,
     }
     extracted_payload = {
         "captured_at": captured_at,
-        "capture_date": "2026-04-12",
+        "capture_date": capture_date,
         "source_id": "san-rafael-city-campaign-form460-ocr",
         "summary_count": len(captures),
         "filing_summaries": [summarize_capture(capture) for capture in captures],
@@ -340,7 +332,7 @@ def main() -> None:
         ],
     }
     manifest = {
-        "capture_date": "2026-04-12",
+        "capture_date": capture_date,
         "captured_at": captured_at,
         "source_id": "san-rafael-city-campaign-form460-ocr",
         "derived_from": [
@@ -348,16 +340,18 @@ def main() -> None:
         ],
         "artifacts": [
             {
-                "path": "data/raw/san-rafael-city-campaign-form460-ocr/2026-04-12/results.json",
+                "path": f"data/raw/san-rafael-city-campaign-form460-ocr/{capture_date}/results.json",
                 "description": "Metadata, document info, basic info, and per-page OCR text for selected San Rafael Form 460 filings.",
             }
         ],
     }
 
-    write_json(RAW_DIR / "results.json", raw_payload)
-    write_json(RAW_DIR / "manifest.json", manifest)
-    write_json(EXTRACTED_PATH, extracted_payload)
-    write_json(NORMALIZED_PATH, build_normalized_bundle(captures, captured_at))
+    write_json(raw_dir / "results.json", raw_payload)
+    write_json(raw_dir / "manifest.json", manifest)
+    write_json(extracted_path, extracted_payload)
+
+    aggregate_captures = list(load_latest_captures_by_entry(RAW_BASE_DIR).values())
+    write_json(NORMALIZED_PATH, build_normalized_bundle(aggregate_captures, captured_at))
 
 
 if __name__ == "__main__":

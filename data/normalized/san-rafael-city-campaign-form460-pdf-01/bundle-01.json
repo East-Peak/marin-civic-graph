@@ -2,7 +2,7 @@
   "case_study_id": "san-rafael-city-campaign-form460-pdf-01",
   "bundle_id": "san-rafael-city-campaign-form460-pdf-01__bundle-01",
   "status": "working",
-  "generated_at": "2026-04-12T19:15:14Z",
+  "generated_at": "2026-04-13T11:10:14Z",
   "scope": [
     "Selected schedule-bearing San Rafael city-side Form 460 filings captured as raw PDFs through the public Laserfiche export path",
     "Actual PDF exports for three high-value 2024 filings using StartExport, CheckExportStatus, and ExportJobHandler",
@@ -53,6 +53,156 @@
       "sha256": "b59def3b0fe70c1f408b765e729845b8075f6850c4f74ec5ee838d0980d0f0e7",
       "source_record_id": "record-san-rafael-campaign-filing-entry-37365",
       "source_filing_id": "filing-san-rafael-campaign-entry-37365"
+    },
+    {
+      "id": "record-san-rafael-campaign-pdf-entry-28450",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_pdf_capture",
+      "source_id": "san-rafael-city-campaign-form460-pdf-export",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/28450-form-460-kate-colin-for-san-rafael-mayor-2020-2019-12-31.pdf",
+      "capture_status": "captured_via_public_export_job",
+      "entry_id": 28450,
+      "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)",
+      "content_type": "application/pdf",
+      "byte_size": 3526846,
+      "sha256": "dc33b8714541dc6b73ad43f9c2c1853af8599cecf782d25454c7e19000d7dee1",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-28450",
+      "source_filing_id": "filing-san-rafael-campaign-entry-28450"
+    },
+    {
+      "id": "record-san-rafael-campaign-pdf-entry-31112",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_pdf_capture",
+      "source_id": "san-rafael-city-campaign-form460-pdf-export",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/31112-form-460-maika-llorens-gulati-for-city-council-2020-2020-06-30.pdf",
+      "capture_status": "captured_via_public_export_job",
+      "entry_id": 31112,
+      "title": "Form 460 - Maika Llorens Gulati for City Council 2020 (2020-06-30)",
+      "content_type": "application/pdf",
+      "byte_size": 2763894,
+      "sha256": "435a8e6232029f268c890fd1b5a2b68145f4d0c629b8a08e404611ca98ad72f6",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-31112",
+      "source_filing_id": "filing-san-rafael-campaign-entry-31112"
+    },
+    {
+      "id": "record-san-rafael-campaign-pdf-entry-31115",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_pdf_capture",
+      "source_id": "san-rafael-city-campaign-form460-pdf-export",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/31115-form-460-kate-colin-for-san-rafael-mayor-2020-2020-06-30.pdf",
+      "capture_status": "captured_via_public_export_job",
+      "entry_id": 31115,
+      "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2020-06-30)",
+      "content_type": "application/pdf",
+      "byte_size": 11867739,
+      "sha256": "58127e2e04a0a466740644d745be7305cae488eea745ba1f88aac80d7bbe30ea",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-31115",
+      "source_filing_id": "filing-san-rafael-campaign-entry-31115"
+    },
+    {
+      "id": "record-san-rafael-campaign-pdf-entry-31430",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_pdf_capture",
+      "source_id": "san-rafael-city-campaign-form460-pdf-export",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/31430-form-460-rachel-kertz-for-city-council-2020-2020-06-30.pdf",
+      "capture_status": "captured_via_public_export_job",
+      "entry_id": 31430,
+      "title": "Form 460- Rachel Kertz for City Council 2020 (2020-06-30)",
+      "content_type": "application/pdf",
+      "byte_size": 2852767,
+      "sha256": "da673fd9508fc4f134eb91b1351085c090caed07ceb235c5d314780853cc2b30",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-31430",
+      "source_filing_id": "filing-san-rafael-campaign-entry-31430"
+    },
+    {
+      "id": "record-san-rafael-campaign-pdf-entry-31440",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_pdf_capture",
+      "source_id": "san-rafael-city-campaign-form460-pdf-export",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/31440-form-460-greg-knell-for-city-council-2020-06-30-20.pdf",
+      "capture_status": "captured_via_public_export_job",
+      "entry_id": 31440,
+      "title": "Form 460- Greg Knell for City Council 2020 (06-30-20)",
+      "content_type": "application/pdf",
+      "byte_size": 5322045,
+      "sha256": "b9a362d9500b5d8b1abe27cec6095a9669ad840b4f227a9c12958cdadf57d0ca",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-31440",
+      "source_filing_id": "filing-san-rafael-campaign-entry-31440"
+    },
+    {
+      "id": "record-san-rafael-campaign-pdf-entry-32255",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_pdf_capture",
+      "source_id": "san-rafael-city-campaign-form460-pdf-export",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/32255-form-460-maika-llorens-gulati-for-city-council-2020-2020-10-22.pdf",
+      "capture_status": "captured_via_public_export_job",
+      "entry_id": 32255,
+      "title": "Form 460 - Maika Llorens Gulati for City Council 2020 (2020-10-22)",
+      "content_type": "application/pdf",
+      "byte_size": 3771037,
+      "sha256": "5ecb3ad11c6a057631909d78efd00fbc36d12d1ce7a8426d03706097819aa16e",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-32255",
+      "source_filing_id": "filing-san-rafael-campaign-entry-32255"
+    },
+    {
+      "id": "record-san-rafael-campaign-pdf-entry-32274",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_pdf_capture",
+      "source_id": "san-rafael-city-campaign-form460-pdf-export",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/32274-form-460-greg-knell-for-city-council-2020-2nd-preelection.pdf",
+      "capture_status": "captured_via_public_export_job",
+      "entry_id": 32274,
+      "title": "Form 460- Greg Knell for City Council 2020 2nd Preelection",
+      "content_type": "application/pdf",
+      "byte_size": 9085333,
+      "sha256": "c570938b33506809e9564a2c8c802a4503a1f470746d478eac27c0a1c0ac1d09",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-32274",
+      "source_filing_id": "filing-san-rafael-campaign-entry-32274"
+    },
+    {
+      "id": "record-san-rafael-campaign-pdf-entry-32326",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_pdf_capture",
+      "source_id": "san-rafael-city-campaign-form460-pdf-export",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/32326-form-460-mahmoud-a-shirazi-for-mayor-2020-amendment.pdf",
+      "capture_status": "captured_via_public_export_job",
+      "entry_id": 32326,
+      "title": "Form 460- Mahmoud A.Shirazi for Mayor 2020; Amendment",
+      "content_type": "application/pdf",
+      "byte_size": 2497994,
+      "sha256": "f900b27ef9f27d2f1d3230b7d438a6ee5a9d8173092c89f10487d6d0431d0d84",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-32326",
+      "source_filing_id": "filing-san-rafael-campaign-entry-32326"
+    },
+    {
+      "id": "record-san-rafael-campaign-pdf-entry-32521",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_pdf_capture",
+      "source_id": "san-rafael-city-campaign-form460-pdf-export",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/32521-form-460-kate-colin-for-san-rafael-mayor-2020-2020-12-31.pdf",
+      "capture_status": "captured_via_public_export_job",
+      "entry_id": 32521,
+      "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2020-12-31)",
+      "content_type": "application/pdf",
+      "byte_size": 7815240,
+      "sha256": "50b3ba9c029308d8f2fbe80faad7f43b9ced78af7a926da7a4d3ee95bd459d32",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-32521",
+      "source_filing_id": "filing-san-rafael-campaign-entry-32521"
+    },
+    {
+      "id": "record-san-rafael-campaign-pdf-entry-33340",
+      "record_class": "financial_record",
+      "record_type": "campaign_filing_pdf_capture",
+      "source_id": "san-rafael-city-campaign-form460-pdf-export",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/33340-form-460-kate-colin-for-san-rafael-mayor-2020-2021-06-30.pdf",
+      "capture_status": "captured_via_public_export_job",
+      "entry_id": 33340,
+      "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2021-06-30)",
+      "content_type": "application/pdf",
+      "byte_size": 4279855,
+      "sha256": "12701672e7d950defec5470555f8aec7a05c34516bbdc566af7e287185681319",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-33340",
+      "source_filing_id": "filing-san-rafael-campaign-entry-33340"
     }
   ],
   "filing_capture_candidates": [
@@ -96,6 +246,146 @@
       "evidence_record_ids": [
         "record-san-rafael-campaign-filing-entry-37365",
         "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "filing-pdf-capture-28450",
+      "source_filing_id": "filing-san-rafael-campaign-entry-28450",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-28450",
+      "pdf_record_id": "record-san-rafael-campaign-pdf-entry-28450",
+      "status": "captured",
+      "capture_method": "doc_warm_step_plus_zip_export_job",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/28450-form-460-kate-colin-for-san-rafael-mayor-2020-2019-12-31.pdf",
+      "export_rights_confirmed": true,
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-28450",
+        "record-san-rafael-campaign-pdf-entry-28450"
+      ]
+    },
+    {
+      "id": "filing-pdf-capture-31112",
+      "source_filing_id": "filing-san-rafael-campaign-entry-31112",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-31112",
+      "pdf_record_id": "record-san-rafael-campaign-pdf-entry-31112",
+      "status": "captured",
+      "capture_method": "doc_warm_step_plus_zip_export_job",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/31112-form-460-maika-llorens-gulati-for-city-council-2020-2020-06-30.pdf",
+      "export_rights_confirmed": true,
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31112",
+        "record-san-rafael-campaign-pdf-entry-31112"
+      ]
+    },
+    {
+      "id": "filing-pdf-capture-31115",
+      "source_filing_id": "filing-san-rafael-campaign-entry-31115",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-31115",
+      "pdf_record_id": "record-san-rafael-campaign-pdf-entry-31115",
+      "status": "captured",
+      "capture_method": "doc_warm_step_plus_zip_export_job",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/31115-form-460-kate-colin-for-san-rafael-mayor-2020-2020-06-30.pdf",
+      "export_rights_confirmed": true,
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31115",
+        "record-san-rafael-campaign-pdf-entry-31115"
+      ]
+    },
+    {
+      "id": "filing-pdf-capture-31430",
+      "source_filing_id": "filing-san-rafael-campaign-entry-31430",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-31430",
+      "pdf_record_id": "record-san-rafael-campaign-pdf-entry-31430",
+      "status": "captured",
+      "capture_method": "doc_warm_step_plus_zip_export_job",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/31430-form-460-rachel-kertz-for-city-council-2020-2020-06-30.pdf",
+      "export_rights_confirmed": true,
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31430",
+        "record-san-rafael-campaign-pdf-entry-31430"
+      ]
+    },
+    {
+      "id": "filing-pdf-capture-31440",
+      "source_filing_id": "filing-san-rafael-campaign-entry-31440",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-31440",
+      "pdf_record_id": "record-san-rafael-campaign-pdf-entry-31440",
+      "status": "captured",
+      "capture_method": "doc_warm_step_plus_zip_export_job",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/31440-form-460-greg-knell-for-city-council-2020-06-30-20.pdf",
+      "export_rights_confirmed": true,
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31440",
+        "record-san-rafael-campaign-pdf-entry-31440"
+      ]
+    },
+    {
+      "id": "filing-pdf-capture-32255",
+      "source_filing_id": "filing-san-rafael-campaign-entry-32255",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-32255",
+      "pdf_record_id": "record-san-rafael-campaign-pdf-entry-32255",
+      "status": "captured",
+      "capture_method": "doc_warm_step_plus_zip_export_job",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/32255-form-460-maika-llorens-gulati-for-city-council-2020-2020-10-22.pdf",
+      "export_rights_confirmed": true,
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-32255",
+        "record-san-rafael-campaign-pdf-entry-32255"
+      ]
+    },
+    {
+      "id": "filing-pdf-capture-32274",
+      "source_filing_id": "filing-san-rafael-campaign-entry-32274",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-32274",
+      "pdf_record_id": "record-san-rafael-campaign-pdf-entry-32274",
+      "status": "captured",
+      "capture_method": "doc_warm_step_plus_zip_export_job",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/32274-form-460-greg-knell-for-city-council-2020-2nd-preelection.pdf",
+      "export_rights_confirmed": true,
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-32274",
+        "record-san-rafael-campaign-pdf-entry-32274"
+      ]
+    },
+    {
+      "id": "filing-pdf-capture-32326",
+      "source_filing_id": "filing-san-rafael-campaign-entry-32326",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-32326",
+      "pdf_record_id": "record-san-rafael-campaign-pdf-entry-32326",
+      "status": "captured",
+      "capture_method": "doc_warm_step_plus_zip_export_job",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/32326-form-460-mahmoud-a-shirazi-for-mayor-2020-amendment.pdf",
+      "export_rights_confirmed": true,
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-32326",
+        "record-san-rafael-campaign-pdf-entry-32326"
+      ]
+    },
+    {
+      "id": "filing-pdf-capture-32521",
+      "source_filing_id": "filing-san-rafael-campaign-entry-32521",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-32521",
+      "pdf_record_id": "record-san-rafael-campaign-pdf-entry-32521",
+      "status": "captured",
+      "capture_method": "doc_warm_step_plus_zip_export_job",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/32521-form-460-kate-colin-for-san-rafael-mayor-2020-2020-12-31.pdf",
+      "export_rights_confirmed": true,
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-32521",
+        "record-san-rafael-campaign-pdf-entry-32521"
+      ]
+    },
+    {
+      "id": "filing-pdf-capture-33340",
+      "source_filing_id": "filing-san-rafael-campaign-entry-33340",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-33340",
+      "pdf_record_id": "record-san-rafael-campaign-pdf-entry-33340",
+      "status": "captured",
+      "capture_method": "doc_warm_step_plus_zip_export_job",
+      "artifact_path": "data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-13/33340-form-460-kate-colin-for-san-rafael-mayor-2020-2021-06-30.pdf",
+      "export_rights_confirmed": true,
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-33340",
+        "record-san-rafael-campaign-pdf-entry-33340"
       ]
     }
   ],

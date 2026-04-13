@@ -520,6 +520,19 @@ def run_q4(
         and "san-rafael-city-campaign-form460-schedules-01__bundle-01" in node["source_bundle_ids"]
     ]
 
+    notes = []
+    if len(recurrence_years) >= 2 and not noisy_actor_nodes:
+        notes.append(
+            "QA-backed campaign money now spans more than one cycle without importing noisy OCR actors into graph-v1."
+        )
+    else:
+        notes.append(
+            "Committees and filings now span 2020, 2022, and 2024, but the QA-backed money layer still effectively lives in too few cycles."
+        )
+        notes.append(
+            "That is the core reason this query still fails: the graph has campaign filing breadth, but not enough multi-cycle QA-backed money recurrence yet."
+        )
+
     result = {
         "id": "Q4",
         "title": "San Rafael election money spine",
@@ -539,10 +552,7 @@ def run_q4(
             "qa_money_flow_samples": format_ids(sorted(node["id"] for node in qa_money_flow_nodes), limit=12),
             "noisy_actor_ids": noisy_actor_nodes,
         },
-        "notes": [
-            "Committees and filings now span 2020, 2022, and 2024, but the QA-backed money layer still effectively lives in the 2024 Form 460 sample.",
-            "That is the core reason this query still fails: the graph has campaign filing breadth, but not multi-cycle QA-backed money recurrence yet.",
-        ],
+        "notes": notes,
     }
     return result
 
@@ -581,10 +591,31 @@ def run_q5(
         row["status_counts"] = dict(sorted(row["status_counts"].items()))
         subject_summaries.append(row)
 
+    queue_is_small = len(validation_nodes) <= 20 and len(subject_rows) <= 10
+    notes = []
+    if queue_is_small:
+        notes.append("The validation queue remains small enough to review directly.")
+    else:
+        notes.append(
+            "The validation queue is too large for the current checkpoint and needs pruning or better reference-aware suppression."
+        )
+    focus_row = next(
+        (
+            row
+            for row in subject_summaries
+            if row["subject_node_id"] == "filing-san-rafael-campaign-entry-37677"
+        ),
+        None,
+    )
+    if focus_row is not None:
+        notes.append(
+            "The known Kate Colin 2024 Schedule A extraction gap remains visible in the queue and is still the main carried-forward reconciliation issue."
+        )
+
     result = {
         "id": "Q5",
         "title": "validation queue",
-        "pass": len(validation_nodes) <= 20 and len(subject_rows) <= 10,
+        "pass": queue_is_small,
         "metrics": {
             "validation_check_count": len(validation_nodes),
             "subject_filing_count": len(subject_rows),
@@ -592,18 +623,11 @@ def run_q5(
         },
         "samples": {
             "subjects": subject_summaries,
-            "focus_subject": next(
-                (
-                    row
-                    for row in subject_summaries
-                    if row["subject_node_id"] == "filing-san-rafael-campaign-entry-37677"
-                ),
-                None,
-            ),
+            "focus_subject": focus_row,
         },
-        "notes": [
-            "The queue remains small enough to review directly, and the remaining non-reconciled item is still the known $1,000 Kate Colin Schedule A extraction gap.",
-            "This is the first query that checks whether new breadth work is creating a manageable validation surface instead of a noisy anomaly dump.",
+        "notes": notes
+        + [
+            "This query checks whether new breadth work is creating a manageable validation surface instead of a noisy anomaly dump."
         ],
     }
     return result

@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-04-13T01:22:28Z",
+  "generated_at": "2026-04-13T11:19:00Z",
   "engine": "projection_jsonl",
   "projection_id": "graph-v1",
-  "projection_report_generated_at": "2026-04-13T01:09:51Z",
+  "projection_report_generated_at": "2026-04-13T11:19:00Z",
   "projection_counts": {
-    "nodes": 6050,
-    "edges": 20177,
+    "nodes": 6068,
+    "edges": 20251,
     "node_type_counts": {
       "Actor": 21,
       "AgendaItem": 2970,
@@ -18,21 +18,19 @@
       "Institution": 5,
       "Issue": 3,
       "Meeting": 283,
-      "MoneyFlow": 145,
+      "MoneyFlow": 147,
       "Place": 8,
-      "Record": 822,
+      "Record": 834,
       "Seat": 5,
       "SeatService": 5,
-      "ValidationCheck": 12
+      "ValidationCheck": 16
     }
   },
   "summary": {
     "total": 5,
-    "passed": 4,
-    "failed": 1,
-    "failed_query_ids": [
-      "Q4"
-    ]
+    "passed": 5,
+    "failed": 0,
+    "failed_query_ids": []
   },
   "queries": [
     {
@@ -356,14 +354,14 @@
     {
       "id": "Q4",
       "title": "San Rafael election money spine",
-      "pass": false,
+      "pass": true,
       "metrics": {
         "cycle_rollup": {
           "2020": {
             "committee_count": 7,
             "filing_count": 66,
             "ie_filing_count": 4,
-            "qa_money_flow_count": 0
+            "qa_money_flow_count": 2
           },
           "2022": {
             "committee_count": 7,
@@ -381,8 +379,9 @@
         "committee_count": 16,
         "filing_count": 152,
         "ie_filing_count": 4,
-        "qa_money_flow_count": 136,
+        "qa_money_flow_count": 138,
         "qa_money_flow_years": [
+          2020,
           2024
         ],
         "imported_noisy_actor_count": 0
@@ -410,6 +409,7 @@
           "filing-san-rafael-ie-entry-32292"
         ],
         "qa_money_flow_samples": [
+          "moneyflow-2020-12-18-jim-milligan-committee-kate-colin-for-mayor-2020-1",
           "moneyflow-2024-06-14-mary-sackett-z-committee-rachel-kertz-for-san-rafael-city-council-2024-1",
           "moneyflow-2024-06-17-bruce-raful-z-committee-rachel-kertz-for-san-rafael-city-council-2024-3",
           "moneyflow-2024-06-17-katie-rice-z-committee-rachel-kertz-for-san-rafael-city-council-2024-2",
@@ -421,14 +421,12 @@
           "moneyflow-2024-06-20-lisa-doran-z-committee-rachel-kertz-for-san-rafael-city-council-2024-10",
           "moneyflow-2024-06-20-windi-snarly-0-committee-rachel-kertz-for-san-rafael-city-council-2024-9",
           "moneyflow-2024-06-21-kim-diamond-committee-rachel-kertz-for-san-rafael-city-council-2024-11",
-          "moneyflow-2024-06-24-michael-manowski-committee-rachel-kertz-for-san-rafael-city-council-2024-13",
-          "... (+124 more)"
+          "... (+126 more)"
         ],
         "noisy_actor_ids": []
       },
       "notes": [
-        "Committees and filings now span 2020, 2022, and 2024, but the QA-backed money layer still effectively lives in the 2024 Form 460 sample.",
-        "That is the core reason this query still fails: the graph has campaign filing breadth, but not multi-cycle QA-backed money recurrence yet."
+        "QA-backed campaign money now spans more than one cycle without importing noisy OCR actors into graph-v1."
       ]
     },
     {
@@ -436,15 +434,36 @@
       "title": "validation queue",
       "pass": true,
       "metrics": {
-        "validation_check_count": 12,
-        "subject_filing_count": 3,
+        "validation_check_count": 16,
+        "subject_filing_count": 5,
         "status_counts": {
-          "extraction_gap": 1,
-          "reconciled": 11
+          "extraction_gap": 2,
+          "reconciled": 12,
+          "source_inconsistency": 2
         }
       },
       "samples": {
         "subjects": [
+          {
+            "subject_node_id": "filing-san-rafael-campaign-entry-28450",
+            "subject_display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)",
+            "check_count": 2,
+            "status_counts": {
+              "reconciled": 1,
+              "source_inconsistency": 1
+            },
+            "max_absolute_delta_value_number": 30.0
+          },
+          {
+            "subject_node_id": "filing-san-rafael-campaign-entry-33340",
+            "subject_display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2021-06-30)",
+            "check_count": 2,
+            "status_counts": {
+              "extraction_gap": 1,
+              "source_inconsistency": 1
+            },
+            "max_absolute_delta_value_number": 1381.54
+          },
           {
             "subject_node_id": "filing-san-rafael-campaign-entry-37365",
             "subject_display_label": "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
@@ -486,10 +505,11 @@
         }
       },
       "notes": [
-        "The queue remains small enough to review directly, and the remaining non-reconciled item is still the known $1,000 Kate Colin Schedule A extraction gap.",
-        "This is the first query that checks whether new breadth work is creating a manageable validation surface instead of a noisy anomaly dump."
+        "The validation queue remains small enough to review directly.",
+        "The known Kate Colin 2024 Schedule A extraction gap remains visible in the queue and is still the main carried-forward reconciliation issue.",
+        "This query checks whether new breadth work is creating a manageable validation surface instead of a noisy anomaly dump."
       ]
     }
   ],
-  "next_recommendation": "Continue the San Rafael city-office campaign filing backbone, but focus specifically on multi-cycle QA-backed money extraction and validation rather than opening county tracks or adding more schema."
+  "next_recommendation": "Do not widen scope blindly. Use the failed query set to pick the next density move and keep the sprint San Rafael-first."
 }

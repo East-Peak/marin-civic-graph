@@ -2,10 +2,21 @@
   "manifest_version": 1,
   "loop_id": "san-rafael-city-campaign-money-01",
   "label": "San Rafael city-office campaign money QA loop",
-  "status": "active",
-  "verified_at": "2026-04-12",
+  "status": "checkpoint_passed",
+  "verified_at": "2026-04-13",
   "lane": "san-rafael-city-office-campaign-money",
   "goal": "Turn Q4 from fail to pass by adding multi-cycle QA-backed campaign money coverage without importing noisy OCR actors into graph-v1.",
+  "last_checkpoint": {
+    "capture_date": "2026-04-13",
+    "query_pack_passed": 5,
+    "query_pack_failed": 0,
+    "q4_qa_money_flow_years": [
+      2020,
+      2024
+    ],
+    "q5_validation_check_count": 16,
+    "q5_subject_filing_count": 5
+  },
   "query_gate": {
     "required_queries_to_remain_passing": [
       "Q1",
@@ -56,7 +67,7 @@
   "batches": [
     {
       "batch_id": "batch-01-2020-city-office-form460",
-      "status": "pending",
+      "status": "accepted",
       "priority": 1,
       "goal": "Add the first non-2024 QA-backed city-office campaign-money cycle.",
       "cycle_year": 2020,
@@ -94,11 +105,21 @@
         "Q1, Q2, Q3, and Q5 still pass.",
         "Q4 qa_money_flow_years includes 2020.",
         "Q4 imported_noisy_actor_count remains 0."
-      ]
+      ],
+      "outcome": {
+        "accepted_at": "2026-04-13",
+        "qa_money_flow_years_after": [
+          2020,
+          2024
+        ],
+        "qa_money_flow_count_added": 2,
+        "imported_noisy_actor_count_after": 0,
+        "validation_check_count_after": 16
+      }
     },
     {
       "batch_id": "batch-02-2022-city-office-form460",
-      "status": "pending",
+      "status": "deferred_pending_review",
       "priority": 2,
       "goal": "Add a second non-2024 cycle if the 2020 batch is not enough to clear Q4.",
       "cycle_year": 2022,
@@ -139,7 +160,7 @@
     },
     {
       "batch_id": "batch-03-2024-gap-closure",
-      "status": "pending",
+      "status": "deferred_pending_review",
       "priority": 3,
       "goal": "Use 2024 only as a targeted cleanup batch if older-cycle extraction still leaves Q4 failing.",
       "cycle_year": 2024,

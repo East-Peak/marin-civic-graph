@@ -528,7 +528,7 @@ Mirror the question here when it affects:
 
 ### OQ-035: San Rafael multi-cycle QA-backed campaign money coverage
 
-- `status`: watch
+- `status`: resolved
 - `layer`: breadth sprint / campaign money
 - `scope`: `san-rafael-city-campaign-filings-01`, `san-rafael-city-campaign-form460-schedules-01`
 - `source refs`:
@@ -536,9 +536,23 @@ Mirror the question here when it affects:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-filings-01/bundle-01.json)
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
 - `question`: When should the San Rafael city-office campaign lane graduate from a single-cycle QA-backed money sample into true multi-cycle money recurrence across `2020`, `2022`, and `2024`?
-- `why it matters`: The first formal fixed-query-pack run now passes `Q1`, `Q2`, `Q3`, and `Q5`, but `Q4` still fails. Committees and filings span all three cycles, yet the QA-backed `MoneyFlow` layer still lives only in the `2024` Form 460 sample. That means the next breadth decision should still be San Rafael campaign deepening, not county widening.
-- `current note`: The current query-pack report shows `2020` with `66` filings and `4` IE filings, `2022` with `44` filings, and `2024` with `42` filings plus all `136` imported QA-backed money flows. No noisy OCR-born `Actor` nodes were imported into graph-v1, so the gating gap is cycle coverage, not actor pollution in core import.
-- `next evidence`: recover one or more additional QA-backed city-office money layers from `2020` or `2022`, rerun the fixed query pack, and only then decide whether county breadth is the next best move.
+- `why it matters`: The first formal fixed-query-pack run initially failed `Q4`, so the first Ralph loop was aimed at recovering one additional QA-backed campaign-money cycle before reopening broader breadth decisions.
+- `current note`: The first Ralph-loop batch recovered a thin but sufficient 2020 money layer from city-office Form `460` filings. The current query-pack report now shows `qa_money_flow_years = [2020, 2024]`, `qa_money_flow_count = 138`, and `imported_noisy_actor_count = 0`, so the gating question is answered.
+- `resolution`: Batch `01` of `san-rafael-city-campaign-money-01` was accepted on April 13, 2026. `Q4` now passes without reopening county breadth.
+
+### OQ-036: Should the campaign-money Ralph loop continue into 2022 now that the gate is already met?
+
+- `status`: watch
+- `layer`: breadth sprint / campaign money
+- `scope`: `san-rafael-city-campaign-money-01`
+- `source refs`:
+  - [san-rafael-city-campaign-money-01.json](/Users/tammypais/projects/marin-civic-graph/registry/loop-manifests/san-rafael-city-campaign-money-01.json)
+  - [query-pack-report.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/query-pack-report.json)
+  - [2026-04-13.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json)
+- `question`: Once batch `01` makes all five fixed queries pass, should the loop continue into the `2022` city-office Form `460` batch or stop and choose the next densification lane?
+- `why it matters`: The loop goal is now met, but the recovered `2020` layer is thin. Continuing into `2022` could strengthen recurrence depth, but it is no longer obviously the best next move compared with another San Rafael lane.
+- `current note`: Batch `02` is now `deferred_pending_review` in the loop manifest. It should not run automatically just because it exists.
+- `next evidence`: compare the likely product value of `2022` campaign-money depth against the next-best San Rafael densification candidate before opening another batch.
 
 ## Maintenance
 

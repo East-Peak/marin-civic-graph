@@ -1,6 +1,6 @@
 {
   "projection_id": "graph-v1",
-  "generated_at": "2026-04-13T01:09:51Z",
+  "generated_at": "2026-04-13T11:19:00Z",
   "manifest_path": "/Users/tammypais/projects/marin-civic-graph/registry/import-manifest.yaml",
   "output_dir": "data/projected/graph-v1",
   "bundle_reports": [
@@ -261,32 +261,32 @@
         {
           "section": "record_refs",
           "mode": "nodes",
-          "input_count": 3,
-          "imported_count": 3,
+          "input_count": 15,
+          "imported_count": 15,
           "skipped_count": 0,
           "skip_reasons": {}
         },
         {
           "section": "filing_candidates",
           "mode": "nodes",
-          "input_count": 3,
-          "imported_count": 3,
+          "input_count": 15,
+          "imported_count": 15,
           "skipped_count": 0,
           "skip_reasons": {}
         },
         {
           "section": "money_flow_candidates",
           "mode": "nodes",
-          "input_count": 136,
-          "imported_count": 136,
+          "input_count": 138,
+          "imported_count": 138,
           "skipped_count": 0,
           "skip_reasons": {}
         },
         {
           "section": "validation_check_candidates",
           "mode": "nodes",
-          "input_count": 12,
-          "imported_count": 12,
+          "input_count": 16,
+          "imported_count": 16,
           "skipped_count": 0,
           "skip_reasons": {}
         }
@@ -493,12 +493,12 @@
     "Institution": 5,
     "Issue": 3,
     "Meeting": 283,
-    "MoneyFlow": 145,
+    "MoneyFlow": 147,
     "Place": 8,
-    "Record": 822,
+    "Record": 834,
     "Seat": 5,
     "SeatService": 5,
-    "ValidationCheck": 12
+    "ValidationCheck": 16
   },
   "edge_type_counts": {
     "ABOUT_AGENDA_ITEM": 1451,
@@ -510,9 +510,9 @@
     "CONTROLLED_BY_COMMITTEE": 14,
     "DECIDED_AT_MEETING": 1472,
     "DECIDED_BY_INSTITUTION": 1472,
-    "DERIVED_FROM_RECORD": 31,
-    "DISCLOSED_IN_FILING": 146,
-    "EVIDENCED_BY": 6174,
+    "DERIVED_FROM_RECORD": 47,
+    "DISCLOSED_IN_FILING": 148,
+    "EVIDENCED_BY": 6196,
     "FILED_BY_ACTOR": 241,
     "FILED_BY_COMMITTEE": 232,
     "FILED_DURING_SEAT_SERVICE": 19,
@@ -536,18 +536,18 @@
     "RELATED_TO_ELECTION": 3,
     "RELATES_TO_ACTOR": 249,
     "RELATES_TO_AGENDA_ITEM": 10,
-    "RELATES_TO_COMMITTEE": 268,
+    "RELATES_TO_COMMITTEE": 269,
     "RELATES_TO_DECISION": 369,
     "RELATES_TO_ELECTION": 313,
-    "RELATES_TO_FILING": 9,
+    "RELATES_TO_FILING": 21,
     "RELATES_TO_INSTITUTION": 4,
     "RELATES_TO_ISSUE": 20,
     "RELATES_TO_MEETING": 524,
     "RELATES_TO_MONEY_FLOW": 4,
     "RELATES_TO_PLACE": 11,
-    "RELATES_TO_RECORD": 238,
+    "RELATES_TO_RECORD": 250,
     "RELATES_TO_SEAT": 247,
-    "RELATES_TO_VALIDATIONCHECK": 12,
+    "RELATES_TO_VALIDATIONCHECK": 16,
     "REQUESTED_BY_ACTOR": 1,
     "REQUESTED_BY_SEAT": 1,
     "REQUESTED_BY_SEAT_SERVICE": 1,
@@ -555,13 +555,13 @@
     "SERVES_IN_INSTITUTION": 5,
     "TARGETS_ACTOR": 4,
     "TARGETS_SEAT": 4,
-    "TO_TARGET": 106,
-    "VALIDATES": 12
+    "TO_TARGET": 107,
+    "VALIDATES": 16
   },
-  "total_nodes": 6050,
-  "total_edges": 20177,
-  "duplicate_node_merges": 238,
-  "duplicate_edge_merges": 725,
+  "total_nodes": 6068,
+  "total_edges": 20251,
+  "duplicate_node_merges": 250,
+  "duplicate_edge_merges": 785,
   "node_conflicts": [
     {
       "id": "record-2023-05-08-san-rafael-city-council-special-page",
@@ -2216,12 +2216,21 @@
     }
   ],
   "skipped_edge_reasons": {
-    "missing_target:Actor": 147
+    "missing_target:Actor": 149,
+    "missing_target:Record": 44
   },
   "top_skipped_edge_targets": [
     [
       "actor-anedot",
       9
+    ],
+    [
+      "record-san-rafael-campaign-ocr-entry-28450",
+      6
+    ],
+    [
+      "record-san-rafael-campaign-pdf-entry-28450",
+      5
     ],
     [
       "actor-four-waters-media-inc",
@@ -2232,15 +2241,63 @@
       5
     ],
     [
+      "record-san-rafael-campaign-ocr-entry-33340",
+      4
+    ],
+    [
+      "record-san-rafael-campaign-pdf-entry-33340",
+      3
+    ],
+    [
+      "record-san-rafael-campaign-ocr-entry-31112",
+      2
+    ],
+    [
+      "record-san-rafael-campaign-ocr-entry-31115",
+      2
+    ],
+    [
+      "record-san-rafael-campaign-ocr-entry-31430",
+      2
+    ],
+    [
+      "record-san-rafael-campaign-ocr-entry-31440",
+      2
+    ],
+    [
+      "record-san-rafael-campaign-ocr-entry-31935",
+      2
+    ],
+    [
+      "record-san-rafael-campaign-ocr-entry-31936",
+      2
+    ],
+    [
+      "record-san-rafael-campaign-ocr-entry-31937",
+      2
+    ],
+    [
+      "record-san-rafael-campaign-ocr-entry-32103",
+      2
+    ],
+    [
+      "record-san-rafael-campaign-ocr-entry-32326",
+      2
+    ],
+    [
+      "record-san-rafael-campaign-ocr-entry-32521",
+      2
+    ],
+    [
+      "actor-paul-jensen",
+      2
+    ],
+    [
       "actor-bruce-burtch",
       2
     ],
     [
       "actor-caran-cuneo",
-      2
-    ],
-    [
-      "actor-paul-jensen",
       2
     ],
     [
@@ -2261,62 +2318,6 @@
     ],
     [
       "actor-mayor-kate",
-      1
-    ],
-    [
-      "actor-vice-mayor-hill",
-      1
-    ],
-    [
-      "actor-councilmember-bushey",
-      1
-    ],
-    [
-      "actor-councilmember-kertz",
-      1
-    ],
-    [
-      "actor-councilmember-llorens-gulati",
-      1
-    ],
-    [
-      "actor-deborah-ablin",
-      1
-    ],
-    [
-      "actor-heather-allison",
-      1
-    ],
-    [
-      "actor-dorothy-breiner",
-      1
-    ],
-    [
-      "actor-greg-brockbank",
-      1
-    ],
-    [
-      "actor-tracy-case",
-      1
-    ],
-    [
-      "actor-wayne-clark",
-      1
-    ],
-    [
-      "actor-damon-connoily-tor-assemnly-2024",
-      1
-    ],
-    [
-      "actor-andrew-deckas",
-      1
-    ],
-    [
-      "actor-democratic-central-committee-of-marin-id",
-      1
-    ],
-    [
-      "actor-dennis-rodoni-for-supervisor",
       1
     ]
   ]

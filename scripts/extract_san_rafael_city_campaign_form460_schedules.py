@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import html
 import json
 import re
@@ -10,26 +11,27 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-
-ROOT = Path(__file__).resolve().parent.parent
-RAW_CAPTURE_PATH = (
-    ROOT / "data" / "raw" / "san-rafael-city-campaign-form460-ocr" / "2026-04-12" / "results.json"
+from san_rafael_city_campaign_loop_lib import (
+    ROOT,
+    current_capture_date,
+    load_json,
+    load_latest_captures_by_entry,
+    write_json,
 )
+
+
+RAW_CAPTURE_BASE_DIR = ROOT / "data" / "raw" / "san-rafael-city-campaign-form460-ocr"
 CANONICAL_SEEDS_PATH = ROOT / "data" / "normalized" / "canonical-seeds-san-rafael-01.json"
 CAMPAIGN_SAMPLE_BUNDLE_PATH = (
     ROOT / "data" / "normalized" / "campaign-finance-sample-basket-01" / "bundle-01.json"
 )
 EXTRACTED_DIR = ROOT / "data" / "extracted" / "san-rafael-city-campaign-form460-schedules"
-EXTRACTED_PATH = EXTRACTED_DIR / "2026-04-12.json"
 NORMALIZED_DIR = ROOT / "data" / "normalized" / "san-rafael-city-campaign-form460-schedules-01"
 NORMALIZED_PATH = NORMALIZED_DIR / "bundle-01.json"
-PDF_EXPORT_EXTRACTED_PATH = (
-    ROOT / "data" / "extracted" / "san-rafael-city-campaign-form460-pdf-export" / "2026-04-12.json"
-)
+PDF_EXPORT_BASE_DIR = ROOT / "data" / "raw" / "san-rafael-city-campaign-form460-pdf-export"
 
 CASE_STUDY_ID = "san-rafael-city-campaign-form460-schedules-01"
 BUNDLE_ID = f"{CASE_STUDY_ID}__bundle-01"
-EXTRACTED_ARTIFACT_PATH = "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json"
 
 DATE_LINE_RE = re.compile(r"^\s*\d{1,2}(?:[^0-9]+)\d{1,2}(?:[^0-9]+)\d{2,4}\s*$")
 LEADING_DATE_FRAGMENT_RE = re.compile(
@@ -65,14 +67,14 @@ SCHEDULE_E_DESCRIPTION_HINTS = [
     "Voter Data",
 ]
 
-
 def utc_now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def write_json(path: Path, payload: Any) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2) + "\n")
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--capture-date", default=current_capture_date())
+    return parser.parse_args()
 
 
 def slugify(value: str) -> str:
@@ -782,15 +784,31 @@ def parse_schedule_e_page(page_text: str, page_num: int) -> list[dict[str, Any]]
     return rows
 
 
+def load_ocr_capture_payload() -> dict[str, Any]:
+    captures = sorted(load_latest_captures_by_entry(RAW_CAPTURE_BASE_DIR).values(), key=lambda item: item["target"]["entry_id"])
+    return {
+        "source_id": "san-rafael-city-campaign-form460-ocr",
+        "captures": captures,
+    }
+
+
 def load_pdf_export_map() -> dict[int, str]:
-    if not PDF_EXPORT_EXTRACTED_PATH.exists():
-        return {}
-    payload = json.loads(PDF_EXPORT_EXTRACTED_PATH.read_text())
-    return {item["entry_id"]: item["artifact_path"] for item in payload.get("items", [])}
+    pdf_map: dict[int, str] = {}
+    for capture in load_latest_captures_by_entry(PDF_EXPORT_BASE_DIR).values():
+        if capture.get("status") != "captured":
+            continue
+        entry_id = capture["target"]["entry_id"]
+        artifact_path = capture.get("download", {}).get("artifact_path")
+        if artifact_path:
+            pdf_map[entry_id] = artifact_path
+    return pdf_map
 
 
 def load_pdf_layout_pages(pdf_path: str) -> list[str]:
-    output = subprocess.check_output(["pdftotext", "-layout", pdf_path, "-"])
+    resolved_path = Path(pdf_path)
+    if not resolved_path.is_absolute():
+        resolved_path = ROOT / resolved_path
+    output = subprocess.check_output(["pdftotext", "-layout", str(resolved_path), "-"])
     return [page for page in output.decode("utf-8", "ignore").split("\f") if page.strip()]
 
 
@@ -1125,7 +1143,12 @@ def dedupe_schedule_rows(rows: list[dict[str, Any]], keys: list[str]) -> list[di
 
 
 def main() -> None:
-    raw_capture = json.loads(RAW_CAPTURE_PATH.read_text())
+    args = parse_args()
+    capture_date = args.capture_date
+    extracted_path = EXTRACTED_DIR / f"{capture_date}.json"
+    extracted_artifact_path = f"data/extracted/san-rafael-city-campaign-form460-schedules/{capture_date}.json"
+
+    raw_capture = load_ocr_capture_payload()
     known_actor_map = load_known_actor_map()
     pdf_export_map = load_pdf_export_map()
     generated_at = utc_now_iso()
@@ -1270,7 +1293,7 @@ def main() -> None:
                 "record_class": "financial_record",
                 "record_type": "form_460_schedule_extract",
                 "source_id": "san-rafael-city-campaign-form460-ocr",
-                "artifact_path": EXTRACTED_ARTIFACT_PATH,
+                "artifact_path": extracted_artifact_path,
                 "capture_status": "derived_from_ocr_capture",
                 "source_record_id": source_record_id,
                 "ocr_record_id": ocr_record_id,
@@ -1326,6 +1349,8 @@ def main() -> None:
         ]
 
         for spec in validation_specs:
+            if spec["reference_value_number"] is None:
+                continue
             check = build_validation_check(
                 check_id=build_validation_check_id(
                     [target["filing_id"], spec["metric_name"], spec["check_type"]]
@@ -1474,7 +1499,7 @@ def main() -> None:
             )
 
     extracted_payload = {
-        "capture_date": "2026-04-12",
+        "capture_date": capture_date,
         "extracted_at": generated_at,
         "source_id": "san-rafael-city-campaign-form460-ocr",
         "filing_extracts": extracted_filings,
@@ -1490,7 +1515,7 @@ def main() -> None:
         "status": "working",
         "generated_at": generated_at,
         "scope": [
-            "Selected San Rafael 2024 Form 460 filings with schedule-level OCR extraction",
+            "Selected San Rafael Form 460 filings with schedule-level OCR and PDF-backed extraction across multiple city-office cycles",
             "Promotion of itemized contribution and expenditure rows into graph-ready MoneyFlow candidates where OCR is strong enough",
             "Reuse of existing filing and committee IDs instead of inventing a parallel campaign namespace",
             "Automatic filing-level validation checks against official itemized and rollup summary values",
@@ -1514,7 +1539,7 @@ def main() -> None:
         ],
     }
 
-    write_json(EXTRACTED_PATH, extracted_payload)
+    write_json(extracted_path, extracted_payload)
     write_json(NORMALIZED_PATH, normalized_payload)
 
 

@@ -2,20 +2,176 @@
   "case_study_id": "san-rafael-city-campaign-form460-schedules-01",
   "bundle_id": "san-rafael-city-campaign-form460-schedules-01__bundle-01",
   "status": "working",
-  "generated_at": "2026-04-12T20:07:45Z",
+  "generated_at": "2026-04-13T11:18:14Z",
   "scope": [
-    "Selected San Rafael 2024 Form 460 filings with schedule-level OCR extraction",
+    "Selected San Rafael Form 460 filings with schedule-level OCR and PDF-backed extraction across multiple city-office cycles",
     "Promotion of itemized contribution and expenditure rows into graph-ready MoneyFlow candidates where OCR is strong enough",
     "Reuse of existing filing and committee IDs instead of inventing a parallel campaign namespace",
     "Automatic filing-level validation checks against official itemized and rollup summary values"
   ],
   "record_refs": [
     {
+      "id": "record-san-rafael-campaign-form460-schedule-extract-entry-28450",
+      "record_class": "financial_record",
+      "record_type": "form_460_schedule_extract",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+      "capture_status": "derived_from_ocr_capture",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-28450",
+      "ocr_record_id": "record-san-rafael-campaign-ocr-entry-28450",
+      "source_filing_id": "filing-san-rafael-campaign-entry-28450",
+      "title": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)",
+      "entry_id": 28450
+    },
+    {
+      "id": "record-san-rafael-campaign-form460-schedule-extract-entry-31112",
+      "record_class": "financial_record",
+      "record_type": "form_460_schedule_extract",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+      "capture_status": "derived_from_ocr_capture",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-31112",
+      "ocr_record_id": "record-san-rafael-campaign-ocr-entry-31112",
+      "source_filing_id": "filing-san-rafael-campaign-entry-31112",
+      "title": "Schedule extraction for Form 460 - Maika Llorens Gulati for City Council 2020 (2020-06-30)",
+      "entry_id": 31112
+    },
+    {
+      "id": "record-san-rafael-campaign-form460-schedule-extract-entry-31115",
+      "record_class": "financial_record",
+      "record_type": "form_460_schedule_extract",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+      "capture_status": "derived_from_ocr_capture",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-31115",
+      "ocr_record_id": "record-san-rafael-campaign-ocr-entry-31115",
+      "source_filing_id": "filing-san-rafael-campaign-entry-31115",
+      "title": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2020 (2020-06-30)",
+      "entry_id": 31115
+    },
+    {
+      "id": "record-san-rafael-campaign-form460-schedule-extract-entry-31430",
+      "record_class": "financial_record",
+      "record_type": "form_460_schedule_extract",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+      "capture_status": "derived_from_ocr_capture",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-31430",
+      "ocr_record_id": "record-san-rafael-campaign-ocr-entry-31430",
+      "source_filing_id": "filing-san-rafael-campaign-entry-31430",
+      "title": "Schedule extraction for Form 460- Rachel Kertz for City Council 2020 (2020-06-30)",
+      "entry_id": 31430
+    },
+    {
+      "id": "record-san-rafael-campaign-form460-schedule-extract-entry-31440",
+      "record_class": "financial_record",
+      "record_type": "form_460_schedule_extract",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+      "capture_status": "derived_from_ocr_capture",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-31440",
+      "ocr_record_id": "record-san-rafael-campaign-ocr-entry-31440",
+      "source_filing_id": "filing-san-rafael-campaign-entry-31440",
+      "title": "Schedule extraction for Form 460- Greg Knell for City Council 2020 (06-30-20)",
+      "entry_id": 31440
+    },
+    {
+      "id": "record-san-rafael-campaign-form460-schedule-extract-entry-31935",
+      "record_class": "financial_record",
+      "record_type": "form_460_schedule_extract",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+      "capture_status": "derived_from_ocr_capture",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-31935",
+      "ocr_record_id": "record-san-rafael-campaign-ocr-entry-31935",
+      "source_filing_id": "filing-san-rafael-campaign-entry-31935",
+      "title": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2020 1st Preelection",
+      "entry_id": 31935
+    },
+    {
+      "id": "record-san-rafael-campaign-form460-schedule-extract-entry-31936",
+      "record_class": "financial_record",
+      "record_type": "form_460_schedule_extract",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+      "capture_status": "derived_from_ocr_capture",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-31936",
+      "ocr_record_id": "record-san-rafael-campaign-ocr-entry-31936",
+      "source_filing_id": "filing-san-rafael-campaign-entry-31936",
+      "title": "Schedule extraction for Form 460- Rachel Kertz for City Council 2020 1st Preelection",
+      "entry_id": 31936
+    },
+    {
+      "id": "record-san-rafael-campaign-form460-schedule-extract-entry-31937",
+      "record_class": "financial_record",
+      "record_type": "form_460_schedule_extract",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+      "capture_status": "derived_from_ocr_capture",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-31937",
+      "ocr_record_id": "record-san-rafael-campaign-ocr-entry-31937",
+      "source_filing_id": "filing-san-rafael-campaign-entry-31937",
+      "title": "Schedule extraction for Form 460 - Maika Llorens Gulati for City Council 2020 (2020-09-24)",
+      "entry_id": 31937
+    },
+    {
+      "id": "record-san-rafael-campaign-form460-schedule-extract-entry-32103",
+      "record_class": "financial_record",
+      "record_type": "form_460_schedule_extract",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+      "capture_status": "derived_from_ocr_capture",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-32103",
+      "ocr_record_id": "record-san-rafael-campaign-ocr-entry-32103",
+      "source_filing_id": "filing-san-rafael-campaign-entry-32103",
+      "title": "Schedule extraction for Form 460- Greg Knell for City Council 2020 1st Preelection",
+      "entry_id": 32103
+    },
+    {
+      "id": "record-san-rafael-campaign-form460-schedule-extract-entry-32326",
+      "record_class": "financial_record",
+      "record_type": "form_460_schedule_extract",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+      "capture_status": "derived_from_ocr_capture",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-32326",
+      "ocr_record_id": "record-san-rafael-campaign-ocr-entry-32326",
+      "source_filing_id": "filing-san-rafael-campaign-entry-32326",
+      "title": "Schedule extraction for Form 460- Mahmoud A.Shirazi for Mayor 2020; Amendment",
+      "entry_id": 32326
+    },
+    {
+      "id": "record-san-rafael-campaign-form460-schedule-extract-entry-32521",
+      "record_class": "financial_record",
+      "record_type": "form_460_schedule_extract",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+      "capture_status": "derived_from_ocr_capture",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-32521",
+      "ocr_record_id": "record-san-rafael-campaign-ocr-entry-32521",
+      "source_filing_id": "filing-san-rafael-campaign-entry-32521",
+      "title": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2020 (2020-12-31)",
+      "entry_id": 32521
+    },
+    {
+      "id": "record-san-rafael-campaign-form460-schedule-extract-entry-33340",
+      "record_class": "financial_record",
+      "record_type": "form_460_schedule_extract",
+      "source_id": "san-rafael-city-campaign-form460-ocr",
+      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+      "capture_status": "derived_from_ocr_capture",
+      "source_record_id": "record-san-rafael-campaign-filing-entry-33340",
+      "ocr_record_id": "record-san-rafael-campaign-ocr-entry-33340",
+      "source_filing_id": "filing-san-rafael-campaign-entry-33340",
+      "title": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2020 (2021-06-30)",
+      "entry_id": 33340
+    },
+    {
       "id": "record-san-rafael-campaign-form460-schedule-extract-entry-37365",
       "record_class": "financial_record",
       "record_type": "form_460_schedule_extract",
       "source_id": "san-rafael-city-campaign-form460-ocr",
-      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json",
+      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
       "capture_status": "derived_from_ocr_capture",
       "source_record_id": "record-san-rafael-campaign-filing-entry-37365",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37365",
@@ -28,7 +184,7 @@
       "record_class": "financial_record",
       "record_type": "form_460_schedule_extract",
       "source_id": "san-rafael-city-campaign-form460-ocr",
-      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json",
+      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
       "capture_status": "derived_from_ocr_capture",
       "source_record_id": "record-san-rafael-campaign-filing-entry-37677",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37677",
@@ -41,7 +197,7 @@
       "record_class": "financial_record",
       "record_type": "form_460_schedule_extract",
       "source_id": "san-rafael-city-campaign-form460-ocr",
-      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json",
+      "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
       "capture_status": "derived_from_ocr_capture",
       "source_record_id": "record-san-rafael-campaign-filing-entry-37685",
       "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37685",
@@ -51,6 +207,19 @@
     }
   ],
   "actor_candidates": [
+    {
+      "id": "actor-1",
+      "name": "1",
+      "actor_type": "organization",
+      "observed_labels": [
+        "1"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-28450",
+        "record-san-rafael-campaign-ocr-entry-28450",
+        "record-san-rafael-campaign-pdf-entry-28450"
+      ]
+    },
     {
       "id": "actor-aaron-lamstein-m",
       "name": "Aaron Lamstein m",
@@ -261,19 +430,19 @@
     },
     {
       "id": "actor-bruce-burtch",
-      "name": "Bruce Burtch\u00ae",
+      "name": "Bruce Burtch \u2751\ufffd",
       "actor_type": "person",
       "observed_labels": [
-        "Bruce Burtch\u00ae",
-        "Bruce Burtch \u2751\ufffd"
+        "Bruce Burtch \u2751\ufffd",
+        "Bruce Burtch\u00ae"
       ],
       "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677",
         "record-san-rafael-campaign-filing-entry-37365",
         "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
+        "record-san-rafael-campaign-pdf-entry-37365",
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -749,6 +918,19 @@
       ]
     },
     {
+      "id": "actor-jim-milligan",
+      "name": "Jim Milligan \u2751",
+      "actor_type": "political_organization",
+      "observed_labels": [
+        "Jim Milligan \u2751"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-28450",
+        "record-san-rafael-campaign-ocr-entry-28450",
+        "record-san-rafael-campaign-pdf-entry-28450"
+      ]
+    },
+    {
       "id": "actor-joe-ohehir",
       "name": "Joe OHehir \u00ae",
       "actor_type": "person",
@@ -1205,19 +1387,19 @@
     },
     {
       "id": "actor-paul-jensen",
-      "name": "Paul Jensen \u00ae",
+      "name": "Paul Jensen",
       "actor_type": "person",
       "observed_labels": [
-        "Paul Jensen \u00ae",
-        "Paul Jensen"
+        "Paul Jensen",
+        "Paul Jensen \u00ae"
       ],
       "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37677",
-        "record-san-rafael-campaign-ocr-entry-37677",
-        "record-san-rafael-campaign-pdf-entry-37677",
         "record-san-rafael-campaign-filing-entry-37365",
         "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
+        "record-san-rafael-campaign-pdf-entry-37365",
+        "record-san-rafael-campaign-filing-entry-37677",
+        "record-san-rafael-campaign-ocr-entry-37677",
+        "record-san-rafael-campaign-pdf-entry-37677"
       ]
     },
     {
@@ -1548,6 +1730,344 @@
   ],
   "filing_candidates": [
     {
+      "id": "filing-san-rafael-campaign-entry-28450",
+      "filing_type": "form_460",
+      "committee_id": "committee-kate-colin-for-mayor-2020",
+      "filer_actor_id": "actor-kate-colin",
+      "election_id": "election-2020-11-03-san-rafael-general",
+      "record_id": "record-san-rafael-campaign-filing-entry-28450",
+      "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-28450",
+      "schedule_a_row_count": 1,
+      "schedule_d_row_count": 0,
+      "schedule_e_row_count": 1,
+      "extracted_itemized_contributions_total": 500.0,
+      "extracted_schedule_d_total": 0,
+      "extracted_itemized_payments_total": 1.0,
+      "reported_itemized_contributions": null,
+      "reported_unitemized_contributions": null,
+      "reported_monetary_contributions": null,
+      "reported_payments_made": 1.0,
+      "reported_itemized_payments": 1.0,
+      "reported_unitemized_payments": 30.0,
+      "validation_check_ids": [
+        "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-itemized-payments-reconciliation-check",
+        "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-total-payments-rollup-summary-consistency-check"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-28450",
+        "record-san-rafael-campaign-ocr-entry-28450",
+        "record-san-rafael-campaign-pdf-entry-28450",
+        "record-san-rafael-campaign-form460-schedule-extract-entry-28450"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-31112",
+      "filing_type": "form_460",
+      "committee_id": "committee-maika-llorens-gulati-for-san-rafael-city-council-2020",
+      "filer_actor_id": "actor-maika-llorens-gulati",
+      "election_id": "election-2020-11-03-san-rafael-general",
+      "record_id": "record-san-rafael-campaign-filing-entry-31112",
+      "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-31112",
+      "schedule_a_row_count": 0,
+      "schedule_d_row_count": 0,
+      "schedule_e_row_count": 0,
+      "extracted_itemized_contributions_total": 0,
+      "extracted_schedule_d_total": 0,
+      "extracted_itemized_payments_total": 0,
+      "reported_itemized_contributions": null,
+      "reported_unitemized_contributions": null,
+      "reported_monetary_contributions": null,
+      "reported_payments_made": null,
+      "reported_itemized_payments": null,
+      "reported_unitemized_payments": null,
+      "validation_check_ids": [],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31112",
+        "record-san-rafael-campaign-ocr-entry-31112",
+        "record-san-rafael-campaign-pdf-entry-31112",
+        "record-san-rafael-campaign-form460-schedule-extract-entry-31112"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-31115",
+      "filing_type": "form_460",
+      "committee_id": "committee-kate-colin-for-mayor-2020",
+      "filer_actor_id": "actor-kate-colin",
+      "election_id": "election-2020-11-03-san-rafael-general",
+      "record_id": "record-san-rafael-campaign-filing-entry-31115",
+      "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-31115",
+      "schedule_a_row_count": 0,
+      "schedule_d_row_count": 0,
+      "schedule_e_row_count": 0,
+      "extracted_itemized_contributions_total": 0,
+      "extracted_schedule_d_total": 0,
+      "extracted_itemized_payments_total": 0,
+      "reported_itemized_contributions": null,
+      "reported_unitemized_contributions": null,
+      "reported_monetary_contributions": null,
+      "reported_payments_made": null,
+      "reported_itemized_payments": null,
+      "reported_unitemized_payments": null,
+      "validation_check_ids": [],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31115",
+        "record-san-rafael-campaign-ocr-entry-31115",
+        "record-san-rafael-campaign-pdf-entry-31115",
+        "record-san-rafael-campaign-form460-schedule-extract-entry-31115"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-31430",
+      "filing_type": "form_460",
+      "committee_id": "committee-rachel-kertz-for-city-council-2020",
+      "filer_actor_id": "actor-rachel-kertz",
+      "election_id": "election-2020-11-03-san-rafael-general",
+      "record_id": "record-san-rafael-campaign-filing-entry-31430",
+      "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-31430",
+      "schedule_a_row_count": 0,
+      "schedule_d_row_count": 0,
+      "schedule_e_row_count": 0,
+      "extracted_itemized_contributions_total": 0,
+      "extracted_schedule_d_total": 0,
+      "extracted_itemized_payments_total": 0,
+      "reported_itemized_contributions": null,
+      "reported_unitemized_contributions": null,
+      "reported_monetary_contributions": null,
+      "reported_payments_made": null,
+      "reported_itemized_payments": null,
+      "reported_unitemized_payments": null,
+      "validation_check_ids": [],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31430",
+        "record-san-rafael-campaign-ocr-entry-31430",
+        "record-san-rafael-campaign-pdf-entry-31430",
+        "record-san-rafael-campaign-form460-schedule-extract-entry-31430"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-31440",
+      "filing_type": "form_460",
+      "committee_id": "committee-greg-knell-for-city-council-2020",
+      "filer_actor_id": "actor-greg-knell",
+      "election_id": "election-2020-11-03-san-rafael-general",
+      "record_id": "record-san-rafael-campaign-filing-entry-31440",
+      "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-31440",
+      "schedule_a_row_count": 0,
+      "schedule_d_row_count": 0,
+      "schedule_e_row_count": 0,
+      "extracted_itemized_contributions_total": 0,
+      "extracted_schedule_d_total": 0,
+      "extracted_itemized_payments_total": 0,
+      "reported_itemized_contributions": null,
+      "reported_unitemized_contributions": null,
+      "reported_monetary_contributions": null,
+      "reported_payments_made": null,
+      "reported_itemized_payments": null,
+      "reported_unitemized_payments": null,
+      "validation_check_ids": [],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31440",
+        "record-san-rafael-campaign-ocr-entry-31440",
+        "record-san-rafael-campaign-pdf-entry-31440",
+        "record-san-rafael-campaign-form460-schedule-extract-entry-31440"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-31935",
+      "filing_type": "form_460",
+      "committee_id": "committee-kate-colin-for-mayor-2020",
+      "filer_actor_id": "actor-kate-colin",
+      "election_id": "election-2020-11-03-san-rafael-general",
+      "record_id": "record-san-rafael-campaign-filing-entry-31935",
+      "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-31935",
+      "schedule_a_row_count": 0,
+      "schedule_d_row_count": 0,
+      "schedule_e_row_count": 0,
+      "extracted_itemized_contributions_total": 0,
+      "extracted_schedule_d_total": 0,
+      "extracted_itemized_payments_total": 0,
+      "reported_itemized_contributions": null,
+      "reported_unitemized_contributions": null,
+      "reported_monetary_contributions": null,
+      "reported_payments_made": null,
+      "reported_itemized_payments": null,
+      "reported_unitemized_payments": null,
+      "validation_check_ids": [],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31935",
+        "record-san-rafael-campaign-ocr-entry-31935",
+        "record-san-rafael-campaign-form460-schedule-extract-entry-31935"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-31936",
+      "filing_type": "form_460",
+      "committee_id": "committee-rachel-kertz-for-city-council-2020",
+      "filer_actor_id": "actor-rachel-kertz",
+      "election_id": "election-2020-11-03-san-rafael-general",
+      "record_id": "record-san-rafael-campaign-filing-entry-31936",
+      "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-31936",
+      "schedule_a_row_count": 0,
+      "schedule_d_row_count": 0,
+      "schedule_e_row_count": 0,
+      "extracted_itemized_contributions_total": 0,
+      "extracted_schedule_d_total": 0,
+      "extracted_itemized_payments_total": 0,
+      "reported_itemized_contributions": null,
+      "reported_unitemized_contributions": null,
+      "reported_monetary_contributions": null,
+      "reported_payments_made": null,
+      "reported_itemized_payments": null,
+      "reported_unitemized_payments": null,
+      "validation_check_ids": [],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31936",
+        "record-san-rafael-campaign-ocr-entry-31936",
+        "record-san-rafael-campaign-form460-schedule-extract-entry-31936"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-31937",
+      "filing_type": "form_460",
+      "committee_id": "committee-maika-llorens-gulati-for-san-rafael-city-council-2020",
+      "filer_actor_id": "actor-maika-llorens-gulati",
+      "election_id": "election-2020-11-03-san-rafael-general",
+      "record_id": "record-san-rafael-campaign-filing-entry-31937",
+      "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-31937",
+      "schedule_a_row_count": 0,
+      "schedule_d_row_count": 0,
+      "schedule_e_row_count": 0,
+      "extracted_itemized_contributions_total": 0,
+      "extracted_schedule_d_total": 0,
+      "extracted_itemized_payments_total": 0,
+      "reported_itemized_contributions": null,
+      "reported_unitemized_contributions": null,
+      "reported_monetary_contributions": null,
+      "reported_payments_made": null,
+      "reported_itemized_payments": null,
+      "reported_unitemized_payments": null,
+      "validation_check_ids": [],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-31937",
+        "record-san-rafael-campaign-ocr-entry-31937",
+        "record-san-rafael-campaign-form460-schedule-extract-entry-31937"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-32103",
+      "filing_type": "form_460",
+      "committee_id": "committee-greg-knell-for-city-council-2020",
+      "filer_actor_id": "actor-greg-knell",
+      "election_id": "election-2020-11-03-san-rafael-general",
+      "record_id": "record-san-rafael-campaign-filing-entry-32103",
+      "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-32103",
+      "schedule_a_row_count": 0,
+      "schedule_d_row_count": 0,
+      "schedule_e_row_count": 0,
+      "extracted_itemized_contributions_total": 0,
+      "extracted_schedule_d_total": 0,
+      "extracted_itemized_payments_total": 0,
+      "reported_itemized_contributions": null,
+      "reported_unitemized_contributions": null,
+      "reported_monetary_contributions": null,
+      "reported_payments_made": null,
+      "reported_itemized_payments": null,
+      "reported_unitemized_payments": null,
+      "validation_check_ids": [],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-32103",
+        "record-san-rafael-campaign-ocr-entry-32103",
+        "record-san-rafael-campaign-form460-schedule-extract-entry-32103"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-32326",
+      "filing_type": "form_460",
+      "committee_id": "committee-mahmoud-a-shirazi-for-mayor-2020",
+      "filer_actor_id": "actor-mahmoud-shirazi",
+      "election_id": "election-2020-11-03-san-rafael-general",
+      "record_id": "record-san-rafael-campaign-filing-entry-32326",
+      "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-32326",
+      "schedule_a_row_count": 0,
+      "schedule_d_row_count": 0,
+      "schedule_e_row_count": 0,
+      "extracted_itemized_contributions_total": 0,
+      "extracted_schedule_d_total": 0,
+      "extracted_itemized_payments_total": 0,
+      "reported_itemized_contributions": null,
+      "reported_unitemized_contributions": null,
+      "reported_monetary_contributions": null,
+      "reported_payments_made": null,
+      "reported_itemized_payments": null,
+      "reported_unitemized_payments": null,
+      "validation_check_ids": [],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-32326",
+        "record-san-rafael-campaign-ocr-entry-32326",
+        "record-san-rafael-campaign-pdf-entry-32326",
+        "record-san-rafael-campaign-form460-schedule-extract-entry-32326"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-32521",
+      "filing_type": "form_460",
+      "committee_id": "committee-kate-colin-for-mayor-2020",
+      "filer_actor_id": "actor-kate-colin",
+      "election_id": "election-2020-11-03-san-rafael-general",
+      "record_id": "record-san-rafael-campaign-filing-entry-32521",
+      "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-32521",
+      "schedule_a_row_count": 0,
+      "schedule_d_row_count": 0,
+      "schedule_e_row_count": 0,
+      "extracted_itemized_contributions_total": 0,
+      "extracted_schedule_d_total": 0,
+      "extracted_itemized_payments_total": 0,
+      "reported_itemized_contributions": null,
+      "reported_unitemized_contributions": null,
+      "reported_monetary_contributions": null,
+      "reported_payments_made": null,
+      "reported_itemized_payments": null,
+      "reported_unitemized_payments": null,
+      "validation_check_ids": [],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-32521",
+        "record-san-rafael-campaign-ocr-entry-32521",
+        "record-san-rafael-campaign-pdf-entry-32521",
+        "record-san-rafael-campaign-form460-schedule-extract-entry-32521"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-33340",
+      "filing_type": "form_460",
+      "committee_id": "committee-kate-colin-for-mayor-2020",
+      "filer_actor_id": "actor-kate-colin",
+      "election_id": "election-2020-11-03-san-rafael-general",
+      "record_id": "record-san-rafael-campaign-filing-entry-33340",
+      "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-33340",
+      "schedule_a_row_count": 0,
+      "schedule_d_row_count": 0,
+      "schedule_e_row_count": 0,
+      "extracted_itemized_contributions_total": 0,
+      "extracted_schedule_d_total": 0,
+      "extracted_itemized_payments_total": 0,
+      "reported_itemized_contributions": null,
+      "reported_unitemized_contributions": null,
+      "reported_monetary_contributions": 0.0,
+      "reported_payments_made": 390.54,
+      "reported_itemized_payments": 1381.54,
+      "reported_unitemized_payments": 1.0,
+      "validation_check_ids": [
+        "validationcheck-filing-san-rafael-campaign-entry-33340-schedule-e-itemized-payments-reconciliation-check",
+        "validationcheck-filing-san-rafael-campaign-entry-33340-schedule-e-total-payments-rollup-summary-consistency-check"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-33340",
+        "record-san-rafael-campaign-ocr-entry-33340",
+        "record-san-rafael-campaign-pdf-entry-33340",
+        "record-san-rafael-campaign-form460-schedule-extract-entry-33340"
+      ]
+    },
+    {
       "id": "filing-san-rafael-campaign-entry-37365",
       "filing_type": "form_460",
       "committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
@@ -1648,6 +2168,645 @@
     }
   ],
   "money_flow_candidates": [
+    {
+      "id": "moneyflow-2020-12-18-jim-milligan-committee-kate-colin-for-mayor-2020-1",
+      "flow_type": "campaign_contribution",
+      "amount": 500.0,
+      "flow_date": "2020-12-18",
+      "from_actor_id": "actor-jim-milligan",
+      "to_committee_id": "committee-kate-colin-for-mayor-2020",
+      "filing_id": "filing-san-rafael-campaign-entry-28450",
+      "contributor_code": "COM",
+      "source_schedule": "schedule_a",
+      "source_page_num": 4,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Investment advisor; DOTH Baker Street Advisors IND Re -Elect Kate Colin for City Council 2017 \u00aeCOM",
+      "address_raw": null,
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-28450",
+        "record-san-rafael-campaign-ocr-entry-28450",
+        "record-san-rafael-campaign-pdf-entry-28450"
+      ]
+    },
+    {
+      "id": "moneyflow-committee-kate-colin-for-mayor-2020-1-uncoded-1",
+      "flow_type": "campaign_expenditure",
+      "amount": 1.0,
+      "from_committee_id": "committee-kate-colin-for-mayor-2020",
+      "to_actor_id": "actor-1",
+      "filing_id": "filing-san-rafael-campaign-entry-28450",
+      "payment_code": null,
+      "description_raw": null,
+      "address_raw": null,
+      "source_schedule": "schedule_e",
+      "source_page_num": 5,
+      "parse_confidence": "medium",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-28450",
+        "record-san-rafael-campaign-ocr-entry-28450",
+        "record-san-rafael-campaign-pdf-entry-28450"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-14-mary-sackett-z-committee-rachel-kertz-for-san-rafael-city-council-2024-1",
+      "flow_type": "campaign_contribution",
+      "amount": 250.0,
+      "flow_date": "2024-06-14",
+      "from_actor_id": "actor-mary-sackett-z",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 4,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "County Supervisor, County of Marin",
+      "address_raw": "San Rafael, CA 94903",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-17-katie-rice-z-committee-rachel-kertz-for-san-rafael-city-council-2024-2",
+      "flow_type": "campaign_contribution",
+      "amount": 250.0,
+      "flow_date": "2024-06-17",
+      "from_actor_id": "actor-katie-rice-z",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 4,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "County Supervisor, County of Marin",
+      "address_raw": "San Anselmo, CA 94979",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-17-bruce-raful-z-committee-rachel-kertz-for-san-rafael-city-council-2024-3",
+      "flow_type": "campaign_contribution",
+      "amount": 250.0,
+      "flow_date": "2024-06-17",
+      "from_actor_id": "actor-bruce-raful-z",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 4,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Real Estate Appraiser, Self - El COM El OTH Raful & Associates",
+      "address_raw": "San Rafael, CA 94901",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-18-tamara-hull-z-committee-rachel-kertz-for-san-rafael-city-council-2024-4",
+      "flow_type": "campaign_contribution",
+      "amount": 250.0,
+      "flow_date": "2024-06-18",
+      "from_actor_id": "actor-tamara-hull-z",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 4,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "CPA, Self - Jannisse & Hull CPAs",
+      "address_raw": "Novato, CA 94945",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-19-caran-cuneo-z-committee-rachel-kertz-for-san-rafael-city-council-2024-5",
+      "flow_type": "campaign_contribution",
+      "amount": 100.0,
+      "flow_date": "2024-06-19",
+      "from_actor_id": "actor-caran-cuneo-z",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 4,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Consultant, Marin Builders Association",
+      "address_raw": "San Rafael, CA 94903",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-19-and-leigh-bakhtiari-committee-rachel-kertz-for-san-rafael-city-council-2024-6",
+      "flow_type": "campaign_contribution",
+      "amount": 300.0,
+      "flow_date": "2024-06-19",
+      "from_actor_id": "actor-and-leigh-bakhtiari",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 5,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "President, City Carpets",
+      "address_raw": null,
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-19-ranjiv-khush-z-committee-rachel-kertz-for-san-rafael-city-council-2024-7",
+      "flow_type": "campaign_contribution",
+      "amount": 100.0,
+      "flow_date": "2024-06-19",
+      "from_actor_id": "actor-ranjiv-khush-z",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 5,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Project Director, The Aquaya Institute",
+      "address_raw": "San Anselmo, CA 94960",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-20-eric-boales-z-committee-rachel-kertz-for-san-rafael-city-council-2024-8",
+      "flow_type": "campaign_contribution",
+      "amount": 500.0,
+      "flow_date": "2024-06-20",
+      "from_actor_id": "actor-eric-boales-z",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 5,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Manager, Wells Fargo",
+      "address_raw": "San Rafael, CA 94903",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-20-windi-snarly-0-committee-rachel-kertz-for-san-rafael-city-council-2024-9",
+      "flow_type": "campaign_contribution",
+      "amount": 500.0,
+      "flow_date": "2024-06-20",
+      "from_actor_id": "actor-windi-snarly-0",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 5,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Human Resources, Wells Fargo",
+      "address_raw": "San Rafael, CA 94903",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-20-lisa-doran-z-committee-rachel-kertz-for-san-rafael-city-council-2024-10",
+      "flow_type": "campaign_contribution",
+      "amount": 100.0,
+      "flow_date": "2024-06-20",
+      "from_actor_id": "actor-lisa-doran-z",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 5,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "CPA, Self- Doran & Associates SCC",
+      "address_raw": "San Rafael, CA 94903",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-21-kim-diamond-committee-rachel-kertz-for-san-rafael-city-council-2024-11",
+      "flow_type": "campaign_contribution",
+      "amount": 200.0,
+      "flow_date": "2024-06-21",
+      "from_actor_id": "actor-kim-diamond",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 6,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Real Estate Development, KD Shae Development",
+      "address_raw": "San Rafael, CA 94903",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-24-paul-jensen-committee-rachel-kertz-for-san-rafael-city-council-2024-12",
+      "flow_type": "campaign_contribution",
+      "amount": 250.0,
+      "flow_date": "2024-06-24",
+      "from_actor_id": "actor-paul-jensen",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 6,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Retired",
+      "address_raw": "San Rafael, CA 94903",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-24-michael-manowski-committee-rachel-kertz-for-san-rafael-city-council-2024-13",
+      "flow_type": "campaign_contribution",
+      "amount": 250.0,
+      "flow_date": "2024-06-24",
+      "from_actor_id": "actor-michael-manowski",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 6,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "CTO, Delta Dental Insurance",
+      "address_raw": "San Rafael, CA 94903",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-26-resource-conservation-pac-committee-rachel-kertz-for-san-rafael-city-council-2024-14",
+      "flow_type": "campaign_contribution",
+      "amount": 250.0,
+      "flow_date": "2024-06-26",
+      "from_actor_id": "actor-resource-conservation-pac",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 6,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "SCC",
+      "address_raw": "San Rafael, CA 94901",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-26-catherine-colin-0-committee-rachel-kertz-for-san-rafael-city-council-2024-15",
+      "flow_type": "campaign_contribution",
+      "amount": 250.0,
+      "flow_date": "2024-06-26",
+      "from_actor_id": "actor-catherine-colin-0",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 6,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Mayor, City of San Rafael SCC",
+      "address_raw": "San Rafael, CA 94901",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-27-bruce-burtch-committee-rachel-kertz-for-san-rafael-city-council-2024-16",
+      "flow_type": "campaign_contribution",
+      "amount": 100.0,
+      "flow_date": "2024-06-27",
+      "from_actor_id": "actor-bruce-burtch",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 7,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Retired",
+      "address_raw": "San Rafael, CA 94901",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-27-millie-anderson-z-committee-rachel-kertz-for-san-rafael-city-council-2024-17",
+      "flow_type": "campaign_contribution",
+      "amount": 100.0,
+      "flow_date": "2024-06-27",
+      "from_actor_id": "actor-millie-anderson-z",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 7,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Senior Placement, Self - Mom's New Pad",
+      "address_raw": "Guerneville, CA 95446",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-27-laurie-dubin-z-committee-rachel-kertz-for-san-rafael-city-council-2024-18",
+      "flow_type": "campaign_contribution",
+      "amount": 118.0,
+      "flow_date": "2024-06-27",
+      "from_actor_id": "actor-laurie-dubin-z",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 7,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Retired",
+      "address_raw": "Larkspur, CA 94939",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-27-melissa-prandi-z-committee-rachel-kertz-for-san-rafael-city-council-2024-19",
+      "flow_type": "campaign_contribution",
+      "amount": 250.0,
+      "flow_date": "2024-06-27",
+      "from_actor_id": "actor-melissa-prandi-z",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 7,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Property Management, Prandi Property Management, Inc.",
+      "address_raw": "San Rafael, CA 94901",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-27-geza-kadar-0-committee-rachel-kertz-for-san-rafael-city-council-2024-20",
+      "flow_type": "campaign_contribution",
+      "amount": 200.0,
+      "flow_date": "2024-06-27",
+      "from_actor_id": "actor-geza-kadar-0",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 7,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Retired El SCC",
+      "address_raw": "Santa Rosa, CA 95404",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-27-mary-de-may-0-committee-rachel-kertz-for-san-rafael-city-council-2024-21",
+      "flow_type": "campaign_contribution",
+      "amount": 180.0,
+      "flow_date": "2024-06-27",
+      "from_actor_id": "actor-mary-de-may-0",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 8,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "physician, University of California San Francisco",
+      "address_raw": "Mill Valley, CA 94941",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-27-meredith-parnell-committee-rachel-kertz-for-san-rafael-city-council-2024-22",
+      "flow_type": "campaign_contribution",
+      "amount": 100.0,
+      "flow_date": "2024-06-27",
+      "from_actor_id": "actor-meredith-parnell",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 8,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Chief Program Officer, St. El COMEl OTH Vincent de Paul",
+      "address_raw": "San Anselmo, CA 94960",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-28-william-hamamoto-committee-rachel-kertz-for-san-rafael-city-council-2024-23",
+      "flow_type": "campaign_contribution",
+      "amount": 100.0,
+      "flow_date": "2024-06-28",
+      "from_actor_id": "actor-william-hamamoto",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 8,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Retired",
+      "address_raw": "San Rafael, CA 94903",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-28-richard-pushkin-z-committee-rachel-kertz-for-san-rafael-city-council-2024-24",
+      "flow_type": "campaign_contribution",
+      "amount": 100.0,
+      "flow_date": "2024-06-28",
+      "from_actor_id": "actor-richard-pushkin-z",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 8,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Research Physician, Madrigal Pharmaceuticals",
+      "address_raw": "San Rafael, CA 94903",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-29-laura-duffy-committee-rachel-kertz-for-san-rafael-city-council-2024-25",
+      "flow_type": "campaign_contribution",
+      "amount": 100.0,
+      "flow_date": "2024-06-29",
+      "from_actor_id": "actor-laura-duffy",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 8,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "physician, Laura Duffy El SCC",
+      "address_raw": "San Rafael, CA 94903",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-30-carolyn-kertz-committee-rachel-kertz-for-san-rafael-city-council-2024-26",
+      "flow_type": "campaign_contribution",
+      "amount": 200.0,
+      "flow_date": "2024-06-30",
+      "from_actor_id": "actor-carolyn-kertz",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 9,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Retired",
+      "address_raw": "San Mateo, CA 94402",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-30-sandy-magid-z-committee-rachel-kertz-for-san-rafael-city-council-2024-27",
+      "flow_type": "campaign_contribution",
+      "amount": 250.0,
+      "flow_date": "2024-06-30",
+      "from_actor_id": "actor-sandy-magid-z",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 9,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "CPA, Self - Magid Accountancy Corp.",
+      "address_raw": "Novato, CA 94945",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-30-stephen-isaacs-committee-rachel-kertz-for-san-rafael-city-council-2024-28",
+      "flow_type": "campaign_contribution",
+      "amount": 100.0,
+      "flow_date": "2024-06-30",
+      "from_actor_id": "actor-stephen-isaacs",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 9,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Retired",
+      "address_raw": "Greenbrae, CA 94904",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-30-paul-cohen-z-committee-rachel-kertz-for-san-rafael-city-council-2024-29",
+      "flow_type": "campaign_contribution",
+      "amount": 100.0,
+      "flow_date": "2024-06-30",
+      "from_actor_id": "actor-paul-cohen-z",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 9,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "Consultant, Self - PMCohen public Affairs",
+      "address_raw": "San Rafael, CA 94901",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
+    {
+      "id": "moneyflow-2024-06-30-lori-frugoli-w1-committee-rachel-kertz-for-san-rafael-city-council-2024-30",
+      "flow_type": "campaign_contribution",
+      "amount": 250.0,
+      "flow_date": "2024-06-30",
+      "from_actor_id": "actor-lori-frugoli-w1",
+      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+      "filing_id": "filing-san-rafael-campaign-entry-37365",
+      "contributor_code": "IND",
+      "source_schedule": "schedule_a",
+      "source_page_num": 9,
+      "parse_confidence": "high",
+      "occupation_employer_raw": "District Attorney, County of Marin SCC",
+      "address_raw": "Novato, CA 94947",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-37365",
+        "record-san-rafael-campaign-ocr-entry-37365",
+        "record-san-rafael-campaign-pdf-entry-37365"
+      ]
+    },
     {
       "id": "moneyflow-2024-07-06-deborah-ablin-committee-kate-colin-for-san-rafael-mayor-2024-1",
       "flow_type": "campaign_contribution",
@@ -3733,609 +4892,115 @@
         "record-san-rafael-campaign-ocr-entry-37685",
         "record-san-rafael-campaign-pdf-entry-37685"
       ]
-    },
-    {
-      "id": "moneyflow-2024-06-14-mary-sackett-z-committee-rachel-kertz-for-san-rafael-city-council-2024-1",
-      "flow_type": "campaign_contribution",
-      "amount": 250.0,
-      "flow_date": "2024-06-14",
-      "from_actor_id": "actor-mary-sackett-z",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 4,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "County Supervisor, County of Marin",
-      "address_raw": "San Rafael, CA 94903",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-17-katie-rice-z-committee-rachel-kertz-for-san-rafael-city-council-2024-2",
-      "flow_type": "campaign_contribution",
-      "amount": 250.0,
-      "flow_date": "2024-06-17",
-      "from_actor_id": "actor-katie-rice-z",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 4,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "County Supervisor, County of Marin",
-      "address_raw": "San Anselmo, CA 94979",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-17-bruce-raful-z-committee-rachel-kertz-for-san-rafael-city-council-2024-3",
-      "flow_type": "campaign_contribution",
-      "amount": 250.0,
-      "flow_date": "2024-06-17",
-      "from_actor_id": "actor-bruce-raful-z",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 4,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Real Estate Appraiser, Self - El COM El OTH Raful & Associates",
-      "address_raw": "San Rafael, CA 94901",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-18-tamara-hull-z-committee-rachel-kertz-for-san-rafael-city-council-2024-4",
-      "flow_type": "campaign_contribution",
-      "amount": 250.0,
-      "flow_date": "2024-06-18",
-      "from_actor_id": "actor-tamara-hull-z",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 4,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "CPA, Self - Jannisse & Hull CPAs",
-      "address_raw": "Novato, CA 94945",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-19-caran-cuneo-z-committee-rachel-kertz-for-san-rafael-city-council-2024-5",
-      "flow_type": "campaign_contribution",
-      "amount": 100.0,
-      "flow_date": "2024-06-19",
-      "from_actor_id": "actor-caran-cuneo-z",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 4,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Consultant, Marin Builders Association",
-      "address_raw": "San Rafael, CA 94903",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-19-and-leigh-bakhtiari-committee-rachel-kertz-for-san-rafael-city-council-2024-6",
-      "flow_type": "campaign_contribution",
-      "amount": 300.0,
-      "flow_date": "2024-06-19",
-      "from_actor_id": "actor-and-leigh-bakhtiari",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 5,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "President, City Carpets",
-      "address_raw": null,
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-19-ranjiv-khush-z-committee-rachel-kertz-for-san-rafael-city-council-2024-7",
-      "flow_type": "campaign_contribution",
-      "amount": 100.0,
-      "flow_date": "2024-06-19",
-      "from_actor_id": "actor-ranjiv-khush-z",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 5,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Project Director, The Aquaya Institute",
-      "address_raw": "San Anselmo, CA 94960",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-20-eric-boales-z-committee-rachel-kertz-for-san-rafael-city-council-2024-8",
-      "flow_type": "campaign_contribution",
-      "amount": 500.0,
-      "flow_date": "2024-06-20",
-      "from_actor_id": "actor-eric-boales-z",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 5,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Manager, Wells Fargo",
-      "address_raw": "San Rafael, CA 94903",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-20-windi-snarly-0-committee-rachel-kertz-for-san-rafael-city-council-2024-9",
-      "flow_type": "campaign_contribution",
-      "amount": 500.0,
-      "flow_date": "2024-06-20",
-      "from_actor_id": "actor-windi-snarly-0",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 5,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Human Resources, Wells Fargo",
-      "address_raw": "San Rafael, CA 94903",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-20-lisa-doran-z-committee-rachel-kertz-for-san-rafael-city-council-2024-10",
-      "flow_type": "campaign_contribution",
-      "amount": 100.0,
-      "flow_date": "2024-06-20",
-      "from_actor_id": "actor-lisa-doran-z",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 5,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "CPA, Self- Doran & Associates SCC",
-      "address_raw": "San Rafael, CA 94903",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-21-kim-diamond-committee-rachel-kertz-for-san-rafael-city-council-2024-11",
-      "flow_type": "campaign_contribution",
-      "amount": 200.0,
-      "flow_date": "2024-06-21",
-      "from_actor_id": "actor-kim-diamond",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 6,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Real Estate Development, KD Shae Development",
-      "address_raw": "San Rafael, CA 94903",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-24-paul-jensen-committee-rachel-kertz-for-san-rafael-city-council-2024-12",
-      "flow_type": "campaign_contribution",
-      "amount": 250.0,
-      "flow_date": "2024-06-24",
-      "from_actor_id": "actor-paul-jensen",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 6,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Retired",
-      "address_raw": "San Rafael, CA 94903",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-24-michael-manowski-committee-rachel-kertz-for-san-rafael-city-council-2024-13",
-      "flow_type": "campaign_contribution",
-      "amount": 250.0,
-      "flow_date": "2024-06-24",
-      "from_actor_id": "actor-michael-manowski",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 6,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "CTO, Delta Dental Insurance",
-      "address_raw": "San Rafael, CA 94903",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-26-resource-conservation-pac-committee-rachel-kertz-for-san-rafael-city-council-2024-14",
-      "flow_type": "campaign_contribution",
-      "amount": 250.0,
-      "flow_date": "2024-06-26",
-      "from_actor_id": "actor-resource-conservation-pac",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 6,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "SCC",
-      "address_raw": "San Rafael, CA 94901",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-26-catherine-colin-0-committee-rachel-kertz-for-san-rafael-city-council-2024-15",
-      "flow_type": "campaign_contribution",
-      "amount": 250.0,
-      "flow_date": "2024-06-26",
-      "from_actor_id": "actor-catherine-colin-0",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 6,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Mayor, City of San Rafael SCC",
-      "address_raw": "San Rafael, CA 94901",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-27-bruce-burtch-committee-rachel-kertz-for-san-rafael-city-council-2024-16",
-      "flow_type": "campaign_contribution",
-      "amount": 100.0,
-      "flow_date": "2024-06-27",
-      "from_actor_id": "actor-bruce-burtch",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 7,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Retired",
-      "address_raw": "San Rafael, CA 94901",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-27-millie-anderson-z-committee-rachel-kertz-for-san-rafael-city-council-2024-17",
-      "flow_type": "campaign_contribution",
-      "amount": 100.0,
-      "flow_date": "2024-06-27",
-      "from_actor_id": "actor-millie-anderson-z",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 7,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Senior Placement, Self - Mom's New Pad",
-      "address_raw": "Guerneville, CA 95446",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-27-laurie-dubin-z-committee-rachel-kertz-for-san-rafael-city-council-2024-18",
-      "flow_type": "campaign_contribution",
-      "amount": 118.0,
-      "flow_date": "2024-06-27",
-      "from_actor_id": "actor-laurie-dubin-z",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 7,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Retired",
-      "address_raw": "Larkspur, CA 94939",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-27-melissa-prandi-z-committee-rachel-kertz-for-san-rafael-city-council-2024-19",
-      "flow_type": "campaign_contribution",
-      "amount": 250.0,
-      "flow_date": "2024-06-27",
-      "from_actor_id": "actor-melissa-prandi-z",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 7,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Property Management, Prandi Property Management, Inc.",
-      "address_raw": "San Rafael, CA 94901",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-27-geza-kadar-0-committee-rachel-kertz-for-san-rafael-city-council-2024-20",
-      "flow_type": "campaign_contribution",
-      "amount": 200.0,
-      "flow_date": "2024-06-27",
-      "from_actor_id": "actor-geza-kadar-0",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 7,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Retired El SCC",
-      "address_raw": "Santa Rosa, CA 95404",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-27-mary-de-may-0-committee-rachel-kertz-for-san-rafael-city-council-2024-21",
-      "flow_type": "campaign_contribution",
-      "amount": 180.0,
-      "flow_date": "2024-06-27",
-      "from_actor_id": "actor-mary-de-may-0",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 8,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "physician, University of California San Francisco",
-      "address_raw": "Mill Valley, CA 94941",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-27-meredith-parnell-committee-rachel-kertz-for-san-rafael-city-council-2024-22",
-      "flow_type": "campaign_contribution",
-      "amount": 100.0,
-      "flow_date": "2024-06-27",
-      "from_actor_id": "actor-meredith-parnell",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 8,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Chief Program Officer, St. El COMEl OTH Vincent de Paul",
-      "address_raw": "San Anselmo, CA 94960",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-28-william-hamamoto-committee-rachel-kertz-for-san-rafael-city-council-2024-23",
-      "flow_type": "campaign_contribution",
-      "amount": 100.0,
-      "flow_date": "2024-06-28",
-      "from_actor_id": "actor-william-hamamoto",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 8,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Retired",
-      "address_raw": "San Rafael, CA 94903",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-28-richard-pushkin-z-committee-rachel-kertz-for-san-rafael-city-council-2024-24",
-      "flow_type": "campaign_contribution",
-      "amount": 100.0,
-      "flow_date": "2024-06-28",
-      "from_actor_id": "actor-richard-pushkin-z",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 8,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Research Physician, Madrigal Pharmaceuticals",
-      "address_raw": "San Rafael, CA 94903",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-29-laura-duffy-committee-rachel-kertz-for-san-rafael-city-council-2024-25",
-      "flow_type": "campaign_contribution",
-      "amount": 100.0,
-      "flow_date": "2024-06-29",
-      "from_actor_id": "actor-laura-duffy",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 8,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "physician, Laura Duffy El SCC",
-      "address_raw": "San Rafael, CA 94903",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-30-carolyn-kertz-committee-rachel-kertz-for-san-rafael-city-council-2024-26",
-      "flow_type": "campaign_contribution",
-      "amount": 200.0,
-      "flow_date": "2024-06-30",
-      "from_actor_id": "actor-carolyn-kertz",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 9,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Retired",
-      "address_raw": "San Mateo, CA 94402",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-30-sandy-magid-z-committee-rachel-kertz-for-san-rafael-city-council-2024-27",
-      "flow_type": "campaign_contribution",
-      "amount": 250.0,
-      "flow_date": "2024-06-30",
-      "from_actor_id": "actor-sandy-magid-z",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 9,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "CPA, Self - Magid Accountancy Corp.",
-      "address_raw": "Novato, CA 94945",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-30-stephen-isaacs-committee-rachel-kertz-for-san-rafael-city-council-2024-28",
-      "flow_type": "campaign_contribution",
-      "amount": 100.0,
-      "flow_date": "2024-06-30",
-      "from_actor_id": "actor-stephen-isaacs",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 9,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Retired",
-      "address_raw": "Greenbrae, CA 94904",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-30-paul-cohen-z-committee-rachel-kertz-for-san-rafael-city-council-2024-29",
-      "flow_type": "campaign_contribution",
-      "amount": 100.0,
-      "flow_date": "2024-06-30",
-      "from_actor_id": "actor-paul-cohen-z",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 9,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "Consultant, Self - PMCohen public Affairs",
-      "address_raw": "San Rafael, CA 94901",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
-    },
-    {
-      "id": "moneyflow-2024-06-30-lori-frugoli-w1-committee-rachel-kertz-for-san-rafael-city-council-2024-30",
-      "flow_type": "campaign_contribution",
-      "amount": 250.0,
-      "flow_date": "2024-06-30",
-      "from_actor_id": "actor-lori-frugoli-w1",
-      "to_committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
-      "filing_id": "filing-san-rafael-campaign-entry-37365",
-      "contributor_code": "IND",
-      "source_schedule": "schedule_a",
-      "source_page_num": 9,
-      "parse_confidence": "high",
-      "occupation_employer_raw": "District Attorney, County of Marin SCC",
-      "address_raw": "Novato, CA 94947",
-      "evidence_record_ids": [
-        "record-san-rafael-campaign-filing-entry-37365",
-        "record-san-rafael-campaign-ocr-entry-37365",
-        "record-san-rafael-campaign-pdf-entry-37365"
-      ]
     }
   ],
   "validation_check_candidates": [
+    {
+      "id": "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-itemized-payments-reconciliation-check",
+      "check_type": "reconciliation_check",
+      "subject_node_id": "filing-san-rafael-campaign-entry-28450",
+      "subject_node_type": "Filing",
+      "metric_name": "schedule_e_itemized_payments",
+      "measured_value_number": 1.0,
+      "measured_value_label": "extracted_itemized_payments_total",
+      "reference_value_number": 1.0,
+      "reference_value_label": "reported_itemized_payments",
+      "delta_value_number": 0.0,
+      "absolute_delta_value_number": 0.0,
+      "delta_direction": "equal",
+      "status": "reconciled",
+      "severity": "info",
+      "confidence": "high",
+      "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-28450",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-28450",
+        "record-san-rafael-campaign-ocr-entry-28450",
+        "record-san-rafael-campaign-pdf-entry-28450",
+        "record-san-rafael-campaign-form460-schedule-extract-entry-28450"
+      ],
+      "notes": []
+    },
+    {
+      "id": "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-total-payments-rollup-summary-consistency-check",
+      "check_type": "summary_consistency_check",
+      "subject_node_id": "filing-san-rafael-campaign-entry-28450",
+      "subject_node_type": "Filing",
+      "metric_name": "schedule_e_total_payments_rollup",
+      "measured_value_number": 31.0,
+      "measured_value_label": "reported_itemized_plus_unitemized_plus_interest_payments",
+      "reference_value_number": 1.0,
+      "reference_value_label": "reported_total_payments",
+      "delta_value_number": 30.0,
+      "absolute_delta_value_number": 30.0,
+      "delta_direction": "measured_gt_reference",
+      "status": "source_inconsistency",
+      "severity": "warn",
+      "confidence": "high",
+      "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-28450",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-28450",
+        "record-san-rafael-campaign-ocr-entry-28450",
+        "record-san-rafael-campaign-pdf-entry-28450",
+        "record-san-rafael-campaign-form460-schedule-extract-entry-28450"
+      ],
+      "notes": [
+        "Measured value exceeds the official or reference value and needs review."
+      ]
+    },
+    {
+      "id": "validationcheck-filing-san-rafael-campaign-entry-33340-schedule-e-itemized-payments-reconciliation-check",
+      "check_type": "reconciliation_check",
+      "subject_node_id": "filing-san-rafael-campaign-entry-33340",
+      "subject_node_type": "Filing",
+      "metric_name": "schedule_e_itemized_payments",
+      "measured_value_number": 0,
+      "measured_value_label": "extracted_itemized_payments_total",
+      "reference_value_number": 1381.54,
+      "reference_value_label": "reported_itemized_payments",
+      "delta_value_number": -1381.54,
+      "absolute_delta_value_number": 1381.54,
+      "delta_direction": "reference_gt_measured",
+      "status": "extraction_gap",
+      "severity": "warn",
+      "confidence": "high",
+      "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-33340",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-33340",
+        "record-san-rafael-campaign-ocr-entry-33340",
+        "record-san-rafael-campaign-pdf-entry-33340",
+        "record-san-rafael-campaign-form460-schedule-extract-entry-33340"
+      ],
+      "notes": [
+        "Measured value trails the official or reference value."
+      ]
+    },
+    {
+      "id": "validationcheck-filing-san-rafael-campaign-entry-33340-schedule-e-total-payments-rollup-summary-consistency-check",
+      "check_type": "summary_consistency_check",
+      "subject_node_id": "filing-san-rafael-campaign-entry-33340",
+      "subject_node_type": "Filing",
+      "metric_name": "schedule_e_total_payments_rollup",
+      "measured_value_number": 1382.54,
+      "measured_value_label": "reported_itemized_plus_unitemized_plus_interest_payments",
+      "reference_value_number": 390.54,
+      "reference_value_label": "reported_total_payments",
+      "delta_value_number": 992.0,
+      "absolute_delta_value_number": 992.0,
+      "delta_direction": "measured_gt_reference",
+      "status": "source_inconsistency",
+      "severity": "warn",
+      "confidence": "high",
+      "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-33340",
+      "evidence_record_ids": [
+        "record-san-rafael-campaign-filing-entry-33340",
+        "record-san-rafael-campaign-ocr-entry-33340",
+        "record-san-rafael-campaign-pdf-entry-33340",
+        "record-san-rafael-campaign-form460-schedule-extract-entry-33340"
+      ],
+      "notes": [
+        "Measured value exceeds the official or reference value and needs review."
+      ]
+    },
     {
       "id": "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-itemized-contributions-reconciliation-check",
       "check_type": "reconciliation_check",

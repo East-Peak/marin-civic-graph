@@ -151,6 +151,9 @@ Start narrow:
 - [San Rafael City Campaign Form 460 Schedule Bundle](./data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
 - [San Rafael City Campaign Form 460 PDF Extract](./data/extracted/san-rafael-city-campaign-form460-pdf-export/2026-04-12.json)
 - [San Rafael City Campaign Form 460 Schedule Extract](./data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json)
+- [San Rafael City Campaign Form 460 OCR Extract 2026-04-13](./data/extracted/san-rafael-city-campaign-form460-ocr/2026-04-13.json)
+- [San Rafael City Campaign Form 460 PDF Extract 2026-04-13](./data/extracted/san-rafael-city-campaign-form460-pdf-export/2026-04-13.json)
+- [San Rafael City Campaign Form 460 Schedule Extract 2026-04-13](./data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json)
 - [Campaign Finance Sample Basket Bundle](./data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
 - [Campaign Finance Form 803 Slice Bundle](./data/normalized/campaign-finance-form-803-slice-01/bundle-01.json)
 - [San Rafael Officeholder Disclosure Bundle](./data/normalized/san-rafael-officeholder-disclosures-01/bundle-01.json)
@@ -204,6 +207,7 @@ Start narrow:
 - [San Rafael Form 460 OCR Capture Workflow](./scripts/capture_san_rafael_city_campaign_form460_ocr.py)
 - [San Rafael Form 460 PDF Export Workflow](./scripts/capture_san_rafael_city_campaign_form460_pdf_exports.py)
 - [San Rafael Form 460 Schedule Extractor](./scripts/extract_san_rafael_city_campaign_form460_schedules.py)
+- [San Rafael City Campaign Loop Helper](./scripts/san_rafael_city_campaign_loop_lib.py)
 - [San Rafael City Campaign Evidence Record Normalizer](./scripts/normalize_san_rafael_city_campaign_records.py)
 - [San Rafael City Campaign Actor Supplement Normalizer](./scripts/normalize_san_rafael_city_campaign_actors.py)
 - [Boyd Legal Bundle Normalizer](./scripts/normalize_legal_precedent_boyd.py)
@@ -230,11 +234,13 @@ This repo started as a planning workspace and now includes the first live implem
   - a narrow actor and issue supplement now lands `8` conservative campaign actors and `3` canonical issues without widening into discovery-stage review material
   - the first breadth-sprint council slice now adds `263` citywide `Meeting` nodes and `264` council `Record` nodes backed by captured meeting pages
   - the second breadth-sprint council slice now adds `220` captured minutes `Record` nodes plus a conservative citywide minutes-first decision layer with `3175` `AgendaItem` candidates and `1453` `Decision` candidates
-  - graph-v1 is now at `6050` nodes and `20177` edges, with `1472` `Decision` nodes and `2970` `AgendaItem` nodes after projection merging
+  - graph-v1 is now at `6068` nodes and `20251` edges, with `1472` `Decision` nodes, `2970` `AgendaItem` nodes, `147` `MoneyFlow` nodes, and `16` bounded `ValidationCheck` nodes after projection merging
   - consent votes are now modeled conservatively: one section-level voted decision, with subitem outcomes linked back to that consent action instead of pretending each subitem had its own roll call
   - the elected-disclosure breadth slice now adds `9` current-officeholder Form `700` filings and `9` `EconomicInterestDisclosure` nodes backed by the public NetFile export and explicit current `SeatService` start dates
   - the current projection report still shows `missing_target:Actor = 147`; `Issue` and `Record` completeness gaps are no longer part of graph-v1
-  - the first formal fixed-query-pack run now passes `Q1`, `Q2`, `Q3`, and `Q5`, while `Q4` fails because QA-backed campaign money recurrence still only exists in the `2024` city-office sample
+  - the current fixed-query-pack run now passes all five queries
+  - the first Ralph-loop campaign-money batch recovered enough `2020` QA-backed money to move `Q4` from fail to pass without importing noisy OCR actors
+  - the same batch required a validation-suppression rule for sparse older filings, so the queue now stays bounded at `16` checks across `5` subject filings instead of exploding into empty-reference noise
   - the first live local Neo4j load and query pass has been run successfully against the projected graph, proving end-to-end continuity for actor, seat-service, filing, money, decision, issue, and validation queries
 - first normalized legal bundle now exists as `legal-precedent-01`:
   - captured the Boyd TRO, preliminary-injunction, and dismissal orders as durable PDF-backed legal records

@@ -1,11 +1,11 @@
 # Graph Query Pack Report
 
-- `generated_at`: 2026-04-13T01:22:28Z
+- `generated_at`: 2026-04-13T11:19:00Z
 - `engine`: projection_jsonl
 - `projection_id`: graph-v1
-- `nodes`: 6050
-- `edges`: 20177
-- `queries_passed`: 4/5
+- `nodes`: 6068
+- `edges`: 20251
+- `queries_passed`: 5/5
 
 ## Q1: actor-kate-colin dossier
 
@@ -33,20 +33,20 @@
 
 ## Q4: San Rafael election money spine
 
-- `pass`: no
-- `metrics`: {"committee_count": 16, "cycle_rollup": {"2020": {"committee_count": 7, "filing_count": 66, "ie_filing_count": 4, "qa_money_flow_count": 0}, "2022": {"committee_count": 7, "filing_count": 44, "ie_filing_count": 0, "qa_money_flow_count": 0}, "2024": {"committee_count": 8, "filing_count": 42, "ie_filing_count": 0, "qa_money_flow_count": 136}}, "filing_count": 152, "ie_filing_count": 4, "imported_noisy_actor_count": 0, "qa_money_flow_count": 136, "qa_money_flow_years": [2024]}
+- `pass`: yes
+- `metrics`: {"committee_count": 16, "cycle_rollup": {"2020": {"committee_count": 7, "filing_count": 66, "ie_filing_count": 4, "qa_money_flow_count": 2}, "2022": {"committee_count": 7, "filing_count": 44, "ie_filing_count": 0, "qa_money_flow_count": 0}, "2024": {"committee_count": 8, "filing_count": 42, "ie_filing_count": 0, "qa_money_flow_count": 136}}, "filing_count": 152, "ie_filing_count": 4, "imported_noisy_actor_count": 0, "qa_money_flow_count": 138, "qa_money_flow_years": [2020, 2024]}
 - `notes`:
-  - Committees and filings now span 2020, 2022, and 2024, but the QA-backed money layer still effectively lives in the 2024 Form 460 sample.
-  - That is the core reason this query still fails: the graph has campaign filing breadth, but not multi-cycle QA-backed money recurrence yet.
+  - QA-backed campaign money now spans more than one cycle without importing noisy OCR actors into graph-v1.
 
 ## Q5: validation queue
 
 - `pass`: yes
-- `metrics`: {"status_counts": {"extraction_gap": 1, "reconciled": 11}, "subject_filing_count": 3, "validation_check_count": 12}
+- `metrics`: {"status_counts": {"extraction_gap": 2, "reconciled": 12, "source_inconsistency": 2}, "subject_filing_count": 5, "validation_check_count": 16}
 - `notes`:
-  - The queue remains small enough to review directly, and the remaining non-reconciled item is still the known $1,000 Kate Colin Schedule A extraction gap.
-  - This is the first query that checks whether new breadth work is creating a manageable validation surface instead of a noisy anomaly dump.
+  - The validation queue remains small enough to review directly.
+  - The known Kate Colin 2024 Schedule A extraction gap remains visible in the queue and is still the main carried-forward reconciliation issue.
+  - This query checks whether new breadth work is creating a manageable validation surface instead of a noisy anomaly dump.
 
 ## Recommendation
 
-Continue the San Rafael city-office campaign filing backbone, but focus specifically on multi-cycle QA-backed money extraction and validation rather than opening county tracks or adding more schema.
+Do not widen scope blindly. Use the failed query set to pick the next density move and keep the sprint San Rafael-first.

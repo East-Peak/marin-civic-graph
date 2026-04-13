@@ -117,6 +117,12 @@ Machine-readable control file:
 
 - [san-rafael-city-campaign-money-01.json](../registry/loop-manifests/san-rafael-city-campaign-money-01.json)
 
+Current checkpoint:
+
+- batch `01` is now accepted
+- `Q4` now passes with QA-backed money in `2020` and `2024`
+- `Q5` remains bounded after suppressing zero-information validation checks on sparse older filings
+
 ## Current Batch Strategy
 
 Run the campaign-money loop in this order:
@@ -131,6 +137,7 @@ Why this order:
 - `2020` is the fastest path to multi-cycle recurrence
 - `2022` is the second strengthening cycle if `2020` alone is not enough
 - more `2024` extraction should only happen if the older cycles still leave `Q4` short
+- once the query-pack gate is met, later batches stop being automatic and should be reviewed against the next best lane
 
 ## Operational Pattern
 

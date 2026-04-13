@@ -16,6 +16,14 @@ The rule is:
 
 Backfilled on April 12, 2026 from the existing workspace decision set and project history.
 
+## 2026-04-13
+
+- **The first Ralph-loop batch can stop once the query-pack gate is met**
+  - Batch `01` of `san-rafael-city-campaign-money-01` hardened the city-side Form `460` OCR/PDF workflows into manifest-driven batch tools, recovered a thin but sufficient `2020` QA-backed money layer, and moved the fixed query pack to `5/5` passing.
+  - The same batch also exposed a validation-noise problem on sparse older filings, so the schedule extractor was tightened to suppress zero-information checks with no real reference value before the batch was accepted.
+  - Once the gate is met, later batches become optional review decisions, not automatic next steps. `2022` stays available, but it is now `deferred_pending_review` rather than the default next move.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-first-ralph-loop-batch-can-stop-on-query-pack-success.md`
+
 ## 2026-04-12
 
 - **Breadth execution should now use bounded Ralph loops instead of undifferentiated backfill**
