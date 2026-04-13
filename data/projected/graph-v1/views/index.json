@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-13T12:38:15Z",
+  "generated_at": "2026-04-13T12:45:37Z",
   "projection_dir": "data/projected/graph-v1",
   "contract_version": 1,
   "views": [
@@ -50,6 +50,14 @@
       "subject_id": "program-san-rafael-sanctioned-camping",
       "subject_node_type": "Program",
       "path": "data/projected/graph-v1/views/program-san-rafael-sanctioned-camping-dossier.json"
+    },
+    {
+      "id": "program-csl-building-forward-dossier",
+      "title": "Program dossier: California State Library Building Forward Library Facilities Improvement Program",
+      "view_type": "program_dossier",
+      "subject_id": "program-csl-building-forward",
+      "subject_node_type": "Program",
+      "path": "data/projected/graph-v1/views/program-csl-building-forward-dossier.json"
     },
     {
       "id": "money-overlap-summary",

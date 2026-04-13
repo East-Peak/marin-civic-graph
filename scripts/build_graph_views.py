@@ -90,6 +90,17 @@ def unique_node_summaries(nodes: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return results
 
 
+def unique_nodes(nodes: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    seen: set[str] = set()
+    results: list[dict[str, Any]] = []
+    for node in nodes:
+        if node["id"] in seen:
+            continue
+        seen.add(node["id"])
+        results.append(node)
+    return results
+
+
 def sort_nodes(nodes: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return sorted(nodes, key=lambda node: (node_year(node) or 0, node_title(node), node["id"]))
 
@@ -698,7 +709,8 @@ def program_dossier(
         ),
         None,
     )
-    places = sort_nodes(
+    places = unique_nodes(
+        sort_nodes(
         edge_targets(
             outgoing,
             node_by_id,
@@ -706,6 +718,7 @@ def program_dossier(
             relationship_type="RELATES_TO_PLACE",
             target_node_type="Place",
         )
+    )
     )
     evidence_records = sort_nodes(
         edge_targets(
@@ -716,7 +729,9 @@ def program_dossier(
             target_node_type="Record",
         )
     )
-    related_records = sort_nodes(
+    evidence_record_ids = {record["id"] for record in evidence_records}
+    related_records = unique_nodes(
+        sort_nodes(
         edge_sources(
             incoming,
             node_by_id,
@@ -724,8 +739,11 @@ def program_dossier(
             relationship_type="RELATES_TO_PROGRAM",
             source_node_type="Record",
         )
+        )
     )
-    linked_cases = sort_nodes(
+    related_records = [record for record in related_records if record["id"] not in evidence_record_ids]
+    linked_cases = unique_nodes(
+        sort_nodes(
         edge_targets(
             outgoing,
             node_by_id,
@@ -741,7 +759,9 @@ def program_dossier(
             source_node_type="Case",
         )
     )
-    linked_decisions = sort_nodes(
+    )
+    linked_decisions = unique_nodes(
+        sort_nodes(
         edge_targets(
             outgoing,
             node_by_id,
@@ -750,10 +770,23 @@ def program_dossier(
             target_node_type="Decision",
         )
     )
-    linked_money_flows = linked_money_flows_for_decisions(
-        linked_decisions,
-        node_by_id=node_by_id,
-        incoming=incoming,
+    )
+    direct_money_flows = edge_sources(
+        incoming,
+        node_by_id,
+        program_id,
+        relationship_type="RELATES_TO_PROGRAM",
+        source_node_type="MoneyFlow",
+    )
+    linked_money_flows = unique_nodes(
+        sort_nodes(
+            direct_money_flows
+            + linked_money_flows_for_decisions(
+                linked_decisions,
+                node_by_id=node_by_id,
+                incoming=incoming,
+            )
+        )
     )
 
     return {

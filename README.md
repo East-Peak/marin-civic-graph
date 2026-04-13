@@ -149,6 +149,7 @@ Start narrow:
 - [Resolution 15336 Decision Dossier](./data/projected/graph-v1/views/decision-2024-08-19-resolution-15336-dossier.json)
 - [Boyd Case Dossier](./data/projected/graph-v1/views/case-boyd-v-city-of-san-rafael-dossier.json)
 - [Sanctioned Camping Program Dossier](./data/projected/graph-v1/views/program-san-rafael-sanctioned-camping-dossier.json)
+- [Building Forward Program Dossier](./data/projected/graph-v1/views/program-csl-building-forward-dossier.json)
 - [Money Overlap Summary](./data/projected/graph-v1/views/money-overlap-summary.json)
 - [Legal Constraint View](./data/projected/graph-v1/views/legal-constraint-view.json)
 - [Validation Queue](./data/projected/graph-v1/views/validation-queue.json)
@@ -175,6 +176,7 @@ Start narrow:
 - [San Rafael City Campaign Evidence Record Bundle](./data/normalized/san-rafael-city-campaign-records-01/bundle-01.json)
 - [San Rafael City Campaign Actor Supplement Bundle](./data/normalized/san-rafael-city-campaign-actors-01/bundle-01.json)
 - [San Rafael Actor Completeness Bundle](./data/normalized/san-rafael-actor-completeness-01/bundle-01.json)
+- [Grant Program Support Bundle](./data/normalized/grant-program-dossiers-01/bundle-01.json)
 - [Canonical Issue Seed Bundle](./data/normalized/canonical-issues-01.json)
 - [San Rafael Canonical Seed Bundle](./data/normalized/canonical-seeds-san-rafael-01.json)
 - [San Rafael City Council Archive Inventory](./data/extracted/san-rafael-city-council-meetings/2026-04-11.json)
@@ -227,6 +229,7 @@ Start narrow:
 - [San Rafael City Campaign Evidence Record Normalizer](./scripts/normalize_san_rafael_city_campaign_records.py)
 - [San Rafael City Campaign Actor Supplement Normalizer](./scripts/normalize_san_rafael_city_campaign_actors.py)
 - [San Rafael Actor Completeness Normalizer](./scripts/normalize_san_rafael_actor_completeness.py)
+- [Grant Program Dossier Support Normalizer](./scripts/normalize_grant_program_dossiers.py)
 - [Boyd Legal Bundle Normalizer](./scripts/normalize_legal_precedent_boyd.py)
 - [Grants Pass Legal Bundle Normalizer](./scripts/normalize_legal_precedent_grants_pass.py)
 - [Graph Projection Helper](./scripts/graph_projection_lib.py)
@@ -253,11 +256,11 @@ This repo started as a planning workspace and now includes the first live implem
   - actor completeness now uses three narrow controls instead of broad donor import: projection-time alias remap for raw officeholder placeholders, a small explicit actor supplement for repeated vendors/platforms and high-value counterparties, and parser suppression that keeps one-off unresolved `Form 460` row actors as labels on `MoneyFlow` nodes
   - the first breadth-sprint council slice now adds `263` citywide `Meeting` nodes and `264` council `Record` nodes backed by captured meeting pages
   - the second breadth-sprint council slice now adds `220` captured minutes `Record` nodes plus a conservative citywide minutes-first decision layer with `3175` `AgendaItem` candidates and `1453` `Decision` candidates
-  - graph-v1 is now at `6191` nodes and `20867` edges, with `45` `Actor` nodes, `1472` `Decision` nodes, `2970` `AgendaItem` nodes, `147` `MoneyFlow` nodes, `21` `EconomicInterestDisclosure` nodes, `8` `SeatService` nodes, `4` `Case` nodes, `13` `Proceeding` nodes, `9` `CaseParticipation` nodes, `1` `Program` node, `865` `Record` nodes, and `16` bounded `ValidationCheck` nodes after projection merging
+  - graph-v1 is now at `6199` nodes and `20885` edges, with `46` `Actor` nodes, `1473` `Decision` nodes, `2970` `AgendaItem` nodes, `148` `MoneyFlow` nodes, `21` `EconomicInterestDisclosure` nodes, `8` `SeatService` nodes, `4` `Case` nodes, `13` `Proceeding` nodes, `9` `CaseParticipation` nodes, `2` `Program` nodes, `868` `Record` nodes, and `16` bounded `ValidationCheck` nodes after projection merging
   - consent votes are now modeled conservatively: one section-level voted decision, with subitem outcomes linked back to that consent action instead of pretending each subitem had its own roll call
   - the elected-disclosure breadth slice now adds `21` officeholder Form `700` filings and `21` `EconomicInterestDisclosure` nodes backed by the public NetFile export plus explicit current and 2020-2024 historical `SeatService` windows for the current mayor, District 1, and District 4 officeholders
   - the current projection report now shows no `missing_target:Actor`, `missing_target:Issue`, or `missing_target:Record` categories, with `5` actor-alias edge remaps preserved
-  - the first projected view pack now sits on top of the clean graph:
+  - the projected view pack now sits on top of the clean graph and now includes both the sanctioned-camping program dossier and a bounded grant-backed program dossier for the California State Library Building Forward thread:
     - `actor-kate-colin-dossier`
     - `actor-rachel-kertz-dossier`
     - `organization-downtown-streets-team-dossier`

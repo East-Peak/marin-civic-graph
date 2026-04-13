@@ -143,6 +143,10 @@ Current shape:
 - `linked_decisions`
 - `linked_money_flows`
 
+Current note:
+
+- `linked_money_flows` may be sourced either from direct `MoneyFlow -> Program` links or from `MoneyFlow -> Decision -> Program` paths when the normalized bundle only encodes the decision crosswalk.
+
 ### `money_overlap_summary`
 
 Current shape:

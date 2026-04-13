@@ -26,6 +26,10 @@
       "subject_id": "program-san-rafael-sanctioned-camping"
     },
     {
+      "view_type": "program_dossier",
+      "subject_id": "program-csl-building-forward"
+    },
+    {
       "view_type": "money_overlap_summary"
     },
     {

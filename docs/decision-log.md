@@ -18,6 +18,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **A bounded grant-program support bundle can enter graph-v1 without reopening procurement**
+  - The next useful pressure test after the sanctioned-camping program dossier was not a full procurement import. It was one small grant-backed program thread that could prove the `program_dossier` contract works outside the homelessness/legal lane.
+  - The right slice is the California State Library Building Forward program as it connects to San Rafael's December 19, 2022 Downtown Library grant-acceptance decision, one linked grant-award money flow, and a small set of evidence and related records.
+  - The import stays bounded through a dedicated normalized support bundle at `data/normalized/grant-program-dossiers-01/bundle-01.json` instead of widening the full procurement basket into core import scope.
+  - Result: graph-v1 now carries a second program node and a second generated program dossier at `program-csl-building-forward-dossier.json`.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-bounded-grant-program-support-can-enter-graph-v1-without-reopening-procurement.md`
+
 - **Programs need their own dossier contract once the legal lane is imported**
   - After actor, organization, decision, and case dossiers were generalized, the next missing product-shaped graph output was the program layer.
   - `program-san-rafael-sanctioned-camping` is the right first target because it unifies local decisions, linked money flows, evidence records, jurisdiction/place, and the Boyd / Grants Pass legal constraint chain.

@@ -96,6 +96,13 @@ Current scope:
 
 - [validation-queue.json](../data/projected/graph-v1/views/validation-queue.json)
 
+Current scope:
+
+- `ValidationCheck` status / severity queue
+- linked filing subject
+- derived record
+- delta-focused ordering
+
 ### Organization dossier
 
 - [organization-downtown-streets-team-dossier.json](../data/projected/graph-v1/views/organization-downtown-streets-team-dossier.json)
@@ -107,13 +114,15 @@ Current scope:
 ### Program dossier
 
 - [program-san-rafael-sanctioned-camping-dossier.json](../data/projected/graph-v1/views/program-san-rafael-sanctioned-camping-dossier.json)
+- [program-csl-building-forward-dossier.json](../data/projected/graph-v1/views/program-csl-building-forward-dossier.json)
 
 Current scope:
 
-- `ValidationCheck` status / severity queue
-- linked filing subject
-- derived record
-- delta-focused ordering
+- program
+- operating institution
+- jurisdiction
+- evidence records and related records
+- linked decisions, cases, and money flows
 
 ## Use
 

@@ -3,16 +3,16 @@
   "title": "Money overlap summary",
   "view_type": "money_overlap_summary",
   "contract_version": 1,
-  "generated_at": "2026-04-13T12:38:15Z",
+  "generated_at": "2026-04-13T12:45:37Z",
   "metrics": {
-    "money_flow_count": 147,
+    "money_flow_count": 148,
     "flow_type_counts": {
       "appropriation": 1,
       "behested_payment": 1,
       "campaign_contribution": 104,
       "campaign_expenditure": 34,
       "contract_authorization": 5,
-      "grant_award": 1,
+      "grant_award": 2,
       "program_startup_costs": 1
     },
     "overlap_subject_count": 18

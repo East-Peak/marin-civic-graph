@@ -5,7 +5,7 @@
   "subject_id": "program-san-rafael-sanctioned-camping",
   "subject_node_type": "Program",
   "contract_version": 1,
-  "generated_at": "2026-04-13T12:38:15Z",
+  "generated_at": "2026-04-13T12:45:37Z",
   "program": {
     "id": "program-san-rafael-sanctioned-camping",
     "node_type": "Program",
@@ -88,8 +88,8 @@
   "metrics": {
     "place_count": 1,
     "evidence_record_count": 4,
-    "related_record_count": 1,
-    "linked_case_count": 3,
+    "related_record_count": 0,
+    "linked_case_count": 2,
     "linked_decision_count": 2,
     "linked_money_flow_count": 7
   },
@@ -249,39 +249,7 @@
       }
     }
   ],
-  "related_records": [
-    {
-      "id": "record-san-rafael-sanctioned-camping-area-page",
-      "node_type": "Record",
-      "display_label": "Sanctioned Camping Area - San Rafael",
-      "year": null,
-      "source_bundle_ids": [
-        "legal-precedent-01__bundle-01"
-      ],
-      "properties": {
-        "artifact_path": "data/raw/san-rafael-sanctioned-camping-area/2026-04-10/source.html",
-        "issue_ids": [
-          "issue-homelessness",
-          "issue-encampments"
-        ],
-        "place_ids": [
-          "place-san-rafael",
-          "place-mahon-creek-path"
-        ],
-        "record_class": "program_record",
-        "record_type": "official_program_page",
-        "related_case_ids": [
-          "case-boyd-v-city-of-san-rafael"
-        ],
-        "related_program_ids": [
-          "program-san-rafael-sanctioned-camping"
-        ],
-        "source_id": "san-rafael-sanctioned-camping-area",
-        "text_path": "data/extracted/san-rafael-sanctioned-camping-area/source.txt",
-        "title": "Sanctioned Camping Area - San Rafael"
-      }
-    }
-  ],
+  "related_records": [],
   "linked_cases": [
     {
       "id": "case-boyd-v-city-of-san-rafael",

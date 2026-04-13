@@ -1,30 +1,30 @@
 {
-  "generated_at": "2026-04-13T12:02:20Z",
+  "generated_at": "2026-04-13T12:44:59Z",
   "engine": "projection_jsonl",
   "projection_id": "graph-v1",
-  "projection_report_generated_at": "2026-04-13T12:02:19Z",
+  "projection_report_generated_at": "2026-04-13T12:44:45Z",
   "projection_counts": {
-    "nodes": 6191,
-    "edges": 20867,
+    "nodes": 6199,
+    "edges": 20885,
     "node_type_counts": {
-      "Actor": 45,
+      "Actor": 46,
       "AgendaItem": 2970,
       "Candidacy": 14,
       "Case": 4,
       "CaseParticipation": 9,
       "Committee": 16,
-      "Decision": 1472,
+      "Decision": 1473,
       "EconomicInterestDisclosure": 21,
       "Election": 21,
       "Filing": 254,
-      "Institution": 11,
+      "Institution": 12,
       "Issue": 3,
       "Meeting": 283,
-      "MoneyFlow": 147,
+      "MoneyFlow": 148,
       "Place": 13,
       "Proceeding": 13,
-      "Program": 1,
-      "Record": 865,
+      "Program": 2,
+      "Record": 868,
       "Seat": 5,
       "SeatService": 8,
       "ValidationCheck": 16
@@ -234,7 +234,7 @@
       "title": "San Rafael council decision timeline",
       "pass": true,
       "metrics": {
-        "decision_count": 1454,
+        "decision_count": 1455,
         "meeting_count": 175,
         "year_span": [
           2019,
@@ -247,7 +247,7 @@
           2026
         ],
         "decisions_with_votes": 564,
-        "decisions_with_evidence": 1454
+        "decisions_with_evidence": 1455
       },
       "samples": {
         "first_five": [
