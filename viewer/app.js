@@ -445,6 +445,19 @@ function renderDecisionMoneyExplanation(data) {
   );
 }
 
+function renderProgramLocalPressureSummary(data) {
+  contentEl.append(
+    renderListSection("Program", [data.program], renderNodeCard, { open: true }),
+    renderListSection("Institution", data.institution ? [data.institution] : []),
+    renderListSection("Jurisdiction", data.jurisdiction_place ? [data.jurisdiction_place] : []),
+    renderListSection("Places", data.places || []),
+    renderListSection("Top Counterparties", data.top_counterparties || [], renderCounterpartyItem, { open: true }),
+    renderListSection("Decision Explanations", data.decision_explanations || [], renderDecisionMoneyExplanationItem, { open: true }),
+    renderListSection("Legal Case Rollups", data.legal_case_rollups || [], renderCaseScopeRollup, { open: true }),
+    renderListSection("Evidence Records", data.evidence_records || []),
+  );
+}
+
 function renderCaseScopeRollup(item) {
   const wrapper = el("article", "list-card");
   wrapper.append(
@@ -525,6 +538,10 @@ function renderView(data) {
   }
   if (data.view_type === "decision_money_explanation") {
     renderDecisionMoneyExplanation(data);
+    return;
+  }
+  if (data.view_type === "program_local_pressure_summary") {
+    renderProgramLocalPressureSummary(data);
     return;
   }
   if (data.view_type === "jurisdiction_legal_constraint_summary") {

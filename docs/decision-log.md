@@ -18,6 +18,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **Program-local pressure summaries should combine decision-money and legal pressure around one local thread**
+  - After the decision-money explanation and jurisdiction legal summary landed, the next missing product-shaped question was narrower: how does one local program thread absorb both legal pressure and linked money pressure at the same time.
+  - The right bounded subject is still `program-san-rafael-sanctioned-camping`, because it already bridges local decisions, linked money, and the Boyd / Grants Pass constraint lane without reopening ingestion.
+  - The projected view pack now emits `program-san-rafael-sanctioned-camping-local-pressure-summary.json`.
+  - Result: the current summary stays read-model-only, but fuses the sanctioned-camping program dossier, filtered decision-money explanations, linked legal case rollups, top counterparties, and shared issue pressure into one local-thread view.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-program-local-pressure-summaries-should-combine-decision-money-and-legal-pressure.md`
+
 - **Decision-money explanations should make the rollup legible before we widen finance further**
   - The first decision-money rollup proved ranking, but not explanation. The next useful pressure test was whether the graph could explain why a decision ranked high without adding more source data.
   - The right bounded follow-on is still `place-san-rafael`: reuse the existing decision-money paths and add flow-type breakdowns, counterparties, and agreement/program/project/case context.

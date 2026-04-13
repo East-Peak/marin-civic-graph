@@ -154,6 +154,7 @@ Start narrow:
 - [San Rafael Jurisdiction Delivery Summary](./data/projected/graph-v1/views/jurisdiction-san-rafael-delivery-summary.json)
 - [San Rafael Decision Money Rollup](./data/projected/graph-v1/views/decision-money-san-rafael-rollup.json)
 - [San Rafael Decision Money Explanation](./data/projected/graph-v1/views/decision-money-san-rafael-explanation.json)
+- [Sanctioned Camping Local Pressure Summary](./data/projected/graph-v1/views/program-san-rafael-sanctioned-camping-local-pressure-summary.json)
 - [San Rafael Jurisdiction Legal Constraint Summary](./data/projected/graph-v1/views/jurisdiction-san-rafael-legal-constraint-summary.json)
 - [Money Overlap Summary](./data/projected/graph-v1/views/money-overlap-summary.json)
 - [Legal Constraint View](./data/projected/graph-v1/views/legal-constraint-view.json)
@@ -279,6 +280,7 @@ This repo started as a planning workspace and now includes the first live implem
     - `jurisdiction-san-rafael-delivery-summary`
     - `decision-money-san-rafael-rollup`
     - `decision-money-san-rafael-explanation`
+    - `program-san-rafael-sanctioned-camping-local-pressure-summary`
     - `jurisdiction-san-rafael-legal-constraint-summary`
     - `money-overlap-summary`
     - `legal-constraint-view`

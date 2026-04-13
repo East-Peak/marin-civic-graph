@@ -46,6 +46,10 @@
       "subject_id": "place-san-rafael"
     },
     {
+      "view_type": "program_local_pressure_summary",
+      "subject_id": "program-san-rafael-sanctioned-camping"
+    },
+    {
       "view_type": "jurisdiction_legal_constraint_summary",
       "subject_id": "place-san-rafael"
     },

@@ -174,6 +174,18 @@ Current scope:
 - counterparties and agreement/program/project context
 - linked money flows with evidence records
 
+### Program local pressure summary
+
+- [program-san-rafael-sanctioned-camping-local-pressure-summary.json](../data/projected/graph-v1/views/program-san-rafael-sanctioned-camping-local-pressure-summary.json)
+
+Current scope:
+
+- one local program thread
+- decision-money explanations filtered to the program's linked decisions
+- linked legal case rollups
+- shared issue pressure across the in-scope case set
+- top counterparties and supporting evidence records
+
 ### Jurisdiction legal constraint summary
 
 - [jurisdiction-san-rafael-legal-constraint-summary.json](../data/projected/graph-v1/views/jurisdiction-san-rafael-legal-constraint-summary.json)

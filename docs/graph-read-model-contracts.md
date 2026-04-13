@@ -256,6 +256,30 @@ Current note:
 - this is a richer explanatory layer over the existing `decision_money_rollup`
 - it is intended to answer not just which decisions rank high, but why they do: by showing flow-type mix, counterparties, and agreement/program/project/case context
 
+### `program_local_pressure_summary`
+
+Subject:
+
+- one `Program`
+
+Current shape:
+
+- `program`
+- `institution`
+- `jurisdiction_place`
+- `places`
+- `metrics`
+- `decision_explanations`
+- `legal_case_rollups`
+- `top_counterparties`
+- `evidence_records`
+
+Current note:
+
+- this is a bounded synthesis layer over the existing `program_dossier`, `decision_money_explanation`, and `case_dossier` read models
+- it is intended to answer one local-thread question: how legal pressure, local decisions, and linked money concentrate around a specific program without inventing new graph truth edges
+- linked money remains decision-derived here unless a direct `MoneyFlow -> Program` path already exists in the imported graph
+
 ### `jurisdiction_legal_constraint_summary`
 
 Subject:
