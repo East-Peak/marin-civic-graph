@@ -11,9 +11,11 @@ ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_MANIFEST_PATH = ROOT / "registry" / "import-manifest.yaml"
 
 NODE_TYPE_BY_PREFIX = {
+    "agreement-": "Agreement",
     "actor-": "Actor",
     "agencyresponse-": "AgencyResponse",
     "agenda-item-": "AgendaItem",
+    "amendment-": "Amendment",
     "case-": "Case",
     "casepart-": "CaseParticipation",
     "claim-": "Claim",
@@ -32,6 +34,7 @@ NODE_TYPE_BY_PREFIX = {
     "moneyflow-": "MoneyFlow",
     "oversightreport-": "OversightReport",
     "place-": "Place",
+    "project-": "Project",
     "program-": "Program",
     "proceeding-": "Proceeding",
     "record-": "Record",

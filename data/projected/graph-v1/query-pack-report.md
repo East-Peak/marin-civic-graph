@@ -1,10 +1,10 @@
 # Graph Query Pack Report
 
-- `generated_at`: 2026-04-13T12:44:59Z
+- `generated_at`: 2026-04-13T12:55:30Z
 - `engine`: projection_jsonl
 - `projection_id`: graph-v1
-- `nodes`: 6199
-- `edges`: 20885
+- `nodes`: 6233
+- `edges`: 21016
 - `queries_passed`: 5/5
 
 ## Q1: actor-kate-colin dossier
@@ -26,7 +26,7 @@
 ## Q3: San Rafael council decision timeline
 
 - `pass`: yes
-- `metrics`: {"decision_count": 1455, "decisions_with_evidence": 1455, "decisions_with_votes": 564, "meeting_count": 175, "year_span": [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]}
+- `metrics`: {"decision_count": 1458, "decisions_with_evidence": 1458, "decisions_with_votes": 564, "meeting_count": 175, "year_span": [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]}
 - `notes`:
   - This is the first fixed-query-pack check that directly measures whether the council breadth pass created an actual multi-year decision timeline.
   - The result is now a real 2019+ council decision spine rather than one worked-example branch.

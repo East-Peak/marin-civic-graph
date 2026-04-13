@@ -147,6 +147,30 @@ Current note:
 
 - `linked_money_flows` may be sourced either from direct `MoneyFlow -> Program` links or from `MoneyFlow -> Decision -> Program` paths when the normalized bundle only encodes the decision crosswalk.
 
+### `project_dossier`
+
+Subject:
+
+- one `Project`
+
+Current shape:
+
+- `project`
+- `primary_place`
+- `jurisdiction_place`
+- `metrics`
+- `evidence_records`
+- `related_records`
+- `linked_programs`
+- `linked_decisions`
+- `agreements`
+- `amendments`
+- `linked_money_flows`
+
+Current note:
+
+- `linked_money_flows` may be sourced either from direct `MoneyFlow -> Project` links or from `MoneyFlow -> Decision -> Project` paths when the normalized bundle only encodes the decision crosswalk.
+
 ### `money_overlap_summary`
 
 Current shape:

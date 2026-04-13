@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-13T12:45:37Z",
+  "generated_at": "2026-04-13T12:52:12Z",
   "projection_dir": "data/projected/graph-v1",
   "contract_version": 1,
   "views": [
@@ -58,6 +58,14 @@
       "subject_id": "program-csl-building-forward",
       "subject_node_type": "Program",
       "path": "data/projected/graph-v1/views/program-csl-building-forward-dossier.json"
+    },
+    {
+      "id": "project-downtown-library-renovation-dossier",
+      "title": "Project dossier: Downtown Library Renovation Project",
+      "view_type": "project_dossier",
+      "subject_id": "project-downtown-library-renovation",
+      "subject_node_type": "Project",
+      "path": "data/projected/graph-v1/views/project-downtown-library-renovation-dossier.json"
     },
     {
       "id": "money-overlap-summary",

@@ -5,14 +5,15 @@
   "subject_id": "program-csl-building-forward",
   "subject_node_type": "Program",
   "contract_version": 1,
-  "generated_at": "2026-04-13T12:45:37Z",
+  "generated_at": "2026-04-13T12:52:12Z",
   "program": {
     "id": "program-csl-building-forward",
     "node_type": "Program",
     "display_label": "California State Library Building Forward Library Facilities Improvement Program",
     "year": null,
     "source_bundle_ids": [
-      "grant-program-dossiers-01__bundle-01"
+      "grant-program-dossiers-01__bundle-01",
+      "project-dossiers-01__bundle-01"
     ],
     "properties": {
       "institution_id": "inst-california-state-library",
@@ -34,7 +35,8 @@
     "display_label": "California State Library",
     "year": null,
     "source_bundle_ids": [
-      "grant-program-dossiers-01__bundle-01"
+      "grant-program-dossiers-01__bundle-01",
+      "project-dossiers-01__bundle-01"
     ],
     "properties": {
       "institution_type": "state_agency",
@@ -72,7 +74,8 @@
       "display_label": "record-csl-building-forward-report-2021-2022",
       "year": null,
       "source_bundle_ids": [
-        "grant-program-dossiers-01__bundle-01"
+        "grant-program-dossiers-01__bundle-01",
+        "project-dossiers-01__bundle-01"
       ],
       "properties": {
         "artifact_path": "data/raw/california-state-library-building-forward-report-2021-2022/2026-04-11/source.txt",
@@ -80,6 +83,9 @@
         "record_type": "annual_report",
         "related_program_ids": [
           "program-csl-building-forward"
+        ],
+        "related_project_ids": [
+          "project-downtown-library-renovation"
         ],
         "source_id": "california-state-library-building-forward-report-2021-2022"
       }
@@ -92,7 +98,8 @@
       "display_label": "record-downtown-library-state-grant-acceptance-staff-report",
       "year": null,
       "source_bundle_ids": [
-        "grant-program-dossiers-01__bundle-01"
+        "grant-program-dossiers-01__bundle-01",
+        "project-dossiers-01__bundle-01"
       ],
       "properties": {
         "artifact_path": "data/raw/san-rafael-downtown-library-state-grant-acceptance-staff-report/2026-04-11/staff-report.pdf",
@@ -100,6 +107,9 @@
         "record_type": "staff_report",
         "related_program_ids": [
           "program-csl-building-forward"
+        ],
+        "related_project_ids": [
+          "project-downtown-library-renovation"
         ],
         "source_id": "san-rafael-downtown-library-state-grant-acceptance-staff-report"
       }
@@ -110,7 +120,8 @@
       "display_label": "record-srcc-2022-12-19-library-grants",
       "year": null,
       "source_bundle_ids": [
-        "grant-program-dossiers-01__bundle-01"
+        "grant-program-dossiers-01__bundle-01",
+        "project-dossiers-01__bundle-01"
       ],
       "properties": {
         "artifact_path": "data/raw/san-rafael-city-council-2022-12-19-library-grants/2026-04-11/source.html",
@@ -118,6 +129,9 @@
         "record_type": "meeting_page",
         "related_program_ids": [
           "program-csl-building-forward"
+        ],
+        "related_project_ids": [
+          "project-downtown-library-renovation"
         ],
         "source_id": "san-rafael-city-council-2022-12-19-library-grants"
       }
@@ -131,7 +145,8 @@
       "display_label": "decision-2022-12-19-downtown-carnegie-grant-acceptance",
       "year": null,
       "source_bundle_ids": [
-        "grant-program-dossiers-01__bundle-01"
+        "grant-program-dossiers-01__bundle-01",
+        "project-dossiers-01__bundle-01"
       ],
       "properties": {
         "agenda_item_ref": "4.f.i",
@@ -144,6 +159,7 @@
         ],
         "institution_id": "inst-san-rafael-city-council",
         "meeting_id": "meeting-2022-12-19-san-rafael-city-council",
+        "project_id": "project-downtown-library-renovation",
         "related_agreement_ids": [
           "agreement-csl-downtown-carnegie-building-forward"
         ]
@@ -157,7 +173,8 @@
       "display_label": "moneyflow-downtown-carnegie-building-forward-grant-2022",
       "year": null,
       "source_bundle_ids": [
-        "grant-program-dossiers-01__bundle-01"
+        "grant-program-dossiers-01__bundle-01",
+        "project-dossiers-01__bundle-01"
       ],
       "properties": {
         "agreement_id": "agreement-csl-downtown-carnegie-building-forward",
@@ -171,7 +188,8 @@
         ],
         "flow_type": "grant_award",
         "institution_id": "inst-san-rafael-city-council",
-        "program_id": "program-csl-building-forward"
+        "program_id": "program-csl-building-forward",
+        "project_id": "project-downtown-library-renovation"
       }
     }
   ]

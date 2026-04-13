@@ -57,6 +57,8 @@ def main() -> None:
 
     node_type_counts = Counter(node["node_type"] for node in nodes)
     required_types = [
+        "Agreement",
+        "Amendment",
         "Actor",
         "Case",
         "CaseParticipation",
@@ -71,6 +73,7 @@ def main() -> None:
         "Decision",
         "Filing",
         "MoneyFlow",
+        "Project",
         "Proceeding",
         "Program",
         "Record",
@@ -171,6 +174,21 @@ def main() -> None:
         adjacency,
         "case-blake-v-city-of-grants-pass",
         "case-city-of-grants-pass-v-johnson",
+    )
+    assert_path(
+        adjacency,
+        "project-downtown-library-renovation",
+        "decision-2022-12-19-downtown-carnegie-grant-acceptance",
+    )
+    assert_path(
+        adjacency,
+        "project-downtown-library-renovation",
+        "agreement-unger-downtown-library-construction",
+    )
+    assert_path(
+        adjacency,
+        "project-downtown-library-renovation",
+        "moneyflow-downtown-carnegie-building-forward-grant-2022",
     )
 
     validation_nodes = [

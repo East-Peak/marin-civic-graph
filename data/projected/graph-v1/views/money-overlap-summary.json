@@ -3,19 +3,21 @@
   "title": "Money overlap summary",
   "view_type": "money_overlap_summary",
   "contract_version": 1,
-  "generated_at": "2026-04-13T12:45:37Z",
+  "generated_at": "2026-04-13T12:52:12Z",
   "metrics": {
-    "money_flow_count": 148,
+    "money_flow_count": 152,
     "flow_type_counts": {
       "appropriation": 1,
       "behested_payment": 1,
       "campaign_contribution": 104,
       "campaign_expenditure": 34,
+      "contingency_authorization": 1,
       "contract_authorization": 5,
-      "grant_award": 2,
+      "grant_award": 3,
+      "obligation": 2,
       "program_startup_costs": 1
     },
-    "overlap_subject_count": 18
+    "overlap_subject_count": 22
   },
   "top_overlap_subjects": [
     {
@@ -151,6 +153,98 @@
       ],
       "source_bundle_ids": [
         "san-rafael-homelessness-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "inst-san-rafael-city-council",
+        "node_type": "Institution",
+        "display_label": "San Rafael City Council",
+        "year": null,
+        "source_bundle_ids": [
+          "campaign-finance-form-803-slice-01__bundle-01",
+          "canonical-seeds-san-rafael-01",
+          "project-dossiers-01__bundle-01",
+          "san-rafael-election-records-01__bundle-01",
+          "san-rafael-homelessness-01__bundle-01"
+        ],
+        "properties": {
+          "evidence_record_ids": [
+            "record-san-rafael-city-council-2024-08-19-item-5a-report",
+            "record-san-rafael-library-grants-2022-12-19",
+            "record-san-rafael-elected-officials-2026-04-11",
+            "record-san-rafael-city-council-page-2026-04-11"
+          ],
+          "institution_type": "council",
+          "name": "San Rafael City Council",
+          "parent_institution_id": "inst-city-of-san-rafael",
+          "seed_status": "canonical_seed"
+        }
+      },
+      "flow_count": 5,
+      "flow_types": [
+        "contingency_authorization",
+        "grant_award",
+        "obligation"
+      ],
+      "relationship_types": [
+        "RELATES_TO_INSTITUTION"
+      ],
+      "source_bundle_ids": [
+        "grant-program-dossiers-01__bundle-01",
+        "project-dossiers-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "project-downtown-library-renovation",
+        "node_type": "Project",
+        "display_label": "Downtown Library Renovation Project",
+        "year": null,
+        "source_bundle_ids": [
+          "project-dossiers-01__bundle-01"
+        ],
+        "properties": {
+          "evidence_summary": "The project is supported by direct city grant-acceptance records and California State Library award records showing a $1,000,000 SB 129 / Building Forward Downtown Carnegie award plus a separate $1,000,000 targeted design-process award.",
+          "jurisdiction_place_id": "place-san-rafael",
+          "name": "Downtown Library Renovation Project",
+          "primary_place_id": "place-downtown-library-1100-e-st",
+          "project_type": "capital_library_renovation",
+          "record_ids": [
+            "record-downtown-library-project-page",
+            "record-downtown-library-reopening",
+            "record-srcc-2022-12-19-library-grants",
+            "record-downtown-library-state-grant-acceptance-staff-report",
+            "record-csl-building-forward-report-2021-2022",
+            "record-csl-lds-annual-update-2023-2024"
+          ],
+          "related_decision_ids": [
+            "decision-2022-12-19-downtown-carnegie-grant-acceptance",
+            "decision-2023-09-18-noll-tam-first-amendment",
+            "decision-2024-09-16-unger-award",
+            "decision-2024-09-16-unico-approval",
+            "decision-2025-04-07-noll-tam-second-amendment",
+            "decision-2025-04-07-unger-second-amendment"
+          ],
+          "related_program_ids": [
+            "program-csl-building-forward",
+            "program-csl-targeted-grants"
+          ],
+          "status": "reopened"
+        }
+      },
+      "flow_count": 5,
+      "flow_types": [
+        "contingency_authorization",
+        "grant_award",
+        "obligation"
+      ],
+      "relationship_types": [
+        "RELATES_TO_PROJECT"
+      ],
+      "source_bundle_ids": [
+        "grant-program-dossiers-01__bundle-01",
+        "project-dossiers-01__bundle-01"
       ]
     },
     {
@@ -299,6 +393,48 @@
     },
     {
       "node": {
+        "id": "decision-2024-09-16-unger-award",
+        "node_type": "Decision",
+        "display_label": "decision-2024-09-16-unger-award",
+        "year": null,
+        "source_bundle_ids": [
+          "project-dossiers-01__bundle-01"
+        ],
+        "properties": {
+          "agenda_item_ref": "4.e",
+          "authorized_total_amount": 2100000.0,
+          "decided_at": "2024-09-16",
+          "decision_type": "contract_authorization",
+          "evidence_record_ids": [
+            "record-srcc-2024-09-16-downtown-library",
+            "record-downtown-library-construction-award-staff-report",
+            "record-srcc-2024-09-16-agenda-packet"
+          ],
+          "institution_id": "inst-san-rafael-city-council",
+          "meeting_id": "meeting-2024-09-16-san-rafael-city-council",
+          "project_id": "project-downtown-library-renovation",
+          "related_agreement_ids": [
+            "agreement-unger-downtown-library-construction"
+          ],
+          "related_procurement_ids": [
+            "procurement-downtown-library-renovation-construction-rfp"
+          ]
+        }
+      },
+      "flow_count": 2,
+      "flow_types": [
+        "contingency_authorization",
+        "obligation"
+      ],
+      "relationship_types": [
+        "RELATES_TO_DECISION"
+      ],
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
         "id": "inst-city-of-san-rafael",
         "node_type": "Institution",
         "display_label": "City of San Rafael",
@@ -415,6 +551,33 @@
       ],
       "source_bundle_ids": [
         "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "actor-california-state-library",
+        "node_type": "Actor",
+        "display_label": "California State Library",
+        "year": null,
+        "source_bundle_ids": [
+          "grant-program-dossiers-01__bundle-01",
+          "project-dossiers-01__bundle-01"
+        ],
+        "properties": {
+          "actor_type": "government_agency",
+          "name": "California State Library"
+        }
+      },
+      "flow_count": 2,
+      "flow_types": [
+        "grant_award"
+      ],
+      "relationship_types": [
+        "RELATES_TO_ACTOR"
+      ],
+      "source_bundle_ids": [
+        "grant-program-dossiers-01__bundle-01",
+        "project-dossiers-01__bundle-01"
       ]
     },
     {

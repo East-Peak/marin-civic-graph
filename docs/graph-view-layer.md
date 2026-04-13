@@ -124,6 +124,19 @@ Current scope:
 - evidence records and related records
 - linked decisions, cases, and money flows
 
+### Project dossier
+
+- [project-downtown-library-renovation-dossier.json](../data/projected/graph-v1/views/project-downtown-library-renovation-dossier.json)
+
+Current scope:
+
+- project
+- primary place and jurisdiction
+- evidence records and related records
+- linked programs and decisions
+- agreements and amendments
+- linked money flows
+
 ## Use
 
 Run:

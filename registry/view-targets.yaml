@@ -30,6 +30,10 @@
       "subject_id": "program-csl-building-forward"
     },
     {
+      "view_type": "project_dossier",
+      "subject_id": "project-downtown-library-renovation"
+    },
+    {
       "view_type": "money_overlap_summary"
     },
     {

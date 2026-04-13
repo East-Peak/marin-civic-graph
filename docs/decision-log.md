@@ -18,6 +18,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **A bounded Downtown Library project bundle can enter graph-v1 without reopening procurement**
+  - After the `program_dossier` contract worked for both the sanctioned-camping and Building Forward threads, the next missing read model was a project layer that could unify grants, agreements, amendments, decisions, records, and place.
+  - The right test is still bounded: one Downtown Library support bundle, not a general procurement import.
+  - The supporting slice now lives at `data/normalized/project-dossiers-01/bundle-01.json` and adds one `Project`, five `Agreement`, three `Amendment`, and related decision/money/record nodes into graph-v1.
+  - Result: the projected view pack now emits `project-downtown-library-renovation-dossier.json`.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-bounded-project-support-can-enter-graph-v1-without-reopening-procurement.md`
+
 - **A bounded grant-program support bundle can enter graph-v1 without reopening procurement**
   - The next useful pressure test after the sanctioned-camping program dossier was not a full procurement import. It was one small grant-backed program thread that could prove the `program_dossier` contract works outside the homelessness/legal lane.
   - The right slice is the California State Library Building Forward program as it connects to San Rafael's December 19, 2022 Downtown Library grant-acceptance decision, one linked grant-award money flow, and a small set of evidence and related records.

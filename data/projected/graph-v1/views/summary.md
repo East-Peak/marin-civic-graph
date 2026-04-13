@@ -1,6 +1,6 @@
 # Graph View Summary
 
-Generated: 2026-04-13T12:45:37Z
+Generated: 2026-04-13T12:52:12Z
 
 ## Included Views
 
@@ -11,6 +11,7 @@ Generated: 2026-04-13T12:45:37Z
 - Case dossier: Boyd v. City of San Rafael (`case_dossier`)
 - Program dossier: San Rafael sanctioned camping program (`program_dossier`)
 - Program dossier: California State Library Building Forward Library Facilities Improvement Program (`program_dossier`)
+- Project dossier: Downtown Library Renovation Project (`project_dossier`)
 - Money overlap summary (`money_overlap_summary`)
 - Legal constraint view (`legal_constraint_view`)
 - Validation queue (`validation_queue`)
@@ -22,7 +23,8 @@ Generated: 2026-04-13T12:45:37Z
 - Decision dossiers now cover `1` targets, including `Resolution 15336 appropriating $2,256,400 and authorizing $2,002,400 in contracts` with `5` vote records.
 - Case dossiers now cover `1` targets, including `Boyd v. City of San Rafael` with `6` proceedings.
 - Program dossiers now cover `2` targets, including `San Rafael sanctioned camping program` with `2` linked decisions and `7` linked money flows.
-- The graph currently materializes `148` money flows across `7` flow types.
+- Project dossiers now cover `1` targets, including `Downtown Library Renovation Project` with `5` agreements and `5` linked money flows.
+- The graph currently materializes `152` money flows across `9` flow types.
 - The legal lane currently includes `4` cases and links back to `2` San Rafael local decisions.
 - The validation queue currently contains `16` checks.
 
@@ -35,6 +37,7 @@ Generated: 2026-04-13T12:45:37Z
 - `case-boyd-v-city-of-san-rafael-dossier.json`
 - `program-san-rafael-sanctioned-camping-dossier.json`
 - `program-csl-building-forward-dossier.json`
+- `project-downtown-library-renovation-dossier.json`
 - `money-overlap-summary.json`
 - `legal-constraint-view.json`
 - `validation-queue.json`
