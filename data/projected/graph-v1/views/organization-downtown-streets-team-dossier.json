@@ -1,0 +1,174 @@
+{
+  "id": "organization-downtown-streets-team-dossier",
+  "title": "Organization dossier: Downtown Streets Team",
+  "view_type": "organization_dossier",
+  "subject_id": "actor-downtown-streets-team",
+  "subject_node_type": "Actor",
+  "contract_version": 1,
+  "generated_at": "2026-04-13T12:34:54Z",
+  "organization": {
+    "id": "actor-downtown-streets-team",
+    "node_type": "Actor",
+    "display_label": "Downtown Streets Team",
+    "year": null,
+    "source_bundle_ids": [
+      "canonical-seeds-san-rafael-01"
+    ],
+    "properties": {
+      "actor_type": "nonprofit",
+      "aliases": [
+        "DST"
+      ],
+      "evidence_record_ids": [
+        "record-san-rafael-city-council-2024-08-19-item-5a-report",
+        "record-san-rafael-contract-downtown-streets-team-2024-08-19",
+        "record-san-rafael-camping-implementation-plan-2023-12-14"
+      ],
+      "name": "Downtown Streets Team",
+      "observed_labels": [
+        "Downtown Streets Team",
+        "DST"
+      ],
+      "seed_status": "canonical_seed"
+    }
+  },
+  "metrics": {
+    "money_flow_count": 1,
+    "linked_decision_count": 1,
+    "record_count": 4,
+    "linked_case_count": 0,
+    "linked_program_count": 0
+  },
+  "money_flows": [
+    {
+      "money_flow": {
+        "id": "moneyflow-2024-08-19-dst-contract",
+        "node_type": "MoneyFlow",
+        "display_label": "moneyflow-2024-08-19-dst-contract",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-homelessness-01__bundle-01"
+        ],
+        "properties": {
+          "amount": 200000,
+          "currency": "USD",
+          "money_type": "contract_authorization",
+          "related_decision_id": "decision-2024-08-19-resolution-15336",
+          "to_actor_id": "actor-downtown-streets-team"
+        }
+      },
+      "relationship_types": [
+        "TO_TARGET"
+      ]
+    }
+  ],
+  "linked_decisions": [
+    {
+      "id": "decision-2024-08-19-resolution-15336",
+      "node_type": "Decision",
+      "display_label": "Resolution 15336 appropriating $2,256,400 and authorizing $2,002,400 in contracts",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-homelessness-01__bundle-01"
+      ],
+      "properties": {
+        "agenda_item_id": "agenda-item-2024-08-19-5a",
+        "decision_type": "appropriation_and_contract_authorization",
+        "effective_date": "2024-08-19",
+        "institution_id": "inst-san-rafael-city-council",
+        "meeting_id": "meeting-2024-08-19-san-rafael-city-council",
+        "status": "adopted",
+        "title": "Resolution 15336 appropriating $2,256,400 and authorizing $2,002,400 in contracts"
+      }
+    }
+  ],
+  "evidence_records": [
+    {
+      "id": "record-san-rafael-camping-implementation-plan-2023-12-14",
+      "node_type": "Record",
+      "display_label": "record-san-rafael-camping-implementation-plan-2023-12-14",
+      "year": null,
+      "source_bundle_ids": [
+        "canonical-seeds-san-rafael-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-camping-implementation-plan/2026-04-10/source.html",
+        "record_class": "program_record",
+        "record_type": "implementation_update",
+        "source_id": "san-rafael-camping-implementation-plan"
+      }
+    },
+    {
+      "id": "record-san-rafael-city-council-2024-08-19-item-5a-report",
+      "node_type": "Record",
+      "display_label": "record-san-rafael-city-council-2024-08-19-item-5a-report",
+      "year": null,
+      "source_bundle_ids": [
+        "canonical-seeds-san-rafael-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-aug-19-2024-council-meeting/2026-04-10/item-5a-report.pdf",
+        "record_class": "meeting_record",
+        "record_type": "agenda_report",
+        "source_id": "san-rafael-aug-19-2024-council-meeting"
+      }
+    },
+    {
+      "id": "record-san-rafael-contract-downtown-streets-team-2024-08-19",
+      "node_type": "Record",
+      "display_label": "record-san-rafael-contract-downtown-streets-team-2024-08-19",
+      "year": null,
+      "source_bundle_ids": [
+        "canonical-seeds-san-rafael-01"
+      ],
+      "properties": {
+        "artifact_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-contract-downtown-streets-team.txt",
+        "record_class": "contract_record",
+        "record_type": "contract_extract",
+        "source_id": "san-rafael-aug-19-2024-council-meeting"
+      }
+    }
+  ],
+  "related_records": [
+    {
+      "id": "record-2024-08-19-contract-downtown-streets-team",
+      "node_type": "Record",
+      "display_label": "Downtown Streets Team agreement for implementation and management of employment development and volunteer work",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-homelessness-01__bundle-01"
+      ],
+      "properties": {
+        "actor_ids": [
+          "actor-downtown-streets-team"
+        ],
+        "agenda_item_id": "agenda-item-2024-08-19-5a",
+        "artifact_paths": [
+          "data/raw/san-rafael-aug-19-2024-council-meeting/2026-04-10/item-5a-report.pdf"
+        ],
+        "decision_ids": [
+          "decision-2024-08-19-resolution-15336"
+        ],
+        "issue_ids": [
+          "issue-homelessness"
+        ],
+        "meeting_id": "meeting-2024-08-19-san-rafael-city-council",
+        "published_at": "2024-08-19",
+        "publisher": "City of San Rafael",
+        "record_class": "contract_record",
+        "record_type": "professional_services_agreement",
+        "related_moneyflow_ids": [
+          "moneyflow-2024-08-19-dst-contract"
+        ],
+        "source_record_id": "doc-2024-08-19-item-5a-report",
+        "source_tier": "official",
+        "status": "derived_candidate",
+        "text_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-contract-downtown-streets-team.txt",
+        "title": "Downtown Streets Team agreement for implementation and management of employment development and volunteer work",
+        "word_count": 5087
+      }
+    }
+  ],
+  "linked_cases": [],
+  "linked_programs": []
+}

@@ -18,6 +18,20 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **Projected graph views should be manifest-driven read models, not hand-picked demos**
+  - The first dossier pack proved the graph could emit product-shaped JSON, but the builder was still hardcoded to one actor and one decision.
+  - The next fix was data-side, not UI-side: add a view target manifest, define stable read-model contracts, and generalize dossier generation across actor, organization, decision, and case subjects.
+  - The control file is now `registry/view-targets.yaml`, and the contracts are documented in `docs/graph-read-model-contracts.md`.
+  - Current generated targets now include:
+    - `actor-kate-colin-dossier`
+    - `actor-rachel-kertz-dossier`
+    - `organization-downtown-streets-team-dossier`
+    - `decision-2024-08-19-resolution-15336-dossier`
+    - `case-boyd-v-city-of-san-rafael-dossier`
+    - plus the existing money, legal, and validation summaries
+  - Boundary: these are still projected read models over graph-v1, not a backend API and not a replacement for normalized bundles.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-projected-graph-views-should-be-manifest-driven-read-models.md`
+
 - **The first local graph shell should stay static and read-only**
   - Once the projected view pack existed, the next useful move was a tiny browser shell over the generated JSON views, not a real app framework and not a live query API.
   - The shell now lives under `viewer/` and is served by `scripts/serve_graph_views.py`.

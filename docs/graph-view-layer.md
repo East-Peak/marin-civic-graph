@@ -26,6 +26,8 @@ That is the point of this layer.
 ## Current Builder
 
 - [build_graph_views.py](../scripts/build_graph_views.py)
+- [view-targets.yaml](../registry/view-targets.yaml)
+- [graph-read-model-contracts.md](./graph-read-model-contracts.md)
 
 It runs against the projected graph payload:
 
@@ -42,6 +44,7 @@ And writes:
 ### Actor dossier
 
 - [actor-kate-colin-dossier.json](../data/projected/graph-v1/views/actor-kate-colin-dossier.json)
+- [actor-rachel-kertz-dossier.json](../data/projected/graph-v1/views/actor-rachel-kertz-dossier.json)
 
 Current scope:
 
@@ -54,7 +57,7 @@ Current scope:
 
 ### Decision dossier
 
-- [decision-resolution-15336-dossier.json](../data/projected/graph-v1/views/decision-resolution-15336-dossier.json)
+- [decision-2024-08-19-resolution-15336-dossier.json](../data/projected/graph-v1/views/decision-2024-08-19-resolution-15336-dossier.json)
 
 Current scope:
 
@@ -92,6 +95,14 @@ Current scope:
 ### Validation queue
 
 - [validation-queue.json](../data/projected/graph-v1/views/validation-queue.json)
+
+### Organization dossier
+
+- [organization-downtown-streets-team-dossier.json](../data/projected/graph-v1/views/organization-downtown-streets-team-dossier.json)
+
+### Case dossier
+
+- [case-boyd-v-city-of-san-rafael-dossier.json](../data/projected/graph-v1/views/case-boyd-v-city-of-san-rafael-dossier.json)
 
 Current scope:
 

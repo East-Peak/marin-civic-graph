@@ -121,7 +121,7 @@ function renderMoneyFlowEdge(item) {
   const card = el("article", "list-card");
   const flow = item.money_flow;
   card.append(
-    el("p", "eyebrow", item.relationship_type),
+    el("p", "eyebrow", (item.relationship_types || [item.relationship_type || "linked"]).join(" · ")),
     el("h4", null, flow.display_label)
   );
   const meta = el("div", "list-card__meta");
@@ -184,14 +184,12 @@ function renderActorDossier(data) {
     renderListSection("Actor", [data.actor], renderNodeCard, { open: true }),
     renderListSection("Seat Services", data.seat_services),
     renderListSection("Committees", data.committees),
+    renderListSection("Candidacies", data.candidacies || []),
     renderListSection("Filings", data.filings),
     renderListSection("Council Votes", data.council_votes, renderVoteRow),
     renderListSection("Money Flows", data.money_flows, renderMoneyFlowEdge),
-    renderListSection(
-      "Evidence Record IDs",
-      data.record_ids.map((id) => ({ id, node_type: "Record", display_label: id, properties: {} })),
-      renderNodeCard
-    )
+    renderListSection("Evidence Records", data.evidence_records || []),
+    renderListSection("Related Records", data.related_records || [])
   );
 }
 
@@ -211,6 +209,33 @@ function renderDecisionDossier(data) {
     renderListSection("Linked Money Flows", data.linked_money_flows),
     renderListSection("Linked Cases", data.linked_cases),
     renderListSection("Linked Programs", data.linked_programs),
+  );
+}
+
+function renderOrganizationDossier(data) {
+  contentEl.append(
+    renderListSection("Organization", [data.organization], renderNodeCard, { open: true }),
+    renderListSection("Money Flows", data.money_flows || [], renderMoneyFlowEdge, { open: true }),
+    renderListSection("Linked Decisions", data.linked_decisions || []),
+    renderListSection("Evidence Records", data.evidence_records || []),
+    renderListSection("Related Records", data.related_records || []),
+    renderListSection("Linked Cases", data.linked_cases || []),
+    renderListSection("Linked Programs", data.linked_programs || []),
+  );
+}
+
+function renderCaseDossier(data) {
+  contentEl.append(
+    renderListSection("Case", [data.case], renderNodeCard, { open: true }),
+    renderListSection("Court", data.court ? [data.court] : []),
+    renderListSection("Proceedings", data.proceedings || [], renderNodeCard, { open: true }),
+    renderListSection("Participations", data.participations || []),
+    renderListSection("Evidence Records", data.evidence_records || []),
+    renderListSection("Related Records", data.related_records || []),
+    renderListSection("Issues", data.issues || []),
+    renderListSection("Programs", data.programs || []),
+    renderListSection("Places", data.places || []),
+    renderListSection("Linked Local Decisions", data.linked_local_decisions || []),
   );
 }
 
@@ -271,23 +296,31 @@ function renderView(data) {
   clearChildren(contentEl);
   createMetricCards(data.metrics || {});
 
-  if (data.id === "actor-kate-colin-dossier") {
+  if (data.view_type === "actor_dossier") {
     renderActorDossier(data);
     return;
   }
-  if (data.id === "decision-resolution-15336-dossier") {
+  if (data.view_type === "organization_dossier") {
+    renderOrganizationDossier(data);
+    return;
+  }
+  if (data.view_type === "decision_dossier") {
     renderDecisionDossier(data);
     return;
   }
-  if (data.id === "money-overlap-summary") {
+  if (data.view_type === "case_dossier") {
+    renderCaseDossier(data);
+    return;
+  }
+  if (data.view_type === "money_overlap_summary") {
     renderMoneyOverlap(data);
     return;
   }
-  if (data.id === "legal-constraint-view") {
+  if (data.view_type === "legal_constraint_view") {
     renderLegalConstraint(data);
     return;
   }
-  if (data.id === "validation-queue") {
+  if (data.view_type === "validation_queue") {
     renderValidationQueue(data);
     return;
   }
@@ -335,7 +368,7 @@ function renderNav() {
 
     button.append(
       el("span", "nav-button__title", view.title),
-      el("span", "nav-button__id", view.id),
+      el("span", "nav-button__id", view.view_type || view.id),
     );
     navEl.append(button);
   });

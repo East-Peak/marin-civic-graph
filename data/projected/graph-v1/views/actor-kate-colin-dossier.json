@@ -1,7 +1,11 @@
 {
   "id": "actor-kate-colin-dossier",
   "title": "Actor dossier: Kate Colin",
-  "generated_at": "2026-04-13T12:12:58Z",
+  "view_type": "actor_dossier",
+  "subject_id": "actor-kate-colin",
+  "subject_node_type": "Actor",
+  "contract_version": 1,
+  "generated_at": "2026-04-13T12:34:54Z",
   "actor": {
     "id": "actor-kate-colin",
     "node_type": "Actor",
@@ -39,10 +43,12 @@
   "metrics": {
     "seat_service_count": 2,
     "committee_count": 2,
+    "candidacy_count": 2,
     "filing_count": 57,
     "council_decision_count": 566,
     "money_flow_count": 1,
-    "record_count": 242,
+    "evidence_record_count": 8,
+    "related_record_count": 54,
     "filing_years": [
       2020,
       2021,
@@ -51,6 +57,16 @@
       2024,
       2025,
       2026
+    ],
+    "vote_years": [
+      "2019",
+      "2020",
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025",
+      "2026"
     ]
   },
   "seat_services": [
@@ -150,7 +166,74 @@
       }
     }
   ],
+  "candidacies": [
+    {
+      "id": "candidacy-kate-colin-san-rafael-mayor-2020",
+      "node_type": "Candidacy",
+      "display_label": "candidacy-kate-colin-san-rafael-mayor-2020",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "candidate_actor_id": "actor-kate-colin",
+        "committee_id": "committee-kate-colin-for-mayor-2020",
+        "election_id": "election-2020-11-03-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-3-2020-election-page",
+          "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"
+        ],
+        "notes": "Enriched from the public Laserfiche folder listing. The committee boundary is now explicit, but filing contents still depend on the folder-listing path rather than direct filing-document capture.",
+        "result_status": "unknown",
+        "seat_id": "seat-san-rafael-mayor-at-large"
+      }
+    },
+    {
+      "id": "candidacy-kate-colin-san-rafael-mayor-2024",
+      "node_type": "Candidacy",
+      "display_label": "candidacy-kate-colin-san-rafael-mayor-2024",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "candidate_actor_id": "actor-kate-colin",
+        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "election_id": "election-2024-11-05-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-5-2024-election-page",
+          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"
+        ],
+        "notes": "Enriched from the public Laserfiche folder listing. The committee boundary is now explicit, but filing contents still depend on the folder-listing path rather than direct filing-document capture.",
+        "result_status": "unknown",
+        "seat_id": "seat-san-rafael-mayor-at-large"
+      }
+    }
+  ],
   "filings": [
+    {
+      "id": "filing-san-rafael-campaign-entry-28599",
+      "node_type": "Filing",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 (State)",
+      "year": 2020,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-mayor-2020",
+        "election_id": "election-2020-11-03-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-28599"
+        ],
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_410",
+        "posted_at": "2020-02-25",
+        "record_id": "record-san-rafael-campaign-filing-entry-28599",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 (State)"
+      }
+    },
     {
       "id": "filing-san-rafael-campaign-entry-28439",
       "node_type": "Filing",
@@ -173,47 +256,6 @@
         "record_id": "record-san-rafael-campaign-filing-entry-28439",
         "status": "captured_from_public_folder_listing",
         "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 1"
-      }
-    },
-    {
-      "id": "filing-san-rafael-campaign-entry-28450",
-      "node_type": "Filing",
-      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)",
-      "year": 2020,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01",
-        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-mayor-2020",
-        "election_id": "election-2020-11-03-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-28450",
-          "record-san-rafael-campaign-ocr-entry-28450",
-          "record-san-rafael-campaign-pdf-entry-28450",
-          "record-san-rafael-campaign-form460-schedule-extract-entry-28450"
-        ],
-        "extracted_itemized_contributions_total": 500.0,
-        "extracted_itemized_payments_total": 1.0,
-        "extracted_schedule_d_total": 0,
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_460",
-        "posted_at": "2020-01-23",
-        "record_id": "record-san-rafael-campaign-filing-entry-28450",
-        "reported_itemized_payments": 1.0,
-        "reported_payments_made": 1.0,
-        "reported_unitemized_payments": 30.0,
-        "schedule_a_row_count": 1,
-        "schedule_d_row_count": 0,
-        "schedule_e_row_count": 1,
-        "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-28450",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)",
-        "validation_check_ids": [
-          "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-itemized-payments-reconciliation-check",
-          "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-total-payments-rollup-summary-consistency-check"
-        ]
       }
     },
     {
@@ -265,9 +307,9 @@
       }
     },
     {
-      "id": "filing-san-rafael-campaign-entry-28599",
+      "id": "filing-san-rafael-campaign-entry-28601",
       "node_type": "Filing",
-      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 (State)",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 2 (State)",
       "year": 2020,
       "source_bundle_ids": [
         "san-rafael-city-campaign-filings-01__bundle-01"
@@ -277,14 +319,15 @@
         "election_id": "election-2020-11-03-san-rafael-general",
         "evidence_record_ids": [
           "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-28599"
+          "record-san-rafael-campaign-filing-entry-28601"
         ],
         "filer_actor_id": "actor-kate-colin",
         "filing_type": "form_410",
+        "is_amendment": true,
         "posted_at": "2020-02-25",
-        "record_id": "record-san-rafael-campaign-filing-entry-28599",
+        "record_id": "record-san-rafael-campaign-filing-entry-28601",
         "status": "captured_from_public_folder_listing",
-        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 (State)"
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 2 (State)"
       }
     },
     {
@@ -312,9 +355,9 @@
       }
     },
     {
-      "id": "filing-san-rafael-campaign-entry-28601",
+      "id": "filing-san-rafael-campaign-entry-31941",
       "node_type": "Filing",
-      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 2 (State)",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 3 (State)",
       "year": 2020,
       "source_bundle_ids": [
         "san-rafael-city-campaign-filings-01__bundle-01"
@@ -324,15 +367,15 @@
         "election_id": "election-2020-11-03-san-rafael-general",
         "evidence_record_ids": [
           "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-28601"
+          "record-san-rafael-campaign-filing-entry-31941"
         ],
         "filer_actor_id": "actor-kate-colin",
         "filing_type": "form_410",
         "is_amendment": true,
-        "posted_at": "2020-02-25",
-        "record_id": "record-san-rafael-campaign-filing-entry-28601",
+        "posted_at": "2020-09-25",
+        "record_id": "record-san-rafael-campaign-filing-entry-31941",
         "status": "captured_from_public_folder_listing",
-        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 2 (State)"
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 3 (State)"
       }
     },
     {
@@ -357,6 +400,95 @@
         "record_id": "record-san-rafael-campaign-filing-entry-31114",
         "status": "captured_from_public_folder_listing",
         "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 4"
+      }
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-31874",
+      "node_type": "Filing",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 4 (State)",
+      "year": 2020,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-mayor-2020",
+        "election_id": "election-2020-11-03-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-31874"
+        ],
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_410",
+        "is_amendment": true,
+        "posted_at": "2020-09-21",
+        "record_id": "record-san-rafael-campaign-filing-entry-31874",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 4 (State)"
+      }
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-28450",
+      "node_type": "Filing",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)",
+      "year": 2020,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01",
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-mayor-2020",
+        "election_id": "election-2020-11-03-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-28450",
+          "record-san-rafael-campaign-ocr-entry-28450",
+          "record-san-rafael-campaign-pdf-entry-28450",
+          "record-san-rafael-campaign-form460-schedule-extract-entry-28450"
+        ],
+        "extracted_itemized_contributions_total": 500.0,
+        "extracted_itemized_payments_total": 1.0,
+        "extracted_schedule_d_total": 0,
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_460",
+        "posted_at": "2020-01-23",
+        "record_id": "record-san-rafael-campaign-filing-entry-28450",
+        "reported_itemized_payments": 1.0,
+        "reported_payments_made": 1.0,
+        "reported_unitemized_payments": 30.0,
+        "schedule_a_row_count": 1,
+        "schedule_d_row_count": 0,
+        "schedule_e_row_count": 1,
+        "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-28450",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)",
+        "validation_check_ids": [
+          "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-itemized-payments-reconciliation-check",
+          "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-total-payments-rollup-summary-consistency-check"
+        ]
+      }
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-31116",
+      "node_type": "Filing",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31) Amendment",
+      "year": 2020,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-mayor-2020",
+        "election_id": "election-2020-11-03-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-31116"
+        ],
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_460",
+        "is_amendment": true,
+        "posted_at": "2020-07-23",
+        "record_id": "record-san-rafael-campaign-filing-entry-31116",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31) Amendment"
       }
     },
     {
@@ -394,78 +526,6 @@
       }
     },
     {
-      "id": "filing-san-rafael-campaign-entry-31116",
-      "node_type": "Filing",
-      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31) Amendment",
-      "year": 2020,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-mayor-2020",
-        "election_id": "election-2020-11-03-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-31116"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_460",
-        "is_amendment": true,
-        "posted_at": "2020-07-23",
-        "record_id": "record-san-rafael-campaign-filing-entry-31116",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31) Amendment"
-      }
-    },
-    {
-      "id": "filing-san-rafael-campaign-entry-31117",
-      "node_type": "Filing",
-      "display_label": "Form 501 - Kate Colin for San Rafael Mayor 2020 Amendment",
-      "year": 2020,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-mayor-2020",
-        "election_id": "election-2020-11-03-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-31117"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_501",
-        "is_amendment": true,
-        "posted_at": "2020-07-23",
-        "record_id": "record-san-rafael-campaign-filing-entry-31117",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 501 - Kate Colin for San Rafael Mayor 2020 Amendment"
-      }
-    },
-    {
-      "id": "filing-san-rafael-campaign-entry-31874",
-      "node_type": "Filing",
-      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 4 (State)",
-      "year": 2020,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-mayor-2020",
-        "election_id": "election-2020-11-03-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-31874"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_410",
-        "is_amendment": true,
-        "posted_at": "2020-09-21",
-        "record_id": "record-san-rafael-campaign-filing-entry-31874",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 4 (State)"
-      }
-    },
-    {
       "id": "filing-san-rafael-campaign-entry-31935",
       "node_type": "Filing",
       "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 1st Preelection",
@@ -499,9 +559,9 @@
       }
     },
     {
-      "id": "filing-san-rafael-campaign-entry-31941",
+      "id": "filing-san-rafael-campaign-entry-32228",
       "node_type": "Filing",
-      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 3 (State)",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 2nd Preelection",
       "year": 2020,
       "source_bundle_ids": [
         "san-rafael-city-campaign-filings-01__bundle-01"
@@ -511,15 +571,37 @@
         "election_id": "election-2020-11-03-san-rafael-general",
         "evidence_record_ids": [
           "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-31941"
+          "record-san-rafael-campaign-filing-entry-32228"
         ],
         "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_410",
-        "is_amendment": true,
-        "posted_at": "2020-09-25",
-        "record_id": "record-san-rafael-campaign-filing-entry-31941",
+        "filing_type": "form_460",
+        "posted_at": "2020-10-21",
+        "record_id": "record-san-rafael-campaign-filing-entry-32228",
         "status": "captured_from_public_folder_listing",
-        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 3 (State)"
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 2nd Preelection"
+      }
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-32288",
+      "node_type": "Filing",
+      "display_label": "Form 496 - SR Chamber of Commerce PAC Supporting Kate Colin (10-05-2020)",
+      "year": 2020,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-mayor-2020",
+        "election_id": "election-2020-11-03-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-32288"
+        ],
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_496",
+        "posted_at": "2020-10-29",
+        "record_id": "record-san-rafael-campaign-filing-entry-32288",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 496 - SR Chamber of Commerce PAC Supporting Kate Colin (10-05-2020)"
       }
     },
     {
@@ -569,29 +651,6 @@
       }
     },
     {
-      "id": "filing-san-rafael-campaign-entry-32228",
-      "node_type": "Filing",
-      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 2nd Preelection",
-      "year": 2020,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-mayor-2020",
-        "election_id": "election-2020-11-03-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-32228"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_460",
-        "posted_at": "2020-10-21",
-        "record_id": "record-san-rafael-campaign-filing-entry-32228",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 2nd Preelection"
-      }
-    },
-    {
       "id": "filing-san-rafael-campaign-entry-32278",
       "node_type": "Filing",
       "display_label": "Form 497 - Kate Colin for San Rafael Mayor 2020 (10-27-20)",
@@ -615,9 +674,9 @@
       }
     },
     {
-      "id": "filing-san-rafael-campaign-entry-32288",
+      "id": "filing-san-rafael-campaign-entry-31117",
       "node_type": "Filing",
-      "display_label": "Form 496 - SR Chamber of Commerce PAC Supporting Kate Colin (10-05-2020)",
+      "display_label": "Form 501 - Kate Colin for San Rafael Mayor 2020 Amendment",
       "year": 2020,
       "source_bundle_ids": [
         "san-rafael-city-campaign-filings-01__bundle-01"
@@ -627,14 +686,15 @@
         "election_id": "election-2020-11-03-san-rafael-general",
         "evidence_record_ids": [
           "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-32288"
+          "record-san-rafael-campaign-filing-entry-31117"
         ],
         "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_496",
-        "posted_at": "2020-10-29",
-        "record_id": "record-san-rafael-campaign-filing-entry-32288",
+        "filing_type": "form_501",
+        "is_amendment": true,
+        "posted_at": "2020-07-23",
+        "record_id": "record-san-rafael-campaign-filing-entry-31117",
         "status": "captured_from_public_folder_listing",
-        "title": "Form 496 - SR Chamber of Commerce PAC Supporting Kate Colin (10-05-2020)"
+        "title": "Form 501 - Kate Colin for San Rafael Mayor 2020 Amendment"
       }
     },
     {
@@ -669,29 +729,6 @@
         "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-32521",
         "status": "captured_from_public_folder_listing",
         "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2020-12-31)"
-      }
-    },
-    {
-      "id": "filing-san-rafael-campaign-entry-32634",
-      "node_type": "Filing",
-      "display_label": "Form 497- Marin Professional Firefighters Association to Measure R (10/20)",
-      "year": 2021,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-mayor-2020",
-        "election_id": "election-2020-11-03-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-32634"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_497",
-        "posted_at": "2021-02-05",
-        "record_id": "record-san-rafael-campaign-filing-entry-32634",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 497- Marin Professional Firefighters Association to Measure R (10/20)"
       }
     },
     {
@@ -734,6 +771,29 @@
           "validationcheck-filing-san-rafael-campaign-entry-33340-schedule-e-itemized-payments-reconciliation-check",
           "validationcheck-filing-san-rafael-campaign-entry-33340-schedule-e-total-payments-rollup-summary-consistency-check"
         ]
+      }
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-32634",
+      "node_type": "Filing",
+      "display_label": "Form 497- Marin Professional Firefighters Association to Measure R (10/20)",
+      "year": 2021,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-mayor-2020",
+        "election_id": "election-2020-11-03-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-32634"
+        ],
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_497",
+        "posted_at": "2021-02-05",
+        "record_id": "record-san-rafael-campaign-filing-entry-32634",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 497- Marin Professional Firefighters Association to Measure R (10/20)"
       }
     },
     {
@@ -839,52 +899,6 @@
       }
     },
     {
-      "id": "filing-san-rafael-campaign-entry-35555",
-      "node_type": "Filing",
-      "display_label": "Form 501 - Kate Colin",
-      "year": 2023,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-        "election_id": "election-2024-11-05-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-35555"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_501",
-        "posted_at": "2023-01-18",
-        "record_id": "record-san-rafael-campaign-filing-entry-35555",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 501 - Kate Colin"
-      }
-    },
-    {
-      "id": "filing-san-rafael-campaign-entry-35556",
-      "node_type": "Filing",
-      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2024; Initial",
-      "year": 2023,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-        "election_id": "election-2024-11-05-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-35556"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_410",
-        "posted_at": "2023-01-19",
-        "record_id": "record-san-rafael-campaign-filing-entry-35556",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 410 - Kate Colin for San Rafael Mayor 2024; Initial"
-      }
-    },
-    {
       "id": "filing-san-rafael-campaign-entry-35557",
       "node_type": "Filing",
       "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020; Termination",
@@ -905,52 +919,6 @@
         "record_id": "record-san-rafael-campaign-filing-entry-35557",
         "status": "captured_from_public_folder_listing",
         "title": "Form 410 - Kate Colin for San Rafael Mayor 2020; Termination"
-      }
-    },
-    {
-      "id": "filing-san-rafael-campaign-entry-35558",
-      "node_type": "Filing",
-      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020; Termination",
-      "year": 2023,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-mayor-2020",
-        "election_id": "election-2020-11-03-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-35558"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_460",
-        "posted_at": "2023-01-19",
-        "record_id": "record-san-rafael-campaign-filing-entry-35558",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020; Termination"
-      }
-    },
-    {
-      "id": "filing-san-rafael-campaign-entry-35559",
-      "node_type": "Filing",
-      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-22",
-      "year": 2023,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-        "election_id": "election-2024-11-05-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-35559"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_460",
-        "posted_at": "2023-01-19",
-        "record_id": "record-san-rafael-campaign-filing-entry-35559",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-22"
       }
     },
     {
@@ -977,29 +945,6 @@
       }
     },
     {
-      "id": "filing-san-rafael-campaign-entry-35813",
-      "node_type": "Filing",
-      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2024; Initial (State)",
-      "year": 2023,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-        "election_id": "election-2024-11-05-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-35813"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_410",
-        "posted_at": "2023-03-28",
-        "record_id": "record-san-rafael-campaign-filing-entry-35813",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 410 - Kate Colin for San Rafael Mayor 2024; Initial (State)"
-      }
-    },
-    {
       "id": "filing-san-rafael-campaign-entry-36094",
       "node_type": "Filing",
       "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment",
@@ -1021,77 +966,6 @@
         "record_id": "record-san-rafael-campaign-filing-entry-36094",
         "status": "captured_from_public_folder_listing",
         "title": "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment"
-      }
-    },
-    {
-      "id": "filing-san-rafael-campaign-entry-36095",
-      "node_type": "Filing",
-      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 06-30-23",
-      "year": 2023,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-        "election_id": "election-2024-11-05-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-36095"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_460",
-        "posted_at": "2023-07-26",
-        "record_id": "record-san-rafael-campaign-filing-entry-36095",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 06-30-23"
-      }
-    },
-    {
-      "id": "filing-san-rafael-campaign-entry-36096",
-      "node_type": "Filing",
-      "display_label": "Form 501 - Kate Colin; Amendment",
-      "year": 2023,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-        "election_id": "election-2024-11-05-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-36096"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_501",
-        "is_amendment": true,
-        "posted_at": "2023-07-26",
-        "record_id": "record-san-rafael-campaign-filing-entry-36096",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 501 - Kate Colin; Amendment"
-      }
-    },
-    {
-      "id": "filing-san-rafael-campaign-entry-36144",
-      "node_type": "Filing",
-      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment (State)",
-      "year": 2023,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-        "election_id": "election-2024-11-05-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-36144"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_410",
-        "is_amendment": true,
-        "posted_at": "2023-08-01",
-        "record_id": "record-san-rafael-campaign-filing-entry-36144",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment (State)"
       }
     },
     {
@@ -1143,6 +1017,192 @@
       }
     },
     {
+      "id": "filing-san-rafael-campaign-entry-36144",
+      "node_type": "Filing",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment (State)",
+      "year": 2023,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "election_id": "election-2024-11-05-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-36144"
+        ],
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_410",
+        "is_amendment": true,
+        "posted_at": "2023-08-01",
+        "record_id": "record-san-rafael-campaign-filing-entry-36144",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment (State)"
+      }
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-35556",
+      "node_type": "Filing",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2024; Initial",
+      "year": 2023,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "election_id": "election-2024-11-05-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-35556"
+        ],
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_410",
+        "posted_at": "2023-01-19",
+        "record_id": "record-san-rafael-campaign-filing-entry-35556",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2024; Initial"
+      }
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-35813",
+      "node_type": "Filing",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2024; Initial (State)",
+      "year": 2023,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "election_id": "election-2024-11-05-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-35813"
+        ],
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_410",
+        "posted_at": "2023-03-28",
+        "record_id": "record-san-rafael-campaign-filing-entry-35813",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2024; Initial (State)"
+      }
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-35558",
+      "node_type": "Filing",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020; Termination",
+      "year": 2023,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-mayor-2020",
+        "election_id": "election-2020-11-03-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-35558"
+        ],
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_460",
+        "posted_at": "2023-01-19",
+        "record_id": "record-san-rafael-campaign-filing-entry-35558",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020; Termination"
+      }
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-36095",
+      "node_type": "Filing",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 06-30-23",
+      "year": 2023,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "election_id": "election-2024-11-05-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-36095"
+        ],
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_460",
+        "posted_at": "2023-07-26",
+        "record_id": "record-san-rafael-campaign-filing-entry-36095",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 06-30-23"
+      }
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-35559",
+      "node_type": "Filing",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-22",
+      "year": 2023,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "election_id": "election-2024-11-05-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-35559"
+        ],
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_460",
+        "posted_at": "2023-01-19",
+        "record_id": "record-san-rafael-campaign-filing-entry-35559",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-22"
+      }
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-35555",
+      "node_type": "Filing",
+      "display_label": "Form 501 - Kate Colin",
+      "year": 2023,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "election_id": "election-2024-11-05-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-35555"
+        ],
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_501",
+        "posted_at": "2023-01-18",
+        "record_id": "record-san-rafael-campaign-filing-entry-35555",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 501 - Kate Colin"
+      }
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-36096",
+      "node_type": "Filing",
+      "display_label": "Form 501 - Kate Colin; Amendment",
+      "year": 2023,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "election_id": "election-2024-11-05-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-36096"
+        ],
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_501",
+        "is_amendment": true,
+        "posted_at": "2023-07-26",
+        "record_id": "record-san-rafael-campaign-filing-entry-36096",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 501 - Kate Colin; Amendment"
+      }
+    },
+    {
       "id": "filing-san-rafael-form700-2023-03-14-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
       "node_type": "Filing",
       "display_label": "filing-san-rafael-form700-2023-03-14-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
@@ -1168,29 +1228,6 @@
         "source_filer_name": "Colin, Catherine",
         "statement_type": "Annual",
         "status": "historical_officeholder_continuity"
-      }
-    },
-    {
-      "id": "filing-san-rafael-campaign-entry-36561",
-      "node_type": "Filing",
-      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-23",
-      "year": 2024,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-        "election_id": "election-2024-11-05-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-36561"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_460",
-        "posted_at": "2024-02-02",
-        "record_id": "record-san-rafael-campaign-filing-entry-36561",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-23"
       }
     },
     {
@@ -1241,9 +1278,9 @@
       }
     },
     {
-      "id": "filing-san-rafael-campaign-entry-37609",
+      "id": "filing-san-rafael-campaign-entry-36561",
       "node_type": "Filing",
-      "display_label": "Form 497 - Kate Colin for San Rafael Mayor 2024; 09-17-24",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-23",
       "year": 2024,
       "source_bundle_ids": [
         "san-rafael-city-campaign-filings-01__bundle-01"
@@ -1253,14 +1290,14 @@
         "election_id": "election-2024-11-05-san-rafael-general",
         "evidence_record_ids": [
           "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-37609"
+          "record-san-rafael-campaign-filing-entry-36561"
         ],
         "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_497",
-        "posted_at": "2024-09-17",
-        "record_id": "record-san-rafael-campaign-filing-entry-37609",
+        "filing_type": "form_460",
+        "posted_at": "2024-02-02",
+        "record_id": "record-san-rafael-campaign-filing-entry-36561",
         "status": "captured_from_public_folder_listing",
-        "title": "Form 497 - Kate Colin for San Rafael Mayor 2024; 09-17-24"
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-23"
       }
     },
     {
@@ -1310,29 +1347,6 @@
       }
     },
     {
-      "id": "filing-san-rafael-campaign-entry-37733",
-      "node_type": "Filing",
-      "display_label": "Form 497 - Kate Colin for San Rafael Mayor 2024; 10-11-24",
-      "year": 2024,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-        "election_id": "election-2024-11-05-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-37733"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_497",
-        "posted_at": "2024-10-14",
-        "record_id": "record-san-rafael-campaign-filing-entry-37733",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 497 - Kate Colin for San Rafael Mayor 2024; 10-11-24"
-      }
-    },
-    {
       "id": "filing-san-rafael-campaign-entry-37775",
       "node_type": "Filing",
       "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 2nd preelection",
@@ -1353,6 +1367,52 @@
         "record_id": "record-san-rafael-campaign-filing-entry-37775",
         "status": "captured_from_public_folder_listing",
         "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 2nd preelection"
+      }
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-37609",
+      "node_type": "Filing",
+      "display_label": "Form 497 - Kate Colin for San Rafael Mayor 2024; 09-17-24",
+      "year": 2024,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "election_id": "election-2024-11-05-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-37609"
+        ],
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_497",
+        "posted_at": "2024-09-17",
+        "record_id": "record-san-rafael-campaign-filing-entry-37609",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 497 - Kate Colin for San Rafael Mayor 2024; 09-17-24"
+      }
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-37733",
+      "node_type": "Filing",
+      "display_label": "Form 497 - Kate Colin for San Rafael Mayor 2024; 10-11-24",
+      "year": 2024,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "election_id": "election-2024-11-05-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-37733"
+        ],
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_497",
+        "posted_at": "2024-10-14",
+        "record_id": "record-san-rafael-campaign-filing-entry-37733",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 497 - Kate Colin for San Rafael Mayor 2024; 10-11-24"
       }
     },
     {
@@ -1430,29 +1490,26 @@
       }
     },
     {
-      "id": "filing-2025-09-04-kate-colin-form-803",
+      "id": "filing-san-rafael-campaign-entry-40949",
       "node_type": "Filing",
-      "display_label": "filing-2025-09-04-kate-colin-form-803",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 06-30-25",
       "year": 2025,
       "source_bundle_ids": [
-        "campaign-finance-form-803-slice-01__bundle-01"
+        "san-rafael-city-campaign-filings-01__bundle-01"
       ],
       "properties": {
+        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "election_id": "election-2024-11-05-san-rafael-general",
         "evidence_record_ids": [
-          "record-san-rafael-public-records-form-803-search",
-          "record-kate-colin-form-803-2025-09-04"
+          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-40949"
         ],
-        "filing_institution_id": "inst-city-of-san-rafael",
-        "filing_officer_institution_id": "inst-san-rafael-city-clerk",
-        "filing_type": "form_803",
-        "last_modified_at": "2025-09-18T19:52:23-07:00",
-        "official_actor_id": "actor-kate-colin",
-        "official_seat_id": "seat-san-rafael-mayor-at-large",
-        "official_seat_service_id": "seatservice-kate-colin-mayor-current",
-        "page_count": 1,
-        "posted_at": "2025-09-17T20:21:03-07:00",
-        "record_locator": "entry_id:41053",
-        "signed_at": "2025-09-04"
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_460",
+        "posted_at": "2025-07-31",
+        "record_id": "record-san-rafael-campaign-filing-entry-40949",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 06-30-25"
       }
     },
     {
@@ -1479,29 +1536,6 @@
       }
     },
     {
-      "id": "filing-san-rafael-campaign-entry-40949",
-      "node_type": "Filing",
-      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 06-30-25",
-      "year": 2025,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-        "election_id": "election-2024-11-05-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-40949"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_460",
-        "posted_at": "2025-07-31",
-        "record_id": "record-san-rafael-campaign-filing-entry-40949",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 06-30-25"
-      }
-    },
-    {
       "id": "filing-san-rafael-campaign-entry-41053",
       "node_type": "Filing",
       "display_label": "Form 803 - Kate Colin",
@@ -1522,6 +1556,32 @@
         "record_id": "record-san-rafael-campaign-filing-entry-41053",
         "status": "captured_from_public_folder_listing",
         "title": "Form 803 - Kate Colin"
+      }
+    },
+    {
+      "id": "filing-2025-09-04-kate-colin-form-803",
+      "node_type": "Filing",
+      "display_label": "filing-2025-09-04-kate-colin-form-803",
+      "year": 2025,
+      "source_bundle_ids": [
+        "campaign-finance-form-803-slice-01__bundle-01"
+      ],
+      "properties": {
+        "evidence_record_ids": [
+          "record-san-rafael-public-records-form-803-search",
+          "record-kate-colin-form-803-2025-09-04"
+        ],
+        "filing_institution_id": "inst-city-of-san-rafael",
+        "filing_officer_institution_id": "inst-san-rafael-city-clerk",
+        "filing_type": "form_803",
+        "last_modified_at": "2025-09-18T19:52:23-07:00",
+        "official_actor_id": "actor-kate-colin",
+        "official_seat_id": "seat-san-rafael-mayor-at-large",
+        "official_seat_service_id": "seatservice-kate-colin-mayor-current",
+        "page_count": 1,
+        "posted_at": "2025-09-17T20:21:03-07:00",
+        "record_locator": "entry_id:41053",
+        "signed_at": "2025-09-04"
       }
     },
     {
@@ -1553,29 +1613,6 @@
       }
     },
     {
-      "id": "filing-san-rafael-campaign-entry-41858",
-      "node_type": "Filing",
-      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-25",
-      "year": 2026,
-      "source_bundle_ids": [
-        "san-rafael-city-campaign-filings-01__bundle-01"
-      ],
-      "properties": {
-        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
-        "election_id": "election-2024-11-05-san-rafael-general",
-        "evidence_record_ids": [
-          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
-          "record-san-rafael-campaign-filing-entry-41858"
-        ],
-        "filer_actor_id": "actor-kate-colin",
-        "filing_type": "form_460",
-        "posted_at": "2026-01-30",
-        "record_id": "record-san-rafael-campaign-filing-entry-41858",
-        "status": "captured_from_public_folder_listing",
-        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-25"
-      }
-    },
-    {
       "id": "filing-san-rafael-campaign-entry-41859",
       "node_type": "Filing",
       "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 07-01-24 - 09-21-24; Amendment",
@@ -1597,6 +1634,29 @@
         "record_id": "record-san-rafael-campaign-filing-entry-41859",
         "status": "captured_from_public_folder_listing",
         "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 07-01-24 - 09-21-24; Amendment"
+      }
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-41858",
+      "node_type": "Filing",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-25",
+      "year": 2026,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "election_id": "election-2024-11-05-san-rafael-general",
+        "evidence_record_ids": [
+          "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+          "record-san-rafael-campaign-filing-entry-41858"
+        ],
+        "filer_actor_id": "actor-kate-colin",
+        "filing_type": "form_460",
+        "posted_at": "2026-01-30",
+        "record_id": "record-san-rafael-campaign-filing-entry-41858",
+        "status": "captured_from_public_folder_listing",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-25"
       }
     }
   ],
@@ -1960,11 +2020,370 @@
       "vote": "aye",
       "seat_id": null,
       "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-06-17-san-rafael-city-council-6a-resolution-adoption-14688",
+      "decision_label": "Grand Jury Response on Wildfire Preparedness",
+      "meeting_id": "meeting-2019-06-17-san-rafael-city-council",
+      "meeting_date": "2019-06-17",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-06-17-san-rafael-city-council-6b-resolution-adoption-14689",
+      "decision_label": "Accepted report",
+      "meeting_id": "meeting-2019-06-17-san-rafael-city-council",
+      "meeting_date": "2019-06-17",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-07-15-san-rafael-city-council-4-consent-calendar-approval",
+      "decision_label": "approve the remainder of the",
+      "meeting_id": "meeting-2019-07-15-san-rafael-city-council",
+      "meeting_date": "2019-07-15",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-07-15-san-rafael-city-council-4i-resolution-adoption-14706",
+      "decision_label": "Marin County Multi-Jurisdictional Local Hazard Mitigation Plan",
+      "meeting_id": "meeting-2019-07-15-san-rafael-city-council",
+      "meeting_date": "2019-07-15",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-07-15-san-rafael-city-council-6a-resolution-adoption-14707",
+      "decision_label": "Point San Pedro Median Landscaping Assessment District",
+      "meeting_id": "meeting-2019-07-15-san-rafael-city-council",
+      "meeting_date": "2019-07-15",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-07-15-san-rafael-city-council-6b-resolution-adoption-14708",
+      "decision_label": "Baypoint Lagoons Landscaping and Lighting Assessment District",
+      "meeting_id": "meeting-2019-07-15-san-rafael-city-council",
+      "meeting_date": "2019-07-15",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-07-15-san-rafael-city-council-6c-resolution-adoption-14709",
+      "decision_label": "Vacate a Portion of Jacoby Street",
+      "meeting_id": "meeting-2019-07-15-san-rafael-city-council",
+      "meeting_date": "2019-07-15",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-07-15-san-rafael-city-council-6d-resolution-adoption-14710",
+      "decision_label": "Freitas Parkway Undergrounding District",
+      "meeting_id": "meeting-2019-07-15-san-rafael-city-council",
+      "meeting_date": "2019-07-15",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-07-15-san-rafael-city-council-7a-resolution-adoption-14711",
+      "decision_label": "Grand Jury Report: \"Vaping: An Under-the-Radar Epidemic\"",
+      "meeting_id": "meeting-2019-07-15-san-rafael-city-council",
+      "meeting_date": "2019-07-15",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-07-15-san-rafael-city-council-7b-resolution-adoption-14426-14712",
+      "decision_label": "Accepted report",
+      "meeting_id": "meeting-2019-07-15-san-rafael-city-council",
+      "meeting_date": "2019-07-15",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-07-15-san-rafael-city-council-7c-resolution-adoption-14713-14714",
+      "decision_label": "Citywide Budget, Capital Improvement Program and Legal Spending Limit FY 2019-20",
+      "meeting_id": "meeting-2019-07-15-san-rafael-city-council",
+      "meeting_date": "2019-07-15",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-08-05-san-rafael-city-council-4-consent-calendar-approval",
+      "decision_label": "approve Consent",
+      "meeting_id": "meeting-2019-08-05-san-rafael-city-council",
+      "meeting_date": "2019-08-05",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-08-05-san-rafael-city-council-5a-report-acceptance-accepted-report",
+      "decision_label": "Accepted report",
+      "meeting_id": "meeting-2019-08-05-san-rafael-city-council",
+      "meeting_date": "2019-08-05",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-08-05-san-rafael-city-council-5b-report-acceptance-accepted-report-and-provided-feedback-to-staff",
+      "decision_label": "Accepted report and provided feedback to staff",
+      "meeting_id": "meeting-2019-08-05-san-rafael-city-council",
+      "meeting_date": "2019-08-05",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-08-05-san-rafael-city-council-5c-report-acceptance-accepted-report",
+      "decision_label": "Accepted report",
+      "meeting_id": "meeting-2019-08-05-san-rafael-city-council",
+      "meeting_date": "2019-08-05",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-08-05-san-rafael-city-council-5d-resolution-adoption-14716",
+      "decision_label": "Grand Jury Report: \"School Resource Officers\"",
+      "meeting_id": "meeting-2019-08-05-san-rafael-city-council",
+      "meeting_date": "2019-08-05",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-08-19-san-rafael-city-council-4-consent-calendar-approval",
+      "decision_label": "approve Consent",
+      "meeting_id": "meeting-2019-08-19-san-rafael-city-council",
+      "meeting_date": "2019-08-19",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-08-19-san-rafael-city-council-6a-motion-approval",
+      "decision_label": "Alarm Ordinance Revision",
+      "meeting_id": "meeting-2019-08-19-san-rafael-city-council",
+      "meeting_date": "2019-08-19",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-08-19-san-rafael-city-council-7a-continuance-continued-to-city-council-meeting-of-monday-september-3-2019",
+      "decision_label": "Continued to City Council meeting of Monday, September 3, 2019",
+      "meeting_id": "meeting-2019-08-19-san-rafael-city-council",
+      "meeting_date": "2019-08-19",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-09-03-san-rafael-city-council-4c-continuance-continued",
+      "decision_label": "Continued",
+      "meeting_id": "meeting-2019-09-03-san-rafael-city-council",
+      "meeting_date": "2019-09-03",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-09-03-san-rafael-city-council-6a-report-acceptance-accepted-report",
+      "decision_label": "Accepted report",
+      "meeting_id": "meeting-2019-09-03-san-rafael-city-council",
+      "meeting_date": "2019-09-03",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-09-03-san-rafael-city-council-6b-report-acceptance-accepted-report",
+      "decision_label": "Accepted report",
+      "meeting_id": "meeting-2019-09-03-san-rafael-city-council",
+      "meeting_date": "2019-09-03",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-09-03-san-rafael-city-council-6c-resolution-adoption-14721",
+      "decision_label": "Grand Jury Report: \"Marin's Telecommunications Disconnect\"",
+      "meeting_id": "meeting-2019-09-03-san-rafael-city-council",
+      "meeting_date": "2019-09-03",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-09-16-san-rafael-city-council-4-consent-calendar-approval",
+      "decision_label": "approve the remainder",
+      "meeting_id": "meeting-2019-09-16-san-rafael-city-council",
+      "meeting_date": "2019-09-16",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-09-16-san-rafael-city-council-4d-resolution-adoption-14725",
+      "decision_label": "Senate Bill 2 Planning Grants Program",
+      "meeting_id": "meeting-2019-09-16-san-rafael-city-council",
+      "meeting_date": "2019-09-16",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-09-16-san-rafael-city-council-5a-report-acceptance-accepted-report-and-provided-feedback-to-staff",
+      "decision_label": "Accepted report and provided feedback to staff",
+      "meeting_id": "meeting-2019-09-16-san-rafael-city-council",
+      "meeting_date": "2019-09-16",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-09-16-san-rafael-city-council-5b-report-acceptance-accepted-report",
+      "decision_label": "Accepted report",
+      "meeting_id": "meeting-2019-09-16-san-rafael-city-council",
+      "meeting_date": "2019-09-16",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-09-16-san-rafael-city-council-5c-resolution-adoption-14726",
+      "decision_label": "Library and Recreation Personnel Changes",
+      "meeting_id": "meeting-2019-09-16-san-rafael-city-council",
+      "meeting_date": "2019-09-16",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-10-07-san-rafael-city-council-4-consent-calendar-approval",
+      "decision_label": "approve Consent",
+      "meeting_id": "meeting-2019-10-07-san-rafael-city-council",
+      "meeting_date": "2019-10-07",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-10-07-san-rafael-city-council-5a-resolution-adoption-14729",
+      "decision_label": "New 120-Residential Unit Mixed-Use Building - 703-723 Third Street",
+      "meeting_id": "meeting-2019-10-07-san-rafael-city-council",
+      "meeting_date": "2019-10-07",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-10-07-san-rafael-city-council-5b-report-acceptance-accepted-report-and-provided-direction-to-staff",
+      "decision_label": "Accepted report and provided direction to staff",
+      "meeting_id": "meeting-2019-10-07-san-rafael-city-council",
+      "meeting_date": "2019-10-07",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-10-07-san-rafael-city-council-5c-resolution-adoption-14730",
+      "decision_label": "Information Technology Services Agreement",
+      "meeting_id": "meeting-2019-10-07-san-rafael-city-council",
+      "meeting_date": "2019-10-07",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-10-21-san-rafael-city-council-5-consent-calendar-approval",
+      "decision_label": "approve Consent",
+      "meeting_id": "meeting-2019-10-21-san-rafael-city-council",
+      "meeting_date": "2019-10-21",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-10-21-san-rafael-city-council-6a-resolution-adoption-14733",
+      "decision_label": "Marin Wildfire Prevention Authority",
+      "meeting_id": "meeting-2019-10-21-san-rafael-city-council",
+      "meeting_date": "2019-10-21",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-10-29-san-rafael-city-council-2-motion-approval",
+      "decision_label": "adopt the",
+      "meeting_id": "meeting-2019-10-29-san-rafael-city-council",
+      "meeting_date": "2019-10-29",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-11-04-san-rafael-city-council-4-consent-calendar-approval",
+      "decision_label": "approve the remainder",
+      "meeting_id": "meeting-2019-11-04-san-rafael-city-council",
+      "meeting_date": "2019-11-04",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-11-04-san-rafael-city-council-4g-resolution-adoption-14736",
+      "decision_label": "Termination of Local Emergency",
+      "meeting_id": "meeting-2019-11-04-san-rafael-city-council",
+      "meeting_date": "2019-11-04",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-11-04-san-rafael-city-council-6a-resolution-adoption-14737",
+      "decision_label": "Short-Term Rental Ordinance and Policy Resolution",
+      "meeting_id": "meeting-2019-11-04-san-rafael-city-council",
+      "meeting_date": "2019-11-04",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-11-04-san-rafael-city-council-6b-motion-approval",
+      "decision_label": "Noise Ordinance Amendments for Utility Power Outages",
+      "meeting_id": "meeting-2019-11-04-san-rafael-city-council",
+      "meeting_date": "2019-11-04",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
+    },
+    {
+      "decision_id": "decision-2019-11-04-san-rafael-city-council-7a-motion-approval",
+      "decision_label": "Local 1021 - Child Care Unit Memorandum of Understanding",
+      "meeting_id": "meeting-2019-11-04-san-rafael-city-council",
+      "meeting_date": "2019-11-04",
+      "vote": "aye",
+      "seat_id": null,
+      "seat_service_id": null
     }
   ],
   "money_flows": [
     {
-      "relationship_type": "REQUESTED_BY_ACTOR",
       "money_flow": {
         "id": "moneyflow-2025-08-08-pge-to-canal-alliance-form-803",
         "node_type": "MoneyFlow",
@@ -1991,40 +2410,1980 @@
           "requested_by_seat_service_id": "seatservice-kate-colin-mayor-current",
           "to_actor_id": "actor-canal-alliance"
         }
+      },
+      "relationship_types": [
+        "REQUESTED_BY_ACTOR"
+      ]
+    }
+  ],
+  "evidence_records": [
+    {
+      "id": "record-kate-colin-form-803-2025-09-04",
+      "node_type": "Record",
+      "display_label": "record-kate-colin-form-803-2025-09-04",
+      "year": null,
+      "source_bundle_ids": [
+        "campaign-finance-form-803-slice-01__bundle-01",
+        "canonical-seeds-san-rafael-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-kate-colin-form-803-2025-09-04/2026-04-11/source.txt",
+        "record_class": "financial_record",
+        "record_type": "form_803",
+        "source_id": "san-rafael-kate-colin-form-803-2025-09-04"
+      }
+    },
+    {
+      "id": "record-san-rafael-boyd-dismissal-release-2024-08-08",
+      "node_type": "Record",
+      "display_label": "record-san-rafael-boyd-dismissal-release-2024-08-08",
+      "year": null,
+      "source_bundle_ids": [
+        "canonical-seeds-san-rafael-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-boyd-dismissal-news-release/2026-04-10/source.html",
+        "record_class": "media_record",
+        "record_type": "official_news_release",
+        "source_id": "san-rafael-boyd-dismissal-news-release"
+      }
+    },
+    {
+      "id": "record-san-rafael-city-council-2024-08-19-item-5a-report",
+      "node_type": "Record",
+      "display_label": "record-san-rafael-city-council-2024-08-19-item-5a-report",
+      "year": null,
+      "source_bundle_ids": [
+        "canonical-seeds-san-rafael-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-aug-19-2024-council-meeting/2026-04-10/item-5a-report.pdf",
+        "record_class": "meeting_record",
+        "record_type": "agenda_report",
+        "source_id": "san-rafael-aug-19-2024-council-meeting"
+      }
+    },
+    {
+      "id": "record-san-rafael-city-council-page-2026-04-11",
+      "node_type": "Record",
+      "display_label": "record-san-rafael-city-council-page-2026-04-11",
+      "year": null,
+      "source_bundle_ids": [
+        "canonical-seeds-san-rafael-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-council-page/2026-04-11/source.html",
+        "record_class": "administrative_record",
+        "record_type": "department_page",
+        "source_id": "san-rafael-city-council-page"
+      }
+    },
+    {
+      "id": "record-san-rafael-downtown-library-reopening-2025-04-07",
+      "node_type": "Record",
+      "display_label": "record-san-rafael-downtown-library-reopening-2025-04-07",
+      "year": null,
+      "source_bundle_ids": [
+        "canonical-seeds-san-rafael-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-downtown-library-reopening/2026-04-11/source.html",
+        "record_class": "program_record",
+        "record_type": "official_update",
+        "source_id": "san-rafael-downtown-library-reopening"
+      }
+    },
+    {
+      "id": "record-san-rafael-elected-officials-2026-04-11",
+      "node_type": "Record",
+      "display_label": "record-san-rafael-elected-officials-2026-04-11",
+      "year": null,
+      "source_bundle_ids": [
+        "canonical-seeds-san-rafael-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-elected-officials/2026-04-11/source.html",
+        "record_class": "administrative_record",
+        "record_type": "official_roster_page",
+        "source_id": "san-rafael-elected-officials"
+      }
+    },
+    {
+      "id": "record-san-rafael-form700-export-2026-04-12",
+      "node_type": "Record",
+      "display_label": "record-san-rafael-form700-export-2026-04-12",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-officeholder-disclosures-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-sei-netfile-portal/2026-04-12/form700-700-filers-export.xls",
+        "record_class": "financial_record",
+        "record_type": "form_700_export",
+        "source_id": "san-rafael-sei-netfile-portal"
+      }
+    },
+    {
+      "id": "record-san-rafael-november-5-2024-election-page",
+      "node_type": "Record",
+      "display_label": "record-san-rafael-november-5-2024-election-page",
+      "year": null,
+      "source_bundle_ids": [
+        "canonical-seeds-san-rafael-01",
+        "san-rafael-city-campaign-records-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-november-5-2024-election/2026-04-11/source.html",
+        "capture_status": "captured",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_url": "https://www.cityofsanrafael.org/november-5-2024-election/",
+        "record_class": "administrative_record",
+        "record_type": "election_results_page",
+        "source_id": "san-rafael-november-5-2024-election",
+        "title": "November 5, 2024 Election - San Rafael"
       }
     }
   ],
-  "record_ids": [
-    "doc-2024-08-19-item-5a-report",
-    "doc-2024-08-19-minutes",
-    "record-2019-01-22-san-rafael-city-council-minutes",
-    "record-2019-02-04-san-rafael-city-council-minutes",
-    "record-2019-02-19-san-rafael-city-council-minutes",
-    "record-2019-03-04-san-rafael-city-council-minutes",
-    "record-2019-03-18-san-rafael-city-council-minutes",
-    "record-2019-04-02-san-rafael-city-council-minutes",
-    "record-2019-04-15-san-rafael-city-council-minutes",
-    "record-2019-05-06-san-rafael-city-council-minutes",
-    "record-2019-05-20-san-rafael-city-council-minutes",
-    "record-2019-06-03-san-rafael-city-council-minutes",
-    "record-2019-06-17-san-rafael-city-council-minutes",
-    "record-2019-07-15-san-rafael-city-council-minutes",
-    "record-2019-08-05-san-rafael-city-council-minutes",
-    "record-2019-08-19-san-rafael-city-council-minutes",
-    "record-2019-09-03-san-rafael-city-council-minutes",
-    "record-2019-09-16-san-rafael-city-council-minutes",
-    "record-2019-10-07-san-rafael-city-council-minutes",
-    "record-2019-10-21-san-rafael-city-council-minutes",
-    "record-2019-10-29-san-rafael-city-council-minutes",
-    "record-2019-11-04-san-rafael-city-council-minutes",
-    "record-2019-11-18-san-rafael-city-council-minutes",
-    "record-2019-11-18-san-rafael-city-council-special-minutes",
-    "record-2019-12-02-san-rafael-city-council-minutes",
-    "record-2019-12-16-san-rafael-city-council-minutes",
-    "record-2020-01-21-san-rafael-city-council-minutes",
-    "record-2020-02-03-san-rafael-city-council-minutes",
-    "record-2020-02-18-san-rafael-city-council-minutes",
-    "record-2020-03-02-san-rafael-city-council-minutes",
-    "... (+212 more)"
+  "related_records": [
+    {
+      "id": "record-san-rafael-campaign-filing-entry-28599",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 (State)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=28599&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 28599,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 2,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 (State)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-28439",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 1",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=28439&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 28439,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 3,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 1"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-28597",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 1 (State)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=28597&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 28597,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 2,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 1 (State)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-28598",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 2",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=28598&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 28598,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 3,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 2"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-28601",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 2 (State)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=28601&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 28601,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 2,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 2 (State)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-28600",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 3",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=28600&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 28600,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 3,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 3"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-31941",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 3 (State)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=31941&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 31941,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 2,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 3 (State)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-31114",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 4",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=31114&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 31114,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 3,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 4"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-31874",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 4 (State)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=31874&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 31874,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 3,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020 Amendment 4 (State)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-35557",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020; Termination",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=35557&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 35557,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 3,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020; Termination"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-35646",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2020; Termination (State)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=35646&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 35646,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 3,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2020; Termination (State)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-36094",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=36094&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 36094,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 3,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-36410",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment (11-16-23)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=36410&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 36410,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 3,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment (11-16-23)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-36459",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment (11-16-23) State",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=36459&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 36459,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 3,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment (11-16-23) State"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-36144",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment (State)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=36144&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 36144,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 3,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2024; Amendment (State)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-35556",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2024; Initial",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=35556&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 35556,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 3,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2024; Initial"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-35813",
+      "node_type": "Record",
+      "display_label": "Form 410 - Kate Colin for San Rafael Mayor 2024; Initial (State)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=35813&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 35813,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 3,
+        "record_class": "financial_record",
+        "record_type": "form_410",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 410 - Kate Colin for San Rafael Mayor 2024; Initial (State)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-28450",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=28450&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 28450,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 5,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-31116",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31) Amendment",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=31116&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 31116,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 6,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31) Amendment"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-31115",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2020-06-30)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=31115&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 31115,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 19,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2020-06-30)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-32521",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2020-12-31)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=32521&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 32521,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 12,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2020-12-31)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-33340",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2021-06-30)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=33340&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 33340,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 6,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2021-06-30)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-33990",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2021-12-31)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=33990&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 33990,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 6,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2021-12-31)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-34864",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2022-06-30)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=34864&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 34864,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 5,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2022-06-30)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-31935",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 1st Preelection",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=31935&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 31935,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 24,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 1st Preelection"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-32228",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 2nd Preelection",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=32228&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 32228,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 18,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 2nd Preelection"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-35558",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020; Termination",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=35558&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 35558,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 7,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2020; Termination"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-36095",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 06-30-23",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=36095&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 36095,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 17,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 06-30-23"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-37369",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 06-30-24",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=37369&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 37369,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 9,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 06-30-24"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-37487",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 06-30-24; Amendment",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=37487&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 37487,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 19,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 06-30-24; Amendment"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-40949",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 06-30-25",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=40949&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 40949,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 5,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 06-30-25"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-41859",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 07-01-24 - 09-21-24; Amendment",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=41859&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 41859,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 27,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 07-01-24 - 09-21-24; Amendment"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-35559",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-22",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=35559&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 35559,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 5,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-22"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-36561",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-23",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=36561&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 36561,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 13,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-23"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-40249",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-24",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=40249&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 40249,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 12,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-24"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-41858",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-25",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=41858&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 41858,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 3,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 12-31-25"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-37677",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=37677&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 37677,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 26,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-37775",
+      "node_type": "Record",
+      "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 2nd preelection",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=37775&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 37775,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 12,
+        "record_class": "financial_record",
+        "record_type": "form_460",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 2nd preelection"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-32288",
+      "node_type": "Record",
+      "display_label": "Form 496 - SR Chamber of Commerce PAC Supporting Kate Colin (10-05-2020)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=32288&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 32288,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 4,
+        "record_class": "financial_record",
+        "record_type": "form_496",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 496 - SR Chamber of Commerce PAC Supporting Kate Colin (10-05-2020)"
+      }
+    },
+    {
+      "id": "record-san-rafael-ie-filing-entry-32166",
+      "node_type": "Record",
+      "display_label": "Form 496 - SR Chamber of Commerce PAC Supporting Kate Colin (10-05-2020)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-ie-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-sr-chamber-of-commerce-pac-2020-11-03-san-rafael-general-ie"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=32166&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 32166,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-independent-expenditure-filings-folder",
+        "page_count": 4,
+        "record_class": "financial_record",
+        "record_type": "form_496",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "target_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "template_name": "FPPC Materials",
+        "title": "Form 496 - SR Chamber of Commerce PAC Supporting Kate Colin (10-05-2020)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-32132",
+      "node_type": "Record",
+      "display_label": "Form 497 - Kate Colin for San Rafael Mayor 2020 (09-28-20)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=32132&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 32132,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 1,
+        "record_class": "financial_record",
+        "record_type": "form_497",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 497 - Kate Colin for San Rafael Mayor 2020 (09-28-20)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-32225",
+      "node_type": "Record",
+      "display_label": "Form 497 - Kate Colin for San Rafael Mayor 2020 (10-19-20)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=32225&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 32225,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 1,
+        "record_class": "financial_record",
+        "record_type": "form_497",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 497 - Kate Colin for San Rafael Mayor 2020 (10-19-20)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-32278",
+      "node_type": "Record",
+      "display_label": "Form 497 - Kate Colin for San Rafael Mayor 2020 (10-27-20)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=32278&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 32278,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 1,
+        "record_class": "financial_record",
+        "record_type": "form_497",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 497 - Kate Colin for San Rafael Mayor 2020 (10-27-20)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-37609",
+      "node_type": "Record",
+      "display_label": "Form 497 - Kate Colin for San Rafael Mayor 2024; 09-17-24",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=37609&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 37609,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 1,
+        "record_class": "financial_record",
+        "record_type": "form_497",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 497 - Kate Colin for San Rafael Mayor 2024; 09-17-24"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-37733",
+      "node_type": "Record",
+      "display_label": "Form 497 - Kate Colin for San Rafael Mayor 2024; 10-11-24",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=37733&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 37733,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 1,
+        "record_class": "financial_record",
+        "record_type": "form_497",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 497 - Kate Colin for San Rafael Mayor 2024; 10-11-24"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-37776",
+      "node_type": "Record",
+      "display_label": "Form 497 - Kate Colin for San Rafael Mayor 2024; 10-25-24",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=37776&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 37776,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 1,
+        "record_class": "financial_record",
+        "record_type": "form_497",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 497 - Kate Colin for San Rafael Mayor 2024; 10-25-24"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-37809",
+      "node_type": "Record",
+      "display_label": "Form 497 - Kate Colin for San Rafael Mayor 2024; 10-29-24",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=37809&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 37809,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 1,
+        "record_class": "financial_record",
+        "record_type": "form_497",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 497 - Kate Colin for San Rafael Mayor 2024; 10-29-24"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-32634",
+      "node_type": "Record",
+      "display_label": "Form 497- Marin Professional Firefighters Association to Measure R (10/20)",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=32634&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 32634,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 1,
+        "record_class": "financial_record",
+        "record_type": "form_497",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 497- Marin Professional Firefighters Association to Measure R (10/20)"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-35555",
+      "node_type": "Record",
+      "display_label": "Form 501 - Kate Colin",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=35555&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 35555,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 1,
+        "record_class": "financial_record",
+        "record_type": "form_501",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 501 - Kate Colin"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-31117",
+      "node_type": "Record",
+      "display_label": "Form 501 - Kate Colin for San Rafael Mayor 2020 Amendment",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-mayor-2020"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=31117&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "entry_id": 31117,
+        "folder_record_id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+        "page_count": 1,
+        "record_class": "financial_record",
+        "record_type": "form_501",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 501 - Kate Colin for San Rafael Mayor 2020 Amendment"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-36096",
+      "node_type": "Record",
+      "display_label": "Form 501 - Kate Colin; Amendment",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=36096&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 36096,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 1,
+        "record_class": "financial_record",
+        "record_type": "form_501",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 501 - Kate Colin; Amendment"
+      }
+    },
+    {
+      "id": "record-san-rafael-campaign-filing-entry-41053",
+      "node_type": "Record",
+      "display_label": "Form 803 - Kate Colin",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-filings-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-campaign-folder-listings/2026-04-12/folder-listings.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "capture_status": "captured_from_folder_listing",
+        "committee_ids": [
+          "committee-kate-colin-for-san-rafael-mayor-2024"
+        ],
+        "doc_url": "https://publicrecords.cityofsanrafael.org/WebLink/DocView.aspx?id=41053&dbid=0&repo=CityofSanRafael",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "entry_id": 41053,
+        "folder_record_id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+        "page_count": 1,
+        "record_class": "financial_record",
+        "record_type": "form_803",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "source_id": "san-rafael-city-campaign-folder-listings",
+        "template_name": "FPPC Materials",
+        "title": "Form 803 - Kate Colin"
+      }
+    },
+    {
+      "id": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+      "node_type": "Record",
+      "display_label": "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-records-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "candidate_name": "Kate Colin",
+        "capture_status": "discovery_only",
+        "election_ids": [
+          "election-2020-11-03-san-rafael-general"
+        ],
+        "election_label": "November 3, 2020 Election - San Rafael",
+        "entry_id": 31079,
+        "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=31079&dbid=0&repo=CityofSanRafael",
+        "label": "Kate Colin campaign filings folder",
+        "linked_from_source_ids": [
+          "san-rafael-november-3-2020-election"
+        ],
+        "office_label": "Mayoral Candidates",
+        "record_class": "financial_record",
+        "record_type": "campaign_filing_folder",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "section_label": "City of San Rafael Election",
+        "source_id": "san-rafael-city-side-campaign-filings"
+      }
+    },
+    {
+      "id": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+      "node_type": "Record",
+      "display_label": "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-records-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/extracted/san-rafael-city-side-campaign-filings/2026-04-11.json",
+        "candidate_actor_ids": [
+          "actor-kate-colin"
+        ],
+        "candidate_name": "Kate Colin",
+        "capture_status": "discovery_only",
+        "election_ids": [
+          "election-2024-11-05-san-rafael-general"
+        ],
+        "election_label": "November 5, 2024 Election - San Rafael",
+        "entry_id": 35554,
+        "folder_url": "https://publicrecords.cityofsanrafael.org/WebLink/Browse.aspx?id=35554&dbid=0&repo=CityofSanRafael",
+        "label": "Kate Colin campaign filings folder",
+        "linked_from_source_ids": [
+          "san-rafael-november-5-2024-election"
+        ],
+        "office_label": "Mayoral Candidates",
+        "record_class": "financial_record",
+        "record_type": "campaign_filing_folder",
+        "seat_ids": [
+          "seat-san-rafael-mayor-at-large"
+        ],
+        "section_label": "City of San Rafael Election",
+        "source_id": "san-rafael-city-side-campaign-filings"
+      }
+    }
   ]
 }

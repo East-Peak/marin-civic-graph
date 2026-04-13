@@ -1,7 +1,11 @@
 {
-  "id": "decision-resolution-15336-dossier",
-  "title": "Decision dossier: Resolution 15336",
-  "generated_at": "2026-04-13T12:12:58Z",
+  "id": "decision-2024-08-19-resolution-15336-dossier",
+  "title": "Decision dossier: Resolution 15336 appropriating $2,256,400 and authorizing $2,002,400 in contracts",
+  "view_type": "decision_dossier",
+  "subject_id": "decision-2024-08-19-resolution-15336",
+  "subject_node_type": "Decision",
+  "contract_version": 1,
+  "generated_at": "2026-04-13T12:34:54Z",
   "decision": {
     "id": "decision-2024-08-19-resolution-15336",
     "node_type": "Decision",

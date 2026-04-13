@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
-from collections import Counter, defaultdict
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -14,8 +14,6 @@ from run_graph_query_pack import (
     build_indexes,
     edge_sources,
     edge_targets,
-    evidence_record_ids,
-    format_ids,
     meeting_for_decision,
     node_title,
     node_year,
@@ -23,6 +21,8 @@ from run_graph_query_pack import (
 
 
 VIEW_DIR_NAME = "views"
+DEFAULT_VIEW_TARGETS_PATH = ROOT / "registry" / "view-targets.yaml"
+FLOW_RELATIONSHIP_TYPES = {"FROM_SOURCE", "TO_TARGET", "REQUESTED_BY_ACTOR"}
 
 
 def parse_args() -> argparse.Namespace:
@@ -33,6 +33,11 @@ def parse_args() -> argparse.Namespace:
         "--manifest",
         default=str(DEFAULT_MANIFEST_PATH),
         help="Path to the JSON-compatible YAML import manifest.",
+    )
+    parser.add_argument(
+        "--targets",
+        default=str(DEFAULT_VIEW_TARGETS_PATH),
+        help="Path to the JSON-compatible YAML view target manifest.",
     )
     parser.add_argument(
         "--projection-dir",
@@ -85,6 +90,151 @@ def unique_node_summaries(nodes: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return results
 
 
+def sort_nodes(nodes: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return sorted(nodes, key=lambda node: (node_year(node) or 0, node_title(node), node["id"]))
+
+
+def slugify_subject(subject_id: str) -> str:
+    for prefix in ("actor-", "decision-", "case-"):
+        if subject_id.startswith(prefix):
+            return subject_id[len(prefix) :]
+    return subject_id
+
+
+def relative_or_absolute(path: Path) -> str:
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
+def related_records_for_actor(
+    actor_id: str,
+    *,
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    evidence_records = edge_targets(
+        outgoing,
+        node_by_id,
+        actor_id,
+        relationship_type="EVIDENCED_BY",
+        target_node_type="Record",
+    )
+    related_records = edge_sources(
+        incoming,
+        node_by_id,
+        actor_id,
+        relationship_type="RELATES_TO_ACTOR",
+        source_node_type="Record",
+    )
+    return sort_nodes(evidence_records), sort_nodes(related_records)
+
+
+def connected_money_flows(
+    subject_id: str,
+    *,
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
+    buckets: dict[str, dict[str, Any]] = {}
+    for edge in outgoing.get(subject_id, []) + incoming.get(subject_id, []):
+        if edge["relationship_type"] not in FLOW_RELATIONSHIP_TYPES:
+            continue
+        other_id = edge["target_id"] if edge["source_id"] == subject_id else edge["source_id"]
+        flow = node_by_id.get(other_id)
+        if flow is None or flow["node_type"] != "MoneyFlow":
+            continue
+        bucket = buckets.setdefault(
+            flow["id"],
+            {
+                "money_flow": node_summary(flow),
+                "relationship_types": set(),
+            },
+        )
+        bucket["relationship_types"].add(edge["relationship_type"])
+
+    results = []
+    for bucket in buckets.values():
+        results.append(
+            {
+                "money_flow": bucket["money_flow"],
+                "relationship_types": sorted(bucket["relationship_types"]),
+            }
+        )
+    results.sort(
+        key=lambda item: (
+            -(item["money_flow"]["properties"].get("amount") or 0),
+            item["money_flow"]["display_label"],
+            item["money_flow"]["id"],
+        )
+    )
+    return results
+
+
+def linked_decisions_from_money_flows(
+    money_flow_entries: list[dict[str, Any]],
+    *,
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
+    decisions = []
+    for item in money_flow_entries:
+        flow_id = item["money_flow"]["id"]
+        decisions.extend(
+            edge_targets(
+                outgoing,
+                node_by_id,
+                flow_id,
+                relationship_type="RELATES_TO_DECISION",
+                target_node_type="Decision",
+            )
+        )
+    return sort_nodes(decisions)
+
+
+def linked_cases_from_records(
+    records: list[dict[str, Any]],
+    *,
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
+    cases = []
+    for record in records:
+        cases.extend(
+            edge_targets(
+                outgoing,
+                node_by_id,
+                record["id"],
+                relationship_type="RELATES_TO_CASE",
+                target_node_type="Case",
+            )
+        )
+    return sort_nodes(cases)
+
+
+def linked_programs_from_records(
+    records: list[dict[str, Any]],
+    *,
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
+    programs = []
+    for record in records:
+        programs.extend(
+            edge_targets(
+                outgoing,
+                node_by_id,
+                record["id"],
+                relationship_type="RELATES_TO_PROGRAM",
+                target_node_type="Program",
+            )
+        )
+    return sort_nodes(programs)
+
+
 def actor_dossier(
     *,
     actor_id: str,
@@ -93,6 +243,7 @@ def actor_dossier(
     incoming: dict[str, list[dict[str, Any]]],
 ) -> dict[str, Any]:
     actor = node_by_id[actor_id]
+    actor_label = node_title(actor)
 
     seat_services = sorted(
         edge_sources(
@@ -104,36 +255,45 @@ def actor_dossier(
         ),
         key=lambda node: (node.get("properties", {}).get("started_at", ""), node["id"]),
     )
-    committees = sorted(
+    committees = sort_nodes(
         edge_sources(
             incoming,
             node_by_id,
             actor_id,
             relationship_type="CONTROLLED_BY_ACTOR",
             source_node_type="Committee",
-        ),
-        key=lambda node: (node_year(node) or 0, node["id"]),
+        )
     )
-    filings = sorted(
-        {
-            filing["id"]: filing
-            for filing in (
-                edge_sources(incoming, node_by_id, actor_id, relationship_type="OFFICIAL_FILER", source_node_type="Filing")
-                + edge_sources(incoming, node_by_id, actor_id, relationship_type="FILED_BY_ACTOR", source_node_type="Filing")
-                + [
-                    filing
-                    for committee in committees
-                    for filing in edge_sources(
-                        incoming,
-                        node_by_id,
-                        committee["id"],
-                        relationship_type="FILED_BY_COMMITTEE",
-                        source_node_type="Filing",
-                    )
-                ]
-            )
-        }.values(),
-        key=lambda node: (node_year(node) or 0, node["id"]),
+    candidacies = sort_nodes(
+        edge_sources(
+            incoming,
+            node_by_id,
+            actor_id,
+            relationship_type="CANDIDATE_ACTOR",
+            source_node_type="Candidacy",
+        )
+    )
+    filings = sort_nodes(
+        list(
+            {
+                filing["id"]: filing
+                for filing in (
+                    edge_sources(incoming, node_by_id, actor_id, relationship_type="OFFICIAL_FILER", source_node_type="Filing")
+                    + edge_sources(incoming, node_by_id, actor_id, relationship_type="FILED_BY_ACTOR", source_node_type="Filing")
+                    + [
+                        filing
+                        for committee in committees
+                        for filing in edge_sources(
+                            incoming,
+                            node_by_id,
+                            committee["id"],
+                            relationship_type="FILED_BY_COMMITTEE",
+                            source_node_type="Filing",
+                        )
+                    ]
+                )
+            }.values()
+        )
     )
     council_decisions = sorted(
         [
@@ -166,65 +326,113 @@ def actor_dossier(
             }
         )
 
-    money_flows = []
-    for edge in outgoing.get(actor_id, []):
-        if edge["relationship_type"] not in {"FROM_SOURCE", "TO_TARGET", "REQUESTED_BY_ACTOR"}:
-            continue
-        flow = node_by_id.get(edge["target_id"])
-        if flow is None or flow["node_type"] != "MoneyFlow":
-            continue
-        money_flows.append(
-            {
-                "relationship_type": edge["relationship_type"],
-                "money_flow": node_summary(flow),
-            }
-        )
-    for edge in incoming.get(actor_id, []):
-        if edge["relationship_type"] not in {"FROM_SOURCE", "TO_TARGET", "REQUESTED_BY_ACTOR"}:
-            continue
-        flow = node_by_id.get(edge["source_id"])
-        if flow is None or flow["node_type"] != "MoneyFlow":
-            continue
-        money_flows.append(
-            {
-                "relationship_type": edge["relationship_type"],
-                "money_flow": node_summary(flow),
-            }
-        )
-
-    record_ids = sorted(
-        {
-            record_id
-            for filing in filings
-            for record_id in evidence_record_ids(outgoing, filing["id"])
-        }
-        | {
-            record_id
-            for decision in council_decisions
-            for record_id in evidence_record_ids(outgoing, decision["id"])
-        }
+    money_flows = connected_money_flows(
+        actor_id,
+        node_by_id=node_by_id,
+        outgoing=outgoing,
+        incoming=incoming,
+    )
+    evidence_records, related_records = related_records_for_actor(
+        actor_id,
+        node_by_id=node_by_id,
+        outgoing=outgoing,
+        incoming=incoming,
     )
 
     return {
-        "id": "actor-kate-colin-dossier",
-        "title": "Actor dossier: Kate Colin",
+        "id": f"actor-{slugify_subject(actor_id)}-dossier",
+        "title": f"Actor dossier: {actor_label}",
+        "view_type": "actor_dossier",
+        "subject_id": actor_id,
+        "subject_node_type": "Actor",
+        "contract_version": 1,
         "generated_at": iso_now(),
         "actor": node_summary(actor),
         "metrics": {
             "seat_service_count": len(seat_services),
             "committee_count": len(committees),
+            "candidacy_count": len(candidacies),
             "filing_count": len(filings),
             "council_decision_count": len(council_decisions),
             "money_flow_count": len(money_flows),
-            "record_count": len(record_ids),
+            "evidence_record_count": len(evidence_records),
+            "related_record_count": len(related_records),
             "filing_years": sorted({year for filing in filings if (year := node_year(filing)) is not None}),
+            "vote_years": sorted(
+                {
+                    meeting_date[:4]
+                    for vote in vote_records
+                    if isinstance((meeting_date := vote.get("meeting_date")), str) and len(meeting_date) >= 4
+                }
+            ),
         },
         "seat_services": unique_node_summaries(seat_services),
         "committees": unique_node_summaries(committees),
+        "candidacies": unique_node_summaries(candidacies),
         "filings": unique_node_summaries(filings),
-        "council_votes": vote_records[:40],
+        "council_votes": vote_records[:80],
         "money_flows": money_flows[:40],
-        "record_ids": format_ids(record_ids, limit=30),
+        "evidence_records": unique_node_summaries(evidence_records),
+        "related_records": unique_node_summaries(related_records),
+    }
+
+
+def organization_dossier(
+    *,
+    actor_id: str,
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    organization = node_by_id[actor_id]
+    org_label = node_title(organization)
+    money_flows = connected_money_flows(
+        actor_id,
+        node_by_id=node_by_id,
+        outgoing=outgoing,
+        incoming=incoming,
+    )
+    linked_decisions = linked_decisions_from_money_flows(
+        money_flows,
+        node_by_id=node_by_id,
+        outgoing=outgoing,
+    )
+    evidence_records, related_records = related_records_for_actor(
+        actor_id,
+        node_by_id=node_by_id,
+        outgoing=outgoing,
+        incoming=incoming,
+    )
+    all_records = unique_node_summaries(evidence_records + related_records)
+    linked_cases = unique_node_summaries(
+        linked_cases_from_records(evidence_records + related_records, node_by_id=node_by_id, outgoing=outgoing)
+    )
+    linked_programs = unique_node_summaries(
+        linked_programs_from_records(evidence_records + related_records, node_by_id=node_by_id, outgoing=outgoing)
+    )
+
+    return {
+        "id": f"organization-{slugify_subject(actor_id)}-dossier",
+        "title": f"Organization dossier: {org_label}",
+        "view_type": "organization_dossier",
+        "subject_id": actor_id,
+        "subject_node_type": "Actor",
+        "contract_version": 1,
+        "generated_at": iso_now(),
+        "organization": node_summary(organization),
+        "metrics": {
+            "money_flow_count": len(money_flows),
+            "linked_decision_count": len(linked_decisions),
+            "record_count": len(all_records),
+            "linked_case_count": len(linked_cases),
+            "linked_program_count": len(linked_programs),
+        },
+        "money_flows": money_flows[:40],
+        "linked_decisions": unique_node_summaries(linked_decisions),
+        "evidence_records": unique_node_summaries(evidence_records),
+        "related_records": unique_node_summaries(related_records),
+        "linked_cases": linked_cases,
+        "linked_programs": linked_programs,
     }
 
 
@@ -290,8 +498,12 @@ def decision_dossier(
         )
 
     return {
-        "id": "decision-resolution-15336-dossier",
-        "title": "Decision dossier: Resolution 15336",
+        "id": f"decision-{slugify_subject(decision_id)}-dossier",
+        "title": f"Decision dossier: {node_title(decision)}",
+        "view_type": "decision_dossier",
+        "subject_id": decision_id,
+        "subject_node_type": "Decision",
+        "contract_version": 1,
         "generated_at": iso_now(),
         "decision": node_summary(decision),
         "meeting": node_summary(meeting),
@@ -308,6 +520,129 @@ def decision_dossier(
         "linked_money_flows": unique_node_summaries(linked_money_flows),
         "linked_cases": unique_node_summaries(linked_cases),
         "linked_programs": unique_node_summaries(linked_programs),
+    }
+
+
+def case_dossier(
+    *,
+    case_id: str,
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    case = node_by_id[case_id]
+    court = next(
+        iter(
+            edge_targets(
+                outgoing,
+                node_by_id,
+                case_id,
+                relationship_type="HEARD_IN_COURT",
+                target_node_type="Institution",
+            )
+        ),
+        None,
+    )
+    proceedings = sort_nodes(
+        edge_sources(
+            incoming,
+            node_by_id,
+            case_id,
+            relationship_type="PART_OF_CASE",
+            source_node_type="Proceeding",
+        )
+    )
+    participations = sort_nodes(
+        edge_sources(
+            incoming,
+            node_by_id,
+            case_id,
+            relationship_type="PART_OF_CASE",
+            source_node_type="CaseParticipation",
+        )
+    )
+    evidence_records = sort_nodes(
+        edge_targets(
+            outgoing,
+            node_by_id,
+            case_id,
+            relationship_type="EVIDENCED_BY",
+            target_node_type="Record",
+        )
+    )
+    related_records = sort_nodes(
+        edge_sources(
+            incoming,
+            node_by_id,
+            case_id,
+            relationship_type="RELATES_TO_CASE",
+            source_node_type="Record",
+        )
+    )
+    issues = sort_nodes(
+        edge_targets(
+            outgoing,
+            node_by_id,
+            case_id,
+            relationship_type="RELATES_TO_ISSUE",
+            target_node_type="Issue",
+        )
+    )
+    programs = sort_nodes(
+        edge_targets(
+            outgoing,
+            node_by_id,
+            case_id,
+            relationship_type="RELATES_TO_PROGRAM",
+            target_node_type="Program",
+        )
+    )
+    places = sort_nodes(
+        edge_targets(
+            outgoing,
+            node_by_id,
+            case_id,
+            relationship_type="RELATES_TO_PLACE",
+            target_node_type="Place",
+        )
+    )
+    linked_local_decisions = sort_nodes(
+        edge_targets(
+            outgoing,
+            node_by_id,
+            case_id,
+            relationship_type="RELATES_TO_DECISION",
+            target_node_type="Decision",
+        )
+    )
+
+    return {
+        "id": f"case-{slugify_subject(case_id)}-dossier",
+        "title": f"Case dossier: {node_title(case)}",
+        "view_type": "case_dossier",
+        "subject_id": case_id,
+        "subject_node_type": "Case",
+        "contract_version": 1,
+        "generated_at": iso_now(),
+        "case": node_summary(case),
+        "court": node_summary(court),
+        "metrics": {
+            "proceeding_count": len(proceedings),
+            "participation_count": len(participations),
+            "evidence_record_count": len(evidence_records),
+            "related_record_count": len(related_records),
+            "issue_count": len(issues),
+            "program_count": len(programs),
+            "linked_local_decision_count": len(linked_local_decisions),
+        },
+        "proceedings": unique_node_summaries(proceedings),
+        "participations": unique_node_summaries(participations),
+        "evidence_records": unique_node_summaries(evidence_records),
+        "related_records": unique_node_summaries(related_records),
+        "issues": unique_node_summaries(issues),
+        "programs": unique_node_summaries(programs),
+        "places": unique_node_summaries(places),
+        "linked_local_decisions": unique_node_summaries(linked_local_decisions),
     }
 
 
@@ -376,6 +711,8 @@ def money_overlap_view(
     return {
         "id": "money-overlap-summary",
         "title": "Money overlap summary",
+        "view_type": "money_overlap_summary",
+        "contract_version": 1,
         "generated_at": iso_now(),
         "metrics": {
             "money_flow_count": sum(flow_type_counts.values()),
@@ -393,10 +730,7 @@ def legal_constraint_view(
     outgoing: dict[str, list[dict[str, Any]]],
     incoming: dict[str, list[dict[str, Any]]],
 ) -> dict[str, Any]:
-    cases = sorted(
-        [node for node in nodes if node["node_type"] == "Case"],
-        key=lambda node: (node_year(node) or 0, node["id"]),
-    )
+    cases = sort_nodes([node for node in nodes if node["node_type"] == "Case"])
     case_views = []
     all_issue_ids: set[str] = set()
     all_program_ids: set[str] = set()
@@ -464,6 +798,8 @@ def legal_constraint_view(
     return {
         "id": "legal-constraint-view",
         "title": "Legal constraint view",
+        "view_type": "legal_constraint_view",
+        "contract_version": 1,
         "generated_at": iso_now(),
         "metrics": {
             "case_count": len(cases),
@@ -517,6 +853,8 @@ def validation_queue(
     return {
         "id": "validation-queue",
         "title": "Validation queue",
+        "view_type": "validation_queue",
+        "contract_version": 1,
         "generated_at": iso_now(),
         "metrics": {
             "validation_check_count": len(items),
@@ -527,13 +865,70 @@ def validation_queue(
     }
 
 
-def write_markdown_summary(output_dir: Path, views: dict[str, dict[str, Any]]) -> None:
-    actor = views["actor-kate-colin-dossier"]
-    decision = views["decision-resolution-15336-dossier"]
-    money = views["money-overlap-summary"]
-    legal = views["legal-constraint-view"]
-    validation = views["validation-queue"]
+def build_view_from_target(
+    target: dict[str, Any],
+    *,
+    nodes: list[dict[str, Any]],
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    view_type = target["view_type"]
+    subject_id = target.get("subject_id")
 
+    if view_type == "actor_dossier":
+        return actor_dossier(
+            actor_id=subject_id,
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
+    if view_type == "organization_dossier":
+        return organization_dossier(
+            actor_id=subject_id,
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
+    if view_type == "decision_dossier":
+        return decision_dossier(
+            decision_id=subject_id,
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
+    if view_type == "case_dossier":
+        return case_dossier(
+            case_id=subject_id,
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
+    if view_type == "money_overlap_summary":
+        return money_overlap_view(
+            nodes=nodes,
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
+    if view_type == "legal_constraint_view":
+        return legal_constraint_view(
+            nodes=nodes,
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
+    if view_type == "validation_queue":
+        return validation_queue(
+            nodes=nodes,
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+        )
+
+    raise ValueError(f"Unsupported view target type: {view_type}")
+
+
+def write_markdown_summary(output_dir: Path, views: list[dict[str, Any]]) -> None:
     lines = [
         "# Graph View Summary",
         "",
@@ -541,86 +936,102 @@ def write_markdown_summary(output_dir: Path, views: dict[str, dict[str, Any]]) -
         "",
         "## Included Views",
         "",
-        "- Actor dossier: Kate Colin",
-        "- Decision dossier: Resolution 15336",
-        "- Money overlap summary",
-        "- Legal constraint view",
-        "- Validation queue",
-        "",
-        "## Highlights",
-        "",
-        f"- Kate Colin currently spans `{actor['metrics']['seat_service_count']}` seat-service windows, `{actor['metrics']['committee_count']}` committees, `{actor['metrics']['filing_count']}` filings, and `{actor['metrics']['council_decision_count']}` council decisions.",
-        f"- Resolution 15336 currently has `{decision['metrics']['vote_count']}` vote records, `{decision['metrics']['linked_money_flow_count']}` linked money flows, and `{decision['metrics']['linked_case_count']}` linked cases.",
-        f"- The graph currently materializes `{money['metrics']['money_flow_count']}` money flows across `{len(money['metrics']['flow_type_counts'])}` flow types.",
-        f"- The legal lane currently includes `{legal['metrics']['case_count']}` cases and links back to `{legal['metrics']['linked_local_decision_count']}` San Rafael local decisions.",
-        f"- The validation queue currently contains `{validation['metrics']['validation_check_count']}` checks.",
-        "",
-        "## Output Files",
-        "",
-        "- `actor-kate-colin-dossier.json`",
-        "- `decision-resolution-15336-dossier.json`",
-        "- `money-overlap-summary.json`",
-        "- `legal-constraint-view.json`",
-        "- `validation-queue.json`",
-        "- `index.json`",
     ]
+
+    for payload in views:
+        lines.append(f"- {payload['title']} (`{payload['view_type']}`)")
+
+    lines.extend(["", "## Highlights", ""])
+
+    actor_views = [payload for payload in views if payload["view_type"] == "actor_dossier"]
+    organization_views = [payload for payload in views if payload["view_type"] == "organization_dossier"]
+    case_views = [payload for payload in views if payload["view_type"] == "case_dossier"]
+    decision_views = [payload for payload in views if payload["view_type"] == "decision_dossier"]
+    money_views = [payload for payload in views if payload["view_type"] == "money_overlap_summary"]
+    legal_views = [payload for payload in views if payload["view_type"] == "legal_constraint_view"]
+    validation_views = [payload for payload in views if payload["view_type"] == "validation_queue"]
+
+    if actor_views:
+        lines.append(
+            f"- Actor dossiers now cover `{len(actor_views)}` targets, including `{actor_views[0]['actor']['display_label']}` with `{actor_views[0]['metrics']['filing_count']}` filings and `{actor_views[0]['metrics']['council_decision_count']}` council decisions."
+        )
+    if organization_views:
+        lines.append(
+            f"- Organization dossiers now cover `{len(organization_views)}` targets, including `{organization_views[0]['organization']['display_label']}` with `{organization_views[0]['metrics']['money_flow_count']}` linked money flows."
+        )
+    if decision_views:
+        lines.append(
+            f"- Decision dossiers now cover `{len(decision_views)}` targets, including `{decision_views[0]['decision']['display_label']}` with `{decision_views[0]['metrics']['vote_count']}` vote records."
+        )
+    if case_views:
+        lines.append(
+            f"- Case dossiers now cover `{len(case_views)}` targets, including `{case_views[0]['case']['display_label']}` with `{case_views[0]['metrics']['proceeding_count']}` proceedings."
+        )
+    if money_views:
+        money = money_views[0]
+        lines.append(
+            f"- The graph currently materializes `{money['metrics']['money_flow_count']}` money flows across `{len(money['metrics']['flow_type_counts'])}` flow types."
+        )
+    if legal_views:
+        legal = legal_views[0]
+        lines.append(
+            f"- The legal lane currently includes `{legal['metrics']['case_count']}` cases and links back to `{legal['metrics']['linked_local_decision_count']}` San Rafael local decisions."
+        )
+    if validation_views:
+        validation = validation_views[0]
+        lines.append(f"- The validation queue currently contains `{validation['metrics']['validation_check_count']}` checks.")
+
+    lines.extend(["", "## Output Files", ""])
+    for payload in views:
+        lines.append(f"- `{payload['id']}.json`")
+    lines.append("- `index.json`")
+
     (output_dir / "summary.md").write_text("\n".join(lines) + "\n")
 
 
 def main() -> None:
     args = parse_args()
     manifest = read_manifest(Path(args.manifest))
+    targets_manifest = read_manifest(Path(args.targets))
     projection_dir = Path(args.projection_dir) if args.projection_dir else ROOT / manifest["output_dir"]
     output_dir = Path(args.output_dir) if args.output_dir else projection_dir / VIEW_DIR_NAME
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    for stale_path in output_dir.glob("*.json"):
+        stale_path.unlink()
+    summary_path = output_dir / "summary.md"
+    if summary_path.exists():
+        summary_path.unlink()
+
     nodes, edges, node_by_id, outgoing, incoming = build_indexes(projection_dir)
+    _ = edges  # kept for future contract expansion
 
-    views = {
-        "actor-kate-colin-dossier": actor_dossier(
-            actor_id="actor-kate-colin",
-            node_by_id=node_by_id,
-            outgoing=outgoing,
-            incoming=incoming,
-        ),
-        "decision-resolution-15336-dossier": decision_dossier(
-            decision_id="decision-2024-08-19-resolution-15336",
-            node_by_id=node_by_id,
-            outgoing=outgoing,
-            incoming=incoming,
-        ),
-        "money-overlap-summary": money_overlap_view(
+    views: list[dict[str, Any]] = []
+    for target in targets_manifest["targets"]:
+        payload = build_view_from_target(
+            target,
             nodes=nodes,
             node_by_id=node_by_id,
             outgoing=outgoing,
             incoming=incoming,
-        ),
-        "legal-constraint-view": legal_constraint_view(
-            nodes=nodes,
-            node_by_id=node_by_id,
-            outgoing=outgoing,
-            incoming=incoming,
-        ),
-        "validation-queue": validation_queue(
-            nodes=nodes,
-            node_by_id=node_by_id,
-            outgoing=outgoing,
-        ),
-    }
-
-    for view_id, payload in views.items():
-        write_json(output_dir / f"{view_id}.json", payload)
+        )
+        views.append(payload)
+        write_json(output_dir / f"{payload['id']}.json", payload)
 
     index_payload = {
         "generated_at": iso_now(),
         "projection_dir": str(projection_dir.relative_to(ROOT)),
+        "contract_version": targets_manifest.get("contract_version", 1),
         "views": [
             {
-                "id": view_id,
+                "id": payload["id"],
                 "title": payload["title"],
-                "path": f"{output_dir.relative_to(ROOT)}/{view_id}.json",
+                "view_type": payload["view_type"],
+                "subject_id": payload.get("subject_id"),
+                "subject_node_type": payload.get("subject_node_type"),
+                "path": relative_or_absolute(output_dir / f"{payload['id']}.json"),
             }
-            for view_id, payload in views.items()
+            for payload in views
         ],
     }
     write_json(output_dir / "index.json", index_payload)

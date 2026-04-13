@@ -67,6 +67,7 @@ Start narrow:
 - [Architecture Review Checklist](./docs/architecture-review-checklist.md)
 - [Graph Query Pack](./docs/graph-query-pack.md)
 - [Graph View Layer](./docs/graph-view-layer.md)
+- [Graph Read-Model Contracts](./docs/graph-read-model-contracts.md)
 - [Ralph Loop Plan](./docs/ralph-loop-plan.md)
 - [Controlled Breadth Sprint Proposal](./docs/breadth-sprint-proposal.md)
 - [Controlled Breadth Sprint Adversarial Review Checklist](./docs/breadth-sprint-review-checklist.md)
@@ -114,6 +115,7 @@ Start narrow:
 - [Source Profile Matrix](./docs/source-profile-matrix.md)
 - [Historical Backfill Wave 01](./docs/historical-backfill-wave-01.md)
 - [Seed Source Registry](./registry/README.md)
+- [View Target Manifest](./registry/view-targets.yaml)
 - [Active Ralph Loop Manifest](./registry/loop-manifests/san-rafael-city-campaign-money-01.json)
 - [Media Attribution Rules](./docs/media-attribution-rules.md)
 - [Open Questions](./docs/open-questions.md)
@@ -142,7 +144,10 @@ Start narrow:
 - [Graph View Summary](./data/projected/graph-v1/views/summary.md)
 - [Local Graph Viewer Shell](./viewer/index.html)
 - [Kate Colin Actor Dossier](./data/projected/graph-v1/views/actor-kate-colin-dossier.json)
-- [Resolution 15336 Decision Dossier](./data/projected/graph-v1/views/decision-resolution-15336-dossier.json)
+- [Rachel Kertz Actor Dossier](./data/projected/graph-v1/views/actor-rachel-kertz-dossier.json)
+- [Downtown Streets Team Organization Dossier](./data/projected/graph-v1/views/organization-downtown-streets-team-dossier.json)
+- [Resolution 15336 Decision Dossier](./data/projected/graph-v1/views/decision-2024-08-19-resolution-15336-dossier.json)
+- [Boyd Case Dossier](./data/projected/graph-v1/views/case-boyd-v-city-of-san-rafael-dossier.json)
 - [Money Overlap Summary](./data/projected/graph-v1/views/money-overlap-summary.json)
 - [Legal Constraint View](./data/projected/graph-v1/views/legal-constraint-view.json)
 - [Validation Queue](./data/projected/graph-v1/views/validation-queue.json)
@@ -253,7 +258,10 @@ This repo started as a planning workspace and now includes the first live implem
   - the current projection report now shows no `missing_target:Actor`, `missing_target:Issue`, or `missing_target:Record` categories, with `5` actor-alias edge remaps preserved
   - the first projected view pack now sits on top of the clean graph:
     - `actor-kate-colin-dossier`
-    - `decision-resolution-15336-dossier`
+    - `actor-rachel-kertz-dossier`
+    - `organization-downtown-streets-team-dossier`
+    - `decision-2024-08-19-resolution-15336-dossier`
+    - `case-boyd-v-city-of-san-rafael-dossier`
     - `money-overlap-summary`
     - `legal-constraint-view`
     - `validation-queue`

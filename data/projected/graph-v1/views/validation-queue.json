@@ -1,7 +1,9 @@
 {
   "id": "validation-queue",
   "title": "Validation queue",
-  "generated_at": "2026-04-13T12:12:58Z",
+  "view_type": "validation_queue",
+  "contract_version": 1,
+  "generated_at": "2026-04-13T12:34:54Z",
   "metrics": {
     "validation_check_count": 16,
     "by_status": {

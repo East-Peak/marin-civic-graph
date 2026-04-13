@@ -1,7 +1,9 @@
 {
   "id": "money-overlap-summary",
   "title": "Money overlap summary",
-  "generated_at": "2026-04-13T12:12:58Z",
+  "view_type": "money_overlap_summary",
+  "contract_version": 1,
+  "generated_at": "2026-04-13T12:34:54Z",
   "metrics": {
     "money_flow_count": 147,
     "flow_type_counts": {

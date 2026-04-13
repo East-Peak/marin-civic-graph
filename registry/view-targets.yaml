@@ -1,0 +1,34 @@
+{
+  "contract_version": 1,
+  "targets": [
+    {
+      "view_type": "actor_dossier",
+      "subject_id": "actor-kate-colin"
+    },
+    {
+      "view_type": "actor_dossier",
+      "subject_id": "actor-rachel-kertz"
+    },
+    {
+      "view_type": "organization_dossier",
+      "subject_id": "actor-downtown-streets-team"
+    },
+    {
+      "view_type": "decision_dossier",
+      "subject_id": "decision-2024-08-19-resolution-15336"
+    },
+    {
+      "view_type": "case_dossier",
+      "subject_id": "case-boyd-v-city-of-san-rafael"
+    },
+    {
+      "view_type": "money_overlap_summary"
+    },
+    {
+      "view_type": "legal_constraint_view"
+    },
+    {
+      "view_type": "validation_queue"
+    }
+  ]
+}
