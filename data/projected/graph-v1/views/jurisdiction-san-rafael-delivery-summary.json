@@ -1,0 +1,1080 @@
+{
+  "id": "jurisdiction-san-rafael-delivery-summary",
+  "title": "Jurisdiction delivery summary: San Rafael",
+  "view_type": "jurisdiction_delivery_summary",
+  "subject_id": "place-san-rafael",
+  "subject_node_type": "Place",
+  "contract_version": 1,
+  "generated_at": "2026-04-13T12:58:05Z",
+  "jurisdiction_place": {
+    "id": "place-san-rafael",
+    "node_type": "Place",
+    "display_label": "San Rafael",
+    "year": null,
+    "source_bundle_ids": [
+      "legal-precedent-01__bundle-01",
+      "legal-precedent-02__bundle-01",
+      "san-rafael-election-records-01__bundle-01",
+      "san-rafael-homelessness-01__bundle-01"
+    ],
+    "properties": {
+      "jurisdiction_place_id": "place-california",
+      "name": "San Rafael",
+      "place_type": "city"
+    }
+  },
+  "metrics": {
+    "program_count": 1,
+    "project_count": 1,
+    "linked_decision_count": 8,
+    "linked_money_flow_count": 12,
+    "linked_case_count": 2,
+    "evidence_record_count": 10,
+    "related_record_count": 8
+  },
+  "program_rollups": [
+    {
+      "program": {
+        "id": "program-san-rafael-sanctioned-camping",
+        "node_type": "Program",
+        "display_label": "San Rafael sanctioned camping program",
+        "year": null,
+        "source_bundle_ids": [
+          "legal-precedent-01__bundle-01"
+        ],
+        "properties": {
+          "institution_id": "inst-city-of-san-rafael",
+          "jurisdiction_place_id": "place-san-rafael",
+          "name": "San Rafael sanctioned camping program",
+          "place_ids": [
+            "place-mahon-creek-path"
+          ],
+          "program_type": "sanctioned_camping_program",
+          "record_ids": [
+            "record-san-rafael-sanctioned-camping-area-page",
+            "record-2024-08-19-sanctioned-camp-site-plan",
+            "record-2024-08-19-sanctioned-camp-code-of-conduct",
+            "record-2024-08-19-resolution-15336-text"
+          ],
+          "related_case_ids": [
+            "case-boyd-v-city-of-san-rafael"
+          ],
+          "related_decision_ids": [
+            "decision-2024-08-19-resolution-15336",
+            "decision-2024-08-19-ordinance-2040-introduction"
+          ],
+          "status": "implemented"
+        }
+      },
+      "institution": {
+        "id": "inst-city-of-san-rafael",
+        "node_type": "Institution",
+        "display_label": "City of San Rafael",
+        "year": null,
+        "source_bundle_ids": [
+          "campaign-finance-form-803-slice-01__bundle-01",
+          "canonical-seeds-san-rafael-01",
+          "legal-precedent-01__bundle-01",
+          "legal-precedent-02__bundle-01",
+          "san-rafael-election-records-01__bundle-01",
+          "san-rafael-homelessness-01__bundle-01"
+        ],
+        "properties": {
+          "evidence_record_ids": [
+            "record-san-rafael-city-council-2024-08-19-item-5a-report",
+            "record-kate-colin-form-803-2025-09-04",
+            "record-san-rafael-boyd-tro-order-2023-08-16",
+            "record-san-rafael-boyd-preliminary-injunction-order-2023-10-19",
+            "doc-2024-08-08-boyd-dismissal-release",
+            "record-san-rafael-boyd-dismissal-order-2024-08-07",
+            "doc-2024-06-28-grants-pass-statement",
+            "record-san-rafael-grants-pass-explainer-2024-09-02"
+          ],
+          "institution_type": "city_government",
+          "jurisdiction_place_id": "place-san-rafael",
+          "name": "City of San Rafael",
+          "seed_status": "canonical_seed"
+        }
+      },
+      "metrics": {
+        "place_count": 1,
+        "evidence_record_count": 4,
+        "related_record_count": 0,
+        "linked_case_count": 2,
+        "linked_decision_count": 2,
+        "linked_money_flow_count": 7
+      }
+    }
+  ],
+  "project_rollups": [
+    {
+      "project": {
+        "id": "project-downtown-library-renovation",
+        "node_type": "Project",
+        "display_label": "Downtown Library Renovation Project",
+        "year": null,
+        "source_bundle_ids": [
+          "project-dossiers-01__bundle-01"
+        ],
+        "properties": {
+          "evidence_summary": "The project is supported by direct city grant-acceptance records and California State Library award records showing a $1,000,000 SB 129 / Building Forward Downtown Carnegie award plus a separate $1,000,000 targeted design-process award.",
+          "jurisdiction_place_id": "place-san-rafael",
+          "name": "Downtown Library Renovation Project",
+          "primary_place_id": "place-downtown-library-1100-e-st",
+          "project_type": "capital_library_renovation",
+          "record_ids": [
+            "record-downtown-library-project-page",
+            "record-downtown-library-reopening",
+            "record-srcc-2022-12-19-library-grants",
+            "record-downtown-library-state-grant-acceptance-staff-report",
+            "record-csl-building-forward-report-2021-2022",
+            "record-csl-lds-annual-update-2023-2024"
+          ],
+          "related_decision_ids": [
+            "decision-2022-12-19-downtown-carnegie-grant-acceptance",
+            "decision-2023-09-18-noll-tam-first-amendment",
+            "decision-2024-09-16-unger-award",
+            "decision-2024-09-16-unico-approval",
+            "decision-2025-04-07-noll-tam-second-amendment",
+            "decision-2025-04-07-unger-second-amendment"
+          ],
+          "related_program_ids": [
+            "program-csl-building-forward",
+            "program-csl-targeted-grants"
+          ],
+          "status": "reopened"
+        }
+      },
+      "primary_place": {
+        "id": "place-downtown-library-1100-e-st",
+        "node_type": "Place",
+        "display_label": "Downtown Library, 1100 E Street, San Rafael",
+        "year": null,
+        "source_bundle_ids": [
+          "project-dossiers-01__bundle-01"
+        ],
+        "properties": {
+          "name": "Downtown Library, 1100 E Street, San Rafael",
+          "place_type": "facility"
+        }
+      },
+      "metrics": {
+        "evidence_record_count": 6,
+        "related_record_count": 8,
+        "linked_program_count": 2,
+        "linked_decision_count": 6,
+        "agreement_count": 5,
+        "amendment_count": 3,
+        "linked_money_flow_count": 5
+      }
+    }
+  ],
+  "linked_decisions": [
+    {
+      "id": "decision-2024-08-19-ordinance-2040-introduction",
+      "node_type": "Decision",
+      "display_label": "Introduction of Ordinance No. 2040 amending Chapter 19.50",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-homelessness-01__bundle-01"
+      ],
+      "properties": {
+        "agenda_item_id": "agenda-item-2024-08-19-5a",
+        "decision_type": "ordinance_introduction",
+        "institution_id": "inst-san-rafael-city-council",
+        "meeting_id": "meeting-2024-08-19-san-rafael-city-council",
+        "status": "introduced",
+        "title": "Introduction of Ordinance No. 2040 amending Chapter 19.50"
+      }
+    },
+    {
+      "id": "decision-2024-08-19-resolution-15336",
+      "node_type": "Decision",
+      "display_label": "Resolution 15336 appropriating $2,256,400 and authorizing $2,002,400 in contracts",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-homelessness-01__bundle-01"
+      ],
+      "properties": {
+        "agenda_item_id": "agenda-item-2024-08-19-5a",
+        "decision_type": "appropriation_and_contract_authorization",
+        "effective_date": "2024-08-19",
+        "institution_id": "inst-san-rafael-city-council",
+        "meeting_id": "meeting-2024-08-19-san-rafael-city-council",
+        "status": "adopted",
+        "title": "Resolution 15336 appropriating $2,256,400 and authorizing $2,002,400 in contracts"
+      }
+    },
+    {
+      "id": "decision-2022-12-19-downtown-carnegie-grant-acceptance",
+      "node_type": "Decision",
+      "display_label": "decision-2022-12-19-downtown-carnegie-grant-acceptance",
+      "year": null,
+      "source_bundle_ids": [
+        "grant-program-dossiers-01__bundle-01",
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "agenda_item_ref": "4.f.i",
+        "authorized_total_amount": 1000000,
+        "decided_at": "2022-12-19",
+        "decision_type": "grant_acceptance",
+        "evidence_record_ids": [
+          "record-srcc-2022-12-19-library-grants",
+          "record-downtown-library-state-grant-acceptance-staff-report"
+        ],
+        "institution_id": "inst-san-rafael-city-council",
+        "meeting_id": "meeting-2022-12-19-san-rafael-city-council",
+        "project_id": "project-downtown-library-renovation",
+        "related_agreement_ids": [
+          "agreement-csl-downtown-carnegie-building-forward"
+        ]
+      }
+    },
+    {
+      "id": "decision-2023-09-18-noll-tam-first-amendment",
+      "node_type": "Decision",
+      "display_label": "decision-2023-09-18-noll-tam-first-amendment",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "decided_at": "2023-09-18",
+        "decision_type": "amendment_approval",
+        "evidence_record_ids": [
+          "record-srcc-2023-09-18-downtown-library",
+          "record-downtown-library-first-amendment-staff-report"
+        ],
+        "institution_id": "inst-san-rafael-city-council",
+        "meeting_id": "meeting-2023-09-18-san-rafael-city-council",
+        "project_id": "project-downtown-library-renovation",
+        "related_amendment_ids": [
+          "amendment-noll-and-tam-first"
+        ]
+      }
+    },
+    {
+      "id": "decision-2024-09-16-unger-award",
+      "node_type": "Decision",
+      "display_label": "decision-2024-09-16-unger-award",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "agenda_item_ref": "4.e",
+        "authorized_total_amount": 2100000.0,
+        "decided_at": "2024-09-16",
+        "decision_type": "contract_authorization",
+        "evidence_record_ids": [
+          "record-srcc-2024-09-16-downtown-library",
+          "record-downtown-library-construction-award-staff-report",
+          "record-srcc-2024-09-16-agenda-packet"
+        ],
+        "institution_id": "inst-san-rafael-city-council",
+        "meeting_id": "meeting-2024-09-16-san-rafael-city-council",
+        "project_id": "project-downtown-library-renovation",
+        "related_agreement_ids": [
+          "agreement-unger-downtown-library-construction"
+        ],
+        "related_procurement_ids": [
+          "procurement-downtown-library-renovation-construction-rfp"
+        ]
+      }
+    },
+    {
+      "id": "decision-2024-09-16-unico-approval",
+      "node_type": "Decision",
+      "display_label": "decision-2024-09-16-unico-approval",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "agenda_item_ref": "4.e",
+        "authorized_total_amount": 210536.82,
+        "decided_at": "2024-09-16",
+        "decision_type": "contract_authorization",
+        "evidence_record_ids": [
+          "record-srcc-2024-09-16-downtown-library",
+          "record-downtown-library-construction-award-staff-report",
+          "record-srcc-2024-09-16-agenda-packet"
+        ],
+        "institution_id": "inst-san-rafael-city-council",
+        "meeting_id": "meeting-2024-09-16-san-rafael-city-council",
+        "project_id": "project-downtown-library-renovation",
+        "related_agreement_ids": [
+          "agreement-unico-downtown-library-construction-management"
+        ]
+      }
+    },
+    {
+      "id": "decision-2025-04-07-noll-tam-second-amendment",
+      "node_type": "Decision",
+      "display_label": "decision-2025-04-07-noll-tam-second-amendment",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "decided_at": "2025-04-07",
+        "decision_type": "amendment_approval",
+        "evidence_record_ids": [
+          "record-srcc-2025-04-07-downtown-library",
+          "record-downtown-library-second-amendment-staff-report"
+        ],
+        "institution_id": "inst-san-rafael-city-council",
+        "meeting_id": "meeting-2025-04-07-san-rafael-city-council",
+        "project_id": "project-downtown-library-renovation",
+        "related_amendment_ids": [
+          "amendment-noll-and-tam-second"
+        ]
+      }
+    },
+    {
+      "id": "decision-2025-04-07-unger-second-amendment",
+      "node_type": "Decision",
+      "display_label": "decision-2025-04-07-unger-second-amendment",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "decided_at": "2025-04-07",
+        "decision_type": "amendment_approval",
+        "evidence_record_ids": [
+          "record-srcc-2025-04-07-downtown-library",
+          "record-downtown-library-second-amendment-staff-report"
+        ],
+        "institution_id": "inst-san-rafael-city-council",
+        "meeting_id": "meeting-2025-04-07-san-rafael-city-council",
+        "project_id": "project-downtown-library-renovation",
+        "related_amendment_ids": [
+          "amendment-unger-second"
+        ]
+      }
+    }
+  ],
+  "linked_money_flows": [
+    {
+      "id": "moneyflow-2024-08-19-grants-fund-283-appropriation",
+      "node_type": "MoneyFlow",
+      "display_label": "Appropriation from Grants Fund 283 for sanctioned camping startup costs and contracts.",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-homelessness-01__bundle-01"
+      ],
+      "properties": {
+        "amount": 2256400,
+        "currency": "USD",
+        "money_type": "appropriation",
+        "related_decision_id": "decision-2024-08-19-resolution-15336",
+        "summary": "Appropriation from Grants Fund 283 for sanctioned camping startup costs and contracts."
+      }
+    },
+    {
+      "id": "moneyflow-2024-08-19-startup-costs",
+      "node_type": "MoneyFlow",
+      "display_label": "Estimated site preparation and set-up costs for the sanctioned camping area.",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-homelessness-01__bundle-01"
+      ],
+      "properties": {
+        "amount": 500000,
+        "currency": "USD",
+        "money_type": "program_startup_costs",
+        "related_decision_id": "decision-2024-08-19-resolution-15336",
+        "summary": "Estimated site preparation and set-up costs for the sanctioned camping area."
+      }
+    },
+    {
+      "id": "moneyflow-2024-08-19-defense-block-contract",
+      "node_type": "MoneyFlow",
+      "display_label": "moneyflow-2024-08-19-defense-block-contract",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-homelessness-01__bundle-01"
+      ],
+      "properties": {
+        "amount": 850000,
+        "currency": "USD",
+        "money_type": "contract_authorization",
+        "related_decision_id": "decision-2024-08-19-resolution-15336",
+        "to_actor_id": "actor-defense-block-security"
+      }
+    },
+    {
+      "id": "moneyflow-2024-08-19-dst-contract",
+      "node_type": "MoneyFlow",
+      "display_label": "moneyflow-2024-08-19-dst-contract",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-homelessness-01__bundle-01"
+      ],
+      "properties": {
+        "amount": 200000,
+        "currency": "USD",
+        "money_type": "contract_authorization",
+        "related_decision_id": "decision-2024-08-19-resolution-15336",
+        "to_actor_id": "actor-downtown-streets-team"
+      }
+    },
+    {
+      "id": "moneyflow-2024-08-19-fs-global-contract",
+      "node_type": "MoneyFlow",
+      "display_label": "moneyflow-2024-08-19-fs-global-contract",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-homelessness-01__bundle-01"
+      ],
+      "properties": {
+        "amount": 675000,
+        "currency": "USD",
+        "money_type": "contract_authorization",
+        "related_decision_id": "decision-2024-08-19-resolution-15336",
+        "to_actor_id": "actor-fs-global-solutions"
+      }
+    },
+    {
+      "id": "moneyflow-2024-08-19-other-junk-contract",
+      "node_type": "MoneyFlow",
+      "display_label": "moneyflow-2024-08-19-other-junk-contract",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-homelessness-01__bundle-01"
+      ],
+      "properties": {
+        "amount": 165000,
+        "currency": "USD",
+        "money_type": "contract_authorization",
+        "related_decision_id": "decision-2024-08-19-resolution-15336",
+        "to_actor_id": "actor-other-junk-co"
+      }
+    },
+    {
+      "id": "moneyflow-2024-08-19-wehope-contract",
+      "node_type": "MoneyFlow",
+      "display_label": "moneyflow-2024-08-19-wehope-contract",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-homelessness-01__bundle-01"
+      ],
+      "properties": {
+        "amount": 112400,
+        "currency": "USD",
+        "money_type": "contract_authorization",
+        "related_decision_id": "decision-2024-08-19-resolution-15336",
+        "to_actor_id": "actor-wehope"
+      }
+    },
+    {
+      "id": "moneyflow-downtown-carnegie-building-forward-grant-2022",
+      "node_type": "MoneyFlow",
+      "display_label": "moneyflow-downtown-carnegie-building-forward-grant-2022",
+      "year": null,
+      "source_bundle_ids": [
+        "grant-program-dossiers-01__bundle-01",
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "agreement_id": "agreement-csl-downtown-carnegie-building-forward",
+        "amount": 1000000,
+        "counterparty_actor_id": "actor-california-state-library",
+        "decision_id": "decision-2022-12-19-downtown-carnegie-grant-acceptance",
+        "evidence_record_ids": [
+          "record-srcc-2022-12-19-library-grants",
+          "record-downtown-library-state-grant-acceptance-staff-report",
+          "record-csl-building-forward-report-2021-2022"
+        ],
+        "flow_type": "grant_award",
+        "institution_id": "inst-san-rafael-city-council",
+        "program_id": "program-csl-building-forward",
+        "project_id": "project-downtown-library-renovation"
+      }
+    },
+    {
+      "id": "moneyflow-downtown-carnegie-targeted-design-grant",
+      "node_type": "MoneyFlow",
+      "display_label": "moneyflow-downtown-carnegie-targeted-design-grant",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "agreement_id": "agreement-csl-downtown-carnegie-targeted-design-grant",
+        "amount": 1000000,
+        "counterparty_actor_id": "actor-california-state-library",
+        "evidence_record_ids": [
+          "record-csl-lds-annual-update-2023-2024"
+        ],
+        "flow_type": "grant_award",
+        "institution_id": "inst-san-rafael-city-council",
+        "project_id": "project-downtown-library-renovation"
+      }
+    },
+    {
+      "id": "moneyflow-unger-contingency-2024",
+      "node_type": "MoneyFlow",
+      "display_label": "moneyflow-unger-contingency-2024",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "amount": 275000.0,
+        "decision_id": "decision-2024-09-16-unger-award",
+        "evidence_record_ids": [
+          "record-downtown-library-construction-award-staff-report"
+        ],
+        "flow_type": "contingency_authorization",
+        "institution_id": "inst-san-rafael-city-council",
+        "project_id": "project-downtown-library-renovation"
+      }
+    },
+    {
+      "id": "moneyflow-unger-contract-2024",
+      "node_type": "MoneyFlow",
+      "display_label": "moneyflow-unger-contract-2024",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "amount": 1825000.0,
+        "counterparty_actor_id": "actor-unger-construction-co",
+        "decision_id": "decision-2024-09-16-unger-award",
+        "evidence_record_ids": [
+          "record-downtown-library-construction-award-staff-report"
+        ],
+        "flow_type": "obligation",
+        "institution_id": "inst-san-rafael-city-council",
+        "project_id": "project-downtown-library-renovation"
+      }
+    },
+    {
+      "id": "moneyflow-unico-construction-management-2024",
+      "node_type": "MoneyFlow",
+      "display_label": "moneyflow-unico-construction-management-2024",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "amount": 210536.82,
+        "counterparty_actor_id": "actor-unico-engineering",
+        "decision_id": "decision-2024-09-16-unico-approval",
+        "evidence_record_ids": [
+          "record-downtown-library-construction-award-staff-report"
+        ],
+        "flow_type": "obligation",
+        "institution_id": "inst-san-rafael-city-council",
+        "project_id": "project-downtown-library-renovation"
+      }
+    }
+  ],
+  "linked_cases": [
+    {
+      "id": "case-boyd-v-city-of-san-rafael",
+      "node_type": "Case",
+      "display_label": "Boyd v. City of San Rafael",
+      "year": 2023,
+      "source_bundle_ids": [
+        "legal-precedent-01__bundle-01"
+      ],
+      "properties": {
+        "case_type": "civil_rights_camping_ordinance_challenge",
+        "closed_at": "2024-08-07",
+        "court_institution_id": "inst-us-district-court-ndca",
+        "court_name": "U.S. District Court, Northern District of California",
+        "docket_number": "23-cv-04085-EMC",
+        "filed_at": "2023-08-11",
+        "issue_ids": [
+          "issue-homelessness",
+          "issue-encampments",
+          "issue-camping-ordinance"
+        ],
+        "name": "Boyd v. City of San Rafael",
+        "notes": [
+          "The first legal bundle now includes public filed-order copies for the TRO, preliminary injunction, and dismissal stages, plus the city's own official summaries of the amendment and implementation chain.",
+          "City records consistently say the operative Boyd injunction was grounded in ADA and Fourteenth Amendment state-created-danger theories, not the Eighth Amendment or Grants Pass directly."
+        ],
+        "place_ids": [
+          "place-san-rafael",
+          "place-mahon-creek-path"
+        ],
+        "record_ids": [
+          "record-san-rafael-boyd-tro-order-2023-08-16",
+          "record-san-rafael-boyd-preliminary-injunction-order-2023-10-19",
+          "record-san-rafael-boyd-dismissal-order-2024-08-07",
+          "doc-2024-08-08-boyd-dismissal-release",
+          "doc-2024-08-19-item-5a-report",
+          "doc-2024-08-19-staff-report",
+          "doc-2024-06-28-grants-pass-statement",
+          "record-san-rafael-grants-pass-explainer-2024-09-02",
+          "record-san-rafael-sanctioned-camping-area-page"
+        ],
+        "related_decision_ids": [
+          "decision-2024-08-19-ordinance-2040-introduction",
+          "decision-2024-08-19-resolution-15336"
+        ],
+        "related_program_ids": [
+          "program-san-rafael-sanctioned-camping"
+        ],
+        "status": "dismissed"
+      }
+    },
+    {
+      "id": "case-city-of-grants-pass-v-johnson",
+      "node_type": "Case",
+      "display_label": "City of Grants Pass v. Johnson",
+      "year": 2023,
+      "source_bundle_ids": [
+        "legal-precedent-02__bundle-01"
+      ],
+      "properties": {
+        "case_type": "supreme_court_public_camping_eighth_amendment_precedent",
+        "closed_at": "2024-06-28",
+        "court_institution_id": "inst-united-states-supreme-court",
+        "court_name": "Supreme Court of the United States",
+        "docket_number": "23-175",
+        "filed_at": "2023-08-22",
+        "issue_ids": [
+          "issue-homelessness",
+          "issue-encampments",
+          "issue-camping-ordinance"
+        ],
+        "name": "City of Grants Pass v. Johnson",
+        "notes": [
+          "This bundle treats the Supreme Court docket and slip opinion as the authoritative controlling-precedent layer.",
+          "San Rafael's own June 28 statement and September 2 explainer are preserved as local response records, not as substitutes for the Supreme Court opinion."
+        ],
+        "place_ids": [
+          "place-grants-pass-oregon",
+          "place-oregon"
+        ],
+        "record_ids": [
+          "record-scotus-grants-pass-docket-23-175",
+          "record-scotus-grants-pass-opinion-2024-06-28",
+          "record-sf-city-attorney-grants-pass-amicus-post-2024-03-01",
+          "doc-2024-06-28-grants-pass-statement",
+          "record-san-rafael-grants-pass-explainer-2024-09-02"
+        ],
+        "related_case_ids": [
+          "case-blake-v-city-of-grants-pass",
+          "case-johnson-v-city-of-grants-pass"
+        ],
+        "related_decision_ids": [
+          "decision-2024-08-19-ordinance-2040-introduction",
+          "decision-2024-08-19-resolution-15336"
+        ],
+        "related_program_ids": [
+          "program-san-rafael-sanctioned-camping"
+        ],
+        "status": "reversed_and_remanded"
+      }
+    }
+  ],
+  "evidence_records": [
+    {
+      "id": "record-2024-08-19-sanctioned-camp-code-of-conduct",
+      "node_type": "Record",
+      "display_label": "Draft code of conduct for the San Rafael sanctioned camping area",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-homelessness-01__bundle-01"
+      ],
+      "properties": {
+        "agenda_item_id": "agenda-item-2024-08-19-5a",
+        "artifact_paths": [
+          "data/raw/san-rafael-aug-19-2024-council-meeting/2026-04-10/item-5a-report.pdf"
+        ],
+        "issue_ids": [
+          "issue-homelessness",
+          "issue-encampments"
+        ],
+        "meeting_id": "meeting-2024-08-19-san-rafael-city-council",
+        "place_ids": [
+          "place-mahon-creek-path"
+        ],
+        "published_at": "2024-08-19",
+        "publisher": "City of San Rafael",
+        "record_class": "program_record",
+        "record_type": "code_of_conduct",
+        "source_record_id": "doc-2024-08-19-item-5a-report",
+        "source_tier": "official",
+        "status": "derived_candidate",
+        "text_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-sanctioned-camp-code-of-conduct.txt",
+        "title": "Draft code of conduct for the San Rafael sanctioned camping area",
+        "word_count": 492
+      }
+    },
+    {
+      "id": "record-2024-08-19-resolution-15336-text",
+      "node_type": "Record",
+      "display_label": "Resolution No. 15336 appropriating $2,256,400 and authorizing $2,002,400 for ERF3 and other homelessness services",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-homelessness-01__bundle-01"
+      ],
+      "properties": {
+        "agenda_item_id": "agenda-item-2024-08-19-5a",
+        "artifact_paths": [
+          "data/raw/san-rafael-aug-19-2024-council-meeting/2026-04-10/item-5a-report.pdf"
+        ],
+        "decision_ids": [
+          "decision-2024-08-19-resolution-15336"
+        ],
+        "issue_ids": [
+          "issue-homelessness",
+          "issue-encampments"
+        ],
+        "meeting_id": "meeting-2024-08-19-san-rafael-city-council",
+        "place_ids": [
+          "place-mahon-creek-path"
+        ],
+        "published_at": "2024-08-19",
+        "publisher": "City of San Rafael",
+        "record_class": "legislative_record",
+        "record_type": "resolution_text",
+        "source_record_id": "doc-2024-08-19-item-5a-report",
+        "source_tier": "official",
+        "status": "derived_candidate",
+        "text_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-resolution-15336.txt",
+        "title": "Resolution No. 15336 appropriating $2,256,400 and authorizing $2,002,400 for ERF3 and other homelessness services",
+        "word_count": 742
+      }
+    },
+    {
+      "id": "record-san-rafael-sanctioned-camping-area-page",
+      "node_type": "Record",
+      "display_label": "Sanctioned Camping Area - San Rafael",
+      "year": null,
+      "source_bundle_ids": [
+        "legal-precedent-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-sanctioned-camping-area/2026-04-10/source.html",
+        "issue_ids": [
+          "issue-homelessness",
+          "issue-encampments"
+        ],
+        "place_ids": [
+          "place-san-rafael",
+          "place-mahon-creek-path"
+        ],
+        "record_class": "program_record",
+        "record_type": "official_program_page",
+        "related_case_ids": [
+          "case-boyd-v-city-of-san-rafael"
+        ],
+        "related_program_ids": [
+          "program-san-rafael-sanctioned-camping"
+        ],
+        "source_id": "san-rafael-sanctioned-camping-area",
+        "text_path": "data/extracted/san-rafael-sanctioned-camping-area/source.txt",
+        "title": "Sanctioned Camping Area - San Rafael"
+      }
+    },
+    {
+      "id": "record-2024-08-19-sanctioned-camp-site-plan",
+      "node_type": "Record",
+      "display_label": "Sanctioned encampment site plan with 47 total campsites",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-homelessness-01__bundle-01"
+      ],
+      "properties": {
+        "agenda_item_id": "agenda-item-2024-08-19-5a",
+        "artifact_paths": [
+          "data/raw/san-rafael-aug-19-2024-council-meeting/2026-04-10/item-5a-report.pdf"
+        ],
+        "issue_ids": [
+          "issue-homelessness",
+          "issue-encampments"
+        ],
+        "meeting_id": "meeting-2024-08-19-san-rafael-city-council",
+        "place_ids": [
+          "place-mahon-creek-path"
+        ],
+        "published_at": "2024-08-19",
+        "publisher": "City of San Rafael",
+        "record_class": "program_record",
+        "record_type": "site_plan",
+        "source_record_id": "doc-2024-08-19-item-5a-report",
+        "source_tier": "official",
+        "status": "derived_candidate",
+        "text_path": "data/extracted/san-rafael-aug-19-2024-council-meeting/item-5a-sanctioned-camp-site-plan.txt",
+        "title": "Sanctioned encampment site plan with 47 total campsites",
+        "word_count": 50
+      }
+    },
+    {
+      "id": "record-csl-building-forward-report-2021-2022",
+      "node_type": "Record",
+      "display_label": "record-csl-building-forward-report-2021-2022",
+      "year": null,
+      "source_bundle_ids": [
+        "grant-program-dossiers-01__bundle-01",
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/california-state-library-building-forward-report-2021-2022/2026-04-11/source.txt",
+        "record_class": "financial_record",
+        "record_type": "annual_report",
+        "related_program_ids": [
+          "program-csl-building-forward"
+        ],
+        "related_project_ids": [
+          "project-downtown-library-renovation"
+        ],
+        "source_id": "california-state-library-building-forward-report-2021-2022"
+      }
+    },
+    {
+      "id": "record-csl-lds-annual-update-2023-2024",
+      "node_type": "Record",
+      "display_label": "record-csl-lds-annual-update-2023-2024",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/california-state-library-lds-annual-update-2023-2024/2026-04-11/source.txt",
+        "record_class": "financial_record",
+        "record_type": "annual_report",
+        "related_project_ids": [
+          "project-downtown-library-renovation"
+        ],
+        "source_id": "california-state-library-lds-annual-update-2023-2024"
+      }
+    },
+    {
+      "id": "record-downtown-library-project-page",
+      "node_type": "Record",
+      "display_label": "record-downtown-library-project-page",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-downtown-library-renovation-project-page/2026-04-11/source.html",
+        "record_class": "program_record",
+        "record_type": "project_page",
+        "related_project_ids": [
+          "project-downtown-library-renovation"
+        ],
+        "source_id": "san-rafael-downtown-library-renovation-project-page"
+      }
+    },
+    {
+      "id": "record-downtown-library-reopening",
+      "node_type": "Record",
+      "display_label": "record-downtown-library-reopening",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-downtown-library-reopening/2026-04-11/source.html",
+        "record_class": "program_record",
+        "record_type": "project_update",
+        "related_project_ids": [
+          "project-downtown-library-renovation"
+        ],
+        "source_id": "san-rafael-downtown-library-reopening"
+      }
+    },
+    {
+      "id": "record-downtown-library-state-grant-acceptance-staff-report",
+      "node_type": "Record",
+      "display_label": "record-downtown-library-state-grant-acceptance-staff-report",
+      "year": null,
+      "source_bundle_ids": [
+        "grant-program-dossiers-01__bundle-01",
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-downtown-library-state-grant-acceptance-staff-report/2026-04-11/staff-report.pdf",
+        "record_class": "financial_record",
+        "record_type": "staff_report",
+        "related_program_ids": [
+          "program-csl-building-forward"
+        ],
+        "related_project_ids": [
+          "project-downtown-library-renovation"
+        ],
+        "source_id": "san-rafael-downtown-library-state-grant-acceptance-staff-report"
+      }
+    },
+    {
+      "id": "record-srcc-2022-12-19-library-grants",
+      "node_type": "Record",
+      "display_label": "record-srcc-2022-12-19-library-grants",
+      "year": null,
+      "source_bundle_ids": [
+        "grant-program-dossiers-01__bundle-01",
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-council-2022-12-19-library-grants/2026-04-11/source.html",
+        "record_class": "meeting_record",
+        "record_type": "meeting_page",
+        "related_program_ids": [
+          "program-csl-building-forward"
+        ],
+        "related_project_ids": [
+          "project-downtown-library-renovation"
+        ],
+        "source_id": "san-rafael-city-council-2022-12-19-library-grants"
+      }
+    }
+  ],
+  "related_records": [
+    {
+      "id": "record-downtown-library-construction-award-staff-report",
+      "node_type": "Record",
+      "display_label": "record-downtown-library-construction-award-staff-report",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-downtown-library-construction-award-staff-report/2026-04-11/staff-report.pdf",
+        "record_class": "contract_record",
+        "record_type": "staff_report",
+        "related_project_ids": [
+          "project-downtown-library-renovation"
+        ],
+        "source_id": "san-rafael-downtown-library-construction-award-staff-report"
+      }
+    },
+    {
+      "id": "record-downtown-library-first-amendment-staff-report",
+      "node_type": "Record",
+      "display_label": "record-downtown-library-first-amendment-staff-report",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-downtown-library-first-amendment-staff-report/2026-04-11/staff-report.pdf",
+        "record_class": "contract_record",
+        "record_type": "staff_report",
+        "related_project_ids": [
+          "project-downtown-library-renovation"
+        ],
+        "source_id": "san-rafael-downtown-library-first-amendment-staff-report"
+      }
+    },
+    {
+      "id": "record-downtown-library-renovation-rfp",
+      "node_type": "Record",
+      "display_label": "record-downtown-library-renovation-rfp",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-downtown-library-renovation-rfp/2026-04-11/source.html",
+        "record_class": "contract_record",
+        "record_type": "solicitation",
+        "related_project_ids": [
+          "project-downtown-library-renovation"
+        ],
+        "source_id": "san-rafael-downtown-library-renovation-rfp"
+      }
+    },
+    {
+      "id": "record-downtown-library-second-amendment-staff-report",
+      "node_type": "Record",
+      "display_label": "record-downtown-library-second-amendment-staff-report",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-downtown-library-second-amendment-staff-report/2026-04-11/staff-report.pdf",
+        "record_class": "contract_record",
+        "record_type": "staff_report",
+        "related_project_ids": [
+          "project-downtown-library-renovation"
+        ],
+        "source_id": "san-rafael-downtown-library-second-amendment-staff-report"
+      }
+    },
+    {
+      "id": "record-srcc-2023-09-18-downtown-library",
+      "node_type": "Record",
+      "display_label": "record-srcc-2023-09-18-downtown-library",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-council-2023-09-18-downtown-library/2026-04-11/source.html",
+        "record_class": "meeting_record",
+        "record_type": "meeting_page",
+        "related_project_ids": [
+          "project-downtown-library-renovation"
+        ],
+        "source_id": "san-rafael-city-council-2023-09-18-downtown-library"
+      }
+    },
+    {
+      "id": "record-srcc-2024-09-16-agenda-packet",
+      "node_type": "Record",
+      "display_label": "record-srcc-2024-09-16-agenda-packet",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-council-2024-09-16-agenda-packet/2026-04-11/agenda-packet.pdf",
+        "record_class": "meeting_record",
+        "record_type": "agenda_packet",
+        "related_project_ids": [
+          "project-downtown-library-renovation"
+        ],
+        "source_id": "san-rafael-city-council-2024-09-16-agenda-packet"
+      }
+    },
+    {
+      "id": "record-srcc-2024-09-16-downtown-library",
+      "node_type": "Record",
+      "display_label": "record-srcc-2024-09-16-downtown-library",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-council-2024-09-16-downtown-library/2026-04-11/source.html",
+        "record_class": "meeting_record",
+        "record_type": "meeting_page",
+        "related_project_ids": [
+          "project-downtown-library-renovation"
+        ],
+        "source_id": "san-rafael-city-council-2024-09-16-downtown-library"
+      }
+    },
+    {
+      "id": "record-srcc-2025-04-07-downtown-library",
+      "node_type": "Record",
+      "display_label": "record-srcc-2025-04-07-downtown-library",
+      "year": null,
+      "source_bundle_ids": [
+        "project-dossiers-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-city-council-2025-04-07-downtown-library/2026-04-11/source.html",
+        "record_class": "meeting_record",
+        "record_type": "meeting_page",
+        "related_project_ids": [
+          "project-downtown-library-renovation"
+        ],
+        "source_id": "san-rafael-city-council-2025-04-07-downtown-library"
+      }
+    }
+  ]
+}

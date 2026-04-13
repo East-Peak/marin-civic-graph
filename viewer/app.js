@@ -179,6 +179,26 @@ function renderValidationItem(item) {
   return wrapper;
 }
 
+function renderRollupCard(item) {
+  const subject = item.program || item.project;
+  const secondary = item.institution || item.primary_place;
+  const wrapper = el("article", "list-card");
+  wrapper.append(
+    el("p", "eyebrow", subject?.node_type || "Rollup"),
+    el("h4", null, subject?.display_label || "Unnamed")
+  );
+  const pills = el("div", "pill-row");
+  Object.entries(item.metrics || {}).forEach(([key, value]) => {
+    if (typeof value !== "number") return;
+    pills.append(badge(`${formatNumber(value)} ${key.replaceAll("_count", "").replaceAll("_", " ")}`));
+  });
+  wrapper.append(pills);
+  if (secondary) {
+    wrapper.append(el("p", "muted", secondary.display_label));
+  }
+  return wrapper;
+}
+
 function renderActorDossier(data) {
   contentEl.append(
     renderListSection("Actor", [data.actor], renderNodeCard, { open: true }),
@@ -274,6 +294,19 @@ function renderMoneyOverlap(data) {
   );
 }
 
+function renderJurisdictionDeliverySummary(data) {
+  contentEl.append(
+    renderListSection("Jurisdiction", [data.jurisdiction_place], renderNodeCard, { open: true }),
+    renderListSection("Program Rollups", data.program_rollups || [], renderRollupCard, { open: true }),
+    renderListSection("Project Rollups", data.project_rollups || [], renderRollupCard, { open: true }),
+    renderListSection("Linked Decisions", data.linked_decisions || []),
+    renderListSection("Linked Money Flows", data.linked_money_flows || []),
+    renderListSection("Linked Cases", data.linked_cases || []),
+    renderListSection("Evidence Records", data.evidence_records || []),
+    renderListSection("Related Records", data.related_records || []),
+  );
+}
+
 function renderLegalConstraint(data) {
   const panel = el("section", "panel");
   panel.append(el("h3", null, "Case Views"));
@@ -351,6 +384,10 @@ function renderView(data) {
   }
   if (data.view_type === "money_overlap_summary") {
     renderMoneyOverlap(data);
+    return;
+  }
+  if (data.view_type === "jurisdiction_delivery_summary") {
+    renderJurisdictionDeliverySummary(data);
     return;
   }
   if (data.view_type === "legal_constraint_view") {

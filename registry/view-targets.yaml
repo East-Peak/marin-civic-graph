@@ -34,6 +34,10 @@
       "subject_id": "project-downtown-library-renovation"
     },
     {
+      "view_type": "jurisdiction_delivery_summary",
+      "subject_id": "place-san-rafael"
+    },
+    {
       "view_type": "money_overlap_summary"
     },
     {

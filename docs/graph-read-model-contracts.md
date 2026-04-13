@@ -171,6 +171,30 @@ Current note:
 
 - `linked_money_flows` may be sourced either from direct `MoneyFlow -> Project` links or from `MoneyFlow -> Decision -> Project` paths when the normalized bundle only encodes the decision crosswalk.
 
+### `jurisdiction_delivery_summary`
+
+Subject:
+
+- one jurisdictional `Place`
+
+Current shape:
+
+- `jurisdiction_place`
+- `metrics`
+- `program_rollups`
+- `project_rollups`
+- `linked_decisions`
+- `linked_money_flows`
+- `linked_cases`
+- `evidence_records`
+- `related_records`
+
+Current note:
+
+- this is a bounded read-model rollup over the existing `program_dossier` and `project_dossier` layer
+- it does not create new graph truth edges
+- it is meant to answer a broader product question: what active program/project delivery threads, decisions, money, and constraint context currently exist within one jurisdiction
+
 ### `money_overlap_summary`
 
 Current shape:

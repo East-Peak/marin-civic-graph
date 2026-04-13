@@ -90,6 +90,21 @@ def unique_node_summaries(nodes: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return results
 
 
+def unique_summary_items(items: list[dict[str, Any] | None]) -> list[dict[str, Any]]:
+    seen: set[str] = set()
+    results: list[dict[str, Any]] = []
+    for item in items:
+        if item is None:
+            continue
+        item_id = item.get("id")
+        if not item_id or item_id in seen:
+            continue
+        seen.add(item_id)
+        results.append(item)
+    results.sort(key=lambda item: (item.get("year") or 0, item.get("display_label") or "", item.get("id") or ""))
+    return results
+
+
 def unique_nodes(nodes: list[dict[str, Any]]) -> list[dict[str, Any]]:
     seen: set[str] = set()
     results: list[dict[str, Any]] = []
@@ -106,7 +121,7 @@ def sort_nodes(nodes: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def slugify_subject(subject_id: str) -> str:
-    for prefix in ("actor-", "decision-", "case-", "program-", "project-"):
+    for prefix in ("actor-", "decision-", "case-", "program-", "project-", "place-"):
         if subject_id.startswith(prefix):
             return subject_id[len(prefix) :]
     return subject_id
@@ -981,6 +996,120 @@ def project_dossier(
     }
 
 
+def jurisdiction_delivery_summary(
+    *,
+    place_id: str,
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    jurisdiction_place = node_by_id[place_id]
+    programs = unique_nodes(
+        sort_nodes(
+            edge_sources(
+                incoming,
+                node_by_id,
+                place_id,
+                relationship_type="IN_JURISDICTION",
+                source_node_type="Program",
+            )
+        )
+    )
+    projects = unique_nodes(
+        sort_nodes(
+            edge_sources(
+                incoming,
+                node_by_id,
+                place_id,
+                relationship_type="IN_JURISDICTION",
+                source_node_type="Project",
+            )
+        )
+    )
+
+    program_rollups = []
+    project_rollups = []
+    linked_decisions: list[dict[str, Any]] = []
+    linked_money_flows: list[dict[str, Any]] = []
+    linked_cases: list[dict[str, Any]] = []
+    evidence_records: list[dict[str, Any]] = []
+    related_records: list[dict[str, Any]] = []
+
+    for program in programs:
+        payload = program_dossier(
+            program_id=program["id"],
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
+        program_rollups.append(
+            {
+                "program": payload["program"],
+                "institution": payload["institution"],
+                "metrics": payload["metrics"],
+            }
+        )
+        linked_decisions.extend(payload["linked_decisions"])
+        linked_money_flows.extend(payload["linked_money_flows"])
+        linked_cases.extend(payload["linked_cases"])
+        evidence_records.extend(payload["evidence_records"])
+        related_records.extend(payload["related_records"])
+
+    for project in projects:
+        payload = project_dossier(
+            project_id=project["id"],
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
+        project_rollups.append(
+            {
+                "project": payload["project"],
+                "primary_place": payload["primary_place"],
+                "metrics": payload["metrics"],
+            }
+        )
+        linked_decisions.extend(payload["linked_decisions"])
+        linked_money_flows.extend(payload["linked_money_flows"])
+        evidence_records.extend(payload["evidence_records"])
+        related_records.extend(payload["related_records"])
+
+    linked_decisions = unique_summary_items(linked_decisions)
+    linked_money_flows = unique_summary_items(linked_money_flows)
+    linked_cases = unique_summary_items(linked_cases)
+    evidence_records = unique_summary_items(evidence_records)
+    related_records = unique_summary_items(
+        [record for record in related_records if record.get("id") not in {item["id"] for item in evidence_records}]
+    )
+
+    return {
+        "id": f"jurisdiction-{slugify_subject(place_id)}-delivery-summary",
+        "title": f"Jurisdiction delivery summary: {node_title(jurisdiction_place)}",
+        "view_type": "jurisdiction_delivery_summary",
+        "subject_id": place_id,
+        "subject_node_type": "Place",
+        "contract_version": 1,
+        "generated_at": iso_now(),
+        "jurisdiction_place": node_summary(jurisdiction_place),
+        "metrics": {
+            "program_count": len(program_rollups),
+            "project_count": len(project_rollups),
+            "linked_decision_count": len(linked_decisions),
+            "linked_money_flow_count": len(linked_money_flows),
+            "linked_case_count": len(linked_cases),
+            "evidence_record_count": len(evidence_records),
+            "related_record_count": len(related_records),
+        },
+        "program_rollups": program_rollups,
+        "project_rollups": project_rollups,
+        "linked_decisions": linked_decisions,
+        "linked_money_flows": linked_money_flows,
+        "linked_cases": linked_cases,
+        "evidence_records": evidence_records,
+        "related_records": related_records,
+    }
+
+
 def money_overlap_view(
     *,
     nodes: list[dict[str, Any]],
@@ -1253,6 +1382,13 @@ def build_view_from_target(
             outgoing=outgoing,
             incoming=incoming,
         )
+    if view_type == "jurisdiction_delivery_summary":
+        return jurisdiction_delivery_summary(
+            place_id=subject_id,
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
     if view_type == "money_overlap_summary":
         return money_overlap_view(
             nodes=nodes,
@@ -1297,6 +1433,7 @@ def write_markdown_summary(output_dir: Path, views: list[dict[str, Any]]) -> Non
     case_views = [payload for payload in views if payload["view_type"] == "case_dossier"]
     program_views = [payload for payload in views if payload["view_type"] == "program_dossier"]
     project_views = [payload for payload in views if payload["view_type"] == "project_dossier"]
+    jurisdiction_views = [payload for payload in views if payload["view_type"] == "jurisdiction_delivery_summary"]
     decision_views = [payload for payload in views if payload["view_type"] == "decision_dossier"]
     money_views = [payload for payload in views if payload["view_type"] == "money_overlap_summary"]
     legal_views = [payload for payload in views if payload["view_type"] == "legal_constraint_view"]
@@ -1325,6 +1462,10 @@ def write_markdown_summary(output_dir: Path, views: list[dict[str, Any]]) -> Non
     if project_views:
         lines.append(
             f"- Project dossiers now cover `{len(project_views)}` targets, including `{project_views[0]['project']['display_label']}` with `{project_views[0]['metrics']['agreement_count']}` agreements and `{project_views[0]['metrics']['linked_money_flow_count']}` linked money flows."
+        )
+    if jurisdiction_views:
+        lines.append(
+            f"- Jurisdiction delivery summaries now cover `{len(jurisdiction_views)}` targets, including `{jurisdiction_views[0]['jurisdiction_place']['display_label']}` with `{jurisdiction_views[0]['metrics']['program_count']}` programs, `{jurisdiction_views[0]['metrics']['project_count']}` projects, and `{jurisdiction_views[0]['metrics']['linked_money_flow_count']}` linked money flows."
         )
     if money_views:
         money = money_views[0]

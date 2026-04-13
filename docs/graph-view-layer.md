@@ -137,6 +137,19 @@ Current scope:
 - agreements and amendments
 - linked money flows
 
+### Jurisdiction delivery summary
+
+- [jurisdiction-san-rafael-delivery-summary.json](../data/projected/graph-v1/views/jurisdiction-san-rafael-delivery-summary.json)
+
+Current scope:
+
+- one jurisdictional place
+- program and project rollups
+- linked decisions
+- linked money flows
+- linked cases
+- evidence and related records
+
 ## Use
 
 Run:

@@ -18,6 +18,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **Jurisdiction-level delivery summaries should aggregate the existing dossier layer, not widen import scope**
+  - After actor, organization, case, program, and project read models existed, the next useful pressure test was not more ingestion. It was whether the graph could answer a broader local-delivery question without inventing new graph truth.
+  - The right bounded test is `place-san-rafael`: one jurisdictional summary that rolls up current program and project threads, linked decisions, linked money, linked cases, and supporting records.
+  - The projected view pack now emits `jurisdiction-san-rafael-delivery-summary.json`, built by aggregating the existing `program_dossier` and `project_dossier` layer rather than widening procurement or legal import scope.
+  - Result: the current San Rafael delivery summary now shows `1` program, `1` project, `8` linked decisions, `12` linked money flows, and `2` linked cases in one read model.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-jurisdiction-delivery-summaries-should-aggregate-existing-dossiers.md`
+
 - **A bounded Downtown Library project bundle can enter graph-v1 without reopening procurement**
   - After the `program_dossier` contract worked for both the sanctioned-camping and Building Forward threads, the next missing read model was a project layer that could unify grants, agreements, amendments, decisions, records, and place.
   - The right test is still bounded: one Downtown Library support bundle, not a general procurement import.
