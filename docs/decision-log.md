@@ -18,6 +18,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **Programs need their own dossier contract once the legal lane is imported**
+  - After actor, organization, decision, and case dossiers were generalized, the next missing product-shaped graph output was the program layer.
+  - `program-san-rafael-sanctioned-camping` is the right first target because it unifies local decisions, linked money flows, evidence records, jurisdiction/place, and the Boyd / Grants Pass legal constraint chain.
+  - The projected read-model layer now includes `program_dossier`, with the first generated output at `program-san-rafael-sanctioned-camping-dossier.json`.
+  - Boundary: linked money in this dossier is still derived through decision relationships, not a new direct `MoneyFlow -> Program` truth layer.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-program-read-models-should-sit-between-decisions-money-and-legal-constraints.md`
+
 - **Projected graph views should be manifest-driven read models, not hand-picked demos**
   - The first dossier pack proved the graph could emit product-shaped JSON, but the builder was still hardcoded to one actor and one decision.
   - The next fix was data-side, not UI-side: add a view target manifest, define stable read-model contracts, and generalize dossier generation across actor, organization, decision, and case subjects.

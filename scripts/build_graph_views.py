@@ -95,7 +95,7 @@ def sort_nodes(nodes: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def slugify_subject(subject_id: str) -> str:
-    for prefix in ("actor-", "decision-", "case-"):
+    for prefix in ("actor-", "decision-", "case-", "program-"):
         if subject_id.startswith(prefix):
             return subject_id[len(prefix) :]
     return subject_id
@@ -193,6 +193,26 @@ def linked_decisions_from_money_flows(
             )
         )
     return sort_nodes(decisions)
+
+
+def linked_money_flows_for_decisions(
+    decisions: list[dict[str, Any]],
+    *,
+    node_by_id: dict[str, dict[str, Any]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
+    flows = []
+    for decision in decisions:
+        flows.extend(
+            edge_sources(
+                incoming,
+                node_by_id,
+                decision["id"],
+                relationship_type="RELATES_TO_DECISION",
+                source_node_type="MoneyFlow",
+            )
+        )
+    return sort_nodes(flows)
 
 
 def linked_cases_from_records(
@@ -646,6 +666,124 @@ def case_dossier(
     }
 
 
+def program_dossier(
+    *,
+    program_id: str,
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    program = node_by_id[program_id]
+    institution = next(
+        iter(
+            edge_targets(
+                outgoing,
+                node_by_id,
+                program_id,
+                relationship_type="OPERATED_BY_INSTITUTION",
+                target_node_type="Institution",
+            )
+        ),
+        None,
+    )
+    jurisdiction_place = next(
+        iter(
+            edge_targets(
+                outgoing,
+                node_by_id,
+                program_id,
+                relationship_type="IN_JURISDICTION",
+                target_node_type="Place",
+            )
+        ),
+        None,
+    )
+    places = sort_nodes(
+        edge_targets(
+            outgoing,
+            node_by_id,
+            program_id,
+            relationship_type="RELATES_TO_PLACE",
+            target_node_type="Place",
+        )
+    )
+    evidence_records = sort_nodes(
+        edge_targets(
+            outgoing,
+            node_by_id,
+            program_id,
+            relationship_type="EVIDENCED_BY",
+            target_node_type="Record",
+        )
+    )
+    related_records = sort_nodes(
+        edge_sources(
+            incoming,
+            node_by_id,
+            program_id,
+            relationship_type="RELATES_TO_PROGRAM",
+            source_node_type="Record",
+        )
+    )
+    linked_cases = sort_nodes(
+        edge_targets(
+            outgoing,
+            node_by_id,
+            program_id,
+            relationship_type="RELATES_TO_CASE",
+            target_node_type="Case",
+        )
+        + edge_sources(
+            incoming,
+            node_by_id,
+            program_id,
+            relationship_type="RELATES_TO_PROGRAM",
+            source_node_type="Case",
+        )
+    )
+    linked_decisions = sort_nodes(
+        edge_targets(
+            outgoing,
+            node_by_id,
+            program_id,
+            relationship_type="RELATES_TO_DECISION",
+            target_node_type="Decision",
+        )
+    )
+    linked_money_flows = linked_money_flows_for_decisions(
+        linked_decisions,
+        node_by_id=node_by_id,
+        incoming=incoming,
+    )
+
+    return {
+        "id": f"program-{slugify_subject(program_id)}-dossier",
+        "title": f"Program dossier: {node_title(program)}",
+        "view_type": "program_dossier",
+        "subject_id": program_id,
+        "subject_node_type": "Program",
+        "contract_version": 1,
+        "generated_at": iso_now(),
+        "program": node_summary(program),
+        "institution": node_summary(institution),
+        "jurisdiction_place": node_summary(jurisdiction_place),
+        "metrics": {
+            "place_count": len(places),
+            "evidence_record_count": len(evidence_records),
+            "related_record_count": len(related_records),
+            "linked_case_count": len(linked_cases),
+            "linked_decision_count": len(linked_decisions),
+            "linked_money_flow_count": len(linked_money_flows),
+        },
+        "places": unique_node_summaries(places),
+        "evidence_records": unique_node_summaries(evidence_records),
+        "related_records": unique_node_summaries(related_records),
+        "linked_cases": unique_node_summaries(linked_cases),
+        "linked_decisions": unique_node_summaries(linked_decisions),
+        "linked_money_flows": unique_node_summaries(linked_money_flows),
+    }
+
+
 def money_overlap_view(
     *,
     nodes: list[dict[str, Any]],
@@ -904,6 +1042,13 @@ def build_view_from_target(
             outgoing=outgoing,
             incoming=incoming,
         )
+    if view_type == "program_dossier":
+        return program_dossier(
+            program_id=subject_id,
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
     if view_type == "money_overlap_summary":
         return money_overlap_view(
             nodes=nodes,
@@ -946,6 +1091,7 @@ def write_markdown_summary(output_dir: Path, views: list[dict[str, Any]]) -> Non
     actor_views = [payload for payload in views if payload["view_type"] == "actor_dossier"]
     organization_views = [payload for payload in views if payload["view_type"] == "organization_dossier"]
     case_views = [payload for payload in views if payload["view_type"] == "case_dossier"]
+    program_views = [payload for payload in views if payload["view_type"] == "program_dossier"]
     decision_views = [payload for payload in views if payload["view_type"] == "decision_dossier"]
     money_views = [payload for payload in views if payload["view_type"] == "money_overlap_summary"]
     legal_views = [payload for payload in views if payload["view_type"] == "legal_constraint_view"]
@@ -966,6 +1112,10 @@ def write_markdown_summary(output_dir: Path, views: list[dict[str, Any]]) -> Non
     if case_views:
         lines.append(
             f"- Case dossiers now cover `{len(case_views)}` targets, including `{case_views[0]['case']['display_label']}` with `{case_views[0]['metrics']['proceeding_count']}` proceedings."
+        )
+    if program_views:
+        lines.append(
+            f"- Program dossiers now cover `{len(program_views)}` targets, including `{program_views[0]['program']['display_label']}` with `{program_views[0]['metrics']['linked_decision_count']}` linked decisions and `{program_views[0]['metrics']['linked_money_flow_count']}` linked money flows."
         )
     if money_views:
         money = money_views[0]

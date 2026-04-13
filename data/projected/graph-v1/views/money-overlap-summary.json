@@ -3,7 +3,7 @@
   "title": "Money overlap summary",
   "view_type": "money_overlap_summary",
   "contract_version": 1,
-  "generated_at": "2026-04-13T12:34:54Z",
+  "generated_at": "2026-04-13T12:38:15Z",
   "metrics": {
     "money_flow_count": 147,
     "flow_type_counts": {

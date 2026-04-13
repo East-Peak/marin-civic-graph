@@ -104,6 +104,10 @@ Current scope:
 
 - [case-boyd-v-city-of-san-rafael-dossier.json](../data/projected/graph-v1/views/case-boyd-v-city-of-san-rafael-dossier.json)
 
+### Program dossier
+
+- [program-san-rafael-sanctioned-camping-dossier.json](../data/projected/graph-v1/views/program-san-rafael-sanctioned-camping-dossier.json)
+
 Current scope:
 
 - `ValidationCheck` status / severity queue

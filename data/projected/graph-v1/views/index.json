@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-13T12:34:54Z",
+  "generated_at": "2026-04-13T12:38:15Z",
   "projection_dir": "data/projected/graph-v1",
   "contract_version": 1,
   "views": [
@@ -42,6 +42,14 @@
       "subject_id": "case-boyd-v-city-of-san-rafael",
       "subject_node_type": "Case",
       "path": "data/projected/graph-v1/views/case-boyd-v-city-of-san-rafael-dossier.json"
+    },
+    {
+      "id": "program-san-rafael-sanctioned-camping-dossier",
+      "title": "Program dossier: San Rafael sanctioned camping program",
+      "view_type": "program_dossier",
+      "subject_id": "program-san-rafael-sanctioned-camping",
+      "subject_node_type": "Program",
+      "path": "data/projected/graph-v1/views/program-san-rafael-sanctioned-camping-dossier.json"
     },
     {
       "id": "money-overlap-summary",

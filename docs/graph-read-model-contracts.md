@@ -124,6 +124,25 @@ Current shape:
 - `places`
 - `linked_local_decisions`
 
+### `program_dossier`
+
+Subject:
+
+- one `Program`
+
+Current shape:
+
+- `program`
+- `institution`
+- `jurisdiction_place`
+- `metrics`
+- `places`
+- `evidence_records`
+- `related_records`
+- `linked_cases`
+- `linked_decisions`
+- `linked_money_flows`
+
 ### `money_overlap_summary`
 
 Current shape:

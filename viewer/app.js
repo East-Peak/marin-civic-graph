@@ -239,6 +239,20 @@ function renderCaseDossier(data) {
   );
 }
 
+function renderProgramDossier(data) {
+  contentEl.append(
+    renderListSection("Program", [data.program], renderNodeCard, { open: true }),
+    renderListSection("Institution", data.institution ? [data.institution] : []),
+    renderListSection("Jurisdiction", data.jurisdiction_place ? [data.jurisdiction_place] : []),
+    renderListSection("Places", data.places || []),
+    renderListSection("Evidence Records", data.evidence_records || []),
+    renderListSection("Related Records", data.related_records || []),
+    renderListSection("Linked Cases", data.linked_cases || []),
+    renderListSection("Linked Decisions", data.linked_decisions || []),
+    renderListSection("Linked Money Flows", data.linked_money_flows || []),
+  );
+}
+
 function renderMoneyOverlap(data) {
   contentEl.append(
     renderListSection("Top Overlap Subjects", data.top_overlap_subjects, renderOverlapSubject, { open: true })
@@ -310,6 +324,10 @@ function renderView(data) {
   }
   if (data.view_type === "case_dossier") {
     renderCaseDossier(data);
+    return;
+  }
+  if (data.view_type === "program_dossier") {
+    renderProgramDossier(data);
     return;
   }
   if (data.view_type === "money_overlap_summary") {

@@ -148,6 +148,7 @@ Start narrow:
 - [Downtown Streets Team Organization Dossier](./data/projected/graph-v1/views/organization-downtown-streets-team-dossier.json)
 - [Resolution 15336 Decision Dossier](./data/projected/graph-v1/views/decision-2024-08-19-resolution-15336-dossier.json)
 - [Boyd Case Dossier](./data/projected/graph-v1/views/case-boyd-v-city-of-san-rafael-dossier.json)
+- [Sanctioned Camping Program Dossier](./data/projected/graph-v1/views/program-san-rafael-sanctioned-camping-dossier.json)
 - [Money Overlap Summary](./data/projected/graph-v1/views/money-overlap-summary.json)
 - [Legal Constraint View](./data/projected/graph-v1/views/legal-constraint-view.json)
 - [Validation Queue](./data/projected/graph-v1/views/validation-queue.json)
@@ -262,6 +263,7 @@ This repo started as a planning workspace and now includes the first live implem
     - `organization-downtown-streets-team-dossier`
     - `decision-2024-08-19-resolution-15336-dossier`
     - `case-boyd-v-city-of-san-rafael-dossier`
+    - `program-san-rafael-sanctioned-camping-dossier`
     - `money-overlap-summary`
     - `legal-constraint-view`
     - `validation-queue`
