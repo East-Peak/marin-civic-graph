@@ -458,6 +458,32 @@ function renderProgramLocalPressureSummary(data) {
   );
 }
 
+function renderPressureThreadRollup(item) {
+  const wrapper = el("section", "panel");
+  wrapper.append(
+    el("p", "eyebrow", item.thread_type || "thread"),
+    el("h3", null, item.subject?.display_label || "Unnamed thread"),
+  );
+  const pills = el("div", "pill-row");
+  Object.entries(item.metrics || {}).forEach(([key, value]) => {
+    if (typeof value !== "number") return;
+    if (key === "linked_money_total_amount") {
+      pills.append(badge(`$${formatNumber(value)}`, "ok"));
+      return;
+    }
+    pills.append(badge(`${formatNumber(value)} ${key.replaceAll("_count", "").replaceAll("_", " ")}`));
+  });
+  wrapper.append(pills);
+  if (item.context) {
+    wrapper.append(el("p", "muted", item.context.display_label));
+  }
+  wrapper.append(renderProperties(item.pressure_flags || {}));
+  if (item.top_counterparties?.length) {
+    wrapper.append(renderListSection("Top Counterparties", item.top_counterparties, renderCounterpartyItem));
+  }
+  return wrapper;
+}
+
 function renderCaseScopeRollup(item) {
   const wrapper = el("article", "list-card");
   wrapper.append(
@@ -493,6 +519,15 @@ function renderJurisdictionLegalConstraintSummary(data) {
     renderListSection("Case Lineage", data.case_lineage || [], renderCaseLineageItem),
     renderListSection("Evidence Records", data.evidence_records || []),
     renderListSection("Related Records", data.related_records || [])
+  );
+}
+
+function renderJurisdictionLocalPressureComparison(data) {
+  contentEl.append(
+    renderListSection("Jurisdiction", [data.jurisdiction_place], renderNodeCard, { open: true }),
+    renderListSection("Thread Rollups", data.thread_rollups || [], renderPressureThreadRollup, { open: true }),
+    renderListSection("Top Counterparties", data.top_counterparties || [], renderCounterpartyItem),
+    renderListSection("Evidence Records", data.evidence_records || []),
   );
 }
 
@@ -542,6 +577,10 @@ function renderView(data) {
   }
   if (data.view_type === "program_local_pressure_summary") {
     renderProgramLocalPressureSummary(data);
+    return;
+  }
+  if (data.view_type === "jurisdiction_local_pressure_comparison") {
+    renderJurisdictionLocalPressureComparison(data);
     return;
   }
   if (data.view_type === "jurisdiction_legal_constraint_summary") {

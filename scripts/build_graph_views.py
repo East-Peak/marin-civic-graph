@@ -1509,6 +1509,87 @@ def decision_money_explanation(
     }
 
 
+def aggregate_pressure_from_decision_explanations(
+    decision_explanations: list[dict[str, Any]],
+) -> dict[str, Any]:
+    money_flow_amounts: dict[str, float] = {}
+    flow_type_counts = Counter()
+    counterparty_buckets: dict[str, dict[str, Any]] = {}
+
+    for item in decision_explanations:
+        for flow in item.get("linked_money_flows", []):
+            money_flow = flow.get("money_flow") or {}
+            flow_id = money_flow.get("id")
+            if not flow_id:
+                continue
+            amount = flow.get("amount")
+            if not isinstance(amount, (int, float)):
+                amount = 0.0
+            amount = float(amount)
+            if flow_id not in money_flow_amounts:
+                money_flow_amounts[flow_id] = amount
+                flow_type_counts[flow.get("flow_type") or "unknown"] += 1
+            for link in flow.get("links", []):
+                node = link.get("node")
+                if not node:
+                    continue
+                key = node["id"]
+                bucket = counterparty_buckets.setdefault(
+                    key,
+                    {
+                        "node": node,
+                        "relationship_types": set(),
+                        "flow_ids": set(),
+                        "total_amount": 0.0,
+                    },
+                )
+                bucket["relationship_types"].add(link.get("relationship_type") or "linked")
+                if flow_id not in bucket["flow_ids"]:
+                    bucket["flow_ids"].add(flow_id)
+                    bucket["total_amount"] += amount
+
+    top_counterparties = []
+    for bucket in counterparty_buckets.values():
+        top_counterparties.append(
+            {
+                "node": bucket["node"],
+                "relationship_types": sorted(bucket["relationship_types"]),
+                "flow_count": len(bucket["flow_ids"]),
+                "total_amount": bucket["total_amount"],
+            }
+        )
+    top_counterparties.sort(
+        key=lambda item: (
+            -item["total_amount"],
+            -item["flow_count"],
+            item["node"]["node_type"],
+            item["node"]["id"],
+        )
+    )
+
+    return {
+        "money_flow_ids": set(money_flow_amounts.keys()),
+        "money_flow_amounts": money_flow_amounts,
+        "linked_money_total_amount": sum(money_flow_amounts.values()),
+        "flow_type_counts": dict(sorted(flow_type_counts.items())),
+        "top_counterparties": top_counterparties,
+    }
+
+
+def filter_counterparties_for_display(
+    counterparties: list[dict[str, Any]],
+    *,
+    excluded_ids: set[str] | None = None,
+) -> list[dict[str, Any]]:
+    allowed_node_types = {"Actor", "Institution", "Agreement"}
+    excluded_ids = excluded_ids or set()
+    return [
+        item
+        for item in counterparties
+        if item["node"]["node_type"] in allowed_node_types and item["node"]["id"] not in excluded_ids
+    ]
+
+
 def program_local_pressure_summary(
     *,
     program_id: str,
@@ -1579,50 +1660,8 @@ def program_local_pressure_summary(
         )
     )
 
-    linked_money_flow_ids = set()
-    linked_money_total_amount = 0.0
-    counterparty_buckets: dict[str, dict[str, Any]] = {}
-    flow_type_counts = Counter()
     evidence_records = unique_summary_items(evidence_records)
-
-    for item in decision_explanations:
-        linked_money_total_amount += item["metrics"]["linked_money_total_amount"]
-        flow_type_counts.update(item["metrics"]["flow_type_counts"])
-        for flow in item["linked_money_flows"]:
-            linked_money_flow_ids.add(flow["money_flow"]["id"])
-        for counterparty in item["counterparties"]:
-            key = counterparty["node"]["id"]
-            bucket = counterparty_buckets.setdefault(
-                key,
-                {
-                    "node": counterparty["node"],
-                    "relationship_types": set(),
-                    "flow_count": 0,
-                    "total_amount": 0.0,
-                },
-            )
-            bucket["relationship_types"].update(counterparty["relationship_types"])
-            bucket["flow_count"] += counterparty["flow_count"]
-            bucket["total_amount"] += counterparty["total_amount"]
-
-    top_counterparties = []
-    for bucket in counterparty_buckets.values():
-        top_counterparties.append(
-            {
-                "node": bucket["node"],
-                "relationship_types": sorted(bucket["relationship_types"]),
-                "flow_count": bucket["flow_count"],
-                "total_amount": bucket["total_amount"],
-            }
-        )
-    top_counterparties.sort(
-        key=lambda item: (
-            -item["total_amount"],
-            -item["flow_count"],
-            item["node"]["node_type"],
-            item["node"]["id"],
-        )
-    )
+    pressure = aggregate_pressure_from_decision_explanations(decision_explanations)
 
     return {
         "id": f"program-{slugify_subject(program_id)}-local-pressure-summary",
@@ -1638,18 +1677,233 @@ def program_local_pressure_summary(
         "places": program_payload["places"],
         "metrics": {
             "linked_decision_count": len(decision_explanations),
-            "linked_money_flow_count": len(linked_money_flow_ids),
-            "linked_money_total_amount": linked_money_total_amount,
+            "linked_money_flow_count": len(pressure["money_flow_ids"]),
+            "linked_money_total_amount": pressure["linked_money_total_amount"],
             "linked_case_count": len(legal_case_rollups),
             "shared_issue_count": len(shared_issue_ids),
             "evidence_record_count": len(evidence_records),
-            "top_counterparty_count": len(top_counterparties),
-            "flow_type_counts": dict(sorted(flow_type_counts.items())),
+            "top_counterparty_count": len(pressure["top_counterparties"]),
+            "flow_type_counts": pressure["flow_type_counts"],
         },
         "decision_explanations": decision_explanations,
         "legal_case_rollups": legal_case_rollups,
-        "top_counterparties": top_counterparties[:10],
+        "top_counterparties": pressure["top_counterparties"][:10],
         "evidence_records": evidence_records,
+    }
+
+
+def jurisdiction_local_pressure_comparison(
+    *,
+    place_id: str,
+    nodes: list[dict[str, Any]],
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    jurisdiction_place = node_by_id[place_id]
+    decision_payload = decision_money_explanation(
+        place_id=place_id,
+        nodes=nodes,
+        node_by_id=node_by_id,
+        outgoing=outgoing,
+        incoming=incoming,
+    )
+    explanation_by_decision_id = {
+        item["decision"]["id"]: item for item in decision_payload["decision_explanations"]
+    }
+    programs = unique_nodes(
+        sort_nodes(
+            edge_sources(
+                incoming,
+                node_by_id,
+                place_id,
+                relationship_type="IN_JURISDICTION",
+                source_node_type="Program",
+            )
+        )
+    )
+    projects = unique_nodes(
+        sort_nodes(
+            edge_sources(
+                incoming,
+                node_by_id,
+                place_id,
+                relationship_type="IN_JURISDICTION",
+                source_node_type="Project",
+            )
+        )
+    )
+
+    thread_rollups = []
+    all_case_ids: set[str] = set()
+    all_decision_ids: set[str] = set()
+    all_shared_issue_ids: set[str] = set()
+    all_evidence_records: list[dict[str, Any]] = []
+    all_decision_explanations: list[dict[str, Any]] = []
+
+    for program in programs:
+        payload = program_local_pressure_summary(
+            program_id=program["id"],
+            nodes=nodes,
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
+        all_decision_ids.update(item["decision"]["id"] for item in payload["decision_explanations"])
+        all_case_ids.update(item["case"]["id"] for item in payload["legal_case_rollups"])
+        all_shared_issue_ids.update(
+            issue["id"]
+            for item in payload["legal_case_rollups"]
+            for issue in item["issues"]
+        )
+        all_evidence_records.extend(payload["evidence_records"])
+        all_decision_explanations.extend(payload["decision_explanations"])
+        thread_rollups.append(
+            {
+                "thread_type": "program",
+                "subject": payload["program"],
+                "context": payload["institution"],
+                "metrics": payload["metrics"],
+                "pressure_flags": {
+                    "has_money_pressure": payload["metrics"]["linked_money_flow_count"] > 0,
+                    "has_legal_pressure": payload["metrics"]["linked_case_count"] > 0,
+                    "has_shared_issue_pressure": payload["metrics"]["shared_issue_count"] > 0,
+                },
+                "linked_decisions": payload["decision_explanations"],
+                "linked_cases": payload["legal_case_rollups"],
+                "top_counterparties": filter_counterparties_for_display(
+                    payload["top_counterparties"],
+                    excluded_ids={payload["program"]["id"]},
+                )[:3],
+            }
+        )
+
+    for project in projects:
+        payload = project_dossier(
+            project_id=project["id"],
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
+        project_decision_ids = {item["id"] for item in payload["linked_decisions"]}
+        decision_explanations = [
+            explanation_by_decision_id[decision_id]
+            for decision_id in project_decision_ids
+            if decision_id in explanation_by_decision_id
+        ]
+        project_case_ids = {
+            case["id"]
+            for item in decision_explanations
+            for case in item["linked_cases"]
+        }
+        legal_case_rollups = []
+        thread_issue_ids: set[str] = set()
+        for case_id in sorted(project_case_ids):
+            case_payload = case_dossier(
+                case_id=case_id,
+                node_by_id=node_by_id,
+                outgoing=outgoing,
+                incoming=incoming,
+            )
+            legal_case_rollups.append(
+                {
+                    "case": case_payload["case"],
+                    "court": case_payload["court"],
+                    "metrics": case_payload["metrics"],
+                    "issues": case_payload["issues"],
+                    "linked_local_decisions": case_payload["linked_local_decisions"],
+                    "records": case_payload["evidence_records"],
+                }
+            )
+            thread_issue_ids.update(item["id"] for item in case_payload["issues"])
+            all_evidence_records.extend(case_payload["evidence_records"])
+            all_evidence_records.extend(case_payload["related_records"])
+        pressure = aggregate_pressure_from_decision_explanations(decision_explanations)
+        filtered_counterparties = filter_counterparties_for_display(
+            pressure["top_counterparties"],
+            excluded_ids={
+                payload["project"]["id"],
+                *( [payload["primary_place"]["id"]] if payload["primary_place"] else [] ),
+                *( [payload["jurisdiction_place"]["id"]] if payload["jurisdiction_place"] else [] ),
+            },
+        )
+        all_decision_ids.update(project_decision_ids)
+        all_case_ids.update(project_case_ids)
+        all_shared_issue_ids.update(thread_issue_ids)
+        all_evidence_records.extend(payload["evidence_records"])
+        all_evidence_records.extend(payload["related_records"])
+        all_decision_explanations.extend(decision_explanations)
+        thread_rollups.append(
+            {
+                "thread_type": "project",
+                "subject": payload["project"],
+                "context": payload["primary_place"] or payload["jurisdiction_place"],
+                "metrics": {
+                    "linked_decision_count": len(payload["linked_decisions"]),
+                    "linked_money_flow_count": len(pressure["money_flow_ids"]),
+                    "linked_money_total_amount": pressure["linked_money_total_amount"],
+                    "linked_case_count": len(legal_case_rollups),
+                    "shared_issue_count": len(thread_issue_ids),
+                    "evidence_record_count": len(payload["evidence_records"]) + len(payload["related_records"]),
+                    "agreement_count": payload["metrics"]["agreement_count"],
+                    "amendment_count": payload["metrics"]["amendment_count"],
+                    "flow_type_counts": pressure["flow_type_counts"],
+                },
+                "pressure_flags": {
+                    "has_money_pressure": len(pressure["money_flow_ids"]) > 0,
+                    "has_legal_pressure": len(legal_case_rollups) > 0,
+                    "has_shared_issue_pressure": len(thread_issue_ids) > 0,
+                    "has_agreement_lineage": payload["metrics"]["agreement_count"] > 0,
+                    "has_amendment_lineage": payload["metrics"]["amendment_count"] > 0,
+                },
+                "linked_decisions": decision_explanations,
+                "linked_cases": legal_case_rollups,
+                "top_counterparties": filtered_counterparties[:3],
+            }
+        )
+
+    thread_rollups.sort(
+        key=lambda item: (
+            -(item["metrics"].get("linked_money_total_amount") or 0),
+            -(item["metrics"].get("linked_case_count") or 0),
+            -(item["metrics"].get("linked_decision_count") or 0),
+            item["subject"]["id"],
+        )
+    )
+    all_evidence_records = unique_summary_items(all_evidence_records)
+    overall_pressure = aggregate_pressure_from_decision_explanations(all_decision_explanations)
+    filtered_overall_counterparties = filter_counterparties_for_display(
+        overall_pressure["top_counterparties"],
+        excluded_ids={item["subject"]["id"] for item in thread_rollups} | {place_id},
+    )
+
+    return {
+        "id": f"jurisdiction-{slugify_subject(place_id)}-local-pressure-comparison",
+        "title": f"Jurisdiction local pressure comparison: {node_title(jurisdiction_place)}",
+        "view_type": "jurisdiction_local_pressure_comparison",
+        "subject_id": place_id,
+        "subject_node_type": "Place",
+        "contract_version": 1,
+        "generated_at": iso_now(),
+        "jurisdiction_place": node_summary(jurisdiction_place),
+        "metrics": {
+            "thread_count": len(thread_rollups),
+            "program_thread_count": len([item for item in thread_rollups if item["thread_type"] == "program"]),
+            "project_thread_count": len([item for item in thread_rollups if item["thread_type"] == "project"]),
+            "money_pressure_thread_count": len([item for item in thread_rollups if item["pressure_flags"]["has_money_pressure"]]),
+            "legal_pressure_thread_count": len([item for item in thread_rollups if item["pressure_flags"]["has_legal_pressure"]]),
+            "linked_decision_count": len(all_decision_ids),
+            "linked_money_flow_count": len(overall_pressure["money_flow_ids"]),
+            "linked_money_total_amount": overall_pressure["linked_money_total_amount"],
+            "linked_case_count": len(all_case_ids),
+            "shared_issue_count": len(all_shared_issue_ids),
+            "evidence_record_count": len(all_evidence_records),
+            "top_counterparty_count": len(filtered_overall_counterparties),
+            "flow_type_counts": overall_pressure["flow_type_counts"],
+        },
+        "thread_rollups": thread_rollups,
+        "top_counterparties": filtered_overall_counterparties[:10],
+        "evidence_records": all_evidence_records,
     }
 
 
@@ -2153,6 +2407,14 @@ def build_view_from_target(
             outgoing=outgoing,
             incoming=incoming,
         )
+    if view_type == "jurisdiction_local_pressure_comparison":
+        return jurisdiction_local_pressure_comparison(
+            place_id=subject_id,
+            nodes=nodes,
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
     if view_type == "jurisdiction_legal_constraint_summary":
         return jurisdiction_legal_constraint_summary(
             place_id=subject_id,
@@ -2211,6 +2473,9 @@ def write_markdown_summary(output_dir: Path, views: list[dict[str, Any]]) -> Non
         payload for payload in views if payload["view_type"] == "decision_money_explanation"
     ]
     program_pressure_views = [payload for payload in views if payload["view_type"] == "program_local_pressure_summary"]
+    jurisdiction_pressure_views = [
+        payload for payload in views if payload["view_type"] == "jurisdiction_local_pressure_comparison"
+    ]
     jurisdiction_legal_views = [
         payload for payload in views if payload["view_type"] == "jurisdiction_legal_constraint_summary"
     ]
@@ -2258,6 +2523,10 @@ def write_markdown_summary(output_dir: Path, views: list[dict[str, Any]]) -> Non
     if program_pressure_views:
         lines.append(
             f"- Program local pressure summaries now cover `{len(program_pressure_views)}` targets, including `{program_pressure_views[0]['program']['display_label']}` with `{program_pressure_views[0]['metrics']['linked_decision_count']}` linked decisions, `{program_pressure_views[0]['metrics']['linked_case_count']}` linked cases, and `${program_pressure_views[0]['metrics']['linked_money_total_amount']:,.2f}` in linked money."
+        )
+    if jurisdiction_pressure_views:
+        lines.append(
+            f"- Jurisdiction local pressure comparisons now cover `{len(jurisdiction_pressure_views)}` targets, including `{jurisdiction_pressure_views[0]['jurisdiction_place']['display_label']}` with `{jurisdiction_pressure_views[0]['metrics']['thread_count']}` threads, `{jurisdiction_pressure_views[0]['metrics']['linked_case_count']}` linked cases, and `${jurisdiction_pressure_views[0]['metrics']['linked_money_total_amount']:,.2f}` in linked money."
         )
     if jurisdiction_legal_views:
         lines.append(

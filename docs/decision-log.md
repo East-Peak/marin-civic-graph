@@ -18,6 +18,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **Jurisdiction pressure comparisons should rank local threads before we reopen ingest**
+  - Once the sanctioned-camping local-pressure summary existed, the next missing product question was comparative rather than thread-specific: which current San Rafael threads carry the most combined legal pressure, linked money, and evidence density.
+  - The right bounded answer is still `place-san-rafael`, using only the current in-scope program and project threads rather than importing more data first.
+  - The projected view pack now emits `jurisdiction-san-rafael-local-pressure-comparison.json`.
+  - Result: the current comparison layer ranks the current San Rafael threads side by side and surfaces shared counterparties and pressure flags without widening graph truth.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-jurisdiction-pressure-comparisons-should-rank-local-threads-before-we-reopen-ingest.md`
+
 - **Program-local pressure summaries should combine decision-money and legal pressure around one local thread**
   - After the decision-money explanation and jurisdiction legal summary landed, the next missing product-shaped question was narrower: how does one local program thread absorb both legal pressure and linked money pressure at the same time.
   - The right bounded subject is still `program-san-rafael-sanctioned-camping`, because it already bridges local decisions, linked money, and the Boyd / Grants Pass constraint lane without reopening ingestion.

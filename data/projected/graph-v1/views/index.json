@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-13T13:17:43Z",
+  "generated_at": "2026-04-13T13:24:10Z",
   "projection_dir": "data/projected/graph-v1",
   "contract_version": 1,
   "views": [
@@ -98,6 +98,14 @@
       "subject_id": "program-san-rafael-sanctioned-camping",
       "subject_node_type": "Program",
       "path": "data/projected/graph-v1/views/program-san-rafael-sanctioned-camping-local-pressure-summary.json"
+    },
+    {
+      "id": "jurisdiction-san-rafael-local-pressure-comparison",
+      "title": "Jurisdiction local pressure comparison: San Rafael",
+      "view_type": "jurisdiction_local_pressure_comparison",
+      "subject_id": "place-san-rafael",
+      "subject_node_type": "Place",
+      "path": "data/projected/graph-v1/views/jurisdiction-san-rafael-local-pressure-comparison.json"
     },
     {
       "id": "jurisdiction-san-rafael-legal-constraint-summary",

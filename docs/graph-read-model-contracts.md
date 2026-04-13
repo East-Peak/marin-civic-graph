@@ -280,6 +280,37 @@ Current note:
 - it is intended to answer one local-thread question: how legal pressure, local decisions, and linked money concentrate around a specific program without inventing new graph truth edges
 - linked money remains decision-derived here unless a direct `MoneyFlow -> Program` path already exists in the imported graph
 
+### `jurisdiction_local_pressure_comparison`
+
+Subject:
+
+- one jurisdictional `Place`
+
+Current shape:
+
+- `jurisdiction_place`
+- `metrics`
+- `thread_rollups`
+- `top_counterparties`
+- `evidence_records`
+
+Each thread rollup currently includes:
+
+- `thread_type`
+- `subject`
+- `context`
+- `metrics`
+- `pressure_flags`
+- `linked_decisions`
+- `linked_cases`
+- `top_counterparties`
+
+Current note:
+
+- this is a bounded comparison layer over the current in-scope program and project threads for one jurisdiction
+- it is intended to answer a harder product question than a single dossier: which local delivery threads currently carry the most combined money pressure, legal pressure, and evidence density
+- it still derives pressure from existing read models and graph paths; it does not mint new graph truth edges
+
 ### `jurisdiction_legal_constraint_summary`
 
 Subject:

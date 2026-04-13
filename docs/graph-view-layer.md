@@ -186,6 +186,18 @@ Current scope:
 - shared issue pressure across the in-scope case set
 - top counterparties and supporting evidence records
 
+### Jurisdiction local pressure comparison
+
+- [jurisdiction-san-rafael-local-pressure-comparison.json](../data/projected/graph-v1/views/jurisdiction-san-rafael-local-pressure-comparison.json)
+
+Current scope:
+
+- one jurisdictional place
+- side-by-side rollups for in-scope program and project threads
+- per-thread money pressure, legal pressure, and evidence density
+- overall top counterparties across those threads
+- bounded comparison over the current graph, not new ingest
+
 ### Jurisdiction legal constraint summary
 
 - [jurisdiction-san-rafael-legal-constraint-summary.json](../data/projected/graph-v1/views/jurisdiction-san-rafael-legal-constraint-summary.json)
