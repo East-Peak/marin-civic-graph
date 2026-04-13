@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "verified": "2026-04-13",
+  "north_star_question_id": "QX-001",
+  "questions": [
+    {
+      "id": "QX-001",
+      "prompt": "Which San Rafael local threads carry the most combined money pressure and legal pressure, and who are the recurring counterparties around them?",
+      "status": "active",
+      "question_type": "pressure_ranking",
+      "primary_view_ids": [
+        "jurisdiction-san-rafael-local-pressure-comparison",
+        "jurisdiction-san-rafael-local-pressure-explanation"
+      ],
+      "pass_signal": "At least two local threads rank cleanly with explicit counterparties and bounded legal context.",
+      "next_ingest_trigger": "Add another bounded local thread only if the current comparison is too thin to be representative."
+    },
+    {
+      "id": "QX-002",
+      "prompt": "Why does this thread rank high?",
+      "status": "active",
+      "question_type": "thread_explanation",
+      "primary_view_ids": [
+        "program-san-rafael-sanctioned-camping-local-pressure-summary",
+        "jurisdiction-san-rafael-local-pressure-explanation"
+      ],
+      "pass_signal": "The answer shows linked money, legal pressure, and evidence density without inventing new graph truth.",
+      "next_ingest_trigger": "Widen only if a key ranked thread cannot be explained from current data."
+    },
+    {
+      "id": "QX-003",
+      "prompt": "Which local decisions actually moved this thread?",
+      "status": "active",
+      "question_type": "decision_chain",
+      "primary_view_ids": [
+        "decision-2024-08-19-resolution-15336-dossier",
+        "decision-money-san-rafael-explanation"
+      ],
+      "pass_signal": "Decision, meeting, agenda item, vote, and linked money/evidence all resolve in one answer path.",
+      "next_ingest_trigger": "Widen decision extraction only if high-signal threads lack decision continuity."
+    },
+    {
+      "id": "QX-004",
+      "prompt": "Which organizations, vendors, or institutions recur around this thread?",
+      "status": "active",
+      "question_type": "counterparty_recurrence",
+      "primary_view_ids": [
+        "organization-downtown-streets-team-dossier",
+        "money-overlap-summary",
+        "jurisdiction-san-rafael-local-pressure-comparison"
+      ],
+      "pass_signal": "Recurring counterparties appear across more than one linked object class or thread.",
+      "next_ingest_trigger": "Add bounded entity support only if a recurring counterparty is missing or unresolved."
+    },
+    {
+      "id": "QX-005",
+      "prompt": "What legal constraints bear on this local thread?",
+      "status": "active",
+      "question_type": "legal_constraint",
+      "primary_view_ids": [
+        "case-boyd-v-city-of-san-rafael-dossier",
+        "legal-constraint-view",
+        "jurisdiction-san-rafael-legal-constraint-summary"
+      ],
+      "pass_signal": "The answer shows in-scope cases, linked local decisions/programs, and supporting legal records.",
+      "next_ingest_trigger": "Widen legal import only if the active local thread lacks enough legal context."
+    },
+    {
+      "id": "QX-006",
+      "prompt": "What in this graph slice still does not reconcile cleanly?",
+      "status": "active",
+      "question_type": "validation",
+      "primary_view_ids": [
+        "validation-queue"
+      ],
+      "pass_signal": "Validation remains bounded and legible instead of turning into low-quality noise.",
+      "next_ingest_trigger": "Pause widening if validation noise grows faster than answer quality."
+    }
+  ]
+}

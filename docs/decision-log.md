@@ -18,6 +18,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **The next graph phase should be driven by a bounded question set, not by more surface area**
+  - The graph and projected read-model layer are now dense enough that future widening should be driven by missing answers rather than by more source coverage in the abstract.
+  - The right next control layer is a small question ladder with one north-star question plus a handful of supporting questions, each mapped to existing read models and a clear ingest trigger.
+  - The new control artifacts are `docs/question-set-v1.md` and `registry/question-set-v1.yaml`.
+  - Result: the current north-star question is now explicit, centered on which San Rafael local threads carry the most combined money pressure and legal pressure, and future ingest can be judged against whether it materially improves that answer.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-the-next-graph-phase-should-be-driven-by-a-bounded-question-set.md`
+
 - **Jurisdiction pressure explanations should explain why one thread ranks above another**
   - Once the San Rafael pressure comparison existed, the next missing product question was explanatory rather than comparative: why does one local thread rank above another on the current graph.
   - The right bounded answer is still `place-san-rafael`, reusing the comparison layer and adding explicit ranking method, per-thread explanation points, and pairwise deltas instead of reopening ingest.

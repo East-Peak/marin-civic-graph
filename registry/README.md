@@ -18,6 +18,7 @@ It should stay:
 - [sources.yaml](./sources.yaml) — current seed registry
 - [import-manifest.yaml](./import-manifest.yaml) — narrowed v1 graph-materialization scope
 - [view-targets.yaml](./view-targets.yaml) — target manifest for projected read-model / dossier generation
+- [question-set-v1.yaml](./question-set-v1.yaml) — first bounded product-question set and current answer targets
 - [loop-manifests/](./loop-manifests/) — bounded Ralph-loop control files for active backfill / densification lanes
 
 ## Current Scope
