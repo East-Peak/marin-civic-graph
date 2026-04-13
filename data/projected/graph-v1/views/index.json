@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-13T12:58:05Z",
+  "generated_at": "2026-04-13T13:01:57Z",
   "projection_dir": "data/projected/graph-v1",
   "contract_version": 1,
   "views": [
@@ -74,6 +74,14 @@
       "subject_id": "place-san-rafael",
       "subject_node_type": "Place",
       "path": "data/projected/graph-v1/views/jurisdiction-san-rafael-delivery-summary.json"
+    },
+    {
+      "id": "decision-money-san-rafael-rollup",
+      "title": "Decision money rollup: San Rafael",
+      "view_type": "decision_money_rollup",
+      "subject_id": "place-san-rafael",
+      "subject_node_type": "Place",
+      "path": "data/projected/graph-v1/views/decision-money-san-rafael-rollup.json"
     },
     {
       "id": "money-overlap-summary",

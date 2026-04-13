@@ -18,6 +18,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **Decision-to-money rollups should rank linked local decisions before we widen ingestion again**
+  - After the jurisdiction delivery summary, the next missing product-shaped question was narrower and more operational: which local decisions are actually driving the most linked money in the current graph.
+  - The right bounded test is still `place-san-rafael`, using existing `Decision -> MoneyFlow`, `Decision -> Project`, `Program -> Decision`, and `Case -> Decision` paths instead of importing more finance data first.
+  - The projected view pack now emits `decision-money-san-rafael-rollup.json`.
+  - Result: the current rollup covers `4` money-linked decisions, `11` linked money flows, `$8,069,336.82` in linked flow volume, `2` linked programs, `1` linked project, and `2` linked cases.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-decision-money-rollups-should-rank-linked-local-decisions.md`
+
 - **Jurisdiction-level delivery summaries should aggregate the existing dossier layer, not widen import scope**
   - After actor, organization, case, program, and project read models existed, the next useful pressure test was not more ingestion. It was whether the graph could answer a broader local-delivery question without inventing new graph truth.
   - The right bounded test is `place-san-rafael`: one jurisdictional summary that rolls up current program and project threads, linked decisions, linked money, linked cases, and supporting records.

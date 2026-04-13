@@ -152,6 +152,7 @@ Start narrow:
 - [Building Forward Program Dossier](./data/projected/graph-v1/views/program-csl-building-forward-dossier.json)
 - [Downtown Library Project Dossier](./data/projected/graph-v1/views/project-downtown-library-renovation-dossier.json)
 - [San Rafael Jurisdiction Delivery Summary](./data/projected/graph-v1/views/jurisdiction-san-rafael-delivery-summary.json)
+- [San Rafael Decision Money Rollup](./data/projected/graph-v1/views/decision-money-san-rafael-rollup.json)
 - [Money Overlap Summary](./data/projected/graph-v1/views/money-overlap-summary.json)
 - [Legal Constraint View](./data/projected/graph-v1/views/legal-constraint-view.json)
 - [Validation Queue](./data/projected/graph-v1/views/validation-queue.json)
@@ -264,7 +265,7 @@ This repo started as a planning workspace and now includes the first live implem
   - consent votes are now modeled conservatively: one section-level voted decision, with subitem outcomes linked back to that consent action instead of pretending each subitem had its own roll call
   - the elected-disclosure breadth slice now adds `21` officeholder Form `700` filings and `21` `EconomicInterestDisclosure` nodes backed by the public NetFile export plus explicit current and 2020-2024 historical `SeatService` windows for the current mayor, District 1, and District 4 officeholders
   - the current projection report now shows no `missing_target:Actor`, `missing_target:Issue`, or `missing_target:Record` categories, with `5` actor-alias edge remaps preserved
-  - the projected view pack now sits on top of the clean graph and now includes both the sanctioned-camping and Building Forward program dossiers, a bounded Downtown Library project dossier that unifies grants, agreements, amendments, decisions, records, and place, and a jurisdiction-level San Rafael delivery summary that rolls those threads back up into one cross-cutting read model:
+  - the projected view pack now sits on top of the clean graph and now includes both the sanctioned-camping and Building Forward program dossiers, a bounded Downtown Library project dossier that unifies grants, agreements, amendments, decisions, records, and place, a jurisdiction-level San Rafael delivery summary that rolls those threads back up into one cross-cutting read model, and a San Rafael decision-to-money rollup that ranks local money-linked decisions by linked flow volume:
     - `actor-kate-colin-dossier`
     - `actor-rachel-kertz-dossier`
     - `organization-downtown-streets-team-dossier`
@@ -274,6 +275,7 @@ This repo started as a planning workspace and now includes the first live implem
     - `program-csl-building-forward-dossier`
     - `project-downtown-library-renovation-dossier`
     - `jurisdiction-san-rafael-delivery-summary`
+    - `decision-money-san-rafael-rollup`
     - `money-overlap-summary`
     - `legal-constraint-view`
     - `validation-queue`

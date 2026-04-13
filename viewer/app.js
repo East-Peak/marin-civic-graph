@@ -307,6 +307,31 @@ function renderJurisdictionDeliverySummary(data) {
   );
 }
 
+function renderDecisionMoneyRollupItem(item) {
+  const wrapper = el("article", "list-card");
+  wrapper.append(
+    el("p", "eyebrow", item.meeting?.properties?.meeting_date || item.meeting?.display_label || "Decision"),
+    el("h4", null, item.decision?.display_label || "Unnamed decision")
+  );
+  const pills = el("div", "pill-row");
+  pills.append(badge(`$${formatNumber(item.metrics?.linked_money_total_amount || 0)}`, "ok"));
+  pills.append(badge(`${formatNumber(item.metrics?.linked_money_flow_count || 0)} flows`));
+  if (item.metrics?.linked_program_count) pills.append(badge(`${item.metrics.linked_program_count} programs`));
+  if (item.metrics?.linked_project_count) pills.append(badge(`${item.metrics.linked_project_count} projects`));
+  if (item.metrics?.linked_case_count) pills.append(badge(`${item.metrics.linked_case_count} cases`));
+  wrapper.append(pills);
+  if (item.agenda_items?.length) {
+    wrapper.append(el("p", "muted", item.agenda_items.map((agenda) => agenda.display_label).join(" · ")));
+  }
+  const details = {
+    decision_id: item.decision?.id,
+    meeting_id: item.meeting?.id,
+    flow_type_counts: JSON.stringify(item.metrics?.flow_type_counts || {}),
+  };
+  wrapper.append(renderProperties(details));
+  return wrapper;
+}
+
 function renderLegalConstraint(data) {
   const panel = el("section", "panel");
   panel.append(el("h3", null, "Case Views"));
@@ -354,6 +379,13 @@ function renderValidationQueue(data) {
   );
 }
 
+function renderDecisionMoneyRollup(data) {
+  contentEl.append(
+    renderListSection("Jurisdiction", [data.jurisdiction_place], renderNodeCard, { open: true }),
+    renderListSection("Decision Rollups", data.decision_rollups || [], renderDecisionMoneyRollupItem, { open: true })
+  );
+}
+
 function renderView(data) {
   clearChildren(contentEl);
   createMetricCards(data.metrics || {});
@@ -388,6 +420,10 @@ function renderView(data) {
   }
   if (data.view_type === "jurisdiction_delivery_summary") {
     renderJurisdictionDeliverySummary(data);
+    return;
+  }
+  if (data.view_type === "decision_money_rollup") {
+    renderDecisionMoneyRollup(data);
     return;
   }
   if (data.view_type === "legal_constraint_view") {

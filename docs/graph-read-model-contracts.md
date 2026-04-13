@@ -195,6 +195,35 @@ Current note:
 - it does not create new graph truth edges
 - it is meant to answer a broader product question: what active program/project delivery threads, decisions, money, and constraint context currently exist within one jurisdiction
 
+### `decision_money_rollup`
+
+Subject:
+
+- one jurisdictional `Place`
+
+Current shape:
+
+- `jurisdiction_place`
+- `metrics`
+- `decision_rollups`
+
+Each rollup currently includes:
+
+- `decision`
+- `meeting`
+- `agenda_items`
+- `metrics`
+- `linked_programs`
+- `linked_projects`
+- `linked_cases`
+- `linked_money_flows`
+- `evidence_records`
+
+Current note:
+
+- this is a bounded read model over existing `Decision -> MoneyFlow`, `Decision -> Project`, `Program -> Decision`, and `Case -> Decision` graph paths
+- it is intended to answer: which local decisions are currently driving the most linked money, and what program/project/case context travels with them
+
 ### `money_overlap_summary`
 
 Current shape:

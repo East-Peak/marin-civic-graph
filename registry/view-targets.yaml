@@ -38,6 +38,10 @@
       "subject_id": "place-san-rafael"
     },
     {
+      "view_type": "decision_money_rollup",
+      "subject_id": "place-san-rafael"
+    },
+    {
       "view_type": "money_overlap_summary"
     },
     {

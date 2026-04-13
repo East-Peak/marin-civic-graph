@@ -150,6 +150,18 @@ Current scope:
 - linked cases
 - evidence and related records
 
+### Decision money rollup
+
+- [decision-money-san-rafael-rollup.json](../data/projected/graph-v1/views/decision-money-san-rafael-rollup.json)
+
+Current scope:
+
+- one jurisdictional place
+- money-linked decisions ranked by linked amount
+- meeting and agenda-item context
+- linked programs, projects, and cases
+- linked money flows and evidence records
+
 ## Use
 
 Run:

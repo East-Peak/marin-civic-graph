@@ -1,6 +1,6 @@
 # Graph View Summary
 
-Generated: 2026-04-13T12:58:05Z
+Generated: 2026-04-13T13:01:57Z
 
 ## Included Views
 
@@ -13,6 +13,7 @@ Generated: 2026-04-13T12:58:05Z
 - Program dossier: California State Library Building Forward Library Facilities Improvement Program (`program_dossier`)
 - Project dossier: Downtown Library Renovation Project (`project_dossier`)
 - Jurisdiction delivery summary: San Rafael (`jurisdiction_delivery_summary`)
+- Decision money rollup: San Rafael (`decision_money_rollup`)
 - Money overlap summary (`money_overlap_summary`)
 - Legal constraint view (`legal_constraint_view`)
 - Validation queue (`validation_queue`)
@@ -26,6 +27,7 @@ Generated: 2026-04-13T12:58:05Z
 - Program dossiers now cover `2` targets, including `San Rafael sanctioned camping program` with `2` linked decisions and `7` linked money flows.
 - Project dossiers now cover `1` targets, including `Downtown Library Renovation Project` with `5` agreements and `5` linked money flows.
 - Jurisdiction delivery summaries now cover `1` targets, including `San Rafael` with `1` programs, `1` projects, and `12` linked money flows.
+- Decision money rollups now cover `1` targets, including `San Rafael` with `4` money-linked decisions and `$8,069,336.82` in linked flow volume.
 - The graph currently materializes `152` money flows across `9` flow types.
 - The legal lane currently includes `4` cases and links back to `2` San Rafael local decisions.
 - The validation queue currently contains `16` checks.
@@ -41,6 +43,7 @@ Generated: 2026-04-13T12:58:05Z
 - `program-csl-building-forward-dossier.json`
 - `project-downtown-library-renovation-dossier.json`
 - `jurisdiction-san-rafael-delivery-summary.json`
+- `decision-money-san-rafael-rollup.json`
 - `money-overlap-summary.json`
 - `legal-constraint-view.json`
 - `validation-queue.json`
