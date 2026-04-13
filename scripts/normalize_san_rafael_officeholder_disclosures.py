@@ -62,6 +62,20 @@ def filing_matches_current_office(row: dict[str, Any], seat_id: str) -> bool:
     return False
 
 
+def filing_matches_seat_service(
+    row: dict[str, Any],
+    seat_service: dict[str, Any],
+    filed_at: date | None,
+) -> bool:
+    started_at = parse_iso_date(seat_service.get("started_at"))
+    ended_at = parse_iso_date(seat_service.get("ended_at"))
+    if filed_at is None or started_at is None or filed_at < started_at:
+        return False
+    if ended_at is not None and filed_at >= ended_at:
+        return False
+    return filing_matches_current_office(row, seat_service["seat_id"])
+
+
 def build_record_refs() -> list[dict[str, Any]]:
     return [
         {
@@ -85,12 +99,15 @@ def main() -> None:
     form700_extract = json.loads(FORM700_EXTRACT_PATH.read_text())
     canonical_seeds = json.loads(CANONICAL_SEEDS_PATH.read_text())
 
-    current_seat_service_by_actor: dict[str, dict[str, Any]] = {}
+    seat_services_by_actor: dict[str, list[dict[str, Any]]] = {}
     for seat_service in canonical_seeds["seat_service_candidates"]:
-        if seat_service.get("status") != "current":
+        if seat_service.get("status") not in {"current", "historical"}:
             continue
         actor_id = seat_service["actor_id"]
-        current_seat_service_by_actor[actor_id] = seat_service
+        seat_services_by_actor.setdefault(actor_id, []).append(seat_service)
+
+    for actor_id, seat_services in seat_services_by_actor.items():
+        seat_services.sort(key=lambda item: (item.get("started_at") or "", item["id"]))
 
     filing_candidates: list[dict[str, Any]] = []
     eid_candidates: list[dict[str, Any]] = []
@@ -100,18 +117,21 @@ def main() -> None:
         if actor_id is None:
             continue
 
-        seat_service = current_seat_service_by_actor.get(actor_id)
-        if seat_service is None:
-            continue
-
         filed_at = parse_iso_date(row["filed_at"])
-        started_at = parse_iso_date(seat_service.get("started_at"))
-        if filed_at is None or started_at is None or filed_at < started_at:
+        matching_services = [
+            seat_service
+            for seat_service in seat_services_by_actor.get(actor_id, [])
+            if filing_matches_seat_service(row, seat_service, filed_at)
+        ]
+        if not matching_services:
             continue
-
+        seat_service = matching_services[-1]
         seat_id = seat_service["seat_id"]
-        if not filing_matches_current_office(row, seat_id):
-            continue
+        continuity_status = (
+            "current_officeholder_continuity"
+            if seat_service.get("status") == "current"
+            else "historical_officeholder_continuity"
+        )
 
         filing_id = f"filing-{row['filing_key']}"
         eid_id = f"eid-{row['filing_key']}"
@@ -135,7 +155,7 @@ def main() -> None:
                 "official_seat_service_id": seat_service["id"],
                 "filing_institution_id": "inst-city-of-san-rafael",
                 "filed_at": row["filed_at"],
-                "status": "export_inventory_backed",
+                "status": continuity_status,
                 **common_properties,
             }
         )
@@ -150,7 +170,7 @@ def main() -> None:
                 "filing_id": filing_id,
                 "disclosure_type": disclosure_type(row["statement_type"]),
                 "filed_at": row["filed_at"],
-                "status": "current_officeholder_continuity",
+                "status": continuity_status,
                 **common_properties,
             }
         )
@@ -165,13 +185,13 @@ def main() -> None:
     payload = {
         "case_study_id": CASE_STUDY_ID,
         "bundle_id": BUNDLE_ID,
-        "status": "current_officeholder_continuity_built",
+        "status": "historical_officeholder_continuity_extended",
         "generated_at": utc_now_iso(),
         "scope": [
-            "Current San Rafael elected officeholder Form 700 continuity only",
-            "Current seat-service joins only where the filing date falls inside an explicit current service window",
+            "Current San Rafael elected officeholder Form 700 continuity plus explicit 2020-2024 historical service windows for the current mayor, District 1, and District 4 officeholders",
+            "Seat-service joins only where the filing date falls inside an explicit current or historical service window",
             "Export-backed filing and EconomicInterestDisclosure objects without broad staff or commission import",
-            "No pre-current-term mapping until older San Rafael seat-service history is modeled"
+            "No broad pre-2020 or non-city-office mapping until older San Rafael seat-service history is modeled more explicitly"
         ],
         "record_refs": build_record_refs(),
         "filing_candidates": filing_candidates,
@@ -189,13 +209,13 @@ def main() -> None:
             {
                 "id": "OQ-034",
                 "status": "watch",
-                "question": "How should pre-current-term Form 700 rows for current San Rafael officeholders map to historical seat services once older city-election and term-boundary lineage is modeled?",
+                "question": "How should pre-2020 or pre-district Form 700 rows for current San Rafael officeholders map once older seat structures and older term boundaries are modeled?",
             }
         ],
         "notes": [
-            "This slice is intentionally narrower than the full Form 700 archive. It promotes only rows that resolve cleanly to existing canonical officeholders and explicit current SeatService boundaries.",
+            "This slice is intentionally narrower than the full Form 700 archive. It promotes only rows that resolve cleanly to existing canonical officeholders and explicit seat-service boundaries.",
             "The export workbook is the evidence record for this continuity layer. Direct row-level document recovery remains a separate adapter problem and is still tracked as a global watch item.",
-            "Kate Colin, Maika Llorens Gulati, and Rachel Kertz now have explicit current-term start dates because the December 16, 2024 special meeting page includes their swear-in ceremony.",
+            "Kate Colin, Maika Llorens Gulati, and Rachel Kertz now also have explicit 2020-12-07 historical service starts because the December 7, 2020 special City Council minutes record their oath of office.",
         ],
     }
 

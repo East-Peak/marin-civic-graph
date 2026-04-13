@@ -1,16 +1,16 @@
 # Graph Query Pack Report
 
-- `generated_at`: 2026-04-13T11:19:00Z
+- `generated_at`: 2026-04-13T11:28:23Z
 - `engine`: projection_jsonl
 - `projection_id`: graph-v1
-- `nodes`: 6068
-- `edges`: 20251
+- `nodes`: 6098
+- `edges`: 20422
 - `queries_passed`: 5/5
 
 ## Q1: actor-kate-colin dossier
 
 - `pass`: yes
-- `metrics`: {"committee_count": 2, "council_decision_count": 564, "council_meeting_count": 167, "council_record_count": 167, "filing_count": 53, "filing_family_counts": {"form_410": 17, "form_460": 21, "form_496": 1, "form_497": 8, "form_501": 3, "form_700": 1, "form_803": 2}, "filing_years": [2020, 2021, 2022, 2023, 2024, 2025, 2026], "seat_service_count": 1}
+- `metrics`: {"committee_count": 2, "council_decision_count": 564, "council_meeting_count": 167, "council_record_count": 167, "filing_count": 57, "filing_family_counts": {"form_410": 17, "form_460": 21, "form_496": 1, "form_497": 8, "form_501": 3, "form_700": 5, "form_803": 2}, "filing_years": [2020, 2021, 2022, 2023, 2024, 2025, 2026], "seat_service_count": 2}
 - `notes`:
   - Kate Colin now spans council voting, campaign committees, campaign filings, a local Form 803 filing, and imported Form 700 continuity.
   - The dossier crosses more than one year and more than one filing family, so it satisfies the fixed breadth-sprint threshold.

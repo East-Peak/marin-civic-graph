@@ -18,6 +18,12 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **Current-officeholder disclosure continuity should widen through explicit prior term windows before older seat structures**
+  - Add only the historical seat-service windows that are directly anchored by explicit 2020 election and swear-in evidence for the current mayor, District 1, and District 4 officeholders.
+  - Use those windows to widen the Form `700` continuity bundle from current-term-only to current-plus-2020-2024 continuity, while keeping pre-2020 / pre-district rows out of graph-v1.
+  - Result: graph-v1 now carries `21` Form `700` filings, `21` `EconomicInterestDisclosure` nodes, and `8` `SeatService` nodes while the fixed query pack still passes `5/5`.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-historical-seatservice-continuity-should-precede-broader-disclosure-backfill.md`
+
 - **The first Ralph-loop batch can stop once the query-pack gate is met**
   - Batch `01` of `san-rafael-city-campaign-money-01` hardened the city-side Form `460` OCR/PDF workflows into manifest-driven batch tools, recovered a thin but sufficient `2020` QA-backed money layer, and moved the fixed query pack to `5/5` passing.
   - The same batch also exposed a validation-noise problem on sparse older filings, so the schedule extractor was tightened to suppress zero-information checks with no real reference value before the batch was accepted.

@@ -234,11 +234,11 @@ This repo started as a planning workspace and now includes the first live implem
   - a narrow actor and issue supplement now lands `8` conservative campaign actors and `3` canonical issues without widening into discovery-stage review material
   - the first breadth-sprint council slice now adds `263` citywide `Meeting` nodes and `264` council `Record` nodes backed by captured meeting pages
   - the second breadth-sprint council slice now adds `220` captured minutes `Record` nodes plus a conservative citywide minutes-first decision layer with `3175` `AgendaItem` candidates and `1453` `Decision` candidates
-  - graph-v1 is now at `6068` nodes and `20251` edges, with `1472` `Decision` nodes, `2970` `AgendaItem` nodes, `147` `MoneyFlow` nodes, and `16` bounded `ValidationCheck` nodes after projection merging
+  - graph-v1 is now at `6098` nodes and `20422` edges, with `1472` `Decision` nodes, `2970` `AgendaItem` nodes, `147` `MoneyFlow` nodes, `21` `EconomicInterestDisclosure` nodes, `8` `SeatService` nodes, and `16` bounded `ValidationCheck` nodes after projection merging
   - consent votes are now modeled conservatively: one section-level voted decision, with subitem outcomes linked back to that consent action instead of pretending each subitem had its own roll call
-  - the elected-disclosure breadth slice now adds `9` current-officeholder Form `700` filings and `9` `EconomicInterestDisclosure` nodes backed by the public NetFile export and explicit current `SeatService` start dates
+  - the elected-disclosure breadth slice now adds `21` officeholder Form `700` filings and `21` `EconomicInterestDisclosure` nodes backed by the public NetFile export plus explicit current and 2020-2024 historical `SeatService` windows for the current mayor, District 1, and District 4 officeholders
   - the current projection report still shows `missing_target:Actor = 147`; `Issue` and `Record` completeness gaps are no longer part of graph-v1
-  - the current fixed-query-pack run now passes all five queries
+  - the current fixed-query-pack run still passes all five queries after the historical disclosure widening pass
   - the first Ralph-loop campaign-money batch recovered enough `2020` QA-backed money to move `Q4` from fail to pass without importing noisy OCR actors
   - the same batch required a validation-suppression rule for sparse older filings, so the queue now stays bounded at `16` checks across `5` subject filings instead of exploding into empty-reference noise
   - the first live local Neo4j load and query pass has been run successfully against the projected graph, proving end-to-end continuity for actor, seat-service, filing, money, decision, issue, and validation queries

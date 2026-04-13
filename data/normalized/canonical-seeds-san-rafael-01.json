@@ -1,7 +1,7 @@
 {
   "bundle_id": "canonical-seeds-san-rafael-01",
   "status": "working",
-  "generated_at": "2026-04-12T08:03:35-07:00",
+  "generated_at": "2026-04-13T11:29:28Z",
   "scope": {
     "jurisdiction": "San Rafael",
     "focus": "Evidence-backed canonical actor, seat, and institution seeds for cross-slice joins",
@@ -446,6 +446,51 @@
   ],
   "election_candidates": [
     {
+      "id": "election-2020-11-03-san-rafael-mayor-general",
+      "jurisdiction_id": "place-san-rafael",
+      "election_type": "general_municipal",
+      "election_date": "2020-11-03",
+      "seat_id": "seat-san-rafael-mayor-at-large",
+      "related_canonical_election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "status": "certified",
+      "evidence_record_ids": [
+        "record-san-rafael-november-3-2020-election-page",
+        "record-2020-12-07-san-rafael-city-council-special-minutes"
+      ]
+    },
+    {
+      "id": "election-2020-11-03-san-rafael-council-district-1-general",
+      "jurisdiction_id": "place-san-rafael",
+      "election_type": "general_municipal",
+      "election_date": "2020-11-03",
+      "seat_id": "seat-san-rafael-city-council-district-1",
+      "related_canonical_election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "status": "certified",
+      "evidence_record_ids": [
+        "record-san-rafael-november-3-2020-election-page",
+        "record-2020-12-07-san-rafael-city-council-special-minutes"
+      ]
+    },
+    {
+      "id": "election-2020-11-03-san-rafael-council-district-4-general",
+      "jurisdiction_id": "place-san-rafael",
+      "election_type": "general_municipal",
+      "election_date": "2020-11-03",
+      "seat_id": "seat-san-rafael-city-council-district-4",
+      "related_canonical_election_ids": [
+        "election-2020-11-03-san-rafael-general"
+      ],
+      "status": "certified",
+      "evidence_record_ids": [
+        "record-san-rafael-november-3-2020-election-page",
+        "record-2020-12-07-san-rafael-city-council-special-minutes"
+      ]
+    },
+    {
       "id": "election-2022-11-08-san-rafael-council-district-2-general",
       "jurisdiction_id": "place-san-rafael",
       "election_type": "general_municipal",
@@ -504,6 +549,63 @@
     }
   ],
   "seat_service_candidates": [
+    {
+      "id": "seatservice-kate-colin-mayor-2020-term",
+      "actor_id": "actor-kate-colin",
+      "seat_id": "seat-san-rafael-mayor-at-large",
+      "service_type": "elected",
+      "institution_id": "inst-san-rafael-city-council",
+      "election_id": "election-2020-11-03-san-rafael-mayor-general",
+      "started_at": "2020-12-07",
+      "ended_at": "2024-12-16",
+      "observed_at": "2026-04-13",
+      "status": "historical",
+      "evidence_record_ids": [
+        "record-san-rafael-november-3-2020-election-page",
+        "record-2020-12-07-san-rafael-city-council-special-page",
+        "record-2020-12-07-san-rafael-city-council-special-minutes",
+        "record-san-rafael-november-5-2024-election-page"
+      ],
+      "notes": "The November 3, 2020 election page names Kate Colin as Mayor-elect, and the December 7, 2020 special City Council minutes record her oath of office. This historical service window ends when the current mayoral term begins on December 16, 2024."
+    },
+    {
+      "id": "seatservice-maika-llorens-gulati-d1-2020-term",
+      "actor_id": "actor-maika-llorens-gulati",
+      "seat_id": "seat-san-rafael-city-council-district-1",
+      "service_type": "elected",
+      "institution_id": "inst-san-rafael-city-council",
+      "election_id": "election-2020-11-03-san-rafael-council-district-1-general",
+      "started_at": "2020-12-07",
+      "ended_at": "2024-12-16",
+      "observed_at": "2026-04-13",
+      "status": "historical",
+      "evidence_record_ids": [
+        "record-san-rafael-november-3-2020-election-page",
+        "record-2020-12-07-san-rafael-city-council-special-page",
+        "record-2020-12-07-san-rafael-city-council-special-minutes",
+        "record-san-rafael-november-5-2024-election-page"
+      ],
+      "notes": "The November 3, 2020 election page names Maika Llorens Gulati as the District 1 winner, and the December 7, 2020 special City Council minutes record her oath of office. This historical service window ends when the current District 1 term begins on December 16, 2024."
+    },
+    {
+      "id": "seatservice-rachel-kertz-d4-2020-term",
+      "actor_id": "actor-rachel-kertz",
+      "seat_id": "seat-san-rafael-city-council-district-4",
+      "service_type": "elected",
+      "institution_id": "inst-san-rafael-city-council",
+      "election_id": "election-2020-11-03-san-rafael-council-district-4-general",
+      "started_at": "2020-12-07",
+      "ended_at": "2024-12-16",
+      "observed_at": "2026-04-13",
+      "status": "historical",
+      "evidence_record_ids": [
+        "record-san-rafael-november-3-2020-election-page",
+        "record-2020-12-07-san-rafael-city-council-special-page",
+        "record-2020-12-07-san-rafael-city-council-special-minutes",
+        "record-san-rafael-november-5-2024-election-page"
+      ],
+      "notes": "The November 3, 2020 election page names Rachel Kertz as the District 4 winner, and the December 7, 2020 special City Council minutes record her oath of office. This historical service window ends when the current District 4 term begins on December 16, 2024."
+    },
     {
       "id": "seatservice-kate-colin-mayor-current",
       "actor_id": "actor-kate-colin",

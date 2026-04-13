@@ -1,13 +1,13 @@
 {
   "case_study_id": "san-rafael-officeholder-disclosures-01",
   "bundle_id": "san-rafael-officeholder-disclosures-01__bundle-01",
-  "status": "current_officeholder_continuity_built",
-  "generated_at": "2026-04-13T00:01:20Z",
+  "status": "historical_officeholder_continuity_extended",
+  "generated_at": "2026-04-13T11:28:22Z",
   "scope": [
-    "Current San Rafael elected officeholder Form 700 continuity only",
-    "Current seat-service joins only where the filing date falls inside an explicit current service window",
+    "Current San Rafael elected officeholder Form 700 continuity plus explicit 2020-2024 historical service windows for the current mayor, District 1, and District 4 officeholders",
+    "Seat-service joins only where the filing date falls inside an explicit current or historical service window",
     "Export-backed filing and EconomicInterestDisclosure objects without broad staff or commission import",
-    "No pre-current-term mapping until older San Rafael seat-service history is modeled"
+    "No broad pre-2020 or non-city-office mapping until older San Rafael seat-service history is modeled more explicitly"
   ],
   "record_refs": [
     {
@@ -27,6 +27,186 @@
   ],
   "filing_candidates": [
     {
+      "id": "filing-san-rafael-form700-2020-12-23-kertz-rachel-assuming-office-city-council-member-city-council",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-rachel-kertz",
+      "official_seat_id": "seat-san-rafael-city-council-district-4",
+      "official_seat_service_id": "seatservice-rachel-kertz-d4-2020-term",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2020-12-23",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Kertz, Rachel",
+      "position_title": "City Council Member",
+      "department_name": "City Council",
+      "statement_type": "Assuming Office",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2020-12-23-kertz-rachel-assuming-office-city-council-member-city-council",
+      "base_filing_key": "san-rafael-form700-2020-12-23-kertz-rachel-assuming-office-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2020-12-30-llorens-gulati-maika-assuming-office-city-council-member-city-council",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-maika-llorens-gulati",
+      "official_seat_id": "seat-san-rafael-city-council-district-1",
+      "official_seat_service_id": "seatservice-maika-llorens-gulati-d1-2020-term",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2020-12-30",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Llorens Gulati, Maika",
+      "position_title": "City Council Member",
+      "department_name": "City Council",
+      "statement_type": "Assuming Office",
+      "document_link_count": 1,
+      "record_locator": "san-rafael-form700-2020-12-30-llorens-gulati-maika-assuming-office-city-council-member-city-council",
+      "base_filing_key": "san-rafael-form700-2020-12-30-llorens-gulati-maika-assuming-office-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2021-03-29-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-kate-colin",
+      "official_seat_id": "seat-san-rafael-mayor-at-large",
+      "official_seat_service_id": "seatservice-kate-colin-mayor-2020-term",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2021-03-29",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Colin, Catherine",
+      "position_title": "City Council Member, Mayor",
+      "department_name": "City Council, City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2021-03-29-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "base_filing_key": "san-rafael-form700-2021-03-29-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2022-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-rachel-kertz",
+      "official_seat_id": "seat-san-rafael-city-council-district-4",
+      "official_seat_service_id": "seatservice-rachel-kertz-d4-2020-term",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2022-03-06",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Kertz, Rachel",
+      "position_title": "City Council Member, Alternate",
+      "department_name": "City Council, Sanitation District",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2022-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "base_filing_key": "san-rafael-form700-2022-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2022-03-21-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-maika-llorens-gulati",
+      "official_seat_id": "seat-san-rafael-city-council-district-1",
+      "official_seat_service_id": "seatservice-maika-llorens-gulati-d1-2020-term",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2022-03-21",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Llorens Gulati, Maika",
+      "position_title": "City Council Member, Board Member",
+      "department_name": "City Council, Marin Clean Energy",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2022-03-21-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "base_filing_key": "san-rafael-form700-2022-03-21-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2022-03-24-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-kate-colin",
+      "official_seat_id": "seat-san-rafael-mayor-at-large",
+      "official_seat_service_id": "seatservice-kate-colin-mayor-2020-term",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2022-03-24",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Colin, Catherine",
+      "position_title": "City Council Member, Mayor, Board Member",
+      "department_name": "City Council, City Council, Sanitation District",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2022-03-24-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "base_filing_key": "san-rafael-form700-2022-03-24-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2023-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-rachel-kertz",
+      "official_seat_id": "seat-san-rafael-city-council-district-4",
+      "official_seat_service_id": "seatservice-rachel-kertz-d4-2020-term",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2023-03-06",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Kertz, Rachel",
+      "position_title": "City Council Member, Alternate",
+      "department_name": "City Council, Sanitation District",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2023-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "base_filing_key": "san-rafael-form700-2023-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2023-03-13-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-maika-llorens-gulati",
+      "official_seat_id": "seat-san-rafael-city-council-district-1",
+      "official_seat_service_id": "seatservice-maika-llorens-gulati-d1-2020-term",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2023-03-13",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Llorens Gulati, Maika",
+      "position_title": "City Council Member, Board Member",
+      "department_name": "City Council, Marin Clean Energy",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2023-03-13-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "base_filing_key": "san-rafael-form700-2023-03-13-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2023-03-14-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-kate-colin",
+      "official_seat_id": "seat-san-rafael-mayor-at-large",
+      "official_seat_service_id": "seatservice-kate-colin-mayor-2020-term",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2023-03-14",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Colin, Catherine",
+      "position_title": "City Council Member, Mayor, Board Member",
+      "department_name": "City Council, City Council, Sanitation District",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2023-03-14-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "base_filing_key": "san-rafael-form700-2023-03-14-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
       "id": "filing-san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council",
       "filing_type": "form_700",
       "official_actor_id": "actor-eli-hill",
@@ -34,7 +214,7 @@
       "official_seat_service_id": "seatservice-eli-hill-d2-current",
       "filing_institution_id": "inst-city-of-san-rafael",
       "filed_at": "2023-03-30",
-      "status": "export_inventory_backed",
+      "status": "current_officeholder_continuity",
       "source_filer_name": "Hill, Elias",
       "position_title": "City Council Member",
       "department_name": "City Council",
@@ -54,7 +234,7 @@
       "official_seat_service_id": "seatservice-maribeth-bushey-d3-current",
       "filing_institution_id": "inst-city-of-san-rafael",
       "filed_at": "2023-04-03",
-      "status": "export_inventory_backed",
+      "status": "current_officeholder_continuity",
       "source_filer_name": "Bushey, Maribeth",
       "position_title": "City Council Member",
       "department_name": "City Council",
@@ -67,6 +247,26 @@
       ]
     },
     {
+      "id": "filing-san-rafael-form700-2024-03-28-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-kate-colin",
+      "official_seat_id": "seat-san-rafael-mayor-at-large",
+      "official_seat_service_id": "seatservice-kate-colin-mayor-2020-term",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2024-03-28",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Colin, Catherine",
+      "position_title": "City Council Member, Mayor",
+      "department_name": "City Council, City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2024-03-28-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "base_filing_key": "san-rafael-form700-2024-03-28-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
       "id": "filing-san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council",
       "filing_type": "form_700",
       "official_actor_id": "actor-eli-hill",
@@ -74,7 +274,7 @@
       "official_seat_service_id": "seatservice-eli-hill-d2-current",
       "filing_institution_id": "inst-city-of-san-rafael",
       "filed_at": "2024-04-01",
-      "status": "export_inventory_backed",
+      "status": "current_officeholder_continuity",
       "source_filer_name": "Hill, Elias",
       "position_title": "City Council Member",
       "department_name": "City Council",
@@ -94,7 +294,7 @@
       "official_seat_service_id": "seatservice-maribeth-bushey-d3-current",
       "filing_institution_id": "inst-city-of-san-rafael",
       "filed_at": "2024-04-02",
-      "status": "export_inventory_backed",
+      "status": "current_officeholder_continuity",
       "source_filer_name": "Bushey, Maribeth",
       "position_title": "City Council Member",
       "department_name": "City Council",
@@ -107,6 +307,46 @@
       ]
     },
     {
+      "id": "filing-san-rafael-form700-2024-04-02-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-rachel-kertz",
+      "official_seat_id": "seat-san-rafael-city-council-district-4",
+      "official_seat_service_id": "seatservice-rachel-kertz-d4-2020-term",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2024-04-02",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Kertz, Rachel",
+      "position_title": "City Council Member, Alternate",
+      "department_name": "City Council, Sanitation District",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2024-04-02-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "base_filing_key": "san-rafael-form700-2024-04-02-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2024-04-05-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-maika-llorens-gulati",
+      "official_seat_id": "seat-san-rafael-city-council-district-1",
+      "official_seat_service_id": "seatservice-maika-llorens-gulati-d1-2020-term",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2024-04-05",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Llorens Gulati, Maika",
+      "position_title": "City Council Member, Board Member",
+      "department_name": "City Council, Marin Clean Energy",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2024-04-05-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "base_filing_key": "san-rafael-form700-2024-04-05-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
       "id": "filing-san-rafael-form700-2025-03-23-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
       "filing_type": "form_700",
       "official_actor_id": "actor-rachel-kertz",
@@ -114,7 +354,7 @@
       "official_seat_service_id": "seatservice-rachel-kertz-d4-current",
       "filing_institution_id": "inst-city-of-san-rafael",
       "filed_at": "2025-03-23",
-      "status": "export_inventory_backed",
+      "status": "current_officeholder_continuity",
       "source_filer_name": "Kertz, Rachel",
       "position_title": "City Council Member, Alternate",
       "department_name": "City Council, Sanitation District",
@@ -134,7 +374,7 @@
       "official_seat_service_id": "seatservice-maika-llorens-gulati-d1-current",
       "filing_institution_id": "inst-city-of-san-rafael",
       "filed_at": "2025-03-28",
-      "status": "export_inventory_backed",
+      "status": "current_officeholder_continuity",
       "source_filer_name": "Llorens Gulati, Maika",
       "position_title": "City Council Member, Board Member",
       "department_name": "City Council, Marin Clean Energy",
@@ -154,7 +394,7 @@
       "official_seat_service_id": "seatservice-kate-colin-mayor-current",
       "filing_institution_id": "inst-city-of-san-rafael",
       "filed_at": "2025-03-30",
-      "status": "export_inventory_backed",
+      "status": "current_officeholder_continuity",
       "source_filer_name": "Colin, Catherine",
       "position_title": "Mayor",
       "department_name": "City Council",
@@ -174,7 +414,7 @@
       "official_seat_service_id": "seatservice-maribeth-bushey-d3-current",
       "filing_institution_id": "inst-city-of-san-rafael",
       "filed_at": "2025-03-31",
-      "status": "export_inventory_backed",
+      "status": "current_officeholder_continuity",
       "source_filer_name": "Bushey, Maribeth",
       "position_title": "City Council Member",
       "department_name": "City Council",
@@ -194,7 +434,7 @@
       "official_seat_service_id": "seatservice-eli-hill-d2-current",
       "filing_institution_id": "inst-city-of-san-rafael",
       "filed_at": "2025-03-31",
-      "status": "export_inventory_backed",
+      "status": "current_officeholder_continuity",
       "source_filer_name": "Hill, Elias",
       "position_title": "City Council Member",
       "department_name": "City Council",
@@ -208,6 +448,195 @@
     }
   ],
   "economic_interest_disclosure_candidates": [
+    {
+      "id": "eid-san-rafael-form700-2020-12-23-kertz-rachel-assuming-office-city-council-member-city-council",
+      "filer_actor_id": "actor-rachel-kertz",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-city-council-district-4",
+      "seat_service_id": "seatservice-rachel-kertz-d4-2020-term",
+      "filing_id": "filing-san-rafael-form700-2020-12-23-kertz-rachel-assuming-office-city-council-member-city-council",
+      "disclosure_type": "assuming_office",
+      "filed_at": "2020-12-23",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Kertz, Rachel",
+      "position_title": "City Council Member",
+      "department_name": "City Council",
+      "statement_type": "Assuming Office",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2020-12-23-kertz-rachel-assuming-office-city-council-member-city-council",
+      "base_filing_key": "san-rafael-form700-2020-12-23-kertz-rachel-assuming-office-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2020-12-30-llorens-gulati-maika-assuming-office-city-council-member-city-council",
+      "filer_actor_id": "actor-maika-llorens-gulati",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-city-council-district-1",
+      "seat_service_id": "seatservice-maika-llorens-gulati-d1-2020-term",
+      "filing_id": "filing-san-rafael-form700-2020-12-30-llorens-gulati-maika-assuming-office-city-council-member-city-council",
+      "disclosure_type": "assuming_office",
+      "filed_at": "2020-12-30",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Llorens Gulati, Maika",
+      "position_title": "City Council Member",
+      "department_name": "City Council",
+      "statement_type": "Assuming Office",
+      "document_link_count": 1,
+      "record_locator": "san-rafael-form700-2020-12-30-llorens-gulati-maika-assuming-office-city-council-member-city-council",
+      "base_filing_key": "san-rafael-form700-2020-12-30-llorens-gulati-maika-assuming-office-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2021-03-29-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "filer_actor_id": "actor-kate-colin",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-mayor-at-large",
+      "seat_service_id": "seatservice-kate-colin-mayor-2020-term",
+      "filing_id": "filing-san-rafael-form700-2021-03-29-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "disclosure_type": "annual",
+      "filed_at": "2021-03-29",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Colin, Catherine",
+      "position_title": "City Council Member, Mayor",
+      "department_name": "City Council, City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2021-03-29-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "base_filing_key": "san-rafael-form700-2021-03-29-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2022-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "filer_actor_id": "actor-rachel-kertz",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-city-council-district-4",
+      "seat_service_id": "seatservice-rachel-kertz-d4-2020-term",
+      "filing_id": "filing-san-rafael-form700-2022-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "disclosure_type": "annual",
+      "filed_at": "2022-03-06",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Kertz, Rachel",
+      "position_title": "City Council Member, Alternate",
+      "department_name": "City Council, Sanitation District",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2022-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "base_filing_key": "san-rafael-form700-2022-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2022-03-21-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "filer_actor_id": "actor-maika-llorens-gulati",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-city-council-district-1",
+      "seat_service_id": "seatservice-maika-llorens-gulati-d1-2020-term",
+      "filing_id": "filing-san-rafael-form700-2022-03-21-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "disclosure_type": "annual",
+      "filed_at": "2022-03-21",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Llorens Gulati, Maika",
+      "position_title": "City Council Member, Board Member",
+      "department_name": "City Council, Marin Clean Energy",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2022-03-21-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "base_filing_key": "san-rafael-form700-2022-03-21-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2022-03-24-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "filer_actor_id": "actor-kate-colin",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-mayor-at-large",
+      "seat_service_id": "seatservice-kate-colin-mayor-2020-term",
+      "filing_id": "filing-san-rafael-form700-2022-03-24-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "disclosure_type": "annual",
+      "filed_at": "2022-03-24",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Colin, Catherine",
+      "position_title": "City Council Member, Mayor, Board Member",
+      "department_name": "City Council, City Council, Sanitation District",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2022-03-24-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "base_filing_key": "san-rafael-form700-2022-03-24-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2023-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "filer_actor_id": "actor-rachel-kertz",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-city-council-district-4",
+      "seat_service_id": "seatservice-rachel-kertz-d4-2020-term",
+      "filing_id": "filing-san-rafael-form700-2023-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "disclosure_type": "annual",
+      "filed_at": "2023-03-06",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Kertz, Rachel",
+      "position_title": "City Council Member, Alternate",
+      "department_name": "City Council, Sanitation District",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2023-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "base_filing_key": "san-rafael-form700-2023-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2023-03-13-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "filer_actor_id": "actor-maika-llorens-gulati",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-city-council-district-1",
+      "seat_service_id": "seatservice-maika-llorens-gulati-d1-2020-term",
+      "filing_id": "filing-san-rafael-form700-2023-03-13-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "disclosure_type": "annual",
+      "filed_at": "2023-03-13",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Llorens Gulati, Maika",
+      "position_title": "City Council Member, Board Member",
+      "department_name": "City Council, Marin Clean Energy",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2023-03-13-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "base_filing_key": "san-rafael-form700-2023-03-13-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2023-03-14-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "filer_actor_id": "actor-kate-colin",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-mayor-at-large",
+      "seat_service_id": "seatservice-kate-colin-mayor-2020-term",
+      "filing_id": "filing-san-rafael-form700-2023-03-14-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "disclosure_type": "annual",
+      "filed_at": "2023-03-14",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Colin, Catherine",
+      "position_title": "City Council Member, Mayor, Board Member",
+      "department_name": "City Council, City Council, Sanitation District",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2023-03-14-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "base_filing_key": "san-rafael-form700-2023-03-14-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
     {
       "id": "eid-san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council",
       "filer_actor_id": "actor-eli-hill",
@@ -251,6 +680,27 @@
       ]
     },
     {
+      "id": "eid-san-rafael-form700-2024-03-28-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "filer_actor_id": "actor-kate-colin",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-mayor-at-large",
+      "seat_service_id": "seatservice-kate-colin-mayor-2020-term",
+      "filing_id": "filing-san-rafael-form700-2024-03-28-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "disclosure_type": "annual",
+      "filed_at": "2024-03-28",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Colin, Catherine",
+      "position_title": "City Council Member, Mayor",
+      "department_name": "City Council, City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2024-03-28-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "base_filing_key": "san-rafael-form700-2024-03-28-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
       "id": "eid-san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council",
       "filer_actor_id": "actor-eli-hill",
       "filing_institution_id": "inst-city-of-san-rafael",
@@ -288,6 +738,48 @@
       "document_link_count": 0,
       "record_locator": "san-rafael-form700-2024-04-02-bushey-maribeth-annual-city-council-member-city-council",
       "base_filing_key": "san-rafael-form700-2024-04-02-bushey-maribeth-annual-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2024-04-02-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "filer_actor_id": "actor-rachel-kertz",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-city-council-district-4",
+      "seat_service_id": "seatservice-rachel-kertz-d4-2020-term",
+      "filing_id": "filing-san-rafael-form700-2024-04-02-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "disclosure_type": "annual",
+      "filed_at": "2024-04-02",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Kertz, Rachel",
+      "position_title": "City Council Member, Alternate",
+      "department_name": "City Council, Sanitation District",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2024-04-02-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "base_filing_key": "san-rafael-form700-2024-04-02-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2024-04-05-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "filer_actor_id": "actor-maika-llorens-gulati",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-city-council-district-1",
+      "seat_service_id": "seatservice-maika-llorens-gulati-d1-2020-term",
+      "filing_id": "filing-san-rafael-form700-2024-04-05-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "disclosure_type": "annual",
+      "filed_at": "2024-04-05",
+      "status": "historical_officeholder_continuity",
+      "source_filer_name": "Llorens Gulati, Maika",
+      "position_title": "City Council Member, Board Member",
+      "department_name": "City Council, Marin Clean Energy",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2024-04-05-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "base_filing_key": "san-rafael-form700-2024-04-05-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
       "evidence_record_ids": [
         "record-san-rafael-form700-export-2026-04-12"
       ]
@@ -402,27 +894,27 @@
     "export_wave_01_row_count": 1078,
     "visible_archive_start": "2018-07-02",
     "visible_archive_end": "2026-04-08",
-    "promoted_filing_count": 9,
-    "promoted_disclosure_count": 9,
+    "promoted_filing_count": 21,
+    "promoted_disclosure_count": 21,
     "promoted_actor_count": 5,
     "per_actor_filing_counts": {
       "actor-eli-hill": 3,
-      "actor-kate-colin": 1,
-      "actor-maika-llorens-gulati": 1,
+      "actor-kate-colin": 5,
+      "actor-maika-llorens-gulati": 5,
       "actor-maribeth-bushey": 3,
-      "actor-rachel-kertz": 1
+      "actor-rachel-kertz": 5
     }
   },
   "open_questions": [
     {
       "id": "OQ-034",
       "status": "watch",
-      "question": "How should pre-current-term Form 700 rows for current San Rafael officeholders map to historical seat services once older city-election and term-boundary lineage is modeled?"
+      "question": "How should pre-2020 or pre-district Form 700 rows for current San Rafael officeholders map once older seat structures and older term boundaries are modeled?"
     }
   ],
   "notes": [
-    "This slice is intentionally narrower than the full Form 700 archive. It promotes only rows that resolve cleanly to existing canonical officeholders and explicit current SeatService boundaries.",
+    "This slice is intentionally narrower than the full Form 700 archive. It promotes only rows that resolve cleanly to existing canonical officeholders and explicit seat-service boundaries.",
     "The export workbook is the evidence record for this continuity layer. Direct row-level document recovery remains a separate adapter problem and is still tracked as a global watch item.",
-    "Kate Colin, Maika Llorens Gulati, and Rachel Kertz now have explicit current-term start dates because the December 16, 2024 special meeting page includes their swear-in ceremony."
+    "Kate Colin, Maika Llorens Gulati, and Rachel Kertz now also have explicit 2020-12-07 historical service starts because the December 7, 2020 special City Council minutes record their oath of office."
   ]
 }

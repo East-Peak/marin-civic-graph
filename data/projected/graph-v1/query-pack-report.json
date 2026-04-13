@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-04-13T11:19:00Z",
+  "generated_at": "2026-04-13T11:28:23Z",
   "engine": "projection_jsonl",
   "projection_id": "graph-v1",
-  "projection_report_generated_at": "2026-04-13T11:19:00Z",
+  "projection_report_generated_at": "2026-04-13T11:28:23Z",
   "projection_counts": {
-    "nodes": 6068,
-    "edges": 20251,
+    "nodes": 6098,
+    "edges": 20422,
     "node_type_counts": {
       "Actor": 21,
       "AgendaItem": 2970,
       "Candidacy": 14,
       "Committee": 16,
       "Decision": 1472,
-      "EconomicInterestDisclosure": 9,
-      "Election": 18,
-      "Filing": 242,
+      "EconomicInterestDisclosure": 21,
+      "Election": 21,
+      "Filing": 254,
       "Institution": 5,
       "Issue": 3,
       "Meeting": 283,
@@ -22,7 +22,7 @@
       "Place": 8,
       "Record": 834,
       "Seat": 5,
-      "SeatService": 5,
+      "SeatService": 8,
       "ValidationCheck": 16
     }
   },
@@ -38,16 +38,16 @@
       "title": "actor-kate-colin dossier",
       "pass": true,
       "metrics": {
-        "seat_service_count": 1,
+        "seat_service_count": 2,
         "committee_count": 2,
-        "filing_count": 53,
+        "filing_count": 57,
         "filing_family_counts": {
           "form_410": 17,
           "form_460": 21,
           "form_496": 1,
           "form_497": 8,
           "form_501": 3,
-          "form_700": 1,
+          "form_700": 5,
           "form_803": 2
         },
         "filing_years": [
@@ -65,6 +65,7 @@
       },
       "samples": {
         "seat_service_ids": [
+          "seatservice-kate-colin-mayor-2020-term",
           "seatservice-kate-colin-mayor-current"
         ],
         "committee_ids": [
@@ -72,6 +73,10 @@
           "committee-kate-colin-for-san-rafael-mayor-2024"
         ],
         "form700_filing_ids": [
+          "filing-san-rafael-form700-2021-03-29-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+          "filing-san-rafael-form700-2022-03-24-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+          "filing-san-rafael-form700-2023-03-14-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+          "filing-san-rafael-form700-2024-03-28-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
           "filing-san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council"
         ],
         "form803_filing_ids": [

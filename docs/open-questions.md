@@ -521,10 +521,10 @@ Mirror the question here when it affects:
   - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-officeholder-disclosures-01/bundle-01.json)
   - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-sei-netfile-portal/2026-04-12.json)
   - [canonical-seeds-san-rafael-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/canonical-seeds-san-rafael-01.json)
-- `question`: How should pre-current-term Form 700 rows for current San Rafael officeholders map to historical seat services once older city-election and term-boundary lineage is modeled?
-- `why it matters`: The first elected-disclosure import is intentionally narrow and only promotes rows that fall inside explicit current `SeatService` windows. Older rows for the same people are still useful continuity evidence, but importing them early would blur current officeholding with earlier terms or earlier office structures.
-- `current note`: The first officeholder-disclosure bundle now imports `9` Form 700 filings and `9` `EconomicInterestDisclosure` nodes for `Kate Colin`, `Maika Llorens Gulati`, `Eli Hill`, `Maribeth Bushey`, and `Rachel Kertz`. Earlier rows remain in the extracted Form 700 inventory but stay out of graph-v1 until historical seat-service lineage is modeled more explicitly.
-- `next evidence`: extend San Rafael election and swearing-in coverage far enough backward to support older term-boundary objects, then widen the disclosure bundle from current-service continuity to historical officeholder continuity.
+- `question`: How should pre-2020 or pre-district Form 700 rows for current San Rafael officeholders map once older seat structures and older term boundaries are modeled?
+- `why it matters`: The elected-disclosure layer now covers explicit current terms plus the 2020-2024 prior terms for the current mayor, District 1, and District 4 officeholders. The remaining risk is older office structure drift, not simple current-term continuity.
+- `current note`: The widened officeholder-disclosure bundle now imports `21` Form 700 filings and `21` `EconomicInterestDisclosure` nodes. `Kate Colin`, `Maika Llorens Gulati`, and `Rachel Kertz` now resolve through explicit historical `SeatService` windows starting on `2020-12-07`, while `Eli Hill` and `Maribeth Bushey` still only use the current post-2022 windows.
+- `next evidence`: capture enough older San Rafael election and swear-in evidence to determine whether pre-2020 rows should map to older at-large council structures, older non-council offices, or remain out of graph-v1.
 
 ### OQ-035: San Rafael multi-cycle QA-backed campaign money coverage
 
