@@ -224,6 +224,39 @@ Current note:
 - this is a bounded read model over existing `Decision -> MoneyFlow`, `Decision -> Project`, `Program -> Decision`, and `Case -> Decision` graph paths
 - it is intended to answer: which local decisions are currently driving the most linked money, and what program/project/case context travels with them
 
+### `jurisdiction_legal_constraint_summary`
+
+Subject:
+
+- one jurisdictional `Place`
+
+Current shape:
+
+- `jurisdiction_place`
+- `metrics`
+- `programs_in_scope`
+- `projects_in_scope`
+- `case_rollups`
+- `case_lineage`
+- `evidence_records`
+- `related_records`
+
+Each case rollup currently includes:
+
+- `case`
+- `court`
+- `metrics`
+- `scope_hits`
+- `issues`
+- `programs`
+- `linked_local_decisions`
+- `records`
+
+Current note:
+
+- this is a bounded read model over the imported legal lane plus local San Rafael program and decision links
+- it is intended to answer: which legal constraint cases currently touch this jurisdiction, why they are in scope, and how they overlap on local programs and decisions
+
 ### `money_overlap_summary`
 
 Current shape:

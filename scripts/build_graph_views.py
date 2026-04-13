@@ -1305,6 +1305,203 @@ def decision_money_rollup(
     }
 
 
+def jurisdiction_legal_constraint_summary(
+    *,
+    place_id: str,
+    nodes: list[dict[str, Any]],
+    node_by_id: dict[str, dict[str, Any]],
+    outgoing: dict[str, list[dict[str, Any]]],
+    incoming: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    jurisdiction_place = node_by_id[place_id]
+    in_scope_programs = unique_nodes(
+        sort_nodes(
+            edge_sources(
+                incoming,
+                node_by_id,
+                place_id,
+                relationship_type="IN_JURISDICTION",
+                source_node_type="Program",
+            )
+        )
+    )
+    in_scope_projects = unique_nodes(
+        sort_nodes(
+            edge_sources(
+                incoming,
+                node_by_id,
+                place_id,
+                relationship_type="IN_JURISDICTION",
+                source_node_type="Project",
+            )
+        )
+    )
+    in_scope_program_ids = {node["id"] for node in in_scope_programs}
+    in_scope_decision_ids = {
+        decision["id"]
+        for program in in_scope_programs
+        for decision in edge_targets(
+            outgoing,
+            node_by_id,
+            program["id"],
+            relationship_type="RELATES_TO_DECISION",
+            target_node_type="Decision",
+        )
+    }
+    in_scope_decision_ids.update(
+        decision["id"]
+        for project in in_scope_projects
+        for decision in edge_targets(
+            outgoing,
+            node_by_id,
+            project["id"],
+            relationship_type="RELATES_TO_DECISION",
+            target_node_type="Decision",
+        )
+    )
+
+    case_rollups = []
+    shared_issue_ids: set[str] = set()
+    shared_program_ids: set[str] = set()
+    shared_decision_ids: set[str] = set()
+    evidence_records: list[dict[str, Any]] = []
+    related_records: list[dict[str, Any]] = []
+    in_scope_case_ids: set[str] = set()
+
+    for node in nodes:
+        if node["node_type"] != "Case":
+            continue
+
+        direct_place_hit = any(
+            related["id"] == place_id
+            for related in edge_targets(
+                outgoing,
+                node_by_id,
+                node["id"],
+                relationship_type="RELATES_TO_PLACE",
+                target_node_type="Place",
+            )
+        )
+        linked_programs = unique_nodes(
+            sort_nodes(
+                edge_targets(
+                    outgoing,
+                    node_by_id,
+                    node["id"],
+                    relationship_type="RELATES_TO_PROGRAM",
+                    target_node_type="Program",
+                )
+            )
+        )
+        linked_program_ids = {program["id"] for program in linked_programs}
+        program_hit = bool(linked_program_ids & in_scope_program_ids)
+        linked_local_decisions = unique_nodes(
+            sort_nodes(
+                edge_targets(
+                    outgoing,
+                    node_by_id,
+                    node["id"],
+                    relationship_type="RELATES_TO_DECISION",
+                    target_node_type="Decision",
+                )
+            )
+        )
+        linked_local_decision_ids = {decision["id"] for decision in linked_local_decisions}
+        decision_hit = bool(linked_local_decision_ids & in_scope_decision_ids)
+
+        if not (direct_place_hit or program_hit or decision_hit):
+            continue
+
+        in_scope_case_ids.add(node["id"])
+        dossier = case_dossier(
+            case_id=node["id"],
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
+        shared_issue_ids.update(item["id"] for item in dossier["issues"])
+        shared_program_ids.update(item["id"] for item in dossier["programs"])
+        shared_decision_ids.update(item["id"] for item in dossier["linked_local_decisions"])
+        evidence_records.extend(dossier["evidence_records"])
+        related_records.extend(dossier["related_records"])
+
+        case_rollups.append(
+            {
+                "case": dossier["case"],
+                "court": dossier["court"],
+                "metrics": dossier["metrics"],
+                "scope_hits": {
+                    "direct_place_hit": direct_place_hit,
+                    "program_hit": program_hit,
+                    "decision_hit": decision_hit,
+                },
+                "issues": dossier["issues"],
+                "programs": dossier["programs"],
+                "linked_local_decisions": dossier["linked_local_decisions"],
+                "records": dossier["evidence_records"],
+            }
+        )
+
+    case_rollups.sort(
+        key=lambda item: (
+            -item["metrics"]["linked_local_decision_count"],
+            -item["metrics"]["program_count"],
+            -item["metrics"]["proceeding_count"],
+            item["case"]["id"],
+        )
+    )
+
+    case_lineage = []
+    for case_id in sorted(in_scope_case_ids):
+        for related in edge_targets(
+            outgoing,
+            node_by_id,
+            case_id,
+            relationship_type="RELATES_TO_CASE",
+            target_node_type="Case",
+        ):
+            if related["id"] not in in_scope_case_ids or case_id > related["id"]:
+                continue
+            case_lineage.append(
+                {
+                    "source_case": node_summary(node_by_id[case_id]),
+                    "target_case": node_summary(related),
+                }
+            )
+
+    evidence_records = unique_summary_items(evidence_records)
+    evidence_ids = {item["id"] for item in evidence_records}
+    related_records = unique_summary_items(
+        [record for record in related_records if record.get("id") not in evidence_ids]
+    )
+
+    return {
+        "id": f"jurisdiction-{slugify_subject(place_id)}-legal-constraint-summary",
+        "title": f"Jurisdiction legal constraint summary: {node_title(jurisdiction_place)}",
+        "view_type": "jurisdiction_legal_constraint_summary",
+        "subject_id": place_id,
+        "subject_node_type": "Place",
+        "contract_version": 1,
+        "generated_at": iso_now(),
+        "jurisdiction_place": node_summary(jurisdiction_place),
+        "metrics": {
+            "case_count": len(case_rollups),
+            "shared_issue_count": len(shared_issue_ids),
+            "linked_program_count": len(shared_program_ids),
+            "linked_local_decision_count": len(shared_decision_ids),
+            "case_lineage_count": len(case_lineage),
+            "evidence_record_count": len(evidence_records),
+            "related_record_count": len(related_records),
+        },
+        "programs_in_scope": unique_node_summaries(in_scope_programs),
+        "projects_in_scope": unique_node_summaries(in_scope_projects),
+        "case_rollups": case_rollups,
+        "case_lineage": case_lineage,
+        "evidence_records": evidence_records,
+        "related_records": related_records,
+    }
+
+
 def money_overlap_view(
     *,
     nodes: list[dict[str, Any]],
@@ -1592,6 +1789,14 @@ def build_view_from_target(
             outgoing=outgoing,
             incoming=incoming,
         )
+    if view_type == "jurisdiction_legal_constraint_summary":
+        return jurisdiction_legal_constraint_summary(
+            place_id=subject_id,
+            nodes=nodes,
+            node_by_id=node_by_id,
+            outgoing=outgoing,
+            incoming=incoming,
+        )
     if view_type == "money_overlap_summary":
         return money_overlap_view(
             nodes=nodes,
@@ -1638,6 +1843,9 @@ def write_markdown_summary(output_dir: Path, views: list[dict[str, Any]]) -> Non
     project_views = [payload for payload in views if payload["view_type"] == "project_dossier"]
     jurisdiction_views = [payload for payload in views if payload["view_type"] == "jurisdiction_delivery_summary"]
     decision_money_views = [payload for payload in views if payload["view_type"] == "decision_money_rollup"]
+    jurisdiction_legal_views = [
+        payload for payload in views if payload["view_type"] == "jurisdiction_legal_constraint_summary"
+    ]
     decision_views = [payload for payload in views if payload["view_type"] == "decision_dossier"]
     money_views = [payload for payload in views if payload["view_type"] == "money_overlap_summary"]
     legal_views = [payload for payload in views if payload["view_type"] == "legal_constraint_view"]
@@ -1674,6 +1882,10 @@ def write_markdown_summary(output_dir: Path, views: list[dict[str, Any]]) -> Non
     if decision_money_views:
         lines.append(
             f"- Decision money rollups now cover `{len(decision_money_views)}` targets, including `{decision_money_views[0]['jurisdiction_place']['display_label']}` with `{decision_money_views[0]['metrics']['decision_count']}` money-linked decisions and `${decision_money_views[0]['metrics']['linked_money_total_amount']:,.2f}` in linked flow volume."
+        )
+    if jurisdiction_legal_views:
+        lines.append(
+            f"- Jurisdiction legal summaries now cover `{len(jurisdiction_legal_views)}` targets, including `{jurisdiction_legal_views[0]['jurisdiction_place']['display_label']}` with `{jurisdiction_legal_views[0]['metrics']['case_count']}` cases, `{jurisdiction_legal_views[0]['metrics']['linked_local_decision_count']}` linked local decisions, and `{jurisdiction_legal_views[0]['metrics']['case_lineage_count']}` in-scope case-lineage links."
         )
     if money_views:
         money = money_views[0]

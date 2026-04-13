@@ -162,6 +162,19 @@ Current scope:
 - linked programs, projects, and cases
 - linked money flows and evidence records
 
+### Jurisdiction legal constraint summary
+
+- [jurisdiction-san-rafael-legal-constraint-summary.json](../data/projected/graph-v1/views/jurisdiction-san-rafael-legal-constraint-summary.json)
+
+Current scope:
+
+- one jurisdictional place
+- in-scope program and project context
+- legal case rollups filtered to the jurisdiction
+- linked local decisions and shared issues
+- case-lineage links across the in-scope legal set
+- evidence and related records
+
 ## Use
 
 Run:

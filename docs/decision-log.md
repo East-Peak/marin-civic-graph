@@ -18,6 +18,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **Jurisdiction legal summaries should explain multi-case local constraint pressure**
+  - After the decision-to-money rollup, the next missing product question was legal rather than financial: which imported cases actually constrain this jurisdiction, why they are in scope, and how they overlap on local programs and decisions.
+  - The right bounded test is still `place-san-rafael`, using the existing Boyd / Grants Pass legal lane plus San Rafael program and decision links instead of widening legal ingestion again.
+  - The projected view pack now emits `jurisdiction-san-rafael-legal-constraint-summary.json`.
+  - Result: the current summary covers `2` in-scope cases, `3` shared issues, `1` linked program, `2` linked local decisions, and `12` evidence records.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-jurisdiction-legal-summaries-should-explain-multi-case-local-constraint-pressure.md`
+
 - **Decision-to-money rollups should rank linked local decisions before we widen ingestion again**
   - After the jurisdiction delivery summary, the next missing product-shaped question was narrower and more operational: which local decisions are actually driving the most linked money in the current graph.
   - The right bounded test is still `place-san-rafael`, using existing `Decision -> MoneyFlow`, `Decision -> Project`, `Program -> Decision`, and `Case -> Decision` paths instead of importing more finance data first.

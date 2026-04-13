@@ -386,6 +386,44 @@ function renderDecisionMoneyRollup(data) {
   );
 }
 
+function renderCaseScopeRollup(item) {
+  const wrapper = el("article", "list-card");
+  wrapper.append(
+    el("p", "eyebrow", item.court?.display_label || "Court"),
+    el("h4", null, item.case?.display_label || "Unnamed case")
+  );
+  const pills = el("div", "pill-row");
+  Object.entries(item.scope_hits || {}).forEach(([key, value]) => {
+    if (value) pills.append(badge(key.replaceAll("_", " "), "ok"));
+  });
+  pills.append(badge(`${formatNumber(item.metrics?.linked_local_decision_count || 0)} local decisions`));
+  if (item.metrics?.program_count) pills.append(badge(`${formatNumber(item.metrics.program_count)} programs`));
+  if (item.metrics?.issue_count) pills.append(badge(`${formatNumber(item.metrics.issue_count)} issues`));
+  wrapper.append(pills);
+  return wrapper;
+}
+
+function renderCaseLineageItem(item) {
+  const wrapper = el("article", "list-card");
+  wrapper.append(
+    el("p", "eyebrow", "Case lineage"),
+    el("h4", null, `${item.source_case?.display_label || "Unknown"} → ${item.target_case?.display_label || "Unknown"}`)
+  );
+  return wrapper;
+}
+
+function renderJurisdictionLegalConstraintSummary(data) {
+  contentEl.append(
+    renderListSection("Jurisdiction", [data.jurisdiction_place], renderNodeCard, { open: true }),
+    renderListSection("Programs In Scope", data.programs_in_scope || []),
+    renderListSection("Projects In Scope", data.projects_in_scope || []),
+    renderListSection("Case Rollups", data.case_rollups || [], renderCaseScopeRollup, { open: true }),
+    renderListSection("Case Lineage", data.case_lineage || [], renderCaseLineageItem),
+    renderListSection("Evidence Records", data.evidence_records || []),
+    renderListSection("Related Records", data.related_records || [])
+  );
+}
+
 function renderView(data) {
   clearChildren(contentEl);
   createMetricCards(data.metrics || {});
@@ -424,6 +462,10 @@ function renderView(data) {
   }
   if (data.view_type === "decision_money_rollup") {
     renderDecisionMoneyRollup(data);
+    return;
+  }
+  if (data.view_type === "jurisdiction_legal_constraint_summary") {
+    renderJurisdictionLegalConstraintSummary(data);
     return;
   }
   if (data.view_type === "legal_constraint_view") {

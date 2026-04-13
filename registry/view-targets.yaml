@@ -42,6 +42,10 @@
       "subject_id": "place-san-rafael"
     },
     {
+      "view_type": "jurisdiction_legal_constraint_summary",
+      "subject_id": "place-san-rafael"
+    },
+    {
       "view_type": "money_overlap_summary"
     },
     {
