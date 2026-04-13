@@ -140,6 +140,7 @@ Start narrow:
 - [Graph Query Pack Summary](./data/projected/graph-v1/query-pack-report.md)
 - [Graph View Index](./data/projected/graph-v1/views/index.json)
 - [Graph View Summary](./data/projected/graph-v1/views/summary.md)
+- [Local Graph Viewer Shell](./viewer/index.html)
 - [Kate Colin Actor Dossier](./data/projected/graph-v1/views/actor-kate-colin-dossier.json)
 - [Resolution 15336 Decision Dossier](./data/projected/graph-v1/views/decision-resolution-15336-dossier.json)
 - [Money Overlap Summary](./data/projected/graph-v1/views/money-overlap-summary.json)
@@ -227,6 +228,7 @@ Start narrow:
 - [Graph Projection Smoke Checks](./scripts/graph_smoke_checks.py)
 - [Graph Query Pack Runner](./scripts/run_graph_query_pack.py)
 - [Graph View Builder](./scripts/build_graph_views.py)
+- [Local Graph View Server](./scripts/serve_graph_views.py)
 - [Neo4j V1 Loader](./scripts/load_neo4j_v1.py)
 - [Marin County BOS Archive Capture Workflow](./scripts/capture_marin_county_bos_archive.py)
 - [Marin County Campaign Finance Export Capture Workflow](./scripts/capture_marin_county_campaign_finance_exports.py)
@@ -255,7 +257,8 @@ This repo started as a planning workspace and now includes the first live implem
     - `money-overlap-summary`
     - `legal-constraint-view`
     - `validation-queue`
-  - that view pack is the new product-facing pressure test: it proves the graph can emit bounded dossiers and summary views without depending on a live Neo4j session or a frontend shell
+  - that view pack is the new product-facing pressure test: it proves the graph can emit bounded dossiers and summary views without depending on a live Neo4j session
+  - there is now also a tiny local read-only shell under `viewer/`, served by `scripts/serve_graph_views.py`, so the projected dossier pack can be inspected in a browser without introducing an app framework or a live graph API
   - the current fixed-query-pack run still passes all five queries after the legal import widening pass
   - the fixed five-query breadth gate stays unchanged at `Q1` through `Q5`, and the graph now also passes a supplemental legal constraint query covering `Boyd` plus the full `Grants Pass` district -> Ninth Circuit -> Supreme Court lineage
   - the campaign evidence-record bundle has now been regenerated after the accepted 2020 Ralph-loop batch, widening from `25` to `45` campaign evidence `Record` nodes so older OCR/PDF artifacts no longer surface as `missing_target:Record` skips

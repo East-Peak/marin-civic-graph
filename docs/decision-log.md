@@ -18,6 +18,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **The first local graph shell should stay static and read-only**
+  - Once the projected view pack existed, the next useful move was a tiny browser shell over the generated JSON views, not a real app framework and not a live query API.
+  - The shell now lives under `viewer/` and is served by `scripts/serve_graph_views.py`.
+  - It renders the existing dossier/summary pack directly from `data/projected/graph-v1/views/`, so product review can happen in a browser without changing the graph architecture.
+  - Boundary: do **not** turn this into a second source of truth or a dynamic backend. It is a thin consumer over projected artifacts.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-local-graph-shell-should-stay-static-and-read-only.md`
+
 - **The next pivot after graph completeness should be a projected view pack**
   - Once the graph-v1 completeness tail was closed, the highest-value next move was no longer more ingestion or more ontology. It was to make the graph emit bounded dossier-style views a product could plausibly render.
   - The first view pack now includes:

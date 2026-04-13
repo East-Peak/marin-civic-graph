@@ -106,11 +106,18 @@ Run:
 
 ```bash
 python3 scripts/build_graph_views.py
+python3 scripts/serve_graph_views.py
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8017/viewer/
 ```
 
 ## Boundary
 
-This is not a frontend.
+This is not a real frontend or a graph API.
 
 It is a product-facing view pack over the projected graph so we can:
 
@@ -118,3 +125,10 @@ It is a product-facing view pack over the projected graph so we can:
 - spot weak joins earlier
 - decide what a real UI should ask for
 - avoid widening ingestion without a concrete product question
+
+The local shell is intentionally static and read-only:
+
+- it serves files from the repo root
+- it reads the generated JSON view pack under `data/projected/graph-v1/views/`
+- it does not talk to Neo4j
+- it does not introduce another app stack before the product questions are clearer

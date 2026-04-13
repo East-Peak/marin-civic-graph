@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Marin Civic Graph Viewer</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="sidebar__header">
+          <p class="eyebrow">Local Shell</p>
+          <h1>Marin Civic Graph</h1>
+          <p class="muted">
+            Read-only view pack over projected graph-v1 JSON.
+          </p>
+        </div>
+
+        <nav id="view-nav" class="nav" aria-label="Graph views"></nav>
+
+        <div class="sidebar__footer">
+          <p class="muted">
+            Source: <code>data/projected/graph-v1/views/</code>
+          </p>
+          <a id="raw-json-link" class="raw-link" href="#" target="_blank" rel="noreferrer">Open raw JSON</a>
+        </div>
+      </aside>
+
+      <main class="content">
+        <header class="content__header">
+          <div>
+            <p id="view-eyebrow" class="eyebrow">Projected View</p>
+            <h2 id="view-title">Loading…</h2>
+          </div>
+          <div class="header-actions">
+            <span id="generated-at" class="muted"></span>
+          </div>
+        </header>
+
+        <section id="metrics" class="metrics" aria-label="View metrics"></section>
+        <section id="content" class="view-body" aria-live="polite"></section>
+      </main>
+    </div>
+
+    <template id="metric-card-template">
+      <article class="metric-card">
+        <div class="metric-card__label"></div>
+        <div class="metric-card__value"></div>
+      </article>
+    </template>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
