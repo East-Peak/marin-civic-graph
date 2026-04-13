@@ -237,7 +237,7 @@ Mirror the question here when it affects:
   - [form700-700-filers-export.xls](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-sei-netfile-portal/2026-04-12/form700-700-filers-export.xls)
 - `question`: Is there a repeatable public path to mass direct-document recovery for historical San Rafael Form 700 filings, or does the NetFile export remain a metadata-first inventory while targeted filer/date searches are used only for selective document fetches?
 - `why it matters`: The full-history export is strong enough for filing inventory, actor recurrence, and disclosure counts, but it only exposes direct document URLs on a small minority of rows. That is good enough for graph backfill, but not yet good enough for one-shot raw-PDF preservation of the whole visible archive.
-- `current note`: The full visible-history export currently yields `1085` 700-filer rows from `2018-07-02` through `2026-04-08`, with only `16` rows exposing direct document links in the exported HTML. The direct-link layer is therefore materially weaker than the inventory layer.
+- `current note`: The full visible-history export currently yields `1085` 700-filer rows from `2018-07-02` through `2026-04-08`, with only `16` rows exposing direct document links in the exported HTML. The direct-link layer is therefore materially weaker than the inventory layer. The first graph-facing import now uses a deliberately narrow officeholder-only continuity bundle with `9` promoted Form 700 filings and `9` `EconomicInterestDisclosure` nodes for current San Rafael elected officials, all backed by the export workbook rather than by direct row-level PDFs.
 - `next evidence`: use the known working targeted historical-search payload to test whether row-level filer/date searches can promote direct `GetDocument.aspx` URLs at scale without relying on the export alone.
 
 ### OQ-024: San Rafael city-side campaign office-scope boundary
@@ -511,6 +511,20 @@ Mirror the question here when it affects:
 - `question`: What is the clean second-pass extraction path for agenda items, decisions, and votes across the now-captured San Rafael City Council meeting-page corpus?
 - `why it matters`: The first breadth-sprint council slice now gives the graph a real citywide meeting and evidence-record backbone, but the fixed query pack still needs deeper decision and vote extraction before the council timeline is truly citywide.
 - `resolution note`: Not resolved yet. The current bundle intentionally stops at meeting-page-backed `Meeting` and `Record` objects plus linked packet/minutes/video URLs. The next council deepening pass should parse linked minutes and page-backed agenda content rather than inventing decision nodes from archive metadata alone.
+
+### OQ-034: San Rafael pre-current-term officeholder disclosure mapping
+
+- `status`: watch
+- `layer`: disclosure continuity / historical seat lineage
+- `scope`: `san-rafael-officeholder-disclosures-01`
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-officeholder-disclosures-01/bundle-01.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-sei-netfile-portal/2026-04-12.json)
+  - [canonical-seeds-san-rafael-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/canonical-seeds-san-rafael-01.json)
+- `question`: How should pre-current-term Form 700 rows for current San Rafael officeholders map to historical seat services once older city-election and term-boundary lineage is modeled?
+- `why it matters`: The first elected-disclosure import is intentionally narrow and only promotes rows that fall inside explicit current `SeatService` windows. Older rows for the same people are still useful continuity evidence, but importing them early would blur current officeholding with earlier terms or earlier office structures.
+- `current note`: The first officeholder-disclosure bundle now imports `9` Form 700 filings and `9` `EconomicInterestDisclosure` nodes for `Kate Colin`, `Maika Llorens Gulati`, `Eli Hill`, `Maribeth Bushey`, and `Rachel Kertz`. Earlier rows remain in the extracted Form 700 inventory but stay out of graph-v1 until historical seat-service lineage is modeled more explicitly.
+- `next evidence`: extend San Rafael election and swearing-in coverage far enough backward to support older term-boundary objects, then widen the disclosure bundle from current-service continuity to historical officeholder continuity.
 
 ## Maintenance
 

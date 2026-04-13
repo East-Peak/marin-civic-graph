@@ -20,6 +20,7 @@ NODE_TYPE_BY_PREFIX = {
     "committee-": "Committee",
     "decision-": "Decision",
     "doc-": "Record",
+    "eid-": "EconomicInterestDisclosure",
     "election-": "Election",
     "filing-": "Filing",
     "finding-": "Finding",

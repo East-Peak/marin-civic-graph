@@ -180,13 +180,15 @@
       "observed_labels": [
         "Kate Colin",
         "Mayor Kate Colin",
-        "Kate Colin (she/her/hers)"
+        "Kate Colin (she/her/hers)",
+        "Colin, Catherine"
       ],
       "evidence_record_ids": [
         "record-san-rafael-city-council-2024-08-19-item-5a-report",
         "record-san-rafael-boyd-dismissal-release-2024-08-08",
         "record-san-rafael-downtown-library-reopening-2025-04-07",
         "record-kate-colin-form-803-2025-09-04",
+        "record-san-rafael-form700-export-2026-04-12",
         "record-san-rafael-elected-officials-2026-04-11",
         "record-san-rafael-city-council-page-2026-04-11",
         "record-san-rafael-november-5-2024-election-page"
@@ -202,12 +204,14 @@
       "seed_status": "canonical_seed",
       "observed_labels": [
         "Eli Hill",
-        "Vice Mayor Hill"
+        "Vice Mayor Hill",
+        "Hill, Elias"
       ],
       "evidence_record_ids": [
         "record-san-rafael-city-council-2024-08-19-item-5a-report",
         "record-san-rafael-november-8-2022-election-page",
         "record-san-rafael-city-council-2022-12-19-special-election-results-page",
+        "record-san-rafael-form700-export-2026-04-12",
         "record-san-rafael-elected-officials-2026-04-11",
         "record-san-rafael-city-council-page-2026-04-11"
       ],
@@ -222,12 +226,14 @@
       "seed_status": "canonical_seed",
       "observed_labels": [
         "Maribeth Bushey",
-        "Councilmember Bushey"
+        "Councilmember Bushey",
+        "Bushey, Maribeth"
       ],
       "evidence_record_ids": [
         "record-san-rafael-city-council-2024-08-19-item-5a-report",
         "record-san-rafael-november-8-2022-election-page",
         "record-san-rafael-city-council-2022-12-19-special-election-results-page",
+        "record-san-rafael-form700-export-2026-04-12",
         "record-san-rafael-elected-officials-2026-04-11",
         "record-san-rafael-city-council-page-2026-04-11"
       ],
@@ -243,10 +249,12 @@
       "observed_labels": [
         "Rachel Kertz",
         "Councilmember Kertz",
-        "Vice Mayor Rachel Kertz"
+        "Vice Mayor Rachel Kertz",
+        "Kertz, Rachel"
       ],
       "evidence_record_ids": [
         "record-san-rafael-city-council-2024-08-19-item-5a-report",
+        "record-san-rafael-form700-export-2026-04-12",
         "record-san-rafael-elected-officials-2026-04-11",
         "record-san-rafael-city-council-page-2026-04-11",
         "record-san-rafael-november-5-2024-election-page"
@@ -262,10 +270,12 @@
       "seed_status": "canonical_seed",
       "observed_labels": [
         "Maika Llorens Gulati",
-        "Councilmember Llorens Gulati"
+        "Councilmember Llorens Gulati",
+        "Llorens Gulati, Maika"
       ],
       "evidence_record_ids": [
         "record-san-rafael-city-council-2024-08-19-item-5a-report",
+        "record-san-rafael-form700-export-2026-04-12",
         "record-san-rafael-elected-officials-2026-04-11",
         "record-san-rafael-city-council-page-2026-04-11",
         "record-san-rafael-november-5-2024-election-page"
@@ -501,13 +511,16 @@
       "service_type": "elected",
       "institution_id": "inst-san-rafael-city-council",
       "election_id": "election-2024-11-05-san-rafael-mayor-general",
+      "started_at": "2024-12-16",
       "observed_at": "2026-04-11",
       "status": "current",
       "evidence_record_ids": [
+        "record-2024-12-16-san-rafael-city-council-special-page",
         "record-san-rafael-elected-officials-2026-04-11",
         "record-san-rafael-city-council-page-2026-04-11",
         "record-san-rafael-november-5-2024-election-page"
-      ]
+      ],
+      "notes": "The December 16, 2024 special meeting page includes the swear-in ceremony for Kate Colin as Mayor, which provides the first explicit service-start boundary for the current at-large mayoral term."
     },
     {
       "id": "seatservice-maika-llorens-gulati-d1-current",
@@ -516,13 +529,16 @@
       "service_type": "elected",
       "institution_id": "inst-san-rafael-city-council",
       "election_id": "election-2024-11-05-san-rafael-council-district-1-general",
+      "started_at": "2024-12-16",
       "observed_at": "2026-04-11",
       "status": "current",
       "evidence_record_ids": [
+        "record-2024-12-16-san-rafael-city-council-special-page",
         "record-san-rafael-elected-officials-2026-04-11",
         "record-san-rafael-city-council-page-2026-04-11",
         "record-san-rafael-november-5-2024-election-page"
-      ]
+      ],
+      "notes": "The December 16, 2024 special meeting page includes the swear-in ceremony for Maika Llorens Gulati as Councilmember District 1, which provides the first explicit service-start boundary for the current District 1 term."
     },
     {
       "id": "seatservice-eli-hill-d2-current",
@@ -567,13 +583,16 @@
       "service_type": "elected",
       "institution_id": "inst-san-rafael-city-council",
       "election_id": "election-2024-11-05-san-rafael-council-district-4-general",
+      "started_at": "2024-12-16",
       "observed_at": "2026-04-11",
       "status": "current",
       "evidence_record_ids": [
+        "record-2024-12-16-san-rafael-city-council-special-page",
         "record-san-rafael-elected-officials-2026-04-11",
         "record-san-rafael-city-council-page-2026-04-11",
         "record-san-rafael-november-5-2024-election-page"
-      ]
+      ],
+      "notes": "The December 16, 2024 special meeting page includes the swear-in ceremony for Rachel Kertz as Councilmember District 4, which provides the first explicit service-start boundary for the current District 4 term."
     }
   ],
   "claim_candidates": [

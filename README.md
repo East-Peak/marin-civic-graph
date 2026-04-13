@@ -148,6 +148,7 @@ Start narrow:
 - [San Rafael City Campaign Form 460 Schedule Extract](./data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json)
 - [Campaign Finance Sample Basket Bundle](./data/normalized/campaign-finance-sample-basket-01/bundle-01.json)
 - [Campaign Finance Form 803 Slice Bundle](./data/normalized/campaign-finance-form-803-slice-01/bundle-01.json)
+- [San Rafael Officeholder Disclosure Bundle](./data/normalized/san-rafael-officeholder-disclosures-01/bundle-01.json)
 - [San Rafael City Campaign Evidence Record Bundle](./data/normalized/san-rafael-city-campaign-records-01/bundle-01.json)
 - [San Rafael City Campaign Actor Supplement Bundle](./data/normalized/san-rafael-city-campaign-actors-01/bundle-01.json)
 - [Canonical Issue Seed Bundle](./data/normalized/canonical-issues-01.json)
@@ -182,6 +183,7 @@ Start narrow:
 - [Case Study 01 Extractor](./scripts/extract_case_study_01_bundle.py)
 - [San Rafael Form 803 Capture Workflow](./scripts/capture_san_rafael_form803.py)
 - [San Rafael Form 700 Backfill Workflow](./scripts/capture_san_rafael_form700_backfill.py)
+- [San Rafael Officeholder Disclosure Normalizer](./scripts/normalize_san_rafael_officeholder_disclosures.py)
 - [San Rafael Election Page Discovery Helpers](./scripts/san_rafael_election_pages.py)
 - [San Rafael Election Page Capture Workflow](./scripts/capture_san_rafael_election_pages.py)
 - [San Rafael City Council Archive Capture Workflow](./scripts/capture_san_rafael_city_council_archive.py)
@@ -213,10 +215,11 @@ This repo started as a planning workspace and now includes the first live implem
   - projection builder that narrows bundle-local JSON into one graph envelope
   - JSONL node/edge projection plus a generated Cypher loader output under [data/projected](./data/projected/README.md)
   - smoke checks that prove actor, seat-service, filing, money, decision, record, and validation continuity end to end
-  - current graph-v1 projection totals: `1390` nodes and `4975` edges
   - evidence completeness is now backed by a dedicated San Rafael city-side campaign evidence-record bundle that promotes OCR/PDF/folder artifacts already referenced from filings, money flows, validation checks, and the narrow actor supplement
   - a narrow actor and issue supplement now lands `8` conservative campaign actors and `3` canonical issues without widening into discovery-stage review material
   - the first breadth-sprint council slice now adds `263` citywide `Meeting` nodes and `264` council `Record` nodes backed by captured meeting pages
+  - the elected-disclosure breadth slice now adds `9` current-officeholder Form `700` filings and `9` `EconomicInterestDisclosure` nodes backed by the public NetFile export and explicit current `SeatService` start dates
+  - current graph-v1 projection totals: `1410` nodes and `5082` edges
   - the current projection report still shows `missing_target:Actor = 147`; `Issue` and `Record` completeness gaps are no longer part of graph-v1
   - the first live local Neo4j load and query pass has been run successfully against the projected graph, proving end-to-end continuity for actor, seat-service, filing, money, decision, issue, and validation queries
 - first normalized legal bundle now exists as `legal-precedent-01`:

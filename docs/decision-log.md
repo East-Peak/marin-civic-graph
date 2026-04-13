@@ -51,6 +51,11 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
   - Do not pretend the citywide decision timeline is solved yet; agenda-item, decision, and vote extraction remain a second pass on the captured meeting pages and linked minutes.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-san-rafael-council-breadth-slice-should-start-with-meeting-page-backed-meeting-and-record-nodes.md`
 
+- **The elected-disclosure breadth slice should stay narrow and current-service-backed**
+  - Use the San Rafael Form `700` export as the evidence surface, but only promote filings that resolve cleanly to current canonical officeholders and explicit current `SeatService` start dates.
+  - Defer pre-current-term rows and broad staff / commission disclosure import until older seat-service lineage is modeled.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-san-rafael-form700-officeholder-continuity-should-stay-narrow.md`
+
 - **Active projects need a repo-local running decision index**
   - Keep a compact `docs/decision-log.md` in the repo, with detailed rationale still living in workspace decisions.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-active-projects-need-repo-local-decision-log.md`

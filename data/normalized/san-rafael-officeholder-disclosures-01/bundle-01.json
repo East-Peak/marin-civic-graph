@@ -1,0 +1,428 @@
+{
+  "case_study_id": "san-rafael-officeholder-disclosures-01",
+  "bundle_id": "san-rafael-officeholder-disclosures-01__bundle-01",
+  "status": "current_officeholder_continuity_built",
+  "generated_at": "2026-04-13T00:01:20Z",
+  "scope": [
+    "Current San Rafael elected officeholder Form 700 continuity only",
+    "Current seat-service joins only where the filing date falls inside an explicit current service window",
+    "Export-backed filing and EconomicInterestDisclosure objects without broad staff or commission import",
+    "No pre-current-term mapping until older San Rafael seat-service history is modeled"
+  ],
+  "record_refs": [
+    {
+      "id": "record-san-rafael-form700-portal-2026-04-12",
+      "record_class": "financial_record",
+      "record_type": "disclosure_portal",
+      "source_id": "san-rafael-sei-netfile-portal",
+      "artifact_path": "data/raw/san-rafael-sei-netfile-portal/2026-04-12/source.html"
+    },
+    {
+      "id": "record-san-rafael-form700-export-2026-04-12",
+      "record_class": "financial_record",
+      "record_type": "form_700_export",
+      "source_id": "san-rafael-sei-netfile-portal",
+      "artifact_path": "data/raw/san-rafael-sei-netfile-portal/2026-04-12/form700-700-filers-export.xls"
+    }
+  ],
+  "filing_candidates": [
+    {
+      "id": "filing-san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-eli-hill",
+      "official_seat_id": "seat-san-rafael-city-council-district-2",
+      "official_seat_service_id": "seatservice-eli-hill-d2-current",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2023-03-30",
+      "status": "export_inventory_backed",
+      "source_filer_name": "Hill, Elias",
+      "position_title": "City Council Member",
+      "department_name": "City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council",
+      "base_filing_key": "san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2023-04-03-bushey-maribeth-annual-city-council-member-city-council",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-maribeth-bushey",
+      "official_seat_id": "seat-san-rafael-city-council-district-3",
+      "official_seat_service_id": "seatservice-maribeth-bushey-d3-current",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2023-04-03",
+      "status": "export_inventory_backed",
+      "source_filer_name": "Bushey, Maribeth",
+      "position_title": "City Council Member",
+      "department_name": "City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2023-04-03-bushey-maribeth-annual-city-council-member-city-council",
+      "base_filing_key": "san-rafael-form700-2023-04-03-bushey-maribeth-annual-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-eli-hill",
+      "official_seat_id": "seat-san-rafael-city-council-district-2",
+      "official_seat_service_id": "seatservice-eli-hill-d2-current",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2024-04-01",
+      "status": "export_inventory_backed",
+      "source_filer_name": "Hill, Elias",
+      "position_title": "City Council Member",
+      "department_name": "City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council",
+      "base_filing_key": "san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2024-04-02-bushey-maribeth-annual-city-council-member-city-council",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-maribeth-bushey",
+      "official_seat_id": "seat-san-rafael-city-council-district-3",
+      "official_seat_service_id": "seatservice-maribeth-bushey-d3-current",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2024-04-02",
+      "status": "export_inventory_backed",
+      "source_filer_name": "Bushey, Maribeth",
+      "position_title": "City Council Member",
+      "department_name": "City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2024-04-02-bushey-maribeth-annual-city-council-member-city-council",
+      "base_filing_key": "san-rafael-form700-2024-04-02-bushey-maribeth-annual-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2025-03-23-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-rachel-kertz",
+      "official_seat_id": "seat-san-rafael-city-council-district-4",
+      "official_seat_service_id": "seatservice-rachel-kertz-d4-current",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2025-03-23",
+      "status": "export_inventory_backed",
+      "source_filer_name": "Kertz, Rachel",
+      "position_title": "City Council Member, Alternate",
+      "department_name": "City Council, Sanitation District",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2025-03-23-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "base_filing_key": "san-rafael-form700-2025-03-23-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2025-03-28-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-maika-llorens-gulati",
+      "official_seat_id": "seat-san-rafael-city-council-district-1",
+      "official_seat_service_id": "seatservice-maika-llorens-gulati-d1-current",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2025-03-28",
+      "status": "export_inventory_backed",
+      "source_filer_name": "Llorens Gulati, Maika",
+      "position_title": "City Council Member, Board Member",
+      "department_name": "City Council, Marin Clean Energy",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2025-03-28-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "base_filing_key": "san-rafael-form700-2025-03-28-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-kate-colin",
+      "official_seat_id": "seat-san-rafael-mayor-at-large",
+      "official_seat_service_id": "seatservice-kate-colin-mayor-current",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2025-03-30",
+      "status": "export_inventory_backed",
+      "source_filer_name": "Colin, Catherine",
+      "position_title": "Mayor",
+      "department_name": "City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council",
+      "base_filing_key": "san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2025-03-31-bushey-maribeth-annual-city-council-member-city-council",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-maribeth-bushey",
+      "official_seat_id": "seat-san-rafael-city-council-district-3",
+      "official_seat_service_id": "seatservice-maribeth-bushey-d3-current",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2025-03-31",
+      "status": "export_inventory_backed",
+      "source_filer_name": "Bushey, Maribeth",
+      "position_title": "City Council Member",
+      "department_name": "City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2025-03-31-bushey-maribeth-annual-city-council-member-city-council",
+      "base_filing_key": "san-rafael-form700-2025-03-31-bushey-maribeth-annual-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "filing-san-rafael-form700-2025-03-31-hill-elias-annual-city-council-member-city-council",
+      "filing_type": "form_700",
+      "official_actor_id": "actor-eli-hill",
+      "official_seat_id": "seat-san-rafael-city-council-district-2",
+      "official_seat_service_id": "seatservice-eli-hill-d2-current",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "filed_at": "2025-03-31",
+      "status": "export_inventory_backed",
+      "source_filer_name": "Hill, Elias",
+      "position_title": "City Council Member",
+      "department_name": "City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2025-03-31-hill-elias-annual-city-council-member-city-council",
+      "base_filing_key": "san-rafael-form700-2025-03-31-hill-elias-annual-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    }
+  ],
+  "economic_interest_disclosure_candidates": [
+    {
+      "id": "eid-san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council",
+      "filer_actor_id": "actor-eli-hill",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-city-council-district-2",
+      "seat_service_id": "seatservice-eli-hill-d2-current",
+      "filing_id": "filing-san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council",
+      "disclosure_type": "annual",
+      "filed_at": "2023-03-30",
+      "status": "current_officeholder_continuity",
+      "source_filer_name": "Hill, Elias",
+      "position_title": "City Council Member",
+      "department_name": "City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council",
+      "base_filing_key": "san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2023-04-03-bushey-maribeth-annual-city-council-member-city-council",
+      "filer_actor_id": "actor-maribeth-bushey",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-city-council-district-3",
+      "seat_service_id": "seatservice-maribeth-bushey-d3-current",
+      "filing_id": "filing-san-rafael-form700-2023-04-03-bushey-maribeth-annual-city-council-member-city-council",
+      "disclosure_type": "annual",
+      "filed_at": "2023-04-03",
+      "status": "current_officeholder_continuity",
+      "source_filer_name": "Bushey, Maribeth",
+      "position_title": "City Council Member",
+      "department_name": "City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2023-04-03-bushey-maribeth-annual-city-council-member-city-council",
+      "base_filing_key": "san-rafael-form700-2023-04-03-bushey-maribeth-annual-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council",
+      "filer_actor_id": "actor-eli-hill",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-city-council-district-2",
+      "seat_service_id": "seatservice-eli-hill-d2-current",
+      "filing_id": "filing-san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council",
+      "disclosure_type": "annual",
+      "filed_at": "2024-04-01",
+      "status": "current_officeholder_continuity",
+      "source_filer_name": "Hill, Elias",
+      "position_title": "City Council Member",
+      "department_name": "City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council",
+      "base_filing_key": "san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2024-04-02-bushey-maribeth-annual-city-council-member-city-council",
+      "filer_actor_id": "actor-maribeth-bushey",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-city-council-district-3",
+      "seat_service_id": "seatservice-maribeth-bushey-d3-current",
+      "filing_id": "filing-san-rafael-form700-2024-04-02-bushey-maribeth-annual-city-council-member-city-council",
+      "disclosure_type": "annual",
+      "filed_at": "2024-04-02",
+      "status": "current_officeholder_continuity",
+      "source_filer_name": "Bushey, Maribeth",
+      "position_title": "City Council Member",
+      "department_name": "City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2024-04-02-bushey-maribeth-annual-city-council-member-city-council",
+      "base_filing_key": "san-rafael-form700-2024-04-02-bushey-maribeth-annual-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2025-03-23-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "filer_actor_id": "actor-rachel-kertz",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-city-council-district-4",
+      "seat_service_id": "seatservice-rachel-kertz-d4-current",
+      "filing_id": "filing-san-rafael-form700-2025-03-23-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "disclosure_type": "annual",
+      "filed_at": "2025-03-23",
+      "status": "current_officeholder_continuity",
+      "source_filer_name": "Kertz, Rachel",
+      "position_title": "City Council Member, Alternate",
+      "department_name": "City Council, Sanitation District",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2025-03-23-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "base_filing_key": "san-rafael-form700-2025-03-23-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2025-03-28-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "filer_actor_id": "actor-maika-llorens-gulati",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-city-council-district-1",
+      "seat_service_id": "seatservice-maika-llorens-gulati-d1-current",
+      "filing_id": "filing-san-rafael-form700-2025-03-28-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "disclosure_type": "annual",
+      "filed_at": "2025-03-28",
+      "status": "current_officeholder_continuity",
+      "source_filer_name": "Llorens Gulati, Maika",
+      "position_title": "City Council Member, Board Member",
+      "department_name": "City Council, Marin Clean Energy",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2025-03-28-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "base_filing_key": "san-rafael-form700-2025-03-28-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council",
+      "filer_actor_id": "actor-kate-colin",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-mayor-at-large",
+      "seat_service_id": "seatservice-kate-colin-mayor-current",
+      "filing_id": "filing-san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council",
+      "disclosure_type": "annual",
+      "filed_at": "2025-03-30",
+      "status": "current_officeholder_continuity",
+      "source_filer_name": "Colin, Catherine",
+      "position_title": "Mayor",
+      "department_name": "City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council",
+      "base_filing_key": "san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2025-03-31-bushey-maribeth-annual-city-council-member-city-council",
+      "filer_actor_id": "actor-maribeth-bushey",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-city-council-district-3",
+      "seat_service_id": "seatservice-maribeth-bushey-d3-current",
+      "filing_id": "filing-san-rafael-form700-2025-03-31-bushey-maribeth-annual-city-council-member-city-council",
+      "disclosure_type": "annual",
+      "filed_at": "2025-03-31",
+      "status": "current_officeholder_continuity",
+      "source_filer_name": "Bushey, Maribeth",
+      "position_title": "City Council Member",
+      "department_name": "City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2025-03-31-bushey-maribeth-annual-city-council-member-city-council",
+      "base_filing_key": "san-rafael-form700-2025-03-31-bushey-maribeth-annual-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    },
+    {
+      "id": "eid-san-rafael-form700-2025-03-31-hill-elias-annual-city-council-member-city-council",
+      "filer_actor_id": "actor-eli-hill",
+      "filing_institution_id": "inst-city-of-san-rafael",
+      "seat_id": "seat-san-rafael-city-council-district-2",
+      "seat_service_id": "seatservice-eli-hill-d2-current",
+      "filing_id": "filing-san-rafael-form700-2025-03-31-hill-elias-annual-city-council-member-city-council",
+      "disclosure_type": "annual",
+      "filed_at": "2025-03-31",
+      "status": "current_officeholder_continuity",
+      "source_filer_name": "Hill, Elias",
+      "position_title": "City Council Member",
+      "department_name": "City Council",
+      "statement_type": "Annual",
+      "document_link_count": 0,
+      "record_locator": "san-rafael-form700-2025-03-31-hill-elias-annual-city-council-member-city-council",
+      "base_filing_key": "san-rafael-form700-2025-03-31-hill-elias-annual-city-council-member-city-council",
+      "evidence_record_ids": [
+        "record-san-rafael-form700-export-2026-04-12"
+      ]
+    }
+  ],
+  "summary": {
+    "export_wave_01_row_count": 1078,
+    "visible_archive_start": "2018-07-02",
+    "visible_archive_end": "2026-04-08",
+    "promoted_filing_count": 9,
+    "promoted_disclosure_count": 9,
+    "promoted_actor_count": 5,
+    "per_actor_filing_counts": {
+      "actor-eli-hill": 3,
+      "actor-kate-colin": 1,
+      "actor-maika-llorens-gulati": 1,
+      "actor-maribeth-bushey": 3,
+      "actor-rachel-kertz": 1
+    }
+  },
+  "open_questions": [
+    {
+      "id": "OQ-034",
+      "status": "watch",
+      "question": "How should pre-current-term Form 700 rows for current San Rafael officeholders map to historical seat services once older city-election and term-boundary lineage is modeled?"
+    }
+  ],
+  "notes": [
+    "This slice is intentionally narrower than the full Form 700 archive. It promotes only rows that resolve cleanly to existing canonical officeholders and explicit current SeatService boundaries.",
+    "The export workbook is the evidence record for this continuity layer. Direct row-level document recovery remains a separate adapter problem and is still tracked as a global watch item.",
+    "Kate Colin, Maika Llorens Gulati, and Rachel Kertz now have explicit current-term start dates because the December 16, 2024 special meeting page includes their swear-in ceremony."
+  ]
+}

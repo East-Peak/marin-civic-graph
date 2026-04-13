@@ -1,6 +1,6 @@
 {
   "projection_id": "graph-v1",
-  "generated_at": "2026-04-12T23:49:51Z",
+  "generated_at": "2026-04-13T00:01:30Z",
   "manifest_path": "/Users/tammypais/projects/marin-civic-graph/registry/import-manifest.yaml",
   "output_dir": "data/projected/graph-v1",
   "bundle_reports": [
@@ -329,6 +329,36 @@
       ]
     },
     {
+      "bundle_id": "san-rafael-officeholder-disclosures-01__bundle-01",
+      "path": "data/normalized/san-rafael-officeholder-disclosures-01/bundle-01.json",
+      "sections": [
+        {
+          "section": "record_refs",
+          "mode": "nodes",
+          "input_count": 2,
+          "imported_count": 2,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "filing_candidates",
+          "mode": "nodes",
+          "input_count": 9,
+          "imported_count": 9,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "economic_interest_disclosure_candidates",
+          "mode": "nodes",
+          "input_count": 9,
+          "imported_count": 9,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    },
+    {
       "bundle_id": "san-rafael-homelessness-01__bundle-01",
       "path": "data/normalized/san-rafael-homelessness-01/bundle-01.json",
       "sections": [
@@ -419,14 +449,15 @@
     "Candidacy": 14,
     "Committee": 16,
     "Decision": 23,
+    "EconomicInterestDisclosure": 9,
     "Election": 18,
-    "Filing": 233,
+    "Filing": 242,
     "Institution": 5,
     "Issue": 3,
     "Meeting": 283,
     "MoneyFlow": 145,
     "Place": 8,
-    "Record": 600,
+    "Record": 602,
     "Seat": 5,
     "SeatService": 5,
     "ValidationCheck": 12
@@ -442,14 +473,14 @@
     "DECIDED_AT_MEETING": 23,
     "DECIDED_BY_INSTITUTION": 23,
     "DERIVED_FROM_RECORD": 31,
-    "DISCLOSED_IN_FILING": 137,
-    "EVIDENCED_BY": 1726,
-    "FILED_BY_ACTOR": 232,
+    "DISCLOSED_IN_FILING": 146,
+    "EVIDENCED_BY": 1752,
+    "FILED_BY_ACTOR": 241,
     "FILED_BY_COMMITTEE": 232,
-    "FILED_DURING_SEAT_SERVICE": 1,
+    "FILED_DURING_SEAT_SERVICE": 19,
     "FILED_FOR_ELECTION": 232,
-    "FILED_FOR_SEAT": 1,
-    "FILED_WITH_INSTITUTION": 1,
+    "FILED_FOR_SEAT": 19,
+    "FILED_WITH_INSTITUTION": 19,
     "FILED_WITH_OFFICER": 1,
     "FOR_ELECTION": 14,
     "FOR_SEAT": 24,
@@ -457,7 +488,7 @@
     "HELD_BY_ACTOR": 5,
     "HELD_BY_INSTITUTION": 283,
     "IN_JURISDICTION": 34,
-    "OFFICIAL_FILER": 1,
+    "OFFICIAL_FILER": 10,
     "PART_OF_MEETING": 1,
     "PRIMARY_FOR_ELECTION": 16,
     "RECORD_ATTACHED_TO_RECORD": 8,
@@ -489,8 +520,8 @@
     "TO_TARGET": 106,
     "VALIDATES": 12
   },
-  "total_nodes": 1390,
-  "total_edges": 4975,
+  "total_nodes": 1410,
+  "total_edges": 5082,
   "duplicate_node_merges": 26,
   "duplicate_edge_merges": 272,
   "node_conflicts": [

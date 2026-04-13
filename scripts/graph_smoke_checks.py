@@ -63,6 +63,7 @@ def main() -> None:
         "SeatService",
         "Election",
         "Committee",
+        "EconomicInterestDisclosure",
         "Meeting",
         "AgendaItem",
         "Decision",
@@ -94,6 +95,16 @@ def main() -> None:
 
     assert_path(adjacency, "actor-kate-colin", "seatservice-kate-colin-mayor-current")
     assert_path(adjacency, "actor-kate-colin", "filing-2025-09-04-kate-colin-form-803")
+    assert_path(
+        adjacency,
+        "actor-kate-colin",
+        "eid-san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council",
+    )
+    assert_path(
+        adjacency,
+        "eid-san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council",
+        "seatservice-kate-colin-mayor-current",
+    )
     assert_path(
         adjacency,
         "filing-2025-09-04-kate-colin-form-803",

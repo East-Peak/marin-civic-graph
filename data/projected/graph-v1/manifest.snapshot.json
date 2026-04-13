@@ -267,6 +267,29 @@
       ]
     },
     {
+      "path": "data/normalized/san-rafael-officeholder-disclosures-01/bundle-01.json",
+      "sections": [
+        {
+          "name": "record_refs",
+          "mode": "nodes",
+          "node_type": "Record",
+          "promotion_state": "promoted"
+        },
+        {
+          "name": "filing_candidates",
+          "mode": "nodes",
+          "node_type": "Filing",
+          "promotion_state": "promoted"
+        },
+        {
+          "name": "economic_interest_disclosure_candidates",
+          "mode": "nodes",
+          "node_type": "EconomicInterestDisclosure",
+          "promotion_state": "promoted"
+        }
+      ]
+    },
+    {
       "path": "data/normalized/san-rafael-homelessness-01/bundle-01.json",
       "sections": [
         {
