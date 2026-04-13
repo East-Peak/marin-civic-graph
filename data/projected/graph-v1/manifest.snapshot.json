@@ -129,6 +129,35 @@
       ]
     },
     {
+      "path": "data/normalized/san-rafael-city-council-decisions-01/bundle-01.json",
+      "sections": [
+        {
+          "name": "record_refs",
+          "mode": "nodes",
+          "node_type": "Record",
+          "promotion_state": "promoted"
+        },
+        {
+          "name": "actor_candidates",
+          "mode": "nodes",
+          "node_type": "Actor",
+          "promotion_state": "promoted"
+        },
+        {
+          "name": "agenda_item_candidates",
+          "mode": "nodes",
+          "node_type": "AgendaItem",
+          "promotion_state": "promoted"
+        },
+        {
+          "name": "decision_candidates",
+          "mode": "nodes",
+          "node_type": "Decision",
+          "promotion_state": "promoted"
+        }
+      ]
+    },
+    {
       "path": "data/normalized/san-rafael-city-campaign-filings-01/bundle-01.json",
       "sections": [
         {

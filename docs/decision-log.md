@@ -56,6 +56,12 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
   - Defer pre-current-term rows and broad staff / commission disclosure import until older seat-service lineage is modeled.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-san-rafael-form700-officeholder-continuity-should-stay-narrow.md`
 
+- **The second San Rafael council breadth pass should be minutes-backed and consent-conservative**
+  - Capture the linked minutes PDFs citywide, promote minutes `Record` nodes, and extract `AgendaItem` plus `Decision` objects from those minutes rather than inventing decisions from archive metadata.
+  - For consent blocks, attach one section-level voted decision and link subitem outcomes back to it instead of fabricating standalone roll calls for every consent subitem.
+  - Skip generic minutes-derived decisions for meetings already covered by deeper San Rafael bundles, including the August 19, 2024 homelessness package and the page-backed election-record meetings.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-san-rafael-council-decision-breadth-pass-should-be-minutes-backed-and-consent-conservative.md`
+
 - **Active projects need a repo-local running decision index**
   - Keep a compact `docs/decision-log.md` in the repo, with detailed rationale still living in workspace decisions.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-active-projects-need-repo-local-decision-log.md`

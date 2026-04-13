@@ -155,7 +155,9 @@ Start narrow:
 - [San Rafael Canonical Seed Bundle](./data/normalized/canonical-seeds-san-rafael-01.json)
 - [San Rafael City Council Archive Inventory](./data/extracted/san-rafael-city-council-meetings/2026-04-11.json)
 - [San Rafael City Council Meeting Page Capture](./data/extracted/san-rafael-city-council-meeting-pages/2026-04-12.json)
+- [San Rafael City Council Minutes Capture](./data/extracted/san-rafael-city-council-minutes/2026-04-12.json)
 - [San Rafael City Council Backbone Bundle](./data/normalized/san-rafael-city-council-backbone-01/bundle-01.json)
+- [San Rafael City Council Decision Bundle](./data/normalized/san-rafael-city-council-decisions-01/bundle-01.json)
 - [Marin County BOS Archive Inventory](./data/extracted/marin-county-bos-meetings/2026-04-11.json)
 - [Marin County Campaign Finance Yearly Export Inventory](./data/extracted/marin-county-campaign-finance-yearly-exports/2026-04-11.json)
 - [San Rafael Form 700 Backfill Inventory](./data/extracted/san-rafael-sei-netfile-portal/2026-04-12.json)
@@ -188,7 +190,9 @@ Start narrow:
 - [San Rafael Election Page Capture Workflow](./scripts/capture_san_rafael_election_pages.py)
 - [San Rafael City Council Archive Capture Workflow](./scripts/capture_san_rafael_city_council_archive.py)
 - [San Rafael City Council Meeting Page Capture Workflow](./scripts/capture_san_rafael_city_council_pages.py)
+- [San Rafael City Council Minutes Capture Workflow](./scripts/capture_san_rafael_city_council_minutes.py)
 - [San Rafael City Council Backbone Normalizer](./scripts/normalize_san_rafael_city_council_backbone.py)
+- [San Rafael City Council Decision Normalizer](./scripts/normalize_san_rafael_city_council_decisions.py)
 - [San Rafael City-Side Campaign Filing Inventory Workflow](./scripts/capture_san_rafael_city_campaign_filing_inventory.py)
 - [San Rafael Election Direct Record Capture Workflow](./scripts/capture_san_rafael_election_direct_records.py)
 - [San Rafael Election Direct Record Normalizer](./scripts/normalize_san_rafael_election_direct_records.py)
@@ -218,6 +222,9 @@ This repo started as a planning workspace and now includes the first live implem
   - evidence completeness is now backed by a dedicated San Rafael city-side campaign evidence-record bundle that promotes OCR/PDF/folder artifacts already referenced from filings, money flows, validation checks, and the narrow actor supplement
   - a narrow actor and issue supplement now lands `8` conservative campaign actors and `3` canonical issues without widening into discovery-stage review material
   - the first breadth-sprint council slice now adds `263` citywide `Meeting` nodes and `264` council `Record` nodes backed by captured meeting pages
+  - the second breadth-sprint council slice now adds `220` captured minutes `Record` nodes plus a conservative citywide minutes-first decision layer with `3175` `AgendaItem` candidates and `1453` `Decision` candidates
+  - graph-v1 is now at `6050` nodes and `20177` edges, with `1472` `Decision` nodes and `2970` `AgendaItem` nodes after projection merging
+  - consent votes are now modeled conservatively: one section-level voted decision, with subitem outcomes linked back to that consent action instead of pretending each subitem had its own roll call
   - the elected-disclosure breadth slice now adds `9` current-officeholder Form `700` filings and `9` `EconomicInterestDisclosure` nodes backed by the public NetFile export and explicit current `SeatService` start dates
   - current graph-v1 projection totals: `1410` nodes and `5082` edges
   - the current projection report still shows `missing_target:Actor = 147`; `Issue` and `Record` completeness gaps are no longer part of graph-v1

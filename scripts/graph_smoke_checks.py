@@ -79,6 +79,14 @@ def main() -> None:
         raise AssertionError(
             f"Expected the San Rafael council breadth slice to lift Meeting density above 200, found {node_type_counts['Meeting']}"
         )
+    if node_type_counts["Decision"] < 500:
+        raise AssertionError(
+            f"Expected the San Rafael council decision slice to lift Decision density above 500, found {node_type_counts['Decision']}"
+        )
+    if node_type_counts["AgendaItem"] < 1000:
+        raise AssertionError(
+            f"Expected the San Rafael council decision slice to lift AgendaItem density above 1000, found {node_type_counts['AgendaItem']}"
+        )
 
     dangling_edges = [
         edge
@@ -124,6 +132,16 @@ def main() -> None:
         adjacency,
         "meeting-2026-03-16-san-rafael-city-council",
         "record-2026-03-16-san-rafael-city-council-page",
+    )
+    assert_path(
+        adjacency,
+        "meeting-2026-03-16-san-rafael-city-council",
+        "decision-2026-03-16-san-rafael-city-council-2-consent-calendar-approval",
+    )
+    assert_path(
+        adjacency,
+        "decision-2026-03-16-san-rafael-city-council-2-consent-calendar-approval",
+        "agenda-item-2026-03-16-san-rafael-city-council-2",
     )
     assert_path(
         adjacency,

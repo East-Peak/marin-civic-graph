@@ -501,16 +501,16 @@ Mirror the question here when it affects:
 
 ### OQ-033: San Rafael council decision/vote depth after citywide meeting capture
 
-- `status`: open
-- `layer`: breadth sprint / council backbone
-- `scope`: `san-rafael-city-council-backbone-01`
+- `status`: watch
+- `layer`: breadth sprint / council decisions
+- `scope`: `san-rafael-city-council-decisions-01`
 - `source refs`:
-  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-council-backbone-01/bundle-01.json)
-  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-council-meeting-pages/2026-04-12.json)
+  - [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-council-minutes/2026-04-12.json)
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-council-decisions-01/bundle-01.json)
   - [report.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/report.json)
-- `question`: What is the clean second-pass extraction path for agenda items, decisions, and votes across the now-captured San Rafael City Council meeting-page corpus?
-- `why it matters`: The first breadth-sprint council slice now gives the graph a real citywide meeting and evidence-record backbone, but the fixed query pack still needs deeper decision and vote extraction before the council timeline is truly citywide.
-- `resolution note`: Not resolved yet. The current bundle intentionally stops at meeting-page-backed `Meeting` and `Record` objects plus linked packet/minutes/video URLs. The next council deepening pass should parse linked minutes and page-backed agenda content rather than inventing decision nodes from archive metadata alone.
+- `question`: When should the citywide San Rafael council layer graduate from minutes-backed agenda items and decisions into packet-level record splitting or stricter vote provenance?
+- `why it matters`: The graph now has a real citywide meeting, minutes-record, agenda-item, and decision layer, but complex consent blocks and multi-resolution items still rely on minutes-first heuristics rather than on packet-level object boundaries.
+- `resolution note`: Narrowed materially. The second breadth-sprint council pass now captures `220` minutes PDFs, promotes `3175` `AgendaItem` candidates and `1453` `Decision` candidates, and raises graph-v1 to `6050` nodes / `20177` edges. The remaining question is no longer whether citywide decision extraction exists; it is when packet/staff-report parsing should replace or refine the current conservative minutes-first layer for the hardest item-boundary cases.
 
 ### OQ-034: San Rafael pre-current-term officeholder disclosure mapping
 

@@ -1,6 +1,6 @@
 {
   "projection_id": "graph-v1",
-  "generated_at": "2026-04-13T00:01:30Z",
+  "generated_at": "2026-04-13T01:09:51Z",
   "manifest_path": "/Users/tammypais/projects/marin-civic-graph/registry/import-manifest.yaml",
   "output_dir": "data/projected/graph-v1",
   "bundle_reports": [
@@ -143,6 +143,44 @@
           "mode": "nodes",
           "input_count": 263,
           "imported_count": 263,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    },
+    {
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "path": "data/normalized/san-rafael-city-council-decisions-01/bundle-01.json",
+      "sections": [
+        {
+          "section": "record_refs",
+          "mode": "nodes",
+          "input_count": 222,
+          "imported_count": 222,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "actor_candidates",
+          "mode": "nodes",
+          "input_count": 2,
+          "imported_count": 2,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "agenda_item_candidates",
+          "mode": "nodes",
+          "input_count": 3175,
+          "imported_count": 3175,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "decision_candidates",
+          "mode": "nodes",
+          "input_count": 1453,
+          "imported_count": 1453,
           "skipped_count": 0,
           "skip_reasons": {}
         }
@@ -444,11 +482,11 @@
     }
   ],
   "node_type_counts": {
-    "Actor": 19,
-    "AgendaItem": 1,
+    "Actor": 21,
+    "AgendaItem": 2970,
     "Candidacy": 14,
     "Committee": 16,
-    "Decision": 23,
+    "Decision": 1472,
     "EconomicInterestDisclosure": 9,
     "Election": 18,
     "Filing": 242,
@@ -457,24 +495,24 @@
     "Meeting": 283,
     "MoneyFlow": 145,
     "Place": 8,
-    "Record": 602,
+    "Record": 822,
     "Seat": 5,
     "SeatService": 5,
     "ValidationCheck": 12
   },
   "edge_type_counts": {
-    "ABOUT_AGENDA_ITEM": 2,
+    "ABOUT_AGENDA_ITEM": 1451,
     "BELONGS_TO_INSTITUTION": 5,
     "CANDIDATE_ACTOR": 14,
-    "CAST_VOTE_ON": 10,
+    "CAST_VOTE_ON": 2822,
     "COMMITTEE_ACTOR": 2,
     "CONTROLLED_BY_ACTOR": 14,
     "CONTROLLED_BY_COMMITTEE": 14,
-    "DECIDED_AT_MEETING": 23,
-    "DECIDED_BY_INSTITUTION": 23,
+    "DECIDED_AT_MEETING": 1472,
+    "DECIDED_BY_INSTITUTION": 1472,
     "DERIVED_FROM_RECORD": 31,
     "DISCLOSED_IN_FILING": 146,
-    "EVIDENCED_BY": 1752,
+    "EVIDENCED_BY": 6174,
     "FILED_BY_ACTOR": 241,
     "FILED_BY_COMMITTEE": 232,
     "FILED_DURING_SEAT_SERVICE": 19,
@@ -489,7 +527,7 @@
     "HELD_BY_INSTITUTION": 283,
     "IN_JURISDICTION": 34,
     "OFFICIAL_FILER": 10,
-    "PART_OF_MEETING": 1,
+    "PART_OF_MEETING": 2970,
     "PRIMARY_FOR_ELECTION": 16,
     "RECORD_ATTACHED_TO_RECORD": 8,
     "RECORD_AUTHORIZES_DECISION": 1,
@@ -499,12 +537,12 @@
     "RELATES_TO_ACTOR": 249,
     "RELATES_TO_AGENDA_ITEM": 10,
     "RELATES_TO_COMMITTEE": 268,
-    "RELATES_TO_DECISION": 42,
+    "RELATES_TO_DECISION": 369,
     "RELATES_TO_ELECTION": 313,
     "RELATES_TO_FILING": 9,
     "RELATES_TO_INSTITUTION": 4,
     "RELATES_TO_ISSUE": 20,
-    "RELATES_TO_MEETING": 306,
+    "RELATES_TO_MEETING": 524,
     "RELATES_TO_MONEY_FLOW": 4,
     "RELATES_TO_PLACE": 11,
     "RELATES_TO_RECORD": 238,
@@ -520,10 +558,10 @@
     "TO_TARGET": 106,
     "VALIDATES": 12
   },
-  "total_nodes": 1410,
-  "total_edges": 5082,
-  "duplicate_node_merges": 26,
-  "duplicate_edge_merges": 272,
+  "total_nodes": 6050,
+  "total_edges": 20177,
+  "duplicate_node_merges": 238,
+  "duplicate_edge_merges": 725,
   "node_conflicts": [
     {
       "id": "record-2023-05-08-san-rafael-city-council-special-page",
@@ -602,6 +640,1541 @@
       ]
     },
     {
+      "id": "record-2023-05-08-san-rafael-city-council-special-minutes",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "source_url",
+        "line_count"
+      ]
+    },
+    {
+      "id": "record-2025-03-17-san-rafael-city-council-special-minutes",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "line_count"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-01-22-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-02-04-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-02-19-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-03-04-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-03-18-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-04-02-san-rafael-city-council-4",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-04-02-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-04-15-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-05-06-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-05-20-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-06-03-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-06-03-san-rafael-city-council-2",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-06-03-san-rafael-city-council-3",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-06-03-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-06-17-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-07-15-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-08-05-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-08-19-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-09-03-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-09-16-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-10-07-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-10-21-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-11-04-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-11-18-san-rafael-city-council-2",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-11-18-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-12-02-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-12-16-san-rafael-city-council-4",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-12-16-san-rafael-city-council-4c",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2019-12-16-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-01-21-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-02-03-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-02-18-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-03-02-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-03-23-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-04-06-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-04-20-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-05-04-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-05-18-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-06-01-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-07-06-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-07-20-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-08-03-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-08-17-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-09-08-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-09-21-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-10-05-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-10-19-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-11-02-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-11-16-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2020-12-21-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-01-19-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-02-01-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-02-01-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-02-16-san-rafael-city-council-6i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-02-16-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-03-01-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-03-15-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-04-05-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-04-19-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-05-03-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-05-17-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-06-07-san-rafael-city-council-5i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-06-07-san-rafael-city-council-5i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-06-07-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-06-21-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-07-06-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-07-19-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-08-02-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-08-16-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-09-13-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-09-20-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-10-04-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-10-18-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-11-01-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-11-15-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-12-06-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2021-12-20-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-01-18-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-02-07-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-02-22-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-03-07-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-03-21-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-04-04-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-04-18-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-05-02-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-05-16-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-06-06-san-rafael-city-council-5i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-06-06-san-rafael-city-council-5i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-06-06-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-06-21-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-07-05-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-07-18-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-08-01-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-09-06-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-09-19-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-10-03-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-10-17-san-rafael-city-council-4i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-10-17-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-11-07-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-11-21-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-12-05-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2022-12-19-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-01-17-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-02-06-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-02-21-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-03-06-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-03-20-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-04-03-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-04-17-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-05-01-san-rafael-city-council-4i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-05-01-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-05-15-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-06-05-san-rafael-city-council-5i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-06-05-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-06-20-san-rafael-city-council-4i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-06-20-san-rafael-city-council-4i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-06-20-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-07-10-san-rafael-city-council-special-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-07-10-san-rafael-city-council-special-2",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-07-10-san-rafael-city-council-special-3",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-07-10-san-rafael-city-council-special-4",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-07-17-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-08-21-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-08-21-san-rafael-city-council-2",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-08-21-san-rafael-city-council-4i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-08-21-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-09-05-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-09-18-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-09-18-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-10-02-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-10-02-san-rafael-city-council-2",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-10-02-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-10-02-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-10-02-san-rafael-city-council-2",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-10-16-san-rafael-city-council-special-1a",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-10-16-san-rafael-city-council-special-1a",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-10-16-san-rafael-city-council-special-1b",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-10-16-san-rafael-city-council-special-1c",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-11-06-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-11-20-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-12-04-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2023-12-18-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-01-16-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-02-05-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-02-20-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-03-04-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-03-04-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-03-18-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-04-02-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-04-02-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-04-15-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-04-15-san-rafael-city-council-2",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-04-15-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-05-06-san-rafael-city-council-4i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-05-06-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-05-20-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-06-17-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-06-17-san-rafael-city-council-2",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-06-17-san-rafael-city-council-4i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-06-17-san-rafael-city-council-4i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-06-17-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-07-15-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-07-15-san-rafael-city-council-4i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-08-19-san-rafael-city-council-special-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-09-16-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-09-16-san-rafael-city-council-4a",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-09-16-san-rafael-city-council-4b",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-09-16-san-rafael-city-council-4c",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-10-07-san-rafael-city-council-special-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-10-07-san-rafael-city-council-special-2",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-10-07-san-rafael-city-council-special-2a",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-10-07-san-rafael-city-council-special-2b",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-10-07-san-rafael-city-council-special-2c",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-12-02-san-rafael-city-council-4i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-12-02-san-rafael-city-council-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-12-02-san-rafael-city-council-2",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-12-16-san-rafael-city-council-special-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-12-16-san-rafael-city-council-special-2",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2024-12-16-san-rafael-city-council-special-4i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2025-03-17-san-rafael-city-council-special-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2025-03-17-san-rafael-city-council-special-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2025-04-07-san-rafael-city-council-special-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2025-04-07-san-rafael-city-council-special-4i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2025-04-07-san-rafael-city-council-special-4i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2025-04-21-san-rafael-city-council-special-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2025-06-02-san-rafael-city-council-4i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2025-06-02-san-rafael-city-council-4i",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2025-06-23-san-rafael-city-council-special-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "id": "agenda-item-2025-06-23-san-rafael-city-council-special-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2025-06-23-san-rafael-city-council-special-2",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2025-06-23-san-rafael-city-council-special-3",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2025-06-23-san-rafael-city-council-special-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2025-06-23-san-rafael-city-council-special-2",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2025-06-23-san-rafael-city-council-special-3",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
+      "id": "agenda-item-2026-02-11-san-rafael-city-council-special-closed-session-1",
+      "bundle_id": "san-rafael-city-council-decisions-01__bundle-01",
+      "fields": [
+        "title",
+        "heading"
+      ]
+    },
+    {
       "id": "inst-san-rafael-city-council",
       "bundle_id": "san-rafael-homelessness-01__bundle-01",
       "fields": [
@@ -616,7 +2189,32 @@
       ]
     }
   ],
-  "edge_conflicts": [],
+  "edge_conflicts": [
+    {
+      "source_id": "actor-john-gamblin",
+      "relationship_type": "CAST_VOTE_ON",
+      "target_id": "decision-2019-05-06-san-rafael-city-council-4i-resolution-adoption-14667",
+      "fields": [
+        "vote"
+      ]
+    },
+    {
+      "source_id": "actor-eli-hill",
+      "relationship_type": "CAST_VOTE_ON",
+      "target_id": "decision-2022-04-18-san-rafael-city-council-6b-motion-approval",
+      "fields": [
+        "vote"
+      ]
+    },
+    {
+      "source_id": "actor-maika-llorens-gulati",
+      "relationship_type": "CAST_VOTE_ON",
+      "target_id": "decision-2025-08-18-san-rafael-city-council-4-consent-calendar-approval",
+      "fields": [
+        "vote"
+      ]
+    }
+  ],
   "skipped_edge_reasons": {
     "missing_target:Actor": 147
   },
