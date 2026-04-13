@@ -18,6 +18,17 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **The next pivot after graph completeness should be a projected view pack**
+  - Once the graph-v1 completeness tail was closed, the highest-value next move was no longer more ingestion or more ontology. It was to make the graph emit bounded dossier-style views a product could plausibly render.
+  - The first view pack now includes:
+    - actor dossier
+    - decision dossier
+    - money overlap summary
+    - legal constraint view
+    - validation queue
+  - This keeps the next pressure test product-facing while still running entirely on the projected graph payload, without requiring a live Neo4j session or a frontend.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-first-product-facing-graph-layer-should-be-a-projected-view-pack.md`
+
 - **Row-level campaign actors should stay label-only unless they are known or repeated**
   - The first actor-completeness pass proved that the remaining misses were concentrated in `Form 460` row actors, not in the core civic spine.
   - The right fix was to tighten `extract_san_rafael_city_campaign_form460_schedules.py` so unresolved one-off row actors keep normalized label fields on `MoneyFlow` nodes, but do not emit actor edges unless they already resolve to an imported actor or recur across the schedule bundle.

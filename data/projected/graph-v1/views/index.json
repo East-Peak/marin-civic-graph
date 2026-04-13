@@ -1,0 +1,31 @@
+{
+  "generated_at": "2026-04-13T12:12:58Z",
+  "projection_dir": "data/projected/graph-v1",
+  "views": [
+    {
+      "id": "actor-kate-colin-dossier",
+      "title": "Actor dossier: Kate Colin",
+      "path": "data/projected/graph-v1/views/actor-kate-colin-dossier.json"
+    },
+    {
+      "id": "decision-resolution-15336-dossier",
+      "title": "Decision dossier: Resolution 15336",
+      "path": "data/projected/graph-v1/views/decision-resolution-15336-dossier.json"
+    },
+    {
+      "id": "money-overlap-summary",
+      "title": "Money overlap summary",
+      "path": "data/projected/graph-v1/views/money-overlap-summary.json"
+    },
+    {
+      "id": "legal-constraint-view",
+      "title": "Legal constraint view",
+      "path": "data/projected/graph-v1/views/legal-constraint-view.json"
+    },
+    {
+      "id": "validation-queue",
+      "title": "Validation queue",
+      "path": "data/projected/graph-v1/views/validation-queue.json"
+    }
+  ]
+}

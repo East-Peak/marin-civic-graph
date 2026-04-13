@@ -1,0 +1,1725 @@
+{
+  "id": "validation-queue",
+  "title": "Validation queue",
+  "generated_at": "2026-04-13T12:12:58Z",
+  "metrics": {
+    "validation_check_count": 16,
+    "by_status": {
+      "extraction_gap": 2,
+      "source_inconsistency": 2,
+      "reconciled": 12
+    },
+    "by_severity": {
+      "warn": 4,
+      "info": 12
+    }
+  },
+  "items": [
+    {
+      "check": {
+        "id": "validationcheck-filing-san-rafael-campaign-entry-33340-schedule-e-itemized-payments-reconciliation-check",
+        "node_type": "ValidationCheck",
+        "display_label": "validationcheck-filing-san-rafael-campaign-entry-33340-schedule-e-itemized-payments-reconciliation-check",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "absolute_delta_value_number": 1381.54,
+          "check_type": "reconciliation_check",
+          "confidence": "high",
+          "delta_direction": "reference_gt_measured",
+          "delta_value_number": -1381.54,
+          "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-33340",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-33340",
+            "record-san-rafael-campaign-ocr-entry-33340",
+            "record-san-rafael-campaign-pdf-entry-33340",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-33340"
+          ],
+          "measured_value_label": "extracted_itemized_payments_total",
+          "measured_value_number": 0,
+          "metric_name": "schedule_e_itemized_payments",
+          "notes": [
+            "Measured value trails the official or reference value."
+          ],
+          "reference_value_label": "reported_itemized_payments",
+          "reference_value_number": 1381.54,
+          "severity": "warn",
+          "status": "extraction_gap",
+          "subject_node_id": "filing-san-rafael-campaign-entry-33340",
+          "subject_node_type": "Filing"
+        }
+      },
+      "subject": {
+        "id": "filing-san-rafael-campaign-entry-33340",
+        "node_type": "Filing",
+        "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2021-06-30)",
+        "year": 2021,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01",
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "committee_id": "committee-kate-colin-for-mayor-2020",
+          "election_id": "election-2020-11-03-san-rafael-general",
+          "evidence_record_ids": [
+            "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+            "record-san-rafael-campaign-filing-entry-33340",
+            "record-san-rafael-campaign-ocr-entry-33340",
+            "record-san-rafael-campaign-pdf-entry-33340",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-33340"
+          ],
+          "extracted_itemized_contributions_total": 0,
+          "extracted_itemized_payments_total": 0,
+          "extracted_schedule_d_total": 0,
+          "filer_actor_id": "actor-kate-colin",
+          "filing_type": "form_460",
+          "posted_at": "2021-08-02",
+          "record_id": "record-san-rafael-campaign-filing-entry-33340",
+          "reported_itemized_payments": 1381.54,
+          "reported_monetary_contributions": 0.0,
+          "reported_payments_made": 390.54,
+          "reported_unitemized_payments": 1.0,
+          "schedule_a_row_count": 0,
+          "schedule_d_row_count": 0,
+          "schedule_e_row_count": 0,
+          "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-33340",
+          "status": "captured_from_public_folder_listing",
+          "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2021-06-30)",
+          "validation_check_ids": [
+            "validationcheck-filing-san-rafael-campaign-entry-33340-schedule-e-itemized-payments-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-33340-schedule-e-total-payments-rollup-summary-consistency-check"
+          ]
+        }
+      },
+      "derived_record": {
+        "id": "record-san-rafael-campaign-form460-schedule-extract-entry-33340",
+        "node_type": "Record",
+        "display_label": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2020 (2021-06-30)",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+          "capture_status": "derived_from_ocr_capture",
+          "entry_id": 33340,
+          "ocr_record_id": "record-san-rafael-campaign-ocr-entry-33340",
+          "record_class": "financial_record",
+          "record_type": "form_460_schedule_extract",
+          "source_filing_id": "filing-san-rafael-campaign-entry-33340",
+          "source_id": "san-rafael-city-campaign-form460-ocr",
+          "source_record_id": "record-san-rafael-campaign-filing-entry-33340",
+          "title": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2020 (2021-06-30)"
+        }
+      },
+      "status": "extraction_gap",
+      "severity": "warn",
+      "metric_name": "schedule_e_itemized_payments",
+      "measured_value_number": 0,
+      "reference_value_number": 1381.54,
+      "absolute_delta_value_number": 1381.54
+    },
+    {
+      "check": {
+        "id": "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-itemized-contributions-reconciliation-check",
+        "node_type": "ValidationCheck",
+        "display_label": "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-itemized-contributions-reconciliation-check",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "absolute_delta_value_number": 1000.0,
+          "check_type": "reconciliation_check",
+          "confidence": "high",
+          "delta_direction": "reference_gt_measured",
+          "delta_value_number": -1000.0,
+          "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37677",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37677",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37677"
+          ],
+          "measured_value_label": "extracted_itemized_contributions_total",
+          "measured_value_number": 14992.0,
+          "metric_name": "schedule_a_itemized_contributions",
+          "notes": [
+            "Measured value trails the official or reference value."
+          ],
+          "reference_value_label": "reported_itemized_contributions",
+          "reference_value_number": 15992.0,
+          "severity": "warn",
+          "status": "extraction_gap",
+          "subject_node_id": "filing-san-rafael-campaign-entry-37677",
+          "subject_node_type": "Filing"
+        }
+      },
+      "subject": {
+        "id": "filing-san-rafael-campaign-entry-37677",
+        "node_type": "Filing",
+        "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+        "year": 2024,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01",
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+          "election_id": "election-2024-11-05-san-rafael-general",
+          "evidence_record_ids": [
+            "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37677",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37677"
+          ],
+          "extracted_itemized_contributions_total": 14992.0,
+          "extracted_itemized_payments_total": 23337.66,
+          "extracted_schedule_d_total": 0,
+          "filer_actor_id": "actor-kate-colin",
+          "filing_type": "form_460",
+          "posted_at": "2024-09-26",
+          "record_id": "record-san-rafael-campaign-filing-entry-37677",
+          "reported_itemized_contributions": 15992.0,
+          "reported_itemized_payments": 23337.66,
+          "reported_monetary_contributions": 16392.0,
+          "reported_payments_made": 23394.96,
+          "reported_unitemized_contributions": 400.0,
+          "reported_unitemized_payments": 57.3,
+          "schedule_a_row_count": 48,
+          "schedule_d_row_count": 0,
+          "schedule_e_row_count": 27,
+          "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37677",
+          "status": "captured_from_public_folder_listing",
+          "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+          "validation_check_ids": [
+            "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-itemized-contributions-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-total-contributions-rollup-summary-consistency-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-itemized-payments-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-total-payments-rollup-summary-consistency-check"
+          ]
+        }
+      },
+      "derived_record": {
+        "id": "record-san-rafael-campaign-form460-schedule-extract-entry-37677",
+        "node_type": "Record",
+        "display_label": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+          "capture_status": "derived_from_ocr_capture",
+          "entry_id": 37677,
+          "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37677",
+          "record_class": "financial_record",
+          "record_type": "form_460_schedule_extract",
+          "source_filing_id": "filing-san-rafael-campaign-entry-37677",
+          "source_id": "san-rafael-city-campaign-form460-ocr",
+          "source_record_id": "record-san-rafael-campaign-filing-entry-37677",
+          "title": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection"
+        }
+      },
+      "status": "extraction_gap",
+      "severity": "warn",
+      "metric_name": "schedule_a_itemized_contributions",
+      "measured_value_number": 14992.0,
+      "reference_value_number": 15992.0,
+      "absolute_delta_value_number": 1000.0
+    },
+    {
+      "check": {
+        "id": "validationcheck-filing-san-rafael-campaign-entry-33340-schedule-e-total-payments-rollup-summary-consistency-check",
+        "node_type": "ValidationCheck",
+        "display_label": "validationcheck-filing-san-rafael-campaign-entry-33340-schedule-e-total-payments-rollup-summary-consistency-check",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "absolute_delta_value_number": 992.0,
+          "check_type": "summary_consistency_check",
+          "confidence": "high",
+          "delta_direction": "measured_gt_reference",
+          "delta_value_number": 992.0,
+          "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-33340",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-33340",
+            "record-san-rafael-campaign-ocr-entry-33340",
+            "record-san-rafael-campaign-pdf-entry-33340",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-33340"
+          ],
+          "measured_value_label": "reported_itemized_plus_unitemized_plus_interest_payments",
+          "measured_value_number": 1382.54,
+          "metric_name": "schedule_e_total_payments_rollup",
+          "notes": [
+            "Measured value exceeds the official or reference value and needs review."
+          ],
+          "reference_value_label": "reported_total_payments",
+          "reference_value_number": 390.54,
+          "severity": "warn",
+          "status": "source_inconsistency",
+          "subject_node_id": "filing-san-rafael-campaign-entry-33340",
+          "subject_node_type": "Filing"
+        }
+      },
+      "subject": {
+        "id": "filing-san-rafael-campaign-entry-33340",
+        "node_type": "Filing",
+        "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2021-06-30)",
+        "year": 2021,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01",
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "committee_id": "committee-kate-colin-for-mayor-2020",
+          "election_id": "election-2020-11-03-san-rafael-general",
+          "evidence_record_ids": [
+            "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+            "record-san-rafael-campaign-filing-entry-33340",
+            "record-san-rafael-campaign-ocr-entry-33340",
+            "record-san-rafael-campaign-pdf-entry-33340",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-33340"
+          ],
+          "extracted_itemized_contributions_total": 0,
+          "extracted_itemized_payments_total": 0,
+          "extracted_schedule_d_total": 0,
+          "filer_actor_id": "actor-kate-colin",
+          "filing_type": "form_460",
+          "posted_at": "2021-08-02",
+          "record_id": "record-san-rafael-campaign-filing-entry-33340",
+          "reported_itemized_payments": 1381.54,
+          "reported_monetary_contributions": 0.0,
+          "reported_payments_made": 390.54,
+          "reported_unitemized_payments": 1.0,
+          "schedule_a_row_count": 0,
+          "schedule_d_row_count": 0,
+          "schedule_e_row_count": 0,
+          "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-33340",
+          "status": "captured_from_public_folder_listing",
+          "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2021-06-30)",
+          "validation_check_ids": [
+            "validationcheck-filing-san-rafael-campaign-entry-33340-schedule-e-itemized-payments-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-33340-schedule-e-total-payments-rollup-summary-consistency-check"
+          ]
+        }
+      },
+      "derived_record": {
+        "id": "record-san-rafael-campaign-form460-schedule-extract-entry-33340",
+        "node_type": "Record",
+        "display_label": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2020 (2021-06-30)",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+          "capture_status": "derived_from_ocr_capture",
+          "entry_id": 33340,
+          "ocr_record_id": "record-san-rafael-campaign-ocr-entry-33340",
+          "record_class": "financial_record",
+          "record_type": "form_460_schedule_extract",
+          "source_filing_id": "filing-san-rafael-campaign-entry-33340",
+          "source_id": "san-rafael-city-campaign-form460-ocr",
+          "source_record_id": "record-san-rafael-campaign-filing-entry-33340",
+          "title": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2020 (2021-06-30)"
+        }
+      },
+      "status": "source_inconsistency",
+      "severity": "warn",
+      "metric_name": "schedule_e_total_payments_rollup",
+      "measured_value_number": 1382.54,
+      "reference_value_number": 390.54,
+      "absolute_delta_value_number": 992.0
+    },
+    {
+      "check": {
+        "id": "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-total-payments-rollup-summary-consistency-check",
+        "node_type": "ValidationCheck",
+        "display_label": "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-total-payments-rollup-summary-consistency-check",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "absolute_delta_value_number": 30.0,
+          "check_type": "summary_consistency_check",
+          "confidence": "high",
+          "delta_direction": "measured_gt_reference",
+          "delta_value_number": 30.0,
+          "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-28450",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-28450",
+            "record-san-rafael-campaign-ocr-entry-28450",
+            "record-san-rafael-campaign-pdf-entry-28450",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-28450"
+          ],
+          "measured_value_label": "reported_itemized_plus_unitemized_plus_interest_payments",
+          "measured_value_number": 31.0,
+          "metric_name": "schedule_e_total_payments_rollup",
+          "notes": [
+            "Measured value exceeds the official or reference value and needs review."
+          ],
+          "reference_value_label": "reported_total_payments",
+          "reference_value_number": 1.0,
+          "severity": "warn",
+          "status": "source_inconsistency",
+          "subject_node_id": "filing-san-rafael-campaign-entry-28450",
+          "subject_node_type": "Filing"
+        }
+      },
+      "subject": {
+        "id": "filing-san-rafael-campaign-entry-28450",
+        "node_type": "Filing",
+        "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)",
+        "year": 2020,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01",
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "committee_id": "committee-kate-colin-for-mayor-2020",
+          "election_id": "election-2020-11-03-san-rafael-general",
+          "evidence_record_ids": [
+            "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+            "record-san-rafael-campaign-filing-entry-28450",
+            "record-san-rafael-campaign-ocr-entry-28450",
+            "record-san-rafael-campaign-pdf-entry-28450",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-28450"
+          ],
+          "extracted_itemized_contributions_total": 500.0,
+          "extracted_itemized_payments_total": 1.0,
+          "extracted_schedule_d_total": 0,
+          "filer_actor_id": "actor-kate-colin",
+          "filing_type": "form_460",
+          "posted_at": "2020-01-23",
+          "record_id": "record-san-rafael-campaign-filing-entry-28450",
+          "reported_itemized_payments": 1.0,
+          "reported_payments_made": 1.0,
+          "reported_unitemized_payments": 30.0,
+          "schedule_a_row_count": 1,
+          "schedule_d_row_count": 0,
+          "schedule_e_row_count": 1,
+          "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-28450",
+          "status": "captured_from_public_folder_listing",
+          "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)",
+          "validation_check_ids": [
+            "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-itemized-payments-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-total-payments-rollup-summary-consistency-check"
+          ]
+        }
+      },
+      "derived_record": {
+        "id": "record-san-rafael-campaign-form460-schedule-extract-entry-28450",
+        "node_type": "Record",
+        "display_label": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+          "capture_status": "derived_from_ocr_capture",
+          "entry_id": 28450,
+          "ocr_record_id": "record-san-rafael-campaign-ocr-entry-28450",
+          "record_class": "financial_record",
+          "record_type": "form_460_schedule_extract",
+          "source_filing_id": "filing-san-rafael-campaign-entry-28450",
+          "source_id": "san-rafael-city-campaign-form460-ocr",
+          "source_record_id": "record-san-rafael-campaign-filing-entry-28450",
+          "title": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)"
+        }
+      },
+      "status": "source_inconsistency",
+      "severity": "warn",
+      "metric_name": "schedule_e_total_payments_rollup",
+      "measured_value_number": 31.0,
+      "reference_value_number": 1.0,
+      "absolute_delta_value_number": 30.0
+    },
+    {
+      "check": {
+        "id": "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-itemized-payments-reconciliation-check",
+        "node_type": "ValidationCheck",
+        "display_label": "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-itemized-payments-reconciliation-check",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "absolute_delta_value_number": 0.0,
+          "check_type": "reconciliation_check",
+          "confidence": "high",
+          "delta_direction": "equal",
+          "delta_value_number": 0.0,
+          "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-28450",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-28450",
+            "record-san-rafael-campaign-ocr-entry-28450",
+            "record-san-rafael-campaign-pdf-entry-28450",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-28450"
+          ],
+          "measured_value_label": "extracted_itemized_payments_total",
+          "measured_value_number": 1.0,
+          "metric_name": "schedule_e_itemized_payments",
+          "reference_value_label": "reported_itemized_payments",
+          "reference_value_number": 1.0,
+          "severity": "info",
+          "status": "reconciled",
+          "subject_node_id": "filing-san-rafael-campaign-entry-28450",
+          "subject_node_type": "Filing"
+        }
+      },
+      "subject": {
+        "id": "filing-san-rafael-campaign-entry-28450",
+        "node_type": "Filing",
+        "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)",
+        "year": 2020,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01",
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "committee_id": "committee-kate-colin-for-mayor-2020",
+          "election_id": "election-2020-11-03-san-rafael-general",
+          "evidence_record_ids": [
+            "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder",
+            "record-san-rafael-campaign-filing-entry-28450",
+            "record-san-rafael-campaign-ocr-entry-28450",
+            "record-san-rafael-campaign-pdf-entry-28450",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-28450"
+          ],
+          "extracted_itemized_contributions_total": 500.0,
+          "extracted_itemized_payments_total": 1.0,
+          "extracted_schedule_d_total": 0,
+          "filer_actor_id": "actor-kate-colin",
+          "filing_type": "form_460",
+          "posted_at": "2020-01-23",
+          "record_id": "record-san-rafael-campaign-filing-entry-28450",
+          "reported_itemized_payments": 1.0,
+          "reported_payments_made": 1.0,
+          "reported_unitemized_payments": 30.0,
+          "schedule_a_row_count": 1,
+          "schedule_d_row_count": 0,
+          "schedule_e_row_count": 1,
+          "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-28450",
+          "status": "captured_from_public_folder_listing",
+          "title": "Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)",
+          "validation_check_ids": [
+            "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-itemized-payments-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-total-payments-rollup-summary-consistency-check"
+          ]
+        }
+      },
+      "derived_record": {
+        "id": "record-san-rafael-campaign-form460-schedule-extract-entry-28450",
+        "node_type": "Record",
+        "display_label": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+          "capture_status": "derived_from_ocr_capture",
+          "entry_id": 28450,
+          "ocr_record_id": "record-san-rafael-campaign-ocr-entry-28450",
+          "record_class": "financial_record",
+          "record_type": "form_460_schedule_extract",
+          "source_filing_id": "filing-san-rafael-campaign-entry-28450",
+          "source_id": "san-rafael-city-campaign-form460-ocr",
+          "source_record_id": "record-san-rafael-campaign-filing-entry-28450",
+          "title": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2020 (2019-12-31)"
+        }
+      },
+      "status": "reconciled",
+      "severity": "info",
+      "metric_name": "schedule_e_itemized_payments",
+      "measured_value_number": 1.0,
+      "reference_value_number": 1.0,
+      "absolute_delta_value_number": 0.0
+    },
+    {
+      "check": {
+        "id": "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-itemized-contributions-reconciliation-check",
+        "node_type": "ValidationCheck",
+        "display_label": "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-itemized-contributions-reconciliation-check",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "absolute_delta_value_number": 0.0,
+          "check_type": "reconciliation_check",
+          "confidence": "high",
+          "delta_direction": "equal",
+          "delta_value_number": 0.0,
+          "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37365",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37365",
+            "record-san-rafael-campaign-ocr-entry-37365",
+            "record-san-rafael-campaign-pdf-entry-37365",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37365"
+          ],
+          "measured_value_label": "extracted_itemized_contributions_total",
+          "measured_value_number": 6048.0,
+          "metric_name": "schedule_a_itemized_contributions",
+          "reference_value_label": "reported_itemized_contributions",
+          "reference_value_number": 6048.0,
+          "severity": "info",
+          "status": "reconciled",
+          "subject_node_id": "filing-san-rafael-campaign-entry-37365",
+          "subject_node_type": "Filing"
+        }
+      },
+      "subject": {
+        "id": "filing-san-rafael-campaign-entry-37365",
+        "node_type": "Filing",
+        "display_label": "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+        "year": 2024,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01",
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+          "election_id": "election-2024-11-05-san-rafael-general",
+          "evidence_record_ids": [
+            "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder",
+            "record-san-rafael-campaign-filing-entry-37365",
+            "record-san-rafael-campaign-ocr-entry-37365",
+            "record-san-rafael-campaign-pdf-entry-37365",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37365"
+          ],
+          "extracted_itemized_contributions_total": 6048.0,
+          "extracted_itemized_payments_total": 0,
+          "extracted_schedule_d_total": 0,
+          "filer_actor_id": "actor-rachel-kertz",
+          "filing_type": "form_460",
+          "posted_at": "2024-07-31",
+          "record_id": "record-san-rafael-campaign-filing-entry-37365",
+          "reported_itemized_contributions": 6048.0,
+          "reported_itemized_payments": 0.0,
+          "reported_monetary_contributions": 6915.0,
+          "reported_payments_made": 183.29,
+          "reported_unitemized_contributions": 867.0,
+          "reported_unitemized_payments": 183.29,
+          "schedule_a_row_count": 30,
+          "schedule_d_row_count": 0,
+          "schedule_e_row_count": 0,
+          "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37365",
+          "status": "captured_from_public_folder_listing",
+          "title": "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+          "validation_check_ids": [
+            "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-itemized-contributions-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-total-contributions-rollup-summary-consistency-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-itemized-payments-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-total-payments-rollup-summary-consistency-check"
+          ]
+        }
+      },
+      "derived_record": {
+        "id": "record-san-rafael-campaign-form460-schedule-extract-entry-37365",
+        "node_type": "Record",
+        "display_label": "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+          "capture_status": "derived_from_ocr_capture",
+          "entry_id": 37365,
+          "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37365",
+          "record_class": "financial_record",
+          "record_type": "form_460_schedule_extract",
+          "source_filing_id": "filing-san-rafael-campaign-entry-37365",
+          "source_id": "san-rafael-city-campaign-form460-ocr",
+          "source_record_id": "record-san-rafael-campaign-filing-entry-37365",
+          "title": "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024 (06-30-24)"
+        }
+      },
+      "status": "reconciled",
+      "severity": "info",
+      "metric_name": "schedule_a_itemized_contributions",
+      "measured_value_number": 6048.0,
+      "reference_value_number": 6048.0,
+      "absolute_delta_value_number": 0.0
+    },
+    {
+      "check": {
+        "id": "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-total-contributions-rollup-summary-consistency-check",
+        "node_type": "ValidationCheck",
+        "display_label": "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-total-contributions-rollup-summary-consistency-check",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "absolute_delta_value_number": 0.0,
+          "check_type": "summary_consistency_check",
+          "confidence": "high",
+          "delta_direction": "equal",
+          "delta_value_number": 0.0,
+          "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37365",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37365",
+            "record-san-rafael-campaign-ocr-entry-37365",
+            "record-san-rafael-campaign-pdf-entry-37365",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37365"
+          ],
+          "measured_value_label": "reported_itemized_plus_unitemized_contributions",
+          "measured_value_number": 6915.0,
+          "metric_name": "schedule_a_total_contributions_rollup",
+          "reference_value_label": "reported_total_contributions",
+          "reference_value_number": 6915.0,
+          "severity": "info",
+          "status": "reconciled",
+          "subject_node_id": "filing-san-rafael-campaign-entry-37365",
+          "subject_node_type": "Filing"
+        }
+      },
+      "subject": {
+        "id": "filing-san-rafael-campaign-entry-37365",
+        "node_type": "Filing",
+        "display_label": "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+        "year": 2024,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01",
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+          "election_id": "election-2024-11-05-san-rafael-general",
+          "evidence_record_ids": [
+            "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder",
+            "record-san-rafael-campaign-filing-entry-37365",
+            "record-san-rafael-campaign-ocr-entry-37365",
+            "record-san-rafael-campaign-pdf-entry-37365",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37365"
+          ],
+          "extracted_itemized_contributions_total": 6048.0,
+          "extracted_itemized_payments_total": 0,
+          "extracted_schedule_d_total": 0,
+          "filer_actor_id": "actor-rachel-kertz",
+          "filing_type": "form_460",
+          "posted_at": "2024-07-31",
+          "record_id": "record-san-rafael-campaign-filing-entry-37365",
+          "reported_itemized_contributions": 6048.0,
+          "reported_itemized_payments": 0.0,
+          "reported_monetary_contributions": 6915.0,
+          "reported_payments_made": 183.29,
+          "reported_unitemized_contributions": 867.0,
+          "reported_unitemized_payments": 183.29,
+          "schedule_a_row_count": 30,
+          "schedule_d_row_count": 0,
+          "schedule_e_row_count": 0,
+          "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37365",
+          "status": "captured_from_public_folder_listing",
+          "title": "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+          "validation_check_ids": [
+            "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-itemized-contributions-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-total-contributions-rollup-summary-consistency-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-itemized-payments-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-total-payments-rollup-summary-consistency-check"
+          ]
+        }
+      },
+      "derived_record": {
+        "id": "record-san-rafael-campaign-form460-schedule-extract-entry-37365",
+        "node_type": "Record",
+        "display_label": "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+          "capture_status": "derived_from_ocr_capture",
+          "entry_id": 37365,
+          "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37365",
+          "record_class": "financial_record",
+          "record_type": "form_460_schedule_extract",
+          "source_filing_id": "filing-san-rafael-campaign-entry-37365",
+          "source_id": "san-rafael-city-campaign-form460-ocr",
+          "source_record_id": "record-san-rafael-campaign-filing-entry-37365",
+          "title": "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024 (06-30-24)"
+        }
+      },
+      "status": "reconciled",
+      "severity": "info",
+      "metric_name": "schedule_a_total_contributions_rollup",
+      "measured_value_number": 6915.0,
+      "reference_value_number": 6915.0,
+      "absolute_delta_value_number": 0.0
+    },
+    {
+      "check": {
+        "id": "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-itemized-payments-reconciliation-check",
+        "node_type": "ValidationCheck",
+        "display_label": "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-itemized-payments-reconciliation-check",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "absolute_delta_value_number": 0.0,
+          "check_type": "reconciliation_check",
+          "confidence": "high",
+          "delta_direction": "equal",
+          "delta_value_number": 0.0,
+          "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37365",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37365",
+            "record-san-rafael-campaign-ocr-entry-37365",
+            "record-san-rafael-campaign-pdf-entry-37365",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37365"
+          ],
+          "measured_value_label": "extracted_itemized_payments_total",
+          "measured_value_number": 0,
+          "metric_name": "schedule_e_itemized_payments",
+          "reference_value_label": "reported_itemized_payments",
+          "reference_value_number": 0.0,
+          "severity": "info",
+          "status": "reconciled",
+          "subject_node_id": "filing-san-rafael-campaign-entry-37365",
+          "subject_node_type": "Filing"
+        }
+      },
+      "subject": {
+        "id": "filing-san-rafael-campaign-entry-37365",
+        "node_type": "Filing",
+        "display_label": "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+        "year": 2024,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01",
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+          "election_id": "election-2024-11-05-san-rafael-general",
+          "evidence_record_ids": [
+            "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder",
+            "record-san-rafael-campaign-filing-entry-37365",
+            "record-san-rafael-campaign-ocr-entry-37365",
+            "record-san-rafael-campaign-pdf-entry-37365",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37365"
+          ],
+          "extracted_itemized_contributions_total": 6048.0,
+          "extracted_itemized_payments_total": 0,
+          "extracted_schedule_d_total": 0,
+          "filer_actor_id": "actor-rachel-kertz",
+          "filing_type": "form_460",
+          "posted_at": "2024-07-31",
+          "record_id": "record-san-rafael-campaign-filing-entry-37365",
+          "reported_itemized_contributions": 6048.0,
+          "reported_itemized_payments": 0.0,
+          "reported_monetary_contributions": 6915.0,
+          "reported_payments_made": 183.29,
+          "reported_unitemized_contributions": 867.0,
+          "reported_unitemized_payments": 183.29,
+          "schedule_a_row_count": 30,
+          "schedule_d_row_count": 0,
+          "schedule_e_row_count": 0,
+          "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37365",
+          "status": "captured_from_public_folder_listing",
+          "title": "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+          "validation_check_ids": [
+            "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-itemized-contributions-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-total-contributions-rollup-summary-consistency-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-itemized-payments-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-total-payments-rollup-summary-consistency-check"
+          ]
+        }
+      },
+      "derived_record": {
+        "id": "record-san-rafael-campaign-form460-schedule-extract-entry-37365",
+        "node_type": "Record",
+        "display_label": "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+          "capture_status": "derived_from_ocr_capture",
+          "entry_id": 37365,
+          "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37365",
+          "record_class": "financial_record",
+          "record_type": "form_460_schedule_extract",
+          "source_filing_id": "filing-san-rafael-campaign-entry-37365",
+          "source_id": "san-rafael-city-campaign-form460-ocr",
+          "source_record_id": "record-san-rafael-campaign-filing-entry-37365",
+          "title": "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024 (06-30-24)"
+        }
+      },
+      "status": "reconciled",
+      "severity": "info",
+      "metric_name": "schedule_e_itemized_payments",
+      "measured_value_number": 0,
+      "reference_value_number": 0.0,
+      "absolute_delta_value_number": 0.0
+    },
+    {
+      "check": {
+        "id": "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-total-payments-rollup-summary-consistency-check",
+        "node_type": "ValidationCheck",
+        "display_label": "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-total-payments-rollup-summary-consistency-check",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "absolute_delta_value_number": 0.0,
+          "check_type": "summary_consistency_check",
+          "confidence": "high",
+          "delta_direction": "equal",
+          "delta_value_number": 0.0,
+          "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37365",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37365",
+            "record-san-rafael-campaign-ocr-entry-37365",
+            "record-san-rafael-campaign-pdf-entry-37365",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37365"
+          ],
+          "measured_value_label": "reported_itemized_plus_unitemized_plus_interest_payments",
+          "measured_value_number": 183.29,
+          "metric_name": "schedule_e_total_payments_rollup",
+          "reference_value_label": "reported_total_payments",
+          "reference_value_number": 183.29,
+          "severity": "info",
+          "status": "reconciled",
+          "subject_node_id": "filing-san-rafael-campaign-entry-37365",
+          "subject_node_type": "Filing"
+        }
+      },
+      "subject": {
+        "id": "filing-san-rafael-campaign-entry-37365",
+        "node_type": "Filing",
+        "display_label": "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+        "year": 2024,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01",
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+          "election_id": "election-2024-11-05-san-rafael-general",
+          "evidence_record_ids": [
+            "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder",
+            "record-san-rafael-campaign-filing-entry-37365",
+            "record-san-rafael-campaign-ocr-entry-37365",
+            "record-san-rafael-campaign-pdf-entry-37365",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37365"
+          ],
+          "extracted_itemized_contributions_total": 6048.0,
+          "extracted_itemized_payments_total": 0,
+          "extracted_schedule_d_total": 0,
+          "filer_actor_id": "actor-rachel-kertz",
+          "filing_type": "form_460",
+          "posted_at": "2024-07-31",
+          "record_id": "record-san-rafael-campaign-filing-entry-37365",
+          "reported_itemized_contributions": 6048.0,
+          "reported_itemized_payments": 0.0,
+          "reported_monetary_contributions": 6915.0,
+          "reported_payments_made": 183.29,
+          "reported_unitemized_contributions": 867.0,
+          "reported_unitemized_payments": 183.29,
+          "schedule_a_row_count": 30,
+          "schedule_d_row_count": 0,
+          "schedule_e_row_count": 0,
+          "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37365",
+          "status": "captured_from_public_folder_listing",
+          "title": "Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+          "validation_check_ids": [
+            "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-itemized-contributions-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-a-total-contributions-rollup-summary-consistency-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-itemized-payments-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37365-schedule-e-total-payments-rollup-summary-consistency-check"
+          ]
+        }
+      },
+      "derived_record": {
+        "id": "record-san-rafael-campaign-form460-schedule-extract-entry-37365",
+        "node_type": "Record",
+        "display_label": "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024 (06-30-24)",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+          "capture_status": "derived_from_ocr_capture",
+          "entry_id": 37365,
+          "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37365",
+          "record_class": "financial_record",
+          "record_type": "form_460_schedule_extract",
+          "source_filing_id": "filing-san-rafael-campaign-entry-37365",
+          "source_id": "san-rafael-city-campaign-form460-ocr",
+          "source_record_id": "record-san-rafael-campaign-filing-entry-37365",
+          "title": "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024 (06-30-24)"
+        }
+      },
+      "status": "reconciled",
+      "severity": "info",
+      "metric_name": "schedule_e_total_payments_rollup",
+      "measured_value_number": 183.29,
+      "reference_value_number": 183.29,
+      "absolute_delta_value_number": 0.0
+    },
+    {
+      "check": {
+        "id": "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-total-contributions-rollup-summary-consistency-check",
+        "node_type": "ValidationCheck",
+        "display_label": "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-total-contributions-rollup-summary-consistency-check",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "absolute_delta_value_number": 0.0,
+          "check_type": "summary_consistency_check",
+          "confidence": "high",
+          "delta_direction": "equal",
+          "delta_value_number": 0.0,
+          "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37677",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37677",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37677"
+          ],
+          "measured_value_label": "reported_itemized_plus_unitemized_contributions",
+          "measured_value_number": 16392.0,
+          "metric_name": "schedule_a_total_contributions_rollup",
+          "reference_value_label": "reported_total_contributions",
+          "reference_value_number": 16392.0,
+          "severity": "info",
+          "status": "reconciled",
+          "subject_node_id": "filing-san-rafael-campaign-entry-37677",
+          "subject_node_type": "Filing"
+        }
+      },
+      "subject": {
+        "id": "filing-san-rafael-campaign-entry-37677",
+        "node_type": "Filing",
+        "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+        "year": 2024,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01",
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+          "election_id": "election-2024-11-05-san-rafael-general",
+          "evidence_record_ids": [
+            "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37677",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37677"
+          ],
+          "extracted_itemized_contributions_total": 14992.0,
+          "extracted_itemized_payments_total": 23337.66,
+          "extracted_schedule_d_total": 0,
+          "filer_actor_id": "actor-kate-colin",
+          "filing_type": "form_460",
+          "posted_at": "2024-09-26",
+          "record_id": "record-san-rafael-campaign-filing-entry-37677",
+          "reported_itemized_contributions": 15992.0,
+          "reported_itemized_payments": 23337.66,
+          "reported_monetary_contributions": 16392.0,
+          "reported_payments_made": 23394.96,
+          "reported_unitemized_contributions": 400.0,
+          "reported_unitemized_payments": 57.3,
+          "schedule_a_row_count": 48,
+          "schedule_d_row_count": 0,
+          "schedule_e_row_count": 27,
+          "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37677",
+          "status": "captured_from_public_folder_listing",
+          "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+          "validation_check_ids": [
+            "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-itemized-contributions-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-total-contributions-rollup-summary-consistency-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-itemized-payments-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-total-payments-rollup-summary-consistency-check"
+          ]
+        }
+      },
+      "derived_record": {
+        "id": "record-san-rafael-campaign-form460-schedule-extract-entry-37677",
+        "node_type": "Record",
+        "display_label": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+          "capture_status": "derived_from_ocr_capture",
+          "entry_id": 37677,
+          "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37677",
+          "record_class": "financial_record",
+          "record_type": "form_460_schedule_extract",
+          "source_filing_id": "filing-san-rafael-campaign-entry-37677",
+          "source_id": "san-rafael-city-campaign-form460-ocr",
+          "source_record_id": "record-san-rafael-campaign-filing-entry-37677",
+          "title": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection"
+        }
+      },
+      "status": "reconciled",
+      "severity": "info",
+      "metric_name": "schedule_a_total_contributions_rollup",
+      "measured_value_number": 16392.0,
+      "reference_value_number": 16392.0,
+      "absolute_delta_value_number": 0.0
+    },
+    {
+      "check": {
+        "id": "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-itemized-payments-reconciliation-check",
+        "node_type": "ValidationCheck",
+        "display_label": "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-itemized-payments-reconciliation-check",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "absolute_delta_value_number": 0.0,
+          "check_type": "reconciliation_check",
+          "confidence": "high",
+          "delta_direction": "equal",
+          "delta_value_number": 0.0,
+          "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37677",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37677",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37677"
+          ],
+          "measured_value_label": "extracted_itemized_payments_total",
+          "measured_value_number": 23337.66,
+          "metric_name": "schedule_e_itemized_payments",
+          "reference_value_label": "reported_itemized_payments",
+          "reference_value_number": 23337.66,
+          "severity": "info",
+          "status": "reconciled",
+          "subject_node_id": "filing-san-rafael-campaign-entry-37677",
+          "subject_node_type": "Filing"
+        }
+      },
+      "subject": {
+        "id": "filing-san-rafael-campaign-entry-37677",
+        "node_type": "Filing",
+        "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+        "year": 2024,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01",
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+          "election_id": "election-2024-11-05-san-rafael-general",
+          "evidence_record_ids": [
+            "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37677",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37677"
+          ],
+          "extracted_itemized_contributions_total": 14992.0,
+          "extracted_itemized_payments_total": 23337.66,
+          "extracted_schedule_d_total": 0,
+          "filer_actor_id": "actor-kate-colin",
+          "filing_type": "form_460",
+          "posted_at": "2024-09-26",
+          "record_id": "record-san-rafael-campaign-filing-entry-37677",
+          "reported_itemized_contributions": 15992.0,
+          "reported_itemized_payments": 23337.66,
+          "reported_monetary_contributions": 16392.0,
+          "reported_payments_made": 23394.96,
+          "reported_unitemized_contributions": 400.0,
+          "reported_unitemized_payments": 57.3,
+          "schedule_a_row_count": 48,
+          "schedule_d_row_count": 0,
+          "schedule_e_row_count": 27,
+          "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37677",
+          "status": "captured_from_public_folder_listing",
+          "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+          "validation_check_ids": [
+            "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-itemized-contributions-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-total-contributions-rollup-summary-consistency-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-itemized-payments-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-total-payments-rollup-summary-consistency-check"
+          ]
+        }
+      },
+      "derived_record": {
+        "id": "record-san-rafael-campaign-form460-schedule-extract-entry-37677",
+        "node_type": "Record",
+        "display_label": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+          "capture_status": "derived_from_ocr_capture",
+          "entry_id": 37677,
+          "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37677",
+          "record_class": "financial_record",
+          "record_type": "form_460_schedule_extract",
+          "source_filing_id": "filing-san-rafael-campaign-entry-37677",
+          "source_id": "san-rafael-city-campaign-form460-ocr",
+          "source_record_id": "record-san-rafael-campaign-filing-entry-37677",
+          "title": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection"
+        }
+      },
+      "status": "reconciled",
+      "severity": "info",
+      "metric_name": "schedule_e_itemized_payments",
+      "measured_value_number": 23337.66,
+      "reference_value_number": 23337.66,
+      "absolute_delta_value_number": 0.0
+    },
+    {
+      "check": {
+        "id": "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-total-payments-rollup-summary-consistency-check",
+        "node_type": "ValidationCheck",
+        "display_label": "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-total-payments-rollup-summary-consistency-check",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "absolute_delta_value_number": 0.0,
+          "check_type": "summary_consistency_check",
+          "confidence": "high",
+          "delta_direction": "equal",
+          "delta_value_number": 0.0,
+          "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37677",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37677",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37677"
+          ],
+          "measured_value_label": "reported_itemized_plus_unitemized_plus_interest_payments",
+          "measured_value_number": 23394.96,
+          "metric_name": "schedule_e_total_payments_rollup",
+          "reference_value_label": "reported_total_payments",
+          "reference_value_number": 23394.96,
+          "severity": "info",
+          "status": "reconciled",
+          "subject_node_id": "filing-san-rafael-campaign-entry-37677",
+          "subject_node_type": "Filing"
+        }
+      },
+      "subject": {
+        "id": "filing-san-rafael-campaign-entry-37677",
+        "node_type": "Filing",
+        "display_label": "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+        "year": 2024,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01",
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "committee_id": "committee-kate-colin-for-san-rafael-mayor-2024",
+          "election_id": "election-2024-11-05-san-rafael-general",
+          "evidence_record_ids": [
+            "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder",
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37677",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37677"
+          ],
+          "extracted_itemized_contributions_total": 14992.0,
+          "extracted_itemized_payments_total": 23337.66,
+          "extracted_schedule_d_total": 0,
+          "filer_actor_id": "actor-kate-colin",
+          "filing_type": "form_460",
+          "posted_at": "2024-09-26",
+          "record_id": "record-san-rafael-campaign-filing-entry-37677",
+          "reported_itemized_contributions": 15992.0,
+          "reported_itemized_payments": 23337.66,
+          "reported_monetary_contributions": 16392.0,
+          "reported_payments_made": 23394.96,
+          "reported_unitemized_contributions": 400.0,
+          "reported_unitemized_payments": 57.3,
+          "schedule_a_row_count": 48,
+          "schedule_d_row_count": 0,
+          "schedule_e_row_count": 27,
+          "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37677",
+          "status": "captured_from_public_folder_listing",
+          "title": "Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+          "validation_check_ids": [
+            "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-itemized-contributions-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-a-total-contributions-rollup-summary-consistency-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-itemized-payments-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37677-schedule-e-total-payments-rollup-summary-consistency-check"
+          ]
+        }
+      },
+      "derived_record": {
+        "id": "record-san-rafael-campaign-form460-schedule-extract-entry-37677",
+        "node_type": "Record",
+        "display_label": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+          "capture_status": "derived_from_ocr_capture",
+          "entry_id": 37677,
+          "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37677",
+          "record_class": "financial_record",
+          "record_type": "form_460_schedule_extract",
+          "source_filing_id": "filing-san-rafael-campaign-entry-37677",
+          "source_id": "san-rafael-city-campaign-form460-ocr",
+          "source_record_id": "record-san-rafael-campaign-filing-entry-37677",
+          "title": "Schedule extraction for Form 460 - Kate Colin for San Rafael Mayor 2024; 1st preelection"
+        }
+      },
+      "status": "reconciled",
+      "severity": "info",
+      "metric_name": "schedule_e_total_payments_rollup",
+      "measured_value_number": 23394.96,
+      "reference_value_number": 23394.96,
+      "absolute_delta_value_number": 0.0
+    },
+    {
+      "check": {
+        "id": "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-itemized-contributions-reconciliation-check",
+        "node_type": "ValidationCheck",
+        "display_label": "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-itemized-contributions-reconciliation-check",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "absolute_delta_value_number": 0.0,
+          "check_type": "reconciliation_check",
+          "confidence": "high",
+          "delta_direction": "equal",
+          "delta_value_number": 0.0,
+          "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37685",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37685",
+            "record-san-rafael-campaign-ocr-entry-37685",
+            "record-san-rafael-campaign-pdf-entry-37685",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37685"
+          ],
+          "measured_value_label": "extracted_itemized_contributions_total",
+          "measured_value_number": 6775.0,
+          "metric_name": "schedule_a_itemized_contributions",
+          "reference_value_label": "reported_itemized_contributions",
+          "reference_value_number": 6775.0,
+          "severity": "info",
+          "status": "reconciled",
+          "subject_node_id": "filing-san-rafael-campaign-entry-37685",
+          "subject_node_type": "Filing"
+        }
+      },
+      "subject": {
+        "id": "filing-san-rafael-campaign-entry-37685",
+        "node_type": "Filing",
+        "display_label": "Form 460 - Rachel Kertz for City Council 2024; preelection",
+        "year": 2024,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01",
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+          "election_id": "election-2024-11-05-san-rafael-general",
+          "evidence_record_ids": [
+            "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder",
+            "record-san-rafael-campaign-filing-entry-37685",
+            "record-san-rafael-campaign-ocr-entry-37685",
+            "record-san-rafael-campaign-pdf-entry-37685",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37685"
+          ],
+          "extracted_itemized_contributions_total": 6775.0,
+          "extracted_itemized_payments_total": 3576.26,
+          "extracted_schedule_d_total": 100.0,
+          "filer_actor_id": "actor-rachel-kertz",
+          "filing_type": "form_460",
+          "posted_at": "2024-09-30",
+          "record_id": "record-san-rafael-campaign-filing-entry-37685",
+          "reported_itemized_contributions": 6775.0,
+          "reported_itemized_payments": 3576.26,
+          "reported_monetary_contributions": 7265.0,
+          "reported_payments_made": 3825.99,
+          "reported_unitemized_contributions": 490.0,
+          "reported_unitemized_payments": 249.73,
+          "schedule_a_row_count": 24,
+          "schedule_d_row_count": 1,
+          "schedule_e_row_count": 6,
+          "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37685",
+          "status": "captured_from_public_folder_listing",
+          "title": "Form 460 - Rachel Kertz for City Council 2024; preelection",
+          "validation_check_ids": [
+            "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-itemized-contributions-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-total-contributions-rollup-summary-consistency-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-itemized-payments-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-total-payments-rollup-summary-consistency-check"
+          ]
+        }
+      },
+      "derived_record": {
+        "id": "record-san-rafael-campaign-form460-schedule-extract-entry-37685",
+        "node_type": "Record",
+        "display_label": "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024; preelection",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+          "capture_status": "derived_from_ocr_capture",
+          "entry_id": 37685,
+          "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37685",
+          "record_class": "financial_record",
+          "record_type": "form_460_schedule_extract",
+          "source_filing_id": "filing-san-rafael-campaign-entry-37685",
+          "source_id": "san-rafael-city-campaign-form460-ocr",
+          "source_record_id": "record-san-rafael-campaign-filing-entry-37685",
+          "title": "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024; preelection"
+        }
+      },
+      "status": "reconciled",
+      "severity": "info",
+      "metric_name": "schedule_a_itemized_contributions",
+      "measured_value_number": 6775.0,
+      "reference_value_number": 6775.0,
+      "absolute_delta_value_number": 0.0
+    },
+    {
+      "check": {
+        "id": "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-total-contributions-rollup-summary-consistency-check",
+        "node_type": "ValidationCheck",
+        "display_label": "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-total-contributions-rollup-summary-consistency-check",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "absolute_delta_value_number": 0.0,
+          "check_type": "summary_consistency_check",
+          "confidence": "high",
+          "delta_direction": "equal",
+          "delta_value_number": 0.0,
+          "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37685",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37685",
+            "record-san-rafael-campaign-ocr-entry-37685",
+            "record-san-rafael-campaign-pdf-entry-37685",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37685"
+          ],
+          "measured_value_label": "reported_itemized_plus_unitemized_contributions",
+          "measured_value_number": 7265.0,
+          "metric_name": "schedule_a_total_contributions_rollup",
+          "reference_value_label": "reported_total_contributions",
+          "reference_value_number": 7265.0,
+          "severity": "info",
+          "status": "reconciled",
+          "subject_node_id": "filing-san-rafael-campaign-entry-37685",
+          "subject_node_type": "Filing"
+        }
+      },
+      "subject": {
+        "id": "filing-san-rafael-campaign-entry-37685",
+        "node_type": "Filing",
+        "display_label": "Form 460 - Rachel Kertz for City Council 2024; preelection",
+        "year": 2024,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01",
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+          "election_id": "election-2024-11-05-san-rafael-general",
+          "evidence_record_ids": [
+            "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder",
+            "record-san-rafael-campaign-filing-entry-37685",
+            "record-san-rafael-campaign-ocr-entry-37685",
+            "record-san-rafael-campaign-pdf-entry-37685",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37685"
+          ],
+          "extracted_itemized_contributions_total": 6775.0,
+          "extracted_itemized_payments_total": 3576.26,
+          "extracted_schedule_d_total": 100.0,
+          "filer_actor_id": "actor-rachel-kertz",
+          "filing_type": "form_460",
+          "posted_at": "2024-09-30",
+          "record_id": "record-san-rafael-campaign-filing-entry-37685",
+          "reported_itemized_contributions": 6775.0,
+          "reported_itemized_payments": 3576.26,
+          "reported_monetary_contributions": 7265.0,
+          "reported_payments_made": 3825.99,
+          "reported_unitemized_contributions": 490.0,
+          "reported_unitemized_payments": 249.73,
+          "schedule_a_row_count": 24,
+          "schedule_d_row_count": 1,
+          "schedule_e_row_count": 6,
+          "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37685",
+          "status": "captured_from_public_folder_listing",
+          "title": "Form 460 - Rachel Kertz for City Council 2024; preelection",
+          "validation_check_ids": [
+            "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-itemized-contributions-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-total-contributions-rollup-summary-consistency-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-itemized-payments-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-total-payments-rollup-summary-consistency-check"
+          ]
+        }
+      },
+      "derived_record": {
+        "id": "record-san-rafael-campaign-form460-schedule-extract-entry-37685",
+        "node_type": "Record",
+        "display_label": "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024; preelection",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+          "capture_status": "derived_from_ocr_capture",
+          "entry_id": 37685,
+          "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37685",
+          "record_class": "financial_record",
+          "record_type": "form_460_schedule_extract",
+          "source_filing_id": "filing-san-rafael-campaign-entry-37685",
+          "source_id": "san-rafael-city-campaign-form460-ocr",
+          "source_record_id": "record-san-rafael-campaign-filing-entry-37685",
+          "title": "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024; preelection"
+        }
+      },
+      "status": "reconciled",
+      "severity": "info",
+      "metric_name": "schedule_a_total_contributions_rollup",
+      "measured_value_number": 7265.0,
+      "reference_value_number": 7265.0,
+      "absolute_delta_value_number": 0.0
+    },
+    {
+      "check": {
+        "id": "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-itemized-payments-reconciliation-check",
+        "node_type": "ValidationCheck",
+        "display_label": "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-itemized-payments-reconciliation-check",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "absolute_delta_value_number": 0.0,
+          "check_type": "reconciliation_check",
+          "confidence": "high",
+          "delta_direction": "equal",
+          "delta_value_number": 0.0,
+          "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37685",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37685",
+            "record-san-rafael-campaign-ocr-entry-37685",
+            "record-san-rafael-campaign-pdf-entry-37685",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37685"
+          ],
+          "measured_value_label": "extracted_itemized_payments_total",
+          "measured_value_number": 3576.26,
+          "metric_name": "schedule_e_itemized_payments",
+          "reference_value_label": "reported_itemized_payments",
+          "reference_value_number": 3576.26,
+          "severity": "info",
+          "status": "reconciled",
+          "subject_node_id": "filing-san-rafael-campaign-entry-37685",
+          "subject_node_type": "Filing"
+        }
+      },
+      "subject": {
+        "id": "filing-san-rafael-campaign-entry-37685",
+        "node_type": "Filing",
+        "display_label": "Form 460 - Rachel Kertz for City Council 2024; preelection",
+        "year": 2024,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01",
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+          "election_id": "election-2024-11-05-san-rafael-general",
+          "evidence_record_ids": [
+            "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder",
+            "record-san-rafael-campaign-filing-entry-37685",
+            "record-san-rafael-campaign-ocr-entry-37685",
+            "record-san-rafael-campaign-pdf-entry-37685",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37685"
+          ],
+          "extracted_itemized_contributions_total": 6775.0,
+          "extracted_itemized_payments_total": 3576.26,
+          "extracted_schedule_d_total": 100.0,
+          "filer_actor_id": "actor-rachel-kertz",
+          "filing_type": "form_460",
+          "posted_at": "2024-09-30",
+          "record_id": "record-san-rafael-campaign-filing-entry-37685",
+          "reported_itemized_contributions": 6775.0,
+          "reported_itemized_payments": 3576.26,
+          "reported_monetary_contributions": 7265.0,
+          "reported_payments_made": 3825.99,
+          "reported_unitemized_contributions": 490.0,
+          "reported_unitemized_payments": 249.73,
+          "schedule_a_row_count": 24,
+          "schedule_d_row_count": 1,
+          "schedule_e_row_count": 6,
+          "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37685",
+          "status": "captured_from_public_folder_listing",
+          "title": "Form 460 - Rachel Kertz for City Council 2024; preelection",
+          "validation_check_ids": [
+            "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-itemized-contributions-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-total-contributions-rollup-summary-consistency-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-itemized-payments-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-total-payments-rollup-summary-consistency-check"
+          ]
+        }
+      },
+      "derived_record": {
+        "id": "record-san-rafael-campaign-form460-schedule-extract-entry-37685",
+        "node_type": "Record",
+        "display_label": "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024; preelection",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+          "capture_status": "derived_from_ocr_capture",
+          "entry_id": 37685,
+          "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37685",
+          "record_class": "financial_record",
+          "record_type": "form_460_schedule_extract",
+          "source_filing_id": "filing-san-rafael-campaign-entry-37685",
+          "source_id": "san-rafael-city-campaign-form460-ocr",
+          "source_record_id": "record-san-rafael-campaign-filing-entry-37685",
+          "title": "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024; preelection"
+        }
+      },
+      "status": "reconciled",
+      "severity": "info",
+      "metric_name": "schedule_e_itemized_payments",
+      "measured_value_number": 3576.26,
+      "reference_value_number": 3576.26,
+      "absolute_delta_value_number": 0.0
+    },
+    {
+      "check": {
+        "id": "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-total-payments-rollup-summary-consistency-check",
+        "node_type": "ValidationCheck",
+        "display_label": "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-total-payments-rollup-summary-consistency-check",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "absolute_delta_value_number": 0.0,
+          "check_type": "summary_consistency_check",
+          "confidence": "high",
+          "delta_direction": "equal",
+          "delta_value_number": 0.0,
+          "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37685",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37685",
+            "record-san-rafael-campaign-ocr-entry-37685",
+            "record-san-rafael-campaign-pdf-entry-37685",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37685"
+          ],
+          "measured_value_label": "reported_itemized_plus_unitemized_plus_interest_payments",
+          "measured_value_number": 3825.99,
+          "metric_name": "schedule_e_total_payments_rollup",
+          "reference_value_label": "reported_total_payments",
+          "reference_value_number": 3825.99,
+          "severity": "info",
+          "status": "reconciled",
+          "subject_node_id": "filing-san-rafael-campaign-entry-37685",
+          "subject_node_type": "Filing"
+        }
+      },
+      "subject": {
+        "id": "filing-san-rafael-campaign-entry-37685",
+        "node_type": "Filing",
+        "display_label": "Form 460 - Rachel Kertz for City Council 2024; preelection",
+        "year": 2024,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01",
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "committee_id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+          "election_id": "election-2024-11-05-san-rafael-general",
+          "evidence_record_ids": [
+            "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder",
+            "record-san-rafael-campaign-filing-entry-37685",
+            "record-san-rafael-campaign-ocr-entry-37685",
+            "record-san-rafael-campaign-pdf-entry-37685",
+            "record-san-rafael-campaign-form460-schedule-extract-entry-37685"
+          ],
+          "extracted_itemized_contributions_total": 6775.0,
+          "extracted_itemized_payments_total": 3576.26,
+          "extracted_schedule_d_total": 100.0,
+          "filer_actor_id": "actor-rachel-kertz",
+          "filing_type": "form_460",
+          "posted_at": "2024-09-30",
+          "record_id": "record-san-rafael-campaign-filing-entry-37685",
+          "reported_itemized_contributions": 6775.0,
+          "reported_itemized_payments": 3576.26,
+          "reported_monetary_contributions": 7265.0,
+          "reported_payments_made": 3825.99,
+          "reported_unitemized_contributions": 490.0,
+          "reported_unitemized_payments": 249.73,
+          "schedule_a_row_count": 24,
+          "schedule_d_row_count": 1,
+          "schedule_e_row_count": 6,
+          "schedule_extract_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-37685",
+          "status": "captured_from_public_folder_listing",
+          "title": "Form 460 - Rachel Kertz for City Council 2024; preelection",
+          "validation_check_ids": [
+            "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-itemized-contributions-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-a-total-contributions-rollup-summary-consistency-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-itemized-payments-reconciliation-check",
+            "validationcheck-filing-san-rafael-campaign-entry-37685-schedule-e-total-payments-rollup-summary-consistency-check"
+          ]
+        }
+      },
+      "derived_record": {
+        "id": "record-san-rafael-campaign-form460-schedule-extract-entry-37685",
+        "node_type": "Record",
+        "display_label": "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024; preelection",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+        ],
+        "properties": {
+          "artifact_path": "data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-13.json",
+          "capture_status": "derived_from_ocr_capture",
+          "entry_id": 37685,
+          "ocr_record_id": "record-san-rafael-campaign-ocr-entry-37685",
+          "record_class": "financial_record",
+          "record_type": "form_460_schedule_extract",
+          "source_filing_id": "filing-san-rafael-campaign-entry-37685",
+          "source_id": "san-rafael-city-campaign-form460-ocr",
+          "source_record_id": "record-san-rafael-campaign-filing-entry-37685",
+          "title": "Schedule extraction for Form 460 - Rachel Kertz for City Council 2024; preelection"
+        }
+      },
+      "status": "reconciled",
+      "severity": "info",
+      "metric_name": "schedule_e_total_payments_rollup",
+      "measured_value_number": 3825.99,
+      "reference_value_number": 3825.99,
+      "absolute_delta_value_number": 0.0
+    }
+  ]
+}

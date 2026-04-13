@@ -66,6 +66,7 @@ Start narrow:
 - [Graph Materialization Proposal](./docs/graph-materialization-proposal.md)
 - [Architecture Review Checklist](./docs/architecture-review-checklist.md)
 - [Graph Query Pack](./docs/graph-query-pack.md)
+- [Graph View Layer](./docs/graph-view-layer.md)
 - [Ralph Loop Plan](./docs/ralph-loop-plan.md)
 - [Controlled Breadth Sprint Proposal](./docs/breadth-sprint-proposal.md)
 - [Controlled Breadth Sprint Adversarial Review Checklist](./docs/breadth-sprint-review-checklist.md)
@@ -137,6 +138,13 @@ Start narrow:
 - [Graph V1 Cypher Loader Output](./data/projected/graph-v1/load-graph-v1.cypher)
 - [Graph Query Pack Report](./data/projected/graph-v1/query-pack-report.json)
 - [Graph Query Pack Summary](./data/projected/graph-v1/query-pack-report.md)
+- [Graph View Index](./data/projected/graph-v1/views/index.json)
+- [Graph View Summary](./data/projected/graph-v1/views/summary.md)
+- [Kate Colin Actor Dossier](./data/projected/graph-v1/views/actor-kate-colin-dossier.json)
+- [Resolution 15336 Decision Dossier](./data/projected/graph-v1/views/decision-resolution-15336-dossier.json)
+- [Money Overlap Summary](./data/projected/graph-v1/views/money-overlap-summary.json)
+- [Legal Constraint View](./data/projected/graph-v1/views/legal-constraint-view.json)
+- [Validation Queue](./data/projected/graph-v1/views/validation-queue.json)
 - [Bundle 01 Extracted Summary](./data/extracted/san-rafael-homelessness-01/bundle-01-summary.json)
 - [Bundle 01 Normalized Summary](./data/normalized/san-rafael-homelessness-01/bundle-01.json)
 - [Marin IJ Citation Layer](./data/normalized/san-rafael-homelessness-01/marin-ij-citation-layer.json)
@@ -218,6 +226,7 @@ Start narrow:
 - [Graph Projection Builder](./scripts/build_graph_projection.py)
 - [Graph Projection Smoke Checks](./scripts/graph_smoke_checks.py)
 - [Graph Query Pack Runner](./scripts/run_graph_query_pack.py)
+- [Graph View Builder](./scripts/build_graph_views.py)
 - [Neo4j V1 Loader](./scripts/load_neo4j_v1.py)
 - [Marin County BOS Archive Capture Workflow](./scripts/capture_marin_county_bos_archive.py)
 - [Marin County Campaign Finance Export Capture Workflow](./scripts/capture_marin_county_campaign_finance_exports.py)
@@ -240,6 +249,13 @@ This repo started as a planning workspace and now includes the first live implem
   - consent votes are now modeled conservatively: one section-level voted decision, with subitem outcomes linked back to that consent action instead of pretending each subitem had its own roll call
   - the elected-disclosure breadth slice now adds `21` officeholder Form `700` filings and `21` `EconomicInterestDisclosure` nodes backed by the public NetFile export plus explicit current and 2020-2024 historical `SeatService` windows for the current mayor, District 1, and District 4 officeholders
   - the current projection report now shows no `missing_target:Actor`, `missing_target:Issue`, or `missing_target:Record` categories, with `5` actor-alias edge remaps preserved
+  - the first projected view pack now sits on top of the clean graph:
+    - `actor-kate-colin-dossier`
+    - `decision-resolution-15336-dossier`
+    - `money-overlap-summary`
+    - `legal-constraint-view`
+    - `validation-queue`
+  - that view pack is the new product-facing pressure test: it proves the graph can emit bounded dossiers and summary views without depending on a live Neo4j session or a frontend shell
   - the current fixed-query-pack run still passes all five queries after the legal import widening pass
   - the fixed five-query breadth gate stays unchanged at `Q1` through `Q5`, and the graph now also passes a supplemental legal constraint query covering `Boyd` plus the full `Grants Pass` district -> Ninth Circuit -> Supreme Court lineage
   - the campaign evidence-record bundle has now been regenerated after the accepted 2020 Ralph-loop batch, widening from `25` to `45` campaign evidence `Record` nodes so older OCR/PDF artifacts no longer surface as `missing_target:Record` skips

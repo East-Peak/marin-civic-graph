@@ -1,0 +1,687 @@
+{
+  "id": "money-overlap-summary",
+  "title": "Money overlap summary",
+  "generated_at": "2026-04-13T12:12:58Z",
+  "metrics": {
+    "money_flow_count": 147,
+    "flow_type_counts": {
+      "appropriation": 1,
+      "behested_payment": 1,
+      "campaign_contribution": 104,
+      "campaign_expenditure": 34,
+      "contract_authorization": 5,
+      "grant_award": 1,
+      "program_startup_costs": 1
+    },
+    "overlap_subject_count": 18
+  },
+  "top_overlap_subjects": [
+    {
+      "node": {
+        "id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "node_type": "Committee",
+        "display_label": "Kate Colin for San Rafael Mayor 2024",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01"
+        ],
+        "properties": {
+          "committee_type": "candidate_linked_committee",
+          "controlling_actor_id": "actor-kate-colin",
+          "evidence_record_ids": [
+            "record-san-rafael-november-5-2024-election-kate-colin-campaign-folder"
+          ],
+          "jurisdiction_place_id": "place-san-rafael",
+          "name": "Kate Colin for San Rafael Mayor 2024",
+          "primary_election_id": "election-2024-11-05-san-rafael-general",
+          "source_system_ref": "laserfiche-folder:35554"
+        }
+      },
+      "flow_count": 75,
+      "flow_types": [
+        "campaign_contribution",
+        "campaign_expenditure"
+      ],
+      "relationship_types": [
+        "RELATES_TO_COMMITTEE",
+        "TO_TARGET"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "committee-rachel-kertz-for-san-rafael-city-council-2024",
+        "node_type": "Committee",
+        "display_label": "Rachel Kertz for San Rafael City Council 2024",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01"
+        ],
+        "properties": {
+          "committee_type": "candidate_linked_committee",
+          "controlling_actor_id": "actor-rachel-kertz",
+          "evidence_record_ids": [
+            "record-san-rafael-november-5-2024-election-rachel-kertz-campaign-folder"
+          ],
+          "jurisdiction_place_id": "place-san-rafael",
+          "name": "Rachel Kertz for San Rafael City Council 2024",
+          "primary_election_id": "election-2024-11-05-san-rafael-general",
+          "source_system_ref": "laserfiche-folder:36450"
+        }
+      },
+      "flow_count": 61,
+      "flow_types": [
+        "campaign_contribution",
+        "campaign_expenditure"
+      ],
+      "relationship_types": [
+        "RELATES_TO_COMMITTEE",
+        "TO_TARGET"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "actor-anedot",
+        "node_type": "Actor",
+        "display_label": "Anedot",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-actor-completeness-01__bundle-01"
+        ],
+        "properties": {
+          "actor_type": "business",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37677"
+          ],
+          "name": "Anedot",
+          "observed_labels": [
+            "Anedot"
+          ],
+          "promotion_basis": "recurring_form460_vendor_platform_or_donor",
+          "status": "promoted_for_graph_completeness"
+        }
+      },
+      "flow_count": 9,
+      "flow_types": [
+        "campaign_expenditure"
+      ],
+      "relationship_types": [
+        "TO_TARGET"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "decision-2024-08-19-resolution-15336",
+        "node_type": "Decision",
+        "display_label": "Resolution 15336 appropriating $2,256,400 and authorizing $2,002,400 in contracts",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-homelessness-01__bundle-01"
+        ],
+        "properties": {
+          "agenda_item_id": "agenda-item-2024-08-19-5a",
+          "decision_type": "appropriation_and_contract_authorization",
+          "effective_date": "2024-08-19",
+          "institution_id": "inst-san-rafael-city-council",
+          "meeting_id": "meeting-2024-08-19-san-rafael-city-council",
+          "status": "adopted",
+          "title": "Resolution 15336 appropriating $2,256,400 and authorizing $2,002,400 in contracts"
+        }
+      },
+      "flow_count": 7,
+      "flow_types": [
+        "appropriation",
+        "contract_authorization",
+        "program_startup_costs"
+      ],
+      "relationship_types": [
+        "RELATES_TO_DECISION"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-homelessness-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "actor-four-waters-media-inc",
+        "node_type": "Actor",
+        "display_label": "four waters media, inc.",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-actor-completeness-01__bundle-01"
+        ],
+        "properties": {
+          "actor_type": "business",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37677"
+          ],
+          "name": "four waters media, inc.",
+          "observed_labels": [
+            "four waters media, inc."
+          ],
+          "promotion_basis": "recurring_form460_vendor_platform_or_donor",
+          "status": "promoted_for_graph_completeness"
+        }
+      },
+      "flow_count": 5,
+      "flow_types": [
+        "campaign_expenditure"
+      ],
+      "relationship_types": [
+        "TO_TARGET"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "actor-pmcohen-public-affairs",
+        "node_type": "Actor",
+        "display_label": "PMCohen Public Affairs",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-actor-completeness-01__bundle-01"
+        ],
+        "properties": {
+          "actor_type": "business",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37677"
+          ],
+          "name": "PMCohen Public Affairs",
+          "observed_labels": [
+            "PMCohen Public Affairs"
+          ],
+          "promotion_basis": "recurring_form460_vendor_platform_or_donor",
+          "status": "promoted_for_graph_completeness"
+        }
+      },
+      "flow_count": 5,
+      "flow_types": [
+        "campaign_expenditure"
+      ],
+      "relationship_types": [
+        "TO_TARGET"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "actor-caran-cuneo",
+        "node_type": "Actor",
+        "display_label": "Caran Cuneo",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-actor-completeness-01__bundle-01"
+        ],
+        "properties": {
+          "actor_type": "person",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37365",
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37365",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37365",
+            "record-san-rafael-campaign-pdf-entry-37677"
+          ],
+          "name": "Caran Cuneo",
+          "observed_labels": [
+            "Caran Cuneo"
+          ],
+          "promotion_basis": "recurring_form460_vendor_platform_or_donor",
+          "status": "promoted_for_graph_completeness"
+        }
+      },
+      "flow_count": 3,
+      "flow_types": [
+        "campaign_contribution",
+        "campaign_expenditure"
+      ],
+      "relationship_types": [
+        "FROM_SOURCE",
+        "TO_TARGET"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "committee-kate-colin-for-mayor-2020",
+        "node_type": "Committee",
+        "display_label": "Kate Colin for Mayor 2020",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-city-campaign-filings-01__bundle-01"
+        ],
+        "properties": {
+          "committee_type": "candidate_linked_committee",
+          "controlling_actor_id": "actor-kate-colin",
+          "evidence_record_ids": [
+            "record-san-rafael-november-3-2020-election-kate-colin-campaign-folder"
+          ],
+          "jurisdiction_place_id": "place-san-rafael",
+          "name": "Kate Colin for Mayor 2020",
+          "primary_election_id": "election-2020-11-03-san-rafael-general",
+          "source_system_ref": "laserfiche-folder:31079"
+        }
+      },
+      "flow_count": 2,
+      "flow_types": [
+        "campaign_contribution",
+        "campaign_expenditure"
+      ],
+      "relationship_types": [
+        "RELATES_TO_COMMITTEE",
+        "TO_TARGET"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "inst-city-of-san-rafael",
+        "node_type": "Institution",
+        "display_label": "City of San Rafael",
+        "year": null,
+        "source_bundle_ids": [
+          "campaign-finance-form-803-slice-01__bundle-01",
+          "canonical-seeds-san-rafael-01",
+          "legal-precedent-01__bundle-01",
+          "legal-precedent-02__bundle-01",
+          "san-rafael-election-records-01__bundle-01",
+          "san-rafael-homelessness-01__bundle-01"
+        ],
+        "properties": {
+          "evidence_record_ids": [
+            "record-san-rafael-city-council-2024-08-19-item-5a-report",
+            "record-kate-colin-form-803-2025-09-04",
+            "record-san-rafael-boyd-tro-order-2023-08-16",
+            "record-san-rafael-boyd-preliminary-injunction-order-2023-10-19",
+            "doc-2024-08-08-boyd-dismissal-release",
+            "record-san-rafael-boyd-dismissal-order-2024-08-07",
+            "doc-2024-06-28-grants-pass-statement",
+            "record-san-rafael-grants-pass-explainer-2024-09-02"
+          ],
+          "institution_type": "city_government",
+          "jurisdiction_place_id": "place-san-rafael",
+          "name": "City of San Rafael",
+          "seed_status": "canonical_seed"
+        }
+      },
+      "flow_count": 2,
+      "flow_types": [
+        "behested_payment",
+        "grant_award"
+      ],
+      "relationship_types": [
+        "RELATES_TO_INSTITUTION",
+        "TO_TARGET"
+      ],
+      "source_bundle_ids": [
+        "campaign-finance-form-803-slice-01__bundle-01",
+        "san-rafael-homelessness-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "actor-barry-moss",
+        "node_type": "Actor",
+        "display_label": "Barry Moss",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-actor-completeness-01__bundle-01"
+        ],
+        "properties": {
+          "actor_type": "person",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37685",
+            "record-san-rafael-campaign-ocr-entry-37685",
+            "record-san-rafael-campaign-pdf-entry-37685"
+          ],
+          "name": "Barry Moss",
+          "observed_labels": [
+            "Barry Moss Z",
+            "Barry Moss \u2751I",
+            "Barry Moss"
+          ],
+          "promotion_basis": "recurring_form460_vendor_platform_or_donor",
+          "status": "promoted_for_graph_completeness"
+        }
+      },
+      "flow_count": 2,
+      "flow_types": [
+        "campaign_contribution"
+      ],
+      "relationship_types": [
+        "FROM_SOURCE"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "actor-bruce-burtch",
+        "node_type": "Actor",
+        "display_label": "Bruce Burtch",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-actor-completeness-01__bundle-01"
+        ],
+        "properties": {
+          "actor_type": "person",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37365",
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37365",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37365",
+            "record-san-rafael-campaign-pdf-entry-37677"
+          ],
+          "name": "Bruce Burtch",
+          "observed_labels": [
+            "Bruce Burtch"
+          ],
+          "promotion_basis": "recurring_form460_vendor_platform_or_donor",
+          "status": "promoted_for_graph_completeness"
+        }
+      },
+      "flow_count": 2,
+      "flow_types": [
+        "campaign_contribution"
+      ],
+      "relationship_types": [
+        "FROM_SOURCE"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "actor-cathryn-hilliard",
+        "node_type": "Actor",
+        "display_label": "Cathryn Hilliard",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-actor-completeness-01__bundle-01"
+        ],
+        "properties": {
+          "actor_type": "person",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37685",
+            "record-san-rafael-campaign-ocr-entry-37685",
+            "record-san-rafael-campaign-pdf-entry-37685"
+          ],
+          "name": "Cathryn Hilliard",
+          "observed_labels": [
+            "Cathryn Hilliard 0",
+            "Cathryn Hilliard \u00ae",
+            "Cathryn Hilliard"
+          ],
+          "promotion_basis": "recurring_form460_vendor_platform_or_donor",
+          "status": "promoted_for_graph_completeness"
+        }
+      },
+      "flow_count": 2,
+      "flow_types": [
+        "campaign_contribution"
+      ],
+      "relationship_types": [
+        "FROM_SOURCE"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "actor-diana-maier",
+        "node_type": "Actor",
+        "display_label": "Diana Maier",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-actor-completeness-01__bundle-01"
+        ],
+        "properties": {
+          "actor_type": "person",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-filing-entry-37685",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37685",
+            "record-san-rafael-campaign-pdf-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37685"
+          ],
+          "name": "Diana Maier",
+          "observed_labels": [
+            "Diana Maier"
+          ],
+          "promotion_basis": "recurring_form460_vendor_platform_or_donor",
+          "status": "promoted_for_graph_completeness"
+        }
+      },
+      "flow_count": 2,
+      "flow_types": [
+        "campaign_contribution"
+      ],
+      "relationship_types": [
+        "FROM_SOURCE"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "actor-geza-kadar",
+        "node_type": "Actor",
+        "display_label": "Geza Kadar",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-actor-completeness-01__bundle-01"
+        ],
+        "properties": {
+          "actor_type": "person",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37365",
+            "record-san-rafael-campaign-filing-entry-37685",
+            "record-san-rafael-campaign-ocr-entry-37365",
+            "record-san-rafael-campaign-ocr-entry-37685",
+            "record-san-rafael-campaign-pdf-entry-37365",
+            "record-san-rafael-campaign-pdf-entry-37685"
+          ],
+          "name": "Geza Kadar",
+          "observed_labels": [
+            "Geza Kadar 0",
+            "Geza Kadar \u00ae",
+            "Geza Kadar"
+          ],
+          "promotion_basis": "recurring_form460_vendor_platform_or_donor",
+          "status": "promoted_for_graph_completeness"
+        }
+      },
+      "flow_count": 2,
+      "flow_types": [
+        "campaign_contribution"
+      ],
+      "relationship_types": [
+        "FROM_SOURCE"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "actor-mary-de-may",
+        "node_type": "Actor",
+        "display_label": "Mary De May",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-actor-completeness-01__bundle-01"
+        ],
+        "properties": {
+          "actor_type": "person",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37365",
+            "record-san-rafael-campaign-filing-entry-37685",
+            "record-san-rafael-campaign-ocr-entry-37365",
+            "record-san-rafael-campaign-ocr-entry-37685",
+            "record-san-rafael-campaign-pdf-entry-37365",
+            "record-san-rafael-campaign-pdf-entry-37685"
+          ],
+          "name": "Mary De May",
+          "observed_labels": [
+            "Mary De May 0",
+            "Mary De May \u2751\ufffd/",
+            "Mary De May"
+          ],
+          "promotion_basis": "recurring_form460_vendor_platform_or_donor",
+          "status": "promoted_for_graph_completeness"
+        }
+      },
+      "flow_count": 2,
+      "flow_types": [
+        "campaign_contribution"
+      ],
+      "relationship_types": [
+        "FROM_SOURCE"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "actor-paul-jensen",
+        "node_type": "Actor",
+        "display_label": "Paul Jensen",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-actor-completeness-01__bundle-01"
+        ],
+        "properties": {
+          "actor_type": "person",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37365",
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37365",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37365",
+            "record-san-rafael-campaign-pdf-entry-37677"
+          ],
+          "name": "Paul Jensen",
+          "observed_labels": [
+            "Paul Jensen"
+          ],
+          "promotion_basis": "recurring_form460_vendor_platform_or_donor",
+          "status": "promoted_for_graph_completeness"
+        }
+      },
+      "flow_count": 2,
+      "flow_types": [
+        "campaign_contribution"
+      ],
+      "relationship_types": [
+        "FROM_SOURCE"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "actor-ranjiv-khush",
+        "node_type": "Actor",
+        "display_label": "Ranjiv Khush",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-actor-completeness-01__bundle-01"
+        ],
+        "properties": {
+          "actor_type": "person",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37365",
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37365",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37365",
+            "record-san-rafael-campaign-pdf-entry-37677"
+          ],
+          "name": "Ranjiv Khush",
+          "observed_labels": [
+            "Ranjiv Khush Z",
+            "Ranjiv Khush \u00ae",
+            "Ranjiv Khush"
+          ],
+          "promotion_basis": "recurring_form460_vendor_platform_or_donor",
+          "status": "promoted_for_graph_completeness"
+        }
+      },
+      "flow_count": 2,
+      "flow_types": [
+        "campaign_contribution"
+      ],
+      "relationship_types": [
+        "FROM_SOURCE"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
+        "id": "actor-se-owens-and-company",
+        "node_type": "Actor",
+        "display_label": "S.E. Owens & Company",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-actor-completeness-01__bundle-01"
+        ],
+        "properties": {
+          "actor_type": "business",
+          "evidence_record_ids": [
+            "record-san-rafael-campaign-filing-entry-37677",
+            "record-san-rafael-campaign-ocr-entry-37677",
+            "record-san-rafael-campaign-pdf-entry-37677"
+          ],
+          "name": "S.E. Owens & Company",
+          "observed_labels": [
+            "S.E. Owens & Company"
+          ],
+          "promotion_basis": "campaign_finance_sample_vendor",
+          "status": "promoted_for_graph_completeness"
+        }
+      },
+      "flow_count": 2,
+      "flow_types": [
+        "campaign_expenditure"
+      ],
+      "relationship_types": [
+        "TO_TARGET"
+      ],
+      "source_bundle_ids": [
+        "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+      ]
+    }
+  ]
+}
