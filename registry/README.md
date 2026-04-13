@@ -17,6 +17,7 @@ It should stay:
 
 - [sources.yaml](./sources.yaml) — current seed registry
 - [import-manifest.yaml](./import-manifest.yaml) — narrowed v1 graph-materialization scope
+- [loop-manifests/](./loop-manifests/) — bounded Ralph-loop control files for active backfill / densification lanes
 
 ## Current Scope
 
@@ -43,3 +44,4 @@ Registry schema and field meanings:
 - Some sources are thread-specific tactical pages for case study 01.
 - Paywalled or operator-assisted sources are allowed in the registry as long as the access model is explicit.
 - The registry is also becoming the place where municipality-specific source quirks, historical backfill targets, and recurring sync cadence get documented.
+- Active Ralph loops should live in `loop-manifests/` so the next execution batch is explicit and reviewable.

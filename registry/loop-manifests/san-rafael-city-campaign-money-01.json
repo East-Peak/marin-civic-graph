@@ -1,0 +1,176 @@
+{
+  "manifest_version": 1,
+  "loop_id": "san-rafael-city-campaign-money-01",
+  "label": "San Rafael city-office campaign money QA loop",
+  "status": "active",
+  "verified_at": "2026-04-12",
+  "lane": "san-rafael-city-office-campaign-money",
+  "goal": "Turn Q4 from fail to pass by adding multi-cycle QA-backed campaign money coverage without importing noisy OCR actors into graph-v1.",
+  "query_gate": {
+    "required_queries_to_remain_passing": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q5"
+    ],
+    "target_query_to_improve": "Q4",
+    "success_condition": "QA-backed money flows span more than one election cycle and imported noisy actor count remains zero."
+  },
+  "source_surfaces": [
+    "san-rafael-city-side-campaign-filings",
+    "san-rafael-election-direct-records",
+    "san-rafael-city-campaign-folder-listings",
+    "san-rafael-city-campaign-form460-ocr",
+    "san-rafael-city-campaign-form460-pdf-export"
+  ],
+  "existing_workflows": [
+    {
+      "script": "scripts/capture_san_rafael_city_campaign_folder_listings.py",
+      "role": "recover public filing-folder listings and entry IDs"
+    },
+    {
+      "script": "scripts/capture_san_rafael_city_campaign_form460_ocr.py",
+      "role": "capture OCR text for targeted Form 460 filings"
+    },
+    {
+      "script": "scripts/capture_san_rafael_city_campaign_form460_pdf_exports.py",
+      "role": "capture raw exported PDFs for targeted Form 460 filings"
+    },
+    {
+      "script": "scripts/extract_san_rafael_city_campaign_form460_schedules.py",
+      "role": "extract reconciled schedule rows and validation checks"
+    }
+  ],
+  "guardrails": [
+    "Do not widen to county campaign finance during this loop.",
+    "Do not import broad new actor candidates into graph-v1 unless they survive existing actor-noise rules.",
+    "Do not add new schema unless a real source boundary forces it.",
+    "Keep broad row-level MoneyFlow promotion outside graph-v1 unless QA-backed."
+  ],
+  "stop_conditions": [
+    "Two consecutive accepted-attempt candidates fail to improve Q4.",
+    "Imported noisy actor count becomes non-zero.",
+    "ValidationCheck volume grows faster than the useful coverage gain.",
+    "The batch requires schema changes instead of parser or adapter work."
+  ],
+  "batches": [
+    {
+      "batch_id": "batch-01-2020-city-office-form460",
+      "status": "pending",
+      "priority": 1,
+      "goal": "Add the first non-2024 QA-backed city-office campaign-money cycle.",
+      "cycle_year": 2020,
+      "committee_ids": [
+        "committee-kate-colin-for-mayor-2020",
+        "committee-rachel-kertz-for-city-council-2020",
+        "committee-maika-llorens-gulati-for-san-rafael-city-council-2020",
+        "committee-greg-knell-for-city-council-2020",
+        "committee-mahmoud-a-shirazi-for-mayor-2020"
+      ],
+      "target_filing_ids": [
+        "filing-san-rafael-campaign-entry-28450",
+        "filing-san-rafael-campaign-entry-31112",
+        "filing-san-rafael-campaign-entry-31115",
+        "filing-san-rafael-campaign-entry-31430",
+        "filing-san-rafael-campaign-entry-31440",
+        "filing-san-rafael-campaign-entry-31935",
+        "filing-san-rafael-campaign-entry-31936",
+        "filing-san-rafael-campaign-entry-31937",
+        "filing-san-rafael-campaign-entry-32103",
+        "filing-san-rafael-campaign-entry-32224",
+        "filing-san-rafael-campaign-entry-32228",
+        "filing-san-rafael-campaign-entry-32254",
+        "filing-san-rafael-campaign-entry-32255",
+        "filing-san-rafael-campaign-entry-32274",
+        "filing-san-rafael-campaign-entry-32326",
+        "filing-san-rafael-campaign-entry-32521",
+        "filing-san-rafael-campaign-entry-33340"
+      ],
+      "preferred_form_types": [
+        "form_460"
+      ],
+      "expected_query_effect": "Q4 should gain QA-backed money coverage in 2020 without adding noisy actors.",
+      "acceptance_checks": [
+        "Q1, Q2, Q3, and Q5 still pass.",
+        "Q4 qa_money_flow_years includes 2020.",
+        "Q4 imported_noisy_actor_count remains 0."
+      ]
+    },
+    {
+      "batch_id": "batch-02-2022-city-office-form460",
+      "status": "pending",
+      "priority": 2,
+      "goal": "Add a second non-2024 cycle if the 2020 batch is not enough to clear Q4.",
+      "cycle_year": 2022,
+      "committee_ids": [
+        "committee-eli-hill-for-san-rafael-city-council-2022",
+        "committee-maribeth-bushey-for-city-council-2022",
+        "committee-jonathan-frieman-for-san-rafael-city-council-2022"
+      ],
+      "deferred_committee_ids": [
+        "committee-gerrod-herndon-for-san-rafael-city-council-2022"
+      ],
+      "target_filing_ids": [
+        "filing-san-rafael-campaign-entry-33337",
+        "filing-san-rafael-campaign-entry-33997",
+        "filing-san-rafael-campaign-entry-34841",
+        "filing-san-rafael-campaign-entry-35167",
+        "filing-san-rafael-campaign-entry-35169",
+        "filing-san-rafael-campaign-entry-35170",
+        "filing-san-rafael-campaign-entry-35306",
+        "filing-san-rafael-campaign-entry-35307",
+        "filing-san-rafael-campaign-entry-35313",
+        "filing-san-rafael-campaign-entry-35653",
+        "filing-san-rafael-campaign-entry-35655",
+        "filing-san-rafael-campaign-entry-36101",
+        "filing-san-rafael-campaign-entry-36105",
+        "filing-san-rafael-campaign-entry-36251",
+        "filing-san-rafael-campaign-entry-36558"
+      ],
+      "preferred_form_types": [
+        "form_460"
+      ],
+      "expected_query_effect": "Q4 should gain QA-backed money coverage in 2022 if 2020 alone does not create enough recurrence.",
+      "acceptance_checks": [
+        "Q1, Q2, Q3, and Q5 still pass.",
+        "Q4 qa_money_flow_years includes 2022 or Q4 becomes passing.",
+        "Q4 imported_noisy_actor_count remains 0."
+      ]
+    },
+    {
+      "batch_id": "batch-03-2024-gap-closure",
+      "status": "pending",
+      "priority": 3,
+      "goal": "Use 2024 only as a targeted cleanup batch if older-cycle extraction still leaves Q4 failing.",
+      "cycle_year": 2024,
+      "committee_ids": [
+        "committee-kate-colin-for-san-rafael-mayor-2024",
+        "committee-rachel-kertz-for-san-rafael-city-council-2024",
+        "committee-maika-llorens-gulati-for-san-rafael-city-council-2024",
+        "committee-mahmoud-a-shirazi-for-san-rafael-mayor-2024"
+      ],
+      "target_filing_ids": [
+        "filing-san-rafael-campaign-entry-37369",
+        "filing-san-rafael-campaign-entry-37384",
+        "filing-san-rafael-campaign-entry-37663",
+        "filing-san-rafael-campaign-entry-37677",
+        "filing-san-rafael-campaign-entry-37685",
+        "filing-san-rafael-campaign-entry-37687",
+        "filing-san-rafael-campaign-entry-37775",
+        "filing-san-rafael-campaign-entry-37779"
+      ],
+      "preferred_form_types": [
+        "form_460"
+      ],
+      "start_only_if": [
+        "Batch 01 and Batch 02 are complete or explicitly reviewed.",
+        "Q4 still fails after older-cycle work."
+      ],
+      "acceptance_checks": [
+        "Q1, Q2, Q3, and Q5 still pass.",
+        "Q4 improves materially or becomes passing.",
+        "ValidationCheck volume remains bounded."
+      ]
+    }
+  ]
+}

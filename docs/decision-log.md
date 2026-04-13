@@ -18,6 +18,12 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-12
 
+- **Breadth execution should now use bounded Ralph loops instead of undifferentiated backfill**
+  - Once the fixed query pack exists, widening should run through one lane-scoped batch loop at a time: select a bounded batch, capture, extract, normalize, rebuild `graph-v1`, rerun the fixed query pack, and accept the batch only if the graph improved in the target lane.
+  - The first active loop is `san-rafael-city-campaign-money-01`, aimed at turning `Q4` from fail to pass by adding multi-cycle QA-backed city-office campaign money while keeping noisy OCR actors out of graph-v1.
+  - Durable control files now live in `registry/loop-manifests/`, with the current loop manifest at `registry/loop-manifests/san-rafael-city-campaign-money-01.json`.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-12-breadth-execution-should-use-bounded-ralph-loops.md`
+
 - **The fixed five-query pack now gates breadth-sprint decisions**
   - Run the checkpoint against the projected `graph-v1` payload, not just a live Neo4j session, so the sprint can be judged consistently from repo state alone.
   - The first formal run now passes `Q1`, `Q2`, `Q3`, and `Q5`, while `Q4` still fails because the San Rafael campaign money layer has QA-backed recurrence only in `2024`.
