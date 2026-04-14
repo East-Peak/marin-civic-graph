@@ -1,0 +1,24 @@
+sources:
+  - id: corte-madera-town-council
+    adapter: civicplus
+    url: https://cortemadera.gov/AgendaCenter
+    jurisdiction_id: place-corte-madera
+    institution_id: org-corte-madera-town-council
+    backfill_from: "2019-01-01"
+    schedule: weekly
+
+  - id: tiburon-town-council
+    adapter: civicplus
+    url: https://townoftiburon.org/AgendaCenter
+    jurisdiction_id: place-tiburon
+    institution_id: org-tiburon-town-council
+    backfill_from: "2019-01-01"
+    schedule: weekly
+
+  - id: mill-valley-committees
+    adapter: civicplus
+    url: https://cityofmillvalley.org/AgendaCenter
+    jurisdiction_id: place-mill-valley
+    institution_id: org-mill-valley-committees
+    backfill_from: "2019-01-01"
+    schedule: weekly
