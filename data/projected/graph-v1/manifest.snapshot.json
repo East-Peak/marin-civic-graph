@@ -371,6 +371,29 @@
       ]
     },
     {
+      "path": "data/normalized/san-rafael-camping-ordinance-program-01/bundle-01.json",
+      "sections": [
+        {
+          "name": "record_refs",
+          "mode": "nodes",
+          "node_type": "Record",
+          "promotion_state": "promoted"
+        },
+        {
+          "name": "program_candidates",
+          "mode": "nodes",
+          "node_type": "Program",
+          "promotion_state": "promoted"
+        },
+        {
+          "name": "case_candidates",
+          "mode": "nodes",
+          "node_type": "Case",
+          "promotion_state": "promoted"
+        }
+      ]
+    },
+    {
       "path": "data/normalized/project-dossiers-01/bundle-01.json",
       "sections": [
         {

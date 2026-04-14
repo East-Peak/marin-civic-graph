@@ -269,6 +269,7 @@ Current shape:
 - `jurisdiction_place`
 - `places`
 - `metrics`
+- `linked_decisions`
 - `decision_explanations`
 - `legal_case_rollups`
 - `top_counterparties`
@@ -279,6 +280,7 @@ Current note:
 - this is a bounded synthesis layer over the existing `program_dossier`, `decision_money_explanation`, and `case_dossier` read models
 - it is intended to answer one local-thread question: how legal pressure, local decisions, and linked money concentrate around a specific program without inventing new graph truth edges
 - linked money remains decision-derived here unless a direct `MoneyFlow -> Program` path already exists in the imported graph
+- `linked_decisions` is the full local decision lineage for the program; `decision_explanations` remains the filtered money-linked subset
 
 ### `jurisdiction_local_pressure_comparison`
 
@@ -310,6 +312,7 @@ Current note:
 - this is a bounded comparison layer over the current in-scope program, project, and QA-backed election threads for one jurisdiction
 - it is intended to answer a harder product question than a single dossier: which local delivery threads currently carry the most combined money pressure, legal pressure, and evidence density
 - it still derives pressure from existing read models and graph paths; it does not mint new graph truth edges
+- `linked_decisions` in each thread rollup is the supporting local decision lineage for that thread, not only the money-linked subset
 
 ### `jurisdiction_local_pressure_explanation`
 

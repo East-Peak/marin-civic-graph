@@ -114,6 +114,7 @@ Current scope:
 ### Program dossier
 
 - [program-san-rafael-sanctioned-camping-dossier.json](../data/projected/graph-v1/views/program-san-rafael-sanctioned-camping-dossier.json)
+- [program-san-rafael-camping-ordinance-implementation-dossier.json](../data/projected/graph-v1/views/program-san-rafael-camping-ordinance-implementation-dossier.json)
 - [program-csl-building-forward-dossier.json](../data/projected/graph-v1/views/program-csl-building-forward-dossier.json)
 
 Current scope:
@@ -177,11 +178,12 @@ Current scope:
 ### Program local pressure summary
 
 - [program-san-rafael-sanctioned-camping-local-pressure-summary.json](../data/projected/graph-v1/views/program-san-rafael-sanctioned-camping-local-pressure-summary.json)
+- [program-san-rafael-camping-ordinance-implementation-local-pressure-summary.json](../data/projected/graph-v1/views/program-san-rafael-camping-ordinance-implementation-local-pressure-summary.json)
 
 Current scope:
 
 - one local program thread
-- decision-money explanations filtered to the program's linked decisions
+- supporting local decisions plus any money-linked decision explanations that fall inside that decision set
 - linked legal case rollups
 - shared issue pressure across the in-scope case set
 - top counterparties and supporting evidence records
@@ -193,7 +195,7 @@ Current scope:
 Current scope:
 
 - one jurisdictional place
-- side-by-side rollups for in-scope program and project threads
+- side-by-side rollups for in-scope program, project, and bounded election threads
 - per-thread money pressure, legal pressure, and evidence density
 - overall top counterparties across those threads
 - bounded comparison over the current graph, not new ingest

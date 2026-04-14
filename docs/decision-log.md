@@ -18,6 +18,14 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **The second legally constrained San Rafael local thread should come from the existing camping-ordinance corpus, not a new ingest lane**
+  - Once `QX-001` widened to four threads, the next missing representativeness problem was specific: the comparison still had only one legally constrained local thread.
+  - The right fix was not county breadth or another domain tranche. The repo already had enough truth across the San Rafael homelessness bundle, legal-precedent pair, and citywide council decision corpus to promote a second bounded thread: `program-san-rafael-camping-ordinance-implementation`.
+  - That support slice now lives at `data/normalized/san-rafael-camping-ordinance-program-01/bundle-01.json` and cross-walks existing city updates, legal explainers, council minutes, and the Boyd / Grants Pass case pair into one broader ordinance-implementation thread.
+  - Result: the San Rafael local-pressure comparison now spans `5` local threads with `2` legal-pressure-bearing local threads, and the legal-constraint summary now carries `2` linked programs in scope.
+  - Boundary: this thread adds no new raw-source ingest and no new money promotion. It is a bounded import/read-model widening over existing graph truth.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-second-legal-pressure-thread-should-come-from-existing-camping-ordinance-materials.md`
+
 - **The next graph phase should be driven by a bounded question set, not by more surface area**
   - The graph and projected read-model layer are now dense enough that future widening should be driven by missing answers rather than by more source coverage in the abstract.
   - The right next control layer is a small question ladder with one north-star question plus a handful of supporting questions, each mapped to existing read models and a clear ingest trigger.

@@ -1,6 +1,6 @@
 {
   "projection_id": "graph-v1",
-  "generated_at": "2026-04-13T12:51:59Z",
+  "generated_at": "2026-04-14T00:50:14Z",
   "manifest_path": "/Users/tammypais/projects/marin-civic-graph/registry/import-manifest.yaml",
   "output_dir": "data/projected/graph-v1",
   "bundle_reports": [
@@ -465,6 +465,36 @@
       ]
     },
     {
+      "bundle_id": "san-rafael-camping-ordinance-program-01__bundle-01",
+      "path": "data/normalized/san-rafael-camping-ordinance-program-01/bundle-01.json",
+      "sections": [
+        {
+          "section": "record_refs",
+          "mode": "nodes",
+          "input_count": 11,
+          "imported_count": 11,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "program_candidates",
+          "mode": "nodes",
+          "input_count": 1,
+          "imported_count": 1,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        },
+        {
+          "section": "case_candidates",
+          "mode": "nodes",
+          "input_count": 2,
+          "imported_count": 2,
+          "skipped_count": 0,
+          "skip_reasons": {}
+        }
+      ]
+    },
+    {
       "bundle_id": "project-dossiers-01__bundle-01",
       "path": "data/normalized/project-dossiers-01/bundle-01.json",
       "sections": [
@@ -786,7 +816,7 @@
     "MoneyFlow": 152,
     "Place": 14,
     "Proceeding": 13,
-    "Program": 3,
+    "Program": 4,
     "Project": 1,
     "Record": 879,
     "Seat": 5,
@@ -807,7 +837,7 @@
     "DECIDED_BY_INSTITUTION": 1478,
     "DERIVED_FROM_RECORD": 67,
     "DISCLOSED_IN_FILING": 160,
-    "EVIDENCED_BY": 6472,
+    "EVIDENCED_BY": 6478,
     "FILED_BY_ACTOR": 253,
     "FILED_BY_COMMITTEE": 232,
     "FILED_DURING_SEAT_SERVICE": 43,
@@ -824,9 +854,9 @@
     "HELD_BY_INSTITUTION": 283,
     "INVOLVES_ACTOR": 4,
     "INVOLVES_INSTITUTION": 5,
-    "IN_JURISDICTION": 41,
+    "IN_JURISDICTION": 42,
     "OFFICIAL_FILER": 22,
-    "OPERATED_BY_INSTITUTION": 3,
+    "OPERATED_BY_INSTITUTION": 4,
     "PART_OF_CASE": 22,
     "PART_OF_MEETING": 2970,
     "PRIMARY_FOR_ELECTION": 16,
@@ -840,17 +870,17 @@
     "RELATES_TO_AGENDA_ITEM": 10,
     "RELATES_TO_AGREEMENT": 5,
     "RELATES_TO_AMENDMENT": 3,
-    "RELATES_TO_CASE": 18,
+    "RELATES_TO_CASE": 20,
     "RELATES_TO_COMMITTEE": 269,
-    "RELATES_TO_DECISION": 386,
+    "RELATES_TO_DECISION": 392,
     "RELATES_TO_ELECTION": 313,
     "RELATES_TO_FILING": 41,
     "RELATES_TO_INSTITUTION": 14,
     "RELATES_TO_ISSUE": 64,
     "RELATES_TO_MEETING": 524,
     "RELATES_TO_MONEY_FLOW": 4,
-    "RELATES_TO_PLACE": 55,
-    "RELATES_TO_PROGRAM": 11,
+    "RELATES_TO_PLACE": 59,
+    "RELATES_TO_PROGRAM": 24,
     "RELATES_TO_PROJECT": 33,
     "RELATES_TO_RECORD": 262,
     "RELATES_TO_SEAT": 247,
@@ -865,10 +895,10 @@
     "TO_TARGET": 132,
     "VALIDATES": 16
   },
-  "total_nodes": 6233,
-  "total_edges": 21016,
-  "duplicate_node_merges": 265,
-  "duplicate_edge_merges": 801,
+  "total_nodes": 6234,
+  "total_edges": 21049,
+  "duplicate_node_merges": 278,
+  "duplicate_edge_merges": 846,
   "actor_alias_edge_remaps": 5,
   "node_conflicts": [
     {

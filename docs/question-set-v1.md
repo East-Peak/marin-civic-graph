@@ -37,15 +37,17 @@ Current answer surfaces:
 
 Current answer boundary:
 
-- `4` local threads are now in scope today:
-  - `1` program thread
+- `5` local threads are now in scope today:
+  - `2` program threads
   - `1` project thread
   - `2` QA-backed city-election threads
-- the answer is materially better than before, but it still has only one legal-pressure-bearing local thread
+- the answer now includes `2` legal-pressure-bearing local threads:
+  - `program-san-rafael-sanctioned-camping`
+  - `program-san-rafael-camping-ordinance-implementation`
 
 Next ingest trigger:
 
-- widen only when the graph needs a second legally constrained local thread or a materially different counterparty pattern to make this comparison more representative
+- widen only when the graph needs a materially different counterparty pattern or a second legally constrained local thread with its own direct money path to make this comparison more representative
 
 ## Supporting Questions
 

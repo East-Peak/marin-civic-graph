@@ -1,6 +1,6 @@
 # Graph Query Pack Report
 
-- `generated_at`: 2026-04-13T12:55:30Z
+- `generated_at`: 2026-04-14T00:50:14Z
 - `engine`: projection_jsonl
 - `projection_id`: graph-v1
 - `nodes`: 6233

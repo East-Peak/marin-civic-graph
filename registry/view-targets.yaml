@@ -27,6 +27,10 @@
     },
     {
       "view_type": "program_dossier",
+      "subject_id": "program-san-rafael-camping-ordinance-implementation"
+    },
+    {
+      "view_type": "program_dossier",
       "subject_id": "program-csl-building-forward"
     },
     {
@@ -48,6 +52,10 @@
     {
       "view_type": "program_local_pressure_summary",
       "subject_id": "program-san-rafael-sanctioned-camping"
+    },
+    {
+      "view_type": "program_local_pressure_summary",
+      "subject_id": "program-san-rafael-camping-ordinance-implementation"
     },
     {
       "view_type": "jurisdiction_local_pressure_comparison",

@@ -1,0 +1,300 @@
+{
+  "case_study_id": "san-rafael-camping-ordinance-program-01",
+  "bundle_id": "san-rafael-camping-ordinance-program-01__bundle-01",
+  "status": "bounded_local_legal_pressure_thread_support",
+  "generated_at": "2026-04-14T00:50:14Z",
+  "scope": {
+    "included": [
+      "one bounded San Rafael camping-ordinance implementation and enforcement thread",
+      "existing city updates, legal explainers, and council minutes already captured elsewhere in the repo",
+      "existing Boyd and Grants Pass case objects cross-walked to the broader ordinance thread"
+    ],
+    "excluded": [
+      "new raw-source ingestion",
+      "new money-flow promotion for encampment enforcement beyond already imported decision-linked flows",
+      "county or non-San-Rafael homelessness expansion"
+    ]
+  },
+  "record_refs": [
+    {
+      "id": "doc-2023-12-14-implementation-plan",
+      "document_type": "official_update",
+      "source_id": "san-rafael-camping-implementation-plan",
+      "artifact_path": "data/raw/san-rafael-camping-implementation-plan/2026-04-10/source.html",
+      "related_program_ids": [
+        "program-san-rafael-camping-ordinance-implementation"
+      ]
+    },
+    {
+      "id": "doc-2024-06-14-homelessness-update",
+      "document_type": "official_update",
+      "source_id": "san-rafael-homelessness-update-june-2024",
+      "artifact_path": "data/raw/san-rafael-homelessness-update-june-2024/2026-04-10/source.html",
+      "related_program_ids": [
+        "program-san-rafael-camping-ordinance-implementation"
+      ]
+    },
+    {
+      "id": "doc-2024-06-28-grants-pass-statement",
+      "document_type": "official_statement",
+      "source_id": "san-rafael-grants-pass-statement",
+      "artifact_path": "data/raw/san-rafael-grants-pass-statement/2026-04-10/source.html",
+      "related_program_ids": [
+        "program-san-rafael-camping-ordinance-implementation"
+      ]
+    },
+    {
+      "id": "doc-2024-08-08-boyd-dismissal-release",
+      "document_type": "news_release",
+      "source_id": "san-rafael-boyd-dismissal-news-release",
+      "artifact_path": "data/raw/san-rafael-boyd-dismissal-news-release/2026-04-10/source.html",
+      "related_program_ids": [
+        "program-san-rafael-camping-ordinance-implementation"
+      ]
+    },
+    {
+      "id": "doc-2025-01-24-homelessness-update",
+      "document_type": "official_update",
+      "source_id": "san-rafael-homelessness-update-jan-2025",
+      "artifact_path": "data/raw/san-rafael-homelessness-update-jan-2025/2026-04-10/source.html",
+      "related_program_ids": [
+        "program-san-rafael-camping-ordinance-implementation"
+      ]
+    },
+    {
+      "id": "record-san-rafael-grants-pass-explainer-2024-09-02",
+      "record_class": "legal_record",
+      "record_type": "official_legal_explainer",
+      "title": "Supreme Court\u2019s Grants Pass Ruling & Its Effect on San Rafael\u2019s Encampment Policy",
+      "source_id": "san-rafael-grants-pass-explainer",
+      "artifact_path": "data/raw/san-rafael-grants-pass-explainer/2026-04-10/source.html",
+      "text_path": "data/extracted/san-rafael-grants-pass-explainer/source.txt",
+      "published_at": "2024-09-02",
+      "issue_ids": [
+        "issue-homelessness",
+        "issue-encampments",
+        "issue-camping-ordinance"
+      ],
+      "place_ids": [
+        "place-san-rafael",
+        "place-mahon-creek-path"
+      ],
+      "related_case_ids": [
+        "case-boyd-v-city-of-san-rafael"
+      ],
+      "related_program_ids": [
+        "program-san-rafael-camping-ordinance-implementation"
+      ]
+    },
+    {
+      "id": "record-2023-07-10-san-rafael-city-council-special-minutes",
+      "record_class": "meeting_record",
+      "record_type": "minutes_pdf",
+      "source_id": "san-rafael-city-council-minutes",
+      "artifact_path": "data/raw/san-rafael-city-council-minutes/2026-04-12/pdfs/meeting-2023-07-10-san-rafael-city-council-special.pdf",
+      "meeting_id": "meeting-2023-07-10-san-rafael-city-council-special",
+      "source_url": "https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/07/CC-SA-MINUTES-2023-07-10-Special.pdf",
+      "title": "San Rafael City Council minutes - 2023-07-10 (Special)",
+      "capture_status": "captured_pdf_and_extracted_text",
+      "text_artifact_path": "data/extracted/san-rafael-city-council-minutes/2026-04-12/texts/meeting-2023-07-10-san-rafael-city-council-special.txt",
+      "page_count": 4,
+      "line_count": 121,
+      "related_program_ids": [
+        "program-san-rafael-camping-ordinance-implementation"
+      ]
+    },
+    {
+      "id": "record-2023-07-17-san-rafael-city-council-minutes",
+      "record_class": "meeting_record",
+      "record_type": "minutes_pdf",
+      "source_id": "san-rafael-city-council-minutes",
+      "artifact_path": "data/raw/san-rafael-city-council-minutes/2026-04-12/pdfs/meeting-2023-07-17-san-rafael-city-council.pdf",
+      "meeting_id": "meeting-2023-07-17-san-rafael-city-council",
+      "source_url": "https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/08/CC-SA-Minutes-2023-07-17.pdf",
+      "title": "San Rafael City Council minutes - 2023-07-17",
+      "capture_status": "captured_pdf_and_extracted_text",
+      "text_artifact_path": "data/extracted/san-rafael-city-council-minutes/2026-04-12/texts/meeting-2023-07-17-san-rafael-city-council.txt",
+      "page_count": 8,
+      "line_count": 266,
+      "related_program_ids": [
+        "program-san-rafael-camping-ordinance-implementation"
+      ]
+    },
+    {
+      "id": "record-2024-04-15-san-rafael-city-council-minutes",
+      "record_class": "meeting_record",
+      "record_type": "minutes_pdf",
+      "source_id": "san-rafael-city-council-minutes",
+      "artifact_path": "data/raw/san-rafael-city-council-minutes/2026-04-12/pdfs/meeting-2024-04-15-san-rafael-city-council.pdf",
+      "meeting_id": "meeting-2024-04-15-san-rafael-city-council",
+      "source_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2024/04/CC-SA-Minutes-2024-04-15.pdf",
+      "title": "San Rafael City Council minutes - 2024-04-15",
+      "capture_status": "captured_pdf_and_extracted_text",
+      "text_artifact_path": "data/extracted/san-rafael-city-council-minutes/2026-04-12/texts/meeting-2024-04-15-san-rafael-city-council.txt",
+      "page_count": 8,
+      "line_count": 286,
+      "related_program_ids": [
+        "program-san-rafael-camping-ordinance-implementation"
+      ]
+    },
+    {
+      "id": "record-2024-10-07-san-rafael-city-council-special-minutes",
+      "record_class": "meeting_record",
+      "record_type": "minutes_pdf",
+      "source_id": "san-rafael-city-council-minutes",
+      "artifact_path": "data/raw/san-rafael-city-council-minutes/2026-04-12/pdfs/meeting-2024-10-07-san-rafael-city-council-special.pdf",
+      "meeting_id": "meeting-2024-10-07-san-rafael-city-council-special",
+      "source_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2024/11/CC-SM-MINUTES-2024-10-07.pdf",
+      "title": "San Rafael City Council minutes - 2024-10-07 (Special)",
+      "capture_status": "captured_pdf_and_extracted_text",
+      "text_artifact_path": "data/extracted/san-rafael-city-council-minutes/2026-04-12/texts/meeting-2024-10-07-san-rafael-city-council-special.txt",
+      "page_count": 4,
+      "line_count": 117,
+      "related_program_ids": [
+        "program-san-rafael-camping-ordinance-implementation"
+      ]
+    },
+    {
+      "id": "record-2025-04-07-san-rafael-city-council-special-minutes",
+      "record_class": "meeting_record",
+      "record_type": "minutes_pdf",
+      "source_id": "san-rafael-city-council-minutes",
+      "artifact_path": "data/raw/san-rafael-city-council-minutes/2026-04-12/pdfs/meeting-2025-04-07-san-rafael-city-council-special.pdf",
+      "meeting_id": "meeting-2025-04-07-san-rafael-city-council-special",
+      "source_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/04/CC-Minutes-2025-04-07.pdf",
+      "title": "San Rafael City Council minutes - 2025-04-07 (Special)",
+      "capture_status": "captured_pdf_and_extracted_text",
+      "text_artifact_path": "data/extracted/san-rafael-city-council-minutes/2026-04-12/texts/meeting-2025-04-07-san-rafael-city-council-special.txt",
+      "page_count": 9,
+      "line_count": 330,
+      "related_program_ids": [
+        "program-san-rafael-camping-ordinance-implementation"
+      ]
+    }
+  ],
+  "program_candidates": [
+    {
+      "id": "program-san-rafael-camping-ordinance-implementation",
+      "name": "San Rafael camping ordinance implementation and enforcement",
+      "program_type": "camping_ordinance_implementation",
+      "institution_id": "inst-city-of-san-rafael",
+      "jurisdiction_place_id": "place-san-rafael",
+      "status": "active",
+      "record_ids": [
+        "doc-2023-12-14-implementation-plan",
+        "doc-2024-06-14-homelessness-update",
+        "doc-2024-06-28-grants-pass-statement",
+        "doc-2024-08-08-boyd-dismissal-release",
+        "record-san-rafael-grants-pass-explainer-2024-09-02",
+        "doc-2025-01-24-homelessness-update"
+      ],
+      "related_case_ids": [
+        "case-boyd-v-city-of-san-rafael",
+        "case-city-of-grants-pass-v-johnson"
+      ],
+      "related_decision_ids": [
+        "decision-2023-07-10-san-rafael-city-council-special-4a-motion-approval",
+        "decision-2023-07-17-san-rafael-city-council-6a-motion-approval",
+        "decision-2024-04-15-san-rafael-city-council-6b-decision-introduced-ordinance-waived-further-reading-of-ordinance-and-referred-to-it-by",
+        "decision-2024-08-19-ordinance-2040-introduction",
+        "decision-2024-10-07-san-rafael-city-council-special-2i-resolution-adoption-15349",
+        "decision-2025-04-07-san-rafael-city-council-special-6b-ordinance-introduction-introduced-the-ordinance-waived-further-reading-of-the-ordinance-and-referred"
+      ],
+      "place_ids": [
+        "place-lindaro-street",
+        "place-mahon-creek-path",
+        "place-andersen-drive",
+        "place-francisco-boulevard-west"
+      ]
+    }
+  ],
+  "case_candidates": [
+    {
+      "id": "case-boyd-v-city-of-san-rafael",
+      "name": "Boyd v. City of San Rafael",
+      "case_type": "civil_rights_camping_ordinance_challenge",
+      "court_name": "U.S. District Court, Northern District of California",
+      "court_institution_id": "inst-us-district-court-ndca",
+      "docket_number": "23-cv-04085-EMC",
+      "status": "dismissed",
+      "filed_at": "2023-08-11",
+      "closed_at": "2024-08-07",
+      "record_ids": [
+        "record-san-rafael-boyd-tro-order-2023-08-16",
+        "record-san-rafael-boyd-preliminary-injunction-order-2023-10-19",
+        "record-san-rafael-boyd-dismissal-order-2024-08-07",
+        "doc-2024-08-08-boyd-dismissal-release",
+        "doc-2024-08-19-item-5a-report",
+        "doc-2024-08-19-staff-report",
+        "doc-2024-06-28-grants-pass-statement",
+        "record-san-rafael-grants-pass-explainer-2024-09-02",
+        "record-san-rafael-sanctioned-camping-area-page"
+      ],
+      "issue_ids": [
+        "issue-homelessness",
+        "issue-encampments",
+        "issue-camping-ordinance"
+      ],
+      "place_ids": [
+        "place-san-rafael",
+        "place-mahon-creek-path"
+      ],
+      "related_decision_ids": [
+        "decision-2024-08-19-ordinance-2040-introduction",
+        "decision-2024-08-19-resolution-15336"
+      ],
+      "related_program_ids": [
+        "program-san-rafael-sanctioned-camping",
+        "program-san-rafael-camping-ordinance-implementation"
+      ],
+      "notes": [
+        "The first legal bundle now includes public filed-order copies for the TRO, preliminary injunction, and dismissal stages, plus the city's own official summaries of the amendment and implementation chain.",
+        "City records consistently say the operative Boyd injunction was grounded in ADA and Fourteenth Amendment state-created-danger theories, not the Eighth Amendment or Grants Pass directly."
+      ]
+    },
+    {
+      "id": "case-city-of-grants-pass-v-johnson",
+      "name": "City of Grants Pass v. Johnson",
+      "case_type": "supreme_court_public_camping_eighth_amendment_precedent",
+      "court_name": "Supreme Court of the United States",
+      "court_institution_id": "inst-united-states-supreme-court",
+      "docket_number": "23-175",
+      "status": "reversed_and_remanded",
+      "filed_at": "2023-08-22",
+      "closed_at": "2024-06-28",
+      "record_ids": [
+        "record-scotus-grants-pass-docket-23-175",
+        "record-scotus-grants-pass-opinion-2024-06-28",
+        "record-sf-city-attorney-grants-pass-amicus-post-2024-03-01",
+        "doc-2024-06-28-grants-pass-statement",
+        "record-san-rafael-grants-pass-explainer-2024-09-02"
+      ],
+      "issue_ids": [
+        "issue-homelessness",
+        "issue-encampments",
+        "issue-camping-ordinance"
+      ],
+      "place_ids": [
+        "place-grants-pass-oregon",
+        "place-oregon"
+      ],
+      "related_case_ids": [
+        "case-blake-v-city-of-grants-pass",
+        "case-johnson-v-city-of-grants-pass"
+      ],
+      "related_decision_ids": [
+        "decision-2024-08-19-ordinance-2040-introduction",
+        "decision-2024-08-19-resolution-15336"
+      ],
+      "related_program_ids": [
+        "program-san-rafael-sanctioned-camping",
+        "program-san-rafael-camping-ordinance-implementation"
+      ],
+      "notes": [
+        "This bundle treats the Supreme Court docket and slip opinion as the authoritative controlling-precedent layer.",
+        "San Rafael's own June 28 statement and September 2 explainer are preserved as local response records, not as substitutes for the Supreme Court opinion."
+      ]
+    }
+  ],
+  "open_questions": []
+}

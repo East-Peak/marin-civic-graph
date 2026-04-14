@@ -1749,6 +1749,7 @@ def program_local_pressure_summary(
         outgoing=outgoing,
         incoming=incoming,
     )
+    linked_decisions = list(program_payload["linked_decisions"])
     jurisdiction_place = program_payload["jurisdiction_place"]
     place_id = jurisdiction_place["id"] if jurisdiction_place else None
 
@@ -1821,7 +1822,8 @@ def program_local_pressure_summary(
         "jurisdiction_place": program_payload["jurisdiction_place"],
         "places": program_payload["places"],
         "metrics": {
-            "linked_decision_count": len(decision_explanations),
+            "linked_decision_count": len(linked_decisions),
+            "money_linked_decision_count": len(decision_explanations),
             "linked_money_flow_count": len(pressure["money_flow_ids"]),
             "linked_money_total_amount": pressure["linked_money_total_amount"],
             "linked_case_count": len(legal_case_rollups),
@@ -1830,6 +1832,7 @@ def program_local_pressure_summary(
             "top_counterparty_count": len(pressure["top_counterparties"]),
             "flow_type_counts": pressure["flow_type_counts"],
         },
+        "linked_decisions": linked_decisions,
         "decision_explanations": decision_explanations,
         "legal_case_rollups": legal_case_rollups,
         "top_counterparties": pressure["top_counterparties"][:10],
@@ -2065,7 +2068,7 @@ def jurisdiction_local_pressure_comparison(
                     "has_legal_pressure": payload["metrics"]["linked_case_count"] > 0,
                     "has_shared_issue_pressure": payload["metrics"]["shared_issue_count"] > 0,
                 },
-                "linked_decisions": payload["decision_explanations"],
+                "linked_decisions": payload["linked_decisions"],
                 "linked_cases": payload["legal_case_rollups"],
                 "top_counterparties": filter_counterparties_for_display(
                     payload["top_counterparties"],
@@ -2152,7 +2155,7 @@ def jurisdiction_local_pressure_comparison(
                     "has_agreement_lineage": payload["metrics"]["agreement_count"] > 0,
                     "has_amendment_lineage": payload["metrics"]["amendment_count"] > 0,
                 },
-                "linked_decisions": decision_explanations,
+                "linked_decisions": payload["linked_decisions"],
                 "linked_cases": legal_case_rollups,
                 "top_counterparties": filtered_counterparties[:3],
             }
