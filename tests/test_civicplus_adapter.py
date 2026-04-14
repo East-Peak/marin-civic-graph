@@ -270,20 +270,87 @@ class TestParseMeetingRowsMillValley:
                 assert field in m, f"Missing field {field!r}"
 
 
-# ---------------------------------------------------------------------------
-# TestCivicPlusAdapterStub
-# ---------------------------------------------------------------------------
 
-class TestCivicPlusAdapterStub:
-    def test_capture_raises_not_implemented(self):
-        adapter = CivicPlusAdapter(
-            source_config={
-                "id": "test-source",
-                "url": "https://example.com/AgendaCenter",
-                "jurisdiction_id": "test-jurisdiction",
-                "institution_id": "test-institution",
-            },
-            root_dir=Path("/tmp"),
+class TestCivicPlusAdapterCapture:
+    def _make_adapter(self, source_id, fixture_name, tmp_path, categories=None):
+        config = {
+            "id": source_id,
+            "adapter": "civicplus",
+            "url": f"https://example.gov/AgendaCenter",
+            "jurisdiction_id": f"place-{source_id.rsplit('-', 1)[0]}",
+            "institution_id": f"org-{source_id}",
+            "backfill_from": "2015-01-01",
+        }
+        if categories:
+            config["categories"] = categories
+        adapter = CivicPlusAdapter(config, tmp_path)
+        fixture_path = FIXTURES / fixture_name
+        fixture_html = fixture_path.read_text(errors="ignore")
+        adapter._fetch_page = lambda url: fixture_html
+        adapter._fetch_year = lambda url, cat_id, year, cookies: ""
+        return adapter
+
+    def test_capture_returns_dict(self, tmp_path):
+        adapter = self._make_adapter("corte-madera-town", "civicplus-corte-madera.html", tmp_path)
+        result = adapter.capture()
+        assert isinstance(result, dict)
+
+    def test_capture_has_required_envelope_fields(self, tmp_path):
+        adapter = self._make_adapter("corte-madera-town", "civicplus-corte-madera.html", tmp_path)
+        result = adapter.capture()
+        for field in ["capture_id", "source_id", "captured_at", "institution_id",
+                      "jurisdiction_id", "meeting_count", "artifact_counts",
+                      "meetings", "record_refs", "errors"]:
+            assert field in result, f"Missing field: {field}"
+        assert result["adapter"] == "civicplus"
+
+    def test_capture_meeting_count_matches(self, tmp_path):
+        adapter = self._make_adapter("corte-madera-town", "civicplus-corte-madera.html", tmp_path)
+        result = adapter.capture()
+        assert result["meeting_count"] == len(result["meetings"])
+        assert result["meeting_count"] > 20
+
+    def test_capture_writes_raw_html(self, tmp_path):
+        adapter = self._make_adapter("corte-madera-town", "civicplus-corte-madera.html", tmp_path)
+        adapter.capture()
+        raw_files = list((tmp_path / "data" / "raw").rglob("source.html"))
+        assert len(raw_files) == 1
+
+    def test_capture_record_refs_present(self, tmp_path):
+        adapter = self._make_adapter("corte-madera-town", "civicplus-corte-madera.html", tmp_path)
+        result = adapter.capture()
+        assert len(result["record_refs"]) >= 1
+        assert result["record_refs"][0]["record_type"] == "agenda_center_page"
+
+    def test_tiburon_meeting_count(self, tmp_path):
+        adapter = self._make_adapter("tiburon-town", "civicplus-tiburon.html", tmp_path)
+        result = adapter.capture()
+        assert result["meeting_count"] > 50
+
+    def test_capture_meetings_have_institution_id(self, tmp_path):
+        adapter = self._make_adapter("corte-madera-town", "civicplus-corte-madera.html", tmp_path)
+        result = adapter.capture()
+        for m in result["meetings"][:5]:
+            assert m["institution_id"] == "org-corte-madera-town"
+
+    def test_capture_meetings_have_meeting_id(self, tmp_path):
+        adapter = self._make_adapter("corte-madera-town", "civicplus-corte-madera.html", tmp_path)
+        result = adapter.capture()
+        for m in result["meetings"][:5]:
+            assert "meeting_id" in m
+            assert m["meeting_id"].startswith("meeting-")
+
+    def test_capture_has_categories_list(self, tmp_path):
+        adapter = self._make_adapter("corte-madera-town", "civicplus-corte-madera.html", tmp_path)
+        result = adapter.capture()
+        assert "categories" in result
+        assert len(result["categories"]) > 1
+
+    def test_category_filter(self, tmp_path):
+        adapter = self._make_adapter(
+            "corte-madera-town", "civicplus-corte-madera.html", tmp_path,
+            categories=["Town Council"],
         )
-        with pytest.raises(NotImplementedError):
-            adapter.capture()
+        result = adapter.capture()
+        named_cats = {m.get("category") for m in result["meetings"] if m.get("category")}
+        assert named_cats.issubset({"Town Council"})
