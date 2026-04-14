@@ -1,6 +1,6 @@
 # Question Set V1
 
-Verified: April 13, 2026
+Verified: April 14, 2026
 
 This file defines the first real question set for Marin Civic Graph.
 
@@ -47,6 +47,7 @@ Current answer boundary:
 - the answer now includes a second money-heavy local project thread with a materially different counterparty pattern:
   - `project-san-rafael-350-merrydale-interim-shelter`
   - this adds county-grant, property-acquisition, brokerage, and project-services pressure that was not visible in the prior comparison
+  - this thread now also carries packet-derived child records and stronger agreement boundaries for the November 17, 2025 and February 17, 2026 actions, so the project-pressure lane is better supported than before without inventing finer vote splits
 - the answer now includes a low-pressure San Rafael planning baseline:
   - `project-700-irwin-st`
   - this thread carries no current money or legal pressure in graph-v1 and acts as a bounded entitlement-project comparator instead of another homelessness or finance variant

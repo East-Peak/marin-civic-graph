@@ -18,6 +18,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-14
 
+- **Cross-model collaboration should use a repo-local handoff brief, not chat archaeology**
+  - The project is now dense enough that bringing in Claude or another model without a durable briefing would waste time and risk re-litigating architecture that is already settled.
+  - The right fix is a repo-local collaboration handoff that explains the architecture, the current graph state, the bounded question set, the main rules, and the best current work split between Codex and Claude.
+  - The new collaboration brief now lives at `docs/claude-collaboration-handoff.md`, and the README / AGENTS / workspace project memory now point collaborators to it before older chat history.
+  - Boundary: this handoff is not a second source of truth. It summarizes the current state and points back to the real control artifacts: `question-set-v1`, `open-questions`, `decision-log`, projection reports, and read-model outputs.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-14-cross-model-collaboration-should-use-a-repo-local-handoff-brief.md`
+
 - **Merrydale should gain packet-derived child records before any finer decision splitting**
   - The direct staff-report and agenda-packet support added on April 13 was enough to resolve the provenance question, but it still left the highest-value November 17, 2025 and February 17, 2026 Merrydale actions too collapsed for a clean project dossier.
   - The right next move was still bounded: promote packet-derived child records and stronger agreement boundaries where the packets already expose them, without pretending to have clause-level vote objects or a reopened procurement lane.

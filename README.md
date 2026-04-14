@@ -24,6 +24,26 @@ The product should make it easier to answer questions like:
 - What records justified it?
 - Which organizations, donors, contractors, or grantees were adjacent to the decision?
 
+## Current State
+
+As of April 14, 2026, this repo is past the sample-basket-only stage.
+
+Current live state:
+
+- graph-v1 projection: `6267` nodes / `21262` edges
+- fixed query pack: `5/5` passing
+- projected read-model pack: `22` views
+- current north-star answer covers `7` bounded San Rafael local threads across:
+  - `2` programs
+  - `3` projects
+  - `2` elections
+
+The strongest current product question is:
+
+- which San Rafael local threads carry the most combined money pressure and legal pressure, and who are the recurring counterparties around them?
+
+That question is now materially answerable from the projected graph layer.
+
 ## Product Thesis
 
 Local government is often formally public but practically obscure. The goal is not to invent a new theory of politics; it is to make institutional process legible.
@@ -67,6 +87,7 @@ Start narrow:
 - [Architecture Review Checklist](./docs/architecture-review-checklist.md)
 - [Graph Query Pack](./docs/graph-query-pack.md)
 - [Question Set V1](./docs/question-set-v1.md)
+- [Claude Collaboration Handoff](./docs/claude-collaboration-handoff.md)
 - [Daily Log 2026-04-13](./docs/daily-log-2026-04-13.md)
 - [Daily Log 2026-04-14](./docs/daily-log-2026-04-14.md)
 - [Graph View Layer](./docs/graph-view-layer.md)
