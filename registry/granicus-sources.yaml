@@ -1,0 +1,24 @@
+sources:
+  - id: marin-county-bos
+    adapter: granicus
+    url: https://marin.granicus.com/ViewPublisher.php?view_id=33
+    jurisdiction_id: place-marin-county
+    institution_id: org-marin-county-board-of-supervisors
+    backfill_from: "2019-01-01"
+    schedule: weekly
+
+  - id: novato-city-council
+    adapter: granicus
+    url: https://novato.granicus.com/ViewPublisher.php?view_id=7
+    jurisdiction_id: place-novato
+    institution_id: org-novato-city-council
+    backfill_from: "2019-01-01"
+    schedule: weekly
+
+  - id: sausalito-city-council
+    adapter: granicus
+    url: https://sausalito.granicus.com/ViewPublisher.php?view_id=6
+    jurisdiction_id: place-sausalito
+    institution_id: org-sausalito-city-council
+    backfill_from: "2019-01-01"
+    schedule: weekly
