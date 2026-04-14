@@ -260,17 +260,174 @@ def parse_legacy(html: str, backfill_from: str) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
-# Modern parser stubs (implemented in Task 4)
+# Modern-specific patterns
+# ---------------------------------------------------------------------------
+
+MONTH_NAMES = {
+    "jan": 1, "january": 1, "feb": 2, "february": 2,
+    "mar": 3, "march": 3, "apr": 4, "april": 4,
+    "may": 5, "jun": 6, "june": 6, "jul": 7, "july": 7,
+    "aug": 8, "august": 8, "sep": 9, "september": 9,
+    "oct": 10, "october": 10, "nov": 11, "november": 11,
+    "dec": 12, "december": 12,
+}
+
+# Matches numeric date pattern: MM / DD / YYYY (spaces or \xa0 around slashes).
+MODERN_NUMERIC_DATE_RE = re.compile(r"(\d{2})\s*/\s*(\d{2})\s*/\s*(\d{4})")
+
+# Matches named-month date: Mon[th] DD[,] YYYY (leading spaces ok for day).
+MODERN_NAMED_DATE_RE = re.compile(r"([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})")
+
+# Matches TabbedPanelsContent divs.  Each panel wraps one year's tbody.
+TABBED_CONTENT_RE = re.compile(
+    r'<div class="TabbedPanelsContent">(.*?)</div>\s*(?=<div class="TabbedPanelsContent">|</div>\s*</div>)',
+    re.S,
+)
+
+# Matches the year digit inside a TabbedPanelsTab <li>.
+TABBED_TAB_RE = re.compile(r'<li class="TabbedPanelsTab"[^>]*>\s*(\d{4})\s*</li>')
+
+
+# ---------------------------------------------------------------------------
+# Modern parser
 # ---------------------------------------------------------------------------
 
 def parse_modern_date(text: str) -> str | None:
-    """Parse a modern Granicus date string — implemented in Task 4."""
-    raise NotImplementedError("parse_modern_date not yet implemented")
+    """Parse a modern Granicus date string into ISO-8601 format.
+
+    Handles:
+    - ``03 / 24 / 2026`` and ``03\\xa0/\\xa024\\xa0/\\xa02026`` (numeric)
+    - ``Apr  7, 2026`` and ``April 14, 2026`` (named month)
+    - Optional ``- HH:MM PM`` time suffix (stripped before parsing)
+
+    Returns ``YYYY-MM-DD`` or ``None`` if the text cannot be parsed.
+    """
+    # Normalise non-breaking spaces and collapse surrounding whitespace.
+    normalised = text.replace("\xa0", " ").strip()
+
+    # Strip trailing time suffix (e.g. "- 6:00 PM" or "- 4:01 PM").
+    normalised = re.sub(r"\s*-\s*\d{1,2}:\d{2}\s*[AP]M\s*$", "", normalised, flags=re.I).strip()
+
+    # Try numeric pattern first (MM / DD / YYYY).
+    m = MODERN_NUMERIC_DATE_RE.search(normalised)
+    if m:
+        return f"{m.group(3)}-{m.group(1)}-{m.group(2)}"
+
+    # Try named-month pattern (Mon[th] D[D][,] YYYY).
+    m = MODERN_NAMED_DATE_RE.search(normalised)
+    if m:
+        month_key = m.group(1).lower()
+        month_num = MONTH_NAMES.get(month_key) or MONTH_NAMES.get(month_key[:3])
+        if month_num is not None:
+            return f"{m.group(3)}-{month_num:02d}-{int(m.group(2)):02d}"
+
+    return None
+
+
+def _parse_modern_row(cells: list[str], row_number: int) -> dict | None:
+    """Parse a modern Granicus row.
+
+    Two layouts are handled:
+
+    **Archive row — 6 or 7 cells:**
+      0 Name | 1 Date | 2 Duration | 3 Agenda | 4 Minutes | 5 Video [| 6 MP4]
+
+    **Upcoming row — 5 cells:**
+      0 Name | 1 Date | 2 AgendaLink | 3 EventLink | 4 eComment
+
+    Rows with fewer than 4 cells are skipped (returns None).
+    """
+    if len(cells) < 4:
+        return None
+
+    title = strip_tags(cells[0])
+    date_raw = strip_tags(cells[1])
+    date = parse_modern_date(date_raw)
+
+    if len(cells) >= 6:
+        # Archive row: Name | Date | Duration | Agenda | Minutes | Video [| MP4]
+        agenda_url = extract_href(cells[3])
+        minutes_url = extract_href(cells[4])
+        video_url = extract_onclick_url(cells[5]) or extract_href(cells[5])
+        mp4_url = extract_href(cells[6]) if len(cells) > 6 else None
+    else:
+        # Upcoming row (5 cells): Name | Date | Agenda | EventLink | eComment
+        agenda_url = extract_href(cells[2])
+        minutes_url = None
+        video_url = None
+        mp4_url = None
+
+    artifacts = {
+        "agenda": _artifact(agenda_url),
+        "minutes": _artifact(minutes_url),
+        "video": _artifact(video_url),
+        "mp4": _artifact(mp4_url),
+    }
+
+    all_urls = [agenda_url, minutes_url, video_url, mp4_url]
+    clip_id, event_id = _first_id(*all_urls)
+
+    return {
+        "date": date,
+        "title": title,
+        "meeting_type": classify_meeting(title),
+        "artifacts": artifacts,
+        "source_row_number": row_number,
+        "clip_id": clip_id,
+        "event_id": event_id,
+        "source_sort_epoch": None,
+    }
 
 
 def parse_modern(html: str, backfill_from: str) -> list[dict]:
-    """Parse a modern Granicus archive page — implemented in Task 4."""
-    raise NotImplementedError("parse_modern not yet implemented")
+    """Parse a modern Granicus archive page (TabbedPanels or flat tbody).
+
+    Attempts the TabbedPanels layout first: if ``<li class="TabbedPanelsTab">``
+    year tabs and ``<div class="TabbedPanelsContent">`` panels are found and
+    their counts match, each panel is parsed independently.
+
+    Falls back to extracting all ``<tr class="listingRow">`` rows from the
+    full document when the tabbed layout is not matched cleanly.
+
+    Args:
+        html: Full HTML source of the modern Granicus publisher view.
+        backfill_from: ISO-8601 date string (``YYYY-MM-DD``); rows earlier
+            than this date are excluded.
+
+    Returns:
+        List of meeting dicts in the order they appear in the document.
+    """
+    meetings: list[dict] = []
+    row_counter = 0
+
+    tabs = TABBED_TAB_RE.findall(html)
+    panels = TABBED_CONTENT_RE.findall(html)
+
+    if tabs and panels and len(tabs) == len(panels):
+        # Tabbed layout: iterate each year panel separately.
+        for _year, panel_html in zip(tabs, panels):
+            for row_html in ROW_RE.findall(panel_html):
+                row_counter += 1
+                cells = extract_cells(row_html)
+                meeting = _parse_modern_row(cells, row_counter)
+                if meeting is None:
+                    continue
+                if meeting["date"] and meeting["date"] < backfill_from:
+                    continue
+                meetings.append(meeting)
+    else:
+        # Flat layout: parse all rows from the full document.
+        for row_html in ROW_RE.findall(html):
+            row_counter += 1
+            cells = extract_cells(row_html)
+            meeting = _parse_modern_row(cells, row_counter)
+            if meeting is None:
+                continue
+            if meeting["date"] and meeting["date"] < backfill_from:
+                continue
+            meetings.append(meeting)
+
+    return meetings
 
 
 # ---------------------------------------------------------------------------
