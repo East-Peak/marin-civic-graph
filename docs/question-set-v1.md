@@ -37,9 +37,9 @@ Current answer surfaces:
 
 Current answer boundary:
 
-- `6` local threads are now in scope today:
+- `7` local threads are now in scope today:
   - `2` program threads
-  - `2` project threads
+  - `3` project threads
   - `2` QA-backed city-election threads
 - the answer now includes `2` legal-pressure-bearing local threads:
   - `program-san-rafael-sanctioned-camping`
@@ -47,12 +47,15 @@ Current answer boundary:
 - the answer now includes a second money-heavy local project thread with a materially different counterparty pattern:
   - `project-san-rafael-350-merrydale-interim-shelter`
   - this adds county-grant, property-acquisition, brokerage, and project-services pressure that was not visible in the prior comparison
+- the answer now includes a low-pressure San Rafael planning baseline:
+  - `project-700-irwin-st`
+  - this thread carries no current money or legal pressure in graph-v1 and acts as a bounded entitlement-project comparator instead of another homelessness or finance variant
 
 Next ingest trigger:
 
 - widen only when the graph needs either:
   - a second legally constrained local thread with its own direct money path
-  - or another materially different local-pressure pattern beyond the current program/project/election mix
+  - or a missing local thread that the current program/project/election/planning mix still cannot represent
 
 ## Supporting Questions
 

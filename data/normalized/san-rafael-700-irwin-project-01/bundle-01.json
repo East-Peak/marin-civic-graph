@@ -1,0 +1,80 @@
+{
+  "case_study_id": "san-rafael-700-irwin-project-01",
+  "bundle_id": "san-rafael-700-irwin-project-01__bundle-01",
+  "status": "bounded_project_support",
+  "generated_at": "2026-04-14T01:32:00Z",
+  "scope": {
+    "included": [
+      "one bounded San Rafael planning-project thread",
+      "existing official city project page and hearing notice records",
+      "applicant and place joins needed for a low-pressure project baseline"
+    ],
+    "excluded": [
+      "full permit-lane import into graph-v1",
+      "application, determination, or appeal node import",
+      "planning-commission meeting or decision promotion while the hearing-date mismatch remains open",
+      "money-flow or legal-pressure promotion for this thread"
+    ]
+  },
+  "record_refs": [
+    {
+      "id": "record-700-irwin-project-page",
+      "record_class": "administrative_record",
+      "record_type": "project_page",
+      "source_id": "san-rafael-700-irwin-project-page",
+      "artifact_path": "data/raw/san-rafael-700-irwin-project-page/2026-04-10/source.html",
+      "related_project_ids": [
+        "project-700-irwin-st"
+      ]
+    },
+    {
+      "id": "record-700-irwin-public-hearing-notice",
+      "record_class": "administrative_record",
+      "record_type": "hearing_notice",
+      "source_id": "san-rafael-700-irwin-public-hearing-notice",
+      "artifact_path": "data/raw/san-rafael-700-irwin-public-hearing-notice/2026-04-10/source.html",
+      "related_project_ids": [
+        "project-700-irwin-st"
+      ]
+    }
+  ],
+  "actor_candidates": [
+    {
+      "id": "actor-700-irwin-street-partners-llc",
+      "name": "700 Irwin Street Partners, LLC",
+      "actor_type": "business"
+    }
+  ],
+  "place_candidates": [
+    {
+      "id": "place-700-irwin-st",
+      "name": "700 Irwin Street",
+      "place_type": "address"
+    }
+  ],
+  "project_candidates": [
+    {
+      "id": "project-700-irwin-st",
+      "name": "700 Irwin St.",
+      "project_type": "mixed_use_residential",
+      "primary_place_id": "place-700-irwin-st",
+      "jurisdiction_place_id": "place-san-rafael",
+      "applicant_actor_id": "actor-700-irwin-street-partners-llc",
+      "status": "application_complete",
+      "source_system_ref": "PLAN25-046",
+      "record_ids": [
+        "record-700-irwin-project-page",
+        "record-700-irwin-public-hearing-notice"
+      ],
+      "evidence_summary": "This bounded San Rafael planning-project slice is anchored in the official city project page and the official public-hearing notice. It preserves the applicant, application number PLAN25-046, project type, and hearing-notice linkage without importing the broader permit schema into graph-v1."
+    }
+  ],
+  "open_questions": [
+    {
+      "id": "OQ-001",
+      "question": "The hearing notice body says January 13, 2025, but the project timeline strongly suggests January 13, 2026. Which hearing date is correct?",
+      "status": "open",
+      "note": "This bounded project slice can still enter graph-v1 as a low-pressure planning baseline while the hearing-date mismatch remains unresolved."
+    }
+  ]
+}

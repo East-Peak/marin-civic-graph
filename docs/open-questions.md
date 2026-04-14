@@ -53,6 +53,7 @@ Mirror the question here when it affects:
   - [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-700-irwin-public-hearing-notice/2026-04-10/source.html)
 - `question`: The hearing notice body says January 13, 2025, but the project timeline and posting chronology strongly suggest January 13, 2026. Which hearing date is correct?
 - `why it matters`: This affects the meeting join and any later decision chain tied to the project.
+- `current note`: `project-700-irwin-st` now enters graph-v1 as a bounded low-pressure planning-project baseline using only the official project page and hearing notice. The date mismatch remains the reason the thread does not yet promote a planning-commission meeting or decision.
 - `next evidence`: capture the linked meeting page or agenda where the hearing is listed officially.
 
 ### OQ-002: P5139 object boundary

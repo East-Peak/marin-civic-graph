@@ -18,6 +18,14 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **A low-pressure planning baseline can enter `QX-001` without reopening the permit lane**
+  - Once Merrydale entered the local-pressure comparison, the next question was whether another bounded local thread would improve the answer or just pad the count.
+  - `project-700-irwin-st` was the right test because it introduces a different local pattern: an entitlement/planning thread with an applicant, an application number, and a hearing notice, but no imported money or legal pressure.
+  - The new support slice now lives at `data/normalized/san-rafael-700-irwin-project-01/bundle-01.json` and imports only the applicant actor, the project place, the project node, and the two existing official records from the permit sample basket.
+  - Result: the San Rafael local-pressure comparison now spans `7` local threads with `3` projects, and the current comparison has a clean low-pressure planning baseline instead of only high-pressure delivery, election, and homelessness threads.
+  - Boundary: this does not reopen the permit ontology in graph-v1. The hearing-date mismatch remains open and still blocks promotion of a planning-commission meeting or decision.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-700-irwin-baseline-project-can-enter-qx-001-without-reopening-permits.md`
+
 - **A second money-heavy local project thread can strengthen `QX-001` from the existing council corpus**
   - Once `QX-001` already had two program threads, one project thread, and two election threads, the next representativeness gap was not abstract breadth. It was the lack of a second project-pressure pattern with materially different counterparties.
   - The right fix was still San Rafael-first and bounded: promote `project-san-rafael-350-merrydale-interim-shelter` from the existing city council meeting-page corpus, existing legal lane, and the sanctioned-camping context already in the repo.

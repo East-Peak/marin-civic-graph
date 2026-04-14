@@ -441,6 +441,35 @@
       ]
     },
     {
+      "path": "data/normalized/san-rafael-700-irwin-project-01/bundle-01.json",
+      "sections": [
+        {
+          "name": "record_refs",
+          "mode": "nodes",
+          "node_type": "Record",
+          "promotion_state": "promoted"
+        },
+        {
+          "name": "actor_candidates",
+          "mode": "nodes",
+          "node_type": "Actor",
+          "promotion_state": "promoted"
+        },
+        {
+          "name": "place_candidates",
+          "mode": "nodes",
+          "node_type": "Place",
+          "promotion_state": "promoted"
+        },
+        {
+          "name": "project_candidates",
+          "mode": "nodes",
+          "node_type": "Project",
+          "promotion_state": "promoted"
+        }
+      ]
+    },
+    {
       "path": "data/normalized/project-dossiers-01/bundle-01.json",
       "sections": [
         {

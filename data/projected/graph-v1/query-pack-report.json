@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-04-14T01:21:10Z",
+  "generated_at": "2026-04-14T01:32:18Z",
   "engine": "projection_jsonl",
   "projection_id": "graph-v1",
-  "projection_report_generated_at": "2026-04-14T01:15:35Z",
+  "projection_report_generated_at": "2026-04-14T01:32:00Z",
   "projection_counts": {
-    "nodes": 6250,
-    "edges": 21141,
+    "nodes": 6255,
+    "edges": 21148,
     "node_type_counts": {
-      "Actor": 52,
+      "Actor": 53,
       "AgendaItem": 2970,
       "Agreement": 8,
       "Amendment": 4,
@@ -23,11 +23,11 @@
       "Issue": 3,
       "Meeting": 283,
       "MoneyFlow": 157,
-      "Place": 14,
+      "Place": 15,
       "Proceeding": 13,
       "Program": 4,
-      "Project": 2,
-      "Record": 879,
+      "Project": 3,
+      "Record": 881,
       "Seat": 5,
       "SeatService": 8,
       "ValidationCheck": 16

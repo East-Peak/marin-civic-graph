@@ -5,7 +5,7 @@
   "subject_id": "place-san-rafael",
   "subject_node_type": "Place",
   "contract_version": 1,
-  "generated_at": "2026-04-14T01:16:06Z",
+  "generated_at": "2026-04-14T01:32:18Z",
   "jurisdiction_place": {
     "id": "place-san-rafael",
     "node_type": "Place",
@@ -24,9 +24,9 @@
     }
   },
   "metrics": {
-    "thread_count": 6,
+    "thread_count": 7,
     "program_thread_count": 2,
-    "project_thread_count": 2,
+    "project_thread_count": 3,
     "election_thread_count": 2,
     "money_pressure_thread_count": 5,
     "legal_pressure_thread_count": 2,
@@ -35,7 +35,7 @@
     "linked_money_total_amount": 23462619.74,
     "linked_case_count": 2,
     "shared_issue_count": 3,
-    "evidence_record_count": 270,
+    "evidence_record_count": 272,
     "top_counterparty_count": 19,
     "flow_type_counts": {
       "amendment_authorization": 1,
@@ -1505,7 +1505,7 @@
             "RELATES_TO_INSTITUTION"
           ],
           "flow_count": 4,
-          "total_amount": 3310536.8200000003
+          "total_amount": 3310536.82
         },
         {
           "node": {
@@ -3010,6 +3010,69 @@
           ]
         }
       ]
+    },
+    {
+      "rank": 7,
+      "thread_type": "project",
+      "subject": {
+        "id": "project-700-irwin-st",
+        "node_type": "Project",
+        "display_label": "700 Irwin St.",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-700-irwin-project-01__bundle-01"
+        ],
+        "properties": {
+          "applicant_actor_id": "actor-700-irwin-street-partners-llc",
+          "evidence_summary": "This bounded San Rafael planning-project slice is anchored in the official city project page and the official public-hearing notice. It preserves the applicant, application number PLAN25-046, project type, and hearing-notice linkage without importing the broader permit schema into graph-v1.",
+          "jurisdiction_place_id": "place-san-rafael",
+          "name": "700 Irwin St.",
+          "primary_place_id": "place-700-irwin-st",
+          "project_type": "mixed_use_residential",
+          "record_ids": [
+            "record-700-irwin-project-page",
+            "record-700-irwin-public-hearing-notice"
+          ],
+          "source_system_ref": "PLAN25-046",
+          "status": "application_complete"
+        }
+      },
+      "context": {
+        "id": "place-700-irwin-st",
+        "node_type": "Place",
+        "display_label": "700 Irwin Street",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-700-irwin-project-01__bundle-01"
+        ],
+        "properties": {
+          "name": "700 Irwin Street",
+          "place_type": "address"
+        }
+      },
+      "metrics": {
+        "linked_decision_count": 0,
+        "linked_money_flow_count": 0,
+        "linked_money_total_amount": 0,
+        "linked_case_count": 0,
+        "shared_issue_count": 0,
+        "evidence_record_count": 2,
+        "agreement_count": 0,
+        "amendment_count": 0,
+        "flow_type_counts": {}
+      },
+      "pressure_flags": {
+        "has_money_pressure": false,
+        "has_legal_pressure": false,
+        "has_shared_issue_pressure": false,
+        "has_agreement_lineage": false,
+        "has_amendment_lineage": false
+      },
+      "dominant_flow_types": [],
+      "top_counterparties": [],
+      "explanation_points": [],
+      "linked_decisions": [],
+      "linked_cases": []
     }
   ],
   "pairwise_comparisons": [
@@ -3166,7 +3229,7 @@
         "RELATES_TO_INSTITUTION"
       ],
       "flow_count": 4,
-      "total_amount": 3310536.8200000003
+      "total_amount": 3310536.82
     },
     {
       "node": {
@@ -10764,6 +10827,42 @@
           "program-san-rafael-camping-ordinance-implementation"
         ],
         "source_id": "san-rafael-homelessness-update-jan-2025"
+      }
+    },
+    {
+      "id": "record-700-irwin-project-page",
+      "node_type": "Record",
+      "display_label": "record-700-irwin-project-page",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-700-irwin-project-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-700-irwin-project-page/2026-04-10/source.html",
+        "record_class": "administrative_record",
+        "record_type": "project_page",
+        "related_project_ids": [
+          "project-700-irwin-st"
+        ],
+        "source_id": "san-rafael-700-irwin-project-page"
+      }
+    },
+    {
+      "id": "record-700-irwin-public-hearing-notice",
+      "node_type": "Record",
+      "display_label": "record-700-irwin-public-hearing-notice",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-700-irwin-project-01__bundle-01"
+      ],
+      "properties": {
+        "artifact_path": "data/raw/san-rafael-700-irwin-public-hearing-notice/2026-04-10/source.html",
+        "record_class": "administrative_record",
+        "record_type": "hearing_notice",
+        "related_project_ids": [
+          "project-700-irwin-st"
+        ],
+        "source_id": "san-rafael-700-irwin-public-hearing-notice"
       }
     },
     {

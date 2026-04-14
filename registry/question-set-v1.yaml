@@ -12,8 +12,8 @@
         "jurisdiction-san-rafael-local-pressure-comparison",
         "jurisdiction-san-rafael-local-pressure-explanation"
       ],
-      "pass_signal": "At least six bounded local threads rank cleanly across program, project, and election types, with explicit counterparties and more than one legal-pressure-bearing local thread.",
-      "next_ingest_trigger": "Add another bounded local thread only if the current comparison still lacks a second legally constrained local thread with its own direct money path, or if it needs another materially different pressure pattern beyond the current program/project/election mix."
+      "pass_signal": "At least seven bounded local threads rank cleanly across program, project, election, and planning-baseline types, with explicit counterparties and more than one legal-pressure-bearing local thread.",
+      "next_ingest_trigger": "Add another bounded local thread only if the current comparison still lacks a second legally constrained local thread with its own direct money path, or if the current program/project/election/planning mix still misses a clearly different local-pressure pattern."
     },
     {
       "id": "QX-002",

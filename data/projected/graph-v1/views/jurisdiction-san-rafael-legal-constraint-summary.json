@@ -5,7 +5,7 @@
   "subject_id": "place-san-rafael",
   "subject_node_type": "Place",
   "contract_version": 1,
-  "generated_at": "2026-04-14T01:16:06Z",
+  "generated_at": "2026-04-14T01:32:18Z",
   "jurisdiction_place": {
     "id": "place-san-rafael",
     "node_type": "Place",
@@ -148,6 +148,29 @@
           "program-san-rafael-sanctioned-camping"
         ],
         "status": "active"
+      }
+    },
+    {
+      "id": "project-700-irwin-st",
+      "node_type": "Project",
+      "display_label": "700 Irwin St.",
+      "year": null,
+      "source_bundle_ids": [
+        "san-rafael-700-irwin-project-01__bundle-01"
+      ],
+      "properties": {
+        "applicant_actor_id": "actor-700-irwin-street-partners-llc",
+        "evidence_summary": "This bounded San Rafael planning-project slice is anchored in the official city project page and the official public-hearing notice. It preserves the applicant, application number PLAN25-046, project type, and hearing-notice linkage without importing the broader permit schema into graph-v1.",
+        "jurisdiction_place_id": "place-san-rafael",
+        "name": "700 Irwin St.",
+        "primary_place_id": "place-700-irwin-st",
+        "project_type": "mixed_use_residential",
+        "record_ids": [
+          "record-700-irwin-project-page",
+          "record-700-irwin-public-hearing-notice"
+        ],
+        "source_system_ref": "PLAN25-046",
+        "status": "application_complete"
       }
     },
     {
