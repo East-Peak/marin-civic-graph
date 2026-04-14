@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-04-14T01:32:18Z",
+  "generated_at": "2026-04-14T02:44:29Z",
   "engine": "projection_jsonl",
   "projection_id": "graph-v1",
-  "projection_report_generated_at": "2026-04-14T01:32:00Z",
+  "projection_report_generated_at": "2026-04-14T02:44:20Z",
   "projection_counts": {
-    "nodes": 6255,
-    "edges": 21148,
+    "nodes": 6259,
+    "edges": 21176,
     "node_type_counts": {
       "Actor": 53,
       "AgendaItem": 2970,
@@ -27,7 +27,7 @@
       "Proceeding": 13,
       "Program": 4,
       "Project": 3,
-      "Record": 881,
+      "Record": 885,
       "Seat": 5,
       "SeatService": 8,
       "ValidationCheck": 16

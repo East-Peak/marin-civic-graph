@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-04-12
+updated_at: 2026-04-13
 sources:
   - source_id: san-rafael-city-campaign-form460-ocr
     label: San Rafael Selected Form 460 OCR Capture Path
@@ -698,6 +698,130 @@ sources:
     notes:
       - The packet includes the same behested-payment guidance attachment found in the governance protocols record.
       - Useful bridge between disclosure guidance and a concrete City Council meeting artifact.
+
+  - source_id: san-rafael-350-merrydale-staff-report-2025-11-17
+    label: San Rafael 350 Merrydale November 17 2025 Staff Report
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-merrydale-interim-shelter-project-01
+    source_category: documents
+    source_type: staff_report_pdf
+    entry_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/84d3410c-6.a-declaration-of-shelter-crisis-and-approval-of-related-actions-and-aquisition-of-the-property-at-350-merrydale-road-rev.pdf
+    discovery_urls:
+      - https://www.cityofsanrafael.org/meetings/city-council-november-17-2025/
+    fetch_strategy: pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - decision
+      - agreement
+      - money_flow
+      - record:staff_report
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: direct city PDF linked from the November 17, 2025 Council meeting page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Strengthens packet-level support for the county-grant, acquisition, and brokerage actions in the Merrydale project thread.
+
+  - source_id: san-rafael-city-council-2025-11-17-agenda-packet
+    label: San Rafael City Council November 17 2025 Agenda Packet
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-merrydale-interim-shelter-project-01
+    source_category: documents
+    source_type: agenda_packet_pdf
+    entry_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/5e2fbbbf-agenda-packet-2025-11-17-rev-3.pdf
+    discovery_urls:
+      - https://www.cityofsanrafael.org/meetings/city-council-november-17-2025/
+    fetch_strategy: pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - agenda_item
+      - decision
+      - agreement
+      - record:packet
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: direct city agenda-packet PDF for the November 17, 2025 Council meeting
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Tactical packet support for the Merrydale shelter-crisis, grant, and acquisition actions.
+
+  - source_id: san-rafael-350-merrydale-staff-report-2026-02-17
+    label: San Rafael 350 Merrydale February 17 2026 Staff Report
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-merrydale-interim-shelter-project-01
+    source_category: documents
+    source_type: staff_report_pdf
+    entry_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/78e1be80-2.b-350-merrydale-road-interim-shelter.pdf
+    discovery_urls:
+      - https://www.cityofsanrafael.org/meetings/city-council-tuesday-february-17-2026/
+    fetch_strategy: pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - decision
+      - agreement
+      - amendment
+      - money_flow
+      - record:staff_report
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: direct city PDF linked from the February 17, 2026 Council meeting page
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Strengthens packet-level support for the Merrydale design and project-services authorizations.
+
+  - source_id: san-rafael-city-council-2026-02-17-agenda-packet
+    label: San Rafael City Council February 17 2026 Agenda Packet
+    owner_type: institution
+    owner_id: san-rafael-city-council
+    jurisdiction_id: san-rafael
+    case_study_ids:
+      - san-rafael-merrydale-interim-shelter-project-01
+    source_category: documents
+    source_type: agenda_packet_pdf
+    entry_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/08989132-agenda-packet-2026-02-17.pdf
+    discovery_urls:
+      - https://www.cityofsanrafael.org/meetings/city-council-tuesday-february-17-2026/
+    fetch_strategy: pdf
+    browser_required: false
+    auth_required: false
+    paywall_status: none
+    expected_objects:
+      - meeting
+      - agenda_item
+      - decision
+      - agreement
+      - amendment
+      - record:packet
+    cadence: manual
+    history_depth: immutable_once_posted
+    source_tier_default: A
+    robots_notes: direct city agenda-packet PDF for the February 17, 2026 Council meeting
+    review_risk: medium
+    dedupe_key_strategy: exact_url
+    notes:
+      - Tactical packet support for the Merrydale predevelopment and project-services authorizations.
 
   - source_id: marin-resource-recovery-center-home
     label: Marin Resource Recovery Center home page

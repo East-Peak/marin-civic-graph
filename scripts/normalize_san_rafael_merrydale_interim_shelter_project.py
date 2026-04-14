@@ -65,10 +65,42 @@ def main() -> None:
         with_related_project_ref(pick(decision_records, "record-2024-11-04-san-rafael-city-council-special-minutes")),
         with_related_project_ref(pick(backbone_records, "record-2025-11-17-san-rafael-city-council-page")),
         with_related_project_ref(pick(decision_records, "record-2025-11-17-san-rafael-city-council-minutes")),
+        {
+            "id": "record-2025-11-17-350-merrydale-staff-report",
+            "record_class": "meeting_record",
+            "record_type": "staff_report",
+            "source_id": "san-rafael-350-merrydale-staff-report-2025-11-17",
+            "artifact_path": "data/raw/san-rafael-350-merrydale-staff-report-2025-11-17/2026-04-13/staff-report.pdf",
+            "related_project_ids": [PROJECT_ID],
+        },
+        {
+            "id": "record-2025-11-17-san-rafael-city-council-agenda-packet",
+            "record_class": "meeting_record",
+            "record_type": "agenda_packet",
+            "source_id": "san-rafael-city-council-2025-11-17-agenda-packet",
+            "artifact_path": "data/raw/san-rafael-city-council-2025-11-17-agenda-packet/2026-04-13/agenda-packet.pdf",
+            "related_project_ids": [PROJECT_ID],
+        },
         with_related_project_ref(pick(backbone_records, "record-2025-12-01-san-rafael-city-council-page")),
         with_related_project_ref(pick(decision_records, "record-2025-12-01-san-rafael-city-council-minutes")),
         with_related_project_ref(pick(backbone_records, "record-2026-02-17-san-rafael-city-council-page")),
         with_related_project_ref(pick(decision_records, "record-2026-02-17-san-rafael-city-council-minutes")),
+        {
+            "id": "record-2026-02-17-350-merrydale-staff-report",
+            "record_class": "meeting_record",
+            "record_type": "staff_report",
+            "source_id": "san-rafael-350-merrydale-staff-report-2026-02-17",
+            "artifact_path": "data/raw/san-rafael-350-merrydale-staff-report-2026-02-17/2026-04-13/staff-report.pdf",
+            "related_project_ids": [PROJECT_ID],
+        },
+        {
+            "id": "record-2026-02-17-san-rafael-city-council-agenda-packet",
+            "record_class": "meeting_record",
+            "record_type": "agenda_packet",
+            "source_id": "san-rafael-city-council-2026-02-17-agenda-packet",
+            "artifact_path": "data/raw/san-rafael-city-council-2026-02-17-agenda-packet/2026-04-13/agenda-packet.pdf",
+            "related_project_ids": [PROJECT_ID],
+        },
         with_related_project_ref(pick(backbone_records, "record-2026-03-16-san-rafael-city-council-page")),
         with_related_project_ref(pick(decision_records, "record-2026-03-16-san-rafael-city-council-minutes")),
         with_related_project_ref(pick(legal_records, "record-san-rafael-sanctioned-camping-area-page")),
@@ -86,10 +118,14 @@ def main() -> None:
             "record-2024-11-04-san-rafael-city-council-special-minutes",
             "record-2025-11-17-san-rafael-city-council-page",
             "record-2025-11-17-san-rafael-city-council-minutes",
+            "record-2025-11-17-350-merrydale-staff-report",
+            "record-2025-11-17-san-rafael-city-council-agenda-packet",
             "record-2025-12-01-san-rafael-city-council-page",
             "record-2025-12-01-san-rafael-city-council-minutes",
             "record-2026-02-17-san-rafael-city-council-page",
             "record-2026-02-17-san-rafael-city-council-minutes",
+            "record-2026-02-17-350-merrydale-staff-report",
+            "record-2026-02-17-san-rafael-city-council-agenda-packet",
             "record-2026-03-16-san-rafael-city-council-page",
             "record-2026-03-16-san-rafael-city-council-minutes",
             "record-san-rafael-sanctioned-camping-area-page",
@@ -105,7 +141,7 @@ def main() -> None:
             "decision-2026-02-17-350-merrydale-project-services-authorization",
             "decision-2026-03-16-san-rafael-city-council-4a-direction-or-receipt-received-the-project-update-and-provided-direction-regarding-the-operational-fra",
         ],
-        "evidence_summary": "This bounded project slice is anchored in official San Rafael meeting pages and official minutes covering ERF-3/County collaboration, November 2025 site acquisition actions, February 2026 design and construction-management authorizations, and the March 2026 operational-framework update.",
+        "evidence_summary": "This bounded project slice is anchored in official San Rafael meeting pages, official minutes, and direct city PDF staff reports and agenda packets covering ERF-3/County collaboration, November 2025 site acquisition actions, February 2026 design and construction-management authorizations, and the March 2026 operational-framework update.",
     }
 
     decision_candidates = [
@@ -127,6 +163,8 @@ def main() -> None:
             "record_ids": [
                 "record-2025-11-17-san-rafael-city-council-page",
                 "record-2025-11-17-san-rafael-city-council-minutes",
+                "record-2025-11-17-350-merrydale-staff-report",
+                "record-2025-11-17-san-rafael-city-council-agenda-packet",
             ],
         },
         {
@@ -141,6 +179,8 @@ def main() -> None:
             "record_ids": [
                 "record-2025-11-17-san-rafael-city-council-page",
                 "record-2025-11-17-san-rafael-city-council-minutes",
+                "record-2025-11-17-350-merrydale-staff-report",
+                "record-2025-11-17-san-rafael-city-council-agenda-packet",
             ],
         },
         with_project_ref(
@@ -161,6 +201,8 @@ def main() -> None:
             "record_ids": [
                 "record-2026-02-17-san-rafael-city-council-page",
                 "record-2026-02-17-san-rafael-city-council-minutes",
+                "record-2026-02-17-350-merrydale-staff-report",
+                "record-2026-02-17-san-rafael-city-council-agenda-packet",
             ],
         },
         with_project_ref(
@@ -184,6 +226,8 @@ def main() -> None:
             "evidence_record_ids": [
                 "record-2026-02-17-san-rafael-city-council-page",
                 "record-2026-02-17-san-rafael-city-council-minutes",
+                "record-2026-02-17-350-merrydale-staff-report",
+                "record-2026-02-17-san-rafael-city-council-agenda-packet",
             ],
         },
         {
@@ -198,6 +242,8 @@ def main() -> None:
             "evidence_record_ids": [
                 "record-2026-02-17-san-rafael-city-council-page",
                 "record-2026-02-17-san-rafael-city-council-minutes",
+                "record-2026-02-17-350-merrydale-staff-report",
+                "record-2026-02-17-san-rafael-city-council-agenda-packet",
             ],
         },
         {
@@ -212,6 +258,8 @@ def main() -> None:
             "evidence_record_ids": [
                 "record-2025-11-17-san-rafael-city-council-page",
                 "record-2025-11-17-san-rafael-city-council-minutes",
+                "record-2025-11-17-350-merrydale-staff-report",
+                "record-2025-11-17-san-rafael-city-council-agenda-packet",
             ],
         },
     ]
@@ -244,6 +292,8 @@ def main() -> None:
             "evidence_record_ids": [
                 "record-2025-11-17-san-rafael-city-council-page",
                 "record-2025-11-17-san-rafael-city-council-minutes",
+                "record-2025-11-17-350-merrydale-staff-report",
+                "record-2025-11-17-san-rafael-city-council-agenda-packet",
             ],
         },
         {
@@ -256,6 +306,8 @@ def main() -> None:
             "evidence_record_ids": [
                 "record-2025-11-17-san-rafael-city-council-page",
                 "record-2025-11-17-san-rafael-city-council-minutes",
+                "record-2025-11-17-350-merrydale-staff-report",
+                "record-2025-11-17-san-rafael-city-council-agenda-packet",
             ],
         },
         {
@@ -282,6 +334,8 @@ def main() -> None:
             "evidence_record_ids": [
                 "record-2026-02-17-san-rafael-city-council-page",
                 "record-2026-02-17-san-rafael-city-council-minutes",
+                "record-2026-02-17-350-merrydale-staff-report",
+                "record-2026-02-17-san-rafael-city-council-agenda-packet",
             ],
         },
         {
@@ -295,6 +349,8 @@ def main() -> None:
             "evidence_record_ids": [
                 "record-2026-02-17-san-rafael-city-council-page",
                 "record-2026-02-17-san-rafael-city-council-minutes",
+                "record-2026-02-17-350-merrydale-staff-report",
+                "record-2026-02-17-san-rafael-city-council-agenda-packet",
             ],
         },
     ]
@@ -308,11 +364,11 @@ def main() -> None:
             "included": [
                 "one bounded 350 Merrydale interim shelter project thread",
                 "existing official San Rafael council meeting pages and minutes already captured in the repo",
+                "direct city PDF staff reports and agenda packets linked from those official meeting pages",
                 "direct project money flows for county grant, acquisition, brokerage, and design/construction-management authorizations",
                 "project linkage back to the existing sanctioned-camping program context",
             ],
             "excluded": [
-                "new raw-source ingestion outside the already captured council corpus",
                 "seller-side counterparty inference where the official meeting pages do not name the seller",
                 "full county housing or procurement expansion",
                 "direct case linkage beyond the existing sanctioned-camping program context",
@@ -345,8 +401,8 @@ def main() -> None:
             {
                 "id": "OQ-037",
                 "status": "watch",
-                "question": "When should the 350 Merrydale project stop relying on page-backed custom decision objects for the November 17, 2025 and February 17, 2026 actions and move to packet/staff-report-level extraction?",
-                "why_it_matters": "The current bounded project slice is strong enough for pressure ranking and dossier generation, but the custom decision objects still reflect official meeting-page language because the citywide minutes parser did not preserve the 2025-11-17 sub-action titles or the 2026-02-17 item-specific decision node.",
+                "question": "Now that the 350 Merrydale thread has direct staff-report and agenda-packet support, when should the November 17, 2025 and February 17, 2026 custom decision objects be split into stricter packet-derived child decisions or agreement-specific records?",
+                "why_it_matters": "The bounded project slice no longer relies on page-plus-minutes evidence alone, but the 2025-11-17 grant/acquisition sub-actions and the 2026-02-17 services authorization still use custom decision objects instead of packet-derived child boundaries.",
             }
         ],
     }

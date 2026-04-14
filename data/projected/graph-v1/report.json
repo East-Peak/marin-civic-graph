@@ -1,6 +1,6 @@
 {
   "projection_id": "graph-v1",
-  "generated_at": "2026-04-14T01:32:00Z",
+  "generated_at": "2026-04-14T02:44:20Z",
   "manifest_path": "/Users/tammypais/projects/marin-civic-graph/registry/import-manifest.yaml",
   "output_dir": "data/projected/graph-v1",
   "bundle_reports": [
@@ -501,8 +501,8 @@
         {
           "section": "record_refs",
           "mode": "nodes",
-          "input_count": 11,
-          "imported_count": 11,
+          "input_count": 15,
+          "imported_count": 15,
           "skipped_count": 0,
           "skip_reasons": {}
         },
@@ -918,7 +918,7 @@
     "Proceeding": 13,
     "Program": 4,
     "Project": 3,
-    "Record": 881,
+    "Record": 885,
     "Seat": 5,
     "SeatService": 8,
     "ValidationCheck": 16
@@ -937,7 +937,7 @@
     "DECIDED_BY_INSTITUTION": 1481,
     "DERIVED_FROM_RECORD": 67,
     "DISCLOSED_IN_FILING": 160,
-    "EVIDENCED_BY": 6515,
+    "EVIDENCED_BY": 6539,
     "FILED_BY_ACTOR": 253,
     "FILED_BY_COMMITTEE": 232,
     "FILED_DURING_SEAT_SERVICE": 43,
@@ -981,7 +981,7 @@
     "RELATES_TO_MONEY_FLOW": 4,
     "RELATES_TO_PLACE": 59,
     "RELATES_TO_PROGRAM": 25,
-    "RELATES_TO_PROJECT": 61,
+    "RELATES_TO_PROJECT": 65,
     "RELATES_TO_RECORD": 262,
     "RELATES_TO_SEAT": 247,
     "RELATES_TO_VALIDATIONCHECK": 16,
@@ -995,8 +995,8 @@
     "TO_TARGET": 135,
     "VALIDATES": 16
   },
-  "total_nodes": 6255,
-  "total_edges": 21148,
+  "total_nodes": 6259,
+  "total_edges": 21176,
   "duplicate_node_merges": 292,
   "duplicate_edge_merges": 885,
   "actor_alias_edge_remaps": 5,

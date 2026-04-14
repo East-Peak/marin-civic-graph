@@ -1,10 +1,10 @@
 # Graph Query Pack Report
 
-- `generated_at`: 2026-04-14T01:32:18Z
+- `generated_at`: 2026-04-14T02:44:29Z
 - `engine`: projection_jsonl
 - `projection_id`: graph-v1
-- `nodes`: 6255
-- `edges`: 21148
+- `nodes`: 6259
+- `edges`: 21176
 - `queries_passed`: 5/5
 
 ## Q1: actor-kate-colin dossier

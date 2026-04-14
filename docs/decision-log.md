@@ -34,6 +34,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
   - Boundary: this is still a bounded local-thread widening. It does not justify reopening broad procurement ingest, and it leaves packet/staff-report refinement for the hardest Merrydale decision boundaries as a follow-on question.
   - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-merrydale-project-thread-should-enter-qx-001-from-existing-council-corpus.md`
 
+- **Merrydale needed direct packet and staff-report support before any finer project splitting**
+  - Once Merrydale became the top-ranked local thread, the weak spot was no longer whether it belonged in `QX-001`. The weak spot was provenance on its hardest November 17, 2025 and February 17, 2026 decision boundaries.
+  - The right next move was still bounded: capture the direct city PDF staff reports and agenda packets already linked from the official meeting pages, then attach those records to the existing project, decision, agreement, amendment, and money-flow objects.
+  - Result: the Merrydale support bundle now carries those four direct PDFs, the project dossier now carries `15` evidence records, and `OQ-037` is narrowed from provenance weakness to object-boundary refinement.
+  - Boundary: this still does not justify packet-derived child decisions everywhere. The remaining question is when to split the current custom decision objects, not whether the thread has enough official support to stay in graph-v1.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-merrydale-should-gain-direct-packet-and-staff-report-support-before-further-splitting.md`
+
 - **The second legally constrained San Rafael local thread should come from the existing camping-ordinance corpus, not a new ingest lane**
   - Once `QX-001` widened to four threads, the next missing representativeness problem was specific: the comparison still had only one legally constrained local thread.
   - The right fix was not county breadth or another domain tranche. The repo already had enough truth across the San Rafael homelessness bundle, legal-precedent pair, and citywide council decision corpus to promote a second bounded thread: `program-san-rafael-camping-ordinance-implementation`.
