@@ -431,9 +431,78 @@ def parse_modern(html: str, backfill_from: str) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
-# Adapter stub
+# Adapter
 # ---------------------------------------------------------------------------
 
 class GranicusAdapter(BaseAdapter):
+    """Granicus Publisher View adapter.
+    Auto-detects legacy vs modern template and dispatches to the appropriate parser.
+    """
+
+    def _fetch(self, url: str) -> str:
+        """Fetch HTML from URL. Extracted as method for test monkey-patching."""
+        return fetch_html(url)
+
     def capture(self) -> dict:
-        raise NotImplementedError("Granicus capture not yet implemented")
+        html = self._fetch(self.url)
+        variant = detect_variant(html)
+        captured_at = self.utc_now_iso()
+
+        # Write raw HTML
+        raw_dir = self.raw_dir()
+        raw_dir.mkdir(parents=True, exist_ok=True)
+        raw_path = raw_dir / "source.html"
+        raw_path.write_text(html, encoding="utf-8")
+
+        # Parse meetings using the detected variant
+        if variant == "legacy":
+            meetings = parse_legacy(html, backfill_from=self.backfill_from)
+        else:
+            meetings = parse_modern(html, backfill_from=self.backfill_from)
+
+        # Stamp each meeting with institution_id and meeting_id
+        for m in meetings:
+            m["institution_id"] = self.institution_id
+            slug = self.source_id
+            if m.get("clip_id"):
+                m["meeting_id"] = f"meeting-{slug}-{m['clip_id']}"
+            elif m.get("date"):
+                row = m["source_row_number"]
+                m["meeting_id"] = f"meeting-{slug}-{m['date']}-row-{row}"
+            else:
+                m["meeting_id"] = f"meeting-{slug}-row-{m['source_row_number']}"
+
+        # Compute artifact counts
+        artifact_counts: dict[str, int] = {}
+        for m in meetings:
+            for art_name, art in m.get("artifacts", {}).items():
+                if art.get("available"):
+                    artifact_counts[art_name] = artifact_counts.get(art_name, 0) + 1
+
+        # Build record_refs
+        record_refs = [
+            {
+                "id": f"record-{self.source_id}-archive-page-{captured_at[:10]}",
+                "record_type": "meeting_archive_page",
+                "source_id": self.source_id,
+                "artifact_path": str(raw_path.relative_to(self.root)),
+                "captured_at": captured_at,
+            }
+        ]
+
+        return {
+            "capture_id": self.capture_id(),
+            "source_id": self.source_id,
+            "adapter": "granicus",
+            "variant": variant,
+            "captured_at": captured_at,
+            "url": self.url,
+            "jurisdiction_id": self.jurisdiction_id,
+            "institution_id": self.institution_id,
+            "raw_artifact": str(raw_path.relative_to(self.root)),
+            "meeting_count": len(meetings),
+            "artifact_counts": artifact_counts,
+            "meetings": meetings,
+            "record_refs": record_refs,
+            "errors": [],
+        }

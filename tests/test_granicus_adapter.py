@@ -19,6 +19,7 @@ from adapters.granicus import (
     parse_legacy_date,
     parse_modern,
     parse_modern_date,
+    GranicusAdapter,
 )
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
@@ -261,3 +262,92 @@ class TestParseModern:
         meetings = parse_modern(sausalito_html, backfill_from="2019-01-01")
         minutes = [m for m in meetings if m["artifacts"].get("minutes", {}).get("available")]
         assert len(minutes) > 30
+
+
+class TestGranicusAdapterCapture:
+    """Integration tests using saved HTML fixtures (no live HTTP)."""
+
+    def _make_adapter(self, source_id, fixture_name, tmp_path):
+        config = {
+            "id": source_id,
+            "adapter": "granicus",
+            "url": "https://example.granicus.com/ViewPublisher.php?view_id=1",
+            "jurisdiction_id": f"place-{source_id.rsplit('-', 1)[0]}",
+            "institution_id": f"org-{source_id}",
+            "backfill_from": "2019-01-01",
+        }
+        adapter = GranicusAdapter(config, tmp_path)
+        fixture_path = FIXTURES / fixture_name
+        adapter._fetch = lambda url: fixture_path.read_text(errors="ignore")
+        return adapter
+
+    def test_legacy_capture_returns_dict(self, tmp_path):
+        adapter = self._make_adapter("marin-county-bos", "granicus-marin-county-bos.html", tmp_path)
+        result = adapter.capture()
+        assert isinstance(result, dict)
+        assert result["source_id"] == "marin-county-bos"
+        assert result["variant"] == "legacy"
+
+    def test_modern_capture_returns_dict(self, tmp_path):
+        adapter = self._make_adapter("novato-city-council", "granicus-novato-city-council.html", tmp_path)
+        result = adapter.capture()
+        assert isinstance(result, dict)
+        assert result["variant"] == "modern"
+
+    def test_capture_has_required_envelope_fields(self, tmp_path):
+        adapter = self._make_adapter("marin-county-bos", "granicus-marin-county-bos.html", tmp_path)
+        result = adapter.capture()
+        assert "capture_id" in result
+        assert "source_id" in result
+        assert "captured_at" in result
+        assert "institution_id" in result
+        assert "jurisdiction_id" in result
+        assert "meeting_count" in result
+        assert "artifact_counts" in result
+        assert "meetings" in result
+        assert "record_refs" in result
+        assert "errors" in result
+
+    def test_capture_meeting_count_matches(self, tmp_path):
+        adapter = self._make_adapter("marin-county-bos", "granicus-marin-county-bos.html", tmp_path)
+        result = adapter.capture()
+        assert result["meeting_count"] == len(result["meetings"])
+        assert result["meeting_count"] > 200
+
+    def test_capture_writes_raw_html(self, tmp_path):
+        adapter = self._make_adapter("marin-county-bos", "granicus-marin-county-bos.html", tmp_path)
+        adapter.capture()
+        raw_files = list((tmp_path / "data" / "raw" / "marin-county-bos").rglob("source.html"))
+        assert len(raw_files) == 1
+
+    def test_capture_record_refs_present(self, tmp_path):
+        adapter = self._make_adapter("marin-county-bos", "granicus-marin-county-bos.html", tmp_path)
+        result = adapter.capture()
+        assert len(result["record_refs"]) >= 1
+        ref = result["record_refs"][0]
+        assert "id" in ref
+        assert "record_type" in ref
+        assert ref["record_type"] == "meeting_archive_page"
+
+    def test_novato_meeting_count_reasonable(self, tmp_path):
+        adapter = self._make_adapter("novato-city-council", "granicus-novato-city-council.html", tmp_path)
+        result = adapter.capture()
+        assert result["meeting_count"] > 200
+
+    def test_sausalito_meeting_count_reasonable(self, tmp_path):
+        adapter = self._make_adapter("sausalito-city-council", "granicus-sausalito-city-council.html", tmp_path)
+        result = adapter.capture()
+        assert result["meeting_count"] > 100
+
+    def test_capture_meetings_have_institution_id(self, tmp_path):
+        adapter = self._make_adapter("novato-city-council", "granicus-novato-city-council.html", tmp_path)
+        result = adapter.capture()
+        for m in result["meetings"][:5]:
+            assert m["institution_id"] == "org-novato-city-council"
+
+    def test_capture_meetings_have_meeting_id(self, tmp_path):
+        adapter = self._make_adapter("novato-city-council", "granicus-novato-city-council.html", tmp_path)
+        result = adapter.capture()
+        for m in result["meetings"][:5]:
+            assert "meeting_id" in m
+            assert m["meeting_id"].startswith("meeting-")
