@@ -185,7 +185,7 @@ def run_verification(driver) -> dict:
     check(
         "Merrydale project has linked decisions",
         """
-        MATCH (d:Decision)-[:ABOUT_PROJECT]->(p:Project)
+        MATCH (p:Project)-[:RELATES_TO_DECISION]->(d:Decision)
         WHERE p.id CONTAINS 'merrydale'
         RETURN count(d) AS cnt
         """,
