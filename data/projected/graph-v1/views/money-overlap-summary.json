@@ -3,7 +3,7 @@
   "title": "Money overlap summary",
   "view_type": "money_overlap_summary",
   "contract_version": 1,
-  "generated_at": "2026-04-14T02:44:21Z",
+  "generated_at": "2026-04-14T12:28:41Z",
   "metrics": {
     "money_flow_count": 157,
     "flow_type_counts": {
@@ -127,6 +127,55 @@
     },
     {
       "node": {
+        "id": "inst-city-of-san-rafael",
+        "node_type": "Institution",
+        "display_label": "City of San Rafael",
+        "year": null,
+        "source_bundle_ids": [
+          "campaign-finance-form-803-slice-01__bundle-01",
+          "canonical-seeds-san-rafael-01",
+          "legal-precedent-01__bundle-01",
+          "legal-precedent-02__bundle-01",
+          "san-rafael-election-records-01__bundle-01",
+          "san-rafael-homelessness-01__bundle-01"
+        ],
+        "properties": {
+          "evidence_record_ids": [
+            "record-san-rafael-city-council-2024-08-19-item-5a-report",
+            "record-kate-colin-form-803-2025-09-04",
+            "record-san-rafael-boyd-tro-order-2023-08-16",
+            "record-san-rafael-boyd-preliminary-injunction-order-2023-10-19",
+            "doc-2024-08-08-boyd-dismissal-release",
+            "record-san-rafael-boyd-dismissal-order-2024-08-07",
+            "doc-2024-06-28-grants-pass-statement",
+            "record-san-rafael-grants-pass-explainer-2024-09-02"
+          ],
+          "institution_type": "city_government",
+          "jurisdiction_place_id": "place-san-rafael",
+          "name": "City of San Rafael",
+          "seed_status": "canonical_seed"
+        }
+      },
+      "flow_count": 7,
+      "flow_types": [
+        "amendment_authorization",
+        "behested_payment",
+        "contract_authorization",
+        "grant_award",
+        "property_acquisition_authorization"
+      ],
+      "relationship_types": [
+        "RELATES_TO_INSTITUTION",
+        "TO_TARGET"
+      ],
+      "source_bundle_ids": [
+        "campaign-finance-form-803-slice-01__bundle-01",
+        "san-rafael-homelessness-01__bundle-01",
+        "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+      ]
+    },
+    {
+      "node": {
         "id": "decision-2024-08-19-resolution-15336",
         "node_type": "Decision",
         "display_label": "Resolution 15336 appropriating $2,256,400 and authorizing $2,002,400 in contracts",
@@ -179,12 +228,17 @@
             "record-2025-11-17-san-rafael-city-council-minutes",
             "record-2025-11-17-350-merrydale-staff-report",
             "record-2025-11-17-san-rafael-city-council-agenda-packet",
+            "record-2025-11-17-350-merrydale-resolution-county-grant-and-affordable-housing",
+            "record-2025-11-17-350-merrydale-resolution-purchase-and-brokerage",
             "record-2025-12-01-san-rafael-city-council-page",
             "record-2025-12-01-san-rafael-city-council-minutes",
             "record-2026-02-17-san-rafael-city-council-page",
             "record-2026-02-17-san-rafael-city-council-minutes",
             "record-2026-02-17-350-merrydale-staff-report",
             "record-2026-02-17-san-rafael-city-council-agenda-packet",
+            "record-2026-02-17-350-merrydale-resolution-project-services",
+            "record-2026-02-17-350-merrydale-swinerton-psa",
+            "record-2026-02-17-350-merrydale-lca-amendment",
             "record-2026-03-16-san-rafael-city-council-page",
             "record-2026-03-16-san-rafael-city-council-minutes",
             "record-san-rafael-sanctioned-camping-area-page"
@@ -499,7 +553,7 @@
       "node": {
         "id": "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
         "node_type": "Decision",
-        "display_label": "350 Merrydale acquisition and brokerage approval",
+        "display_label": "350 Merrydale purchase and brokerage resolution",
         "year": null,
         "source_bundle_ids": [
           "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
@@ -514,10 +568,15 @@
             "record-2025-11-17-san-rafael-city-council-page",
             "record-2025-11-17-san-rafael-city-council-minutes",
             "record-2025-11-17-350-merrydale-staff-report",
-            "record-2025-11-17-san-rafael-city-council-agenda-packet"
+            "record-2025-11-17-san-rafael-city-council-agenda-packet",
+            "record-2025-11-17-350-merrydale-resolution-purchase-and-brokerage"
+          ],
+          "related_decision_id": "decision-2025-11-17-san-rafael-city-council-6v-resolution-adoption-15478-15479-15480",
+          "resolution_numbers": [
+            "15480"
           ],
           "status": "adopted",
-          "title": "350 Merrydale acquisition and brokerage approval"
+          "title": "350 Merrydale purchase and brokerage resolution"
         }
       },
       "flow_count": 2,
@@ -536,7 +595,7 @@
       "node": {
         "id": "decision-2026-02-17-350-merrydale-project-services-authorization",
         "node_type": "Decision",
-        "display_label": "350 Merrydale project services authorization",
+        "display_label": "350 Merrydale project services resolution",
         "year": null,
         "source_bundle_ids": [
           "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
@@ -551,10 +610,13 @@
             "record-2026-02-17-san-rafael-city-council-page",
             "record-2026-02-17-san-rafael-city-council-minutes",
             "record-2026-02-17-350-merrydale-staff-report",
-            "record-2026-02-17-san-rafael-city-council-agenda-packet"
+            "record-2026-02-17-san-rafael-city-council-agenda-packet",
+            "record-2026-02-17-350-merrydale-resolution-project-services",
+            "record-2026-02-17-350-merrydale-swinerton-psa",
+            "record-2026-02-17-350-merrydale-lca-amendment"
           ],
           "status": "adopted",
-          "title": "350 Merrydale project services authorization"
+          "title": "350 Merrydale project services resolution"
         }
       },
       "flow_count": 2,
@@ -567,51 +629,6 @@
       ],
       "source_bundle_ids": [
         "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
-      ]
-    },
-    {
-      "node": {
-        "id": "inst-city-of-san-rafael",
-        "node_type": "Institution",
-        "display_label": "City of San Rafael",
-        "year": null,
-        "source_bundle_ids": [
-          "campaign-finance-form-803-slice-01__bundle-01",
-          "canonical-seeds-san-rafael-01",
-          "legal-precedent-01__bundle-01",
-          "legal-precedent-02__bundle-01",
-          "san-rafael-election-records-01__bundle-01",
-          "san-rafael-homelessness-01__bundle-01"
-        ],
-        "properties": {
-          "evidence_record_ids": [
-            "record-san-rafael-city-council-2024-08-19-item-5a-report",
-            "record-kate-colin-form-803-2025-09-04",
-            "record-san-rafael-boyd-tro-order-2023-08-16",
-            "record-san-rafael-boyd-preliminary-injunction-order-2023-10-19",
-            "doc-2024-08-08-boyd-dismissal-release",
-            "record-san-rafael-boyd-dismissal-order-2024-08-07",
-            "doc-2024-06-28-grants-pass-statement",
-            "record-san-rafael-grants-pass-explainer-2024-09-02"
-          ],
-          "institution_type": "city_government",
-          "jurisdiction_place_id": "place-san-rafael",
-          "name": "City of San Rafael",
-          "seed_status": "canonical_seed"
-        }
-      },
-      "flow_count": 2,
-      "flow_types": [
-        "behested_payment",
-        "grant_award"
-      ],
-      "relationship_types": [
-        "RELATES_TO_INSTITUTION",
-        "TO_TARGET"
-      ],
-      "source_bundle_ids": [
-        "campaign-finance-form-803-slice-01__bundle-01",
-        "san-rafael-homelessness-01__bundle-01"
       ]
     },
     {

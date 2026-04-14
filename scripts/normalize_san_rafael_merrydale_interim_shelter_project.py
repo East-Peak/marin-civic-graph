@@ -60,6 +60,28 @@ def main() -> None:
     decisions = index_by_id(council_decisions["decision_candidates"])
     legal_records = index_by_id(legal_local["record_refs"])
 
+    nov_17_base_record_ids = [
+        "record-2025-11-17-san-rafael-city-council-page",
+        "record-2025-11-17-san-rafael-city-council-minutes",
+        "record-2025-11-17-350-merrydale-staff-report",
+        "record-2025-11-17-san-rafael-city-council-agenda-packet",
+    ]
+    nov_17_child_record_ids = [
+        "record-2025-11-17-350-merrydale-resolution-county-grant-and-affordable-housing",
+        "record-2025-11-17-350-merrydale-resolution-purchase-and-brokerage",
+    ]
+    feb_17_base_record_ids = [
+        "record-2026-02-17-san-rafael-city-council-page",
+        "record-2026-02-17-san-rafael-city-council-minutes",
+        "record-2026-02-17-350-merrydale-staff-report",
+        "record-2026-02-17-san-rafael-city-council-agenda-packet",
+    ]
+    feb_17_child_record_ids = [
+        "record-2026-02-17-350-merrydale-resolution-project-services",
+        "record-2026-02-17-350-merrydale-swinerton-psa",
+        "record-2026-02-17-350-merrydale-lca-amendment",
+    ]
+
     record_refs = [
         with_related_project_ref(pick(backbone_records, "record-2024-11-04-san-rafael-city-council-special-page")),
         with_related_project_ref(pick(decision_records, "record-2024-11-04-san-rafael-city-council-special-minutes")),
@@ -79,6 +101,39 @@ def main() -> None:
             "record_type": "agenda_packet",
             "source_id": "san-rafael-city-council-2025-11-17-agenda-packet",
             "artifact_path": "data/raw/san-rafael-city-council-2025-11-17-agenda-packet/2026-04-13/agenda-packet.pdf",
+            "related_project_ids": [PROJECT_ID],
+        },
+        {
+            "id": "record-2025-11-17-350-merrydale-resolution-county-grant-and-affordable-housing",
+            "record_class": "administrative_record",
+            "record_type": "resolution",
+            "source_id": "san-rafael-city-council-2025-11-17-agenda-packet",
+            "artifact_path": "data/raw/san-rafael-city-council-2025-11-17-agenda-packet/2026-04-13/agenda-packet.pdf",
+            "source_record_id": "record-2025-11-17-san-rafael-city-council-agenda-packet",
+            "title": "Resolution regarding county grant and affordable housing agreements for 350 Merrydale Road",
+            "decision_ids": [
+                "decision-2025-11-17-350-merrydale-county-grant-approval",
+            ],
+            "related_moneyflow_ids": [
+                "moneyflow-2025-11-17-350-merrydale-county-grant",
+            ],
+            "related_project_ids": [PROJECT_ID],
+        },
+        {
+            "id": "record-2025-11-17-350-merrydale-resolution-purchase-and-brokerage",
+            "record_class": "administrative_record",
+            "record_type": "resolution",
+            "source_id": "san-rafael-city-council-2025-11-17-agenda-packet",
+            "artifact_path": "data/raw/san-rafael-city-council-2025-11-17-agenda-packet/2026-04-13/agenda-packet.pdf",
+            "source_record_id": "record-2025-11-17-san-rafael-city-council-agenda-packet",
+            "title": "Resolution regarding purchase of 350 Merrydale Road and brokerage agreement",
+            "decision_ids": [
+                "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
+            ],
+            "related_moneyflow_ids": [
+                "moneyflow-2025-11-17-350-merrydale-property-acquisition",
+                "moneyflow-2025-11-17-350-merrydale-brokerage-services",
+            ],
             "related_project_ids": [PROJECT_ID],
         },
         with_related_project_ref(pick(backbone_records, "record-2025-12-01-san-rafael-city-council-page")),
@@ -101,6 +156,55 @@ def main() -> None:
             "artifact_path": "data/raw/san-rafael-city-council-2026-02-17-agenda-packet/2026-04-13/agenda-packet.pdf",
             "related_project_ids": [PROJECT_ID],
         },
+        {
+            "id": "record-2026-02-17-350-merrydale-resolution-project-services",
+            "record_class": "administrative_record",
+            "record_type": "resolution",
+            "source_id": "san-rafael-city-council-2026-02-17-agenda-packet",
+            "artifact_path": "data/raw/san-rafael-city-council-2026-02-17-agenda-packet/2026-04-13/agenda-packet.pdf",
+            "source_record_id": "record-2026-02-17-san-rafael-city-council-agenda-packet",
+            "title": "Resolution regarding Merrydale project services and ERF-3 appropriation",
+            "decision_ids": [
+                "decision-2026-02-17-350-merrydale-project-services-authorization",
+            ],
+            "related_moneyflow_ids": [
+                "moneyflow-2026-02-17-350-merrydale-swinerton-services",
+                "moneyflow-2026-02-17-350-merrydale-lca-design-amendment",
+            ],
+            "related_project_ids": [PROJECT_ID],
+        },
+        {
+            "id": "record-2026-02-17-350-merrydale-swinerton-psa",
+            "record_class": "administrative_record",
+            "record_type": "agreement_attachment",
+            "source_id": "san-rafael-city-council-2026-02-17-agenda-packet",
+            "artifact_path": "data/raw/san-rafael-city-council-2026-02-17-agenda-packet/2026-04-13/agenda-packet.pdf",
+            "source_record_id": "record-2026-02-17-san-rafael-city-council-agenda-packet",
+            "title": "Swinerton Management and Consulting professional services agreement for 350 Merrydale Road Interim Shelter Project",
+            "decision_ids": [
+                "decision-2026-02-17-350-merrydale-project-services-authorization",
+            ],
+            "related_moneyflow_ids": [
+                "moneyflow-2026-02-17-350-merrydale-swinerton-services",
+            ],
+            "related_project_ids": [PROJECT_ID],
+        },
+        {
+            "id": "record-2026-02-17-350-merrydale-lca-amendment",
+            "record_class": "administrative_record",
+            "record_type": "amendment_attachment",
+            "source_id": "san-rafael-city-council-2026-02-17-agenda-packet",
+            "artifact_path": "data/raw/san-rafael-city-council-2026-02-17-agenda-packet/2026-04-13/agenda-packet.pdf",
+            "source_record_id": "record-2026-02-17-san-rafael-city-council-agenda-packet",
+            "title": "LCA Architects amendment to professional services agreement for 350 Merrydale Road Interim Shelter Project",
+            "decision_ids": [
+                "decision-2026-02-17-350-merrydale-project-services-authorization",
+            ],
+            "related_moneyflow_ids": [
+                "moneyflow-2026-02-17-350-merrydale-lca-design-amendment",
+            ],
+            "related_project_ids": [PROJECT_ID],
+        },
         with_related_project_ref(pick(backbone_records, "record-2026-03-16-san-rafael-city-council-page")),
         with_related_project_ref(pick(decision_records, "record-2026-03-16-san-rafael-city-council-minutes")),
         with_related_project_ref(pick(legal_records, "record-san-rafael-sanctioned-camping-area-page")),
@@ -120,12 +224,17 @@ def main() -> None:
             "record-2025-11-17-san-rafael-city-council-minutes",
             "record-2025-11-17-350-merrydale-staff-report",
             "record-2025-11-17-san-rafael-city-council-agenda-packet",
+            "record-2025-11-17-350-merrydale-resolution-county-grant-and-affordable-housing",
+            "record-2025-11-17-350-merrydale-resolution-purchase-and-brokerage",
             "record-2025-12-01-san-rafael-city-council-page",
             "record-2025-12-01-san-rafael-city-council-minutes",
             "record-2026-02-17-san-rafael-city-council-page",
             "record-2026-02-17-san-rafael-city-council-minutes",
             "record-2026-02-17-350-merrydale-staff-report",
             "record-2026-02-17-san-rafael-city-council-agenda-packet",
+            "record-2026-02-17-350-merrydale-resolution-project-services",
+            "record-2026-02-17-350-merrydale-swinerton-psa",
+            "record-2026-02-17-350-merrydale-lca-amendment",
             "record-2026-03-16-san-rafael-city-council-page",
             "record-2026-03-16-san-rafael-city-council-minutes",
             "record-san-rafael-sanctioned-camping-area-page",
@@ -153,34 +262,32 @@ def main() -> None:
         ),
         {
             "id": "decision-2025-11-17-350-merrydale-county-grant-approval",
-            "title": "350 Merrydale county grant and affordable housing agreement approval",
+            "title": "350 Merrydale county grant and affordable housing agreement resolution",
             "decision_type": "grant_and_housing_agreement_authorization",
             "status": "adopted",
             "institution_id": "inst-san-rafael-city-council",
             "meeting_id": "meeting-2025-11-17-san-rafael-city-council",
             "effective_date": "2025-11-17",
             "project_id": PROJECT_ID,
-            "record_ids": [
-                "record-2025-11-17-san-rafael-city-council-page",
-                "record-2025-11-17-san-rafael-city-council-minutes",
-                "record-2025-11-17-350-merrydale-staff-report",
-                "record-2025-11-17-san-rafael-city-council-agenda-packet",
+            "resolution_numbers": ["15479"],
+            "related_decision_id": "decision-2025-11-17-san-rafael-city-council-6v-resolution-adoption-15478-15479-15480",
+            "record_ids": nov_17_base_record_ids + [
+                "record-2025-11-17-350-merrydale-resolution-county-grant-and-affordable-housing",
             ],
         },
         {
             "id": "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
-            "title": "350 Merrydale acquisition and brokerage approval",
+            "title": "350 Merrydale purchase and brokerage resolution",
             "decision_type": "property_acquisition_authorization",
             "status": "adopted",
             "institution_id": "inst-san-rafael-city-council",
             "meeting_id": "meeting-2025-11-17-san-rafael-city-council",
             "effective_date": "2025-11-17",
             "project_id": PROJECT_ID,
-            "record_ids": [
-                "record-2025-11-17-san-rafael-city-council-page",
-                "record-2025-11-17-san-rafael-city-council-minutes",
-                "record-2025-11-17-350-merrydale-staff-report",
-                "record-2025-11-17-san-rafael-city-council-agenda-packet",
+            "resolution_numbers": ["15480"],
+            "related_decision_id": "decision-2025-11-17-san-rafael-city-council-6v-resolution-adoption-15478-15479-15480",
+            "record_ids": nov_17_base_record_ids + [
+                "record-2025-11-17-350-merrydale-resolution-purchase-and-brokerage",
             ],
         },
         with_project_ref(
@@ -191,19 +298,14 @@ def main() -> None:
         ),
         {
             "id": "decision-2026-02-17-350-merrydale-project-services-authorization",
-            "title": "350 Merrydale project services authorization",
+            "title": "350 Merrydale project services resolution",
             "decision_type": "project_services_authorization",
             "status": "adopted",
             "institution_id": "inst-san-rafael-city-council",
             "meeting_id": "meeting-2026-02-17-san-rafael-city-council",
             "effective_date": "2026-02-17",
             "project_id": PROJECT_ID,
-            "record_ids": [
-                "record-2026-02-17-san-rafael-city-council-page",
-                "record-2026-02-17-san-rafael-city-council-minutes",
-                "record-2026-02-17-350-merrydale-staff-report",
-                "record-2026-02-17-san-rafael-city-council-agenda-packet",
-            ],
+            "record_ids": feb_17_base_record_ids + feb_17_child_record_ids,
         },
         with_project_ref(
             pick(
@@ -215,6 +317,41 @@ def main() -> None:
 
     agreement_candidates = [
         {
+            "id": "agreement-350-merrydale-county-grant",
+            "name": "350 Merrydale county grant agreement",
+            "agreement_type": "grant_agreement",
+            "institution_id": "inst-city-of-san-rafael",
+            "project_id": PROJECT_ID,
+            "authorized_amount": 8000000,
+            "effective_date": "2025-11-17",
+            "evidence_record_ids": nov_17_base_record_ids + [
+                "record-2025-11-17-350-merrydale-resolution-county-grant-and-affordable-housing",
+            ],
+        },
+        {
+            "id": "agreement-350-merrydale-affordable-housing",
+            "name": "350 Merrydale affordable housing agreement",
+            "agreement_type": "affordable_housing_agreement",
+            "institution_id": "inst-city-of-san-rafael",
+            "project_id": PROJECT_ID,
+            "effective_date": "2025-11-17",
+            "evidence_record_ids": nov_17_base_record_ids + [
+                "record-2025-11-17-350-merrydale-resolution-county-grant-and-affordable-housing",
+            ],
+        },
+        {
+            "id": "agreement-350-merrydale-purchase-and-sale",
+            "name": "350 Merrydale purchase and sale agreement",
+            "agreement_type": "purchase_and_sale_agreement",
+            "institution_id": "inst-city-of-san-rafael",
+            "project_id": PROJECT_ID,
+            "authorized_amount": 6700000,
+            "effective_date": "2025-11-17",
+            "evidence_record_ids": nov_17_base_record_ids + [
+                "record-2025-11-17-350-merrydale-resolution-purchase-and-brokerage",
+            ],
+        },
+        {
             "id": "agreement-350-merrydale-swinerton-project-management",
             "name": "350 Merrydale Swinerton project and construction management agreement",
             "agreement_type": "professional_services_agreement",
@@ -223,11 +360,9 @@ def main() -> None:
             "project_id": PROJECT_ID,
             "authorized_amount": 229703,
             "effective_date": "2026-02-17",
-            "evidence_record_ids": [
-                "record-2026-02-17-san-rafael-city-council-page",
-                "record-2026-02-17-san-rafael-city-council-minutes",
-                "record-2026-02-17-350-merrydale-staff-report",
-                "record-2026-02-17-san-rafael-city-council-agenda-packet",
+            "evidence_record_ids": feb_17_base_record_ids + [
+                "record-2026-02-17-350-merrydale-resolution-project-services",
+                "record-2026-02-17-350-merrydale-swinerton-psa",
             ],
         },
         {
@@ -239,11 +374,9 @@ def main() -> None:
             "project_id": PROJECT_ID,
             "authorized_amount": 280750,
             "effective_date": "2026-02-17",
-            "evidence_record_ids": [
-                "record-2026-02-17-san-rafael-city-council-page",
-                "record-2026-02-17-san-rafael-city-council-minutes",
-                "record-2026-02-17-350-merrydale-staff-report",
-                "record-2026-02-17-san-rafael-city-council-agenda-packet",
+            "evidence_record_ids": feb_17_base_record_ids + [
+                "record-2026-02-17-350-merrydale-resolution-project-services",
+                "record-2026-02-17-350-merrydale-lca-amendment",
             ],
         },
         {
@@ -255,11 +388,8 @@ def main() -> None:
             "project_id": PROJECT_ID,
             "authorized_amount": 201000,
             "effective_date": "2025-11-17",
-            "evidence_record_ids": [
-                "record-2025-11-17-san-rafael-city-council-page",
-                "record-2025-11-17-san-rafael-city-council-minutes",
-                "record-2025-11-17-350-merrydale-staff-report",
-                "record-2025-11-17-san-rafael-city-council-agenda-packet",
+            "evidence_record_ids": nov_17_base_record_ids + [
+                "record-2025-11-17-350-merrydale-resolution-purchase-and-brokerage",
             ],
         },
     ]
@@ -273,9 +403,9 @@ def main() -> None:
             "project_id": PROJECT_ID,
             "authorized_amount": 207250,
             "effective_date": "2026-02-17",
-            "evidence_record_ids": [
-                "record-2026-02-17-san-rafael-city-council-page",
-                "record-2026-02-17-san-rafael-city-council-minutes",
+            "evidence_record_ids": feb_17_base_record_ids + [
+                "record-2026-02-17-350-merrydale-resolution-project-services",
+                "record-2026-02-17-350-merrydale-lca-amendment",
             ],
         }
     ]
@@ -286,14 +416,13 @@ def main() -> None:
             "flow_type": "grant_award",
             "amount": 8000000,
             "currency": "USD",
+            "institution_id": "inst-city-of-san-rafael",
             "related_institution_id": "inst-marin-county",
-            "related_decision_id": "decision-2025-11-17-350-merrydale-county-grant-approval",
+            "agreement_id": "agreement-350-merrydale-county-grant",
+            "decision_id": "decision-2025-11-17-350-merrydale-county-grant-approval",
             "project_id": PROJECT_ID,
-            "evidence_record_ids": [
-                "record-2025-11-17-san-rafael-city-council-page",
-                "record-2025-11-17-san-rafael-city-council-minutes",
-                "record-2025-11-17-350-merrydale-staff-report",
-                "record-2025-11-17-san-rafael-city-council-agenda-packet",
+            "evidence_record_ids": nov_17_base_record_ids + [
+                "record-2025-11-17-350-merrydale-resolution-county-grant-and-affordable-housing",
             ],
         },
         {
@@ -301,13 +430,12 @@ def main() -> None:
             "flow_type": "property_acquisition_authorization",
             "amount": 6700000,
             "currency": "USD",
-            "related_decision_id": "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
+            "institution_id": "inst-city-of-san-rafael",
+            "agreement_id": "agreement-350-merrydale-purchase-and-sale",
+            "decision_id": "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
             "project_id": PROJECT_ID,
-            "evidence_record_ids": [
-                "record-2025-11-17-san-rafael-city-council-page",
-                "record-2025-11-17-san-rafael-city-council-minutes",
-                "record-2025-11-17-350-merrydale-staff-report",
-                "record-2025-11-17-san-rafael-city-council-agenda-packet",
+            "evidence_record_ids": nov_17_base_record_ids + [
+                "record-2025-11-17-350-merrydale-resolution-purchase-and-brokerage",
             ],
         },
         {
@@ -315,12 +443,14 @@ def main() -> None:
             "flow_type": "contract_authorization",
             "amount": 201000,
             "currency": "USD",
+            "institution_id": "inst-city-of-san-rafael",
+            "agreement_id": "agreement-350-merrydale-newmark-brokerage",
+            "counterparty_actor_id": "actor-newmark-commercial-brokerage",
             "to_actor_id": "actor-newmark-commercial-brokerage",
-            "related_decision_id": "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
+            "decision_id": "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
             "project_id": PROJECT_ID,
-            "evidence_record_ids": [
-                "record-2025-11-17-san-rafael-city-council-page",
-                "record-2025-11-17-san-rafael-city-council-minutes",
+            "evidence_record_ids": nov_17_base_record_ids + [
+                "record-2025-11-17-350-merrydale-resolution-purchase-and-brokerage",
             ],
         },
         {
@@ -328,14 +458,15 @@ def main() -> None:
             "flow_type": "contract_authorization",
             "amount": 229703,
             "currency": "USD",
+            "institution_id": "inst-city-of-san-rafael",
+            "agreement_id": "agreement-350-merrydale-swinerton-project-management",
+            "counterparty_actor_id": "actor-swinerton-management-and-consulting",
             "to_actor_id": "actor-swinerton-management-and-consulting",
-            "related_decision_id": "decision-2026-02-17-350-merrydale-project-services-authorization",
+            "decision_id": "decision-2026-02-17-350-merrydale-project-services-authorization",
             "project_id": PROJECT_ID,
-            "evidence_record_ids": [
-                "record-2026-02-17-san-rafael-city-council-page",
-                "record-2026-02-17-san-rafael-city-council-minutes",
-                "record-2026-02-17-350-merrydale-staff-report",
-                "record-2026-02-17-san-rafael-city-council-agenda-packet",
+            "evidence_record_ids": feb_17_base_record_ids + [
+                "record-2026-02-17-350-merrydale-resolution-project-services",
+                "record-2026-02-17-350-merrydale-swinerton-psa",
             ],
         },
         {
@@ -343,14 +474,15 @@ def main() -> None:
             "flow_type": "amendment_authorization",
             "amount": 207250,
             "currency": "USD",
+            "institution_id": "inst-city-of-san-rafael",
+            "agreement_id": "agreement-350-merrydale-lca-design-services",
+            "counterparty_actor_id": "actor-lca-architects",
             "to_actor_id": "actor-lca-architects",
-            "related_decision_id": "decision-2026-02-17-350-merrydale-project-services-authorization",
+            "decision_id": "decision-2026-02-17-350-merrydale-project-services-authorization",
             "project_id": PROJECT_ID,
-            "evidence_record_ids": [
-                "record-2026-02-17-san-rafael-city-council-page",
-                "record-2026-02-17-san-rafael-city-council-minutes",
-                "record-2026-02-17-350-merrydale-staff-report",
-                "record-2026-02-17-san-rafael-city-council-agenda-packet",
+            "evidence_record_ids": feb_17_base_record_ids + [
+                "record-2026-02-17-350-merrydale-resolution-project-services",
+                "record-2026-02-17-350-merrydale-lca-amendment",
             ],
         },
     ]
@@ -365,6 +497,7 @@ def main() -> None:
                 "one bounded 350 Merrydale interim shelter project thread",
                 "existing official San Rafael council meeting pages and minutes already captured in the repo",
                 "direct city PDF staff reports and agenda packets linked from those official meeting pages",
+                "packet-derived child records for the highest-value November 2025 and February 2026 Merrydale actions",
                 "direct project money flows for county grant, acquisition, brokerage, and design/construction-management authorizations",
                 "project linkage back to the existing sanctioned-camping program context",
             ],
@@ -400,9 +533,9 @@ def main() -> None:
         "open_questions": [
             {
                 "id": "OQ-037",
-                "status": "watch",
-                "question": "Now that the 350 Merrydale thread has direct staff-report and agenda-packet support, when should the November 17, 2025 and February 17, 2026 custom decision objects be split into stricter packet-derived child decisions or agreement-specific records?",
-                "why_it_matters": "The bounded project slice no longer relies on page-plus-minutes evidence alone, but the 2025-11-17 grant/acquisition sub-actions and the 2026-02-17 services authorization still use custom decision objects instead of packet-derived child boundaries.",
+                "status": "resolved",
+                "question": "The Merrydale thread now uses packet-derived child records and stronger agreement boundaries for the November 17, 2025 and February 17, 2026 actions.",
+                "why_it_matters": "The bounded project slice no longer relies on coarse page-plus-minutes custom boundaries alone. Packet-derived child records now carry the highest-value November and February sub-actions without reopening the procurement lane.",
             }
         ],
     }

@@ -587,7 +587,7 @@ Mirror the question here when it affects:
 
 ### OQ-037: Merrydale project decision-boundary refinement
 
-- `status`: watch
+- `status`: resolved
 - `layer`: project thread / decision provenance
 - `scope`: `san-rafael-merrydale-interim-shelter-project-01`
 - `source refs`:
@@ -596,8 +596,7 @@ Mirror the question here when it affects:
   - [jurisdiction-san-rafael-local-pressure-comparison.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/views/jurisdiction-san-rafael-local-pressure-comparison.json)
 - `question`: When should the Merrydale project move from staff-report-and-packet-backed custom decision objects to stricter packet-derived child decisions or agreement-specific record splits for the November 17, 2025 and February 17, 2026 actions?
 - `why it matters`: The bounded Merrydale slice is now strong enough for `QX-001` with direct city staff-report and agenda-packet support, but its highest-value money and agreement actions are still collapsed into custom decision objects instead of packet-derived child boundaries.
-- `current note`: Merrydale now has direct city PDF staff reports and agenda packets for the November 17, 2025 and February 17, 2026 meetings, and the project dossier now carries `15` evidence records. The remaining question is object-boundary refinement, not weak provenance.
-- `next evidence`: extract the item-level packet/staff-report boundaries for the November 17, 2025 grant/acquisition actions and the February 17, 2026 project-services authorization, then decide whether the current custom decisions should stay, split, or attach agreement-specific child records.
+- `resolution note`: Resolved with packet-derived child records and stronger agreement boundaries inside `san-rafael-merrydale-interim-shelter-project-01`. The thread now promotes separate child records for the November 17, 2025 county-grant / affordable-housing resolution and purchase / brokerage resolution, plus the February 17, 2026 project-services resolution, Swinerton PSA, and LCA amendment. Merrydale now carries `20` evidence records and `6` agreement nodes in the projected dossier, while keeping the bounded custom decision layer intact instead of inventing finer vote splits than the packet support justifies.
 
 ## Maintenance
 

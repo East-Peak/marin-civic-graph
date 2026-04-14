@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-04-14T02:44:29Z",
+  "generated_at": "2026-04-14T12:28:41Z",
   "engine": "projection_jsonl",
   "projection_id": "graph-v1",
-  "projection_report_generated_at": "2026-04-14T02:44:20Z",
+  "projection_report_generated_at": "2026-04-14T12:28:40Z",
   "projection_counts": {
-    "nodes": 6259,
-    "edges": 21176,
+    "nodes": 6267,
+    "edges": 21262,
     "node_type_counts": {
       "Actor": 53,
       "AgendaItem": 2970,
-      "Agreement": 8,
+      "Agreement": 11,
       "Amendment": 4,
       "Candidacy": 14,
       "Case": 4,
@@ -27,7 +27,7 @@
       "Proceeding": 13,
       "Program": 4,
       "Project": 3,
-      "Record": 885,
+      "Record": 890,
       "Seat": 5,
       "SeatService": 8,
       "ValidationCheck": 16

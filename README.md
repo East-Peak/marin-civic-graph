@@ -68,6 +68,7 @@ Start narrow:
 - [Graph Query Pack](./docs/graph-query-pack.md)
 - [Question Set V1](./docs/question-set-v1.md)
 - [Daily Log 2026-04-13](./docs/daily-log-2026-04-13.md)
+- [Daily Log 2026-04-14](./docs/daily-log-2026-04-14.md)
 - [Graph View Layer](./docs/graph-view-layer.md)
 - [Graph Read-Model Contracts](./docs/graph-read-model-contracts.md)
 - [Ralph Loop Plan](./docs/ralph-loop-plan.md)

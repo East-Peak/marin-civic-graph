@@ -16,6 +16,16 @@ The rule is:
 
 Backfilled on April 12, 2026 from the existing workspace decision set and project history.
 
+## 2026-04-14
+
+- **Merrydale should gain packet-derived child records before any finer decision splitting**
+  - The direct staff-report and agenda-packet support added on April 13 was enough to resolve the provenance question, but it still left the highest-value November 17, 2025 and February 17, 2026 Merrydale actions too collapsed for a clean project dossier.
+  - The right next move was still bounded: promote packet-derived child records and stronger agreement boundaries where the packets already expose them, without pretending to have clause-level vote objects or a reopened procurement lane.
+  - The Merrydale support slice now carries child records for the November county-grant / affordable-housing resolution, the November purchase / brokerage resolution, the February project-services resolution, the Swinerton PSA, and the LCA amendment. It also now carries distinct county-grant, affordable-housing, and purchase-and-sale agreement objects.
+  - Result: the projected Merrydale dossier now carries `20` evidence records and `6` agreements, while graph-v1 rebuilds cleanly to `6267` nodes / `21262` edges and the fixed query pack remains `5/5` passing.
+  - Boundary: this is not permission to invent finer vote splits than the packets support. Keep the current custom decision layer until a later product question requires clause-level or appropriation-level splitting.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-14-merrydale-packet-derived-child-records-should-precede-finer-vote-splitting.md`
+
 ## 2026-04-13
 
 - **A low-pressure planning baseline can enter `QX-001` without reopening the permit lane**
