@@ -178,7 +178,7 @@ class NetFileAdapter(BaseAdapter):
                     "year": year,
                     "export_mode": "zip_excel",
                     "zip_path": str(zip_path),
-                    "zip_bytes": zip_bytes,
+                    "zip_bytes": len(zip_bytes),
                     "sheet_names": sheet_names,
                     "sheet_count": len(sheet_names),
                 }
