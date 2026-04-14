@@ -85,6 +85,7 @@ Start narrow:
 - [Graph Data Model](./docs/graph-data-model.md)
 - [Graph Materialization Proposal](./docs/graph-materialization-proposal.md)
 - [Architecture Review Checklist](./docs/architecture-review-checklist.md)
+- [Schema Review Response](./docs/schema-review-response.md)
 - [Graph Query Pack](./docs/graph-query-pack.md)
 - [Question Set V1](./docs/question-set-v1.md)
 - [Claude Collaboration Handoff](./docs/claude-collaboration-handoff.md)
