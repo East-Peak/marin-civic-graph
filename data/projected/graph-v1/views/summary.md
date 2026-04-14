@@ -1,6 +1,6 @@
 # Graph View Summary
 
-Generated: 2026-04-14T00:50:35Z
+Generated: 2026-04-14T01:16:06Z
 
 ## Included Views
 
@@ -13,6 +13,7 @@ Generated: 2026-04-14T00:50:35Z
 - Program dossier: San Rafael camping ordinance implementation and enforcement (`program_dossier`)
 - Program dossier: California State Library Building Forward Library Facilities Improvement Program (`program_dossier`)
 - Project dossier: Downtown Library Renovation Project (`project_dossier`)
+- Project dossier: 350 Merrydale Interim Shelter Project (`project_dossier`)
 - Jurisdiction delivery summary: San Rafael (`jurisdiction_delivery_summary`)
 - Decision money rollup: San Rafael (`decision_money_rollup`)
 - Decision money explanation: San Rafael (`decision_money_explanation`)
@@ -32,15 +33,15 @@ Generated: 2026-04-14T00:50:35Z
 - Decision dossiers now cover `1` targets, including `Resolution 15336 appropriating $2,256,400 and authorizing $2,002,400 in contracts` with `5` vote records.
 - Case dossiers now cover `1` targets, including `Boyd v. City of San Rafael` with `6` proceedings.
 - Program dossiers now cover `3` targets, including `San Rafael sanctioned camping program` with `2` linked decisions and `7` linked money flows.
-- Project dossiers now cover `1` targets, including `Downtown Library Renovation Project` with `5` agreements and `5` linked money flows.
-- Jurisdiction delivery summaries now cover `1` targets, including `San Rafael` with `2` programs, `1` projects, and `12` linked money flows.
-- Decision money rollups now cover `1` targets, including `San Rafael` with `4` money-linked decisions and `$8,069,336.82` in linked flow volume.
-- Decision money explanations now cover `1` targets, including `San Rafael` with `4` explained decisions and `$8,069,336.82` in explained linked flow volume.
+- Project dossiers now cover `2` targets, including `Downtown Library Renovation Project` with `5` agreements and `5` linked money flows.
+- Jurisdiction delivery summaries now cover `1` targets, including `San Rafael` with `2` programs, `2` projects, and `17` linked money flows.
+- Decision money rollups now cover `1` targets, including `San Rafael` with `7` money-linked decisions and `$23,407,289.82` in linked flow volume.
+- Decision money explanations now cover `1` targets, including `San Rafael` with `7` explained decisions and `$23,407,289.82` in explained linked flow volume.
 - Program local pressure summaries now cover `2` targets, including `San Rafael sanctioned camping program` with `2` linked decisions, `2` linked cases, and `$4,758,800.00` in linked money.
-- Jurisdiction local pressure comparisons now cover `1` targets, including `San Rafael` with `5` threads (`2` election-backed), `2` linked cases, and `$8,124,666.74` in linked money.
-- Jurisdiction local pressure explanations now cover `1` targets, including `San Rafael` with `5` ranked thread explanations and `1` pairwise comparisons.
+- Jurisdiction local pressure comparisons now cover `1` targets, including `San Rafael` with `6` threads (`2` election-backed), `2` linked cases, and `$23,462,619.74` in linked money.
+- Jurisdiction local pressure explanations now cover `1` targets, including `San Rafael` with `6` ranked thread explanations and `1` pairwise comparisons.
 - Jurisdiction legal summaries now cover `1` targets, including `San Rafael` with `2` cases, `2` linked local decisions, and `0` in-scope case-lineage links.
-- The graph currently materializes `152` money flows across `9` flow types.
+- The graph currently materializes `157` money flows across `11` flow types.
 - The legal lane currently includes `4` cases and links back to `2` San Rafael local decisions.
 - The validation queue currently contains `16` checks.
 
@@ -55,6 +56,7 @@ Generated: 2026-04-14T00:50:35Z
 - `program-san-rafael-camping-ordinance-implementation-dossier.json`
 - `program-csl-building-forward-dossier.json`
 - `project-downtown-library-renovation-dossier.json`
+- `project-san-rafael-350-merrydale-interim-shelter-dossier.json`
 - `jurisdiction-san-rafael-delivery-summary.json`
 - `decision-money-san-rafael-rollup.json`
 - `decision-money-san-rafael-explanation.json`

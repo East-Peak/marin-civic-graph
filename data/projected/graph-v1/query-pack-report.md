@@ -1,10 +1,10 @@
 # Graph Query Pack Report
 
-- `generated_at`: 2026-04-14T00:50:14Z
+- `generated_at`: 2026-04-14T01:21:10Z
 - `engine`: projection_jsonl
 - `projection_id`: graph-v1
-- `nodes`: 6233
-- `edges`: 21016
+- `nodes`: 6250
+- `edges`: 21141
 - `queries_passed`: 5/5
 
 ## Q1: actor-kate-colin dossier
@@ -26,7 +26,7 @@
 ## Q3: San Rafael council decision timeline
 
 - `pass`: yes
-- `metrics`: {"decision_count": 1458, "decisions_with_evidence": 1458, "decisions_with_votes": 564, "meeting_count": 175, "year_span": [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]}
+- `metrics`: {"decision_count": 1461, "decisions_with_evidence": 1461, "decisions_with_votes": 564, "meeting_count": 175, "year_span": [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]}
 - `notes`:
   - This is the first fixed-query-pack check that directly measures whether the council breadth pass created an actual multi-year decision timeline.
   - The result is now a real 2019+ council decision spine rather than one worked-example branch.
@@ -52,7 +52,7 @@
 ### L1: legal constraint chain
 
 - `pass`: yes
-- `metrics`: {"boyd_present": true, "grants_pass_lineage_case_count": 3, "grants_pass_present": true, "legal_node_count": 26, "legal_record_count": 15, "linked_local_decision_count": 2, "shared_issue_count": 3, "shared_program_count": 1}
+- `metrics`: {"boyd_present": true, "grants_pass_lineage_case_count": 3, "grants_pass_present": true, "legal_node_count": 26, "legal_record_count": 15, "linked_local_decision_count": 2, "shared_issue_count": 3, "shared_program_count": 2}
 - `notes`:
   - This is a supplemental query, not part of the fixed five-query breadth gate.
   - It checks whether the first local-case plus controlling-precedent pair is materialized well enough to show a real legal constraint chain back into San Rafael decisions and programs.

@@ -38,6 +38,10 @@
       "subject_id": "project-downtown-library-renovation"
     },
     {
+      "view_type": "project_dossier",
+      "subject_id": "project-san-rafael-350-merrydale-interim-shelter"
+    },
+    {
       "view_type": "jurisdiction_delivery_summary",
       "subject_id": "place-san-rafael"
     },

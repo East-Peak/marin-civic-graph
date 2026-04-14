@@ -152,6 +152,18 @@
       ]
     },
     {
+      "path": "data/normalized/san-rafael-merrydale-interim-shelter-project-01/bundle-01.json",
+      "sections": [
+        { "name": "record_refs", "mode": "nodes", "node_type": "Record", "promotion_state": "promoted" },
+        { "name": "actor_candidates", "mode": "nodes", "node_type": "Actor", "promotion_state": "promoted" },
+        { "name": "project_candidates", "mode": "nodes", "node_type": "Project", "promotion_state": "promoted" },
+        { "name": "decision_candidates", "mode": "nodes", "node_type": "Decision", "promotion_state": "promoted" },
+        { "name": "agreement_candidates", "mode": "nodes", "node_type": "Agreement", "promotion_state": "promoted" },
+        { "name": "amendment_candidates", "mode": "nodes", "node_type": "Amendment", "promotion_state": "promoted" },
+        { "name": "money_flow_candidates", "mode": "nodes", "node_type": "MoneyFlow", "promotion_state": "promoted" }
+      ]
+    },
+    {
       "path": "data/normalized/project-dossiers-01/bundle-01.json",
       "sections": [
         { "name": "record_refs", "mode": "nodes", "node_type": "Record", "promotion_state": "promoted" },

@@ -18,6 +18,14 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-04-13
 
+- **A second money-heavy local project thread can strengthen `QX-001` from the existing council corpus**
+  - Once `QX-001` already had two program threads, one project thread, and two election threads, the next representativeness gap was not abstract breadth. It was the lack of a second project-pressure pattern with materially different counterparties.
+  - The right fix was still San Rafael-first and bounded: promote `project-san-rafael-350-merrydale-interim-shelter` from the existing city council meeting-page corpus, existing legal lane, and the sanctioned-camping context already in the repo.
+  - The new support slice now lives at `data/normalized/san-rafael-merrydale-interim-shelter-project-01/bundle-01.json` and brings in county grant, property acquisition, brokerage, project-management, and design-services lineage without reopening a broad procurement lane.
+  - Result: the San Rafael local-pressure comparison now spans `6` local threads with `2` projects, `2` programs, `2` elections, and a new top-ranked thread with `$15,337,953.00` in linked money volume.
+  - Boundary: this is still a bounded local-thread widening. It does not justify reopening broad procurement ingest, and it leaves packet/staff-report refinement for the hardest Merrydale decision boundaries as a follow-on question.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-04-13-merrydale-project-thread-should-enter-qx-001-from-existing-council-corpus.md`
+
 - **The second legally constrained San Rafael local thread should come from the existing camping-ordinance corpus, not a new ingest lane**
   - Once `QX-001` widened to four threads, the next missing representativeness problem was specific: the comparison still had only one legally constrained local thread.
   - The right fix was not county breadth or another domain tranche. The repo already had enough truth across the San Rafael homelessness bundle, legal-precedent pair, and citywide council decision corpus to promote a second bounded thread: `program-san-rafael-camping-ordinance-implementation`.

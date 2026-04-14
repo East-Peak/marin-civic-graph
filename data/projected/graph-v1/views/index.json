@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-14T00:50:35Z",
+  "generated_at": "2026-04-14T01:16:06Z",
   "projection_dir": "data/projected/graph-v1",
   "contract_version": 1,
   "views": [
@@ -74,6 +74,14 @@
       "subject_id": "project-downtown-library-renovation",
       "subject_node_type": "Project",
       "path": "data/projected/graph-v1/views/project-downtown-library-renovation-dossier.json"
+    },
+    {
+      "id": "project-san-rafael-350-merrydale-interim-shelter-dossier",
+      "title": "Project dossier: 350 Merrydale Interim Shelter Project",
+      "view_type": "project_dossier",
+      "subject_id": "project-san-rafael-350-merrydale-interim-shelter",
+      "subject_node_type": "Project",
+      "path": "data/projected/graph-v1/views/project-san-rafael-350-merrydale-interim-shelter-dossier.json"
     },
     {
       "id": "jurisdiction-san-rafael-delivery-summary",

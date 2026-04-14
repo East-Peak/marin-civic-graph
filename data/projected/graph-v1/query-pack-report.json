@@ -1,32 +1,32 @@
 {
-  "generated_at": "2026-04-14T00:50:14Z",
+  "generated_at": "2026-04-14T01:21:10Z",
   "engine": "projection_jsonl",
   "projection_id": "graph-v1",
-  "projection_report_generated_at": "2026-04-13T12:51:59Z",
+  "projection_report_generated_at": "2026-04-14T01:15:35Z",
   "projection_counts": {
-    "nodes": 6233,
-    "edges": 21016,
+    "nodes": 6250,
+    "edges": 21141,
     "node_type_counts": {
-      "Actor": 49,
+      "Actor": 52,
       "AgendaItem": 2970,
-      "Agreement": 5,
-      "Amendment": 3,
+      "Agreement": 8,
+      "Amendment": 4,
       "Candidacy": 14,
       "Case": 4,
       "CaseParticipation": 9,
       "Committee": 16,
-      "Decision": 1478,
+      "Decision": 1481,
       "EconomicInterestDisclosure": 21,
       "Election": 21,
       "Filing": 254,
       "Institution": 12,
       "Issue": 3,
       "Meeting": 283,
-      "MoneyFlow": 152,
+      "MoneyFlow": 157,
       "Place": 14,
       "Proceeding": 13,
-      "Program": 3,
-      "Project": 1,
+      "Program": 4,
+      "Project": 2,
       "Record": 879,
       "Seat": 5,
       "SeatService": 8,
@@ -237,7 +237,7 @@
       "title": "San Rafael council decision timeline",
       "pass": true,
       "metrics": {
-        "decision_count": 1458,
+        "decision_count": 1461,
         "meeting_count": 175,
         "year_span": [
           2019,
@@ -250,7 +250,7 @@
           2026
         ],
         "decisions_with_votes": 564,
-        "decisions_with_evidence": 1458
+        "decisions_with_evidence": 1461
       },
       "samples": {
         "first_five": [
@@ -533,7 +533,7 @@
         "grants_pass_present": true,
         "grants_pass_lineage_case_count": 3,
         "shared_issue_count": 3,
-        "shared_program_count": 1,
+        "shared_program_count": 2,
         "linked_local_decision_count": 2,
         "legal_record_count": 15,
         "legal_node_count": 26
@@ -550,6 +550,7 @@
           "issue-homelessness"
         ],
         "shared_program_ids": [
+          "program-san-rafael-camping-ordinance-implementation",
           "program-san-rafael-sanctioned-camping"
         ],
         "linked_local_decision_ids": [

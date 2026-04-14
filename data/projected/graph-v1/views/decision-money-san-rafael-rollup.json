@@ -5,7 +5,7 @@
   "subject_id": "place-san-rafael",
   "subject_node_type": "Place",
   "contract_version": 1,
-  "generated_at": "2026-04-14T00:50:35Z",
+  "generated_at": "2026-04-14T01:16:06Z",
   "jurisdiction_place": {
     "id": "place-san-rafael",
     "node_type": "Place",
@@ -24,22 +24,433 @@
     }
   },
   "metrics": {
-    "decision_count": 4,
-    "linked_money_flow_count": 11,
-    "linked_money_total_amount": 8069336.82,
+    "decision_count": 7,
+    "linked_money_flow_count": 16,
+    "linked_money_total_amount": 23407289.82,
     "linked_program_count": 2,
-    "linked_project_count": 1,
+    "linked_project_count": 2,
     "linked_case_count": 2,
     "flow_type_counts": {
+      "amendment_authorization": 1,
       "appropriation": 1,
       "contingency_authorization": 1,
-      "contract_authorization": 5,
-      "grant_award": 1,
+      "contract_authorization": 7,
+      "grant_award": 2,
       "obligation": 2,
-      "program_startup_costs": 1
+      "program_startup_costs": 1,
+      "property_acquisition_authorization": 1
     }
   },
   "decision_rollups": [
+    {
+      "decision": {
+        "id": "decision-2025-11-17-350-merrydale-county-grant-approval",
+        "node_type": "Decision",
+        "display_label": "350 Merrydale county grant and affordable housing agreement approval",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+        ],
+        "properties": {
+          "decision_type": "grant_and_housing_agreement_authorization",
+          "effective_date": "2025-11-17",
+          "institution_id": "inst-san-rafael-city-council",
+          "meeting_id": "meeting-2025-11-17-san-rafael-city-council",
+          "project_id": "project-san-rafael-350-merrydale-interim-shelter",
+          "record_ids": [
+            "record-2025-11-17-san-rafael-city-council-page",
+            "record-2025-11-17-san-rafael-city-council-minutes"
+          ],
+          "status": "adopted",
+          "title": "350 Merrydale county grant and affordable housing agreement approval"
+        }
+      },
+      "meeting": {
+        "id": "meeting-2025-11-17-san-rafael-city-council",
+        "node_type": "Meeting",
+        "display_label": "San Rafael City Council meeting",
+        "year": 2025,
+        "source_bundle_ids": [
+          "san-rafael-city-council-backbone-01__bundle-01"
+        ],
+        "properties": {
+          "agenda_item_marker_count": 0,
+          "agenda_packet_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/5e2fbbbf-agenda-packet-2025-11-17-rev-3.pdf",
+          "agenda_pdf_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/2d4a5f84-cc-agenda-2025-11-17.pdf",
+          "archive_meeting_page_url": "https://www.cityofsanrafael.org/meetings/city-council-november-17-2025/",
+          "evidence_record_ids": [
+            "record-2025-11-17-san-rafael-city-council-page",
+            "record-san-rafael-city-council-archive-page"
+          ],
+          "has_agenda_packet_tab": true,
+          "has_agenda_tab": true,
+          "has_minutes_tab": true,
+          "has_video_tab": true,
+          "institution_id": "inst-san-rafael-city-council",
+          "meeting_date": "2025-11-17",
+          "meeting_page_url": "https://www.cityofsanrafael.org/meetings/city-council-november-17-2025/",
+          "meeting_type": "regular_meeting",
+          "minutes_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/12/d2ca1a56-cc-minutes-2025-11-17.pdf",
+          "starts_at": "2025-11-17T06:00:00-08:00",
+          "status": "captured_from_meeting_page",
+          "title": "San Rafael City Council meeting",
+          "video_url": "https://www.youtube.com/embed/h6ey-0sY03g?autoplay=0&controls=1&enablejsapi=1&widgetid=1"
+        }
+      },
+      "agenda_items": [],
+      "metrics": {
+        "linked_money_flow_count": 1,
+        "linked_money_total_amount": 8000000.0,
+        "linked_program_count": 0,
+        "linked_project_count": 1,
+        "linked_case_count": 0,
+        "evidence_record_count": 2,
+        "flow_type_counts": {
+          "grant_award": 1
+        }
+      },
+      "linked_programs": [],
+      "linked_projects": [
+        {
+          "id": "project-san-rafael-350-merrydale-interim-shelter",
+          "node_type": "Project",
+          "display_label": "350 Merrydale Interim Shelter Project",
+          "year": null,
+          "source_bundle_ids": [
+            "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+          ],
+          "properties": {
+            "evidence_summary": "This bounded project slice is anchored in official San Rafael meeting pages and official minutes covering ERF-3/County collaboration, November 2025 site acquisition actions, February 2026 design and construction-management authorizations, and the March 2026 operational-framework update.",
+            "jurisdiction_place_id": "place-san-rafael",
+            "name": "350 Merrydale Interim Shelter Project",
+            "primary_place_id": "place-350-merrydale-road",
+            "project_type": "interim_shelter_project",
+            "record_ids": [
+              "record-2024-11-04-san-rafael-city-council-special-page",
+              "record-2024-11-04-san-rafael-city-council-special-minutes",
+              "record-2025-11-17-san-rafael-city-council-page",
+              "record-2025-11-17-san-rafael-city-council-minutes",
+              "record-2025-12-01-san-rafael-city-council-page",
+              "record-2025-12-01-san-rafael-city-council-minutes",
+              "record-2026-02-17-san-rafael-city-council-page",
+              "record-2026-02-17-san-rafael-city-council-minutes",
+              "record-2026-03-16-san-rafael-city-council-page",
+              "record-2026-03-16-san-rafael-city-council-minutes",
+              "record-san-rafael-sanctioned-camping-area-page"
+            ],
+            "related_decision_ids": [
+              "decision-2024-11-04-san-rafael-city-council-special-7a-motion-approval",
+              "decision-2025-11-17-350-merrydale-county-grant-approval",
+              "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
+              "decision-2025-12-01-san-rafael-city-council-4b-approval-approved-final-adoption-of-ordinance-2057",
+              "decision-2026-02-17-350-merrydale-project-services-authorization",
+              "decision-2026-03-16-san-rafael-city-council-4a-direction-or-receipt-received-the-project-update-and-provided-direction-regarding-the-operational-fra"
+            ],
+            "related_program_ids": [
+              "program-san-rafael-sanctioned-camping"
+            ],
+            "status": "active"
+          }
+        }
+      ],
+      "linked_cases": [],
+      "linked_money_flows": [
+        {
+          "id": "moneyflow-2025-11-17-350-merrydale-county-grant",
+          "node_type": "MoneyFlow",
+          "display_label": "moneyflow-2025-11-17-350-merrydale-county-grant",
+          "year": null,
+          "source_bundle_ids": [
+            "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+          ],
+          "properties": {
+            "amount": 8000000,
+            "currency": "USD",
+            "evidence_record_ids": [
+              "record-2025-11-17-san-rafael-city-council-page",
+              "record-2025-11-17-san-rafael-city-council-minutes"
+            ],
+            "flow_type": "grant_award",
+            "project_id": "project-san-rafael-350-merrydale-interim-shelter",
+            "related_decision_id": "decision-2025-11-17-350-merrydale-county-grant-approval",
+            "related_institution_id": "inst-marin-county"
+          }
+        }
+      ],
+      "evidence_records": [
+        {
+          "id": "record-2025-11-17-san-rafael-city-council-page",
+          "node_type": "Record",
+          "display_label": "City Council - November 17, 2025 - San Rafael",
+          "year": null,
+          "source_bundle_ids": [
+            "san-rafael-city-council-backbone-01__bundle-01",
+            "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+          ],
+          "properties": {
+            "agenda_download_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/2d4a5f84-cc-agenda-2025-11-17.pdf",
+            "agenda_item_marker_count": 0,
+            "agenda_packet_download_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/5e2fbbbf-agenda-packet-2025-11-17-rev-3.pdf",
+            "artifact_path": "data/raw/san-rafael-city-council-meeting-pages/2026-04-12/pages/record-2025-11-17-san-rafael-city-council-page.html",
+            "capture_status": "captured_html",
+            "meeting_id": "meeting-2025-11-17-san-rafael-city-council",
+            "meeting_kind": "regular",
+            "minutes_download_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/12/d2ca1a56-cc-minutes-2025-11-17.pdf",
+            "modified_at": "2025-12-02T18:13:43+00:00",
+            "record_class": "meeting_record",
+            "record_type": "meeting_page",
+            "related_project_ids": [
+              "project-san-rafael-350-merrydale-interim-shelter"
+            ],
+            "source_id": "san-rafael-city-council-meeting-pages",
+            "source_url": "https://www.cityofsanrafael.org/meetings/city-council-november-17-2025/",
+            "title": "City Council - November 17, 2025 - San Rafael",
+            "video_url": "https://www.youtube.com/embed/h6ey-0sY03g?autoplay=0&controls=1&enablejsapi=1&widgetid=1"
+          }
+        },
+        {
+          "id": "record-2025-11-17-san-rafael-city-council-minutes",
+          "node_type": "Record",
+          "display_label": "San Rafael City Council minutes - 2025-11-17",
+          "year": null,
+          "source_bundle_ids": [
+            "san-rafael-city-council-decisions-01__bundle-01",
+            "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+          ],
+          "properties": {
+            "artifact_path": "data/raw/san-rafael-city-council-minutes/2026-04-12/pdfs/meeting-2025-11-17-san-rafael-city-council.pdf",
+            "capture_status": "captured_pdf_and_extracted_text",
+            "line_count": 282,
+            "meeting_id": "meeting-2025-11-17-san-rafael-city-council",
+            "page_count": 7,
+            "record_class": "meeting_record",
+            "record_type": "minutes_pdf",
+            "related_project_ids": [
+              "project-san-rafael-350-merrydale-interim-shelter"
+            ],
+            "source_id": "san-rafael-city-council-minutes",
+            "source_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/12/d2ca1a56-cc-minutes-2025-11-17.pdf",
+            "text_artifact_path": "data/extracted/san-rafael-city-council-minutes/2026-04-12/texts/meeting-2025-11-17-san-rafael-city-council.txt",
+            "title": "San Rafael City Council minutes - 2025-11-17"
+          }
+        }
+      ]
+    },
+    {
+      "decision": {
+        "id": "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
+        "node_type": "Decision",
+        "display_label": "350 Merrydale acquisition and brokerage approval",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+        ],
+        "properties": {
+          "decision_type": "property_acquisition_authorization",
+          "effective_date": "2025-11-17",
+          "institution_id": "inst-san-rafael-city-council",
+          "meeting_id": "meeting-2025-11-17-san-rafael-city-council",
+          "project_id": "project-san-rafael-350-merrydale-interim-shelter",
+          "record_ids": [
+            "record-2025-11-17-san-rafael-city-council-page",
+            "record-2025-11-17-san-rafael-city-council-minutes"
+          ],
+          "status": "adopted",
+          "title": "350 Merrydale acquisition and brokerage approval"
+        }
+      },
+      "meeting": {
+        "id": "meeting-2025-11-17-san-rafael-city-council",
+        "node_type": "Meeting",
+        "display_label": "San Rafael City Council meeting",
+        "year": 2025,
+        "source_bundle_ids": [
+          "san-rafael-city-council-backbone-01__bundle-01"
+        ],
+        "properties": {
+          "agenda_item_marker_count": 0,
+          "agenda_packet_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/5e2fbbbf-agenda-packet-2025-11-17-rev-3.pdf",
+          "agenda_pdf_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/2d4a5f84-cc-agenda-2025-11-17.pdf",
+          "archive_meeting_page_url": "https://www.cityofsanrafael.org/meetings/city-council-november-17-2025/",
+          "evidence_record_ids": [
+            "record-2025-11-17-san-rafael-city-council-page",
+            "record-san-rafael-city-council-archive-page"
+          ],
+          "has_agenda_packet_tab": true,
+          "has_agenda_tab": true,
+          "has_minutes_tab": true,
+          "has_video_tab": true,
+          "institution_id": "inst-san-rafael-city-council",
+          "meeting_date": "2025-11-17",
+          "meeting_page_url": "https://www.cityofsanrafael.org/meetings/city-council-november-17-2025/",
+          "meeting_type": "regular_meeting",
+          "minutes_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/12/d2ca1a56-cc-minutes-2025-11-17.pdf",
+          "starts_at": "2025-11-17T06:00:00-08:00",
+          "status": "captured_from_meeting_page",
+          "title": "San Rafael City Council meeting",
+          "video_url": "https://www.youtube.com/embed/h6ey-0sY03g?autoplay=0&controls=1&enablejsapi=1&widgetid=1"
+        }
+      },
+      "agenda_items": [],
+      "metrics": {
+        "linked_money_flow_count": 2,
+        "linked_money_total_amount": 6901000.0,
+        "linked_program_count": 0,
+        "linked_project_count": 1,
+        "linked_case_count": 0,
+        "evidence_record_count": 2,
+        "flow_type_counts": {
+          "contract_authorization": 1,
+          "property_acquisition_authorization": 1
+        }
+      },
+      "linked_programs": [],
+      "linked_projects": [
+        {
+          "id": "project-san-rafael-350-merrydale-interim-shelter",
+          "node_type": "Project",
+          "display_label": "350 Merrydale Interim Shelter Project",
+          "year": null,
+          "source_bundle_ids": [
+            "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+          ],
+          "properties": {
+            "evidence_summary": "This bounded project slice is anchored in official San Rafael meeting pages and official minutes covering ERF-3/County collaboration, November 2025 site acquisition actions, February 2026 design and construction-management authorizations, and the March 2026 operational-framework update.",
+            "jurisdiction_place_id": "place-san-rafael",
+            "name": "350 Merrydale Interim Shelter Project",
+            "primary_place_id": "place-350-merrydale-road",
+            "project_type": "interim_shelter_project",
+            "record_ids": [
+              "record-2024-11-04-san-rafael-city-council-special-page",
+              "record-2024-11-04-san-rafael-city-council-special-minutes",
+              "record-2025-11-17-san-rafael-city-council-page",
+              "record-2025-11-17-san-rafael-city-council-minutes",
+              "record-2025-12-01-san-rafael-city-council-page",
+              "record-2025-12-01-san-rafael-city-council-minutes",
+              "record-2026-02-17-san-rafael-city-council-page",
+              "record-2026-02-17-san-rafael-city-council-minutes",
+              "record-2026-03-16-san-rafael-city-council-page",
+              "record-2026-03-16-san-rafael-city-council-minutes",
+              "record-san-rafael-sanctioned-camping-area-page"
+            ],
+            "related_decision_ids": [
+              "decision-2024-11-04-san-rafael-city-council-special-7a-motion-approval",
+              "decision-2025-11-17-350-merrydale-county-grant-approval",
+              "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
+              "decision-2025-12-01-san-rafael-city-council-4b-approval-approved-final-adoption-of-ordinance-2057",
+              "decision-2026-02-17-350-merrydale-project-services-authorization",
+              "decision-2026-03-16-san-rafael-city-council-4a-direction-or-receipt-received-the-project-update-and-provided-direction-regarding-the-operational-fra"
+            ],
+            "related_program_ids": [
+              "program-san-rafael-sanctioned-camping"
+            ],
+            "status": "active"
+          }
+        }
+      ],
+      "linked_cases": [],
+      "linked_money_flows": [
+        {
+          "id": "moneyflow-2025-11-17-350-merrydale-brokerage-services",
+          "node_type": "MoneyFlow",
+          "display_label": "moneyflow-2025-11-17-350-merrydale-brokerage-services",
+          "year": null,
+          "source_bundle_ids": [
+            "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+          ],
+          "properties": {
+            "amount": 201000,
+            "currency": "USD",
+            "evidence_record_ids": [
+              "record-2025-11-17-san-rafael-city-council-page",
+              "record-2025-11-17-san-rafael-city-council-minutes"
+            ],
+            "flow_type": "contract_authorization",
+            "project_id": "project-san-rafael-350-merrydale-interim-shelter",
+            "related_decision_id": "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
+            "to_actor_id": "actor-newmark-commercial-brokerage"
+          }
+        },
+        {
+          "id": "moneyflow-2025-11-17-350-merrydale-property-acquisition",
+          "node_type": "MoneyFlow",
+          "display_label": "moneyflow-2025-11-17-350-merrydale-property-acquisition",
+          "year": null,
+          "source_bundle_ids": [
+            "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+          ],
+          "properties": {
+            "amount": 6700000,
+            "currency": "USD",
+            "evidence_record_ids": [
+              "record-2025-11-17-san-rafael-city-council-page",
+              "record-2025-11-17-san-rafael-city-council-minutes"
+            ],
+            "flow_type": "property_acquisition_authorization",
+            "project_id": "project-san-rafael-350-merrydale-interim-shelter",
+            "related_decision_id": "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval"
+          }
+        }
+      ],
+      "evidence_records": [
+        {
+          "id": "record-2025-11-17-san-rafael-city-council-page",
+          "node_type": "Record",
+          "display_label": "City Council - November 17, 2025 - San Rafael",
+          "year": null,
+          "source_bundle_ids": [
+            "san-rafael-city-council-backbone-01__bundle-01",
+            "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+          ],
+          "properties": {
+            "agenda_download_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/2d4a5f84-cc-agenda-2025-11-17.pdf",
+            "agenda_item_marker_count": 0,
+            "agenda_packet_download_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/5e2fbbbf-agenda-packet-2025-11-17-rev-3.pdf",
+            "artifact_path": "data/raw/san-rafael-city-council-meeting-pages/2026-04-12/pages/record-2025-11-17-san-rafael-city-council-page.html",
+            "capture_status": "captured_html",
+            "meeting_id": "meeting-2025-11-17-san-rafael-city-council",
+            "meeting_kind": "regular",
+            "minutes_download_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/12/d2ca1a56-cc-minutes-2025-11-17.pdf",
+            "modified_at": "2025-12-02T18:13:43+00:00",
+            "record_class": "meeting_record",
+            "record_type": "meeting_page",
+            "related_project_ids": [
+              "project-san-rafael-350-merrydale-interim-shelter"
+            ],
+            "source_id": "san-rafael-city-council-meeting-pages",
+            "source_url": "https://www.cityofsanrafael.org/meetings/city-council-november-17-2025/",
+            "title": "City Council - November 17, 2025 - San Rafael",
+            "video_url": "https://www.youtube.com/embed/h6ey-0sY03g?autoplay=0&controls=1&enablejsapi=1&widgetid=1"
+          }
+        },
+        {
+          "id": "record-2025-11-17-san-rafael-city-council-minutes",
+          "node_type": "Record",
+          "display_label": "San Rafael City Council minutes - 2025-11-17",
+          "year": null,
+          "source_bundle_ids": [
+            "san-rafael-city-council-decisions-01__bundle-01",
+            "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+          ],
+          "properties": {
+            "artifact_path": "data/raw/san-rafael-city-council-minutes/2026-04-12/pdfs/meeting-2025-11-17-san-rafael-city-council.pdf",
+            "capture_status": "captured_pdf_and_extracted_text",
+            "line_count": 282,
+            "meeting_id": "meeting-2025-11-17-san-rafael-city-council",
+            "page_count": 7,
+            "record_class": "meeting_record",
+            "record_type": "minutes_pdf",
+            "related_project_ids": [
+              "project-san-rafael-350-merrydale-interim-shelter"
+            ],
+            "source_id": "san-rafael-city-council-minutes",
+            "source_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/12/d2ca1a56-cc-minutes-2025-11-17.pdf",
+            "text_artifact_path": "data/extracted/san-rafael-city-council-minutes/2026-04-12/texts/meeting-2025-11-17-san-rafael-city-council.txt",
+            "title": "San Rafael City Council minutes - 2025-11-17"
+          }
+        }
+      ]
+    },
     {
       "decision": {
         "id": "decision-2024-08-19-resolution-15336",
@@ -824,6 +1235,224 @@
               "project-downtown-library-renovation"
             ],
             "source_id": "san-rafael-city-council-2022-12-19-library-grants"
+          }
+        }
+      ]
+    },
+    {
+      "decision": {
+        "id": "decision-2026-02-17-350-merrydale-project-services-authorization",
+        "node_type": "Decision",
+        "display_label": "350 Merrydale project services authorization",
+        "year": null,
+        "source_bundle_ids": [
+          "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+        ],
+        "properties": {
+          "decision_type": "project_services_authorization",
+          "effective_date": "2026-02-17",
+          "institution_id": "inst-san-rafael-city-council",
+          "meeting_id": "meeting-2026-02-17-san-rafael-city-council",
+          "project_id": "project-san-rafael-350-merrydale-interim-shelter",
+          "record_ids": [
+            "record-2026-02-17-san-rafael-city-council-page",
+            "record-2026-02-17-san-rafael-city-council-minutes"
+          ],
+          "status": "adopted",
+          "title": "350 Merrydale project services authorization"
+        }
+      },
+      "meeting": {
+        "id": "meeting-2026-02-17-san-rafael-city-council",
+        "node_type": "Meeting",
+        "display_label": "San Rafael City Council meeting",
+        "year": 2026,
+        "source_bundle_ids": [
+          "san-rafael-city-council-backbone-01__bundle-01",
+          "san-rafael-election-records-01__bundle-01"
+        ],
+        "properties": {
+          "agenda_item_marker_count": 0,
+          "agenda_packet_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/08989132-agenda-packet-2026-02-17.pdf",
+          "agenda_pdf_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/a4181d41-cc-agenda-2026-02-17.pdf",
+          "archive_meeting_page_url": "https://www.cityofsanrafael.org/meetings/city-council-tuesday-february-17-2026/",
+          "evidence_record_ids": [
+            "record-san-rafael-election-entry-41989",
+            "record-2026-02-17-san-rafael-city-council-page",
+            "record-san-rafael-city-council-archive-page"
+          ],
+          "has_agenda_packet_tab": true,
+          "has_agenda_tab": true,
+          "has_minutes_tab": true,
+          "has_video_tab": true,
+          "institution_id": "inst-san-rafael-city-council",
+          "meeting_date": "2026-02-17",
+          "meeting_page_url": "https://www.cityofsanrafael.org/meetings/city-council-tuesday-february-17-2026/",
+          "meeting_type": "special",
+          "minutes_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2026/03/9ec66f80-cc-minutes-2026-02-17.pdf",
+          "starts_at": "2026-02-17T06:00:00-08:00",
+          "status": "derived_from_record_metadata",
+          "title": "San Rafael City Council meeting",
+          "video_url": "https://www.youtube.com/embed/0xK-7CGwWZw?autoplay=0&controls=1&enablejsapi=1&widgetid=1"
+        }
+      },
+      "agenda_items": [],
+      "metrics": {
+        "linked_money_flow_count": 2,
+        "linked_money_total_amount": 436953.0,
+        "linked_program_count": 0,
+        "linked_project_count": 1,
+        "linked_case_count": 0,
+        "evidence_record_count": 2,
+        "flow_type_counts": {
+          "amendment_authorization": 1,
+          "contract_authorization": 1
+        }
+      },
+      "linked_programs": [],
+      "linked_projects": [
+        {
+          "id": "project-san-rafael-350-merrydale-interim-shelter",
+          "node_type": "Project",
+          "display_label": "350 Merrydale Interim Shelter Project",
+          "year": null,
+          "source_bundle_ids": [
+            "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+          ],
+          "properties": {
+            "evidence_summary": "This bounded project slice is anchored in official San Rafael meeting pages and official minutes covering ERF-3/County collaboration, November 2025 site acquisition actions, February 2026 design and construction-management authorizations, and the March 2026 operational-framework update.",
+            "jurisdiction_place_id": "place-san-rafael",
+            "name": "350 Merrydale Interim Shelter Project",
+            "primary_place_id": "place-350-merrydale-road",
+            "project_type": "interim_shelter_project",
+            "record_ids": [
+              "record-2024-11-04-san-rafael-city-council-special-page",
+              "record-2024-11-04-san-rafael-city-council-special-minutes",
+              "record-2025-11-17-san-rafael-city-council-page",
+              "record-2025-11-17-san-rafael-city-council-minutes",
+              "record-2025-12-01-san-rafael-city-council-page",
+              "record-2025-12-01-san-rafael-city-council-minutes",
+              "record-2026-02-17-san-rafael-city-council-page",
+              "record-2026-02-17-san-rafael-city-council-minutes",
+              "record-2026-03-16-san-rafael-city-council-page",
+              "record-2026-03-16-san-rafael-city-council-minutes",
+              "record-san-rafael-sanctioned-camping-area-page"
+            ],
+            "related_decision_ids": [
+              "decision-2024-11-04-san-rafael-city-council-special-7a-motion-approval",
+              "decision-2025-11-17-350-merrydale-county-grant-approval",
+              "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
+              "decision-2025-12-01-san-rafael-city-council-4b-approval-approved-final-adoption-of-ordinance-2057",
+              "decision-2026-02-17-350-merrydale-project-services-authorization",
+              "decision-2026-03-16-san-rafael-city-council-4a-direction-or-receipt-received-the-project-update-and-provided-direction-regarding-the-operational-fra"
+            ],
+            "related_program_ids": [
+              "program-san-rafael-sanctioned-camping"
+            ],
+            "status": "active"
+          }
+        }
+      ],
+      "linked_cases": [],
+      "linked_money_flows": [
+        {
+          "id": "moneyflow-2026-02-17-350-merrydale-lca-design-amendment",
+          "node_type": "MoneyFlow",
+          "display_label": "moneyflow-2026-02-17-350-merrydale-lca-design-amendment",
+          "year": null,
+          "source_bundle_ids": [
+            "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+          ],
+          "properties": {
+            "amount": 207250,
+            "currency": "USD",
+            "evidence_record_ids": [
+              "record-2026-02-17-san-rafael-city-council-page",
+              "record-2026-02-17-san-rafael-city-council-minutes"
+            ],
+            "flow_type": "amendment_authorization",
+            "project_id": "project-san-rafael-350-merrydale-interim-shelter",
+            "related_decision_id": "decision-2026-02-17-350-merrydale-project-services-authorization",
+            "to_actor_id": "actor-lca-architects"
+          }
+        },
+        {
+          "id": "moneyflow-2026-02-17-350-merrydale-swinerton-services",
+          "node_type": "MoneyFlow",
+          "display_label": "moneyflow-2026-02-17-350-merrydale-swinerton-services",
+          "year": null,
+          "source_bundle_ids": [
+            "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+          ],
+          "properties": {
+            "amount": 229703,
+            "currency": "USD",
+            "evidence_record_ids": [
+              "record-2026-02-17-san-rafael-city-council-page",
+              "record-2026-02-17-san-rafael-city-council-minutes"
+            ],
+            "flow_type": "contract_authorization",
+            "project_id": "project-san-rafael-350-merrydale-interim-shelter",
+            "related_decision_id": "decision-2026-02-17-350-merrydale-project-services-authorization",
+            "to_actor_id": "actor-swinerton-management-and-consulting"
+          }
+        }
+      ],
+      "evidence_records": [
+        {
+          "id": "record-2026-02-17-san-rafael-city-council-page",
+          "node_type": "Record",
+          "display_label": "City Council - February 17, 2026 (Tuesday) - San Rafael",
+          "year": null,
+          "source_bundle_ids": [
+            "san-rafael-city-council-backbone-01__bundle-01",
+            "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+          ],
+          "properties": {
+            "agenda_download_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/a4181d41-cc-agenda-2026-02-17.pdf",
+            "agenda_item_marker_count": 0,
+            "agenda_packet_download_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/08989132-agenda-packet-2026-02-17.pdf",
+            "artifact_path": "data/raw/san-rafael-city-council-meeting-pages/2026-04-12/pages/record-2026-02-17-san-rafael-city-council-page.html",
+            "capture_status": "captured_html",
+            "meeting_id": "meeting-2026-02-17-san-rafael-city-council",
+            "meeting_kind": "regular",
+            "minutes_download_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2026/03/9ec66f80-cc-minutes-2026-02-17.pdf",
+            "modified_at": "2026-03-03T18:25:46+00:00",
+            "record_class": "meeting_record",
+            "record_type": "meeting_page",
+            "related_project_ids": [
+              "project-san-rafael-350-merrydale-interim-shelter"
+            ],
+            "source_id": "san-rafael-city-council-meeting-pages",
+            "source_url": "https://www.cityofsanrafael.org/meetings/city-council-tuesday-february-17-2026/",
+            "title": "City Council - February 17, 2026 (Tuesday) - San Rafael",
+            "video_url": "https://www.youtube.com/embed/0xK-7CGwWZw?autoplay=0&controls=1&enablejsapi=1&widgetid=1"
+          }
+        },
+        {
+          "id": "record-2026-02-17-san-rafael-city-council-minutes",
+          "node_type": "Record",
+          "display_label": "San Rafael City Council minutes - 2026-02-17",
+          "year": null,
+          "source_bundle_ids": [
+            "san-rafael-city-council-decisions-01__bundle-01",
+            "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
+          ],
+          "properties": {
+            "artifact_path": "data/raw/san-rafael-city-council-minutes/2026-04-12/pdfs/meeting-2026-02-17-san-rafael-city-council.pdf",
+            "capture_status": "captured_pdf_and_extracted_text",
+            "line_count": 295,
+            "meeting_id": "meeting-2026-02-17-san-rafael-city-council",
+            "page_count": 8,
+            "record_class": "meeting_record",
+            "record_type": "minutes_pdf",
+            "related_project_ids": [
+              "project-san-rafael-350-merrydale-interim-shelter"
+            ],
+            "source_id": "san-rafael-city-council-minutes",
+            "source_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2026/03/9ec66f80-cc-minutes-2026-02-17.pdf",
+            "text_artifact_path": "data/extracted/san-rafael-city-council-minutes/2026-04-12/texts/meeting-2026-02-17-san-rafael-city-council.txt",
+            "title": "San Rafael City Council minutes - 2026-02-17"
           }
         }
       ]

@@ -584,6 +584,20 @@ Mirror the question here when it affects:
 - `current note`: Batch `02` is now `deferred_pending_review` in the loop manifest. It should not run automatically just because it exists.
 - `next evidence`: compare the likely product value of `2022` campaign-money depth against the next-best San Rafael densification candidate before opening another batch.
 
+### OQ-037: Merrydale project decision-boundary refinement
+
+- `status`: watch
+- `layer`: project thread / decision provenance
+- `scope`: `san-rafael-merrydale-interim-shelter-project-01`
+- `source refs`:
+  - [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-merrydale-interim-shelter-project-01/bundle-01.json)
+  - [project-san-rafael-350-merrydale-interim-shelter-dossier.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/views/project-san-rafael-350-merrydale-interim-shelter-dossier.json)
+  - [jurisdiction-san-rafael-local-pressure-comparison.json](/Users/tammypais/projects/marin-civic-graph/data/projected/graph-v1/views/jurisdiction-san-rafael-local-pressure-comparison.json)
+- `question`: When should the Merrydale project stop relying on page-backed custom decision objects for the November 17, 2025 and February 17, 2026 actions and move to packet/staff-report-level extraction?
+- `why it matters`: The bounded Merrydale slice is strong enough for `QX-001`, but some of its highest-value money and agreement actions are still modeled through meeting-page and minutes evidence instead of packet-level item splitting.
+- `current note`: The project now enters graph-v1 and the local-pressure comparison cleanly, but the November 17, 2025 grant/acquisition actions and the February 17, 2026 project-services authorization still use custom decision nodes because the citywide minutes parser did not preserve those item boundaries precisely enough.
+- `next evidence`: capture the corresponding staff reports or packet materials for those meetings and decide whether the current custom decisions should be replaced or simply gain stronger record support.
+
 ## Maintenance
 
 When a question is answered:

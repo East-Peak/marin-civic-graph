@@ -5,7 +5,7 @@
   "subject_id": "case-boyd-v-city-of-san-rafael",
   "subject_node_type": "Case",
   "contract_version": 1,
-  "generated_at": "2026-04-14T00:50:35Z",
+  "generated_at": "2026-04-14T01:16:06Z",
   "case": {
     "id": "case-boyd-v-city-of-san-rafael",
     "node_type": "Case",
@@ -344,7 +344,8 @@
       "display_label": "Sanctioned Camping Area - San Rafael",
       "year": null,
       "source_bundle_ids": [
-        "legal-precedent-01__bundle-01"
+        "legal-precedent-01__bundle-01",
+        "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
       ],
       "properties": {
         "artifact_path": "data/raw/san-rafael-sanctioned-camping-area/2026-04-10/source.html",
@@ -363,6 +364,9 @@
         ],
         "related_program_ids": [
           "program-san-rafael-sanctioned-camping"
+        ],
+        "related_project_ids": [
+          "project-san-rafael-350-merrydale-interim-shelter"
         ],
         "source_id": "san-rafael-sanctioned-camping-area",
         "text_path": "data/extracted/san-rafael-sanctioned-camping-area/source.txt",
@@ -576,7 +580,8 @@
       "display_label": "Sanctioned Camping Area - San Rafael",
       "year": null,
       "source_bundle_ids": [
-        "legal-precedent-01__bundle-01"
+        "legal-precedent-01__bundle-01",
+        "san-rafael-merrydale-interim-shelter-project-01__bundle-01"
       ],
       "properties": {
         "artifact_path": "data/raw/san-rafael-sanctioned-camping-area/2026-04-10/source.html",
@@ -595,6 +600,9 @@
         ],
         "related_program_ids": [
           "program-san-rafael-sanctioned-camping"
+        ],
+        "related_project_ids": [
+          "project-san-rafael-350-merrydale-interim-shelter"
         ],
         "source_id": "san-rafael-sanctioned-camping-area",
         "text_path": "data/extracted/san-rafael-sanctioned-camping-area/source.txt",
