@@ -1,3 +1,4 @@
+import re
 import sys
 from pathlib import Path
 
@@ -14,6 +15,10 @@ from adapters.granicus import (
     extract_rows,
     classify_meeting,
     detect_variant,
+    parse_legacy,
+    parse_legacy_date,
+    parse_modern,
+    parse_modern_date,
 )
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
@@ -118,3 +123,141 @@ class TestExtractRows:
         html = (FIXTURES / "granicus-marin-county-bos.html").read_text(errors="ignore")
         rows = extract_rows(html)
         assert rows[0].startswith("<tr")
+
+
+class TestParseLegacyDate:
+    def test_two_digit_year(self):
+        assert parse_legacy_date("04/14/26") == "2026-04-14"
+
+    def test_with_time(self):
+        assert parse_legacy_date("07/08/25 - 09:00 AM") == "2025-07-08"
+
+    def test_returns_none_for_bad_input(self):
+        assert parse_legacy_date("not a date") is None
+
+
+class TestParseLegacy:
+    @pytest.fixture
+    def legacy_html(self):
+        return (FIXTURES / "granicus-marin-county-bos.html").read_text(errors="ignore")
+
+    def test_returns_meetings_list(self, legacy_html):
+        meetings = parse_legacy(legacy_html, backfill_from="2019-01-01")
+        assert isinstance(meetings, list)
+        assert len(meetings) > 200
+
+    def test_meeting_has_required_fields(self, legacy_html):
+        meetings = parse_legacy(legacy_html, backfill_from="2019-01-01")
+        m = meetings[0]
+        assert "date" in m
+        assert "title" in m
+        assert "meeting_type" in m
+        assert "artifacts" in m
+        assert "source_row_number" in m
+
+    def test_meeting_date_is_iso(self, legacy_html):
+        meetings = parse_legacy(legacy_html, backfill_from="2019-01-01")
+        for m in meetings[:10]:
+            if m["date"]:
+                assert re.match(r"\d{4}-\d{2}-\d{2}", m["date"])
+
+    def test_respects_backfill_from(self, legacy_html):
+        meetings = parse_legacy(legacy_html, backfill_from="2024-01-01")
+        for m in meetings:
+            if m["date"]:
+                assert m["date"] >= "2024-01-01"
+
+    def test_artifacts_use_available_url_format(self, legacy_html):
+        meetings = parse_legacy(legacy_html, backfill_from="2019-01-01")
+        for m in meetings[:10]:
+            for art_name, art in m["artifacts"].items():
+                assert "available" in art
+                assert "url" in art
+
+    def test_extracts_agenda_urls(self, legacy_html):
+        meetings = parse_legacy(legacy_html, backfill_from="2019-01-01")
+        agendas = [m for m in meetings if m["artifacts"].get("agenda", {}).get("available")]
+        assert len(agendas) > 100
+
+    def test_extracts_video_urls(self, legacy_html):
+        meetings = parse_legacy(legacy_html, backfill_from="2019-01-01")
+        videos = [m for m in meetings if m["artifacts"].get("video", {}).get("available")]
+        assert len(videos) > 100
+
+
+class TestParseModernDate:
+    def test_numeric_with_nbsp(self):
+        assert parse_modern_date("03\xa0/\xa024\xa0/\xa02026") == "2026-03-24"
+
+    def test_numeric_with_spaces(self):
+        assert parse_modern_date("03 / 24 / 2026") == "2026-03-24"
+
+    def test_month_name_abbreviated(self):
+        assert parse_modern_date("Apr\xa0 7,\xa02026") == "2026-04-07"
+
+    def test_month_name_full(self):
+        assert parse_modern_date("April 14, 2026") == "2026-04-14"
+
+    def test_returns_none_for_bad_input(self):
+        assert parse_modern_date("not a date") is None
+
+    def test_handles_time_suffix(self):
+        assert parse_modern_date("Apr\xa0 7,\xa02026 - 4:01\xa0PM") == "2026-04-07"
+
+
+class TestParseModern:
+    @pytest.fixture
+    def novato_html(self):
+        return (FIXTURES / "granicus-novato-city-council.html").read_text(errors="ignore")
+
+    @pytest.fixture
+    def sausalito_html(self):
+        return (FIXTURES / "granicus-sausalito-city-council.html").read_text(errors="ignore")
+
+    def test_returns_meetings_from_novato(self, novato_html):
+        meetings = parse_modern(novato_html, backfill_from="2019-01-01")
+        assert isinstance(meetings, list)
+        assert len(meetings) > 200
+
+    def test_returns_meetings_from_sausalito(self, sausalito_html):
+        meetings = parse_modern(sausalito_html, backfill_from="2019-01-01")
+        assert isinstance(meetings, list)
+        assert len(meetings) > 100
+
+    def test_meeting_has_required_fields(self, novato_html):
+        meetings = parse_modern(novato_html, backfill_from="2019-01-01")
+        m = meetings[0]
+        assert "date" in m
+        assert "title" in m
+        assert "meeting_type" in m
+        assert "artifacts" in m
+
+    def test_meeting_date_is_iso(self, novato_html):
+        meetings = parse_modern(novato_html, backfill_from="2019-01-01")
+        dated = [m for m in meetings if m["date"]]
+        assert len(dated) > 100
+        for m in dated[:20]:
+            assert re.match(r"\d{4}-\d{2}-\d{2}", m["date"])
+
+    def test_artifacts_use_available_url_format(self, novato_html):
+        meetings = parse_modern(novato_html, backfill_from="2019-01-01")
+        for m in meetings[:10]:
+            for art in m["artifacts"].values():
+                assert "available" in art
+                assert "url" in art
+
+    def test_respects_backfill_from(self, novato_html):
+        meetings = parse_modern(novato_html, backfill_from="2024-01-01")
+        for m in meetings:
+            if m["date"]:
+                assert m["date"] >= "2024-01-01"
+
+    def test_extracts_agenda_urls_novato(self, novato_html):
+        meetings = parse_modern(novato_html, backfill_from="2019-01-01")
+        agendas = [m for m in meetings if m["artifacts"].get("agenda", {}).get("available")]
+        assert len(agendas) > 100
+
+    def test_extracts_minutes_urls_sausalito(self, sausalito_html):
+        meetings = parse_modern(sausalito_html, backfill_from="2019-01-01")
+        minutes = [m for m in meetings if m["artifacts"].get("minutes", {}).get("available")]
+        assert len(minutes) > 30
