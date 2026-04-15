@@ -16,8 +16,10 @@ sources:
 
   - id: belvedere-city-council
     adapter: proudcity
-    url: https://cityofbelvedere.org/departments/public-meetings/
+    url: https://www.cityofbelvedere.org/city-council-meetings/
     jurisdiction_id: place-belvedere
     institution_id: org-belvedere-city-council
     backfill_from: "2019-01-01"
     schedule: weekly
+    archive_pages:
+      - https://www.cityofbelvedere.org/city-council-meeting-archive/

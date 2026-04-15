@@ -22,3 +22,11 @@ sources:
     institution_id: org-sausalito-city-council
     backfill_from: "2019-01-01"
     schedule: weekly
+
+  - id: tiburon-town-council-granicus
+    adapter: granicus
+    url: https://townoftiburon.granicus.com/ViewPublisher.php?view_id=5
+    jurisdiction_id: place-tiburon
+    institution_id: org-tiburon-town-council
+    backfill_from: "2019-01-01"
+    schedule: weekly

@@ -1,0 +1,8 @@
+sources:
+  - id: ross-town-council
+    adapter: drupal_ross
+    url: https://townofrossca.gov/meetings
+    jurisdiction_id: place-ross
+    institution_id: org-ross-town-council
+    backfill_from: "2019-01-01"
+    schedule: monthly
