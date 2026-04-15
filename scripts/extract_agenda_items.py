@@ -468,7 +468,7 @@ def fetch_meetings_needing_items(
     source_filter = "AND r.source_id = $source_id" if source_id else ""
     query = f"""
         MATCH (m:Meeting)-[:EVIDENCED_BY]->(r:Record)
-        WHERE r.record_type = 'meeting_agenda'
+        WHERE r.record_type IN ['meeting_agenda', 'meeting_packet']
         {source_filter}
         AND NOT exists {{ (m)<-[:PART_OF_MEETING]-(:AgendaItem) }}
         RETURN m.id AS meeting_id,
