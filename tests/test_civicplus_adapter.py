@@ -284,6 +284,7 @@ class TestCivicPlusAdapterCapture:
         if categories:
             config["categories"] = categories
         adapter = CivicPlusAdapter(config, tmp_path)
+        adapter._request_delay = 0  # no sleeping in tests
         fixture_path = FIXTURES / fixture_name
         fixture_html = fixture_path.read_text(errors="ignore")
         adapter._fetch_page = lambda url: fixture_html
@@ -354,3 +355,66 @@ class TestCivicPlusAdapterCapture:
         result = adapter.capture()
         named_cats = {m.get("category") for m in result["meetings"] if m.get("category")}
         assert named_cats.issubset({"Town Council"})
+
+
+# ---------------------------------------------------------------------------
+# TestCivicPlusYearFetching
+# ---------------------------------------------------------------------------
+
+class TestCivicPlusYearFetching:
+    def _make_adapter_with_years(self, source_id, fixture_name, year_fixtures, tmp_path):
+        """Create adapter where _fetch_page returns main fixture and _fetch_year returns year-specific fixtures."""
+        config = {
+            "id": source_id,
+            "adapter": "civicplus",
+            "url": "https://example.gov/AgendaCenter",
+            "jurisdiction_id": f"place-test",
+            "institution_id": f"org-{source_id}",
+            "backfill_from": "2019-01-01",
+        }
+        adapter = CivicPlusAdapter(config, tmp_path)
+        adapter._request_delay = 0  # no sleeping in tests
+        fixture_path = FIXTURES / fixture_name
+        adapter._fetch_page = lambda url: fixture_path.read_text(errors="ignore")
+
+        # _fetch_year returns year-specific HTML or empty string
+        def mock_fetch_year(url, cat_id, year, cookies):
+            key = f"{cat_id}_{year}"
+            return year_fixtures.get(key, "")
+        adapter._fetch_year = mock_fetch_year
+        return adapter
+
+    def test_capture_calls_fetch_year_for_historical_data(self, tmp_path):
+        """When year fixtures return meetings, they should be included in the output."""
+        # Create a minimal HTML fragment that parse_meeting_rows can handle.
+        # Town Council in corte-madera fixture is category id=1.
+        year_html = '''
+        <tr class="catAgendaRow">
+            <td>
+                <h3><strong aria-label="Agenda for March 15, 2023"></strong></h3>
+                <p><a href="/AgendaCenter/ViewFile/Agenda/_03152023-999">Historical Meeting (PDF)</a></p>
+            </td>
+            <td class="minutes"></td>
+            <td class="downloads"><div class="popoutContainer"><ol role="menu"></ol></div></td>
+        </tr>
+        '''
+        # The main fixture (corte-madera) has current year meetings.
+        # The year fixture adds one historical meeting for cat 1 (Town Council), year 2023.
+        adapter = self._make_adapter_with_years(
+            "test-civicplus", "civicplus-corte-madera.html",
+            {"1_2023": year_html}, tmp_path
+        )
+        result = adapter.capture()
+        # Should have meetings from both initial page AND the year fetch
+        meeting_dates = [m["date"] for m in result["meetings"] if m.get("date")]
+        assert "2023-03-15" in meeting_dates
+
+    def test_capture_deduplicates_meetings(self, tmp_path):
+        """Meetings from year fetch that already exist from initial page should not be duplicated."""
+        adapter = self._make_adapter_with_years(
+            "test-civicplus", "civicplus-corte-madera.html",
+            {}, tmp_path  # No year fixtures — just initial page
+        )
+        result = adapter.capture()
+        meeting_ids = [m.get("meeting_id") for m in result["meetings"]]
+        assert len(meeting_ids) == len(set(meeting_ids))  # No duplicates

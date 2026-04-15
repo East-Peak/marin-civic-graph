@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import http.cookiejar
 import re
+import time
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -269,6 +270,10 @@ class CivicPlusAdapter(BaseAdapter):
     optional ``categories`` config list, and returns the capture envelope.
     """
 
+    # Delay in seconds between AJAX year-fetch requests (rate limiting).
+    # Tests can set this to 0 to avoid sleeping.
+    _request_delay: float = 1.0
+
     def _fetch_page(self, url: str) -> str:
         """GET *url* with a cookie jar, return response HTML.
 
@@ -341,9 +346,50 @@ class CivicPlusAdapter(BaseAdapter):
 
         # --- Apply optional category filter from config ---
         allowed: list[str] | None = self.config.get("categories")
-        if allowed is not None:
-            allowed_set = set(allowed)
+        allowed_set: set[str] | None = set(allowed) if allowed is not None else None
+        if allowed_set is not None:
             meetings = [m for m in meetings if m.get("category") in allowed_set]
+
+        # --- Fetch historical years via AJAX for each category ---
+        backfill_year = int(self.backfill_from[:4])
+        seen_ids: set[str] = {
+            m.get("meeting_id") or m.get("agenda_id") or ""
+            for m in meetings
+        }
+
+        for cat in categories:
+            cat_id = cat["id"]
+            cat_name = cat["name"]
+
+            if allowed_set is not None and cat_name not in allowed_set:
+                continue
+
+            available_years = extract_years_for_category(html, cat_id)
+
+            for year in available_years:
+                if year < backfill_year:
+                    continue
+
+                year_html = self._fetch_year(self.url, cat_id, year, None)
+                if self._request_delay:
+                    time.sleep(self._request_delay)
+                if not year_html:
+                    continue
+
+                year_meetings = parse_meeting_rows(
+                    year_html, base_url=base_url, backfill_from=self.backfill_from
+                )
+                for m in year_meetings:
+                    m_id = (
+                        m.get("meeting_id")
+                        or m.get("agenda_id")
+                        or f"{m.get('date')}-{m.get('source_row_number')}"
+                    )
+                    if m_id not in seen_ids:
+                        if not m.get("category"):
+                            m["category"] = cat_name
+                        meetings.append(m)
+                        seen_ids.add(m_id)
 
         # --- Stamp institution_id and meeting_id onto each meeting ---
         slug = self.source_id
