@@ -91,6 +91,41 @@ _CM_ROLL_CALL_RE = re.compile(
 
 
 # ---------------------------------------------------------------------------
+# Regex patterns — Sausalito narrative-prose minutes format
+# ---------------------------------------------------------------------------
+
+# "[Title] Name moved, seconded by [Title] Name, and [unanimously] carried [N-M] [(Name dissenting)]"
+_SAU_VOTE_RE = re.compile(
+    r"(?:(?:Mayor\s+Pro\s+Tem|Vice\s+Mayor|Mayor|Councilmember|Councilwoman|Councilman)\s+)?"
+    r"(\w+(?:['-]\w+)*)\s+moved,\s+seconded\s+by\s+"
+    r"(?:(?:Mayor\s+Pro\s+Tem|Vice\s+Mayor|Mayor|Councilmember|Councilwoman|Councilman)\s+)?"
+    r"(\w+(?:['-]\w+)*),\s+and\s+(?:unanimously\s+)?carried"
+    r"(?:\s+(\d+-\d+))?(?:\s*\((\w+(?:['-]\w+)*)\s+dissenting\))?"
+    r",?\s+to\s+(.+?)(?=\n\n|\Z)",
+    re.S | re.I,
+)
+
+
+# ---------------------------------------------------------------------------
+# Regex patterns — Marin County BOS minutes format
+# ---------------------------------------------------------------------------
+
+# Regular session: "M/s Supervisor X - Supervisor Y to <action>. AYES: ALL"
+_BOS_MS_RE = re.compile(
+    r"M/s\s+Supervisor\s+(\w+(?:['-]\w+)*)\s+-\s+Supervisor\s+(\w+(?:['-]\w+)*)\s+to\s+(.+?)\.\s*AYES:\s*(\w+)",
+    re.S | re.I,
+)
+
+# Special session: "Motion to <action> moved by Supervisor X and seconded by Supervisor Y"
+_BOS_MOVED_RE = re.compile(
+    r"(?:Motion\s+to\s+)?(.+?)moved\s+by\s+Supervisor\s+(\w+(?:['-]\w+)*)\s+and\s+seconded\s+by\s+Supervisor\s+(\w+(?:['-]\w+)*)",
+    re.S | re.I,
+)
+
+_BOS_OUTCOME_RE = re.compile(r"Motion\s+(passed|failed)\.", re.I)
+
+
+# ---------------------------------------------------------------------------
 # Name parsing helpers
 # ---------------------------------------------------------------------------
 
@@ -256,6 +291,22 @@ def parse_cortemadera_votes(text: str) -> list[dict]:
     return votes
 
 
+def parse_sausalito_votes(text: str) -> list[dict]:
+    """Parse vote records from Sausalito narrative-prose meeting minutes.
+
+    TODO: implement Sausalito format parser.
+    """
+    raise NotImplementedError("parse_sausalito_votes is not yet implemented")
+
+
+def parse_bos_votes(text: str) -> list[dict]:
+    """Parse vote records from Marin County Board of Supervisors meeting minutes.
+
+    TODO: implement BOS format parser.
+    """
+    raise NotImplementedError("parse_bos_votes is not yet implemented")
+
+
 def extract_resolution_numbers(text: str) -> list[str]:
     """Return all resolution numbers found in text (e.g. '2026-021')."""
     return [m.group(1) for m in _RESOLUTION_RE.finditer(text)]
@@ -264,6 +315,78 @@ def extract_resolution_numbers(text: str) -> list[str]:
 def extract_ordinance_numbers(text: str) -> list[str]:
     """Return all ordinance numbers found in text (e.g. '1733')."""
     return [m.group(1) for m in _ORDINANCE_RE.finditer(text)]
+
+
+# ---------------------------------------------------------------------------
+# Regex patterns — Sausalito narrative-prose minutes format
+# ---------------------------------------------------------------------------
+
+# "{Title} {Name} moved, seconded by {Title} {Name}, and {outcome}, to {action}"
+# Outcome: "unanimously carried" | "carried N-M[(dissent)]"
+_SAU_VOTE_RE = re.compile(
+    r"(?:Councilmember|Vice Mayor|Mayor)\s+(\w+(?:['\-]\w+)*)\s+moved,\s+seconded by\s+"
+    r"(?:Councilmember|Vice Mayor|Mayor)\s+(\w+(?:['\-]\w+)*),\s+and\s+"
+    r"(unanimously carried|carried\s+\d+-\d+(?:\s*\([^)]+\))?)",
+    re.S | re.I,
+)
+
+# Motion text: everything after ", to " following the outcome clause, up to paragraph end
+_SAU_MOTION_TEXT_RE = re.compile(
+    r"(?:unanimously carried|carried\s+\d+-\d+(?:\s*\([^)]+\))?)\s*,\s+to\s+(.+?)(?=\n\n|\Z)",
+    re.S | re.I,
+)
+
+# Dissenter from "(Hoffman dissenting)"
+_SAU_DISSENTER_RE = re.compile(r"\((\w+)\s+dissenting\)", re.I)
+
+# Numeric tally from "carried 4-1"
+_SAU_TALLY_RE = re.compile(r"carried\s+(\d+-\d+)", re.I)
+
+
+def parse_sausalito_votes(text: str) -> list[dict]:
+    """Parse all vote records from Sausalito narrative-prose minutes.
+
+    Format: "{Title} {Name} moved, seconded by {Title} {Name}, and {outcome}, to {action}"
+
+    Handles "unanimously carried" (tally=None) and "carried N-M (Name dissenting)".
+    Only produces results when text is extractable (returns [] for blank input).
+    """
+    # Normalize Unicode smart quotes — same fix applied to Novato PDFs
+    text = text.replace('’', "'").replace('‘', "'")
+    text = text.replace('“', '"'').replace('”', '"'')
+
+    votes: list[dict] = []
+    for m in _SAU_VOTE_RE.finditer(text):
+        mover = m.group(1)
+        seconder = m.group(2)
+        outcome_clause = m.group(3)
+
+        tally_m = _SAU_TALLY_RE.search(outcome_clause)
+        tally = tally_m.group(1) if tally_m else None
+
+        dissenter_m = _SAU_DISSENTER_RE.search(outcome_clause)
+        noes = [dissenter_m.group(1).upper()] if dissenter_m else []
+
+        # Motion text lives in a ~500-char window starting at this match
+        search_window = text[m.start() : m.start() + 500]
+        motion_m = _SAU_MOTION_TEXT_RE.search(search_window)
+        if motion_m:
+            motion_text = re.sub(r"\s+", " ", motion_m.group(1)).strip().rstrip(".")
+        else:
+            motion_text = ""
+
+        votes.append({
+            "mover": mover,
+            "seconder": seconder,
+            "tally": tally,
+            "motion_text": motion_text,
+            "ayes": [],
+            "noes": noes,
+            "recused": [],
+            "absent": [],
+            "outcome": "carried",
+        })
+    return votes
 
 
 # ---------------------------------------------------------------------------

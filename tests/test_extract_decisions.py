@@ -488,3 +488,111 @@ class TestParseCorteMaderaVotes:
         votes = parse_cortemadera_votes(CORTE_MADERA_SAMPLE)
         for v in votes:
             assert v["outcome"] == "carried"
+
+
+# ---------------------------------------------------------------------------
+# Sausalito narrative-prose format tests
+# ---------------------------------------------------------------------------
+
+SAUSALITO_SAMPLE = """
+Councilmember Cox moved, seconded by Vice Mayor Blaustein, and unanimously carried, to
+approve the agenda.
+
+Councilmember Sobieski moved, seconded by Mayor Woodside, and unanimously carried,
+to receive and file the Fiscal Year 2025-2026 Mid-Year Budget report.
+
+Councilmember Hoffman moved, seconded by Councilmember Cox, and unanimously
+carried, to adopt Resolution No. 02-2026, affirming the violations cited in the
+Notice of Violation issued to 100 Ebbtide Avenue.
+
+Vice Mayor Blaustein moved, seconded by Councilmember Sobieski, and carried 4-1
+(Hoffman dissenting), to approve the contract amendment.
+"""
+
+
+class TestParseSausalitoVotes:
+    def test_finds_all_votes(self):
+        votes = parse_sausalito_votes(SAUSALITO_SAMPLE)
+        assert len(votes) >= 4
+
+    def test_mover_seconder(self):
+        votes = parse_sausalito_votes(SAUSALITO_SAMPLE)
+        assert votes[0]["mover"] == "Cox"
+        assert votes[0]["seconder"] == "Blaustein"
+
+    def test_unanimous(self):
+        votes = parse_sausalito_votes(SAUSALITO_SAMPLE)
+        assert votes[0]["outcome"] == "carried"
+        assert votes[0]["tally"] is None  # unanimous, no numeric tally
+
+    def test_split_vote(self):
+        votes = parse_sausalito_votes(SAUSALITO_SAMPLE)
+        split = [v for v in votes if v.get("tally") == "4-1"]
+        assert len(split) == 1
+        assert "HOFFMAN" in split[0]["noes"]
+
+    def test_motion_text(self):
+        votes = parse_sausalito_votes(SAUSALITO_SAMPLE)
+        assert "approve the agenda" in votes[0]["motion_text"]
+
+    def test_resolution_number(self):
+        votes = parse_sausalito_votes(SAUSALITO_SAMPLE)
+        res_vote = [v for v in votes if "02-2026" in v.get("motion_text", "")]
+        assert len(res_vote) >= 1
+
+
+# ---------------------------------------------------------------------------
+# Marin County BOS format tests
+# ---------------------------------------------------------------------------
+
+BOS_REGULAR_SAMPLE = """
+M/s Supervisor Moulton-Peters - Supervisor Colbert to approve Consent Calendar A (Items CA-1 through CA-10). AYES: ALL
+
+M/s Supervisor Rodoni - Supervisor Lucan to approve Consent Calendar B (Items CB-1 through CB-7). AYES: ALL
+
+M/s Supervisor Colbert - Supervisor Lucan to approve budget instructions for FY 2026-28. AYES: ALL
+"""
+
+BOS_SPECIAL_SAMPLE = """
+Motion to approve the First extension of a Local Emergency Proclamation moved
+by Supervisor Sackett and seconded by Supervisor Colbert.
+
+Votes:
+
+AYES: ALL
+
+NOES: NONE
+Motion passed.
+"""
+
+
+class TestParseBosVotes:
+    def test_regular_session_votes(self):
+        votes = parse_bos_votes(BOS_REGULAR_SAMPLE)
+        assert len(votes) == 3
+
+    def test_regular_mover_seconder(self):
+        votes = parse_bos_votes(BOS_REGULAR_SAMPLE)
+        assert votes[0]["mover"] == "Moulton-Peters"
+        assert votes[0]["seconder"] == "Colbert"
+
+    def test_regular_motion_text(self):
+        votes = parse_bos_votes(BOS_REGULAR_SAMPLE)
+        assert "Consent Calendar A" in votes[0]["motion_text"]
+
+    def test_ayes_all(self):
+        votes = parse_bos_votes(BOS_REGULAR_SAMPLE)
+        assert votes[0]["ayes"] == ["ALL"]
+
+    def test_special_session_votes(self):
+        votes = parse_bos_votes(BOS_SPECIAL_SAMPLE)
+        assert len(votes) >= 1
+
+    def test_special_mover_seconder(self):
+        votes = parse_bos_votes(BOS_SPECIAL_SAMPLE)
+        assert votes[0]["mover"] == "Sackett"
+        assert votes[0]["seconder"] == "Colbert"
+
+    def test_hyphenated_name(self):
+        votes = parse_bos_votes(BOS_REGULAR_SAMPLE)
+        assert votes[0]["mover"] == "Moulton-Peters"
