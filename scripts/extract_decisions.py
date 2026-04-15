@@ -73,6 +73,24 @@ _ORDINANCE_RE = re.compile(r"Ordinance(?:\s+No\.?)?\s+(\d+)", re.I)
 
 
 # ---------------------------------------------------------------------------
+# Regex patterns — Corte Madera CivicPlus minutes format
+# ---------------------------------------------------------------------------
+
+# MOTION: It was M/S/C (Mover/Seconder) to <action text>
+# Followed immediately by a ROLL CALL VOTE line.
+_CM_MOTION_RE = re.compile(
+    r"MOTION:\s+It was M/S/C\s+\((\w+(?:['\-]\w+)*)/(\w+(?:['\-]\w+)*)\)\s+to\s+(.+?)(?=\nROLL CALL VOTE:)",
+    re.S | re.I,
+)
+
+# ROLL CALL VOTE: N-N in favor  or  N-N (Name opposed) in favor
+_CM_ROLL_CALL_RE = re.compile(
+    r"ROLL CALL VOTE:\s+(\d+-\d+)\s*(?:\((\w+(?:['\-]\w+)*)\s+opposed\))?\s+in favor",
+    re.I,
+)
+
+
+# ---------------------------------------------------------------------------
 # Name parsing helpers
 # ---------------------------------------------------------------------------
 
@@ -187,6 +205,55 @@ def _find_block_end(text: str, start: int) -> int:
     lines = text[start:].split("\n")
     chars = sum(len(l) + 1 for l in lines[:40])
     return start + chars
+
+
+def parse_cortemadera_votes(text: str) -> list[dict]:
+    """Parse all vote records from Corte Madera CivicPlus-format meeting minutes.
+
+    Handles:
+    - MOTION: It was M/S/C (Mover/Seconder) to <action> blocks
+    - ROLL CALL VOTE: N-N in favor  or  N-N (Name opposed) in favor
+
+    Returns a list of vote dicts ordered by position in the document.  Each
+    dict matches the structure used by parse_novato_votes: mover, seconder,
+    tally, motion_text, ayes, noes, recused, absent, outcome.
+
+    Note: Corte Madera minutes do not list every voter, so ayes and recused
+    are always empty lists.  noes contains the dissenter's last name (upper)
+    when one is named; otherwise it is also empty.
+    """
+    votes: list[dict] = []
+
+    for motion_m in _CM_MOTION_RE.finditer(text):
+        mover = motion_m.group(1)
+        seconder = motion_m.group(2)
+        raw_motion = motion_m.group(3)
+        motion_text = re.sub(r"\s+", " ", raw_motion).strip()
+
+        # The ROLL CALL VOTE line starts immediately after the MOTION block.
+        roll_start = motion_m.end()
+        roll_m = _CM_ROLL_CALL_RE.search(text, roll_start)
+        if roll_m is None:
+            continue
+
+        tally = roll_m.group(1)
+        dissenter = roll_m.group(2)  # None when unanimous
+
+        noes: list[str] = [dissenter.upper()] if dissenter else []
+
+        votes.append({
+            "mover": mover,
+            "seconder": seconder,
+            "tally": tally,
+            "motion_text": motion_text,
+            "ayes": [],
+            "noes": noes,
+            "recused": [],
+            "absent": [],
+            "outcome": "carried",
+        })
+
+    return votes
 
 
 def extract_resolution_numbers(text: str) -> list[str]:
@@ -454,7 +521,10 @@ def process_meeting(
     if not text or not text.strip():
         return {"meeting_id": meeting_id, "status": "empty_text", "decisions": 0}
 
-    votes = parse_novato_votes(text)
+    if re.search(r"MOTION:\s+It was M/S/C", text, re.I):
+        votes = parse_cortemadera_votes(text)
+    else:
+        votes = parse_novato_votes(text)
     resolution_nums = extract_resolution_numbers(text)
     ordinance_nums = extract_ordinance_numbers(text)
 

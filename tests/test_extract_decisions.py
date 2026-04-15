@@ -14,7 +14,9 @@ from extract_decisions import (
     build_decision_node,
     extract_ordinance_numbers,
     extract_resolution_numbers,
+    parse_cortemadera_votes,
     parse_novato_votes,
+    parse_sausalito_votes,
 )
 
 
@@ -438,3 +440,51 @@ class TestVoteValueNoe:
         assert '"noe"' not in source, (
             'write_decisions still uses vote="noe"; should be vote="no"'
         )
+
+
+# ---------------------------------------------------------------------------
+# Corte Madera CivicPlus format tests
+# ---------------------------------------------------------------------------
+
+CORTE_MADERA_SAMPLE = """
+MOTION: It was M/S/C (Ravasio/Beckman) to approve Consent Calendar items 4.B. through 4.D.
+ROLL CALL VOTE: 5-0 in favor of the motion.
+
+MOTION: It was M/S/C (Casissa/Andrews) to accept the 2026 Staff Work Plan with the changes
+mentioned during the meeting.
+ROLL CALL VOTE: 4-1 (Ravasio opposed) in favor of the motion.
+
+MOTION: It was M/S/C (Beckman/Casissa) to re-introduce the proposed ordinance at a subsequent
+council meeting with the inclusion of a ban on nicotine pouches.
+ROLL CALL VOTE: 5-0 in favor of the motion.
+"""
+
+
+class TestParseCorteMaderaVotes:
+    def test_finds_all_votes(self):
+        votes = parse_cortemadera_votes(CORTE_MADERA_SAMPLE)
+        assert len(votes) == 3
+
+    def test_mover_seconder(self):
+        votes = parse_cortemadera_votes(CORTE_MADERA_SAMPLE)
+        assert votes[0]["mover"] == "Ravasio"
+        assert votes[0]["seconder"] == "Beckman"
+
+    def test_unanimous_tally(self):
+        votes = parse_cortemadera_votes(CORTE_MADERA_SAMPLE)
+        assert votes[0]["tally"] == "5-0"
+
+    def test_split_vote_with_dissenter(self):
+        votes = parse_cortemadera_votes(CORTE_MADERA_SAMPLE)
+        split = [v for v in votes if v["tally"] == "4-1"]
+        assert len(split) == 1
+        assert split[0]["noes"] == ["RAVASIO"]
+
+    def test_motion_text(self):
+        votes = parse_cortemadera_votes(CORTE_MADERA_SAMPLE)
+        assert "Consent Calendar" in votes[0]["motion_text"]
+
+    def test_outcome_always_carried(self):
+        votes = parse_cortemadera_votes(CORTE_MADERA_SAMPLE)
+        for v in votes:
+            assert v["outcome"] == "carried"
