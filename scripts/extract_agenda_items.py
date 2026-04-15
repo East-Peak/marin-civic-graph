@@ -76,11 +76,10 @@ def detect_agenda_format(text: str) -> Optional[str]:
     granicus_hits = len(_GRANICUS_SECTION_RE.findall(text))
     civicplus_hits = len(_CIVICPLUS_SECTION_RE.findall(text))
 
-    # Fairfax/ProudCity: simple numbered items (1. Description) with section keywords
+    # Fairfax/ProudCity/general: simple numbered items (1. Description) with section keywords
     fairfax_items = len(re.findall(r"^\s*(\d+)\.\s+(?!CALL|CONSENT|PUBLIC|BUSINESS|REPORT|CLOSED|ADJOURN)[A-Z]", text, re.MULTILINE))
-    if fairfax_items >= 3 and bos_hits == 0 and tiburon_hits == 0:
-        # Check if there are section keywords (CONSENT, PUBLIC HEARING)
-        has_sections = bool(re.search(r"CONSENT CALENDAR|PUBLIC HEARING", text, re.I))
+    if fairfax_items >= 1 and bos_hits == 0 and tiburon_hits == 0:
+        has_sections = bool(re.search(r"CONSENT CALENDAR|PUBLIC HEARING|APPROVAL OF|ADJOURN", text, re.I))
         if has_sections:
             return "fairfax"
 
@@ -256,6 +255,11 @@ _FAIRFAX_SECTION_KEYWORDS = {
     "public hearing": "Public Hearing",
     "public comment": "Public Comment",
     "closed session": "Closed Session",
+    "action item": "Action Items",
+    "new business": "New Business",
+    "old business": "Old Business",
+    "approval of agenda": "Procedural",
+    "approval of minutes": "Procedural",
 }
 
 
@@ -309,21 +313,22 @@ def parse_tiburon_agenda(text: str) -> tuple[list[dict], list[dict]]:
     sections = []
     items = []
 
-    # Collect items by scanning for CC-N., AI-N., PH-N. patterns
     prefix_map = {"CC": "Consent Calendar", "AI": "Action Items", "PH": "Public Hearings"}
     seen_sections = set()
 
     for i, line in enumerate(lines):
         for prefix, section_name in prefix_map.items():
-            match = re.match(rf"^{prefix}-(\d+)\.\s*$", line)
+            # Match CC-1. or CC-1 with optional trailing text
+            match = re.match(rf"^{prefix}-(\d+)\.?\s*(.*)", line)
             if match:
                 number = match.group(1)
-                # Title is the next non-empty line
-                title = ""
-                for j in range(i + 1, min(i + 5, len(lines))):
-                    if lines[j] and not re.match(r"^(CC|AI|PH)-\d+", lines[j]):
-                        title = lines[j][:200]
-                        break
+                # Title from same line or next non-empty line
+                title = match.group(2).strip()
+                if not title:
+                    for j in range(i + 1, min(i + 5, len(lines))):
+                        if lines[j] and not re.match(r"^(CC|AI|PH)-\d+", lines[j]):
+                            title = lines[j][:200]
+                            break
 
                 if prefix not in seen_sections:
                     sections.append({"label": prefix, "name": section_name})
@@ -334,6 +339,31 @@ def parse_tiburon_agenda(text: str) -> tuple[list[dict], list[dict]]:
                     "number": number,
                     "section_name": section_name,
                     "title": title,
+                })
+
+    # If no CC/AI/PH items found, try numbered items under section headers
+    if not items:
+        current_section = "General"
+        section_keywords = {
+            "consent calendar": "Consent Calendar",
+            "action item": "Action Items",
+            "public hearing": "Public Hearings",
+            "staff briefing": "Staff Briefing",
+        }
+        for line in lines:
+            for kw, sname in section_keywords.items():
+                if kw in line.lower() and len(line) < 80:
+                    current_section = sname
+                    if sname not in [s["name"] for s in sections]:
+                        sections.append({"label": sname[:2].upper(), "name": sname})
+
+            match = re.match(r"^(\d+)\.\s+(.+)", line)
+            if match and not any(skip in line.lower() for skip in ["email", "attend", "zoom", "call-in"]):
+                items.append({
+                    "section": current_section[:2].upper(),
+                    "number": match.group(1),
+                    "section_name": current_section,
+                    "title": match.group(2)[:200],
                 })
 
     return sections, items
