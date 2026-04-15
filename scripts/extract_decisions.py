@@ -302,13 +302,13 @@ def extract_ordinance_numbers(text: str) -> list[str]:
 _SAU_VOTE_RE = re.compile(
     r"(?:Councilmember|Vice Mayor|Mayor)\s+(\w+(?:['\-]\w+)*)\s+moved,\s+seconded by\s+"
     r"(?:Councilmember|Vice Mayor|Mayor)\s+(\w+(?:['\-]\w+)*),\s+and\s+"
-    r"(unanimously carried|carried\s+\d+-\d+(?:\s*\([^)]+\))?)",
+    r"(unanimously\s+carried|carried\s+\d+-\d+(?:\s*\([^)]+\))?)",
     re.S | re.I,
 )
 
 # Motion text: everything after ", to " following the outcome clause, up to paragraph end
 _SAU_MOTION_TEXT_RE = re.compile(
-    r"(?:unanimously carried|carried\s+\d+-\d+(?:\s*\([^)]+\))?)\s*,\s+to\s+(.+?)(?=\n\n|\Z)",
+    r"(?:unanimously\s+carried|carried\s+\d+-\d+(?:\s*\([^)]+\))?)\s*,\s+to\s+(.+?)(?=\n\n|\Z)",
     re.S | re.I,
 )
 
@@ -622,6 +622,8 @@ def process_meeting(
 
     if re.search(r"MOTION:\s+It was M/S/C", text, re.I):
         votes = parse_cortemadera_votes(text)
+    elif re.search(r"moved,\s+seconded by", text, re.I):
+        votes = parse_sausalito_votes(text)
     else:
         votes = parse_novato_votes(text)
     resolution_nums = extract_resolution_numbers(text)
