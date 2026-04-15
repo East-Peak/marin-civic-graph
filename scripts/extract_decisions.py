@@ -46,10 +46,12 @@ _NAME_TITLE_PREFIX = r"(?:(?:Mayor\s+Pro\s+Tem|Vice\s+Mayor|Mayor|Councilmember|
 # Name: optional-title WORD (supports apostrophes and hyphens within name, e.g. O'Connor)
 _NAME_PAT = _NAME_TITLE_PREFIX + r"(\w+(?:['\-]\w+)*)"
 
-# "COUNCIL ACTION: Upon motion by [Title] X and seconded\nby [Title] Y, the City Council voted N-N via roll call to\n<action text>"
+# "COUNCIL ACTION[...]: [Upon motion by | Motion made by] [Title] X and seconded\nby [Title] Y, the City Council voted N-N via roll call [to]\n<action text>"
 _COUNCIL_ACTION_RE = re.compile(
-    r"COUNCIL ACTION:\s*Upon motion by\s+" + _NAME_PAT + r"\s+and seconded\s*\n?\s*"
-    r"by\s+" + _NAME_PAT + r",\s+the City Council voted\s+(\d+-\d+(?:-\d+)?)\s+via roll call to"
+    r"COUNCIL ACTION(?:\s+ON\s+MAIN\s+MOTION)?:\s*"
+    r"(?:Upon motion by|Motion made by|Upon substitute motion (?:made )?by)\s+" + _NAME_PAT
+    + r"\s+and\s+seconded\s*\n?\s*"
+    r"by\s+" + _NAME_PAT + r",?\s+the City Council voted\s+(\d+-\d+(?:-\d+)?)\s+via roll call\s+(?:to\s+)?"
     r"\s*\n?\s*(.+?)(?=\n\s*AYES:)",
     re.S | re.I,
 )
@@ -63,6 +65,7 @@ _FAILED_MOTION_RE = re.compile(
 _AYES_RE = re.compile(r"AYES:\s*(.+)", re.I)
 _NOES_RE = re.compile(r"NOES:\s*(.+)", re.I)
 _RECUSED_RE = re.compile(r"RECUSED:\s*(.+)", re.I)
+_ABSENT_RE = re.compile(r"ABSENT:\s*(.+)", re.I)
 _OUTCOME_RE = re.compile(r"Motion (carried|failed)\.", re.I)
 
 _RESOLUTION_RE = re.compile(r"Resolution No\.\s*([\d-]+)", re.I)
@@ -96,6 +99,10 @@ def parse_novato_votes(text: str) -> list[dict]:
     containing: mover, seconder (optional), tally (optional), motion_text,
     ayes, noes, recused, outcome ("carried" | "failed")
     """
+    # Normalize Unicode quotes to ASCII so patterns match Novato PDFs (Bug 1)
+    text = text.replace('\u2019', "'").replace('\u2018', "'")
+    text = text.replace('\u201c', '"').replace('\u201d', '"')
+
     # Collect all events as (position, vote_dict) then sort by position.
     events: list[tuple[int, dict]] = []
 
@@ -109,6 +116,7 @@ def parse_novato_votes(text: str) -> list[dict]:
             "ayes": [],
             "noes": [],
             "recused": [],
+            "absent": [],
             "outcome": "failed",
         }))
 
@@ -130,6 +138,7 @@ def parse_novato_votes(text: str) -> list[dict]:
         ayes: list[str] = []
         noes: list[str] = []
         recused: list[str] = []
+        absent: list[str] = []
         outcome = "unknown"
 
         am = _AYES_RE.search(block)
@@ -144,6 +153,10 @@ def parse_novato_votes(text: str) -> list[dict]:
         if rm:
             recused = _parse_name_list(rm.group(1))
 
+        abm = _ABSENT_RE.search(block)
+        if abm:
+            absent = _parse_name_list(abm.group(1))
+
         om = _OUTCOME_RE.search(block)
         if om:
             outcome = om.group(1).lower()
@@ -156,6 +169,7 @@ def parse_novato_votes(text: str) -> list[dict]:
             "ayes": ayes,
             "noes": noes,
             "recused": recused,
+            "absent": absent,
             "outcome": outcome,
         }))
 
@@ -204,6 +218,8 @@ def build_decision_node(
 
     motion_text = vote.get("motion_text", "")
     display_label = (motion_text[:120] if motion_text else node_id)
+    outcome = vote.get("outcome", "unknown")
+    decision_type = "failed_motion" if outcome == "failed" and not vote.get("tally") else "roll_call_vote"
 
     return {
         "id": node_id,
@@ -220,9 +236,10 @@ def build_decision_node(
             "ayes": vote.get("ayes", []),
             "noes": vote.get("noes", []),
             "recused": vote.get("recused", []),
-            "outcome": vote.get("outcome", "unknown"),
-            "decision_type": "roll_call_vote",
-            "status": vote.get("outcome", "unknown"),
+            "absent": vote.get("absent", []),
+            "outcome": outcome,
+            "decision_type": decision_type,
+            "status": outcome,
         },
     }
 
@@ -382,7 +399,7 @@ def write_decisions(driver, nodes: list[dict], meeting_id: str, person_map: dict
         for name in node["properties"].get("noes", []):
             pid = person_map.get(name)
             if pid:
-                vote_edges.append({"decision_id": node["id"], "person_id": pid, "vote": "noe"})
+                vote_edges.append({"decision_id": node["id"], "person_id": pid, "vote": "no"})
         for name in node["properties"].get("recused", []):
             pid = person_map.get(name)
             if pid:
@@ -535,14 +552,34 @@ def main(argv=None):
         person_map = fetch_persons_for_source(driver, source_id)
         log.info("Loaded %d person name mappings for %s", len(person_map), source_id)
 
+    # Cache person maps per source so --all builds them lazily per meeting (Bug 2)
+    person_map_cache: dict[str, dict[str, str]] = {}
+    if not dry_run and source_id:
+        person_map_cache[source_id] = person_map
+
     results = []
     for meeting in meetings:
+        meeting_person_map = person_map
+        if not dry_run:
+            meeting_source_id = meeting.get("source_id")
+            if meeting_source_id:
+                if meeting_source_id not in person_map_cache:
+                    person_map_cache[meeting_source_id] = fetch_persons_for_source(
+                        driver, meeting_source_id
+                    )
+                    log.info(
+                        "Loaded %d person name mappings for %s",
+                        len(person_map_cache[meeting_source_id]),
+                        meeting_source_id,
+                    )
+                meeting_person_map = person_map_cache[meeting_source_id]
+
         result = process_meeting(
             meeting=meeting,
             dry_run=dry_run,
             driver=driver,
             data_root=ROOT,
-            person_map=person_map,
+            person_map=meeting_person_map,
         )
         results.append(result)
         if not dry_run:

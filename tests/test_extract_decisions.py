@@ -224,3 +224,217 @@ class TestBuildDecisionNode:
         }
         node = build_decision_node(vote, "meeting-2026-01-14-novato-city-council", "novato-city-council", 3)
         assert node["id"].endswith("-vote-3")
+
+    def test_decision_type_roll_call(self):
+        """Carried votes should have decision_type 'roll_call_vote'."""
+        vote = {
+            "mover": "EKLUND", "seconder": "KARKAL", "tally": "5-0",
+            "ayes": [], "noes": [], "recused": [],
+            "motion_text": "approve something", "outcome": "carried",
+        }
+        node = build_decision_node(vote, "meeting-2026-01-14-novato-city-council", "novato-city-council", 0)
+        assert node["properties"]["decision_type"] == "roll_call_vote"
+
+    def test_decision_type_failed_motion(self):
+        """Failed motions should have decision_type 'failed_motion'."""
+        vote = {
+            "mover": "EKLUND", "seconder": None, "tally": None,
+            "ayes": [], "noes": [], "recused": [],
+            "motion_text": "motion failed — no second", "outcome": "failed",
+        }
+        node = build_decision_node(vote, "meeting-2026-01-14-novato-city-council", "novato-city-council", 0)
+        assert node["properties"]["decision_type"] == "failed_motion"
+
+
+# ---------------------------------------------------------------------------
+# Bug regression tests — Unicode, regex variants, new fields
+# ---------------------------------------------------------------------------
+
+# U+2019 RIGHT SINGLE QUOTATION MARK versions of the names
+_UNICODE_MINUTES = (
+    "COUNCIL ACTION: Upon motion by Eklund and seconded\n"
+    "by O\u2019Connor, the City Council voted 5-0 via roll call to\n"
+    "approve the Final Agenda.\n"
+    "AYES: EKLUND, KARKAL, O\u2019CONNOR, JACOBS, FARAC\n"
+    "NOES: NONE\n\n"
+    "Motion carried.\n"
+)
+
+_ON_MAIN_MOTION_MINUTES = (
+    "COUNCIL ACTION ON MAIN MOTION: Upon motion by Eklund and seconded\n"
+    "by Jacobs, the City Council voted 4-1 via roll call to\n"
+    "approve the amended budget.\n"
+    "AYES: EKLUND, KARKAL, JACOBS, FARAC\n"
+    "NOES: OCONNOR\n\n"
+    "Motion carried.\n"
+)
+
+_MOTION_MADE_BY_MINUTES = (
+    "COUNCIL ACTION: Motion made by Karkal and seconded\n"
+    "by Jacobs, the City Council voted 3-2 via roll call to\n"
+    "deny the appeal.\n"
+    "AYES: KARKAL, JACOBS, FARAC\n"
+    "NOES: EKLUND, OCONNOR\n\n"
+    "Motion carried.\n"
+)
+
+_ABSENT_FIELD_MINUTES = (
+    "COUNCIL ACTION: Upon motion by Eklund and seconded\n"
+    "by Karkal, the City Council voted 4-0 via roll call to\n"
+    "approve the consent calendar.\n"
+    "AYES: EKLUND, KARKAL, OCONNOR, FARAC\n"
+    "NOES: NONE\n"
+    "ABSENT: JACOBS\n\n"
+    "Motion carried.\n"
+)
+
+_MISSING_TO_MINUTES = (
+    "COUNCIL ACTION: Upon motion by Eklund and seconded\n"
+    "by Karkal, the City Council voted 4-1 via roll call approve\n"
+    "the rezoning request.\n"
+    "AYES: EKLUND, KARKAL, OCONNOR, FARAC\n"
+    "NOES: JACOBS\n\n"
+    "Motion carried.\n"
+)
+
+_NO_COMMA_AFTER_SECONDER_MINUTES = (
+    "COUNCIL ACTION: Upon motion by Eklund and seconded\n"
+    "by Councilmember Karkal the City Council voted 5-0 via roll call to\n"
+    "approve the minutes.\n"
+    "AYES: EKLUND, KARKAL, OCONNOR, JACOBS, FARAC\n"
+    "NOES: NONE\n\n"
+    "Motion carried.\n"
+)
+
+_AND_NEWLINE_SECONDED_MINUTES = (
+    "COUNCIL ACTION: Upon motion by Eklund and\n"
+    "seconded by Karkal, the City Council voted 5-0 via roll call to\n"
+    "approve the consent calendar.\n"
+    "AYES: EKLUND, KARKAL, OCONNOR, JACOBS, FARAC\n"
+    "NOES: NONE\n\n"
+    "Motion carried.\n"
+)
+
+
+class TestUnicodeApostrophe:
+    """Bug 1 — U+2019 RIGHT SINGLE QUOTATION MARK in Novato PDFs."""
+
+    def test_unicode_apostrophe_seconder_matched(self):
+        """O\u2019Connor with Unicode apostrophe must be parsed as seconder."""
+        votes = parse_novato_votes(_UNICODE_MINUTES)
+        assert len(votes) == 1
+        assert votes[0]["seconder"] == "O'CONNOR"
+
+    def test_unicode_apostrophe_in_ayes(self):
+        """O\u2019CONNOR in AYES list must be normalised to O'CONNOR."""
+        votes = parse_novato_votes(_UNICODE_MINUTES)
+        assert "O'CONNOR" in votes[0]["ayes"]
+
+    def test_unicode_left_quote_normalised(self):
+        """U+2018 LEFT SINGLE QUOTATION MARK is also normalised."""
+        text = _UNICODE_MINUTES.replace("\u2019", "\u2018")
+        votes = parse_novato_votes(text)
+        assert len(votes) == 1
+
+
+class TestCouncilActionOnMainMotion:
+    """Bug 5 — COUNCIL ACTION ON MAIN MOTION: prefix variant."""
+
+    def test_on_main_motion_prefix_parsed(self):
+        votes = parse_novato_votes(_ON_MAIN_MOTION_MINUTES)
+        assert len(votes) == 1
+
+    def test_on_main_motion_mover(self):
+        votes = parse_novato_votes(_ON_MAIN_MOTION_MINUTES)
+        assert votes[0]["mover"] == "EKLUND"
+
+    def test_on_main_motion_tally(self):
+        votes = parse_novato_votes(_ON_MAIN_MOTION_MINUTES)
+        assert votes[0]["tally"] == "4-1"
+
+
+class TestMotionMadeBy:
+    """Bug 6 — 'Motion made by' variant instead of 'Upon motion by'."""
+
+    def test_motion_made_by_parsed(self):
+        votes = parse_novato_votes(_MOTION_MADE_BY_MINUTES)
+        assert len(votes) == 1
+
+    def test_motion_made_by_mover(self):
+        votes = parse_novato_votes(_MOTION_MADE_BY_MINUTES)
+        assert votes[0]["mover"] == "KARKAL"
+
+    def test_motion_made_by_tally(self):
+        votes = parse_novato_votes(_MOTION_MADE_BY_MINUTES)
+        assert votes[0]["tally"] == "3-2"
+
+
+class TestAbsentField:
+    """Bug 9 — ABSENT field should be captured."""
+
+    def test_absent_field_present_in_vote(self):
+        votes = parse_novato_votes(_ABSENT_FIELD_MINUTES)
+        assert len(votes) == 1
+        assert "absent" in votes[0]
+
+    def test_absent_names_parsed(self):
+        votes = parse_novato_votes(_ABSENT_FIELD_MINUTES)
+        assert "JACOBS" in votes[0]["absent"]
+
+    def test_absent_field_empty_when_none(self):
+        """When there is no ABSENT line, absent should be an empty list."""
+        votes = parse_novato_votes(_UNICODE_MINUTES)
+        assert votes[0].get("absent", []) == []
+
+
+class TestMissingToAfterRollCall:
+    """Bug 4 — 'via roll call approve' (no 'to') should still parse."""
+
+    def test_missing_to_parsed(self):
+        votes = parse_novato_votes(_MISSING_TO_MINUTES)
+        assert len(votes) == 1
+
+    def test_missing_to_motion_text(self):
+        votes = parse_novato_votes(_MISSING_TO_MINUTES)
+        assert "rezoning" in votes[0]["motion_text"]
+
+
+class TestNoCommaAfterSeconder:
+    """Bug 7 — no comma after seconder name."""
+
+    def test_no_comma_after_seconder_parsed(self):
+        votes = parse_novato_votes(_NO_COMMA_AFTER_SECONDER_MINUTES)
+        assert len(votes) == 1
+
+    def test_no_comma_seconder_captured(self):
+        votes = parse_novato_votes(_NO_COMMA_AFTER_SECONDER_MINUTES)
+        assert votes[0]["seconder"] == "KARKAL"
+
+
+class TestAndNewlineSeconded:
+    """Bug 3 — line break between 'and' and 'seconded'."""
+
+    def test_and_newline_seconded_parsed(self):
+        votes = parse_novato_votes(_AND_NEWLINE_SECONDED_MINUTES)
+        assert len(votes) == 1
+
+    def test_and_newline_seconder_captured(self):
+        votes = parse_novato_votes(_AND_NEWLINE_SECONDED_MINUTES)
+        assert votes[0]["seconder"] == "KARKAL"
+
+
+class TestVoteValueNoe:
+    """Bug 8 — CAST_VOTE edges use 'no' not 'noe'."""
+
+    def test_noe_typo_fixed_in_write_decisions(self):
+        """write_decisions must use vote='no' for NOES, not vote='noe'."""
+        import extract_decisions as ed
+        # Inspect the source: the literal string 'noe' must not appear as a
+        # vote value assignment in write_decisions.
+        import inspect
+        source = inspect.getsource(ed.write_decisions)
+        # The bug was: vote_edges.append({..., "vote": "noe"})
+        # The fix is: "vote": "no"
+        assert '"noe"' not in source, (
+            'write_decisions still uses vote="noe"; should be vote="no"'
+        )
