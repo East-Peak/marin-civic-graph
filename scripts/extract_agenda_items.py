@@ -76,6 +76,14 @@ def detect_agenda_format(text: str) -> Optional[str]:
     granicus_hits = len(_GRANICUS_SECTION_RE.findall(text))
     civicplus_hits = len(_CIVICPLUS_SECTION_RE.findall(text))
 
+    # Fairfax/ProudCity: simple numbered items (1. Description) with section keywords
+    fairfax_items = len(re.findall(r"^\s*(\d+)\.\s+(?!CALL|CONSENT|PUBLIC|BUSINESS|REPORT|CLOSED|ADJOURN)[A-Z]", text, re.MULTILINE))
+    if fairfax_items >= 3 and bos_hits == 0 and tiburon_hits == 0:
+        # Check if there are section keywords (CONSENT, PUBLIC HEARING)
+        has_sections = bool(re.search(r"CONSENT CALENDAR|PUBLIC HEARING", text, re.I))
+        if has_sections:
+            return "fairfax"
+
     # Check for actual item patterns to disambiguate
     # CivicPlus items: "N.LETTER" like "3.A Approve..."
     civicplus_item_hits = len(re.findall(r"^\s+(\d+)\.([A-Z])\s+", text, re.MULTILINE))
@@ -233,6 +241,54 @@ def parse_bos_agenda(text: str) -> tuple[list[dict], list[dict]]:
                 "number": str(i),
                 "section_name": "Public Hearing",
                 "title": title.strip()[:200],
+            })
+
+    return sections, items
+
+
+# ---------------------------------------------------------------------------
+# Fairfax / ProudCity parser
+# ---------------------------------------------------------------------------
+
+_FAIRFAX_ITEM_RE = re.compile(r"^\s*(\d+)\.\s+(.+)", re.MULTILINE)
+_FAIRFAX_SECTION_KEYWORDS = {
+    "consent calendar": "Consent Calendar",
+    "public hearing": "Public Hearing",
+    "public comment": "Public Comment",
+    "closed session": "Closed Session",
+}
+
+
+def parse_fairfax_agenda(text: str) -> tuple[list[dict], list[dict]]:
+    """Parse Fairfax/ProudCity agenda: simple numbered items with section keywords."""
+    lines = text.split("\n")
+    sections = []
+    items = []
+    current_section = "General"
+
+    for line in lines:
+        stripped = line.strip()
+        # Check for section keywords
+        for keyword, section_name in _FAIRFAX_SECTION_KEYWORDS.items():
+            if keyword in stripped.lower() and len(stripped) < 80:
+                current_section = section_name
+                if section_name not in [s["name"] for s in sections]:
+                    sections.append({"label": section_name[:2].upper(), "name": section_name})
+                break
+
+        # Check for numbered items
+        match = re.match(r"^\s*(\d+)\.\s+([A-Z].+)", stripped)
+        if match:
+            number = match.group(1)
+            title = match.group(2).strip()
+            # Skip section header lines that happen to start with numbers
+            if any(kw in title.lower() for kw in ["call to order", "roll call", "adjournment", "pledge"]):
+                continue
+            items.append({
+                "section": current_section[:2].upper(),
+                "number": number,
+                "section_name": current_section,
+                "title": title[:200],
             })
 
     return sections, items
@@ -510,6 +566,8 @@ def process_meeting(
         sections, parsed_items = parse_bos_agenda(text)
     elif fmt == "tiburon":
         sections, parsed_items = parse_tiburon_agenda(text)
+    elif fmt == "fairfax":
+        sections, parsed_items = parse_fairfax_agenda(text)
     else:
         log.warning("Unknown agenda format for %s", meeting_id)
         return {"meeting_id": meeting_id, "status": "unknown_format", "items": 0}
