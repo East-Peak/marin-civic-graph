@@ -341,13 +341,18 @@ def normalize_campaign_source(
     nodes.append(place_node)
 
     moneyflow_count = 0
+    errors: list[str] = []
 
     for zip_path in zip_paths:
         year = zip_path.stem  # e.g. "2024"
         record_id = f"record-{source_id}-export-{year}"
 
         # --- Contributions ---
-        contrib_rows = parse_contributions(zip_path)
+        try:
+            contrib_rows = parse_contributions(zip_path)
+        except Exception as e:
+            errors.append(f"Failed to parse contributions from {zip_path.name}: {e}")
+            contrib_rows = []
         for row in contrib_rows:
             filer_id = str(row["filer_id"])
 
@@ -402,7 +407,11 @@ def normalize_campaign_source(
                                "EVIDENCED_BY", capture_id))
 
         # --- Expenditures ---
-        expend_rows = parse_expenditures(zip_path)
+        try:
+            expend_rows = parse_expenditures(zip_path)
+        except Exception as e:
+            errors.append(f"Failed to parse expenditures from {zip_path.name}: {e}")
+            expend_rows = []
         for row in expend_rows:
             filer_id = str(row["filer_id"])
 
