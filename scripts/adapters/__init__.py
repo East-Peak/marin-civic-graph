@@ -9,10 +9,12 @@ def get_adapter_class(name: str) -> Type[BaseAdapter]:
     from .granicus import GranicusAdapter
     from .civicplus import CivicPlusAdapter
     from .netfile import NetFileAdapter
+    from .proudcity import ProudCityAdapter
     registry: dict[str, Type[BaseAdapter]] = {
         "granicus": GranicusAdapter,
         "civicplus": CivicPlusAdapter,
         "netfile": NetFileAdapter,
+        "proudcity": ProudCityAdapter,
     }
     if name not in registry:
         raise KeyError(f"Unknown adapter: {name!r}. Available: {list(registry.keys())}")
