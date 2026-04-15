@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Meeting minutes vote/decision extraction pipeline for Marin Civic Graph.
 
-Downloads minutes PDFs from captured meeting URLs, extracts text with
-pdftotext, parses vote records with regex, and creates Decision nodes
-linked to Meeting + Person nodes in Neo4j.
+Downloads minutes PDFs (or HTML for BOS) from captured meeting URLs, extracts
+text with pdftotext (or tag-stripping for HTML), parses vote records with regex,
+and creates Decision nodes linked to Meeting + Person nodes in Neo4j.
 
 Usage:
     python scripts/extract_decisions.py --source novato-city-council --limit 5 --dry-run
@@ -20,6 +20,7 @@ import re
 import subprocess
 import sys
 import time
+from html import unescape
 from pathlib import Path
 from typing import Optional
 
@@ -91,18 +92,45 @@ _CM_ROLL_CALL_RE = re.compile(
 
 
 # ---------------------------------------------------------------------------
-# Regex patterns — Marin County BOS minutes format
+# Regex patterns — Sausalito narrative-prose minutes format
 # ---------------------------------------------------------------------------
 
-# Regular session: "M/s Supervisor X - Supervisor Y to <action>. AYES: ALL"
-_BOS_MS_RE = re.compile(
-    r"M/s\s+Supervisor\s+(\w+(?:['-]\w+)*)\s+-\s+Supervisor\s+(\w+(?:['-]\w+)*)\s+to\s+(.+?)\.\s*AYES:\s*(\w+)",
+# "{Title} {Name} moved, seconded by {Title} {Name}, and {outcome}, to {action}"
+# Outcome: "unanimously carried" | "carried N-M [(Name dissenting)]"
+_SAU_VOTE_RE = re.compile(
+    r"(?:Councilmember|Vice Mayor|Mayor)\s+(\w+(?:['\-]\w+)*)\s+moved,\s+seconded by\s+"
+    r"(?:Councilmember|Vice Mayor|Mayor)\s+(\w+(?:['\-]\w+)*),\s+and\s+"
+    r"(unanimously\s+carried|carried\s+\d+-\d+(?:\s*\([^)]+\))?)",
     re.S | re.I,
 )
 
-# Special session: "Motion to <action> moved by Supervisor X and seconded by Supervisor Y"
+# Motion text: everything after ", to " following the outcome clause, up to paragraph end
+_SAU_MOTION_TEXT_RE = re.compile(
+    r"(?:unanimously\s+carried|carried\s+\d+-\d+(?:\s*\([^)]+\))?)\s*,\s+to\s+(.+?)(?=\n\n|\Z)",
+    re.S | re.I,
+)
+
+# Dissenter from "(Hoffman dissenting)"
+_SAU_DISSENTER_RE = re.compile(r"\((\w+)\s+dissenting\)", re.I)
+
+# Numeric tally from "carried 4-1"
+_SAU_TALLY_RE = re.compile(r"carried\s+(\d+-\d+)", re.I)
+
+
+# ---------------------------------------------------------------------------
+# Regex patterns — Marin County BOS minutes format
+# ---------------------------------------------------------------------------
+
+# Regular session HTML: "M/s Supervisor X - Supervisor Y to <action>. AYES: ALL"
+_BOS_MS_RE = re.compile(
+    r"M/s\s+Supervisor\s+(\w+(?:['\-]\w+)*)\s+-\s+Supervisor\s+(\w+(?:['\-]\w+)*)\s+to\s+(.+?)\.\s*AYES:\s*(\w+)",
+    re.S | re.I,
+)
+
+# Special session PDF: "Motion to <action> moved by Supervisor X and seconded by Supervisor Y"
+# followed by a Votes: block with "AYES: ALL" and optional "NOES: NONE" and "Motion passed/failed."
 _BOS_MOVED_RE = re.compile(
-    r"(?:Motion\s+to\s+)?(.+?)moved\s+by\s+Supervisor\s+(\w+(?:['-]\w+)*)\s+and\s+seconded\s+by\s+Supervisor\s+(\w+(?:['-]\w+)*)",
+    r"(?:Motion\s+to\s+)?(.+?)moved\s+by\s+Supervisor\s+(\w+(?:['\-]\w+)*)\s+and\s+seconded\s+by\s+Supervisor\s+(\w+(?:['\-]\w+)*)",
     re.S | re.I,
 )
 
@@ -275,50 +303,6 @@ def parse_cortemadera_votes(text: str) -> list[dict]:
     return votes
 
 
-def parse_bos_votes(text: str) -> list[dict]:
-    """Parse vote records from Marin County Board of Supervisors meeting minutes.
-
-    TODO: implement BOS format parser.
-    """
-    raise NotImplementedError("parse_bos_votes is not yet implemented")
-
-
-def extract_resolution_numbers(text: str) -> list[str]:
-    """Return all resolution numbers found in text (e.g. '2026-021')."""
-    return [m.group(1) for m in _RESOLUTION_RE.finditer(text)]
-
-
-def extract_ordinance_numbers(text: str) -> list[str]:
-    """Return all ordinance numbers found in text (e.g. '1733')."""
-    return [m.group(1) for m in _ORDINANCE_RE.finditer(text)]
-
-
-# ---------------------------------------------------------------------------
-# Regex patterns — Sausalito narrative-prose minutes format
-# ---------------------------------------------------------------------------
-
-# "{Title} {Name} moved, seconded by {Title} {Name}, and {outcome}, to {action}"
-# Outcome: "unanimously carried" | "carried N-M[(dissent)]"
-_SAU_VOTE_RE = re.compile(
-    r"(?:Councilmember|Vice Mayor|Mayor)\s+(\w+(?:['\-]\w+)*)\s+moved,\s+seconded by\s+"
-    r"(?:Councilmember|Vice Mayor|Mayor)\s+(\w+(?:['\-]\w+)*),\s+and\s+"
-    r"(unanimously\s+carried|carried\s+\d+-\d+(?:\s*\([^)]+\))?)",
-    re.S | re.I,
-)
-
-# Motion text: everything after ", to " following the outcome clause, up to paragraph end
-_SAU_MOTION_TEXT_RE = re.compile(
-    r"(?:unanimously\s+carried|carried\s+\d+-\d+(?:\s*\([^)]+\))?)\s*,\s+to\s+(.+?)(?=\n\n|\Z)",
-    re.S | re.I,
-)
-
-# Dissenter from "(Hoffman dissenting)"
-_SAU_DISSENTER_RE = re.compile(r"\((\w+)\s+dissenting\)", re.I)
-
-# Numeric tally from "carried 4-1"
-_SAU_TALLY_RE = re.compile(r"carried\s+(\d+-\d+)", re.I)
-
-
 def parse_sausalito_votes(text: str) -> list[dict]:
     """Parse all vote records from Sausalito narrative-prose minutes.
 
@@ -363,6 +347,95 @@ def parse_sausalito_votes(text: str) -> list[dict]:
             "outcome": "carried",
         })
     return votes
+
+
+def parse_bos_votes(text: str) -> list[dict]:
+    """Parse all vote records from Marin County Board of Supervisors minutes.
+
+    Handles two formats:
+
+    Regular sessions (HTML):
+        M/s Supervisor X - Supervisor Y to <action>. AYES: ALL
+
+    Special sessions (PDF):
+        Motion to <action> moved by Supervisor X and seconded by Supervisor Y.
+        Votes:
+        AYES: ALL
+        NOES: NONE
+        Motion passed.
+
+    Returns a list of vote dicts, each with: mover, seconder, motion_text,
+    ayes (["ALL"] for unanimous), noes, outcome.
+    """
+    events: list[tuple[int, dict]] = []
+
+    # --- Regular session: M/s lines ---
+    for m in _BOS_MS_RE.finditer(text):
+        mover = m.group(1)
+        seconder = m.group(2)
+        motion_text = re.sub(r"\s+", " ", m.group(3)).strip()
+        ayes_raw = m.group(4).upper()
+        ayes = ["ALL"] if ayes_raw == "ALL" else _parse_name_list(ayes_raw)
+
+        events.append((m.start(), {
+            "mover": mover,
+            "seconder": seconder,
+            "tally": None,
+            "motion_text": motion_text,
+            "ayes": ayes,
+            "noes": [],
+            "recused": [],
+            "absent": [],
+            "outcome": "carried",
+        }))
+
+    # --- Special session: "moved by Supervisor X and seconded by Supervisor Y" ---
+    for m in _BOS_MOVED_RE.finditer(text):
+        raw_motion = m.group(1)
+        mover = m.group(2)
+        seconder = m.group(3)
+        motion_text = re.sub(r"\s+", " ", raw_motion).strip().rstrip(".")
+
+        # Search for AYES/NOES and outcome in the next ~800 chars after the match
+        window = text[m.start() : m.start() + 800]
+        ayes_m = _AYES_RE.search(window)
+        noes_m = _NOES_RE.search(window)
+        outcome_m = _BOS_OUTCOME_RE.search(window)
+
+        ayes_raw = ayes_m.group(1).strip().upper() if ayes_m else ""
+        ayes = ["ALL"] if ayes_raw == "ALL" else (_parse_name_list(ayes_raw) if ayes_raw else [])
+
+        noes_raw = noes_m.group(1).strip().upper() if noes_m else ""
+        noes = [] if noes_raw in ("NONE", "") else _parse_name_list(noes_raw)
+
+        outcome = "carried"
+        if outcome_m:
+            outcome = "carried" if outcome_m.group(1).lower() == "passed" else "failed"
+
+        events.append((m.start(), {
+            "mover": mover,
+            "seconder": seconder,
+            "tally": None,
+            "motion_text": motion_text,
+            "ayes": ayes,
+            "noes": noes,
+            "recused": [],
+            "absent": [],
+            "outcome": outcome,
+        }))
+
+    events.sort(key=lambda x: x[0])
+    return [vote for _, vote in events]
+
+
+def extract_resolution_numbers(text: str) -> list[str]:
+    """Return all resolution numbers found in text (e.g. '2026-021')."""
+    return [m.group(1) for m in _RESOLUTION_RE.finditer(text)]
+
+
+def extract_ordinance_numbers(text: str) -> list[str]:
+    """Return all ordinance numbers found in text (e.g. '1733')."""
+    return [m.group(1) for m in _ORDINANCE_RE.finditer(text)]
 
 
 # ---------------------------------------------------------------------------
@@ -424,23 +497,56 @@ def normalize_minutes_url(url: Optional[str]) -> Optional[str]:
 
 
 # ---------------------------------------------------------------------------
-# PDF / text extraction
+# Minutes download and text extraction (PDF and HTML)
 # ---------------------------------------------------------------------------
 
-def download_minutes(url: str, dest_dir: Path, meeting_id: str) -> Optional[Path]:
-    """Download a minutes PDF; return path or None on failure."""
+def download_minutes(url: str, dest_dir: Path, meeting_id: str) -> tuple[Optional[Path], str]:
+    """Download a minutes document (PDF or HTML); return (path, format).
+
+    Returns (None, "failed") on error.
+    Returns (path, "pdf") or (path, "html") on success.
+
+    BOS regular-session minutes are served as HTML; all other sources
+    typically serve PDF.  We detect by Content-Type and magic bytes.
+    """
     dest_dir.mkdir(parents=True, exist_ok=True)
     try:
         resp = requests.get(url, timeout=30, allow_redirects=True, verify=False)
         resp.raise_for_status()
-        if b"%PDF" in resp.content[:8] or "pdf" in resp.headers.get("content-type", "").lower():
+        content_type = resp.headers.get("content-type", "")
+
+        if "pdf" in content_type.lower() or resp.content[:4] == b"%PDF":
             path = dest_dir / f"{meeting_id}.pdf"
             path.write_bytes(resp.content)
-            return path
-        log.warning("Minutes URL did not return PDF for %s: %s", meeting_id, url)
-        return None
+            return path, "pdf"
+        elif "html" in content_type.lower():
+            path = dest_dir / f"{meeting_id}.html"
+            path.write_bytes(resp.content)
+            return path, "html"
+        else:
+            log.warning("Unknown content type for %s: %s", url, content_type)
+            if b"%PDF" in resp.content[:8]:
+                path = dest_dir / f"{meeting_id}.pdf"
+                path.write_bytes(resp.content)
+                return path, "pdf"
+            return None, "failed"
     except Exception as exc:
         log.warning("Failed to download minutes %s: %s", url, exc)
+        return None, "failed"
+
+
+def extract_text_from_html(html_path: Path) -> Optional[str]:
+    """Strip HTML tags to get plain text from an HTML minutes page."""
+    try:
+        html = html_path.read_text(encoding="utf-8", errors="replace")
+        text = re.sub(r"<[^>]+>", " ", html)
+        text = unescape(text)
+        # Collapse runs of whitespace but preserve meaningful line breaks
+        text = re.sub(r"[ \t]+", " ", text)
+        text = re.sub(r"\n{3,}", "\n\n", text)
+        return text.strip()
+    except Exception as exc:
+        log.warning("Failed to read HTML %s: %s", html_path, exc)
         return None
 
 
@@ -460,6 +566,27 @@ def extract_text(pdf_path: Path) -> Optional[str]:
     except Exception as exc:
         log.warning("pdftotext error for %s: %s", pdf_path, exc)
         return None
+
+
+# ---------------------------------------------------------------------------
+# Format detection
+# ---------------------------------------------------------------------------
+
+def detect_minutes_format(text: str) -> str:
+    """Return the minutes format detected in text.
+
+    Returns one of: 'bos', 'cortemadera', 'sausalito', 'novato'.
+    'novato' is the fallback for Granicus-style minutes.
+    """
+    if re.search(r"M/s\s+Supervisor\s+\w", text, re.I):
+        return "bos"
+    if re.search(r"moved\s+by\s+Supervisor\s+\w+\s+and\s+seconded\s+by\s+Supervisor", text, re.I):
+        return "bos"
+    if re.search(r"MOTION:\s+It was M/S/C", text, re.I):
+        return "cortemadera"
+    if re.search(r"\w+\s+moved,\s+seconded by\s+(?:Councilmember|Vice Mayor|Mayor)\s+\w+", text, re.I):
+        return "sausalito"
+    return "novato"
 
 
 # ---------------------------------------------------------------------------
@@ -605,32 +732,48 @@ def process_meeting(
         return {"meeting_id": meeting_id, "status": "skip_no_url", "decisions": 0}
 
     minutes_dir = data_root / "data" / "raw" / source_id / "minutes"
+
+    # Check for cached files (PDF or HTML)
     cached_pdf = minutes_dir / f"{meeting_id}.pdf"
+    cached_html = minutes_dir / f"{meeting_id}.html"
 
     if cached_pdf.exists():
         log.info("Using cached PDF: %s", cached_pdf)
-        pdf_path = cached_pdf
+        file_path, file_type = cached_pdf, "pdf"
+    elif cached_html.exists():
+        log.info("Using cached HTML: %s", cached_html)
+        file_path, file_type = cached_html, "html"
     else:
         log.info("Downloading minutes: %s", url)
-        pdf_path = download_minutes(url, minutes_dir, meeting_id)
-        if pdf_path is None:
+        file_path, file_type = download_minutes(url, minutes_dir, meeting_id)
+        if file_path is None:
             return {"meeting_id": meeting_id, "status": "download_failed", "decisions": 0}
 
-    text = extract_text(pdf_path)
+    # Extract text based on file type
+    if file_type == "pdf":
+        text = extract_text(file_path)
+    else:
+        text = extract_text_from_html(file_path)
+
     if not text or not text.strip():
         return {"meeting_id": meeting_id, "status": "empty_text", "decisions": 0}
 
-    if re.search(r"MOTION:\s+It was M/S/C", text, re.I):
+    # Dispatch to the correct parser based on format detection
+    fmt = detect_minutes_format(text)
+    if fmt == "bos":
+        votes = parse_bos_votes(text)
+    elif fmt == "cortemadera":
         votes = parse_cortemadera_votes(text)
-    elif re.search(r"moved,\s+seconded by", text, re.I):
+    elif fmt == "sausalito":
         votes = parse_sausalito_votes(text)
     else:
         votes = parse_novato_votes(text)
+
     resolution_nums = extract_resolution_numbers(text)
     ordinance_nums = extract_ordinance_numbers(text)
 
     if not votes:
-        log.info("%s: no votes found", meeting_id)
+        log.info("%s: no votes found (format=%s)", meeting_id, fmt)
         return {"meeting_id": meeting_id, "status": "no_votes_found", "decisions": 0}
 
     nodes = [
@@ -639,8 +782,8 @@ def process_meeting(
     ]
 
     log.info(
-        "%s: %d votes parsed (resolutions=%s, ordinances=%s)",
-        meeting_id, len(votes), resolution_nums, ordinance_nums,
+        "%s: %d votes parsed (format=%s, resolutions=%s, ordinances=%s)",
+        meeting_id, len(votes), fmt, resolution_nums, ordinance_nums,
     )
 
     if dry_run:

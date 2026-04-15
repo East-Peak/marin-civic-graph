@@ -14,6 +14,7 @@ from extract_decisions import (
     build_decision_node,
     extract_ordinance_numbers,
     extract_resolution_numbers,
+    parse_bos_votes,
     parse_cortemadera_votes,
     parse_novato_votes,
     parse_sausalito_votes,
