@@ -1,0 +1,18 @@
+sources:
+  - id: marin-county-campaign-finance
+    adapter: netfile
+    url: https://public.netfile.com/pub2/?aid=CMAR
+    jurisdiction_id: place-marin-county
+    institution_id: org-marin-county-campaign-finance
+    backfill_from: "2019-01-01"
+    schedule: quarterly
+    export_target: "ctl00$phBody$GetExcelAmend"
+
+  - id: novato-campaign-finance
+    adapter: netfile
+    url: https://public.netfile.com/pub2/?AID=NVO
+    jurisdiction_id: place-novato
+    institution_id: org-novato-campaign-finance
+    backfill_from: "2019-01-01"
+    schedule: quarterly
+    export_target: "ctl00$phBody$GetExcelAmend"

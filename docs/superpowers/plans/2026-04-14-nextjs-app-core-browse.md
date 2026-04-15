@@ -1,0 +1,1639 @@
+# Next.js App + Core Browse Experience — Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Build a Next.js web app that lets users browse the Marin Civic Graph — entity pages for all 21 node types with a hero radial visualization, powered by live Cypher queries against Neo4j AuraDB.
+
+**Architecture:** Next.js 16 App Router with server components for data fetching, a shared Neo4j connection module, dynamic entity pages at `/{type}/{id}`, and a Cytoscape.js radial graph visualization. Follows the same patterns as the family-tree-toolkit project.
+
+**Tech Stack:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, neo4j (JS driver), cytoscape + cytoscape-fcose (graph layout), Vitest
+
+**Spec:** `docs/specs/2026-04-14-marin-civic-graph-v1-design.md` Sections 5a and 5b
+
+**Prerequisite:** Plan 1 (Migration + Neo4j Foundation) — graph is loaded in AuraDB at `neo4j+s://<INSTANCE-ID>.databases.neo4j.io`
+
+---
+
+## File Structure
+
+```
+app/                                    # Next.js project root (same pattern as family-tree-toolkit)
+  src/
+    app/
+      layout.tsx                        # Root layout with navigation
+      page.tsx                          # Homepage / dashboard
+      [type]/
+        [id]/
+          page.tsx                      # Dynamic entity page
+      api/
+        entity/
+          [id]/
+            route.ts                    # GET entity detail + neighborhood
+          route.ts                      # GET entity list with type filter
+        search/
+          route.ts                      # GET full-text search
+    components/
+      layout/
+        nav.tsx                         # Top navigation bar
+        entity-header.tsx               # Entity page header (name, type badge, jurisdiction)
+      entity/
+        person-detail.tsx               # Tier 1: Person page content
+        decision-detail.tsx             # Tier 1: Decision page content
+        project-detail.tsx              # Tier 1: Project page content
+        program-detail.tsx              # Tier 1: Program page content
+        case-detail.tsx                 # Tier 1: Case page content
+        meeting-detail.tsx              # Tier 1: Meeting page content
+        filing-detail.tsx               # Tier 1: Filing page content
+        committee-detail.tsx            # Tier 1: Committee page content
+        generic-detail.tsx              # Tier 2: Lightweight page for all other types
+        connections-panel.tsx           # Shared: grouped connection cards
+        evidence-drawer.tsx             # Shared: expandable source records
+        timeline.tsx                    # Shared: chronological activity list
+      graph/
+        radial-graph.tsx                # Cytoscape.js radial visualization (client component)
+        graph-utils.ts                  # Graph data transformation helpers
+    lib/
+      neo4j.ts                          # Neo4j driver singleton + query helpers
+      types.ts                          # TypeScript types for graph entities
+      entity-config.ts                  # Per-type configuration (tier, display name, color, icon)
+      cypher/
+        entity-detail.ts                # Cypher queries for entity + neighborhood
+        entity-list.ts                  # Cypher queries for filtered lists
+        search.ts                       # Full-text search query
+  package.json
+  tsconfig.json
+  tailwind.config.ts
+  next.config.ts
+  .env.local.example                    # Template for Neo4j credentials
+  vitest.config.ts
+```
+
+---
+
+### Task 1: Scaffold Next.js app
+
+**Files:**
+- Create: `app/package.json`
+- Create: `app/tsconfig.json`
+- Create: `app/next.config.ts`
+- Create: `app/tailwind.config.ts`
+- Create: `app/.env.local.example`
+- Create: `app/vitest.config.ts`
+- Create: `app/src/app/layout.tsx`
+- Create: `app/src/app/page.tsx`
+
+- [ ] **Step 1: Create the Next.js project**
+
+Run from repo root:
+```bash
+cd /Users/tammypais/projects/marin-civic-graph
+npx create-next-app@latest app --typescript --tailwind --eslint --app --src-dir --no-import-alias --no-turbopack
+```
+
+Accept defaults. This creates the `app/` directory with Next.js 16, TypeScript, Tailwind, App Router.
+
+- [ ] **Step 2: Install project dependencies**
+
+```bash
+cd app
+npm install neo4j-driver cytoscape
+npm install -D @types/cytoscape vitest @vitejs/plugin-react
+```
+
+- [ ] **Step 3: Create .env.local.example**
+
+```
+# Neo4j AuraDB connection
+NEO4J_URI=neo4j+s://xxxxxxxx.databases.neo4j.io
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=your-password-here
+NEO4J_DATABASE=neo4j
+```
+
+- [ ] **Step 4: Create .env.local with real credentials**
+
+Copy `.env.local.example` to `.env.local` and fill in the real AuraDB credentials from `/Users/tammypais/Desktop/Neo4j-<INSTANCE-ID>-Created-2026-04-14.txt`:
+```
+NEO4J_URI=neo4j+s://<INSTANCE-ID>.databases.neo4j.io
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=***REDACTED***
+NEO4J_DATABASE=neo4j
+```
+
+Add `.env.local` to `.gitignore` (should already be there from create-next-app).
+
+- [ ] **Step 5: Create vitest.config.ts**
+
+```typescript
+import { defineConfig } from "vitest/config";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: "node",
+    include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
+  },
+  resolve: {
+    alias: {
+      "@": new URL("./src", import.meta.url).pathname,
+    },
+  },
+});
+```
+
+- [ ] **Step 6: Replace default page.tsx with a placeholder homepage**
+
+Replace `app/src/app/page.tsx`:
+
+```tsx
+export default function Home() {
+  return (
+    <main className="min-h-screen p-8">
+      <h1 className="text-3xl font-bold mb-4">Marin Civic Graph</h1>
+      <p className="text-gray-600">
+        A civic-intelligence tool for Marin County. Browse local government
+        decisions, actors, money flows, and more.
+      </p>
+    </main>
+  );
+}
+```
+
+- [ ] **Step 7: Verify the app runs**
+
+```bash
+cd app && npm run dev
+```
+
+Open http://localhost:3000 in a browser. Verify the placeholder page renders.
+
+- [ ] **Step 8: Commit**
+
+```bash
+git add app/ -f
+git commit -m "feat: scaffold Next.js app with TypeScript, Tailwind, Neo4j driver
+
+Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 2: Neo4j connection module + TypeScript types
+
+**Files:**
+- Create: `app/src/lib/neo4j.ts`
+- Create: `app/src/lib/types.ts`
+- Create: `app/src/lib/entity-config.ts`
+- Test: `app/src/lib/entity-config.test.ts`
+
+- [ ] **Step 1: Write the failing test for entity-config**
+
+Create `app/src/lib/entity-config.test.ts`:
+
+```typescript
+import { describe, it, expect } from "vitest";
+import { getEntityConfig, ENTITY_TYPES, entityTypeFromId } from "./entity-config";
+
+describe("getEntityConfig", () => {
+  it("returns tier 1 config for Person", () => {
+    const config = getEntityConfig("Person");
+    expect(config.tier).toBe(1);
+    expect(config.slug).toBe("person");
+    expect(config.color).toBeTruthy();
+  });
+
+  it("returns tier 2 config for Place", () => {
+    const config = getEntityConfig("Place");
+    expect(config.tier).toBe(2);
+  });
+
+  it("returns config for all 21 types", () => {
+    for (const type of ENTITY_TYPES) {
+      const config = getEntityConfig(type);
+      expect(config).toBeTruthy();
+      expect(config.displayName).toBeTruthy();
+    }
+  });
+});
+
+describe("entityTypeFromId", () => {
+  it("resolves person- prefix", () => {
+    expect(entityTypeFromId("person-kate-colin")).toBe("Person");
+  });
+
+  it("resolves org- prefix", () => {
+    expect(entityTypeFromId("org-city-of-san-rafael")).toBe("Organization");
+  });
+
+  it("resolves decision- prefix", () => {
+    expect(entityTypeFromId("decision-2024-08-19-resolution-15336")).toBe("Decision");
+  });
+
+  it("resolves filing- prefix", () => {
+    expect(entityTypeFromId("filing-san-rafael-form700-entry")).toBe("Filing");
+  });
+
+  it("returns null for unknown prefix", () => {
+    expect(entityTypeFromId("unknown-something")).toBeNull();
+  });
+});
+```
+
+- [ ] **Step 2: Run test to verify it fails**
+
+```bash
+cd app && npx vitest run src/lib/entity-config.test.ts
+```
+
+Expected: FAIL — module not found
+
+- [ ] **Step 3: Create types.ts**
+
+```typescript
+/** Core graph entity as returned by Neo4j queries. */
+export interface GraphNode {
+  id: string;
+  nodeType: string;
+  displayLabel: string;
+  promotionState: string;
+  properties: Record<string, unknown>;
+  labels?: string[];
+}
+
+/** Graph edge as returned by Neo4j queries. */
+export interface GraphEdge {
+  sourceId: string;
+  sourceNodeType: string;
+  targetId: string;
+  targetNodeType: string;
+  relationshipType: string;
+  properties: Record<string, unknown>;
+}
+
+/** Entity detail with neighborhood — what the API returns. */
+export interface EntityDetail {
+  node: GraphNode;
+  connections: GraphEdge[];
+  connectedNodes: GraphNode[];
+}
+
+/** Entity list item — lightweight summary for list views. */
+export interface EntityListItem {
+  id: string;
+  nodeType: string;
+  displayLabel: string;
+  properties: Record<string, unknown>;
+}
+```
+
+- [ ] **Step 4: Create entity-config.ts**
+
+```typescript
+export const ENTITY_TYPES = [
+  "Person", "Organization", "Committee", "Seat", "SeatService",
+  "Election", "Candidacy", "Meeting", "AgendaItem", "Decision",
+  "Filing", "MoneyFlow", "Case", "Proceeding", "Project",
+  "Program", "Agreement", "Amendment", "Record", "Place", "Issue",
+] as const;
+
+export type EntityType = (typeof ENTITY_TYPES)[number];
+
+interface EntityConfig {
+  slug: string;
+  displayName: string;
+  pluralName: string;
+  tier: 1 | 2;
+  color: string;       // Tailwind color class for badges/accents
+  graphColor: string;   // Hex color for Cytoscape nodes
+}
+
+const CONFIG: Record<EntityType, EntityConfig> = {
+  Person:       { slug: "person",       displayName: "Person",        pluralName: "People",         tier: 1, color: "blue",    graphColor: "#3B82F6" },
+  Organization: { slug: "organization", displayName: "Organization",  pluralName: "Organizations",  tier: 1, color: "purple",  graphColor: "#8B5CF6" },
+  Committee:    { slug: "committee",    displayName: "Committee",     pluralName: "Committees",     tier: 1, color: "pink",    graphColor: "#EC4899" },
+  Seat:         { slug: "seat",         displayName: "Seat",          pluralName: "Seats",          tier: 2, color: "gray",    graphColor: "#6B7280" },
+  SeatService:  { slug: "seatservice",  displayName: "Seat Service",  pluralName: "Seat Services",  tier: 2, color: "gray",    graphColor: "#6B7280" },
+  Election:     { slug: "election",     displayName: "Election",      pluralName: "Elections",      tier: 2, color: "amber",   graphColor: "#F59E0B" },
+  Candidacy:    { slug: "candidacy",    displayName: "Candidacy",     pluralName: "Candidacies",    tier: 2, color: "amber",   graphColor: "#F59E0B" },
+  Meeting:      { slug: "meeting",      displayName: "Meeting",       pluralName: "Meetings",       tier: 1, color: "teal",    graphColor: "#14B8A6" },
+  AgendaItem:   { slug: "agendaitem",   displayName: "Agenda Item",   pluralName: "Agenda Items",   tier: 2, color: "teal",    graphColor: "#14B8A6" },
+  Decision:     { slug: "decision",     displayName: "Decision",      pluralName: "Decisions",      tier: 1, color: "red",     graphColor: "#EF4444" },
+  Filing:       { slug: "filing",       displayName: "Filing",        pluralName: "Filings",        tier: 1, color: "orange",  graphColor: "#F97316" },
+  MoneyFlow:    { slug: "moneyflow",    displayName: "Money Flow",    pluralName: "Money Flows",    tier: 2, color: "green",   graphColor: "#22C55E" },
+  Case:         { slug: "case",         displayName: "Case",          pluralName: "Cases",          tier: 1, color: "rose",    graphColor: "#F43F5E" },
+  Proceeding:   { slug: "proceeding",   displayName: "Proceeding",    pluralName: "Proceedings",    tier: 2, color: "rose",    graphColor: "#F43F5E" },
+  Project:      { slug: "project",      displayName: "Project",       pluralName: "Projects",       tier: 1, color: "indigo",  graphColor: "#6366F1" },
+  Program:      { slug: "program",      displayName: "Program",       pluralName: "Programs",       tier: 1, color: "violet",  graphColor: "#8B5CF6" },
+  Agreement:    { slug: "agreement",    displayName: "Agreement",     pluralName: "Agreements",     tier: 2, color: "emerald", graphColor: "#10B981" },
+  Amendment:    { slug: "amendment",     displayName: "Amendment",     pluralName: "Amendments",     tier: 2, color: "emerald", graphColor: "#10B981" },
+  Record:       { slug: "record",       displayName: "Record",        pluralName: "Records",        tier: 2, color: "slate",   graphColor: "#64748B" },
+  Place:        { slug: "place",        displayName: "Place",         pluralName: "Places",         tier: 2, color: "cyan",    graphColor: "#06B6D4" },
+  Issue:        { slug: "issue",        displayName: "Issue",         pluralName: "Issues",         tier: 2, color: "yellow",  graphColor: "#EAB308" },
+};
+
+export function getEntityConfig(type: EntityType | string): EntityConfig {
+  return CONFIG[type as EntityType] ?? CONFIG.Record;
+}
+
+const PREFIX_TO_TYPE: Record<string, EntityType> = {
+  "person-": "Person",
+  "org-": "Organization",
+  "committee-": "Committee",
+  "seat-": "Seat",
+  "seatservice-": "SeatService",
+  "election-": "Election",
+  "candidacy-": "Candidacy",
+  "meeting-": "Meeting",
+  "agenda-item-": "AgendaItem",
+  "decision-": "Decision",
+  "filing-": "Filing",
+  "moneyflow-": "MoneyFlow",
+  "case-": "Case",
+  "proceeding-": "Proceeding",
+  "project-": "Project",
+  "program-": "Program",
+  "agreement-": "Agreement",
+  "amendment-": "Amendment",
+  "record-": "Record",
+  "doc-": "Record",
+  "place-": "Place",
+  "issue-": "Issue",
+  "validationcheck-": "ValidationCheck" as EntityType,
+};
+
+export function entityTypeFromId(id: string): EntityType | null {
+  for (const [prefix, type] of Object.entries(PREFIX_TO_TYPE)) {
+    if (id.startsWith(prefix)) return type;
+  }
+  return null;
+}
+```
+
+- [ ] **Step 5: Create neo4j.ts**
+
+```typescript
+import neo4j, { Driver } from "neo4j-driver";
+
+let driver: Driver | null = null;
+
+export function getDriver(): Driver {
+  if (driver) return driver;
+
+  const uri = process.env.NEO4J_URI;
+  const user = process.env.NEO4J_USER;
+  const password = process.env.NEO4J_PASSWORD;
+
+  if (!uri || !user || !password) {
+    throw new Error("NEO4J_URI, NEO4J_USER, and NEO4J_PASSWORD must be set");
+  }
+
+  driver = neo4j.driver(uri, neo4j.auth.basic(user, password));
+  return driver;
+}
+
+export async function runQuery<T = Record<string, unknown>>(
+  cypher: string,
+  params: Record<string, unknown> = {},
+): Promise<T[]> {
+  const d = getDriver();
+  const session = d.session({
+    database: process.env.NEO4J_DATABASE ?? "neo4j",
+  });
+  try {
+    const result = await session.run(cypher, params);
+    return result.records.map((r) => r.toObject() as T);
+  } finally {
+    await session.close();
+  }
+}
+```
+
+- [ ] **Step 6: Run tests**
+
+```bash
+cd app && npx vitest run src/lib/entity-config.test.ts
+```
+
+Expected: All PASS
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add app/src/lib/
+git commit -m "feat: add Neo4j connection module, TypeScript types, and entity config
+
+Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 3: Cypher query modules
+
+**Files:**
+- Create: `app/src/lib/cypher/entity-detail.ts`
+- Create: `app/src/lib/cypher/entity-list.ts`
+- Create: `app/src/lib/cypher/search.ts`
+- Test: `app/src/lib/cypher/entity-detail.test.ts`
+
+- [ ] **Step 1: Write failing test for entity-detail queries**
+
+Create `app/src/lib/cypher/entity-detail.test.ts`:
+
+```typescript
+import { describe, it, expect } from "vitest";
+import { buildEntityDetailQuery, buildNeighborhoodQuery } from "./entity-detail";
+
+describe("buildEntityDetailQuery", () => {
+  it("returns a Cypher MATCH by id", () => {
+    const q = buildEntityDetailQuery("person-kate-colin");
+    expect(q.cypher).toContain("MATCH (n {id: $id})");
+    expect(q.params.id).toBe("person-kate-colin");
+  });
+});
+
+describe("buildNeighborhoodQuery", () => {
+  it("returns outgoing and incoming edges within N hops", () => {
+    const q = buildNeighborhoodQuery("person-kate-colin", { maxHops: 1 });
+    expect(q.cypher).toContain("MATCH (center {id: $id})");
+    expect(q.cypher).toContain("-[r]-");
+    expect(q.params.id).toBe("person-kate-colin");
+  });
+
+  it("limits results", () => {
+    const q = buildNeighborhoodQuery("person-kate-colin", { maxHops: 1, limit: 50 });
+    expect(q.cypher).toContain("LIMIT");
+  });
+});
+```
+
+- [ ] **Step 2: Run test to verify it fails**
+
+```bash
+cd app && npx vitest run src/lib/cypher/entity-detail.test.ts
+```
+
+- [ ] **Step 3: Implement entity-detail.ts**
+
+```typescript
+interface CypherQuery {
+  cypher: string;
+  params: Record<string, unknown>;
+}
+
+/** Fetch a single entity node by ID with all properties. */
+export function buildEntityDetailQuery(id: string): CypherQuery {
+  return {
+    cypher: `
+      MATCH (n {id: $id})
+      RETURN n, labels(n) AS labels
+    `,
+    params: { id },
+  };
+}
+
+/** Fetch the 1-hop neighborhood of an entity: all directly connected nodes and edges. */
+export function buildNeighborhoodQuery(
+  id: string,
+  opts: { maxHops?: number; limit?: number } = {},
+): CypherQuery {
+  const limit = opts.limit ?? 100;
+  return {
+    cypher: `
+      MATCH (center {id: $id})-[r]-(neighbor)
+      WITH r, neighbor, center
+      ORDER BY type(r), neighbor.display_label
+      LIMIT ${limit}
+      RETURN
+        center.id AS centerId,
+        type(r) AS relType,
+        startNode(r).id AS sourceId,
+        endNode(r).id AS targetId,
+        properties(r) AS relProps,
+        neighbor.id AS neighborId,
+        neighbor.node_type AS neighborType,
+        neighbor.display_label AS neighborLabel,
+        labels(neighbor) AS neighborLabels,
+        properties(neighbor) AS neighborProps
+    `,
+    params: { id },
+  };
+}
+```
+
+- [ ] **Step 4: Implement entity-list.ts**
+
+```typescript
+interface CypherQuery {
+  cypher: string;
+  params: Record<string, unknown>;
+}
+
+/** Fetch a paginated list of entities by type. */
+export function buildEntityListQuery(
+  nodeType: string,
+  opts: { limit?: number; offset?: number; sortBy?: string } = {},
+): CypherQuery {
+  const limit = opts.limit ?? 50;
+  const offset = opts.offset ?? 0;
+  const sortField = opts.sortBy ?? "display_label";
+
+  return {
+    cypher: `
+      MATCH (n:${nodeType})
+      RETURN n.id AS id, n.node_type AS nodeType, n.display_label AS displayLabel,
+             properties(n) AS properties
+      ORDER BY n.${sortField}
+      SKIP ${offset}
+      LIMIT ${limit}
+    `,
+    params: {},
+  };
+}
+
+/** Count entities by type. */
+export function buildEntityCountQuery(nodeType: string): CypherQuery {
+  return {
+    cypher: `MATCH (n:${nodeType}) RETURN count(n) AS count`,
+    params: {},
+  };
+}
+```
+
+- [ ] **Step 5: Implement search.ts**
+
+```typescript
+interface CypherQuery {
+  cypher: string;
+  params: Record<string, unknown>;
+}
+
+/** Full-text search across entity names and display labels. */
+export function buildSearchQuery(query: string, limit: number = 20): CypherQuery {
+  return {
+    cypher: `
+      CALL db.index.fulltext.queryNodes("entity_names", $query)
+      YIELD node, score
+      RETURN node.id AS id, node.node_type AS nodeType,
+             node.display_label AS displayLabel, score
+      ORDER BY score DESC
+      LIMIT ${limit}
+    `,
+    params: { query },
+  };
+}
+```
+
+- [ ] **Step 6: Run tests**
+
+```bash
+cd app && npx vitest run
+```
+
+Expected: All PASS
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add app/src/lib/cypher/
+git commit -m "feat: add Cypher query builders for entity detail, list, and search
+
+Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 4: API routes
+
+**Files:**
+- Create: `app/src/app/api/entity/[id]/route.ts`
+- Create: `app/src/app/api/entity/route.ts`
+- Create: `app/src/app/api/search/route.ts`
+
+- [ ] **Step 1: Create entity detail API route**
+
+Create `app/src/app/api/entity/[id]/route.ts`:
+
+```typescript
+import { NextRequest, NextResponse } from "next/server";
+import { runQuery } from "@/lib/neo4j";
+import { buildEntityDetailQuery, buildNeighborhoodQuery } from "@/lib/cypher/entity-detail";
+
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
+
+  try {
+    // Fetch the entity node
+    const nodeResults = await runQuery(
+      ...Object.values(buildEntityDetailQuery(id)),
+    );
+    if (nodeResults.length === 0) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    // Fetch 1-hop neighborhood
+    const { cypher, params: qParams } = buildNeighborhoodQuery(id, { limit: 100 });
+    const neighborhood = await runQuery(cypher, qParams);
+
+    return NextResponse.json({
+      node: nodeResults[0],
+      neighborhood,
+    });
+  } catch (error) {
+    console.error("Entity detail error:", error);
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+  }
+}
+```
+
+- [ ] **Step 2: Create entity list API route**
+
+Create `app/src/app/api/entity/route.ts`:
+
+```typescript
+import { NextRequest, NextResponse } from "next/server";
+import { runQuery } from "@/lib/neo4j";
+import { buildEntityListQuery, buildEntityCountQuery } from "@/lib/cypher/entity-list";
+import { ENTITY_TYPES } from "@/lib/entity-config";
+
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const type = searchParams.get("type");
+  const limit = parseInt(searchParams.get("limit") ?? "50", 10);
+  const offset = parseInt(searchParams.get("offset") ?? "0", 10);
+
+  if (!type || !ENTITY_TYPES.includes(type as any)) {
+    return NextResponse.json(
+      { error: `Invalid type. Must be one of: ${ENTITY_TYPES.join(", ")}` },
+      { status: 400 },
+    );
+  }
+
+  try {
+    const { cypher: listQ, params: listP } = buildEntityListQuery(type, { limit, offset });
+    const { cypher: countQ, params: countP } = buildEntityCountQuery(type);
+
+    const [items, countResult] = await Promise.all([
+      runQuery(listQ, listP),
+      runQuery(countQ, countP),
+    ]);
+
+    return NextResponse.json({
+      type,
+      items,
+      total: (countResult[0] as any)?.count ?? 0,
+      limit,
+      offset,
+    });
+  } catch (error) {
+    console.error("Entity list error:", error);
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+  }
+}
+```
+
+- [ ] **Step 3: Create search API route**
+
+Create `app/src/app/api/search/route.ts`:
+
+```typescript
+import { NextRequest, NextResponse } from "next/server";
+import { runQuery } from "@/lib/neo4j";
+import { buildSearchQuery } from "@/lib/cypher/search";
+
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const q = searchParams.get("q");
+
+  if (!q || q.length < 2) {
+    return NextResponse.json({ results: [] });
+  }
+
+  try {
+    const { cypher, params } = buildSearchQuery(q);
+    const results = await runQuery(cypher, params);
+    return NextResponse.json({ results });
+  } catch (error) {
+    console.error("Search error:", error);
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+  }
+}
+```
+
+- [ ] **Step 4: Verify API routes work**
+
+Start the dev server and test:
+```bash
+cd app && npm run dev
+```
+
+Test in another terminal:
+```bash
+curl http://localhost:3000/api/entity/person-kate-colin | python -m json.tool | head -20
+curl "http://localhost:3000/api/entity?type=Person&limit=5" | python -m json.tool | head -20
+curl "http://localhost:3000/api/search?q=kate" | python -m json.tool
+```
+
+Verify: entity detail returns node + neighborhood, entity list returns items with count, search returns matching entities.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add app/src/app/api/
+git commit -m "feat: add API routes for entity detail, list, and search
+
+Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 5: Layout and navigation
+
+**Files:**
+- Create: `app/src/components/layout/nav.tsx`
+- Modify: `app/src/app/layout.tsx`
+- Create: `app/src/components/layout/entity-header.tsx`
+- Create: `app/src/components/layout/search-box.tsx`
+
+- [ ] **Step 1: Create navigation component**
+
+Create `app/src/components/layout/nav.tsx`:
+
+```tsx
+import Link from "next/link";
+import { SearchBox } from "./search-box";
+
+const NAV_LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/person", label: "People" },
+  { href: "/decision", label: "Decisions" },
+  { href: "/project", label: "Projects" },
+  { href: "/case", label: "Cases" },
+  { href: "/meeting", label: "Meetings" },
+  { href: "/filing", label: "Filings" },
+];
+
+export function Nav() {
+  return (
+    <nav className="border-b border-gray-200 bg-white px-6 py-3 flex items-center gap-6">
+      <Link href="/" className="text-lg font-semibold text-gray-900">
+        Marin Civic Graph
+      </Link>
+      <div className="flex gap-4 text-sm">
+        {NAV_LINKS.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="text-gray-600 hover:text-gray-900"
+          >
+            {link.label}
+          </Link>
+        ))}
+      </div>
+      <div className="ml-auto w-72">
+        <SearchBox />
+      </div>
+    </nav>
+  );
+}
+```
+
+- [ ] **Step 2: Create search box component**
+
+Create `app/src/components/layout/search-box.tsx`:
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { getEntityConfig, entityTypeFromId } from "@/lib/entity-config";
+
+export function SearchBox() {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<any[]>([]);
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
+
+  async function handleSearch(value: string) {
+    setQuery(value);
+    if (value.length < 2) {
+      setResults([]);
+      setOpen(false);
+      return;
+    }
+    const res = await fetch(`/api/search?q=${encodeURIComponent(value)}`);
+    const data = await res.json();
+    setResults(data.results ?? []);
+    setOpen(true);
+  }
+
+  function handleSelect(id: string) {
+    const type = entityTypeFromId(id);
+    if (type) {
+      const config = getEntityConfig(type);
+      router.push(`/${config.slug}/${id}`);
+    }
+    setOpen(false);
+    setQuery("");
+  }
+
+  return (
+    <div className="relative">
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => handleSearch(e.target.value)}
+        onBlur={() => setTimeout(() => setOpen(false), 200)}
+        placeholder="Search entities..."
+        className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none"
+      />
+      {open && results.length > 0 && (
+        <ul className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-64 overflow-y-auto">
+          {results.map((r: any) => (
+            <li key={r.id}>
+              <button
+                onMouseDown={() => handleSelect(r.id)}
+                className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2"
+              >
+                <span className="text-xs text-gray-400">{r.nodeType}</span>
+                <span>{r.displayLabel}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+```
+
+- [ ] **Step 3: Create entity header component**
+
+Create `app/src/components/layout/entity-header.tsx`:
+
+```tsx
+import { getEntityConfig } from "@/lib/entity-config";
+
+interface EntityHeaderProps {
+  id: string;
+  nodeType: string;
+  displayLabel: string;
+  properties: Record<string, unknown>;
+}
+
+export function EntityHeader({ id, nodeType, displayLabel, properties }: EntityHeaderProps) {
+  const config = getEntityConfig(nodeType);
+
+  return (
+    <div className="mb-6">
+      <div className="flex items-center gap-3 mb-1">
+        <span
+          className={`inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-${config.color}-100 text-${config.color}-800`}
+        >
+          {config.displayName}
+        </span>
+        {properties.subtype && (
+          <span className="text-xs text-gray-500">
+            {String(properties.subtype)}
+          </span>
+        )}
+      </div>
+      <h1 className="text-2xl font-bold text-gray-900">{displayLabel}</h1>
+      <p className="text-sm text-gray-500 mt-1 font-mono">{id}</p>
+    </div>
+  );
+}
+```
+
+- [ ] **Step 4: Update root layout**
+
+Replace `app/src/app/layout.tsx`:
+
+```tsx
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { Nav } from "@/components/layout/nav";
+
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Marin Civic Graph",
+  description: "Civic intelligence for Marin County",
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body className={`${inter.className} bg-gray-50 min-h-screen`}>
+        <Nav />
+        <main className="max-w-7xl mx-auto px-6 py-8">{children}</main>
+      </body>
+    </html>
+  );
+}
+```
+
+- [ ] **Step 5: Verify layout renders**
+
+Start dev server, navigate to http://localhost:3000. Verify nav bar with links and search box appears.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add app/src/components/layout/ app/src/app/layout.tsx
+git commit -m "feat: add navigation, search box, and entity header components
+
+Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 6: Dynamic entity page routing
+
+**Files:**
+- Create: `app/src/app/[type]/[id]/page.tsx`
+- Create: `app/src/app/[type]/page.tsx`
+- Create: `app/src/components/entity/connections-panel.tsx`
+- Create: `app/src/components/entity/generic-detail.tsx`
+
+- [ ] **Step 1: Create the dynamic entity page (server component)**
+
+Create `app/src/app/[type]/[id]/page.tsx`:
+
+```tsx
+import { notFound } from "next/navigation";
+import { runQuery } from "@/lib/neo4j";
+import { buildEntityDetailQuery, buildNeighborhoodQuery } from "@/lib/cypher/entity-detail";
+import { getEntityConfig, entityTypeFromId, ENTITY_TYPES } from "@/lib/entity-config";
+import { EntityHeader } from "@/components/layout/entity-header";
+import { ConnectionsPanel } from "@/components/entity/connections-panel";
+import { GenericDetail } from "@/components/entity/generic-detail";
+import { RadialGraph } from "@/components/graph/radial-graph";
+
+interface PageProps {
+  params: Promise<{ type: string; id: string }>;
+}
+
+export default async function EntityPage({ params }: PageProps) {
+  const { type, id } = await params;
+
+  // Fetch entity
+  const { cypher: nodeQ, params: nodeP } = buildEntityDetailQuery(id);
+  const nodeResults = await runQuery(nodeQ, nodeP);
+  if (nodeResults.length === 0) return notFound();
+
+  const nodeRecord = nodeResults[0] as any;
+  const node = nodeRecord.n.properties;
+  const nodeType = node.node_type ?? entityTypeFromId(id) ?? "Record";
+  const displayLabel = node.display_label ?? id;
+
+  // Fetch neighborhood
+  const { cypher: nQ, params: nP } = buildNeighborhoodQuery(id, { limit: 100 });
+  const neighborhood = await runQuery(nQ, nP);
+
+  const config = getEntityConfig(nodeType);
+
+  return (
+    <div>
+      <EntityHeader
+        id={id}
+        nodeType={nodeType}
+        displayLabel={displayLabel}
+        properties={node}
+      />
+
+      {/* Hero radial graph */}
+      <div className="mb-8 rounded-lg border border-gray-200 bg-white p-4">
+        <RadialGraph
+          centerId={id}
+          centerLabel={displayLabel}
+          centerType={nodeType}
+          neighborhood={JSON.parse(JSON.stringify(neighborhood))}
+        />
+      </div>
+
+      {/* Connections */}
+      <ConnectionsPanel
+        centerId={id}
+        neighborhood={JSON.parse(JSON.stringify(neighborhood))}
+      />
+    </div>
+  );
+}
+```
+
+- [ ] **Step 2: Create entity type list page**
+
+Create `app/src/app/[type]/page.tsx`:
+
+```tsx
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { runQuery } from "@/lib/neo4j";
+import { buildEntityListQuery, buildEntityCountQuery } from "@/lib/cypher/entity-list";
+import { getEntityConfig, ENTITY_TYPES } from "@/lib/entity-config";
+
+interface PageProps {
+  params: Promise<{ type: string }>;
+}
+
+export default async function EntityListPage({ params }: PageProps) {
+  const { type } = await params;
+
+  // Find the matching entity type by slug
+  const matchedType = ENTITY_TYPES.find(
+    (t) => getEntityConfig(t).slug === type,
+  );
+  if (!matchedType) return notFound();
+
+  const config = getEntityConfig(matchedType);
+
+  const { cypher: listQ, params: listP } = buildEntityListQuery(matchedType, { limit: 100 });
+  const { cypher: countQ, params: countP } = buildEntityCountQuery(matchedType);
+
+  const [items, countResult] = await Promise.all([
+    runQuery(listQ, listP),
+    runQuery(countQ, countP),
+  ]);
+
+  const total = (countResult[0] as any)?.count ?? 0;
+
+  return (
+    <div>
+      <h1 className="text-2xl font-bold mb-1">{config.pluralName}</h1>
+      <p className="text-sm text-gray-500 mb-6">{total.toString()} total</p>
+
+      <div className="bg-white rounded-lg border border-gray-200 divide-y divide-gray-100">
+        {(items as any[]).map((item) => (
+          <Link
+            key={item.id}
+            href={`/${config.slug}/${item.id}`}
+            className="block px-4 py-3 hover:bg-gray-50"
+          >
+            <span className="font-medium">{item.displayLabel}</span>
+            <span className="text-sm text-gray-400 ml-2 font-mono">{item.id}</span>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+- [ ] **Step 3: Create connections panel component**
+
+Create `app/src/components/entity/connections-panel.tsx`:
+
+```tsx
+import Link from "next/link";
+import { getEntityConfig, entityTypeFromId } from "@/lib/entity-config";
+
+interface ConnectionsPanelProps {
+  centerId: string;
+  neighborhood: any[];
+}
+
+export function ConnectionsPanel({ centerId, neighborhood }: ConnectionsPanelProps) {
+  // Group connections by relationship type
+  const grouped = new Map<string, any[]>();
+  for (const row of neighborhood) {
+    const relType = row.relType as string;
+    if (!grouped.has(relType)) grouped.set(relType, []);
+    grouped.get(relType)!.push(row);
+  }
+
+  if (grouped.size === 0) {
+    return <p className="text-gray-500 text-sm">No connections found.</p>;
+  }
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-lg font-semibold">Connections</h2>
+      {Array.from(grouped.entries()).map(([relType, rows]) => (
+        <div key={relType}>
+          <h3 className="text-sm font-medium text-gray-500 mb-2">
+            {relType.replace(/_/g, " ")} ({rows.length})
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+            {rows.slice(0, 12).map((row: any) => {
+              const neighborType = entityTypeFromId(row.neighborId) ?? "Record";
+              const config = getEntityConfig(neighborType);
+              return (
+                <Link
+                  key={`${relType}-${row.neighborId}`}
+                  href={`/${config.slug}/${row.neighborId}`}
+                  className="block rounded border border-gray-200 px-3 py-2 hover:bg-gray-50 text-sm"
+                >
+                  <span
+                    className={`inline-block w-2 h-2 rounded-full bg-${config.color}-500 mr-2`}
+                  />
+                  <span>{row.neighborLabel ?? row.neighborId}</span>
+                </Link>
+              );
+            })}
+            {rows.length > 12 && (
+              <span className="text-xs text-gray-400 px-3 py-2">
+                +{rows.length - 12} more
+              </span>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+- [ ] **Step 4: Create generic detail component (Tier 2 fallback)**
+
+Create `app/src/components/entity/generic-detail.tsx`:
+
+```tsx
+interface GenericDetailProps {
+  properties: Record<string, unknown>;
+}
+
+export function GenericDetail({ properties }: GenericDetailProps) {
+  const displayProps = Object.entries(properties).filter(
+    ([key]) => !["payload_json", "node_type", "display_label", "promotion_state"].includes(key),
+  );
+
+  if (displayProps.length === 0) return null;
+
+  return (
+    <div className="mb-6">
+      <h2 className="text-lg font-semibold mb-3">Properties</h2>
+      <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+        {displayProps.map(([key, value]) => (
+          <div key={key} className="flex gap-2">
+            <dt className="text-gray-500 min-w-32">{key.replace(/_/g, " ")}</dt>
+            <dd className="text-gray-900 break-all">
+              {Array.isArray(value) ? value.join(", ") : String(value ?? "")}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+```
+
+- [ ] **Step 5: Verify entity pages work**
+
+Start dev server, navigate to:
+- `http://localhost:3000/person` — should show list of 23 people
+- `http://localhost:3000/person/person-kate-colin` — should show Kate Colin's detail page with connections
+- `http://localhost:3000/decision` — should show list of 1,481 decisions
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add app/src/app/\[type\]/ app/src/components/entity/
+git commit -m "feat: add dynamic entity pages with connections panel
+
+Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 7: Radial graph visualization
+
+**Files:**
+- Create: `app/src/components/graph/radial-graph.tsx`
+- Create: `app/src/components/graph/graph-utils.ts`
+- Test: `app/src/components/graph/graph-utils.test.ts`
+
+- [ ] **Step 1: Write failing test for graph-utils**
+
+Create `app/src/components/graph/graph-utils.test.ts`:
+
+```typescript
+import { describe, it, expect } from "vitest";
+import { neighborhoodToCytoscape } from "./graph-utils";
+
+describe("neighborhoodToCytoscape", () => {
+  it("converts neighborhood rows to cytoscape elements", () => {
+    const rows = [
+      {
+        centerId: "person-kate-colin",
+        relType: "CAST_VOTE",
+        sourceId: "person-kate-colin",
+        targetId: "decision-foo",
+        relProps: { vote: "yes" },
+        neighborId: "decision-foo",
+        neighborType: "Decision",
+        neighborLabel: "Resolution 123",
+        neighborLabels: ["Decision"],
+        neighborProps: {},
+      },
+    ];
+    const elements = neighborhoodToCytoscape(
+      "person-kate-colin",
+      "Kate Colin",
+      "Person",
+      rows,
+    );
+
+    // Should have center node + 1 neighbor node + 1 edge = 3 elements
+    const nodes = elements.filter((e: any) => e.group === "nodes");
+    const edges = elements.filter((e: any) => e.group === "edges");
+    expect(nodes).toHaveLength(2);
+    expect(edges).toHaveLength(1);
+  });
+
+  it("deduplicates neighbor nodes", () => {
+    const rows = [
+      {
+        centerId: "person-kate-colin",
+        relType: "CAST_VOTE",
+        sourceId: "person-kate-colin",
+        targetId: "decision-foo",
+        relProps: {},
+        neighborId: "decision-foo",
+        neighborType: "Decision",
+        neighborLabel: "Res 1",
+        neighborLabels: ["Decision"],
+        neighborProps: {},
+      },
+      {
+        centerId: "person-kate-colin",
+        relType: "EVIDENCED_BY",
+        sourceId: "decision-foo",
+        targetId: "person-kate-colin",
+        relProps: {},
+        neighborId: "decision-foo",
+        neighborType: "Decision",
+        neighborLabel: "Res 1",
+        neighborLabels: ["Decision"],
+        neighborProps: {},
+      },
+    ];
+    const elements = neighborhoodToCytoscape(
+      "person-kate-colin",
+      "Kate Colin",
+      "Person",
+      rows,
+    );
+    const nodes = elements.filter((e: any) => e.group === "nodes");
+    expect(nodes).toHaveLength(2); // center + 1 deduped neighbor
+  });
+});
+```
+
+- [ ] **Step 2: Run test to verify it fails**
+
+```bash
+cd app && npx vitest run src/components/graph/graph-utils.test.ts
+```
+
+- [ ] **Step 3: Implement graph-utils.ts**
+
+```typescript
+import { getEntityConfig } from "@/lib/entity-config";
+
+interface CytoscapeElement {
+  group: "nodes" | "edges";
+  data: Record<string, unknown>;
+}
+
+export function neighborhoodToCytoscape(
+  centerId: string,
+  centerLabel: string,
+  centerType: string,
+  neighborhood: any[],
+): CytoscapeElement[] {
+  const elements: CytoscapeElement[] = [];
+  const seenNodes = new Set<string>();
+
+  // Add center node
+  const centerConfig = getEntityConfig(centerType);
+  elements.push({
+    group: "nodes",
+    data: {
+      id: centerId,
+      label: centerLabel,
+      nodeType: centerType,
+      color: centerConfig.graphColor,
+      isCenter: true,
+    },
+  });
+  seenNodes.add(centerId);
+
+  // Add neighbor nodes and edges
+  for (const row of neighborhood) {
+    const neighborId = row.neighborId as string;
+    const neighborType = (row.neighborType as string) ?? "Record";
+    const neighborLabel = (row.neighborLabel as string) ?? neighborId;
+
+    // Add neighbor node (deduplicated)
+    if (!seenNodes.has(neighborId)) {
+      const config = getEntityConfig(neighborType);
+      elements.push({
+        group: "nodes",
+        data: {
+          id: neighborId,
+          label: neighborLabel,
+          nodeType: neighborType,
+          color: config.graphColor,
+          isCenter: false,
+        },
+      });
+      seenNodes.add(neighborId);
+    }
+
+    // Add edge
+    const sourceId = row.sourceId as string;
+    const targetId = row.targetId as string;
+    const relType = row.relType as string;
+    elements.push({
+      group: "edges",
+      data: {
+        id: `${sourceId}-${relType}-${targetId}`,
+        source: sourceId,
+        target: targetId,
+        label: relType.replace(/_/g, " "),
+        relType,
+      },
+    });
+  }
+
+  return elements;
+}
+```
+
+- [ ] **Step 4: Implement radial-graph.tsx**
+
+Create `app/src/components/graph/radial-graph.tsx`:
+
+```tsx
+"use client";
+
+import { useEffect, useRef } from "react";
+import cytoscape from "cytoscape";
+import { neighborhoodToCytoscape } from "./graph-utils";
+import { useRouter } from "next/navigation";
+import { getEntityConfig, entityTypeFromId } from "@/lib/entity-config";
+
+interface RadialGraphProps {
+  centerId: string;
+  centerLabel: string;
+  centerType: string;
+  neighborhood: any[];
+}
+
+export function RadialGraph({
+  centerId,
+  centerLabel,
+  centerType,
+  neighborhood,
+}: RadialGraphProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cyRef = useRef<cytoscape.Core | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const elements = neighborhoodToCytoscape(
+      centerId,
+      centerLabel,
+      centerType,
+      neighborhood,
+    );
+
+    const cy = cytoscape({
+      container: containerRef.current,
+      elements,
+      style: [
+        {
+          selector: "node",
+          style: {
+            label: "data(label)",
+            "background-color": "data(color)",
+            color: "#374151",
+            "font-size": "10px",
+            "text-valign": "bottom",
+            "text-margin-y": 6,
+            "text-max-width": "80px",
+            "text-wrap": "ellipsis",
+            width: 20,
+            height: 20,
+          },
+        },
+        {
+          selector: "node[?isCenter]",
+          style: {
+            width: 40,
+            height: 40,
+            "font-size": "13px",
+            "font-weight": "bold",
+            "border-width": 3,
+            "border-color": "#1F2937",
+          },
+        },
+        {
+          selector: "edge",
+          style: {
+            width: 1,
+            "line-color": "#D1D5DB",
+            "curve-style": "bezier",
+            "target-arrow-shape": "triangle",
+            "target-arrow-color": "#D1D5DB",
+            "arrow-scale": 0.6,
+          },
+        },
+      ],
+      layout: {
+        name: "concentric",
+        concentric: (node: any) => (node.data("isCenter") ? 10 : 1),
+        levelWidth: () => 1,
+        minNodeSpacing: 30,
+        animate: false,
+      },
+      userZoomingEnabled: true,
+      userPanningEnabled: true,
+      boxSelectionEnabled: false,
+    });
+
+    // Click handler for navigation
+    cy.on("tap", "node", (evt) => {
+      const nodeId = evt.target.id();
+      if (nodeId === centerId) return;
+      const type = entityTypeFromId(nodeId);
+      if (type) {
+        const config = getEntityConfig(type);
+        router.push(`/${config.slug}/${nodeId}`);
+      }
+    });
+
+    // Hover cursor
+    cy.on("mouseover", "node", () => {
+      if (containerRef.current) containerRef.current.style.cursor = "pointer";
+    });
+    cy.on("mouseout", "node", () => {
+      if (containerRef.current) containerRef.current.style.cursor = "default";
+    });
+
+    cyRef.current = cy;
+
+    return () => {
+      cy.destroy();
+    };
+  }, [centerId, centerLabel, centerType, neighborhood, router]);
+
+  return (
+    <div>
+      <h2 className="text-sm font-medium text-gray-500 mb-2">Connection Graph</h2>
+      <div ref={containerRef} className="w-full h-96 rounded bg-gray-50" />
+    </div>
+  );
+}
+```
+
+- [ ] **Step 5: Run tests**
+
+```bash
+cd app && npx vitest run
+```
+
+Expected: All PASS
+
+- [ ] **Step 6: Verify radial graph renders**
+
+Start dev server, navigate to `http://localhost:3000/person/person-kate-colin`. Verify:
+- The radial graph appears with Kate Colin at center
+- Neighbor nodes are colored by type
+- Clicking a neighbor navigates to that entity's page
+- The graph is zoomable and pannable
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add app/src/components/graph/
+git commit -m "feat: add Cytoscape.js radial graph visualization component
+
+Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 8: Update homepage with entity type cards
+
+**Files:**
+- Modify: `app/src/app/page.tsx`
+
+- [ ] **Step 1: Create a dashboard homepage**
+
+Replace `app/src/app/page.tsx`:
+
+```tsx
+import Link from "next/link";
+import { runQuery } from "@/lib/neo4j";
+import { getEntityConfig, ENTITY_TYPES } from "@/lib/entity-config";
+
+async function getTypeCounts(): Promise<Record<string, number>> {
+  const results = await runQuery<{ label: string; count: number }>(`
+    CALL db.labels() YIELD label
+    CALL {
+      WITH label
+      MATCH (n)
+      WHERE label IN labels(n)
+      RETURN count(n) AS count
+    }
+    RETURN label, count
+    ORDER BY count DESC
+  `);
+  const counts: Record<string, number> = {};
+  for (const r of results) {
+    counts[r.label as any] = Number((r as any).count);
+  }
+  return counts;
+}
+
+export default async function Home() {
+  const counts = await getTypeCounts();
+
+  // Filter to entity types that actually have data
+  const typesWithData = ENTITY_TYPES.filter(
+    (t) => (counts[t] ?? 0) > 0,
+  ).sort((a, b) => (counts[b] ?? 0) - (counts[a] ?? 0));
+
+  const totalNodes = Object.values(counts).reduce((a, b) => a + b, 0);
+
+  return (
+    <div>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Marin Civic Graph</h1>
+        <p className="text-gray-600 mb-4">
+          A civic-intelligence tool for Marin County. Browse local government
+          decisions, actors, money flows, and more.
+        </p>
+        <p className="text-sm text-gray-500">
+          {totalNodes.toLocaleString()} entities across {typesWithData.length} types
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {typesWithData.map((type) => {
+          const config = getEntityConfig(type);
+          const count = counts[type] ?? 0;
+          return (
+            <Link
+              key={type}
+              href={`/${config.slug}`}
+              className="block rounded-lg border border-gray-200 bg-white p-4 hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <span
+                  className={`inline-block w-3 h-3 rounded-full`}
+                  style={{ backgroundColor: config.graphColor }}
+                />
+                <span className="font-medium text-sm">{config.pluralName}</span>
+              </div>
+              <span className="text-2xl font-bold text-gray-900">
+                {count.toLocaleString()}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+```
+
+- [ ] **Step 2: Verify homepage**
+
+Navigate to http://localhost:3000. Verify: entity type cards with counts, clickable links to type pages.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add app/src/app/page.tsx
+git commit -m "feat: add dashboard homepage with entity type cards and counts
+
+Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+## Build Verification
+
+After all tasks are complete:
+
+1. `cd app && npx vitest run` — all tests pass
+2. `cd app && npm run build` — production build succeeds
+3. Browse these pages manually:
+   - Homepage: entity type cards with correct counts
+   - `/person` — list of 23 people
+   - `/person/person-kate-colin` — Kate Colin detail page with radial graph and connections
+   - `/decision/decision-2024-08-19-resolution-15336` — decision with votes, meeting link
+   - `/project/project-san-rafael-350-merrydale-interim-shelter` — Merrydale with agreements, money
+   - `/case/case-boyd-v-city-of-san-rafael` — Boyd case with parties, proceedings
+   - Search "kate" — returns Kate Colin in results
+4. Radial graph: click a neighbor node, verify navigation works

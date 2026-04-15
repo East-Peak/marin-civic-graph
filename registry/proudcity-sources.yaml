@@ -1,0 +1,25 @@
+sources:
+  - id: fairfax-town-council
+    adapter: proudcity
+    url: https://townoffairfaxca.gov/meetings/
+    jurisdiction_id: place-fairfax
+    institution_id: org-fairfax-town-council
+    backfill_from: "2019-01-01"
+    schedule: weekly
+    archive_pages:
+      - https://townoffairfaxca.gov/2024-meeting-archive/
+      - https://townoffairfaxca.gov/2023-meeting-archive/
+      - https://townoffairfaxca.gov/2022-meeting-archive/
+      - https://townoffairfaxca.gov/2021-meeting-archive/
+      - https://townoffairfaxca.gov/2020-meeting-archive/
+      - https://townoffairfaxca.gov/2019-meeting-archive/
+
+  - id: belvedere-city-council
+    adapter: proudcity
+    url: https://www.cityofbelvedere.org/city-council-meetings/
+    jurisdiction_id: place-belvedere
+    institution_id: org-belvedere-city-council
+    backfill_from: "2019-01-01"
+    schedule: weekly
+    archive_pages:
+      - https://www.cityofbelvedere.org/city-council-meeting-archive/
