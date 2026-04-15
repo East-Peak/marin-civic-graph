@@ -1,0 +1,448 @@
+#!/usr/bin/env python3
+"""Agenda PDF extraction pipeline for Marin Civic Graph.
+
+Downloads agenda PDFs from captured meeting URLs, extracts text with
+pdftotext, parses sections and items, and creates AgendaItem nodes in Neo4j.
+
+Usage:
+    python scripts/extract_agenda_items.py --source novato-city-council --limit 5
+    python scripts/extract_agenda_items.py --all --limit 10
+    python scripts/extract_agenda_items.py --source novato-city-council --limit 3 --dry-run
+"""
+
+from __future__ import annotations
+
+import argparse
+import logging
+import re
+import subprocess
+import sys
+import time
+from pathlib import Path
+from typing import Optional
+
+import requests
+from neo4j import GraphDatabase
+
+ROOT = Path(__file__).resolve().parent.parent
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+    datefmt="%H:%M:%S",
+)
+log = logging.getLogger(__name__)
+
+
+# ---------------------------------------------------------------------------
+# URL normalization
+# ---------------------------------------------------------------------------
+
+def normalize_agenda_url(url: Optional[str]) -> Optional[str]:
+    """Prepend https: to protocol-relative URLs (//host/path)."""
+    if url is None:
+        return None
+    if url.startswith("//"):
+        return "https:" + url
+    return url
+
+
+# ---------------------------------------------------------------------------
+# Format detection
+# ---------------------------------------------------------------------------
+
+# Granicus: letter-first section headers like "A. CONVENE", "G. CONSENT CALENDAR"
+_GRANICUS_SECTION_RE = re.compile(r"^\s*([A-Z])\.\s+[A-Z]", re.MULTILINE)
+# CivicPlus: number-first section headers like "1. CALL TO ORDER", "4. CONSENT CALENDAR"
+_CIVICPLUS_SECTION_RE = re.compile(r"^\s*(\d+)\.\s+[A-Z]", re.MULTILINE)
+
+
+def detect_agenda_format(text: str) -> Optional[str]:
+    """Return 'granicus', 'civicplus', or None based on section header patterns."""
+    granicus_hits = len(_GRANICUS_SECTION_RE.findall(text))
+    civicplus_hits = len(_CIVICPLUS_SECTION_RE.findall(text))
+
+    if granicus_hits == 0 and civicplus_hits == 0:
+        return None
+    if granicus_hits >= civicplus_hits:
+        return "granicus"
+    return "civicplus"
+
+
+# ---------------------------------------------------------------------------
+# Granicus parser
+# ---------------------------------------------------------------------------
+
+# Section header: "G. CONSENT CALENDAR" (optional leading whitespace, match to end of line)
+_GRAN_SECTION_RE = re.compile(r"^\s*([A-Z])\.\s+([A-Z][A-Z /&]+)", re.MULTILINE)
+# Item: "   G.1.   Description text" (leading whitespace required)
+_GRAN_ITEM_RE = re.compile(r"^\s+([A-Z])\.(\d+)\.\s+(.+)", re.MULTILINE)
+
+
+def parse_granicus_agenda(text: str) -> tuple[list[dict], list[dict]]:
+    """Parse Granicus-format agenda text into sections and items.
+
+    Returns:
+        sections: list of {"label": "G", "name": "CONSENT CALENDAR"}
+        items: list of {"section": "G", "number": "1", "section_name": "...", "title": "..."}
+    """
+    if not text.strip():
+        return [], []
+
+    # Build label -> name mapping from section headers
+    section_map: dict[str, str] = {}
+    sections: list[dict] = []
+    for m in _GRAN_SECTION_RE.finditer(text):
+        label = m.group(1)
+        name = m.group(2).strip()
+        if label not in section_map:
+            section_map[label] = name
+            sections.append({"label": label, "name": name})
+
+    items: list[dict] = []
+    for m in _GRAN_ITEM_RE.finditer(text):
+        section_label = m.group(1)
+        number = m.group(2)
+        title = m.group(3).strip()
+        items.append({
+            "section": section_label,
+            "number": number,
+            "section_name": section_map.get(section_label, ""),
+            "title": title,
+        })
+
+    return sections, items
+
+
+# ---------------------------------------------------------------------------
+# CivicPlus parser
+# ---------------------------------------------------------------------------
+
+# Section header: "4. CONSENT CALENDAR" (optional leading whitespace)
+_CP_SECTION_RE = re.compile(r"^\s*(\d+)\.\s+([A-Z][A-Z\s/&]+)", re.MULTILINE)
+# Item: "   4.A.   Description text" (leading whitespace required)
+_CP_ITEM_RE = re.compile(r"^\s+(\d+)\.([A-Z])\.\s+(.+)", re.MULTILINE)
+
+
+def parse_civicplus_agenda(text: str) -> tuple[list[dict], list[dict]]:
+    """Parse CivicPlus-format agenda text into sections and items.
+
+    Returns:
+        sections: list of {"label": "4", "name": "CONSENT CALENDAR"}
+        items: list of {"section": "4", "number": "A", "section_name": "...", "title": "..."}
+    """
+    if not text.strip():
+        return [], []
+
+    # Build section number -> name mapping
+    section_map: dict[str, str] = {}
+    sections: list[dict] = []
+    for m in _CP_SECTION_RE.finditer(text):
+        label = m.group(1)
+        name = m.group(2).strip()
+        if label not in section_map:
+            section_map[label] = name
+            sections.append({"label": label, "name": name})
+
+    items: list[dict] = []
+    for m in _CP_ITEM_RE.finditer(text):
+        section_label = m.group(1)
+        number = m.group(2)
+        title = m.group(3).strip()
+        items.append({
+            "section": section_label,
+            "number": number,
+            "section_name": section_map.get(section_label, ""),
+            "title": title,
+        })
+
+    return sections, items
+
+
+# ---------------------------------------------------------------------------
+# Node builder
+# ---------------------------------------------------------------------------
+
+def build_agenda_item_node(
+    meeting_id: str,
+    section: str,
+    number: str,
+    section_name: str,
+    title: str,
+    source_id: str,
+) -> dict:
+    """Build an AgendaItem node dict from parsed agenda fields.
+
+    ID format: agenda-item-{meeting_id_suffix}-{section}{number}
+    where suffix = everything after the first 'meeting-' prefix.
+    """
+    # Strip the leading 'meeting-' prefix to get the suffix
+    suffix = meeting_id.removeprefix("meeting-")
+    # Compose a short item key: section + number, lowercased
+    item_key = f"{section}{number}".lower()
+    node_id = f"agenda-item-{suffix}-{item_key}"
+
+    return {
+        "id": node_id,
+        "node_type": "AgendaItem",
+        "display_label": title[:120],
+        "promotion_state": "promoted",
+        "properties": {
+            "heading": section_name.title() if section_name else f"Section {section}",
+            "title": title,
+            "section_number": section,
+            "item_number": number,
+            "meeting_id": meeting_id,
+            "source_id": source_id,
+            "status": "parsed_from_agenda",
+        },
+    }
+
+
+# ---------------------------------------------------------------------------
+# PDF handling
+# ---------------------------------------------------------------------------
+
+def download_pdf(url: str, dest_path: Path) -> bool:
+    """Download a PDF to dest_path. Returns True on success."""
+    dest_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        resp = requests.get(url, timeout=30, allow_redirects=True)
+        resp.raise_for_status()
+        content_type = resp.headers.get("content-type", "")
+        if "pdf" not in content_type.lower() and not resp.content[:4] == b"%PDF":
+            # Accept either content-type or magic bytes
+            if b"%PDF" not in resp.content[:8]:
+                log.warning("Response does not appear to be a PDF: %s", url)
+                return False
+        dest_path.write_bytes(resp.content)
+        return True
+    except Exception as exc:
+        log.warning("Failed to download %s: %s", url, exc)
+        return False
+
+
+def extract_text(pdf_path: Path) -> Optional[str]:
+    """Run pdftotext -layout on pdf_path and return stdout text."""
+    try:
+        result = subprocess.run(
+            ["pdftotext", "-layout", str(pdf_path), "-"],
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        if result.returncode != 0:
+            log.warning("pdftotext failed for %s: %s", pdf_path, result.stderr[:200])
+            return None
+        return result.stdout
+    except Exception as exc:
+        log.warning("pdftotext error for %s: %s", pdf_path, exc)
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Neo4j interaction
+# ---------------------------------------------------------------------------
+
+def get_driver(uri: str, user: str, password: str):
+    return GraphDatabase.driver(uri, auth=(user, password))
+
+
+def fetch_meetings_needing_items(
+    driver,
+    source_id: Optional[str],
+    limit: int,
+) -> list[dict]:
+    """Return meetings that have agenda URLs but no AgendaItem nodes yet."""
+    source_filter = "AND r.source_id = $source_id" if source_id else ""
+    query = f"""
+        MATCH (m:Meeting)-[:EVIDENCED_BY]->(r:Record)
+        WHERE r.record_type = 'meeting_agenda'
+        {source_filter}
+        AND NOT exists {{ (m)<-[:PART_OF_MEETING]-(:AgendaItem) }}
+        RETURN m.id AS meeting_id,
+               r.source_id AS source_id,
+               r.source_url AS agenda_url,
+               m.meeting_date AS meeting_date
+        ORDER BY m.meeting_date DESC
+        LIMIT $limit
+    """
+    params: dict = {"limit": limit}
+    if source_id:
+        params["source_id"] = source_id
+
+    with driver.session() as session:
+        result = session.run(query, params)
+        return [dict(row) for row in result]
+
+
+def write_agenda_items(driver, nodes: list[dict], meeting_id: str) -> None:
+    """Write AgendaItem nodes and PART_OF_MEETING edges to Neo4j."""
+    query = """
+        UNWIND $nodes AS n
+        MERGE (a:AgendaItem {id: n.id})
+        SET a.display_label       = n.display_label,
+            a.promotion_state     = n.promotion_state,
+            a.heading             = n.properties.heading,
+            a.title               = n.properties.title,
+            a.section_number      = n.properties.section_number,
+            a.item_number         = n.properties.item_number,
+            a.meeting_id          = n.properties.meeting_id,
+            a.source_id           = n.properties.source_id,
+            a.status              = n.properties.status
+        WITH a
+        MATCH (m:Meeting {id: a.meeting_id})
+        MERGE (a)-[:PART_OF_MEETING]->(m)
+    """
+    with driver.session() as session:
+        session.run(query, {"nodes": nodes})
+
+
+# ---------------------------------------------------------------------------
+# Processing loop
+# ---------------------------------------------------------------------------
+
+def process_meeting(
+    meeting: dict,
+    dry_run: bool,
+    driver,
+    data_root: Path,
+) -> dict:
+    """Download, parse, and optionally write one meeting's agenda items."""
+    meeting_id = meeting["meeting_id"]
+    source_id = meeting["source_id"]
+    raw_url = meeting["agenda_url"]
+    url = normalize_agenda_url(raw_url)
+
+    if not url:
+        return {"meeting_id": meeting_id, "status": "skip_no_url", "items": 0}
+
+    # Destination path for PDF
+    pdf_dir = data_root / "data" / "raw" / source_id / "agendas"
+    pdf_path = pdf_dir / f"{meeting_id}.pdf"
+
+    # Download if not already cached
+    if pdf_path.exists():
+        log.info("Using cached PDF: %s", pdf_path)
+    else:
+        log.info("Downloading %s -> %s", url, pdf_path)
+        ok = download_pdf(url, pdf_path)
+        if not ok:
+            return {"meeting_id": meeting_id, "status": "download_failed", "items": 0}
+
+    # Extract text
+    text = extract_text(pdf_path)
+    if not text or not text.strip():
+        return {"meeting_id": meeting_id, "status": "empty_text", "items": 0}
+
+    # Detect format and parse
+    fmt = detect_agenda_format(text)
+    if fmt == "granicus":
+        sections, parsed_items = parse_granicus_agenda(text)
+    elif fmt == "civicplus":
+        sections, parsed_items = parse_civicplus_agenda(text)
+    else:
+        log.warning("Unknown agenda format for %s", meeting_id)
+        return {"meeting_id": meeting_id, "status": "unknown_format", "items": 0}
+
+    if not parsed_items:
+        log.warning("No items parsed from %s (format=%s)", meeting_id, fmt)
+        return {"meeting_id": meeting_id, "status": "no_items_parsed", "items": 0}
+
+    # Build nodes
+    nodes = [
+        build_agenda_item_node(
+            meeting_id=meeting_id,
+            section=item["section"],
+            number=item["number"],
+            section_name=item["section_name"],
+            title=item["title"],
+            source_id=source_id,
+        )
+        for item in parsed_items
+    ]
+
+    log.info(
+        "%s: %s items from %d sections (format=%s)",
+        meeting_id, len(nodes), len(sections), fmt,
+    )
+
+    if dry_run:
+        # Print a sample for review
+        for node in nodes[:3]:
+            props = node["properties"]
+            print(
+                f"  [{props['section_number']}.{props['item_number']}]"
+                f" {props['heading']} — {props['title'][:80]}"
+            )
+        if len(nodes) > 3:
+            print(f"  ... and {len(nodes) - 3} more items")
+    else:
+        write_agenda_items(driver, nodes, meeting_id)
+
+    return {"meeting_id": meeting_id, "status": "ok", "items": len(nodes), "format": fmt}
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(description="Extract agenda items from PDFs into Neo4j")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--source", help="Process meetings for a specific source_id")
+    group.add_argument("--all", action="store_true", help="Process all sources")
+    parser.add_argument("--limit", type=int, default=10, help="Max meetings to process")
+    parser.add_argument("--dry-run", action="store_true", help="Parse but do not write to Neo4j")
+    return parser.parse_args(argv)
+
+
+def main(argv=None):
+    import os
+    args = parse_args(argv)
+
+    neo4j_uri = os.environ.get("NEO4J_URI", "")
+    neo4j_user = os.environ.get("NEO4J_USER", "neo4j")
+    neo4j_password = os.environ.get("NEO4J_PASSWORD", "")
+
+    if not neo4j_uri or not neo4j_password:
+        log.error("NEO4J_URI and NEO4J_PASSWORD must be set")
+        sys.exit(1)
+
+    driver = get_driver(neo4j_uri, neo4j_user, neo4j_password)
+    source_id = args.source if not args.all else None
+
+    log.info(
+        "Fetching meetings needing agenda extraction (source=%s, limit=%d, dry_run=%s)",
+        source_id or "ALL", args.limit, args.dry_run,
+    )
+
+    meetings = fetch_meetings_needing_items(driver, source_id, args.limit)
+    log.info("Found %d meetings to process", len(meetings))
+
+    results = []
+    for meeting in meetings:
+        result = process_meeting(
+            meeting=meeting,
+            dry_run=args.dry_run,
+            driver=driver,
+            data_root=ROOT,
+        )
+        results.append(result)
+        if not args.dry_run:
+            time.sleep(1)  # rate limit between downloads
+
+    driver.close()
+
+    # Summary
+    ok = sum(1 for r in results if r["status"] == "ok")
+    total_items = sum(r.get("items", 0) for r in results)
+    errors = [r for r in results if r["status"] != "ok"]
+    log.info("Done: %d/%d meetings processed, %d total items", ok, len(results), total_items)
+    if errors:
+        for err in errors:
+            log.warning("  %s: %s", err["meeting_id"], err["status"])
+
+
+if __name__ == "__main__":
+    main()
