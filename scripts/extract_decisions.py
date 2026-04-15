@@ -91,22 +91,6 @@ _CM_ROLL_CALL_RE = re.compile(
 
 
 # ---------------------------------------------------------------------------
-# Regex patterns — Sausalito narrative-prose minutes format
-# ---------------------------------------------------------------------------
-
-# "[Title] Name moved, seconded by [Title] Name, and [unanimously] carried [N-M] [(Name dissenting)]"
-_SAU_VOTE_RE = re.compile(
-    r"(?:(?:Mayor\s+Pro\s+Tem|Vice\s+Mayor|Mayor|Councilmember|Councilwoman|Councilman)\s+)?"
-    r"(\w+(?:['-]\w+)*)\s+moved,\s+seconded\s+by\s+"
-    r"(?:(?:Mayor\s+Pro\s+Tem|Vice\s+Mayor|Mayor|Councilmember|Councilwoman|Councilman)\s+)?"
-    r"(\w+(?:['-]\w+)*),\s+and\s+(?:unanimously\s+)?carried"
-    r"(?:\s+(\d+-\d+))?(?:\s*\((\w+(?:['-]\w+)*)\s+dissenting\))?"
-    r",?\s+to\s+(.+?)(?=\n\n|\Z)",
-    re.S | re.I,
-)
-
-
-# ---------------------------------------------------------------------------
 # Regex patterns — Marin County BOS minutes format
 # ---------------------------------------------------------------------------
 
@@ -291,14 +275,6 @@ def parse_cortemadera_votes(text: str) -> list[dict]:
     return votes
 
 
-def parse_sausalito_votes(text: str) -> list[dict]:
-    """Parse vote records from Sausalito narrative-prose meeting minutes.
-
-    TODO: implement Sausalito format parser.
-    """
-    raise NotImplementedError("parse_sausalito_votes is not yet implemented")
-
-
 def parse_bos_votes(text: str) -> list[dict]:
     """Parse vote records from Marin County Board of Supervisors meeting minutes.
 
@@ -352,8 +328,8 @@ def parse_sausalito_votes(text: str) -> list[dict]:
     Only produces results when text is extractable (returns [] for blank input).
     """
     # Normalize Unicode smart quotes — same fix applied to Novato PDFs
-    text = text.replace('’', "'").replace('‘', "'")
-    text = text.replace('“', '"'').replace('”', '"'')
+    text = text.replace('\u2019', "'").replace('\u2018', "'")
+    text = text.replace('\u201c', '"').replace('\u201d', '"')
 
     votes: list[dict] = []
     for m in _SAU_VOTE_RE.finditer(text):
