@@ -57,8 +57,16 @@ _GRANICUS_SECTION_RE = re.compile(r"^\s*([A-Z])\.\s+[A-Z]", re.MULTILINE)
 _CIVICPLUS_SECTION_RE = re.compile(r"^\s*(\d+)\.\s+[A-Z]", re.MULTILINE)
 
 
+_BOS_ITEM_RE = re.compile(r"CA\s*-\s*(\d+)\.", re.MULTILINE)
+
+
 def detect_agenda_format(text: str) -> Optional[str]:
-    """Return 'granicus', 'civicplus', or None based on section header patterns."""
+    """Return 'granicus', 'civicplus', 'bos', or None based on section header patterns."""
+    # BOS uses "CA - N." pattern (Consent Agenda items)
+    bos_hits = len(_BOS_ITEM_RE.findall(text))
+    if bos_hits >= 3:
+        return "bos"
+
     granicus_hits = len(_GRANICUS_SECTION_RE.findall(text))
     civicplus_hits = len(_CIVICPLUS_SECTION_RE.findall(text))
 
@@ -160,6 +168,61 @@ def parse_civicplus_agenda(text: str) -> tuple[list[dict], list[dict]]:
 
 
 # ---------------------------------------------------------------------------
+# BOS (Board of Supervisors) parser
+# ---------------------------------------------------------------------------
+
+_BOS_SECTION_RE = re.compile(
+    r"^(Consent Agenda [A-Z]|Public Hearing|Board (?:Action|Business))",
+    re.MULTILINE | re.IGNORECASE,
+)
+_BOS_CA_ITEM_RE = re.compile(
+    r"^CA\s*-\s*(\d+)\.\s*(.*)",
+    re.MULTILINE,
+)
+
+
+def parse_bos_agenda(text: str) -> tuple[list[dict], list[dict]]:
+    """Parse Marin County BOS HTML agenda format.
+
+    BOS uses "CA - N. Department Name" for consent items
+    and "Public Hearing" / "Board Action" for other sections.
+    """
+    sections: list[dict] = []
+    items: list[dict] = []
+
+    # Find section headers
+    for m in _BOS_SECTION_RE.finditer(text):
+        name = m.group(1).strip()
+        sections.append({"label": name[:2].upper(), "name": name})
+
+    # Parse CA items
+    for m in _BOS_CA_ITEM_RE.finditer(text):
+        number = m.group(1)
+        title = m.group(2).strip()
+        items.append({
+            "section": "CA",
+            "number": number,
+            "section_name": "Consent Agenda",
+            "title": title,
+        })
+
+    # Parse Public Hearing items (lines after "Public Hearing" that start with "Request")
+    ph_start = text.lower().find("public hearing")
+    if ph_start > 0:
+        ph_text = text[ph_start:ph_start + 2000]
+        request_lines = re.findall(r"Request\s+(.+?)(?:\n|$)", ph_text)
+        for i, title in enumerate(request_lines, 1):
+            items.append({
+                "section": "PH",
+                "number": str(i),
+                "section_name": "Public Hearing",
+                "title": title.strip()[:200],
+            })
+
+    return sections, items
+
+
+# ---------------------------------------------------------------------------
 # Node builder
 # ---------------------------------------------------------------------------
 
@@ -203,23 +266,54 @@ def build_agenda_item_node(
 # PDF handling
 # ---------------------------------------------------------------------------
 
-def download_pdf(url: str, dest_path: Path) -> bool:
-    """Download a PDF to dest_path. Returns True on success."""
-    dest_path.parent.mkdir(parents=True, exist_ok=True)
+def download_agenda(url: str, dest_dir: Path, meeting_id: str) -> tuple[Optional[Path], str]:
+    """Download an agenda (PDF or HTML) and return (path, format).
+
+    Returns (None, "failed") on error.
+    Returns (path, "pdf") or (path, "html") on success.
+    """
+    dest_dir.mkdir(parents=True, exist_ok=True)
     try:
         resp = requests.get(url, timeout=30, allow_redirects=True)
         resp.raise_for_status()
         content_type = resp.headers.get("content-type", "")
-        if "pdf" not in content_type.lower() and not resp.content[:4] == b"%PDF":
-            # Accept either content-type or magic bytes
-            if b"%PDF" not in resp.content[:8]:
-                log.warning("Response does not appear to be a PDF: %s", url)
-                return False
-        dest_path.write_bytes(resp.content)
-        return True
+
+        if "pdf" in content_type.lower() or resp.content[:4] == b"%PDF":
+            path = dest_dir / f"{meeting_id}.pdf"
+            path.write_bytes(resp.content)
+            return path, "pdf"
+        elif "html" in content_type.lower():
+            path = dest_dir / f"{meeting_id}.html"
+            path.write_bytes(resp.content)
+            return path, "html"
+        else:
+            log.warning("Unknown content type for %s: %s", url, content_type)
+            # Try saving anyway and check magic bytes
+            if b"%PDF" in resp.content[:8]:
+                path = dest_dir / f"{meeting_id}.pdf"
+                path.write_bytes(resp.content)
+                return path, "pdf"
+            return None, "failed"
     except Exception as exc:
         log.warning("Failed to download %s: %s", url, exc)
-        return False
+        return None, "failed"
+
+
+def extract_text_from_html(html_path: Path) -> Optional[str]:
+    """Strip HTML tags to get plain text from an HTML agenda."""
+    import re as _re
+    from html import unescape
+    try:
+        html = html_path.read_text(encoding="utf-8", errors="replace")
+        text = _re.sub(r"<[^>]+>", " ", html)
+        text = unescape(text)
+        text = _re.sub(r"\s+", " ", text)
+        # Try to preserve line breaks by splitting on common delimiters
+        text = text.replace(". ", ".\n").replace("  ", "\n")
+        return text
+    except Exception as exc:
+        log.warning("Failed to read HTML %s: %s", html_path, exc)
+        return None
 
 
 def extract_text(pdf_path: Path) -> Optional[str]:
@@ -317,21 +411,31 @@ def process_meeting(
     if not url:
         return {"meeting_id": meeting_id, "status": "skip_no_url", "items": 0}
 
-    # Destination path for PDF
-    pdf_dir = data_root / "data" / "raw" / source_id / "agendas"
-    pdf_path = pdf_dir / f"{meeting_id}.pdf"
+    # Destination directory for cached downloads
+    agenda_dir = data_root / "data" / "raw" / source_id / "agendas"
 
-    # Download if not already cached
-    if pdf_path.exists():
-        log.info("Using cached PDF: %s", pdf_path)
+    # Check for cached files (PDF or HTML)
+    cached_pdf = agenda_dir / f"{meeting_id}.pdf"
+    cached_html = agenda_dir / f"{meeting_id}.html"
+
+    if cached_pdf.exists():
+        log.info("Using cached PDF: %s", cached_pdf)
+        file_path, file_type = cached_pdf, "pdf"
+    elif cached_html.exists():
+        log.info("Using cached HTML: %s", cached_html)
+        file_path, file_type = cached_html, "html"
     else:
-        log.info("Downloading %s -> %s", url, pdf_path)
-        ok = download_pdf(url, pdf_path)
-        if not ok:
+        log.info("Downloading %s", url)
+        file_path, file_type = download_agenda(url, agenda_dir, meeting_id)
+        if file_path is None:
             return {"meeting_id": meeting_id, "status": "download_failed", "items": 0}
 
-    # Extract text
-    text = extract_text(pdf_path)
+    # Extract text based on file type
+    if file_type == "pdf":
+        text = extract_text(file_path)
+    else:
+        text = extract_text_from_html(file_path)
+
     if not text or not text.strip():
         return {"meeting_id": meeting_id, "status": "empty_text", "items": 0}
 
@@ -341,6 +445,8 @@ def process_meeting(
         sections, parsed_items = parse_granicus_agenda(text)
     elif fmt == "civicplus":
         sections, parsed_items = parse_civicplus_agenda(text)
+    elif fmt == "bos":
+        sections, parsed_items = parse_bos_agenda(text)
     else:
         log.warning("Unknown agenda format for %s", meeting_id)
         return {"meeting_id": meeting_id, "status": "unknown_format", "items": 0}
