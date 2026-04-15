@@ -58,10 +58,16 @@ _CIVICPLUS_SECTION_RE = re.compile(r"^\s*(\d+)\.\s+[A-Z]", re.MULTILINE)
 
 
 _BOS_ITEM_RE = re.compile(r"CA\s*-\s*(\d+)\.", re.MULTILINE)
+_TIBURON_ITEM_RE = re.compile(r"(?:CC|AI|PH)-(\d+)\.", re.MULTILINE)
 
 
 def detect_agenda_format(text: str) -> Optional[str]:
-    """Return 'granicus', 'civicplus', 'bos', or None based on section header patterns."""
+    """Return 'granicus', 'civicplus', 'bos', 'tiburon', or None."""
+    # Tiburon uses CC-N. / AI-N. / PH-N. pattern
+    tiburon_hits = len(_TIBURON_ITEM_RE.findall(text))
+    if tiburon_hits >= 2:
+        return "tiburon"
+
     # BOS uses "CA - N." pattern (Consent Agenda items)
     bos_hits = len(_BOS_ITEM_RE.findall(text))
     if bos_hits >= 3:
@@ -70,11 +76,21 @@ def detect_agenda_format(text: str) -> Optional[str]:
     granicus_hits = len(_GRANICUS_SECTION_RE.findall(text))
     civicplus_hits = len(_CIVICPLUS_SECTION_RE.findall(text))
 
-    if granicus_hits == 0 and civicplus_hits == 0:
-        return None
-    if granicus_hits >= civicplus_hits:
+    # Check for actual item patterns to disambiguate
+    # CivicPlus items: "N.LETTER" like "3.A Approve..."
+    civicplus_item_hits = len(re.findall(r"^\s+(\d+)\.([A-Z])\s+", text, re.MULTILINE))
+    # Granicus items: "LETTER.N" like "G.1. Approve..."
+    granicus_item_hits = len(re.findall(r"^\s+([A-Z])\.(\d+)\.\s+", text, re.MULTILINE))
+
+    if civicplus_item_hits > granicus_item_hits:
+        return "civicplus"
+    if granicus_item_hits > 0:
         return "granicus"
-    return "civicplus"
+    if civicplus_hits > 0:
+        return "civicplus"
+    if granicus_hits > 0:
+        return "granicus"
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -129,7 +145,7 @@ def parse_granicus_agenda(text: str) -> tuple[list[dict], list[dict]]:
 # Section header: "4. CONSENT CALENDAR" (optional leading whitespace)
 _CP_SECTION_RE = re.compile(r"^\s*(\d+)\.\s+([A-Z][A-Z\s/&]+)", re.MULTILINE)
 # Item: "   4.A.   Description text" (leading whitespace required)
-_CP_ITEM_RE = re.compile(r"^\s+(\d+)\.([A-Z])\.\s+(.+)", re.MULTILINE)
+_CP_ITEM_RE = re.compile(r"^\s+(\d+)\.([A-Z])\.?\s+(.+)", re.MULTILINE)
 
 
 def parse_civicplus_agenda(text: str) -> tuple[list[dict], list[dict]]:
@@ -223,6 +239,51 @@ def parse_bos_agenda(text: str) -> tuple[list[dict], list[dict]]:
 
 
 # ---------------------------------------------------------------------------
+# Tiburon parser
+# ---------------------------------------------------------------------------
+
+_TIBURON_CC_RE = re.compile(r"^CC-(\d+)\.\s*$", re.MULTILINE)
+_TIBURON_AI_RE = re.compile(r"^AI-(\d+)\.\s*$", re.MULTILINE)
+_TIBURON_PH_RE = re.compile(r"^PH-(\d+)\.\s*$", re.MULTILINE)
+
+
+def parse_tiburon_agenda(text: str) -> tuple[list[dict], list[dict]]:
+    """Parse Tiburon HTML agenda: CC-N (consent), AI-N (action), PH-N (public hearing)."""
+    lines = [l.strip() for l in text.split("\n")]
+    sections = []
+    items = []
+
+    # Collect items by scanning for CC-N., AI-N., PH-N. patterns
+    prefix_map = {"CC": "Consent Calendar", "AI": "Action Items", "PH": "Public Hearings"}
+    seen_sections = set()
+
+    for i, line in enumerate(lines):
+        for prefix, section_name in prefix_map.items():
+            match = re.match(rf"^{prefix}-(\d+)\.\s*$", line)
+            if match:
+                number = match.group(1)
+                # Title is the next non-empty line
+                title = ""
+                for j in range(i + 1, min(i + 5, len(lines))):
+                    if lines[j] and not re.match(r"^(CC|AI|PH)-\d+", lines[j]):
+                        title = lines[j][:200]
+                        break
+
+                if prefix not in seen_sections:
+                    sections.append({"label": prefix, "name": section_name})
+                    seen_sections.add(prefix)
+
+                items.append({
+                    "section": prefix,
+                    "number": number,
+                    "section_name": section_name,
+                    "title": title,
+                })
+
+    return sections, items
+
+
+# ---------------------------------------------------------------------------
 # Node builder
 # ---------------------------------------------------------------------------
 
@@ -274,7 +335,7 @@ def download_agenda(url: str, dest_dir: Path, meeting_id: str) -> tuple[Optional
     """
     dest_dir.mkdir(parents=True, exist_ok=True)
     try:
-        resp = requests.get(url, timeout=30, allow_redirects=True)
+        resp = requests.get(url, timeout=30, allow_redirects=True, verify=False)
         resp.raise_for_status()
         content_type = resp.headers.get("content-type", "")
 
@@ -447,6 +508,8 @@ def process_meeting(
         sections, parsed_items = parse_civicplus_agenda(text)
     elif fmt == "bos":
         sections, parsed_items = parse_bos_agenda(text)
+    elif fmt == "tiburon":
+        sections, parsed_items = parse_tiburon_agenda(text)
     else:
         log.warning("Unknown agenda format for %s", meeting_id)
         return {"meeting_id": meeting_id, "status": "unknown_format", "items": 0}
