@@ -56,13 +56,21 @@ class TestMigrateId:
         )
         assert new_id == "org-vote-yes-123"
 
-    def test_actor_unknown_gets_org_prefix(self):
+    def test_actor_unknown_defaults_to_person_prefix(self):
         new_id = migrate_id(
             "actor-mystery-entity",
             "Actor",
             {"actor_type": "unknown"},
         )
-        assert new_id == "org-mystery-entity"
+        assert new_id == "person-mystery-entity"
+
+    def test_actor_missing_type_defaults_to_person_prefix(self):
+        new_id = migrate_id(
+            "actor-edward-m-chen",
+            "Actor",
+            {},
+        )
+        assert new_id == "person-edward-m-chen"
 
     def test_actor_organization_gets_org_prefix(self):
         new_id = migrate_id(
@@ -220,7 +228,7 @@ class TestMigrateNode:
         result = migrate_node(node)
         assert result["labels"] == ["Organization", "Government"]
 
-    def test_actor_unknown_labels(self):
+    def test_actor_unknown_defaults_to_person(self):
         node = {
             "id": "actor-mystery",
             "node_type": "Actor",
@@ -232,7 +240,25 @@ class TestMigrateNode:
             "properties": {"actor_type": "unknown", "name": "Mystery"},
         }
         result = migrate_node(node)
-        assert result["labels"] == ["Organization"]
+        assert result["node_type"] == "Person"
+        assert result["labels"] == ["Person"]
+        assert result["id"] == "person-mystery"
+
+    def test_actor_missing_type_defaults_to_person(self):
+        node = {
+            "id": "actor-edward-m-chen",
+            "node_type": "Actor",
+            "display_label": "Edward M. Chen",
+            "promotion_state": "promoted",
+            "source_bundle_ids": [],
+            "source_sections": [],
+            "source_status": None,
+            "properties": {"name": "Edward M. Chen"},
+        }
+        result = migrate_node(node)
+        assert result["node_type"] == "Person"
+        assert result["labels"] == ["Person"]
+        assert result["id"] == "person-edward-m-chen"
 
     # --- Institution → Organization ---
 

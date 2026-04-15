@@ -25,7 +25,7 @@ from typing import Optional
 # Constants
 # ---------------------------------------------------------------------------
 
-# Actor actor_type values that map to Organization (everything except "person")
+# Actor actor_type values that map to Organization (explicitly organizational)
 _ORG_ACTOR_TYPES = {
     "business",
     "nonprofit",
@@ -33,7 +33,6 @@ _ORG_ACTOR_TYPES = {
     "political_committee",
     "government_agency",
     "institutional_actor",
-    "unknown",
 }
 
 # Multi-label rules for Actor → Organization
@@ -44,8 +43,11 @@ _ACTOR_ORG_LABELS: dict[str, list[str]] = {
     "political_committee": ["Organization", "Political"],
     "government_agency": ["Organization", "Government"],
     "institutional_actor": ["Organization"],
-    "unknown": ["Organization"],
 }
+
+# Actor types that default to Person (including missing/unknown —
+# safer to reclassify a person as org than to corrupt person-as-org edges)
+_PERSON_ACTOR_TYPES = {"person", "unknown", ""}
 
 # Institution institution_type → label suffix
 _GOVERNMENT_INSTITUTION_TYPES = {
@@ -95,12 +97,17 @@ def migrate_id(old_id: str, node_type: str, properties: dict) -> str:
     All others          → unchanged
     """
     if node_type == "Actor":
-        actor_type = properties.get("actor_type", "unknown")
+        actor_type = properties.get("actor_type", "")
         rest = old_id[len("actor-"):]
-        if actor_type == "person":
-            return f"person-{rest}"
-        else:
+        # Explicitly organizational types get org- prefix
+        if actor_type in ("business", "nonprofit", "organization",
+                          "political_committee", "government_agency",
+                          "institutional_actor"):
             return f"org-{rest}"
+        # Everything else (person, unknown, missing, judges, plaintiffs)
+        # defaults to person- — safer to reclassify a person as an org
+        # than to recover from corrupted person-as-org edges
+        return f"person-{rest}"
 
     if node_type == "Institution":
         rest = old_id[len("inst-"):]
@@ -179,15 +186,16 @@ def migrate_node(node: dict) -> Optional[dict]:
     # --- Determine new ID, node_type, and labels ---
 
     if node_type == "Actor":
-        actor_type = props.get("actor_type", "unknown")
+        actor_type = props.get("actor_type", "")
         new_id = migrate_id(old_id, node_type, props)
 
-        if actor_type == "person":
-            new_node_type = "Person"
-            labels = ["Person"]
-        else:
+        if actor_type in _ORG_ACTOR_TYPES:
             new_node_type = "Organization"
             labels = _ACTOR_ORG_LABELS.get(actor_type, ["Organization"])
+        else:
+            # person, unknown, missing, or any unrecognized type → Person
+            new_node_type = "Person"
+            labels = ["Person"]
 
         # Rename observed_labels → aliases; remove actor_type
         if "observed_labels" in props:

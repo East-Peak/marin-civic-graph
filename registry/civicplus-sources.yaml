@@ -1,4 +1,5 @@
 sources:
+  # Corte Madera — split by body so institution_id is accurate
   - id: corte-madera-town-council
     adapter: civicplus
     url: https://cortemadera.gov/AgendaCenter
@@ -6,19 +7,42 @@ sources:
     institution_id: org-corte-madera-town-council
     backfill_from: "2019-01-01"
     schedule: weekly
+    categories: ["Town Council"]
 
+  - id: corte-madera-planning-commission
+    adapter: civicplus
+    url: https://cortemadera.gov/AgendaCenter
+    jurisdiction_id: place-corte-madera
+    institution_id: org-corte-madera-planning-commission
+    backfill_from: "2019-01-01"
+    schedule: weekly
+    categories: ["Planning Commission"]
+
+  # Tiburon — only has 2012-2016 data on CivicPlus (recent meetings elsewhere)
   - id: tiburon-town-council
     adapter: civicplus
     url: https://townoftiburon.org/AgendaCenter
     jurisdiction_id: place-tiburon
     institution_id: org-tiburon-town-council
-    backfill_from: "2019-01-01"
+    backfill_from: "2012-01-01"
     schedule: weekly
+    categories: ["Town Council"]
 
-  - id: mill-valley-committees
+  # Mill Valley — City Council not on CivicPlus; capture Planning Commission
+  - id: mill-valley-planning-commission
     adapter: civicplus
     url: https://cityofmillvalley.org/AgendaCenter
     jurisdiction_id: place-mill-valley
-    institution_id: org-mill-valley-committees
+    institution_id: org-mill-valley-planning-commission
     backfill_from: "2019-01-01"
     schedule: weekly
+    categories: ["Planning Commission"]
+
+  - id: mill-valley-parks-recreation
+    adapter: civicplus
+    url: https://cityofmillvalley.org/AgendaCenter
+    jurisdiction_id: place-mill-valley
+    institution_id: org-mill-valley-parks-recreation-commission
+    backfill_from: "2019-01-01"
+    schedule: weekly
+    categories: ["Parks & Recreation Commission"]
