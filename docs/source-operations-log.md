@@ -36,6 +36,7 @@ Run via `python scripts/ingest.py --source {source_id} --registry registry/netfi
 |---|---|---|---|---|
 | `normalize_meetings.py` | Adapter JSON → Meeting/Record/Org/Place nodes → Neo4j | 2026-04-15 | After each capture run | `python scripts/normalize_meetings.py --all --load` |
 | `normalize_campaign_finance.py` | NetFile ZIPs → Committee/MoneyFlow/Person nodes → Neo4j | 2026-04-15 | After each NetFile capture | `python scripts/normalize_campaign_finance.py --all --load` |
+| `ingest_socrata_permits.py` | Socrata SODA API → 49K Project+Place nodes + IN_JURISDICTION edges → Neo4j | 2026-04-14 | Quarterly | `python scripts/ingest_socrata_permits.py --load` |
 
 ## Post-Normalization Pipelines
 
@@ -58,7 +59,6 @@ Run via `python scripts/ingest.py --source {source_id} --registry registry/netfi
 
 | Source | What | Priority | Access | Notes |
 |---|---|---|---|---|
-| **Marin County permits (Socrata)** | 49K building permits | High | Free SODA API, no auth | `data.marincounty.gov` datasets: `nits-hbvx`, `mkbn-caye` |
 | **Form 700 (FPPC)** | Officeholder economic interests | High | `form700search.fppc.ca.gov` (all 87200 filers since Jan 2025) | AB 1170 mandates e-filing |
 | **Form 700 (NetFile local)** | Broader staff disclosures | High | 9 cities have portals: `public.netfile.com/pub/?aid={CITY}` | City codes: cmar, raf, NVO, SAU, tib, ctm, LARK, SMO, ROSS |
 | **eTRAKiT permits** (4 cities) | City-level permits | Medium | Sausalito, Tiburon, San Anselmo, Larkspur — same ASP.NET scraping | One adapter covers all 4 |
@@ -94,5 +94,5 @@ Run via `python scripts/ingest.py --source {source_id} --registry registry/netfi
 
 - Instance: `<INSTANCE-ID>.databases.neo4j.io` (paid)
 - Credentials: `~/Desktop/Neo4j-<INSTANCE-ID>-Created-2026-04-14.txt`
-- Current state: ~42K nodes / ~67K edges
+- Current state: ~43K nodes / ~68K edges (includes 1K permit sample loaded 2026-04-14)
 - Schema: `registry/neo4j-schema.cypher` (22 constraints, full-text index, 12 property indexes)
