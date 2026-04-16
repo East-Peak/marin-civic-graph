@@ -1,0 +1,851 @@
+{"source_id": "case-cl-69053064", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-69053064", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-69053064", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67631894", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67631894", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67631894", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67689404", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67689404", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67689404", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67650450", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67650450", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67650450", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63197526", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-63197526", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-63197526", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63209114", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-63209114", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-63209114", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5982591", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5982591", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5982591", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5937724", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5937724", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5937724", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-61624868", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-61624868", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-61624868", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5866359", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5866359", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5866359", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5891434", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5891434", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5891434", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5848857", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5848857", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5848857", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5764778", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5764778", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5764778", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5779276", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5779276", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5779276", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5719100", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5719100", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5719100", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5777584", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5777584", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5777584", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-64892671", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68861196", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-65662954", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-65662954", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-65662954", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-11254944", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-11254944", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-11254944", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-24597516", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-24597516", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-24597516", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5978013", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-32467796", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-32467796", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-32467796", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-30704485", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-30704485", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-30704485", "target_id": "org-court-canb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4163506", "target_id": "org-court-canb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68268920", "target_id": "org-court-flmb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-9844391", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-9844391", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-9844391", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67483011", "target_id": "org-court-idd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4215176", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4403249", "target_id": "org-court-vaeb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-72222751", "target_id": "org-court-canb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68254119", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5921539", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5921539", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5921539", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69225482", "target_id": "org-court-casd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-65359787", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-65359787", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-65359787", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67897445", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69797779", "target_id": "org-court-ohsd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-66978228", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-64353859", "target_id": "org-court-idd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69630905", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-71865156", "target_id": "org-court-mad", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-70379268", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-70495566", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67738572", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68699083", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-68699083", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-68699083", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-9060406", "target_id": "org-city-of-san-rafael", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-9060406", "target_id": "place-san-rafael", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-9060406", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-66672958", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-61534234", "target_id": "org-court-idd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68866888", "target_id": "org-court-azd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-60058529", "target_id": "org-city-of-novato", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-60058529", "target_id": "place-novato", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-60058529", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5979438", "target_id": "org-city-of-novato", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5979438", "target_id": "place-novato", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5979438", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5978229", "target_id": "org-city-of-novato", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5978229", "target_id": "place-novato", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5978229", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4182815", "target_id": "org-city-of-novato", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-4182815", "target_id": "place-novato", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-4182815", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5930734", "target_id": "org-city-of-novato", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5930734", "target_id": "place-novato", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5930734", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4168786", "target_id": "org-city-of-novato", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-4168786", "target_id": "place-novato", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-4168786", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-64350163", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-64350163", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-64350163", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17383156", "target_id": "org-court-canb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-7344675", "target_id": "org-city-of-novato", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-7344675", "target_id": "place-novato", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-7344675", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-11835743", "target_id": "org-city-of-novato", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-11835743", "target_id": "place-novato", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-11835743", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5938647", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5943800", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5943800", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5943800", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-9844821", "target_id": "org-city-of-novato", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-9844821", "target_id": "place-novato", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-9844821", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-9844404", "target_id": "org-city-of-novato", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-9844404", "target_id": "place-novato", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-9844404", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-9457382", "target_id": "org-city-of-novato", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-9457382", "target_id": "place-novato", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-9457382", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-9458933", "target_id": "org-city-of-novato", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-9458933", "target_id": "place-novato", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-9458933", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-9587123", "target_id": "org-city-of-novato", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-9587123", "target_id": "place-novato", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-9587123", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-70147717", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63413728", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69704676", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-18196241", "target_id": "org-court-txwd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69423651", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-16220833", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67660489", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-62622637", "target_id": "org-court-gamd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-10640212", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-60014710", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-60415439", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67639357", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-6292882", "target_id": "org-court-canb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68405412", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17319653", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-6114380", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17301670", "target_id": "org-court-ord", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-16041529", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63381808", "target_id": "org-court-hid", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-16958449", "target_id": "org-court-azd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63375375", "target_id": "org-court-cacb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63579426", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-18486873", "target_id": "org-court-uscfc", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4551537", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5982371", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4565235", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4182872", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63214304", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-6069992", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-72005408", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-72005408", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-72005408", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4181606", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-71903604", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-71903604", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-71903604", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63294110", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-63294110", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-63294110", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63202709", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-63202709", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-63202709", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-64900941", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-64900941", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-64900941", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-62999931", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-62999931", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-62999931", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63178592", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-63178592", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-63178592", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-64893034", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-64893034", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-64893034", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63344032", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-63344032", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-63344032", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63178203", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-63178203", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-63178203", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63209001", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-63209001", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-63209001", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63002273", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-63002273", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-63002273", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-14599526", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-14599526", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-14599526", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17112591", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-17112591", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-17112591", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8475997", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-8475997", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-8475997", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-59295217", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-59295217", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-59295217", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5962316", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5962316", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5962316", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5778647", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5778647", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5778647", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4170670", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-4170670", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-4170670", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5737793", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5737793", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5737793", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4173104", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-4173104", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-4173104", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69405676", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63247246", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63196803", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67091515", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63251724", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-11835169", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-11835169", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-11835169", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-6558432", "target_id": "org-court-canb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-7575627", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-7575627", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-7575627", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-93525", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-93525", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-93525", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68915393", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-72309378", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-11649283", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-11649283", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-11649283", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-10430366", "target_id": "org-city-of-sausalito", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-10430366", "target_id": "place-sausalito", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-10430366", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63101767", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69925704", "target_id": "org-court-ord", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69609277", "target_id": "org-court-idd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63399615", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69594402", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67830691", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68181217", "target_id": "org-court-mssd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69608613", "target_id": "org-court-dcd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68151593", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17350418", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-61572292", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-59960231", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67988040", "target_id": "org-court-akd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68855201", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-14654860", "target_id": "org-city-of-mill-valley", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-14654860", "target_id": "place-mill-valley", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-14654860", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5933914", "target_id": "org-city-of-mill-valley", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5933914", "target_id": "place-mill-valley", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5933914", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-65598127", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5966394", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-11835444", "target_id": "org-city-of-mill-valley", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-11835444", "target_id": "place-mill-valley", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-11835444", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5947217", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5947217", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5947217", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5742033", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-9456781", "target_id": "org-city-of-mill-valley", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-9456781", "target_id": "place-mill-valley", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-9456781", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-65264461", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63314835", "target_id": "org-court-canb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69215182", "target_id": "org-court-nysd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68868668", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-327360", "target_id": "org-court-canb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4170827", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4178308", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-70147736", "target_id": "org-court-njb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-39139333", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69635268", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4318761", "target_id": "org-court-nyed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-61654321", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4167616", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4172409", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67015223", "target_id": "org-court-cadc", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4167089", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4175698", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-16507716", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5929181", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5946739", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4163417", "target_id": "org-court-canb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4172708", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-16950209", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4172549", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67405729", "target_id": "org-court-nysd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4547665", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-66627045", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-72255193", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67772913", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67584878", "target_id": "org-court-cadc", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4215196", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4327459", "target_id": "org-court-nysb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8026527", "target_id": "org-court-nysb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17131648", "target_id": "org-court-ded", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-70968537", "target_id": "org-town-of-fairfax", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-70968537", "target_id": "place-fairfax", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-70968537", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69621762", "target_id": "org-town-of-fairfax", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-69621762", "target_id": "place-fairfax", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-69621762", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68230963", "target_id": "org-court-scd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8502240", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68129899", "target_id": "org-court-scd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8502801", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8502243", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-12019981", "target_id": "org-town-of-fairfax", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-12019981", "target_id": "place-fairfax", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-12019981", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8502420", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8441061", "target_id": "org-court-ca10", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8502284", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8502261", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8502401", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8149292", "target_id": "org-court-ca10", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8502651", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8502236", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8136776", "target_id": "org-court-ca10", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8165226", "target_id": "org-court-ca10", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8165077", "target_id": "org-court-ca10", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8103679", "target_id": "org-court-ca10", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-13365508", "target_id": "org-court-scd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8129175", "target_id": "org-court-ca10", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8447715", "target_id": "org-court-ca10", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-626", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8081336", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-7975192", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8217724", "target_id": "org-court-cadc", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-1092", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-12992", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-1051", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-9535810", "target_id": "org-town-of-fairfax", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-9535810", "target_id": "place-fairfax", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-9535810", "target_id": "org-court-scd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-1017", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8102339", "target_id": "org-court-cadc", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-9845674", "target_id": "org-town-of-fairfax", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-9845674", "target_id": "place-fairfax", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-9845674", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-9233490", "target_id": "org-town-of-fairfax", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-9233490", "target_id": "place-fairfax", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-9233490", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-14851359", "target_id": "org-court-oknb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-15864483", "target_id": "org-court-nceb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-15864470", "target_id": "org-court-nceb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5377431", "target_id": "org-court-scd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-14867536", "target_id": "org-court-flsb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-70655183", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68322020", "target_id": "org-court-scd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-60080660", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-149632", "target_id": "org-court-jpml", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67027132", "target_id": "org-court-vtd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-7203344", "target_id": "org-court-scd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8476131", "target_id": "org-town-of-corte-madera", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-8476131", "target_id": "place-corte-madera", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-8476131", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5723545", "target_id": "org-town-of-corte-madera", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5723545", "target_id": "place-corte-madera", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5723545", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8421050", "target_id": "org-court-cadc", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8404374", "target_id": "org-court-cadc", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-11836804", "target_id": "org-town-of-corte-madera", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-11836804", "target_id": "place-corte-madera", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-11836804", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4175905", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69961059", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-6115648", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4174416", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4170418", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8477848", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5872406", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5083155", "target_id": "org-court-gamd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-16896177", "target_id": "org-court-canb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68348793", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4326883", "target_id": "org-court-nysb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68456662", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69545727", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67709923", "target_id": "org-court-canb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4177054", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-41982782", "target_id": "org-court-njb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8501324", "target_id": "org-court-caeb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4169687", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-71160429", "target_id": "org-court-txsb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4327513", "target_id": "org-court-nysb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69257597", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5750116", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5750116", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5750116", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67346920", "target_id": "org-court-txwd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-9842511", "target_id": "org-town-of-tiburon", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-9842511", "target_id": "place-tiburon", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-9842511", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-9456062", "target_id": "org-town-of-tiburon", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-9456062", "target_id": "place-tiburon", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-9456062", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67409502", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67095103", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-18645649", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-60701183", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5848876", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4167987", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17123915", "target_id": "org-court-vaeb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17123917", "target_id": "org-court-vaeb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69805803", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4168655", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-6830667", "target_id": "org-court-innd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4717575", "target_id": "org-court-cod", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69856593", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-70231713", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67621337", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-14903103", "target_id": "org-court-mad", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4498463", "target_id": "org-court-dcd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5912145", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4556528", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4169591", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5855365", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4168494", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5960355", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63304550", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5964844", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-7391633", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67377046", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5947157", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67182116", "target_id": "org-court-ca5", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4496060", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5993427", "target_id": "org-court-casd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4190449", "target_id": "org-court-casd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17288215", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-62605230", "target_id": "org-court-mnd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4147306", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-60988251", "target_id": "org-court-dcd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-60695157", "target_id": "org-court-dcd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-48321437", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-18702085", "target_id": "org-court-wied", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5694476", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4678061", "target_id": "org-court-hid", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4159272", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4840722", "target_id": "org-court-caeb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4542692", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5701207", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69944278", "target_id": "org-city-of-belvedere", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-69944278", "target_id": "place-belvedere", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-69944278", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63588747", "target_id": "org-city-of-belvedere", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-63588747", "target_id": "place-belvedere", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-63588747", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69043388", "target_id": "org-city-of-belvedere", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-69043388", "target_id": "place-belvedere", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-69043388", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-13007382", "target_id": "org-city-of-belvedere", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-13007382", "target_id": "place-belvedere", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-13007382", "target_id": "org-court-ilnd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-10642373", "target_id": "org-city-of-belvedere", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-10642373", "target_id": "place-belvedere", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-10642373", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-9843218", "target_id": "org-city-of-belvedere", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-9843218", "target_id": "place-belvedere", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-9843218", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-9062666", "target_id": "org-city-of-belvedere", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-9062666", "target_id": "place-belvedere", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-9062666", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-61608908", "target_id": "org-court-ilnd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68041849", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4270925", "target_id": "org-court-laed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-61067509", "target_id": "org-court-ilnd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68052781", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-15994160", "target_id": "org-court-ilnd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-7586507", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5940706", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-15039345", "target_id": "org-court-ilnd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-15951783", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5861575", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-12400616", "target_id": "org-court-ilnd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5943932", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-66729967", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5704114", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5918865", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4925508", "target_id": "org-court-flnd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-15791488", "target_id": "org-court-ilnd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4172258", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4206092", "target_id": "org-court-dcd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67648153", "target_id": "org-city-of-larkspur", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67648153", "target_id": "place-larkspur", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67648153", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5952747", "target_id": "org-city-of-larkspur", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5952747", "target_id": "place-larkspur", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5952747", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-11836003", "target_id": "org-city-of-larkspur", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-11836003", "target_id": "place-larkspur", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-11836003", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5962164", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-6240169", "target_id": "org-court-ohnd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68332077", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69330997", "target_id": "org-court-cod", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4182643", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67249230", "target_id": "org-court-njb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5880280", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4171123", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17248433", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4210767", "target_id": "org-court-dcd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68236308", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17248449", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17248451", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17248453", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17248454", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17248458", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17248448", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17248450", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17248457", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17248455", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-7987825", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4409569", "target_id": "org-court-wawb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-65650108", "target_id": "org-court-nysd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68406966", "target_id": "org-court-txsb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69339462", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69339447", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4327483", "target_id": "org-court-nysb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17248452", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-6116198", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5901065", "target_id": "org-town-of-san-anselmo", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5901065", "target_id": "place-san-anselmo", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5901065", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-7987465", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5942804", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-16475739", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-6382748", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-6674078", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4495149", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-6457461", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4173060", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4152672", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4180761", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-6026185", "target_id": "org-court-casd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-17188186", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4182429", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68961904", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4145869", "target_id": "org-court-cacd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4165528", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4159579", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-4215626", "target_id": "org-court-deb", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-72324335", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-72324335", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-72324335", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-70284175", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-70284175", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-70284175", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-71143883", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-71143883", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-71143883", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-70065955", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-70065955", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-70065955", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-71066562", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-71066562", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-71066562", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-71157395", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-71157395", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-71157395", "target_id": "org-court-dcd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-71038745", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-71038745", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-71038745", "target_id": "org-court-paed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69577578", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-69577578", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-69577578", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-72098121", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-72098121", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-72098121", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69637017", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-69637017", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-69637017", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69200994", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-69200994", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-69200994", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-71645613", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-71645613", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-71645613", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67112995", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67112995", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67112995", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68032517", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-68032517", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-68032517", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67799151", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67799151", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67799151", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67667770", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67667770", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67667770", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-71175563", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-71175563", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-71175563", "target_id": "org-court-ilnd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67702413", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67702413", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67702413", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-65774493", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-65774493", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-65774493", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-66618552", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-66618552", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-66618552", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63374216", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-63374216", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-63374216", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69925688", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-69925688", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-69925688", "target_id": "org-court-mad", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-60662242", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-60662242", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-60662242", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-60643513", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-60643513", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-60643513", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68432759", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-68432759", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-68432759", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67096089", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67096089", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67096089", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67778015", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67778015", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67778015", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-7662509", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-7662509", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-7662509", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-14607358", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-14607358", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-14607358", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-8511600", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-8511600", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-8511600", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-7620618", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-7620618", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-7620618", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-18204109", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-18204109", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-18204109", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-6294815", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-6294815", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-6294815", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-6120037", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-6120037", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-6120037", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-7298950", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-7298950", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-7298950", "target_id": "org-court-ca9", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5981847", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5981847", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5981847", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-6147577", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-6147577", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-6147577", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5979238", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5979238", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5979238", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-7039471", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-7039471", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-7039471", "target_id": "org-court-ohnd", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-6556398", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-6556398", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-6556398", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5978864", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5978864", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5978864", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5977781", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5977781", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5977781", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5967562", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5967562", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5967562", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5969930", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5969930", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5969930", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5974082", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5974082", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5974082", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-14987501", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-14987501", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-14987501", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-5968932", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-5968932", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-5968932", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69727943", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-69727943", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-69727943", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-66729499", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-66729499", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-66729499", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-65764128", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-65764128", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-65764128", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69236483", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-69236483", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-69236483", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68179497", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-68179497", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-68179497", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-65345439", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-65345439", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-65345439", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-66748005", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-66748005", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-66748005", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68877250", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-68877250", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-68877250", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68036745", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-68036745", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-68036745", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67258220", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67258220", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67258220", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69282749", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-69282749", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-69282749", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68893873", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-68893873", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-68893873", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63284093", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-63284093", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-63284093", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67217603", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67217603", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67217603", "target_id": "org-court-caed", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68187663", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-68187663", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-68187663", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-65652096", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-65652096", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-65652096", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-62601853", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-62601853", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-62601853", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68503510", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-68503510", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-68503510", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-61647669", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-61647669", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-61647669", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68849316", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-68849316", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-68849316", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-62601707", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-62601707", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-62601707", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68347205", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-68347205", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-68347205", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67307080", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67307080", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67307080", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67903672", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67903672", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67903672", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-69142359", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-69142359", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-69142359", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67890066", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67890066", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67890066", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67737374", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67737374", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67737374", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67919544", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67919544", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67919544", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-59851524", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-59851524", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-59851524", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68194355", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-68194355", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-68194355", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-66785284", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-66785284", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-66785284", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-68422209", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-68422209", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-68422209", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67558368", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67558368", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67558368", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67639898", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67639898", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67639898", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-65770710", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-65770710", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-65770710", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67274170", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67274170", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67274170", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67142215", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67142215", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67142215", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67175116", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67175116", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67175116", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-18725927", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-18725927", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-18725927", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-67935590", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-67935590", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-67935590", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-65382160", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-65382160", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-65382160", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-66617251", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-66617251", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-66617251", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-66580808", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-66580808", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-66580808", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-63571575", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-63571575", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-63571575", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
+{"source_id": "case-cl-66684451", "target_id": "org-county-of-marin", "relationship_type": "PARTY_TO", "properties": {"role": "defendant"}}
+{"source_id": "case-cl-66684451", "target_id": "place-marin-county", "relationship_type": "IN_JURISDICTION", "properties": {}}
+{"source_id": "case-cl-66684451", "target_id": "org-court-cand", "relationship_type": "HEARD_IN", "properties": {}}
