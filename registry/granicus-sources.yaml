@@ -30,3 +30,11 @@ sources:
     institution_id: org-tiburon-town-council
     backfill_from: "2019-01-01"
     schedule: weekly
+
+  - id: san-anselmo-town-council
+    adapter: granicus
+    url: https://sananselmo-ca.granicus.com/ViewPublisher.php?view_id=8
+    jurisdiction_id: place-san-anselmo
+    institution_id: org-san-anselmo-town-council
+    backfill_from: "2019-01-01"
+    schedule: weekly
