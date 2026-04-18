@@ -13,6 +13,8 @@ from extract_agenda_items import (
     detect_agenda_format,
     parse_granicus_agenda,
     parse_civicplus_agenda,
+    parse_bos_agenda,
+    parse_fairfax_agenda,
     build_agenda_item_node,
     normalize_agenda_url,
 )
@@ -24,11 +26,11 @@ from extract_agenda_items import (
 
 class TestDetectAgendaFormat:
     def test_granicus_format(self):
-        text = "A. CONVENE\n   G.1. Approve minutes"
+        text = "A. CONVENE\n   G.1. Approve minutes\n   G.2. Accept report"
         assert detect_agenda_format(text) == "granicus"
 
     def test_civicplus_format(self):
-        text = "1. CALL TO ORDER\n   4.A. Approve minutes"
+        text = "1. CALL TO ORDER\n   4.A. Approve minutes\n   4.B. Accept report"
         assert detect_agenda_format(text) == "civicplus"
 
     def test_granicus_full_header(self):
@@ -36,12 +38,86 @@ class TestDetectAgendaFormat:
         assert detect_agenda_format(text) == "granicus"
 
     def test_civicplus_multi_section(self):
-        text = "4. CONSENT CALENDAR\n5. PUBLIC HEARINGS\n   5.A. Zoning variance"
+        text = "4. CONSENT CALENDAR\n5. PUBLIC HEARINGS\n   5.A. Zoning variance\n   5.B. Use permit"
         assert detect_agenda_format(text) == "civicplus"
 
     def test_unknown_returns_none(self):
         text = "Meeting agenda\nNo discernible structure here."
         assert detect_agenda_format(text) is None
+
+    def test_sausalito_civicplus_not_fairfax(self):
+        """Sausalito uses CivicPlus format — must NOT be detected as fairfax."""
+        text = (
+            "1. CALL TO ORDER\n"
+            "2. ROLL CALL\n"
+            "3. CONSENT CALENDAR\n"
+            "   3.A Approve the minutes of February 11, 2025\n"
+            "   3.B Accept the Treasurer's monthly report\n"
+            "   3.C Ratify purchase orders\n"
+            "4. PUBLIC HEARINGS\n"
+            "   4.A Proposed amendment to zoning ordinance\n"
+            "5. ADJOURNMENT\n"
+        )
+        fmt = detect_agenda_format(text)
+        assert fmt != "fairfax", f"Sausalito should not detect as fairfax, got {fmt}"
+        assert fmt == "civicplus"
+
+    def test_bos_not_fairfax(self):
+        """BOS uses CA-N format — must NOT be detected as fairfax."""
+        text = (
+            "Consent Agenda A\n"
+            "CA - 1. Director of Public Works requests approval\n"
+            "CA - 2. County Counsel reports on litigation\n"
+            "CA - 3. County Administrator recommends adoption\n"
+            "CA - 4. Auditor-Controller submits quarterly report\n"
+            "Public Hearing\n"
+            "Request to approve variance for 123 Main St\n"
+        )
+        fmt = detect_agenda_format(text)
+        assert fmt != "fairfax", f"BOS should not detect as fairfax, got {fmt}"
+        assert fmt == "bos"
+
+    def test_fairfax_simple_numbered(self):
+        """Fairfax uses simple numbered items with section keywords."""
+        text = (
+            "CONSENT CALENDAR\n"
+            "3. Approve the minutes of March 5, 2025\n"
+            "4. Accept financial report for February 2025\n"
+            "5. Ratify purchase orders\n"
+            "PUBLIC HEARING\n"
+            "6. Zoning amendment for downtown overlay district\n"
+            "7. Use permit application for 123 Main Street\n"
+            "ADJOURNMENT\n"
+        )
+        fmt = detect_agenda_format(text)
+        assert fmt == "fairfax"
+
+    def test_civicplus_items_beat_fairfax(self):
+        """When text has N.LETTER sub-items, civicplus wins over fairfax."""
+        text = (
+            "1. CALL TO ORDER\n"
+            "2. CONSENT CALENDAR\n"
+            "   2.A Approve the minutes\n"
+            "   2.B Accept report\n"
+            "3. PUBLIC HEARING\n"
+            "   3.A Zoning variance request\n"
+            "4. ADJOURNMENT\n"
+        )
+        assert detect_agenda_format(text) == "civicplus"
+
+    def test_granicus_items_beat_fairfax(self):
+        """When text has LETTER.N sub-items, granicus wins over fairfax."""
+        text = (
+            "A. CONVENE\n"
+            "G. CONSENT CALENDAR\n"
+            "   G.1.   Approve minutes\n"
+            "   G.2.   Accept report\n"
+            "   G.3.   Ratify contracts\n"
+            "I. PUBLIC HEARINGS\n"
+            "   I.1.   Zoning variance\n"
+            "ADJOURNMENT\n"
+        )
+        assert detect_agenda_format(text) == "granicus"
 
 
 # ---------------------------------------------------------------------------

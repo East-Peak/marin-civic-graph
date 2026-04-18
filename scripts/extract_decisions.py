@@ -601,14 +601,20 @@ def fetch_meetings_needing_decisions(
     driver,
     source_id: Optional[str],
     limit: int,
+    reprocess: bool = False,
 ) -> list[dict]:
-    """Return meetings that have minutes URLs but no linked Decision nodes."""
+    """Return meetings that have minutes URLs but no linked Decision nodes.
+
+    When reprocess=True, also return meetings that already have Decision nodes
+    so they can be re-extracted with improved parsers.
+    """
     source_filter = "AND r.source_id = $source_id" if source_id else ""
+    skip_clause = "" if reprocess else "AND NOT exists { (m)<-[:DECIDED_AT]-(:Decision) }"
     query = f"""
         MATCH (m:Meeting)-[:EVIDENCED_BY]->(r:Record)
         WHERE r.record_type IN ['meeting_minutes', 'meeting_minutes_pdf']
         {source_filter}
-        AND NOT exists {{ (m)<-[:DECIDED_AT]-(:Decision) }}
+        {skip_clause}
         RETURN m.id AS meeting_id,
                r.source_id AS source_id,
                r.source_url AS minutes_url,
@@ -623,6 +629,23 @@ def fetch_meetings_needing_decisions(
     with driver.session() as session:
         result = session.run(query, params)
         return [dict(row) for row in result]
+
+
+def delete_existing_decisions(driver, meeting_id: str) -> int:
+    """Delete existing Decision nodes and their edges for a meeting.
+
+    Returns the number of deleted Decision nodes.
+    """
+    query = """
+        MATCH (d:Decision)-[:DECIDED_AT]->(m:Meeting {id: $meeting_id})
+        OPTIONAL MATCH (d)<-[v:CAST_VOTE]-()
+        DELETE v, d
+        RETURN count(d) AS deleted
+    """
+    with driver.session() as session:
+        result = session.run(query, {"meeting_id": meeting_id})
+        record = result.single()
+        return record["deleted"] if record else 0
 
 
 def fetch_persons_for_source(driver, source_id: str) -> dict[str, str]:
@@ -684,19 +707,32 @@ def write_decisions(driver, nodes: list[dict], meeting_id: str, person_map: dict
 
     # Create CAST_VOTE edges to Person nodes
     vote_edges: list[dict] = []
+    unmatched_names: set[str] = set()
     for node in nodes:
         for name in node["properties"].get("ayes", []):
             pid = person_map.get(name)
             if pid:
                 vote_edges.append({"decision_id": node["id"], "person_id": pid, "vote": "aye"})
+            elif name and name != "ALL":
+                unmatched_names.add(name)
         for name in node["properties"].get("noes", []):
             pid = person_map.get(name)
             if pid:
                 vote_edges.append({"decision_id": node["id"], "person_id": pid, "vote": "no"})
+            elif name and name != "NONE":
+                unmatched_names.add(name)
         for name in node["properties"].get("recused", []):
             pid = person_map.get(name)
             if pid:
                 vote_edges.append({"decision_id": node["id"], "person_id": pid, "vote": "recused"})
+            elif name:
+                unmatched_names.add(name)
+
+    if unmatched_names:
+        log.warning(
+            "Unmatched voter names for %s: %s",
+            meeting_id, sorted(unmatched_names),
+        )
 
     if vote_edges:
         edge_query = """
@@ -721,6 +757,7 @@ def process_meeting(
     driver,
     data_root: Path,
     person_map: Optional[dict[str, str]] = None,
+    reprocess: bool = False,
 ) -> dict:
     """Download, parse, and optionally write one meeting's decisions."""
     meeting_id = meeting["meeting_id"]
@@ -807,6 +844,10 @@ def process_meeting(
         if ordinance_nums:
             print(f"  Ordinances:  {', '.join(ordinance_nums)}")
     else:
+        if reprocess:
+            deleted = delete_existing_decisions(driver, meeting_id)
+            if deleted:
+                log.info("Reprocess: deleted %d existing decisions for %s", deleted, meeting_id)
         pm = person_map or {}
         write_decisions(driver, nodes, meeting_id, pm)
 
@@ -833,6 +874,8 @@ def parse_args(argv=None):
     parser.add_argument("--limit", type=int, default=10, help="Max meetings to process")
     parser.add_argument("--dry-run", action="store_true", help="Parse but do not write to Neo4j")
     parser.add_argument("--load", action="store_true", help="Write parsed decisions to Neo4j")
+    parser.add_argument("--reprocess", action="store_true",
+                        help="Re-extract decisions for meetings that already have them")
     return parser.parse_args(argv)
 
 
@@ -853,11 +896,11 @@ def main(argv=None):
     dry_run = args.dry_run or not args.load
 
     log.info(
-        "Fetching meetings needing decision extraction (source=%s, limit=%d, dry_run=%s)",
-        source_id or "ALL", args.limit, dry_run,
+        "Fetching meetings needing decision extraction (source=%s, limit=%d, dry_run=%s, reprocess=%s)",
+        source_id or "ALL", args.limit, dry_run, args.reprocess,
     )
 
-    meetings = fetch_meetings_needing_decisions(driver, source_id, args.limit)
+    meetings = fetch_meetings_needing_decisions(driver, source_id, args.limit, reprocess=args.reprocess)
     log.info("Found %d meetings to process", len(meetings))
 
     # Pre-fetch person map for CAST_VOTE edge resolution
@@ -894,6 +937,7 @@ def main(argv=None):
             driver=driver,
             data_root=ROOT,
             person_map=meeting_person_map,
+            reprocess=args.reprocess,
         )
         results.append(result)
         if not dry_run:
@@ -902,12 +946,18 @@ def main(argv=None):
     driver.close()
 
     ok = sum(1 for r in results if r["status"] == "ok")
+    no_votes = sum(1 for r in results if r["status"] == "no_votes_found")
     total_decisions = sum(r.get("decisions", 0) for r in results)
     errors = [r for r in results if r["status"] not in ("ok", "no_votes_found")]
     log.info(
-        "Done: %d/%d meetings processed, %d decisions extracted",
-        ok, len(results), total_decisions,
+        "Done: %d/%d meetings processed, %d decisions extracted, %d with no votes found",
+        ok, len(results), total_decisions, no_votes,
     )
+    if no_votes:
+        log.warning(
+            "%d meetings had minutes but zero votes parsed — may need parser improvements",
+            no_votes,
+        )
     if errors:
         log.warning("Meetings with errors: %s", [r["meeting_id"] for r in errors])
 

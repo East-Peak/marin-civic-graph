@@ -85,6 +85,51 @@ def build_edge_batch_query(relationship_type: str) -> str:
     ])
 
 
+def validate_edge_endpoints(
+    node_ids: set[str],
+    edges: list[dict],
+) -> dict:
+    """Check that all edge source/target IDs exist in the node set.
+
+    Returns a summary dict with:
+        missing_sources: list of edges with missing source nodes
+        missing_targets: list of edges with missing target nodes
+        by_relationship: broken edge counts keyed by relationship_type
+        total_broken: count of edges with at least one missing endpoint
+    """
+    missing_sources: list[dict] = []
+    missing_targets: list[dict] = []
+    by_rel: dict[str, int] = {}
+    broken_count = 0
+
+    for edge in edges:
+        src_missing = edge["source_id"] not in node_ids
+        tgt_missing = edge["target_id"] not in node_ids
+        if src_missing:
+            missing_sources.append({
+                "source_id": edge["source_id"],
+                "target_id": edge["target_id"],
+                "relationship_type": edge["relationship_type"],
+            })
+        if tgt_missing:
+            missing_targets.append({
+                "source_id": edge["source_id"],
+                "target_id": edge["target_id"],
+                "relationship_type": edge["relationship_type"],
+            })
+        if src_missing or tgt_missing:
+            broken_count += 1
+            rel = edge["relationship_type"]
+            by_rel[rel] = by_rel.get(rel, 0) + 1
+
+    return {
+        "missing_sources": missing_sources,
+        "missing_targets": missing_targets,
+        "by_relationship": by_rel,
+        "total_broken": broken_count,
+    }
+
+
 # ---------------------------------------------------------------------------
 # Neo4j I/O functions (require a live driver)
 # ---------------------------------------------------------------------------

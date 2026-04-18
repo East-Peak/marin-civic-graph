@@ -326,10 +326,17 @@ class TestPersonIdFromName:
 
     def test_id_prefix(self):
         pid = self.fn("Colin, Kate")
-        assert pid.startswith("person-")
+        assert pid.startswith("person-f700-"), (
+            f"Form 700 person IDs must use 'f700' namespace: {pid}"
+        )
 
     def test_id_is_lowercase_slug(self):
         pid = self.fn("Colin, Kate")
         assert pid == pid.lower()
         assert " " not in pid
         assert "," not in pid
+
+    def test_no_collision_with_campaign_finance(self):
+        """Form 700 person IDs must not collide with campaign finance person IDs."""
+        pid = self.fn("Smith, John")
+        assert "f700" in pid, f"Form 700 person ID must be namespaced: {pid}"

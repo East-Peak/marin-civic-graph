@@ -161,10 +161,15 @@ def find_person_match(candidate_name: str, person_lookup: dict[str, str]) -> str
         if pname.lower() == name_lower:
             return pid
 
-    # 2. Slug match
+    # 2. Slug match — try canonical IDs first, then pipeline-namespaced
     for slug in _candidate_slugs(candidate_name):
         if slug in person_lookup:
             return slug
+    for prefix in ("cf", "f700"):
+        for slug in _candidate_slugs(candidate_name):
+            prefixed = slug.replace("person-", f"person-{prefix}-", 1)
+            if prefixed in person_lookup:
+                return prefixed
 
     # 3. Last-name-only fallback (single word, or last token of a multi-word name)
     parts = candidate_name.strip().split()

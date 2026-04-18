@@ -151,7 +151,7 @@ def build_moneyflow_node(
     source_schedule: str,
     capture_id: str,
 ) -> dict:
-    node_id = f"moneyflow-{filer_id}-{tran_id}"
+    node_id = f"moneyflow-{filer_id}-{source_schedule.lower()}-{tran_id}"
     props: dict = {
         "amount": amount,
         "flow_type": flow_type,
@@ -194,7 +194,8 @@ def build_contributor_node(
         )
     else:
         # IND (individual) and anything else → Person
-        node_id = f"person-{slug}"
+        # Namespaced to prevent cross-pipeline collision with Form 700, officeholder seeds, etc.
+        node_id = f"person-cf-{slug}"
         parts = [p for p in [name_first, name_last] if p and p.strip()]
         display = " ".join(parts) if parts else slug
         return _node(
@@ -347,6 +348,24 @@ def normalize_campaign_source(
         year = zip_path.stem  # e.g. "2024"
         record_id = f"record-{source_id}-export-{year}"
 
+        # Record node for this yearly export (evidence chain target)
+        record_node = _node(
+            id=record_id,
+            node_type="Record",
+            labels=["Record"],
+            display_label=f"{source_id} export {year}",
+            properties={
+                "name": f"{source_id} export {year}",
+                "record_type": "campaign_finance_export",
+                "year": year,
+                "source_file": zip_path.name,
+            },
+            capture_id=capture_id,
+            section="export_records",
+            status="from_netfile_zip",
+        )
+        nodes.append(record_node)
+
         # --- Contributions ---
         try:
             contrib_rows = parse_contributions(zip_path)
@@ -474,6 +493,30 @@ def normalize_campaign_source(
     for contributor_node in contributors.values():
         nodes.append(contributor_node)
 
+    # Validate referential integrity before writing
+    node_ids = {n["id"] for n in nodes}
+    broken_edges = [
+        e for e in edges
+        if e["source_id"] not in node_ids or e["target_id"] not in node_ids
+    ]
+    if broken_edges:
+        by_rel: dict[str, int] = {}
+        for e in broken_edges:
+            by_rel[e["relationship_type"]] = by_rel.get(e["relationship_type"], 0) + 1
+        print(f"  WARNING: {len(broken_edges)} edges reference missing nodes:", file=sys.stderr)
+        for rel, count in by_rel.items():
+            print(f"    {rel}: {count} broken", file=sys.stderr)
+
+    # Check for duplicate node IDs
+    seen_ids: dict[str, int] = {}
+    for n in nodes:
+        seen_ids[n["id"]] = seen_ids.get(n["id"], 0) + 1
+    duplicate_ids = {nid: count for nid, count in seen_ids.items() if count > 1}
+    if duplicate_ids:
+        print(f"  WARNING: {len(duplicate_ids)} duplicate node IDs:", file=sys.stderr)
+        for nid, count in list(duplicate_ids.items())[:10]:
+            print(f"    {nid}: {count}x", file=sys.stderr)
+
     # Write JSONL
     with open(output_dir / "nodes.jsonl", "w") as f:
         for node in nodes:
@@ -491,6 +534,8 @@ def normalize_campaign_source(
         "committee_count": len(committees),
         "contributor_count": len(contributors),
         "moneyflow_count": moneyflow_count,
+        "broken_edge_count": len(broken_edges),
+        "duplicate_id_count": len(duplicate_ids),
     }
     with open(output_dir / "normalization-report.json", "w") as f:
         json.dump(report, indent=2, fp=f)

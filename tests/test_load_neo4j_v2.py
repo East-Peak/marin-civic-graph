@@ -17,6 +17,7 @@ from load_neo4j_v2 import (
     build_edge_batch_query,
     build_node_batch_query,
     chunk_list,
+    validate_edge_endpoints,
 )
 
 
@@ -138,3 +139,71 @@ class TestBuildEdgeBatchQuery:
         assert "MERGE (s)-[r:DECIDED_BY]->(t)" in query
         assert "MATCH (s {id: row.source_id})" in query
         assert "MATCH (t {id: row.target_id})" in query
+
+
+class TestValidateEdgeEndpoints:
+    """validate_edge_endpoints detects edges pointing to missing nodes."""
+
+    def test_all_valid_returns_empty(self):
+        node_ids = {"node-1", "node-2", "node-3"}
+        edges = [
+            {"source_id": "node-1", "target_id": "node-2", "relationship_type": "LINKS"},
+            {"source_id": "node-2", "target_id": "node-3", "relationship_type": "LINKS"},
+        ]
+        result = validate_edge_endpoints(node_ids, edges)
+        assert result["missing_sources"] == []
+        assert result["missing_targets"] == []
+        assert result["total_broken"] == 0
+
+    def test_detects_missing_source(self):
+        node_ids = {"node-1", "node-2"}
+        edges = [
+            {"source_id": "node-gone", "target_id": "node-2", "relationship_type": "LINKS"},
+        ]
+        result = validate_edge_endpoints(node_ids, edges)
+        assert len(result["missing_sources"]) == 1
+        assert result["missing_sources"][0]["source_id"] == "node-gone"
+        assert result["total_broken"] == 1
+
+    def test_detects_missing_target(self):
+        node_ids = {"node-1", "node-2"}
+        edges = [
+            {"source_id": "node-1", "target_id": "node-gone", "relationship_type": "LINKS"},
+        ]
+        result = validate_edge_endpoints(node_ids, edges)
+        assert len(result["missing_targets"]) == 1
+        assert result["missing_targets"][0]["target_id"] == "node-gone"
+
+    def test_both_endpoints_missing(self):
+        node_ids = {"node-1"}
+        edges = [
+            {"source_id": "gone-a", "target_id": "gone-b", "relationship_type": "LINKS"},
+        ]
+        result = validate_edge_endpoints(node_ids, edges)
+        assert len(result["missing_sources"]) == 1
+        assert len(result["missing_targets"]) == 1
+        assert result["total_broken"] == 1
+
+    def test_groups_by_relationship_type(self):
+        node_ids = {"node-1"}
+        edges = [
+            {"source_id": "node-1", "target_id": "gone-a", "relationship_type": "EVIDENCED_BY"},
+            {"source_id": "node-1", "target_id": "gone-b", "relationship_type": "EVIDENCED_BY"},
+            {"source_id": "gone-c", "target_id": "node-1", "relationship_type": "FROM_SOURCE"},
+        ]
+        result = validate_edge_endpoints(node_ids, edges)
+        assert result["total_broken"] == 3
+        assert "EVIDENCED_BY" in result["by_relationship"]
+        assert result["by_relationship"]["EVIDENCED_BY"] == 2
+        assert result["by_relationship"]["FROM_SOURCE"] == 1
+
+    def test_empty_edges(self):
+        result = validate_edge_endpoints({"node-1"}, [])
+        assert result["total_broken"] == 0
+
+    def test_empty_nodes(self):
+        edges = [
+            {"source_id": "a", "target_id": "b", "relationship_type": "X"},
+        ]
+        result = validate_edge_endpoints(set(), edges)
+        assert result["total_broken"] == 1

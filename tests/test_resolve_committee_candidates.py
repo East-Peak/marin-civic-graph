@@ -99,3 +99,21 @@ class TestFindPersonMatch:
     def test_case_insensitive_name_match(self):
         persons = {"person-colin-kate": "Kate Colin"}
         assert find_person_match("kate colin", persons) == "person-colin-kate"
+
+    def test_finds_cf_prefixed_person(self):
+        """Resolver must find campaign-finance-namespaced person IDs."""
+        persons = {"person-cf-kertz-rachel": "Rachel Kertz"}
+        assert find_person_match("Rachel Kertz", persons) == "person-cf-kertz-rachel"
+
+    def test_finds_f700_prefixed_person(self):
+        """Resolver must find Form 700-namespaced person IDs."""
+        persons = {"person-f700-kate-colin": "Kate Colin"}
+        assert find_person_match("Kate Colin", persons) == "person-f700-kate-colin"
+
+    def test_prefers_canonical_over_prefixed(self):
+        """Canonical person-{slug} should be preferred over namespaced variants."""
+        persons = {
+            "person-kate-colin": "Kate Colin",
+            "person-cf-colin-kate": "Kate Colin",
+        }
+        assert find_person_match("Kate Colin", persons) == "person-kate-colin"

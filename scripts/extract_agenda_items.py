@@ -62,41 +62,59 @@ _TIBURON_ITEM_RE = re.compile(r"(?:CC|AI|PH)-(\d+)\.", re.MULTILINE)
 
 
 def detect_agenda_format(text: str) -> Optional[str]:
-    """Return 'granicus', 'civicplus', 'bos', 'tiburon', or None."""
-    # Tiburon uses CC-N. / AI-N. / PH-N. pattern
+    """Return 'granicus', 'civicplus', 'bos', 'tiburon', 'fairfax', or None.
+
+    Detection order (most specific → least specific):
+      1. Tiburon — CC-N/AI-N/PH-N patterns
+      2. BOS — CA-N consent agenda items
+      3. CivicPlus — N.LETTER sub-items (3.A, 4.B)
+      4. Granicus — LETTER.N sub-items (G.1, I.2)
+      5. CivicPlus/Granicus section headers (weaker signal)
+      6. Fairfax — simple numbered items (only if no sub-items found)
+    """
+    # 1. Tiburon: CC-N. / AI-N. / PH-N. (most specific prefix pattern)
     tiburon_hits = len(_TIBURON_ITEM_RE.findall(text))
     if tiburon_hits >= 2:
         return "tiburon"
 
-    # BOS uses "CA - N." pattern (Consent Agenda items)
+    # 2. BOS: "CA - N." consent agenda items
     bos_hits = len(_BOS_ITEM_RE.findall(text))
     if bos_hits >= 3:
         return "bos"
 
-    granicus_hits = len(_GRANICUS_SECTION_RE.findall(text))
-    civicplus_hits = len(_CIVICPLUS_SECTION_RE.findall(text))
-
-    # Fairfax/ProudCity/general: simple numbered items (1. Description) with section keywords
-    fairfax_items = len(re.findall(r"^\s*(\d+)\.\s+(?!CALL|CONSENT|PUBLIC|BUSINESS|REPORT|CLOSED|ADJOURN)[A-Z]", text, re.MULTILINE))
-    if fairfax_items >= 1 and bos_hits == 0 and tiburon_hits == 0:
-        has_sections = bool(re.search(r"CONSENT CALENDAR|PUBLIC HEARING|APPROVAL OF|ADJOURN", text, re.I))
-        if has_sections:
-            return "fairfax"
-
-    # Check for actual item patterns to disambiguate
-    # CivicPlus items: "N.LETTER" like "3.A Approve..."
-    civicplus_item_hits = len(re.findall(r"^\s+(\d+)\.([A-Z])\s+", text, re.MULTILINE))
-    # Granicus items: "LETTER.N" like "G.1. Approve..."
+    # 3-4. Sub-item patterns (strongest format signal for CivicPlus vs Granicus)
+    # CivicPlus: "N.LETTER[.]" like "3.A Approve..." or "4.B. Accept..."
+    civicplus_item_hits = len(re.findall(r"^\s+(\d+)\.([A-Z])\.?\s+", text, re.MULTILINE))
+    # Granicus: "LETTER.N." like "G.1. Approve..."
     granicus_item_hits = len(re.findall(r"^\s+([A-Z])\.(\d+)\.\s+", text, re.MULTILINE))
 
-    if civicplus_item_hits > granicus_item_hits:
+    if civicplus_item_hits > granicus_item_hits and civicplus_item_hits >= 2:
         return "civicplus"
-    if granicus_item_hits > 0:
+    if granicus_item_hits >= 2:
         return "granicus"
-    if civicplus_hits > 0:
+
+    # 5. Section-header-only detection (weaker signal, needs higher threshold)
+    # Use all-caps requirement to avoid matching mixed-case lines like "3. Approve..."
+    granicus_section_hits = len(re.findall(r"^\s*[A-Z]\.\s+[A-Z][A-Z]", text, re.MULTILINE))
+    civicplus_section_hits = len(re.findall(r"^\s*\d+\.\s+[A-Z][A-Z\s/&]{3,}", text, re.MULTILINE))
+
+    if civicplus_section_hits > granicus_section_hits and civicplus_section_hits >= 3:
         return "civicplus"
-    if granicus_hits > 0:
+    if granicus_section_hits >= 3:
         return "granicus"
+
+    # 6. Fairfax fallback: simple numbered items with section keywords.
+    # Only match if NO sub-item patterns were found (otherwise it's civicplus/granicus
+    # with items we couldn't parse, not fairfax).
+    if civicplus_item_hits == 0 and granicus_item_hits == 0:
+        fairfax_items = len(re.findall(r"^\s*(\d+)\.\s+[A-Z]", text, re.MULTILINE))
+        if fairfax_items >= 3:
+            has_sections = bool(re.search(
+                r"CONSENT CALENDAR|PUBLIC HEARING|APPROVAL OF|ADJOURN", text, re.I
+            ))
+            if has_sections:
+                return "fairfax"
+
     return None
 
 
@@ -493,15 +511,21 @@ def fetch_meetings_needing_items(
     driver,
     source_id: Optional[str],
     limit: int,
+    reprocess: bool = False,
 ) -> list[dict]:
-    """Return meetings that have agenda URLs but no AgendaItem nodes yet."""
+    """Return meetings that have agenda URLs but no AgendaItem nodes yet.
+
+    When reprocess=True, also return meetings that already have AgendaItem nodes
+    so they can be re-extracted with improved parsers.
+    """
     source_filter = "AND r.source_id = $source_id" if source_id else ""
+    skip_clause = "" if reprocess else "AND NOT exists { (m)<-[:PART_OF_MEETING]-(:AgendaItem) }"
     query = f"""
         MATCH (m:Meeting)-[:EVIDENCED_BY]->(r:Record)
-        WHERE r.record_type IN ['meeting_agenda', 'meeting_packet']
+        WHERE r.record_type IN ['meeting_agenda']
         {source_filter}
-        AND NOT exists {{ (m)<-[:PART_OF_MEETING]-(:AgendaItem) }}
-        RETURN m.id AS meeting_id,
+        {skip_clause}
+        RETURN DISTINCT m.id AS meeting_id,
                r.source_id AS source_id,
                r.source_url AS agenda_url,
                m.meeting_date AS meeting_date
@@ -515,6 +539,22 @@ def fetch_meetings_needing_items(
     with driver.session() as session:
         result = session.run(query, params)
         return [dict(row) for row in result]
+
+
+def delete_existing_agenda_items(driver, meeting_id: str) -> int:
+    """Delete existing AgendaItem nodes and their edges for a meeting.
+
+    Returns the number of deleted AgendaItem nodes.
+    """
+    query = """
+        MATCH (a:AgendaItem)-[:PART_OF_MEETING]->(m:Meeting {id: $meeting_id})
+        DETACH DELETE a
+        RETURN count(a) AS deleted
+    """
+    with driver.session() as session:
+        result = session.run(query, {"meeting_id": meeting_id})
+        record = result.single()
+        return record["deleted"] if record else 0
 
 
 def write_agenda_items(driver, nodes: list[dict], meeting_id: str) -> None:
@@ -548,6 +588,7 @@ def process_meeting(
     dry_run: bool,
     driver,
     data_root: Path,
+    reprocess: bool = False,
 ) -> dict:
     """Download, parse, and optionally write one meeting's agenda items."""
     meeting_id = meeting["meeting_id"]
@@ -635,6 +676,10 @@ def process_meeting(
         if len(nodes) > 3:
             print(f"  ... and {len(nodes) - 3} more items")
     else:
+        if reprocess:
+            deleted = delete_existing_agenda_items(driver, meeting_id)
+            if deleted:
+                log.info("Reprocess: deleted %d existing agenda items for %s", deleted, meeting_id)
         write_agenda_items(driver, nodes, meeting_id)
 
     return {"meeting_id": meeting_id, "status": "ok", "items": len(nodes), "format": fmt}
@@ -651,6 +696,8 @@ def parse_args(argv=None):
     group.add_argument("--all", action="store_true", help="Process all sources")
     parser.add_argument("--limit", type=int, default=10, help="Max meetings to process")
     parser.add_argument("--dry-run", action="store_true", help="Parse but do not write to Neo4j")
+    parser.add_argument("--reprocess", action="store_true",
+                        help="Re-extract items for meetings that already have them")
     return parser.parse_args(argv)
 
 
@@ -670,11 +717,11 @@ def main(argv=None):
     source_id = args.source if not args.all else None
 
     log.info(
-        "Fetching meetings needing agenda extraction (source=%s, limit=%d, dry_run=%s)",
-        source_id or "ALL", args.limit, args.dry_run,
+        "Fetching meetings needing agenda extraction (source=%s, limit=%d, dry_run=%s, reprocess=%s)",
+        source_id or "ALL", args.limit, args.dry_run, args.reprocess,
     )
 
-    meetings = fetch_meetings_needing_items(driver, source_id, args.limit)
+    meetings = fetch_meetings_needing_items(driver, source_id, args.limit, reprocess=args.reprocess)
     log.info("Found %d meetings to process", len(meetings))
 
     results = []
@@ -684,6 +731,7 @@ def main(argv=None):
             dry_run=args.dry_run,
             driver=driver,
             data_root=ROOT,
+            reprocess=args.reprocess,
         )
         results.append(result)
         if not args.dry_run:
