@@ -150,8 +150,9 @@ def build_moneyflow_node(
     flow_type: str,
     source_schedule: str,
     capture_id: str,
+    year: str = "",
 ) -> dict:
-    node_id = f"moneyflow-{filer_id}-{source_schedule.lower()}-{tran_id}"
+    node_id = f"moneyflow-{filer_id}-{year}-{source_schedule.lower()}-{tran_id}"
     props: dict = {
         "amount": amount,
         "flow_type": flow_type,
@@ -342,6 +343,7 @@ def normalize_campaign_source(
     nodes.append(place_node)
 
     moneyflow_count = 0
+    moneyflow_seen: dict[str, tuple] = {}  # id → (amount, flow_date) for dedup
     errors: list[str] = []
 
     for zip_path in zip_paths:
@@ -398,7 +400,7 @@ def normalize_campaign_source(
                 )
                 contributors[contributor_slug] = contributor_node
 
-            # MoneyFlow node
+            # MoneyFlow node (with year for cross-year uniqueness)
             moneyflow_node = build_moneyflow_node(
                 filer_id=filer_id,
                 tran_id=row["tran_id"],
@@ -407,10 +409,25 @@ def normalize_campaign_source(
                 flow_type="contribution",
                 source_schedule="A",
                 capture_id=capture_id,
+                year=year,
             )
+            mf_id = moneyflow_node["id"]
+            mf_key = (row["amount"], row.get("flow_date"))
+
+            # Dedup: skip identical rows, disambiguate conflicting ones
+            if mf_id in moneyflow_seen:
+                if moneyflow_seen[mf_id] == mf_key:
+                    continue  # identical duplicate — skip
+                # Conflicting duplicate — make unique with counter
+                counter = 2
+                while f"{mf_id}-{counter}" in moneyflow_seen:
+                    counter += 1
+                mf_id = f"{mf_id}-{counter}"
+                moneyflow_node["id"] = mf_id
+            moneyflow_seen[mf_id] = mf_key
+
             nodes.append(moneyflow_node)
             moneyflow_count += 1
-            mf_id = moneyflow_node["id"]
             committee_id = f"committee-netfile-{filer_id}"
 
             # Edges
@@ -457,7 +474,7 @@ def normalize_campaign_source(
                 )
                 contributors[payee_slug] = payee_node
 
-            # MoneyFlow node
+            # MoneyFlow node (with year for cross-year uniqueness)
             moneyflow_node = build_moneyflow_node(
                 filer_id=filer_id,
                 tran_id=row["tran_id"],
@@ -466,10 +483,24 @@ def normalize_campaign_source(
                 flow_type="expenditure",
                 source_schedule="E",
                 capture_id=capture_id,
+                year=year,
             )
+            mf_id = moneyflow_node["id"]
+            mf_key = (row["amount"], row.get("flow_date"))
+
+            # Dedup: skip identical rows, disambiguate conflicting ones
+            if mf_id in moneyflow_seen:
+                if moneyflow_seen[mf_id] == mf_key:
+                    continue  # identical duplicate — skip
+                counter = 2
+                while f"{mf_id}-{counter}" in moneyflow_seen:
+                    counter += 1
+                mf_id = f"{mf_id}-{counter}"
+                moneyflow_node["id"] = mf_id
+            moneyflow_seen[mf_id] = mf_key
+
             nodes.append(moneyflow_node)
             moneyflow_count += 1
-            mf_id = moneyflow_node["id"]
             committee_id = f"committee-netfile-{filer_id}"
 
             # Edges: committee → moneyflow → payee
@@ -616,8 +647,22 @@ def main() -> None:
         print(f"  Edges total:  {report['edge_count']}")
         print(f"  Output:       {output_dir}")
 
+        # Fail hard on integrity issues
+        if report["duplicate_id_count"] > 0 or report["broken_edge_count"] > 0:
+            print(
+                f"  ERROR: {report['duplicate_id_count']} duplicate IDs, "
+                f"{report['broken_edge_count']} broken edges — refusing to --load",
+                file=sys.stderr,
+            )
+            if args.load:
+                continue
+
         if args.load:
-            from load_neo4j_v2 import load_nodes as neo4j_load_nodes, load_edges as neo4j_load_edges
+            from load_neo4j_v2 import (
+                load_nodes as neo4j_load_nodes,
+                load_edges as neo4j_load_edges,
+                validate_and_filter_edges,
+            )
 
             from neo4j import GraphDatabase
 
@@ -629,11 +674,20 @@ def main() -> None:
                       file=sys.stderr)
                 continue
 
+            # Validate edges before loading
+            node_ids = {n["id"] for n in nodes}
+            clean_edges, edge_report = validate_and_filter_edges(node_ids, edges)
+            if edge_report["total_broken"] > 0:
+                print(
+                    f"  WARNING: filtered {edge_report['total_broken']} broken edges before load",
+                    file=sys.stderr,
+                )
+
             driver = GraphDatabase.driver(uri, auth=(user, password))
             try:
                 print("  Loading into Neo4j...")
                 neo4j_load_nodes(driver, nodes)
-                neo4j_load_edges(driver, edges)
+                neo4j_load_edges(driver, clean_edges)
                 print("  Loaded.")
             finally:
                 driver.close()

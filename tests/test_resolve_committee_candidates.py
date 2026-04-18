@@ -110,10 +110,28 @@ class TestFindPersonMatch:
         persons = {"person-f700-kate-colin": "Kate Colin"}
         assert find_person_match("Kate Colin", persons) == "person-f700-kate-colin"
 
-    def test_prefers_canonical_over_prefixed(self):
-        """Canonical person-{slug} should be preferred over namespaced variants."""
+    def test_ambiguous_canonical_plus_prefixed_returns_none(self):
+        """Canonical + prefixed with same display name → ambiguous, refuse to resolve."""
         persons = {
             "person-kate-colin": "Kate Colin",
             "person-cf-colin-kate": "Kate Colin",
         }
-        assert find_person_match("Kate Colin", persons) == "person-kate-colin"
+        result = find_person_match("Kate Colin", persons)
+        assert result is None, f"Two same-name entries should be ambiguous, got {result}"
+
+    def test_ambiguous_exact_name_returns_none(self):
+        """Multiple exact-name matches with no canonical → refuse to resolve."""
+        persons = {
+            "person-cf-smith-john": "John Smith",
+            "person-f700-john-smith": "John Smith",
+        }
+        result = find_person_match("John Smith", persons)
+        assert result is None, f"Ambiguous exact-name match should return None, got {result}"
+
+    def test_single_exact_name_match_resolves(self):
+        """One exact-name match → return it regardless of prefix."""
+        persons = {
+            "person-cf-smith-john": "John Smith",
+            "person-f700-kate-colin": "Kate Colin",
+        }
+        assert find_person_match("John Smith", persons) == "person-cf-smith-john"

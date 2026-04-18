@@ -155,11 +155,16 @@ def find_person_match(candidate_name: str, person_lookup: dict[str, str]) -> str
 
     Returns the person_id, or None if no unambiguous match is found.
     """
-    # 1. Exact display-name match (case-insensitive)
+    # 1. Exact display-name match (case-insensitive) — must be unambiguous
     name_lower = candidate_name.lower().strip()
-    for pid, pname in person_lookup.items():
-        if pname.lower() == name_lower:
-            return pid
+    exact_matches = [
+        pid for pid, pname in person_lookup.items()
+        if pname.lower() == name_lower
+    ]
+    if len(exact_matches) == 1:
+        return exact_matches[0]
+    if len(exact_matches) > 1:
+        return None  # ambiguous — refuse to resolve
 
     # 2. Slug match — try canonical IDs first, then pipeline-namespaced
     for slug in _candidate_slugs(candidate_name):

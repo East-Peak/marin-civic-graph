@@ -130,6 +130,25 @@ def validate_edge_endpoints(
     }
 
 
+def validate_and_filter_edges(
+    node_ids: set[str],
+    edges: list[dict],
+) -> tuple[list[dict], dict]:
+    """Validate edges and return only those with valid endpoints.
+
+    Returns (clean_edges, report) where report is from validate_edge_endpoints.
+    """
+    report = validate_edge_endpoints(node_ids, edges)
+    if report["total_broken"] == 0:
+        return edges, report
+
+    clean = [
+        e for e in edges
+        if e["source_id"] in node_ids and e["target_id"] in node_ids
+    ]
+    return clean, report
+
+
 # ---------------------------------------------------------------------------
 # Neo4j I/O functions (require a live driver)
 # ---------------------------------------------------------------------------
@@ -348,6 +367,15 @@ def main() -> None:
         edges = _read_jsonl(edges_path)
         print(f"  {len(edges):,} edges loaded.")
 
+        # Validate edge endpoints before loading
+        node_ids = {n["id"] for n in nodes}
+        clean_edges, edge_report = validate_and_filter_edges(node_ids, edges)
+        if edge_report["total_broken"] > 0:
+            print(f"  WARNING: {edge_report['total_broken']} edges have missing endpoints:")
+            for rel, count in edge_report["by_relationship"].items():
+                print(f"    {rel}: {count} broken")
+            print(f"  Filtered to {len(clean_edges):,} valid edges.")
+
         print(f"Loading nodes into Neo4j (batch_size={args.batch_size}) ...")
         node_counts = load_nodes(driver, nodes, batch_size=args.batch_size)
         total_nodes = sum(node_counts.values())
@@ -356,7 +384,7 @@ def main() -> None:
             print(f"    {ntype:30s} {count:6,d}")
 
         print(f"Loading edges into Neo4j (batch_size={args.batch_size}) ...")
-        edge_counts = load_edges(driver, edges, batch_size=args.batch_size)
+        edge_counts = load_edges(driver, clean_edges, batch_size=args.batch_size)
         total_edges = sum(edge_counts.values())
         print(f"  {total_edges:,} edges written.")
         for rel, count in sorted(edge_counts.items(), key=lambda x: -x[1])[:20]:

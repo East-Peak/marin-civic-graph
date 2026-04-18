@@ -144,7 +144,8 @@ def normalize_name(raw: str) -> str:
 def person_id_from_name(raw_name: str) -> str:
     """Produce a stable person node ID from a (possibly inverted) filer name.
 
-    'Colin, Kate' and 'Kate Colin' both produce 'person-kate-colin'.
+    'Colin, Kate' and 'Kate Colin' both produce 'person-f700-kate-colin'.
+    Namespaced with 'f700' to prevent collision with other pipelines.
     """
     normalized = normalize_name(raw_name)
     return f"person-f700-{slugify(normalized)}"

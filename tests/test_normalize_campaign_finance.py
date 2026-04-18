@@ -104,9 +104,9 @@ class TestBuildMoneyflowNode:
             filer_id=1461685, tran_id="1cVRUPUuwASA",
             amount=150.0, flow_date="2024-01-13",
             flow_type="contribution", source_schedule="A",
-            capture_id="test",
+            capture_id="test", year="2024",
         )
-        assert node["id"] == "moneyflow-1461685-a-1cVRUPUuwASA"
+        assert node["id"] == "moneyflow-1461685-2024-a-1cVRUPUuwASA"
         assert node["node_type"] == "MoneyFlow"
         assert node["properties"]["amount"] == 150.0
         assert node["properties"]["flow_type"] == "contribution"
@@ -238,15 +238,15 @@ class TestRecordNodesCreated:
 
 
 class TestMoneyFlowIdUniqueness:
-    """MoneyFlow IDs must be unique across schedules."""
+    """MoneyFlow IDs must be unique — within year, across years, across schedules."""
 
-    def test_id_includes_schedule(self):
+    def test_id_includes_year_and_schedule(self):
         node = build_moneyflow_node(
             filer_id=1234, tran_id="TXN001", amount=100.0,
             flow_date="2024-01-15", flow_type="contribution",
-            source_schedule="A", capture_id="test",
+            source_schedule="A", capture_id="test", year="2024",
         )
-        assert "-a-" in node["id"], f"MoneyFlow ID should include schedule: {node['id']}"
+        assert "-2024-a-" in node["id"], f"MoneyFlow ID should include year+schedule: {node['id']}"
 
     def test_same_tran_id_different_schedule_unique(self, tmp_path):
         zip_path = _make_test_zip(
@@ -266,6 +266,55 @@ class TestMoneyFlowIdUniqueness:
         mf_ids = [n["id"] for n in mf_nodes]
         assert len(mf_ids) == 2
         assert len(set(mf_ids)) == 2, f"MoneyFlow IDs must be unique: {mf_ids}"
+
+    def test_within_year_conflicting_duplicates_get_unique_ids(self, tmp_path):
+        """Same (filer, schedule, tran_id) with different amounts — must get unique IDs."""
+        zip_path = _make_test_zip(
+            tmp_path / "zips", "2024",
+            contributions=[
+                [1234, "Test PAC", "CTL", "IDT30", "IND", "Smith", "John",
+                 100.0, "2024-10-17", None, None, None, None, None, None],
+                [1234, "Test PAC", "CTL", "IDT30", "IND", "Smith", "John",
+                 250.0, "2024-10-21", None, None, None, None, None, None],
+            ],
+        )
+        capture = _make_capture("test-source", "place-test")
+        nodes, edges, report = normalize_campaign_source(capture, [zip_path], tmp_path / "out")
+        mf_nodes = [n for n in nodes if n["node_type"] == "MoneyFlow"]
+        mf_ids = [n["id"] for n in mf_nodes]
+        assert len(mf_ids) == 2, "Both conflicting rows should produce nodes"
+        assert len(set(mf_ids)) == 2, f"Conflicting duplicates must have unique IDs: {mf_ids}"
+
+    def test_identical_duplicates_are_deduped(self, tmp_path):
+        """Same (filer, schedule, tran_id, amount, date) → keep one."""
+        zip_path = _make_test_zip(
+            tmp_path / "zips", "2024",
+            contributions=[
+                [1234, "Test PAC", "CTL", "TXN001", "IND", "Smith", "John",
+                 100.0, "2024-01-15", None, None, None, None, None, None],
+                [1234, "Test PAC", "CTL", "TXN001", "IND", "Smith", "John",
+                 100.0, "2024-01-15", None, None, None, None, None, None],
+            ],
+        )
+        capture = _make_capture("test-source", "place-test")
+        nodes, edges, report = normalize_campaign_source(capture, [zip_path], tmp_path / "out")
+        mf_nodes = [n for n in nodes if n["node_type"] == "MoneyFlow"]
+        assert len(mf_nodes) == 1, "Identical duplicate should be deduped to one node"
+
+    def test_duplicate_id_count_zero_after_dedup(self, tmp_path):
+        """After dedup, report should show zero duplicate IDs."""
+        zip_path = _make_test_zip(
+            tmp_path / "zips", "2024",
+            contributions=[
+                [1234, "Test PAC", "CTL", "IDT30", "IND", "Smith", "John",
+                 100.0, "2024-10-17", None, None, None, None, None, None],
+                [1234, "Test PAC", "CTL", "IDT30", "IND", "Smith", "John",
+                 250.0, "2024-10-21", None, None, None, None, None, None],
+            ],
+        )
+        capture = _make_capture("test-source", "place-test")
+        nodes, edges, report = normalize_campaign_source(capture, [zip_path], tmp_path / "out")
+        assert report["duplicate_id_count"] == 0
 
 
 class TestOutputReferentialIntegrity:

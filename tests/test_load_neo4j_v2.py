@@ -18,6 +18,7 @@ from load_neo4j_v2 import (
     build_node_batch_query,
     chunk_list,
     validate_edge_endpoints,
+    validate_and_filter_edges,
 )
 
 
@@ -207,3 +208,33 @@ class TestValidateEdgeEndpoints:
         ]
         result = validate_edge_endpoints(set(), edges)
         assert result["total_broken"] == 1
+
+
+class TestValidateAndFilterEdges:
+    """validate_and_filter_edges removes broken edges and returns clean set."""
+
+    def test_returns_only_valid_edges(self):
+        node_ids = {"node-1", "node-2"}
+        edges = [
+            {"source_id": "node-1", "target_id": "node-2", "relationship_type": "OK"},
+            {"source_id": "node-1", "target_id": "gone", "relationship_type": "BROKEN"},
+        ]
+        clean, report = validate_and_filter_edges(node_ids, edges)
+        assert len(clean) == 1
+        assert clean[0]["relationship_type"] == "OK"
+        assert report["total_broken"] == 1
+
+    def test_all_valid_passes_through(self):
+        node_ids = {"a", "b", "c"}
+        edges = [
+            {"source_id": "a", "target_id": "b", "relationship_type": "X"},
+            {"source_id": "b", "target_id": "c", "relationship_type": "Y"},
+        ]
+        clean, report = validate_and_filter_edges(node_ids, edges)
+        assert len(clean) == 2
+        assert report["total_broken"] == 0
+
+    def test_empty_input(self):
+        clean, report = validate_and_filter_edges(set(), [])
+        assert len(clean) == 0
+        assert report["total_broken"] == 0
