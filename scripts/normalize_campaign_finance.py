@@ -20,6 +20,7 @@ import os
 import re
 import sys
 import zipfile
+import hashlib
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -140,6 +141,16 @@ def build_committee_node(
         section="committee_stubs",
         status="stub_from_netfile_export",
     )
+
+
+def _row_fingerprint(amount, flow_date, name_last=None, name_first=None) -> str:
+    """Deterministic 6-char hash for MoneyFlow dedup.
+
+    Includes amount, date, and contributor/payee name so that rows with the
+    same transaction key but different data get unique IDs.
+    """
+    parts = [str(amount), str(flow_date or ""), str(name_last or ""), str(name_first or "")]
+    return hashlib.md5("|".join(parts).encode()).hexdigest()[:6]
 
 
 def build_moneyflow_node(
@@ -343,7 +354,7 @@ def normalize_campaign_source(
     nodes.append(place_node)
 
     moneyflow_count = 0
-    moneyflow_seen: dict[str, tuple] = {}  # id → (amount, flow_date) for dedup
+    moneyflow_seen: set[str] = set()  # seen MoneyFlow IDs for dedup
     errors: list[str] = []
 
     for zip_path in zip_paths:
@@ -400,7 +411,9 @@ def normalize_campaign_source(
                 )
                 contributors[contributor_slug] = contributor_node
 
-            # MoneyFlow node (with year for cross-year uniqueness)
+            # MoneyFlow node — fingerprint hash makes ID deterministic and order-independent
+            fp = _row_fingerprint(row["amount"], row["flow_date"],
+                                  row.get("contributor_last"), row.get("contributor_first"))
             moneyflow_node = build_moneyflow_node(
                 filer_id=filer_id,
                 tran_id=row["tran_id"],
@@ -411,20 +424,13 @@ def normalize_campaign_source(
                 capture_id=capture_id,
                 year=year,
             )
-            mf_id = moneyflow_node["id"]
-            mf_key = (row["amount"], row.get("flow_date"))
+            mf_id = f"{moneyflow_node['id']}-{fp}"
+            moneyflow_node["id"] = mf_id
 
-            # Dedup: skip identical rows, disambiguate conflicting ones
+            # Dedup: same fingerprint → same ID → true duplicate, skip
             if mf_id in moneyflow_seen:
-                if moneyflow_seen[mf_id] == mf_key:
-                    continue  # identical duplicate — skip
-                # Conflicting duplicate — make unique with counter
-                counter = 2
-                while f"{mf_id}-{counter}" in moneyflow_seen:
-                    counter += 1
-                mf_id = f"{mf_id}-{counter}"
-                moneyflow_node["id"] = mf_id
-            moneyflow_seen[mf_id] = mf_key
+                continue
+            moneyflow_seen.add(mf_id)
 
             nodes.append(moneyflow_node)
             moneyflow_count += 1
@@ -474,7 +480,9 @@ def normalize_campaign_source(
                 )
                 contributors[payee_slug] = payee_node
 
-            # MoneyFlow node (with year for cross-year uniqueness)
+            # MoneyFlow node — fingerprint hash makes ID deterministic and order-independent
+            fp = _row_fingerprint(row["amount"], row["flow_date"],
+                                  row.get("payee_last"), row.get("payee_first"))
             moneyflow_node = build_moneyflow_node(
                 filer_id=filer_id,
                 tran_id=row["tran_id"],
@@ -485,19 +493,13 @@ def normalize_campaign_source(
                 capture_id=capture_id,
                 year=year,
             )
-            mf_id = moneyflow_node["id"]
-            mf_key = (row["amount"], row.get("flow_date"))
+            mf_id = f"{moneyflow_node['id']}-{fp}"
+            moneyflow_node["id"] = mf_id
 
-            # Dedup: skip identical rows, disambiguate conflicting ones
+            # Dedup: same fingerprint → same ID → true duplicate, skip
             if mf_id in moneyflow_seen:
-                if moneyflow_seen[mf_id] == mf_key:
-                    continue  # identical duplicate — skip
-                counter = 2
-                while f"{mf_id}-{counter}" in moneyflow_seen:
-                    counter += 1
-                mf_id = f"{mf_id}-{counter}"
-                moneyflow_node["id"] = mf_id
-            moneyflow_seen[mf_id] = mf_key
+                continue
+            moneyflow_seen.add(mf_id)
 
             nodes.append(moneyflow_node)
             moneyflow_count += 1
@@ -654,8 +656,7 @@ def main() -> None:
                 f"{report['broken_edge_count']} broken edges — refusing to --load",
                 file=sys.stderr,
             )
-            if args.load:
-                continue
+            sys.exit(1)
 
         if args.load:
             from load_neo4j_v2 import (

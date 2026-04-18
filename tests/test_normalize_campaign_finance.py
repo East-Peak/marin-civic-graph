@@ -285,8 +285,29 @@ class TestMoneyFlowIdUniqueness:
         assert len(mf_ids) == 2, "Both conflicting rows should produce nodes"
         assert len(set(mf_ids)) == 2, f"Conflicting duplicates must have unique IDs: {mf_ids}"
 
+    def test_conflicting_ids_are_order_independent(self, tmp_path):
+        """Reversing row order must produce the same set of MoneyFlow IDs."""
+        rows_forward = [
+            [1234, "Test PAC", "CTL", "IDT30", "IND", "Smith", "John",
+             100.0, "2024-10-17", None, None, None, None, None, None],
+            [1234, "Test PAC", "CTL", "IDT30", "IND", "Smith", "John",
+             250.0, "2024-10-21", None, None, None, None, None, None],
+        ]
+        rows_reversed = list(reversed(rows_forward))
+
+        zip_fwd = _make_test_zip(tmp_path / "z1", "2024", contributions=rows_forward)
+        zip_rev = _make_test_zip(tmp_path / "z2", "2024", contributions=rows_reversed)
+        capture = _make_capture("test-source", "place-test")
+
+        nodes_fwd, _, _ = normalize_campaign_source(capture, [zip_fwd], tmp_path / "out1")
+        nodes_rev, _, _ = normalize_campaign_source(capture, [zip_rev], tmp_path / "out2")
+
+        ids_fwd = {n["id"] for n in nodes_fwd if n["node_type"] == "MoneyFlow"}
+        ids_rev = {n["id"] for n in nodes_rev if n["node_type"] == "MoneyFlow"}
+        assert ids_fwd == ids_rev, f"IDs must be order-independent.\nFwd: {ids_fwd}\nRev: {ids_rev}"
+
     def test_identical_duplicates_are_deduped(self, tmp_path):
-        """Same (filer, schedule, tran_id, amount, date) → keep one."""
+        """Same (filer, schedule, tran_id, amount, date, contributor) → keep one."""
         zip_path = _make_test_zip(
             tmp_path / "zips", "2024",
             contributions=[
@@ -300,6 +321,22 @@ class TestMoneyFlowIdUniqueness:
         nodes, edges, report = normalize_campaign_source(capture, [zip_path], tmp_path / "out")
         mf_nodes = [n for n in nodes if n["node_type"] == "MoneyFlow"]
         assert len(mf_nodes) == 1, "Identical duplicate should be deduped to one node"
+
+    def test_same_amount_date_different_contributor_not_deduped(self, tmp_path):
+        """Same key + same amount/date but different contributor → must keep both."""
+        zip_path = _make_test_zip(
+            tmp_path / "zips", "2024",
+            contributions=[
+                [1234, "Test PAC", "CTL", "TXN001", "IND", "Smith", "John",
+                 100.0, "2024-01-15", None, None, None, None, None, None],
+                [1234, "Test PAC", "CTL", "TXN001", "IND", "Jones", "Mary",
+                 100.0, "2024-01-15", None, None, None, None, None, None],
+            ],
+        )
+        capture = _make_capture("test-source", "place-test")
+        nodes, edges, report = normalize_campaign_source(capture, [zip_path], tmp_path / "out")
+        mf_nodes = [n for n in nodes if n["node_type"] == "MoneyFlow"]
+        assert len(mf_nodes) == 2, "Different contributors should not be deduped"
 
     def test_duplicate_id_count_zero_after_dedup(self, tmp_path):
         """After dedup, report should show zero duplicate IDs."""

@@ -371,10 +371,14 @@ def main() -> None:
         node_ids = {n["id"] for n in nodes}
         clean_edges, edge_report = validate_and_filter_edges(node_ids, edges)
         if edge_report["total_broken"] > 0:
-            print(f"  WARNING: {edge_report['total_broken']} edges have missing endpoints:")
+            print(f"  ERROR: {edge_report['total_broken']} edges have missing endpoints:", file=sys.stderr)
             for rel, count in edge_report["by_relationship"].items():
-                print(f"    {rel}: {count} broken")
-            print(f"  Filtered to {len(clean_edges):,} valid edges.")
+                print(f"    {rel}: {count} broken", file=sys.stderr)
+            print(f"  Filtered to {len(clean_edges):,} valid edges. Exiting non-zero.", file=sys.stderr)
+            # Still load what we can, but signal failure
+            load_failed = True
+        else:
+            load_failed = False
 
         print(f"Loading nodes into Neo4j (batch_size={args.batch_size}) ...")
         node_counts = load_nodes(driver, nodes, batch_size=args.batch_size)
@@ -391,10 +395,16 @@ def main() -> None:
             print(f"    {rel:40s} {count:6,d}")
 
         print()
-        print("Load complete.")
+        if load_failed:
+            print("Load complete with errors — some edges had missing endpoints.", file=sys.stderr)
+        else:
+            print("Load complete.")
 
     finally:
         driver.close()
+
+    if load_failed:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
