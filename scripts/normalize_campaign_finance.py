@@ -143,14 +143,16 @@ def build_committee_node(
     )
 
 
-def _row_fingerprint(amount, flow_date, name_last=None, name_first=None) -> str:
-    """Deterministic 6-char hash for MoneyFlow dedup.
+def _row_fingerprint(amount, flow_date, name_last=None, name_first=None, entity_cd=None) -> str:
+    """Deterministic 8-char hash for MoneyFlow dedup.
 
-    Includes amount, date, and contributor/payee name so that rows with the
-    same transaction key but different data get unique IDs.
+    Includes amount, date, contributor/payee name, and entity_cd (which affects
+    person-vs-org routing) so that rows with the same transaction key but
+    different data get unique IDs.
     """
-    parts = [str(amount), str(flow_date or ""), str(name_last or ""), str(name_first or "")]
-    return hashlib.md5("|".join(parts).encode()).hexdigest()[:6]
+    parts = [str(amount), str(flow_date or ""), str(name_last or ""), str(name_first or ""),
+             str(entity_cd or "")]
+    return hashlib.md5("|".join(parts).encode()).hexdigest()[:8]
 
 
 def build_moneyflow_node(
@@ -168,6 +170,8 @@ def build_moneyflow_node(
         "amount": amount,
         "flow_type": flow_type,
         "source_schedule": source_schedule,
+        "source_tran_id": tran_id,
+        "source_year": year,
     }
     if flow_date:
         props["flow_date"] = flow_date
@@ -413,7 +417,8 @@ def normalize_campaign_source(
 
             # MoneyFlow node — fingerprint hash makes ID deterministic and order-independent
             fp = _row_fingerprint(row["amount"], row["flow_date"],
-                                  row.get("contributor_last"), row.get("contributor_first"))
+                                  row.get("contributor_last"), row.get("contributor_first"),
+                                  entity_cd)
             moneyflow_node = build_moneyflow_node(
                 filer_id=filer_id,
                 tran_id=row["tran_id"],
@@ -482,7 +487,8 @@ def normalize_campaign_source(
 
             # MoneyFlow node — fingerprint hash makes ID deterministic and order-independent
             fp = _row_fingerprint(row["amount"], row["flow_date"],
-                                  row.get("payee_last"), row.get("payee_first"))
+                                  row.get("payee_last"), row.get("payee_first"),
+                                  entity_cd)
             moneyflow_node = build_moneyflow_node(
                 filer_id=filer_id,
                 tran_id=row["tran_id"],
@@ -653,7 +659,7 @@ def main() -> None:
         if report["duplicate_id_count"] > 0 or report["broken_edge_count"] > 0:
             print(
                 f"  ERROR: {report['duplicate_id_count']} duplicate IDs, "
-                f"{report['broken_edge_count']} broken edges — refusing to --load",
+                f"{report['broken_edge_count']} broken edges — output is not loadable",
                 file=sys.stderr,
             )
             sys.exit(1)

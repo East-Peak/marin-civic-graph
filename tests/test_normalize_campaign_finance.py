@@ -248,6 +248,15 @@ class TestMoneyFlowIdUniqueness:
         )
         assert "-2024-a-" in node["id"], f"MoneyFlow ID should include year+schedule: {node['id']}"
 
+    def test_node_has_debug_properties(self):
+        node = build_moneyflow_node(
+            filer_id=1234, tran_id="TXN001", amount=100.0,
+            flow_date="2024-01-15", flow_type="contribution",
+            source_schedule="A", capture_id="test", year="2024",
+        )
+        assert node["properties"]["source_tran_id"] == "TXN001"
+        assert node["properties"]["source_year"] == "2024"
+
     def test_same_tran_id_different_schedule_unique(self, tmp_path):
         zip_path = _make_test_zip(
             tmp_path / "zips", "2024",
