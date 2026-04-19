@@ -2,6 +2,7 @@
 import { runQuery } from "@/lib/neo4j";
 import { jsonError } from "@/lib/api-errors";
 import { urlSegmentForType, type NodeType } from "@/lib/type-display";
+import { canonicalType } from "@/lib/canonical-type";
 
 // Escape Lucene query syntax so reserved chars don't become operators.
 // Per Lucene docs: + - && || ! ( ) { } [ ] ^ " ~ * ? : \ /
@@ -32,8 +33,8 @@ type SearchResult = {
 
 function nodeToResult(node: Neo4jNode): SearchResult {
   const props = node.properties;
-  const type = (node.labels[0] as NodeType) ?? "Person";
   const id = String(props.id);
+  const type = canonicalType(node.labels, id) ?? "Person";
   const slug = id.includes("-") ? id.slice(id.indexOf("-") + 1) : id;
   const urlType = urlSegmentForType(type);
   return {

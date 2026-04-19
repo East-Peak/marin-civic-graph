@@ -1,7 +1,7 @@
 {
   "slug": "boyd-v-san-rafael",
   "display_name": "Boyd v. City of San Rafael",
-  "built_at": "2026-04-19T20:45:55+00:00",
+  "built_at": "2026-04-19T20:51:32+00:00",
   "focus_node_id": "case-boyd-v-city-of-san-rafael",
   "headline_stats": {
     "caption": "federal \u00b7 0 proceedings \u00b7 constrains 0 decisions",
@@ -17,7 +17,7 @@
     },
     {
       "id": "org-us-district-court-ndca",
-      "type": "Court",
+      "type": "Organization",
       "label": "U.S. District Court, Northern District of California",
       "role": "primary",
       "route": "/graph?focus=org-us-district-court-ndca"
@@ -31,7 +31,7 @@
     },
     {
       "id": "org-city-of-san-rafael",
-      "type": "Government",
+      "type": "Organization",
       "label": "City of San Rafael",
       "role": "primary",
       "route": "/graph?focus=org-city-of-san-rafael"

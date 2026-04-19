@@ -1,7 +1,7 @@
 {
   "slug": "resolution-15336",
   "display_name": "Resolution 15336 (Merrydale)",
-  "built_at": "2026-04-19T20:45:55+00:00",
+  "built_at": "2026-04-19T20:51:32+00:00",
   "focus_node_id": "decision-2024-08-19-resolution-15336",
   "headline_stats": {
     "caption": "2025-11-17 \u00b7 $0 \u00b7 5 votes",
@@ -59,7 +59,7 @@
     },
     {
       "id": "org-san-rafael-city-council",
-      "type": "Government",
+      "type": "Organization",
       "label": "San Rafael City Council",
       "role": "primary",
       "route": "/graph?focus=org-san-rafael-city-council"

@@ -40,6 +40,34 @@ LEGAL_EDGES = {"CONSTRAINS"}
 
 MAX_NODES = 55  # per §5.5 target ≤ 60 nodes; small safety margin.
 
+# Canonical type resolver. Mirrors app/src/lib/canonical-type.ts — keep in sync.
+ORGANIZATION_SUBTYPES = {"Government", "Nonprofit", "Business", "Political", "Court", "Department", "Commission"}
+
+TYPE_BY_ID_PREFIX = {
+    "person-": "Person", "org-": "Organization", "committee-": "Committee",
+    "seat-": "Seat", "seatservice-": "SeatService", "election-": "Election",
+    "candidacy-": "Candidacy", "meeting-": "Meeting", "agendaitem-": "AgendaItem",
+    "decision-": "Decision", "filing-": "Filing", "moneyflow-": "MoneyFlow",
+    "case-": "Case", "proceeding-": "Proceeding", "project-": "Project",
+    "program-": "Program", "agreement-": "Agreement", "amendment-": "Amendment",
+    "record-": "Record", "place-": "Place", "issue-": "Issue",
+    "actor-": "Person", "inst-": "Organization", "eid-": "Filing",
+}
+
+KNOWN_TYPES = set(TYPE_BY_ID_PREFIX.values())
+
+
+def canonical_type(labels, node_id):
+    for prefix, type_name in TYPE_BY_ID_PREFIX.items():
+        if node_id.startswith(prefix):
+            return type_name
+    for lbl in labels or []:
+        if lbl in KNOWN_TYPES:
+            return lbl
+    if any(lbl in ORGANIZATION_SUBTYPES for lbl in labels or []):
+        return "Organization"
+    return None
+
 
 def classify_edge_style(rel_type: str) -> str:
     if rel_type in MONEY_EDGES:
@@ -52,7 +80,7 @@ def classify_edge_style(rel_type: str) -> str:
 def build_node_payload(node: dict, role: str) -> dict:
     node_id = node["id"]
     label = node.get("search_label") or node.get("name") or node_id
-    type_name = node["labels"][0] if node.get("labels") else "Unknown"
+    type_name = canonical_type(node.get("labels", []), node_id) or "Unknown"
     return {
         "id": node_id,
         "type": type_name,
