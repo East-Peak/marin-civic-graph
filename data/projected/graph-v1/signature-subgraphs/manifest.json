@@ -1,10 +1,25 @@
 {
-  "built_at": "2026-04-19T21:15:22+00:00",
+  "built_at": "2026-04-19T22:26:24+00:00",
   "subgraphs": [
+    {
+      "slug": "merrydale-interim-shelter",
+      "display_name": "350 Merrydale Interim Shelter",
+      "focus_node_id": "project-san-rafael-350-merrydale-interim-shelter"
+    },
+    {
+      "slug": "sanctioned-camping",
+      "display_name": "Sanctioned Camping Program",
+      "focus_node_id": "program-san-rafael-sanctioned-camping"
+    },
     {
       "slug": "boyd-v-san-rafael",
       "display_name": "Boyd v. City of San Rafael",
       "focus_node_id": "case-boyd-v-city-of-san-rafael"
+    },
+    {
+      "slug": "downtown-library-renovation",
+      "display_name": "Downtown Library Renovation",
+      "focus_node_id": "project-downtown-library-renovation"
     },
     {
       "slug": "kate-colin",
@@ -20,6 +35,11 @@
       "slug": "grants-pass-v-johnson",
       "display_name": "Grants Pass v. Johnson (SCOTUS)",
       "focus_node_id": "case-city-of-grants-pass-v-johnson"
+    },
+    {
+      "slug": "form-803-colin-pge-canal",
+      "display_name": "Form 803 \u00b7 Colin / PG&E / Canal Alliance",
+      "focus_node_id": "filing-2025-09-04-kate-colin-form-803"
     }
   ]
 }

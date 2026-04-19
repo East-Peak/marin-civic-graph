@@ -12,14 +12,19 @@ from build_signature_subgraphs import (
 
 
 def test_classify_money_edge():
+    # Post Plan-2 Batch A the classifier operates on live AuraDB edge names
+    # from scripts/edge_vocabulary.py MONEY_EDGES_LIVE.
     assert classify_edge_style("FROM_SOURCE") == "money"
     assert classify_edge_style("TO_TARGET") == "money"
-    assert classify_edge_style("DISCLOSED_IN") == "money"
-    assert classify_edge_style("UNDER_AGREEMENT") == "money"
+    assert classify_edge_style("DISCLOSED_IN_FILING") == "money"
+    assert classify_edge_style("RELATES_TO_AGREEMENT") == "money"
 
 
-def test_classify_legal_edge():
-    assert classify_edge_style("CONSTRAINS") == "legal-constrains"
+def test_classify_legal_edge_empty_until_constrains_materializes():
+    # CONSTRAINS is not yet in the live graph; LEGAL_EDGES_LIVE is empty.
+    # Any edge name therefore falls through to "governance" until ingestion lands.
+    # Once CONSTRAINS is materialized this assertion should be flipped.
+    assert classify_edge_style("CONSTRAINS") == "governance"
 
 
 def test_classify_governance_default():

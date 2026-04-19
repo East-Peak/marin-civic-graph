@@ -1,10 +1,10 @@
 {
   "slug": "grants-pass-v-johnson",
   "display_name": "Grants Pass v. Johnson (SCOTUS)",
-  "built_at": "2026-04-19T21:15:22+00:00",
+  "built_at": "2026-04-19T22:26:24+00:00",
   "focus_node_id": "case-city-of-grants-pass-v-johnson",
   "headline_stats": {
-    "caption": "SCOTUS \u00b7 0 proceedings",
+    "caption": "SCOTUS \u00b7 4 proceedings",
     "kicker": "SIGNATURE SUBGRAPH \u00b7 GRANTS PASS V. JOHNSON (SCOTUS)"
   },
   "nodes": [
@@ -21,6 +21,48 @@
       "label": "Supreme Court of the United States",
       "role": "primary",
       "route": "/graph?focus=org-united-states-supreme-court"
+    },
+    {
+      "id": "proceeding-grants-pass-cert-granted-2024-01-12",
+      "type": "Proceeding",
+      "label": "proceeding-grants-pass-cert-granted-2024-01-12",
+      "role": "primary",
+      "route": "/graph?focus=proceeding-grants-pass-cert-granted-2024-01-12"
+    },
+    {
+      "id": "proceeding-grants-pass-cert-petition-filed-2023-08-22",
+      "type": "Proceeding",
+      "label": "proceeding-grants-pass-cert-petition-filed-2023-08-22",
+      "role": "primary",
+      "route": "/graph?focus=proceeding-grants-pass-cert-petition-filed-2023-08-22"
+    },
+    {
+      "id": "proceeding-grants-pass-opinion-2024-06-28",
+      "type": "Proceeding",
+      "label": "proceeding-grants-pass-opinion-2024-06-28",
+      "role": "primary",
+      "route": "/graph?focus=proceeding-grants-pass-opinion-2024-06-28"
+    },
+    {
+      "id": "proceeding-grants-pass-oral-argument-2024-04-22",
+      "type": "Proceeding",
+      "label": "proceeding-grants-pass-oral-argument-2024-04-22",
+      "role": "primary",
+      "route": "/graph?focus=proceeding-grants-pass-oral-argument-2024-04-22"
+    },
+    {
+      "id": "program-san-rafael-camping-ordinance-implementation",
+      "type": "Program",
+      "label": "San Rafael camping ordinance implementation and enforcement",
+      "role": "primary",
+      "route": "/graph?focus=program-san-rafael-camping-ordinance-implementation"
+    },
+    {
+      "id": "program-san-rafael-sanctioned-camping",
+      "type": "Program",
+      "label": "San Rafael sanctioned camping program",
+      "role": "primary",
+      "route": "/graph?focus=program-san-rafael-sanctioned-camping"
     },
     {
       "id": "org-gloria-johnson-et-al",
@@ -51,6 +93,125 @@
       "route": "/graph?focus=person-gloria-johnson-et-al"
     },
     {
+      "id": "org-neil-m-gorsuch",
+      "type": "Organization",
+      "label": "Neil M. Gorsuch",
+      "role": "secondary",
+      "route": "/graph?focus=org-neil-m-gorsuch"
+    },
+    {
+      "id": "person-neil-m-gorsuch",
+      "type": "Person",
+      "label": "Neil M. Gorsuch",
+      "role": "secondary",
+      "route": "/graph?focus=person-neil-m-gorsuch"
+    },
+    {
+      "id": "org-city-of-san-rafael",
+      "type": "Organization",
+      "label": "City of San Rafael",
+      "role": "secondary",
+      "route": "/graph?focus=org-city-of-san-rafael"
+    },
+    {
+      "id": "case-boyd-v-city-of-san-rafael",
+      "type": "Case",
+      "label": "Boyd v. City of San Rafael",
+      "role": "secondary",
+      "route": "/graph?focus=case-boyd-v-city-of-san-rafael"
+    },
+    {
+      "id": "doc-2023-12-14-implementation-plan",
+      "type": "Record",
+      "label": "Record",
+      "role": "secondary",
+      "route": "/graph?focus=doc-2023-12-14-implementation-plan"
+    },
+    {
+      "id": "doc-2024-06-14-homelessness-update",
+      "type": "Record",
+      "label": "Record",
+      "role": "secondary",
+      "route": "/graph?focus=doc-2024-06-14-homelessness-update"
+    },
+    {
+      "id": "doc-2024-06-28-grants-pass-statement",
+      "type": "Record",
+      "label": "Record",
+      "role": "secondary",
+      "route": "/graph?focus=doc-2024-06-28-grants-pass-statement"
+    },
+    {
+      "id": "doc-2024-08-08-boyd-dismissal-release",
+      "type": "Record",
+      "label": "Record",
+      "role": "secondary",
+      "route": "/graph?focus=doc-2024-08-08-boyd-dismissal-release"
+    },
+    {
+      "id": "doc-2025-01-24-homelessness-update",
+      "type": "Record",
+      "label": "Record",
+      "role": "secondary",
+      "route": "/graph?focus=doc-2025-01-24-homelessness-update"
+    },
+    {
+      "id": "record-2023-07-10-san-rafael-city-council-special-minutes",
+      "type": "Record",
+      "label": "Minutes Pdf",
+      "role": "secondary",
+      "route": "/graph?focus=record-2023-07-10-san-rafael-city-council-special-minutes"
+    },
+    {
+      "id": "record-2023-07-17-san-rafael-city-council-minutes",
+      "type": "Record",
+      "label": "Minutes Pdf",
+      "role": "secondary",
+      "route": "/graph?focus=record-2023-07-17-san-rafael-city-council-minutes"
+    },
+    {
+      "id": "record-2024-04-15-san-rafael-city-council-minutes",
+      "type": "Record",
+      "label": "Minutes Pdf",
+      "role": "secondary",
+      "route": "/graph?focus=record-2024-04-15-san-rafael-city-council-minutes"
+    },
+    {
+      "id": "record-2024-10-07-san-rafael-city-council-special-minutes",
+      "type": "Record",
+      "label": "Minutes Pdf",
+      "role": "secondary",
+      "route": "/graph?focus=record-2024-10-07-san-rafael-city-council-special-minutes"
+    },
+    {
+      "id": "record-2025-04-07-san-rafael-city-council-special-minutes",
+      "type": "Record",
+      "label": "Minutes Pdf",
+      "role": "secondary",
+      "route": "/graph?focus=record-2025-04-07-san-rafael-city-council-special-minutes"
+    },
+    {
+      "id": "record-san-rafael-grants-pass-explainer-2024-09-02",
+      "type": "Record",
+      "label": "Official Legal Explainer",
+      "role": "secondary",
+      "route": "/graph?focus=record-san-rafael-grants-pass-explainer-2024-09-02"
+    },
+    {
+      "id": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "Project",
+      "label": "350 Merrydale Interim Shelter Project",
+      "role": "secondary",
+      "route": "/graph?focus=project-san-rafael-350-merrydale-interim-shelter"
+    },
+    {
+      "id": "record-san-rafael-sanctioned-camping-area-page",
+      "type": "Record",
+      "label": "Official Program Page",
+      "role": "secondary",
+      "route": "/graph?focus=record-san-rafael-sanctioned-camping-area-page"
+    },
+    {
       "id": "case-johnson-v-city-of-grants-pass",
       "type": "Case",
       "label": "Johnson v. City of Grants Pass",
@@ -70,6 +231,42 @@
       "source": "case-city-of-grants-pass-v-johnson",
       "target": "org-united-states-supreme-court",
       "type": "HEARD_IN",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-grants-pass-cert-granted-2024-01-12",
+      "target": "case-city-of-grants-pass-v-johnson",
+      "type": "PART_OF_CASE",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-grants-pass-cert-petition-filed-2023-08-22",
+      "target": "case-city-of-grants-pass-v-johnson",
+      "type": "PART_OF_CASE",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-grants-pass-opinion-2024-06-28",
+      "target": "case-city-of-grants-pass-v-johnson",
+      "type": "PART_OF_CASE",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-grants-pass-oral-argument-2024-04-22",
+      "target": "case-city-of-grants-pass-v-johnson",
+      "type": "PART_OF_CASE",
+      "style": "governance"
+    },
+    {
+      "source": "case-city-of-grants-pass-v-johnson",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "case-city-of-grants-pass-v-johnson",
+      "target": "program-san-rafael-sanctioned-camping",
+      "type": "RELATES_TO_PROGRAM",
       "style": "governance"
     },
     {
@@ -94,6 +291,120 @@
       "source": "person-gloria-johnson-et-al",
       "target": "case-city-of-grants-pass-v-johnson",
       "type": "PARTY_TO",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-grants-pass-opinion-2024-06-28",
+      "target": "org-neil-m-gorsuch",
+      "type": "HEARD_BY",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-grants-pass-opinion-2024-06-28",
+      "target": "person-neil-m-gorsuch",
+      "type": "HEARD_BY",
+      "style": "governance"
+    },
+    {
+      "source": "program-san-rafael-camping-ordinance-implementation",
+      "target": "org-city-of-san-rafael",
+      "type": "OPERATED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "case-boyd-v-city-of-san-rafael",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "doc-2023-12-14-implementation-plan",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "doc-2024-06-14-homelessness-update",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "doc-2024-06-28-grants-pass-statement",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "doc-2024-08-08-boyd-dismissal-release",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "doc-2025-01-24-homelessness-update",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "record-2023-07-10-san-rafael-city-council-special-minutes",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "record-2023-07-17-san-rafael-city-council-minutes",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "record-2024-04-15-san-rafael-city-council-minutes",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "record-2024-10-07-san-rafael-city-council-special-minutes",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "record-2025-04-07-san-rafael-city-council-special-minutes",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "record-san-rafael-grants-pass-explainer-2024-09-02",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "program-san-rafael-sanctioned-camping",
+      "target": "org-city-of-san-rafael",
+      "type": "OPERATED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "case-boyd-v-city-of-san-rafael",
+      "target": "program-san-rafael-sanctioned-camping",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "project-san-rafael-350-merrydale-interim-shelter",
+      "target": "program-san-rafael-sanctioned-camping",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "record-san-rafael-sanctioned-camping-area-page",
+      "target": "program-san-rafael-sanctioned-camping",
+      "type": "RELATES_TO_PROGRAM",
       "style": "governance"
     },
     {

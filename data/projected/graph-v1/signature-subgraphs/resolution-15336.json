@@ -1,7 +1,7 @@
 {
   "slug": "resolution-15336",
   "display_name": "Resolution 15336 (Merrydale)",
-  "built_at": "2026-04-19T21:15:22+00:00",
+  "built_at": "2026-04-19T22:26:24+00:00",
   "focus_node_id": "decision-2024-08-19-resolution-15336",
   "headline_stats": {
     "caption": "2024-08-19 \u00b7 $0 \u00b7 5 votes",
@@ -14,6 +14,13 @@
       "label": "Resolution 15336 appropriating $2,256,400 and authorizing $2,002,400 in contracts",
       "role": "focus",
       "route": "/graph?focus=decision-2024-08-19-resolution-15336"
+    },
+    {
+      "id": "agenda-item-2024-08-19-5a",
+      "type": "AgendaItem",
+      "label": "agenda-item-2024-08-19-5a",
+      "role": "primary",
+      "route": "/graph?focus=agenda-item-2024-08-19-5a"
     },
     {
       "id": "person-eli-hill",
@@ -63,6 +70,20 @@
       "label": "San Rafael City Council",
       "role": "primary",
       "route": "/graph?focus=org-san-rafael-city-council"
+    },
+    {
+      "id": "decision-2024-08-19-ordinance-2040-introduction",
+      "type": "Decision",
+      "label": "Introduction of Ordinance No. 2040 amending Chapter 19.50",
+      "role": "secondary",
+      "route": "/graph?focus=decision-2024-08-19-ordinance-2040-introduction"
+    },
+    {
+      "id": "candidacy-eli-hill-san-rafael-council-district-2-2022",
+      "type": "Candidacy",
+      "label": "candidacy-eli-hill-san-rafael-council-district-2-2022",
+      "role": "secondary",
+      "route": "/graph?focus=candidacy-eli-hill-san-rafael-council-district-2-2022"
     },
     {
       "id": "committee-eli-hill-for-san-rafael-city-council-2022",
@@ -371,30 +392,15 @@
       "label": "Accepted report",
       "role": "secondary",
       "route": "/graph?focus=decision-2021-04-05-san-rafael-city-council-8a-report-acceptance-accepted-report"
-    },
-    {
-      "id": "decision-2021-04-19-san-rafael-city-council-7a-report-acceptance-accepted-report",
-      "type": "Decision",
-      "label": "Accepted report",
-      "role": "secondary",
-      "route": "/graph?focus=decision-2021-04-19-san-rafael-city-council-7a-report-acceptance-accepted-report"
-    },
-    {
-      "id": "decision-2021-04-19-san-rafael-city-council-7b-report-acceptance-accepted-report",
-      "type": "Decision",
-      "label": "Accepted report",
-      "role": "secondary",
-      "route": "/graph?focus=decision-2021-04-19-san-rafael-city-council-7b-report-acceptance-accepted-report"
-    },
-    {
-      "id": "decision-2021-05-03-san-rafael-city-council-7a-resolution-adoption-14908",
-      "type": "Decision",
-      "label": "BioMarin Development Agreement",
-      "role": "secondary",
-      "route": "/graph?focus=decision-2021-05-03-san-rafael-city-council-7a-resolution-adoption-14908"
     }
   ],
   "edges": [
+    {
+      "source": "decision-2024-08-19-resolution-15336",
+      "target": "agenda-item-2024-08-19-5a",
+      "type": "ABOUT_AGENDA_ITEM",
+      "style": "governance"
+    },
     {
       "source": "person-eli-hill",
       "target": "decision-2024-08-19-resolution-15336",
@@ -435,6 +441,24 @@
       "source": "decision-2024-08-19-resolution-15336",
       "target": "org-san-rafael-city-council",
       "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2024-08-19-ordinance-2040-introduction",
+      "target": "agenda-item-2024-08-19-5a",
+      "type": "ABOUT_AGENDA_ITEM",
+      "style": "governance"
+    },
+    {
+      "source": "agenda-item-2024-08-19-5a",
+      "target": "meeting-2024-08-19-san-rafael-city-council",
+      "type": "PART_OF_MEETING",
+      "style": "governance"
+    },
+    {
+      "source": "candidacy-eli-hill-san-rafael-council-district-2-2022",
+      "target": "person-eli-hill",
+      "type": "CANDIDATE_ACTOR",
       "style": "governance"
     },
     {
@@ -630,6 +654,24 @@
       "style": "governance"
     },
     {
+      "source": "filing-san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council",
+      "target": "person-eli-hill",
+      "type": "OFFICIAL_FILER",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council",
+      "target": "person-eli-hill",
+      "type": "OFFICIAL_FILER",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2025-03-31-hill-elias-annual-city-council-member-city-council",
+      "target": "person-eli-hill",
+      "type": "OFFICIAL_FILER",
+      "style": "governance"
+    },
+    {
       "source": "person-eli-hill",
       "target": "decision-2021-02-01-san-rafael-city-council-7a-motion-approval",
       "type": "CAST_VOTE",
@@ -703,19 +745,7 @@
     },
     {
       "source": "person-eli-hill",
-      "target": "decision-2021-04-19-san-rafael-city-council-7a-report-acceptance-accepted-report",
-      "type": "CAST_VOTE",
-      "style": "governance"
-    },
-    {
-      "source": "person-eli-hill",
-      "target": "decision-2021-04-19-san-rafael-city-council-7b-report-acceptance-accepted-report",
-      "type": "CAST_VOTE",
-      "style": "governance"
-    },
-    {
-      "source": "person-eli-hill",
-      "target": "decision-2021-05-03-san-rafael-city-council-7a-resolution-adoption-14908",
+      "target": "decision-2024-08-19-ordinance-2040-introduction",
       "type": "CAST_VOTE",
       "style": "governance"
     },
@@ -793,19 +823,7 @@
     },
     {
       "source": "person-kate-colin",
-      "target": "decision-2021-04-19-san-rafael-city-council-7a-report-acceptance-accepted-report",
-      "type": "CAST_VOTE",
-      "style": "governance"
-    },
-    {
-      "source": "person-kate-colin",
-      "target": "decision-2021-04-19-san-rafael-city-council-7b-report-acceptance-accepted-report",
-      "type": "CAST_VOTE",
-      "style": "governance"
-    },
-    {
-      "source": "person-kate-colin",
-      "target": "decision-2021-05-03-san-rafael-city-council-7a-resolution-adoption-14908",
+      "target": "decision-2024-08-19-ordinance-2040-introduction",
       "type": "CAST_VOTE",
       "style": "governance"
     },
@@ -883,19 +901,7 @@
     },
     {
       "source": "person-maika-llorens-gulati",
-      "target": "decision-2021-04-19-san-rafael-city-council-7a-report-acceptance-accepted-report",
-      "type": "CAST_VOTE",
-      "style": "governance"
-    },
-    {
-      "source": "person-maika-llorens-gulati",
-      "target": "decision-2021-04-19-san-rafael-city-council-7b-report-acceptance-accepted-report",
-      "type": "CAST_VOTE",
-      "style": "governance"
-    },
-    {
-      "source": "person-maika-llorens-gulati",
-      "target": "decision-2021-05-03-san-rafael-city-council-7a-resolution-adoption-14908",
+      "target": "decision-2024-08-19-ordinance-2040-introduction",
       "type": "CAST_VOTE",
       "style": "governance"
     },
@@ -973,19 +979,7 @@
     },
     {
       "source": "person-maribeth-bushey",
-      "target": "decision-2021-04-19-san-rafael-city-council-7a-report-acceptance-accepted-report",
-      "type": "CAST_VOTE",
-      "style": "governance"
-    },
-    {
-      "source": "person-maribeth-bushey",
-      "target": "decision-2021-04-19-san-rafael-city-council-7b-report-acceptance-accepted-report",
-      "type": "CAST_VOTE",
-      "style": "governance"
-    },
-    {
-      "source": "person-maribeth-bushey",
-      "target": "decision-2021-05-03-san-rafael-city-council-7a-resolution-adoption-14908",
+      "target": "decision-2024-08-19-ordinance-2040-introduction",
       "type": "CAST_VOTE",
       "style": "governance"
     },
@@ -1063,24 +1057,36 @@
     },
     {
       "source": "person-rachel-kertz",
-      "target": "decision-2021-04-19-san-rafael-city-council-7a-report-acceptance-accepted-report",
-      "type": "CAST_VOTE",
-      "style": "governance"
-    },
-    {
-      "source": "person-rachel-kertz",
-      "target": "decision-2021-04-19-san-rafael-city-council-7b-report-acceptance-accepted-report",
-      "type": "CAST_VOTE",
-      "style": "governance"
-    },
-    {
-      "source": "person-rachel-kertz",
-      "target": "decision-2021-05-03-san-rafael-city-council-7a-resolution-adoption-14908",
+      "target": "decision-2024-08-19-ordinance-2040-introduction",
       "type": "CAST_VOTE",
       "style": "governance"
     },
     {
       "source": "meeting-2024-08-19-san-rafael-city-council",
+      "target": "org-san-rafael-city-council",
+      "type": "AT_INSTITUTION",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2024-08-19-ordinance-2040-introduction",
+      "target": "meeting-2024-08-19-san-rafael-city-council",
+      "type": "AT_MEETING",
+      "style": "governance"
+    },
+    {
+      "source": "agenda-item-2024-08-19-5a",
+      "target": "meeting-2024-08-19-san-rafael-city-council",
+      "type": "PART_OF_MEETING",
+      "style": "governance"
+    },
+    {
+      "source": "meeting-2024-08-19-san-rafael-city-council",
+      "target": "org-san-rafael-city-council",
+      "type": "AT_INSTITUTION",
+      "style": "governance"
+    },
+    {
+      "source": "seatservice-eli-hill-d2-current",
       "target": "org-san-rafael-city-council",
       "type": "AT_INSTITUTION",
       "style": "governance"
@@ -1158,33 +1164,9 @@
       "style": "governance"
     },
     {
-      "source": "decision-2021-04-19-san-rafael-city-council-7a-report-acceptance-accepted-report",
+      "source": "decision-2024-08-19-ordinance-2040-introduction",
       "target": "org-san-rafael-city-council",
       "type": "DECIDED_BY",
-      "style": "governance"
-    },
-    {
-      "source": "decision-2021-04-19-san-rafael-city-council-7b-report-acceptance-accepted-report",
-      "target": "org-san-rafael-city-council",
-      "type": "DECIDED_BY",
-      "style": "governance"
-    },
-    {
-      "source": "decision-2021-05-03-san-rafael-city-council-7a-resolution-adoption-14908",
-      "target": "org-san-rafael-city-council",
-      "type": "DECIDED_BY",
-      "style": "governance"
-    },
-    {
-      "source": "meeting-2024-08-19-san-rafael-city-council",
-      "target": "org-san-rafael-city-council",
-      "type": "AT_INSTITUTION",
-      "style": "governance"
-    },
-    {
-      "source": "seatservice-eli-hill-d2-current",
-      "target": "org-san-rafael-city-council",
-      "type": "AT_INSTITUTION",
       "style": "governance"
     }
   ]

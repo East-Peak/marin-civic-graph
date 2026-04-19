@@ -22,21 +22,24 @@ from pathlib import Path
 import yaml
 from neo4j import GraphDatabase, Session
 
+# Single source of truth for spec §3 → live AuraDB edge mapping.
+# See docs/reference/2026-04-19-live-edge-catalog.md for the catalog.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from edge_vocabulary import (  # noqa: E402
+    LEGAL_EDGES_LIVE,
+    MONEY_EDGES_LIVE,
+    PHASE2_WHITELIST_LIVE,
+)
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 REGISTRY = REPO_ROOT / "registry" / "signature-subgraphs.yaml"
 OUT_DIR = REPO_ROOT / "data" / "projected" / "graph-v1" / "signature-subgraphs"
 
-PHASE2_WHITELIST = [
-    "CAST_VOTE", "AT_MEETING", "ABOUT_ITEM", "DECIDED_BY", "PART_OF", "HELD_BY",
-    "FOR_SEAT", "RESULT_OF", "AT_INSTITUTION", "FROM_SOURCE", "TO_TARGET",
-    "DISCLOSED_IN", "UNDER_AGREEMENT", "AMENDS", "CONTROLLED_BY", "FILED_BY",
-    "BY_PERSON", "IN_ELECTION", "FOR_ELECTION", "FOR_PROJECT", "ABOUT_PROJECT",
-    "ABOUT_PROGRAM", "PARTY_TO", "CONSTRAINS", "BETWEEN", "HEARD_IN",
-]
+PHASE2_WHITELIST = PHASE2_WHITELIST_LIVE
 WHITELIST_PATTERN = "|".join(PHASE2_WHITELIST)
 
-MONEY_EDGES = {"FROM_SOURCE", "TO_TARGET", "DISCLOSED_IN", "UNDER_AGREEMENT"}
-LEGAL_EDGES = {"CONSTRAINS"}
+MONEY_EDGES = set(MONEY_EDGES_LIVE)
+LEGAL_EDGES = set(LEGAL_EDGES_LIVE)
 
 MAX_NODES = 55  # per §5.5 target ≤ 60 nodes; small safety margin.
 

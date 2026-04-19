@@ -1,10 +1,10 @@
 {
   "slug": "merrydale-interim-shelter",
   "display_name": "350 Merrydale Interim Shelter",
-  "built_at": "2026-04-19T21:15:22+00:00",
+  "built_at": "2026-04-19T22:26:24+00:00",
   "focus_node_id": "project-san-rafael-350-merrydale-interim-shelter",
   "headline_stats": {
-    "caption": "$0 \u00b7 0 decisions \u00b7 0 counterparties \u00b7 0 records",
+    "caption": "$15,337,953 \u00b7 6 decisions \u00b7 10 counterparties \u00b7 20 records",
     "kicker": "SIGNATURE SUBGRAPH \u00b7 350 MERRYDALE INTERIM SHELTER"
   },
   "nodes": [
@@ -14,7 +14,878 @@
       "label": "350 Merrydale Interim Shelter Project",
       "role": "focus",
       "route": "/graph?focus=project-san-rafael-350-merrydale-interim-shelter"
+    },
+    {
+      "id": "program-san-rafael-sanctioned-camping",
+      "type": "Program",
+      "label": "San Rafael sanctioned camping program",
+      "role": "primary",
+      "route": "/graph?focus=program-san-rafael-sanctioned-camping"
+    },
+    {
+      "id": "agreement-350-merrydale-affordable-housing",
+      "type": "Agreement",
+      "label": "350 Merrydale affordable housing agreement",
+      "role": "primary",
+      "route": "/graph?focus=agreement-350-merrydale-affordable-housing"
+    },
+    {
+      "id": "agreement-350-merrydale-county-grant",
+      "type": "Agreement",
+      "label": "350 Merrydale county grant agreement",
+      "role": "primary",
+      "route": "/graph?focus=agreement-350-merrydale-county-grant"
+    },
+    {
+      "id": "agreement-350-merrydale-lca-design-services",
+      "type": "Agreement",
+      "label": "350 Merrydale LCA design services agreement",
+      "role": "primary",
+      "route": "/graph?focus=agreement-350-merrydale-lca-design-services"
+    },
+    {
+      "id": "agreement-350-merrydale-newmark-brokerage",
+      "type": "Agreement",
+      "label": "350 Merrydale Newmark brokerage services agreement",
+      "role": "primary",
+      "route": "/graph?focus=agreement-350-merrydale-newmark-brokerage"
+    },
+    {
+      "id": "agreement-350-merrydale-purchase-and-sale",
+      "type": "Agreement",
+      "label": "350 Merrydale purchase and sale agreement",
+      "role": "primary",
+      "route": "/graph?focus=agreement-350-merrydale-purchase-and-sale"
+    },
+    {
+      "id": "agreement-350-merrydale-swinerton-project-management",
+      "type": "Agreement",
+      "label": "350 Merrydale Swinerton project and construction management agreement",
+      "role": "primary",
+      "route": "/graph?focus=agreement-350-merrydale-swinerton-project-management"
+    },
+    {
+      "id": "amendment-350-merrydale-lca-design-services-2026-02-17",
+      "type": "Amendment",
+      "label": "350 Merrydale LCA design services amendment",
+      "role": "primary",
+      "route": "/graph?focus=amendment-350-merrydale-lca-design-services-2026-02-17"
+    },
+    {
+      "id": "decision-2024-11-04-san-rafael-city-council-special-7a-motion-approval",
+      "type": "Decision",
+      "label": "Encampment Resolution Fund Round 3 (ERF-3) and State of California/State Senator",
+      "role": "primary",
+      "route": "/graph?focus=decision-2024-11-04-san-rafael-city-council-special-7a-motion-approval"
+    },
+    {
+      "id": "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
+      "type": "Decision",
+      "label": "350 Merrydale purchase and brokerage resolution",
+      "role": "primary",
+      "route": "/graph?focus=decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval"
+    },
+    {
+      "id": "decision-2025-11-17-350-merrydale-county-grant-approval",
+      "type": "Decision",
+      "label": "350 Merrydale county grant and affordable housing agreement resolution",
+      "role": "primary",
+      "route": "/graph?focus=decision-2025-11-17-350-merrydale-county-grant-approval"
+    },
+    {
+      "id": "decision-2025-12-01-san-rafael-city-council-4b-approval-approved-final-adoption-of-ordinance-2057",
+      "type": "Decision",
+      "label": "Approved Final Adoption of Ordinance 2057",
+      "role": "primary",
+      "route": "/graph?focus=decision-2025-12-01-san-rafael-city-council-4b-approval-approved-final-adoption-of-ordinance-2057"
+    },
+    {
+      "id": "decision-2026-02-17-350-merrydale-project-services-authorization",
+      "type": "Decision",
+      "label": "350 Merrydale project services resolution",
+      "role": "primary",
+      "route": "/graph?focus=decision-2026-02-17-350-merrydale-project-services-authorization"
+    },
+    {
+      "id": "decision-2026-03-16-san-rafael-city-council-4a-direction-or-receipt-received-the-project-update-and-provided-direction-regarding-the-operational-fra",
+      "type": "Decision",
+      "label": "Received the project update and provided direction regarding the operational framework for the",
+      "role": "primary",
+      "route": "/graph?focus=decision-2026-03-16-san-rafael-city-council-4a-direction-or-receipt-received-the-project-update-and-provided-direction-regarding-the-operational-fra"
+    },
+    {
+      "id": "moneyflow-2025-11-17-350-merrydale-brokerage-services",
+      "type": "MoneyFlow",
+      "label": "moneyflow-2025-11-17-350-merrydale-brokerage-services",
+      "role": "primary",
+      "route": "/graph?focus=moneyflow-2025-11-17-350-merrydale-brokerage-services"
+    },
+    {
+      "id": "moneyflow-2025-11-17-350-merrydale-county-grant",
+      "type": "MoneyFlow",
+      "label": "moneyflow-2025-11-17-350-merrydale-county-grant",
+      "role": "primary",
+      "route": "/graph?focus=moneyflow-2025-11-17-350-merrydale-county-grant"
+    },
+    {
+      "id": "moneyflow-2025-11-17-350-merrydale-property-acquisition",
+      "type": "MoneyFlow",
+      "label": "moneyflow-2025-11-17-350-merrydale-property-acquisition",
+      "role": "primary",
+      "route": "/graph?focus=moneyflow-2025-11-17-350-merrydale-property-acquisition"
+    },
+    {
+      "id": "moneyflow-2026-02-17-350-merrydale-lca-design-amendment",
+      "type": "MoneyFlow",
+      "label": "moneyflow-2026-02-17-350-merrydale-lca-design-amendment",
+      "role": "primary",
+      "route": "/graph?focus=moneyflow-2026-02-17-350-merrydale-lca-design-amendment"
+    },
+    {
+      "id": "moneyflow-2026-02-17-350-merrydale-swinerton-services",
+      "type": "MoneyFlow",
+      "label": "moneyflow-2026-02-17-350-merrydale-swinerton-services",
+      "role": "primary",
+      "route": "/graph?focus=moneyflow-2026-02-17-350-merrydale-swinerton-services"
+    },
+    {
+      "id": "record-2024-11-04-san-rafael-city-council-special-minutes",
+      "type": "Record",
+      "label": "Minutes Pdf",
+      "role": "primary",
+      "route": "/graph?focus=record-2024-11-04-san-rafael-city-council-special-minutes"
+    },
+    {
+      "id": "record-2024-11-04-san-rafael-city-council-special-page",
+      "type": "Record",
+      "label": "Meeting Page",
+      "role": "primary",
+      "route": "/graph?focus=record-2024-11-04-san-rafael-city-council-special-page"
+    },
+    {
+      "id": "record-2025-11-17-350-merrydale-resolution-county-grant-and-affordable-housing",
+      "type": "Record",
+      "label": "Resolution",
+      "role": "primary",
+      "route": "/graph?focus=record-2025-11-17-350-merrydale-resolution-county-grant-and-affordable-housing"
+    },
+    {
+      "id": "record-2025-11-17-350-merrydale-resolution-purchase-and-brokerage",
+      "type": "Record",
+      "label": "Resolution",
+      "role": "primary",
+      "route": "/graph?focus=record-2025-11-17-350-merrydale-resolution-purchase-and-brokerage"
+    },
+    {
+      "id": "record-2025-11-17-350-merrydale-staff-report",
+      "type": "Record",
+      "label": "Staff Report",
+      "role": "primary",
+      "route": "/graph?focus=record-2025-11-17-350-merrydale-staff-report"
+    },
+    {
+      "id": "record-2025-11-17-san-rafael-city-council-agenda-packet",
+      "type": "Record",
+      "label": "Agenda Packet",
+      "role": "primary",
+      "route": "/graph?focus=record-2025-11-17-san-rafael-city-council-agenda-packet"
+    },
+    {
+      "id": "record-2025-11-17-san-rafael-city-council-minutes",
+      "type": "Record",
+      "label": "Minutes Pdf",
+      "role": "primary",
+      "route": "/graph?focus=record-2025-11-17-san-rafael-city-council-minutes"
+    },
+    {
+      "id": "record-2025-11-17-san-rafael-city-council-page",
+      "type": "Record",
+      "label": "Meeting Page",
+      "role": "primary",
+      "route": "/graph?focus=record-2025-11-17-san-rafael-city-council-page"
+    },
+    {
+      "id": "record-2025-12-01-san-rafael-city-council-minutes",
+      "type": "Record",
+      "label": "Minutes Pdf",
+      "role": "primary",
+      "route": "/graph?focus=record-2025-12-01-san-rafael-city-council-minutes"
+    },
+    {
+      "id": "record-2025-12-01-san-rafael-city-council-page",
+      "type": "Record",
+      "label": "Meeting Page",
+      "role": "primary",
+      "route": "/graph?focus=record-2025-12-01-san-rafael-city-council-page"
+    },
+    {
+      "id": "record-2026-02-17-350-merrydale-lca-amendment",
+      "type": "Record",
+      "label": "Amendment Attachment",
+      "role": "primary",
+      "route": "/graph?focus=record-2026-02-17-350-merrydale-lca-amendment"
+    },
+    {
+      "id": "record-2026-02-17-350-merrydale-resolution-project-services",
+      "type": "Record",
+      "label": "Resolution",
+      "role": "primary",
+      "route": "/graph?focus=record-2026-02-17-350-merrydale-resolution-project-services"
+    },
+    {
+      "id": "record-2026-02-17-350-merrydale-staff-report",
+      "type": "Record",
+      "label": "Staff Report",
+      "role": "primary",
+      "route": "/graph?focus=record-2026-02-17-350-merrydale-staff-report"
+    },
+    {
+      "id": "record-2026-02-17-350-merrydale-swinerton-psa",
+      "type": "Record",
+      "label": "Agreement Attachment",
+      "role": "primary",
+      "route": "/graph?focus=record-2026-02-17-350-merrydale-swinerton-psa"
+    },
+    {
+      "id": "record-2026-02-17-san-rafael-city-council-agenda-packet",
+      "type": "Record",
+      "label": "Agenda Packet",
+      "role": "primary",
+      "route": "/graph?focus=record-2026-02-17-san-rafael-city-council-agenda-packet"
+    },
+    {
+      "id": "record-2026-02-17-san-rafael-city-council-minutes",
+      "type": "Record",
+      "label": "Minutes Pdf",
+      "role": "primary",
+      "route": "/graph?focus=record-2026-02-17-san-rafael-city-council-minutes"
+    },
+    {
+      "id": "record-2026-02-17-san-rafael-city-council-page",
+      "type": "Record",
+      "label": "Meeting Page",
+      "role": "primary",
+      "route": "/graph?focus=record-2026-02-17-san-rafael-city-council-page"
+    },
+    {
+      "id": "record-2026-03-16-san-rafael-city-council-minutes",
+      "type": "Record",
+      "label": "Minutes Pdf",
+      "role": "primary",
+      "route": "/graph?focus=record-2026-03-16-san-rafael-city-council-minutes"
+    },
+    {
+      "id": "record-2026-03-16-san-rafael-city-council-page",
+      "type": "Record",
+      "label": "Meeting Page",
+      "role": "primary",
+      "route": "/graph?focus=record-2026-03-16-san-rafael-city-council-page"
+    },
+    {
+      "id": "record-san-rafael-sanctioned-camping-area-page",
+      "type": "Record",
+      "label": "Official Program Page",
+      "role": "primary",
+      "route": "/graph?focus=record-san-rafael-sanctioned-camping-area-page"
+    },
+    {
+      "id": "org-city-of-san-rafael",
+      "type": "Organization",
+      "label": "City of San Rafael",
+      "role": "secondary",
+      "route": "/graph?focus=org-city-of-san-rafael"
+    },
+    {
+      "id": "case-boyd-v-city-of-san-rafael",
+      "type": "Case",
+      "label": "Boyd v. City of San Rafael",
+      "role": "secondary",
+      "route": "/graph?focus=case-boyd-v-city-of-san-rafael"
+    },
+    {
+      "id": "case-city-of-grants-pass-v-johnson",
+      "type": "Case",
+      "label": "City of Grants Pass v. Johnson",
+      "role": "secondary",
+      "route": "/graph?focus=case-city-of-grants-pass-v-johnson"
+    },
+    {
+      "id": "org-lca-architects",
+      "type": "Organization",
+      "label": "LCA Architects",
+      "role": "secondary",
+      "route": "/graph?focus=org-lca-architects"
+    },
+    {
+      "id": "org-newmark-commercial-brokerage",
+      "type": "Organization",
+      "label": "Cornish and Carey Commercial (d/b/a Newmark)",
+      "role": "secondary",
+      "route": "/graph?focus=org-newmark-commercial-brokerage"
+    },
+    {
+      "id": "org-swinerton-management-and-consulting",
+      "type": "Organization",
+      "label": "Swinerton Management & Consulting",
+      "role": "secondary",
+      "route": "/graph?focus=org-swinerton-management-and-consulting"
+    },
+    {
+      "id": "agenda-item-2024-11-04-san-rafael-city-council-special-7a",
+      "type": "AgendaItem",
+      "label": "agenda-item-2024-11-04-san-rafael-city-council-special-7a",
+      "role": "secondary",
+      "route": "/graph?focus=agenda-item-2024-11-04-san-rafael-city-council-special-7a"
+    },
+    {
+      "id": "person-eli-hill",
+      "type": "Person",
+      "label": "Eli Hill",
+      "role": "secondary",
+      "route": "/graph?focus=person-eli-hill"
+    },
+    {
+      "id": "person-kate-colin",
+      "type": "Person",
+      "label": "Kate Colin",
+      "role": "secondary",
+      "route": "/graph?focus=person-kate-colin"
+    },
+    {
+      "id": "person-maika-llorens-gulati",
+      "type": "Person",
+      "label": "Maika Llorens Gulati",
+      "role": "secondary",
+      "route": "/graph?focus=person-maika-llorens-gulati"
+    },
+    {
+      "id": "person-maribeth-bushey",
+      "type": "Person",
+      "label": "Maribeth Bushey",
+      "role": "secondary",
+      "route": "/graph?focus=person-maribeth-bushey"
+    },
+    {
+      "id": "person-rachel-kertz",
+      "type": "Person",
+      "label": "Rachel Kertz",
+      "role": "secondary",
+      "route": "/graph?focus=person-rachel-kertz"
+    },
+    {
+      "id": "meeting-2024-11-04-san-rafael-city-council-special",
+      "type": "Meeting",
+      "label": "San Rafael City Council meeting \u2014 2024-11-04",
+      "role": "secondary",
+      "route": "/graph?focus=meeting-2024-11-04-san-rafael-city-council-special"
+    },
+    {
+      "id": "org-san-rafael-city-council",
+      "type": "Organization",
+      "label": "San Rafael City Council",
+      "role": "secondary",
+      "route": "/graph?focus=org-san-rafael-city-council"
+    },
+    {
+      "id": "meeting-2025-11-17-san-rafael-city-council",
+      "type": "Meeting",
+      "label": "San Rafael City Council meeting \u2014 2025-11-17",
+      "role": "secondary",
+      "route": "/graph?focus=meeting-2025-11-17-san-rafael-city-council"
     }
   ],
-  "edges": []
+  "edges": [
+    {
+      "source": "project-san-rafael-350-merrydale-interim-shelter",
+      "target": "program-san-rafael-sanctioned-camping",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "agreement-350-merrydale-affordable-housing",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "agreement-350-merrydale-county-grant",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "agreement-350-merrydale-lca-design-services",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "agreement-350-merrydale-newmark-brokerage",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "agreement-350-merrydale-purchase-and-sale",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "agreement-350-merrydale-swinerton-project-management",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "amendment-350-merrydale-lca-design-services-2026-02-17",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2024-11-04-san-rafael-city-council-special-7a-motion-approval",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2025-11-17-350-merrydale-county-grant-approval",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2025-12-01-san-rafael-city-council-4b-approval-approved-final-adoption-of-ordinance-2057",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2026-02-17-350-merrydale-project-services-authorization",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2026-03-16-san-rafael-city-council-4a-direction-or-receipt-received-the-project-update-and-provided-direction-regarding-the-operational-fra",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "moneyflow-2025-11-17-350-merrydale-brokerage-services",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "moneyflow-2025-11-17-350-merrydale-county-grant",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "moneyflow-2025-11-17-350-merrydale-property-acquisition",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "moneyflow-2026-02-17-350-merrydale-lca-design-amendment",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "moneyflow-2026-02-17-350-merrydale-swinerton-services",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2024-11-04-san-rafael-city-council-special-minutes",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2024-11-04-san-rafael-city-council-special-page",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2025-11-17-350-merrydale-resolution-county-grant-and-affordable-housing",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2025-11-17-350-merrydale-resolution-purchase-and-brokerage",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2025-11-17-350-merrydale-staff-report",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2025-11-17-san-rafael-city-council-agenda-packet",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2025-11-17-san-rafael-city-council-minutes",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2025-11-17-san-rafael-city-council-page",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2025-12-01-san-rafael-city-council-minutes",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2025-12-01-san-rafael-city-council-page",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2026-02-17-350-merrydale-lca-amendment",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2026-02-17-350-merrydale-resolution-project-services",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2026-02-17-350-merrydale-staff-report",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2026-02-17-350-merrydale-swinerton-psa",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2026-02-17-san-rafael-city-council-agenda-packet",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2026-02-17-san-rafael-city-council-minutes",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2026-02-17-san-rafael-city-council-page",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2026-03-16-san-rafael-city-council-minutes",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-2026-03-16-san-rafael-city-council-page",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "record-san-rafael-sanctioned-camping-area-page",
+      "target": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "RELATES_TO_PROJECT",
+      "style": "governance"
+    },
+    {
+      "source": "program-san-rafael-sanctioned-camping",
+      "target": "org-city-of-san-rafael",
+      "type": "OPERATED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "case-boyd-v-city-of-san-rafael",
+      "target": "program-san-rafael-sanctioned-camping",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "case-city-of-grants-pass-v-johnson",
+      "target": "program-san-rafael-sanctioned-camping",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "record-san-rafael-sanctioned-camping-area-page",
+      "target": "program-san-rafael-sanctioned-camping",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "moneyflow-2025-11-17-350-merrydale-county-grant",
+      "target": "agreement-350-merrydale-county-grant",
+      "type": "RELATES_TO_AGREEMENT",
+      "style": "money"
+    },
+    {
+      "source": "amendment-350-merrydale-lca-design-services-2026-02-17",
+      "target": "agreement-350-merrydale-lca-design-services",
+      "type": "AMENDS_AGREEMENT",
+      "style": "governance"
+    },
+    {
+      "source": "agreement-350-merrydale-lca-design-services",
+      "target": "org-lca-architects",
+      "type": "COUNTERPARTY_ACTOR",
+      "style": "governance"
+    },
+    {
+      "source": "moneyflow-2026-02-17-350-merrydale-lca-design-amendment",
+      "target": "agreement-350-merrydale-lca-design-services",
+      "type": "RELATES_TO_AGREEMENT",
+      "style": "money"
+    },
+    {
+      "source": "agreement-350-merrydale-newmark-brokerage",
+      "target": "org-newmark-commercial-brokerage",
+      "type": "COUNTERPARTY_ACTOR",
+      "style": "governance"
+    },
+    {
+      "source": "moneyflow-2025-11-17-350-merrydale-brokerage-services",
+      "target": "agreement-350-merrydale-newmark-brokerage",
+      "type": "RELATES_TO_AGREEMENT",
+      "style": "money"
+    },
+    {
+      "source": "moneyflow-2025-11-17-350-merrydale-property-acquisition",
+      "target": "agreement-350-merrydale-purchase-and-sale",
+      "type": "RELATES_TO_AGREEMENT",
+      "style": "money"
+    },
+    {
+      "source": "agreement-350-merrydale-swinerton-project-management",
+      "target": "org-swinerton-management-and-consulting",
+      "type": "COUNTERPARTY_ACTOR",
+      "style": "governance"
+    },
+    {
+      "source": "moneyflow-2026-02-17-350-merrydale-swinerton-services",
+      "target": "agreement-350-merrydale-swinerton-project-management",
+      "type": "RELATES_TO_AGREEMENT",
+      "style": "money"
+    },
+    {
+      "source": "amendment-350-merrydale-lca-design-services-2026-02-17",
+      "target": "agreement-350-merrydale-lca-design-services",
+      "type": "AMENDS_AGREEMENT",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2024-11-04-san-rafael-city-council-special-7a-motion-approval",
+      "target": "agenda-item-2024-11-04-san-rafael-city-council-special-7a",
+      "type": "ABOUT_AGENDA_ITEM",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2024-11-04-san-rafael-city-council-special-7a-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2024-11-04-san-rafael-city-council-special-7a-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2024-11-04-san-rafael-city-council-special-7a-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2024-11-04-san-rafael-city-council-special-7a-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2024-11-04-san-rafael-city-council-special-7a-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2024-11-04-san-rafael-city-council-special-7a-motion-approval",
+      "target": "meeting-2024-11-04-san-rafael-city-council-special",
+      "type": "AT_MEETING",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2024-11-04-san-rafael-city-council-special-7a-motion-approval",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
+      "target": "meeting-2025-11-17-san-rafael-city-council",
+      "type": "AT_MEETING",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2025-11-17-350-merrydale-county-grant-approval",
+      "target": "meeting-2025-11-17-san-rafael-city-council",
+      "type": "AT_MEETING",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2025-11-17-350-merrydale-county-grant-approval",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2025-12-01-san-rafael-city-council-4b-approval-approved-final-adoption-of-ordinance-2057",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2026-02-17-350-merrydale-project-services-authorization",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2026-03-16-san-rafael-city-council-4a-direction-or-receipt-received-the-project-update-and-provided-direction-regarding-the-operational-fra",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2026-03-16-san-rafael-city-council-4a-direction-or-receipt-received-the-project-update-and-provided-direction-regarding-the-operational-fra",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2026-03-16-san-rafael-city-council-4a-direction-or-receipt-received-the-project-update-and-provided-direction-regarding-the-operational-fra",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2026-03-16-san-rafael-city-council-4a-direction-or-receipt-received-the-project-update-and-provided-direction-regarding-the-operational-fra",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2026-03-16-san-rafael-city-council-4a-direction-or-receipt-received-the-project-update-and-provided-direction-regarding-the-operational-fra",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2026-03-16-san-rafael-city-council-4a-direction-or-receipt-received-the-project-update-and-provided-direction-regarding-the-operational-fra",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "moneyflow-2025-11-17-350-merrydale-brokerage-services",
+      "target": "agreement-350-merrydale-newmark-brokerage",
+      "type": "RELATES_TO_AGREEMENT",
+      "style": "money"
+    },
+    {
+      "source": "moneyflow-2025-11-17-350-merrydale-brokerage-services",
+      "target": "org-newmark-commercial-brokerage",
+      "type": "TO_TARGET",
+      "style": "money"
+    },
+    {
+      "source": "moneyflow-2025-11-17-350-merrydale-county-grant",
+      "target": "agreement-350-merrydale-county-grant",
+      "type": "RELATES_TO_AGREEMENT",
+      "style": "money"
+    },
+    {
+      "source": "moneyflow-2025-11-17-350-merrydale-property-acquisition",
+      "target": "agreement-350-merrydale-purchase-and-sale",
+      "type": "RELATES_TO_AGREEMENT",
+      "style": "money"
+    },
+    {
+      "source": "moneyflow-2026-02-17-350-merrydale-lca-design-amendment",
+      "target": "agreement-350-merrydale-lca-design-services",
+      "type": "RELATES_TO_AGREEMENT",
+      "style": "money"
+    },
+    {
+      "source": "moneyflow-2026-02-17-350-merrydale-lca-design-amendment",
+      "target": "org-lca-architects",
+      "type": "TO_TARGET",
+      "style": "money"
+    },
+    {
+      "source": "moneyflow-2026-02-17-350-merrydale-swinerton-services",
+      "target": "agreement-350-merrydale-swinerton-project-management",
+      "type": "RELATES_TO_AGREEMENT",
+      "style": "money"
+    },
+    {
+      "source": "moneyflow-2026-02-17-350-merrydale-swinerton-services",
+      "target": "org-swinerton-management-and-consulting",
+      "type": "TO_TARGET",
+      "style": "money"
+    },
+    {
+      "source": "record-san-rafael-sanctioned-camping-area-page",
+      "target": "program-san-rafael-sanctioned-camping",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    }
+  ]
 }

@@ -1,10 +1,10 @@
 {
   "slug": "kate-colin",
   "display_name": "Kate Colin \u2014 Mayor",
-  "built_at": "2026-04-19T21:15:22+00:00",
+  "built_at": "2026-04-19T22:26:24+00:00",
   "focus_node_id": "person-kate-colin",
   "headline_stats": {
-    "caption": "Mayor \u00b7 0 offices \u00b7 52 filings \u00b7 0 votes",
+    "caption": "Mayor \u00b7 0 offices \u00b7 50 filings \u00b7 0 votes",
     "kicker": "SIGNATURE SUBGRAPH \u00b7 KATE COLIN \u2014 MAYOR"
   },
   "nodes": [
@@ -14,6 +14,20 @@
       "label": "Kate Colin",
       "role": "focus",
       "route": "/graph?focus=person-kate-colin"
+    },
+    {
+      "id": "candidacy-kate-colin-san-rafael-mayor-2020",
+      "type": "Candidacy",
+      "label": "candidacy-kate-colin-san-rafael-mayor-2020",
+      "role": "primary",
+      "route": "/graph?focus=candidacy-kate-colin-san-rafael-mayor-2020"
+    },
+    {
+      "id": "candidacy-kate-colin-san-rafael-mayor-2024",
+      "type": "Candidacy",
+      "label": "candidacy-kate-colin-san-rafael-mayor-2024",
+      "role": "primary",
+      "route": "/graph?focus=candidacy-kate-colin-san-rafael-mayor-2024"
     },
     {
       "id": "committee-kate-colin-for-mayor-2020",
@@ -378,23 +392,21 @@
       "label": "Form 497",
       "role": "primary",
       "route": "/graph?focus=filing-san-rafael-campaign-entry-37776"
-    },
-    {
-      "id": "filing-san-rafael-campaign-entry-37809",
-      "type": "Filing",
-      "label": "Form 497",
-      "role": "primary",
-      "route": "/graph?focus=filing-san-rafael-campaign-entry-37809"
-    },
-    {
-      "id": "filing-san-rafael-campaign-entry-40249",
-      "type": "Filing",
-      "label": "Form 460",
-      "role": "primary",
-      "route": "/graph?focus=filing-san-rafael-campaign-entry-40249"
     }
   ],
   "edges": [
+    {
+      "source": "candidacy-kate-colin-san-rafael-mayor-2020",
+      "target": "person-kate-colin",
+      "type": "CANDIDATE_ACTOR",
+      "style": "governance"
+    },
+    {
+      "source": "candidacy-kate-colin-san-rafael-mayor-2024",
+      "target": "person-kate-colin",
+      "type": "CANDIDATE_ACTOR",
+      "style": "governance"
+    },
     {
       "source": "committee-kate-colin-for-mayor-2020",
       "target": "person-kate-colin",
@@ -708,15 +720,597 @@
       "style": "governance"
     },
     {
-      "source": "filing-san-rafael-campaign-entry-37809",
-      "target": "person-kate-colin",
-      "type": "FILED_BY",
+      "source": "candidacy-kate-colin-san-rafael-mayor-2020",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "CONTROLLED_BY_COMMITTEE",
       "style": "governance"
     },
     {
-      "source": "filing-san-rafael-campaign-entry-40249",
-      "target": "person-kate-colin",
-      "type": "FILED_BY",
+      "source": "candidacy-kate-colin-san-rafael-mayor-2024",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "CONTROLLED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "candidacy-kate-colin-san-rafael-mayor-2020",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "CONTROLLED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-28439",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-28450",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-28597",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-28598",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-28599",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-28600",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-28601",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-31114",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-31115",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-31116",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-31117",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-31874",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-31935",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-31941",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-32132",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-32225",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-32228",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-32278",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-32288",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-32521",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-32634",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-33340",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-33990",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-34864",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35557",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35558",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35646",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "candidacy-kate-colin-san-rafael-mayor-2024",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "CONTROLLED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35555",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35556",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35559",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35813",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36094",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36095",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36096",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36144",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36410",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36459",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36561",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-37369",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-37487",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-37609",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-37677",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-37733",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-37775",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-37776",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2021-03-29-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "target": "filing-san-rafael-form700-2021-03-29-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "type": "DISCLOSED_IN_FILING",
+      "style": "money"
+    },
+    {
+      "source": "filing-san-rafael-form700-2022-03-24-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "target": "filing-san-rafael-form700-2022-03-24-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "type": "DISCLOSED_IN_FILING",
+      "style": "money"
+    },
+    {
+      "source": "filing-san-rafael-form700-2023-03-14-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "target": "filing-san-rafael-form700-2023-03-14-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "type": "DISCLOSED_IN_FILING",
+      "style": "money"
+    },
+    {
+      "source": "filing-san-rafael-form700-2024-03-28-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "target": "filing-san-rafael-form700-2024-03-28-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "type": "DISCLOSED_IN_FILING",
+      "style": "money"
+    },
+    {
+      "source": "filing-san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council",
+      "target": "filing-san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council",
+      "type": "DISCLOSED_IN_FILING",
+      "style": "money"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-28439",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-28450",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-28597",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-28598",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-28599",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-28600",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-28601",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-31114",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-31115",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-31116",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-31117",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-31874",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-31935",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-31941",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-32132",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-32225",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-32228",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-32278",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-32288",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-32521",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-32634",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-33340",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-33990",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-34864",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35555",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35556",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35557",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35558",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35559",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35646",
+      "target": "committee-kate-colin-for-mayor-2020",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35813",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36094",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36095",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36096",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36144",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36410",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36459",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36561",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-37369",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-37487",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-37609",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-37677",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-37733",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-37775",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-37776",
+      "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+      "type": "FILED_BY_COMMITTEE",
       "style": "governance"
     }
   ]

@@ -1,10 +1,10 @@
 {
   "slug": "boyd-v-san-rafael",
   "display_name": "Boyd v. City of San Rafael",
-  "built_at": "2026-04-19T21:15:22+00:00",
+  "built_at": "2026-04-19T22:26:24+00:00",
   "focus_node_id": "case-boyd-v-city-of-san-rafael",
   "headline_stats": {
-    "caption": "federal \u00b7 0 proceedings \u00b7 constrains 0 decisions",
+    "caption": "federal \u00b7 6 proceedings \u00b7 constrains 0 decisions",
     "kicker": "SIGNATURE SUBGRAPH \u00b7 BOYD V. CITY OF SAN RAFAEL"
   },
   "nodes": [
@@ -21,6 +21,62 @@
       "label": "U.S. District Court, Northern District of California",
       "role": "primary",
       "route": "/graph?focus=org-us-district-court-ndca"
+    },
+    {
+      "id": "proceeding-boyd-complaint-filed-2023-08-11",
+      "type": "Proceeding",
+      "label": "proceeding-boyd-complaint-filed-2023-08-11",
+      "role": "primary",
+      "route": "/graph?focus=proceeding-boyd-complaint-filed-2023-08-11"
+    },
+    {
+      "id": "proceeding-boyd-dismissal-order-2024-08-07",
+      "type": "Proceeding",
+      "label": "proceeding-boyd-dismissal-order-2024-08-07",
+      "role": "primary",
+      "route": "/graph?focus=proceeding-boyd-dismissal-order-2024-08-07"
+    },
+    {
+      "id": "proceeding-boyd-motion-hearing-2024-07-15",
+      "type": "Proceeding",
+      "label": "proceeding-boyd-motion-hearing-2024-07-15",
+      "role": "primary",
+      "route": "/graph?focus=proceeding-boyd-motion-hearing-2024-07-15"
+    },
+    {
+      "id": "proceeding-boyd-motion-to-dismiss-filed-2024-05-10",
+      "type": "Proceeding",
+      "label": "proceeding-boyd-motion-to-dismiss-filed-2024-05-10",
+      "role": "primary",
+      "route": "/graph?focus=proceeding-boyd-motion-to-dismiss-filed-2024-05-10"
+    },
+    {
+      "id": "proceeding-boyd-preliminary-injunction-2023-10-19",
+      "type": "Proceeding",
+      "label": "proceeding-boyd-preliminary-injunction-2023-10-19",
+      "role": "primary",
+      "route": "/graph?focus=proceeding-boyd-preliminary-injunction-2023-10-19"
+    },
+    {
+      "id": "proceeding-boyd-tro-granted-2023-08-15",
+      "type": "Proceeding",
+      "label": "proceeding-boyd-tro-granted-2023-08-15",
+      "role": "primary",
+      "route": "/graph?focus=proceeding-boyd-tro-granted-2023-08-15"
+    },
+    {
+      "id": "program-san-rafael-camping-ordinance-implementation",
+      "type": "Program",
+      "label": "San Rafael camping ordinance implementation and enforcement",
+      "role": "primary",
+      "route": "/graph?focus=program-san-rafael-camping-ordinance-implementation"
+    },
+    {
+      "id": "program-san-rafael-sanctioned-camping",
+      "type": "Program",
+      "label": "San Rafael sanctioned camping program",
+      "role": "primary",
+      "route": "/graph?focus=program-san-rafael-sanctioned-camping"
     },
     {
       "id": "org-shaleeta-boyd-et-al",
@@ -44,6 +100,286 @@
       "route": "/graph?focus=person-shaleeta-boyd-et-al"
     },
     {
+      "id": "org-edward-m-chen",
+      "type": "Organization",
+      "label": "Edward M. Chen",
+      "role": "secondary",
+      "route": "/graph?focus=org-edward-m-chen"
+    },
+    {
+      "id": "person-edward-m-chen",
+      "type": "Person",
+      "label": "Edward M. Chen",
+      "role": "secondary",
+      "route": "/graph?focus=person-edward-m-chen"
+    },
+    {
+      "id": "org-trina-l-thompson",
+      "type": "Organization",
+      "label": "Trina L. Thompson",
+      "role": "secondary",
+      "route": "/graph?focus=org-trina-l-thompson"
+    },
+    {
+      "id": "person-trina-l-thompson",
+      "type": "Person",
+      "label": "Trina L. Thompson",
+      "role": "secondary",
+      "route": "/graph?focus=person-trina-l-thompson"
+    },
+    {
+      "id": "case-city-of-grants-pass-v-johnson",
+      "type": "Case",
+      "label": "City of Grants Pass v. Johnson",
+      "role": "secondary",
+      "route": "/graph?focus=case-city-of-grants-pass-v-johnson"
+    },
+    {
+      "id": "doc-2023-12-14-implementation-plan",
+      "type": "Record",
+      "label": "Record",
+      "role": "secondary",
+      "route": "/graph?focus=doc-2023-12-14-implementation-plan"
+    },
+    {
+      "id": "doc-2024-06-14-homelessness-update",
+      "type": "Record",
+      "label": "Record",
+      "role": "secondary",
+      "route": "/graph?focus=doc-2024-06-14-homelessness-update"
+    },
+    {
+      "id": "doc-2024-06-28-grants-pass-statement",
+      "type": "Record",
+      "label": "Record",
+      "role": "secondary",
+      "route": "/graph?focus=doc-2024-06-28-grants-pass-statement"
+    },
+    {
+      "id": "doc-2024-08-08-boyd-dismissal-release",
+      "type": "Record",
+      "label": "Record",
+      "role": "secondary",
+      "route": "/graph?focus=doc-2024-08-08-boyd-dismissal-release"
+    },
+    {
+      "id": "doc-2025-01-24-homelessness-update",
+      "type": "Record",
+      "label": "Record",
+      "role": "secondary",
+      "route": "/graph?focus=doc-2025-01-24-homelessness-update"
+    },
+    {
+      "id": "record-2023-07-10-san-rafael-city-council-special-minutes",
+      "type": "Record",
+      "label": "Minutes Pdf",
+      "role": "secondary",
+      "route": "/graph?focus=record-2023-07-10-san-rafael-city-council-special-minutes"
+    },
+    {
+      "id": "record-2023-07-17-san-rafael-city-council-minutes",
+      "type": "Record",
+      "label": "Minutes Pdf",
+      "role": "secondary",
+      "route": "/graph?focus=record-2023-07-17-san-rafael-city-council-minutes"
+    },
+    {
+      "id": "record-2024-04-15-san-rafael-city-council-minutes",
+      "type": "Record",
+      "label": "Minutes Pdf",
+      "role": "secondary",
+      "route": "/graph?focus=record-2024-04-15-san-rafael-city-council-minutes"
+    },
+    {
+      "id": "record-2024-10-07-san-rafael-city-council-special-minutes",
+      "type": "Record",
+      "label": "Minutes Pdf",
+      "role": "secondary",
+      "route": "/graph?focus=record-2024-10-07-san-rafael-city-council-special-minutes"
+    },
+    {
+      "id": "record-2025-04-07-san-rafael-city-council-special-minutes",
+      "type": "Record",
+      "label": "Minutes Pdf",
+      "role": "secondary",
+      "route": "/graph?focus=record-2025-04-07-san-rafael-city-council-special-minutes"
+    },
+    {
+      "id": "record-san-rafael-grants-pass-explainer-2024-09-02",
+      "type": "Record",
+      "label": "Official Legal Explainer",
+      "role": "secondary",
+      "route": "/graph?focus=record-san-rafael-grants-pass-explainer-2024-09-02"
+    },
+    {
+      "id": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "Project",
+      "label": "350 Merrydale Interim Shelter Project",
+      "role": "secondary",
+      "route": "/graph?focus=project-san-rafael-350-merrydale-interim-shelter"
+    },
+    {
+      "id": "record-san-rafael-sanctioned-camping-area-page",
+      "type": "Record",
+      "label": "Official Program Page",
+      "role": "secondary",
+      "route": "/graph?focus=record-san-rafael-sanctioned-camping-area-page"
+    },
+    {
+      "id": "filing-san-rafael-form700-2020-12-23-kertz-rachel-assuming-office-city-council-member-city-council",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2020-12-23-kertz-rachel-assuming-office-city-council-member-city-council"
+    },
+    {
+      "id": "filing-san-rafael-form700-2020-12-30-llorens-gulati-maika-assuming-office-city-council-member-city-council",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2020-12-30-llorens-gulati-maika-assuming-office-city-council-member-city-council"
+    },
+    {
+      "id": "filing-san-rafael-form700-2021-03-29-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2021-03-29-colin-catherine-annual-city-council-member-mayor-city-council-city-council"
+    },
+    {
+      "id": "filing-san-rafael-form700-2022-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2022-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district"
+    },
+    {
+      "id": "filing-san-rafael-form700-2022-03-21-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2022-03-21-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy"
+    },
+    {
+      "id": "filing-san-rafael-form700-2022-03-24-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2022-03-24-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district"
+    },
+    {
+      "id": "filing-san-rafael-form700-2023-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2023-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district"
+    },
+    {
+      "id": "filing-san-rafael-form700-2023-03-13-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2023-03-13-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy"
+    },
+    {
+      "id": "filing-san-rafael-form700-2023-03-14-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2023-03-14-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district"
+    },
+    {
+      "id": "filing-san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council"
+    },
+    {
+      "id": "filing-san-rafael-form700-2023-04-03-bushey-maribeth-annual-city-council-member-city-council",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2023-04-03-bushey-maribeth-annual-city-council-member-city-council"
+    },
+    {
+      "id": "filing-san-rafael-form700-2024-03-28-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2024-03-28-colin-catherine-annual-city-council-member-mayor-city-council-city-council"
+    },
+    {
+      "id": "filing-san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council"
+    },
+    {
+      "id": "filing-san-rafael-form700-2024-04-02-bushey-maribeth-annual-city-council-member-city-council",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2024-04-02-bushey-maribeth-annual-city-council-member-city-council"
+    },
+    {
+      "id": "filing-san-rafael-form700-2024-04-02-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2024-04-02-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district"
+    },
+    {
+      "id": "filing-san-rafael-form700-2024-04-05-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2024-04-05-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy"
+    },
+    {
+      "id": "filing-san-rafael-form700-2025-03-23-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2025-03-23-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district"
+    },
+    {
+      "id": "filing-san-rafael-form700-2025-03-28-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2025-03-28-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy"
+    },
+    {
+      "id": "filing-san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council"
+    },
+    {
+      "id": "filing-san-rafael-form700-2025-03-31-bushey-maribeth-annual-city-council-member-city-council",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2025-03-31-bushey-maribeth-annual-city-council-member-city-council"
+    },
+    {
+      "id": "filing-san-rafael-form700-2025-03-31-hill-elias-annual-city-council-member-city-council",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2025-03-31-hill-elias-annual-city-council-member-city-council"
+    },
+    {
+      "id": "filing-2025-09-04-kate-colin-form-803",
+      "type": "Filing",
+      "label": "Form 803 \u00b7 2025-09-04",
+      "role": "secondary",
+      "route": "/graph?focus=filing-2025-09-04-kate-colin-form-803"
+    },
+    {
       "id": "moneyflow-2024-08-19-erf3-joint-award",
       "type": "MoneyFlow",
       "label": "moneyflow-2024-08-19-erf3-joint-award",
@@ -56,160 +392,6 @@
       "label": "moneyflow-1446333-iVLQA8hOR21R",
       "role": "secondary",
       "route": "/graph?focus=moneyflow-1446333-iVLQA8hOR21R"
-    },
-    {
-      "id": "case-cl-69053064",
-      "type": "Case",
-      "label": "case-cl-69053064",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-69053064"
-    },
-    {
-      "id": "case-cl-67631894",
-      "type": "Case",
-      "label": "case-cl-67631894",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-67631894"
-    },
-    {
-      "id": "case-cl-67689404",
-      "type": "Case",
-      "label": "case-cl-67689404",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-67689404"
-    },
-    {
-      "id": "case-cl-67650450",
-      "type": "Case",
-      "label": "case-cl-67650450",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-67650450"
-    },
-    {
-      "id": "case-cl-63197526",
-      "type": "Case",
-      "label": "case-cl-63197526",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-63197526"
-    },
-    {
-      "id": "case-cl-63209114",
-      "type": "Case",
-      "label": "case-cl-63209114",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-63209114"
-    },
-    {
-      "id": "case-cl-5982591",
-      "type": "Case",
-      "label": "case-cl-5982591",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-5982591"
-    },
-    {
-      "id": "case-cl-5937724",
-      "type": "Case",
-      "label": "case-cl-5937724",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-5937724"
-    },
-    {
-      "id": "case-cl-61624868",
-      "type": "Case",
-      "label": "case-cl-61624868",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-61624868"
-    },
-    {
-      "id": "case-cl-5866359",
-      "type": "Case",
-      "label": "case-cl-5866359",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-5866359"
-    },
-    {
-      "id": "case-cl-5891434",
-      "type": "Case",
-      "label": "case-cl-5891434",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-5891434"
-    },
-    {
-      "id": "case-cl-5848857",
-      "type": "Case",
-      "label": "case-cl-5848857",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-5848857"
-    },
-    {
-      "id": "case-cl-5764778",
-      "type": "Case",
-      "label": "case-cl-5764778",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-5764778"
-    },
-    {
-      "id": "case-cl-5779276",
-      "type": "Case",
-      "label": "case-cl-5779276",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-5779276"
-    },
-    {
-      "id": "case-cl-5719100",
-      "type": "Case",
-      "label": "case-cl-5719100",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-5719100"
-    },
-    {
-      "id": "case-cl-5777584",
-      "type": "Case",
-      "label": "case-cl-5777584",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-5777584"
-    },
-    {
-      "id": "case-cl-11254944",
-      "type": "Case",
-      "label": "case-cl-11254944",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-11254944"
-    },
-    {
-      "id": "case-cl-24597516",
-      "type": "Case",
-      "label": "case-cl-24597516",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-24597516"
-    },
-    {
-      "id": "case-cl-32467796",
-      "type": "Case",
-      "label": "case-cl-32467796",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-32467796"
-    },
-    {
-      "id": "case-cl-30704485",
-      "type": "Case",
-      "label": "case-cl-30704485",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-30704485"
-    },
-    {
-      "id": "case-cl-9844391",
-      "type": "Case",
-      "label": "case-cl-9844391",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-9844391"
-    },
-    {
-      "id": "case-cl-9060406",
-      "type": "Case",
-      "label": "case-cl-9060406",
-      "role": "secondary",
-      "route": "/graph?focus=case-cl-9060406"
     }
   ],
   "edges": [
@@ -217,6 +399,54 @@
       "source": "case-boyd-v-city-of-san-rafael",
       "target": "org-us-district-court-ndca",
       "type": "HEARD_IN",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-boyd-complaint-filed-2023-08-11",
+      "target": "case-boyd-v-city-of-san-rafael",
+      "type": "PART_OF_CASE",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-boyd-dismissal-order-2024-08-07",
+      "target": "case-boyd-v-city-of-san-rafael",
+      "type": "PART_OF_CASE",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-boyd-motion-hearing-2024-07-15",
+      "target": "case-boyd-v-city-of-san-rafael",
+      "type": "PART_OF_CASE",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-boyd-motion-to-dismiss-filed-2024-05-10",
+      "target": "case-boyd-v-city-of-san-rafael",
+      "type": "PART_OF_CASE",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-boyd-preliminary-injunction-2023-10-19",
+      "target": "case-boyd-v-city-of-san-rafael",
+      "type": "PART_OF_CASE",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-boyd-tro-granted-2023-08-15",
+      "target": "case-boyd-v-city-of-san-rafael",
+      "type": "PART_OF_CASE",
+      "style": "governance"
+    },
+    {
+      "source": "case-boyd-v-city-of-san-rafael",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "case-boyd-v-city-of-san-rafael",
+      "target": "program-san-rafael-sanctioned-camping",
+      "type": "RELATES_TO_PROGRAM",
       "style": "governance"
     },
     {
@@ -238,6 +468,300 @@
       "style": "governance"
     },
     {
+      "source": "proceeding-boyd-dismissal-order-2024-08-07",
+      "target": "org-edward-m-chen",
+      "type": "HEARD_BY",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-boyd-dismissal-order-2024-08-07",
+      "target": "person-edward-m-chen",
+      "type": "HEARD_BY",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-boyd-motion-hearing-2024-07-15",
+      "target": "org-edward-m-chen",
+      "type": "HEARD_BY",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-boyd-motion-hearing-2024-07-15",
+      "target": "person-edward-m-chen",
+      "type": "HEARD_BY",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-boyd-preliminary-injunction-2023-10-19",
+      "target": "org-edward-m-chen",
+      "type": "HEARD_BY",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-boyd-preliminary-injunction-2023-10-19",
+      "target": "person-edward-m-chen",
+      "type": "HEARD_BY",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-boyd-tro-granted-2023-08-15",
+      "target": "org-trina-l-thompson",
+      "type": "HEARD_BY",
+      "style": "governance"
+    },
+    {
+      "source": "proceeding-boyd-tro-granted-2023-08-15",
+      "target": "person-trina-l-thompson",
+      "type": "HEARD_BY",
+      "style": "governance"
+    },
+    {
+      "source": "program-san-rafael-camping-ordinance-implementation",
+      "target": "org-city-of-san-rafael",
+      "type": "OPERATED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "case-city-of-grants-pass-v-johnson",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "doc-2023-12-14-implementation-plan",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "doc-2024-06-14-homelessness-update",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "doc-2024-06-28-grants-pass-statement",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "doc-2024-08-08-boyd-dismissal-release",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "doc-2025-01-24-homelessness-update",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "record-2023-07-10-san-rafael-city-council-special-minutes",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "record-2023-07-17-san-rafael-city-council-minutes",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "record-2024-04-15-san-rafael-city-council-minutes",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "record-2024-10-07-san-rafael-city-council-special-minutes",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "record-2025-04-07-san-rafael-city-council-special-minutes",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "record-san-rafael-grants-pass-explainer-2024-09-02",
+      "target": "program-san-rafael-camping-ordinance-implementation",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "program-san-rafael-sanctioned-camping",
+      "target": "org-city-of-san-rafael",
+      "type": "OPERATED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "case-city-of-grants-pass-v-johnson",
+      "target": "program-san-rafael-sanctioned-camping",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "project-san-rafael-350-merrydale-interim-shelter",
+      "target": "program-san-rafael-sanctioned-camping",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "record-san-rafael-sanctioned-camping-area-page",
+      "target": "program-san-rafael-sanctioned-camping",
+      "type": "RELATES_TO_PROGRAM",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2020-12-23-kertz-rachel-assuming-office-city-council-member-city-council",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2020-12-30-llorens-gulati-maika-assuming-office-city-council-member-city-council",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2021-03-29-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2022-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2022-03-21-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2022-03-24-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2023-03-06-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2023-03-13-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2023-03-14-colin-catherine-annual-city-council-member-mayor-board-member-city-council-city-council-sanitation-district",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2023-04-03-bushey-maribeth-annual-city-council-member-city-council",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2024-03-28-colin-catherine-annual-city-council-member-mayor-city-council-city-council",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2024-04-02-bushey-maribeth-annual-city-council-member-city-council",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2024-04-02-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2024-04-05-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2025-03-23-kertz-rachel-annual-city-council-member-alternate-city-council-sanitation-district",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2025-03-28-llorens-gulati-maika-annual-city-council-member-board-member-city-council-marin-clean-energy",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2025-03-31-bushey-maribeth-annual-city-council-member-city-council",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2025-03-31-hill-elias-annual-city-council-member-city-council",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "filing-2025-09-04-kate-colin-form-803",
+      "target": "org-city-of-san-rafael",
+      "type": "FILED_WITH",
+      "style": "governance"
+    },
+    {
+      "source": "program-san-rafael-camping-ordinance-implementation",
+      "target": "org-city-of-san-rafael",
+      "type": "OPERATED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "program-san-rafael-sanctioned-camping",
+      "target": "org-city-of-san-rafael",
+      "type": "OPERATED_BY",
+      "style": "governance"
+    },
+    {
       "source": "moneyflow-2024-08-19-erf3-joint-award",
       "target": "org-city-of-san-rafael",
       "type": "TO_TARGET",
@@ -248,270 +772,6 @@
       "target": "org-city-of-san-rafael",
       "type": "TO_TARGET",
       "style": "money"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-69053064",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-67631894",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-67689404",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-67650450",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-63197526",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-63209114",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-5982591",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-5937724",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-61624868",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-5866359",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-5891434",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-5848857",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-5764778",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-5779276",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-5719100",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-5777584",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-11254944",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-24597516",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-32467796",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-30704485",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-9844391",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "org-city-of-san-rafael",
-      "target": "case-cl-9060406",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-69053064",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-67631894",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-67689404",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-67650450",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-63197526",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-63209114",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-5982591",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-5937724",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-61624868",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-5866359",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-5891434",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-5848857",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-5764778",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-5779276",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-5719100",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-5777584",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-11254944",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-24597516",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-32467796",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-30704485",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-9844391",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
-    },
-    {
-      "source": "case-cl-9060406",
-      "target": "org-city-of-san-rafael",
-      "type": "PARTY_TO",
-      "style": "governance"
     }
   ]
 }
