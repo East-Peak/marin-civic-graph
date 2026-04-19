@@ -673,11 +673,27 @@ The checkbox is labeled and the resulting path is visibly marked `PATH VIA LOOSE
   - Subgraph extraction (select nodes → isolate).
   - Temporal filter / date slider (per the temporal semantics in §5.4).
   - Edge-type filter (toggle governance / money / legal-constrains classes, matching §5.2).
-  - Hop limit slider (1–4).
+  - Hop limit slider (1–4, sets the max depth for the "expand all" action below).
   - Save view (session-scoped localStorage; JSON export for longer-term retention).
 - **Interaction**: drag, pan, zoom, lasso-select, right-click for context actions.
-- **Data shape**: starts from `?focus={id}` or empty state ("type a name or click Signature Subgraphs"); loads incrementally as user expands. Each expansion is a live Cypher call.
 - **Freshness**: live Cypher, `INGEST` timestamp is authoritative.
+
+**Initial load contract.**
+
+1. **Empty state** (`/graph` with no `focus` query param): no graph rendered. A centered prompt: `> type a name or pick a signature subgraph` with a list of the 5–8 curated signature subgraphs (links to `/graph?focus={id}`).
+2. **Focused load** (`/graph?focus={id}`): runs the **same two-query selection as the entity-page radial hero** (§5.1.1, Query 1 + Query 2, 40-node cap, Phase-2 edge whitelist). The explorer and the radial hero use the exact same Cypher for the initial load. The only differences are layout (fcose vs concentric) and that the explorer is interactive beyond the cap.
+3. **Default node filters**: `Record`, `Place`, `Issue`, `AgendaItem` are hidden. Three toggle chips in the toolbar (`records`, `places`, `issues`, `agenda items`) flip them on.
+4. **Default edge filters**: governance / money / legal-constrains are all on. Universal edges (`EVIDENCED_BY`, `IN_JURISDICTION`, `RELATES_TO_ISSUE`) are off (and not drawn even if enabled — they re-enter only when the user enables a node filter for Record/Place/Issue, at which point the corresponding universal edge is auto-enabled too).
+5. **Default time slider**: last 5 years from `INGEST` timestamp, clamped to the earliest event in the loaded subgraph (same rule as §5.4).
+
+**Expand contract.** Clicking a node (not the focus — clicking focus is a no-op; clicking anything else) loads that node's 1-hop neighborhood into the current view, subject to:
+- The current edge filters and node filters.
+- A **per-expand cap of 20 nodes**, selected using the same quota table as Phase 2 §5.1.1 but with halved per-type quotas (MoneyFlow: 4, Decision: 4, Filing: 3, etc.). If more are available, the expand footer notes `+{N} more · expand again to load more`.
+- Dedup against already-loaded nodes.
+
+**Right-click → "expand all" (2 hops)** on a node runs a 2-hop expansion capped at 80 nodes with the same filters and full Phase-2 quotas. The hop-limit slider in the toolbar clamps this action globally (e.g., setting it to `1` disables "expand all").
+
+**Filter-change contract.** Changing an edge or node filter applies to already-loaded nodes (shows/hides them) and to future expansions. It does not re-run Query 1/Query 2 — the initial focus subset stays loaded.
 
 ## 7. Entity pages
 
