@@ -41,7 +41,19 @@ describe("neo4j driver module", () => {
 
     const records = await runQuery("RETURN 42 AS x", {});
     expect(records).toHaveLength(1);
-    expect(mockRun).toHaveBeenCalledWith("RETURN 42 AS x", {});
+    // No options → third arg is undefined (so no TransactionConfig is sent).
+    expect(mockRun).toHaveBeenCalledWith("RETURN 42 AS x", {}, undefined);
     expect(mockSession.close).toHaveBeenCalled();
+  });
+
+  it("runQuery threads a per-transaction timeout into TransactionConfig", async () => {
+    const { runQuery } = await import("@/lib/neo4j");
+    const mockRun = vi.fn().mockResolvedValue({ records: [] });
+    const mockSession = { run: mockRun, close: vi.fn() };
+    const { getDriver } = await import("@/lib/neo4j");
+    vi.spyOn(getDriver(), "session").mockReturnValue(mockSession as never);
+
+    await runQuery("RETURN 1", {}, { timeoutMs: 500 });
+    expect(mockRun).toHaveBeenCalledWith("RETURN 1", {}, { timeout: 500 });
   });
 });

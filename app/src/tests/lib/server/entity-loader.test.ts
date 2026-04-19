@@ -178,6 +178,47 @@ describe("loadEntity", () => {
     expect(mockRunQuery).toHaveBeenCalledTimes(3);
   });
 
+  it("falls back to must-show-only when Phase-2 transaction times out", async () => {
+    const focusId = "person-kate-colin";
+    mockRunQuery.mockResolvedValueOnce([focusRecord(focusId, ["Person"])]);
+    // Must-show returns one row.
+    mockRunQuery.mockResolvedValueOnce([
+      record({
+        id: "seatservice-foo",
+        labels: ["SeatService"],
+        label: "SS",
+        ring: 1,
+      }),
+    ]);
+    // Phase-2: simulate the Neo4j server-side transaction timeout error.
+    const timeoutErr = Object.assign(new Error("Transaction timed out"), {
+      code: "Neo.ClientError.Transaction.TransactionTimedOut",
+    });
+    mockRunQuery.mockRejectedValueOnce(timeoutErr);
+    // Edges query still runs.
+    mockRunQuery.mockResolvedValueOnce([]);
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const result = await loadEntity("person", "kate-colin");
+    expect(result).not.toBeNull();
+    expect(result?.neighbors).toHaveLength(1);
+    expect(result?.neighbors[0].role).toBe("must-show");
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("Phase-2 query exceeded"));
+    warnSpy.mockRestore();
+  });
+
+  it("re-throws non-timeout errors from the Phase-2 query", async () => {
+    const focusId = "person-kate-colin";
+    mockRunQuery.mockResolvedValueOnce([focusRecord(focusId, ["Person"])]);
+    mockRunQuery.mockResolvedValueOnce([]); // must-show
+    const genericErr = Object.assign(new Error("Syntax error"), {
+      code: "Neo.ClientError.Statement.SyntaxError",
+    });
+    mockRunQuery.mockRejectedValueOnce(genericErr);
+
+    await expect(loadEntity("person", "kate-colin")).rejects.toThrow("Syntax error");
+  });
+
   it("returns null (→ 404) when the id matches multiple nodes", async () => {
     // Duplicate id — spec §4.2 says the frontend does not disambiguate; log
     // the error and return null so the page renders 404.

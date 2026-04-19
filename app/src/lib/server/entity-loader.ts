@@ -268,20 +268,40 @@ async function runMustShow(
   }));
 }
 
+/**
+ * Is this error a transaction-timeout / transaction-terminated error from
+ * Neo4j? We can't import the driver's Neo4jError type in a server-only
+ * loader without tight coupling, so we duck-type on `code`. Covers the two
+ * distinct codes Neo4j emits when a TransactionConfig.timeout fires.
+ */
+function isTransactionTimeoutError(err: unknown): boolean {
+  if (typeof err !== "object" || err === null) return false;
+  const code = (err as { code?: unknown }).code;
+  if (typeof code !== "string") return false;
+  return (
+    code === "Neo.ClientError.Transaction.TransactionTimedOut" ||
+    code === "Neo.TransientError.Transaction.TransactionTerminated" ||
+    code === "Neo.ClientError.Transaction.TransactionTimedOutClientConfiguration"
+  );
+}
+
 async function runPhase2WithTimeout(
   focusType: NodeType,
   focusId: string,
   mustShowIds: string[],
 ): Promise<NeighborRowRaw[]> {
-  // 500ms circuit-breaker per §5.1.1: if Query 2 misses the target, fall back
-  // to must-show only rather than blocking the page render.
+  // 500ms circuit-breaker per §5.1.1. Implemented as a real server-side
+  // transaction timeout (Neo4j driver's TransactionConfig.timeout) so:
+  //   - the in-flight query is actually cancelled on the server;
+  //   - there's no orphan timer holding the event loop after the query returns.
+  // On timeout we log a warning and fall back to must-show only.
   const cypher = buildPhase2FillQuery(focusType);
-
-  const queryPromise = (async () => {
-    const records = (await runQuery(cypher, {
-      focus_id: focusId,
-      must_show_ids: mustShowIds,
-    })) as unknown as Neo4jRecordLike[];
+  try {
+    const records = (await runQuery(
+      cypher,
+      { focus_id: focusId, must_show_ids: mustShowIds },
+      { timeoutMs: PHASE2_TIMEOUT_MS },
+    )) as unknown as Neo4jRecordLike[];
     return records.map(
       (r): NeighborRowRaw => ({
         id: String(r.get("id")),
@@ -291,18 +311,15 @@ async function runPhase2WithTimeout(
         role: "phase-2" as const,
       }),
     );
-  })();
-
-  const timeoutPromise = new Promise<NeighborRowRaw[]>((resolve) => {
-    setTimeout(() => {
+  } catch (err) {
+    if (isTransactionTimeoutError(err)) {
       console.warn(
         `[entity-loader] Phase-2 query exceeded ${PHASE2_TIMEOUT_MS}ms for focus=${focusId}; falling back to must-show only`,
       );
-      resolve([]);
-    }, PHASE2_TIMEOUT_MS);
-  });
-
-  return Promise.race([queryPromise, timeoutPromise]);
+      return [];
+    }
+    throw err;
+  }
 }
 
 async function runEdgesAmongSelected(

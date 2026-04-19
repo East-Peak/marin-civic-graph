@@ -24,14 +24,22 @@ export function getDriver(): Driver {
   return driver;
 }
 
+export type RunQueryOptions = {
+  /** Transaction timeout in milliseconds. Enforced server-side by Neo4j; on
+   *  timeout the driver rejects with a `Neo.ClientError.Transaction.*` error. */
+  timeoutMs?: number;
+};
+
 export async function runQuery(
   cypher: string,
   params: Record<string, unknown> = {},
+  options: RunQueryOptions = {},
 ): Promise<Neo4jRecord[]> {
   const database = process.env.NEO4J_DATABASE || "neo4j";
   const session = getDriver().session({ database });
   try {
-    const result = await session.run(cypher, params);
+    const txConfig = options.timeoutMs != null ? { timeout: options.timeoutMs } : undefined;
+    const result = await session.run(cypher, params, txConfig);
     return result.records;
   } finally {
     await session.close();
