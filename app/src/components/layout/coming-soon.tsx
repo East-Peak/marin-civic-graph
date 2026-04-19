@@ -1,4 +1,3 @@
-import { StatusBar } from "@/components/layout/status-bar";
 import { NavHeader } from "@/components/layout/nav-header";
 import Link from "next/link";
 
@@ -12,7 +11,6 @@ export type ComingSoonProps = {
 export function ComingSoon({ currentPath, heading, body, planName }: ComingSoonProps) {
   return (
     <div className="min-h-screen bg-bg">
-      <StatusBar connected={true} nodeCount={0} edgeCount={0} jurisdictionCount={0} ingestAt={null} subgraphsBuiltAt={null} />
       <NavHeader currentPath={currentPath} />
       <div className="mx-[18px] mt-24 flex flex-col items-center gap-3 text-center">
         <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-hairline">{planName}</div>

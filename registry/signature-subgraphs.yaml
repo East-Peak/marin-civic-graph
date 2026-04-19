@@ -38,7 +38,7 @@ subgraphs:
   - slug: resolution-15336
     display_name: Resolution 15336 (Merrydale)
     focus_node_id: decision-2024-08-19-resolution-15336
-    headline_stats_template: "2025-11-17 · ${{money_total}} · {{person_count}} votes"
+    headline_stats_template: "2024-08-19 · ${{money_total}} · {{person_count}} votes"
 
   - slug: grants-pass-v-johnson
     display_name: Grants Pass v. Johnson (SCOTUS)

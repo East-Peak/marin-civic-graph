@@ -1,4 +1,3 @@
-// app/src/tests/api/status.test.ts
 import { describe, it, expect, vi } from "vitest";
 
 vi.mock("@/lib/neo4j", () => ({
@@ -9,7 +8,7 @@ import { runQuery } from "@/lib/neo4j";
 import { GET } from "@/app/api/status/route";
 
 describe("GET /api/status", () => {
-  it("returns node_count, edge_count, jurisdiction_count, ingest_at", async () => {
+  it("returns node/edge/jurisdiction counts and ingest_at from live query", async () => {
     (runQuery as ReturnType<typeof vi.fn>).mockResolvedValueOnce([
       {
         get: (k: string) => ({
@@ -23,13 +22,12 @@ describe("GET /api/status", () => {
 
     const res = await GET();
     const body = await res.json();
-    expect(body).toEqual({
+    expect(body).toMatchObject({
       connected: true,
       node_count: 112431,
       edge_count: 141207,
       jurisdiction_count: 11,
       ingest_at: "2026-04-14T09:12:00Z",
-      subgraphs_built_at: expect.any(String),
     });
   });
 

@@ -4,58 +4,15 @@ import { PromptSearch } from "@/components/layout/prompt-search";
 import { CatalogList } from "@/components/home/catalog-list";
 import { SignatureSubgraph } from "@/components/home/signature-subgraph";
 import { TrackingThreads } from "@/components/home/tracking-threads";
-import type { NodeType } from "@/lib/type-display";
-import { ALL_TYPES } from "@/lib/type-display";
-
-type StatusResponse = {
-  connected: boolean;
-  node_count: number;
-  edge_count: number;
-  jurisdiction_count: number;
-  ingest_at: string | null;
-  subgraphs_built_at: string | null;
-};
-
-type CatalogResponse = {
-  built_at: string;
-  counts: Partial<Record<NodeType, number>>;
-};
+import { loadStatus, loadCatalog } from "@/lib/server/homepage-data";
+import { ALL_TYPES, type NodeType } from "@/lib/type-display";
 
 function blankCounts(): Record<NodeType, number> {
   return Object.fromEntries(ALL_TYPES.map((t) => [t, 0])) as Record<NodeType, number>;
 }
 
-async function fetchStatus(): Promise<StatusResponse> {
-  try {
-    const res = await fetch(`${process.env.APP_URL ?? "http://localhost:3000"}/api/status`, {
-      cache: "no-store",
-    });
-    return (await res.json()) as StatusResponse;
-  } catch {
-    return {
-      connected: false,
-      node_count: 0,
-      edge_count: 0,
-      jurisdiction_count: 0,
-      ingest_at: null,
-      subgraphs_built_at: null,
-    };
-  }
-}
-
-async function fetchCatalog(): Promise<CatalogResponse> {
-  try {
-    const res = await fetch(`${process.env.APP_URL ?? "http://localhost:3000"}/catalog.json`, {
-      cache: "no-store",
-    });
-    return (await res.json()) as CatalogResponse;
-  } catch {
-    return { built_at: new Date().toISOString(), counts: {} };
-  }
-}
-
 export default async function Home() {
-  const [status, catalog] = await Promise.all([fetchStatus(), fetchCatalog()]);
+  const [status, catalog] = await Promise.all([loadStatus(), loadCatalog()]);
   const counts = { ...blankCounts(), ...catalog.counts };
 
   return (
