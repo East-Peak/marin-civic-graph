@@ -480,7 +480,7 @@ A Phase-2 candidate reachable at 1-hop gets `ring=1` (inner ring); otherwise `ri
 
 Must-show rows keep the `ring` assigned by Query 1's must-show path classification (1 for direct, 2 for named 2-hop, 3 only for the Person institution).
 
-**Candidate pool for Phase 2**: all nodes reachable from `focus_id` in 1 or 2 traversal hops **along the edge whitelist**, minus the must-show set, minus `:Place`, minus `:Issue`.
+**Candidate pool for Phase 2**: all nodes reachable from `focus_id` in 1 or 2 traversal hops **along the edge whitelist**, minus the focus node itself (2-hop cycles can loop back), minus the must-show set, minus `:Place`, minus `:Issue`. Every Phase-2 sub-query's `WHERE` clause must include `AND c.id <> $focus_id` alongside `NOT c.id IN must_show_ids`.
 
 **Edge-inclusion contract for the hero.** Once the 40-node selection is final, the hero draws every edge between any two selected nodes whose relationship type is in the Phase-2 whitelist (the 26 types enumerated above). This means: the graph shows not just the admission paths (e.g., the specific `HELD_BY` edge that pulled a SeatService into must-show) but also any other whitelisted edge between admitted nodes (e.g., a `CAST_VOTE` between a Person and a Decision that both made the hero). Universal edges (`EVIDENCED_BY`, `IN_JURISDICTION`, `RELATES_TO_ISSUE`) are never drawn in the hero, even if both endpoints are selected — their density would dominate the layout. This keeps the hero the same shape as the admission rules: investigatively meaningful connective tissue, not raw graph density.
 
