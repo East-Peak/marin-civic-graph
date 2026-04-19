@@ -57,8 +57,29 @@ def _registry_entry_url(entry: dict[str, Any]) -> str | None:
     return None
 
 
+def _build_jurisdiction_index(
+    registry: dict[str, dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    """Index registry entries by their `jurisdiction_id` so we can fall back
+    to a jurisdiction-landing URL when a Record's `source_id` doesn't match.
+
+    Multiple registry entries can share a jurisdiction (e.g., a city's
+    council + planning commission under Granicus). The last entry wins —
+    good enough for a landing-page fallback (item-specific resolution is
+    a Plan 3+ task).
+    """
+    out: dict[str, dict[str, Any]] = {}
+    for entry in registry.values():
+        jid = entry.get("jurisdiction_id")
+        if jid:
+            out[jid] = entry
+    return out
+
+
 def normalize_public_url_with_registry(
-    props: dict[str, Any], registry: dict[str, dict[str, Any]]
+    props: dict[str, Any],
+    registry: dict[str, dict[str, Any]],
+    jurisdiction_index: dict[str, dict[str, Any]] | None = None,
 ) -> str | None:
     """Resolve a Record's preferred_public_url per spec §7.1.
 
@@ -66,21 +87,36 @@ def normalize_public_url_with_registry(
       1. `source_url` if it starts with http(s) or is protocol-relative (//).
       2. Registry fallback: look up `source_id` in the merged registry and
          return the entry's canonical upstream URL (`url` or `entry_url`).
-      3. Otherwise None.
+      3. Jurisdiction fallback (Codex round 1 fix 8): if the Record has a
+         linked `place_id` (or the caller supplies one via props), look up
+         the jurisdiction in `jurisdiction_index` and return its landing
+         URL. Not a perfect resolution — returns the jurisdiction's base
+         page, not the specific record — but better than null.
+      4. Otherwise None.
     """
     direct = normalize_public_url(props.get("source_url"))
     if direct is not None:
         return direct
 
     source_id = props.get("source_id")
-    if not source_id:
-        return None
+    if source_id:
+        entry = registry.get(source_id)
+        if entry:
+            maybe = _registry_entry_url(entry)
+            if maybe is not None:
+                return maybe
 
-    entry = registry.get(source_id)
-    if not entry:
-        return None
+    # Jurisdiction fallback — requires the caller to have resolved the
+    # Record's parent Place id (see scripts/build_record_preferred_urls.py
+    # main() for the Cypher that produces it).
+    if jurisdiction_index is not None:
+        jurisdiction_id = props.get("jurisdiction_id")
+        if jurisdiction_id:
+            entry = jurisdiction_index.get(jurisdiction_id)
+            if entry:
+                return _registry_entry_url(entry)
 
-    return _registry_entry_url(entry)
+    return None
 
 
 def load_registry(registry_root: Path | None = None) -> dict[str, dict[str, Any]]:
@@ -146,6 +182,7 @@ def main() -> int:
     database = os.environ.get("NEO4J_DATABASE", "neo4j")
 
     registry = load_registry()
+    jurisdiction_index = _build_jurisdiction_index(registry)
 
     total = 0
     with GraphDatabase.driver(uri, auth=(user, password)) as driver:
@@ -153,10 +190,13 @@ def main() -> int:
             cursor = session.run(
                 """
                 MATCH (r:Record)
+                OPTIONAL MATCH (r)-[:RELATES_TO_PLACE]->(p:Place)
+                WITH r, collect(p.id)[0] AS jurisdiction_id
                 RETURN r.id AS id,
                        r.source_url AS source_url,
                        r.source_id AS source_id,
-                       r.record_type AS record_type
+                       r.record_type AS record_type,
+                       jurisdiction_id AS jurisdiction_id
                 """
             )
             batch: list[dict] = []
@@ -166,8 +206,11 @@ def main() -> int:
                     "source_url": record["source_url"],
                     "source_id": record["source_id"],
                     "record_type": record["record_type"],
+                    "jurisdiction_id": record["jurisdiction_id"],
                 }
-                preferred = normalize_public_url_with_registry(props, registry)
+                preferred = normalize_public_url_with_registry(
+                    props, registry, jurisdiction_index
+                )
                 label = build_display_label(record["record_type"], preferred)
                 batch.append({
                     "id": record["id"],

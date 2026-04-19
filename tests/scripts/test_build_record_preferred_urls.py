@@ -4,6 +4,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from build_record_preferred_urls import (
+    _build_jurisdiction_index,
     build_display_label,
     normalize_public_url,
     normalize_public_url_with_registry,
@@ -147,3 +148,94 @@ def test_registry_fallback_prefers_url_then_entry_url():
     registry2 = {"s2": {"entry_url": "https://b.gov/"}}
     props2 = {"id": "r2", "source_url": None, "source_id": "s2"}
     assert normalize_public_url_with_registry(props2, registry2) == "https://b.gov/"
+
+
+# --- Jurisdiction fallback tests (Codex round 1 fix 8) ---
+
+
+def test_jurisdiction_index_built_from_registry():
+    registry = {
+        "marin-bos": {
+            "id": "marin-bos",
+            "url": "https://marin.granicus.com/x",
+            "jurisdiction_id": "place-marin-county",
+        },
+        "sausalito-cc": {
+            "id": "sausalito-cc",
+            "url": "https://sausalito.granicus.com/y",
+            "jurisdiction_id": "place-sausalito",
+        },
+    }
+    idx = _build_jurisdiction_index(registry)
+    assert idx["place-marin-county"]["url"] == "https://marin.granicus.com/x"
+    assert idx["place-sausalito"]["url"] == "https://sausalito.granicus.com/y"
+
+
+def test_jurisdiction_fallback_used_when_source_id_missing():
+    """Record with no source_url AND no source_id, but a linked Place id."""
+    registry = {
+        "marin-bos": {
+            "url": "https://marin.granicus.com/x",
+            "jurisdiction_id": "place-marin-county",
+        },
+    }
+    idx = _build_jurisdiction_index(registry)
+    props = {
+        "id": "record-abc",
+        "source_url": None,
+        "source_id": None,
+        "jurisdiction_id": "place-marin-county",
+    }
+    assert (
+        normalize_public_url_with_registry(props, registry, idx)
+        == "https://marin.granicus.com/x"
+    )
+
+
+def test_source_id_wins_over_jurisdiction_fallback():
+    """source_id match is preferred even when jurisdiction also resolves."""
+    registry = {
+        "source-a": {
+            "url": "https://specific.example/a",
+            "jurisdiction_id": "place-marin-county",
+        },
+        "source-b": {
+            "url": "https://marin.granicus.com/landing",
+            "jurisdiction_id": "place-marin-county",
+        },
+    }
+    idx = _build_jurisdiction_index(registry)
+    props = {
+        "id": "record-a",
+        "source_url": None,
+        "source_id": "source-a",
+        "jurisdiction_id": "place-marin-county",
+    }
+    assert (
+        normalize_public_url_with_registry(props, registry, idx)
+        == "https://specific.example/a"
+    )
+
+
+def test_jurisdiction_fallback_returns_none_when_not_indexed():
+    registry = {"marin-bos": {"url": "https://x.gov", "jurisdiction_id": "place-marin-county"}}
+    idx = _build_jurisdiction_index(registry)
+    props = {
+        "id": "record-orphan",
+        "source_url": None,
+        "source_id": None,
+        "jurisdiction_id": "place-unknown",
+    }
+    assert normalize_public_url_with_registry(props, registry, idx) is None
+
+
+def test_no_jurisdiction_index_means_no_fallback():
+    """Callers that don't pass a jurisdiction_index keep the old behavior."""
+    registry = {}
+    props = {
+        "id": "record-x",
+        "source_url": None,
+        "source_id": None,
+        "jurisdiction_id": "place-marin-county",
+    }
+    assert normalize_public_url_with_registry(props, registry) is None
