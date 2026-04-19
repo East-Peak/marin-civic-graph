@@ -681,19 +681,23 @@ The checkbox is labeled and the resulting path is visibly marked `PATH VIA LOOSE
 **Initial load contract.**
 
 1. **Empty state** (`/graph` with no `focus` query param): no graph rendered. A centered prompt: `> type a name or pick a signature subgraph` with a list of the 5–8 curated signature subgraphs (links to `/graph?focus={id}`).
-2. **Focused load** (`/graph?focus={id}`): runs the **same two-query selection as the entity-page radial hero** (§5.1.1, Query 1 + Query 2, 40-node cap, Phase-2 edge whitelist). The explorer and the radial hero use the exact same Cypher for the initial load. The only differences are layout (fcose vs concentric) and that the explorer is interactive beyond the cap.
-3. **Default node filters**: `Record`, `Place`, `Issue`, `AgendaItem` are hidden. Three toggle chips in the toolbar (`records`, `places`, `issues`, `agenda items`) flip them on.
-4. **Default edge filters**: governance / money / legal-constrains are all on. Universal edges (`EVIDENCED_BY`, `IN_JURISDICTION`, `RELATES_TO_ISSUE`) are off (and not drawn even if enabled — they re-enter only when the user enables a node filter for Record/Place/Issue, at which point the corresponding universal edge is auto-enabled too).
-5. **Default time slider**: last 5 years from `INGEST` timestamp, clamped to the earliest event in the loaded subgraph (same rule as §5.4).
+2. **Focused load** (`/graph?focus={id}`):
+   - **If focus is a Tier 1 type** (Person, Decision, Project, Program, Case, Meeting, Filing, Committee): runs the same two-query selection as the entity-page radial hero (§5.1.1, Query 1 + Query 2, 40-node cap, Phase-2 edge whitelist). Shared Cypher with the radial hero; only layout and interactive-beyond-cap differ.
+   - **If focus is a Tier 2 type** (Organization, Seat, SeatService, Election, Candidacy, AgendaItem, MoneyFlow, Proceeding, Agreement, Amendment, Record, Place, Issue): runs a **generic focused-load query**: 1-hop neighborhood along the Phase-2 whitelist, capped at 40 nodes, ordered by (type-priority from the Phase-2 quota table, then type-specific ranking key, then `id ASC`). No must-show phase — Tier 2 types don't have curated must-show tables because their connections are already narrow (a MoneyFlow has at most ~5 directly-linked nodes; an Agreement similar).
+     - For `Record` focus: the 1-hop neighborhood includes whatever node the `EVIDENCED_BY` edge points from (typically a Decision, Meeting, or Project). The universal edge exclusion is waived for this focus type only — it's the Record's whole reason to exist in the graph.
+     - For `Place` or `Issue` focus: the 1-hop neighborhood is the set of nodes tied via `IN_JURISDICTION` or `RELATES_TO_ISSUE`, capped at 40 by (type-priority, recency, id). Again the universal edge exclusion is waived for these focus types since they're the entire semantic tie.
+3. **Default node filters**: `Record`, `Place`, `Issue`, `AgendaItem` are hidden — unless any of those is the focus type (in which case its filter auto-enables). Toggle chips in the toolbar flip individual types on/off.
+4. **Default edge filters**: `governance` / `money` / `legal-constrains` classes on. Universal edges (`EVIDENCED_BY`, `IN_JURISDICTION`, `RELATES_TO_ISSUE`) off — unless needed for the current focus (see waiver above) or unless the user toggles on the corresponding node filter (enabling `records` auto-enables `EVIDENCED_BY` edges so they have something to connect to; same pattern for Place/Issue).
+5. **Default time slider**: last 5 years from `INGEST` timestamp, clamped to the earliest event in the loaded subgraph (per §5.4).
 
-**Expand contract.** Clicking a node (not the focus — clicking focus is a no-op; clicking anything else) loads that node's 1-hop neighborhood into the current view, subject to:
-- The current edge filters and node filters.
-- A **per-expand cap of 20 nodes**, selected using the same quota table as Phase 2 §5.1.1 but with halved per-type quotas (MoneyFlow: 4, Decision: 4, Filing: 3, etc.). If more are available, the expand footer notes `+{N} more · expand again to load more`.
+**Expand contract.** Clicking a node (not the focus — clicking focus is a no-op; clicking any other node) loads that node's 1-hop neighborhood into the current view. The neighborhood is constrained by:
+- The current edge filters and node filters. Universal edges and excluded node types (Record/Place/Issue/AgendaItem) are only traversed when explicitly enabled via the toolbar. If not enabled, they are not followed even if technically reachable in 1 hop.
+- A **per-expand cap of 20 nodes**, selected using the Phase-2 quota table but with halved per-type quotas (MoneyFlow: 4, Decision: 4, Filing: 3, Meeting: 3, Person: 3, Organization: 2, AgendaItem: 2, Amendment: 1, Proceeding: 2, Election: 1, Candidacy: 1). If more candidates exist, the UI shows a per-node overflow chip `+{N}` and clicking that node again loads the next 20.
 - Dedup against already-loaded nodes.
 
-**Right-click → "expand all" (2 hops)** on a node runs a 2-hop expansion capped at 80 nodes with the same filters and full Phase-2 quotas. The hop-limit slider in the toolbar clamps this action globally (e.g., setting it to `1` disables "expand all").
+**Right-click → "expand all (2 hops)"** on a node runs a 2-hop expansion capped at 80 nodes with the current filters and full Phase-2 quotas. The hop-limit slider in the toolbar clamps this action (setting it to `1` removes "expand all" from the right-click menu).
 
-**Filter-change contract.** Changing an edge or node filter applies to already-loaded nodes (shows/hides them) and to future expansions. It does not re-run Query 1/Query 2 — the initial focus subset stays loaded.
+**Filter-change contract.** Changing an edge or node filter applies immediately to already-loaded nodes (shows/hides) and to future expansions. It does NOT re-run the focused-load query — the initial 40-node subset stays loaded (hidden nodes remain in memory so re-enabling is instant). Enabling a previously-hidden type does not pull in new nodes of that type that were not in the original 2-hop neighborhood — to pull new nodes, the user clicks to expand.
 
 ## 7. Entity pages
 
