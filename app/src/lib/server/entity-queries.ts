@@ -550,10 +550,71 @@ RETURN DISTINCT a.id AS source, b.id AS target, type(r) AS rel_type,
 
 // ---------------------------------------------------------------------------
 // Tier 2 — simple 1-hop neighborhood along whitelist, cap 40.
+//
+// The generic Tier 2 query would leave Record/Place/Issue focus pages empty
+// because the §5.1.1 Phase-2 whitelist excludes EVIDENCED_BY, IN_JURISDICTION,
+// and RELATES_TO_ISSUE. We add per-focus-type waivers for those three types
+// so their pages can load.
+//
+// TODO: The generic `ORDER BY labels(n)[0], n.id ASC` is the minimum stable
+// ordering. The full §6.3 Tier-2 ordering table (per-type priority + ranking
+// keys) is a follow-up once Tier-2 pages need richer ordering.
 // ---------------------------------------------------------------------------
 
-export function buildTier2NeighborhoodQuery(): string {
-  return `
+export function buildTier2NeighborhoodQuery(focusType?: NodeType): string {
+  switch (focusType) {
+    case "Record":
+      // Records enter the graph via EVIDENCED_BY (which the Phase-2 whitelist
+      // excludes). For a Record focus, show the entities this Record
+      // evidences. No Place/Issue filter needed — EVIDENCED_BY never points
+      // at those.
+      return `
+MATCH (f:Record {id: $focus_id})<-[r:EVIDENCED_BY]-(n)
+WHERE n.id <> $focus_id
+RETURN DISTINCT n.id AS id,
+  labels(n) AS labels,
+  coalesce(n.search_label, n.name, n.id) AS label,
+  1 AS ring,
+  type(r) AS relationship,
+  startNode(r).id AS start_id,
+  endNode(r).id AS end_id
+ORDER BY labels(n)[0] ASC, n.id ASC
+LIMIT 40
+`;
+    case "Place":
+      // Places connect via IN_JURISDICTION (inverse) plus the whitelist.
+      // Keep the Issue exclusion so one Tier-2 page doesn't pull in the
+      // other structural hub.
+      return `
+MATCH (f:Place {id: $focus_id})-[r:IN_JURISDICTION|${PHASE2_PATTERN}]-(n)
+WHERE n.id <> $focus_id AND NOT n:Issue
+RETURN DISTINCT n.id AS id,
+  labels(n) AS labels,
+  coalesce(n.search_label, n.name, n.id) AS label,
+  1 AS ring,
+  type(r) AS relationship,
+  startNode(r).id AS start_id,
+  endNode(r).id AS end_id
+ORDER BY labels(n)[0] ASC, n.id ASC
+LIMIT 40
+`;
+    case "Issue":
+      // Issues connect via RELATES_TO_ISSUE (inverse) plus the whitelist.
+      return `
+MATCH (f:Issue {id: $focus_id})-[r:RELATES_TO_ISSUE|${PHASE2_PATTERN}]-(n)
+WHERE n.id <> $focus_id AND NOT n:Place
+RETURN DISTINCT n.id AS id,
+  labels(n) AS labels,
+  coalesce(n.search_label, n.name, n.id) AS label,
+  1 AS ring,
+  type(r) AS relationship,
+  startNode(r).id AS start_id,
+  endNode(r).id AS end_id
+ORDER BY labels(n)[0] ASC, n.id ASC
+LIMIT 40
+`;
+    default:
+      return `
 MATCH (f {id: $focus_id})-[r:${PHASE2_PATTERN}]-(n)
 WHERE NOT n:Place AND NOT n:Issue AND n.id <> $focus_id
 RETURN DISTINCT n.id AS id,
@@ -563,6 +624,8 @@ RETURN DISTINCT n.id AS id,
   type(r) AS relationship,
   startNode(r).id AS start_id,
   endNode(r).id AS end_id
+ORDER BY labels(n)[0] ASC, n.id ASC
 LIMIT 40
 `;
+  }
 }

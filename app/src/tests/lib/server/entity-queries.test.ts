@@ -136,10 +136,36 @@ describe("entity-queries", () => {
     expect(q).toContain("type(r) IN $whitelist");
   });
 
-  it("buildTier2NeighborhoodQuery caps at 40 and excludes Place/Issue", () => {
+  it("buildTier2NeighborhoodQuery (generic) caps at 40, excludes Place/Issue, stable order", () => {
     const q = buildTier2NeighborhoodQuery();
     expect(q).toContain("LIMIT 40");
     expect(q).toContain("NOT n:Place");
     expect(q).toContain("NOT n:Issue");
+    // Fix 3 — stable ORDER BY so the 40-cap doesn't produce flicker between reloads.
+    expect(q).toContain("ORDER BY labels(n)[0] ASC, n.id ASC");
+  });
+
+  it("buildTier2NeighborhoodQuery(Record) uses EVIDENCED_BY waiver", () => {
+    // Fix 4 — Records reach entities via EVIDENCED_BY (excluded from the
+    // Phase-2 whitelist), so a /record/{id} page needs a per-focus waiver.
+    const q = buildTier2NeighborhoodQuery("Record");
+    expect(q).toContain("EVIDENCED_BY");
+    expect(q).toContain("LIMIT 40");
+    expect(q).toContain("ORDER BY labels(n)[0] ASC, n.id ASC");
+  });
+
+  it("buildTier2NeighborhoodQuery(Place) includes IN_JURISDICTION waiver", () => {
+    const q = buildTier2NeighborhoodQuery("Place");
+    expect(q).toContain("IN_JURISDICTION");
+    // Still exclude Issue to keep the two structural hubs separate.
+    expect(q).toContain("NOT n:Issue");
+    expect(q).toContain("LIMIT 40");
+  });
+
+  it("buildTier2NeighborhoodQuery(Issue) includes RELATES_TO_ISSUE waiver", () => {
+    const q = buildTier2NeighborhoodQuery("Issue");
+    expect(q).toContain("RELATES_TO_ISSUE");
+    expect(q).toContain("NOT n:Place");
+    expect(q).toContain("LIMIT 40");
   });
 });

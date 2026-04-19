@@ -331,8 +331,9 @@ async function runEdgesAmongSelected(
 
 async function loadTier2Neighborhood(
   focusId: string,
+  focusType: NodeType,
 ): Promise<{ neighbors: Neighbor[]; edges: EntityEdge[] }> {
-  const cypher = buildTier2NeighborhoodQuery();
+  const cypher = buildTier2NeighborhoodQuery(focusType);
   const records = (await runQuery(cypher, {
     focus_id: focusId,
   })) as unknown as Neo4jRecordLike[];
@@ -429,7 +430,7 @@ export async function loadEntity(
   }
 
   // Tier 2 path — simple 1-hop neighborhood.
-  const { neighbors, edges } = await loadTier2Neighborhood(id);
+  const { neighbors, edges } = await loadTier2Neighborhood(id, type);
 
   return {
     id,
