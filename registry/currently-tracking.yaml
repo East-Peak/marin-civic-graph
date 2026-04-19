@@ -1,0 +1,23 @@
+# Open Marin homepage "currently tracking" thread cards (spec §3.6).
+# 4–5 entries, hand-curated.
+
+threads:
+  - title: 350 Merrydale Interim Shelter
+    meta: project · San Rafael
+    stat: $15.3M · 6 decisions
+    href: /project/san-rafael-350-merrydale-interim-shelter
+
+  - title: Sanctioned Camping Program
+    meta: program · constrained by Boyd
+    stat: 3 cases · 12 decisions
+    href: /program/san-rafael-sanctioned-camping
+
+  - title: Downtown Library Renovation
+    meta: project · San Rafael
+    stat: $15M+ · 3 agreements
+    href: /project/san-rafael-downtown-library-renovation
+
+  - title: Boyd v. City of San Rafael
+    meta: case · federal
+    stat: constrains 1 program
+    href: /case/boyd-v-city-of-san-rafael

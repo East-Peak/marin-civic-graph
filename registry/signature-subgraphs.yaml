@@ -1,0 +1,51 @@
+# Open Marin homepage signature subgraphs (spec §3.5, §5.5).
+# Each entry defines a curated subgraph rotated on session load.
+# The builder (scripts/build_signature_subgraphs.py) emits a JSON bundle per slug.
+#
+# Fields:
+#   slug           URL-safe identifier (becomes /api/subgraphs/{slug}.json).
+#   display_name   Human title shown in the caption kicker.
+#   focus_node_id  Canonical id of the center (#ffffff) node.
+#   headline_stats_template
+#                  How to format the caption string. Use {{placeholders}} that
+#                  the builder will resolve from the focus's computed stats.
+subgraphs:
+  - slug: merrydale-interim-shelter
+    display_name: 350 Merrydale Interim Shelter
+    focus_node_id: project-san-rafael-350-merrydale-interim-shelter
+    headline_stats_template: "${{money_total}} · {{decision_count}} decisions · {{counterparty_count}} counterparties · {{record_count}} records"
+
+  - slug: sanctioned-camping
+    display_name: Sanctioned Camping Program
+    focus_node_id: program-san-rafael-sanctioned-camping
+    headline_stats_template: "{{case_count}} cases · {{decision_count}} decisions · {{record_count}} records"
+
+  - slug: boyd-v-san-rafael
+    display_name: Boyd v. City of San Rafael
+    focus_node_id: case-boyd-v-city-of-san-rafael
+    headline_stats_template: "federal · {{proceeding_count}} proceedings · constrains {{constrained_decision_count}} decisions"
+
+  - slug: downtown-library-renovation
+    display_name: Downtown Library Renovation
+    focus_node_id: project-san-rafael-downtown-library-renovation
+    headline_stats_template: "${{money_total}} · {{agreement_count}} agreements · {{record_count}} records"
+
+  - slug: kate-colin
+    display_name: Kate Colin — Mayor
+    focus_node_id: person-kate-colin
+    headline_stats_template: "Mayor · {{seat_service_count}} offices · {{filing_count}} filings · {{decision_count}} votes"
+
+  - slug: resolution-15336
+    display_name: Resolution 15336 (Merrydale)
+    focus_node_id: decision-2025-11-17-resolution-15336
+    headline_stats_template: "2025-11-17 · ${{money_total}} · {{person_count}} votes"
+
+  - slug: grants-pass-v-johnson
+    display_name: Grants Pass v. Johnson (SCOTUS)
+    focus_node_id: case-city-of-grants-pass-v-johnson
+    headline_stats_template: "SCOTUS · {{proceeding_count}} proceedings"
+
+  - slug: form-803-colin-pge-canal
+    display_name: Form 803 · Colin / PG&E / Canal Alliance
+    focus_node_id: filing-form-803-kate-colin-2025-08-08
+    headline_stats_template: "Form 803 · ${{money_total}} · PG&E → Canal Alliance"
