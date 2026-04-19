@@ -139,17 +139,21 @@ Full-width below the header, inside the homepage grid. Plex Mono placeholder wit
 | `search_rank` | Integer 0–100. Higher = more prominent. Computed at ingestion time from degree, node-type weight, and recency | `72` |
 
 Search semantics (single source of truth — the query contract below implements these precisely):
-1. **Exact `id` match** short-circuits ranking and is always returned first.
-2. Otherwise, results are ordered by a combined score (see query contract below) that blends Lucene relevance and `search_rank`.
-3. Entities always outrank Records: a type-floor is added to the combined score so no Record can rank above any entity of the same query, regardless of Lucene score.
+1. **Exact `id` match** short-circuits ranking and is always returned first, bypassing the `include_records` filter — if the user typed a real Record ID, they see it regardless of the toggle.
+2. Otherwise, results are returned in **buckets**: entities first, then (if `include_records=true`) Records. Within each bucket, ordering is by a combined score blending Lucene relevance and `search_rank`. Buckets guarantee that entities always outrank Records regardless of Lucene score magnitude.
+3. There is no additive "type floor" — bucketing at the query level enforces the guarantee.
 
 Indexed types (14): `Person`, `Organization`, `Decision`, `Project`, `Program`, `Case`, `Meeting`, `Filing`, `Committee`, `Agreement`, `Amendment`, `Election`, `Place`, `Issue`. These types form the default search corpus.
 
-**Records as a secondary corpus.** `Record` is indexed identically but excluded from default results. When `include_records=true`:
+**Records as a secondary corpus.** `Record` is indexed identically but excluded from default results unless `include_records=true` (or the query is an exact Record ID — see rule 1 above). Record-specific properties:
 - `Record.search_label` — one-line display, e.g. `"Staff report · Resolution 15336 · 2024-08-19"`, derived from `record_type` + linked parent's date.
 - `Record.search_terms` — concatenation of `record_type`, the record's `title` if present, parent Meeting/Decision/Project/Case names, `source_url` host, and any extracted OCR/metadata tokens the ingestion layer surfaces.
-- `Record.search_rank` — capped at **30** by ingestion time (default 20). This ceiling is below the entity minimum so an entity match always outranks a Record match of equivalent label-match strength. Ties broken by `captured_at DESC`, then `id ASC`.
-- When `include_records=true`, results render as a **section divider**: entities above, `records` header, then Records. UI never interleaves.
+- `Record.search_rank` — integer in `[0, 30]` (capped at 30; default 20). Entities use the full `[0, 100]` range. The cap does not itself enforce entity-over-record ordering (that's bucketing's job); it just means Records don't get inflated search_rank values.
+
+**UI rendering.**
+- When the response contains only an entity bucket, results render as a simple list.
+- When the response contains a Record bucket (from `include_records=true`), an in-list `records` divider separates entities (above) from Records (below).
+- When the response contains an exact-id match of a Record with `include_records=false`, that single Record appears above the entity bucket with a small Plex Mono dim kicker `EXACT MATCH`. This is the only case where a Record appears above entities, and it is signaled visually.
 
 **Single backend for all three surfaces.** Homepage search, command palette, and `/search?q=` results all call `GET /api/search?q=...&include_records=bool`. The palette may cache recent queries client-side for snappiness, but the API is always source of truth — there is no separate "palette index" with different ranking.
 
@@ -217,7 +221,7 @@ CALL {
   ORDER BY score DESC
   LIMIT 200
   WITH node, score, (score * 100 + node.search_rank) AS combined_rank
-  ORDER BY combined_rank DESC, node.id ASC
+  ORDER BY combined_rank DESC, node.captured_at DESC, node.id ASC
   LIMIT 50
   RETURN collect(node) AS record_results
 }
@@ -233,7 +237,7 @@ RETURN all_results[..50] AS results
 **Guarantees:**
 - **Exact-id match is always first** and bypasses the `include_records` filter — if the user typed a real Record ID, they want it.
 - **Entities always outrank Records** by construction: the concatenation order is entities-then-records, and each bucket's internal ordering is independent. No additive floor is needed and no unbounded Lucene score can invert the entity/record order.
-- **Within each bucket:** ordered by `combined_rank = score * 100 + search_rank`, ties broken by `id ASC`.
+- **Within each bucket:** ordered by `combined_rank = score * 100 + search_rank`. Entity-bucket ties break by `id ASC`; Record-bucket ties break by `captured_at DESC`, then `id ASC`.
 
 **Stage truncation is a heuristic.** The top-200-by-score filter inside each bucket is tuned so post-rerank drops are rare; if a workload proves otherwise, raise the inner LIMIT — the bucket concatenation guarantee holds at any truncation depth.
 
