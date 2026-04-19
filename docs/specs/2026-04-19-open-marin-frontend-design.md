@@ -186,41 +186,58 @@ Indexed types (14): `Person`, `Organization`, `Decision`, `Project`, `Program`, 
 - **Property indexes** on `search_rank` per type so per-type filtering stays cheap.
 - The existing `id` unique constraints from v1 §4 are sufficient for exact-ID match.
 
-**Query shape (pseudo-Cypher, three-stage with exact-id short-circuit).** Stage 0 handles exact-id match. Stages 1 and 2 handle the full-text ranked path. Results from stage 0 always appear first, then stages 1+2 up to the remaining slots.
+**Query shape (pseudo-Cypher).** The ranking guarantee is enforced by bucketing, not by an additive floor — Lucene scores are unbounded, so additive floors can fail. The query runs three stages and concatenates results.
 
 ```cypher
-// Stage 0: exact id short-circuit (bypasses ranking)
+// Stage 0: exact id short-circuit (bypasses filters; exact-id always returns)
 OPTIONAL MATCH (exact {id: $q})
-WHERE ($include_records OR NOT exact:Record)
 WITH exact
 WITH collect(exact) AS exact_matches
-// Stage 1+2: full-text ranked path
+
+// Stage 1: entity bucket (no Records, always)
 CALL {
-  WITH $q AS q, $include_records AS include_records
+  WITH $q AS q
   CALL db.index.fulltext.queryNodes('openmarin_search_index', q) YIELD node, score
-  WHERE include_records OR NOT node:Record
+  WHERE NOT node:Record
   WITH node, score
   ORDER BY score DESC
   LIMIT 200
-  WITH node, score,
-       CASE WHEN node:Record THEN 0 ELSE 10000 END AS type_floor,
-       (score * 100 + node.search_rank + (CASE WHEN node:Record THEN 0 ELSE 10000 END)) AS combined_rank
+  WITH node, score, (score * 100 + node.search_rank) AS combined_rank
   ORDER BY combined_rank DESC, node.id ASC
   LIMIT 50
-  RETURN collect(node) AS ranked
+  RETURN collect(node) AS entity_results
 }
-// Combine: exact first, then ranked (exact excluded from ranked if also there)
-WITH exact_matches, [n IN ranked WHERE NOT n IN exact_matches] AS ranked_deduped
-RETURN exact_matches + ranked_deduped[..(50 - size(exact_matches))] AS results
+
+// Stage 2: record bucket (only if include_records)
+CALL {
+  WITH $q AS q, $include_records AS include_records
+  CALL db.index.fulltext.queryNodes('openmarin_search_index', q) YIELD node, score
+  WHERE include_records AND node:Record
+  WITH node, score
+  ORDER BY score DESC
+  LIMIT 200
+  WITH node, score, (score * 100 + node.search_rank) AS combined_rank
+  ORDER BY combined_rank DESC, node.id ASC
+  LIMIT 50
+  RETURN collect(node) AS record_results
+}
+
+// Combine: exact first, then entities, then records (dedup against exact)
+WITH exact_matches,
+     [n IN entity_results WHERE NOT n IN exact_matches] AS entities_deduped,
+     [n IN record_results WHERE NOT n IN exact_matches] AS records_deduped
+WITH exact_matches + entities_deduped + records_deduped AS all_results
+RETURN all_results[..50] AS results
 ```
 
-**Formula rationale:**
-- **Lucene `score * 100`** — lexical relevance dominates.
-- **`+ search_rank`** — ingestion-time node prominence (max 100 for entities, max 30 for Records per §3.3 rules). Functions as a fine-grained tiebreaker within the same score band.
-- **`+ 10000` type floor for non-Records** — guarantees every entity outranks every Record regardless of Lucene score. Entity max combined_rank ≈ 100·score + 100 + 10000; Record max ≈ 100·score + 30. Even a Record at score 100.0 (10030) cannot beat an entity at score 0.1 (10020). This is the formal guarantee the prose promises.
-- **Stage 0 exact-id short-circuit** — if `$q` is a real node ID, it's always in the results regardless of what the full-text index thinks.
+**Guarantees:**
+- **Exact-id match is always first** and bypasses the `include_records` filter — if the user typed a real Record ID, they want it.
+- **Entities always outrank Records** by construction: the concatenation order is entities-then-records, and each bucket's internal ordering is independent. No additive floor is needed and no unbounded Lucene score can invert the entity/record order.
+- **Within each bucket:** ordered by `combined_rank = score * 100 + search_rank`, ties broken by `id ASC`.
 
-**Stage 1 truncation is a heuristic.** The top-200-by-score filter is tuned so post-rerank drops are rare in practice; if a workload proves otherwise, raise the inner LIMIT (500 or 1000) — don't change the sort contract. The type-floor guarantee holds at any truncation depth because all Records already rank below all entities.
+**Stage truncation is a heuristic.** The top-200-by-score filter inside each bucket is tuned so post-rerank drops are rare; if a workload proves otherwise, raise the inner LIMIT — the bucket concatenation guarantee holds at any truncation depth.
+
+**`search_rank` formula — shape locked, computation deferred to implementation plan.** Every searchable node carries an integer `search_rank` in `[0, 100]`. It is computed at ingestion time from node degree (more-connected nodes rank higher), node-type weight (per-type table), and recency (a recent-activity bonus). **Records are capped at 30**; entity types use the full range. The exact formula and per-type weights are part of the implementation plan and the ingestion-layer code — the frontend treats `search_rank` as an opaque integer in that range. Changing the formula only changes ordering within the entity or record bucket, never the bucket itself.
 
 **Latency targets** (the implementation plan must validate): p95 ≤ 120ms for palette queries (cold cache), p95 ≤ 200ms for homepage and `/search` queries. If the implementation plan cannot meet this against AuraDB, the fix lives inside `/api/search`: add an in-memory query cache on the Next.js server, pre-warm common queries, tune the Cypher, or change the full-text index configuration. **There is no client-side fallback and no alternative search backend.** All three surfaces always consume `/api/search`, always get the same ranking, always reflect the `INGEST` timestamp. The contract is non-negotiable even if v1 latency numbers miss — slower is acceptable, divergent is not.
 
