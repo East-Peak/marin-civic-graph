@@ -138,7 +138,10 @@ Full-width below the header, inside the homepage grid. Plex Mono placeholder wit
 | `search_terms` | Space-joined concatenation of all tokens a user might type (name, aliases, parent IDs, type-specific identifiers, jurisdiction) | `"san rafael city council 2024-08-19 meeting-san-rafael-2024-08-19 homelessness"` |
 | `search_rank` | Integer 0–100. Higher = more prominent. Computed at ingestion time from degree, node-type weight, and recency | `72` |
 
-Search matches against `search_label` and `search_terms` with prefix-match bias; ties broken by `search_rank DESC`, then `id ASC`. Exact `id` matches bypass ranking.
+Search semantics (single source of truth — the query contract below implements these precisely):
+1. **Exact `id` match** short-circuits ranking and is always returned first.
+2. Otherwise, results are ordered by a combined score (see query contract below) that blends Lucene relevance and `search_rank`.
+3. Entities always outrank Records: a type-floor is added to the combined score so no Record can rank above any entity of the same query, regardless of Lucene score.
 
 Indexed types (14): `Person`, `Organization`, `Decision`, `Project`, `Program`, `Case`, `Meeting`, `Filing`, `Committee`, `Agreement`, `Amendment`, `Election`, `Place`, `Issue`. These types form the default search corpus.
 
@@ -183,22 +186,41 @@ Indexed types (14): `Person`, `Organization`, `Decision`, `Project`, `Program`, 
 - **Property indexes** on `search_rank` per type so per-type filtering stays cheap.
 - The existing `id` unique constraints from v1 §4 are sufficient for exact-ID match.
 
-**Query shape (pseudo-Cypher, two-stage).** The full-text index returns matches ordered by Lucene `score`. We take the top 200 by score (cheap, index-ordered), then re-rank just those 200 by `combined_rank` (blends score with `search_rank`), then cap at 50.
+**Query shape (pseudo-Cypher, three-stage with exact-id short-circuit).** Stage 0 handles exact-id match. Stages 1 and 2 handle the full-text ranked path. Results from stage 0 always appear first, then stages 1+2 up to the remaining slots.
 
 ```cypher
-CALL db.index.fulltext.queryNodes('openmarin_search_index', $q) YIELD node, score
-WHERE $include_records OR NOT node:Record
-WITH node, score
-ORDER BY score DESC
-LIMIT 200
-WITH node, score, (score * 100 + node.search_rank) AS combined_rank
-ORDER BY combined_rank DESC, node.id ASC
-LIMIT 50
+// Stage 0: exact id short-circuit (bypasses ranking)
+OPTIONAL MATCH (exact {id: $q})
+WHERE ($include_records OR NOT exact:Record)
+WITH exact
+WITH collect(exact) AS exact_matches
+// Stage 1+2: full-text ranked path
+CALL {
+  WITH $q AS q, $include_records AS include_records
+  CALL db.index.fulltext.queryNodes('openmarin_search_index', q) YIELD node, score
+  WHERE include_records OR NOT node:Record
+  WITH node, score
+  ORDER BY score DESC
+  LIMIT 200
+  WITH node, score,
+       CASE WHEN node:Record THEN 0 ELSE 10000 END AS type_floor,
+       (score * 100 + node.search_rank + (CASE WHEN node:Record THEN 0 ELSE 10000 END)) AS combined_rank
+  ORDER BY combined_rank DESC, node.id ASC
+  LIMIT 50
+  RETURN collect(node) AS ranked
+}
+// Combine: exact first, then ranked (exact excluded from ranked if also there)
+WITH exact_matches, [n IN ranked WHERE NOT n IN exact_matches] AS ranked_deduped
+RETURN exact_matches + ranked_deduped[..(50 - size(exact_matches))] AS results
 ```
 
-Why two stages: a broad query like `"colin"` could match hundreds of nodes. Stage 1's `ORDER BY score DESC LIMIT 200` uses the full-text index's native ordering (no extra sort cost), dropping long-tail matches. Stage 2 re-ranks the surviving 200 by combined_rank — a small fixed-size sort.
+**Formula rationale:**
+- **Lucene `score * 100`** — lexical relevance dominates.
+- **`+ search_rank`** — ingestion-time node prominence (max 100 for entities, max 30 for Records per §3.3 rules). Functions as a fine-grained tiebreaker within the same score band.
+- **`+ 10000` type floor for non-Records** — guarantees every entity outranks every Record regardless of Lucene score. Entity max combined_rank ≈ 100·score + 100 + 10000; Record max ≈ 100·score + 30. Even a Record at score 100.0 (10030) cannot beat an entity at score 0.1 (10020). This is the formal guarantee the prose promises.
+- **Stage 0 exact-id short-circuit** — if `$q` is a real node ID, it's always in the results regardless of what the full-text index thinks.
 
-**This is a heuristic, not a guarantee.** A match ranked 201st by Lucene score could in principle belong in the final top 50 after `search_rank` is added (if it has a high `search_rank` and the score gap across the 200-boundary is small). Stage 1's LIMIT=200 is tuned so this is rare in practice — `search_rank`'s additive contribution is at most ~100, and empirically the top-50 winners after re-rank are always within the top-200 by score for the observed query workload. If the implementation plan finds a workload where this heuristic drops legitimate winners, the fix is to raise the inner limit (e.g., to 500 or 1000), not to change the sort contract. The worst-case cost of raising it is a larger in-memory sort, still bounded.
+**Stage 1 truncation is a heuristic.** The top-200-by-score filter is tuned so post-rerank drops are rare in practice; if a workload proves otherwise, raise the inner LIMIT (500 or 1000) — don't change the sort contract. The type-floor guarantee holds at any truncation depth because all Records already rank below all entities.
 
 **Latency targets** (the implementation plan must validate): p95 ≤ 120ms for palette queries (cold cache), p95 ≤ 200ms for homepage and `/search` queries. If the implementation plan cannot meet this against AuraDB, the fix lives inside `/api/search`: add an in-memory query cache on the Next.js server, pre-warm common queries, tune the Cypher, or change the full-text index configuration. **There is no client-side fallback and no alternative search backend.** All three surfaces always consume `/api/search`, always get the same ranking, always reflect the `INGEST` timestamp. The contract is non-negotiable even if v1 latency numbers miss — slower is acceptable, divergent is not.
 
