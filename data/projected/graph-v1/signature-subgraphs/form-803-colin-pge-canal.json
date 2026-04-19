@@ -1,0 +1,20 @@
+{
+  "slug": "form-803-colin-pge-canal",
+  "display_name": "Form 803 \u00b7 Colin / PG&E / Canal Alliance",
+  "built_at": "2026-04-19T20:45:55+00:00",
+  "focus_node_id": "filing-2025-09-04-kate-colin-form-803",
+  "headline_stats": {
+    "caption": "Form 803 \u00b7 $0 \u00b7 PG&E \u2192 Canal Alliance",
+    "kicker": "SIGNATURE SUBGRAPH \u00b7 FORM 803 \u00b7 COLIN / PG&E / CANAL ALLIANCE"
+  },
+  "nodes": [
+    {
+      "id": "filing-2025-09-04-kate-colin-form-803",
+      "type": "Filing",
+      "label": "Form 803 \u00b7 2025-09-04",
+      "role": "focus",
+      "route": "/graph?focus=filing-2025-09-04-kate-colin-form-803"
+    }
+  ],
+  "edges": []
+}

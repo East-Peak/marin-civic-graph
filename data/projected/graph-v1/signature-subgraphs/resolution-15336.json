@@ -1,0 +1,1191 @@
+{
+  "slug": "resolution-15336",
+  "display_name": "Resolution 15336 (Merrydale)",
+  "built_at": "2026-04-19T20:45:55+00:00",
+  "focus_node_id": "decision-2024-08-19-resolution-15336",
+  "headline_stats": {
+    "caption": "2025-11-17 \u00b7 $0 \u00b7 5 votes",
+    "kicker": "SIGNATURE SUBGRAPH \u00b7 RESOLUTION 15336 (MERRYDALE)"
+  },
+  "nodes": [
+    {
+      "id": "decision-2024-08-19-resolution-15336",
+      "type": "Decision",
+      "label": "Resolution 15336 appropriating $2,256,400 and authorizing $2,002,400 in contracts",
+      "role": "focus",
+      "route": "/graph?focus=decision-2024-08-19-resolution-15336"
+    },
+    {
+      "id": "person-eli-hill",
+      "type": "Person",
+      "label": "Eli Hill",
+      "role": "primary",
+      "route": "/graph?focus=person-eli-hill"
+    },
+    {
+      "id": "person-kate-colin",
+      "type": "Person",
+      "label": "Kate Colin",
+      "role": "primary",
+      "route": "/graph?focus=person-kate-colin"
+    },
+    {
+      "id": "person-maika-llorens-gulati",
+      "type": "Person",
+      "label": "Maika Llorens Gulati",
+      "role": "primary",
+      "route": "/graph?focus=person-maika-llorens-gulati"
+    },
+    {
+      "id": "person-maribeth-bushey",
+      "type": "Person",
+      "label": "Maribeth Bushey",
+      "role": "primary",
+      "route": "/graph?focus=person-maribeth-bushey"
+    },
+    {
+      "id": "person-rachel-kertz",
+      "type": "Person",
+      "label": "Rachel Kertz",
+      "role": "primary",
+      "route": "/graph?focus=person-rachel-kertz"
+    },
+    {
+      "id": "meeting-2024-08-19-san-rafael-city-council",
+      "type": "Meeting",
+      "label": "Meeting",
+      "role": "primary",
+      "route": "/graph?focus=meeting-2024-08-19-san-rafael-city-council"
+    },
+    {
+      "id": "org-san-rafael-city-council",
+      "type": "Government",
+      "label": "San Rafael City Council",
+      "role": "primary",
+      "route": "/graph?focus=org-san-rafael-city-council"
+    },
+    {
+      "id": "committee-eli-hill-for-san-rafael-city-council-2022",
+      "type": "Committee",
+      "label": "Eli Hill for San Rafael City Council 2022",
+      "role": "secondary",
+      "route": "/graph?focus=committee-eli-hill-for-san-rafael-city-council-2022"
+    },
+    {
+      "id": "filing-san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council"
+    },
+    {
+      "id": "filing-san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council"
+    },
+    {
+      "id": "filing-san-rafael-form700-2025-03-31-hill-elias-annual-city-council-member-city-council",
+      "type": "Filing",
+      "label": "Form 700",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-form700-2025-03-31-hill-elias-annual-city-council-member-city-council"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-33056",
+      "type": "Filing",
+      "label": "Form 501",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-33056"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-33166",
+      "type": "Filing",
+      "label": "Form 410",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-33166"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-33337",
+      "type": "Filing",
+      "label": "Form 460",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-33337"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-33343",
+      "type": "Filing",
+      "label": "Form 410",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-33343"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-33997",
+      "type": "Filing",
+      "label": "Form 460",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-33997"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-34841",
+      "type": "Filing",
+      "label": "Form 460",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-34841"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-34847",
+      "type": "Filing",
+      "label": "Form 460",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-34847"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-35170",
+      "type": "Filing",
+      "label": "Form 460",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-35170"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-35252",
+      "type": "Filing",
+      "label": "Form 497",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-35252"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-35268",
+      "type": "Filing",
+      "label": "Form 497",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-35268"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-35305",
+      "type": "Filing",
+      "label": "Form 460",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-35305"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-35306",
+      "type": "Filing",
+      "label": "Form 460",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-35306"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-35364",
+      "type": "Filing",
+      "label": "Form 497",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-35364"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-35653",
+      "type": "Filing",
+      "label": "Form 460",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-35653"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-36141",
+      "type": "Filing",
+      "label": "Form 410",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-36141"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-36142",
+      "type": "Filing",
+      "label": "Form 460",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-36142"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-36201",
+      "type": "Filing",
+      "label": "Form 410",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-36201"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-36251",
+      "type": "Filing",
+      "label": "Form 460",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-36251"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-37367",
+      "type": "Filing",
+      "label": "Form 470",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-37367"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-41016",
+      "type": "Filing",
+      "label": "Form 460",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-41016"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-41017",
+      "type": "Filing",
+      "label": "Form 460",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-41017"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-41018",
+      "type": "Filing",
+      "label": "Form 460",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-41018"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-41019",
+      "type": "Filing",
+      "label": "Form 450",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-41019"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-41020",
+      "type": "Filing",
+      "label": "Form 450",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-41020"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-41092",
+      "type": "Filing",
+      "label": "Form 450",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-41092"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-41093",
+      "type": "Filing",
+      "label": "Form 460",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-41093"
+    },
+    {
+      "id": "filing-san-rafael-campaign-entry-41096",
+      "type": "Filing",
+      "label": "Form 460",
+      "role": "secondary",
+      "route": "/graph?focus=filing-san-rafael-campaign-entry-41096"
+    },
+    {
+      "id": "seatservice-eli-hill-d2-current",
+      "type": "SeatService",
+      "label": "seatservice-eli-hill-d2-current",
+      "role": "secondary",
+      "route": "/graph?focus=seatservice-eli-hill-d2-current"
+    },
+    {
+      "id": "decision-2021-02-01-san-rafael-city-council-7a-motion-approval",
+      "type": "Decision",
+      "label": "Amendment of the Current Vegetation Management Ordinance",
+      "role": "secondary",
+      "route": "/graph?focus=decision-2021-02-01-san-rafael-city-council-7a-motion-approval"
+    },
+    {
+      "id": "decision-2021-02-01-san-rafael-city-council-7b-motion-approval",
+      "type": "Decision",
+      "label": "Regulation of On-Street Parking on Narrow Streets",
+      "role": "secondary",
+      "route": "/graph?focus=decision-2021-02-01-san-rafael-city-council-7b-motion-approval"
+    },
+    {
+      "id": "decision-2021-02-16-san-rafael-city-council-6i-report-acceptance-accepted-report",
+      "type": "Decision",
+      "label": "Accepted report",
+      "role": "secondary",
+      "route": "/graph?focus=decision-2021-02-16-san-rafael-city-council-6i-report-acceptance-accepted-report"
+    },
+    {
+      "id": "decision-2021-02-16-san-rafael-city-council-6i-resolution-adoption-14890-14891",
+      "type": "Decision",
+      "label": "First Introduction of An Ordinance: Consideration of An Ordinance Amending Title",
+      "role": "secondary",
+      "route": "/graph?focus=decision-2021-02-16-san-rafael-city-council-6i-resolution-adoption-14890-14891"
+    },
+    {
+      "id": "decision-2021-02-16-san-rafael-city-council-7a-resolution-adoption-14892",
+      "type": "Decision",
+      "label": "Grand Jury Report on Roadblocks to Safe Evacuations in Marin",
+      "role": "secondary",
+      "route": "/graph?focus=decision-2021-02-16-san-rafael-city-council-7a-resolution-adoption-14892"
+    },
+    {
+      "id": "decision-2021-03-01-san-rafael-city-council-6a-report-acceptance-accepted-report",
+      "type": "Decision",
+      "label": "Accepted report",
+      "role": "secondary",
+      "route": "/graph?focus=decision-2021-03-01-san-rafael-city-council-6a-report-acceptance-accepted-report"
+    },
+    {
+      "id": "decision-2021-03-01-san-rafael-city-council-7a-motion-approval",
+      "type": "Decision",
+      "label": "Opportunity Zone Renter Protections",
+      "role": "secondary",
+      "route": "/graph?focus=decision-2021-03-01-san-rafael-city-council-7a-motion-approval"
+    },
+    {
+      "id": "decision-2021-03-01-san-rafael-city-council-8a-approval-approved-appointments",
+      "type": "Decision",
+      "label": "Approved Appointments",
+      "role": "secondary",
+      "route": "/graph?focus=decision-2021-03-01-san-rafael-city-council-8a-approval-approved-appointments"
+    },
+    {
+      "id": "decision-2021-03-15-san-rafael-city-council-7a-resolution-adoption-14897",
+      "type": "Decision",
+      "label": "Community Development Block Grant (CDBG)",
+      "role": "secondary",
+      "route": "/graph?focus=decision-2021-03-15-san-rafael-city-council-7a-resolution-adoption-14897"
+    },
+    {
+      "id": "decision-2021-03-15-san-rafael-city-council-7b-resolution-adoption-14897",
+      "type": "Decision",
+      "label": "Amendment of Agreement to Negotiate Exclusively with Goldstone Management, Inc.",
+      "role": "secondary",
+      "route": "/graph?focus=decision-2021-03-15-san-rafael-city-council-7b-resolution-adoption-14897"
+    },
+    {
+      "id": "decision-2021-04-05-san-rafael-city-council-7a-report-acceptance-accepted-report",
+      "type": "Decision",
+      "label": "Accepted report",
+      "role": "secondary",
+      "route": "/graph?focus=decision-2021-04-05-san-rafael-city-council-7a-report-acceptance-accepted-report"
+    },
+    {
+      "id": "decision-2021-04-05-san-rafael-city-council-8a-report-acceptance-accepted-report",
+      "type": "Decision",
+      "label": "Accepted report",
+      "role": "secondary",
+      "route": "/graph?focus=decision-2021-04-05-san-rafael-city-council-8a-report-acceptance-accepted-report"
+    },
+    {
+      "id": "decision-2021-04-19-san-rafael-city-council-7a-report-acceptance-accepted-report",
+      "type": "Decision",
+      "label": "Accepted report",
+      "role": "secondary",
+      "route": "/graph?focus=decision-2021-04-19-san-rafael-city-council-7a-report-acceptance-accepted-report"
+    },
+    {
+      "id": "decision-2021-04-19-san-rafael-city-council-7b-report-acceptance-accepted-report",
+      "type": "Decision",
+      "label": "Accepted report",
+      "role": "secondary",
+      "route": "/graph?focus=decision-2021-04-19-san-rafael-city-council-7b-report-acceptance-accepted-report"
+    },
+    {
+      "id": "decision-2021-05-03-san-rafael-city-council-7a-resolution-adoption-14908",
+      "type": "Decision",
+      "label": "BioMarin Development Agreement",
+      "role": "secondary",
+      "route": "/graph?focus=decision-2021-05-03-san-rafael-city-council-7a-resolution-adoption-14908"
+    }
+  ],
+  "edges": [
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2024-08-19-resolution-15336",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2024-08-19-resolution-15336",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2024-08-19-resolution-15336",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2024-08-19-resolution-15336",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2024-08-19-resolution-15336",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2024-08-19-resolution-15336",
+      "target": "meeting-2024-08-19-san-rafael-city-council",
+      "type": "AT_MEETING",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2024-08-19-resolution-15336",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "committee-eli-hill-for-san-rafael-city-council-2022",
+      "target": "person-eli-hill",
+      "type": "CONTROLLED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2023-03-30-hill-elias-annual-city-council-member-city-council",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2024-04-01-hill-elias-annual-city-council-member-city-council",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-form700-2025-03-31-hill-elias-annual-city-council-member-city-council",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-33056",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-33166",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-33337",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-33343",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-33997",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-34841",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-34847",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35170",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35252",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35268",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35305",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35306",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35364",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-35653",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36141",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36142",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36201",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-36251",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-37367",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-41016",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-41017",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-41018",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-41019",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-41020",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-41092",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-41093",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "filing-san-rafael-campaign-entry-41096",
+      "target": "person-eli-hill",
+      "type": "FILED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "seatservice-eli-hill-d2-current",
+      "target": "person-eli-hill",
+      "type": "HELD_BY",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2021-02-01-san-rafael-city-council-7a-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2021-02-01-san-rafael-city-council-7b-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2021-02-16-san-rafael-city-council-6i-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2021-02-16-san-rafael-city-council-6i-resolution-adoption-14890-14891",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2021-02-16-san-rafael-city-council-7a-resolution-adoption-14892",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2021-03-01-san-rafael-city-council-6a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2021-03-01-san-rafael-city-council-7a-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2021-03-01-san-rafael-city-council-8a-approval-approved-appointments",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2021-03-15-san-rafael-city-council-7a-resolution-adoption-14897",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2021-03-15-san-rafael-city-council-7b-resolution-adoption-14897",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2021-04-05-san-rafael-city-council-7a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2021-04-05-san-rafael-city-council-8a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2021-04-19-san-rafael-city-council-7a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2021-04-19-san-rafael-city-council-7b-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-eli-hill",
+      "target": "decision-2021-05-03-san-rafael-city-council-7a-resolution-adoption-14908",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2021-02-01-san-rafael-city-council-7a-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2021-02-01-san-rafael-city-council-7b-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2021-02-16-san-rafael-city-council-6i-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2021-02-16-san-rafael-city-council-6i-resolution-adoption-14890-14891",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2021-02-16-san-rafael-city-council-7a-resolution-adoption-14892",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2021-03-01-san-rafael-city-council-6a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2021-03-01-san-rafael-city-council-7a-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2021-03-01-san-rafael-city-council-8a-approval-approved-appointments",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2021-03-15-san-rafael-city-council-7a-resolution-adoption-14897",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2021-03-15-san-rafael-city-council-7b-resolution-adoption-14897",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2021-04-05-san-rafael-city-council-7a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2021-04-05-san-rafael-city-council-8a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2021-04-19-san-rafael-city-council-7a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2021-04-19-san-rafael-city-council-7b-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-kate-colin",
+      "target": "decision-2021-05-03-san-rafael-city-council-7a-resolution-adoption-14908",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2021-02-01-san-rafael-city-council-7a-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2021-02-01-san-rafael-city-council-7b-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2021-02-16-san-rafael-city-council-6i-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2021-02-16-san-rafael-city-council-6i-resolution-adoption-14890-14891",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2021-02-16-san-rafael-city-council-7a-resolution-adoption-14892",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2021-03-01-san-rafael-city-council-6a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2021-03-01-san-rafael-city-council-7a-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2021-03-01-san-rafael-city-council-8a-approval-approved-appointments",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2021-03-15-san-rafael-city-council-7a-resolution-adoption-14897",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2021-03-15-san-rafael-city-council-7b-resolution-adoption-14897",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2021-04-05-san-rafael-city-council-7a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2021-04-05-san-rafael-city-council-8a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2021-04-19-san-rafael-city-council-7a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2021-04-19-san-rafael-city-council-7b-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maika-llorens-gulati",
+      "target": "decision-2021-05-03-san-rafael-city-council-7a-resolution-adoption-14908",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2021-02-01-san-rafael-city-council-7a-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2021-02-01-san-rafael-city-council-7b-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2021-02-16-san-rafael-city-council-6i-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2021-02-16-san-rafael-city-council-6i-resolution-adoption-14890-14891",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2021-02-16-san-rafael-city-council-7a-resolution-adoption-14892",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2021-03-01-san-rafael-city-council-6a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2021-03-01-san-rafael-city-council-7a-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2021-03-01-san-rafael-city-council-8a-approval-approved-appointments",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2021-03-15-san-rafael-city-council-7a-resolution-adoption-14897",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2021-03-15-san-rafael-city-council-7b-resolution-adoption-14897",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2021-04-05-san-rafael-city-council-7a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2021-04-05-san-rafael-city-council-8a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2021-04-19-san-rafael-city-council-7a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2021-04-19-san-rafael-city-council-7b-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-maribeth-bushey",
+      "target": "decision-2021-05-03-san-rafael-city-council-7a-resolution-adoption-14908",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2021-02-01-san-rafael-city-council-7a-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2021-02-01-san-rafael-city-council-7b-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2021-02-16-san-rafael-city-council-6i-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2021-02-16-san-rafael-city-council-6i-resolution-adoption-14890-14891",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2021-02-16-san-rafael-city-council-7a-resolution-adoption-14892",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2021-03-01-san-rafael-city-council-6a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2021-03-01-san-rafael-city-council-7a-motion-approval",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2021-03-01-san-rafael-city-council-8a-approval-approved-appointments",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2021-03-15-san-rafael-city-council-7a-resolution-adoption-14897",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2021-03-15-san-rafael-city-council-7b-resolution-adoption-14897",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2021-04-05-san-rafael-city-council-7a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2021-04-05-san-rafael-city-council-8a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2021-04-19-san-rafael-city-council-7a-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2021-04-19-san-rafael-city-council-7b-report-acceptance-accepted-report",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "person-rachel-kertz",
+      "target": "decision-2021-05-03-san-rafael-city-council-7a-resolution-adoption-14908",
+      "type": "CAST_VOTE",
+      "style": "governance"
+    },
+    {
+      "source": "meeting-2024-08-19-san-rafael-city-council",
+      "target": "org-san-rafael-city-council",
+      "type": "AT_INSTITUTION",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2021-02-01-san-rafael-city-council-7a-motion-approval",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2021-02-01-san-rafael-city-council-7b-motion-approval",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2021-02-16-san-rafael-city-council-6i-report-acceptance-accepted-report",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2021-02-16-san-rafael-city-council-6i-resolution-adoption-14890-14891",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2021-02-16-san-rafael-city-council-7a-resolution-adoption-14892",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2021-03-01-san-rafael-city-council-6a-report-acceptance-accepted-report",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2021-03-01-san-rafael-city-council-7a-motion-approval",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2021-03-01-san-rafael-city-council-8a-approval-approved-appointments",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2021-03-15-san-rafael-city-council-7a-resolution-adoption-14897",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2021-03-15-san-rafael-city-council-7b-resolution-adoption-14897",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2021-04-05-san-rafael-city-council-7a-report-acceptance-accepted-report",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2021-04-05-san-rafael-city-council-8a-report-acceptance-accepted-report",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2021-04-19-san-rafael-city-council-7a-report-acceptance-accepted-report",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2021-04-19-san-rafael-city-council-7b-report-acceptance-accepted-report",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "decision-2021-05-03-san-rafael-city-council-7a-resolution-adoption-14908",
+      "target": "org-san-rafael-city-council",
+      "type": "DECIDED_BY",
+      "style": "governance"
+    },
+    {
+      "source": "meeting-2024-08-19-san-rafael-city-council",
+      "target": "org-san-rafael-city-council",
+      "type": "AT_INSTITUTION",
+      "style": "governance"
+    },
+    {
+      "source": "seatservice-eli-hill-d2-current",
+      "target": "org-san-rafael-city-council",
+      "type": "AT_INSTITUTION",
+      "style": "governance"
+    }
+  ]
+}

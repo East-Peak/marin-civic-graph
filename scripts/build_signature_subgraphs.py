@@ -38,7 +38,7 @@ WHITELIST_PATTERN = "|".join(PHASE2_WHITELIST)
 MONEY_EDGES = {"FROM_SOURCE", "TO_TARGET", "DISCLOSED_IN", "UNDER_AGREEMENT"}
 LEGAL_EDGES = {"CONSTRAINS"}
 
-MAX_NODES = 50  # per §5.5 target ≤ 60 nodes; we sample conservatively.
+MAX_NODES = 55  # per §5.5 target ≤ 60 nodes; small safety margin.
 
 
 def classify_edge_style(rel_type: str) -> str:
@@ -103,6 +103,8 @@ def fetch_subgraph(session: Session, focus_id: str) -> tuple[list[dict], list[di
     }
 
     for pair in record["hop1_pairs"] or []:
+        if len(nodes) >= MAX_NODES:
+            break
         n1, r1 = pair["node"], pair["rel"]
         if n1 is None or r1 is None:
             continue
@@ -220,25 +222,44 @@ def main() -> int:
     built_at = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
 
     manifest_subgraphs = []
+    failures: list[str] = []
     with GraphDatabase.driver(uri, auth=(user, password)) as driver:
         with driver.session(database=database) as session:
             for entry in entries:
                 try:
                     bundle = build_bundle(session, entry, built_at)
                 except RuntimeError as exc:
-                    print(f"  SKIP {entry['slug']}: {exc}", file=sys.stderr)
+                    failures.append(f"{entry['slug']}: focus missing — {exc}")
+                    print(f"  FAIL {entry['slug']}: {exc}", file=sys.stderr)
                     continue
+                node_count = len(bundle["nodes"])
+                if node_count < 2:
+                    failures.append(
+                        f"{entry['slug']}: low-connectivity bundle ({node_count} node(s); expected focus + neighbors)"
+                    )
+                    print(
+                        f"  FAIL {entry['slug']}: only {node_count} node(s) — focus has no whitelisted neighbors",
+                        file=sys.stderr,
+                    )
+                    # Still write the bundle so the inspection artifact is present.
                 (OUT_DIR / f"{entry['slug']}.json").write_text(json.dumps(bundle, indent=2))
                 manifest_subgraphs.append({
                     "slug": entry["slug"],
                     "display_name": entry["display_name"],
                     "focus_node_id": entry["focus_node_id"],
                 })
-                print(f"  {entry['slug']}: {len(bundle['nodes'])} nodes, {len(bundle['edges'])} edges")
+                print(f"  {entry['slug']}: {node_count} nodes, {len(bundle['edges'])} edges")
 
     manifest = {"built_at": built_at, "subgraphs": manifest_subgraphs}
     (OUT_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2))
     print(f"Wrote {len(manifest_subgraphs)} bundles + manifest to {OUT_DIR}")
+
+    if failures:
+        print("", file=sys.stderr)
+        print(f"FAILED: {len(failures)} bundle(s) did not meet constraints:", file=sys.stderr)
+        for f in failures:
+            print(f"  - {f}", file=sys.stderr)
+        return 1
     return 0
 
 

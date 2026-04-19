@@ -27,7 +27,7 @@ subgraphs:
 
   - slug: downtown-library-renovation
     display_name: Downtown Library Renovation
-    focus_node_id: project-san-rafael-downtown-library-renovation
+    focus_node_id: project-downtown-library-renovation
     headline_stats_template: "${{money_total}} · {{agreement_count}} agreements · {{record_count}} records"
 
   - slug: kate-colin
@@ -37,7 +37,7 @@ subgraphs:
 
   - slug: resolution-15336
     display_name: Resolution 15336 (Merrydale)
-    focus_node_id: decision-2025-11-17-resolution-15336
+    focus_node_id: decision-2024-08-19-resolution-15336
     headline_stats_template: "2025-11-17 · ${{money_total}} · {{person_count}} votes"
 
   - slug: grants-pass-v-johnson
@@ -47,5 +47,5 @@ subgraphs:
 
   - slug: form-803-colin-pge-canal
     display_name: Form 803 · Colin / PG&E / Canal Alliance
-    focus_node_id: filing-form-803-kate-colin-2025-08-08
+    focus_node_id: filing-2025-09-04-kate-colin-form-803
     headline_stats_template: "Form 803 · ${{money_total}} · PG&E → Canal Alliance"

@@ -1,7 +1,7 @@
 {
   "slug": "grants-pass-v-johnson",
   "display_name": "Grants Pass v. Johnson (SCOTUS)",
-  "built_at": "2026-04-19T18:23:47+00:00",
+  "built_at": "2026-04-19T20:45:55+00:00",
   "focus_node_id": "case-city-of-grants-pass-v-johnson",
   "headline_stats": {
     "caption": "SCOTUS \u00b7 0 proceedings",
@@ -31,14 +31,14 @@
     },
     {
       "id": "org-city-and-county-of-san-francisco",
-      "type": "Organization",
+      "type": "Government",
       "label": "City and County of San Francisco",
       "role": "primary",
       "route": "/graph?focus=org-city-and-county-of-san-francisco"
     },
     {
       "id": "org-city-of-grants-pass",
-      "type": "Organization",
+      "type": "Government",
       "label": "City of Grants Pass",
       "role": "primary",
       "route": "/graph?focus=org-city-of-grants-pass"
