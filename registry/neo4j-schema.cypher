@@ -61,3 +61,30 @@ CREATE INDEX agreement_effective_date IF NOT EXISTS FOR (n:Agreement) ON (n.effe
 CREATE INDEX moneyflow_flow_type IF NOT EXISTS FOR (n:MoneyFlow) ON (n.flow_type);
 CREATE INDEX filing_filing_type IF NOT EXISTS FOR (n:Filing) ON (n.filing_type);
 CREATE INDEX decision_decision_type IF NOT EXISTS FOR (n:Decision) ON (n.decision_type);
+
+// ============================================================================
+// Open Marin search index (spec §3.3)
+// ============================================================================
+// Composite full-text index spanning all 15 searchable types.
+// One query hits every indexed type; Record ranked into a separate bucket client-side.
+
+CREATE FULLTEXT INDEX openmarin_search_index IF NOT EXISTS
+FOR (n:Person|Organization|Committee|Decision|Project|Program|Case|Meeting|Filing|Agreement|Amendment|Election|Place|Issue|Record)
+ON EACH [n.search_label, n.search_terms];
+
+// Per-type search_rank property indexes keep per-type filtering cheap.
+CREATE INDEX person_search_rank IF NOT EXISTS FOR (n:Person) ON (n.search_rank);
+CREATE INDEX organization_search_rank IF NOT EXISTS FOR (n:Organization) ON (n.search_rank);
+CREATE INDEX committee_search_rank IF NOT EXISTS FOR (n:Committee) ON (n.search_rank);
+CREATE INDEX decision_search_rank IF NOT EXISTS FOR (n:Decision) ON (n.search_rank);
+CREATE INDEX project_search_rank IF NOT EXISTS FOR (n:Project) ON (n.search_rank);
+CREATE INDEX program_search_rank IF NOT EXISTS FOR (n:Program) ON (n.search_rank);
+CREATE INDEX case_search_rank IF NOT EXISTS FOR (n:Case) ON (n.search_rank);
+CREATE INDEX meeting_search_rank IF NOT EXISTS FOR (n:Meeting) ON (n.search_rank);
+CREATE INDEX filing_search_rank IF NOT EXISTS FOR (n:Filing) ON (n.search_rank);
+CREATE INDEX agreement_search_rank IF NOT EXISTS FOR (n:Agreement) ON (n.search_rank);
+CREATE INDEX amendment_search_rank IF NOT EXISTS FOR (n:Amendment) ON (n.search_rank);
+CREATE INDEX election_search_rank IF NOT EXISTS FOR (n:Election) ON (n.search_rank);
+CREATE INDEX place_search_rank IF NOT EXISTS FOR (n:Place) ON (n.search_rank);
+CREATE INDEX issue_search_rank IF NOT EXISTS FOR (n:Issue) ON (n.search_rank);
+CREATE INDEX record_search_rank IF NOT EXISTS FOR (n:Record) ON (n.search_rank);
