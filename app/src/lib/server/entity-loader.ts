@@ -104,11 +104,28 @@ function classifyEdgeStyle(relType: string): EdgeStyle {
  * and the id prefix is the lowercased PascalCase (no dash). So `seat-service`
  * → id prefix `seatservice-`. For legacy/aliased types (actor/inst/eid),
  * `resolveIdAlias` handles the remap.
+ *
+ * A few id prefixes diverge from the URL segment by historical choice (e.g.
+ * `organization` → `org-`, `moneyflow` → `moneyflow-` does match). We keep an
+ * explicit short-prefix map for the known divergences so URL lookups succeed
+ * without a DB round-trip per variant.
  */
+const SHORT_ID_PREFIX: Record<string, string> = {
+  organization: "org-",
+};
+
 function candidateIdFromSegment(typeSegment: string, slug: string): string {
   // Collapse dashes in the type segment: "seat-service" → "seatservice".
   const prefix = typeSegment.replace(/-/g, "") + "-";
   return `${prefix}${slug}`;
+}
+
+function shortCandidateIdFromSegment(
+  typeSegment: string,
+  slug: string,
+): string | null {
+  const shortPrefix = SHORT_ID_PREFIX[typeSegment];
+  return shortPrefix ? `${shortPrefix}${slug}` : null;
 }
 
 function labelFromProps(id: string, props: Record<string, unknown>): string {
@@ -176,6 +193,14 @@ async function resolveFocus(
   // Try the canonical id first.
   const direct = await fetchFocusById(candidateId);
   if (direct) return direct;
+
+  // Try the short-form id prefix for types where URL segment and id prefix
+  // diverge (e.g. `organization` → `org-`).
+  const shortId = shortCandidateIdFromSegment(typeSegment, slug);
+  if (shortId) {
+    const shortHit = await fetchFocusById(shortId);
+    if (shortHit) return shortHit;
+  }
 
   // Try alias resolution (legacy prefixes: actor/inst/eid).
   const alias = resolveIdAlias(candidateId);
