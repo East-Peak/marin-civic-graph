@@ -386,17 +386,30 @@ type Phase2SubSpec = {
 };
 
 function phase2Sub(spec: Phase2SubSpec): string {
+  // The 2-hop MATCH can return the same `c` multiple times (multiple paths).
+  // We dedupe via `WITH DISTINCT c` BEFORE the aggregation / EXISTS step so:
+  //   1. The EXISTS subquery can reference `c` (allowed before DISTINCT is
+  //      applied at the outer level).
+  //   2. The ORDER BY clause in RETURN can reference `c.*` properties because
+  //      we omit DISTINCT from the RETURN (already deduped upstream).
+  //
+  // For Person/Organization, the OPTIONAL MATCH + count aggregation is what
+  // actually guarantees one row per c (count(r) collapses duplicates), so
+  // the `WITH DISTINCT c` becomes redundant but harmless.
   const extra = spec.extraClause ?? "";
+  const dedupStep = extra
+    ? "" // aggregation in `extra` already produces one row per c
+    : "\n  WITH DISTINCT c, focus_id, must_show_ids";
   return `
   WITH $focus_id AS focus_id, $must_show_ids AS must_show_ids
   MATCH (f {id: focus_id})-[:${PHASE2_PATTERN}*1..2]-(c:${spec.typeLabel})
-  WHERE c.id <> $focus_id AND NOT c.id IN $must_show_ids
+  WHERE c.id <> $focus_id AND NOT c.id IN $must_show_ids${dedupStep}
   ${extra}
-  RETURN DISTINCT c.id AS id,
+  RETURN c.id AS id,
     labels(c) AS labels,
     coalesce(c.search_label, c.name, c.id) AS label,
     '${spec.typeLiteral}' AS type,
-    CASE WHEN EXISTS { MATCH (f)-[:${PHASE2_PATTERN}]-(c) } THEN 1 ELSE 2 END AS ring,
+    CASE WHEN EXISTS { MATCH ({id: focus_id})-[:${PHASE2_PATTERN}]-(c) } THEN 1 ELSE 2 END AS ring,
     ${spec.rankValueExpr} AS rank_value,
     ${spec.typePriority} AS type_priority
   ORDER BY ${spec.orderBy}
