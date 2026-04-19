@@ -261,16 +261,18 @@ def main() -> int:
                     print(f"  FAIL {entry['slug']}: {exc}", file=sys.stderr)
                     continue
                 node_count = len(bundle["nodes"])
+                # Always write the bundle artifact for inspection, but only add
+                # to the manifest if it has real connective content (focus + ≥1 neighbor).
+                (OUT_DIR / f"{entry['slug']}.json").write_text(json.dumps(bundle, indent=2))
                 if node_count < 2:
                     failures.append(
                         f"{entry['slug']}: low-connectivity bundle ({node_count} node(s); expected focus + neighbors)"
                     )
                     print(
-                        f"  FAIL {entry['slug']}: only {node_count} node(s) — focus has no whitelisted neighbors",
+                        f"  FAIL {entry['slug']}: only {node_count} node(s) — not added to manifest",
                         file=sys.stderr,
                     )
-                    # Still write the bundle so the inspection artifact is present.
-                (OUT_DIR / f"{entry['slug']}.json").write_text(json.dumps(bundle, indent=2))
+                    continue
                 manifest_subgraphs.append({
                     "slug": entry["slug"],
                     "display_name": entry["display_name"],
