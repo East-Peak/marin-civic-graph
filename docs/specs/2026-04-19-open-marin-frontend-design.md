@@ -715,7 +715,7 @@ The checkbox is labeled and the resulting path is visibly marked `PATH VIA LOOSE
 | Issue | 14 | `id ASC` (durable) | — |
 
 No node type is unranked. When the 40-cap hits, the overflow footer appears with a link to expand.
-3. **Default node filters**: `Record`, `Place`, `Issue`, `AgendaItem` are hidden — unless any of those is the focus type (in which case its filter auto-enables). Toggle chips in the toolbar flip individual types on/off.
+3. **Default node filters**: `Record`, `Place`, `Issue`, `AgendaItem` are hidden — unless (a) any of those is the focus type, or (b) any of those appears in the focused-load's must-show set (e.g., `AgendaItem` is must-show for `Decision` and `Meeting` focus per §5.1.1). In either case the filter for that type auto-enables so the initial render honors the must-show contract. Toggle chips in the toolbar then flip individual types on/off.
 4. **Default edge filters**: `governance` / `money` / `legal-constrains` classes on. Universal edges (`EVIDENCED_BY`, `IN_JURISDICTION`, `RELATES_TO_ISSUE`) off — unless needed for the current focus (see waiver above) or unless the user toggles on the corresponding node filter (enabling `records` auto-enables `EVIDENCED_BY` edges so they have something to connect to; same pattern for Place/Issue).
 5. **Default time slider**: last 5 years from `INGEST` timestamp, clamped to the earliest event in the loaded subgraph (per §5.4).
 
@@ -752,7 +752,11 @@ No node type is unranked. When the 40-cap hits, the overflow footer appears with
 - If more candidates of a given type exist past the per-expand cap, the UI shows a per-node overflow chip `+{N}` and clicking that node again loads the next 20 (new batch, subject to same rules).
 - Dedup against already-loaded nodes.
 
-**Right-click → "expand all (2 hops)"** on a node runs a 2-hop expansion capped at 80 nodes using the `Expand-all (2-hop) quota` column above and the same filters. The hop-limit slider in the toolbar clamps this action (setting it to `1` removes "expand all" from the right-click menu).
+**Right-click → "expand all (2 hops)"** on a node runs a 2-hop expansion capped at 80 nodes using the `Expand-all (2-hop) quota` column above and the same filters.
+
+**Hop-distance handling for Expand-all.** Candidates within each type's quota pool are sorted by `(hop_distance ASC, type-specific ranking key, id ASC)` — so 1-hop candidates are always preferred over 2-hop candidates of the same type within that type's quota. Per-type quotas count across both hops combined: a quota of 8 for `MoneyFlow` means up to 8 total MoneyFlows across hops 1 and 2, not 8-per-hop. When the aggregate 80-node cap is reached, lower-priority types (per Tier 2 ordering) drop first.
+
+The hop-limit slider in the toolbar clamps this action (setting it to `1` removes "expand all" from the right-click menu).
 
 **Filter-change contract.** Changing an edge or node filter applies immediately to already-loaded nodes (shows/hides) and to future expansions. It does NOT re-run the focused-load query — the initial 40-node subset stays loaded (hidden nodes remain in memory so re-enabling is instant). Enabling a previously-hidden type does not pull in new nodes of that type that were not in the original 2-hop neighborhood — to pull new nodes, the user clicks to expand.
 
