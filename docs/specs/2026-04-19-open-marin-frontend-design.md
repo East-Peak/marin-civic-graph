@@ -467,7 +467,22 @@ RETURN r.n, r.t, r.tp LIMIT ($cap - $must_show_count)
 
 Per-type `LIMIT`s enforce the quotas; the outer `LIMIT` caps the aggregate at 40 minus must-show count. Rows are consumed in type-priority order, so when the aggregate cap truncates, lower-priority types are the ones dropped.
 
+**Ring assignment for Phase-2 nodes.** Each Phase-2 row also returns a `ring` integer. The rule (expressed per sub-query for clarity):
+
+```cypher
+WITH c, ...
+RETURN DISTINCT c AS n, 'MoneyFlow' AS t,
+  CASE WHEN EXISTS { MATCH (f)-[:CAST_VOTE|AT_MEETING|ABOUT_ITEM|DECIDED_BY|PART_OF|HELD_BY|FOR_SEAT|RESULT_OF|AT_INSTITUTION|FROM_SOURCE|TO_TARGET|DISCLOSED_IN|UNDER_AGREEMENT|AMENDS|CONTROLLED_BY|FILED_BY|BY_PERSON|IN_ELECTION|FOR_ELECTION|FOR_PROJECT|ABOUT_PROJECT|ABOUT_PROGRAM|PARTY_TO|CONSTRAINS|BETWEEN|HEARD_IN]-(c) } THEN 1 ELSE 2 END AS ring,
+  c.amount AS rank_value, 1 AS type_priority
+```
+
+A Phase-2 candidate reachable at 1-hop gets `ring=1` (inner ring); otherwise `ring=2`. Phase 2 never assigns `ring=3` — that is reserved for the Person-focus institution path in Query 1.
+
+Must-show rows keep the `ring` assigned by Query 1's must-show path classification (1 for direct, 2 for named 2-hop, 3 only for the Person institution).
+
 **Candidate pool for Phase 2**: all nodes reachable from `focus_id` in 1 or 2 traversal hops **along the edge whitelist**, minus the must-show set, minus `:Place`, minus `:Issue`.
+
+**Edge-inclusion contract for the hero.** Once the 40-node selection is final, the hero draws every edge between any two selected nodes whose relationship type is in the Phase-2 whitelist (the 26 types enumerated above). This means: the graph shows not just the admission paths (e.g., the specific `HELD_BY` edge that pulled a SeatService into must-show) but also any other whitelisted edge between admitted nodes (e.g., a `CAST_VOTE` between a Person and a Decision that both made the hero). Universal edges (`EVIDENCED_BY`, `IN_JURISDICTION`, `RELATES_TO_ISSUE`) are never drawn in the hero, even if both endpoints are selected — their density would dominate the layout. This keeps the hero the same shape as the admission rules: investigatively meaningful connective tissue, not raw graph density.
 
 **Dedup**: `DISTINCT` in each sub-query handles duplicates from 1-hop-and-2-hop overlap. A node that appears in both must-show and Phase 2 is caught by the `NOT c.id IN must_show_ids` filter in every sub-query.
 
