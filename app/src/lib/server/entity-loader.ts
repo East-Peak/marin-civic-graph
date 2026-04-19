@@ -176,10 +176,20 @@ function isNode(v: unknown): v is Neo4jNodeLike {
 // ---------------------------------------------------------------------------
 
 async function fetchFocusById(id: string): Promise<Neo4jNodeLike | null> {
-  const records = (await runQuery(`MATCH (n {id: $id}) RETURN n LIMIT 1`, {
+  // Fetch up to 2 matches so we can detect duplicate ids. Per spec §4.2,
+  // collisions are treated as ingestion bugs — the frontend does not
+  // disambiguate; it logs an error and returns null (→ 404).
+  const records = (await runQuery(`MATCH (n {id: $id}) RETURN n LIMIT 2`, {
     id,
   })) as unknown as Neo4jRecordLike[];
-  const node = records[0]?.get("n");
+  if (records.length > 1) {
+    console.error(
+      `[entity-loader] Duplicate id in graph: ${id} (${records.length}+ matches). Returning 404.`,
+    );
+    return null;
+  }
+  if (records.length === 0) return null;
+  const node = records[0].get("n");
   if (!isNode(node)) return null;
   return node;
 }

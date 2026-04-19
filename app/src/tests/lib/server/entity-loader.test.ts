@@ -178,6 +178,20 @@ describe("loadEntity", () => {
     expect(mockRunQuery).toHaveBeenCalledTimes(3);
   });
 
+  it("returns null (→ 404) when the id matches multiple nodes", async () => {
+    // Duplicate id — spec §4.2 says the frontend does not disambiguate; log
+    // the error and return null so the page renders 404.
+    mockRunQuery.mockResolvedValueOnce([
+      focusRecord("person-kate-colin", ["Person"]),
+      focusRecord("person-kate-colin", ["Person"]),
+    ]);
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const result = await loadEntity("person", "kate-colin");
+    expect(result).toBeNull();
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining("Duplicate id"));
+    errorSpy.mockRestore();
+  });
+
   it("filters out neighbors whose canonical type cannot be resolved", async () => {
     const focusId = "person-kate-colin";
     mockRunQuery.mockResolvedValueOnce([focusRecord(focusId, ["Person"])]);
