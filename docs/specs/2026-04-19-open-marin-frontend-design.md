@@ -381,14 +381,14 @@ Relationships referenced below must exist in the v1 ontology (see v1 design spec
 
 | Focus entity | Must-show neighbors (direct relationships or named 2-hop paths) |
 |---|---|
-| Person | `SeatService` via inverse `HELD_BY` (filtered to `ended_at IS NULL OR ended_at >= today` for current service); each `SeatService`'s `Seat` via `FOR_SEAT`; `Committee` via inverse `CONTROLLED_BY`; `Candidacy` via inverse `BY_PERSON`; `Case` via `PARTY_TO`; the current `Seat`'s `Organization:Government` via 3-hop path `(Person)<-[:HELD_BY]-(SeatService)-[:FOR_SEAT]->(Seat)-[:AT_INSTITUTION]->(Organization)`. This is the only 3-hop must-show path in the spec — the must-show classifier is (direct 1-hop) ∪ (named 2-hop) ∪ (this one named 3-hop for Person focus). |
+| Person | All `SeatService` via inverse `HELD_BY` (no `ended_at` filter — former offices are investigatively material); each `SeatService`'s `Seat` via `FOR_SEAT`; `Committee` via inverse `CONTROLLED_BY`; `Candidacy` via inverse `BY_PERSON`; `Case` via `PARTY_TO`; each `Seat`'s `Organization:Government` via the 3-hop path `(Person)<-[:HELD_BY]-(SeatService)-[:FOR_SEAT]->(Seat)-[:AT_INSTITUTION]->(Organization)`. This 3-hop institution path is the only 3-hop must-show in the entire contract. |
 | Decision | `Meeting` via `AT_MEETING`; `AgendaItem` via `ABOUT_ITEM`; `Organization:Government` via `DECIDED_BY`; `Person` via inverse `CAST_VOTE`; `Project` via `ABOUT_PROJECT`; `Program` via `ABOUT_PROGRAM`; `Case` via inverse `CONSTRAINS`. |
 | Project | `Agreement` via inverse `FOR_PROJECT`; each `Agreement`'s `Amendment`s via inverse `AMENDS`; `Decision` via inverse `ABOUT_PROJECT`; `Program` via 2-hop path `(Project)<-[:ABOUT_PROJECT]-(:Decision)-[:ABOUT_PROGRAM]->(Program)` (deduped). Place is NOT in the hero — it appears in the facts panel only. |
 | Program | `Decision` via inverse `ABOUT_PROGRAM`; `Project` via 2-hop path `(Program)<-[:ABOUT_PROGRAM]-(:Decision)-[:ABOUT_PROJECT]->(Project)` (deduped); `Case` via 2-hop path `(Program)<-[:ABOUT_PROGRAM]-(:Decision)<-[:CONSTRAINS]-(Case)` (deduped). |
 | Case | `Proceeding` via inverse `PART_OF`; `Organization:Court` via `HEARD_IN`; `Person`/`Organization` via inverse `PARTY_TO`; `Decision` via `CONSTRAINS`. |
 | Meeting | `Organization:Government` via `AT_INSTITUTION`; `AgendaItem` via inverse `PART_OF` (where parent is this Meeting); `Decision` via inverse `AT_MEETING`. |
 | Filing | `Person` or `Committee` via `FILED_BY`; `Election` via `FOR_ELECTION`; `MoneyFlow` via inverse `DISCLOSED_IN`. Form 700 fields (when `filing_type = form_700`) render in the facts panel, not as separate graph nodes — `EconomicInterestDisclosure` is merged into `Filing` per the v1 migration. |
-| Committee | `Person` via `CONTROLLED_BY`; `Filing` via inverse `FILED_BY` where target is this Committee. Linked `Candidacy` and `Election` surface via the `Person` who controls the Committee, through the Person's `Candidacy` → `IN_ELECTION` chain — they are not direct neighbors of Committee in the v1 ontology. |
+| Committee | `Person` via `CONTROLLED_BY`; `Filing` via inverse `FILED_BY` where target is this Committee. Related `Candidacy` nodes surface via Phase 2 fill (reachable in 2 hops through the controlling `Person`). `Election` is 3 hops from Committee and not in the hero — it appears in the facts panel. |
 
 **Phase 2 — ranked fill with per-type quotas.** After the must-show set is placed, remaining slots (up to the 40-node cap) are filled from each type up to its quota, in this order. Ranking uses directly computable local metrics — no centrality on the live query.
 
@@ -416,7 +416,7 @@ Relationships referenced below must exist in the v1 ontology (see v1 design spec
 
 **Query contract (explicit).** The selection runs as **two parameterized Cypher queries** per entity page:
 
-**Query 1 — Must-show.** Given `focus_id` and `focus_type`, traverse exactly the paths listed in the must-show table for that focus type (some are 1-hop, some are named 2-hop). Returns `(id, type, role='must-show', primary=true|false)` where `primary=true` for direct (1-hop) neighbors and `false` for 2-hop. Bounded by the must-show traversal count (empirically ≤ 30 nodes across all focus types on the current graph). If the must-show set is already ≥ 40 nodes, Query 2 is skipped and the overflow footer is shown.
+**Query 1 — Must-show.** Given `focus_id` and `focus_type`, traverse exactly the paths listed in the must-show table for that focus type (some are 1-hop, some are named 2-hop, exactly one is a named 3-hop — Person's institution). Returns `(id, type, role='must-show', ring)` where `ring ∈ {1, 2, 3}` is the hop distance from focus along the matched path. Ring 3 appears only on Person pages for the Organization:Government reached through SeatService + Seat. Bounded by the must-show traversal count (empirically ≤ 30 nodes across all focus types on the current graph). If the must-show set is already ≥ 40 nodes, Query 2 is skipped and the overflow footer is shown.
 
 **Phase-2 edge whitelist.** Phase 2 traversal uses only investigatively meaningful relationships. Universal/structural edges are excluded from Phase 2 even though they are valid graph edges — they would let shared records/jurisdictions/issues pull unrelated neighbors into the hero.
 
@@ -645,8 +645,8 @@ The checkbox is labeled and the resulting path is visibly marked `PATH VIA LOOSE
 
 - **Purpose**: show "this entity is the center of its own story."
 - **Interaction**: hover to reveal a node's label; clicking a node navigates to that entity's own page (where it becomes the focus). This is one action: re-centering and navigating are the same thing.
-- **Layout**: Cytoscape `concentric` layout — 1-hop inner ring, 2-hop outer ring, focus at center. Not `cose-bilkent` or any force-directed layout. Ring placement is stable across renders so the same entity looks the same every visit.
-- **Data shape**: live Cypher query using the neighborhood selection rules in §5.1.1. Total cap 40 nodes.
+- **Layout**: Cytoscape `concentric` layout with up to three rings — inner ring for 1-hop must-show and Phase-2 nodes (`ring=1`), outer ring for 2-hop must-show and Phase-2 nodes (`ring=2`), and (on Person pages only) an outermost ring for the 3-hop `Organization:Government` from §5.1.1 (`ring=3`). Focus at center. Not `cose-bilkent` or any force-directed layout. Ring placement is stable across renders.
+- **Data shape**: live Cypher query using the neighborhood selection rules in §5.1.1, returning `ring ∈ {1, 2, 3}` per node. Total cap 40 nodes.
 - **Freshness**: live Cypher, `INGEST` timestamp is authoritative.
 
 ### 6.3 Full-screen explorer (`/graph`)
