@@ -436,23 +436,23 @@ Excluded from Phase 2 (never traversed): `EVIDENCED_BY`, `IN_JURISDICTION`, `REL
 CALL {
   WITH $focus_id AS focus_id, $must_show_ids AS must_show_ids
   MATCH (f {id: focus_id})-[:CAST_VOTE|AT_MEETING|ABOUT_ITEM|DECIDED_BY|PART_OF|HELD_BY|FOR_SEAT|RESULT_OF|AT_INSTITUTION|FROM_SOURCE|TO_TARGET|DISCLOSED_IN|UNDER_AGREEMENT|AMENDS|CONTROLLED_BY|FILED_BY|BY_PERSON|IN_ELECTION|FOR_ELECTION|FOR_PROJECT|ABOUT_PROJECT|ABOUT_PROGRAM|PARTY_TO|CONSTRAINS|BETWEEN|HEARD_IN*1..2]-(c:MoneyFlow)
-  WHERE NOT c.id IN must_show_ids
+  WHERE c.id <> focus_id AND NOT c.id IN must_show_ids
   RETURN DISTINCT c AS n, 'MoneyFlow' AS t, c.amount AS rank_value, 1 AS type_priority
   ORDER BY c.amount DESC, c.flow_date DESC, c.id ASC
   LIMIT 8
 UNION ALL
   WITH $focus_id AS focus_id, $must_show_ids AS must_show_ids
   MATCH (f {id: focus_id})-[:CAST_VOTE|AT_MEETING|ABOUT_ITEM|DECIDED_BY|PART_OF|HELD_BY|FOR_SEAT|RESULT_OF|AT_INSTITUTION|FROM_SOURCE|TO_TARGET|DISCLOSED_IN|UNDER_AGREEMENT|AMENDS|CONTROLLED_BY|FILED_BY|BY_PERSON|IN_ELECTION|FOR_ELECTION|FOR_PROJECT|ABOUT_PROJECT|ABOUT_PROGRAM|PARTY_TO|CONSTRAINS|BETWEEN|HEARD_IN*1..2]-(c:Decision)
-  WHERE NOT c.id IN must_show_ids
+  WHERE c.id <> focus_id AND NOT c.id IN must_show_ids
   RETURN DISTINCT c, 'Decision', c.decided_at, 2
   ORDER BY c.decided_at DESC, c.id ASC
   LIMIT 8
 UNION ALL
-  ... one sub-query per quota-table row, in type-priority order, each using the same whitelist ...
+  ... one sub-query per quota-table row, in type-priority order, each using the same whitelist and `c.id <> focus_id AND NOT c.id IN must_show_ids` filter ...
 UNION ALL
   WITH $focus_id AS focus_id, $must_show_ids AS must_show_ids
   MATCH (f {id: focus_id})-[:CAST_VOTE|AT_MEETING|ABOUT_ITEM|DECIDED_BY|PART_OF|HELD_BY|FOR_SEAT|RESULT_OF|AT_INSTITUTION|FROM_SOURCE|TO_TARGET|DISCLOSED_IN|UNDER_AGREEMENT|AMENDS|CONTROLLED_BY|FILED_BY|BY_PERSON|IN_ELECTION|FOR_ELECTION|FOR_PROJECT|ABOUT_PROJECT|ABOUT_PROGRAM|PARTY_TO|CONSTRAINS|BETWEEN|HEARD_IN*1..2]-(c:Person)
-  WHERE NOT c.id IN must_show_ids
+  WHERE c.id <> focus_id AND NOT c.id IN must_show_ids
   OPTIONAL MATCH (c)-[r]-(m) WHERE m.id IN must_show_ids
   WITH c, count(r) AS edges_to_must_show
   RETURN DISTINCT c, 'Person', edges_to_must_show, 5
