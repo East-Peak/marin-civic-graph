@@ -3,13 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/copy-subgraphs.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/copy-subgraphs.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "verify": "npm run typecheck && npm run lint && npm test"
   },
   "dependencies": {
     "cytoscape": "^3.33.2",
