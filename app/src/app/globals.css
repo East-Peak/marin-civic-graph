@@ -1,26 +1,52 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  --color-bg: #07090d;
+  --color-panel: #0b0d11;
+  --color-surface: #14171d;
+  --color-border-primary: #1f232b;
+  --color-border-hairline: #1a1d24;
+  --color-body: #c2c8d2;
+  --color-dim: #7b8494;
+  --color-hairline: #5e6573;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-node-focus: #ffffff;
+  --color-node-decision: #a4e8bf;
+  --color-node-money: #f2c77a;
+  --color-node-person: #8db8ff;
+  --color-node-legal: #e27a7a;
+  --color-node-organization: #b8a8d9;
+  --color-node-project-program: #d9a88d;
+  --color-node-generic: #e8ecf3;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+@theme inline {
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+  --font-serif: var(--font-plex-serif);
+  --font-terminal: var(--font-vt323);
+
+  --color-bg: var(--color-bg);
+  --color-panel: var(--color-panel);
+  --color-surface: var(--color-surface);
+  --color-border-primary: var(--color-border-primary);
+  --color-border-hairline: var(--color-border-hairline);
+  --color-body: var(--color-body);
+  --color-dim: var(--color-dim);
+  --color-hairline: var(--color-hairline);
+
+  --color-node-focus: var(--color-node-focus);
+  --color-node-decision: var(--color-node-decision);
+  --color-node-money: var(--color-node-money);
+  --color-node-person: var(--color-node-person);
+  --color-node-legal: var(--color-node-legal);
+  --color-node-organization: var(--color-node-organization);
+  --color-node-project-program: var(--color-node-project-program);
+  --color-node-generic: var(--color-node-generic);
 }
