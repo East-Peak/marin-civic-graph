@@ -869,7 +869,6 @@ The plan rewrite is the next step after this spec is approved.
 Decisions intentionally left to the build, to avoid over-committing before code is in the browser:
 
 - Exact Cytoscape layout tuning (fcose iterations, node-repulsion constants, edge length, `concentric` ring radii) — tune visually on real data.
-- Whether command palette uses a client-only fuzzy index or round-trips to Neo4j for each keystroke — pick after measuring a warm-loaded palette latency. Corpus and ranking (§3.3) are fixed regardless.
 - Precise timeline-ribbon interaction model (pan, zoom, click-to-filter) — prototype first, honoring the temporal semantics in §5.4.
 - Specific keyboard-shortcut overlay design — low-stakes, build it last.
 - Signature-subgraph builder script details (Python/TypeScript, where it runs, scheduling) — build-layer concern; the JSON contract in §5.5 is fixed.
