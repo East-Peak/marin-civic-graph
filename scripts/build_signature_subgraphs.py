@@ -250,26 +250,29 @@ def main() -> int:
     built_at = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
 
     manifest_subgraphs = []
-    failures: list[str] = []
+    # Fatal failures block the pipeline (bad registry). Warnings note data gaps
+    # that should be fixed but don't block downstream steps.
+    fatal_failures: list[str] = []
+    warnings: list[str] = []
     with GraphDatabase.driver(uri, auth=(user, password)) as driver:
         with driver.session(database=database) as session:
             for entry in entries:
                 try:
                     bundle = build_bundle(session, entry, built_at)
                 except RuntimeError as exc:
-                    failures.append(f"{entry['slug']}: focus missing — {exc}")
-                    print(f"  FAIL {entry['slug']}: {exc}", file=sys.stderr)
+                    fatal_failures.append(f"{entry['slug']}: focus missing — {exc}")
+                    print(f"  FATAL {entry['slug']}: {exc}", file=sys.stderr)
                     continue
                 node_count = len(bundle["nodes"])
                 # Always write the bundle artifact for inspection, but only add
                 # to the manifest if it has real connective content (focus + ≥1 neighbor).
                 (OUT_DIR / f"{entry['slug']}.json").write_text(json.dumps(bundle, indent=2))
                 if node_count < 2:
-                    failures.append(
+                    warnings.append(
                         f"{entry['slug']}: low-connectivity bundle ({node_count} node(s); expected focus + neighbors)"
                     )
                     print(
-                        f"  FAIL {entry['slug']}: only {node_count} node(s) — not added to manifest",
+                        f"  WARN {entry['slug']}: only {node_count} node(s) — excluded from manifest",
                         file=sys.stderr,
                     )
                     continue
@@ -284,10 +287,17 @@ def main() -> int:
     (OUT_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2))
     print(f"Wrote {len(manifest_subgraphs)} bundles + manifest to {OUT_DIR}")
 
-    if failures:
+    if warnings:
         print("", file=sys.stderr)
-        print(f"FAILED: {len(failures)} bundle(s) did not meet constraints:", file=sys.stderr)
-        for f in failures:
+        print(f"WARN: {len(warnings)} bundle(s) excluded from manifest (low connectivity):", file=sys.stderr)
+        for w in warnings:
+            print(f"  - {w}", file=sys.stderr)
+        print("(These are expected until the spec/graph edge-vocabulary reconciliation lands — see Codex deferred item #2.)", file=sys.stderr)
+
+    if fatal_failures:
+        print("", file=sys.stderr)
+        print(f"FATAL: {len(fatal_failures)} bundle(s) failed to build (registry mismatch):", file=sys.stderr)
+        for f in fatal_failures:
             print(f"  - {f}", file=sys.stderr)
         return 1
     return 0

@@ -7,6 +7,11 @@ import { TrackingThreads } from "@/components/home/tracking-threads";
 import { loadStatus, loadCatalog } from "@/lib/server/homepage-data";
 import { ALL_TYPES, type NodeType } from "@/lib/type-display";
 
+// Render on each request so status-bar INGEST timestamp and catalog counts reflect
+// the latest refresh, not the build timestamp. Otherwise Next.js statically
+// prerenders this route and freezes the data at deploy time.
+export const dynamic = "force-dynamic";
+
 function blankCounts(): Record<NodeType, number> {
   return Object.fromEntries(ALL_TYPES.map((t) => [t, 0])) as Record<NodeType, number>;
 }
