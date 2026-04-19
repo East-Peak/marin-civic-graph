@@ -422,20 +422,52 @@ async function fetchNeighborEventDates(
 }
 
 /**
- * Count the true 2-hop whitelist-reachable neighborhood size. This is what
- * the overflow footer (§5.1.1) wants to announce — the number the user would
- * see if they opened the explorer at this focus. We exclude the focus itself,
- * Place, and Issue (which are excluded from the hero).
+ * Count the true whitelist-reachable neighborhood size. This is what the
+ * overflow footer (§5.1.1) announces — "if you opened the explorer at this
+ * focus, N nodes would fit the same rules."
+ *
+ * The rules differ by focus type: Record/Place/Issue pages each waive a
+ * specific universal edge (EVIDENCED_BY / IN_JURISDICTION / RELATES_TO_ISSUE)
+ * to keep those focus pages from being dead-ends. The count query must
+ * follow the same rules the neighborhood-loader used.
  *
  * On timeout or error, return null so callers can fall back to the local
  * neighbor count.
  */
-async function runNeighborTotal(focusId: string): Promise<number | null> {
-  const cypher = `
-MATCH (f {id: $focus_id})-[:${PHASE2_WHITELIST_LIVE.join("|")}*1..2]-(n)
+async function runNeighborTotal(focusId: string, focusType: NodeType): Promise<number | null> {
+  const whitelist = PHASE2_WHITELIST_LIVE.join("|");
+
+  let cypher: string;
+  if (focusType === "Record") {
+    // Record focus: neighbors are the entities this Record provides evidence
+    // for, via inverse EVIDENCED_BY.
+    cypher = `
+MATCH (f {id: $focus_id})<-[:EVIDENCED_BY]-(n)
+WHERE n.id <> $focus_id
+RETURN count(DISTINCT n) AS total
+`;
+  } else if (focusType === "Place") {
+    cypher = `
+MATCH (f {id: $focus_id})-[:IN_JURISDICTION|${whitelist}]-(n)
+WHERE n.id <> $focus_id AND NOT n:Issue
+RETURN count(DISTINCT n) AS total
+`;
+  } else if (focusType === "Issue") {
+    cypher = `
+MATCH (f {id: $focus_id})-[:RELATES_TO_ISSUE|${whitelist}]-(n)
+WHERE n.id <> $focus_id AND NOT n:Place
+RETURN count(DISTINCT n) AS total
+`;
+  } else {
+    // Tier 1 focus types and all other Tier 2 types: whitelist-only, exclude
+    // Place and Issue (§5.1.1 hero rules).
+    cypher = `
+MATCH (f {id: $focus_id})-[:${whitelist}*1..2]-(n)
 WHERE n.id <> $focus_id AND NOT n:Place AND NOT n:Issue
 RETURN count(DISTINCT n) AS total
 `;
+  }
+
   try {
     const records = (await runQuery(
       cypher,
@@ -574,7 +606,7 @@ export async function loadEntity(
     // All three run in parallel.
     const [edges, totalCount, dateByNeighborId] = await Promise.all([
       runEdgesAmongSelected([id, ...neighbors.map((n) => n.id)]),
-      runNeighborTotal(id),
+      runNeighborTotal(id, type),
       fetchNeighborEventDates(neighbors),
     ]);
     const neighborsWithDates = neighbors.map((n) => ({
@@ -598,7 +630,7 @@ export async function loadEntity(
   // Tier 2 path — simple 1-hop neighborhood.
   const { neighbors, edges } = await loadTier2Neighborhood(id, type);
   const [totalCount, dateByNeighborId] = await Promise.all([
-    runNeighborTotal(id),
+    runNeighborTotal(id, type),
     fetchNeighborEventDates(neighbors),
   ]);
   const neighborsWithDates = neighbors.map((n) => ({

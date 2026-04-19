@@ -167,8 +167,10 @@ def test_jurisdiction_index_built_from_registry():
         },
     }
     idx = _build_jurisdiction_index(registry)
-    assert idx["place-marin-county"]["url"] == "https://marin.granicus.com/x"
-    assert idx["place-sausalito"]["url"] == "https://sausalito.granicus.com/y"
+    # Keys are normalized (place- prefix stripped) so the graph's `place-*`
+    # jurisdiction ids resolve against bare registry entries like sources.yaml.
+    assert idx["marin-county"]["url"] == "https://marin.granicus.com/x"
+    assert idx["sausalito"]["url"] == "https://sausalito.granicus.com/y"
 
 
 def test_jurisdiction_fallback_used_when_source_id_missing():
@@ -239,3 +241,58 @@ def test_no_jurisdiction_index_means_no_fallback():
         "jurisdiction_id": "place-marin-county",
     }
     assert normalize_public_url_with_registry(props, registry) is None
+
+
+# --- Codex round 2: jurisdiction key normalization across bare/place- forms ---
+
+
+def test_bare_registry_key_matches_place_prefixed_graph_id():
+    """Registry YAMLs like sources.yaml use bare `san-rafael`; graph emits
+    `place-san-rafael` on Place nodes. The jurisdiction fallback must match
+    both forms without requiring the registry to be edited."""
+    registry = {
+        "sr-site": {
+            "source_id": "sr-site",
+            "entry_url": "https://www.cityofsanrafael.org/",
+            "jurisdiction_id": "san-rafael",
+        },
+    }
+    idx = _build_jurisdiction_index(registry)
+    assert idx.get("san-rafael") is registry["sr-site"], "registry key indexed in bare form"
+
+    props = {
+        "id": "record-sr-council-2024",
+        "source_url": None,
+        "source_id": None,
+        "jurisdiction_id": "place-san-rafael",  # from graph
+    }
+    assert (
+        normalize_public_url_with_registry(props, registry, idx)
+        == "https://www.cityofsanrafael.org/"
+    )
+
+
+def test_place_prefixed_registry_key_still_works():
+    """Adapter YAMLs like granicus-sources.yaml use `place-marin-county` —
+    that form must still resolve against a `place-marin-county` graph id."""
+    registry = {
+        "marin-bos": {
+            "id": "marin-bos",
+            "url": "https://marin.granicus.com/x",
+            "jurisdiction_id": "place-marin-county",
+        },
+    }
+    idx = _build_jurisdiction_index(registry)
+    # Normalized to bare `marin-county` in the index
+    assert idx.get("marin-county") is registry["marin-bos"]
+
+    props = {
+        "id": "record-bos-2024",
+        "source_url": None,
+        "source_id": None,
+        "jurisdiction_id": "place-marin-county",
+    }
+    assert (
+        normalize_public_url_with_registry(props, registry, idx)
+        == "https://marin.granicus.com/x"
+    )

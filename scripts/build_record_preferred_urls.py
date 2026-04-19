@@ -57,11 +57,29 @@ def _registry_entry_url(entry: dict[str, Any]) -> str | None:
     return None
 
 
+def _normalize_jurisdiction_key(jid: str | None) -> str | None:
+    """Normalize a jurisdiction identifier to the form stored in registry YAMLs.
+
+    The graph emits `Place.id` values like `place-san-rafael`, but registry
+    entries carry `jurisdiction_id: san-rafael` without the `place-` prefix.
+    Also strip any trailing slash. Returns None for empty/None input.
+    """
+    if not jid:
+        return None
+    key = str(jid).strip().rstrip("/")
+    if key.startswith("place-"):
+        key = key[len("place-"):]
+    return key or None
+
+
 def _build_jurisdiction_index(
     registry: dict[str, dict[str, Any]],
 ) -> dict[str, dict[str, Any]]:
     """Index registry entries by their `jurisdiction_id` so we can fall back
     to a jurisdiction-landing URL when a Record's `source_id` doesn't match.
+
+    Keys are normalized via `_normalize_jurisdiction_key` so lookups accept
+    both bare (`san-rafael`) and place-prefixed (`place-san-rafael`) forms.
 
     Multiple registry entries can share a jurisdiction (e.g., a city's
     council + planning commission under Granicus). The last entry wins —
@@ -70,7 +88,7 @@ def _build_jurisdiction_index(
     """
     out: dict[str, dict[str, Any]] = {}
     for entry in registry.values():
-        jid = entry.get("jurisdiction_id")
+        jid = _normalize_jurisdiction_key(entry.get("jurisdiction_id"))
         if jid:
             out[jid] = entry
     return out
@@ -108,11 +126,12 @@ def normalize_public_url_with_registry(
 
     # Jurisdiction fallback — requires the caller to have resolved the
     # Record's parent Place id (see scripts/build_record_preferred_urls.py
-    # main() for the Cypher that produces it).
+    # main() for the Cypher that produces it). The key is normalized here
+    # so graph-style `place-san-rafael` matches registry-style `san-rafael`.
     if jurisdiction_index is not None:
-        jurisdiction_id = props.get("jurisdiction_id")
-        if jurisdiction_id:
-            entry = jurisdiction_index.get(jurisdiction_id)
+        key = _normalize_jurisdiction_key(props.get("jurisdiction_id"))
+        if key:
+            entry = jurisdiction_index.get(key)
             if entry:
                 return _registry_entry_url(entry)
 
@@ -191,22 +210,39 @@ def main() -> int:
                 """
                 MATCH (r:Record)
                 OPTIONAL MATCH (r)-[:RELATES_TO_PLACE]->(p:Place)
-                WITH r, collect(p.id)[0] AS jurisdiction_id
+                WITH r, p
+                ORDER BY p.id ASC
+                WITH r, collect(p.id) AS place_ids
                 RETURN r.id AS id,
                        r.source_url AS source_url,
                        r.source_id AS source_id,
                        r.record_type AS record_type,
-                       jurisdiction_id AS jurisdiction_id
+                       place_ids AS place_ids
                 """
             )
             batch: list[dict] = []
             for record in cursor:
+                # Pick the first indexed jurisdiction among the linked Places.
+                # `place_ids` is already sorted ASC for determinism; we iterate
+                # and return the first one whose normalized key is present in
+                # the jurisdiction_index. This prevents a non-jurisdiction
+                # place (e.g. a sub-location like `place-mahon-creek-path`)
+                # from shadowing a real jurisdiction (e.g. `place-san-rafael`).
+                place_ids = list(record["place_ids"] or [])
+                chosen_jurisdiction_id: str | None = None
+                for pid in place_ids:
+                    if _normalize_jurisdiction_key(pid) in jurisdiction_index:
+                        chosen_jurisdiction_id = pid
+                        break
+                if chosen_jurisdiction_id is None and place_ids:
+                    chosen_jurisdiction_id = place_ids[0]
+
                 props = {
                     "id": record["id"],
                     "source_url": record["source_url"],
                     "source_id": record["source_id"],
                     "record_type": record["record_type"],
-                    "jurisdiction_id": record["jurisdiction_id"],
+                    "jurisdiction_id": chosen_jurisdiction_id,
                 }
                 preferred = normalize_public_url_with_registry(
                     props, registry, jurisdiction_index
