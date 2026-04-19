@@ -412,7 +412,7 @@ Relationships referenced below must exist in the v1 ontology (see v1 design spec
 
 **Excluded from the hero** (too structural to add signal): `:Place` and `:Issue`. Both appear in the facts panel and connections list, but not the graph — they would dominate as high-degree hubs.
 
-**Overflow footer.** When the 40-cap truncates a type that has more candidates, a Plex Mono dim footer on the graph pane reads `+{N} more neighbors · see /graph?focus={id}` linking to the full-screen explorer where no cap applies.
+**Overflow footer.** When the 40-cap truncates a type that has more candidates, a Plex Mono dim footer on the graph pane reads `+{N} more neighbors · see /graph?focus={id}` linking to the full-screen explorer. The explorer's initial focused-load uses the same 40-node cap, but Expand / Expand-all actions there reveal neighbors beyond it; there is no unbounded initial view.
 
 **Query contract (explicit).** The selection runs as **two parameterized Cypher queries** per entity page:
 
@@ -543,7 +543,7 @@ The graph has many date fields and some important entities have no single event 
 - Durable entities are always visible.
 - Nodes with a required date field set to `NULL` render as "date-unknown" with a small hollow tick on the timeline and are visible at any slider range.
 
-**Default slider range:** last 5 years from `INGEST` timestamp, clamped to the earliest event in the current subgraph.
+**Default slider range:** widens to cover both (a) the last 5 years ending at `INGEST`, and (b) the earliest event in the currently-loaded subgraph. The wider of the two wins — the default never hides a must-show or already-loaded node by virtue of age. Effectively: "last 5 years" is a floor for the slider's left edge, not a cap. The user can then narrow the slider manually.
 
 This contract applies identically to the timeline ribbon on Tier 1 entity pages and the explorer's time slider.
 
@@ -752,11 +752,18 @@ No node type is unranked. When the 40-cap hits, the overflow footer appears with
 - If more candidates of a given type exist past the per-expand cap, the UI shows a per-node overflow chip `+{N}` and clicking that node again loads the next 20 (new batch, subject to same rules).
 - Dedup against already-loaded nodes.
 
-**Right-click → "expand all (2 hops)"** on a node runs a 2-hop expansion capped at 80 nodes using the `Expand-all (2-hop) quota` column above and the same filters.
+**Right-click → "expand all"** on a node runs an N-hop expansion, where N is the current hop-limit slider value (1–4; default 2). The action's cap and quotas scale with N:
 
-**Hop-distance handling for Expand-all.** Candidates within each type's quota pool are sorted by `(hop_distance ASC, type-specific ranking key, id ASC)` — so 1-hop candidates are always preferred over 2-hop candidates of the same type within that type's quota. Per-type quotas count across both hops combined: a quota of 8 for `MoneyFlow` means up to 8 total MoneyFlows across hops 1 and 2, not 8-per-hop. When the aggregate 80-node cap is reached, lower-priority types (per Tier 2 ordering) drop first.
+| Hop limit (N) | Aggregate cap | Per-type quotas |
+|---|---|---|
+| 1 | 20 | Same as Expand (1-hop) column |
+| 2 | 80 | Same as Expand-all (2-hop) column |
+| 3 | 160 | Double the 2-hop column |
+| 4 | 240 | Triple the 2-hop column |
 
-The hop-limit slider in the toolbar clamps this action (setting it to `1` removes "expand all" from the right-click menu).
+**Hop-distance handling for Expand-all (all N).** Candidates within each type's quota pool are sorted by `(hop_distance ASC, type-specific ranking key, id ASC)` — so closer candidates are always preferred over farther ones within the same type's quota. Per-type quotas count across all hops combined. When the aggregate cap is reached, lower-priority types (per Tier 2 ordering) drop first.
+
+Setting the slider to `1` makes "expand all" equivalent to a Click-expand (the right-click menu still shows it; the result is the same 20-node 1-hop load). Slider value `≥2` enables true multi-hop.
 
 **Filter-change contract.** Changing an edge or node filter applies immediately to already-loaded nodes (shows/hides) and to future expansions. It does NOT re-run the focused-load query — the initial 40-node subset stays loaded (hidden nodes remain in memory so re-enabling is instant). Enabling a previously-hidden type does not pull in new nodes of that type that were not in the original 2-hop neighborhood — to pull new nodes, the user clicks to expand.
 
