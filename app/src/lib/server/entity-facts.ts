@@ -1,10 +1,13 @@
 // Per-type fact-field definitions for the entity-page facts panel.
 // Spec §7.1 item 6 (Tier 1) + §7.2 (Tier 2). Extracted as a pure module so
 // tests can exercise per-type rows without rendering React.
+//
+// Also hosts heroStatsForEntity (Tier 1 big-numeral strip, spec §7.1 item 4).
 
 import type { NodeType } from "@/lib/type-display";
 
 export type FactRow = { key: string; value: string | null };
+export type HeroStat = { label: string; value: string };
 
 function s(v: unknown): string | null {
   if (typeof v === "string") return v.length > 0 ? v : null;
@@ -189,4 +192,86 @@ export function factsForEntity(
   // Every type gets the canonical id as the final row for citation.
   rows.push({ key: "ID", value: s(props.id) });
   return rows;
+}
+
+// ---------------------------------------------------------------------------
+// Tier 1 hero stats (big-numeral strip, spec §7.1 item 4).
+// ---------------------------------------------------------------------------
+
+function formatMoney(v: unknown): string {
+  const n =
+    typeof v === "number"
+      ? v
+      : typeof v === "string"
+        ? Number(v)
+        : NaN;
+  if (!Number.isFinite(n) || n === 0) return "—";
+  return `$${Math.round(n).toLocaleString()}`;
+}
+
+function sv(v: unknown): string {
+  if (v == null) return "—";
+  if (typeof v === "string") return v.length > 0 ? v : "—";
+  if (typeof v === "number") return Number.isFinite(v) ? String(v) : "—";
+  return String(v);
+}
+
+/**
+ * Return the ordered big-numeral stats to render in the Tier 1 hero strip.
+ *
+ * Tier 2 types return an empty array — hero-stats.tsx renders nothing in that
+ * case so the layout collapses cleanly.
+ *
+ * Several derived counts (`decisions_count`, `records_count`, `total_money`,
+ * …) are not yet projected onto live AuraDB nodes — those will fall back to
+ * "—" until the Plan 3 ingestion work lands.
+ */
+export function heroStatsForEntity(
+  type: NodeType,
+  props: Record<string, unknown>,
+): HeroStat[] {
+  switch (type) {
+    case "Project":
+    case "Program":
+      return [
+        { label: "money", value: formatMoney(props.total_money) },
+        { label: "decisions", value: sv(props.decisions_count) },
+        { label: "records", value: sv(props.records_count) },
+      ];
+    case "Person":
+      return [
+        { label: "current seat", value: sv(props.current_seat_display) },
+        { label: "filings", value: sv(props.filings_count) },
+        { label: "votes", value: sv(props.votes_count) },
+      ];
+    case "Decision":
+      return [
+        { label: "decided", value: sv(props.decided_at) },
+        { label: "vote", value: sv(props.vote_summary) },
+      ];
+    case "Case":
+      return [
+        { label: "filed", value: sv(props.filed_at) },
+        { label: "status", value: sv(props.status) },
+        { label: "proceedings", value: sv(props.proceedings_count) },
+      ];
+    case "Meeting":
+      return [
+        { label: "date", value: sv(props.meeting_date) },
+        { label: "agenda items", value: sv(props.agenda_items_count) },
+        { label: "decisions", value: sv(props.decisions_count) },
+      ];
+    case "Filing":
+      return [
+        { label: "type", value: sv(props.filing_type) },
+        { label: "signed", value: sv(props.signed_at) },
+      ];
+    case "Committee":
+      return [
+        { label: "fppc id", value: sv(props.fppc_id) },
+        { label: "money in", value: formatMoney(props.total_money_in) },
+      ];
+    default:
+      return [];
+  }
 }

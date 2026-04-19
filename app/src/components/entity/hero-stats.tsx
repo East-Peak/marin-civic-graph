@@ -1,19 +1,45 @@
-// Stub for Batch F. VT323 30px hero stat strip lands in Plan 2 Batch F,
-// Task 17. Rendered (empty) only for Tier 1 focus types so the layout
-// reserves its horizontal band.
+// Tier 1 hero-stats strip — VT323 30px big-numeral block + Plex Mono
+// 10px uppercase label below each value. Per spec §7.1 item 4.
+//
+// Values come from heroStatsForEntity (entity-facts.ts). Missing props render
+// as em-dash; Tier 2 types return an empty list and this component returns
+// null so the composer's conditional wrapper collapses cleanly.
 
 import type { EntityPayload } from "@/lib/server/entity-loader";
+import { heroStatsForEntity } from "@/lib/server/entity-facts";
 
 export function HeroStats({ entity }: { entity: EntityPayload }) {
-  void entity;
+  const stats = heroStatsForEntity(entity.type, entity.properties);
+  if (stats.length === 0) return null;
+
   return (
     <div
-      className="mx-[18px] flex items-center gap-8 border-y border-border-hairline bg-panel px-4 py-3 text-hairline"
-      data-testid="hero-stats-stub"
+      className="mx-[18px] mt-3 flex flex-wrap items-baseline gap-x-8 gap-y-3"
+      data-testid="hero-stats"
     >
-      <span className="font-mono" style={{ fontSize: "11px", letterSpacing: "0.08em" }}>
-        hero stats — Batch F
-      </span>
+      {stats.map((stat) => (
+        <div key={stat.label} className="flex flex-col">
+          <span
+            className="text-[#f2c77a]"
+            style={{
+              fontFamily: "var(--font-vt323)",
+              fontSize: "30px",
+              lineHeight: 1,
+              textShadow: "0 0 6px rgba(242,199,122,0.4)",
+            }}
+            data-testid="hero-stat-value"
+          >
+            {stat.value}
+          </span>
+          <span
+            className="mt-1 font-mono uppercase text-hairline"
+            style={{ fontSize: "10px", letterSpacing: "0.12em" }}
+            data-testid="hero-stat-label"
+          >
+            {stat.label}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
