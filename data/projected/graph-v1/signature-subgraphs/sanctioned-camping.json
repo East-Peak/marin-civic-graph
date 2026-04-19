@@ -1,0 +1,20 @@
+{
+  "slug": "sanctioned-camping",
+  "display_name": "Sanctioned Camping Program",
+  "built_at": "2026-04-19T18:23:47+00:00",
+  "focus_node_id": "program-san-rafael-sanctioned-camping",
+  "headline_stats": {
+    "caption": "0 cases \u00b7 0 decisions \u00b7 0 records",
+    "kicker": "SIGNATURE SUBGRAPH \u00b7 SANCTIONED CAMPING PROGRAM"
+  },
+  "nodes": [
+    {
+      "id": "program-san-rafael-sanctioned-camping",
+      "type": "Program",
+      "label": "San Rafael sanctioned camping program",
+      "role": "focus",
+      "route": "/graph?focus=program-san-rafael-sanctioned-camping"
+    }
+  ],
+  "edges": []
+}

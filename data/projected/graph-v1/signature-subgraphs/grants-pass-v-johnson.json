@@ -1,0 +1,124 @@
+{
+  "slug": "grants-pass-v-johnson",
+  "display_name": "Grants Pass v. Johnson (SCOTUS)",
+  "built_at": "2026-04-19T18:23:47+00:00",
+  "focus_node_id": "case-city-of-grants-pass-v-johnson",
+  "headline_stats": {
+    "caption": "SCOTUS \u00b7 0 proceedings",
+    "kicker": "SIGNATURE SUBGRAPH \u00b7 GRANTS PASS V. JOHNSON (SCOTUS)"
+  },
+  "nodes": [
+    {
+      "id": "case-city-of-grants-pass-v-johnson",
+      "type": "Case",
+      "label": "City of Grants Pass v. Johnson",
+      "role": "focus",
+      "route": "/graph?focus=case-city-of-grants-pass-v-johnson"
+    },
+    {
+      "id": "org-united-states-supreme-court",
+      "type": "Court",
+      "label": "Supreme Court of the United States",
+      "role": "primary",
+      "route": "/graph?focus=org-united-states-supreme-court"
+    },
+    {
+      "id": "org-gloria-johnson-et-al",
+      "type": "Organization",
+      "label": "Gloria Johnson, et al.",
+      "role": "primary",
+      "route": "/graph?focus=org-gloria-johnson-et-al"
+    },
+    {
+      "id": "org-city-and-county-of-san-francisco",
+      "type": "Organization",
+      "label": "City and County of San Francisco",
+      "role": "primary",
+      "route": "/graph?focus=org-city-and-county-of-san-francisco"
+    },
+    {
+      "id": "org-city-of-grants-pass",
+      "type": "Organization",
+      "label": "City of Grants Pass",
+      "role": "primary",
+      "route": "/graph?focus=org-city-of-grants-pass"
+    },
+    {
+      "id": "person-gloria-johnson-et-al",
+      "type": "Person",
+      "label": "Gloria Johnson, et al.",
+      "role": "primary",
+      "route": "/graph?focus=person-gloria-johnson-et-al"
+    },
+    {
+      "id": "case-johnson-v-city-of-grants-pass",
+      "type": "Case",
+      "label": "Johnson v. City of Grants Pass",
+      "role": "secondary",
+      "route": "/graph?focus=case-johnson-v-city-of-grants-pass"
+    },
+    {
+      "id": "case-blake-v-city-of-grants-pass",
+      "type": "Case",
+      "label": "Blake v. City of Grants Pass",
+      "role": "secondary",
+      "route": "/graph?focus=case-blake-v-city-of-grants-pass"
+    }
+  ],
+  "edges": [
+    {
+      "source": "case-city-of-grants-pass-v-johnson",
+      "target": "org-united-states-supreme-court",
+      "type": "HEARD_IN",
+      "style": "governance"
+    },
+    {
+      "source": "org-gloria-johnson-et-al",
+      "target": "case-city-of-grants-pass-v-johnson",
+      "type": "PARTY_TO",
+      "style": "governance"
+    },
+    {
+      "source": "org-city-and-county-of-san-francisco",
+      "target": "case-city-of-grants-pass-v-johnson",
+      "type": "PARTY_TO",
+      "style": "governance"
+    },
+    {
+      "source": "org-city-of-grants-pass",
+      "target": "case-city-of-grants-pass-v-johnson",
+      "type": "PARTY_TO",
+      "style": "governance"
+    },
+    {
+      "source": "person-gloria-johnson-et-al",
+      "target": "case-city-of-grants-pass-v-johnson",
+      "type": "PARTY_TO",
+      "style": "governance"
+    },
+    {
+      "source": "org-gloria-johnson-et-al",
+      "target": "case-johnson-v-city-of-grants-pass",
+      "type": "PARTY_TO",
+      "style": "governance"
+    },
+    {
+      "source": "org-city-of-grants-pass",
+      "target": "case-blake-v-city-of-grants-pass",
+      "type": "PARTY_TO",
+      "style": "governance"
+    },
+    {
+      "source": "org-city-of-grants-pass",
+      "target": "case-johnson-v-city-of-grants-pass",
+      "type": "PARTY_TO",
+      "style": "governance"
+    },
+    {
+      "source": "person-gloria-johnson-et-al",
+      "target": "case-johnson-v-city-of-grants-pass",
+      "type": "PARTY_TO",
+      "style": "governance"
+    }
+  ]
+}

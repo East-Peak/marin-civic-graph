@@ -1,0 +1,20 @@
+{
+  "slug": "merrydale-interim-shelter",
+  "display_name": "350 Merrydale Interim Shelter",
+  "built_at": "2026-04-19T18:23:47+00:00",
+  "focus_node_id": "project-san-rafael-350-merrydale-interim-shelter",
+  "headline_stats": {
+    "caption": "$0 \u00b7 0 decisions \u00b7 0 counterparties \u00b7 0 records",
+    "kicker": "SIGNATURE SUBGRAPH \u00b7 350 MERRYDALE INTERIM SHELTER"
+  },
+  "nodes": [
+    {
+      "id": "project-san-rafael-350-merrydale-interim-shelter",
+      "type": "Project",
+      "label": "350 Merrydale Interim Shelter Project",
+      "role": "focus",
+      "route": "/graph?focus=project-san-rafael-350-merrydale-interim-shelter"
+    }
+  ],
+  "edges": []
+}
