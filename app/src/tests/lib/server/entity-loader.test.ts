@@ -26,6 +26,36 @@ function focusRecord(id: string, labels: string[], props: Record<string, unknown
 
 const mockRunQuery = runQuery as ReturnType<typeof vi.fn>;
 
+/**
+ * The loader issues a 2-hop count query (Codex round 1 fix 1) for the
+ * overflow-footer total. Tests dispatch by cypher string so the count query
+ * gets its own canned response while the rest consume sequential
+ * `mockResolvedValueOnce` entries.
+ */
+function isNeighborTotalCypher(cypher: unknown): boolean {
+  return typeof cypher === "string" && cypher.includes("count(DISTINCT n) AS total");
+}
+
+/**
+ * Install a cypher-dispatching mock on runQuery. `sequential` is an ordered
+ * list of responses for non-neighbor-total calls; `neighborTotal` is what
+ * the 2-hop count query returns (a number or a thrown error).
+ */
+function installCypherDispatcher(
+  sequential: unknown[],
+  neighborTotal: number | Error = 0,
+) {
+  let i = 0;
+  mockRunQuery.mockImplementation(async (cypher: string) => {
+    if (isNeighborTotalCypher(cypher)) {
+      if (neighborTotal instanceof Error) throw neighborTotal;
+      return [record({ total: neighborTotal })] as unknown;
+    }
+    const next = sequential[i++];
+    return (next ?? []) as unknown;
+  });
+}
+
 beforeEach(() => {
   mockRunQuery.mockReset();
 });
@@ -51,7 +81,7 @@ describe("loadEntity", () => {
     expect(mockRunQuery.mock.calls[0][1]).toEqual({ id: "seatservice-foo" });
   });
 
-  it("Tier 1 focus triggers must-show + phase-2 + edges queries (4 total runQuery calls)", async () => {
+  it("Tier 1 focus triggers must-show + phase-2 + edges + neighbor-total queries (5 total runQuery calls)", async () => {
     const focusId = "person-kate-colin";
     mockRunQuery.mockResolvedValueOnce([focusRecord(focusId, ["Person"])]); // focus
     mockRunQuery.mockResolvedValueOnce([
@@ -82,7 +112,8 @@ describe("loadEntity", () => {
 
     const result = await loadEntity("person", "kate-colin");
     expect(result).not.toBeNull();
-    expect(mockRunQuery).toHaveBeenCalledTimes(4);
+    // focus + must-show + phase-2 + edges + neighbor-total = 5 calls.
+    expect(mockRunQuery).toHaveBeenCalledTimes(5);
     expect(result?.neighbors).toHaveLength(2);
     expect(result?.neighbors[0].role).toBe("must-show");
     expect(result?.neighbors[1].role).toBe("phase-2");
@@ -91,12 +122,13 @@ describe("loadEntity", () => {
     expect(result?.edges[0].style).toBe("governance");
   });
 
-  it("Tier 2 focus triggers 1-hop query only (2 total runQuery calls)", async () => {
+  it("Tier 2 focus triggers 1-hop + neighbor-total queries (3 total runQuery calls)", async () => {
     mockRunQuery.mockResolvedValueOnce([focusRecord("org-city-hall", ["Organization"])]);
     mockRunQuery.mockResolvedValueOnce([]); // 1-hop neighborhood
 
     await loadEntity("organization", "city-hall");
-    expect(mockRunQuery).toHaveBeenCalledTimes(2);
+    // focus + Tier-2 neighborhood + neighbor-total = 3 calls.
+    expect(mockRunQuery).toHaveBeenCalledTimes(3);
   });
 
   it("classifies money edges correctly", async () => {
@@ -174,8 +206,47 @@ describe("loadEntity", () => {
 
     const result = await loadEntity("person", "high-degree");
     expect(result?.neighbors).toHaveLength(40);
-    // focus + must-show + edges = 3 calls (no phase-2).
-    expect(mockRunQuery).toHaveBeenCalledTimes(3);
+    // focus + must-show + edges + neighbor-total = 4 calls (no phase-2).
+    expect(mockRunQuery).toHaveBeenCalledTimes(4);
+  });
+
+  it("neighbor_total uses the 2-hop count query (not the displayed neighbor count)", async () => {
+    // Fix 1 — overflow footer needs the true neighborhood size, not the
+    // post-cap displayed count. The dispatcher returns 137 for the count
+    // query even though only 0 neighbors are displayed.
+    installCypherDispatcher(
+      [
+        [focusRecord("person-kate-colin", ["Person"])], // focus
+        [], // must-show
+        [], // phase-2
+        [], // edges
+      ],
+      137,
+    );
+
+    const result = await loadEntity("person", "kate-colin");
+    expect(result?.neighbor_total).toBe(137);
+  });
+
+  it("neighbor_total falls back to displayed count on query failure", async () => {
+    const timeoutErr = Object.assign(new Error("timed out"), {
+      code: "Neo.ClientError.Transaction.TransactionTimedOut",
+    });
+    installCypherDispatcher(
+      [
+        [focusRecord("person-kate-colin", ["Person"])], // focus
+        [record({ id: "decision-1", labels: ["Decision"], label: "D1", ring: 1 })], // must-show
+        [], // phase-2
+        [], // edges
+      ],
+      timeoutErr,
+    );
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const result = await loadEntity("person", "kate-colin");
+    expect(result?.neighbors).toHaveLength(1);
+    expect(result?.neighbor_total).toBe(1); // falls back to neighbors.length
+    warnSpy.mockRestore();
   });
 
   it("falls back to must-show-only when Phase-2 transaction times out", async () => {

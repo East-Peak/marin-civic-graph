@@ -81,6 +81,7 @@ const TIER1_TYPES: ReadonlySet<NodeType> = new Set<NodeType>([
 
 const NODE_CAP = 40;
 const PHASE2_TIMEOUT_MS = 500;
+const NEIGHBOR_TOTAL_TIMEOUT_MS = 500;
 
 // Money/legal sets for edge-style classification (mirrors Python
 // scripts/build_signature_subgraphs.py classify_edge_style).
@@ -322,6 +323,41 @@ async function runPhase2WithTimeout(
   }
 }
 
+/**
+ * Count the true 2-hop whitelist-reachable neighborhood size. This is what
+ * the overflow footer (§5.1.1) wants to announce — the number the user would
+ * see if they opened the explorer at this focus. We exclude the focus itself,
+ * Place, and Issue (which are excluded from the hero).
+ *
+ * On timeout or error, return null so callers can fall back to the local
+ * neighbor count.
+ */
+async function runNeighborTotal(focusId: string): Promise<number | null> {
+  const cypher = `
+MATCH (f {id: $focus_id})-[:${PHASE2_WHITELIST_LIVE.join("|")}*1..2]-(n)
+WHERE n.id <> $focus_id AND NOT n:Place AND NOT n:Issue
+RETURN count(DISTINCT n) AS total
+`;
+  try {
+    const records = (await runQuery(
+      cypher,
+      { focus_id: focusId },
+      { timeoutMs: NEIGHBOR_TOTAL_TIMEOUT_MS },
+    )) as unknown as Neo4jRecordLike[];
+    if (records.length === 0) return null;
+    return toNumber(records[0].get("total"));
+  } catch (err) {
+    if (isTransactionTimeoutError(err)) {
+      console.warn(
+        `[entity-loader] neighbor-total query exceeded ${NEIGHBOR_TOTAL_TIMEOUT_MS}ms for focus=${focusId}; footer will use the displayed count`,
+      );
+      return null;
+    }
+    console.warn(`[entity-loader] neighbor-total query failed for focus=${focusId}:`, err);
+    return null;
+  }
+}
+
 async function runEdgesAmongSelected(
   ids: string[],
 ): Promise<EntityEdge[]> {
@@ -433,7 +469,13 @@ export async function loadEntity(
     }
 
     // Query 3 — edges among all selected nodes (focus + neighbors).
-    const edges = await runEdgesAmongSelected([id, ...neighbors.map((n) => n.id)]);
+    // Query 4 — true 2-hop neighborhood size for the overflow footer.
+    // Both run in parallel; neighbor_total falls back to the displayed
+    // count if the sizing query fails (see §5.1.1 overflow footer).
+    const [edges, totalCount] = await Promise.all([
+      runEdgesAmongSelected([id, ...neighbors.map((n) => n.id)]),
+      runNeighborTotal(id),
+    ]);
 
     return {
       id,
@@ -442,12 +484,13 @@ export async function loadEntity(
       label,
       neighbors,
       edges,
-      neighbor_total: neighbors.length,
+      neighbor_total: totalCount ?? neighbors.length,
     };
   }
 
   // Tier 2 path — simple 1-hop neighborhood.
   const { neighbors, edges } = await loadTier2Neighborhood(id, type);
+  const totalCount = await runNeighborTotal(id);
 
   return {
     id,
@@ -456,6 +499,6 @@ export async function loadEntity(
     label,
     neighbors,
     edges,
-    neighbor_total: neighbors.length,
+    neighbor_total: totalCount ?? neighbors.length,
   };
 }
