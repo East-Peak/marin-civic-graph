@@ -88,7 +88,9 @@ function yearTicks(minMs: number, maxMs: number): number[] {
   const first = new Date(minMs).getUTCFullYear();
   const last = new Date(maxMs).getUTCFullYear();
   const out: number[] = [];
-  for (let y = first; y <= last; y++) {
+  // Include both the event year's Jan 1 AND the following Jan 1 so single-
+  // event ribbons still show a year label within the plot window.
+  for (let y = first; y <= last + 1; y++) {
     out.push(Date.UTC(y, 0, 1));
   }
   return out;
@@ -113,17 +115,23 @@ export function TimelineRibbon({ entity }: { entity: EntityPayload }) {
     );
   }
 
-  const minMs = events[0].time;
-  const maxMs = events[events.length - 1].time;
-  // Pad the range so events at the edge aren't clipped; ensure non-zero span.
-  const spanMs = Math.max(maxMs - minMs, 1000 * 60 * 60 * 24 * 30); // 30 days min
+  const eventMin = events[0].time;
+  const eventMax = events[events.length - 1].time;
+  // Snap the plot range to Jan 1 of the earliest event year and Jan 1 of the
+  // year *after* the latest event so at least two year-boundary ticks are
+  // always visible inside the plot window.
+  const firstYear = new Date(eventMin).getUTCFullYear();
+  const lastYear = new Date(eventMax).getUTCFullYear();
+  const minMs = Date.UTC(firstYear, 0, 1);
+  const maxMs = Date.UTC(lastYear + 1, 0, 1);
+  const spanMs = Math.max(maxMs - minMs, 1000 * 60 * 60 * 24 * 30);
   const plotWidth = WIDTH - MARGIN_LEFT - MARGIN_RIGHT;
 
   const xFor = (t: number): number => {
     return MARGIN_LEFT + ((t - minMs) / spanMs) * plotWidth;
   };
 
-  const ticks = yearTicks(minMs, maxMs);
+  const ticks = yearTicks(eventMin, eventMax);
 
   return (
     <section

@@ -17,7 +17,8 @@ import {
   shapeForType,
   sizeForRole,
 } from "@/components/graph/obsidian-style";
-import type { EntityPayload, Neighbor } from "@/lib/server/entity-loader";
+import type { Neighbor } from "@/lib/server/entity-loader";
+import type { RadialHeroData } from "@/components/entity/radial-hero-data";
 
 type NodeRole = "focus" | "primary" | "secondary";
 
@@ -30,7 +31,7 @@ function visibleLabelFor(role: NodeRole, label: string): string {
   return role === "focus" || role === "primary" ? label : "";
 }
 
-function toElements(entity: EntityPayload): ElementDefinition[] {
+function toElements(entity: RadialHeroData): ElementDefinition[] {
   // Focus node first.
   const focusColorClass = colorClassForType(entity.type);
   const focusShape = shapeForType(entity.type);
@@ -115,12 +116,12 @@ const concentricLayout: LayoutOptions = {
   fit: true,
 } as unknown as LayoutOptions;
 
-export function RadialHero({ entity }: { entity: EntityPayload }) {
+export function RadialHero({ data }: { data: RadialHeroData }) {
   const router = useRouter();
-  const elements = useMemo(() => toElements(entity), [entity]);
+  const elements = useMemo(() => toElements(data), [data]);
 
-  const overflow = entity.neighbor_total - entity.neighbors.length;
-  const typeUpper = entity.type.toUpperCase();
+  const overflow = data.neighbor_total - data.neighbors.length;
+  const typeUpper = data.type.toUpperCase();
 
   return (
     <div className="relative h-full min-h-[420px] w-full" data-testid="radial-hero">
@@ -135,8 +136,8 @@ export function RadialHero({ entity }: { entity: EntityPayload }) {
         elements={elements}
         layout={concentricLayout}
         onNodeClick={(id) => {
-          if (id === entity.id) return; // focus node is a no-op
-          const n = entity.neighbors.find((x) => x.id === id);
+          if (id === data.id) return; // focus node is a no-op
+          const n = data.neighbors.find((x) => x.id === id);
           if (n) router.push(n.route);
         }}
         className="h-full w-full"
@@ -149,7 +150,7 @@ export function RadialHero({ entity }: { entity: EntityPayload }) {
         >
           +{overflow} more neighbors ·{" "}
           <Link
-            href={`/graph?focus=${encodeURIComponent(entity.id)}`}
+            href={`/graph?focus=${encodeURIComponent(data.id)}`}
             className="underline hover:text-dim"
           >
             see /graph

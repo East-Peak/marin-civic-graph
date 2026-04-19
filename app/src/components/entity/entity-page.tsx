@@ -20,6 +20,7 @@ import { NavHeader } from "@/components/layout/nav-header";
 import { HeroTitle } from "@/components/entity/hero-title";
 import { HeroStats } from "@/components/entity/hero-stats";
 import { RadialHero } from "@/components/entity/radial-hero";
+import { toRadialHeroData } from "@/components/entity/radial-hero-data";
 import { FactsPanel } from "@/components/entity/facts-panel";
 import { Connections } from "@/components/entity/connections";
 import { TimelineRibbon } from "@/components/entity/timeline-ribbon";
@@ -91,7 +92,7 @@ export async function EntityPage({ entity }: { entity: EntityPayload }) {
                 "radial-gradient(ellipse at center,#121821 0%,#05070a 90%)",
             }}
           >
-            <RadialHero entity={entity} />
+            <RadialHero data={toRadialHeroData(entity)} />
           </div>
         )}
         <div>

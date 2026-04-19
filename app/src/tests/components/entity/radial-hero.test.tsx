@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import type { ElementDefinition } from "cytoscape";
 import { RadialHero } from "@/components/entity/radial-hero";
+import { toRadialHeroData } from "@/components/entity/radial-hero-data";
 import type { EntityPayload } from "@/lib/server/entity-loader";
 
 // Capture elements passed to CytoscapeBase so we can assert on the data shape
@@ -62,7 +63,7 @@ describe("RadialHero", () => {
       edges: [],
       neighbor_total: 2,
     });
-    render(<RadialHero entity={entity} />);
+    render(<RadialHero data={toRadialHeroData(entity)} />);
 
     const elements = (globalThis as unknown as { __radialElements: ElementDefinition[] })
       .__radialElements;
@@ -87,7 +88,7 @@ describe("RadialHero", () => {
   });
 
   it("renders the ENTITY · TYPE kicker in the corner", () => {
-    render(<RadialHero entity={makeEntity({ type: "Person" })} />);
+    render(<RadialHero data={toRadialHeroData(makeEntity({ type: "Person" }))} />);
     expect(screen.getByTestId("radial-hero-kicker").textContent).toContain("ENTITY");
     expect(screen.getByTestId("radial-hero-kicker").textContent).toContain("PERSON");
   });
@@ -106,7 +107,7 @@ describe("RadialHero", () => {
       ],
       neighbor_total: 10,
     });
-    render(<RadialHero entity={entity} />);
+    render(<RadialHero data={toRadialHeroData(entity)} />);
     const overflow = screen.getByTestId("radial-hero-overflow");
     expect(overflow.textContent).toContain("+9 more neighbors");
     const link = overflow.querySelector("a");
@@ -127,7 +128,7 @@ describe("RadialHero", () => {
       ],
       neighbor_total: 1,
     });
-    render(<RadialHero entity={entity} />);
+    render(<RadialHero data={toRadialHeroData(entity)} />);
     expect(screen.queryByTestId("radial-hero-overflow")).toBeNull();
   });
 
@@ -149,7 +150,7 @@ describe("RadialHero", () => {
       ],
       neighbor_total: 1,
     });
-    render(<RadialHero entity={entity} />);
+    render(<RadialHero data={toRadialHeroData(entity)} />);
     const elements = (globalThis as unknown as { __radialElements: ElementDefinition[] })
       .__radialElements;
     const edges = elements.filter((e) =>
