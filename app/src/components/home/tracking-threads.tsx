@@ -8,7 +8,7 @@ import YAML from "yaml";
 type Thread = { title: string; meta: string; stat: string; href: string };
 
 async function loadThreads(): Promise<Thread[]> {
-  const file = path.resolve(process.cwd(), "..", "registry", "currently-tracking.yaml");
+  const file = path.join(process.cwd(), "public", "currently-tracking.yaml");
   try {
     const content = await readFile(file, "utf-8");
     const parsed = YAML.parse(content) as { threads: Thread[] };

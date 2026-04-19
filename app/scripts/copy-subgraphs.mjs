@@ -15,6 +15,12 @@ async function main() {
   await mkdir(DEST, { recursive: true });
   await cp(SRC, DEST, { recursive: true });
   console.log(`copied subgraph bundles → ${DEST}`);
+
+  // Also copy currently-tracking.yaml for static serving.
+  const REGISTRY_YAML = path.resolve(__dirname, "..", "..", "registry", "currently-tracking.yaml");
+  const REGISTRY_DEST = path.resolve(__dirname, "..", "public", "currently-tracking.yaml");
+  await cp(REGISTRY_YAML, REGISTRY_DEST);
+  console.log(`copied threads registry → ${REGISTRY_DEST}`);
 }
 
 main().catch((err) => {
