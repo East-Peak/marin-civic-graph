@@ -71,8 +71,8 @@ Four faces, used with specific intent. Never substitute one for another.
 
 | Role | Face | Size |
 |---|---|---|
-| Hero page title (entity page) | VT323 | 40px |
-| Hero stat strip (big numerals: amounts, counts) | VT323 | 30px |
+| Hero page title (entity page) | VT323 | 40px (fixed; no range) |
+| Hero stat strip (big numerals: amounts, counts) | VT323 | 30px (fixed; no range) |
 | Hero meta line (under title: jurisdiction, kicker identifiers) | Plex Mono 400 | 11px |
 | H2 section heading | Plex Sans 500 | 18px |
 | Section label ALL CAPS | Plex Mono 500 | 10–11px, `letter-spacing: 0.14em`, uppercase |
@@ -143,6 +143,41 @@ Search matches against `search_label` and `search_terms` with prefix-match bias;
 Indexed types (14): `Person`, `Organization`, `Decision`, `Project`, `Program`, `Case`, `Meeting`, `Filing`, `Committee`, `Agreement`, `Amendment`, `Election`, `Place`, `Issue`. **Records are excluded** from general search. A checkbox in the results page toggles `include records` for the rare case where Record IDs are needed.
 
 **Single backend for all three surfaces.** Homepage search, command palette, and `/search?q=` results all call `GET /api/search?q=...&include_records=bool`. The palette may cache recent queries client-side for snappiness, but the API is always source of truth — there is no separate "palette index" with different ranking.
+
+**`/api/search` response shape (authoritative):**
+
+```json
+{
+  "query": "kate colin",
+  "built_at": "2026-04-18T03:11:44Z",
+  "results": [
+    {
+      "id": "person-kate-colin",
+      "type": "Person",
+      "search_label": "Kate Colin",
+      "route": "/person/kate-colin",
+      "key_fact": "Mayor, San Rafael · 2024–",
+      "last_activity": "2026-02-05",
+      "jurisdiction": "San Rafael",
+      "rank": 96
+    },
+    ...
+  ]
+}
+```
+
+- `key_fact` is a short, type-specific description derived at ingestion time and stored on the node (`search_key_fact` property). For Person: current role. For Decision: subject + date. For Project: status + headline money.
+- `last_activity` is an ISO date derived from the most-recent event tied to the node (latest Decision, latest Filing, latest MoneyFlow).
+- `route` is the entity page URL (type + slug form, per §4.2). The homepage/search results page uses this directly; the palette uses it for selection navigation.
+- Responses are capped at 50 results. Surface-specific sub-caps (palette: 20; homepage dropdown if/when added: 8) slice from the same response.
+
+**Required Neo4j indexes (authoritative — the ingestion layer must create these):**
+
+- Full-text index over `(search_label, search_terms)` on the 14 indexed types. Name: `openmarin_search_index`. Built as a single composite across type labels so one query hits all types.
+- Property indexes on `search_rank DESC` per type to make `ORDER BY search_rank DESC` index-backed.
+- The existing `id` unique constraints from v1 §4 are sufficient for exact-ID match.
+
+Latency target: p95 ≤ 120ms for palette queries (cold cache), p95 ≤ 200ms for homepage and `/search` queries. If the implementation plan can't meet this against AuraDB, it falls back to a pre-built client-side fuzzy index over `search_label` + `search_terms` — but this is an escape hatch, not the default path.
 
 ### 3.4 Left column — Catalog
 
@@ -221,7 +256,7 @@ Every surface in the app declares its data source, caching policy, and freshness
 
 | Surface | Source | Cache | Freshness indicator |
 |---|---|---|---|
-| Homepage signature subgraph | Baked bundle (`/api/subgraphs/{slug}.json`) generated from Neo4j by a nightly script | Built at ingestion time; served as static JSON | `SUBGRAPHS` timestamp in status bar; caption kicker also shows build date |
+| Homepage signature subgraph | Baked bundle (`/api/subgraphs/{slug}.json`) generated from Neo4j after each successful ingestion run (nightly cron is a backstop if no ingest has run in 24 hours) | Written once per rebuild; served as static JSON | `SUBGRAPHS` timestamp in status bar; caption kicker also shows build date |
 | Homepage catalog counts | Baked bundle (`/api/catalog.json`) | Built at ingestion time | Counts reflect `INGEST` timestamp |
 | Homepage "currently tracking" threads | Hand-curated config file committed to repo | Static, rebuilt only on deploy | No per-surface indicator — rotates on deploy |
 | Entity pages (facts, connections, timeline, evidence drawer) | Live Cypher against AuraDB | No cache (fresh every request) | `INGEST` timestamp in status bar |
@@ -319,16 +354,16 @@ The selection is a two-phase process per entity page:
 
 **Phase 1 — must-show set by focus type.** Every neighbor in this set is visible regardless of degree. When the must-show set alone exceeds 40, the cap is relaxed for that page and a warning footer is shown.
 
-| Focus entity | Must-show neighbors |
+| Focus entity | Must-show neighbors (relationship → target type) |
 |---|---|
-| Person | All current `SeatService` + their linked `Seat`; all `Committee` they control or are Candidacy of; all `Case` they are PARTY_TO; current seat's `Organization:Government`. |
-| Decision | `Meeting` it was AT; `AgendaItem` it was ABOUT; `Organization:Government` that DECIDED_BY; all `Person` who CAST_VOTE; linked `Project` / `Program`; any `Case` that CONSTRAINS it. |
-| Project | All linked `Program`; all linked `Agreement` and their `Amendment`s; all `Decision` ABOUT_PROJECT this; linked `Place`. |
-| Program | All linked `Project`; all `Decision` ABOUT_PROGRAM this; any `Case` that CONSTRAINS this program's decisions. |
-| Case | All `Proceeding` PART_OF this case; `Organization:Court` HEARD_IN; all `Person`/`Organization` PARTY_TO; all `Decision` this CONSTRAINS. |
-| Meeting | `Organization:Government` at this meeting; all `AgendaItem` PART_OF; all `Decision` AT_MEETING. |
-| Filing | `Person` or `Committee` that FILED_BY; linked `Election`; all `MoneyFlow` DISCLOSED_IN; linked `EconomicInterestDisclosure` data (if rendered). |
-| Committee | `Person` CONTROLLED_BY; all linked `Candidacy`; all linked `Election`; all `Filing` for this committee. |
+| Person | Current `SeatService` via `HELD_BY`; those `SeatService`s' linked `Seat` via `FOR_SEAT`; `Committee` via `CONTROLLED_BY`; `Candidacy` via `BY_PERSON`; `Case` via `PARTY_TO`; current `Seat`'s `Organization:Government` via `AT_INSTITUTION`. |
+| Decision | `Meeting` via `AT_MEETING`; `AgendaItem` via `ABOUT_ITEM`; `Organization:Government` via `DECIDED_BY`; `Person` via `CAST_VOTE`; `Project` via `ABOUT_PROJECT`; `Program` via `ABOUT_PROGRAM`; `Case` via inverse `CONSTRAINS`. |
+| Project | `Program` via `ABOUT_PROGRAM` (when paired); `Agreement` via `FOR_PROJECT`; those `Agreement`s' `Amendment`s via `AMENDS`; `Decision` via inverse `ABOUT_PROJECT`; `Place` via `IN_JURISDICTION`. |
+| Program | `Project` via `ABOUT_PROJECT` (inverse); `Decision` via inverse `ABOUT_PROGRAM`; `Case` via inverse `CONSTRAINS` on any of this program's Decisions. |
+| Case | `Proceeding` via `PART_OF`; `Organization:Court` via `HEARD_IN`; `Person`/`Organization` via `PARTY_TO`; `Decision` via `CONSTRAINS`. |
+| Meeting | `Organization:Government` via `AT_INSTITUTION`; `AgendaItem` via `PART_OF`; `Decision` via inverse `AT_MEETING`. |
+| Filing | `Person` or `Committee` via `FILED_BY`; `Election` via `FOR_ELECTION`; `MoneyFlow` via inverse `DISCLOSED_IN`. Form 700 fields (when `filing_type = form_700`) render in the facts panel, not as separate graph nodes — `EconomicInterestDisclosure` is merged into `Filing` per the v1 migration. |
+| Committee | `Person` via `CONTROLLED_BY`; `Candidacy` via inverse `BY_PERSON` where `Candidacy.committee_id` matches; `Election` via the committee's `Candidacy`s; `Filing` via `FILED_BY`. |
 
 **Phase 2 — ranked fill with per-type quotas.** After the must-show set is placed, remaining slots (up to the 40-node cap) are filled from each type up to its quota, in this order. Ranking uses directly computable local metrics — no centrality on the live query.
 
@@ -353,7 +388,23 @@ The selection is a two-phase process per entity page:
 
 **Overflow footer.** When the 40-cap truncates a type that has more candidates, a Plex Mono dim footer on the graph pane reads `+{N} more neighbors · see /graph?focus={id}` linking to the full-screen explorer where no cap applies.
 
-**Query contract.** The selection runs as one parameterized Cypher query per focus type, returning (node, role, rank_bucket, rank_value). The query shape is part of the implementation plan; the contract above is what it must satisfy. AuraDB parameter indexes (`id`, plus the per-type date/amount indexes named in the v1 design spec §4) make this O(must-show degree + quota fills), not O(2-hop degree).
+**Query contract (explicit).** The selection runs as **two parameterized Cypher queries** per entity page (not one — one-query is the aspiration, two-query is the contract):
+
+1. **Must-show query.** Given `focus_id` and `focus_type`, traverse the relationships listed in the must-show table for that focus type. Returns `(id, type, role='must-show', primary=true/false based on hop distance)`. This is bounded by the must-show relationship count (empirically ≤ 30 nodes across all focus types on the current graph).
+
+2. **Phase-2 fill query.** Given `focus_id`, the must-show node IDs from query 1, and `{cap: 40}`, traverse outward 1–2 hops, excluding already-selected IDs and excluded types (`Place`, `Issue`). For each reachable candidate node, compute its ranking key per the type table below using **properties on the candidate node itself** (no centrality, no recursive aggregation). Return ordered by (type-priority, ranking key, id) and limit to `(cap - must-show count)`.
+
+**Candidate pool for Phase 2** is precisely: all nodes reachable from `focus_id` in 1 or 2 traversal hops, minus the must-show set, minus `:Place`, minus `:Issue`.
+
+**Dedup:** a node that appears in both must-show and Phase 2 is emitted once with `role='must-show'`. A node that appears at both 1-hop and 2-hop from the focus is emitted once and treated as 1-hop (better `primary` classification).
+
+**For the Person/Organization "count of edges back into must-show" ranking:** this is computable in Phase 2 because the must-show set is materialized by query 1 as a parameter to query 2. The count is a simple `MATCH (candidate)-[]-(m) WHERE m.id IN $must_show_ids WITH candidate, count(m) AS rank_value`.
+
+**Complexity.** Query 1 is O(must-show degree). Query 2 is O(2-hop neighborhood size) in the worst case, but the 2-hop neighborhood is bounded by the AuraDB per-type indexes named in v1 design spec §4 for `Meeting.meeting_date`, `Decision.decided_at`, `MoneyFlow.amount`, etc. — the `ORDER BY` clause can use the index and the query plan avoids scanning all 2-hop candidates for types whose quota is smaller than the total population. On `person-kate-colin` (our worst empirical case), this is well under 100ms on AuraDB Pro.
+
+**Timeout + fallback.** If Query 2 exceeds 500ms, the page renders the must-show set only (with the overflow footer) rather than the full 40. This keeps the page fast even in degenerate cases.
+
+The exact Cypher for each focus type is part of the implementation plan; the contract above is what each query must satisfy.
 
 ### 5.2 Edges
 
@@ -361,7 +412,7 @@ Edges carry meaning. Three styles:
 
 | Style | Stroke | Usage |
 |---|---|---|
-| **Governance (default)** | `rgba(150,180,220,0.22)` thin 0.9px solid | AT_MEETING, ABOUT_ITEM, DECIDED_BY, PART_OF, HELD_BY, FOR_SEAT, RESULT_OF, AT_INSTITUTION, AT_PLACE, EVIDENCED_BY, RELATES_TO_ISSUE, BETWEEN, FOR_PROJECT, ABOUT_PROJECT, ABOUT_PROGRAM |
+| **Governance (default)** | `rgba(150,180,220,0.22)` thin 0.9px solid | AT_MEETING, ABOUT_ITEM, DECIDED_BY, PART_OF, HELD_BY, FOR_SEAT, RESULT_OF, AT_INSTITUTION, IN_JURISDICTION, EVIDENCED_BY, RELATES_TO_ISSUE, BETWEEN, FOR_PROJECT, ABOUT_PROJECT, ABOUT_PROGRAM |
 | **Money** | `rgba(220,200,140,0.55)` 1.2px solid with amber glow | FROM_SOURCE, TO_TARGET, DISCLOSED_IN, UNDER_AGREEMENT |
 | **Legal constrains** | `rgba(226,122,122,0.45)` 1.1px dashed `3,3` with pink glow | `(:Case)-[:CONSTRAINS]->(:Decision)` and parent PARTY_TO where the case is also linked via CONSTRAINS |
 
@@ -446,14 +497,14 @@ Baked JSON served from `/api/subgraphs/{slug}.json`. One file per curated subgra
       "type": "Project",
       "label": "350 Merrydale Interim Shelter",
       "role": "focus",
-      "route": "/project/san-rafael-350-merrydale-interim-shelter"
+      "route": "/graph?focus=project-san-rafael-350-merrydale-interim-shelter"
     },
     {
       "id": "moneyflow-merrydale-county-grant",
       "type": "MoneyFlow",
       "label": "$15.3M county grant",
       "role": "primary",
-      "route": "/money-flow/merrydale-county-grant"
+      "route": "/graph?focus=moneyflow-merrydale-county-grant"
     },
     ...
   ],
@@ -471,7 +522,7 @@ Baked JSON served from `/api/subgraphs/{slug}.json`. One file per curated subgra
 
 **Rules:**
 - `node.role` is one of `focus`, `primary` (1-hop), `secondary` (2-hop). The frontend uses this for sizing.
-- `node.route` is the pre-computed URL — the frontend does NOT construct routes from raw IDs here.
+- `node.route` is the pre-computed URL. **Convention: all signature-subgraph routes deep-link into the full-screen explorer** — `"/graph?focus={id}"`. The homepage's job is to tease and invite; the click sends the user into the explorer, not to a static entity page. The frontend does not construct routes from raw IDs — it uses this field verbatim.
 - `edge.style` is one of `governance`, `money`, `legal-constrains`. Pre-classified so the frontend doesn't need to interpret relationship types.
 - Bundles are immutable once built; the builder always writes a new file and updates the manifest atomically.
 - Bundle size target: ≤ 60 nodes, ≤ 120 edges. Anything larger means the subgraph wasn't curated enough.
@@ -548,9 +599,9 @@ Top-down composition:
 2. **Header row** (persists).
 3. **Kicker + hero title**:
    - Kicker: Plex Mono 10px ALL CAPS, e.g. `PROJECT` or `DECISION · 2024-08-19`.
-   - Title: VT323 38–44px, entity name.
+   - Title: VT323 40px, entity name (per §2.3 authoritative type scale).
    - Meta strip: Plex Mono 11px — jurisdiction, type-specific identifiers, status badges.
-4. **Hero stat strip** (VT323 28–32px numerals): type-specific high-order facts.
+4. **Hero stat strip** (VT323 30px numerals, per §2.3): type-specific high-order facts.
    - Project/Program: total money, linked decisions, counterparties, evidence count.
    - Person: current seat, SeatService window, filings count.
    - Decision: decided-at date, vote summary, linked agenda item.
@@ -558,7 +609,7 @@ Top-down composition:
    - Meeting: date, institution, agenda-items count, decisions count.
    - Filing: filing type, signed-at, period, actor.
    - Committee: fppc_id, candidate, elections, money totals.
-5. **Radial graph hero** (60–70% page width): entity centered, 1–2 hop neighborhood. Hover to reveal labels, click to re-center.
+5. **Radial graph hero** (60–70% page width): entity centered, 1–2 hop neighborhood per §5.1.1. Hover to reveal labels; clicking a node navigates to that node's own entity page (§6.2). No in-place re-centering.
 6. **Facts panel** (right rail, 30–40%): Plex Mono key-value table of scalar properties.
 7. **Connections**: grouped by relationship type, each group a card cluster. Cards show related-entity title (Plex Sans 500), type badge (Plex Mono kicker), mini-meta. Click = navigate.
 8. **Timeline ribbon**: horizontal, VT323 tick marks for dates, events plotted by date. Relevance filtered to events involving this entity or its 1-hop neighborhood.
