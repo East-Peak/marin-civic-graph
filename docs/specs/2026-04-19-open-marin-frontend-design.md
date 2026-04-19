@@ -183,18 +183,22 @@ Indexed types (14): `Person`, `Organization`, `Decision`, `Project`, `Program`, 
 - **Property indexes** on `search_rank` per type so per-type filtering stays cheap.
 - The existing `id` unique constraints from v1 §4 are sufficient for exact-ID match.
 
-**Query shape (pseudo-Cypher):**
+**Query shape (pseudo-Cypher, two-stage).** The full-text index returns matches ordered by Lucene `score`. We take the top 200 by score (cheap, index-ordered), then re-rank just those 200 by `combined_rank` (blends score with `search_rank`), then cap at 50.
 
 ```cypher
 CALL db.index.fulltext.queryNodes('openmarin_search_index', $q) YIELD node, score
 WHERE $include_records OR NOT node:Record
-WITH node, score * 100 + node.search_rank AS combined_rank
-RETURN node, combined_rank
+WITH node, score
+ORDER BY score DESC
+LIMIT 200
+WITH node, score, (score * 100 + node.search_rank) AS combined_rank
 ORDER BY combined_rank DESC, node.id ASC
 LIMIT 50
 ```
 
-The full-text index produces a match `score` (Lucene-style). The combined ranking multiplies score by 100 before adding `search_rank` so that lexical relevance dominates, with `search_rank` as a tiebreaker — not an index-backed sort. This is the honest cost. AuraDB full-text queries typically return in < 50ms on this corpus size; the post-processing `ORDER BY` runs on the 50-ish-row result set, not the full graph.
+Why two stages: a broad query like `"colin"` could match hundreds of nodes. Stage 1's `ORDER BY score DESC LIMIT 200` uses the full-text index's native ordering (no extra sort cost), dropping long-tail matches that would never make the final 50. Stage 2 re-ranks the surviving 200 by combined_rank — a small fixed-size sort, not full-corpus. AuraDB full-text queries typically return < 50ms on this corpus size; the re-rank runs on 200 rows, bounded.
+
+If the full-text query itself returns fewer than 200 matches, stage 2 re-ranks whatever stage 1 produced. If it returns more than 200, the dropped matches are low-score long-tail that would rank below the top 50 regardless.
 
 **Latency targets** (not guarantees — the implementation plan must validate): p95 ≤ 120ms for palette queries (cold cache), p95 ≤ 200ms for homepage and `/search` queries. If the implementation plan can't meet this against AuraDB, the fallback is a pre-built client-side fuzzy index over `search_label` + `search_terms`, shipped as part of the deploy — but this is an escape hatch, not the default path.
 
@@ -413,31 +417,43 @@ Relationships referenced below must exist in the v1 ontology (see v1 design spec
 
 **Query 1 — Must-show.** Given `focus_id` and `focus_type`, traverse exactly the paths listed in the must-show table for that focus type (some are 1-hop, some are named 2-hop). Returns `(id, type, role='must-show', primary=true|false)` where `primary=true` for direct (1-hop) neighbors and `false` for 2-hop. Bounded by the must-show traversal count (empirically ≤ 30 nodes across all focus types on the current graph). If the must-show set is already ≥ 40 nodes, Query 2 is skipped and the overflow footer is shown.
 
-**Query 2 — Phase-2 quota fill.** Structured as **one UNION ALL of per-type sub-queries**, each with its own `MATCH`, `ORDER BY`, and `LIMIT`. The structure (pseudo-Cypher):
+**Phase-2 edge whitelist.** Phase 2 traversal uses only investigatively meaningful relationships. Universal/structural edges are excluded from Phase 2 even though they are valid graph edges — they would let shared records/jurisdictions/issues pull unrelated neighbors into the hero.
+
+Allowed Phase-2 relationship types (exhaustive):
+```
+CAST_VOTE, AT_MEETING, ABOUT_ITEM, DECIDED_BY, PART_OF, HELD_BY, FOR_SEAT, RESULT_OF, AT_INSTITUTION,
+FROM_SOURCE, TO_TARGET, DISCLOSED_IN, UNDER_AGREEMENT, AMENDS, CONTROLLED_BY, FILED_BY,
+BY_PERSON, IN_ELECTION, FOR_ELECTION, FOR_PROJECT, ABOUT_PROJECT, ABOUT_PROGRAM,
+PARTY_TO, CONSTRAINS, BETWEEN, HEARD_IN
+```
+
+Excluded from Phase 2 (never traversed): `EVIDENCED_BY`, `IN_JURISDICTION`, `RELATES_TO_ISSUE`.
+
+**Query 2 — Phase-2 quota fill.** Structured as **one UNION ALL of per-type sub-queries**, each with its own `MATCH`, `ORDER BY`, and `LIMIT`. Each sub-query uses the edge whitelist above. The `$rels` parameter below is the whitelist serialized as a single pipe-separated relationship pattern for use with `apoc.path.expandConfig` or an explicit `MATCH` with a relationship-type list.
 
 ```cypher
 CALL {
   WITH $focus_id AS focus_id, $must_show_ids AS must_show_ids
-  MATCH (f {id: focus_id})-[*1..2]-(c:MoneyFlow)
+  MATCH (f {id: focus_id})-[:CAST_VOTE|AT_MEETING|ABOUT_ITEM|DECIDED_BY|PART_OF|HELD_BY|FOR_SEAT|RESULT_OF|AT_INSTITUTION|FROM_SOURCE|TO_TARGET|DISCLOSED_IN|UNDER_AGREEMENT|AMENDS|CONTROLLED_BY|FILED_BY|BY_PERSON|IN_ELECTION|FOR_ELECTION|FOR_PROJECT|ABOUT_PROJECT|ABOUT_PROGRAM|PARTY_TO|CONSTRAINS|BETWEEN|HEARD_IN*1..2]-(c:MoneyFlow)
   WHERE NOT c.id IN must_show_ids
   RETURN DISTINCT c AS n, 'MoneyFlow' AS t, c.amount AS rank_value, 1 AS type_priority
   ORDER BY c.amount DESC, c.flow_date DESC, c.id ASC
   LIMIT 8
 UNION ALL
   WITH $focus_id AS focus_id, $must_show_ids AS must_show_ids
-  MATCH (f {id: focus_id})-[*1..2]-(c:Decision)
+  MATCH (f {id: focus_id})-[:CAST_VOTE|AT_MEETING|ABOUT_ITEM|DECIDED_BY|PART_OF|HELD_BY|FOR_SEAT|RESULT_OF|AT_INSTITUTION|FROM_SOURCE|TO_TARGET|DISCLOSED_IN|UNDER_AGREEMENT|AMENDS|CONTROLLED_BY|FILED_BY|BY_PERSON|IN_ELECTION|FOR_ELECTION|FOR_PROJECT|ABOUT_PROJECT|ABOUT_PROGRAM|PARTY_TO|CONSTRAINS|BETWEEN|HEARD_IN*1..2]-(c:Decision)
   WHERE NOT c.id IN must_show_ids
   RETURN DISTINCT c, 'Decision', c.decided_at, 2
   ORDER BY c.decided_at DESC, c.id ASC
   LIMIT 8
 UNION ALL
-  ... one sub-query per quota-table row, in type-priority order ...
+  ... one sub-query per quota-table row, in type-priority order, each using the same whitelist ...
 UNION ALL
   WITH $focus_id AS focus_id, $must_show_ids AS must_show_ids
-  MATCH (f {id: focus_id})-[*1..2]-(c:Person)
+  MATCH (f {id: focus_id})-[:CAST_VOTE|AT_MEETING|ABOUT_ITEM|DECIDED_BY|PART_OF|HELD_BY|FOR_SEAT|RESULT_OF|AT_INSTITUTION|FROM_SOURCE|TO_TARGET|DISCLOSED_IN|UNDER_AGREEMENT|AMENDS|CONTROLLED_BY|FILED_BY|BY_PERSON|IN_ELECTION|FOR_ELECTION|FOR_PROJECT|ABOUT_PROJECT|ABOUT_PROGRAM|PARTY_TO|CONSTRAINS|BETWEEN|HEARD_IN*1..2]-(c:Person)
   WHERE NOT c.id IN must_show_ids
-  OPTIONAL MATCH (c)-[]-(m) WHERE m.id IN must_show_ids
-  WITH c, count(DISTINCT m) AS edges_to_must_show
+  OPTIONAL MATCH (c)-[r]-(m) WHERE m.id IN must_show_ids
+  WITH c, count(r) AS edges_to_must_show
   RETURN DISTINCT c, 'Person', edges_to_must_show, 5
   ORDER BY edges_to_must_show DESC, c.id ASC
   LIMIT 6
@@ -450,11 +466,11 @@ RETURN r.n, r.t, r.tp LIMIT ($cap - $must_show_count)
 
 Per-type `LIMIT`s enforce the quotas; the outer `LIMIT` caps the aggregate at 40 minus must-show count. Rows are consumed in type-priority order, so when the aggregate cap truncates, lower-priority types are the ones dropped.
 
-**Candidate pool for Phase 2**: all nodes reachable from `focus_id` in 1 or 2 traversal hops, minus the must-show set, minus `:Place`, minus `:Issue`.
+**Candidate pool for Phase 2**: all nodes reachable from `focus_id` in 1 or 2 traversal hops **along the edge whitelist**, minus the must-show set, minus `:Place`, minus `:Issue`.
 
 **Dedup**: `DISTINCT` in each sub-query handles duplicates from 1-hop-and-2-hop overlap. A node that appears in both must-show and Phase 2 is caught by the `NOT c.id IN must_show_ids` filter in every sub-query.
 
-**Person/Organization ranking metric (locked).** Count of **undirected** relationship instances between the candidate and any node in the must-show set: `OPTIONAL MATCH (c)-[]-(m) WHERE m.id IN must_show_ids`. Undirected is chosen because CAST_VOTE and PARTY_TO point in investigatively meaningful but different directions; we want "is this Person materially attached to the focus's must-show world?" — direction should not matter for that question.
+**Person/Organization ranking metric (locked).** Count of **undirected relationship instances** (not distinct must-show nodes) between the candidate and the must-show set: `OPTIONAL MATCH (c)-[r]-(m) WHERE m.id IN must_show_ids WITH c, count(r) AS edges_to_must_show`. `count(r)` with a relationship binding counts each edge separately — so a Person who CAST_VOTE on 20 Decisions in the must-show set scores 20, not 1. This is the investigation-useful metric: intensity of involvement, not breadth. Direction is ignored because CAST_VOTE and PARTY_TO and CONTROLLED_BY all point in semantically legitimate but different directions, and the question "is this Person materially attached to the focus's world?" does not hinge on direction.
 
 **Complexity.** Query 1 is O(must-show traversal count). Query 2 per sub-query is bounded: the inner `MATCH` walks 1–2 hops and the `LIMIT` caps memory before the `ORDER BY` work. The worst-case sub-query is Person/Organization because it adds an `OPTIONAL MATCH` for the edge count, but this is still bounded by the 2-hop neighborhood size (≤ ~1200 nodes on the current Kate Colin dossier). AuraDB Pro target: p95 ≤ 500ms for Query 2; p95 ≤ 200ms for Query 1. These are the targets the implementation plan must validate.
 
