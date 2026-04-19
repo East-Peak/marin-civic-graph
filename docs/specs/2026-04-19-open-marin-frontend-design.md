@@ -41,16 +41,20 @@ Dark only. No light-mode toggle in v1. The product's feel depends on the graph's
 | Node: case / legal | `#e27a7a` | Case / Proceeding nodes and legal-constrains edges. |
 | Node: organization | `#b8a8d9` | Organization nodes (all subtypes — Government, Nonprofit, Business, Political, Court, Department, Commission). |
 | Node: project / program | `#d9a88d` | Project and Program nodes. |
-| Node: generic | `#e8ecf3` | Everything else — Meeting, AgendaItem, Committee, Filing, Seat, SeatService, Election, Candidacy, Agreement, Amendment, Record, Place, Issue, Proceeding. |
+| Node: generic | `#e8ecf3` | Everything else — Meeting, AgendaItem, Committee, Filing, Seat, SeatService, Election, Candidacy, Agreement, Amendment, Record, Place, Issue. |
+
+Proceeding belongs to the legal bucket (pink `#e27a7a`), not the generic bucket. Every node type has exactly one color assignment.
 
 All colored nodes carry a soft `drop-shadow` glow tuned per color (amber: ~5px / 0.7 alpha; blue: ~5px / 0.6; pink: ~5px / 0.6; mint: ~6px / 0.7; lavender: ~4px / 0.5; sand: ~4px / 0.5). The focus node gets a stronger 8px / 0.9 glow.
 
-**Shape encoding (second channel, applies to generic bucket):** within the generic bucket, shape distinguishes structural categories so the signature subgraph stays readable before hover:
-- **Circle** (default): events and artifacts — Meeting, AgendaItem, Filing, Election, Agreement, Amendment, Record, Proceeding.
+**Shape encoding (second channel, applies to generic bucket):** within the generic bucket, shape distinguishes structural categories:
+- **Circle** (default): events and artifacts — Meeting, AgendaItem, Filing, Election, Agreement, Amendment, Record.
 - **Square**: places and topics — Place, Issue.
 - **Ring (outlined circle)**: role structures — Seat, SeatService, Candidacy, Committee.
 
-Colored nodes (decision / money / person / case / organization / project-program) are always solid circles — shape is reserved for disambiguating the generic bucket.
+**Shape visibility rule.** Shape differences are unreliable at small sizes. Shape encoding only applies to nodes that are ALSO rendered with labels — i.e., the focus node and 1-hop primary neighbors (see §5.1 label rule) — and every shape-encoded node is drawn at a minimum radius of 5px. Secondary / tertiary nodes (4px, 3px dots) are plain circles regardless of type; the Cytoscape stylesheet uses the radius threshold to decide.
+
+Colored nodes (decision / money / person / case-legal / organization / project-program) are always solid circles — shape is reserved for disambiguating the generic bucket.
 
 ### 2.3 Typography
 
@@ -86,8 +90,8 @@ Four faces, used with specific intent. Never substitute one for another.
 
 ### 2.4 Motion
 
-- **Homepage signature subgraph**: subtle drift (~0.3–0.5px node translation at ~0.2Hz), never fully still. The drift is decorative; interaction is a deep-link click, not re-center.
-- **Entity-page radial hero**: smooth 250ms ease-out radial expansion on page load; hovered node scales to 1.2x; clicking re-centers with a 350ms tween.
+- **Homepage signature subgraph**: subtle drift (~0.3–0.5px node translation at ~0.2Hz), never fully still. The drift is decorative; interaction is a deep-link click (see §6.1).
+- **Entity-page radial hero**: smooth 250ms ease-out radial expansion on page load; hovered node scales to 1.2x. Clicking a node navigates to that entity's own page (§6.2) — there is NO in-place re-center animation. The next page's radial hero re-expansion is what provides the visual continuity.
 - **Full-screen explorer**: real force-directed physics (Cytoscape fcose or cola layout). No artificial easing.
 - **Blinking cursor** (brand, prompts): 1.1s step animation. Avoid continuous smooth fades — it's a terminal cursor.
 - **Status bar dot**: constant glow, no pulse.
@@ -126,9 +130,19 @@ Full-width below the header, inside the homepage grid. Plex Mono placeholder wit
 2. Client navigates to `/search?q={query}` — a results page (see §4.5).
 3. The command palette (⌘K) uses the same backend but renders results inline inside the modal; selecting a palette result navigates directly to the entity page, skipping the results page.
 
-**Search corpus (authoritative v1, single source of truth):** matches against `name`, `aliases`, and `id` on the 14 indexed types — `Person`, `Organization`, `Decision`, `Project`, `Program`, `Case`, `Meeting`, `Filing`, `Committee`, `Agreement`, `Amendment`, `Election`, `Place`, `Issue`. **Records are excluded** from general search (too noisy, too many). A checkbox in the results page toggles `include records` for the rare case where Record IDs are needed.
+**Search corpus (authoritative v1, single source of truth).** Many node types don't have a natural `name` field (Meeting has `title` and `meeting_date`; Filing has `filing_type` + `signed_at`; AgendaItem has `heading`; etc.). Rather than teaching search to special-case each type, the normalizer populates three denormalized properties on every searchable node:
 
-**Ranking:** exact ID match > name prefix match > alias match > name substring match. Ties broken by `node_degree` descending (more-connected nodes rank higher).
+| Property | Shape | Example (Meeting) |
+|---|---|---|
+| `search_label` | The display string the user will see in results (one line) | `"San Rafael City Council — 2024-08-19"` |
+| `search_terms` | Space-joined concatenation of all tokens a user might type (name, aliases, parent IDs, type-specific identifiers, jurisdiction) | `"san rafael city council 2024-08-19 meeting-san-rafael-2024-08-19 homelessness"` |
+| `search_rank` | Integer 0–100. Higher = more prominent. Computed at ingestion time from degree, node-type weight, and recency | `72` |
+
+Search matches against `search_label` and `search_terms` with prefix-match bias; ties broken by `search_rank DESC`, then `id ASC`. Exact `id` matches bypass ranking.
+
+Indexed types (14): `Person`, `Organization`, `Decision`, `Project`, `Program`, `Case`, `Meeting`, `Filing`, `Committee`, `Agreement`, `Amendment`, `Election`, `Place`, `Issue`. **Records are excluded** from general search. A checkbox in the results page toggles `include records` for the rare case where Record IDs are needed.
+
+**Single backend for all three surfaces.** Homepage search, command palette, and `/search?q=` results all call `GET /api/search?q=...&include_records=bool`. The palette may cache recent queries client-side for snappiness, but the API is always source of truth — there is no separate "palette index" with different ranking.
 
 ### 3.4 Left column — Catalog
 
@@ -175,7 +189,7 @@ No row labeled "Evidence links" — that was an artifact of an earlier draft and
 
 ### 3.5 Center column — Signature subgraph
 
-One curated, captioned subgraph rendered with the Obsidian Glow language (see §5). Center position holds `#ffffff` focus node; 1–2 hop neighborhood fans out with type-colored nodes and edges. Data is served by a baked bundle (see §5.5 for the full contract). Clicking any node navigates to `/graph?focus={id}` — no on-homepage re-centering.
+One curated, captioned subgraph rendered with the Obsidian Glow language (see §5). Center position holds `#ffffff` focus node; 1–2 hop neighborhood fans out with type-colored nodes and edges. Data is served by a baked bundle (see §5.5 for the full contract). Clicking any node navigates to the URL in that node's `route` field — by convention, signature-subgraph bundle nodes always set `route = "/graph?focus={id}"` so the click deep-links into the explorer. The homepage does not re-center in place.
 
 **Caption** (bottom-left, VT323 16px): auto-generated from the bundle's `headline_stats` field. Example: `$15,337,953 · 6 decisions · 3 counterparties · 20 records`.
 
@@ -214,7 +228,7 @@ Every surface in the app declares its data source, caching policy, and freshness
 | Entity-page radial hero | Live Cypher against AuraDB with per-type neighborhood rules (§5.1.1) | No cache | `INGEST` timestamp |
 | Full-screen explorer | Live Cypher against AuraDB | No cache | `INGEST` timestamp |
 | Data explorer | Live Cypher against AuraDB | No cache | `INGEST` timestamp |
-| Command-palette fuzzy index | Pre-built index shipped with deploy (name/alias table from all searchable types) | Rebuilt at ingestion time | Palette footer shows build date in Plex Mono dim |
+| Command-palette results | Live `/api/search?q=` (same backend as homepage search and `/search?q=` — see §3.3) | Optional client-side query cache, last 20 queries in sessionStorage | Palette footer shows `INGEST` timestamp in Plex Mono dim |
 
 **Invariant:** if a user sees a node on the homepage signature subgraph, navigates to its entity page, and the live data shows materially different facts, the entity page is authoritative and the baked subgraph must be rebuilt. The app does not detect this divergence automatically in v1; it's a staleness signal for the ingestion operator.
 
@@ -299,34 +313,47 @@ Applies consistently to all three graph surfaces.
 
 ### 5.1.1 Neighborhood selection rules (for entity-page radial hero)
 
-High-degree entities like `person-kate-colin` touch hundreds of decisions and meetings. A naive "LIMIT 40" is visually unstable and investigatively misleading (you never know what you're seeing). The radial hero instead uses a **deterministic per-type selection contract** that caps total nodes at 40 while preserving the investigatively important neighbors.
+High-degree entities like `person-kate-colin` touch hundreds of decisions and meetings. A naive "LIMIT 40" is visually unstable and investigatively misleading. The radial hero instead uses a **deterministic per-focus-type selection contract** that caps total nodes at 40 while preserving the investigatively important neighbors.
 
-**Always-include** (visible regardless of degree):
-- All `:Case` nodes connected via `CONSTRAINS` or `PARTY_TO`.
-- All `:Seat` and current `:SeatService` nodes for a Person.
-- All `:Committee` nodes a Person controls or a Candidacy belongs to.
-- Directly-linked `:Agreement` for a Project.
-- Directly-linked `:Program` for a Project and vice versa.
+The selection is a two-phase process per entity page:
 
-**Ranked selection with per-type quotas** (filled in order until the 40-node cap hits):
+**Phase 1 — must-show set by focus type.** Every neighbor in this set is visible regardless of degree. When the must-show set alone exceeds 40, the cap is relaxed for that page and a warning footer is shown.
 
-| Type | Quota | Ranking key |
-|---|---|---|
-| MoneyFlow | up to 8 | `amount DESC` |
-| Decision | up to 8 | `decided_at DESC` |
-| Filing | up to 6 | `signed_at DESC` |
-| Meeting | up to 6 | `meeting_date DESC` |
-| Person | up to 6 | degree centrality inside current 2-hop neighborhood |
-| Organization | up to 4 | degree centrality |
-| Record | up to 4 | `captured_at DESC` |
-| AgendaItem | up to 4 | `item_number ASC` |
-| Amendment | up to 2 | `effective_date DESC` |
+| Focus entity | Must-show neighbors |
+|---|---|
+| Person | All current `SeatService` + their linked `Seat`; all `Committee` they control or are Candidacy of; all `Case` they are PARTY_TO; current seat's `Organization:Government`. |
+| Decision | `Meeting` it was AT; `AgendaItem` it was ABOUT; `Organization:Government` that DECIDED_BY; all `Person` who CAST_VOTE; linked `Project` / `Program`; any `Case` that CONSTRAINS it. |
+| Project | All linked `Program`; all linked `Agreement` and their `Amendment`s; all `Decision` ABOUT_PROJECT this; linked `Place`. |
+| Program | All linked `Project`; all `Decision` ABOUT_PROGRAM this; any `Case` that CONSTRAINS this program's decisions. |
+| Case | All `Proceeding` PART_OF this case; `Organization:Court` HEARD_IN; all `Person`/`Organization` PARTY_TO; all `Decision` this CONSTRAINS. |
+| Meeting | `Organization:Government` at this meeting; all `AgendaItem` PART_OF; all `Decision` AT_MEETING. |
+| Filing | `Person` or `Committee` that FILED_BY; linked `Election`; all `MoneyFlow` DISCLOSED_IN; linked `EconomicInterestDisclosure` data (if rendered). |
+| Committee | `Person` CONTROLLED_BY; all linked `Candidacy`; all linked `Election`; all `Filing` for this committee. |
+
+**Phase 2 — ranked fill with per-type quotas.** After the must-show set is placed, remaining slots (up to the 40-node cap) are filled from each type up to its quota, in this order. Ranking uses directly computable local metrics — no centrality on the live query.
+
+| Type | Quota | Ranking key | Tie-break |
+|---|---|---|---|
+| MoneyFlow | up to 8 | `amount DESC` | `flow_date DESC`, then `id ASC` |
+| Decision | up to 8 | `decided_at DESC` | `id ASC` |
+| Filing | up to 6 | `signed_at DESC` | `id ASC` |
+| Meeting | up to 6 | `meeting_date DESC` | `id ASC` |
+| Person | up to 6 | count of direct edges from this Person back into the must-show set | `id ASC` |
+| Organization | up to 4 | count of direct edges from this Organization back into the must-show set | `id ASC` |
+| Record | up to 4 | `captured_at DESC` | `id ASC` |
+| AgendaItem | up to 4 | `item_number ASC` | `id ASC` |
+| Amendment | up to 2 | `effective_date DESC` | `id ASC` |
+| Proceeding | up to 4 | `date DESC` | `id ASC` |
+| Election | up to 2 | `election_date DESC` | `id ASC` |
+| Candidacy | up to 2 | linked `Election.election_date DESC` | `id ASC` |
+
+**Why "edges back into the must-show set" is the centrality substitute.** It is directly computable in a single Cypher query: for each candidate Person/Organization in the 2-hop neighborhood, count outbound edges whose target is in the must-show set. This is a stable local metric — not a global graph property — and does not require an initial 2-hop computation to seed it.
 
 **Excluded from the hero** (too structural to add signal): `:Place` and `:Issue`. Both appear in the facts panel and connections list, but not the graph — they would dominate as high-degree hubs.
 
-**When the 40-cap is reached**, a Plex Mono dim footer on the graph pane reads `+{N} more neighbors · see /graph?focus={id}` linking to the full-screen explorer where no cap applies.
+**Overflow footer.** When the 40-cap truncates a type that has more candidates, a Plex Mono dim footer on the graph pane reads `+{N} more neighbors · see /graph?focus={id}` linking to the full-screen explorer where no cap applies.
 
-The selection runs as a single parameterized Cypher query per entity type. The query shape is part of the implementation plan; the contract above is what it must satisfy.
+**Query contract.** The selection runs as one parameterized Cypher query per focus type, returning (node, role, rank_bucket, rank_value). The query shape is part of the implementation plan; the contract above is what it must satisfy. AuraDB parameter indexes (`id`, plus the per-type date/amount indexes named in the v1 design spec §4) make this O(must-show degree + quota fills), not O(2-hop degree).
 
 ### 5.2 Edges
 
@@ -366,7 +393,9 @@ The graph has many date fields and some important entities have no single event 
 | Case | `filed_at` | Range: `filed_at` through `closed_at` (or "open" if null). Visible on slider if range overlaps. |
 | SeatService | `started_at` through `ended_at` | Range. Visible if range overlaps. |
 | Candidacy | linked `Election.election_date` | Point event via election. |
-| Person / Organization / Committee / Project / Program / Place / Issue / Seat / Agenda­Item / Record | **none** | Always visible regardless of slider — these are durable entities, not events. |
+| AgendaItem | parent `Meeting.meeting_date` via `(:AgendaItem)-[:PART_OF]->(:Meeting)` | Point event inherited from parent meeting. AgendaItems without a parent meeting (rare; normalizer bug) are hidden when the slider is engaged. |
+| Record | `published_at` if present, else `captured_at` | Point event. Records have a canonical date; they are artifacts of dated events. |
+| Person / Organization / Committee / Project / Program / Place / Issue / Seat | **none** | Always visible regardless of slider — these are genuinely durable entities, not events. |
 
 **Slider semantics:**
 - Slider sets an inclusive `[from, to]` range.
@@ -452,18 +481,29 @@ Baked JSON served from `/api/subgraphs/{slug}.json`. One file per curated subgra
 The explorer's "find path between two entities" feature needs explicit rules — shortest paths through `Record`, `Issue`, or `Place` routinely return technically-short but investigatively-useless paths.
 
 **Default pathfinding behavior:**
-- **Algorithm:** weighted shortest path (Neo4j `apoc.algo.dijkstra` or equivalent with the JavaScript driver).
-- **Excluded node types** (never traversed): `Record`, `Issue`, `Place`, `AgendaItem`.
-- **Edge weights** (lower = preferred):
-  - `CONSTRAINS`, `CAST_VOTE`, `DECIDED_BY`, `PARTY_TO`: 1 (highest-signal)
-  - `FROM_SOURCE`, `TO_TARGET`, `DISCLOSED_IN`, `UNDER_AGREEMENT`: 2
-  - `HELD_BY`, `FOR_SEAT`, `RESULT_OF`, `CONTROLLED_BY`: 3
-  - `AT_MEETING`, `AT_INSTITUTION`, `ABOUT_ITEM`, `FILED_BY`, `BY_PERSON`: 5
-  - `EVIDENCED_BY`: excluded from default pathfinding entirely (too hub-like, only useful when starting or ending at a Record).
+- **Algorithm:** weighted shortest path (Neo4j `apoc.algo.dijkstra` or equivalent via the JavaScript driver).
+- **Excluded intermediate node types** (these types may be path endpoints — start or end — but are never used as intermediate hops): `Record`, `Issue`, `Place`, `AgendaItem`.
 - **Max path length:** 6 hops.
-- **UI toggle:** a "loosen path" checkbox in the explorer toolbar sets all excluded types/edges to weight 10 and allows traversal through them. Labeled so the user knows what they asked for.
 
-When no path is found under default rules, the UI suggests "try loosen path" rather than silently returning a path through less-meaningful relationships.
+**Edge weights** (lower = preferred). Every relationship the v1 data model includes has a weight or is explicitly excluded. No silent defaults.
+
+| Weight | Relationships |
+|---|---|
+| 1 (highest signal) | `CONSTRAINS`, `CAST_VOTE`, `DECIDED_BY`, `PARTY_TO` |
+| 2 | `FROM_SOURCE`, `TO_TARGET`, `DISCLOSED_IN`, `UNDER_AGREEMENT`, `AMENDS` |
+| 3 | `HELD_BY`, `FOR_SEAT`, `RESULT_OF`, `CONTROLLED_BY`, `BY_PERSON`, `IN_ELECTION`, `FOR_ELECTION`, `FOR_PROJECT` |
+| 4 | `ABOUT_PROJECT`, `ABOUT_PROGRAM`, `ABOUT_ITEM`, `BETWEEN`, `HEARD_IN`, `AT_INSTITUTION` |
+| 5 | `AT_MEETING`, `FILED_BY`, `PART_OF` (meeting/case) |
+| excluded from default | `EVIDENCED_BY` (too hub-like to yield meaningful paths), `IN_JURISDICTION`, `RELATES_TO_ISSUE` |
+
+**UI toggle — "loosen path."** A checkbox in the explorer toolbar changes the search to:
+- Admit excluded intermediate node types as hops (weight 10).
+- Admit `EVIDENCED_BY` / `IN_JURISDICTION` / `RELATES_TO_ISSUE` as weight 10 traversals.
+- Leaves the max hop length unchanged.
+
+The checkbox is labeled and the resulting path is visibly marked `PATH VIA LOOSE MATCH` in the result panel so users never conflate tight paths with loose ones.
+
+**When no path is found** under the default rules, the UI suggests "try loosen path" rather than silently returning a less-meaningful path. If still no path, the UI shows `no path` rather than guessing.
 
 ## 6. The three graph surfaces
 
@@ -529,7 +569,7 @@ Top-down composition:
 
 | Field | Resolution rule |
 |---|---|
-| `preferred_public_url` | First non-empty of: `source_url` (if present and `http(s)://`), else the record's canonical upstream URL derived from jurisdiction source registry, else `null`. Never an internal `file://` or on-disk path. |
+| `preferred_public_url` | First non-empty of: (a) `source_url` if it starts with `http://`, `https://`, or `//` (protocol-relative — normalized to `https://` before display); (b) the record's canonical upstream URL derived from the jurisdiction source registry (`registry/{adapter}-sources.yaml`); (c) `null`. Never an internal `file://` or on-disk path. Strings whose path ends in `.pdf` without a scheme resolve through the registry. |
 | `preferred_display_artifact` | Short human label for what the user is clicking through to (e.g., `Staff report PDF`, `Minutes text`, `Committee page`). Derived from `record_type` + file extension. |
 | `artifact_paths` | Array of internal paths (raw captures on the Mac mini). **Never rendered in the UI.** Used only when the app runs locally for Stuart's own investigation mode; omitted from any Vercel deployment response. |
 | `has_public_source` | Boolean: `true` iff `preferred_public_url` is non-null. |
