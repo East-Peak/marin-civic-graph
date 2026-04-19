@@ -135,13 +135,114 @@ def build_search_terms(type_name: str, props: dict) -> str:
     return " ".join(tok.lower() for tok in tokens if tok)
 
 
+def build_search_key_fact(type_name: str, props: dict) -> str | None:
+    """Short type-specific headline for search results. Returns None if props lack key fields."""
+    if type_name == "Person":
+        seat = props.get("current_seat_display")
+        start = props.get("current_seat_start")
+        if seat and start:
+            return f"{seat} · {start}–"
+        if seat:
+            return str(seat)
+        return None
+    if type_name == "Decision":
+        title = props.get("title") or props.get("name")
+        date = props.get("decided_at")
+        if title and date:
+            return f"{title} · {date}"
+        return str(title) if title else None
+    if type_name == "Project" or type_name == "Program":
+        name = props.get("name")
+        status = props.get("status")
+        parts = [p for p in (name, status) if p]
+        return " · ".join(parts) if parts else None
+    if type_name == "Case":
+        caption = props.get("caption") or props.get("name")
+        filed = props.get("filed_at")
+        parts = [p for p in (caption, filed) if p]
+        return " · ".join(parts) if parts else None
+    if type_name == "Meeting":
+        title = props.get("title")
+        date = props.get("meeting_date")
+        inst = props.get("institution_name")
+        parts = [p for p in (title, date, inst) if p]
+        return " · ".join(parts) if parts else None
+    if type_name == "Filing":
+        ft = (props.get("filing_type") or "").replace("_", " ").title()
+        filer = props.get("filed_by_name")
+        date = props.get("signed_at")
+        parts = [p for p in (ft, filer, date) if p]
+        return " · ".join(parts) if parts else None
+    if type_name == "Committee":
+        name = props.get("name")
+        fppc = props.get("fppc_id")
+        parts = [p for p in (name, f"FPPC {fppc}" if fppc else None) if p]
+        return " · ".join(parts) if parts else None
+    if type_name == "Organization":
+        name = props.get("name")
+        subtype = props.get("subtype")
+        parts = [p for p in (name, subtype) if p]
+        return " · ".join(parts) if parts else None
+    if type_name == "Election":
+        kind = props.get("election_type", "Election")
+        date = props.get("election_date")
+        return f"{kind} · {date}" if date else str(kind)
+    if type_name == "Record":
+        rt = (props.get("record_type") or "Record").replace("_", " ").title()
+        parent_title = props.get("parent_title")
+        parent_date = props.get("parent_date")
+        parts = [p for p in (rt, parent_title, parent_date) if p]
+        return " · ".join(parts) if parts else None
+    return props.get("name") or None
+
+
+def build_search_last_activity(type_name: str, props: dict) -> str | None:
+    """Latest ISO date from linked events. props['_linked_event_dates'] is a list of ISO strings."""
+    dates = props.get("_linked_event_dates") or []
+    dates = [d for d in dates if d]
+    if not dates:
+        # Fall back to own date fields
+        for k in (
+            "decided_at", "meeting_date", "flow_date", "signed_at", "election_date",
+            "date", "effective_date", "filed_at", "captured_at", "published_at",
+        ):
+            v = props.get(k)
+            if v:
+                return str(v)
+        return None
+    return max(dates)
+
+
 def compute_search_rank(type_name: str, props: dict) -> int:
-    # Entities: 50 base + up to 30 from degree (log-scaled) + type_weight.
+    # Entities: 50 base + up to 20 from degree (log-scaled) + up to 25 recency + type_weight.
     # Records: capped at 30.
-    degree = int(props.get("degree", 0) or 0)
+    import datetime as dt
     import math
-    degree_component = min(30, int(25 * math.log1p(degree) / math.log(1000))) if degree > 0 else 0
-    base = 50 + degree_component + TYPE_WEIGHT.get(type_name, 0)
+
+    degree = int(props.get("degree", 0) or 0)
+    degree_component = min(25, int(20 * math.log1p(degree) / math.log(1000))) if degree > 0 else 0
+
+    last_activity = props.get("_last_activity") or props.get("search_last_activity")
+    recency_component = 0
+    if last_activity:
+        try:
+            la_str = str(last_activity).replace("Z", "+00:00")
+            # Handle bare YYYY-MM-DD by appending midnight UTC.
+            if "T" not in la_str and len(la_str) <= 10:
+                la = dt.datetime.fromisoformat(la_str + "T00:00:00+00:00")
+            else:
+                la = dt.datetime.fromisoformat(la_str)
+            if la.tzinfo is None:
+                la = la.replace(tzinfo=dt.timezone.utc)
+            days_ago = (dt.datetime.now(dt.timezone.utc) - la).days
+            if days_ago < 0:
+                recency_component = 25
+            else:
+                recency_component = max(0, 25 - int(25 * days_ago / 1095))
+        except (ValueError, TypeError):
+            pass
+
+    base = 50 + degree_component + recency_component + TYPE_WEIGHT.get(type_name, 0)
     if type_name == "Record":
         return max(0, min(30, degree_component + 10))
     return max(0, min(100, base))
@@ -154,7 +255,14 @@ def update_type(session: Session, type_name: str) -> int:
     MATCH (n:{type_name})
     OPTIONAL MATCH (n)-[r]-()
     WITH n, count(r) AS degree
-    RETURN n, degree
+    OPTIONAL MATCH (n)-[]-(e)
+    WHERE e:Meeting OR e:Decision OR e:MoneyFlow OR e:Filing OR e:Election
+       OR e:Proceeding OR e:Agreement OR e:Amendment OR e:Case
+    WITH n, degree, collect(DISTINCT coalesce(
+      e.meeting_date, e.decided_at, e.flow_date, e.signed_at,
+      e.election_date, e.date, e.effective_date, e.filed_at
+    )) AS raw_dates
+    RETURN n, degree, [d IN raw_dates WHERE d IS NOT NULL] AS linked_dates
     """
     records = session.run(query)
     updated = 0
@@ -163,11 +271,17 @@ def update_type(session: Session, type_name: str) -> int:
         node = record["n"]
         props = dict(node.items())
         props["degree"] = record["degree"]
+        linked = list(record["linked_dates"] or [])
+        props["_linked_event_dates"] = linked
+        last_activity = build_search_last_activity(type_name, props)
+        props["_last_activity"] = last_activity
         batch.append({
             "id": props["id"],
             "search_label": build_search_label(type_name, props),
             "search_terms": build_search_terms(type_name, props),
             "search_rank": compute_search_rank(type_name, props),
+            "search_key_fact": build_search_key_fact(type_name, props),
+            "search_last_activity": last_activity,
         })
         if len(batch) >= 500:
             _write_batch(session, type_name, batch)
@@ -186,7 +300,9 @@ def _write_batch(session: Session, type_name: str, rows: list[dict]) -> None:
         MATCH (n:{type_name} {{id: row.id}})
         SET n.search_label = row.search_label,
             n.search_terms = row.search_terms,
-            n.search_rank = row.search_rank
+            n.search_rank = row.search_rank,
+            n.search_key_fact = row.search_key_fact,
+            n.search_last_activity = row.search_last_activity
         """,
         rows=rows,
     )
