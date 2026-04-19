@@ -56,6 +56,32 @@ describe("GET /api/search", () => {
     expect(res.status).toBe(400);
   });
 
+  it("surfaces search_key_fact and search_last_activity from the node", async () => {
+    (runQuery as ReturnType<typeof vi.fn>).mockResolvedValueOnce([
+      {
+        get: (k: string) =>
+          ({
+            results: [
+              fakeNode({
+                _labels: ["Filing"],
+                id: "filing-kate-colin-form-700-2024",
+                search_label: "Form 700 · Kate Colin · 2024-03-01",
+                search_key_fact: "Form 700 · Kate Colin · 2024-03-01",
+                search_last_activity: "2024-03-01",
+                search_rank: 72,
+              }),
+            ],
+          })[k],
+      },
+    ]);
+
+    const req = new Request("http://localhost/api/search?q=form+700");
+    const res = await GET(req);
+    const body = await res.json();
+    expect(body.results[0].key_fact).toBe("Form 700 · Kate Colin · 2024-03-01");
+    expect(body.results[0].last_activity).toBe("2024-03-01");
+  });
+
   it("escapes Lucene reserved chars so queries like 'kate:colin' don't 500", async () => {
     (runQuery as ReturnType<typeof vi.fn>).mockResolvedValueOnce([
       { get: () => [] },
