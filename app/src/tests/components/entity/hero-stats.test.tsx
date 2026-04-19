@@ -18,7 +18,7 @@ function makeEntity(overrides: Partial<EntityPayload> = {}): EntityPayload {
 }
 
 describe("HeroStats", () => {
-  it("renders formatted money, decisions, and records for a Project", () => {
+  it("renders money, decisions, counterparties, evidence for a Project (§7.1)", () => {
     render(
       <HeroStats
         entity={makeEntity({
@@ -26,6 +26,7 @@ describe("HeroStats", () => {
             id: "project-merrydale",
             total_money: 15337953,
             decisions_count: 6,
+            counterparties_count: 4,
             records_count: 20,
           },
         })}
@@ -33,10 +34,12 @@ describe("HeroStats", () => {
     );
     expect(screen.getByText("$15,337,953")).toBeInTheDocument();
     expect(screen.getByText("6")).toBeInTheDocument();
+    expect(screen.getByText("4")).toBeInTheDocument();
     expect(screen.getByText("20")).toBeInTheDocument();
     expect(screen.getByText("money")).toBeInTheDocument();
     expect(screen.getByText("decisions")).toBeInTheDocument();
-    expect(screen.getByText("records")).toBeInTheDocument();
+    expect(screen.getByText("counterparties")).toBeInTheDocument();
+    expect(screen.getByText("evidence")).toBeInTheDocument();
   });
 
   it("em-dashes values whose props are missing", () => {
@@ -48,11 +51,11 @@ describe("HeroStats", () => {
       />,
     );
     const dashes = screen.getAllByText("—");
-    // three Project stats, all missing
-    expect(dashes.length).toBe(3);
+    // Four Project stats (money, decisions, counterparties, evidence), all missing.
+    expect(dashes.length).toBe(4);
   });
 
-  it("renders a Person's current seat, filings, and votes strip", () => {
+  it("renders a Person's current seat, service window, filings strip (§7.1)", () => {
     render(
       <HeroStats
         entity={makeEntity({
@@ -62,15 +65,20 @@ describe("HeroStats", () => {
           properties: {
             id: "person-kate-colin",
             current_seat_display: "Mayor — San Rafael",
+            current_seat_started_at: "2023-11-28",
+            current_seat_ended_at: "2027-12-01",
             filings_count: 12,
-            votes_count: 94,
           },
         })}
       />,
     );
     expect(screen.getByText("Mayor — San Rafael")).toBeInTheDocument();
+    expect(screen.getByText("2023-11-28 – 2027-12-01")).toBeInTheDocument();
     expect(screen.getByText("12")).toBeInTheDocument();
-    expect(screen.getByText("94")).toBeInTheDocument();
+    // Labels present.
+    expect(screen.getByText("current seat")).toBeInTheDocument();
+    expect(screen.getByText("service")).toBeInTheDocument();
+    expect(screen.getByText("filings")).toBeInTheDocument();
   });
 
   it("returns null for Tier 2 types (e.g. MoneyFlow)", () => {
@@ -95,8 +103,8 @@ describe("HeroStats", () => {
         })}
       />,
     );
-    // money value is em-dash, decisions and records also em-dash = 3 dashes
+    // money → em-dash; decisions, counterparties, evidence also em-dash = 4 total.
     const dashes = screen.getAllByText("—");
-    expect(dashes.length).toBe(3);
+    expect(dashes.length).toBe(4);
   });
 });

@@ -222,9 +222,15 @@ function sv(v: unknown): string {
  * Tier 2 types return an empty array — hero-stats.tsx renders nothing in that
  * case so the layout collapses cleanly.
  *
+ * Per spec §7.1 item 4 — each Tier 1 type has an authoritative stat list
+ * with every field represented. Missing props em-dash ("—") gracefully;
+ * the shape stays identical page-to-page so the layout doesn't reflow
+ * as the graph is enriched.
+ *
  * Several derived counts (`decisions_count`, `records_count`, `total_money`,
  * …) are not yet projected onto live AuraDB nodes — those will fall back to
- * "—" until the Plan 3 ingestion work lands.
+ * "—" until the Plan 3 ingestion work lands. The em-dashed slots remain
+ * structural placeholders so nothing moves when the counts arrive.
  */
 export function heroStatsForEntity(
   type: NodeType,
@@ -233,42 +239,68 @@ export function heroStatsForEntity(
   switch (type) {
     case "Project":
     case "Program":
+      // Spec: total money, linked decisions, counterparties, evidence count.
       return [
         { label: "money", value: formatMoney(props.total_money) },
         { label: "decisions", value: sv(props.decisions_count) },
-        { label: "records", value: sv(props.records_count) },
+        { label: "counterparties", value: sv(props.counterparties_count) },
+        { label: "evidence", value: sv(props.records_count ?? props.evidence_count) },
       ];
     case "Person":
+      // Spec: current seat, SeatService window, filings count.
       return [
         { label: "current seat", value: sv(props.current_seat_display) },
+        {
+          label: "service",
+          value: period(
+            props.current_seat_started_at ?? props.service_start_date,
+            props.current_seat_ended_at ?? props.service_end_date,
+          ) ?? "—",
+        },
         { label: "filings", value: sv(props.filings_count) },
-        { label: "votes", value: sv(props.votes_count) },
       ];
     case "Decision":
+      // Spec: decided-at date, vote summary, linked agenda item.
       return [
         { label: "decided", value: sv(props.decided_at) },
         { label: "vote", value: sv(props.vote_summary) },
+        { label: "agenda item", value: sv(props.agenda_item_number ?? props.item_number) },
       ];
     case "Case":
+      // Spec: filed-at, court, status, constrains count.
       return [
         { label: "filed", value: sv(props.filed_at) },
+        { label: "court", value: sv(props.court_name ?? props.court) },
         { label: "status", value: sv(props.status) },
-        { label: "proceedings", value: sv(props.proceedings_count) },
+        { label: "constrains", value: sv(props.constrains_count) },
       ];
     case "Meeting":
+      // Spec: date, institution, agenda-items count, decisions count.
       return [
         { label: "date", value: sv(props.meeting_date) },
+        { label: "institution", value: sv(props.institution_name) },
         { label: "agenda items", value: sv(props.agenda_items_count) },
         { label: "decisions", value: sv(props.decisions_count) },
       ];
     case "Filing":
+      // Spec: filing type, signed-at, period, actor.
       return [
         { label: "type", value: sv(props.filing_type) },
         { label: "signed", value: sv(props.signed_at) },
+        { label: "period", value: period(props.period_start, props.period_end) ?? "—" },
+        {
+          label: "actor",
+          value: sv(
+            props.filed_by_name ?? props.filer_name ?? props.candidate_name,
+          ),
+        },
       ];
     case "Committee":
+      // Spec: fppc_id, candidate, elections, money totals.
       return [
         { label: "fppc id", value: sv(props.fppc_id) },
+        { label: "candidate", value: sv(props.candidate_name) },
+        { label: "elections", value: sv(props.elections_count) },
         { label: "money in", value: formatMoney(props.total_money_in) },
       ];
     default:
