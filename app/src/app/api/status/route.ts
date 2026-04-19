@@ -21,15 +21,15 @@ export async function GET() {
   try {
     const records = await runQuery(
       `
+      OPTIONAL MATCH (s:_SyncState {kind: 'ingest'})
+      WITH s
       MATCH (n)
-      WITH count(n) AS node_count
+      WITH s, count(n) AS node_count
       MATCH ()-[r]->()
-      WITH node_count, count(r) AS edge_count
+      WITH s, node_count, count(r) AS edge_count
       MATCH (p:Place) WHERE p.place_type IN ['city', 'county']
-      WITH node_count, edge_count, count(p) AS jurisdiction_count
-      OPTIONAL MATCH (n) WHERE n.captured_at IS NOT NULL
-      RETURN node_count, edge_count, jurisdiction_count,
-             toString(max(n.captured_at)) AS ingest_at
+      RETURN node_count, edge_count, count(p) AS jurisdiction_count,
+             s.updated_at AS ingest_at
       `,
     );
 
