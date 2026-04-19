@@ -721,10 +721,38 @@ No node type is unranked. When the 40-cap hits, the overflow footer appears with
 
 **Expand contract.** Clicking a node (not the focus — clicking focus is a no-op; clicking any other node) loads that node's 1-hop neighborhood into the current view. The neighborhood is constrained by:
 - The current edge filters and node filters. Universal edges and excluded node types (Record/Place/Issue/AgendaItem) are only traversed when explicitly enabled via the toolbar. If not enabled, they are not followed even if technically reachable in 1 hop.
-- A **per-expand cap of 20 nodes**, selected using the Phase-2 quota table but with halved per-type quotas (MoneyFlow: 4, Decision: 4, Filing: 3, Meeting: 3, Person: 3, Organization: 2, AgendaItem: 2, Amendment: 1, Proceeding: 2, Election: 1, Candidacy: 1). If more candidates exist, the UI shows a per-node overflow chip `+{N}` and clicking that node again loads the next 20.
+- A **per-expand cap of 20 nodes**, selected using **the complete Tier 2 focused-load ordering table above** (all 21 types). Per-type quotas for Expand are half the radial-hero Phase-2 quotas where defined, and a default of 2 for types only in the Tier 2 table. Explicit quotas:
+
+  | Type | Expand quota | Expand-all (2-hop) quota |
+  |---|---|---|
+  | MoneyFlow | 4 | 8 |
+  | Decision | 4 | 8 |
+  | Case | 2 | 4 |
+  | Project | 2 | 4 |
+  | Program | 2 | 4 |
+  | Agreement | 2 | 4 |
+  | Amendment | 1 | 2 |
+  | Filing | 3 | 6 |
+  | Committee | 2 | 4 |
+  | Election | 1 | 2 |
+  | Candidacy | 1 | 2 |
+  | Meeting | 3 | 6 |
+  | Proceeding | 2 | 4 |
+  | Person | 3 | 6 |
+  | Organization | 2 | 4 |
+  | Seat | 2 | 4 |
+  | SeatService | 2 | 4 |
+  | AgendaItem | 2 | 4 |
+  | Record | 2 | 4 |
+  | Place | 1 | 2 |
+  | Issue | 1 | 2 |
+
+  Aggregate caps (20 for Expand, 80 for Expand-all) are enforced after per-type quotas — lower-priority types (per Tier 2 ordering) drop first when the aggregate fills.
+
+- If more candidates of a given type exist past the per-expand cap, the UI shows a per-node overflow chip `+{N}` and clicking that node again loads the next 20 (new batch, subject to same rules).
 - Dedup against already-loaded nodes.
 
-**Right-click → "expand all (2 hops)"** on a node runs a 2-hop expansion capped at 80 nodes with the current filters and full Phase-2 quotas. The hop-limit slider in the toolbar clamps this action (setting it to `1` removes "expand all" from the right-click menu).
+**Right-click → "expand all (2 hops)"** on a node runs a 2-hop expansion capped at 80 nodes using the `Expand-all (2-hop) quota` column above and the same filters. The hop-limit slider in the toolbar clamps this action (setting it to `1` removes "expand all" from the right-click menu).
 
 **Filter-change contract.** Changing an edge or node filter applies immediately to already-loaded nodes (shows/hides) and to future expansions. It does NOT re-run the focused-load query — the initial 40-node subset stays loaded (hidden nodes remain in memory so re-enabling is instant). Enabling a previously-hidden type does not pull in new nodes of that type that were not in the original 2-hop neighborhood — to pull new nodes, the user clicks to expand.
 
