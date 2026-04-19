@@ -3,16 +3,15 @@
 // Composition order:
 //   StatusBar → NavHeader → HeroTitle
 //   → (Tier 1) HeroStats
-//   → main grid: (Tier 1) RadialHero 60-70% + FactsPanel 30-40%
-//                (Tier 2)                            FactsPanel full width
+//   → main grid: (Tier 1) RadialHero 70% + FactsPanel 30%
+//                (Tier 2)                  FactsPanel full width
 //   → Connections
 //   → (Tier 1) TimelineRibbon
 //   → EditorialCallout (optional)
 //   → EvidenceDrawer
 //
-// Batch E ships HeroStats / RadialHero / TimelineRibbon as stubs; Batch F
-// replaces them. Stub rendering is kept inside this composer so Batch F can
-// swap the imports without touching the layout.
+// Batch F completes the Tier 1 picture: HeroStats, RadialHero (Cytoscape
+// concentric), and TimelineRibbon are real.
 
 import type { EntityPayload } from "@/lib/server/entity-loader";
 import type { NodeType } from "@/lib/type-display";
@@ -80,13 +79,20 @@ export async function EntityPage({ entity }: { entity: EntityPayload }) {
       <HeroTitle entity={entity} />
       {tier1 && <HeroStats entity={entity} />}
 
-      <div className="mx-[18px] mt-4 grid gap-4 lg:grid-cols-[minmax(0,_1fr)_360px]">
-        {tier1 ? (
-          <div className="border border-border-primary bg-bg">
+      <div
+        className="mx-[18px] mt-4 grid gap-4"
+        style={{ gridTemplateColumns: tier1 ? "7fr 3fr" : "1fr" }}
+      >
+        {tier1 && (
+          <div
+            className="relative min-h-[420px] rounded border border-border-primary"
+            style={{
+              background:
+                "radial-gradient(ellipse at center,#121821 0%,#05070a 90%)",
+            }}
+          >
             <RadialHero entity={entity} />
           </div>
-        ) : (
-          <div />
         )}
         <div>
           <FactsPanel entity={entity} />
