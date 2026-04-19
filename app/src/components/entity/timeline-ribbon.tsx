@@ -1,9 +1,8 @@
 // Tier 1 horizontal temporal ribbon per spec §7.1 item 8 + §5.4.
 //
-// Server component (no client hooks) so it can consume the server-only
-// effectiveEventDate. Each neighbor with a non-null effective date renders
-// as a small diamond on a linear time axis; year boundaries get VT323 tick
-// labels. Clicking a diamond navigates to that neighbor's entity page.
+// Server component (no client hooks). Each neighbor arrives from the loader
+// with a real `event_date` (null for durable types or missing properties);
+// the focus entity contributes its own `focus_event_date` if dated.
 //
 // Batch F is read-only — no slider, no filter interaction. That comes later
 // once we wire the explorer time slider against the same temporal contract.
@@ -11,11 +10,14 @@
 import Link from "next/link";
 import { palette } from "@/lib/palette";
 import type { EntityPayload, Neighbor } from "@/lib/server/entity-loader";
-import { effectiveEventDate } from "@/lib/server/entity-temporal";
 import { colorClassForType } from "@/components/graph/obsidian-style";
 
 type DatedEvent = {
-  neighbor: Neighbor;
+  /** null ⇒ the focus entity itself (anchors the ribbon). */
+  neighbor: Neighbor | null;
+  label: string;
+  route: string | null;
+  type: string;
   date: string;
   time: number; // ms since epoch
 };
@@ -55,33 +57,35 @@ function colorForType(type: string): string {
 
 function collectEvents(entity: EntityPayload): DatedEvent[] {
   const out: DatedEvent[] = [];
+  // Focus's own effective date (anchors the ribbon when the focus itself is
+  // a dated event — Meeting, Decision, Filing, …). Never fabricated from id.
+  if (entity.focus_event_date) {
+    const t = parseDate(entity.focus_event_date);
+    if (t != null) {
+      out.push({
+        neighbor: null,
+        label: entity.label,
+        route: null,
+        type: entity.type,
+        date: entity.focus_event_date,
+        time: t,
+      });
+    }
+  }
   for (const n of entity.neighbors) {
-    const d = effectiveEventDate(n.type, { id: n.id });
-    // entity-loader doesn't carry full props on neighbors, so the per-date
-    // projection above will largely return null. The common-useful signal we
-    // have is the focus's own event date, plus what props exist. Inline a
-    // second pass using any rich fields on the neighbor if present.
-    const fallback = d ?? deriveDateFromNeighbor(n);
-    if (!fallback) continue;
-    const t = parseDate(fallback);
+    if (!n.event_date) continue;
+    const t = parseDate(n.event_date);
     if (t == null) continue;
-    out.push({ neighbor: n, date: fallback, time: t });
+    out.push({
+      neighbor: n,
+      label: n.label,
+      route: n.route,
+      type: n.type,
+      date: n.event_date,
+      time: t,
+    });
   }
   return out.sort((a, b) => a.time - b.time);
-}
-
-/**
- * Neighbors come in from the loader with minimal properties (just id, type,
- * label, route, ring, role). The date contract in §5.4 expects full props;
- * we don't have those per-neighbor in Batch F. Embed a best-effort date
- * parse from the neighbor id suffix (e.g. `decision-2024-08-19-...`) when
- * present, so the ribbon renders *something* for dated-id patterns.
- */
-function deriveDateFromNeighbor(n: Neighbor): string | null {
-  // Ids frequently encode YYYY-MM-DD right after the type prefix.
-  const match = n.id.match(/(\d{4}-\d{2}-\d{2})/);
-  if (match) return match[1];
-  return null;
 }
 
 function yearTicks(minMs: number, maxMs: number): number[] {
@@ -189,18 +193,16 @@ export function TimelineRibbon({ entity }: { entity: EntityPayload }) {
             </g>
           );
         })}
-        {/* Event diamonds (wrapped in anchor for navigation) */}
+        {/* Event diamonds (wrapped in anchor for navigation). The focus
+            entity itself may be a dated event — its diamond is un-linked. */}
         {events.map((e) => {
           const x = xFor(e.time);
-          const color = colorForType(e.neighbor.type);
-          return (
-            <a
-              key={e.neighbor.id}
-              href={e.neighbor.route}
-              data-testid="timeline-event"
-            >
+          const color = colorForType(e.type);
+          const key = e.neighbor ? e.neighbor.id : `focus-${e.date}`;
+          const diamond = (
+            <>
               <title>
-                {e.neighbor.label} · {e.date}
+                {e.label} · {e.date}
               </title>
               <path
                 d={diamondPath(x, AXIS_Y, DIAMOND_SIZE)}
@@ -209,19 +211,40 @@ export function TimelineRibbon({ entity }: { entity: EntityPayload }) {
                 strokeWidth={0.5}
                 opacity={0.9}
               />
-            </a>
+            </>
+          );
+          if (e.route) {
+            return (
+              <a key={key} href={e.route} data-testid="timeline-event">
+                {diamond}
+              </a>
+            );
+          }
+          return (
+            <g key={key} data-testid="timeline-event-focus">
+              {diamond}
+            </g>
           );
         })}
       </svg>
       {/* Accessible textual fallback (also makes the links testable in jsdom) */}
       <ul className="sr-only">
-        {events.map((e) => (
-          <li key={`sr-${e.neighbor.id}`}>
-            <Link href={e.neighbor.route}>
-              {e.neighbor.label} · {e.date}
-            </Link>
-          </li>
-        ))}
+        {events.map((e) => {
+          const key = e.neighbor ? `sr-${e.neighbor.id}` : `sr-focus-${e.date}`;
+          return (
+            <li key={key}>
+              {e.route ? (
+                <Link href={e.route}>
+                  {e.label} · {e.date}
+                </Link>
+              ) : (
+                <span>
+                  {e.label} · {e.date}
+                </span>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </section>
   );

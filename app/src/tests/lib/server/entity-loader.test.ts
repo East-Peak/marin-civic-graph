@@ -58,6 +58,11 @@ function installCypherDispatcher(
 
 beforeEach(() => {
   mockRunQuery.mockReset();
+  // Default fallback: return [] for any call not explicitly queued — keeps
+  // existing tests from breaking when the loader issues extra follow-up
+  // queries (neighbor-total, neighbor event-dates, …). The `mockResolvedValueOnce`
+  // queue is still consumed first, so explicit test expectations win.
+  mockRunQuery.mockImplementation(async () => [] as unknown);
 });
 
 describe("loadEntity", () => {
@@ -81,7 +86,7 @@ describe("loadEntity", () => {
     expect(mockRunQuery.mock.calls[0][1]).toEqual({ id: "seatservice-foo" });
   });
 
-  it("Tier 1 focus triggers must-show + phase-2 + edges + neighbor-total queries (5 total runQuery calls)", async () => {
+  it("Tier 1 focus triggers must-show + phase-2 + edges + neighbor-total + neighbor-dates queries (6 total runQuery calls)", async () => {
     const focusId = "person-kate-colin";
     mockRunQuery.mockResolvedValueOnce([focusRecord(focusId, ["Person"])]); // focus
     mockRunQuery.mockResolvedValueOnce([
@@ -112,8 +117,8 @@ describe("loadEntity", () => {
 
     const result = await loadEntity("person", "kate-colin");
     expect(result).not.toBeNull();
-    // focus + must-show + phase-2 + edges + neighbor-total = 5 calls.
-    expect(mockRunQuery).toHaveBeenCalledTimes(5);
+    // focus + must-show + phase-2 + edges + neighbor-total + neighbor-dates = 6 calls.
+    expect(mockRunQuery).toHaveBeenCalledTimes(6);
     expect(result?.neighbors).toHaveLength(2);
     expect(result?.neighbors[0].role).toBe("must-show");
     expect(result?.neighbors[1].role).toBe("phase-2");
@@ -206,8 +211,8 @@ describe("loadEntity", () => {
 
     const result = await loadEntity("person", "high-degree");
     expect(result?.neighbors).toHaveLength(40);
-    // focus + must-show + edges + neighbor-total = 4 calls (no phase-2).
-    expect(mockRunQuery).toHaveBeenCalledTimes(4);
+    // focus + must-show + edges + neighbor-total + neighbor-dates = 5 calls (no phase-2).
+    expect(mockRunQuery).toHaveBeenCalledTimes(5);
   });
 
   it("neighbor_total uses the 2-hop count query (not the displayed neighbor count)", async () => {

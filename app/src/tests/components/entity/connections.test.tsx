@@ -12,6 +12,7 @@ function makeEntity(overrides: Partial<EntityPayload> = {}): EntityPayload {
     neighbors: [],
     edges: [],
     neighbor_total: 0,
+    focus_event_date: null,
     ...overrides,
   };
 }
@@ -27,6 +28,7 @@ describe("Connections", () => {
           route: "/meeting/sr-2024-08-19",
           ring: 1,
           role: "must-show",
+          event_date: null,
         },
         {
           id: "meeting-sr-2024-09-16",
@@ -35,6 +37,7 @@ describe("Connections", () => {
           route: "/meeting/sr-2024-09-16",
           ring: 1,
           role: "must-show",
+          event_date: null,
         },
         {
           id: "org-san-rafael-city-council",
@@ -43,6 +46,7 @@ describe("Connections", () => {
           route: "/organization/san-rafael-city-council",
           ring: 1,
           role: "must-show",
+          event_date: null,
         },
       ],
       edges: [
@@ -88,6 +92,7 @@ describe("Connections", () => {
           route: "/meeting/x",
           ring: 1,
           role: "must-show",
+          event_date: null,
         },
       ],
       edges: [
@@ -115,6 +120,7 @@ describe("Connections", () => {
           route: "/meeting/x",
           ring: 1,
           role: "must-show",
+          event_date: null,
         },
       ],
       edges: [

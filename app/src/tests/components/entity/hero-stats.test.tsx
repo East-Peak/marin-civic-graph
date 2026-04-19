@@ -12,6 +12,7 @@ function makeEntity(overrides: Partial<EntityPayload> = {}): EntityPayload {
     neighbors: [],
     edges: [],
     neighbor_total: 0,
+    focus_event_date: null,
     ...overrides,
   };
 }

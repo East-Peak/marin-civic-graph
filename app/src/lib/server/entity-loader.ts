@@ -27,6 +27,7 @@ import {
   buildEdgesAmongSelectedQuery,
   buildTier2NeighborhoodQuery,
 } from "@/lib/server/entity-queries";
+import { effectiveEventDate } from "@/lib/server/entity-temporal";
 import { urlSegmentForType, type NodeType } from "@/lib/type-display";
 
 // ---------------------------------------------------------------------------
@@ -42,6 +43,13 @@ export type Neighbor = {
   route: string; // /{type-url}/{slug}
   ring: 1 | 2 | 3;
   role: NeighborRole;
+  /**
+   * ISO date (or date-time) for the neighbor's effective event, per
+   * entity-temporal.ts / spec §5.4. `null` for durable types (Person,
+   * Organization, …) and for any neighbor that lacks a dated property.
+   * The TimelineRibbon consumes this — never an id-regex fallback.
+   */
+  event_date: string | null;
 };
 
 export type EdgeStyle = "governance" | "money" | "legal-constrains";
@@ -62,6 +70,12 @@ export type EntityPayload = {
   edges: EntityEdge[];
   /** Total 2-hop neighborhood size for the overflow footer (§5.1.1). */
   neighbor_total: number;
+  /**
+   * Effective event date for the focus entity (per §5.4). Anchors the
+   * timeline ribbon when the focus itself is a dated event (Meeting,
+   * Decision, Filing, …). Null for durable types (Person, Project, …).
+   */
+  focus_event_date: string | null;
 };
 
 // ---------------------------------------------------------------------------
@@ -249,6 +263,9 @@ function rowToNeighbor(row: NeighborRowRaw): Neighbor | null {
     route: routeFor(row.id, type),
     ring,
     role: row.role,
+    // Date is populated in a second pass (fetchNeighborEventDates); leave
+    // null here so the loader never emits a Neighbor without the field.
+    event_date: null,
   };
 }
 
@@ -321,6 +338,87 @@ async function runPhase2WithTimeout(
     }
     throw err;
   }
+}
+
+/**
+ * Fetch the date-bearing properties for the given neighbor ids, and project
+ * each id to its effectiveEventDate (per §5.4 / entity-temporal.ts). Returns
+ * a map of id → ISO date string (or null for durable/dateless types).
+ *
+ * This feeds the TimelineRibbon directly — it replaces the old id-regex
+ * fabrication that would mis-date neighbors with incidental date-shaped
+ * substrings in their ids.
+ */
+async function fetchNeighborEventDates(
+  neighbors: Pick<Neighbor, "id" | "type">[],
+): Promise<Map<string, string | null>> {
+  const out = new Map<string, string | null>();
+  if (neighbors.length === 0) return out;
+
+  // Only query for neighbors whose type can carry an event date — the
+  // durable-type branch in effectiveEventDate returns null unconditionally.
+  const datedNeighbors = neighbors.filter((n) => {
+    // Cheap pre-filter: if the type's entry in entity-temporal would return
+    // null regardless of props, skip the DB fetch.
+    const dateless = effectiveEventDate(n.type, {}) === null && n.type !== "Meeting" &&
+      n.type !== "Decision" && n.type !== "MoneyFlow" && n.type !== "Filing" &&
+      n.type !== "Election" && n.type !== "Proceeding" && n.type !== "Agreement" &&
+      n.type !== "Amendment" && n.type !== "Case" && n.type !== "AgendaItem" &&
+      n.type !== "Record" && n.type !== "SeatService";
+    return !dateless;
+  });
+  if (datedNeighbors.length === 0) {
+    // All durable — the caller doesn't need to run a query.
+    return out;
+  }
+
+  const ids = datedNeighbors.map((n) => n.id);
+  // Pull every property that effectiveEventDate may consult, across all
+  // dated types.
+  const cypher = `
+    MATCH (n) WHERE n.id IN $ids
+    RETURN n.id AS id,
+      n.meeting_date AS meeting_date,
+      n.decided_at AS decided_at,
+      n.flow_date AS flow_date,
+      n.signed_at AS signed_at,
+      n.election_date AS election_date,
+      n.proceeding_date AS proceeding_date,
+      n.date AS date,
+      n.effective_date AS effective_date,
+      n.filed_at AS filed_at,
+      n.parent_meeting_date AS parent_meeting_date,
+      n.published_at AS published_at,
+      n.captured_at AS captured_at,
+      n.started_at AS started_at,
+      n.start_date AS start_date
+  `;
+  const records = ((await runQuery(cypher, { ids })) ?? []) as unknown as Neo4jRecordLike[];
+  const propsById = new Map<string, Record<string, unknown>>();
+  for (const r of records) {
+    const id = String(r.get("id"));
+    propsById.set(id, {
+      meeting_date: r.get("meeting_date") ?? undefined,
+      decided_at: r.get("decided_at") ?? undefined,
+      flow_date: r.get("flow_date") ?? undefined,
+      signed_at: r.get("signed_at") ?? undefined,
+      election_date: r.get("election_date") ?? undefined,
+      proceeding_date: r.get("proceeding_date") ?? undefined,
+      date: r.get("date") ?? undefined,
+      effective_date: r.get("effective_date") ?? undefined,
+      filed_at: r.get("filed_at") ?? undefined,
+      parent_meeting_date: r.get("parent_meeting_date") ?? undefined,
+      published_at: r.get("published_at") ?? undefined,
+      captured_at: r.get("captured_at") ?? undefined,
+      started_at: r.get("started_at") ?? undefined,
+      start_date: r.get("start_date") ?? undefined,
+    });
+  }
+  for (const n of datedNeighbors) {
+    const props = propsById.get(n.id) ?? {};
+    out.set(n.id, effectiveEventDate(n.type, props));
+  }
+  return out;
 }
 
 /**
@@ -406,6 +504,7 @@ async function loadTier2Neighborhood(
       route: routeFor(id, type),
       ring: 1,
       role: "must-show",
+      event_date: null, // populated by fetchNeighborEventDates in loadEntity
     });
     const relType = String(r.get("relationship"));
     const startId = String(r.get("start_id"));
@@ -470,35 +569,52 @@ export async function loadEntity(
 
     // Query 3 — edges among all selected nodes (focus + neighbors).
     // Query 4 — true 2-hop neighborhood size for the overflow footer.
-    // Both run in parallel; neighbor_total falls back to the displayed
-    // count if the sizing query fails (see §5.1.1 overflow footer).
-    const [edges, totalCount] = await Promise.all([
+    // Query 5 — event dates for each dated neighbor (feeds the timeline
+    // ribbon; no more id-regex fabrication per Codex round 1 fix 6).
+    // All three run in parallel.
+    const [edges, totalCount, dateByNeighborId] = await Promise.all([
       runEdgesAmongSelected([id, ...neighbors.map((n) => n.id)]),
       runNeighborTotal(id),
+      fetchNeighborEventDates(neighbors),
     ]);
+    const neighborsWithDates = neighbors.map((n) => ({
+      ...n,
+      event_date: dateByNeighborId.get(n.id) ?? null,
+    }));
+    const focusEventDate = effectiveEventDate(type, focus.properties);
 
     return {
       id,
       type,
       properties: focus.properties,
       label,
-      neighbors,
+      neighbors: neighborsWithDates,
       edges,
       neighbor_total: totalCount ?? neighbors.length,
+      focus_event_date: focusEventDate,
     };
   }
 
   // Tier 2 path — simple 1-hop neighborhood.
   const { neighbors, edges } = await loadTier2Neighborhood(id, type);
-  const totalCount = await runNeighborTotal(id);
+  const [totalCount, dateByNeighborId] = await Promise.all([
+    runNeighborTotal(id),
+    fetchNeighborEventDates(neighbors),
+  ]);
+  const neighborsWithDates = neighbors.map((n) => ({
+    ...n,
+    event_date: dateByNeighborId.get(n.id) ?? null,
+  }));
+  const focusEventDate = effectiveEventDate(type, focus.properties);
 
   return {
     id,
     type,
     properties: focus.properties,
     label,
-    neighbors,
+    neighbors: neighborsWithDates,
     edges,
     neighbor_total: totalCount ?? neighbors.length,
+    focus_event_date: focusEventDate,
   };
 }
