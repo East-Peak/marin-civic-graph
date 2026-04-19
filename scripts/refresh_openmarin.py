@@ -9,6 +9,7 @@ Runs, in order:
   4. scripts/build_catalog.py             (bake per-type counts to catalog.json)
   5. scripts/build_signature_subgraphs.py (build homepage bundle JSON)
   6. scripts/update_sync_state.py         (stamp :_SyncState for INGEST freshness)
+  7. app/scripts/copy-subgraphs.mjs       (publish freshly-built bundles + catalog into app/public/)
 
 Exits non-zero if any step fails. Call this after every ingestion run so the
 frontend's baked artifacts and freshness timestamps stay correct.
@@ -24,7 +25,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
-STEPS = [
+PYTHON_STEPS = [
     "scripts/apply_search_index.py",
     "scripts/build_search_properties.py",
     "scripts/build_record_preferred_urls.py",
@@ -33,6 +34,12 @@ STEPS = [
     "scripts/update_sync_state.py",
 ]
 
+# Final step: copy the freshly-built JSON artifacts into app/public/ so the
+# Next.js app actually serves the new catalog / subgraphs / threads registry.
+# Without this, refresh updates data/ but app/public/ stays stale until
+# npm run dev or npm run build triggers the prebuild copy.
+NODE_STEP = "app/scripts/copy-subgraphs.mjs"
+
 
 def main() -> int:
     missing = [v for v in ("NEO4J_URI", "NEO4J_USER", "NEO4J_PASSWORD") if not os.environ.get(v)]
@@ -40,7 +47,7 @@ def main() -> int:
         print(f"error: missing env vars: {', '.join(missing)}", file=sys.stderr)
         return 2
 
-    for step in STEPS:
+    for step in PYTHON_STEPS:
         script = REPO_ROOT / step
         if not script.exists():
             print(f"error: {script} not found", file=sys.stderr)
@@ -51,6 +58,17 @@ def main() -> int:
             print(f"✗ {step} failed (exit {result.returncode})", file=sys.stderr)
             return result.returncode
         print(f"✓ {step}", flush=True)
+
+    node_script = REPO_ROOT / NODE_STEP
+    if not node_script.exists():
+        print(f"error: {node_script} not found", file=sys.stderr)
+        return 2
+    print(f"\n▶ {NODE_STEP}", flush=True)
+    result = subprocess.run(["node", str(node_script)], cwd=REPO_ROOT)
+    if result.returncode != 0:
+        print(f"✗ {NODE_STEP} failed (exit {result.returncode})", file=sys.stderr)
+        return result.returncode
+    print(f"✓ {NODE_STEP}", flush=True)
 
     print("\nAll refresh steps completed.")
     return 0
