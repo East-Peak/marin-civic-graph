@@ -50,3 +50,9 @@ body {
   --color-node-project-program: var(--color-node-project-program);
   --color-node-generic: var(--color-node-generic);
 }
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
