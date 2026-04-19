@@ -45,7 +45,7 @@ async function fetchStatus(): Promise<StatusResponse> {
 
 async function fetchCatalog(): Promise<CatalogResponse> {
   try {
-    const res = await fetch(`${process.env.APP_URL ?? "http://localhost:3000"}/api/catalog`, {
+    const res = await fetch(`${process.env.APP_URL ?? "http://localhost:3000"}/catalog.json`, {
       cache: "no-store",
     });
     return (await res.json()) as CatalogResponse;
