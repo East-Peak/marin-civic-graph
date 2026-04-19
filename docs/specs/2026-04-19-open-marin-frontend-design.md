@@ -140,7 +140,13 @@ Full-width below the header, inside the homepage grid. Plex Mono placeholder wit
 
 Search matches against `search_label` and `search_terms` with prefix-match bias; ties broken by `search_rank DESC`, then `id ASC`. Exact `id` matches bypass ranking.
 
-Indexed types (14): `Person`, `Organization`, `Decision`, `Project`, `Program`, `Case`, `Meeting`, `Filing`, `Committee`, `Agreement`, `Amendment`, `Election`, `Place`, `Issue`. **Records are excluded** from general search. A checkbox in the results page toggles `include records` for the rare case where Record IDs are needed.
+Indexed types (14): `Person`, `Organization`, `Decision`, `Project`, `Program`, `Case`, `Meeting`, `Filing`, `Committee`, `Agreement`, `Amendment`, `Election`, `Place`, `Issue`. These types form the default search corpus.
+
+**Records as a secondary corpus.** `Record` is indexed identically but excluded from default results. When `include_records=true`:
+- `Record.search_label` — one-line display, e.g. `"Staff report · Resolution 15336 · 2024-08-19"`, derived from `record_type` + linked parent's date.
+- `Record.search_terms` — concatenation of `record_type`, the record's `title` if present, parent Meeting/Decision/Project/Case names, `source_url` host, and any extracted OCR/metadata tokens the ingestion layer surfaces.
+- `Record.search_rank` — capped at **30** by ingestion time (default 20). This ceiling is below the entity minimum so an entity match always outranks a Record match of equivalent label-match strength. Ties broken by `captured_at DESC`, then `id ASC`.
+- When `include_records=true`, results render as a **section divider**: entities above, `records` header, then Records. UI never interleaves.
 
 **Single backend for all three surfaces.** Homepage search, command palette, and `/search?q=` results all call `GET /api/search?q=...&include_records=bool`. The palette may cache recent queries client-side for snappiness, but the API is always source of truth — there is no separate "palette index" with different ranking.
 
@@ -173,11 +179,24 @@ Indexed types (14): `Person`, `Organization`, `Decision`, `Project`, `Program`, 
 
 **Required Neo4j indexes (authoritative — the ingestion layer must create these):**
 
-- Full-text index over `(search_label, search_terms)` on the 14 indexed types. Name: `openmarin_search_index`. Built as a single composite across type labels so one query hits all types.
-- Property indexes on `search_rank DESC` per type to make `ORDER BY search_rank DESC` index-backed.
+- **Full-text index** over `search_label` and `search_terms` spanning all 15 searchable types (14 entity types + `Record`). Name: `openmarin_search_index`. Single composite index so one query hits all types; results include `score` which we combine with `search_rank` in-query (see below).
+- **Property indexes** on `search_rank` per type so per-type filtering stays cheap.
 - The existing `id` unique constraints from v1 §4 are sufficient for exact-ID match.
 
-Latency target: p95 ≤ 120ms for palette queries (cold cache), p95 ≤ 200ms for homepage and `/search` queries. If the implementation plan can't meet this against AuraDB, it falls back to a pre-built client-side fuzzy index over `search_label` + `search_terms` — but this is an escape hatch, not the default path.
+**Query shape (pseudo-Cypher):**
+
+```cypher
+CALL db.index.fulltext.queryNodes('openmarin_search_index', $q) YIELD node, score
+WHERE $include_records OR NOT node:Record
+WITH node, score * 100 + node.search_rank AS combined_rank
+RETURN node, combined_rank
+ORDER BY combined_rank DESC, node.id ASC
+LIMIT 50
+```
+
+The full-text index produces a match `score` (Lucene-style). The combined ranking multiplies score by 100 before adding `search_rank` so that lexical relevance dominates, with `search_rank` as a tiebreaker — not an index-backed sort. This is the honest cost. AuraDB full-text queries typically return in < 50ms on this corpus size; the post-processing `ORDER BY` runs on the 50-ish-row result set, not the full graph.
+
+**Latency targets** (not guarantees — the implementation plan must validate): p95 ≤ 120ms for palette queries (cold cache), p95 ≤ 200ms for homepage and `/search` queries. If the implementation plan can't meet this against AuraDB, the fallback is a pre-built client-side fuzzy index over `search_label` + `search_terms`, shipped as part of the deploy — but this is an escape hatch, not the default path.
 
 ### 3.4 Left column — Catalog
 
@@ -354,16 +373,18 @@ The selection is a two-phase process per entity page:
 
 **Phase 1 — must-show set by focus type.** Every neighbor in this set is visible regardless of degree. When the must-show set alone exceeds 40, the cap is relaxed for that page and a warning footer is shown.
 
-| Focus entity | Must-show neighbors (relationship → target type) |
+Relationships referenced below must exist in the v1 ontology (see v1 design spec §3). When the link between two entity types runs through a third type (e.g., Project ↔ Program runs through Decision), the must-show traversal is 2-hop along the named path.
+
+| Focus entity | Must-show neighbors (direct relationships or named 2-hop paths) |
 |---|---|
-| Person | Current `SeatService` via `HELD_BY`; those `SeatService`s' linked `Seat` via `FOR_SEAT`; `Committee` via `CONTROLLED_BY`; `Candidacy` via `BY_PERSON`; `Case` via `PARTY_TO`; current `Seat`'s `Organization:Government` via `AT_INSTITUTION`. |
-| Decision | `Meeting` via `AT_MEETING`; `AgendaItem` via `ABOUT_ITEM`; `Organization:Government` via `DECIDED_BY`; `Person` via `CAST_VOTE`; `Project` via `ABOUT_PROJECT`; `Program` via `ABOUT_PROGRAM`; `Case` via inverse `CONSTRAINS`. |
-| Project | `Program` via `ABOUT_PROGRAM` (when paired); `Agreement` via `FOR_PROJECT`; those `Agreement`s' `Amendment`s via `AMENDS`; `Decision` via inverse `ABOUT_PROJECT`; `Place` via `IN_JURISDICTION`. |
-| Program | `Project` via `ABOUT_PROJECT` (inverse); `Decision` via inverse `ABOUT_PROGRAM`; `Case` via inverse `CONSTRAINS` on any of this program's Decisions. |
-| Case | `Proceeding` via `PART_OF`; `Organization:Court` via `HEARD_IN`; `Person`/`Organization` via `PARTY_TO`; `Decision` via `CONSTRAINS`. |
-| Meeting | `Organization:Government` via `AT_INSTITUTION`; `AgendaItem` via `PART_OF`; `Decision` via inverse `AT_MEETING`. |
+| Person | `SeatService` via inverse `HELD_BY` (filtered to `ended_at IS NULL OR ended_at >= today` for current service); each `SeatService`'s `Seat` via `FOR_SEAT`; `Committee` via inverse `CONTROLLED_BY`; `Candidacy` via inverse `BY_PERSON`; `Case` via `PARTY_TO`; the current `Seat`'s `Organization:Government` via `AT_INSTITUTION` (2-hop through `Seat`). |
+| Decision | `Meeting` via `AT_MEETING`; `AgendaItem` via `ABOUT_ITEM`; `Organization:Government` via `DECIDED_BY`; `Person` via inverse `CAST_VOTE`; `Project` via `ABOUT_PROJECT`; `Program` via `ABOUT_PROGRAM`; `Case` via inverse `CONSTRAINS`. |
+| Project | `Agreement` via inverse `FOR_PROJECT`; each `Agreement`'s `Amendment`s via inverse `AMENDS`; `Decision` via inverse `ABOUT_PROJECT`; `Program` via 2-hop path `(Project)<-[:ABOUT_PROJECT]-(:Decision)-[:ABOUT_PROGRAM]->(Program)` (deduped). Place is NOT in the hero — it appears in the facts panel only. |
+| Program | `Decision` via inverse `ABOUT_PROGRAM`; `Project` via 2-hop path `(Program)<-[:ABOUT_PROGRAM]-(:Decision)-[:ABOUT_PROJECT]->(Project)` (deduped); `Case` via 2-hop path `(Program)<-[:ABOUT_PROGRAM]-(:Decision)<-[:CONSTRAINS]-(Case)` (deduped). |
+| Case | `Proceeding` via inverse `PART_OF`; `Organization:Court` via `HEARD_IN`; `Person`/`Organization` via inverse `PARTY_TO`; `Decision` via `CONSTRAINS`. |
+| Meeting | `Organization:Government` via `AT_INSTITUTION`; `AgendaItem` via inverse `PART_OF` (where parent is this Meeting); `Decision` via inverse `AT_MEETING`. |
 | Filing | `Person` or `Committee` via `FILED_BY`; `Election` via `FOR_ELECTION`; `MoneyFlow` via inverse `DISCLOSED_IN`. Form 700 fields (when `filing_type = form_700`) render in the facts panel, not as separate graph nodes — `EconomicInterestDisclosure` is merged into `Filing` per the v1 migration. |
-| Committee | `Person` via `CONTROLLED_BY`; `Candidacy` via inverse `BY_PERSON` where `Candidacy.committee_id` matches; `Election` via the committee's `Candidacy`s; `Filing` via `FILED_BY`. |
+| Committee | `Person` via `CONTROLLED_BY`; `Filing` via inverse `FILED_BY` where target is this Committee. Linked `Candidacy` and `Election` surface via the `Person` who controls the Committee, through the Person's `Candidacy` → `IN_ELECTION` chain — they are not direct neighbors of Committee in the v1 ontology. |
 
 **Phase 2 — ranked fill with per-type quotas.** After the must-show set is placed, remaining slots (up to the 40-node cap) are filled from each type up to its quota, in this order. Ranking uses directly computable local metrics — no centrality on the live query.
 
@@ -388,23 +409,58 @@ The selection is a two-phase process per entity page:
 
 **Overflow footer.** When the 40-cap truncates a type that has more candidates, a Plex Mono dim footer on the graph pane reads `+{N} more neighbors · see /graph?focus={id}` linking to the full-screen explorer where no cap applies.
 
-**Query contract (explicit).** The selection runs as **two parameterized Cypher queries** per entity page (not one — one-query is the aspiration, two-query is the contract):
+**Query contract (explicit).** The selection runs as **two parameterized Cypher queries** per entity page:
 
-1. **Must-show query.** Given `focus_id` and `focus_type`, traverse the relationships listed in the must-show table for that focus type. Returns `(id, type, role='must-show', primary=true/false based on hop distance)`. This is bounded by the must-show relationship count (empirically ≤ 30 nodes across all focus types on the current graph).
+**Query 1 — Must-show.** Given `focus_id` and `focus_type`, traverse exactly the paths listed in the must-show table for that focus type (some are 1-hop, some are named 2-hop). Returns `(id, type, role='must-show', primary=true|false)` where `primary=true` for direct (1-hop) neighbors and `false` for 2-hop. Bounded by the must-show traversal count (empirically ≤ 30 nodes across all focus types on the current graph). If the must-show set is already ≥ 40 nodes, Query 2 is skipped and the overflow footer is shown.
 
-2. **Phase-2 fill query.** Given `focus_id`, the must-show node IDs from query 1, and `{cap: 40}`, traverse outward 1–2 hops, excluding already-selected IDs and excluded types (`Place`, `Issue`). For each reachable candidate node, compute its ranking key per the type table below using **properties on the candidate node itself** (no centrality, no recursive aggregation). Return ordered by (type-priority, ranking key, id) and limit to `(cap - must-show count)`.
+**Query 2 — Phase-2 quota fill.** Structured as **one UNION ALL of per-type sub-queries**, each with its own `MATCH`, `ORDER BY`, and `LIMIT`. The structure (pseudo-Cypher):
 
-**Candidate pool for Phase 2** is precisely: all nodes reachable from `focus_id` in 1 or 2 traversal hops, minus the must-show set, minus `:Place`, minus `:Issue`.
+```cypher
+CALL {
+  WITH $focus_id AS focus_id, $must_show_ids AS must_show_ids
+  MATCH (f {id: focus_id})-[*1..2]-(c:MoneyFlow)
+  WHERE NOT c.id IN must_show_ids
+  RETURN DISTINCT c AS n, 'MoneyFlow' AS t, c.amount AS rank_value, 1 AS type_priority
+  ORDER BY c.amount DESC, c.flow_date DESC, c.id ASC
+  LIMIT 8
+UNION ALL
+  WITH $focus_id AS focus_id, $must_show_ids AS must_show_ids
+  MATCH (f {id: focus_id})-[*1..2]-(c:Decision)
+  WHERE NOT c.id IN must_show_ids
+  RETURN DISTINCT c, 'Decision', c.decided_at, 2
+  ORDER BY c.decided_at DESC, c.id ASC
+  LIMIT 8
+UNION ALL
+  ... one sub-query per quota-table row, in type-priority order ...
+UNION ALL
+  WITH $focus_id AS focus_id, $must_show_ids AS must_show_ids
+  MATCH (f {id: focus_id})-[*1..2]-(c:Person)
+  WHERE NOT c.id IN must_show_ids
+  OPTIONAL MATCH (c)-[]-(m) WHERE m.id IN must_show_ids
+  WITH c, count(DISTINCT m) AS edges_to_must_show
+  RETURN DISTINCT c, 'Person', edges_to_must_show, 5
+  ORDER BY edges_to_must_show DESC, c.id ASC
+  LIMIT 6
+}
+WITH collect({n:n, t:t, rv:rank_value, tp:type_priority}) AS rows
+UNWIND rows AS r
+WITH r ORDER BY r.tp ASC
+RETURN r.n, r.t, r.tp LIMIT ($cap - $must_show_count)
+```
 
-**Dedup:** a node that appears in both must-show and Phase 2 is emitted once with `role='must-show'`. A node that appears at both 1-hop and 2-hop from the focus is emitted once and treated as 1-hop (better `primary` classification).
+Per-type `LIMIT`s enforce the quotas; the outer `LIMIT` caps the aggregate at 40 minus must-show count. Rows are consumed in type-priority order, so when the aggregate cap truncates, lower-priority types are the ones dropped.
 
-**For the Person/Organization "count of edges back into must-show" ranking:** this is computable in Phase 2 because the must-show set is materialized by query 1 as a parameter to query 2. The count is a simple `MATCH (candidate)-[]-(m) WHERE m.id IN $must_show_ids WITH candidate, count(m) AS rank_value`.
+**Candidate pool for Phase 2**: all nodes reachable from `focus_id` in 1 or 2 traversal hops, minus the must-show set, minus `:Place`, minus `:Issue`.
 
-**Complexity.** Query 1 is O(must-show degree). Query 2 is O(2-hop neighborhood size) in the worst case, but the 2-hop neighborhood is bounded by the AuraDB per-type indexes named in v1 design spec §4 for `Meeting.meeting_date`, `Decision.decided_at`, `MoneyFlow.amount`, etc. — the `ORDER BY` clause can use the index and the query plan avoids scanning all 2-hop candidates for types whose quota is smaller than the total population. On `person-kate-colin` (our worst empirical case), this is well under 100ms on AuraDB Pro.
+**Dedup**: `DISTINCT` in each sub-query handles duplicates from 1-hop-and-2-hop overlap. A node that appears in both must-show and Phase 2 is caught by the `NOT c.id IN must_show_ids` filter in every sub-query.
 
-**Timeout + fallback.** If Query 2 exceeds 500ms, the page renders the must-show set only (with the overflow footer) rather than the full 40. This keeps the page fast even in degenerate cases.
+**Person/Organization ranking metric (locked).** Count of **undirected** relationship instances between the candidate and any node in the must-show set: `OPTIONAL MATCH (c)-[]-(m) WHERE m.id IN must_show_ids`. Undirected is chosen because CAST_VOTE and PARTY_TO point in investigatively meaningful but different directions; we want "is this Person materially attached to the focus's must-show world?" — direction should not matter for that question.
 
-The exact Cypher for each focus type is part of the implementation plan; the contract above is what each query must satisfy.
+**Complexity.** Query 1 is O(must-show traversal count). Query 2 per sub-query is bounded: the inner `MATCH` walks 1–2 hops and the `LIMIT` caps memory before the `ORDER BY` work. The worst-case sub-query is Person/Organization because it adds an `OPTIONAL MATCH` for the edge count, but this is still bounded by the 2-hop neighborhood size (≤ ~1200 nodes on the current Kate Colin dossier). AuraDB Pro target: p95 ≤ 500ms for Query 2; p95 ≤ 200ms for Query 1. These are the targets the implementation plan must validate.
+
+**Timeout + fallback.** If Query 2 exceeds 500ms, the page renders the must-show set only (with the overflow footer) rather than the full 40. This is a circuit breaker, not a hope — the implementation plan must measure it.
+
+The exact Cypher for each focus type is part of the implementation plan; the pseudo-Cypher and contract above are what each production query must satisfy.
 
 ### 5.2 Edges
 
@@ -533,7 +589,9 @@ The explorer's "find path between two entities" feature needs explicit rules —
 
 **Default pathfinding behavior:**
 - **Algorithm:** weighted shortest path (Neo4j `apoc.algo.dijkstra` or equivalent via the JavaScript driver).
-- **Excluded intermediate node types** (these types may be path endpoints — start or end — but are never used as intermediate hops): `Record`, `Issue`, `Place`, `AgendaItem`.
+- **Scope:** runs against the full AuraDB graph, not the currently-loaded client subgraph. The explorer is incrementally-loaded for user-driven expansion, but pathfinding must see the entire graph to avoid returning non-answers bounded by what happens to be loaded.
+- **Result handling:** when a path is returned, every node and edge along that path is auto-injected into the current explorer view (loaded into Cytoscape) and the path itself is highlighted with a bolder amber outline. The user can then continue expanding normally from any injected node.
+- **Excluded intermediate node types** (may appear only as path endpoints — start or end — never as intermediate hops): `Record`, `Issue`, `Place`, `AgendaItem`.
 - **Max path length:** 6 hops.
 
 **Edge weights** (lower = preferred). Every relationship the v1 data model includes has a weight or is explicitly excluded. No silent defaults.
