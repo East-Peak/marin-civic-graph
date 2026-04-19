@@ -129,6 +129,15 @@ describe("entity-queries", () => {
     expect(q).toContain("m.id IN must_show_ids");
   });
 
+  it("buildPhase2FillQuery dedupes candidates with WITH DISTINCT c + count(DISTINCT r)", () => {
+    // Fix 5 — a candidate reachable by multiple paths was previously counted
+    // per-path in edges_to_must_show, inflating Person/Organization
+    // centrality scores. Dedup via DISTINCT on both c and r.
+    const q = buildPhase2FillQuery("Person");
+    expect(q).toContain("WITH DISTINCT c, focus_id, must_show_ids");
+    expect(q).toContain("count(DISTINCT r) AS edges_to_must_show");
+  });
+
   it("buildEdgesAmongSelectedQuery filters to whitelist and selected nodes", () => {
     const q = buildEdgesAmongSelectedQuery();
     expect(q).toContain("a.id IN $ids");

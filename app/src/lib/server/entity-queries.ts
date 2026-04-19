@@ -387,19 +387,16 @@ type Phase2SubSpec = {
 
 function phase2Sub(spec: Phase2SubSpec): string {
   // The 2-hop MATCH can return the same `c` multiple times (multiple paths).
-  // We dedupe via `WITH DISTINCT c` BEFORE the aggregation / EXISTS step so:
-  //   1. The EXISTS subquery can reference `c` (allowed before DISTINCT is
-  //      applied at the outer level).
-  //   2. The ORDER BY clause in RETURN can reference `c.*` properties because
-  //      we omit DISTINCT from the RETURN (already deduped upstream).
-  //
-  // For Person/Organization, the OPTIONAL MATCH + count aggregation is what
-  // actually guarantees one row per c (count(r) collapses duplicates), so
-  // the `WITH DISTINCT c` becomes redundant but harmless.
+  // We dedupe via `WITH DISTINCT c` BEFORE any aggregation / EXISTS step:
+  //   1. For the non-aggregating sub-queries (MoneyFlow/Decision/…), DISTINCT
+  //      ensures each candidate appears once.
+  //   2. For Person/Organization with an OPTIONAL MATCH + count, we MUST
+  //      dedupe c first — otherwise a candidate reachable by two paths
+  //      gets its edges_to_must_show count multiplied by path count.
+  //      (Codex round 1 fix 5.)
   const extra = spec.extraClause ?? "";
-  const dedupStep = extra
-    ? "" // aggregation in `extra` already produces one row per c
-    : "\n  WITH DISTINCT c, focus_id, must_show_ids";
+  // Always dedupe c before the projection / aggregation step.
+  const dedupStep = "\n  WITH DISTINCT c, focus_id, must_show_ids";
   return `
   WITH $focus_id AS focus_id, $must_show_ids AS must_show_ids
   MATCH (f {id: focus_id})-[:${PHASE2_PATTERN}*1..2]-(c:${spec.typeLabel})
@@ -426,9 +423,13 @@ export function buildPhase2FillQuery(focusType: NodeType): string {
   // Person/Organization need an OPTIONAL MATCH step to count edges into the
   // must-show set — the "edges back into must-show" centrality substitute
   // locked by §5.1.1's Person/Organization ranking metric.
+  //
+  // `count(DISTINCT r)` defends against a single relationship being matched
+  // twice from different path expansions; combined with `WITH DISTINCT c`
+  // above, each candidate appears once with an accurate edge count.
   const edgesToMustShow = `
   OPTIONAL MATCH (c)-[r]-(m) WHERE m.id IN must_show_ids
-  WITH c, count(r) AS edges_to_must_show, focus_id, must_show_ids`;
+  WITH c, count(DISTINCT r) AS edges_to_must_show, focus_id, must_show_ids`;
 
   const subs: Phase2SubSpec[] = [
     {
