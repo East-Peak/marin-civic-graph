@@ -895,7 +895,7 @@ Last thing built. Design direction locked now so later work stays coherent:
 
 ## 12. Relationship to the existing v1 design spec and plan
 
-**v1 design spec (`docs/specs/2026-04-14-marin-civic-graph-v1-design.md`)**: functional scope remains authoritative. Section 5 (Product Surfaces), Section 6 (Auth), Section 8 (Out of Scope), and Section 9 (Success Criteria) are unchanged. This spec fills in visual + interaction detail the v1 spec left open.
+**v1 design spec (`docs/specs/2026-04-14-marin-civic-graph-v1-design.md`)**: functional scope remains authoritative. Section 6 (Auth), Section 8 (Out of Scope), and Section 9 (Success Criteria) are unchanged. Section 5 (Product Surfaces) is **augmented and, in places, superseded** by this spec — specifically, v1 §5b's "click a node to re-center" on the radial/orbital hero is superseded by §6.2 of this spec (click navigates to that entity's page; re-centering and navigation are the same action). Where this spec and v1 §5 disagree on interaction detail, this spec wins.
 
 **Next.js app + core browse plan (`docs/superpowers/plans/2026-04-14-nextjs-app-core-browse.md`)**: will be rewritten to reflect this spec. Specifically, the plan needs to add:
 
