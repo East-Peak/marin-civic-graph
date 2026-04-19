@@ -683,9 +683,38 @@ The checkbox is labeled and the resulting path is visibly marked `PATH VIA LOOSE
 1. **Empty state** (`/graph` with no `focus` query param): no graph rendered. A centered prompt: `> type a name or pick a signature subgraph` with a list of the 5–8 curated signature subgraphs (links to `/graph?focus={id}`).
 2. **Focused load** (`/graph?focus={id}`):
    - **If focus is a Tier 1 type** (Person, Decision, Project, Program, Case, Meeting, Filing, Committee): runs the same two-query selection as the entity-page radial hero (§5.1.1, Query 1 + Query 2, 40-node cap, Phase-2 edge whitelist). Shared Cypher with the radial hero; only layout and interactive-beyond-cap differ.
-   - **If focus is a Tier 2 type** (Organization, Seat, SeatService, Election, Candidacy, AgendaItem, MoneyFlow, Proceeding, Agreement, Amendment, Record, Place, Issue): runs a **generic focused-load query**: 1-hop neighborhood along the Phase-2 whitelist, capped at 40 nodes, ordered by (type-priority from the Phase-2 quota table, then type-specific ranking key, then `id ASC`). No must-show phase — Tier 2 types don't have curated must-show tables because their connections are already narrow (a MoneyFlow has at most ~5 directly-linked nodes; an Agreement similar).
-     - For `Record` focus: the 1-hop neighborhood includes whatever node the `EVIDENCED_BY` edge points from (typically a Decision, Meeting, or Project). The universal edge exclusion is waived for this focus type only — it's the Record's whole reason to exist in the graph.
-     - For `Place` or `Issue` focus: the 1-hop neighborhood is the set of nodes tied via `IN_JURISDICTION` or `RELATES_TO_ISSUE`, capped at 40 by (type-priority, recency, id). Again the universal edge exclusion is waived for these focus types since they're the entire semantic tie.
+   - **If focus is a Tier 2 type** (Organization, Seat, SeatService, Election, Candidacy, AgendaItem, MoneyFlow, Proceeding, Agreement, Amendment, Record, Place, Issue): runs a **generic focused-load query**: 1-hop neighborhood along the Phase-2 whitelist (plus focus-type waivers below), capped at 40 nodes, ordered by the complete Tier 2 focused-load ordering table below. No must-show phase — Tier 2 types don't have curated must-show tables because their connections are already narrow (a MoneyFlow has at most ~5 directly-linked nodes; an Agreement similar).
+     - For `Record` focus: the 1-hop neighborhood includes whatever node the `EVIDENCED_BY` edge points from (typically a Decision, Meeting, or Project). The universal edge exclusion is waived for this focus type only.
+     - For `Place` focus: include nodes tied via `IN_JURISDICTION`; waive the `IN_JURISDICTION` edge exclusion.
+     - For `Issue` focus: include nodes tied via `RELATES_TO_ISSUE`; waive the `RELATES_TO_ISSUE` edge exclusion.
+
+**Tier 2 focused-load ordering (complete, authoritative).** Every node type a 1-hop neighbor can hold gets an explicit priority and ranking key. Lower priority number = loaded first when the 40-cap bites. Durable types without a date field use `id ASC` as their primary ranking key.
+
+| Type | Priority | Ranking key | Tie-break |
+|---|---|---|---|
+| MoneyFlow | 1 | `amount DESC` | `flow_date DESC`, `id ASC` |
+| Decision | 2 | `decided_at DESC` | `id ASC` |
+| Case | 3 | `filed_at DESC` | `id ASC` |
+| Project | 4 | `id ASC` (durable) | — |
+| Program | 4 | `id ASC` (durable) | — |
+| Agreement | 5 | `effective_date DESC` | `id ASC` |
+| Amendment | 5 | `effective_date DESC` | `id ASC` |
+| Filing | 6 | `signed_at DESC` | `id ASC` |
+| Committee | 7 | `id ASC` (durable) | — |
+| Election | 7 | `election_date DESC` | `id ASC` |
+| Candidacy | 8 | linked `Election.election_date DESC` | `id ASC` |
+| Meeting | 8 | `meeting_date DESC` | `id ASC` |
+| Proceeding | 9 | `date DESC` | `id ASC` |
+| Person | 9 | `id ASC` (durable) | — |
+| Organization | 10 | `id ASC` (durable) | — |
+| Seat | 11 | `id ASC` (durable) | — |
+| SeatService | 11 | `started_at DESC` | `id ASC` |
+| AgendaItem | 12 | parent `Meeting.meeting_date DESC` | `item_number ASC`, `id ASC` |
+| Record | 13 | `published_at DESC`, then `captured_at DESC` | `id ASC` |
+| Place | 14 | `id ASC` (durable) | — |
+| Issue | 14 | `id ASC` (durable) | — |
+
+No node type is unranked. When the 40-cap hits, the overflow footer appears with a link to expand.
 3. **Default node filters**: `Record`, `Place`, `Issue`, `AgendaItem` are hidden — unless any of those is the focus type (in which case its filter auto-enables). Toggle chips in the toolbar flip individual types on/off.
 4. **Default edge filters**: `governance` / `money` / `legal-constrains` classes on. Universal edges (`EVIDENCED_BY`, `IN_JURISDICTION`, `RELATES_TO_ISSUE`) off — unless needed for the current focus (see waiver above) or unless the user toggles on the corresponding node filter (enabling `records` auto-enables `EVIDENCED_BY` edges so they have something to connect to; same pattern for Place/Issue).
 5. **Default time slider**: last 5 years from `INGEST` timestamp, clamped to the earliest event in the loaded subgraph (per §5.4).
