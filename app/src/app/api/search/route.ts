@@ -3,6 +3,17 @@ import { runQuery } from "@/lib/neo4j";
 import { jsonError } from "@/lib/api-errors";
 import { urlSegmentForType, type NodeType } from "@/lib/type-display";
 
+// Escape Lucene query syntax so reserved chars don't become operators.
+// Per Lucene docs: + - && || ! ( ) { } [ ] ^ " ~ * ? : \ /
+function escapeLucene(q: string): string {
+  return q
+    .replace(/([+\-!(){}\[\]^"~*?:\\/])/g, "\\$1")
+    .replace(/&&/g, "\\&&")
+    .replace(/\|\|/g, "\\||");
+}
+
+const MAX_Q_LENGTH = 500;
+
 type Neo4jNode = {
   properties: Record<string, unknown>;
   labels: string[];
@@ -42,8 +53,13 @@ export async function GET(req: Request) {
   const q = (searchParams.get("q") ?? "").trim();
   const includeRecords = searchParams.get("include_records") === "true";
   if (!q) return jsonError("q required", 400);
+  if (q.length > MAX_Q_LENGTH) return jsonError("q too long", 400);
+
+  const qLucene = escapeLucene(q);
 
   // Bucketed query per spec §3.3.
+  // $q is the raw input (for exact-id match).
+  // $q_lucene is Lucene-escaped (for full-text index calls).
   const cypher = `
     // Stage 0: exact id (bypasses include_records)
     OPTIONAL MATCH (exact {id: $q})
@@ -52,7 +68,7 @@ export async function GET(req: Request) {
 
     // Stage 1: entity bucket (never Records)
     CALL {
-      WITH $q AS q
+      WITH $q_lucene AS q
       CALL db.index.fulltext.queryNodes('openmarin_search_index', q) YIELD node, score
       WHERE NOT node:Record
       WITH node, score
@@ -66,7 +82,7 @@ export async function GET(req: Request) {
 
     // Stage 2: record bucket
     CALL {
-      WITH $q AS q, $include_records AS include_records
+      WITH $q_lucene AS q, $include_records AS include_records
       CALL db.index.fulltext.queryNodes('openmarin_search_index', q) YIELD node, score
       WHERE include_records AND node:Record
       WITH node, score
@@ -86,7 +102,7 @@ export async function GET(req: Request) {
   `;
 
   try {
-    const records = await runQuery(cypher, { q, include_records: includeRecords });
+    const records = await runQuery(cypher, { q, q_lucene: qLucene, include_records: includeRecords });
     const nodes = records[0]?.get("results") as Neo4jNode[] | undefined;
     const results = (nodes ?? []).map(nodeToResult);
     return Response.json({
@@ -95,9 +111,8 @@ export async function GET(req: Request) {
       results,
     });
   } catch (err) {
-    return jsonError(
-      `search failed: ${err instanceof Error ? err.message : "unknown"}`,
-      500,
-    );
+    // Log the real error server-side for debugging; return a generic message to the client.
+    console.error("search error", err);
+    return jsonError("search failed", 500);
   }
 }
