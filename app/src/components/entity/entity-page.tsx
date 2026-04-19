@@ -54,6 +54,42 @@ function routeFor(entity: EntityPayload): string {
   return `/${urlSegmentForType(entity.type)}/${slug}`;
 }
 
+/**
+ * Record-focus source link (Codex round 1 fix 7). A Record page goes
+ * through the Tier-2 shell, so without this the Record's own
+ * preferred_public_url never gets prominent treatment — the evidence
+ * drawer lists Records that evidence OTHER entities, not records whose
+ * focus IS a Record. This component sits above the facts panel.
+ */
+export function RecordSourceLink({ entity }: { entity: EntityPayload }) {
+  const url = entity.properties.preferred_public_url;
+  const artifact = entity.properties.preferred_display_artifact;
+  if (typeof url === "string" && url.length > 0) {
+    return (
+      <div className="mx-[18px] mt-3" data-testid="record-source-link">
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded border border-border-primary bg-panel px-4 py-2 font-mono text-sm text-body hover:bg-surface"
+        >
+          <span className="text-[10px] uppercase tracking-[0.12em] text-hairline">source</span>
+          <span>{typeof artifact === "string" && artifact.length > 0 ? artifact : "open source"}</span>
+          <span className="text-dim">↗</span>
+        </a>
+      </div>
+    );
+  }
+  return (
+    <div
+      className="mx-[18px] mt-3 rounded border border-border-primary bg-panel px-4 py-2 font-mono text-sm text-dim"
+      data-testid="record-source-link-empty"
+    >
+      no public source captured
+    </div>
+  );
+}
+
 export async function EntityPage({ entity }: { entity: EntityPayload }) {
   const [status, records] = await Promise.all([
     loadStatus(),
@@ -79,6 +115,7 @@ export async function EntityPage({ entity }: { entity: EntityPayload }) {
       <NavHeader currentPath={currentPath} />
       <HeroTitle entity={entity} />
       {tier1 && <HeroStats entity={entity} />}
+      {entity.type === "Record" && <RecordSourceLink entity={entity} />}
 
       <div
         className="mx-[18px] mt-4 grid gap-4"
