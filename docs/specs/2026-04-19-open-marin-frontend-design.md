@@ -702,7 +702,7 @@ The checkbox is labeled and the resulting path is visibly marked `PATH VIA LOOSE
 ### 6.2 Entity-page radial hero
 
 - **Purpose**: show "this entity is the center of its own story."
-- **Interaction**: hover to reveal a node's label; clicking a node navigates to that entity's own page (where it becomes the focus). This is one action: re-centering and navigating are the same thing.
+- **Interaction**: labels for focus and 1-hop primary neighbors are shown by default (per §5.1); hover reveals labels for 2-hop and 3-hop nodes. Clicking any node navigates to that entity's own page (where it becomes the focus). Re-centering and navigating are the same action.
 - **Layout**: Cytoscape `concentric` layout with up to three rings — inner ring for 1-hop must-show and Phase-2 nodes (`ring=1`), outer ring for 2-hop must-show and Phase-2 nodes (`ring=2`), and (on Person pages only) an outermost ring for the 3-hop `Organization:Government` from §5.1.1 (`ring=3`). Focus at center. Not `cose-bilkent` or any force-directed layout. Ring placement is stable across renders.
 - **Data shape**: live Cypher query using the neighborhood selection rules in §5.1.1, returning `ring ∈ {1, 2, 3}` per node. Total cap 40 nodes.
 - **Freshness**: live Cypher, `INGEST` timestamp is authoritative.
