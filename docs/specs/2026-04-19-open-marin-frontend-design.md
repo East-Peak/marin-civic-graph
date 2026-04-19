@@ -196,9 +196,9 @@ ORDER BY combined_rank DESC, node.id ASC
 LIMIT 50
 ```
 
-Why two stages: a broad query like `"colin"` could match hundreds of nodes. Stage 1's `ORDER BY score DESC LIMIT 200` uses the full-text index's native ordering (no extra sort cost), dropping long-tail matches that would never make the final 50. Stage 2 re-ranks the surviving 200 by combined_rank — a small fixed-size sort, not full-corpus. AuraDB full-text queries typically return < 50ms on this corpus size; the re-rank runs on 200 rows, bounded.
+Why two stages: a broad query like `"colin"` could match hundreds of nodes. Stage 1's `ORDER BY score DESC LIMIT 200` uses the full-text index's native ordering (no extra sort cost), dropping long-tail matches. Stage 2 re-ranks the surviving 200 by combined_rank — a small fixed-size sort.
 
-If the full-text query itself returns fewer than 200 matches, stage 2 re-ranks whatever stage 1 produced. If it returns more than 200, the dropped matches are low-score long-tail that would rank below the top 50 regardless.
+**This is a heuristic, not a guarantee.** A match ranked 201st by Lucene score could in principle belong in the final top 50 after `search_rank` is added (if it has a high `search_rank` and the score gap across the 200-boundary is small). Stage 1's LIMIT=200 is tuned so this is rare in practice — `search_rank`'s additive contribution is at most ~100, and empirically the top-50 winners after re-rank are always within the top-200 by score for the observed query workload. If the implementation plan finds a workload where this heuristic drops legitimate winners, the fix is to raise the inner limit (e.g., to 500 or 1000), not to change the sort contract. The worst-case cost of raising it is a larger in-memory sort, still bounded.
 
 **Latency targets** (not guarantees — the implementation plan must validate): p95 ≤ 120ms for palette queries (cold cache), p95 ≤ 200ms for homepage and `/search` queries. If the implementation plan can't meet this against AuraDB, the fallback is a pre-built client-side fuzzy index over `search_label` + `search_terms`, shipped as part of the deploy — but this is an escape hatch, not the default path.
 
@@ -381,7 +381,7 @@ Relationships referenced below must exist in the v1 ontology (see v1 design spec
 
 | Focus entity | Must-show neighbors (direct relationships or named 2-hop paths) |
 |---|---|
-| Person | `SeatService` via inverse `HELD_BY` (filtered to `ended_at IS NULL OR ended_at >= today` for current service); each `SeatService`'s `Seat` via `FOR_SEAT`; `Committee` via inverse `CONTROLLED_BY`; `Candidacy` via inverse `BY_PERSON`; `Case` via `PARTY_TO`; the current `Seat`'s `Organization:Government` via `AT_INSTITUTION` (2-hop through `Seat`). |
+| Person | `SeatService` via inverse `HELD_BY` (filtered to `ended_at IS NULL OR ended_at >= today` for current service); each `SeatService`'s `Seat` via `FOR_SEAT`; `Committee` via inverse `CONTROLLED_BY`; `Candidacy` via inverse `BY_PERSON`; `Case` via `PARTY_TO`; the current `Seat`'s `Organization:Government` via 3-hop path `(Person)<-[:HELD_BY]-(SeatService)-[:FOR_SEAT]->(Seat)-[:AT_INSTITUTION]->(Organization)`. This is the only 3-hop must-show path in the spec — the must-show classifier is (direct 1-hop) ∪ (named 2-hop) ∪ (this one named 3-hop for Person focus). |
 | Decision | `Meeting` via `AT_MEETING`; `AgendaItem` via `ABOUT_ITEM`; `Organization:Government` via `DECIDED_BY`; `Person` via inverse `CAST_VOTE`; `Project` via `ABOUT_PROJECT`; `Program` via `ABOUT_PROGRAM`; `Case` via inverse `CONSTRAINS`. |
 | Project | `Agreement` via inverse `FOR_PROJECT`; each `Agreement`'s `Amendment`s via inverse `AMENDS`; `Decision` via inverse `ABOUT_PROJECT`; `Program` via 2-hop path `(Project)<-[:ABOUT_PROJECT]-(:Decision)-[:ABOUT_PROGRAM]->(Program)` (deduped). Place is NOT in the hero — it appears in the facts panel only. |
 | Program | `Decision` via inverse `ABOUT_PROGRAM`; `Project` via 2-hop path `(Program)<-[:ABOUT_PROGRAM]-(:Decision)-[:ABOUT_PROJECT]->(Project)` (deduped); `Case` via 2-hop path `(Program)<-[:ABOUT_PROGRAM]-(:Decision)<-[:CONSTRAINS]-(Case)` (deduped). |
@@ -400,12 +400,13 @@ Relationships referenced below must exist in the v1 ontology (see v1 design spec
 | Meeting | up to 6 | `meeting_date DESC` | `id ASC` |
 | Person | up to 6 | count of direct edges from this Person back into the must-show set | `id ASC` |
 | Organization | up to 4 | count of direct edges from this Organization back into the must-show set | `id ASC` |
-| Record | up to 4 | `captured_at DESC` | `id ASC` |
 | AgendaItem | up to 4 | `item_number ASC` | `id ASC` |
 | Amendment | up to 2 | `effective_date DESC` | `id ASC` |
 | Proceeding | up to 4 | `date DESC` | `id ASC` |
 | Election | up to 2 | `election_date DESC` | `id ASC` |
 | Candidacy | up to 2 | linked `Election.election_date DESC` | `id ASC` |
+
+**Records are not in the Phase-2 quota table.** Records enter the graph only via `EVIDENCED_BY`, which the Phase-2 edge whitelist excludes. Records belong to the entity page's evidence drawer (§7.1 item 10), not the radial graph hero. If a Record is investigatively important enough to surface as a graph node, it will be pulled in by the user expanding the full-screen explorer, where no whitelist applies.
 
 **Why "edges back into the must-show set" is the centrality substitute.** It is directly computable in a single Cypher query: for each candidate Person/Organization in the 2-hop neighborhood, count outbound edges whose target is in the must-show set. This is a stable local metric — not a global graph property — and does not require an initial 2-hop computation to seed it.
 
@@ -472,7 +473,7 @@ Per-type `LIMIT`s enforce the quotas; the outer `LIMIT` caps the aggregate at 40
 
 **Person/Organization ranking metric (locked).** Count of **undirected relationship instances** (not distinct must-show nodes) between the candidate and the must-show set: `OPTIONAL MATCH (c)-[r]-(m) WHERE m.id IN must_show_ids WITH c, count(r) AS edges_to_must_show`. `count(r)` with a relationship binding counts each edge separately — so a Person who CAST_VOTE on 20 Decisions in the must-show set scores 20, not 1. This is the investigation-useful metric: intensity of involvement, not breadth. Direction is ignored because CAST_VOTE and PARTY_TO and CONTROLLED_BY all point in semantically legitimate but different directions, and the question "is this Person materially attached to the focus's world?" does not hinge on direction.
 
-**Complexity.** Query 1 is O(must-show traversal count). Query 2 per sub-query is bounded: the inner `MATCH` walks 1–2 hops and the `LIMIT` caps memory before the `ORDER BY` work. The worst-case sub-query is Person/Organization because it adds an `OPTIONAL MATCH` for the edge count, but this is still bounded by the 2-hop neighborhood size (≤ ~1200 nodes on the current Kate Colin dossier). AuraDB Pro target: p95 ≤ 500ms for Query 2; p95 ≤ 200ms for Query 1. These are the targets the implementation plan must validate.
+**Complexity (honest estimate, not guarantee).** Query 1 is O(must-show traversal count) — bounded by the v1 ontology and small per-focus-type. Query 2 per sub-query walks the 1–2 hop neighborhood along the edge whitelist and returns after its per-type LIMIT. AuraDB's Cypher planner MAY recognize the `ORDER BY … LIMIT N` pattern and apply a TopN optimization, but this is not guaranteed by the spec — the implementation plan must measure actual query latency and, if necessary, add query hints (`USING INDEX`, `USING JOIN`) or rewrite sub-queries. The Person/Organization sub-query is worst-case because it adds an `OPTIONAL MATCH` for the edge count across the 2-hop neighborhood (≤ ~1200 nodes on the current Kate Colin dossier). **Latency targets (to be validated by the implementation plan):** p95 ≤ 500ms for Query 2, p95 ≤ 200ms for Query 1. If targets miss, the circuit breaker below kicks in and the implementation plan owns the follow-up.
 
 **Timeout + fallback.** If Query 2 exceeds 500ms, the page renders the must-show set only (with the overflow footer) rather than the full 40. This is a circuit breaker, not a hope — the implementation plan must measure it.
 
