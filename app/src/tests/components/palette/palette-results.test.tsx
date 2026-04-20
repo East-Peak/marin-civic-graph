@@ -61,4 +61,26 @@ describe("PaletteResults", () => {
     // Container is still a valid element but has no result rows
     expect(container.querySelectorAll("[data-testid='palette-row']")).toHaveLength(0);
   });
+
+  it("each option row has id='palette-item-{index}' (for aria-activedescendant)", () => {
+    render(
+      <PaletteResults items={sampleItems} selectedIndex={0} onSelect={() => {}} />,
+    );
+    const rows = screen.getAllByRole("option");
+    expect(rows[0].id).toBe("palette-item-0");
+    expect(rows[1].id).toBe("palette-item-1");
+  });
+
+  it("applies listboxId to the <ul>", () => {
+    render(
+      <PaletteResults
+        items={sampleItems}
+        selectedIndex={0}
+        onSelect={() => {}}
+        listboxId="palette-listbox"
+      />,
+    );
+    const list = screen.getByRole("listbox");
+    expect(list.id).toBe("palette-listbox");
+  });
 });

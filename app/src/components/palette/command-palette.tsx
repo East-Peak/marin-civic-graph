@@ -29,12 +29,14 @@ type RecentEntity = {
   label: string;
 };
 
+// Mirrors the payload from /api/search (see app/src/lib/server/search-backend.ts).
 type ApiResult = {
   id: string;
   type: string;
   search_label: string;
   key_fact: string | null;
   search_rank: number;
+  route: string;
 };
 
 function readRecents(): RecentEntity[] {
@@ -117,23 +119,16 @@ function recentsAsItems(rs: RecentEntity[]): PaletteResultItem[] {
 }
 
 function apiResultsAsItems(results: ApiResult[]): PaletteResultItem[] {
-  return results.map((r) => {
-    let segment: string;
-    try {
-      segment = urlSegmentForType(r.type as Parameters<typeof urlSegmentForType>[0]);
-    } catch {
-      segment = r.type.toLowerCase();
-    }
-    const slug = r.id.includes("-") ? r.id.slice(r.id.indexOf("-") + 1) : r.id;
-    return {
-      kind: "result" as const,
-      id: r.id,
-      type: r.type,
-      label: r.search_label,
-      key_fact: r.key_fact,
-      route: `/${segment}/${slug}`,
-    };
-  });
+  return results.map((r) => ({
+    kind: "result" as const,
+    id: r.id,
+    type: r.type,
+    label: r.search_label,
+    key_fact: r.key_fact,
+    // Use the route the API already computed. The backend owns slug shape
+    // and url-segment derivation; the client must not re-derive it.
+    route: r.route,
+  }));
 }
 
 export function CommandPalette() {
@@ -149,10 +144,22 @@ function PalettePanel() {
   const { setOpen } = useContext(PaletteContext);
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
+  // Monotonic request id: each fetch captures its id; only the latest
+  // response may commit results. Prevents stale responses from overwriting
+  // fresh ones when the user types quickly.
+  const requestIdRef = useRef(0);
 
   const [query, setQuery] = useState("");
   const [includeRecords, setIncludeRecords] = useState(false);
-  const [results, setResults] = useState<ApiResult[]>([]);
+  // Results are tagged with the (query, includeRecords) tuple they belong
+  // to. On render we only show them when that tuple still matches current
+  // state — otherwise they're stale from a prior keystroke and must drop
+  // out immediately (no flash of old hits while the next fetch lands).
+  const [results, setResults] = useState<{
+    q: string;
+    includeRecords: boolean;
+    items: ApiResult[];
+  }>({ q: "", includeRecords: false, items: [] });
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   // Focus the input on mount (open transition).
@@ -167,6 +174,10 @@ function PalettePanel() {
   const q = query.trim();
   useEffect(() => {
     if (!q) return;
+    // Every render that changes the query or include_records invalidates
+    // any in-flight request — bump the id here (in the effect setup, which
+    // runs synchronously but does not call setState).
+    const myId = ++requestIdRef.current;
     const t = window.setTimeout(async () => {
       try {
         const url = `/api/search?q=${encodeURIComponent(q)}&include_records=${
@@ -175,7 +186,9 @@ function PalettePanel() {
         const res = await fetch(url);
         if (!res.ok) return;
         const json = (await res.json()) as { results: ApiResult[] };
-        setResults(json.results ?? []);
+        // Drop the response if another request has started since we fired.
+        if (myId !== requestIdRef.current) return;
+        setResults({ q, includeRecords, items: json.results ?? [] });
         setSelectedIndex(0);
       } catch {
         /* palette tolerates transient search failures */
@@ -184,15 +197,24 @@ function PalettePanel() {
     return () => window.clearTimeout(t);
   }, [q, includeRecords]);
 
-  // When the query clears (e.g. user deletes text), drop stale results
-  // without using an effect — derive an empty list in the memo instead.
   const items: PaletteResultItem[] = useMemo(() => {
     if (q.length === 0) {
       const recents = recentsAsItems(readRecents());
       return [...recents, ...QUICK_JUMPS];
     }
-    return apiResultsAsItems(results);
-  }, [q, results]);
+    // Only show results that belong to the *current* query/records tuple —
+    // otherwise a user deleting characters (or toggling records) sees old
+    // hits flash while the next fetch is pending.
+    if (results.q !== q || results.includeRecords !== includeRecords) {
+      return [];
+    }
+    return apiResultsAsItems(results.items);
+  }, [q, includeRecords, results]);
+
+  const selectedId =
+    items[selectedIndex] !== undefined
+      ? `palette-item-${selectedIndex}`
+      : undefined;
 
   function activate(item: PaletteResultItem) {
     router.push(item.route);
@@ -239,6 +261,9 @@ function PalettePanel() {
   return (
     <div
       data-testid="command-palette"
+      role="dialog"
+      aria-modal="true"
+      aria-label="command palette"
       className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 pt-[12vh]"
       onClick={() => setOpen(false)}
     >
@@ -260,8 +285,9 @@ function PalettePanel() {
           <input
             ref={inputRef}
             role="combobox"
-            aria-expanded="true"
+            aria-expanded={true}
             aria-controls="palette-listbox"
+            aria-activedescendant={selectedId}
             aria-label="Command palette"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -271,13 +297,12 @@ function PalettePanel() {
           />
         </div>
 
-        <div id="palette-listbox">
-          <PaletteResults
-            items={items}
-            selectedIndex={selectedIndex}
-            onSelect={activate}
-          />
-        </div>
+        <PaletteResults
+          listboxId="palette-listbox"
+          items={items}
+          selectedIndex={selectedIndex}
+          onSelect={activate}
+        />
 
         <div className="flex items-center justify-between border-t border-border-hairline px-3 py-2 text-[11px] text-dim">
           <label className="flex items-center gap-2">

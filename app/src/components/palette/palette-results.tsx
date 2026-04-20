@@ -21,6 +21,9 @@ export type PaletteResultsProps = {
   items: PaletteResultItem[];
   selectedIndex: number;
   onSelect: (item: PaletteResultItem) => void;
+  // The combobox input uses aria-controls/aria-activedescendant to point at
+  // this listbox and its selected row; the parent owns the id contract.
+  listboxId?: string;
 };
 
 function badgeLabel(item: PaletteResultItem): string {
@@ -28,9 +31,15 @@ function badgeLabel(item: PaletteResultItem): string {
   return item.type.toUpperCase();
 }
 
-export function PaletteResults({ items, selectedIndex, onSelect }: PaletteResultsProps) {
+export function PaletteResults({
+  items,
+  selectedIndex,
+  onSelect,
+  listboxId,
+}: PaletteResultsProps) {
   return (
     <ul
+      id={listboxId}
       role="listbox"
       aria-label="palette results"
       className="max-h-[280px] overflow-auto"
@@ -40,6 +49,7 @@ export function PaletteResults({ items, selectedIndex, onSelect }: PaletteResult
         return (
           <li
             key={`${item.kind}:${item.id}`}
+            id={`palette-item-${i}`}
             role="option"
             aria-selected={selected}
             data-testid="palette-row"

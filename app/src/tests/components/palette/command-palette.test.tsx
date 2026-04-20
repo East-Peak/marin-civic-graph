@@ -122,6 +122,7 @@ describe("CommandPalette", () => {
             search_label: "Kate Colin",
             key_fact: null,
             search_rank: 1.0,
+            route: "/person/kate-colin",
           },
           {
             id: "person-eli-beckman",
@@ -129,6 +130,7 @@ describe("CommandPalette", () => {
             search_label: "Eli Beckman",
             key_fact: null,
             search_rank: 0.9,
+            route: "/person/eli-beckman",
           },
         ],
       },
@@ -161,5 +163,126 @@ describe("CommandPalette", () => {
     // at index 0.
     fireEvent.keyDown(input, { key: "Enter" });
     expect(push).toHaveBeenCalledWith("/");
+  });
+
+  it("stale fetch does not overwrite fresher response", async () => {
+    // Drive two overlapping fetches: query A resolves SLOW, query B resolves
+    // FAST. Even though A's debounced fetch fires first, the user has
+    // already typed B by the time A's response lands — B's results must
+    // stay on screen.
+    const deferred: Array<{ resolve: (v: { results: unknown[] }) => void }> = [];
+    globalThis.fetch = vi.fn(async (input: RequestInfo | URL) => {
+      const url = typeof input === "string" ? input : input.toString();
+      fetchCalls.push(url);
+      return await new Promise<Response>((resolveRes) => {
+        deferred.push({
+          resolve: (json) =>
+            resolveRes({
+              ok: true,
+              status: 200,
+              json: async () => json,
+            } as Response),
+        });
+      });
+    }) as unknown as typeof fetch;
+
+    render(<Harness />);
+    const input = screen.getByRole("combobox") as HTMLInputElement;
+
+    // Query A — "kate"
+    fireEvent.change(input, { target: { value: "kate" } });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(200);
+    });
+    // Query B — "eli" (replaces A before A resolves)
+    fireEvent.change(input, { target: { value: "eli" } });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(200);
+    });
+    expect(deferred.length).toBe(2);
+
+    // Resolve B first (fresh), THEN A (stale).
+    await act(async () => {
+      deferred[1].resolve({
+        results: [
+          {
+            id: "person-eli-beckman",
+            type: "Person",
+            search_label: "Eli Beckman",
+            key_fact: null,
+            search_rank: 0.9,
+            route: "/person/eli-beckman",
+          },
+        ],
+      });
+      // Let the microtask settle so setResults fires for B.
+      await vi.advanceTimersByTimeAsync(0);
+    });
+    await act(async () => {
+      deferred[0].resolve({
+        results: [
+          {
+            id: "person-kate-colin",
+            type: "Person",
+            search_label: "Kate Colin",
+            key_fact: null,
+            search_rank: 1.0,
+            route: "/person/kate-colin",
+          },
+        ],
+      });
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    // B's results must be what's displayed — A must have been dropped.
+    expect(screen.getByText("Eli Beckman")).toBeInTheDocument();
+    expect(screen.queryByText("Kate Colin")).toBeNull();
+  });
+
+  it("palette root has dialog semantics (role + aria-modal + aria-label)", () => {
+    render(<Harness />);
+    const root = screen.getByTestId("command-palette");
+    expect(root.getAttribute("role")).toBe("dialog");
+    expect(root.getAttribute("aria-modal")).toBe("true");
+    expect(root.getAttribute("aria-label")).toBe("command palette");
+  });
+
+  it("combobox aria-activedescendant points at the selected option", async () => {
+    mockFetch(() => ({
+      ok: true,
+      json: {
+        results: [
+          {
+            id: "person-kate-colin",
+            type: "Person",
+            search_label: "Kate Colin",
+            key_fact: null,
+            search_rank: 1.0,
+            route: "/person/kate-colin",
+          },
+          {
+            id: "person-eli-beckman",
+            type: "Person",
+            search_label: "Eli Beckman",
+            key_fact: null,
+            search_rank: 0.9,
+            route: "/person/eli-beckman",
+          },
+        ],
+      },
+    }));
+    render(<Harness />);
+    const input = screen.getByRole("combobox") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "k" } });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(200);
+    });
+    expect(input.getAttribute("aria-activedescendant")).toBe("palette-item-0");
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    expect(input.getAttribute("aria-activedescendant")).toBe("palette-item-1");
+    // And the selected row is actually marked aria-selected.
+    const options = screen.getAllByRole("option");
+    expect(options[1].getAttribute("aria-selected")).toBe("true");
+    expect(options[0].getAttribute("aria-selected")).toBe("false");
   });
 });
