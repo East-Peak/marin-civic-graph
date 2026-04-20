@@ -205,9 +205,17 @@ export async function findPath(
          [n IN nodes(path) | labels(n)[0]] AS node_types,
          [n IN nodes(path) | coalesce(n.search_label, n.name, n.id)] AS node_labels,
          [n IN nodes(path) | coalesce(
+             // Keep this list aligned with explorer-queries.ts — injected path
+             // hops must project the same event_date as the same node would
+             // when loaded via /api/expand, or the time slider treats them
+             // differently. Includes both canonical and legacy property names
+             // so e.g. Proceeding (occurred_at OR proceeding_date),
+             // SeatService (started_at OR start_date), and AgendaItem
+             // (parent_meeting_date OR meeting_date) all resolve.
              n.meeting_date, n.decided_at, n.flow_date, n.signed_at,
-             n.election_date, n.occurred_at, n.date, n.effective_date,
-             n.filed_at, n.started_at, n.published_at, n.captured_at
+             n.election_date, n.occurred_at, n.proceeding_date, n.date,
+             n.effective_date, n.filed_at, n.started_at, n.start_date,
+             n.parent_meeting_date, n.published_at, n.captured_at
          )] AS node_event_dates,
          [r IN relationships(path) | type(r)] AS edge_types
     RETURN node_ids, node_types, node_labels, node_event_dates, edge_types
