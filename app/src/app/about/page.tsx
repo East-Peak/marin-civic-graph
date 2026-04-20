@@ -95,6 +95,14 @@ export default async function AboutPage() {
               ))
             )}
           </div>
+          {catalog.built_at && (
+            <div
+              data-testid="catalog-snapshot"
+              className="mt-2 font-mono text-[11px] text-dim"
+            >
+              snapshot from {catalog.built_at.slice(0, 10)} — live count may differ
+            </div>
+          )}
         </section>
 
         <section className="mt-8">
