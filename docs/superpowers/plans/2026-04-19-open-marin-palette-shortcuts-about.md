@@ -287,3 +287,12 @@ Commit: none — verification only.
 Plan 4b (separate plan, Stuart review gate): invite-only auth, Vercel deploy polish.
 
 Plan 5 (deferred per spec §9): AI chat.
+
+## Round 2 Codex follow-ups (applied)
+
+- Modal focus capture + restoration on open/close.
+- Shortcut listener short-circuits while any modal is open (only Esc handled).
+- /about fallback now distinguishes empty-result from loader-error.
+- Jurisdiction count aligned with /about list (city, town, county).
+
+No outstanding a11y debt from round 2.
