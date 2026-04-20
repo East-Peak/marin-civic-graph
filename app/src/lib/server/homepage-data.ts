@@ -6,6 +6,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { runQuery } from "@/lib/neo4j";
 import type { NodeType } from "@/lib/type-display";
+import { JURISDICTION_PLACE_TYPES } from "@/lib/server/jurisdiction-types";
 
 export type StatusPayload = {
   connected: boolean;
@@ -48,10 +49,12 @@ export async function loadStatus(): Promise<StatusPayload> {
       WITH s, count(n) AS node_count
       MATCH ()-[r]->()
       WITH s, node_count, count(r) AS edge_count
-      MATCH (p:Place) WHERE p.place_type IN ['city', 'county']
+      MATCH (p:Place) WHERE p.place_type IN $place_types
       RETURN node_count, edge_count, count(p) AS jurisdiction_count,
              s.updated_at AS ingest_at
       `,
+      // Single source of truth — /about's list and this count must agree.
+      { place_types: JURISDICTION_PLACE_TYPES },
     );
     const record = records[0];
     return {

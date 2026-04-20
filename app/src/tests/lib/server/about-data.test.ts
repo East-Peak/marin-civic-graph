@@ -29,13 +29,17 @@ describe("loadJurisdictions", () => {
     ]);
   });
 
-  it("filters to Place nodes where place_type is city/town/county", async () => {
+  it("filters to Place nodes via shared JURISDICTION_PLACE_TYPES param", async () => {
     mockRunQuery.mockResolvedValueOnce([]);
     await loadJurisdictions();
-    const [cypher] = mockRunQuery.mock.calls[0];
+    const [cypher, params] = mockRunQuery.mock.calls[0];
     expect(cypher).toContain(":Place");
-    expect(cypher).toContain("place_type IN ['city', 'town', 'county']");
+    expect(cypher).toContain("place_type IN $place_types");
     expect(cypher).toContain("ORDER BY p.name ASC");
+    // Single source of truth — must agree with /about list predicate.
+    expect(params).toEqual({
+      place_types: ["city", "town", "county"],
+    });
   });
 
   it("returns [] when the query throws (graceful fallback)", async () => {
