@@ -7,13 +7,19 @@
 // arrays (and collapsed back on load), since Set doesn't round-trip through
 // JSON.stringify.
 //
+// Per fix 7: the on-disk shape also carries the full investigation canvas —
+// every node + edge the user has loaded — so that restoring a view rebuilds
+// the graph they were looking at, not just the focus + filter chip state.
+//
 // Also offers a one-shot JSON export (download of the current state).
 //
 // The parent handles the actual navigation on load by consuming the
-// ExplorerState passed through `onLoadView` and pushing the URL.
+// ExplorerState + nodes + edges passed through `onLoadView` and pushing the
+// URL.
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { ExplorerState } from "@/lib/explorer/explorer-state";
+import type { NodeType } from "@/lib/type-display";
 
 const STORAGE_KEY = "openmarin_saved_views";
 const MAX_SAVED = 20;
@@ -24,9 +30,38 @@ type SerializedExplorerState = Omit<ExplorerState, "loadedNodeIds" | "loadedEdge
   loadedEdgeKeys: string[];
 };
 
+// Per fix 7: the serializable subset of a canvas node. Mirrors the NodeRow
+// shape the explorer client passes through `nodeToElement` but stripped of
+// anything the renderer derives at paint time (size, glow, etc.). We keep
+// type + label + event_date so re-layout reconstructs the same radial map.
+export type SavedViewNode = {
+  id: string;
+  type: NodeType;
+  label: string;
+  route: string;
+  ring: number;
+  event_date?: string | null;
+};
+
+// Per fix 7: canvas edge counterpart to SavedViewNode.
+export type SavedViewEdge = {
+  source: string;
+  target: string;
+  type: string;
+  style: "governance" | "money" | "legal-constrains";
+};
+
 export type SavedView = {
   state: SerializedExplorerState;
+  nodes: SavedViewNode[];
+  edges: SavedViewEdge[];
   saved_at: string;
+};
+
+export type SavedViewLoad = {
+  state: ExplorerState;
+  nodes: SavedViewNode[];
+  edges: SavedViewEdge[];
 };
 
 function serialize(state: ExplorerState): SerializedExplorerState {
@@ -50,7 +85,21 @@ function readSaved(): Record<string, SavedView> {
   const raw = window.localStorage.getItem(STORAGE_KEY);
   if (!raw) return {};
   try {
-    return JSON.parse(raw) as Record<string, SavedView>;
+    const parsed = JSON.parse(raw) as Record<string, Partial<SavedView>>;
+    // Coerce pre-fix-7 entries (no nodes/edges) to the new shape so old
+    // stored views don't crash the UI — they just restore with an empty
+    // canvas payload, same behavior as before.
+    const out: Record<string, SavedView> = {};
+    for (const [k, v] of Object.entries(parsed)) {
+      if (!v || !v.state) continue;
+      out[k] = {
+        state: v.state as SerializedExplorerState,
+        nodes: Array.isArray(v.nodes) ? (v.nodes as SavedViewNode[]) : [],
+        edges: Array.isArray(v.edges) ? (v.edges as SavedViewEdge[]) : [],
+        saved_at: typeof v.saved_at === "string" ? v.saved_at : new Date().toISOString(),
+      };
+    }
+    return out;
   } catch {
     return {};
   }
@@ -76,26 +125,43 @@ function enforceCap(views: Record<string, SavedView>): Record<string, SavedView>
 export type SaveViewMenuProps = {
   open: boolean;
   state: ExplorerState;
+  /** Supplier of the current canvas payload. Called at save-time so the
+   *  parent can snapshot Cytoscape's live nodes/edges into the saved view. */
+  getCanvasPayload?: () => { nodes: SavedViewNode[]; edges: SavedViewEdge[] };
   onClose: () => void;
-  onLoadView: (state: ExplorerState) => void;
+  onLoadView: (loaded: SavedViewLoad) => void;
 };
 
-export function SaveViewMenu({ open, state, onClose, onLoadView }: SaveViewMenuProps) {
+export function SaveViewMenu({
+  open,
+  state,
+  getCanvasPayload,
+  onClose,
+  onLoadView,
+}: SaveViewMenuProps) {
   const [name, setName] = useState("");
   // Read localStorage lazily on first render. Subsequent changes (save,
   // delete, cap-eviction) go through setSaved. Cross-tab mutation is a Plan 4
   // concern — for now, a single tab's view of the saved list is authoritative.
   const [saved, setSaved] = useState<Record<string, SavedView>>(() => readSaved());
 
+  const snapshotPayload = useCallback(() => {
+    if (getCanvasPayload) return getCanvasPayload();
+    return { nodes: [] as SavedViewNode[], edges: [] as SavedViewEdge[] };
+  }, [getCanvasPayload]);
+
   if (!open) return null;
 
   function save() {
     const trimmedName = name.trim();
     if (!trimmedName) return;
+    const payload = snapshotPayload();
     const next: Record<string, SavedView> = {
       ...saved,
       [trimmedName]: {
         state: serialize(state),
+        nodes: payload.nodes,
+        edges: payload.edges,
         saved_at: new Date().toISOString(),
       },
     };
@@ -115,11 +181,22 @@ export function SaveViewMenu({ open, state, onClose, onLoadView }: SaveViewMenuP
   function loadView(key: string) {
     const v = saved[key];
     if (!v) return;
-    onLoadView(deserialize(v.state));
+    onLoadView({
+      state: deserialize(v.state),
+      nodes: v.nodes ?? [],
+      edges: v.edges ?? [],
+    });
   }
 
   function exportJson() {
-    const blob = new Blob([JSON.stringify(serialize(state), null, 2)], {
+    const payload = snapshotPayload();
+    const dump = {
+      state: serialize(state),
+      nodes: payload.nodes,
+      edges: payload.edges,
+      saved_at: new Date().toISOString(),
+    };
+    const blob = new Blob([JSON.stringify(dump, null, 2)], {
       type: "application/json",
     });
     const url = window.URL.createObjectURL(blob);
