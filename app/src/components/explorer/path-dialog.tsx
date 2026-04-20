@@ -13,7 +13,7 @@
 // `fetchSuggestions` hook wired up so that a drop-down can be added without
 // restructuring the component.
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { edgeKey, type EdgeLike } from "@/lib/explorer/explorer-state";
 
 // ---------------------------------------------------------------------------
@@ -70,13 +70,9 @@ export function PathDialog({ open, onClose, onHighlightPath }: PathDialogProps) 
   const fromDebounce = useRef<number | null>(null);
   const toDebounce = useRef<number | null>(null);
 
-  useEffect(() => {
-    if (!open) {
-      // Reset transient state when dialog closes so the next open starts fresh.
-      setResult(null);
-      setError(null);
-    }
-  }, [open]);
+  // (Reset-on-close is handled by not rendering at all when open=false; the
+  // parent remounts the dialog for each opening, so `result` and `error`
+  // start fresh.)
 
   function debouncedSearch(
     q: string,

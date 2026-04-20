@@ -12,7 +12,7 @@
 // The parent handles the actual navigation on load by consuming the
 // ExplorerState passed through `onLoadView` and pushing the URL.
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { ExplorerState } from "@/lib/explorer/explorer-state";
 
 const STORAGE_KEY = "openmarin_saved_views";
@@ -82,11 +82,10 @@ export type SaveViewMenuProps = {
 
 export function SaveViewMenu({ open, state, onClose, onLoadView }: SaveViewMenuProps) {
   const [name, setName] = useState("");
-  const [saved, setSaved] = useState<Record<string, SavedView>>({});
-
-  useEffect(() => {
-    if (open) setSaved(readSaved());
-  }, [open]);
+  // Read localStorage lazily on first render. Subsequent changes (save,
+  // delete, cap-eviction) go through setSaved. Cross-tab mutation is a Plan 4
+  // concern — for now, a single tab's view of the saved list is authoritative.
+  const [saved, setSaved] = useState<Record<string, SavedView>>(() => readSaved());
 
   if (!open) return null;
 
