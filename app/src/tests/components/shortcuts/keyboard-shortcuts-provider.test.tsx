@@ -121,15 +121,52 @@ describe("KeyboardShortcutsProvider", () => {
     expect(push).not.toHaveBeenCalled();
   });
 
-  it("/ routes to /search?q= when there is no homepage prompt-search input", () => {
+  it("/ opens the palette when there is no homepage prompt-search input", () => {
+    render(
+      <KeyboardShortcutsProvider>
+        <PaletteProbe />
+      </KeyboardShortcutsProvider>,
+    );
+    expect(screen.getByTestId("palette-open").textContent).toBe("closed");
+    act(() => {
+      fireEvent.keyDown(window, { key: "/" });
+    });
+    expect(screen.getByTestId("palette-open").textContent).toBe("open");
+    expect(push).not.toHaveBeenCalled();
+  });
+
+  it("⌘K keydown has preventDefault called (blocks browser omnibox)", () => {
     render(
       <KeyboardShortcutsProvider>
         <div />
       </KeyboardShortcutsProvider>,
     );
-    act(() => {
-      fireEvent.keyDown(window, { key: "/" });
+    const ev = new KeyboardEvent("keydown", {
+      key: "k",
+      metaKey: true,
+      bubbles: true,
+      cancelable: true,
     });
-    expect(push).toHaveBeenCalledWith("/search?q=");
+    act(() => {
+      window.dispatchEvent(ev);
+    });
+    expect(ev.defaultPrevented).toBe(true);
+  });
+
+  it("an unhandled key does NOT have preventDefault called", () => {
+    render(
+      <KeyboardShortcutsProvider>
+        <div />
+      </KeyboardShortcutsProvider>,
+    );
+    const ev = new KeyboardEvent("keydown", {
+      key: "x",
+      bubbles: true,
+      cancelable: true,
+    });
+    act(() => {
+      window.dispatchEvent(ev);
+    });
+    expect(ev.defaultPrevented).toBe(false);
   });
 });

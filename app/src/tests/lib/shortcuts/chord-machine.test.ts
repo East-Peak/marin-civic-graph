@@ -5,13 +5,19 @@ const t0 = 1_700_000_000_000;
 
 function keyEvent(
   key: string,
-  opts: { meta?: boolean; ctrl?: boolean; target?: EventTarget | null } = {},
+  opts: {
+    meta?: boolean;
+    ctrl?: boolean;
+    target?: EventTarget | null;
+    isComposing?: boolean;
+  } = {},
 ) {
   return {
     key,
     meta: opts.meta ?? false,
     ctrl: opts.ctrl ?? false,
     target: opts.target ?? null,
+    isComposing: opts.isComposing ?? false,
   };
 }
 
@@ -140,6 +146,45 @@ describe("chord-machine", () => {
     const { events } = handleKey(
       initState(),
       keyEvent("/", { target: makeContentEditable() }),
+      t0,
+    );
+    expect(events).toEqual([]);
+  });
+
+  it("⌘K inside an <input> target still emits palette", () => {
+    const { state, events } = handleKey(
+      initState(),
+      keyEvent("k", { meta: true, target: makeInput() }),
+      t0,
+    );
+    expect(events).toEqual([{ kind: "palette" }]);
+    expect(state.buffer).toBeNull();
+  });
+
+  it("Ctrl+K inside an <input> target still emits palette", () => {
+    const { state, events } = handleKey(
+      initState(),
+      keyEvent("k", { ctrl: true, target: makeInput() }),
+      t0,
+    );
+    expect(events).toEqual([{ kind: "palette" }]);
+    expect(state.buffer).toBeNull();
+  });
+
+  it("isComposing=true suppresses all shortcuts (IME)", () => {
+    // ⌘K during composition must not steal — the IME owns the keystroke.
+    const { events } = handleKey(
+      initState(),
+      keyEvent("k", { meta: true, isComposing: true }),
+      t0,
+    );
+    expect(events).toEqual([]);
+  });
+
+  it("isComposing=true — Escape is also suppressed (IME cancels composition)", () => {
+    const { events } = handleKey(
+      initState(),
+      keyEvent("Escape", { isComposing: true }),
       t0,
     );
     expect(events).toEqual([]);

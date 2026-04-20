@@ -200,6 +200,11 @@ function PalettePanel() {
   }
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    // During IME composition the keystroke belongs to the composer — do not
+    // steal Enter (commit) / Escape (cancel) / arrow keys (candidate nav).
+    if (e.nativeEvent.isComposing) {
+      return;
+    }
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setSelectedIndex((i) => Math.min(items.length - 1, i + 1));
