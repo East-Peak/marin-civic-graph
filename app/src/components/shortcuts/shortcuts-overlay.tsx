@@ -1,12 +1,22 @@
 "use client";
 
-// Task 4 will flesh out the cheat-sheet visual. For now this stub is enough
-// for the provider + tests to verify open/close semantics.
-
 export type ShortcutsOverlayProps = {
   open: boolean;
   onClose: () => void;
 };
+
+type Row = { keys: string; desc: string };
+
+const ROWS: Row[] = [
+  { keys: "\u2318K", desc: "Open palette" },
+  { keys: "/", desc: "Focus search" },
+  { keys: "g h", desc: "Home" },
+  { keys: "g g", desc: "Graph" },
+  { keys: "g d", desc: "Data" },
+  { keys: "g c", desc: "Chat" },
+  { keys: "?", desc: "Show this overlay" },
+  { keys: "esc", desc: "Close modal / clear focus" },
+];
 
 export function ShortcutsOverlay({ open, onClose }: ShortcutsOverlayProps) {
   if (!open) return null;
@@ -18,9 +28,42 @@ export function ShortcutsOverlay({ open, onClose }: ShortcutsOverlayProps) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-[480px] max-w-[95vw] rounded border border-border-primary bg-panel p-4 font-mono text-xs text-body"
+        className="w-[520px] max-w-[95vw] rounded border border-border-primary bg-panel p-4 font-mono text-xs text-body shadow-xl"
       >
-        SHORTCUTS
+        <div
+          className="mb-3 text-body"
+          style={{
+            fontFamily: "var(--font-vt323)",
+            fontSize: "16px",
+            letterSpacing: "0.08em",
+          }}
+        >
+          KEYBOARD SHORTCUTS
+        </div>
+
+        <div className="border-t border-border-hairline">
+          {ROWS.map((row) => (
+            <div
+              key={row.keys}
+              className="flex items-center justify-between border-b border-border-hairline px-1 py-1.5"
+            >
+              <kbd className="rounded border border-border-hairline bg-surface px-1.5 py-0.5 text-[10px] text-body">
+                {row.keys}
+              </kbd>
+              <span className="text-dim">{row.desc}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-3 flex justify-end">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded border border-[#262b35] bg-panel px-3 py-1 text-[11px] text-dim hover:bg-surface"
+          >
+            close
+          </button>
+        </div>
       </div>
     </div>
   );
