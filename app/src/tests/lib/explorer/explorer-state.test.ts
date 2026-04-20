@@ -6,9 +6,13 @@ import {
   defaultTimeRange,
   autoEnableFiltersForFocus,
   edgeKey,
+  edgeClassificationExcludes,
+  widenTimeRangeForLoadedSubgraph,
+  GOVERNANCE_EDGES_LIVE,
   type ExplorerState,
 } from "@/lib/explorer/explorer-state";
 import { ALL_TYPES } from "@/lib/type-display";
+import { MONEY_EDGES_LIVE, LEGAL_EDGES_LIVE } from "@/lib/edge-vocabulary";
 
 const INGEST = "2026-04-14T09:00:00Z";
 
@@ -295,6 +299,108 @@ describe("autoEnableFiltersForFocus", () => {
         edgeFilters: base.edgeFilters,
       }),
     ).toBe(snapshot);
+  });
+});
+
+// -------------------------------------------------------------------------
+// Fix 1: edgeClassificationExcludes
+// -------------------------------------------------------------------------
+
+describe("edgeClassificationExcludes", () => {
+  it("returns an empty list when every edge class is on", () => {
+    const base = parseUrlToState(new URLSearchParams(), INGEST);
+    const excludes = edgeClassificationExcludes(base);
+    expect(excludes).toEqual([]);
+  });
+
+  it("excludes the money edges when money is off", () => {
+    const base = parseUrlToState(new URLSearchParams(), INGEST);
+    const state: ExplorerState = {
+      ...base,
+      edgeFilters: { ...base.edgeFilters, money: false },
+    };
+    const excludes = edgeClassificationExcludes(state);
+    for (const e of MONEY_EDGES_LIVE) expect(excludes).toContain(e);
+  });
+
+  it("excludes governance-classified edges (non-money, non-legal) when governance is off", () => {
+    const base = parseUrlToState(new URLSearchParams(), INGEST);
+    const state: ExplorerState = {
+      ...base,
+      edgeFilters: { ...base.edgeFilters, governance: false },
+    };
+    const excludes = edgeClassificationExcludes(state);
+    for (const e of GOVERNANCE_EDGES_LIVE) expect(excludes).toContain(e);
+    // Money + legal should NOT be excluded since those chips are still on.
+    for (const e of MONEY_EDGES_LIVE) expect(excludes).not.toContain(e);
+  });
+
+  it("excludes legal-constrains edges when legalConstrains is off", () => {
+    const base = parseUrlToState(new URLSearchParams(), INGEST);
+    const state: ExplorerState = {
+      ...base,
+      edgeFilters: { ...base.edgeFilters, legalConstrains: false },
+    };
+    const excludes = edgeClassificationExcludes(state);
+    for (const e of LEGAL_EDGES_LIVE) expect(excludes).toContain(e);
+  });
+
+  it("combines multiple off-classes without double-counting", () => {
+    const base = parseUrlToState(new URLSearchParams(), INGEST);
+    const state: ExplorerState = {
+      ...base,
+      edgeFilters: {
+        governance: false,
+        money: false,
+        legalConstrains: true,
+        universal: true,
+      },
+    };
+    const excludes = edgeClassificationExcludes(state);
+    // Union of governance + money, no duplicates.
+    const set = new Set(excludes);
+    expect(set.size).toBe(excludes.length);
+    for (const e of GOVERNANCE_EDGES_LIVE) expect(set.has(e)).toBe(true);
+    for (const e of MONEY_EDGES_LIVE) expect(set.has(e)).toBe(true);
+  });
+});
+
+// -------------------------------------------------------------------------
+// Fix 4: widenTimeRangeForLoadedSubgraph
+// -------------------------------------------------------------------------
+
+describe("widenTimeRangeForLoadedSubgraph", () => {
+  it("widens timeFrom to cover an earlier event_date", () => {
+    const base = parseUrlToState(new URLSearchParams(), INGEST);
+    expect(base.timeFrom.startsWith("2021-")).toBe(true);
+    const widened = widenTimeRangeForLoadedSubgraph(base, ["2015-06-01"]);
+    expect(widened.timeFrom).toBe("2015-06-01");
+    // timeTo is never touched.
+    expect(widened.timeTo).toBe(base.timeTo);
+  });
+
+  it("does not mutate when every event_date is inside the window", () => {
+    const base = parseUrlToState(new URLSearchParams(), INGEST);
+    const widened = widenTimeRangeForLoadedSubgraph(base, ["2023-01-01", "2024-12-31"]);
+    expect(widened.timeFrom).toBe(base.timeFrom);
+  });
+
+  it("ignores null / undefined / malformed dates", () => {
+    const base = parseUrlToState(new URLSearchParams(), INGEST);
+    const widened = widenTimeRangeForLoadedSubgraph(base, [null, undefined, "", "not-a-date"]);
+    expect(widened.timeFrom).toBe(base.timeFrom);
+  });
+
+  it("uses the earliest of multiple dates", () => {
+    const base = parseUrlToState(new URLSearchParams(), INGEST);
+    const widened = widenTimeRangeForLoadedSubgraph(base, ["2015-06-01", "2010-01-01", "2017-09-09"]);
+    expect(widened.timeFrom).toBe("2010-01-01");
+  });
+
+  it("uses the first 10 chars of a longer ISO datetime", () => {
+    const base = parseUrlToState(new URLSearchParams(), INGEST);
+    const widened = widenTimeRangeForLoadedSubgraph(base, ["2015-06-01T12:34:56Z"]);
+    expect(widened.timeFrom).toBe("2015-06-01");
   });
 });
 

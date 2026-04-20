@@ -30,7 +30,10 @@ export function effectiveEventDate(
     case "Election":
       return s(props.election_date);
     case "Proceeding":
-      return s(props.proceeding_date) ?? s(props.date);
+      // Live graph uses `occurred_at` (per Codex round-1 fix 10). Fall back
+      // to `proceeding_date` / `date` to keep older callers / test fixtures
+      // working.
+      return s(props.occurred_at) ?? s(props.proceeding_date) ?? s(props.date);
     case "Agreement":
     case "Amendment":
       return s(props.effective_date);

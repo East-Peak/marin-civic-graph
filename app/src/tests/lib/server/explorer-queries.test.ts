@@ -85,12 +85,14 @@ describe("buildExpandQuery", () => {
     // Hop 2 quotas: MoneyFlow=8, Person=6, Organization=4, Amendment=2
     const { cypher } = buildExpandQuery({ ...base, hopLimit: 2 });
     expect(cypher).toContain("(c:MoneyFlow)");
-    // Find the MoneyFlow sub-query and verify its LIMIT.
+    // Find the MoneyFlow sub-query and verify its LIMIT. The event_date
+    // column widened the sub-query body so the old 400-char slice is no
+    // longer enough — widen to 500.
     const mfBlock = cypher.slice(cypher.indexOf("(c:MoneyFlow)"));
-    expect(mfBlock.slice(0, 400)).toMatch(/LIMIT 8/);
+    expect(mfBlock.slice(0, 500)).toMatch(/LIMIT 8/);
 
     const amendBlock = cypher.slice(cypher.indexOf("(c:Amendment)"));
-    expect(amendBlock.slice(0, 400)).toMatch(/LIMIT 2/);
+    expect(amendBlock.slice(0, 500)).toMatch(/LIMIT 2/);
   });
 
   it("excludes edges from excludedEdgeTypes from the relationship list", () => {
@@ -134,9 +136,14 @@ describe("buildExpandQuery", () => {
     expect(cap).toBe(80);
   });
 
-  it("orders candidates by (hop_distance, type_priority, id) at the outer level", () => {
+  it("orders candidates by (ring, type_priority, rank_value DESC, id) at the outer level", () => {
     const { cypher } = buildExpandQuery(base);
-    expect(cypher).toContain("ORDER BY ring ASC, type_priority ASC, id ASC");
+    // Fix 3: the outer ORDER BY preserves rank_value so the aggregate cap
+    // drops low-priority types first and keeps the highest-ranked members
+    // per type within the cap.
+    expect(cypher).toContain(
+      "ORDER BY ring ASC, type_priority ASC, rank_value DESC, id ASC",
+    );
     expect(cypher).toContain("LIMIT $cap");
   });
 
@@ -175,5 +182,112 @@ describe("buildExpandQuery", () => {
       excludedEdgeTypes: rels,
     });
     expect(cypher).toContain("__NO_LIVE_EDGE__");
+  });
+
+  // -------------------------------------------------------------------------
+  // Fix 1: edge-class toggles + includeUniversals
+  // -------------------------------------------------------------------------
+
+  it("fix 1: includeUniversals adds EVIDENCED_BY/IN_JURISDICTION/RELATES_TO_ISSUE to the relationship pattern", () => {
+    const withoutUniversals = buildExpandQuery(base);
+    const withUniversals = buildExpandQuery({ ...base, includeUniversals: true });
+
+    const rels = (s: string) =>
+      s.match(/\[:([A-Z_|]+)\*1\.\.2\]/)![1].split("|");
+
+    const baseRels = rels(withoutUniversals.cypher);
+    const universalRels = rels(withUniversals.cypher);
+
+    // Default traversal excludes the three universals.
+    expect(baseRels).not.toContain("EVIDENCED_BY");
+    expect(baseRels).not.toContain("IN_JURISDICTION");
+    expect(baseRels).not.toContain("RELATES_TO_ISSUE");
+
+    // Flipped on, they appear — while PHASE2_WHITELIST_LIVE members stay.
+    expect(universalRels).toContain("EVIDENCED_BY");
+    expect(universalRels).toContain("IN_JURISDICTION");
+    expect(universalRels).toContain("RELATES_TO_ISSUE");
+    expect(universalRels).toContain("AT_MEETING");
+    expect(universalRels).toContain("CAST_VOTE");
+  });
+
+  it("fix 1: excludedEdgeTypes governance subset + includeUniversals = only money + legal + universals", () => {
+    // Simulate toggling governance OFF while keeping money/legal on and
+    // enabling universals. The effective query should traverse money edges
+    // + legal edges + universals, no governance edges.
+    const { cypher } = buildExpandQuery({
+      ...base,
+      excludedEdgeTypes: ["AT_MEETING", "CAST_VOTE", "DECIDED_BY", "DECIDED_AT", "AT_INSTITUTION"],
+      includeUniversals: true,
+    });
+    const rels = cypher.match(/\[:([A-Z_|]+)\*1\.\.2\]/)![1].split("|");
+    expect(rels).not.toContain("AT_MEETING");
+    expect(rels).not.toContain("CAST_VOTE");
+    expect(rels).not.toContain("DECIDED_BY");
+    expect(rels).toContain("FROM_SOURCE");    // money
+    expect(rels).toContain("TO_TARGET");      // money
+    expect(rels).toContain("EVIDENCED_BY");   // universal
+  });
+
+  // -------------------------------------------------------------------------
+  // Fix 3: §6.3 Tier-2 priority table (not Plan 2 Phase-2 table)
+  // -------------------------------------------------------------------------
+
+  it("fix 3: §6.3 Tier-2 priority table includes all 21 types", () => {
+    const { cypher } = buildExpandQuery(base);
+    const expectedTypes = [
+      "MoneyFlow", "Decision", "Case", "Project", "Program",
+      "Agreement", "Amendment", "Filing", "Committee", "Election",
+      "Candidacy", "Meeting", "Proceeding", "Person", "Organization",
+      "Seat", "SeatService", "AgendaItem", "Record", "Place", "Issue",
+    ];
+    for (const t of expectedTypes) {
+      expect(cypher, `missing sub-query for ${t}`).toContain(`(c:${t})`);
+    }
+  });
+
+  it("fix 3 + 10: Proceeding sub-query ranks by occurred_at DESC (live property)", () => {
+    const { cypher } = buildExpandQuery(base);
+    const block = cypher.slice(cypher.indexOf("(c:Proceeding)"));
+    expect(block.slice(0, 600)).toMatch(/ORDER BY hop_distance ASC, c\.occurred_at DESC/);
+    // Pre-fix 10 this ranked on c.date / c.proceeding_date which are empty
+    // on the live graph.
+    expect(block.slice(0, 600)).not.toMatch(/c\.proceeding_date DESC/);
+  });
+
+  it("fix 3: Tier-2 type priorities differ from the Plan 2 Phase-2 table (Case < Filing)", () => {
+    // Plan 2 Phase-2 has Filing at priority 3 before Case. Spec §6.3 Tier-2
+    // ranks Case=3 above Filing=6 (lower number = higher priority).
+    const { cypher } = buildExpandQuery(base);
+    // Find the Case sub-query and read its type_priority constant.
+    const caseBlock = cypher.slice(cypher.indexOf("(c:Case)"));
+    const filingBlock = cypher.slice(cypher.indexOf("(c:Filing)"));
+    expect(caseBlock.slice(0, 600)).toMatch(/3 AS type_priority/);
+    expect(filingBlock.slice(0, 600)).toMatch(/6 AS type_priority/);
+  });
+
+  // -------------------------------------------------------------------------
+  // Fix 4: event_date projection per sub-query
+  // -------------------------------------------------------------------------
+
+  it("fix 4: every sub-query projects event_date so client can plumb it into the time slider", () => {
+    const { cypher } = buildExpandQuery(base);
+    // Each sub-query must emit `AS event_date`. Count occurrences ≥ active
+    // type count.
+    const matches = cypher.match(/AS event_date/g) ?? [];
+    expect(matches.length).toBeGreaterThanOrEqual(21);
+  });
+
+  it("fix 4: outer SELECT carries event_date forward", () => {
+    const { cypher } = buildExpandQuery(base);
+    expect(cypher).toMatch(/RETURN id, labels, label, type, ring, rank_value, type_priority, event_date/);
+  });
+
+  it("fix 4: durable types (Person, Organization, Place, Issue, Seat, Project, Program, Committee, Candidacy) project null event_date", () => {
+    const { cypher } = buildExpandQuery(base);
+    for (const t of ["Person", "Organization", "Place", "Issue", "Seat", "Project", "Program", "Committee", "Candidacy"]) {
+      const block = cypher.slice(cypher.indexOf(`(c:${t})`));
+      expect(block.slice(0, 600), `${t} should have null event_date`).toMatch(/null AS event_date/);
+    }
   });
 });

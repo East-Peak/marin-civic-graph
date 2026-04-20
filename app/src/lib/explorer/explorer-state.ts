@@ -28,6 +28,11 @@
 // trivially testable and safe to import from both client and server.
 
 import { ALL_TYPES, type NodeType } from "@/lib/type-display";
+import {
+  LEGAL_EDGES_LIVE,
+  MONEY_EDGES_LIVE,
+  PHASE2_WHITELIST_LIVE,
+} from "@/lib/edge-vocabulary";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -333,4 +338,92 @@ export function autoEnableFiltersForFocus(
   }
 
   return { ...state, nodeFilters, edgeFilters };
+}
+
+// ---------------------------------------------------------------------------
+// Edge-class derivation — maps the 4 edge-filter classes onto concrete live
+// edge names so /api/expand can enforce the filter at the traversal level.
+// ---------------------------------------------------------------------------
+
+/**
+ * The subset of PHASE2_WHITELIST_LIVE that the "governance" edge class owns —
+ * i.e., the whitelist minus the edges classified under "money" or
+ * "legal-constrains" styles. These are the edges that get traversal-excluded
+ * when the user toggles the "governance" edge chip OFF.
+ *
+ * Kept as a derived constant (not re-derived per call) so the invariant
+ * "governance ∪ money ∪ legal-constrains = whitelist" is visible at module
+ * load time.
+ */
+export const GOVERNANCE_EDGES_LIVE: string[] = PHASE2_WHITELIST_LIVE.filter(
+  (e) => !MONEY_EDGES_LIVE.includes(e) && !LEGAL_EDGES_LIVE.includes(e),
+);
+
+/**
+ * Given the current edgeFilters state, compute the list of live edge names
+ * that must be excluded from the /api/expand traversal relationship list.
+ *
+ * Rules:
+ *   - governance OFF → exclude GOVERNANCE_EDGES_LIVE
+ *   - money OFF      → exclude MONEY_EDGES_LIVE
+ *   - legalConstrains OFF → exclude LEGAL_EDGES_LIVE
+ *
+ * The "universal" class is not excluded here; it's a positive-add (see
+ * `includeUniversalsForState`) because PHASE2_WHITELIST_LIVE doesn't include
+ * the universals by default.
+ */
+export function edgeClassificationExcludes(state: ExplorerState): string[] {
+  const excludes = new Set<string>();
+  if (!state.edgeFilters.governance) {
+    for (const e of GOVERNANCE_EDGES_LIVE) excludes.add(e);
+  }
+  if (!state.edgeFilters.money) {
+    for (const e of MONEY_EDGES_LIVE) excludes.add(e);
+  }
+  if (!state.edgeFilters.legalConstrains) {
+    for (const e of LEGAL_EDGES_LIVE) excludes.add(e);
+  }
+  return Array.from(excludes);
+}
+
+/**
+ * Mirror of the UI's "include universal edges" toggle — returns the value of
+ * `state.edgeFilters.universal`. Kept as a named helper so it can be
+ * imported alongside `edgeClassificationExcludes` wherever expand URLs are
+ * constructed.
+ */
+export function includeUniversalsForState(state: ExplorerState): boolean {
+  return state.edgeFilters.universal;
+}
+
+// ---------------------------------------------------------------------------
+// Time-range widening — spec §5.4 "earliest loaded event floor"
+// ---------------------------------------------------------------------------
+
+/**
+ * Widen `state.timeFrom` to cover the earliest event_date among the provided
+ * loaded nodes. If no loaded node has an event_date earlier than the current
+ * `timeFrom`, the state is returned unchanged.
+ *
+ * Callers pass the per-node event dates keyed by id (or as a flat array). This
+ * module does not reach into Cytoscape — the client is expected to collect
+ * the relevant date props from its canvas and hand them in.
+ *
+ * Per spec §5.4: "last 5 years from ingest, floored by earliest loaded event."
+ * The right edge (`timeTo`) is never mutated by this helper.
+ */
+export function widenTimeRangeForLoadedSubgraph(
+  state: ExplorerState,
+  eventDates: Iterable<string | null | undefined>,
+): ExplorerState {
+  let earliest: string | null = null;
+  for (const raw of eventDates) {
+    if (!raw) continue;
+    const d = raw.slice(0, 10);
+    if (d.length !== 10) continue;
+    if (earliest === null || d < earliest) earliest = d;
+  }
+  if (earliest === null) return state;
+  if (earliest >= state.timeFrom) return state;
+  return { ...state, timeFrom: earliest };
 }

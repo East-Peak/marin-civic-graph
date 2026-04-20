@@ -184,4 +184,82 @@ describe("GET /api/expand", () => {
     const res = await GET(req);
     expect(res.status).toBe(500);
   });
+
+  // -------------------------------------------------------------------------
+  // Fix 1: include_universals=true adds the three universals to the
+  // expand traversal + the edges-among-selected whitelist.
+  // -------------------------------------------------------------------------
+
+  it("fix 1: include_universals=true adds the three universals to the traversal", async () => {
+    runQueryMock.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
+    const req = new Request(
+      "http://localhost/api/expand?focus=f&hop=1&include_universals=true",
+    );
+    await GET(req);
+    const [cypher] = runQueryMock.mock.calls[0];
+    // The variable-length relationship pattern should include each universal.
+    const rels = (cypher as string).match(/\[:([A-Z_|]+)\*1\.\.1\]/)![1].split("|");
+    expect(rels).toContain("EVIDENCED_BY");
+    expect(rels).toContain("IN_JURISDICTION");
+    expect(rels).toContain("RELATES_TO_ISSUE");
+  });
+
+  it("fix 1: include_universals=true adds the three universals to the edges-among-selected whitelist", async () => {
+    runQueryMock
+      .mockResolvedValueOnce([
+        fakeRecord({ id: "a", labels: ["Person"], label: "A", ring: 1 }),
+      ])
+      .mockResolvedValueOnce([]);
+    const req = new Request(
+      "http://localhost/api/expand?focus=f&hop=1&include_universals=true",
+    );
+    await GET(req);
+    const [, edgeParams] = runQueryMock.mock.calls[1];
+    const whitelist = edgeParams.whitelist as string[];
+    expect(whitelist).toContain("EVIDENCED_BY");
+    expect(whitelist).toContain("IN_JURISDICTION");
+    expect(whitelist).toContain("RELATES_TO_ISSUE");
+  });
+
+  it("fix 1: include_universals=false (default) omits the three universals from the traversal", async () => {
+    runQueryMock.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
+    const req = new Request("http://localhost/api/expand?focus=f&hop=1");
+    await GET(req);
+    const [cypher] = runQueryMock.mock.calls[0];
+    const rels = (cypher as string).match(/\[:([A-Z_|]+)\*1\.\.1\]/)![1].split("|");
+    expect(rels).not.toContain("EVIDENCED_BY");
+    expect(rels).not.toContain("IN_JURISDICTION");
+    expect(rels).not.toContain("RELATES_TO_ISSUE");
+  });
+
+  // -------------------------------------------------------------------------
+  // Fix 4: event_date projected into each neighbor response row.
+  // -------------------------------------------------------------------------
+
+  it("fix 4: event_date column is plumbed from Cypher into the JSON response", async () => {
+    runQueryMock
+      .mockResolvedValueOnce([
+        fakeRecord({
+          id: "decision-x",
+          labels: ["Decision"],
+          label: "Dec X",
+          ring: 1,
+          event_date: "2024-05-12",
+        }),
+        fakeRecord({
+          id: "person-k",
+          labels: ["Person"],
+          label: "Kate",
+          ring: 1,
+          event_date: null,
+        }),
+      ])
+      .mockResolvedValueOnce([]);
+    const req = new Request("http://localhost/api/expand?focus=x&hop=1");
+    const res = await GET(req);
+    const body = await res.json();
+    expect(body.nodes).toHaveLength(2);
+    expect(body.nodes[0].event_date).toBe("2024-05-12");
+    expect(body.nodes[1].event_date).toBeNull();
+  });
 });

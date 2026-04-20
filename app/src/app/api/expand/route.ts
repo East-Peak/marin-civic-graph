@@ -11,7 +11,10 @@
 // the explorer's edge rendering matches the entity page's.
 
 import { runQuery } from "@/lib/neo4j";
-import { buildExpandQuery } from "@/lib/server/explorer-queries";
+import {
+  buildExpandQuery,
+  UNIVERSAL_EXPAND_EDGES,
+} from "@/lib/server/explorer-queries";
 import { buildEdgesAmongSelectedQuery } from "@/lib/server/entity-queries";
 import {
   MONEY_EDGES_LIVE,
@@ -73,6 +76,10 @@ type NeighborRow = {
   label: string;
   route: string;
   ring: number;
+  /** ISO date of the effective event for this candidate, or null for durable
+   *  types (Person, Organization, Place, etc.). Clients use this to plumb
+   *  each expanded neighbor into the time slider (§5.4). */
+  event_date: string | null;
 };
 
 type EdgeRow = {
@@ -95,6 +102,7 @@ export async function GET(req: Request) {
   const excludedNodeTypes = parseNodeTypes(searchParams.get("excluded_node_types"));
   const excludedEdgeTypes = parseList(searchParams.get("excluded_edge_types"));
   const alreadyLoadedIds = parseList(searchParams.get("already_loaded"));
+  const includeUniversals = searchParams.get("include_universals") === "true";
 
   try {
     const { cypher, params, cap } = buildExpandQuery({
@@ -103,6 +111,7 @@ export async function GET(req: Request) {
       excludedNodeTypes,
       excludedEdgeTypes,
       alreadyLoadedIds,
+      includeUniversals,
     });
 
     const records = await runQuery(cypher, params);
@@ -113,12 +122,26 @@ export async function GET(req: Request) {
       const id = String(r.get("id"));
       const type = canonicalType(labels, id);
       if (!type) continue; // defensive: skip rows we can't classify
+      // event_date projection may be absent on the degenerate "every type
+      // excluded" path — default to null so callers get a consistent shape.
+      const rawEventDate = (() => {
+        try {
+          return r.get("event_date");
+        } catch {
+          return null;
+        }
+      })();
+      const eventDate =
+        typeof rawEventDate === "string" && rawEventDate.length > 0
+          ? rawEventDate
+          : null;
       nodes.push({
         id,
         type,
         label: String(r.get("label") ?? id),
         route: routeFor(id, type),
         ring: Number(r.get("ring") ?? 1),
+        event_date: eventDate,
       });
     }
 
@@ -130,9 +153,17 @@ export async function GET(req: Request) {
 
     const edges: EdgeRow[] = [];
     if (unionIds.length >= 2) {
-      const allowedEdges = PHASE2_WHITELIST_LIVE.filter(
+      const baseWhitelist = PHASE2_WHITELIST_LIVE.filter(
         (e) => !excludedEdgeTypes.includes(e),
       );
+      const allowedEdges = includeUniversals
+        ? Array.from(
+            new Set<string>([
+              ...baseWhitelist,
+              ...UNIVERSAL_EXPAND_EDGES.filter((e) => !excludedEdgeTypes.includes(e)),
+            ]),
+          )
+        : baseWhitelist;
       const edgeRecords = await runQuery(buildEdgesAmongSelectedQuery(), {
         ids: unionIds,
         whitelist: allowedEdges,

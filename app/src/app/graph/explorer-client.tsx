@@ -41,7 +41,12 @@ import {
   PathDialog,
   type HighlightPathArgs,
 } from "@/components/explorer/path-dialog";
-import { SaveViewMenu } from "@/components/explorer/save-view-menu";
+import {
+  SaveViewMenu,
+  type SavedViewEdge,
+  type SavedViewLoad,
+  type SavedViewNode,
+} from "@/components/explorer/save-view-menu";
 import {
   OverflowIndicator,
   type OverflowItem,
@@ -49,9 +54,11 @@ import {
 import {
   autoEnableFiltersForFocus,
   edgeKey,
+  edgeClassificationExcludes,
   mergeExpansion,
   parseUrlToState,
   stateToUrl,
+  widenTimeRangeForLoadedSubgraph,
   type EdgeLike,
   type ExplorerState,
 } from "@/lib/explorer/explorer-state";
@@ -88,6 +95,7 @@ type ExpandResponse = {
   new_count: number;
   cap: number;
 };
+
 
 // ---------------------------------------------------------------------------
 // Helpers — EntityPayload / expand response → Cytoscape elements
@@ -399,11 +407,23 @@ export function ExplorerClient({ initial, ingestAt }: ExplorerClientProps) {
   useEffect(() => {
     const cy = cyRef.current;
     if (!cy) return;
+    const from = state.timeFrom;
+    const to = state.timeTo;
     cy.batch(() => {
+      // Recompute node visibility from scratch on every state change — we
+      // combine the per-type node filter AND the time-range window in a
+      // single pass so widening the window re-shows nodes that were
+      // previously hidden. A one-way `display = "none"` style (pre-fix) would
+      // leave nodes hidden even after the user slid the window back out.
       cy.nodes().forEach((n) => {
         const t = n.data("type") as NodeType | undefined;
-        const hidden = t ? !state.nodeFilters[t] : false;
-        n.style("display", hidden ? "none" : "element");
+        const typeHidden = t ? !state.nodeFilters[t] : false;
+        const d = String(n.data("eventDate") ?? "").slice(0, 10);
+        // Null event_date = durable entity = always visible regardless of
+        // time window.
+        const timeHidden = d ? d < from || d > to : false;
+        const visible = !typeHidden && !timeHidden;
+        n.style("display", visible ? "element" : "none");
       });
       cy.edges().forEach((e) => {
         const style = e.data("style") as string;
@@ -419,26 +439,7 @@ export function ExplorerClient({ initial, ingestAt }: ExplorerClientProps) {
         e.style("display", visible ? "element" : "none");
       });
     });
-  }, [state.nodeFilters, state.edgeFilters]);
-
-  // ---------------------------------------------------------------------------
-  // Apply time slider filter — hide nodes whose event_date falls outside.
-  // ---------------------------------------------------------------------------
-
-  useEffect(() => {
-    const cy = cyRef.current;
-    if (!cy) return;
-    const from = state.timeFrom;
-    const to = state.timeTo;
-    cy.batch(() => {
-      cy.nodes().forEach((n) => {
-        const d = String(n.data("eventDate") ?? "").slice(0, 10);
-        if (!d) return; // durable / undated — always visible
-        const out = d < from || d > to;
-        if (out) n.style("display", "none");
-      });
-    });
-  }, [state.timeFrom, state.timeTo]);
+  }, [state.nodeFilters, state.edgeFilters, state.timeFrom, state.timeTo]);
 
   // ---------------------------------------------------------------------------
   // Path selection visualization
@@ -471,7 +472,18 @@ export function ExplorerClient({ initial, ingestAt }: ExplorerClientProps) {
       const excludedNodeTypes = (Object.keys(state.nodeFilters) as NodeType[])
         .filter((t) => !state.nodeFilters[t])
         .join(",");
-      const url = `/api/expand?focus=${encodeURIComponent(nodeId)}&hop=${hop}&already_loaded=${encodeURIComponent(alreadyLoaded)}&excluded_node_types=${encodeURIComponent(excludedNodeTypes)}`;
+      // Derive the live-edge exclusion list + the universals toggle from the
+      // edgeFilters state so the server's traversal matches what the user
+      // sees. Without this, edge-class toggles would be purely cosmetic.
+      const excludedEdgeTypes = edgeClassificationExcludes(state).join(",");
+      const includeUniversals = state.edgeFilters.universal ? "true" : "false";
+      const url =
+        `/api/expand?focus=${encodeURIComponent(nodeId)}` +
+        `&hop=${hop}` +
+        `&already_loaded=${encodeURIComponent(alreadyLoaded)}` +
+        `&excluded_node_types=${encodeURIComponent(excludedNodeTypes)}` +
+        `&excluded_edge_types=${encodeURIComponent(excludedEdgeTypes)}` +
+        `&include_universals=${includeUniversals}`;
       try {
         const res = await fetch(url);
         if (!res.ok) return;
@@ -484,15 +496,27 @@ export function ExplorerClient({ initial, ingestAt }: ExplorerClientProps) {
             label: n.label,
             route: n.route,
             ring: 2, // incoming expand neighbors are secondary
+            event_date: n.event_date ?? null,
           }),
         );
         // Add edges that connect existing-or-new nodes. We let mergeExpansion
         // dedupe edge keys so we don't double-render on re-expand.
-        const nextState = mergeExpansion(
+        let nextState = mergeExpansion(
           state,
           newNodes.map((n) => ({ id: n.id })),
           json.edges,
         );
+        // Widen timeFrom to cover the earliest event_date among loaded nodes
+        // (newly-merged + pre-existing). Spec §5.4 "floored by earliest loaded
+        // event."
+        const allDates: (string | null | undefined)[] = [];
+        for (const n of newNodes) allDates.push(n.event_date);
+        cy.nodes().forEach((cyNode) => {
+          const ed = String(cyNode.data("eventDate") ?? "");
+          if (ed) allDates.push(ed);
+        });
+        nextState = widenTimeRangeForLoadedSubgraph(nextState, allDates);
+
         const existingIds = new Set(cy.nodes().map((n) => n.id()));
         for (const n of newNodes) {
           existingIds.add(n.id);
@@ -545,6 +569,77 @@ export function ExplorerClient({ initial, ingestAt }: ExplorerClientProps) {
   const onHighlightPath = useCallback((args: HighlightPathArgs) => {
     const cy = cyRef.current;
     if (!cy) return;
+    // 1) Inject any path hops that aren't already on canvas — pathfinding
+    //    routinely returns nodes the user never expanded, so highlighting
+    //    without injecting would leave the "path" invisible (fix 2).
+    const existingNodeIds = new Set(cy.nodes().map((n) => n.id()));
+    const nodeAdds: ElementDefinition[] = [];
+    for (const n of args.nodes) {
+      if (existingNodeIds.has(n.id)) continue;
+      const t = n.type as NodeType;
+      nodeAdds.push(
+        nodeToElement({
+          id: n.id,
+          type: t,
+          label: n.label,
+          route: "",
+          ring: 2,
+        }),
+      );
+      existingNodeIds.add(n.id);
+      labelsRef.current.set(n.id, n.label);
+    }
+    // 2) Inject any path edges that aren't already present. Cytoscape edge
+    //    ids are synthesized here to avoid collisions with the sequence used
+    //    by expandNode(); a unique `p-` prefix is enough.
+    const existingEdgeKeys = new Set<string>();
+    cy.edges().forEach((e) => {
+      existingEdgeKeys.add(
+        edgeKey({
+          source: e.data("source"),
+          target: e.data("target"),
+          type: e.data("type"),
+        } as EdgeLike),
+      );
+    });
+    const edgeAdds: ElementDefinition[] = [];
+    for (const e of args.edges) {
+      const k = edgeKey({
+        source: e.source,
+        target: e.target,
+        type: e.type,
+      } as EdgeLike);
+      if (existingEdgeKeys.has(k)) continue;
+      existingEdgeKeys.add(k);
+      edgeAdds.push({
+        data: {
+          id: `p-${cy.edges().length}-${e.source}-${e.target}-${e.type}`,
+          source: e.source,
+          target: e.target,
+          type: e.type,
+          // Pathfinding injects use the default "governance" style chip;
+          // the universal classifier branch picks it up if the type matches.
+          style: "governance",
+        },
+      });
+    }
+    const needsLayout = nodeAdds.length > 0 || edgeAdds.length > 0;
+    if (needsLayout) {
+      cy.add([...nodeAdds, ...edgeAdds]);
+      // Re-run fcose so new hops settle into the force graph. Do this BEFORE
+      // painting the amber stroke so the highlight lands on the final layout.
+      cy.layout(fcoseLayout).run();
+      // Mirror the new additions into state.loadedNodeIds / loadedEdgeKeys so
+      // subsequent expands know about them.
+      setState((prev) =>
+        mergeExpansion(
+          prev,
+          args.nodes.map((n) => ({ id: n.id })),
+          args.edges.map((e) => ({ source: e.source, target: e.target, type: e.type })),
+        ),
+      );
+    }
+
     cy.batch(() => {
       cy.elements().removeClass("highlighted");
       cy.nodes().forEach((n) => {
@@ -569,18 +664,81 @@ export function ExplorerClient({ initial, ingestAt }: ExplorerClientProps) {
     });
   }, []);
 
-  // Load a saved view — replace state and fire navigation.
+  // Load a saved view — replace state + rebuild the canvas from the stored
+  // node/edge payload before applying filters, so the user's investigation
+  // lands back the way they left it (fix 7).
   const onLoadView = useCallback(
-    (next: ExplorerState) => {
-      setState(next);
-      if (next.focus && next.focus !== state.focus) {
-        const params = stateToUrl(next);
+    (loaded: SavedViewLoad) => {
+      const cy = cyRef.current;
+      if (cy && (loaded.nodes.length > 0 || loaded.edges.length > 0)) {
+        cy.batch(() => {
+          // Clear the non-focus portion of the canvas so the restored view
+          // doesn't superimpose on whatever the user was already looking at.
+          // The focus node stays if it matches — the subsequent cy.add() is
+          // a no-op for ids already present.
+          cy.elements().remove();
+          const seen = new Set<string>();
+          const nodeEls: ElementDefinition[] = [];
+          for (const n of loaded.nodes) {
+            if (seen.has(n.id)) continue;
+            seen.add(n.id);
+            nodeEls.push(
+              nodeToElement(
+                {
+                  id: n.id,
+                  type: n.type,
+                  label: n.label,
+                  route: n.route,
+                  ring: n.ring,
+                  event_date: n.event_date ?? null,
+                },
+                { isFocus: n.id === loaded.state.focus, showLabel: true },
+              ),
+            );
+            labelsRef.current.set(n.id, n.label);
+          }
+          const edgeEls: ElementDefinition[] = loaded.edges.map((e, i) =>
+            edgeToElement(e, i),
+          );
+          cy.add([...nodeEls, ...edgeEls]);
+        });
+        cy.layout(fcoseLayout).run();
+      }
+      setState(loaded.state);
+      if (loaded.state.focus && loaded.state.focus !== state.focus) {
+        const params = stateToUrl(loaded.state);
         router.push(`/graph?${params.toString()}`);
       }
       setSaveViewOpen(false);
     },
     [router, state.focus],
   );
+
+  // Snapshot the current Cytoscape canvas into a shape the save-view menu
+  // can serialize. Called at save-time (not on every render) so the cost is
+  // bounded. fix 7.
+  const getCanvasPayload = useCallback((): {
+    nodes: SavedViewNode[];
+    edges: SavedViewEdge[];
+  } => {
+    const cy = cyRef.current;
+    if (!cy) return { nodes: [], edges: [] };
+    const nodes: SavedViewNode[] = cy.nodes().map((n) => ({
+      id: n.id(),
+      type: (n.data("type") ?? "Unknown") as NodeType,
+      label: String(n.data("label") ?? n.id()),
+      route: String(n.data("route") ?? ""),
+      ring: Number(n.data("ring") ?? 1),
+      event_date: (n.data("eventDate") as string) || null,
+    }));
+    const edges: SavedViewEdge[] = cy.edges().map((e) => ({
+      source: String(e.data("source")),
+      target: String(e.data("target")),
+      type: String(e.data("type")),
+      style: (e.data("style") as SavedViewEdge["style"]) ?? "governance",
+    }));
+    return { nodes, edges };
+  }, []);
 
   // ---------------------------------------------------------------------------
   // Render — empty state vs. canvas
@@ -690,6 +848,7 @@ export function ExplorerClient({ initial, ingestAt }: ExplorerClientProps) {
       <SaveViewMenu
         open={saveViewOpen}
         state={state}
+        getCanvasPayload={getCanvasPayload}
         onClose={() => setSaveViewOpen(false)}
         onLoadView={onLoadView}
       />
