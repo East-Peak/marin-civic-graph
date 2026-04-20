@@ -577,6 +577,9 @@ export function ExplorerClient({ initial, ingestAt }: ExplorerClientProps) {
     for (const n of args.nodes) {
       if (existingNodeIds.has(n.id)) continue;
       const t = n.type as NodeType;
+      // Carry event_date through so the time-slider filter respects injected
+      // path hops. Durable types have null event_date — filter treats those
+      // as always-visible. Codex round 2 fix.
       nodeAdds.push(
         nodeToElement({
           id: n.id,
@@ -584,6 +587,7 @@ export function ExplorerClient({ initial, ingestAt }: ExplorerClientProps) {
           label: n.label,
           route: "",
           ring: 2,
+          event_date: n.event_date ?? null,
         }),
       );
       existingNodeIds.add(n.id);
@@ -617,9 +621,10 @@ export function ExplorerClient({ initial, ingestAt }: ExplorerClientProps) {
           source: e.source,
           target: e.target,
           type: e.type,
-          // Pathfinding injects use the default "governance" style chip;
-          // the universal classifier branch picks it up if the type matches.
-          style: "governance",
+          // Use the spec §5.2 style reported by path-finder so the edge-class
+          // filter applies identically to expanded edges and path-injected
+          // edges (Codex round 2 fix).
+          style: e.style ?? "governance",
         },
       });
     }
@@ -705,13 +710,18 @@ export function ExplorerClient({ initial, ingestAt }: ExplorerClientProps) {
         cy.layout(fcoseLayout).run();
       }
       setState(loaded.state);
-      if (loaded.state.focus && loaded.state.focus !== state.focus) {
+      // Sync URL without navigating. router.push() would change the server
+      // component's `initial` prop and the [initial] mount effect would
+      // destroy the restored canvas and re-seed from the new focus. Use
+      // replaceState so the URL reflects the loaded view but the server
+      // payload and mount effect don't re-fire (Codex round 2 fix).
+      if (loaded.state.focus && loaded.state.focus !== state.focus && typeof window !== "undefined") {
         const params = stateToUrl(loaded.state);
-        router.push(`/graph?${params.toString()}`);
+        window.history.replaceState({}, "", `/graph?${params.toString()}`);
       }
       setSaveViewOpen(false);
     },
-    [router, state.focus],
+    [state.focus],
   );
 
   // Snapshot the current Cytoscape canvas into a shape the save-view menu

@@ -28,6 +28,22 @@ import "server-only";
 import { runQuery } from "@/lib/neo4j";
 import { specToLive } from "@/lib/edge-vocabulary";
 
+/**
+ * Duck-typed transaction-timeout / transaction-terminated check. Duplicated
+ * from entity-loader.ts — both files need it, driver types are only imported
+ * lazily. If a third caller needs it, extract into a shared module.
+ */
+function isTransactionTimeoutError(err: unknown): boolean {
+  if (typeof err !== "object" || err === null) return false;
+  const code = (err as { code?: unknown }).code;
+  if (typeof code !== "string") return false;
+  return (
+    code === "Neo.ClientError.Transaction.TransactionTimedOut" ||
+    code === "Neo.TransientError.Transaction.TransactionTerminated" ||
+    code === "Neo.ClientError.Transaction.TransactionTimedOutClientConfiguration"
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Weight table — spec §5.6
 // ---------------------------------------------------------------------------
@@ -96,13 +112,20 @@ export type PathNode = {
   id: string;
   type: string;
   label: string;
+  /** ISO date for time-slider filtering when injected into the explorer (§5.4). */
+  event_date: string | null;
 };
+
+export type EdgeStyle = "governance" | "money" | "legal-constrains";
 
 export type PathEdge = {
   source: string;
   target: string;
   type: string;
   weight: number;
+  /** Per spec §5.2. Consumed by the Cytoscape edge stylesheet when the path
+   *  is injected into the explorer; also by the edge-class filters. */
+  style: EdgeStyle;
 };
 
 export type PathResult =
@@ -126,6 +149,8 @@ type RawPathRow = {
   node_ids: string[];
   node_types: string[];
   node_labels: string[];
+  /** Optional for legacy callers. If omitted, treated as all-null (durable). */
+  node_event_dates?: Array<string | null>;
   edge_types: string[];
 };
 
@@ -168,6 +193,10 @@ export async function findPath(
   // now enumerate ALL simple paths up to `maxHops` and let the scorer pick
   // the minimum-weight winner. The runaway case (high-degree pairs) is
   // bounded by the tx timeout below and the default maxHops of 4.
+  // Also project each node's effective event date so path nodes obey the
+  // explorer's time slider when injected. `event_date` per §5.4: point-event
+  // types use their own dated field; durable types (Person, Organization, …)
+  // get null so the UI treats them as always-visible.
   const cypher = `
     MATCH (from {id: $fromId}), (to {id: $toId})
     CALL apoc.algo.allSimplePaths(from, to, $relFilter, $maxHops) YIELD path
@@ -175,8 +204,13 @@ export async function findPath(
          [n IN nodes(path) | n.id] AS node_ids,
          [n IN nodes(path) | labels(n)[0]] AS node_types,
          [n IN nodes(path) | coalesce(n.search_label, n.name, n.id)] AS node_labels,
+         [n IN nodes(path) | coalesce(
+             n.meeting_date, n.decided_at, n.flow_date, n.signed_at,
+             n.election_date, n.occurred_at, n.date, n.effective_date,
+             n.filed_at, n.started_at, n.published_at, n.captured_at
+         )] AS node_event_dates,
          [r IN relationships(path) | type(r)] AS edge_types
-    RETURN node_ids, node_types, node_labels, edge_types
+    RETURN node_ids, node_types, node_labels, node_event_dates, edge_types
   `;
 
   let records;
@@ -187,12 +221,18 @@ export async function findPath(
       { timeoutMs: PATH_FINDER_TIMEOUT_MS },
     );
   } catch (err) {
-    // Timeout (or any other Cypher-side failure) is best surfaced as a
-    // graceful "no path found" from the UI's perspective — the user can
-    // retry with loose or a shorter maxHops. We still log so regressions
-    // don't vanish silently.
-    console.warn("findPath enumeration failed:", err);
-    return { found: false };
+    // Timeouts are the expected degenerate case on well-connected pairs: fall
+    // back to "no path" so the UI can offer a loose retry. Every other error
+    // (Cypher regression, driver failure, auth, network) must propagate so
+    // /api/path can return 5xx and the caller sees something actionable —
+    // silent false negatives here would hide real outages.
+    if (isTransactionTimeoutError(err)) {
+      console.warn(
+        `[path-finder] transaction timeout for ${fromId} → ${toId}; returning no-path`,
+      );
+      return { found: false };
+    }
+    throw err;
   }
 
   if (records.length === 0) return { found: false };
@@ -205,6 +245,7 @@ export async function findPath(
       node_ids: record.get("node_ids") as string[],
       node_types: record.get("node_types") as string[],
       node_labels: record.get("node_labels") as string[],
+      node_event_dates: (record.get("node_event_dates") as Array<string | null>) ?? [],
       edge_types: record.get("edge_types") as string[],
     };
 
@@ -241,6 +282,7 @@ type ScoredPath = {
  */
 export function scorePath(row: RawPathRow, loose: boolean): ScoredPath | null {
   const { node_ids, node_types, node_labels, edge_types } = row;
+  const node_event_dates = row.node_event_dates ?? node_ids.map(() => null);
 
   // Sanity: a simple path has N nodes and N-1 edges.
   if (node_ids.length < 2 || edge_types.length !== node_ids.length - 1) {
@@ -251,6 +293,7 @@ export function scorePath(row: RawPathRow, loose: boolean): ScoredPath | null {
     id,
     type: node_types[i] ?? "Unknown",
     label: node_labels[i] ?? id,
+    event_date: node_event_dates[i] ?? null,
   }));
 
   const edges: PathEdge[] = [];
@@ -298,6 +341,7 @@ export function scorePath(row: RawPathRow, loose: boolean): ScoredPath | null {
       target: node_ids[i + 1],
       type: edgeType,
       weight: edgeWeight,
+      style: styleForEdgeType(edgeType),
     });
     total += edgeWeight;
   }
@@ -307,4 +351,24 @@ export function scorePath(row: RawPathRow, loose: boolean): ScoredPath | null {
     loose_match: looseMatch,
     path: { nodes, edges, weight: total },
   };
+}
+
+/**
+ * Per spec §5.2 edge-style classification. Mirrors the same partition used by
+ * entity-loader.ts → signature-subgraph-builder so Cytoscape stylesheet rules
+ * apply identically everywhere.
+ */
+function styleForEdgeType(relType: string): EdgeStyle {
+  // Spec §5.6 money edges == spec §5.2 money edges. Fetch the live names via
+  // the existing specToLive map rather than duplicating the list.
+  const moneyLive = new Set<string>([
+    ...specToLive("FROM_SOURCE"),
+    ...specToLive("TO_TARGET"),
+    ...specToLive("DISCLOSED_IN"),
+    ...specToLive("UNDER_AGREEMENT"),
+  ]);
+  const legalLive = new Set<string>([...specToLive("CONSTRAINS")]);
+  if (moneyLive.has(relType)) return "money";
+  if (legalLive.has(relType)) return "legal-constrains";
+  return "governance";
 }

@@ -21,8 +21,22 @@ import { edgeKey, type EdgeLike } from "@/lib/explorer/explorer-state";
 // API shapes — mirror lib/server/path-finder.ts PathResult.
 // ---------------------------------------------------------------------------
 
-type PathNode = { id: string; type: string; label: string };
-type PathEdge = { source: string; target: string; type: string; weight: number };
+type EdgeStyle = "governance" | "money" | "legal-constrains";
+type PathNode = {
+  id: string;
+  type: string;
+  label: string;
+  /** ISO date for time-slider filtering when injected into the canvas (§5.4). */
+  event_date: string | null;
+};
+type PathEdge = {
+  source: string;
+  target: string;
+  type: string;
+  weight: number;
+  /** Per spec §5.2; respected by the edge-class filter when injected. */
+  style: EdgeStyle;
+};
 type PathResult =
   | {
       found: true;

@@ -15,15 +15,23 @@ import {
 
 const runQueryMock = runQuery as unknown as ReturnType<typeof vi.fn>;
 
-/** Build a mock Neo4j record that exposes `.get(col)`. */
+/** Build a mock Neo4j record that exposes `.get(col)`.
+ * Defaults `node_event_dates` to all-null so legacy tests don't need to supply
+ * dates (they're exercising weight math, not the timeline fix). */
 function fakeRecord(row: {
   node_ids: string[];
   node_types: string[];
   node_labels: string[];
   edge_types: string[];
+  node_event_dates?: Array<string | null>;
 }) {
+  const withDates = {
+    ...row,
+    node_event_dates:
+      row.node_event_dates ?? row.node_ids.map(() => null),
+  };
   return {
-    get: (k: string) => (row as Record<string, unknown>)[k],
+    get: (k: string) => (withDates as Record<string, unknown>)[k],
   };
 }
 
@@ -362,12 +370,30 @@ describe("findPath", () => {
     }
   });
 
-  it("fix 6: timeout / cypher failure returns {found:false} instead of 500ing", async () => {
-    runQueryMock.mockRejectedValueOnce(new Error("Neo.ClientError.Transaction.TransactionTimedOut"));
+  it("fix 6: transaction-timeout returns {found:false} instead of 500ing", async () => {
+    // Shape a real Neo4jError-style object with .code — the path-finder
+    // classifier distinguishes timeouts (handled gracefully) from other
+    // failures (rethrown so /api/path returns 5xx). Round-2 fix.
+    const timeoutErr = Object.assign(
+      new Error("transaction timed out"),
+      { code: "Neo.ClientError.Transaction.TransactionTimedOut" },
+    );
+    runQueryMock.mockRejectedValueOnce(timeoutErr);
     const consoleWarn = vi.spyOn(console, "warn").mockImplementation(() => {});
     const result = await findPath("a", "b");
     expect(result).toEqual({ found: false });
     consoleWarn.mockRestore();
+  });
+
+  it("round 2: non-timeout Cypher failures are rethrown (not silently no-path)", async () => {
+    // A real regression (wrong Cypher, auth, network) must surface as an
+    // error, not a silent empty result. Round-2 fix.
+    const genericErr = Object.assign(
+      new Error("syntax error"),
+      { code: "Neo.ClientError.Statement.SyntaxError" },
+    );
+    runQueryMock.mockRejectedValueOnce(genericErr);
+    await expect(findPath("a", "b")).rejects.toThrow("syntax error");
   });
 
   it("passes maxHops to the Cypher call", async () => {
