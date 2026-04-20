@@ -249,7 +249,9 @@ describe("findPath", () => {
     expect(looseResult.found).toBe(true);
     if (looseResult.found) {
       expect(looseResult.loose_match).toBe(true);
-      expect(looseResult.path.weight).toBe(2); // PARTY_TO (1) + DECIDED_BY (1)
+      // Fix 5: loose admits excluded intermediate types at a LOOSE_WEIGHT
+      // penalty. So PARTY_TO(1) + 10 (Record intermediate penalty) + DECIDED_BY(1) = 12.
+      expect(looseResult.path.weight).toBe(12);
     }
   });
 
@@ -272,6 +274,102 @@ describe("findPath", () => {
     expect(rels).toContain("CAST_VOTE");
   });
 
+  // -------------------------------------------------------------------------
+  // Fix 5: loose-mode intermediate-type penalty
+  // -------------------------------------------------------------------------
+
+  it("fix 5: loose applies LOOSE_WEIGHT penalty per excluded-intermediate hop", () => {
+    // Path: Person → Record → Decision → Place (two excluded-intermediate
+    // hops: Record, Decision is fine, Place at the endpoint is OK).
+    const scored = scorePath(
+      {
+        node_ids: ["p", "r1", "d", "pl"],
+        node_types: ["Person", "Record", "Decision", "Place"],
+        node_labels: ["P", "R", "D", "PL"],
+        // CAST_VOTE(1) + CAST_VOTE(1) + CAST_VOTE(1) = 3 edge weights
+        edge_types: ["CAST_VOTE", "CAST_VOTE", "CAST_VOTE"],
+      },
+      true,
+    );
+    expect(scored).not.toBeNull();
+    expect(scored!.loose_match).toBe(true);
+    // One excluded intermediate (Record) → +10 penalty. Place at the endpoint
+    // does NOT trigger the penalty. Total = 3 (edges) + 10 = 13.
+    expect(scored!.weight).toBe(13);
+  });
+
+  it("fix 5: strict paths are lighter than loose-equivalent via intermediate penalty", () => {
+    const strict = scorePath(
+      {
+        node_ids: ["p", "d"],
+        node_types: ["Person", "Decision"],
+        node_labels: ["P", "D"],
+        edge_types: ["CAST_VOTE"],
+      },
+      false,
+    );
+    const loose = scorePath(
+      {
+        node_ids: ["p", "r", "d"],
+        node_types: ["Person", "Record", "Decision"],
+        node_labels: ["P", "R", "D"],
+        edge_types: ["CAST_VOTE", "CAST_VOTE"],
+      },
+      true,
+    );
+    expect(strict!.weight).toBeLessThan(loose!.weight);
+  });
+
+  // -------------------------------------------------------------------------
+  // Fix 6: no pre-truncation by hop count
+  // -------------------------------------------------------------------------
+
+  it("fix 6: Cypher does not contain a pre-score LIMIT / ORDER BY size()", async () => {
+    runQueryMock.mockResolvedValueOnce([]);
+    await findPath("a", "b");
+    const [cypher] = runQueryMock.mock.calls[0];
+    // Pre-fix cypher was "ORDER BY size(node_ids) ASC LIMIT 200". Fix 6
+    // removes both so the scorer sees every candidate path.
+    expect(cypher as string).not.toMatch(/LIMIT 200/);
+    expect(cypher as string).not.toMatch(/ORDER BY size\(node_ids\)/);
+  });
+
+  it("fix 6: picks the min-weight path even when it has more hops than another candidate", async () => {
+    // Short path: Person → Decision via AT_MEETING (weight 5)
+    // Long path:  Person → Decision → Meeting (via CAST_VOTE x2 = 2)
+    // Pre-fix, the short path could win at the LIMIT 200 / ORDER BY size
+    // stage. Post-fix, weight decides.
+    runQueryMock.mockResolvedValueOnce([
+      fakeRecord({
+        node_ids: ["p", "d"],
+        node_types: ["Person", "Decision"],
+        node_labels: ["P", "D"],
+        edge_types: ["AT_MEETING"], // weight 5
+      }),
+      fakeRecord({
+        node_ids: ["p", "d2", "d"],
+        node_types: ["Person", "Decision", "Decision"],
+        node_labels: ["P", "D2", "D"],
+        // CAST_VOTE (1) + DECIDED_BY (1) = 2, longer but lighter
+        edge_types: ["CAST_VOTE", "DECIDED_BY"],
+      }),
+    ]);
+    const result = await findPath("p", "d");
+    expect(result.found).toBe(true);
+    if (result.found) {
+      expect(result.path.weight).toBe(2);
+      expect(result.path.edges).toHaveLength(2);
+    }
+  });
+
+  it("fix 6: timeout / cypher failure returns {found:false} instead of 500ing", async () => {
+    runQueryMock.mockRejectedValueOnce(new Error("Neo.ClientError.Transaction.TransactionTimedOut"));
+    const consoleWarn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const result = await findPath("a", "b");
+    expect(result).toEqual({ found: false });
+    consoleWarn.mockRestore();
+  });
+
   it("passes maxHops to the Cypher call", async () => {
     runQueryMock.mockResolvedValueOnce([]);
     await findPath("a", "b", { maxHops: 4 });
@@ -281,6 +379,7 @@ describe("findPath", () => {
     runQueryMock.mockResolvedValueOnce([]);
     await findPath("a", "b");
     const [, defaultParams] = runQueryMock.mock.calls[1];
-    expect(defaultParams.maxHops).toBe(6); // DEFAULT_MAX_HOPS
+    // Fix 6: DEFAULT_MAX_HOPS lowered 6→4 to keep enumeration tractable.
+    expect(defaultParams.maxHops).toBe(4);
   });
 });

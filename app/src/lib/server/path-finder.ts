@@ -77,7 +77,16 @@ export const EXCLUDED_INTERMEDIATE_TYPES: ReadonlySet<string> = new Set([
 ]);
 
 const LOOSE_WEIGHT = 10;
-const DEFAULT_MAX_HOPS = 6;
+// Default hop budget for apoc.algo.allSimplePaths. 4 keeps the enumeration
+// tractable on well-connected subgraphs; pre-fix 6 this was 6, which could
+// blow up on high-degree pairs and trip the driver's 30s timeout. Callers
+// may override via FindPathOptions.maxHops.
+const DEFAULT_MAX_HOPS = 4;
+// Transaction timeout for the pathfinding Cypher — enumeration on a
+// pathological focus can run long, and the UI blocks on the fetch. 12s
+// matches Plan 2's signature-subgraph budget and leaves room for cold-start
+// cache warming without locking the user out indefinitely.
+const PATH_FINDER_TIMEOUT_MS = 12_000;
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -153,6 +162,12 @@ export async function findPath(
   // Project the path into plain arrays so this module doesn't depend on the
   // neo4j-driver's Path/Segment shape. The driver returns primitives per
   // `Neo4jRecord.get(...)` which are trivial to JSON-serialize.
+  //
+  // Pre-fix 6 this query truncated to LIMIT 200 ORDER BY size(nodes). A
+  // longer but lower-weight path could be dropped before scoring — so we
+  // now enumerate ALL simple paths up to `maxHops` and let the scorer pick
+  // the minimum-weight winner. The runaway case (high-degree pairs) is
+  // bounded by the tx timeout below and the default maxHops of 4.
   const cypher = `
     MATCH (from {id: $fromId}), (to {id: $toId})
     CALL apoc.algo.allSimplePaths(from, to, $relFilter, $maxHops) YIELD path
@@ -162,11 +177,23 @@ export async function findPath(
          [n IN nodes(path) | coalesce(n.search_label, n.name, n.id)] AS node_labels,
          [r IN relationships(path) | type(r)] AS edge_types
     RETURN node_ids, node_types, node_labels, edge_types
-    ORDER BY size(node_ids) ASC
-    LIMIT 200
   `;
 
-  const records = await runQuery(cypher, { fromId, toId, relFilter, maxHops });
+  let records;
+  try {
+    records = await runQuery(
+      cypher,
+      { fromId, toId, relFilter, maxHops },
+      { timeoutMs: PATH_FINDER_TIMEOUT_MS },
+    );
+  } catch (err) {
+    // Timeout (or any other Cypher-side failure) is best surfaced as a
+    // graceful "no path found" from the UI's perspective — the user can
+    // retry with loose or a shorter maxHops. We still log so regressions
+    // don't vanish silently.
+    console.warn("findPath enumeration failed:", err);
+    return { found: false };
+  }
 
   if (records.length === 0) return { found: false };
 
@@ -258,6 +285,11 @@ export function scorePath(row: RawPathRow, loose: boolean): ScoredPath | null {
       if (EXCLUDED_INTERMEDIATE_TYPES.has(intermediateType)) {
         if (!loose) return null;
         looseMatch = true;
+        // Spec §5.6: "loose re-admits excluded intermediate types at weight
+        // 10." Penalize ONCE per such hop on top of the edge weight so loose
+        // paths through Record/Issue/Place/AgendaItem come out heavier than
+        // strict paths of comparable topology.
+        total += LOOSE_WEIGHT;
       }
     }
 
