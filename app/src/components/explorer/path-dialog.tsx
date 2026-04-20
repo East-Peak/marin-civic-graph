@@ -5,8 +5,9 @@
 // Two inputs (source + target), a "loose" checkbox, a "Find path" button. On
 // submit, calls /api/path and renders the resulting chain of nodes with type
 // badges. "PATH VIA LOOSE MATCH" tag appears when the server returns
-// loose_match: true (§5.6). "Highlight on canvas" emits the path's node/edge
-// identifiers to the parent so it can paint them with the amber ring.
+// loose_match: true (§5.6). "Highlight on canvas" emits the full path (nodes
+// + edges) to the parent so it can inject any unloaded path hops into the
+// canvas before applying the amber stroke.
 //
 // The source/target inputs are plain text IDs for this Plan 3 scaffolding.
 // Plan 4 is expected to wire in /api/search autocomplete — we already have a
@@ -43,6 +44,12 @@ type SearchResult = {
 export type HighlightPathArgs = {
   nodeIds: string[];
   edgeKeys: string[];
+  /** Full path nodes — consumer injects any not already on canvas before
+   *  highlighting. Without this, a path through unloaded hops would be
+   *  invisible on the canvas. */
+  nodes: PathNode[];
+  /** Full path edges — injected in the same pass as `nodes`. */
+  edges: PathEdge[];
 };
 
 export type PathDialogProps = {
@@ -96,7 +103,7 @@ export function PathDialog({ open, onClose, onHighlightPath }: PathDialogProps) 
     }, 250);
   }
 
-  async function onSubmit() {
+  async function submitWith(useLoose: boolean) {
     if (!from.trim() || !to.trim()) {
       setError("both source and target are required");
       return;
@@ -106,7 +113,7 @@ export function PathDialog({ open, onClose, onHighlightPath }: PathDialogProps) 
     setResult(null);
     try {
       const res = await fetch(
-        `/api/path?from=${encodeURIComponent(from.trim())}&to=${encodeURIComponent(to.trim())}&loose=${loose ? "true" : "false"}`,
+        `/api/path?from=${encodeURIComponent(from.trim())}&to=${encodeURIComponent(to.trim())}&loose=${useLoose ? "true" : "false"}`,
       );
       if (!res.ok) {
         const body = (await res.json().catch(() => ({}))) as { error?: string };
@@ -119,6 +126,10 @@ export function PathDialog({ open, onClose, onHighlightPath }: PathDialogProps) 
     } finally {
       setLoading(false);
     }
+  }
+
+  function onSubmit() {
+    void submitWith(loose);
   }
 
   if (!open) return null;
@@ -266,6 +277,10 @@ export function PathDialog({ open, onClose, onHighlightPath }: PathDialogProps) 
                   onHighlightPath({
                     nodeIds: result.path.nodes.map((n) => n.id),
                     edgeKeys,
+                    // Pass the full node/edge shapes so the parent can inject
+                    // any path hops that aren't already on the canvas — fix 2.
+                    nodes: result.path.nodes,
+                    edges: result.path.edges,
                   });
                 }}
                 className="rounded border border-[#a4e8bf] bg-surface px-2 py-0.5 text-[10px] text-body"
@@ -289,8 +304,12 @@ export function PathDialog({ open, onClose, onHighlightPath }: PathDialogProps) 
                 <button
                   type="button"
                   onClick={() => {
+                    // Flip loose on AND immediately submit with loose=true
+                    // — don't rely on state, pass the value explicitly so
+                    // the retry request sees the fresh value and not the
+                    // stale strict `loose` from before the click (fix 14).
                     setLoose(true);
-                    onSubmit();
+                    void submitWith(true);
                   }}
                   className="underline hover:text-body"
                 >

@@ -185,6 +185,56 @@ describe("PathDialog", () => {
     expect(onHighlightPath).toHaveBeenCalledWith({
       nodeIds: ["a", "b"],
       edgeKeys: expect.any(Array),
+      // Fix 2: full node + edge payload is emitted so the parent can inject
+      // any unloaded path hops before applying the highlight.
+      nodes: [
+        { id: "a", type: "Person", label: "A" },
+        { id: "b", type: "Person", label: "B" },
+      ],
+      edges: [
+        { source: "a", target: "b", type: "CAST_VOTE", weight: 1 },
+      ],
     });
+  });
+
+  // -------------------------------------------------------------------------
+  // Fix 14: "try loose" retry uses the fresh loose state, not stale state
+  // -------------------------------------------------------------------------
+
+  it("fix 14: 'try loose' fetches with loose=true on the retry (no stale state)", async () => {
+    const calls: string[] = [];
+    globalThis.fetch = vi.fn(async (input: RequestInfo | URL) => {
+      const url = typeof input === "string" ? input : input.toString();
+      calls.push(url);
+      return {
+        ok: true,
+        status: 200,
+        // First response (strict): no path. Second response (loose retry):
+        // still no path — the test asserts the URL, not the outcome.
+        json: async () => ({ found: false }),
+      } as Response;
+    }) as unknown as typeof fetch;
+
+    render(
+      <PathDialog open={true} onClose={() => {}} onHighlightPath={() => {}} />,
+    );
+    fireEvent.change(screen.getByLabelText(/source/i), { target: { value: "a" } });
+    fireEvent.change(screen.getByLabelText(/target/i), { target: { value: "b" } });
+    fireEvent.click(screen.getByRole("button", { name: /find path/i }));
+
+    // Wait for the no-result render, then click "try loose".
+    await waitFor(() => {
+      expect(screen.getByTestId("path-no-result")).toBeInTheDocument();
+    });
+    fireEvent.click(screen.getByRole("button", { name: /try loose/i }));
+
+    await waitFor(() => {
+      // The retry must have fired a second fetch with loose=true in the URL.
+      expect(calls.some((u) => u.includes("loose=true"))).toBe(true);
+    });
+    // Pre-fix 14 the retry URL still had loose=false because setLoose(true)
+    // hadn't been committed to state by the time onSubmit read it.
+    expect(calls[0]).toContain("loose=false");
+    expect(calls.at(-1)).toContain("loose=true");
   });
 });
