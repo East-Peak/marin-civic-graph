@@ -101,9 +101,15 @@ const sanRafaelDecisions: DataQueryDef = {
       to_date: toDate,
       institution_id: institutionId,
     };
+    // Fix 8: the slug promises San Rafael decisions, so bake a SR floor into
+    // the match. The optional `institution_id` filter further narrows it to
+    // a specific SR org (city-council, planning-commission, etc.) when set.
+    // Without this floor, future non-SR decisions would silently leak into
+    // the result set the moment any other jurisdiction gets loaded.
     const query = `
       MATCH (d:Decision)
-      WHERE d.decided_at >= $from_date AND d.decided_at <= $to_date
+      WHERE d.institution_id STARTS WITH 'org-san-rafael-'
+        AND d.decided_at >= $from_date AND d.decided_at <= $to_date
         AND ($institution_id IS NULL OR d.institution_id = $institution_id)
       OPTIONAL MATCH (inst:Organization {id: d.institution_id})
       RETURN d.decided_at       AS decided_at,
@@ -265,9 +271,13 @@ const currentOfficeholders: DataQueryDef = {
     const params: Record<string, unknown> = {
       jurisdiction_id: jurisdictionId,
     };
+    // Fix 9: live SeatService uses `ended_at`/`started_at`, not the spec's
+    // `end_date`/`start_date`. Pre-fix this query was filtering on a property
+    // that doesn't exist, so it returned every SeatService row (IS NULL
+    // matches everything) and then downstream joins marked them "current."
     const query = `
       MATCH (p:Person)-[:HELD_BY]-(svc:SeatService)
-      WHERE svc.end_date IS NULL OR svc.end_date = '' OR svc.end_date >= date()
+      WHERE svc.ended_at IS NULL OR svc.ended_at = '' OR svc.ended_at >= date()
       OPTIONAL MATCH (svc)-[:FOR_SEAT]->(seat:Seat)
       WITH p, svc, seat
       WHERE $jurisdiction_id IS NULL
@@ -351,13 +361,17 @@ const legalProceedings: DataQueryDef = {
   columns: [
     { key: "case_caption", label: "Case caption", sortable: true, alignment: "left" },
     { key: "proceeding_type", label: "Type", sortable: true, alignment: "left" },
-    { key: "proceeding_date", label: "Date", sortable: true, alignment: "left" },
+    // Fix 10: column key renamed to occurred_at so the browse table pulls
+    // the right property without a post-query rename step.
+    { key: "occurred_at", label: "Date", sortable: true, alignment: "left" },
     { key: "affected_program", label: "Affected", alignment: "left" },
     { key: "id", label: "Proceeding id", alignment: "left", link: "entity-route" },
   ],
   cypher: (filters) => {
     const caseId = nonEmpty(filters.case_id);
     const params: Record<string, unknown> = { case_id: caseId };
+    // Fix 10: live Proceeding uses `occurred_at`, not `proceeding_date`.
+    // Pre-fix this column was blank for every row.
     const query = `
       MATCH (pr:Proceeding)-[:PART_OF|PART_OF_CASE]->(c:Case)
       WHERE $case_id IS NULL OR c.id = $case_id
@@ -366,10 +380,10 @@ const legalProceedings: DataQueryDef = {
       WITH pr, c, link
       RETURN coalesce(c.search_label, c.caption, c.id) AS case_caption,
              pr.proceeding_type AS proceeding_type,
-             pr.proceeding_date AS proceeding_date,
+             pr.occurred_at     AS occurred_at,
              coalesce(link.search_label, link.name, link.id) AS affected_program,
              pr.id AS id
-      ORDER BY proceeding_date DESC, id ASC
+      ORDER BY occurred_at DESC, id ASC
       LIMIT 500
     `;
     return { query, params };
@@ -584,7 +598,12 @@ const qaValidationGaps: DataQueryDef = {
       RETURN category, description, count
       UNION
       CALL {
-        MATCH (r:Record) WHERE NOT (r)-[:EVIDENCED_BY]->()
+        // Fix 11: live edge direction is (target)-[:EVIDENCED_BY]->(Record).
+        // Pre-fix we checked "NOT (r)-[:EVIDENCED_BY]->()", which is true for
+        // every Record (Records never have outgoing EVIDENCED_BY edges), so
+        // the orphan count matched the total Record count. Flip direction to
+        // find Records with no incoming target.
+        MATCH (r:Record) WHERE NOT ()-[:EVIDENCED_BY]->(r)
         RETURN 'records.orphan_no_target' AS category,
                'Records not attached to any target'  AS description,
                count(r) AS count

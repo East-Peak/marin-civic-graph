@@ -89,7 +89,7 @@ export function columnsForType(type: NodeType): BrowseColumn[] {
  * The Cypher browse query RETURNs these property keys verbatim, so the
  * browse-table can pull row[col.key] with no further transformation.
  */
-function propKeyForFactLabel(type: NodeType, label: string): string {
+export function propKeyForFactLabel(type: NodeType, label: string): string {
   const key = label.toLowerCase();
   const MAP: Record<NodeType, Record<string, string>> = {
     Person: {
@@ -156,8 +156,11 @@ function propKeyForFactLabel(type: NodeType, label: string): string {
     SeatService: {
       seat: "seat_title",
       person: "person_name",
-      start: "start_date",
-      end: "end_date",
+      // Fix 12: live SeatService uses started_at/ended_at, not
+      // start_date/end_date (the spec-level names). Pre-fix the browse-page
+      // date columns rendered blank.
+      start: "started_at",
+      end: "ended_at",
     },
     Election: {
       title: "name",
@@ -179,7 +182,8 @@ function propKeyForFactLabel(type: NodeType, label: string): string {
     },
     Proceeding: {
       title: "title",
-      date: "proceeding_date",
+      // Fix 12: live Proceeding uses occurred_at, not proceeding_date.
+      date: "occurred_at",
       case: "case_caption",
       type: "proceeding_type",
     },

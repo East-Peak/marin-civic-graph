@@ -145,4 +145,26 @@ describe("GET /api/data/[query]", () => {
     );
     expect(res.status).toBe(400);
   });
+
+  // -------------------------------------------------------------------------
+  // Fix 13: apply defaults BEFORE enforcing required filters
+  // -------------------------------------------------------------------------
+
+  it("fix 13: a required filter with a declared default is satisfied via the default (no 400)", async () => {
+    // agreements-and-amendments-for-project has `project_id` required AND
+    // declares a default of "project-san-rafael-350-merrydale-interim-shelter".
+    // Pre-fix, omitting project_id returned 400 because required was checked
+    // before defaults were applied. The page works because it applies
+    // defaults client-side — this test pins parity.
+    runQueryMock.mockResolvedValueOnce([]);
+    const res = await GET(
+      makeReq("agreements-and-amendments-for-project"),
+      makeParams("agreements-and-amendments-for-project"),
+    );
+    expect(res.status).toBe(200);
+    const call = runQueryMock.mock.calls.at(-1);
+    expect(call?.[1].project_id).toBe(
+      "project-san-rafael-350-merrydale-interim-shelter",
+    );
+  });
 });

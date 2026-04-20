@@ -11,6 +11,7 @@ import {
   columnsForType,
   clampLimit,
   nodeTypeForUrlSegment,
+  propKeyForFactLabel,
   runBrowseQuery,
   DEFAULT_LIMIT,
   MAX_LIMIT,
@@ -60,6 +61,21 @@ describe("buildBrowseQuery", () => {
     expect(clampLimit(10_000)).toBe(MAX_LIMIT);
     expect(clampLimit("25")).toBe(25);
     expect(clampLimit("not-a-number")).toBe(DEFAULT_LIMIT);
+  });
+});
+
+// -------------------------------------------------------------------------
+// Fix 12: Proceeding/SeatService property-name mismatches (live vs. spec)
+// -------------------------------------------------------------------------
+
+describe("fix 12: live property-name mappings", () => {
+  it("propKeyForFactLabel('Proceeding', 'Date') maps to occurred_at (live), not proceeding_date (spec)", () => {
+    expect(propKeyForFactLabel("Proceeding", "Date")).toBe("occurred_at");
+  });
+
+  it("propKeyForFactLabel('SeatService', 'Start'/'End') maps to started_at / ended_at", () => {
+    expect(propKeyForFactLabel("SeatService", "Start")).toBe("started_at");
+    expect(propKeyForFactLabel("SeatService", "End")).toBe("ended_at");
   });
 });
 

@@ -144,6 +144,58 @@ describe("cypher builders", () => {
   });
 });
 
+// -------------------------------------------------------------------------
+// Fix 8: san-rafael-decisions-since-2019 bakes a SR institution floor
+// -------------------------------------------------------------------------
+
+describe("Codex round 1 data-queries property-name fixes", () => {
+  it("fix 8: san-rafael-decisions-since-2019 is scoped to SR institutions", () => {
+    const def = findDataQuery("san-rafael-decisions-since-2019")!;
+    const { query } = def.cypher({});
+    expect(query).toMatch(/d\.institution_id STARTS WITH 'org-san-rafael-'/);
+  });
+
+  // -------------------------------------------------------------------------
+  // Fix 9: SeatService uses ended_at / started_at (live names)
+  // -------------------------------------------------------------------------
+
+  it("fix 9: current-officeholders filters on SeatService.ended_at, not end_date", () => {
+    const def = findDataQuery("current-officeholders-form-coverage")!;
+    const { query } = def.cypher({});
+    expect(query).toMatch(/svc\.ended_at/);
+    expect(query).not.toMatch(/svc\.end_date/);
+  });
+
+  // -------------------------------------------------------------------------
+  // Fix 10: Proceeding uses occurred_at (live name)
+  // -------------------------------------------------------------------------
+
+  it("fix 10: legal-proceedings-affecting-local selects pr.occurred_at, not pr.proceeding_date", () => {
+    const def = findDataQuery("legal-proceedings-affecting-local")!;
+    const { query } = def.cypher({});
+    expect(query).toMatch(/pr\.occurred_at/);
+    expect(query).not.toMatch(/pr\.proceeding_date/);
+    // Column config also uses occurred_at as the key so the browse table
+    // pulls the right field.
+    expect(def.columns.find((c) => c.label === "Date")?.key).toBe("occurred_at");
+  });
+
+  // -------------------------------------------------------------------------
+  // Fix 11: EVIDENCED_BY direction in qa-validation-gaps (targets→records)
+  // -------------------------------------------------------------------------
+
+  it("fix 11: qa-validation-gaps orphan-records check flips EVIDENCED_BY direction", () => {
+    const def = findDataQuery("qa-validation-gaps")!;
+    const { query } = def.cypher({});
+    // Strip inline comments so the regex only inspects the executable Cypher.
+    const stripped = query.replace(/\/\/[^\n]*/g, "");
+    expect(stripped).toMatch(/MATCH \(r:Record\) WHERE NOT \(\)-\[:EVIDENCED_BY\]->\(r\)/);
+    // The buggy shape NOT (r)-[:EVIDENCED_BY]->() should no longer appear
+    // in executable Cypher. (Comments elsewhere in the file are fine.)
+    expect(stripped).not.toMatch(/NOT \(r\)-\[:EVIDENCED_BY\]->\(\)/);
+  });
+});
+
 describe("applyFilterDefaults", () => {
   it("merges caller values with each filter's declared default", () => {
     const def = findDataQuery("san-rafael-decisions-since-2019")!;

@@ -66,14 +66,19 @@ export async function GET(
     rawFilters[f.key] = value;
   }
 
-  // Enforce required filters.
+  // Fix 13: apply defaults FIRST, then enforce required filters. Pre-fix
+  // this was reversed — so a required filter with a declared default still
+  // 400'd when the caller omitted it, even though the /data page worked
+  // (the page applies defaults client-side before POST). Making the API
+  // match the page is the consistent fix.
+  const filters = applyFilterDefaults(def, rawFilters);
+
   for (const f of def.filters) {
-    if (f.required && !rawFilters[f.key]) {
+    if (f.required && !filters[f.key]) {
       return jsonError(`filter required: ${f.key}`, 400);
     }
   }
 
-  const filters = applyFilterDefaults(def, rawFilters);
   const { query, params: cypherParams } = def.cypher(filters);
 
   try {
