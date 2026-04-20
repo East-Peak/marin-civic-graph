@@ -1,6 +1,7 @@
 import { StatusBar } from "@/components/layout/status-bar";
 import { NavHeader } from "@/components/layout/nav-header";
 import { loadStatus, loadCatalog } from "@/lib/server/homepage-data";
+import { loadJurisdictions } from "@/lib/server/about-data";
 import { ALL_TYPES, displayNameForType, type NodeType } from "@/lib/type-display";
 
 export const dynamic = "force-dynamic";
@@ -10,19 +11,6 @@ const SECTION_HEADING: React.CSSProperties = {
   fontSize: "18px",
   letterSpacing: "0.08em",
 };
-
-const JURISDICTIONS: string[] = [
-  "Belvedere",
-  "Corte Madera",
-  "Fairfax",
-  "Marin County",
-  "Mill Valley",
-  "Novato",
-  "Ross",
-  "San Anselmo",
-  "Sausalito",
-  "Tiburon",
-];
 
 const STACK: { label: string; detail: string }[] = [
   { label: "Next.js 16", detail: "App Router, React Server Components." },
@@ -34,7 +22,11 @@ const STACK: { label: string; detail: string }[] = [
 ];
 
 export default async function AboutPage() {
-  const [status, catalog] = await Promise.all([loadStatus(), loadCatalog()]);
+  const [status, catalog, jurisdictions] = await Promise.all([
+    loadStatus(),
+    loadCatalog(),
+    loadJurisdictions(),
+  ]);
   const counts = catalog.counts ?? {};
   const rows = ALL_TYPES.map((t) => ({
     type: t,
@@ -126,11 +118,15 @@ export default async function AboutPage() {
             JURISDICTIONS
           </h2>
           <div className="rounded border border-border-primary bg-panel px-3 py-3 font-mono text-xs text-body">
-            <div className="flex flex-wrap gap-x-4 gap-y-1">
-              {JURISDICTIONS.map((j) => (
-                <span key={j}>{j}</span>
-              ))}
-            </div>
+            {jurisdictions.length === 0 ? (
+              <div className="text-dim">Jurisdiction list is loading…</div>
+            ) : (
+              <div className="flex flex-wrap gap-x-4 gap-y-1">
+                {jurisdictions.map((j) => (
+                  <span key={j.name}>{j.name}</span>
+                ))}
+              </div>
+            )}
             <div className="mt-2 text-dim">
               Plus county-wide campaign finance and Form 700 filings.
             </div>
