@@ -145,6 +145,13 @@ describe("entity-queries", () => {
     expect(q).toContain("type(r) IN $whitelist");
   });
 
+  it("buildEdgesAmongSelectedQuery has deterministic ORDER BY (round 3 fix)", () => {
+    // Without ORDER BY the Connections UI rendered groups in AuraDB-plan-dependent
+    // order, which violated the "same entity → same layout every reload" contract.
+    const q = buildEdgesAmongSelectedQuery();
+    expect(q).toContain("ORDER BY rel_type ASC, start_id ASC, end_id ASC");
+  });
+
   it("buildTier2NeighborhoodQuery (generic) caps at 40, excludes Place/Issue, stable order", () => {
     const q = buildTier2NeighborhoodQuery();
     expect(q).toContain("LIMIT 40");
