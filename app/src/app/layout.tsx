@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, IBM_Plex_Serif, VT323 } from "next/font/google";
+import { KeyboardShortcutsProvider } from "@/components/shortcuts/keyboard-shortcuts-provider";
 import "./globals.css";
 
 const plexSans = IBM_Plex_Sans({
@@ -35,7 +36,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${plexSans.variable} ${plexMono.variable} ${plexSerif.variable} ${vt323.variable}`}>
-      <body className="min-h-screen bg-bg text-body antialiased">{children}</body>
+      <body className="min-h-screen bg-bg text-body antialiased">
+        <KeyboardShortcutsProvider>{children}</KeyboardShortcutsProvider>
+      </body>
     </html>
   );
 }

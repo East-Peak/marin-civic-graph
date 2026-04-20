@@ -26,6 +26,7 @@ import { Connections } from "@/components/entity/connections";
 import { TimelineRibbon } from "@/components/entity/timeline-ribbon";
 import { EditorialCallout } from "@/components/entity/editorial-callout";
 import { EvidenceDrawer } from "@/components/entity/evidence-drawer";
+import { RecentEntityTracker } from "@/components/shortcuts/recent-entity-tracker";
 import { loadStatus } from "@/lib/server/homepage-data";
 import { loadEvidence } from "@/lib/server/entity-evidence";
 import { urlSegmentForType } from "@/lib/type-display";
@@ -144,6 +145,10 @@ export async function EntityPage({ entity }: { entity: EntityPayload }) {
       <EditorialCallout entity={entity} />
 
       <EvidenceDrawer records={records} />
+
+      <RecentEntityTracker
+        entity={{ id: entity.id, type: entity.type, search_label: entity.label }}
+      />
     </div>
   );
 }
