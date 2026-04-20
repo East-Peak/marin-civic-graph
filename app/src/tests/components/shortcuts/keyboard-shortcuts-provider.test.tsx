@@ -245,4 +245,34 @@ describe("KeyboardShortcutsProvider", () => {
     // Focus restored to the originally-focused element.
     expect(document.activeElement).toBe(trigger);
   });
+
+  it("⌘K from a focused input opens palette and restores focus on close", () => {
+    // Regression guard: ⌘K must work even when focus is inside a text input
+    // (the chord machine has a text-input short-circuit for plain keys, but
+    // reserved ⌘-chords still need to fire). And once the palette closes,
+    // focus should return to the input the user was typing in.
+    render(
+      <KeyboardShortcutsProvider>
+        <input data-testid="probe-input" />
+        <PaletteProbe />
+      </KeyboardShortcutsProvider>,
+    );
+    const input = screen.getByTestId("probe-input") as HTMLInputElement;
+    input.focus();
+    expect(document.activeElement).toBe(input);
+    expect(screen.getByTestId("palette-open").textContent).toBe("closed");
+
+    act(() => {
+      fireEvent.keyDown(input, { key: "k", metaKey: true });
+    });
+    expect(screen.getByTestId("palette-open").textContent).toBe("open");
+
+    // Close the palette via the global Escape failsafe handled by the provider.
+    act(() => {
+      fireEvent.keyDown(window, { key: "Escape" });
+    });
+    expect(screen.getByTestId("palette-open").textContent).toBe("closed");
+    // Focus restored to the input that was focused when ⌘K fired.
+    expect(document.activeElement).toBe(input);
+  });
 });

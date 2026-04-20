@@ -128,7 +128,7 @@ export default async function AboutPage() {
           <div className="rounded border border-border-primary bg-panel px-3 py-3 font-mono text-xs text-body">
             {!jurisdictionsResult.ok ? (
               <div data-testid="jurisdictions-error" className="text-dim">
-                Jurisdictions unavailable (database connection error).
+                Jurisdictions unavailable.
               </div>
             ) : jurisdictionsResult.jurisdictions.length === 0 ? (
               <div data-testid="jurisdictions-empty" className="text-dim">

@@ -114,7 +114,23 @@ export function KeyboardShortcutsProvider({
       // as a failsafe close. The palette's own onKeyDown handler also
       // catches Escape, but we keep this here so the overlay (which has
       // no text input to own key events) still closes.
+      //
+      // Before returning we still block reserved browser chords (⌘K / Ctrl+K
+      // for the omnibox, "/" for quick-find) so the browser's own UI doesn't
+      // steal focus from our open dialog when e.g. focus is on the palette's
+      // "include records" checkbox or the overlay's close button.
       if (paletteOpen || overlayOpen) {
+        const isPaletteChord =
+          (e.metaKey || e.ctrlKey) && (e.key === "k" || e.key === "K");
+        const isQuickFind =
+          e.key === "/" &&
+          !(
+            e.target instanceof HTMLInputElement ||
+            e.target instanceof HTMLTextAreaElement
+          );
+        if (isPaletteChord || isQuickFind) {
+          e.preventDefault();
+        }
         if (e.key === "Escape") {
           e.preventDefault();
           setPaletteOpen(false);
