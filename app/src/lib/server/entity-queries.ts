@@ -540,12 +540,16 @@ ORDER BY type_priority ASC
 // ---------------------------------------------------------------------------
 
 export function buildEdgesAmongSelectedQuery(): string {
+  // Stable ORDER BY: connections UI groups by rel_type and orders cards within
+  // each group. Without a deterministic sort the same entity can render
+  // connection groups in different orders across reloads (AuraDB plan-dependent).
   return `
 MATCH (a)-[r]-(b)
 WHERE a.id IN $ids AND b.id IN $ids AND a.id < b.id
   AND type(r) IN $whitelist
 RETURN DISTINCT a.id AS source, b.id AS target, type(r) AS rel_type,
   startNode(r).id AS start_id, endNode(r).id AS end_id
+ORDER BY rel_type ASC, start_id ASC, end_id ASC
 `;
 }
 

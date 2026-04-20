@@ -44,10 +44,21 @@ function groupNeighborsByRel(entity: EntityPayload): Grouped[] {
     groups.set("RELATED", orphans);
   }
 
-  return Array.from(groups.entries()).map(([relType, neighbors]) => ({
-    relType,
-    neighbors,
-  }));
+  // Sort groups by relation name and cards within each group by id, so the
+  // same entity renders the same Connections layout every time regardless of
+  // AuraDB's traversal plan. RELATED goes last as a catch-all.
+  const entries = Array.from(groups.entries())
+    .map(([relType, neighbors]): Grouped => ({
+      relType,
+      neighbors: [...neighbors].sort((a, b) => a.id.localeCompare(b.id)),
+    }))
+    .sort((a, b) => {
+      if (a.relType === "RELATED" && b.relType !== "RELATED") return 1;
+      if (b.relType === "RELATED" && a.relType !== "RELATED") return -1;
+      return a.relType.localeCompare(b.relType);
+    });
+
+  return entries;
 }
 
 function neighborMiniMeta(n: Neighbor): string | null {
