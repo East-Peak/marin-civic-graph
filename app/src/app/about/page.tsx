@@ -22,7 +22,7 @@ const STACK: { label: string; detail: string }[] = [
 ];
 
 export default async function AboutPage() {
-  const [status, catalog, jurisdictions] = await Promise.all([
+  const [status, catalog, jurisdictionsResult] = await Promise.all([
     loadStatus(),
     loadCatalog(),
     loadJurisdictions(),
@@ -126,11 +126,20 @@ export default async function AboutPage() {
             JURISDICTIONS
           </h2>
           <div className="rounded border border-border-primary bg-panel px-3 py-3 font-mono text-xs text-body">
-            {jurisdictions.length === 0 ? (
-              <div className="text-dim">Jurisdiction list is loading…</div>
+            {!jurisdictionsResult.ok ? (
+              <div data-testid="jurisdictions-error" className="text-dim">
+                Jurisdictions unavailable (database connection error).
+              </div>
+            ) : jurisdictionsResult.jurisdictions.length === 0 ? (
+              <div data-testid="jurisdictions-empty" className="text-dim">
+                No jurisdictions found.
+              </div>
             ) : (
-              <div className="flex flex-wrap gap-x-4 gap-y-1">
-                {jurisdictions.map((j) => (
+              <div
+                data-testid="jurisdictions-list"
+                className="flex flex-wrap gap-x-4 gap-y-1"
+              >
+                {jurisdictionsResult.jurisdictions.map((j) => (
                   <span key={j.name}>{j.name}</span>
                 ))}
               </div>

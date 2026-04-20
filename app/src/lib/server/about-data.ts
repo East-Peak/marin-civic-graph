@@ -17,7 +17,17 @@ export type Jurisdiction = {
   type: string;
 };
 
-export async function loadJurisdictions(): Promise<Jurisdiction[]> {
+// Discriminated result so the /about page can distinguish three states:
+//   ok: true, jurisdictions.length > 0  → render list
+//   ok: true, jurisdictions.length === 0 → "no jurisdictions found" (honest empty)
+//   ok: false                            → "jurisdictions unavailable" (loader error)
+// Historic behaviour collapsed both zero-result cases to `[]`, which made
+// the page print a misleading "loading…" forever on connection failure.
+export type JurisdictionLoadResult =
+  | { ok: true; jurisdictions: Jurisdiction[] }
+  | { ok: false; error: "unknown" };
+
+export async function loadJurisdictions(): Promise<JurisdictionLoadResult> {
   try {
     const records = await runQuery(
       `
@@ -28,11 +38,12 @@ export async function loadJurisdictions(): Promise<Jurisdiction[]> {
       `,
       { place_types: JURISDICTION_PLACE_TYPES },
     );
-    return records.map((r) => ({
+    const jurisdictions = records.map((r) => ({
       name: String(r.get("name") ?? ""),
       type: String(r.get("type") ?? ""),
     }));
+    return { ok: true, jurisdictions };
   } catch {
-    return [];
+    return { ok: false, error: "unknown" };
   }
 }

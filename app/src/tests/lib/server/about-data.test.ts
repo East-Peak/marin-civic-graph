@@ -15,18 +15,21 @@ function fakeRecord(row: Record<string, unknown>) {
 }
 
 describe("loadJurisdictions", () => {
-  it("returns name+type rows in query order", async () => {
+  it("returns { ok: true, jurisdictions } with name+type rows in query order", async () => {
     mockRunQuery.mockResolvedValueOnce([
       fakeRecord({ name: "Belvedere", type: "city" }),
       fakeRecord({ name: "Fairfax", type: "town" }),
       fakeRecord({ name: "Marin County", type: "county" }),
     ]);
-    const rows = await loadJurisdictions();
-    expect(rows).toEqual([
-      { name: "Belvedere", type: "city" },
-      { name: "Fairfax", type: "town" },
-      { name: "Marin County", type: "county" },
-    ]);
+    const result = await loadJurisdictions();
+    expect(result).toEqual({
+      ok: true,
+      jurisdictions: [
+        { name: "Belvedere", type: "city" },
+        { name: "Fairfax", type: "town" },
+        { name: "Marin County", type: "county" },
+      ],
+    });
   });
 
   it("filters to Place nodes via shared JURISDICTION_PLACE_TYPES param", async () => {
@@ -42,15 +45,27 @@ describe("loadJurisdictions", () => {
     });
   });
 
-  it("returns [] when the query throws (graceful fallback)", async () => {
+  it("returns { ok: true, jurisdictions: [] } on a legitimately-empty result", async () => {
+    mockRunQuery.mockResolvedValueOnce([]);
+    const result = await loadJurisdictions();
+    expect(result).toEqual({ ok: true, jurisdictions: [] });
+  });
+
+  it("returns { ok: false } on loader error — distinguishes empty from broken", async () => {
     mockRunQuery.mockRejectedValueOnce(new Error("boom"));
-    const rows = await loadJurisdictions();
-    expect(rows).toEqual([]);
+    const result = await loadJurisdictions();
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.error).toBe("unknown");
+    }
   });
 
   it("coerces missing type to empty string", async () => {
     mockRunQuery.mockResolvedValueOnce([fakeRecord({ name: "Ross", type: null })]);
-    const rows = await loadJurisdictions();
-    expect(rows[0]).toEqual({ name: "Ross", type: "" });
+    const result = await loadJurisdictions();
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.jurisdictions[0]).toEqual({ name: "Ross", type: "" });
+    }
   });
 });
