@@ -169,4 +169,80 @@ describe("KeyboardShortcutsProvider", () => {
     });
     expect(ev.defaultPrevented).toBe(false);
   });
+
+  it("while palette is open, chord keys do NOT fire navigation", () => {
+    render(
+      <KeyboardShortcutsProvider>
+        <PaletteProbe />
+      </KeyboardShortcutsProvider>,
+    );
+    // Open the palette first.
+    act(() => {
+      fireEvent.keyDown(window, { key: "k", metaKey: true });
+    });
+    expect(screen.getByTestId("palette-open").textContent).toBe("open");
+    // Now a `g g` chord must NOT navigate — the palette owns the keyboard.
+    act(() => {
+      fireEvent.keyDown(window, { key: "g" });
+      fireEvent.keyDown(window, { key: "g" });
+    });
+    expect(push).not.toHaveBeenCalled();
+  });
+
+  it("while overlay is open, ⌘K does NOT open the palette", () => {
+    render(
+      <KeyboardShortcutsProvider>
+        <PaletteProbe />
+      </KeyboardShortcutsProvider>,
+    );
+    // Open the overlay first.
+    act(() => {
+      fireEvent.keyDown(window, { key: "?" });
+    });
+    expect(screen.getByTestId("shortcuts-overlay")).toBeInTheDocument();
+    expect(screen.getByTestId("palette-open").textContent).toBe("closed");
+    // ⌘K should be suppressed while overlay is open — overlay takes precedence.
+    act(() => {
+      fireEvent.keyDown(window, { key: "k", metaKey: true });
+    });
+    expect(screen.getByTestId("palette-open").textContent).toBe("closed");
+  });
+
+  it("while overlay is open, Escape closes it", () => {
+    render(
+      <KeyboardShortcutsProvider>
+        <div />
+      </KeyboardShortcutsProvider>,
+    );
+    act(() => {
+      fireEvent.keyDown(window, { key: "?" });
+    });
+    expect(screen.getByTestId("shortcuts-overlay")).toBeInTheDocument();
+    act(() => {
+      fireEvent.keyDown(window, { key: "Escape" });
+    });
+    expect(screen.queryByTestId("shortcuts-overlay")).toBeNull();
+  });
+
+  it("opening the overlay restores focus on close", () => {
+    render(
+      <KeyboardShortcutsProvider>
+        <button data-testid="trigger">trigger</button>
+      </KeyboardShortcutsProvider>,
+    );
+    const trigger = screen.getByTestId("trigger") as HTMLButtonElement;
+    trigger.focus();
+    expect(document.activeElement).toBe(trigger);
+    act(() => {
+      fireEvent.keyDown(window, { key: "?" });
+    });
+    // Overlay moved focus to its close button.
+    expect(document.activeElement).not.toBe(trigger);
+    act(() => {
+      fireEvent.keyDown(window, { key: "Escape" });
+    });
+    expect(screen.queryByTestId("shortcuts-overlay")).toBeNull();
+    // Focus restored to the originally-focused element.
+    expect(document.activeElement).toBe(trigger);
+  });
 });

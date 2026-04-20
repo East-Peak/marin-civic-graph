@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
 export type ShortcutsOverlayProps = {
   open: boolean;
   onClose: () => void;
@@ -19,6 +21,16 @@ const ROWS: Row[] = [
 ];
 
 export function ShortcutsOverlay({ open, onClose }: ShortcutsOverlayProps) {
+  // When the overlay opens, move focus into the dialog (to the close button).
+  // Screen readers and keyboard users otherwise get stranded on whatever
+  // fired `?` — usually <body>.
+  const closeRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (open) {
+      closeRef.current?.focus();
+    }
+  }, [open]);
+
   if (!open) return null;
   return (
     <div
@@ -60,6 +72,7 @@ export function ShortcutsOverlay({ open, onClose }: ShortcutsOverlayProps) {
 
         <div className="mt-3 flex justify-end">
           <button
+            ref={closeRef}
             type="button"
             onClick={onClose}
             className="rounded border border-[#262b35] bg-panel px-3 py-1 text-[11px] text-dim hover:bg-surface"

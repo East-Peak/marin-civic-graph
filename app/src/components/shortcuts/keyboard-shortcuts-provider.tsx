@@ -41,8 +41,88 @@ export function KeyboardShortcutsProvider({
   // always reads the current value without re-binding on every event.
   const chordState = useRef<KeyState>(initState());
 
+  // Remember the element that had focus when a dialog opened, so we can
+  // restore it on close (a11y: focus should not land on <body> after a
+  // modal closes — it should return to whatever triggered the open).
+  //
+  // Capture happens synchronously in `openPalette` / `openOverlay` BEFORE
+  // the dialog mounts, because once the dialog renders its own useEffect
+  // steals focus to the input / close button, and by the time our own
+  // effect runs `document.activeElement` would already be the dialog.
+  const previouslyFocusedByPalette = useRef<HTMLElement | null>(null);
+  const previouslyFocusedByOverlay = useRef<HTMLElement | null>(null);
+
+  const openPalette = useCallback(() => {
+    previouslyFocusedByPalette.current =
+      (document.activeElement as HTMLElement | null) ?? null;
+    setPaletteOpen(true);
+  }, []);
+
+  const togglePalette = useCallback(() => {
+    setPaletteOpen((v) => {
+      if (!v) {
+        previouslyFocusedByPalette.current =
+          (document.activeElement as HTMLElement | null) ?? null;
+      }
+      return !v;
+    });
+  }, []);
+
+  const openOverlay = useCallback(() => {
+    previouslyFocusedByOverlay.current =
+      (document.activeElement as HTMLElement | null) ?? null;
+    setOverlayOpen(true);
+  }, []);
+
+  // Wrap the state setter used by the PaletteContext so consumers (the
+  // palette itself, click-to-dismiss) get focus-restoration for free.
+  const setPaletteOpenExternal = useCallback((next: boolean) => {
+    setPaletteOpen((prev) => {
+      if (!prev && next) {
+        previouslyFocusedByPalette.current =
+          (document.activeElement as HTMLElement | null) ?? null;
+      }
+      return next;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!paletteOpen) {
+      const el = previouslyFocusedByPalette.current;
+      previouslyFocusedByPalette.current = null;
+      if (el && el.isConnected) {
+        el.focus();
+      }
+    }
+  }, [paletteOpen]);
+
+  useEffect(() => {
+    if (!overlayOpen) {
+      const el = previouslyFocusedByOverlay.current;
+      previouslyFocusedByOverlay.current = null;
+      if (el && el.isConnected) {
+        el.focus();
+      }
+    }
+  }, [overlayOpen]);
+
   const handleEvent = useCallback(
     (e: KeyboardEvent) => {
+      // While any modal is open the dialog owns the keyboard. The window
+      // listener must not produce fresh chord events (no new `g h`
+      // navigation, no new `?` overlay) — only Escape is handled globally
+      // as a failsafe close. The palette's own onKeyDown handler also
+      // catches Escape, but we keep this here so the overlay (which has
+      // no text input to own key events) still closes.
+      if (paletteOpen || overlayOpen) {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          setPaletteOpen(false);
+          setOverlayOpen(false);
+        }
+        return;
+      }
+
       const now = Date.now();
       const { state, events } = handleKey(
         chordState.current,
@@ -69,7 +149,7 @@ export function KeyboardShortcutsProvider({
         switch (ev.kind) {
           case "palette":
             // ⌘K toggles.
-            setPaletteOpen((v) => !v);
+            togglePalette();
             break;
           case "focus-search": {
             // Prefer focusing a visible input[name="q"] (homepage prompt
@@ -82,7 +162,7 @@ export function KeyboardShortcutsProvider({
             if (input) {
               input.focus();
             } else {
-              setPaletteOpen(true);
+              openPalette();
             }
             break;
           }
@@ -90,7 +170,11 @@ export function KeyboardShortcutsProvider({
             router.push(ev.to);
             break;
           case "overlay":
-            setOverlayOpen(ev.open);
+            if (ev.open) {
+              openOverlay();
+            } else {
+              setOverlayOpen(false);
+            }
             break;
           case "escape":
             setPaletteOpen(false);
@@ -99,7 +183,7 @@ export function KeyboardShortcutsProvider({
         }
       }
     },
-    [router],
+    [router, paletteOpen, overlayOpen, togglePalette, openPalette, openOverlay],
   );
 
   useEffect(() => {
@@ -108,7 +192,7 @@ export function KeyboardShortcutsProvider({
   }, [handleEvent]);
 
   return (
-    <PaletteContext.Provider value={{ open: paletteOpen, setOpen: setPaletteOpen }}>
+    <PaletteContext.Provider value={{ open: paletteOpen, setOpen: setPaletteOpenExternal }}>
       {children}
       <CommandPalette />
       <ShortcutsOverlay open={overlayOpen} onClose={() => setOverlayOpen(false)} />
