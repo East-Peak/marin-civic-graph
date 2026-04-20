@@ -19,6 +19,7 @@
 // apply `LIMIT quotaFor(type, hop)` inline.
 
 import "server-only";
+import neo4j from "neo4j-driver";
 import { PHASE2_WHITELIST_LIVE } from "@/lib/edge-vocabulary";
 import type { NodeType } from "@/lib/type-display";
 import {
@@ -122,7 +123,7 @@ export function buildExpandQuery(opts: BuildExpandQueryParams): BuildExpandQuery
   if (subQueries.length === 0) {
     return {
       cypher: "RETURN null AS id, null AS labels, null AS label, null AS type, null AS ring, null AS rank_value, null AS type_priority LIMIT 0",
-      params: { focus_id: focusId, already_loaded_ids: alreadyLoadedIds, cap },
+      params: { focus_id: focusId, already_loaded_ids: alreadyLoadedIds, cap: neo4j.int(cap) },
       cap,
     };
   }
@@ -147,7 +148,9 @@ LIMIT $cap
     params: {
       focus_id: focusId,
       already_loaded_ids: alreadyLoadedIds,
-      cap,
+      // Neo4j's LIMIT demands INTEGER; wrap via neo4j.int so the driver
+      // doesn't send a FLOAT and get rejected with 22N01.
+      cap: neo4j.int(cap),
     },
     cap,
   };
