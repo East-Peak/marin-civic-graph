@@ -54,8 +54,10 @@ Rather than a single-commit rip-out (which Codex flagged correctly: it leaves us
 
 - **Plan v2.1 (Constellation MVP)** deletes `/graph`, `app/src/components/explorer/*`, and `app/src/components/home/signature-subgraph.tsx`. **Cytoscape stays installed in `package.json`** because `RadialHero` on standalone entity pages still depends on it. `/search` and `/data` remain functional throughout v2.1.
 - **Plan v2.2 (Workspaces)** replaces `RadialHero` with the egocentric-graph primitive (Cosmograph). At that point Cytoscape and cytoscape-fcose are removed from `package.json`.
-- **Plan v2.3 (Question bar)** deletes `/search` only after the question bar is shipped and proven.
-- **Plan v2.4-v2.6 (Adjacency-flow / timeline / map)** retire `/data` incrementally as predefined queries get replaced with workspace primitives. The final `/data` deletion lands in Plan v2.6.
+- **Plan v2.3 (Question bar)** ships the question-bar entry point but does NOT delete `/search`. The question bar in v2.3 routes to entity workspaces (which exist after v2.2) and to a stub question workspace that, until adjacency-flow / timeline / table all ship, only renders dossier-list (the side-panel primitive that lands with v2.3 itself, derived from the v1 `/search` row JSX). Multi-result questions whose ideal composition needs an unshipped primitive fall back to dossier-list-only mode.
+- **Plan v2.4-v2.6 (Adjacency-flow / timeline / map)** progressively unlock the full primitive composition. As each primitive ships, `chooseQuestionPrimitives()` starts using it.
+- **Plan v2.7 (Table primitive + lenses + LLM routing)** is when the question-workspace surface area reaches its full set. **`/search` is deleted in v2.7** — by then every composition shape it could have produced is replaced.
+- **`/data`** retires in v2.6 once the predefined-query content is covered by adjacency-flow / timeline / map workspaces.
 
 There is no v1/v2 dual-stack period for the same surface — but during the v2 build, surviving v1 surfaces (`/search`, `/data`) stay as fallbacks until their v2 replacements ship.
 
@@ -406,7 +408,7 @@ The campaign-finance model is committee-mediated: MoneyFlows land in `Committee`
 - Center: anchor.
 - Right bands: Decisions where there is a **recorded vote relation** between anchor and Decision (e.g., `(anchor)-[:CAST_VOTE]->(decision)` per the live ontology — confirm the canonical edge type name in `edge-vocabulary.ts` at implementation time) AND `Decision.decided_at IN window`. One band per Decision. **"Member of institution during the window" is not sufficient** — the band requires a recorded participation/vote edge so we never imply a vote that wasn't documented.
 - Band width: $ magnitude on left side; uniform on right side (Decisions don't have $ weight).
-- Citation requirements: every left band needs (a) a Filing/FPPC-citation on the MoneyFlow, AND (b) a Filing/FPPC-citation on the committee→candidate→person linkage. Every right band needs both (a) a Decision record from primary minutes AND (b) the vote-relation citation tying the anchor to the recorded vote.
+- Citation requirements: every node touched by a band must satisfy §6.3.2 — node-level citation present. For left bands: source filing, MoneyFlow, intermediate Committee, anchor Person all need their own primary-source citation field set on the node. For right bands: anchor Person and target Decision both need theirs. The recorded-vote relation between Person and Decision is required for the band to exist (per the band-construction rule), but it does NOT itself need to carry a citation property — the citation requirement is satisfied at the endpoint nodes.
 - Direct-to-person flows (rare; e.g., a personal gift recorded on a Form 700) render as a single-stage band with no Committee mid-node. Same citation rule.
 - Recused / absent / no-vote-recorded Decisions are dropped, not displayed as "absent."
 
@@ -415,7 +417,7 @@ The campaign-finance model is committee-mediated: MoneyFlows land in `Committee`
 - Left bands: same committee-mediated path as Person — MoneyFlows whose receiving Committee is linked (via the canonical committee→candidate→person path) to a person with a recorded vote relation on this Decision, AND `flow.flow_date IN window`. Bands grouped by voting member, then by source. Intermediate Committees are visible as a labeled mid-stage.
 - Center: Decision (split into yea / nay / abstain sub-nodes).
 - Right bands: persons with a recorded vote relation on this Decision → their vote (yea / nay / abstain). Width: uniform. Members without a recorded vote relation (absent, recused, vote not in minutes) are excluded.
-- Citation requirements: every MoneyFlow needs a Filing/FPPC citation; the committee→person linkage needs its own citation; every right-band requires the recorded-vote-relation citation; the Decision itself needs a primary-minutes citation.
+- Citation requirements: every node touched (MoneyFlows, Committees, voting Persons, Decision) must have its own node-level citation per §6.3.2. The committee→person linkage and the recorded-vote relation must EXIST for the band to be drawn but do not need their own per-edge citation properties (current graph reality).
 
 **MoneyFlow workspace** (anchor: MoneyFlow)
 - Time window: rolling 24 months ending at `flow.flow_date`.
@@ -438,9 +440,13 @@ For all other entity types, adjacency-flow is not the primary primitive (timelin
 
 #### 6.3.2 Eligibility rule
 
-An adjacency-flow band is only rendered if **every** endpoint and the middle join have a primary-source citation. No flow without provenance — this enforces the project's evidence-first stance.
+An adjacency-flow band is only rendered if **every endpoint NODE has a primary-source citation property** on the node itself. The graph's edges (CAST_VOTE, COMMITTEE_FOR_CANDIDATE, etc.) do not currently carry citation properties, and the spec does NOT require them to — citations live on the source-of-truth nodes (Filing, Decision, MoneyFlow, Case, Project, Record), not on the relationships between them. The honest framing: each node was independently documented, the edges report the documented relationship between those records, but no provenance is asserted ABOUT the edge itself.
 
-A "primary-source citation" means: an FPPC report ID, a Form 700 line number, a meeting-minutes URL, a court docket number, a permit ID, or another canonical primary-source field present on the source data. Inferred or derived data does not qualify.
+A "primary-source citation" on a node means at least one of: `filing_id`, `fppc_report_id`, `form_700_line` (Filing), `minutes_url` (Meeting / Decision), `docket_number` (Case / Proceeding), `permit_id` (Project), `source_url` + `source_id` (Record), or another canonical primary-source field present on the source-data ingestion contract. Inferred or derived nodes (e.g., a Person node synthesized purely from name-matching across filings, with no underlying primary record) do not qualify; these are rare in current data but would be flagged for exclusion.
+
+Practically: the eligibility check is `every node in [source, intermediates, target] has at least one of the citation fields above set`. This is implementable today against the current graph; no edge-property migration is needed for v2.4.
+
+If the project later decides to materialize per-edge citations (e.g., adding `evidence_filing_id` to a CAST_VOTE edge to assert which minutes record establishes that vote), the rule can tighten — but that's a separate ingestion-contract change, not blocking adjacency-flow's first ship.
 
 #### 6.3.3 Disclaimer copy
 
@@ -630,7 +636,20 @@ All outbound calls go through `outbound_policy.py`. Direct OpenAI / Anthropic ca
 
 **Script**: `scripts/build_umap.py`.
 
-- **Step 0 — populate the staging frame for ALL nodes**: at the start of every pipeline run, copy canonical UMAP coords to staging for every node that already has them (`MATCH (n) WHERE n.umap_x IS NOT NULL SET n.umap_x_pending = n.umap_x, n.umap_y_pending = n.umap_y, n.umap_version_pending = n.umap_version`). This guarantees clustering / matching / naming always see a complete 114K-node coordinate frame, even on a small nightly delta.
+- **Step 0 — populate the staging frame for ELIGIBLE nodes**: at the start of every pipeline run, copy canonical UMAP coords to staging — but ONLY for nodes that are still eligible per outbound policy (§9.2). Nodes whose type has moved to `INELIGIBLE_TYPES` since the last publish, OR whose source data has been deleted, are deliberately excluded so they have no `*_pending` row. This is what makes ineligibility demotion (§9.5) actually work — ineligible nodes silently fall out of the staged frame and get their canonical fields wiped at promote time.
+
+  ```cypher
+  // Step 0: copy canonical → pending for eligible nodes only.
+  MATCH (n)
+  WHERE n.umap_x IS NOT NULL
+    AND ANY(label IN labels(n) WHERE label IN $eligible_types)
+  SET
+    n.umap_x_pending = n.umap_x,
+    n.umap_y_pending = n.umap_y,
+    n.umap_version_pending = n.umap_version;
+  ```
+
+  This guarantees clustering / matching / naming see a complete coordinate frame for the 114K eligible nodes, even on a small nightly delta. An ineligible node that was previously published has canonical UMAP but no pending — exactly the condition §9.5's demotion step looks for.
 - **Weekly full fit** (Sunday): `UMAP.fit_transform(all_embeddings)` → 114K × 2 array, similarity-transform aligned (§4.3). Overwrites all `*_pending` with new values. Persist the fitted model (`umap.pkl`) for incremental transforms.
 - **Nightly incremental transform**: `umap.transform(new_or_dirty_embeddings)` using the cached fit, similarity-transform applied. Overwrites the `*_pending` for the new/dirty subset only — clean nodes retain the canonical values copied in Step 0.
 - All writes are to staging properties (`umap_x_pending`, `umap_y_pending`, `umap_version_pending`) — never directly to canonical. Promotion to canonical happens atomically at publish time (§9.5).
@@ -1062,11 +1081,13 @@ Backfill: first full pipeline run on production data takes ~13-15 min; happens o
 
 **DB-backed saved workspaces are deferred to a later plan.** v2.2 ships URL-only workspace state. A future Plan (v2.8 or later) adds save-workspace persistence + a `/w/saved/{id}` route + precedence rules. The save button is hidden in v2.2.
 
-### Plan v2.3 — Question bar v1 + delete /search (3-5 days)
+### Plan v2.3 — Question bar v1 + dossier-list primitive (1-1.5 weeks)
 
 - Question bar overlay on Constellation + workspaces.
-- Keyword routing via existing `/api/search`.
-- Delete `/search` route once new bar is proven on production data.
+- Keyword routing via existing `/api/search` (extended to support filters per §2 / §10.3).
+- Dossier-list primitive (§6.7) — required side panel for question workspaces.
+- `chooseQuestionPrimitives()` pure function with v2.3-era fallback: if a composition shape would require an unshipped primitive (adjacency-flow / timeline / map / table), downgrade to `dossier-list` only.
+- `/search` is NOT deleted in this plan; it stays as a fallback. Deletion lands in v2.7.
 - LLM routing deferred to v2.7.
 
 ### Plan v2.4 — Adjacency-flow primitive (1-1.5 weeks)
@@ -1088,11 +1109,12 @@ Backfill: first full pipeline run on production data takes ~13-15 min; happens o
 - Wired into Project, Place, Meeting workspaces.
 - `/data` route retired now that all predefined queries have workspace replacements.
 
-### Plan v2.7 — Table primitive + LLM question routing + Constellation lenses (2-3 weeks, optional)
+### Plan v2.7 — Table primitive + LLM question routing + Constellation lenses + delete /search (2-3 weeks, optional)
 
 - Table primitive.
 - LLM-mediated question routing via Claude Haiku.
 - Constellation Phase 2 lenses: money / recency / influence / issue (requires centrality pipeline).
+- Delete `/search` route — by this plan every question-workspace composition shape is implemented; `/search` has nothing left to fall back to.
 
 Stop or continue based on use after v2.6.
 
@@ -1111,10 +1133,11 @@ Stop or continue based on use after v2.6.
 
 Plan 4b (auth + Vercel deploy) is unchanged — still deferred until Constellation MVP ships.
 
-### 12.2 What lands in v2.3 and v2.6
+### 12.2 What lands later
 
-- v2.3: delete `/search` after question bar proves stable for ~1 week.
-- v2.6: delete `/data` after all predefined queries have workspace replacements.
+- v2.3: question bar ships; `/search` stays as a fallback (chooseQuestionPrimitives may downgrade to dossier-list-only when a needed primitive is unshipped).
+- v2.6: `/data` deleted once adjacency-flow / timeline / map cover all predefined queries.
+- v2.7: `/search` deleted now that every question-workspace shape (including table) is implemented.
 
 ### 12.3 Tests
 
