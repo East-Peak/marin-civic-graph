@@ -468,9 +468,13 @@ Plain HTML table for tabular drilldowns. Sortable, sticky headers. Lowest-effort
 
 Compact list of search results, used in question workspaces (§7.1) as the side panel that pairs with adjacency-flow / egocentric / timeline. Each row shows: type chip, search_label, key_fact, last-activity date — the same fields surfaced by `/api/search` results. Click a row → updates `selectedEntityId` in the workspace store, which other primitives observe to re-anchor (egocentric graph re-centers; adjacency-flow re-derives bands; timeline filters).
 
-**Ownership model — same as every other primitive (§5.5).** dossier-list reads `q + filters` from the workspace store and fetches `/api/search` itself. The shell does not own search results. Any other question-workspace primitive that needs the result list reads it from the workspace store too — populated by whichever primitive fetched first. Concretely: dossier-list, egocentric-graph, adjacency-flow, and timeline all read `q + filters + selectedEntityId` from the store; they each hit `/api/search` if they need the full list, OR `/api/entity/[id]` for the selected entity's details. SWR-style request dedup at the fetch layer means the network only sees one `/api/search` call per (q, filters) combo even when multiple primitives mount.
+**Ownership model — shell-owned for question workspaces.** Question workspaces have a single source of truth for `searchResults`: the workspace shell. On mount, the shell calls `/api/search` once with the URL's `q + filters`, populates `searchResults` in the workspace store, then runs `chooseQuestionPrimitives(searchResults, filters)` to pick the composition. Primitives — dossier-list, adjacency-flow, egocentric-graph, timeline — all read `searchResults` from the store. None of them re-fetch `/api/search`.
 
-The `chooseQuestionPrimitives()` function (§7.1) needs the search results to pick a composition, so it runs a single `/api/search` call inside the workspace shell at mount, writes results into the store as `searchResults: SearchResult[] | null`, and primitives consume from the store instead of re-fetching.
+This is a deliberate exception to §5.5's "primitives own their data fetch" rule: question workspaces have a shell-resolved query that primitives consume; entity workspaces don't (each entity primitive fetches its own slice from `/api/entity/[id]` or similar). The exception exists because (a) `chooseQuestionPrimitives` requires search results before it can pick the composition, so the shell needs them anyway, and (b) duplicating the fetch across N primitives is wasteful when they all want the same list.
+
+For the **selected entity's details** (e.g., adjacency-flow needs the anchor's full payload), primitives still fetch `/api/entity/[id]` themselves — that's per-primitive data, not shared.
+
+When `selectedEntityId` changes (user clicks a row in dossier-list), the store updates; primitives observe and re-render against the new anchor. `searchResults` does NOT re-fetch on selection change — it only re-fetches when `q` or filters change (which is a URL navigation).
 
 Implemented as a thin client component (~200 lines), reusing the row-rendering JSX from the v1 `/search` page so we don't duplicate type-chip + key-fact display logic.
 
@@ -639,10 +643,10 @@ Weekly fit benchmark (Plan v2.0): on Mac mini M-series, 114K × 1536 cosine UMAP
 
 **Script**: `scripts/build_clusters.py`. Nightly batch.
 
-1. Pull all `(umap_x, umap_y)` from Neo4j.
+1. Pull all `(umap_x_pending, umap_y_pending)` from Neo4j (the staged frame populated by §9.3 Step 0 + UMAP fit/transform). Always reads `*_pending`, never canonical — this is the key contract that keeps clustering aligned with the same coordinates the publish will ship.
 2. Run HDBSCAN on the 2D coords (much faster than on 1536-d): `min_cluster_size=15, min_samples=5, metric="euclidean"`.
 3. Compute centroid per cluster, distance per node.
-4. Output: temporary cluster_id per node (these IDs are not yet stable across runs — see §9.5).
+4. Write `cluster_id_pending` and `cluster_centroid_distance_pending` per node (raw HDBSCAN ID — not yet stable across runs; §9.5 matches it).
 
 Library: `hdbscan` Python package. Nightly job duration: <1 minute on 2D data (far cheaper than running HDBSCAN on 1536-d).
 
@@ -671,7 +675,20 @@ Persist the new mapping with stable cluster_ids. This makes `cluster_label` stab
 - `name_clusters.py` reads `cluster_id_pending` + canonical `cluster_label` from the prior run (so unchanged clusters keep their existing names). Writes `cluster_label_pending`.
 - `publish_constellation.py` builds the payload from `*_pending` values, uploads the blob, updates the manifest.
 
-**Atomic promotion** runs in a single Cypher transaction. Order: (1) snapshot the current canonical for rollback, (2) overwrite canonical from staging, (3) update the SyncState manifest pointer. All-or-nothing.
+**Bootstrap (first publish ever).** On the very first pipeline run, no `:_SyncState{kind:"constellation"}` node exists and no `_previous` snapshot is present anywhere. The promote transaction handles this naturally: step 1's `MATCH (n) WHERE n.umap_x IS NOT NULL` matches zero nodes (skip), the `MATCH (s:_SyncState ...)` snapshot also matches zero (skip), step 2 promotes from staging as normal, and step 3's `MERGE (s:_SyncState ...)` creates the SyncState row for the first time. Rollback after a first publish is a no-op (no `_previous` snapshot exists; `had_canonical_before = false` for every node, so all nodes get their canonical fields wiped, manifest goes back to "no constellation"). This is correct: "rolling back the first publish" means returning to the pre-Constellation state.
+
+**Ineligibility demotion.** If a previously-published node becomes ineligible (e.g., its type moves to `INELIGIBLE_TYPES` after a policy update), the next pipeline run must remove it from the constellation. The mechanism: the embedding stage (§9.1) refuses to embed ineligible nodes, so they never enter the staging frame; clustering doesn't see them; the publish step explicitly wipes canonical UMAP/cluster fields on any node that has canonical state but no `*_pending` row in this run:
+
+```cypher
+// At end of promotion transaction (step 3.5, before manifest update):
+MATCH (n) WHERE n.umap_x IS NOT NULL AND n.umap_x_pending IS NULL
+REMOVE n.umap_x, n.umap_y, n.umap_version,
+       n.cluster_id, n.cluster_label, n.cluster_centroid_distance;
+```
+
+This handles both "node became ineligible" and "node was deleted from the graph" cases. Together with the bootstrap rules and the rollback symmetry from round 9, the publish state machine is total.
+
+**Atomic promotion** runs in a single Cypher transaction. Order: (1) snapshot the current canonical for rollback, (2) overwrite canonical from staging, (3) demote ineligible/missing nodes, (4) update the SyncState manifest pointer. All-or-nothing.
 
 ```cypher
 // 1a. Snapshot current canonical for nodes that have it (overwrites any
