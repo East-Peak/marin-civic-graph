@@ -489,7 +489,7 @@ Plain HTML table for tabular drilldowns. Sortable, sticky headers. Lowest-effort
 
 Compact list of search results, used in question workspaces (§7.1) as the side panel that pairs with adjacency-flow / egocentric / timeline. Each row shows: type chip, search_label, key_fact, last-activity date — the same fields surfaced by `/api/search` results. Click a row → updates `selectedEntityId` in the workspace store, which other primitives observe to re-anchor (egocentric graph re-centers; adjacency-flow re-derives bands; timeline filters).
 
-**Ownership model — shell-owned for question workspaces.** Question workspaces have a single source of truth for `searchResults`: the workspace shell. On mount, the shell calls `/api/search` once with the URL's `q + filters`, populates `searchResults` in the workspace store, then runs `chooseQuestionPrimitives(searchResults, filters)` to pick the composition. Primitives — dossier-list, adjacency-flow, egocentric-graph, timeline — all read `searchResults` from the store. None of them re-fetch `/api/search`.
+**Ownership model — shell-owned for question workspaces.** Question workspaces have a single source of truth for `searchResults`: the workspace shell. On mount, the shell calls `/api/search` once with the URL's `q + filters`, populates `searchResults` in the workspace store, then runs `chooseQuestionPrimitives(searchResults, filters, shippedPrimitives)` (signature defined in §7.1) to pick the composition. Primitives — dossier-list, adjacency-flow, egocentric-graph, timeline — all read `searchResults` from the store. None of them re-fetch `/api/search`.
 
 This is a deliberate exception to §5.5's "primitives own their data fetch" rule: question workspaces have a shell-resolved query that primitives consume; entity workspaces don't (each entity primitive fetches its own slice from `/api/entity/[id]` or similar). The exception exists because (a) `chooseQuestionPrimitives` requires search results before it can pick the composition, so the shell needs them anyway, and (b) duplicating the fetch across N primitives is wasteful when they all want the same list.
 
@@ -556,7 +556,7 @@ A question workspace URL is `/w/q/{hash}?q={text}&type={...}&jurisdiction={...}&
    The "single dominant result" idea (top Lucene score >2× second) is dropped — `/api/search` doesn't return raw Lucene scores. The exactly-one-result case is a strict count check, not a score margin.
 4. Render workspace shell with selected primitives. State (filters, selection) populates the shared store from URL.
 
-This mapping is implemented in `app/src/lib/workspace-config.ts` as a pure function `chooseQuestionPrimitives(searchResults, filters): PrimitiveId[]`. v2.3 ships the rule above; v2.7 LLM routing replaces the rule's first step (classification) but the primitive-composition function stays the same.
+This mapping is implemented in `app/src/lib/workspace-config.ts` as a pure function `chooseQuestionPrimitives(searchResults, filters, shippedPrimitives): PrimitiveId[]`. v2.3 ships the rule above with `shippedPrimitives = ["dossier-list"]`; later plans grow the set. v2.7 LLM routing replaces the rule's first step (classification) but the primitive-composition function stays the same.
 
 A question workspace URL is fully reconstructable from the URL alone — no DB lookup required, no session memory.
 
@@ -1174,12 +1174,14 @@ Backfill: first full pipeline run on production data takes ~13-15 min; happens o
 - `/search` is NOT deleted in this plan; it stays as a fallback. Deletion lands in v2.7.
 - LLM routing deferred to v2.7.
 
-### Plan v2.4 — Adjacency-flow primitive (1-1.5 weeks)
+### Plan v2.4 — Adjacency-flow primitive (1.5-2 weeks)
 
 - `@visx/sankey` integration.
-- Three adjacency-flow shapes (Person / Decision / MoneyFlow centric).
-- Eligibility rule: bands only render with primary-source citations on every endpoint.
-- Wired into Person, Organization, Committee, Decision, MoneyFlow workspaces.
+- **Five adjacency-flow shapes** matching §6.3.1: Person, Decision, MoneyFlow, Committee, Organization. (Note: the spec defines 5 shapes — earlier draft incorrectly said 3. Each shape is its own band-construction implementation, ~150-300 lines.)
+- Eligibility rule (§6.3.2): bands only render when every endpoint node has a node-level primary-source citation. Helper `hasPrimarySourceCitation(node)` lives in `app/src/lib/citations.ts`.
+- Wired into Person, Organization, Committee, Decision, MoneyFlow entity workspaces (per §5.2).
+- Disclaimer copy (§6.3.3) rendered below every diagram.
+- `chooseQuestionPrimitives` updated to add `adjacency-flow` to `shippedPrimitives` after this plan ships.
 
 ### Plan v2.5 — Timeline primitive (3-5 days)
 
