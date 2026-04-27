@@ -281,7 +281,7 @@ CSS grid with three slots (left dossier ~40%, top-right primary ~30%, bottom-rig
 - URL ↔ state sync via the workspace state schema (§5.4)
 - Loading skeleton per slot
 - Empty / error states per primitive
-- A "back to Constellation" affordance: button in the top-left that routes to `/` with `?focus_x=&focus_y=&zoom=&umap_version=` so the Constellation restores to the workspace's anchor view. PNG snapshot is optional polish (rendered as a thumbnail in the button when available; absent on cold reloads).
+- A "back to Constellation" affordance: button in the top-left that routes to `/` with `?from_x=&from_y=&from_zoom=&from_umap_version=` (the same param shape used everywhere else — see §4.7) so the Constellation restores to the workspace's anchor view. PNG snapshot is optional polish (rendered as a thumbnail in the button when available; absent on cold reloads).
 - A breadcrumb showing how you got here (Constellation → entity name)
 - ~~Save-workspace button~~ — deferred to a later plan. v2.2 ships URL-only state; URL is the share/save mechanism.
 
@@ -568,7 +568,7 @@ All outbound calls go through `outbound_policy.py`. Direct OpenAI / Anthropic ca
 
 - **Weekly full fit** (Sunday): `UMAP.fit_transform(all_embeddings)` → 114K × 2 array. Persist the fitted model (`umap.pkl`) for incremental transforms.
 - **Nightly incremental transform**: `umap.transform(new_or_dirty_embeddings)` using the cached fit. Cheap (~10s for typical nightly delta).
-- Write `umap_x`, `umap_y`, `umap_version` to each node.
+- Write coordinates to **staging** properties (`umap_x_pending`, `umap_y_pending`, `umap_version_pending`) — never directly to canonical `umap_x` / `umap_y` / `umap_version`. Promotion to canonical happens atomically at publish time (§9.5).
 
 Weekly fit benchmark (Plan v2.0): on Mac mini M-series, 114K × 1536 cosine UMAP fit ~3-8 minutes. Acceptable. If runtime exceeds 15 minutes, we add a PCA-to-50d step before UMAP.
 
@@ -602,13 +602,46 @@ HDBSCAN cluster IDs are not stable across runs (cluster 7 today might be cluster
 
 Persist the new mapping with stable cluster_ids. This makes `cluster_label` stable too — labels stick to the cluster, not to the ephemeral run ID.
 
-**Versioned write strategy.** Pipeline writes are versioned, not in-place: derived properties carry a version suffix during write, and only get promoted to canonical names atomically at the end. Specifically:
+**End-to-end staging surface.** All derived state from a pipeline run lives in `*_pending` properties until atomically promoted at publish time. The pipeline reads its OWN staged outputs, not yesterday's canonical values:
 
-- Pipeline writes `umap_x_pending`, `umap_y_pending`, `cluster_id_pending`, `cluster_label_pending` to Neo4j during the run, AND emits the `version_id` to be the current pipeline run's ID.
-- On successful publish (drift budget passed, blob upload OK, manifest update OK), `publish_constellation.py` runs an atomic Cypher `MATCH (n) WHERE n.umap_x_pending IS NOT NULL SET n.umap_x = n.umap_x_pending, n.umap_y = n.umap_y_pending, n.cluster_id = n.cluster_id_pending, n.cluster_label = n.cluster_label_pending REMOVE n.umap_x_pending, n.umap_y_pending, n.cluster_id_pending, n.cluster_label_pending` and updates `:_SyncState{kind:"constellation"}` with the new `version_id` in the same transaction.
-- On failure, pending properties are wiped: `MATCH (n) REMOVE n.umap_x_pending, n.umap_y_pending, n.cluster_id_pending, n.cluster_label_pending`. Canonical properties remain untouched.
+- `build_umap.py` writes `umap_x_pending`, `umap_y_pending`, `umap_version_pending`.
+- `build_clusters.py` reads `umap_x_pending`, `umap_y_pending`. Writes `cluster_id_pending` (raw HDBSCAN ID).
+- `match_clusters.py` reads `cluster_id_pending` + canonical `cluster_id` from the prior run. Writes the matched stable `cluster_id_pending` (overwriting the raw one) plus `cluster_centroid_distance_pending`.
+- `name_clusters.py` reads `cluster_id_pending` + canonical `cluster_label` from the prior run (so unchanged clusters keep their existing names). Writes `cluster_label_pending`.
+- `publish_constellation.py` builds the payload from `*_pending` values, uploads the blob, updates the manifest.
 
-API reads are pinned to the canonical values, so `/api/cluster/[id]` always reflects what the manifest's active version describes. The constellation payload (blob) and the live DB state never describe different versions.
+**Atomic promotion** happens only after the manifest update succeeds. The promotion runs in a single Cypher transaction:
+
+```cypher
+MATCH (n) WHERE n.umap_x_pending IS NOT NULL
+SET
+  n.umap_x = n.umap_x_pending,
+  n.umap_y = n.umap_y_pending,
+  n.umap_version = n.umap_version_pending,
+  n.cluster_id = n.cluster_id_pending,
+  n.cluster_label = n.cluster_label_pending,
+  n.cluster_centroid_distance = n.cluster_centroid_distance_pending
+REMOVE
+  n.umap_x_pending, n.umap_y_pending, n.umap_version_pending,
+  n.cluster_id_pending, n.cluster_label_pending,
+  n.cluster_centroid_distance_pending;
+
+MERGE (s:_SyncState {kind: 'constellation'})
+SET s.version_id = $new_version_id, s.updated_at = datetime();
+```
+
+**On failure** (drift breach, blob upload fail, schema validation fail): wipe `*_pending` properties only:
+
+```cypher
+MATCH (n) REMOVE
+  n.umap_x_pending, n.umap_y_pending, n.umap_version_pending,
+  n.cluster_id_pending, n.cluster_label_pending,
+  n.cluster_centroid_distance_pending;
+```
+
+Canonical properties remain untouched. Manifest unchanged. Site continues serving the prior version.
+
+API reads (e.g., `/api/cluster/[id]`) are pinned to the canonical values, so they always reflect what the active manifest version describes. The constellation payload (blob) and the live DB state never describe different versions.
 
 ### 9.6 Cluster-naming pipeline
 
@@ -659,7 +692,9 @@ Stages a versioned JSON payload to object storage (Vercel Blob; alt Cloudflare R
 
 ```json
 {
+  "schema_version": 1,
   "version": "2026-04-26-nightly-001",
+  "umap_version": 14,
   "built_at": "2026-04-26T08:00:00Z",
   "node_count": 114493,
   "edge_count": 147862,
@@ -697,7 +732,9 @@ Estimated payload size: 114K nodes × ~150 bytes + 148K edges × ~80 bytes ≈ *
 
 Manifest endpoint:
 
-- `GET /api/constellation-manifest` returns `{ "current_version": "2026-04-26-nightly-001", "url": "https://blob.vercel-storage.com/constellation-2026-04-26-nightly-001.json.gz", "built_at": "...", "size_gz": 6234567 }`.
+- `GET /api/constellation-manifest` returns `{ "schema_version": 1, "current_version": "2026-04-26-nightly-001", "umap_version": 14, "url": "https://blob.vercel-storage.com/constellation-2026-04-26-nightly-001.json.gz", "built_at": "...", "size_gz": 6234567 }`.
+
+  Both `schema_version` and `umap_version` exposed by the manifest match the values inside the payload it points to. Workspace URLs that carry `from_umap_version` are compatible with the current Constellation iff `from_umap_version == manifest.umap_version`. Mismatch triggers the "territory updated" badge (§4.7) and falls back to default zoom on Constellation restore.
 - The manifest itself is served by a Next.js API route reading from Neo4j's `:_SyncState{kind:"constellation"}` node (single row, updated by `publish_constellation.py` at end of pipeline). Cache: `Cache-Control: public, max-age=60, stale-while-revalidate=3600`.
 
 Client flow on `/`:
@@ -730,7 +767,7 @@ build_umap.py              # incremental nightly ~10s, weekly full ~5min
 build_clusters.py          # ~1 min on 2D coords
 match_clusters.py          # <30s
 name_clusters.py           # delta only, ~30s
-publish_constellation.py   # ~30s, writes 30MB JSON
+publish_constellation.py   # ~30s, builds payload from *_pending, uploads blob, atomic promote
 update_sync_state.py       # bumps :_SyncState
 copy-subgraphs.mjs         # existing
 ```
@@ -746,11 +783,11 @@ Total nightly added time: ~3-5 min. Weekly (UMAP full fit): ~10 min added.
 - Next.js 16 (App Router) — kept
 - React 19, TypeScript 5, Tailwind 4 — kept
 - IBM Plex (Sans/Mono/Serif) + VT323 — kept
-- **New**: `@cosmograph/cosmos` (graph renderer, MIT)
-- **New**: `@visx/sankey` (adjacency-flow primitive)
-- **New**: `maplibre-gl` (map primitive)
-- **New**: `zustand` (workspace state store)
-- **Removed**: `cytoscape`, `cytoscape-fcose`, all explorer-coupled plugins
+- **New in v2.1**: `@cosmograph/cosmos` (graph renderer, MIT)
+- **New in v2.1**: `zustand` (used in v2.2; can land earlier as a no-op dep)
+- **New in v2.4**: `@visx/sankey` (adjacency-flow primitive)
+- **New in v2.6**: `maplibre-gl` (map primitive)
+- **Removed in v2.2**: `cytoscape`, `cytoscape-fcose`, and all `cytoscape-*` plugins. NOT removed in v2.1 — `RadialHero` on `/{type}/{slug}` still depends on Cytoscape until the egocentric-graph primitive replaces it. Removing earlier breaks the build.
 
 ### 10.2 Routes
 
