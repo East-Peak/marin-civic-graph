@@ -537,7 +537,11 @@ A question workspace URL is `/w/q/{hash}?q={text}&type={...}&jurisdiction={...}&
 
 1. Parse query string into a `WorkspaceState` object.
 2. Run `/api/search?q={q}&...filters` to get the canonical result list.
-3. **Compose primitives by query shape — deterministic rule using only fields `/api/search` actually returns** (`id`, `type`, `search_label`, `key_fact`, `last_activity`, `rank`, `route`). Rules evaluate top-to-bottom; first match wins:
+3. **Compose primitives by query shape — deterministic rule using only fields `/api/search` actually returns** (`id`, `type`, `search_label`, `key_fact`, `last_activity`, `rank`, `route`).
+
+   The function signature is `chooseQuestionPrimitives(searchResults, filters, shippedPrimitives) → PrimitiveId[]`, where `shippedPrimitives` is the set of primitive IDs available in the current build (e.g., `["dossier-list"]` in v2.3, `["dossier-list", "adjacency-flow", "egocentric-graph"]` after v2.4, `["dossier-list", "adjacency-flow", "egocentric-graph", "timeline", "map", "table"]` after v2.7). The function picks the IDEAL composition by query shape, then DOWNGRADES any primitive not in `shippedPrimitives` to `dossier-list`. If the resulting composition is `[dossier-list, dossier-list]` after downgrade dedup, the workspace renders dossier-list-only.
+
+   Rules evaluate top-to-bottom; first match wins:
    - **Zero results** → empty-state stub (no primitives, just "No results for {q}" message + question bar). `chooseInitialSelectedEntity` returns null.
    - **Empty `q`, only filters set** → table + dossier-list (filtered list view). No anchored primitive needed.
    - **Exactly 1 result** → redirect to `entityRouteToWorkspaceRoute(result.route)`; question workspace doesn't render. Common "user typed an exact name" path.
@@ -766,11 +770,24 @@ This handles both "node became ineligible" and "node was deleted from the graph"
 **Atomic promotion** runs in a single Cypher transaction. Order: (1) snapshot the current canonical for rollback, (2) demote ineligible/missing nodes (BEFORE pending is consumed — so "canonical without pending" cleanly identifies the no-longer-eligible set), (3) overwrite canonical from staging (consumes pending), (4) update the SyncState manifest pointer. All-or-nothing.
 
 ```cypher
-// 1a. Snapshot current canonical for nodes that have it (overwrites any
-//     prior _previous_ snapshot; we keep one rollback step, not deep
-//     history). Tag with a "had_canonical_before" marker so rollback can
-//     distinguish nodes that existed pre-publish vs. nodes born in this
-//     publish.
+// 1a. CLEAR all rollback metadata from prior runs first. Without this,
+//     a node demoted in publish N retains stale _previous values; a
+//     successful publish N+1 that doesn't touch the node would leave
+//     them in place; rolling back N+1 would resurrect the node from
+//     publish N-1's snapshot instead of the immediately-prior version.
+//     Each run's rollback metadata must be self-contained for that run.
+MATCH (n)
+WHERE n.had_canonical_before IS NOT NULL
+   OR n.umap_x_previous IS NOT NULL
+REMOVE
+  n.had_canonical_before,
+  n.umap_x_previous, n.umap_y_previous, n.umap_version_previous,
+  n.cluster_id_previous, n.cluster_label_previous,
+  n.cluster_centroid_distance_previous;
+
+// 1b. Snapshot current canonical for nodes that have it. Tag with
+//     "had_canonical_before" so rollback can distinguish nodes that
+//     existed pre-publish vs. nodes born in this publish.
 MATCH (n) WHERE n.umap_x IS NOT NULL
 SET
   n.umap_x_previous = n.umap_x,
@@ -781,7 +798,7 @@ SET
   n.cluster_centroid_distance_previous = n.cluster_centroid_distance,
   n.had_canonical_before = true;
 
-// 1b. For nodes that DON'T have canonical yet (first-time entrants in
+// 1c. For nodes that DON'T have canonical yet (first-time entrants in
 //     this publish), explicitly mark them so rollback knows to wipe
 //     them on revert.
 MATCH (n) WHERE n.umap_x IS NULL AND n.umap_x_pending IS NOT NULL
