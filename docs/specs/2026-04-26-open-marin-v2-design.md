@@ -510,10 +510,12 @@ Renders as an input element overlaid on the Constellation (and on every workspac
 ```
 input → /api/search (existing) → results dropdown
                               ↓ Enter
-                   /w/entity/{type}/{slug}  (top result if score margin clear)
+                   /w/entity/{type}/{slug}  (when results.length === 1)
                                   or
-                   /w/q/{hash}?q=...  (multi-result composition)
+                   /w/q/{hash}?q=...        (multi-result composition)
 ```
+
+`/api/search` returns canonical entity routes (`/{type}/{slug}` — used by standalone entity pages, kept as-is per §10.2). The question bar maps a single-result hit to its workspace counterpart client-side via the trivial helper `entityRouteToWorkspaceRoute("/{type}/{slug}") → "/w/entity/{type}/{slug}"`. The search backend is NOT extended to emit workspace routes — that mapping lives in `app/src/lib/workspace-routes.ts` next to the question-bar code.
 
 #### Question-workspace URL contract (deterministic reconstruction)
 
@@ -522,21 +524,32 @@ A question workspace URL is `/w/q/{hash}?q={text}&type={...}&jurisdiction={...}&
 - `hash` = first 12 hex chars of `sha256(canonicalized_query_string)`. Pure cosmetic — short stable identifier for the URL. Reconstruction NEVER reads the hash.
 - `q` is the user's raw text (URL-encoded).
 - Optional filter params (`type`, `jurisdiction`, `time_start`, `time_end`, `edge_class`) match the workspace state schema (§5.4).
-- `selected` is the active anchor entity id for primitives that require one (egocentric graph, adjacency-flow, timeline, map). On URL submit from the question bar, this defaults to `searchResults[0].id` (top result). On click of a dossier-list row, this updates and the URL replaces (no nav-stack push). On cold reload of a `/w/q/...` URL with no `selected`, reconstruction sets `selected = searchResults[0].id` deterministically.
+- `selected` is the active anchor entity id for primitives that require one (egocentric graph, adjacency-flow, timeline, map). It is set by `chooseInitialSelectedEntity(searchResults, chosenPrimitives) → string | null`:
+  - If `searchResults.length === 0` → returns `null`. Workspace renders an empty-state ("No results for {q}") with the question bar still active. No anchored primitives mount.
+  - If the chosen primary primitive does not need an anchor (e.g., `table-only` for filter-only browse) → returns `null`.
+  - If the primary primitive is **adjacency-flow**: returns the first result whose type has an adjacency-flow shape defined in §6.3.1 (Person / Organization / Committee / Decision / MoneyFlow). If none, downgrade the composition to `dossier-list-only` and return null.
+  - If the primary primitive is **egocentric**: returns first result of type Person, Organization, or Committee (anchor types that read well in an ego graph). Fall back to `searchResults[0].id` if none match.
+  - If the primary primitive is **timeline**: returns first result of type Meeting, Filing, Case, Proceeding, Project, or Issue. Fall back to `searchResults[0].id`.
+  - If the primary primitive is **map**: returns first result of type Project, Place, or Meeting. If none match → downgrade to `dossier-list-only`.
+- On click of a dossier-list row, `selected` updates and the URL replaces (no nav-stack push). On cold reload, reconstruction re-runs `chooseInitialSelectedEntity` deterministically — the URL's stored `selected` value wins if present and still appears in `searchResults`, else recompute.
 
 **Reconstruction algorithm** (any cold load of `/w/q/...`):
 
 1. Parse query string into a `WorkspaceState` object.
 2. Run `/api/search?q={q}&...filters` to get the canonical result list.
-3. **Compose primitives by query shape — deterministic rule using only fields `/api/search` actually returns** (`id`, `type`, `search_label`, `key_fact`, `last_activity`, `rank`, `route`):
-   - **Empty `q`, only filters set** → table primitive + dossier-list (filtered list view).
-   - **Exactly 1 result** → redirect to `result.route`; the question workspace is just a stepping stone, no shell renders.
-   - **Multi-result, results contain ≥1 Decision OR ≥1 MoneyFlow** → adjacency-flow + dossier-list (the "list of matching entities" rendered as a side panel).
-   - **Multi-result, results predominantly Person/Organization (≥60% by count)** → egocentric graph centered on `selected` (default `searchResults[0].id`) + dossier-list.
-   - **Multi-result, results have temporal spread (>30 day range computed from `last_activity` across results)** → timeline + dossier-list.
-   - **Multi-result, otherwise** → table + dossier-list.
+3. **Compose primitives by query shape — deterministic rule using only fields `/api/search` actually returns** (`id`, `type`, `search_label`, `key_fact`, `last_activity`, `rank`, `route`). Rules evaluate top-to-bottom; first match wins:
+   - **Zero results** → empty-state stub (no primitives, just "No results for {q}" message + question bar). `chooseInitialSelectedEntity` returns null.
+   - **Empty `q`, only filters set** → table + dossier-list (filtered list view). No anchored primitive needed.
+   - **Exactly 1 result** → redirect to `entityRouteToWorkspaceRoute(result.route)`; question workspace doesn't render. Common "user typed an exact name" path.
+   - **Multi-result, ≥1 result is Decision OR MoneyFlow** AND `chooseInitialSelectedEntity` for adjacency-flow returns non-null → adjacency-flow + dossier-list.
+   - **Multi-result, ≥60% of results are Person/Organization** → egocentric graph + dossier-list.
+   - **Multi-result, `last_activity` range across results >30 days** → timeline + dossier-list.
+   - **Multi-result, ≥1 result is Project / Place / Meeting** AND `chooseInitialSelectedEntity` for map returns non-null → map + dossier-list.
+   - **Otherwise** → table + dossier-list (always-safe fallback; works for any result set).
 
-   The "single dominant result" idea (top Lucene score >2× second) is dropped — `/api/search` doesn't return raw Lucene scores. The exactly-one-result case covers the common "user typed an exact name" scenario; everything else goes to a question workspace that's still useful even when ambiguous.
+   `chooseInitialSelectedEntity` (defined in §7.1 selected-param contract) can downgrade a chosen composition to `dossier-list-only` when no anchor candidate exists. This means the rules above don't need to encode "but only if the right anchor type exists" — that check is delegated to the anchor function.
+
+   The "single dominant result" idea (top Lucene score >2× second) is dropped — `/api/search` doesn't return raw Lucene scores. The exactly-one-result case is a strict count check, not a score margin.
 4. Render workspace shell with selected primitives. State (filters, selection) populates the shared store from URL.
 
 This mapping is implemented in `app/src/lib/workspace-config.ts` as a pure function `chooseQuestionPrimitives(searchResults, filters): PrimitiveId[]`. v2.3 ships the rule above; v2.7 LLM routing replaces the rule's first step (classification) but the primitive-composition function stays the same.
@@ -781,7 +794,20 @@ REMOVE
   n.cluster_id_pending, n.cluster_label_pending,
   n.cluster_centroid_distance_pending;
 
-// 3. Update the manifest pointer last. (One-step history was already
+// 3. Demote ineligible / deleted nodes: any node that has canonical
+//    state but no pending row in this run is no longer in the staged
+//    frame, so it should disappear from the constellation.
+MATCH (n) WHERE n.umap_x IS NOT NULL AND NOT EXISTS { MATCH (m) WHERE id(m) = id(n) AND m.umap_x_pending IS NOT NULL }
+REMOVE
+  n.umap_x, n.umap_y, n.umap_version,
+  n.cluster_id, n.cluster_label, n.cluster_centroid_distance;
+// Equivalent simpler form (since pending was just consumed in step 2,
+// any node still without canonical UMAP after the SET above is one
+// that wasn't in the staged frame this run):
+//   MATCH (n) WHERE n.had_canonical_before = true AND NOT (n.umap_x IS NOT NULL)
+//   ... no-op (already removed) — kept for documentation clarity only.
+
+// 4. Update the manifest pointer last. (One-step history was already
 //    captured in step 1; here we move the cursor forward.)
 MERGE (s:_SyncState {kind: 'constellation'})
 SET
