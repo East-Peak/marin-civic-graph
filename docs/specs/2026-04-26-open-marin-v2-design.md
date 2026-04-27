@@ -482,11 +482,12 @@ input → /api/search (existing) → results dropdown
 
 #### Question-workspace URL contract (deterministic reconstruction)
 
-A question workspace URL is `/w/q/{hash}?q={text}&type={...}&jurisdiction={...}&time_start={...}&time_end={...}`.
+A question workspace URL is `/w/q/{hash}?q={text}&type={...}&jurisdiction={...}&time_start={...}&time_end={...}&selected={entity_id}`.
 
 - `hash` = first 12 hex chars of `sha256(canonicalized_query_string)`. Pure cosmetic — short stable identifier for the URL. Reconstruction NEVER reads the hash.
 - `q` is the user's raw text (URL-encoded).
 - Optional filter params (`type`, `jurisdiction`, `time_start`, `time_end`, `edge_class`) match the workspace state schema (§5.4).
+- `selected` is the active anchor entity id for primitives that require one (egocentric graph, adjacency-flow, timeline, map). On URL submit from the question bar, this defaults to `searchResults[0].id` (top result). On click of a dossier-list row, this updates and the URL replaces (no nav-stack push). On cold reload of a `/w/q/...` URL with no `selected`, reconstruction sets `selected = searchResults[0].id` deterministically.
 
 **Reconstruction algorithm** (any cold load of `/w/q/...`):
 
@@ -821,9 +822,13 @@ Stages a versioned JSON payload to object storage (Vercel Blob; alt Cloudflare R
     ...
   ],
   "edges": [
-    { "s": "person-kate-colin", "t": "decision-12345", "type": "VOTED_ON", "weight": 1 },
+    { "s": "person-kate-colin", "t": "decision-12345", "type": "CAST_VOTE", "weight": 1 },
     ...
   ],
+  // edge.type values are LIVE edge names from edge-vocabulary.ts (e.g.,
+  // CAST_VOTE, PART_OF_MEETING, FILED, COMMITTEE_FOR_CANDIDATE) — NOT the
+  // spec-§3 friendly names. Edge vocabulary remains the single source of
+  // truth; the payload speaks its native dialect.
   "clusters": [
     { "id": 7, "label": "San Rafael Decisions", "centroid": [0.21, -0.49], "member_count": 1247 },
     ...
@@ -863,7 +868,7 @@ If the signed URL has expired by the time the client tries it (rare — 5-min TT
 
 Versioned URLs mean we get cache-busting for free (no `?v=` hacks) and can roll back instantly by updating the manifest's `current_version` to point at the prior blob. The pipeline retains the previous N versions (default: 7 days of nightly + 4 weekly fits) for rollback; older versions garbage-collected.
 
-**Rollback flow.** If a published payload is bad (drift budget breached, schema regression, naming hallucination caught post-hoc), Stuart runs `scripts/rollback_constellation.py {version}` which updates the manifest to point at a known-good prior version. Site recovers in <60s as the manifest cache TTL expires.
+**Rollback flow.** Operator-facing contract is **single-step**, matching §9.5: `scripts/rollback_constellation.py` takes no version argument; it always restores the immediately-prior snapshot (canonical DB state + manifest metadata + blob pointer, all in one transaction). Site recovers in <60s as the manifest cache TTL expires. If a deeper rewind is needed, the operator re-runs the pipeline from a known-good source state (the prior 7 nightly + 4 weekly blobs are retained as data, but the rollback script does not iterate through them).
 
 **Failure modes:**
 - Manifest missing / unreachable → `/` renders "Constellation is rebuilding..." with status poll every 30s.
