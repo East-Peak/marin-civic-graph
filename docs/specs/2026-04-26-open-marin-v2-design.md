@@ -1194,7 +1194,7 @@ Backfill: first full pipeline run on production data takes ~13-15 min; happens o
 - MapLibre integration, jurisdiction GeoJSON bundle.
 - Project markers, Place boundaries, Meeting cluster markers.
 - Wired into Project, Place, Meeting workspaces.
-- `/data` route is NOT retired here (was a stale plan claim). `/data` retirement requires the table primitive (v2.7); attempting deletion here leaves pure-table queries (officeholder coverage, QA validation gaps) without a replacement.
+- `/data` route is NOT retired in v2. Per §2, its predefined-Cypher backend is a different surface from question workspaces and stays. A future plan could re-skin its rendering using the table primitive shipped in v2.7, but the backend stays.
 
 ### Plan v2.7 — Table primitive + LLM question routing + Constellation lenses + retire /search (2-3 weeks, optional)
 
@@ -1228,7 +1228,7 @@ Plan 4b (auth + Vercel deploy) is unchanged — still deferred until Constellati
 
 ### 12.3 Tests
 
-The ~125 v1 tests coupled to Cytoscape canvas / explorer state are deleted across v2.1 (Cytoscape) and v2.3 / v2.6 (search / data). The ~280 tests for data layer / search backend / entity loaders / edge vocabulary stay green throughout.
+The ~125 v1 tests coupled to Cytoscape canvas / explorer state are deleted across v2.1 (Cytoscape removal) and v2.7 (search-route deletion). `/data` route + tests stay (§2). The ~280 tests for data layer / search backend / entity loaders / edge vocabulary stay green throughout.
 
 New v2 tests:
 
