@@ -670,25 +670,40 @@ All outbound calls go through `outbound_policy.py`. Direct OpenAI / Anthropic ca
 
   Eligibility resolution mirrors the runtime check in `app/src/lib/canonical-type.ts` — which uses ID prefixes (`actor-`, `inst-`, …) and label hints (`Government`, `Court`, `Political`) rather than equality on `labels(n)`. The pipeline calls a Python port of `canonicalType(node) → NodeType` and feeds the resulting set of eligible node IDs into Step 0:
 
+  Two related helpers:
+
   ```python
-  # build_embeddings.py / build_umap.py shared helper
-  def eligible_node_ids() -> list[str]:
-      records = run_cypher("MATCH (n) WHERE n.umap_x IS NOT NULL RETURN n")
+  # Used by build_embeddings.py: ALL eligible nodes, regardless of
+  # whether they're already in the constellation. New entities need
+  # to be embedded so they can enter the constellation on this run.
+  def all_eligible_node_ids() -> list[str]:
+      records = run_cypher("MATCH (n) RETURN n")
       return [
           n.id for n in records
-          if canonical_type(n) in ELIGIBLE_TYPES   # §9.2
+          if canonical_type(n) in ELIGIBLE_TYPES
           and canonical_type(n) not in INELIGIBLE_TYPES
+      ]
+
+  # Used by build_umap.py Step 0: ONLY the eligible nodes that already
+  # have canonical UMAP coords. These get copied forward into the
+  # staged frame so clustering sees a complete coordinate set.
+  def published_eligible_node_ids() -> list[str]:
+      return [
+          n_id for n_id in all_eligible_node_ids()
+          if has_canonical_umap(n_id)
       ]
   ```
 
   ```cypher
-  // Step 0: copy canonical → pending only for those resolved IDs.
-  MATCH (n) WHERE n.id IN $eligible_ids AND n.umap_x IS NOT NULL
+  // Step 0: copy canonical → pending for already-published eligible nodes.
+  MATCH (n) WHERE n.id IN $published_eligible_ids AND n.umap_x IS NOT NULL
   SET
     n.umap_x_pending = n.umap_x,
     n.umap_y_pending = n.umap_y,
     n.umap_version_pending = n.umap_version;
   ```
+
+  New eligible nodes (in `all_eligible_node_ids()` but not in `published_eligible_node_ids()`) are picked up by `build_embeddings.py` and `build_umap.py`'s incremental transform — they get pending coords from the UMAP transform step, not from Step 0 copy-forward.
 
   This guarantees clustering / matching / naming see a complete coordinate frame for the eligible nodes (≈114K), even on a small nightly delta. An ineligible node that was previously published has canonical UMAP but no pending — exactly the condition §9.5's demotion step looks for. Using the canonical-type helper instead of label equality avoids false-negatives where eligible nodes (e.g., an Organization with subtype label `Government`) would otherwise fail a naive `labels(n) IN ELIGIBLE_TYPES` test.
 - **Weekly full fit** (Sunday): `UMAP.fit_transform(all_embeddings)` → 114K × 2 array, similarity-transform aligned (§4.3). Overwrites all `*_pending` with new values. Persist the fitted model (`umap.pkl`) for incremental transforms.
@@ -735,7 +750,7 @@ Persist the new mapping with stable cluster_ids. This makes `cluster_label` stab
 - `name_clusters.py` reads `cluster_id_pending` + canonical `cluster_label` from the prior run (so unchanged clusters keep their existing names). Writes `cluster_label_pending`.
 - `publish_constellation.py` builds the payload from `*_pending` values, uploads the blob, updates the manifest.
 
-**Bootstrap (first publish ever).** On the very first pipeline run, no `:_SyncState{kind:"constellation"}` node exists and no `_previous` snapshot is present anywhere. The promote transaction handles this naturally: step 1's `MATCH (n) WHERE n.umap_x IS NOT NULL` matches zero nodes (skip), the `MATCH (s:_SyncState ...)` snapshot also matches zero (skip), step 2 promotes from staging as normal, and step 3's `MERGE (s:_SyncState ...)` creates the SyncState row for the first time. Rollback after a first publish is a no-op (no `_previous` snapshot exists; `had_canonical_before = false` for every node, so all nodes get their canonical fields wiped, manifest goes back to "no constellation"). This is correct: "rolling back the first publish" means returning to the pre-Constellation state.
+**Bootstrap (first publish ever).** On the very first pipeline run, no `:_SyncState{kind:"constellation"}` node exists and no `_previous` snapshot is present. The promote transaction handles this naturally: step 1's snapshot match returns zero (no canonical to snapshot), step 2's demotion match returns zero (no canonical-without-pending), step 3 promotes from staging as normal, and step 4's `MERGE (s:_SyncState ...)` creates the SyncState row for the first time. Rollback after a first publish wipes everything correctly (per round 9's `had_canonical_before = false` rule), returning to the pre-Constellation state.
 
 **Ineligibility demotion.** If a previously-published node becomes ineligible (e.g., its type moves to `INELIGIBLE_TYPES` after a policy update), the next pipeline run must remove it from the constellation. The mechanism: the embedding stage (§9.1) refuses to embed ineligible nodes, so they never enter the staging frame; clustering doesn't see them; the publish step explicitly wipes canonical UMAP/cluster fields on any node that has canonical state but no `*_pending` row in this run:
 
@@ -748,7 +763,7 @@ REMOVE n.umap_x, n.umap_y, n.umap_version,
 
 This handles both "node became ineligible" and "node was deleted from the graph" cases. Together with the bootstrap rules and the rollback symmetry from round 9, the publish state machine is total.
 
-**Atomic promotion** runs in a single Cypher transaction. Order: (1) snapshot the current canonical for rollback, (2) overwrite canonical from staging, (3) demote ineligible/missing nodes, (4) update the SyncState manifest pointer. All-or-nothing.
+**Atomic promotion** runs in a single Cypher transaction. Order: (1) snapshot the current canonical for rollback, (2) demote ineligible/missing nodes (BEFORE pending is consumed — so "canonical without pending" cleanly identifies the no-longer-eligible set), (3) overwrite canonical from staging (consumes pending), (4) update the SyncState manifest pointer. All-or-nothing.
 
 ```cypher
 // 1a. Snapshot current canonical for nodes that have it (overwrites any
@@ -780,7 +795,18 @@ SET
   s.previous_umap_version = s.umap_version,
   s.previous_blob_url = s.blob_url;
 
-// 2. Promote pending → canonical.
+// 2. Demote ineligible / deleted nodes BEFORE consuming pending. Any
+//    node with canonical state but no pending row in this run is no
+//    longer in the staged frame and should disappear from the
+//    constellation. (Doing this AFTER step 3 would not work — step 3
+//    removes pending, so the predicate would then match every just-
+//    promoted node and wipe the freshly promoted frame.)
+MATCH (n) WHERE n.umap_x IS NOT NULL AND n.umap_x_pending IS NULL
+REMOVE
+  n.umap_x, n.umap_y, n.umap_version,
+  n.cluster_id, n.cluster_label, n.cluster_centroid_distance;
+
+// 3. Promote pending → canonical (consumes pending).
 MATCH (n) WHERE n.umap_x_pending IS NOT NULL
 SET
   n.umap_x = n.umap_x_pending,
@@ -793,19 +819,6 @@ REMOVE
   n.umap_x_pending, n.umap_y_pending, n.umap_version_pending,
   n.cluster_id_pending, n.cluster_label_pending,
   n.cluster_centroid_distance_pending;
-
-// 3. Demote ineligible / deleted nodes: any node that has canonical
-//    state but no pending row in this run is no longer in the staged
-//    frame, so it should disappear from the constellation.
-MATCH (n) WHERE n.umap_x IS NOT NULL AND NOT EXISTS { MATCH (m) WHERE id(m) = id(n) AND m.umap_x_pending IS NOT NULL }
-REMOVE
-  n.umap_x, n.umap_y, n.umap_version,
-  n.cluster_id, n.cluster_label, n.cluster_centroid_distance;
-// Equivalent simpler form (since pending was just consumed in step 2,
-// any node still without canonical UMAP after the SET above is one
-// that wasn't in the staged frame this run):
-//   MATCH (n) WHERE n.had_canonical_before = true AND NOT (n.umap_x IS NOT NULL)
-//   ... no-op (already removed) — kept for documentation clarity only.
 
 // 4. Update the manifest pointer last. (One-step history was already
 //    captured in step 1; here we move the cursor forward.)
