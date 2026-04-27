@@ -43,9 +43,10 @@ The "60% survives" claim is honest: meaningful new infrastructure (UMAP pipeline
 
 Rather than a single-commit rip-out (which Codex flagged correctly: it leaves users without `/search` until v2.3 ships), v2 stages deletions to match replacement availability:
 
-- **Plan v2.1 (Constellation MVP)** deletes `/graph` and `app/src/components/explorer/*` only. Cytoscape and cytoscape-fcose dependencies are removed at this point. `/search` and `/data` remain functional throughout v2.1.
+- **Plan v2.1 (Constellation MVP)** deletes `/graph`, `app/src/components/explorer/*`, and `app/src/components/home/signature-subgraph.tsx`. **Cytoscape stays installed in `package.json`** because `RadialHero` on standalone entity pages still depends on it. `/search` and `/data` remain functional throughout v2.1.
+- **Plan v2.2 (Workspaces)** replaces `RadialHero` with the egocentric-graph primitive (Cosmograph). At that point Cytoscape and cytoscape-fcose are removed from `package.json`.
 - **Plan v2.3 (Question bar)** deletes `/search` only after the question bar is shipped and proven.
-- **Plan v2.4-v2.6 (Sankey/timeline/map)** retire `/data` incrementally as predefined queries get replaced with workspace primitives. The final `/data` deletion lands in Plan v2.6.
+- **Plan v2.4-v2.6 (Adjacency-flow / timeline / map)** retire `/data` incrementally as predefined queries get replaced with workspace primitives. The final `/data` deletion lands in Plan v2.6.
 
 There is no v1/v2 dual-stack period for the same surface — but during the v2 build, surviving v1 surfaces (`/search`, `/data`) stay as fallbacks until their v2 replacements ship.
 
@@ -62,7 +63,7 @@ There is no v1/v2 dual-stack period for the same surface — but during the v2 b
 │     [cards-as-nodes (tiered), region labels, gentle drift]  │
 │         │ click any node                                    │
 │         ▼                                                   │
-│  /w/{workspace-id}                                          │
+│  /w/entity/{type}/{slug}  or  /w/q/{hash}                   │
 │  ┌──────────┬───────────────┬──────────────────────────┐    │
 │  │ Dossier  │ Egocentric    │ Adjacency-flow / Timeline│    │
 │  │ (text)   │ (mini graph)  │ Map / Table              │    │
@@ -74,15 +75,15 @@ Backend (Neo4j + scripts/ pipeline + Next.js API routes)
 ├── existing: ingest, edges, search index, catalog
 ├── new pipelines (scripts/):
 │   build_embeddings.py       # OpenAI text-embedding-3-small
-│   build_umap.py             # UMAP 1536 → 2 (cached, stable)
-│   build_clusters.py         # HDBSCAN on UMAP-reduced coords
+│   build_umap.py             # UMAP 1536 → 2 + similarity-transform alignment
+│   build_clusters.py         # HDBSCAN on UMAP-2D output
 │   match_clusters.py         # Hungarian matching across runs
 │   name_clusters.py          # Deterministic + Claude Haiku improve
-│   publish_constellation.py  # Bake JSON payload to public/constellation.json
-└── new API: /api/cluster, /api/embed, /api/workspace, /api/constellation
+│   publish_constellation.py  # Stage versioned blob → atomic version promotion
+└── new API: /api/cluster/[id], /api/embed, /api/constellation-manifest
 ```
 
-The frontend is a single Next.js app; routes are Constellation (`/`), workspace (`/w/{id}`), entity dossier (`/{type}/{slug}`), about (`/about`). Workspaces are URL-addressable composed views of primitives.
+The frontend is a single Next.js app; routes are Constellation (`/`), entity workspace (`/w/entity/{type}/{slug}`), question workspace (`/w/q/{hash}`), entity dossier (`/{type}/{slug}`), about (`/about`). Workspaces are URL-addressable composed views of primitives — no DB-backed save/load in v2.2.
 
 ---
 
@@ -135,14 +136,22 @@ umap_model = UMAP(
 
 For 114K × 1536 embeddings: UMAP fit takes ~3-5 minutes on the Mac mini (M-series, single-threaded `n_jobs=1` is ~10 min; multithreaded much faster). Output is 114K × 2 array of (x, y).
 
-**Stability on incremental updates.** Adding a small batch of new entities nightly: we re-run UMAP `transform` (not `fit`) using the cached `fit` model from the prior full run. Full `fit` runs weekly to absorb drift. This keeps positions stable for existing nodes day-to-day.
+**Stability via a persisted similarity transform.** Raw UMAP `fit` can rotate, mirror, or rescale the entire projection across runs even when local structure is preserved. To prevent the territory from "spinning" weekly:
 
-**Procrustes alignment on every full fit.** Raw UMAP `fit` can rotate, mirror, or rescale the entire projection across runs even when local structure is preserved. To prevent the territory from "spinning" weekly, every full fit emits raw `(x', y')` coordinates that are then **Procrustes-aligned to the prior week's persisted `(x, y)`** before write-back. The aligned coordinates are what land in Neo4j and the payload — never raw `fit` output. Library: `scipy.spatial.procrustes` or equivalent.
+1. Weekly full fit emits raw `(x', y')`.
+2. Solve a **2D similarity transform** `T = (rotation, mirror, uniform_scale, translation)` that minimizes squared error between `T(x', y')` and the prior week's persisted `(x, y)` over an anchor set (entities present in both runs). This is a closed-form least-squares fit (4 params: rotation θ, scale s, tx, ty; mirror is a separate sign flag chosen by minimum-error comparison). Use `cv2.estimateAffinePartial2D` or implement directly (~30 lines of numpy).
+3. Persist `T` as a versioned artifact: `umap_alignment_v{N}.json` (the 4 params + mirror flag + anchor set hash).
+4. Apply `T` to ALL UMAP outputs from this fit (full + subsequent nightly transforms) before writing `umap_x`, `umap_y` to Neo4j.
+5. Nightly `umap.transform()` outputs are similarly passed through the cached `T` so new nodes land in the same aligned frame.
+
+This makes alignment operationally complete: the same `T` is reusable for both the weekly full fit's output and every nightly transform of new/dirty nodes until the next full fit produces a new `T`.
+
+`scipy.spatial.procrustes` is NOT used — it returns aligned coordinates, not the transform parameters needed for incremental application.
 
 **Hard drift budget**, enforced as gate on the publish step:
-- Per-node displacement >25% of map width = block publish, alert Stuart.
+- Per-node displacement (after `T` applied) >25% of map width = block publish, alert Stuart.
 - Per-cluster-centroid displacement >15% of map width = block publish, alert Stuart.
-- If breach, `publish_constellation.py` republishes the prior week's payload unchanged and the alert names the offenders for human review.
+- If breach, `publish_constellation.py` does not advance the manifest. The prior week's payload + alignment remain authoritative. Alert names the offenders for human review.
 
 This makes "stable territory" a measurable contract, not a hope.
 
@@ -372,16 +381,17 @@ Each workspace shape has a deterministic band-construction rule. Below, "anchor"
 - Time window: rolling 24 months ending at `max(MoneyFlow.flow_date for flows touching anchor)`, OR if anchor has no flows, the most recent SeatService term boundary.
 - Left bands: MoneyFlows where `flow.recipient = anchor` AND `flow.flow_date IN window`. One band per source.
 - Center: anchor.
-- Right bands: Decisions where `anchor IS_VOTING_MEMBER_OF Decision.institution` AND `Decision.decided_at IN window`. One band per Decision.
+- Right bands: Decisions where there is a **recorded vote relation** between anchor and Decision (e.g., `(anchor)-[:CAST_VOTE_ON {position: yea|nay|abstain}]->(decision)`) AND `Decision.decided_at IN window`. One band per Decision. **"Member of institution during the window" is not sufficient** — the band requires a recorded participation/vote edge so we never imply a vote that wasn't documented.
 - Band width: $ magnitude on left side; uniform on right side (Decisions don't have $ weight).
-- Citation requirements: every left band needs a Filing-citation on the MoneyFlow; every right band needs a Decision record from primary minutes.
+- Citation requirements: every left band needs a Filing-citation on the MoneyFlow; every right band needs both (a) a Decision record from primary minutes AND (b) the vote-relation citation tying the anchor to the recorded vote.
+- Recused / absent / no-vote-recorded Decisions are dropped, not displayed as "absent."
 
 **Decision workspace** (anchor: Decision)
 - Time window: rolling 24 months ending at `Decision.decided_at`.
-- Left bands: MoneyFlows where `flow.recipient IN { voting members of Decision } AND flow.flow_date IN window`. Bands grouped by member, then by source.
+- Left bands: MoneyFlows where `flow.recipient IN { persons with a recorded vote relation on Decision } AND flow.flow_date IN window`. Bands grouped by member, then by source.
 - Center: Decision (split into yea / nay / abstain sub-nodes).
-- Right bands: members → their vote (yea/nay/abstain) on this Decision. Width: uniform.
-- Citation requirements: every MoneyFlow needs a Filing citation; the Decision itself needs a primary-minutes citation.
+- Right bands: persons with a recorded vote relation on this Decision → their vote (yea / nay / abstain). Width: uniform. Members without a recorded vote relation (absent, recused, vote not in minutes) are excluded.
+- Citation requirements: every MoneyFlow needs a Filing citation; every right-band requires the recorded-vote-relation citation; the Decision itself needs a primary-minutes citation.
 
 **MoneyFlow workspace** (anchor: MoneyFlow)
 - Time window: rolling 24 months ending at `flow.flow_date`.
@@ -562,7 +572,7 @@ All outbound calls go through `outbound_policy.py`. Direct OpenAI / Anthropic ca
 
 Weekly fit benchmark (Plan v2.0): on Mac mini M-series, 114K × 1536 cosine UMAP fit ~3-8 minutes. Acceptable. If runtime exceeds 15 minutes, we add a PCA-to-50d step before UMAP.
 
-**Stability guarantee**: with `random_state=42` + `init="spectral"`, weekly fits produce projections that differ <5% per node from prior week (measured by mean Euclidean distance after Procrustes alignment). Acceptable drift.
+**Stability guarantee**: with `random_state=42` + `init="spectral"`, plus the similarity-transform alignment of §4.3, persisted positions differ <5% per node week-over-week (measured by mean Euclidean distance after transform application). Anything larger triggers the drift budget block.
 
 ### 9.4 Clustering pipeline
 
@@ -591,6 +601,14 @@ HDBSCAN cluster IDs are not stable across runs (cluster 7 today might be cluster
 8. For merged clusters (multiple yesterday → one today): largest ancestor's ID wins; merged label is regenerated.
 
 Persist the new mapping with stable cluster_ids. This makes `cluster_label` stable too — labels stick to the cluster, not to the ephemeral run ID.
+
+**Versioned write strategy.** Pipeline writes are versioned, not in-place: derived properties carry a version suffix during write, and only get promoted to canonical names atomically at the end. Specifically:
+
+- Pipeline writes `umap_x_pending`, `umap_y_pending`, `cluster_id_pending`, `cluster_label_pending` to Neo4j during the run, AND emits the `version_id` to be the current pipeline run's ID.
+- On successful publish (drift budget passed, blob upload OK, manifest update OK), `publish_constellation.py` runs an atomic Cypher `MATCH (n) WHERE n.umap_x_pending IS NOT NULL SET n.umap_x = n.umap_x_pending, n.umap_y = n.umap_y_pending, n.cluster_id = n.cluster_id_pending, n.cluster_label = n.cluster_label_pending REMOVE n.umap_x_pending, n.umap_y_pending, n.cluster_id_pending, n.cluster_label_pending` and updates `:_SyncState{kind:"constellation"}` with the new `version_id` in the same transaction.
+- On failure, pending properties are wiped: `MATCH (n) REMOVE n.umap_x_pending, n.umap_y_pending, n.cluster_id_pending, n.cluster_label_pending`. Canonical properties remain untouched.
+
+API reads are pinned to the canonical values, so `/api/cluster/[id]` always reflects what the manifest's active version describes. The constellation payload (blob) and the live DB state never describe different versions.
 
 ### 9.6 Cluster-naming pipeline
 
@@ -637,7 +655,7 @@ Persist the new mapping with stable cluster_ids. This makes `cluster_label` stab
 
 **Script**: `scripts/publish_constellation.py`. Runs at end of nightly pipeline.
 
-Bakes a single JSON payload to `app/public/constellation.json`:
+Stages a versioned JSON payload to object storage (Vercel Blob; alt Cloudflare R2). The manifest is the only thing that flips when a publish succeeds. Schema:
 
 ```json
 {
@@ -738,7 +756,7 @@ Total nightly added time: ~3-5 min. Weekly (UMAP full fit): ~10 min added.
 
 | Route | Purpose | Server/Client |
 |---|---|---|
-| `/` | Constellation (full-bleed) | Client (Cosmograph mount); fetches `/constellation.json` |
+| `/` | Constellation (full-bleed) | Client (Cosmograph mount); fetches `/api/constellation-manifest` then the versioned blob URL it points to |
 | `/w/entity/{type}/{slug}` | Entity workspace | Server-rendered shell, client-rendered primitives |
 | `/w/q/{hash}` | Question workspace | Server-rendered shell, client-rendered primitives |
 | `/{type}/{slug}` | Standalone entity dossier (kept for sharing) | Server |
@@ -766,7 +784,7 @@ Each plan is independently coherent and Stuart-review-gated.
 Mandatory: **one full end-to-end production-size rehearsal** of the entire pipeline:
 
 1. Embed all 114K production entities with the synthesizer + outbound policy enforcement.
-2. UMAP full fit on 114K × 1536, with Procrustes alignment to a fixture "prior frame" so the alignment code is exercised.
+2. UMAP full fit on 114K × 1536, with similarity-transform alignment to a fixture "prior frame" so the alignment code is exercised end-to-end (transform fit + persist + apply to a follow-up nightly transform).
 3. HDBSCAN on the 2D UMAP output.
 4. Hungarian cluster matching against a fixture prior run.
 5. Cluster naming with the deterministic candidate + Haiku improvement + validation pass.
@@ -778,7 +796,7 @@ Mandatory: **one full end-to-end production-size rehearsal** of the entire pipel
 Pass criteria (any failure → amend spec, do not start v2.1):
 - UMAP full fit completes in <12 min on the Mac mini.
 - HDBSCAN on 2D coords completes in <2 min.
-- Procrustes alignment + drift budget logic produces sensible per-node + per-cluster movement numbers (calibrate budget thresholds against the rehearsal numbers).
+- Similarity-transform alignment + drift budget logic produces sensible per-node + per-cluster movement numbers (calibrate budget thresholds against the rehearsal numbers).
 - Payload size ≤8MB gzipped (1.3× our 6MB estimate gives headroom).
 - Client first-paint of full Constellation ≤4s on Wi-Fi.
 - 60fps sustained at Tier A on baseline (M1 MBP / equivalent).
@@ -800,7 +818,7 @@ If any benchmark blows up, the spec is amended before v2.1 starts. v2.0 is the g
 - Tier-A and Tier-B sprite atlases (build-time).
 - Tier-C on-demand sprite generation in Web Worker.
 - Region label DOM overlay.
-- All 6 new pipeline scripts (embeddings, UMAP w/ Procrustes alignment, clusters, matching, naming, payload publish-to-blob).
+- All 6 new pipeline scripts (embeddings, UMAP w/ similarity-transform alignment, clusters, matching, naming, payload publish-to-blob).
 - Manifest API endpoint + rollback script.
 - Outbound policy + audit logging + lint rule against direct vendor calls.
 - Override registry for cluster names.
@@ -868,7 +886,8 @@ Stop or continue based on use after v2.6.
 ### 12.1 What lands in v2.1's first commit
 
 - Delete `/graph` and `app/src/components/explorer/*`.
-- Remove Cytoscape dependencies from `package.json`.
+- Delete `app/src/components/home/signature-subgraph.tsx` (Cytoscape consumer on the homepage).
+- **Cytoscape stays installed in `package.json`** because `RadialHero` on `/{type}/{slug}` standalone entity pages still depends on it. Removal happens in v2.2 when egocentric-graph primitive replaces RadialHero.
 - Add Cosmograph mount as new `/` page (initially with placeholder data until pipeline backfills).
 - Add new pipeline scripts (no-op until embeddings populate).
 - `/search` and `/data` remain.
@@ -925,7 +944,7 @@ Until backfill completes, `/` renders a "Building constellation..." progress pag
 
 ## 14. Open questions
 
-1. **UMAP fit duration on production hardware**: spec assumes <8 min; benchmark in Plan v2.0 confirms.
+1. **UMAP fit duration on production hardware**: spec budget is <12 min for full fit; benchmark in Plan v2.0 confirms.
 2. **HDBSCAN min_cluster_size tuning**: 15 is a starting point; tune in Plan v2.1 against actual data to land in the 80-150 cluster sweet spot.
 3. **Constellation payload size on production data**: 30MB raw / 6MB gzipped is an estimate; confirm in Plan v2.0.
 4. **Tier-C sprite generation throughput on baseline hardware**: 200 sprites/second is a target; benchmark in Plan v2.0.
@@ -938,9 +957,21 @@ Until backfill completes, `/` renders a "Building constellation..." progress pag
 
 ### After Plan v2.0 (benchmarks)
 
-- All assumed runtimes / sizes confirmed within budget.
-- Static-data prototype of `/` renders 50K nodes at 60fps.
-- Outbound policy tests pass; default-deny enforced.
+The v2.0 release gate is the full **114K end-to-end rehearsal** described in §11 Plan v2.0, not a 50K subset. Pass requires every one of these:
+
+- UMAP full fit on 114K × 1536 completes in <12 min on the Mac mini.
+- HDBSCAN on the 2D output completes in <2 min.
+- Similarity-transform alignment + drift-budget logic produce sensible movement numbers and the budget thresholds are calibrated.
+- Payload size ≤8MB gzipped.
+- Client first-paint of full Constellation ≤4s on Wi-Fi.
+- 60fps sustained at Tier A on baseline (M1 MBP / equivalent).
+- Tier C sprite throughput ≥150/sec.
+- Outbound audit log shows zero ineligible-neighbor leaks across the rehearsal.
+- Versioned blob upload + manifest endpoint round-trip works end-to-end.
+
+The 50K subset prototype is acceptable as an early v2.0 sub-benchmark to identify show-stoppers before the full rehearsal — but it is not the release gate.
+
+Outbound policy tests pass; default-deny enforced; lint rule against direct vendor calls outside `outbound_policy.py` is in place.
 
 ### After Plan v2.1 (Constellation MVP)
 
