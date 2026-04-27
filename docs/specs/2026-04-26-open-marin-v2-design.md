@@ -442,9 +442,24 @@ For all other entity types, adjacency-flow is not the primary primitive (timelin
 
 An adjacency-flow band is only rendered if **every endpoint NODE has a primary-source citation property** on the node itself. The graph's edges (CAST_VOTE, COMMITTEE_FOR_CANDIDATE, etc.) do not currently carry citation properties, and the spec does NOT require them to — citations live on the source-of-truth nodes (Filing, Decision, MoneyFlow, Case, Project, Record), not on the relationships between them. The honest framing: each node was independently documented, the edges report the documented relationship between those records, but no provenance is asserted ABOUT the edge itself.
 
-A "primary-source citation" on a node means at least one of: `filing_id`, `fppc_report_id`, `form_700_line` (Filing), `minutes_url` (Meeting / Decision), `docket_number` (Case / Proceeding), `permit_id` (Project), `source_url` + `source_id` (Record), or another canonical primary-source field present on the source-data ingestion contract. Inferred or derived nodes (e.g., a Person node synthesized purely from name-matching across filings, with no underlying primary record) do not qualify; these are rare in current data but would be flagged for exclusion.
+A "primary-source citation" on a node means at least one of:
 
-Practically: the eligibility check is `every node in [source, intermediates, target] has at least one of the citation fields above set`. This is implementable today against the current graph; no edge-property migration is needed for v2.4.
+- `evidence_record_ids` (non-empty array) — the canonical multi-evidence reference used by `build_graph_projection.py` for Person/Organization/Case/Decision; this is the most common citation shape in current data.
+- `record_ids` (non-empty array) — alternative array used in some normalized bundles; treated equivalently to `evidence_record_ids`.
+- `filing_id` / `fppc_report_id` / `form_700_line` (Filing).
+- `minutes_url` / `agenda_url` / `meeting_url` (Meeting / Decision / AgendaItem).
+- `docket_number` (Case / Proceeding).
+- `permit_id` (Project).
+- `source_url` + `source_id` (Record).
+- Or another canonical primary-source field present on the source-data ingestion contract.
+
+The MoneyFlow node carries `source_filing_id` (FPPC schedule reference) — that satisfies the citation rule.
+
+The Committee node carries `fppc_id` — also satisfies.
+
+Inferred or derived nodes with no underlying primary record (e.g., a synthetic person node with empty `evidence_record_ids`) do not qualify and are excluded from adjacency-flow.
+
+Practically: the eligibility check is `every node in [source, intermediates, target] has at least one of the citation fields above set`. The check function — `hasPrimarySourceCitation(node) → bool` — is reusable across all primitives and across the v2 ingestion validators. Implementation lives in `app/src/lib/citations.ts` (TS, used by primitives) with a Python mirror in `scripts/citations.py` (used by ingestion validators). No edge-property migration is needed for v2.4.
 
 If the project later decides to materialize per-edge citations (e.g., adding `evidence_filing_id` to a CAST_VOTE edge to assert which minutes record establishes that vote), the rule can tighten — but that's a separate ingestion-contract change, not blocking adjacency-flow's first ship.
 
@@ -513,13 +528,15 @@ A question workspace URL is `/w/q/{hash}?q={text}&type={...}&jurisdiction={...}&
 
 1. Parse query string into a `WorkspaceState` object.
 2. Run `/api/search?q={q}&...filters` to get the canonical result list.
-3. **Compose primitives by query shape — deterministic rule, not LLM:**
-   - **Empty `q`, only filters set** → table primitive (filtered list view).
-   - **Single dominant result** (top score >2× second) → redirect to `/w/entity/{type}/{slug}` of that result; question workspace is just a stepping stone.
-   - **Multi-result, results contain ≥1 Decision OR ≥1 MoneyFlow** → adjacency-flow + dossier-list primitive (the "list of matching entities" rendered as a side panel).
-   - **Multi-result, results predominantly Person/Organization** → egocentric graph centered on top result + dossier-list.
-   - **Multi-result, results have temporal spread (>30 day range)** → timeline + dossier-list.
+3. **Compose primitives by query shape — deterministic rule using only fields `/api/search` actually returns** (`id`, `type`, `search_label`, `key_fact`, `last_activity`, `rank`, `route`):
+   - **Empty `q`, only filters set** → table primitive + dossier-list (filtered list view).
+   - **Exactly 1 result** → redirect to `result.route`; the question workspace is just a stepping stone, no shell renders.
+   - **Multi-result, results contain ≥1 Decision OR ≥1 MoneyFlow** → adjacency-flow + dossier-list (the "list of matching entities" rendered as a side panel).
+   - **Multi-result, results predominantly Person/Organization (≥60% by count)** → egocentric graph centered on `selected` (default `searchResults[0].id`) + dossier-list.
+   - **Multi-result, results have temporal spread (>30 day range computed from `last_activity` across results)** → timeline + dossier-list.
    - **Multi-result, otherwise** → table + dossier-list.
+
+   The "single dominant result" idea (top Lucene score >2× second) is dropped — `/api/search` doesn't return raw Lucene scores. The exactly-one-result case covers the common "user typed an exact name" scenario; everything else goes to a question workspace that's still useful even when ambiguous.
 4. Render workspace shell with selected primitives. State (filters, selection) populates the shared store from URL.
 
 This mapping is implemented in `app/src/lib/workspace-config.ts` as a pure function `chooseQuestionPrimitives(searchResults, filters): PrimitiveId[]`. v2.3 ships the rule above; v2.7 LLM routing replaces the rule's first step (classification) but the primitive-composition function stays the same.
@@ -638,18 +655,29 @@ All outbound calls go through `outbound_policy.py`. Direct OpenAI / Anthropic ca
 
 - **Step 0 — populate the staging frame for ELIGIBLE nodes**: at the start of every pipeline run, copy canonical UMAP coords to staging — but ONLY for nodes that are still eligible per outbound policy (§9.2). Nodes whose type has moved to `INELIGIBLE_TYPES` since the last publish, OR whose source data has been deleted, are deliberately excluded so they have no `*_pending` row. This is what makes ineligibility demotion (§9.5) actually work — ineligible nodes silently fall out of the staged frame and get their canonical fields wiped at promote time.
 
+  Eligibility resolution mirrors the runtime check in `app/src/lib/canonical-type.ts` — which uses ID prefixes (`actor-`, `inst-`, …) and label hints (`Government`, `Court`, `Political`) rather than equality on `labels(n)`. The pipeline calls a Python port of `canonicalType(node) → NodeType` and feeds the resulting set of eligible node IDs into Step 0:
+
+  ```python
+  # build_embeddings.py / build_umap.py shared helper
+  def eligible_node_ids() -> list[str]:
+      records = run_cypher("MATCH (n) WHERE n.umap_x IS NOT NULL RETURN n")
+      return [
+          n.id for n in records
+          if canonical_type(n) in ELIGIBLE_TYPES   # §9.2
+          and canonical_type(n) not in INELIGIBLE_TYPES
+      ]
+  ```
+
   ```cypher
-  // Step 0: copy canonical → pending for eligible nodes only.
-  MATCH (n)
-  WHERE n.umap_x IS NOT NULL
-    AND ANY(label IN labels(n) WHERE label IN $eligible_types)
+  // Step 0: copy canonical → pending only for those resolved IDs.
+  MATCH (n) WHERE n.id IN $eligible_ids AND n.umap_x IS NOT NULL
   SET
     n.umap_x_pending = n.umap_x,
     n.umap_y_pending = n.umap_y,
     n.umap_version_pending = n.umap_version;
   ```
 
-  This guarantees clustering / matching / naming see a complete coordinate frame for the 114K eligible nodes, even on a small nightly delta. An ineligible node that was previously published has canonical UMAP but no pending — exactly the condition §9.5's demotion step looks for.
+  This guarantees clustering / matching / naming see a complete coordinate frame for the eligible nodes (≈114K), even on a small nightly delta. An ineligible node that was previously published has canonical UMAP but no pending — exactly the condition §9.5's demotion step looks for. Using the canonical-type helper instead of label equality avoids false-negatives where eligible nodes (e.g., an Organization with subtype label `Government`) would otherwise fail a naive `labels(n) IN ELIGIBLE_TYPES` test.
 - **Weekly full fit** (Sunday): `UMAP.fit_transform(all_embeddings)` → 114K × 2 array, similarity-transform aligned (§4.3). Overwrites all `*_pending` with new values. Persist the fitted model (`umap.pkl`) for incremental transforms.
 - **Nightly incremental transform**: `umap.transform(new_or_dirty_embeddings)` using the cached fit, similarity-transform applied. Overwrites the `*_pending` for the new/dirty subset only — clean nodes retain the canonical values copied in Step 0.
 - All writes are to staging properties (`umap_x_pending`, `umap_y_pending`, `umap_version_pending`) — never directly to canonical. Promotion to canonical happens atomically at publish time (§9.5).
