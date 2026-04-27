@@ -56,7 +56,9 @@ Rather than a single-commit rip-out (which Codex flagged correctly: it leaves us
 - **Plan v2.2 (Workspaces)** replaces `RadialHero` with the egocentric-graph primitive (Cosmograph). At that point Cytoscape and cytoscape-fcose are removed from `package.json`.
 - **Plan v2.3 (Question bar)** ships the question-bar entry point but does NOT delete `/search`. The question bar in v2.3 routes to entity workspaces (which exist after v2.2) and to a stub question workspace that, until adjacency-flow / timeline / table all ship, only renders dossier-list (the side-panel primitive that lands with v2.3 itself, derived from the v1 `/search` row JSX). Multi-result questions whose ideal composition needs an unshipped primitive fall back to dossier-list-only mode.
 - **Plan v2.4-v2.6 (Adjacency-flow / timeline / map)** progressively unlock the full primitive composition. As each primitive ships, `chooseQuestionPrimitives()` starts using it.
-- **Plan v2.7 (Table primitive + lenses + LLM routing)** is when the question-workspace surface area reaches its full set. **`/search` AND `/data` are both deleted in v2.7.** `/data` is fundamentally a sortable-table surface (10 predefined query templates rendered as tables/CSVs), so its replacement requires the table primitive — which doesn't ship until v2.7. Earlier deletion would leave several pure-table query shapes (officeholder coverage, QA validation gaps) with no equivalent.
+- **Plan v2.7 (Table primitive + lenses + LLM routing) deletes `/search` only.** `/data` **stays in v2** — its 10 predefined Cypher templates (officeholder Form 700/803 coverage matrix, QA validation gaps via UNION queries, etc.) execute custom Cypher that the question-workspace `/api/search`-backed contract does not subsume. Question workspaces handle "find entities matching `q + filters`"; `/data` handles "run this specific predefined Cypher query." Different shapes; different surface.
+
+  v2 explicitly does NOT replace `/data`. It can be re-skinned later (a separate optional plan) to use the table primitive's rendering, but the predefined-query backend stays. This is a deliberate scope reduction from earlier drafts that wrongly promised `/data` deletion.
 
 There is no v1/v2 dual-stack period for the same surface — but during the v2 build, surviving v1 surfaces (`/search`, `/data`) stay as fallbacks until their v2 replacements ship.
 
@@ -1194,13 +1196,13 @@ Backfill: first full pipeline run on production data takes ~13-15 min; happens o
 - Wired into Project, Place, Meeting workspaces.
 - `/data` route is NOT retired here (was a stale plan claim). `/data` retirement requires the table primitive (v2.7); attempting deletion here leaves pure-table queries (officeholder coverage, QA validation gaps) without a replacement.
 
-### Plan v2.7 — Table primitive + LLM question routing + Constellation lenses + retire /search and /data (2-3 weeks, optional)
+### Plan v2.7 — Table primitive + LLM question routing + Constellation lenses + retire /search (2-3 weeks, optional)
 
 - Table primitive.
 - LLM-mediated question routing via Claude Haiku.
 - Constellation Phase 2 lenses: money / recency / influence / issue (requires centrality pipeline).
 - Delete `/search` route — by this plan every question-workspace composition shape is implemented.
-- Delete `/data` route — its 10 predefined query templates are now reachable via question workspaces with type/jurisdiction filters → table primitive. The "officeholder coverage" and "QA validation gaps" pure-table queries that `/data` exposed are now filter-only question workspaces.
+- **`/data` is NOT retired in v2.** Its predefined Cypher templates (officeholder coverage, QA validation gaps) execute bespoke queries the question-workspace `/api/search`-backed contract cannot subsume. `/data` continues to serve its analyst job in v2. A future plan can re-skin its rendering to use the table primitive but the backend stays.
 
 Stop or continue based on use after v2.6.
 
@@ -1215,14 +1217,14 @@ Stop or continue based on use after v2.6.
 - **Cytoscape stays installed in `package.json`** because `RadialHero` on `/{type}/{slug}` standalone entity pages still depends on it. Removal happens in v2.2 when egocentric-graph primitive replaces RadialHero.
 - Add Cosmograph mount as new `/` page (initially with placeholder data until pipeline backfills).
 - Add new pipeline scripts (no-op until embeddings populate).
-- `/search` and `/data` remain.
+- `/search` remains until v2.7. `/data` remains permanently in v2 (its predefined-Cypher backend isn't subsumed by question workspaces).
 
 Plan 4b (auth + Vercel deploy) is unchanged — still deferred until Constellation MVP ships.
 
 ### 12.2 What lands later
 
-- v2.3: question bar ships; `/search` and `/data` stay as fallbacks (chooseQuestionPrimitives downgrades to dossier-list-only when a needed primitive is unshipped).
-- v2.7: `/search` AND `/data` both deleted, after the table primitive ships in this same plan. Before v2.7, several pure-table query shapes from `/data` (officeholder coverage, QA validation gaps) have no question-workspace equivalent, so `/data` must remain.
+- v2.3: question bar ships; `/search` stays as a fallback (chooseQuestionPrimitives downgrades to dossier-list-only when a needed primitive is unshipped).
+- v2.7: `/search` deleted now that all question-workspace composition shapes (including table) are implemented. `/data` is NOT deleted — see §2 for rationale.
 
 ### 12.3 Tests
 
