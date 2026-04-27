@@ -35,7 +35,13 @@ The "60% survives" claim is honest: meaningful new infrastructure (UMAP pipeline
 - **Ingestion scripts** under `scripts/` — `refresh_openmarin.py` orchestration, `build_search_properties.py`, `build_record_preferred_urls.py`, `build_catalog.py`. v2 adds five new scripts (embeddings, UMAP, clusters, names, constellation payload) into this pipeline.
 - **Search backend** (`app/src/lib/server/search-backend.ts`) — Lucene-escaped fulltext + rank. v2 adds a vector-similarity branch but the bucketed-results contract is preserved.
 - **Entity loaders** (`app/src/lib/server/entity-loader.ts`, `entity-queries.ts`, `path-finder.ts`) — Tier-1 must-show, Phase-2 fill, edges-among-selected. The dossier primitive uses these mostly as-is.
-- **/api routes**: `/api/search`, `/api/entity/[id]`, `/api/expand`, `/api/path`, `/api/status`, `/api/catalog` — kept. Adds `/api/cluster/[id]`, `/api/embed`, `/api/constellation-manifest`.
+- **/api routes** that exist today (verified against `app/src/app/api/`): `/api/search`, `/api/expand`, `/api/path`, `/api/status`, `/api/catalog` — kept.
+- **/api routes that v2 adds or extends**:
+  - **NEW**: `/api/entity/[id]` — server endpoint wrapping `entity-loader.ts` so the dossier client primitive can fetch entity payloads via HTTP. Currently entity loading is server-component-only via direct import; v2 promotes it to a route. Trivial wrapper, ~50 lines.
+  - **NEW**: `/api/cluster/[id]` — cluster membership + label + centroid for hover detail.
+  - **NEW**: `/api/embed` — embeds a single ad-hoc text query (for question-bar similarity search). Subject to outbound policy (§9.2).
+  - **NEW**: `/api/constellation-manifest` — auth-gated; returns versioned signed-URL manifest (§9.7).
+  - **EXTEND**: `/api/search` — currently parses only `q` + `include_records` and calls `runSearch(q, includeRecords)`. v2 extends it to accept optional filters: `type` (NodeType[]), `jurisdiction` (string[]), `time_start` / `time_end` (ISO dates), `edge_class` (EdgeStyle[]). The bucketed-results contract from v1 is preserved; new params filter results post-rank. `runSearch` signature grows to accept an options object.
 - **Layout chrome**: status bar, /about page, keyboard shortcuts provider, command palette (⌘K). All keep.
 - **Tests**: ~280 of the ~405 v1 tests stay green (data layer, search, entity loaders, edge vocabulary, status, /about). The ~125 Cytoscape-canvas-shaped tests are replaced.
 
@@ -363,7 +369,7 @@ Primitives do NOT own the URL; the workspace shell does. Primitives can request 
 
 Text-heavy entity primitive. Largely the v1 entity-page content, refactored as a workspace primitive (drops the global header/footer; expects to be embedded).
 
-**All primitives — including dossier — are client components** that conform to the §5.5 `Primitive` interface and own their own data fetching against `/api/*`. Dossier fetches `/api/entity/[id]` (the existing v1 endpoint, which itself wraps `entity-loader.ts` server-side). This keeps the primitive boundary uniform: workspace shell hands each primitive props + a store, primitive renders, fetches, listens to filters.
+**All primitives — including dossier — are client components** that conform to the §5.5 `Primitive` interface and own their own data fetching against `/api/*`. Dossier fetches `/api/entity/[id]` (NEW in v2 — a thin server-route wrapper around the existing v1 `entity-loader.ts`; v1 entity loading is server-component-only via direct import). This keeps the primitive boundary uniform: workspace shell hands each primitive props + a store, primitive renders, fetches, listens to filters.
 
 The `/{type}/{slug}` standalone route remains a server component (it's a shareable read-only entity page, not a workspace). It can keep using `entity-loader.ts` directly. The workspace dossier primitive is the embedded client variant.
 
@@ -449,6 +455,14 @@ MapLibre GL JS (open source). Renders Projects as parcel markers (where lat/long
 ### 6.6 Table
 
 Plain HTML table for tabular drilldowns. Sortable, sticky headers. Lowest-effort primitive; copies columns from the entity's properties + relevant relations. Used when neither graph nor adjacency-flow nor timeline fits.
+
+### 6.7 Dossier-list
+
+Compact list of search results, used in question workspaces (§7.1) as the side panel that pairs with adjacency-flow / egocentric / timeline. Each row shows: type chip, search_label, key_fact, last-activity date — the same fields surfaced by `/api/search` results. Click a row → primary primitive in the workspace re-anchors on that entity (egocentric graph re-centers; adjacency-flow re-derives bands; timeline filters).
+
+Props: takes the same `searchResults` array that `chooseQuestionPrimitives` consumed, plus a callback for row-click. Reads selection from the workspace store and highlights the active row.
+
+Implemented as a thin client component (~200 lines), reusing the row-rendering JSX from the v1 `/search` page so we don't duplicate type-chip + key-fact display logic.
 
 ---
 
@@ -660,6 +674,14 @@ SET
   n.cluster_label_previous = n.cluster_label,
   n.cluster_centroid_distance_previous = n.cluster_centroid_distance;
 
+// Snapshot manifest metadata too, so rollback can restore it
+// without a separate code path.
+MATCH (s:_SyncState {kind: 'constellation'})
+SET
+  s.previous_version_id = s.version_id,
+  s.previous_umap_version = s.umap_version,
+  s.previous_blob_url = s.blob_url;
+
 // 2. Promote pending → canonical.
 MATCH (n) WHERE n.umap_x_pending IS NOT NULL
 SET
@@ -674,12 +696,13 @@ REMOVE
   n.cluster_id_pending, n.cluster_label_pending,
   n.cluster_centroid_distance_pending;
 
-// 3. Update the manifest pointer last.
+// 3. Update the manifest pointer last. (One-step history was already
+//    captured in step 1; here we move the cursor forward.)
 MERGE (s:_SyncState {kind: 'constellation'})
 SET
   s.version_id = $new_version_id,
   s.umap_version = $new_umap_version,
-  s.previous_version_id = s.version_id,    // implicit one-step history
+  s.blob_url = $new_blob_url,
   s.updated_at = datetime();
 ```
 
@@ -699,14 +722,19 @@ SET
 //  the next successful promote overwrites them. This means rollback is
 //  idempotent within the same step.)
 
-// Flip the manifest back AND point at the prior blob.
+// Flip the manifest back to the prior version atomically — version_id,
+// umap_version, and blob_url all restore in one transaction.
 MATCH (s:_SyncState {kind: 'constellation'})
 SET
   s.version_id = s.previous_version_id,
+  s.umap_version = s.previous_umap_version,
+  s.blob_url = s.previous_blob_url,
   s.updated_at = datetime();
 ```
 
-The blob is also pointed back to the previous version (the prior 7 nightly + 4 weekly versions are retained; older garbage-collected). DB and manifest move together. **The "blob and DB always describe the same version" invariant is preserved across rollback.**
+DB and manifest move together. **The "blob and DB always describe the same version, and the manifest's `umap_version` always matches both" invariant is preserved across rollback.** Workspace URLs carrying `from_umap_version` will see the prior umap_version on the manifest after rollback and either match it (good) or fall back to default zoom with the "territory updated" badge (also good — same path as a forward roll).
+
+The blob is retained on the storage side for the prior 7 nightly + 4 weekly versions; older garbage-collected.
 
 We keep exactly one rollback step (last-good-version). Multi-step rollback is out of scope; if a deeper rewind is needed, the operator re-runs the pipeline from a known-good source state.
 
@@ -892,9 +920,14 @@ Total nightly added time: ~3-5 min. Weekly (UMAP full fit): ~10 min added.
 
 ### 10.3 New API endpoints
 
-- `GET /api/cluster/{id}` — returns cluster membership + label + centroid for hover detail.
+**New routes:**
+- `GET /api/entity/[id]` — wraps `entity-loader.ts` for client-side dossier fetch. Returns the same `EntityPayload` shape that v1 server components currently consume directly.
+- `GET /api/cluster/[id]` — returns cluster membership + label + centroid for hover detail.
 - `POST /api/embed` — embeds a single ad-hoc text query (for question-bar similarity search). Subject to outbound policy (§9.2).
-- `GET /api/constellation-manifest` — returns the current payload version + blob URL + size + built_at (§9.7).
+- `GET /api/constellation-manifest` — auth-gated; returns the current payload version + signed blob URL + size + built_at + umap_version + schema_version (§9.7).
+
+**Extended routes:**
+- `GET /api/search` — v2 adds optional filter params (`type`, `jurisdiction`, `time_start`, `time_end`, `edge_class`). v1 contract (`q`, `include_records`) preserved.
 
 DB-backed workspace save/load endpoints are deferred to a later plan. v2.2 workspaces live in URLs only.
 
