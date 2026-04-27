@@ -41,7 +41,10 @@ The "60% survives" claim is honest: meaningful new infrastructure (UMAP pipeline
   - **NEW**: `/api/cluster/[id]` — cluster membership + label + centroid for hover detail.
   - **NEW**: `/api/embed` — embeds a single ad-hoc text query (for question-bar similarity search). Subject to outbound policy (§9.2).
   - **NEW**: `/api/constellation-manifest` — auth-gated; returns versioned signed-URL manifest (§9.7).
-  - **EXTEND**: `/api/search` — currently parses only `q` + `include_records` and calls `runSearch(q, includeRecords)`. v2 extends it to accept optional filters: `type` (NodeType[]), `jurisdiction` (string[]), `time_start` / `time_end` (ISO dates), `edge_class` (EdgeStyle[]). The bucketed-results contract from v1 is preserved; new params filter results post-rank. `runSearch` signature grows to accept an options object.
+  - **EXTEND**: `/api/search` — currently parses only `q` + `include_records` and calls `runSearch(q, includeRecords)`. v2 extends it to:
+    - Accept optional filters: `type` (NodeType[]), `jurisdiction` (string[]), `time_start` / `time_end` (ISO dates), `edge_class` (EdgeStyle[]). New params filter results post-rank.
+    - **Allow empty `q`** when at least one filter is set (filter-only browse). Empty-q + no-filters still 400. Filter-only queries skip the Lucene branch and run a Cypher query against indexed properties (e.g. `MATCH (n) WHERE n.type IN $types AND ...`). `runSearch` signature grows to accept `(q: string | null, options: SearchOptions)`.
+    - The bucketed-results contract from v1 is preserved when `q` is non-empty.
 - **Layout chrome**: status bar, /about page, keyboard shortcuts provider, command palette (⌘K). All keep.
 - **Tests**: ~280 of the ~405 v1 tests stay green (data layer, search, entity loaders, edge vocabulary, status, /about). The ~125 Cytoscape-canvas-shaped tests are replaced.
 
@@ -321,6 +324,11 @@ type WorkspaceState = {
   fromConstellation?: {
     x: number; y: number; zoom: number; umap_version: number;
   };
+
+  // Question-workspace shared search results (populated once by the
+  // shell at mount; primitives read from here rather than re-fetching).
+  // Null while loading; [] for empty-result queries.
+  searchResults: SearchResult[] | null;
 };
 
 // DB-backed saved workspaces (workspaceId, savedAt) are deferred to a
@@ -458,9 +466,11 @@ Plain HTML table for tabular drilldowns. Sortable, sticky headers. Lowest-effort
 
 ### 6.7 Dossier-list
 
-Compact list of search results, used in question workspaces (§7.1) as the side panel that pairs with adjacency-flow / egocentric / timeline. Each row shows: type chip, search_label, key_fact, last-activity date — the same fields surfaced by `/api/search` results. Click a row → primary primitive in the workspace re-anchors on that entity (egocentric graph re-centers; adjacency-flow re-derives bands; timeline filters).
+Compact list of search results, used in question workspaces (§7.1) as the side panel that pairs with adjacency-flow / egocentric / timeline. Each row shows: type chip, search_label, key_fact, last-activity date — the same fields surfaced by `/api/search` results. Click a row → updates `selectedEntityId` in the workspace store, which other primitives observe to re-anchor (egocentric graph re-centers; adjacency-flow re-derives bands; timeline filters).
 
-Props: takes the same `searchResults` array that `chooseQuestionPrimitives` consumed, plus a callback for row-click. Reads selection from the workspace store and highlights the active row.
+**Ownership model — same as every other primitive (§5.5).** dossier-list reads `q + filters` from the workspace store and fetches `/api/search` itself. The shell does not own search results. Any other question-workspace primitive that needs the result list reads it from the workspace store too — populated by whichever primitive fetched first. Concretely: dossier-list, egocentric-graph, adjacency-flow, and timeline all read `q + filters + selectedEntityId` from the store; they each hit `/api/search` if they need the full list, OR `/api/entity/[id]` for the selected entity's details. SWR-style request dedup at the fetch layer means the network only sees one `/api/search` call per (q, filters) combo even when multiple primitives mount.
+
+The `chooseQuestionPrimitives()` function (§7.1) needs the search results to pick a composition, so it runs a single `/api/search` call inside the workspace shell at mount, writes results into the store as `searchResults: SearchResult[] | null`, and primitives consume from the store instead of re-fetching.
 
 Implemented as a thin client component (~200 lines), reusing the row-rendering JSX from the v1 `/search` page so we don't duplicate type-chip + key-fact display logic.
 
@@ -664,8 +674,11 @@ Persist the new mapping with stable cluster_ids. This makes `cluster_label` stab
 **Atomic promotion** runs in a single Cypher transaction. Order: (1) snapshot the current canonical for rollback, (2) overwrite canonical from staging, (3) update the SyncState manifest pointer. All-or-nothing.
 
 ```cypher
-// 1. Snapshot current canonical (overwrites any prior _previous_ snapshot;
-//    we keep one rollback step, not deep history).
+// 1a. Snapshot current canonical for nodes that have it (overwrites any
+//     prior _previous_ snapshot; we keep one rollback step, not deep
+//     history). Tag with a "had_canonical_before" marker so rollback can
+//     distinguish nodes that existed pre-publish vs. nodes born in this
+//     publish.
 MATCH (n) WHERE n.umap_x IS NOT NULL
 SET
   n.umap_x_previous = n.umap_x,
@@ -673,7 +686,14 @@ SET
   n.umap_version_previous = n.umap_version,
   n.cluster_id_previous = n.cluster_id,
   n.cluster_label_previous = n.cluster_label,
-  n.cluster_centroid_distance_previous = n.cluster_centroid_distance;
+  n.cluster_centroid_distance_previous = n.cluster_centroid_distance,
+  n.had_canonical_before = true;
+
+// 1b. For nodes that DON'T have canonical yet (first-time entrants in
+//     this publish), explicitly mark them so rollback knows to wipe
+//     them on revert.
+MATCH (n) WHERE n.umap_x IS NULL AND n.umap_x_pending IS NOT NULL
+SET n.had_canonical_before = false;
 
 // Snapshot manifest metadata too, so rollback can restore it
 // without a separate code path.
@@ -710,8 +730,9 @@ SET
 **Rollback** (`scripts/rollback_constellation.py`) is symmetric — it restores both the DB canonical AND the manifest in one transaction:
 
 ```cypher
-// Restore canonical from _previous snapshot.
-MATCH (n) WHERE n.umap_x_previous IS NOT NULL
+// Restore canonical from _previous snapshot for nodes that had canonical
+// state before the bad publish.
+MATCH (n) WHERE n.umap_x_previous IS NOT NULL AND n.had_canonical_before = true
 SET
   n.umap_x = n.umap_x_previous,
   n.umap_y = n.umap_y_previous,
@@ -719,6 +740,20 @@ SET
   n.cluster_id = n.cluster_id_previous,
   n.cluster_label = n.cluster_label_previous,
   n.cluster_centroid_distance = n.cluster_centroid_distance_previous;
+
+// For nodes that were FIRST INTRODUCED in the bad publish (no prior
+// canonical state), wipe their canonical fields so they vanish from
+// the constellation entirely until a future good publish picks them
+// up. This preserves the "DB and blob describe the same version"
+// invariant — a rolled-back blob doesn't mention these nodes.
+MATCH (n) WHERE n.had_canonical_before = false
+REMOVE
+  n.umap_x, n.umap_y, n.umap_version,
+  n.cluster_id, n.cluster_label, n.cluster_centroid_distance;
+
+// Clear the marker; next promote re-evaluates.
+MATCH (n) WHERE n.had_canonical_before IS NOT NULL
+REMOVE n.had_canonical_before;
 // (We deliberately don't REMOVE the _previous values — they're kept until
 //  the next successful promote overwrites them. This means rollback is
 //  idempotent within the same step.)
