@@ -566,9 +566,10 @@ All outbound calls go through `outbound_policy.py`. Direct OpenAI / Anthropic ca
 
 **Script**: `scripts/build_umap.py`.
 
-- **Weekly full fit** (Sunday): `UMAP.fit_transform(all_embeddings)` → 114K × 2 array. Persist the fitted model (`umap.pkl`) for incremental transforms.
-- **Nightly incremental transform**: `umap.transform(new_or_dirty_embeddings)` using the cached fit. Cheap (~10s for typical nightly delta).
-- Write coordinates to **staging** properties (`umap_x_pending`, `umap_y_pending`, `umap_version_pending`) — never directly to canonical `umap_x` / `umap_y` / `umap_version`. Promotion to canonical happens atomically at publish time (§9.5).
+- **Step 0 — populate the staging frame for ALL nodes**: at the start of every pipeline run, copy canonical UMAP coords to staging for every node that already has them (`MATCH (n) WHERE n.umap_x IS NOT NULL SET n.umap_x_pending = n.umap_x, n.umap_y_pending = n.umap_y, n.umap_version_pending = n.umap_version`). This guarantees clustering / matching / naming always see a complete 114K-node coordinate frame, even on a small nightly delta.
+- **Weekly full fit** (Sunday): `UMAP.fit_transform(all_embeddings)` → 114K × 2 array, similarity-transform aligned (§4.3). Overwrites all `*_pending` with new values. Persist the fitted model (`umap.pkl`) for incremental transforms.
+- **Nightly incremental transform**: `umap.transform(new_or_dirty_embeddings)` using the cached fit, similarity-transform applied. Overwrites the `*_pending` for the new/dirty subset only — clean nodes retain the canonical values copied in Step 0.
+- All writes are to staging properties (`umap_x_pending`, `umap_y_pending`, `umap_version_pending`) — never directly to canonical. Promotion to canonical happens atomically at publish time (§9.5).
 
 Weekly fit benchmark (Plan v2.0): on Mac mini M-series, 114K × 1536 cosine UMAP fit ~3-8 minutes. Acceptable. If runtime exceeds 15 minutes, we add a PCA-to-50d step before UMAP.
 
@@ -610,9 +611,21 @@ Persist the new mapping with stable cluster_ids. This makes `cluster_label` stab
 - `name_clusters.py` reads `cluster_id_pending` + canonical `cluster_label` from the prior run (so unchanged clusters keep their existing names). Writes `cluster_label_pending`.
 - `publish_constellation.py` builds the payload from `*_pending` values, uploads the blob, updates the manifest.
 
-**Atomic promotion** happens only after the manifest update succeeds. The promotion runs in a single Cypher transaction:
+**Atomic promotion** runs in a single Cypher transaction. Order: (1) snapshot the current canonical for rollback, (2) overwrite canonical from staging, (3) update the SyncState manifest pointer. All-or-nothing.
 
 ```cypher
+// 1. Snapshot current canonical (overwrites any prior _previous_ snapshot;
+//    we keep one rollback step, not deep history).
+MATCH (n) WHERE n.umap_x IS NOT NULL
+SET
+  n.umap_x_previous = n.umap_x,
+  n.umap_y_previous = n.umap_y,
+  n.umap_version_previous = n.umap_version,
+  n.cluster_id_previous = n.cluster_id,
+  n.cluster_label_previous = n.cluster_label,
+  n.cluster_centroid_distance_previous = n.cluster_centroid_distance;
+
+// 2. Promote pending → canonical.
 MATCH (n) WHERE n.umap_x_pending IS NOT NULL
 SET
   n.umap_x = n.umap_x_pending,
@@ -626,9 +639,41 @@ REMOVE
   n.cluster_id_pending, n.cluster_label_pending,
   n.cluster_centroid_distance_pending;
 
+// 3. Update the manifest pointer last.
 MERGE (s:_SyncState {kind: 'constellation'})
-SET s.version_id = $new_version_id, s.updated_at = datetime();
+SET
+  s.version_id = $new_version_id,
+  s.umap_version = $new_umap_version,
+  s.previous_version_id = s.version_id,    // implicit one-step history
+  s.updated_at = datetime();
 ```
+
+**Rollback** (`scripts/rollback_constellation.py`) is symmetric — it restores both the DB canonical AND the manifest in one transaction:
+
+```cypher
+// Restore canonical from _previous snapshot.
+MATCH (n) WHERE n.umap_x_previous IS NOT NULL
+SET
+  n.umap_x = n.umap_x_previous,
+  n.umap_y = n.umap_y_previous,
+  n.umap_version = n.umap_version_previous,
+  n.cluster_id = n.cluster_id_previous,
+  n.cluster_label = n.cluster_label_previous,
+  n.cluster_centroid_distance = n.cluster_centroid_distance_previous;
+// (We deliberately don't REMOVE the _previous values — they're kept until
+//  the next successful promote overwrites them. This means rollback is
+//  idempotent within the same step.)
+
+// Flip the manifest back AND point at the prior blob.
+MATCH (s:_SyncState {kind: 'constellation'})
+SET
+  s.version_id = s.previous_version_id,
+  s.updated_at = datetime();
+```
+
+The blob is also pointed back to the previous version (the prior 7 nightly + 4 weekly versions are retained; older garbage-collected). DB and manifest move together. **The "blob and DB always describe the same version" invariant is preserved across rollback.**
+
+We keep exactly one rollback step (last-good-version). Multi-step rollback is out of scope; if a deeper rewind is needed, the operator re-runs the pipeline from a known-good source state.
 
 **On failure** (drift breach, blob upload fail, schema validation fail): wipe `*_pending` properties only:
 
@@ -727,21 +772,31 @@ Estimated payload size: 114K nodes × ~150 bytes + 148K edges × ~80 bytes ≈ *
 
 **Publish boundary — versioned object storage.** Vercel's `app/public/` is a build-time artifact, so we cannot rewrite it from a nightly cron. The pipeline publishes to **versioned object storage** instead:
 
-- **Primary**: Vercel Blob (zero-config on our hosting platform). Each pipeline run uploads `constellation-{version}.json.gz` (immutable, versioned URL). Cost: ~$0.15/month for our payload size.
-- **Alternative if cost or vendor lock-in concerns arise later**: Cloudflare R2 (~$0.015/GB/month, S3-compatible API).
+- **Primary**: Vercel Blob with **private access** (not the public-bucket variant). Each pipeline run uploads `constellation-{version}.json.gz` to a private blob. Cost: ~$0.15/month for our payload size.
+- **Alternative if cost or vendor lock-in concerns arise later**: Cloudflare R2 (~$0.015/GB/month, S3-compatible API; signed URLs supported natively).
+
+**Auth-respecting transport.** Open Marin is invite-only behind Plan 4b auth. The Constellation payload is the entire dataset — leaking a direct blob URL would defeat that. So:
+
+- Blobs are stored privately. There is no permanent public URL.
+- The manifest endpoint mints a **short-TTL signed URL** (5 minutes) for the current blob version every time it is requested. Both Vercel Blob and Cloudflare R2 support short-lived signed URLs.
+- The manifest endpoint itself sits behind the same auth middleware as the rest of the app (Plan 4b). An unauthenticated request to `/api/constellation-manifest` returns 401 — no blob URL leaks.
+- A leaked signed URL expires in ≤5 minutes and cannot be reused after.
 
 Manifest endpoint:
 
-- `GET /api/constellation-manifest` returns `{ "schema_version": 1, "current_version": "2026-04-26-nightly-001", "umap_version": 14, "url": "https://blob.vercel-storage.com/constellation-2026-04-26-nightly-001.json.gz", "built_at": "...", "size_gz": 6234567 }`.
-
-  Both `schema_version` and `umap_version` exposed by the manifest match the values inside the payload it points to. Workspace URLs that carry `from_umap_version` are compatible with the current Constellation iff `from_umap_version == manifest.umap_version`. Mismatch triggers the "territory updated" badge (§4.7) and falls back to default zoom on Constellation restore.
-- The manifest itself is served by a Next.js API route reading from Neo4j's `:_SyncState{kind:"constellation"}` node (single row, updated by `publish_constellation.py` at end of pipeline). Cache: `Cache-Control: public, max-age=60, stale-while-revalidate=3600`.
+- `GET /api/constellation-manifest` (auth-required) returns `{ "schema_version": 1, "current_version": "2026-04-26-nightly-001", "umap_version": 14, "signed_url": "https://blob.vercel-storage.com/...?token=...&expires=1714123456", "expires_at": "2026-04-26T08:05:00Z", "built_at": "2026-04-26T08:00:00Z", "size_gz": 6234567 }`.
+- Both `schema_version` and `umap_version` exposed by the manifest match the values inside the payload it points to. Workspace URLs that carry `from_umap_version` are compatible with the current Constellation iff `from_umap_version == manifest.umap_version`. Mismatch triggers the "territory updated" badge (§4.7) and falls back to default zoom on Constellation restore.
+- The manifest itself is served by an authenticated Next.js API route. It reads `:_SyncState{kind:"constellation"}` from Neo4j (single row, updated by `publish_constellation.py` at end of pipeline) and mints the signed URL on the fly. Cache: `Cache-Control: private, max-age=60` (per-user; never edge-cached because the signed URL expires).
 
 Client flow on `/`:
 
-1. Fetch `/api/constellation-manifest` (~1KB, ~50ms).
-2. Fetch the versioned blob URL (~6MB gzipped, ~1-2s cold cached at Vercel edge).
+1. Fetch `/api/constellation-manifest` (~1KB, ~50ms — authenticated; cookie session).
+2. Fetch the manifest's `signed_url` (~6MB gzipped, ~1-2s cold).
 3. Parse, feed to Cosmograph.
+
+If the signed URL has expired by the time the client tries it (rare — 5-min TTL is generous for a 6MB download), client re-fetches the manifest for a fresh URL.
+
+**Pre-Plan-4b posture**: until auth lands, the manifest endpoint is gated by an IP allowlist (Stuart's home + tailnet) configured at the Vercel/middleware layer. Same effect as auth, simpler to set up, removed once 4b's NextAuth/Clerk session-cookie middleware is in place.
 
 Versioned URLs mean we get cache-busting for free (no `?v=` hacks) and can roll back instantly by updating the manifest's `current_version` to point at the prior blob. The pipeline retains the previous N versions (default: 7 days of nightly + 4 weekly fits) for rollback; older versions garbage-collected.
 
