@@ -361,7 +361,13 @@ Primitives do NOT own the URL; the workspace shell does. Primitives can request 
 
 ### 6.1 Dossier
 
-Text-heavy entity page. Largely the v1 entity-page component, refactored as a workspace primitive (drops the global header/footer; expects to be embedded). Sections: identity card, key facts, recent activity, citations, evidence drawer. Server component using `entity-loader.ts`.
+Text-heavy entity primitive. Largely the v1 entity-page content, refactored as a workspace primitive (drops the global header/footer; expects to be embedded).
+
+**All primitives — including dossier — are client components** that conform to the §5.5 `Primitive` interface and own their own data fetching against `/api/*`. Dossier fetches `/api/entity/[id]` (the existing v1 endpoint, which itself wraps `entity-loader.ts` server-side). This keeps the primitive boundary uniform: workspace shell hands each primitive props + a store, primitive renders, fetches, listens to filters.
+
+The `/{type}/{slug}` standalone route remains a server component (it's a shareable read-only entity page, not a workspace). It can keep using `entity-loader.ts` directly. The workspace dossier primitive is the embedded client variant.
+
+Sections rendered (both routes): identity card, key facts, recent activity, citations, evidence drawer.
 
 ### 6.2 Egocentric graph
 
@@ -378,20 +384,24 @@ Shows directional adjacency between entities — *what's documented to flow from
 Each workspace shape has a deterministic band-construction rule. Below, "anchor" is the workspace's entity. "Time window" defines what counts as "in the same period." Bands violating the eligibility rule (§6.3.2) are silently dropped, not collapsed into "other."
 
 **Person workspace** (anchor: Person)
-- Time window: rolling 24 months ending at `max(MoneyFlow.flow_date for flows touching anchor)`, OR if anchor has no flows, the most recent SeatService term boundary.
-- Left bands: MoneyFlows where `flow.recipient = anchor` AND `flow.flow_date IN window`. One band per source.
+
+The campaign-finance model is committee-mediated: MoneyFlows land in `Committee` nodes, then committees connect to candidates/persons via `COMMITTEE_FOR_CANDIDATE` / `CANDIDATE_FOR_PERSON` (or similar) edges. The adjacency-flow primitive must traverse this path or it returns false emptiness for the common case. The exact edge types live in `docs/specs/2026-04-15-campaign-finance-normalization-design.md` and `app/src/lib/edge-vocabulary.ts`.
+
+- Time window: rolling 24 months ending at `max(MoneyFlow.flow_date for flows reaching anchor via the committee path)`, OR if anchor has no flows, the most recent SeatService term boundary.
+- Left bands: MoneyFlows where `flow.recipient = some_committee` AND `some_committee` is linked to `anchor` via the canonical committee→candidate→person path (resolved from the edge vocabulary) AND `flow.flow_date IN window`. One band per source. The intermediate Committee is rendered as a labeled mid-stage between source and anchor, not collapsed away — keeping the documented path visible.
 - Center: anchor.
-- Right bands: Decisions where there is a **recorded vote relation** between anchor and Decision (e.g., `(anchor)-[:CAST_VOTE_ON {position: yea|nay|abstain}]->(decision)`) AND `Decision.decided_at IN window`. One band per Decision. **"Member of institution during the window" is not sufficient** — the band requires a recorded participation/vote edge so we never imply a vote that wasn't documented.
+- Right bands: Decisions where there is a **recorded vote relation** between anchor and Decision (e.g., `(anchor)-[:CAST_VOTE]->(decision)` per the live ontology — confirm the canonical edge type name in `edge-vocabulary.ts` at implementation time) AND `Decision.decided_at IN window`. One band per Decision. **"Member of institution during the window" is not sufficient** — the band requires a recorded participation/vote edge so we never imply a vote that wasn't documented.
 - Band width: $ magnitude on left side; uniform on right side (Decisions don't have $ weight).
-- Citation requirements: every left band needs a Filing-citation on the MoneyFlow; every right band needs both (a) a Decision record from primary minutes AND (b) the vote-relation citation tying the anchor to the recorded vote.
+- Citation requirements: every left band needs (a) a Filing/FPPC-citation on the MoneyFlow, AND (b) a Filing/FPPC-citation on the committee→candidate→person linkage. Every right band needs both (a) a Decision record from primary minutes AND (b) the vote-relation citation tying the anchor to the recorded vote.
+- Direct-to-person flows (rare; e.g., a personal gift recorded on a Form 700) render as a single-stage band with no Committee mid-node. Same citation rule.
 - Recused / absent / no-vote-recorded Decisions are dropped, not displayed as "absent."
 
 **Decision workspace** (anchor: Decision)
 - Time window: rolling 24 months ending at `Decision.decided_at`.
-- Left bands: MoneyFlows where `flow.recipient IN { persons with a recorded vote relation on Decision } AND flow.flow_date IN window`. Bands grouped by member, then by source.
+- Left bands: same committee-mediated path as Person — MoneyFlows whose receiving Committee is linked (via the canonical committee→candidate→person path) to a person with a recorded vote relation on this Decision, AND `flow.flow_date IN window`. Bands grouped by voting member, then by source. Intermediate Committees are visible as a labeled mid-stage.
 - Center: Decision (split into yea / nay / abstain sub-nodes).
 - Right bands: persons with a recorded vote relation on this Decision → their vote (yea / nay / abstain). Width: uniform. Members without a recorded vote relation (absent, recused, vote not in minutes) are excluded.
-- Citation requirements: every MoneyFlow needs a Filing citation; every right-band requires the recorded-vote-relation citation; the Decision itself needs a primary-minutes citation.
+- Citation requirements: every MoneyFlow needs a Filing/FPPC citation; the committee→person linkage needs its own citation; every right-band requires the recorded-vote-relation citation; the Decision itself needs a primary-minutes citation.
 
 **MoneyFlow workspace** (anchor: MoneyFlow)
 - Time window: rolling 24 months ending at `flow.flow_date`.
@@ -451,10 +461,35 @@ Renders as an input element overlaid on the Constellation (and on every workspac
 ```
 input → /api/search (existing) → results dropdown
                               ↓ Enter
-                   /w/entity/{type}/{slug}  (top result)
+                   /w/entity/{type}/{slug}  (top result if score margin clear)
                                   or
-                   /w/q/{hash}  (multi-result composition)
+                   /w/q/{hash}?q=...  (multi-result composition)
 ```
+
+#### Question-workspace URL contract (deterministic reconstruction)
+
+A question workspace URL is `/w/q/{hash}?q={text}&type={...}&jurisdiction={...}&time_start={...}&time_end={...}`.
+
+- `hash` = first 12 hex chars of `sha256(canonicalized_query_string)`. Pure cosmetic — short stable identifier for the URL. Reconstruction NEVER reads the hash.
+- `q` is the user's raw text (URL-encoded).
+- Optional filter params (`type`, `jurisdiction`, `time_start`, `time_end`, `edge_class`) match the workspace state schema (§5.4).
+
+**Reconstruction algorithm** (any cold load of `/w/q/...`):
+
+1. Parse query string into a `WorkspaceState` object.
+2. Run `/api/search?q={q}&...filters` to get the canonical result list.
+3. **Compose primitives by query shape — deterministic rule, not LLM:**
+   - **Empty `q`, only filters set** → table primitive (filtered list view).
+   - **Single dominant result** (top score >2× second) → redirect to `/w/entity/{type}/{slug}` of that result; question workspace is just a stepping stone.
+   - **Multi-result, results contain ≥1 Decision OR ≥1 MoneyFlow** → adjacency-flow + dossier-list primitive (the "list of matching entities" rendered as a side panel).
+   - **Multi-result, results predominantly Person/Organization** → egocentric graph centered on top result + dossier-list.
+   - **Multi-result, results have temporal spread (>30 day range)** → timeline + dossier-list.
+   - **Multi-result, otherwise** → table + dossier-list.
+4. Render workspace shell with selected primitives. State (filters, selection) populates the shared store from URL.
+
+This mapping is implemented in `app/src/lib/workspace-config.ts` as a pure function `chooseQuestionPrimitives(searchResults, filters): PrimitiveId[]`. v2.3 ships the rule above; v2.7 LLM routing replaces the rule's first step (classification) but the primitive-composition function stays the same.
+
+A question workspace URL is fully reconstructable from the URL alone — no DB lookup required, no session memory.
 
 ### 7.2 LLM-mediated routing (deferred to Plan v2.7)
 
