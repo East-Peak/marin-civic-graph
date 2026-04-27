@@ -35,7 +35,7 @@ The "60% survives" claim is honest: meaningful new infrastructure (UMAP pipeline
 - **Ingestion scripts** under `scripts/` — `refresh_openmarin.py` orchestration, `build_search_properties.py`, `build_record_preferred_urls.py`, `build_catalog.py`. v2 adds five new scripts (embeddings, UMAP, clusters, names, constellation payload) into this pipeline.
 - **Search backend** (`app/src/lib/server/search-backend.ts`) — Lucene-escaped fulltext + rank. v2 adds a vector-similarity branch but the bucketed-results contract is preserved.
 - **Entity loaders** (`app/src/lib/server/entity-loader.ts`, `entity-queries.ts`, `path-finder.ts`) — Tier-1 must-show, Phase-2 fill, edges-among-selected. The dossier primitive uses these mostly as-is.
-- **/api routes**: `/api/search`, `/api/entity/[id]`, `/api/expand`, `/api/path`, `/api/status`, `/api/catalog` — kept. Adds `/api/cluster`, `/api/embed`, `/api/workspace/[id]`, `/api/constellation`.
+- **/api routes**: `/api/search`, `/api/entity/[id]`, `/api/expand`, `/api/path`, `/api/status`, `/api/catalog` — kept. Adds `/api/cluster/[id]`, `/api/embed`, `/api/constellation-manifest`.
 - **Layout chrome**: status bar, /about page, keyboard shortcuts provider, command palette (⌘K). All keep.
 - **Tests**: ~280 of the ~405 v1 tests stay green (data layer, search, entity loaders, edge vocabulary, status, /about). The ~125 Cytoscape-canvas-shaped tests are replaced.
 
@@ -114,7 +114,7 @@ Each entity has a 1536-dim semantic embedding (§9.1). The layout projects all e
 
 Why UMAP, not force-directed:
 
-- **Cluster geometry matches visual geometry.** HDBSCAN clusters (computed in the same embedding space as UMAP input) land as contiguous spatial regions. Region labels can sit over their convex hulls without lying about structure.
+- **Cluster geometry matches visual geometry.** HDBSCAN clusters are computed on the 2D UMAP output (§9.4), and UMAP preserves embedding-space locality. So clusters in 2D approximate the dense regions of the 1536-d embedding distribution. Region labels can sit over their convex hulls without lying about visible structure.
 - **Stable across days.** UMAP with fixed `random_state` and `init='spectral'` produces near-identical projections across nightly runs (with some drift on new entities). Force simulation, by contrast, finds a fresh local minimum every reload — positions drift visibly between sessions.
 - **Semantic, not topological.** Force layout shows graph connectivity (who's edge-adjacent to whom). UMAP shows semantic similarity (who's *about* similar things). For "show me the territory of Marin civic data," the latter is the right map.
 - **Edges remain as decoration.** Edges (graph relationships) still render between UMAP-positioned nodes — they're informative as a layer but they're not load-bearing for the layout. Two nodes can be far apart in UMAP space but graph-adjacent (e.g., a Person and an unusual Filing they signed); the edge tells that story.
@@ -136,6 +136,15 @@ umap_model = UMAP(
 For 114K × 1536 embeddings: UMAP fit takes ~3-5 minutes on the Mac mini (M-series, single-threaded `n_jobs=1` is ~10 min; multithreaded much faster). Output is 114K × 2 array of (x, y).
 
 **Stability on incremental updates.** Adding a small batch of new entities nightly: we re-run UMAP `transform` (not `fit`) using the cached `fit` model from the prior full run. Full `fit` runs weekly to absorb drift. This keeps positions stable for existing nodes day-to-day.
+
+**Procrustes alignment on every full fit.** Raw UMAP `fit` can rotate, mirror, or rescale the entire projection across runs even when local structure is preserved. To prevent the territory from "spinning" weekly, every full fit emits raw `(x', y')` coordinates that are then **Procrustes-aligned to the prior week's persisted `(x, y)`** before write-back. The aligned coordinates are what land in Neo4j and the payload — never raw `fit` output. Library: `scipy.spatial.procrustes` or equivalent.
+
+**Hard drift budget**, enforced as gate on the publish step:
+- Per-node displacement >25% of map width = block publish, alert Stuart.
+- Per-cluster-centroid displacement >15% of map width = block publish, alert Stuart.
+- If breach, `publish_constellation.py` republishes the prior week's payload unchanged and the alert names the offenders for human review.
+
+This makes "stable territory" a measurable contract, not a hope.
 
 ### 4.4 Cards-as-nodes — tiered rendering
 
@@ -201,7 +210,12 @@ No force simulation runs at render time (positions are fixed from UMAP). The "al
 - **Per-node sparkle** — random nodes get a brief 200ms luminance pulse, ~3 nodes/second. Cosmetic.
 - **Hover halo** — hovered node gets bloom intensifies; 1-hop neighbors brighten slightly; everything else dims to ~25%.
 
-Click: opens the workspace. **Constellation is NOT kept alive as a backdrop** behind the workspace (Codex-flagged correctly: that's permanent WebGL on every page). Instead, the workspace shell renders a static low-res snapshot of the Constellation (saved as a PNG when you clicked through) as the back-link affordance. Clicking the snapshot returns to the live Constellation.
+Click: opens the workspace. **Constellation is NOT kept alive as a backdrop** behind the workspace (permanent WebGL would tax every page). The back-link affordance combines two pieces:
+
+1. **Camera state in URL** — when navigating from `/` to `/w/...`, the URL captures `?from_x=&from_y=&from_zoom=&from_umap_version=` so reloads / shared links / cold-start workspaces can restore the Constellation to the same view on return. This is the load-bearing path home and works even without a snapshot.
+2. **Optional PNG snapshot** — a low-res capture taken at click-through is rendered as a 120×80px thumbnail in the back-link button. Polish, not load-bearing. Reloads of a workspace from a fresh tab show the back-link without a snapshot (just text + a Constellation glyph).
+
+Clicking either restores the Constellation at the captured camera state (if `from_umap_version` matches current; otherwise restores at default zoom and shows a small "territory updated" badge).
 
 ### 4.8 Lenses (deferred to Plan v2.7)
 
@@ -258,9 +272,9 @@ CSS grid with three slots (left dossier ~40%, top-right primary ~30%, bottom-rig
 - URL ↔ state sync via the workspace state schema (§5.4)
 - Loading skeleton per slot
 - Empty / error states per primitive
-- A "back to Constellation" affordance: a static PNG snapshot taken at the moment of navigation, occupying ~120×80px in the top-left. Clicking it routes to `/`. **The live Constellation is not rendered behind the workspace** — that's a permanent WebGL cost we don't pay.
+- A "back to Constellation" affordance: button in the top-left that routes to `/` with `?focus_x=&focus_y=&zoom=&umap_version=` so the Constellation restores to the workspace's anchor view. PNG snapshot is optional polish (rendered as a thumbnail in the button when available; absent on cold reloads).
 - A breadcrumb showing how you got here (Constellation → entity name)
-- Save-workspace button (writes a saved workspace doc to Neo4j; reload-able)
+- ~~Save-workspace button~~ — deferred to a later plan. v2.2 ships URL-only state; URL is the share/save mechanism.
 
 Shell is ~400 lines. Each primitive is a self-contained React component receiving entity context via props + reading shared state from the workspace store (§5.4).
 
@@ -288,16 +302,22 @@ type WorkspaceState = {
   // Selection (cross-primitive)
   selectedEntityId: string | null;
 
-  // Persistence
-  workspaceId: string | null;  // null = unsaved
-  savedAt: string | null;
+  // Camera state for back-to-Constellation restoration
+  fromConstellation?: {
+    x: number; y: number; zoom: number; umap_version: number;
+  };
 };
+
+// DB-backed saved workspaces (workspaceId, savedAt) are deferred to a
+// later plan. v2.2 relies on URL serialization only — the URL itself
+// is the shareable, reloadable, persistent form.
 ```
 
 URL-serialization:
 
-- `kind`, `entity` or `question`, `timeRange`, `jurisdictionFilter`, `edgeClassFilter`, `selectedEntityId` are encoded in the URL query string.
+- `kind`, `entity` or `question`, `timeRange`, `jurisdictionFilter`, `edgeClassFilter`, `selectedEntityId`, `fromConstellation` are encoded in the URL query string.
 - `primitiveParams` is local-only (ephemeral state like hover that shouldn't survive navigation).
+- A workspace URL is fully reconstructable from URL alone — no DB lookup required.
 
 Cross-primitive coordination: timeline scrub updates `timeRange`; egocentric graph and adjacency-flow filter against it. Selection in any primitive sets `selectedEntityId`; other primitives optionally highlight it.
 
@@ -344,15 +364,59 @@ A small focused Cosmograph view (~600×400 default), centered on the entity, sho
 
 Shows directional adjacency between entities — *what's documented to flow from where to where* — without implying causality. Built on `@visx/sankey` for layout but labeled and copy-edited as "documented adjacency," not "influence."
 
-Examples (all factual adjacency, not causal claims):
+#### 6.3.1 Band-construction rules per workspace type
 
-- For a **Person**: MoneyFlows recorded as received (left) → that Person (middle) → Decisions cast in the same period (right). Width = $ magnitude. Below the diagram: small caption: *"Adjacency only — funding receipt and Decision are documented in separate filings; no causal relationship is asserted."*
-- For a **Decision**: MoneyFlows received by voting members → vote split (yea/nay/abstain). Caption: *"Each band represents documented funding to a member. Vote outcomes are independently recorded."*
-- For a **MoneyFlow**: source filing → recipient → recipient's documented activities in the period. No causal arrow.
+Each workspace shape has a deterministic band-construction rule. Below, "anchor" is the workspace's entity. "Time window" defines what counts as "in the same period." Bands violating the eligibility rule (§6.3.2) are silently dropped, not collapsed into "other."
 
-Each band/node is clickable to navigate. Hover surfaces the underlying citations (Filing IDs, FPPC report IDs, Form 700 line numbers).
+**Person workspace** (anchor: Person)
+- Time window: rolling 24 months ending at `max(MoneyFlow.flow_date for flows touching anchor)`, OR if anchor has no flows, the most recent SeatService term boundary.
+- Left bands: MoneyFlows where `flow.recipient = anchor` AND `flow.flow_date IN window`. One band per source.
+- Center: anchor.
+- Right bands: Decisions where `anchor IS_VOTING_MEMBER_OF Decision.institution` AND `Decision.decided_at IN window`. One band per Decision.
+- Band width: $ magnitude on left side; uniform on right side (Decisions don't have $ weight).
+- Citation requirements: every left band needs a Filing-citation on the MoneyFlow; every right band needs a Decision record from primary minutes.
 
-**Eligibility rule.** An adjacency-flow band is only rendered if every endpoint has a primary-source citation. No flow without provenance — this enforces the project's evidence-first stance.
+**Decision workspace** (anchor: Decision)
+- Time window: rolling 24 months ending at `Decision.decided_at`.
+- Left bands: MoneyFlows where `flow.recipient IN { voting members of Decision } AND flow.flow_date IN window`. Bands grouped by member, then by source.
+- Center: Decision (split into yea / nay / abstain sub-nodes).
+- Right bands: members → their vote (yea/nay/abstain) on this Decision. Width: uniform.
+- Citation requirements: every MoneyFlow needs a Filing citation; the Decision itself needs a primary-minutes citation.
+
+**MoneyFlow workspace** (anchor: MoneyFlow)
+- Time window: rolling 24 months ending at `flow.flow_date`.
+- Left bands: source filing → flow.
+- Center: flow.recipient.
+- Right bands: recipient's recorded activities in window — Decisions cast (if recipient is Person), grants disbursed (if recipient is Org), Filings filed (any). Each as a separate band.
+- Citation requirements: source filing must be a primary-source FPPC / Form 700 record; right-side activities must have their own primary-source citations.
+
+**Committee workspace** (anchor: Committee)
+- Time window: calendar year of `committee.year` or current year if `committee.year IS NULL`.
+- Left bands: in-flows (`MoneyFlow.recipient = committee`).
+- Center: committee.
+- Right bands: out-flows (`MoneyFlow.source = committee`).
+- Citation requirements: every flow needs an FPPC schedule citation.
+
+**Organization workspace** (anchor: Organization)
+- Same shape as Committee, with time window = rolling 36 months.
+
+For all other entity types, adjacency-flow is not the primary primitive (timeline or table is); workspace config opts out.
+
+#### 6.3.2 Eligibility rule
+
+An adjacency-flow band is only rendered if **every** endpoint and the middle join have a primary-source citation. No flow without provenance — this enforces the project's evidence-first stance.
+
+A "primary-source citation" means: an FPPC report ID, a Form 700 line number, a meeting-minutes URL, a court docket number, a permit ID, or another canonical primary-source field present on the source data. Inferred or derived data does not qualify.
+
+#### 6.3.3 Disclaimer copy
+
+Every adjacency-flow widget renders a disclaimer line below the diagram:
+
+> *Adjacency only. Each band reflects two independently-documented records connected by a shared entity. No causal relationship between funding receipt and subsequent Decisions is asserted by this view.*
+
+#### 6.3.4 Interaction
+
+Each band/node is clickable to navigate. Hover surfaces the underlying citations (Filing IDs, FPPC report IDs, Form 700 line numbers, minutes URLs) in a tooltip.
 
 ### 6.4 Timeline ribbon
 
@@ -440,6 +504,8 @@ Recent activity:
 
 **Edge-change propagation.** When ingestion modifies an edge (new edge, updated edge property), both endpoints are marked dirty (set `embedding_hash = NULL`) so the next embedding pass re-renders their texts. Dirty marking lives in `scripts/edge_vocabulary.py` (or a hook layer next to it).
 
+**Relation-aware outbound filtering.** Synthesis text MUST exclude any neighbor whose type is in `INELIGIBLE_TYPES` (§9.2) — even if the anchor entity itself is eligible. The synthesis builder iterates neighbors, calls `is_eligible(neighbor.type)`, and skips ineligibles. This is the graph-level enforcement of the outbound policy: an eligible Person's embedding text never includes a CriminalRecord neighbor's label, even though both are connected in the graph.
+
 Batch through OpenAI `text-embedding-3-small` (1536 dim, $0.02/1M tokens). Batch size 100. Write `embedding`, `embedding_hash`, `embedding_version`, `embedded_at` back to the node.
 
 **Cost ceiling**: ~$1.14 for first full embed of 114K entities @ 500 tokens; ~$5/month for refresh + new entities, dirty-cascades included.
@@ -469,12 +535,20 @@ REDACT_FIELDS = {  # fields stripped from synthesis text before outbound
 def is_eligible(node_type: str) -> bool:
     return node_type in ELIGIBLE_TYPES and node_type not in INELIGIBLE_TYPES
 
-def synthesize_outbound_text(node) -> str:
-    # Apply REDACT_FIELDS, then return synthesis
+def synthesize_outbound_text(node, neighbors) -> str:
+    # 1. If is_eligible(node.type) is False, refuse — caller should not even ask.
+    # 2. Apply REDACT_FIELDS to anchor node properties.
+    # 3. For each neighbor: if not is_eligible(neighbor.type), DROP the neighbor
+    #    entirely from the synthesis (don't include label, don't include type).
+    # 4. Render the remaining synthesis text.
     ...
 ```
 
 Default-deny: a new node type is ineligible until explicitly added to `ELIGIBLE_TYPES`. When a future criminal-record lane lands (per the project roadmap's private-data section), it defaults to `INELIGIBLE_TYPES` and never reaches embedding/clustering. Workspaces containing ineligible entities render the entity cards locally; no embeddings → no spatial position → ineligible entities are excluded from the Constellation visual.
+
+**Relation-level enforcement** (graph-aware, not just node-aware): `synthesize_outbound_text` filters neighbors by eligibility. An eligible Person connected to an ineligible CriminalRecord neighbor will not have that neighbor mentioned in the synthesis sent outbound. This is what makes the policy actually safe at the graph level, not just the node level.
+
+**Audit logging.** Every outbound call writes a record to a local `outbound_audit.jsonl` log: `{ timestamp, vendor, node_id, node_type, neighbor_ids_included, neighbor_ids_dropped, prompt_hash }`. Reviewable when expanding eligibility or investigating a leak.
 
 All outbound calls go through `outbound_policy.py`. Direct OpenAI / Anthropic calls from elsewhere in the codebase are forbidden by lint rule.
 
@@ -598,9 +672,30 @@ Bakes a single JSON payload to `app/public/constellation.json`:
 
 Estimated payload size: 114K nodes × ~150 bytes + 148K edges × ~80 bytes ≈ **30MB raw, ~6MB gzipped**. Acceptable for a one-time-per-session download.
 
-The `/` route fetches `/constellation.json` on first paint, parses, and feeds to Cosmograph. Cache headers: `Cache-Control: public, max-age=3600, stale-while-revalidate=86400`. Vercel edge-caches the file.
+**Publish boundary — versioned object storage.** Vercel's `app/public/` is a build-time artifact, so we cannot rewrite it from a nightly cron. The pipeline publishes to **versioned object storage** instead:
 
-Failure mode: if `constellation.json` is missing or corrupt, `/` renders a friendly "Constellation is rebuilding..." page with a status check that retries every 30s. Never blocks site availability.
+- **Primary**: Vercel Blob (zero-config on our hosting platform). Each pipeline run uploads `constellation-{version}.json.gz` (immutable, versioned URL). Cost: ~$0.15/month for our payload size.
+- **Alternative if cost or vendor lock-in concerns arise later**: Cloudflare R2 (~$0.015/GB/month, S3-compatible API).
+
+Manifest endpoint:
+
+- `GET /api/constellation-manifest` returns `{ "current_version": "2026-04-26-nightly-001", "url": "https://blob.vercel-storage.com/constellation-2026-04-26-nightly-001.json.gz", "built_at": "...", "size_gz": 6234567 }`.
+- The manifest itself is served by a Next.js API route reading from Neo4j's `:_SyncState{kind:"constellation"}` node (single row, updated by `publish_constellation.py` at end of pipeline). Cache: `Cache-Control: public, max-age=60, stale-while-revalidate=3600`.
+
+Client flow on `/`:
+
+1. Fetch `/api/constellation-manifest` (~1KB, ~50ms).
+2. Fetch the versioned blob URL (~6MB gzipped, ~1-2s cold cached at Vercel edge).
+3. Parse, feed to Cosmograph.
+
+Versioned URLs mean we get cache-busting for free (no `?v=` hacks) and can roll back instantly by updating the manifest's `current_version` to point at the prior blob. The pipeline retains the previous N versions (default: 7 days of nightly + 4 weekly fits) for rollback; older versions garbage-collected.
+
+**Rollback flow.** If a published payload is bad (drift budget breached, schema regression, naming hallucination caught post-hoc), Stuart runs `scripts/rollback_constellation.py {version}` which updates the manifest to point at a known-good prior version. Site recovers in <60s as the manifest cache TTL expires.
+
+**Failure modes:**
+- Manifest missing / unreachable → `/` renders "Constellation is rebuilding..." with status poll every 30s.
+- Blob URL 404 or hash mismatch → manifest is stale; same recovery flow.
+- Pipeline drift budget breach → `publish_constellation.py` does not advance the manifest version; clients keep loading the prior payload until manual review clears the breach.
 
 ### 9.8 Centrality pipeline (deferred to Plan v2.7)
 
@@ -654,9 +749,9 @@ Total nightly added time: ~3-5 min. Weekly (UMAP full fit): ~10 min added.
 
 - `GET /api/cluster/{id}` — returns cluster membership + label + centroid for hover detail.
 - `POST /api/embed` — embeds a single ad-hoc text query (for question-bar similarity search). Subject to outbound policy (§9.2).
-- `POST /api/workspace` — saves a workspace state; returns workspace-id.
-- `GET /api/workspace/{id}` — loads saved workspace state.
-- `GET /api/constellation` — proxies the static `constellation.json` with cache control (kept here for symmetry; static file works too).
+- `GET /api/constellation-manifest` — returns the current payload version + blob URL + size + built_at (§9.7).
+
+DB-backed workspace save/load endpoints are deferred to a later plan. v2.2 workspaces live in URLs only.
 
 ---
 
@@ -664,43 +759,73 @@ Total nightly added time: ~3-5 min. Weekly (UMAP full fit): ~10 min added.
 
 Each plan is independently coherent and Stuart-review-gated.
 
-### Plan v2.0 — Benchmarks + payload contract (3-5 days)
+### Plan v2.0 — Full-scale rehearsal + payload contract (1-2 weeks)
 
-**Goal**: prove the foundational assumptions before locking v2.1 estimates.
+**Goal**: prove the foundational assumptions at production scale before locking v2.1.
 
-Tasks:
-- Benchmark UMAP fit + transform on a sample 5K and 20K subset of real data. Confirm <8 min on full graph or add PCA-to-50d step.
-- Benchmark HDBSCAN on UMAP-2D output at 100K+ scale. Confirm <2 min.
-- Implement `outbound_policy.py` and unit tests for default-deny.
-- Implement `publish_constellation.py` against fixture data; confirm 30MB / 6MB gzipped budget holds.
-- Build a static-data prototype of `/` that loads a fixture `constellation.json` into Cosmograph, no live data. Confirm 60fps at 50K nodes Tier-A and 1K nodes Tier-C on a baseline machine.
+Mandatory: **one full end-to-end production-size rehearsal** of the entire pipeline:
 
-If any benchmark blows up, the spec is amended before v2.1 starts.
+1. Embed all 114K production entities with the synthesizer + outbound policy enforcement.
+2. UMAP full fit on 114K × 1536, with Procrustes alignment to a fixture "prior frame" so the alignment code is exercised.
+3. HDBSCAN on the 2D UMAP output.
+4. Hungarian cluster matching against a fixture prior run.
+5. Cluster naming with the deterministic candidate + Haiku improvement + validation pass.
+6. Publish payload to Vercel Blob (or local fixture blob if blob isn't yet set up).
+7. Manifest endpoint serves the version.
+8. Static-data prototype of `/` loads the manifest, fetches the blob, parses, and renders all 114K nodes via Cosmograph.
+9. Measure: parse time, first-paint, FPS at full zoom-out (Tier A), zoom-in to Tier C, sprite generation throughput, memory.
 
-### Plan v2.1 — Constellation MVP (3-4 weeks, not 1.5-2)
+Pass criteria (any failure → amend spec, do not start v2.1):
+- UMAP full fit completes in <12 min on the Mac mini.
+- HDBSCAN on 2D coords completes in <2 min.
+- Procrustes alignment + drift budget logic produces sensible per-node + per-cluster movement numbers (calibrate budget thresholds against the rehearsal numbers).
+- Payload size ≤8MB gzipped (1.3× our 6MB estimate gives headroom).
+- Client first-paint of full Constellation ≤4s on Wi-Fi.
+- 60fps sustained at Tier A on baseline (M1 MBP / equivalent).
+- Tier C sprite throughput ≥150/sec (target was 200; allow 25% miss).
+- Outbound audit log shows zero ineligible-neighbor leaks across the rehearsal.
 
-**Honest scope**: renderer + payload + 4 pipelines + region rendering + ambient motion + cutover-of-/graph.
+Other v2.0 deliverables:
+- `outbound_policy.py` complete with unit tests, default-deny, neighbor filtering, redaction, audit logging, lint rule.
+- Payload schema versioned (`schema_version` field) — v2.1 must reject incompatible payloads gracefully.
+- Documented benchmark numbers in `docs/benchmarks/2026-04-XX-v2-rehearsal.md` for v2.1 to plan against.
+
+If any benchmark blows up, the spec is amended before v2.1 starts. v2.0 is the gate; passing it is the precondition for v2.1.
+
+### Plan v2.1 — Constellation MVP (4-6 weeks)
+
+**Honest scope**: renderer + payload publish via versioned object storage + 5 pipelines + UMAP alignment + region rendering + ambient motion + cutover of homepage and `/graph`.
 
 - Cosmograph integration with custom React glue (~200 lines).
 - Tier-A and Tier-B sprite atlases (build-time).
 - Tier-C on-demand sprite generation in Web Worker.
 - Region label DOM overlay.
-- All 5 new pipeline scripts (embeddings, UMAP, clusters, matching, naming) + payload publisher.
-- Outbound policy enforced.
+- All 6 new pipeline scripts (embeddings, UMAP w/ Procrustes alignment, clusters, matching, naming, payload publish-to-blob).
+- Manifest API endpoint + rollback script.
+- Outbound policy + audit logging + lint rule against direct vendor calls.
 - Override registry for cluster names.
-- `/graph` route + `app/src/components/explorer/*` deleted (Cytoscape dependencies removed in same commit).
-- `/search` and `/data` remain operational.
+- `/graph` route deleted along with `app/src/components/explorer/*`.
+- The current homepage's `signature-subgraph.tsx` (Cytoscape consumer) is replaced by the Constellation; the file deleted.
 
-Backfill: first full pipeline run on production data takes ~10-15 min; happens once at v2.1 cutover.
+**Cytoscape stays installed.** `RadialHero` on standalone entity pages (`/{type}/{slug}`) is still a Cytoscape consumer. Removing the dep would break those routes. Plan v2.2 replaces RadialHero with the egocentric-graph primitive (Cosmograph) when entity-page becomes the dossier primitive. Cytoscape removal from `package.json` happens in v2.2, NOT v2.1.
 
-### Plan v2.2 — Workspace shell + dossier + egocentric graph + state schema (1.5-2 weeks)
+`/search` and `/data` remain operational.
+
+Backfill: first full pipeline run on production data takes ~13-15 min; happens once at v2.1 cutover.
+
+**Why 4-6 weeks, not 3-4**: Codex flagged correctly. v2.1 bundles renderer + payload pipeline + worker sprite generation + DOM overlay + 6 pipeline scripts + UMAP-alignment + drift-budget enforcement + ~180 new tests. Realistic.
+
+### Plan v2.2 — Workspace shell + dossier + egocentric graph + state schema (2-3 weeks)
 
 - Workspace shell (CSS grid + URL state sync via Zustand).
-- Workspace state schema implemented (§5.4).
+- Workspace state schema implemented (§5.4) — URL-only, no DB-backed saves yet.
 - Dossier primitive (refactor of v1 entity page).
-- Egocentric graph primitive (small Cosmograph mount with force enabled).
-- Click-from-Constellation routes to entity workspace.
-- Static Constellation snapshot capture for back-link.
+- Egocentric graph primitive (small Cosmograph mount with force enabled) — replaces RadialHero.
+- Click-from-Constellation routes to entity workspace; **camera state (target node, zoom level) persisted in URL** so workspaces are reloadable / shareable without snapshot dependency.
+- Static Constellation snapshot is optional polish for the back-link affordance — fallback is a "Back to Constellation" button that uses URL camera state to restore view.
+- **Cytoscape dependency removed from `package.json`** (RadialHero now superseded by egocentric graph; `signature-subgraph.tsx` deleted in v2.1; no other consumers remain).
+
+**DB-backed saved workspaces are deferred to a later plan.** v2.2 ships URL-only workspace state. A future Plan (v2.8 or later) adds save-workspace persistence + a `/w/saved/{id}` route + precedence rules. The save button is hidden in v2.2.
 
 ### Plan v2.3 — Question bar v1 + delete /search (3-5 days)
 
