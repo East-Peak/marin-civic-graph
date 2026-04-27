@@ -56,8 +56,7 @@ Rather than a single-commit rip-out (which Codex flagged correctly: it leaves us
 - **Plan v2.2 (Workspaces)** replaces `RadialHero` with the egocentric-graph primitive (Cosmograph). At that point Cytoscape and cytoscape-fcose are removed from `package.json`.
 - **Plan v2.3 (Question bar)** ships the question-bar entry point but does NOT delete `/search`. The question bar in v2.3 routes to entity workspaces (which exist after v2.2) and to a stub question workspace that, until adjacency-flow / timeline / table all ship, only renders dossier-list (the side-panel primitive that lands with v2.3 itself, derived from the v1 `/search` row JSX). Multi-result questions whose ideal composition needs an unshipped primitive fall back to dossier-list-only mode.
 - **Plan v2.4-v2.6 (Adjacency-flow / timeline / map)** progressively unlock the full primitive composition. As each primitive ships, `chooseQuestionPrimitives()` starts using it.
-- **Plan v2.7 (Table primitive + lenses + LLM routing)** is when the question-workspace surface area reaches its full set. **`/search` is deleted in v2.7** — by then every composition shape it could have produced is replaced.
-- **`/data`** retires in v2.6 once the predefined-query content is covered by adjacency-flow / timeline / map workspaces.
+- **Plan v2.7 (Table primitive + lenses + LLM routing)** is when the question-workspace surface area reaches its full set. **`/search` AND `/data` are both deleted in v2.7.** `/data` is fundamentally a sortable-table surface (10 predefined query templates rendered as tables/CSVs), so its replacement requires the table primitive — which doesn't ship until v2.7. Earlier deletion would leave several pure-table query shapes (officeholder coverage, QA validation gaps) with no equivalent.
 
 There is no v1/v2 dual-stack period for the same surface — but during the v2 build, surviving v1 surfaces (`/search`, `/data`) stay as fallbacks until their v2 replacements ship.
 
@@ -269,7 +268,7 @@ Workspace state is encoded in URL path + query string so it's shareable, bookmar
 | Organization | Egocentric graph | Adjacency-flow: MoneyFlows touching this org |
 | Committee | Egocentric graph | Adjacency-flow: in/out flows by year |
 | Seat / SeatService | Egocentric graph | Timeline: tenure with overlaid Decisions |
-| Election / Candidacy | Egocentric graph | Adjacency-flow: candidate funding + outcomes |
+| Election / Candidacy | Egocentric graph | Dossier-list of related Persons + their funding (uses Person-shape adjacency-flow on the selected candidate, not a dedicated Election shape) |
 | Meeting | Egocentric graph | Timeline: AgendaItems in order |
 | AgendaItem | Egocentric graph | Decision tally widget |
 | Decision | Egocentric graph | Adjacency-flow: vote split + funding context (factual, not causal) |
@@ -277,7 +276,7 @@ Workspace state is encoded in URL path + query string so it's shareable, bookmar
 | MoneyFlow | Egocentric graph | Adjacency-flow: source → destination chain |
 | Case / Proceeding | Egocentric graph | Timeline: docket events |
 | Project | Map (centered on parcel) | Timeline: status changes + related Decisions |
-| Program | Egocentric graph | Timeline + Adjacency-flow |
+| Program | Egocentric graph | Timeline (no dedicated adjacency-flow shape — Program touches Money via its host Organization, which has its own adjacency-flow workspace) |
 | Agreement / Amendment | Egocentric graph | Timeline: amendment chain |
 | Record | Dossier extract | (no right pane — Records are evidence, not subjects) |
 | Place | Map (centered on jurisdiction) | Egocentric graph |
@@ -1188,19 +1187,20 @@ Backfill: first full pipeline run on production data takes ~13-15 min; happens o
 - D3-based timeline ribbon, scrub-to-filter via shared workspace state.
 - Wired into Meeting, Filing, Case, Proceeding, Project, Issue workspaces.
 
-### Plan v2.6 — Map primitive + retire /data (1-1.5 weeks)
+### Plan v2.6 — Map primitive (1-1.5 weeks)
 
 - MapLibre integration, jurisdiction GeoJSON bundle.
 - Project markers, Place boundaries, Meeting cluster markers.
 - Wired into Project, Place, Meeting workspaces.
-- `/data` route retired now that all predefined queries have workspace replacements.
+- `/data` route is NOT retired here (was a stale plan claim). `/data` retirement requires the table primitive (v2.7); attempting deletion here leaves pure-table queries (officeholder coverage, QA validation gaps) without a replacement.
 
-### Plan v2.7 — Table primitive + LLM question routing + Constellation lenses + delete /search (2-3 weeks, optional)
+### Plan v2.7 — Table primitive + LLM question routing + Constellation lenses + retire /search and /data (2-3 weeks, optional)
 
 - Table primitive.
 - LLM-mediated question routing via Claude Haiku.
 - Constellation Phase 2 lenses: money / recency / influence / issue (requires centrality pipeline).
-- Delete `/search` route — by this plan every question-workspace composition shape is implemented; `/search` has nothing left to fall back to.
+- Delete `/search` route — by this plan every question-workspace composition shape is implemented.
+- Delete `/data` route — its 10 predefined query templates are now reachable via question workspaces with type/jurisdiction filters → table primitive. The "officeholder coverage" and "QA validation gaps" pure-table queries that `/data` exposed are now filter-only question workspaces.
 
 Stop or continue based on use after v2.6.
 
@@ -1221,9 +1221,8 @@ Plan 4b (auth + Vercel deploy) is unchanged — still deferred until Constellati
 
 ### 12.2 What lands later
 
-- v2.3: question bar ships; `/search` stays as a fallback (chooseQuestionPrimitives may downgrade to dossier-list-only when a needed primitive is unshipped).
-- v2.6: `/data` deleted once adjacency-flow / timeline / map cover all predefined queries.
-- v2.7: `/search` deleted now that every question-workspace shape (including table) is implemented.
+- v2.3: question bar ships; `/search` and `/data` stay as fallbacks (chooseQuestionPrimitives downgrades to dossier-list-only when a needed primitive is unshipped).
+- v2.7: `/search` AND `/data` both deleted, after the table primitive ships in this same plan. Before v2.7, several pure-table query shapes from `/data` (officeholder coverage, QA validation gaps) have no question-workspace equivalent, so `/data` must remain.
 
 ### 12.3 Tests
 
