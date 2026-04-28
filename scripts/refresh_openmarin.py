@@ -31,6 +31,13 @@ PYTHON_STEPS = [
     "scripts/build_record_preferred_urls.py",
     "scripts/build_catalog.py",
     "scripts/build_signature_subgraphs.py",
+    # v2.0 pipeline additions (per spec §9.9):
+    "scripts/build_embeddings.py",
+    "scripts/build_umap.py",
+    "scripts/build_clusters.py",
+    "scripts/match_clusters.py",
+    "scripts/name_clusters.py",
+    "scripts/publish_constellation.py",
     "scripts/update_sync_state.py",
 ]
 
