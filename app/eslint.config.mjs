@@ -13,6 +13,18 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  // Block direct vendor SDK imports in TypeScript/JS code.
+  // All OpenAI/Anthropic calls must go through scripts/outbound_policy.py.
+  {
+    rules: {
+      "no-restricted-imports": ["error", {
+        paths: [
+          { name: "openai", message: "Use scripts/outbound_policy.py for vendor calls (server-side only)." },
+          { name: "@anthropic-ai/sdk", message: "Use scripts/outbound_policy.py for vendor calls (server-side only)." },
+        ],
+      }],
+    },
+  },
 ]);
 
 export default eslintConfig;

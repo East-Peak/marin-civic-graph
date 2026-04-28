@@ -67,3 +67,41 @@ def synthesize_outbound_text(node: dict, neighbors: list[dict]) -> str:
                 f"- {n.get('label', n.get('id', ''))} ({n.get('type', '')})"
             )
     return "\n".join(lines)
+
+
+import json
+import os
+from datetime import datetime, timezone
+from pathlib import Path
+
+
+def audit_log(
+    *,
+    vendor: str,
+    node_id: str,
+    node_type: str,
+    neighbor_ids_included: list[str],
+    neighbor_ids_dropped: list[str],
+    prompt_hash: str,
+) -> None:
+    """Append one outbound-call record to the JSONL audit file.
+
+    Path overridable via OUTBOUND_AUDIT_PATH env (used by tests).
+    Default: <repo>/data/outbound_audit.jsonl.
+    """
+    default_path = (
+        Path(__file__).resolve().parent.parent / "data" / "outbound_audit.jsonl"
+    )
+    path = Path(os.environ.get("OUTBOUND_AUDIT_PATH", str(default_path)))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    record = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "vendor": vendor,
+        "node_id": node_id,
+        "node_type": node_type,
+        "neighbor_ids_included": neighbor_ids_included,
+        "neighbor_ids_dropped": neighbor_ids_dropped,
+        "prompt_hash": prompt_hash,
+    }
+    with path.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(record) + "\n")
