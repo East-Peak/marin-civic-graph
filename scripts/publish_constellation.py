@@ -147,12 +147,160 @@ SET s.version_id = $new_version_id,
 
 
 def main() -> int:
+    from neo4j import GraphDatabase
+
+    # Allow import of canonical_type from scripts/ dir.
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from canonical_type import canonical_type
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--bypass-drift", action="store_true",
                         help="DEV ONLY — skip the §4.3 drift budget check")
     args = parser.parse_args()
-    print("publish_constellation.main() is a stub at this commit (Task 16 fills it in)")
+
+    uri = os.environ["NEO4J_URI"]
+    user = os.environ["NEO4J_USER"]
+    password = os.environ["NEO4J_PASSWORD"]
+    database = os.environ.get("NEO4J_DATABASE", "neo4j")
+
+    driver = GraphDatabase.driver(uri, auth=(user, password))
+    with driver.session(database=database) as session:
+        # 1. Pull all *_pending nodes.
+        node_rows = list(session.run(
+            "MATCH (n) WHERE n.umap_x_pending IS NOT NULL "
+            "RETURN n.id AS id, labels(n) AS labels, n.label AS label, "
+            "       n.umap_x_pending AS umap_x_pending, "
+            "       n.umap_y_pending AS umap_y_pending, "
+            "       n.cluster_id_pending AS cluster_id_pending, "
+            "       n.embedding_hash AS embedding_hash, "
+            "       n.search_key_fact AS key_fact"
+        ))
+
+        payload_nodes = []
+        for r in node_rows:
+            nt = canonical_type(r["labels"], r["id"])
+            if nt is None:
+                continue
+            payload_nodes.append({
+                "id": r["id"],
+                "type": nt,
+                "label": r["label"] or r["id"],
+                "key_fact": r["key_fact"],
+                "umap_x_pending": float(r["umap_x_pending"]),
+                "umap_y_pending": float(r["umap_y_pending"]),
+                "cluster_id_pending": r["cluster_id_pending"],
+                "embedding_hash": r["embedding_hash"],
+            })
+
+        # 2. Pull edges between published nodes.
+        edge_rows = list(session.run(
+            "MATCH (a)-[r]-(b) "
+            "WHERE a.umap_x_pending IS NOT NULL AND b.umap_x_pending IS NOT NULL "
+            "RETURN a.id AS a_id, b.id AS b_id, type(r) AS rel_type "
+            "LIMIT 5000000"
+        ))
+        edges = [{"s": r["a_id"], "t": r["b_id"], "type": r["rel_type"], "weight": 1}
+                 for r in edge_rows]
+
+        # 3. Build clusters list.
+        cluster_rows = list(session.run(
+            "MATCH (n) WHERE n.cluster_id_pending IS NOT NULL "
+            "RETURN n.cluster_id_pending AS id, "
+            "       avg(n.umap_x_pending) AS cx, avg(n.umap_y_pending) AS cy, "
+            "       count(n) AS member_count, "
+            "       collect(n.cluster_label_pending)[0] AS label"
+        ))
+        clusters = [
+            {
+                "id": r["id"],
+                "label": r["label"],
+                "centroid": [float(r["cx"]), float(r["cy"])],
+                "member_count": r["member_count"],
+            }
+            for r in cluster_rows
+        ]
+
+        # 4. Pull prior frame for drift check.
+        prior_rows = list(session.run(
+            "MATCH (n) WHERE n.umap_x_previous IS NOT NULL "
+            "RETURN n.id AS id, n.umap_x_previous AS x, n.umap_y_previous AS y"
+        ))
+
+    # 5. Generate version_id.
+    version_id = (
+        f"{datetime.now(timezone.utc).strftime('%Y-%m-%d-%H%M')}-rehearsal-001"
+    )
+    umap_version = int(os.environ.get("UMAP_VERSION", str(SCHEMA_VERSION)))
+
+    # 6. Build payload.
+    payload = build_payload(
+        nodes=payload_nodes,
+        edges=edges,
+        clusters=clusters,
+        version=version_id,
+        umap_version=umap_version,
+    )
+
+    # 7. Drift gate.
+    if not args.bypass_drift and prior_rows:
+        prior_dict = {r["id"]: (float(r["x"]), float(r["y"])) for r in prior_rows}
+        curr_dict = {n["id"]: (n["umap_x_pending"], n["umap_y_pending"]) for n in payload_nodes}
+        matched_ids = [nid for nid in curr_dict if nid in prior_dict]
+        if matched_ids:
+            prior_pts = np.array([prior_dict[nid] for nid in matched_ids])
+            new_pts = np.array([curr_dict[nid] for nid in matched_ids])
+            enforce_drift_budget(
+                prior_pts=prior_pts,
+                new_pts=new_pts,
+                prior_centroids={},
+                new_centroids={},
+            )
+
+    # 8. Serialize and check size.
+    body = json.dumps(payload).encode("utf-8")
+    body_gz = gzip.compress(body, compresslevel=6)
+    print(
+        f"payload: {len(body)} raw, {len(body_gz)} gzipped "
+        f"({len(body_gz) / 1024 / 1024:.1f} MB)"
+    )
+    if len(body_gz) > PAYLOAD_SIZE_GZ_BUDGET:
+        print(
+            f"FAIL: gzipped size {len(body_gz)} > budget {PAYLOAD_SIZE_GZ_BUDGET}",
+            file=sys.stderr,
+        )
+        driver.close()
+        return 4
+
+    # 9. Write rehearsal blob.
+    blob_dir = Path(__file__).resolve().parent.parent / "data" / "rehearsal-blobs"
+    blob_dir.mkdir(parents=True, exist_ok=True)
+    blob_path = blob_dir / f"constellation-{version_id}.json.gz"
+    blob_path.write_bytes(body_gz)
+    print(f"blob written to {blob_path}")
+
+    if args.dry_run:
+        driver.close()
+        return 0
+
+    # 10. Atomic Cypher promote.
+    blob_url = f"constellation-{version_id}.json.gz"
+    with driver.session(database=database) as session:
+        with session.begin_transaction() as tx:
+            for stmt in PROMOTE_CYPHER.split(";"):
+                stmt = stmt.strip()
+                if not stmt:
+                    continue
+                tx.run(
+                    stmt,
+                    new_version_id=version_id,
+                    new_umap_version=umap_version,
+                    new_blob_url=blob_url,
+                )
+            tx.commit()
+
+    print("promoted to canonical; manifest updated")
+    driver.close()
     return 0
 
 
