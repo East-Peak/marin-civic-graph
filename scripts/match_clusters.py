@@ -16,10 +16,15 @@ CLI:
 from __future__ import annotations
 
 import argparse
+import json
+import os
 import sys
+from pathlib import Path
 
 import numpy as np
 from scipy.optimize import linear_sum_assignment
+
+REPO = Path(__file__).resolve().parent.parent
 
 JACCARD_MIN = 0.5
 
@@ -103,10 +108,79 @@ def match_clusters(
 
 
 def main() -> int:
+    from neo4j import GraphDatabase
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
-    print("match_clusters.main() is a stub at this commit (Task 16 fills it in)")
+
+    uri = os.environ["NEO4J_URI"]
+    user = os.environ["NEO4J_USER"]
+    password = os.environ["NEO4J_PASSWORD"]
+    database = os.environ.get("NEO4J_DATABASE", "neo4j")
+
+    driver = GraphDatabase.driver(uri, auth=(user, password))
+    with driver.session(database=database) as session:
+        # Pull yesterday's stable mapping from canonical.
+        prior_rows = list(session.run(
+            "MATCH (n) WHERE n.cluster_id IS NOT NULL "
+            "RETURN n.cluster_id AS cid, collect(n.id) AS members"
+        ))
+        prior_members: dict[int, set[str]] = {
+            int(r["cid"]): set(r["members"]) for r in prior_rows
+        }
+
+        # Pull today's raw mapping from pending.
+        new_rows = list(session.run(
+            "MATCH (n) WHERE n.cluster_id_pending IS NOT NULL "
+            "RETURN n.cluster_id_pending AS cid, collect(n.id) AS members"
+        ))
+        new_members: dict[int, set[str]] = {
+            int(r["cid"]): set(r["members"]) for r in new_rows
+        }
+
+    if not new_members:
+        print("no pending cluster_ids; nothing to match")
+        driver.close()
+        return 0
+
+    result = match_clusters(prior_members, new_members)
+
+    # Build per-node stable ID map.
+    id_remap: dict[str, int] = {}
+    for raw_cid, stable_cid in result["assignments"].items():
+        for node_id in new_members[raw_cid]:
+            id_remap[node_id] = stable_cid
+
+    # Persist stable IDs that need renaming.
+    stable_renames = sorted({
+        result["assignments"][raw] for raw in result["renames_needed"]
+    })
+    renames_path = REPO / "data" / "cluster_renames_needed.json"
+    renames_path.parent.mkdir(parents=True, exist_ok=True)
+    renames_path.write_text(json.dumps(stable_renames))
+
+    total_clusters = len(result["assignments"])
+    print(f"clusters: {total_clusters} total; {len(stable_renames)} needing rename")
+    print(f"renames_needed written to {renames_path}")
+
+    if args.dry_run:
+        driver.close()
+        return 0
+
+    # Write stable cluster_id_pending back in batches.
+    write_rows = [{"id": nid, "stable_id": sid} for nid, sid in id_remap.items()]
+    WRITE_BATCH = 1000
+    with driver.session(database=database) as session:
+        for i in range(0, len(write_rows), WRITE_BATCH):
+            session.run(
+                "UNWIND $rows AS row "
+                "MATCH (n {id: row.id}) "
+                "SET n.cluster_id_pending = row.stable_id",
+                rows=write_rows[i:i + WRITE_BATCH],
+            )
+
+    driver.close()
     return 0
 
 
