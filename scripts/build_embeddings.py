@@ -71,11 +71,109 @@ def main() -> int:
         print("error: VOYAGE_API_KEY required (use --dry-run to skip)", file=sys.stderr)
         return 2
 
-    # Body filled in during Task 16 rehearsal so we don't burn paid embeddings
-    # before the surrounding pipeline (UMAP, clusters, naming, publish) is in
-    # place. The unit-tested surface (synth_text, synthesis_hash, needs_embed)
-    # is complete.
-    print("build_embeddings.main() is a stub at this commit (Task 16 fills it in)")
+    from neo4j import GraphDatabase
+    from canonical_type import canonical_type
+
+    uri = os.environ["NEO4J_URI"]
+    user = os.environ["NEO4J_USER"]
+    password = os.environ["NEO4J_PASSWORD"]
+    database = os.environ.get("NEO4J_DATABASE", "neo4j")
+
+    driver = GraphDatabase.driver(uri, auth=(user, password))
+    with driver.session(database=database) as session:
+        # 1. Pull every node.
+        all_rows = list(session.run(
+            "MATCH (n) RETURN n.id AS id, labels(n) AS labels, properties(n) AS props"
+        ))
+        all_nodes = []
+        for row in all_rows:
+            node_id = row["id"]
+            labels = row["labels"]
+            props = row["props"] or {}
+            t = canonical_type(labels, node_id)
+            if t is None or not is_eligible(t):
+                continue
+            n = dict(props)
+            n["id"] = node_id
+            n["labels"] = labels
+            n["type"] = t
+            all_nodes.append(n)
+
+        # 2. Build neighbor map (cap at top-5 eligible neighbors per node).
+        neighbor_map: dict[str, list[dict]] = {n["id"]: [] for n in all_nodes}
+        edge_rows = list(session.run(
+            "MATCH (a)-[r]-(b) "
+            "WHERE a.id IS NOT NULL AND b.id IS NOT NULL "
+            "RETURN a.id AS a_id, b.id AS b_id, labels(b) AS b_labels, "
+            "       b.label AS b_label, type(r) AS rel_type "
+            "LIMIT 5000000"
+        ))
+        for row in edge_rows:
+            a_id = row["a_id"]
+            if a_id not in neighbor_map:
+                continue
+            if len(neighbor_map[a_id]) >= 5:
+                continue
+            b_id = row["b_id"]
+            b_labels = row["b_labels"]
+            b_type = canonical_type(b_labels, b_id)
+            if b_type is None or not is_eligible(b_type):
+                continue
+            neighbor_map[a_id].append({
+                "id": b_id,
+                "type": b_type,
+                "label": row["b_label"] or b_id,
+            })
+
+        # 3. Determine which nodes need embedding.
+        work: list[tuple[dict, str, str]] = []
+        for n in all_nodes:
+            text = synth_text_for_node(n, neighbor_map[n["id"]])
+            h = synthesis_hash(text, sorted(x["id"] for x in neighbor_map[n["id"]]))
+            if args.full or needs_embed(n, current_hash=h):
+                work.append((n, text, h))
+
+        print(f"need to embed {len(work)} of {len(all_nodes)}")
+        if args.dry_run:
+            driver.close()
+            return 0
+
+        # 4. Batch through Voyage AI.
+        client = voyageai.Client()
+        for i in range(0, len(work), BATCH_SIZE):
+            batch = work[i:i + BATCH_SIZE]
+            texts = [t for (_, t, _) in batch]
+            result = client.embed(texts, model=EMBEDDING_MODEL, input_type="document")
+            embeddings = result.embeddings
+
+            rows = [
+                {"id": n["id"], "embedding": emb, "hash": h}
+                for (n, _, h), emb in zip(batch, embeddings)
+            ]
+            session.run(
+                "UNWIND $rows AS row "
+                "MATCH (n {id: row.id}) "
+                "SET n.embedding = row.embedding, "
+                "    n.embedding_hash = row.hash, "
+                "    n.embedding_version = $version, "
+                "    n.embedded_at = datetime()",
+                rows=rows,
+                version=EMBEDDING_VERSION,
+            )
+
+            for (n, _, h) in batch:
+                audit_log(
+                    vendor="voyage",
+                    node_id=n["id"],
+                    node_type=n["type"],
+                    neighbor_ids_included=[x["id"] for x in neighbor_map[n["id"]]],
+                    neighbor_ids_dropped=[],
+                    prompt_hash=h,
+                )
+
+            print(f"  embedded {min(i + BATCH_SIZE, len(work))}/{len(work)}")
+
+    driver.close()
     return 0
 
 
