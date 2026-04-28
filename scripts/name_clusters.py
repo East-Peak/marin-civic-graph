@@ -96,12 +96,135 @@ def apply_override(*, cluster_id: int, deterministic: str,
 
 
 def main() -> int:
+    import hashlib
+    from neo4j import GraphDatabase
+
+    sys.path.insert(0, str(REPO / "scripts"))
+    from canonical_type import canonical_type
+    from outbound_policy import audit_log
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
-    # run_llm_naming() body filled in during Task 16 rehearsal — sends
-    # samples to claude-haiku-4-5-20251001 via outbound_policy.audit_log.
-    print("name_clusters.main() is a stub at this commit (Task 16 fills it in)")
+
+    renames_path = REPO / "data" / "cluster_renames_needed.json"
+    if not renames_path.exists():
+        print("no cluster_renames_needed.json; nothing to rename")
+        return 0
+    renames_needed: list[int] = json.loads(renames_path.read_text())
+    if not renames_needed:
+        print("renames_needed is empty; nothing to rename")
+        return 0
+
+    uri = os.environ["NEO4J_URI"]
+    user = os.environ["NEO4J_USER"]
+    password = os.environ["NEO4J_PASSWORD"]
+    database = os.environ.get("NEO4J_DATABASE", "neo4j")
+
+    driver = GraphDatabase.driver(uri, auth=(user, password))
+
+    # Name each cluster that needs renaming.
+    name_rows: list[dict] = []
+    with driver.session(database=database) as session:
+        for cid in renames_needed:
+            member_rows = list(session.run(
+                "MATCH (n) WHERE n.cluster_id_pending = $cid "
+                "RETURN n.id AS id, labels(n) AS labels, n.label AS label, "
+                "       n.search_key_fact AS key_fact, "
+                "       n.jurisdiction_name AS jurisdiction_name, "
+                "       n.cluster_centroid_distance_pending AS dist "
+                "ORDER BY dist ASC LIMIT 10",
+                cid=cid,
+            ))
+            members = [
+                {
+                    "id": r["id"],
+                    "label": r["label"] or r["id"],
+                    "type": canonical_type(r["labels"], r["id"]),
+                    "jurisdiction_name": r["jurisdiction_name"],
+                    "key_fact": r["key_fact"],
+                }
+                for r in member_rows
+            ]
+
+            cluster_tokens = set(_tokens(" ".join(m.get("label", "") for m in members)))
+            det = deterministic_candidate(members)
+
+            llm_proposed: str | None = None
+            if not args.dry_run and os.environ.get("ANTHROPIC_API_KEY"):
+                prompt = (
+                    "You're naming a cluster of civic-data entities.\n"
+                    f"Deterministic candidate: \"{det}\"\n"
+                    "Sample members:\n"
+                    + "\n".join(
+                        f"- {m.get('label', '')} ({m.get('type', '')}) · {m.get('key_fact', '')}"
+                        for m in members
+                    )
+                    + "\nReturn a 3-5 word name that describes what's documented in these entities.\n"
+                      "Be factual. Avoid \"influence\", \"controversial\", \"alleged\".\n"
+                      "If you can't improve on the candidate, return it unchanged.\n"
+                      "Output ONLY the name, no preamble."
+                )
+                client = anthropic.Anthropic()
+                msg = client.messages.create(
+                    model="claude-haiku-4-5-20251001",
+                    max_tokens=50,
+                    messages=[{"role": "user", "content": prompt}],
+                )
+                llm_proposed = msg.content[0].text.strip().strip('"').strip()
+                validated = llm_proposed if validate_llm_name(llm_proposed, cluster_tokens) else None
+                audit_log(
+                    vendor="anthropic",
+                    node_id=f"cluster:{cid}",
+                    node_type="Cluster",
+                    neighbor_ids_included=[m["id"] for m in members],
+                    neighbor_ids_dropped=[],
+                    prompt_hash=hashlib.sha256(prompt.encode()).hexdigest(),
+                )
+            else:
+                validated = None
+
+            final_name = apply_override(
+                cluster_id=cid, deterministic=det, llm_proposed=validated
+            )
+            name_rows.append({"cid": cid, "name": final_name})
+
+        if args.dry_run:
+            print(f"dry-run: would rename {len(name_rows)} clusters")
+            for row in name_rows:
+                print(f"  cluster {row['cid']} → {row['name']!r}")
+            driver.close()
+            return 0
+
+        # Write final names for renamed clusters.
+        WRITE_BATCH = 500
+        for i in range(0, len(name_rows), WRITE_BATCH):
+            session.run(
+                "UNWIND $rows AS row "
+                "MATCH (n) WHERE n.cluster_id_pending = row.cid "
+                "SET n.cluster_label_pending = row.name",
+                rows=name_rows[i:i + WRITE_BATCH],
+            )
+
+        # Carry forward labels for clusters NOT in renames_needed.
+        carry_over = list(session.run(
+            "MATCH (n) WHERE n.cluster_id_pending IS NOT NULL AND n.cluster_label_pending IS NULL "
+            "WITH DISTINCT n.cluster_id_pending AS cid "
+            "MATCH (m) WHERE m.cluster_id = cid AND m.cluster_label IS NOT NULL "
+            "RETURN cid, collect(DISTINCT m.cluster_label)[0] AS label"
+        ))
+        carry_rows = [{"cid": r["cid"], "name": r["label"]} for r in carry_over if r["label"]]
+        if carry_rows:
+            for i in range(0, len(carry_rows), WRITE_BATCH):
+                session.run(
+                    "UNWIND $rows AS row "
+                    "MATCH (n) WHERE n.cluster_id_pending = row.cid "
+                    "SET n.cluster_label_pending = row.name",
+                    rows=carry_rows[i:i + WRITE_BATCH],
+                )
+
+    print(f"renamed: {len(name_rows)}; carried over: {len(carry_rows)}")
+    driver.close()
     return 0
 
 
