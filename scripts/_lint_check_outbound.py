@@ -12,10 +12,10 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 ALLOWED = {
     "scripts/outbound_policy.py",
-    "scripts/build_embeddings.py",   # imports openai SDK; must use the policy
+    "scripts/build_embeddings.py",   # imports voyageai SDK; must use the policy
     "scripts/name_clusters.py",      # imports anthropic SDK; must use the policy
 }
-PATTERN = re.compile(r"^\s*(?:import|from)\s+(openai|anthropic)\b", re.MULTILINE)
+PATTERN = re.compile(r"^\s*(?:import|from)\s+(openai|anthropic|voyageai)\b", re.MULTILINE)
 
 
 def main() -> int:

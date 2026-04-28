@@ -86,8 +86,8 @@ There is no v1/v2 dual-stack period for the same surface — but during the v2 b
 Backend (Neo4j + scripts/ pipeline + Next.js API routes)
 ├── existing: ingest, edges, search index, catalog
 ├── new pipelines (scripts/):
-│   build_embeddings.py       # OpenAI text-embedding-3-small
-│   build_umap.py             # UMAP 1536 → 2 + similarity-transform alignment
+│   build_embeddings.py       # Voyage AI voyage-4 (1024 dim)
+│   build_umap.py             # UMAP 1024 → 2 + similarity-transform alignment
 │   build_clusters.py         # HDBSCAN on UMAP-2D output
 │   match_clusters.py         # Hungarian matching across runs
 │   name_clusters.py          # Deterministic + Claude Haiku improve
@@ -123,11 +123,11 @@ The Constellation is *not* for surgical relationship investigation. That happens
 
 This is the central architectural decision and the answer to the "do clusters land as spatial regions?" problem.
 
-Each entity has a 1536-dim semantic embedding (§9.1). The layout projects all embeddings to 2D via UMAP (`umap-learn`, Python, run as nightly batch). The projection's (x, y) coordinates are persisted as node properties (`umap_x`, `umap_y`) and shipped in the Constellation payload.
+Each entity has a 1024-dim semantic embedding (§9.1). The layout projects all embeddings to 2D via UMAP (`umap-learn`, Python, run as nightly batch). The projection's (x, y) coordinates are persisted as node properties (`umap_x`, `umap_y`) and shipped in the Constellation payload.
 
 Why UMAP, not force-directed:
 
-- **Cluster geometry matches visual geometry.** HDBSCAN clusters are computed on the 2D UMAP output (§9.4), and UMAP preserves embedding-space locality. So clusters in 2D approximate the dense regions of the 1536-d embedding distribution. Region labels can sit over their convex hulls without lying about visible structure.
+- **Cluster geometry matches visual geometry.** HDBSCAN clusters are computed on the 2D UMAP output (§9.4), and UMAP preserves embedding-space locality. So clusters in 2D approximate the dense regions of the 1024-d embedding distribution. Region labels can sit over their convex hulls without lying about visible structure.
 - **Stable across days.** UMAP with fixed `random_state` and `init='spectral'` produces near-identical projections across nightly runs (with some drift on new entities). Force simulation, by contrast, finds a fresh local minimum every reload — positions drift visibly between sessions.
 - **Semantic, not topological.** Force layout shows graph connectivity (who's edge-adjacent to whom). UMAP shows semantic similarity (who's *about* similar things). For "show me the territory of Marin civic data," the latter is the right map.
 - **Edges remain as decoration.** Edges (graph relationships) still render between UMAP-positioned nodes — they're informative as a layer but they're not load-bearing for the layout. Two nodes can be far apart in UMAP space but graph-adjacent (e.g., a Person and an unusual Filing they signed); the edge tells that story.
@@ -146,7 +146,7 @@ umap_model = UMAP(
 )
 ```
 
-For 114K × 1536 embeddings: UMAP fit takes ~3-5 minutes on the Mac mini (M-series, single-threaded `n_jobs=1` is ~10 min; multithreaded much faster). Output is 114K × 2 array of (x, y).
+For 114K × 1024 embeddings: UMAP fit takes ~3-5 minutes on the Mac mini (M-series, single-threaded `n_jobs=1` is ~10 min; multithreaded much faster). Output is 114K × 2 array of (x, y).
 
 **Stability via a persisted similarity transform.** Raw UMAP `fit` can rotate, mirror, or rescale the entire projection across runs even when local structure is preserved. To prevent the territory from "spinning" weekly:
 
@@ -582,7 +582,7 @@ Existing v1 schema is preserved. v2 adds these properties to all entity nodes:
 
 | Property | Type | Source | Indexed |
 |---|---|---|---|
-| `embedding` | `vector(1536)` | OpenAI text-embedding-3-small | Yes (Neo4j HNSW vector index, cosine) |
+| `embedding` | `vector(1024)` | Voyage AI voyage-4 (Anthropic's official embeddings partner) | Yes (Neo4j HNSW vector index, cosine) |
 | `embedding_hash` | `string` | SHA-256 of synthesized text + included relation IDs | No |
 | `embedding_version` | `int` | Bumped when synthesis logic changes | No |
 | `embedded_at` | `datetime` | When this embedding was last computed | No |
@@ -593,7 +593,7 @@ Existing v1 schema is preserved. v2 adds these properties to all entity nodes:
 | `cluster_centroid_distance` | `float` | Distance to cluster centroid | No |
 | `centrality_pagerank` | `float` | Computed weekly; for Influence lens | No |
 
-Vector index: `CREATE VECTOR INDEX entity_embedding IF NOT EXISTS FOR (n) ON (n.embedding) OPTIONS {indexConfig: {'vector.dimensions': 1536, 'vector.similarity_function': 'cosine'}}`.
+Vector index: `CREATE VECTOR INDEX entity_embedding IF NOT EXISTS FOR (n) ON (n.embedding) OPTIONS {indexConfig: {'vector.dimensions': 1024, 'vector.similarity_function': 'cosine'}}`.
 
 **No schema break.** All properties are optional; v1 queries continue to work; v2 adds them as it embeds.
 
@@ -621,9 +621,9 @@ Recent activity:
 
 **Relation-aware outbound filtering.** Synthesis text MUST exclude any neighbor whose type is in `INELIGIBLE_TYPES` (§9.2) — even if the anchor entity itself is eligible. The synthesis builder iterates neighbors, calls `is_eligible(neighbor.type)`, and skips ineligibles. This is the graph-level enforcement of the outbound policy: an eligible Person's embedding text never includes a CriminalRecord neighbor's label, even though both are connected in the graph.
 
-Batch through OpenAI `text-embedding-3-small` (1536 dim, $0.02/1M tokens). Batch size 100. Write `embedding`, `embedding_hash`, `embedding_version`, `embedded_at` back to the node.
+Batch through Voyage AI `voyage-4` (1024 dim, $0.06/1M tokens with first 200M tokens free — Anthropic's official embeddings partner). Batch size 128 (voyage-4 max). Write `embedding`, `embedding_hash`, `embedding_version`, `embedded_at` back to the node.
 
-**Cost ceiling**: ~$1.14 for first full embed of 114K entities @ 500 tokens; ~$5/month for refresh + new entities, dirty-cascades included.
+**Cost ceiling**: $0 for the first 200M tokens (Voyage free tier covers ~3.5 full embed passes of our 57M-token corpus); thereafter ~$3.42 per full refresh.
 
 ### 9.2 Outbound data eligibility & redaction
 
@@ -715,7 +715,7 @@ All outbound calls go through `outbound_policy.py`. Direct OpenAI / Anthropic ca
 - **Nightly incremental transform**: `umap.transform(new_or_dirty_embeddings)` using the cached fit, similarity-transform applied. Overwrites the `*_pending` for the new/dirty subset only — clean nodes retain the canonical values copied in Step 0.
 - All writes are to staging properties (`umap_x_pending`, `umap_y_pending`, `umap_version_pending`) — never directly to canonical. Promotion to canonical happens atomically at publish time (§9.5).
 
-Weekly fit benchmark (Plan v2.0): on Mac mini M-series, 114K × 1536 cosine UMAP fit ~3-8 minutes. Acceptable. If runtime exceeds 15 minutes, we add a PCA-to-50d step before UMAP.
+Weekly fit benchmark (Plan v2.0): on Mac mini M-series, 114K × 1024 cosine UMAP fit ~3-8 minutes. Acceptable. If runtime exceeds 15 minutes, we add a PCA-to-50d step before UMAP.
 
 **Stability guarantee**: with `random_state=42` + `init="spectral"`, plus the similarity-transform alignment of §4.3, persisted positions differ <5% per node week-over-week (measured by mean Euclidean distance after transform application). Anything larger triggers the drift budget block.
 
@@ -724,11 +724,11 @@ Weekly fit benchmark (Plan v2.0): on Mac mini M-series, 114K × 1536 cosine UMAP
 **Script**: `scripts/build_clusters.py`. Nightly batch.
 
 1. Pull all `(umap_x_pending, umap_y_pending)` from Neo4j (the staged frame populated by §9.3 Step 0 + UMAP fit/transform). Always reads `*_pending`, never canonical — this is the key contract that keeps clustering aligned with the same coordinates the publish will ship.
-2. Run HDBSCAN on the 2D coords (much faster than on 1536-d): `min_cluster_size=15, min_samples=5, metric="euclidean"`.
+2. Run HDBSCAN on the 2D coords (much faster than on 1024-d): `min_cluster_size=15, min_samples=5, metric="euclidean"`.
 3. Compute centroid per cluster, distance per node.
 4. Write `cluster_id_pending` and `cluster_centroid_distance_pending` per node (raw HDBSCAN ID — not yet stable across runs; §9.5 matches it).
 
-Library: `hdbscan` Python package. Nightly job duration: <1 minute on 2D data (far cheaper than running HDBSCAN on 1536-d).
+Library: `hdbscan` Python package. Nightly job duration: <1 minute on 2D data (far cheaper than running HDBSCAN on 1024-d).
 
 ### 9.5 Cluster matching across runs
 
@@ -1105,7 +1105,7 @@ Each plan is independently coherent and Stuart-review-gated.
 Mandatory: **one full end-to-end production-size rehearsal** of the entire pipeline:
 
 1. Embed all 114K production entities with the synthesizer + outbound policy enforcement.
-2. UMAP full fit on 114K × 1536, with similarity-transform alignment to a fixture "prior frame" so the alignment code is exercised end-to-end (transform fit + persist + apply to a follow-up nightly transform).
+2. UMAP full fit on 114K × 1024, with similarity-transform alignment to a fixture "prior frame" so the alignment code is exercised end-to-end (transform fit + persist + apply to a follow-up nightly transform).
 3. HDBSCAN on the 2D UMAP output.
 4. Hungarian cluster matching against a fixture prior run.
 5. Cluster naming with the deterministic candidate + Haiku improvement + validation pass.
@@ -1286,7 +1286,7 @@ Until backfill completes, `/` renders a "Building constellation..." progress pag
 
 The v2.0 release gate is the full **114K end-to-end rehearsal** described in §11 Plan v2.0, not a 50K subset. Pass requires every one of these:
 
-- UMAP full fit on 114K × 1536 completes in <12 min on the Mac mini.
+- UMAP full fit on 114K × 1024 completes in <12 min on the Mac mini.
 - HDBSCAN on the 2D output completes in <2 min.
 - Similarity-transform alignment + drift-budget logic produce sensible movement numbers and the budget thresholds are calibrated.
 - Payload size ≤8MB gzipped.
@@ -1305,7 +1305,7 @@ Outbound policy tests pass; default-deny enforced; lint rule against direct vend
 - Stuart loads `openmarin.app/` and the Constellation conveys the territory.
 - Region labels are coherent (no banned-term hallucinations slip past the validator).
 - Pipeline runs nightly without manual intervention; cluster IDs are stable across runs.
-- Cost: < $10/month total OpenAI + Anthropic.
+- Cost: < $10/month total Voyage AI + Anthropic.
 
 (The v2.1 success bar does NOT include click-into-workspace — that's Plan v2.2.)
 

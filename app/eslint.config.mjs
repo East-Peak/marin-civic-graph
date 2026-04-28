@@ -21,6 +21,7 @@ const eslintConfig = defineConfig([
         paths: [
           { name: "openai", message: "Use scripts/outbound_policy.py for vendor calls (server-side only)." },
           { name: "@anthropic-ai/sdk", message: "Use scripts/outbound_policy.py for vendor calls (server-side only)." },
+          { name: "voyageai", message: "Use scripts/outbound_policy.py for vendor calls (server-side only)." },
         ],
       }],
     },
