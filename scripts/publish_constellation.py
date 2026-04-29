@@ -157,6 +157,11 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--bypass-drift", action="store_true",
                         help="DEV ONLY — skip the §4.3 drift budget check")
+    parser.add_argument("--no-edges", action="store_true",
+                        help="Drop edges from payload. v2.0 calibration: edges are "
+                             "decoration per §4.3 (layout uses UMAP), and including all "
+                             "~148K edges blows the 8MB gzipped budget. v2.1 decides "
+                             "whether to raise the budget or trim edges by class/weight.")
     args = parser.parse_args()
 
     uri = os.environ["NEO4J_URI"]
@@ -193,15 +198,19 @@ def main() -> int:
                 "embedding_hash": r["embedding_hash"],
             })
 
-        # 2. Pull edges between published nodes.
-        edge_rows = list(session.run(
-            "MATCH (a)-[r]-(b) "
-            "WHERE a.umap_x_pending IS NOT NULL AND b.umap_x_pending IS NOT NULL "
-            "RETURN a.id AS a_id, b.id AS b_id, type(r) AS rel_type "
-            "LIMIT 5000000"
-        ))
-        edges = [{"s": r["a_id"], "t": r["b_id"], "type": r["rel_type"], "weight": 1}
-                 for r in edge_rows]
+        # 2. Pull edges between published nodes (skipped when --no-edges).
+        if args.no_edges:
+            edges = []
+            print("--no-edges: skipping edge fetch (v2.0 calibration)")
+        else:
+            edge_rows = list(session.run(
+                "MATCH (a)-[r]-(b) "
+                "WHERE a.umap_x_pending IS NOT NULL AND b.umap_x_pending IS NOT NULL "
+                "RETURN a.id AS a_id, b.id AS b_id, type(r) AS rel_type "
+                "LIMIT 5000000"
+            ))
+            edges = [{"s": r["a_id"], "t": r["b_id"], "type": r["rel_type"], "weight": 1}
+                     for r in edge_rows]
 
         # 3. Build clusters list.
         cluster_rows = list(session.run(
