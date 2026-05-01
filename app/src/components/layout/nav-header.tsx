@@ -4,7 +4,6 @@ const NAV_ITEMS = [
   { href: "/", label: "Home" },
   { href: "/graph", label: "Graph" },
   { href: "/data", label: "Data" },
-  { href: "/chat", label: "Chat" },
   { href: "/about", label: "About" },
 ];
 

@@ -1,8 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ConstellationCanvas } from "@/lib/cosmograph-mount";
+import { canonicalType } from "@/lib/canonical-type";
 import type { ConstellationPayload } from "@/lib/constellation-types";
+
+const ID_PREFIX_RE = /^[a-z]+-/;
+
+function entityUrlFromId(id: string): string | null {
+  const t = canonicalType([], id);
+  if (!t) return null;
+  return `/${t.toLowerCase()}/${id.replace(ID_PREFIX_RE, "")}`;
+}
 
 type LoadState =
   | { kind: "loading" }
@@ -11,6 +21,7 @@ type LoadState =
   | { kind: "error"; message: string };
 
 export function ConstellationClient() {
+  const router = useRouter();
   const [state, setState] = useState<LoadState>({ kind: "loading" });
 
   useEffect(() => {
@@ -60,7 +71,10 @@ export function ConstellationClient() {
         edges={state.payload.edges}
         spritesA={null}
         spritesB={null}
-        onNodeClick={(id) => console.log("clicked", id)}
+        onNodeClick={(id) => {
+          const url = entityUrlFromId(id);
+          if (url) router.push(url);
+        }}
       />
     </div>
   );
