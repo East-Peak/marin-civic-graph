@@ -1,48 +1,46 @@
-# Marin Civic Graph
+# Open Marin
 
-Marin Civic Graph is a planning repo for a Marin County civic-intelligence product.
+A civic-intelligence graph platform built on public Marin County records — a portfolio project demonstrating data engineering, graph ML, and full-stack work. The current implementation runs against a live Neo4j AuraDB at production scale: ~114K nodes / ~148K edges across 11 jurisdictions and 21 canonical entity types.
 
-The core idea is to build a searchable local graph of:
+What's in the repo:
 
-- institutions
-- actors
-- meetings
-- agenda items
-- decisions
-- projects
-- money
-- records
-- issues
-- places
+- **Reproducible Python ingestion + projection pipelines** (~80 scripts under [`scripts/`](./scripts/)) that pull from FPPC NetFile, CourtListener, Socrata, civic-tech meeting platforms (Granicus, CivicPlus, ProudCity, Drupal), and Form 700 PDFs.
+- **A v2 architecture** ([`docs/specs/2026-04-26-open-marin-v2-design.md`](./docs/specs/2026-04-26-open-marin-v2-design.md)) for a Cosmograph-rendered "Constellation" hero view, with UMAP-projected semantic embeddings (Voyage `voyage-4`, 1024-d), HDBSCAN clustering with Hungarian-matched stable IDs across runs, and atomic Cypher promotion of derived state.
+- **A Next.js 16 / React 19 / TypeScript 5 frontend** with shared Python↔TypeScript model contracts, vendor-import lint enforcement at both the Python and TS layers, and ~423 frontend tests.
+- **Adversarial review discipline.** The v2 architecture spec went through 19 rounds of Codex (gpt-5.4 high-reasoning) review until convergence. Every commit pairs with a co-authoring trailer crediting the AI tool used. The repo treats AI as a serious engineering collaborator, not autocomplete.
 
-The product should make it easier to answer questions like:
+## A short tour
 
-- Who decided this?
-- Which meeting and agenda item covered it?
-- Who spoke on it?
-- Who voted?
-- What records justified it?
-- Which organizations, donors, contractors, or grantees were adjacent to the decision?
+A handful of the most representative pieces:
 
-## Current State
+- [`scripts/build_umap.py`](./scripts/build_umap.py) — UMAP projection pipeline with a closed-form 4-parameter similarity-transform alignment (Umeyama 1991) so weekly fits don't rotate, mirror, or rescale the layout. Tested at machine epsilon in [`tests/test_build_umap.py`](./tests/test_build_umap.py).
+- [`scripts/outbound_policy.py`](./scripts/outbound_policy.py) — vendor-call gatekeeper (default-deny eligibility, per-type field redaction, neighbor-filtering for graph-aware enforcement, JSONL audit log on every outbound call). Direct vendor SDK imports outside this module are blocked by [`scripts/_lint_check_outbound.py`](./scripts/_lint_check_outbound.py) AND ESLint's `no-restricted-imports` rule.
+- [`scripts/publish_constellation.py`](./scripts/publish_constellation.py) — atomic 4-step Cypher promote (snapshot → demote → promote → manifest pointer) with a hard drift-budget gate per the design spec, all-or-nothing in a single transaction.
+- [`scripts/citations.py`](./scripts/citations.py) + [`app/src/lib/citations.ts`](./app/src/lib/citations.ts) — node-level provenance check (`has_primary_source_citation`) implemented as a synchronized Python↔TypeScript pair so the same eligibility rule runs on both sides of the wire.
+- [`app/src/tests/lib/server/data-queries.test.ts`](./app/src/tests/lib/server/data-queries.test.ts) — Cypher-injection sweep across all 10 predefined query templates with deliberately hostile inputs.
 
-As of April 14, 2026, this repo is past the sample-basket-only stage.
+## Status
 
-Current live state:
+- **v1 graph in production** at AuraDB (~114K nodes / ~148K edges, 11 Marin jurisdictions, 21 canonical node types).
+- **Plan v2.0 (benchmarks + foundation) shipped 2026-04-29.** The full v2 pipeline ran end-to-end against the live AuraDB; the Constellation is live in the database. Production rehearsal report at [`docs/benchmarks/2026-04-29-v2-rehearsal.md`](./docs/benchmarks/2026-04-29-v2-rehearsal.md). 5 of 9 server-side pass criteria measured pass; 1 (payload size) flagged for spec amendment; 3 client-side criteria deferred to manual browser test. Verdict: **PROVISIONAL GO**.
+- **v2.1 (Constellation MVP) is next** — full Cosmograph integration, sprite atlas tiering, region-label rendering, full pipeline cutover.
 
-- graph-v1 projection: `6267` nodes / `21262` edges
-- fixed query pack: `5/5` passing
-- projected read-model pack: `22` views
-- current north-star answer covers `7` bounded San Rafael local threads across:
-  - `2` programs
-  - `3` projects
-  - `2` elections
+## Tech stack
 
-The strongest current product question is:
+Python 3.14, Neo4j AuraDB 5.x with vector indexes, `umap-learn`, `hdbscan`, `scipy`, Voyage AI (`voyage-4` embeddings), Anthropic Claude (Haiku 4.5 for cluster naming, Opus 4.7 1M-context for engineering work), Next.js 16 App Router, React 19, TypeScript 5, Tailwind 4, `@cosmograph/cosmos` (MIT WebGL renderer), `vitest`, `pytest`.
 
-- which San Rafael local threads carry the most combined money pressure and legal pressure, and who are the recurring counterparties around them?
+## What this is, and isn't
 
-That question is now materially answerable from the projected graph layer.
+This repo is a **portfolio piece**, not an open-source product:
+
+- **It's runnable.** The pipelines, frontend, and tests all run; the v1 graph is live in AuraDB. You're welcome to read, learn from, and reference the architecture decisions.
+- **It's not maintained for community use.** Bug reports and feature requests aren't being triaged. There's no CONTRIBUTING.md and no roadmap commitment outside what's in [`docs/specs/`](./docs/specs/).
+- **It's not licensed for redistribution.** The code is provided source-available under [PolyForm Noncommercial 1.0](./LICENSE) — read, study, fork-locally, but no commercial use or redistribution. Public-record data artifacts are not relicensed.
+- **The data is not a product.** All entity data is reconstructed from public sources cited in [`docs/specs/2026-04-14-marin-civic-graph-v1-design.md`](./docs/specs/2026-04-14-marin-civic-graph-v1-design.md). Anyone in the data who wants their public-record information removed from this projection should reach out via the commit trailer email.
+
+The work below the cut is the original product brief — useful as context for why the architecture looks the way it does.
+
+---
 
 ## Product Thesis
 
@@ -280,203 +278,3 @@ Start narrow:
 - [Neo4j V1 Loader](./scripts/load_neo4j_v1.py)
 - [Marin County BOS Archive Capture Workflow](./scripts/capture_marin_county_bos_archive.py)
 - [Marin County Campaign Finance Export Capture Workflow](./scripts/capture_marin_county_campaign_finance_exports.py)
-
-## Current Status
-
-This repo started as a planning workspace and now includes the first live implementation slice:
-
-- first graph-materialization scaffold for the narrowed San Rafael governance spine:
-  - explicit import manifest at [import-manifest.yaml](./registry/import-manifest.yaml)
-  - projection builder that narrows bundle-local JSON into one graph envelope
-  - JSONL node/edge projection plus a generated Cypher loader output under [data/projected](./data/projected/README.md)
-  - fixed five-query checkpoint now runs directly against the projected graph payload, so breadth decisions can be gated without relying on a live Neo4j session
-  - smoke checks that prove actor, seat-service, filing, money, decision, record, and validation continuity end to end
-  - evidence completeness is now backed by a dedicated San Rafael city-side campaign evidence-record bundle that promotes OCR/PDF/folder artifacts already referenced from filings, money flows, validation checks, and the actor-completeness layer
-  - actor completeness now uses three narrow controls instead of broad donor import: projection-time alias remap for raw officeholder placeholders, a small explicit actor supplement for repeated vendors/platforms and high-value counterparties, and parser suppression that keeps one-off unresolved `Form 460` row actors as labels on `MoneyFlow` nodes
-  - the first breadth-sprint council slice now adds `263` citywide `Meeting` nodes and `264` council `Record` nodes backed by captured meeting pages
-  - the second breadth-sprint council slice now adds `220` captured minutes `Record` nodes plus a conservative citywide minutes-first decision layer with `3175` `AgendaItem` candidates and `1453` `Decision` candidates
-  - graph-v1 is now at `6233` nodes and `21016` edges, with `49` `Actor` nodes, `1478` `Decision` nodes, `2970` `AgendaItem` nodes, `152` `MoneyFlow` nodes, `21` `EconomicInterestDisclosure` nodes, `8` `SeatService` nodes, `4` `Case` nodes, `13` `Proceeding` nodes, `9` `CaseParticipation` nodes, `3` `Program` nodes, `1` `Project` node, `5` `Agreement` nodes, `3` `Amendment` nodes, `879` `Record` nodes, and `16` bounded `ValidationCheck` nodes after projection merging
-  - consent votes are now modeled conservatively: one section-level voted decision, with subitem outcomes linked back to that consent action instead of pretending each subitem had its own roll call
-  - the elected-disclosure breadth slice now adds `21` officeholder Form `700` filings and `21` `EconomicInterestDisclosure` nodes backed by the public NetFile export plus explicit current and 2020-2024 historical `SeatService` windows for the current mayor, District 1, and District 4 officeholders
-  - the current projection report now shows no `missing_target:Actor`, `missing_target:Issue`, or `missing_target:Record` categories, with `5` actor-alias edge remaps preserved
-  - the projected view pack now sits on top of the clean graph and now includes both the sanctioned-camping and Building Forward program dossiers, a bounded Downtown Library project dossier that unifies grants, agreements, amendments, decisions, records, and place, a jurisdiction-level San Rafael delivery summary that rolls those threads back up into one cross-cutting read model, a San Rafael decision-to-money rollup that ranks local money-linked decisions by linked flow volume, a richer decision-to-money explanation layer that makes those rankings legible through counterparties and flow-type breakdowns, a sanctioned-camping local-pressure summary that fuses money and legal pressure around one local thread, a jurisdiction-level pressure comparison that ranks the current local threads side by side before reopening ingest, and a jurisdiction-level pressure explanation that spells out why one thread ranks above another, plus a jurisdiction-level legal-constraint summary that explains how the Boyd and Grants Pass cases bear on San Rafael:
-    - `actor-kate-colin-dossier`
-    - `actor-rachel-kertz-dossier`
-    - `organization-downtown-streets-team-dossier`
-    - `decision-2024-08-19-resolution-15336-dossier`
-    - `case-boyd-v-city-of-san-rafael-dossier`
-    - `program-san-rafael-sanctioned-camping-dossier`
-    - `program-csl-building-forward-dossier`
-    - `project-downtown-library-renovation-dossier`
-    - `jurisdiction-san-rafael-delivery-summary`
-    - `decision-money-san-rafael-rollup`
-    - `decision-money-san-rafael-explanation`
-    - `program-san-rafael-sanctioned-camping-local-pressure-summary`
-    - `jurisdiction-san-rafael-local-pressure-comparison`
-    - `jurisdiction-san-rafael-local-pressure-explanation`
-    - `jurisdiction-san-rafael-legal-constraint-summary`
-    - `money-overlap-summary`
-    - `legal-constraint-view`
-    - `validation-queue`
-  - that view pack is the new product-facing pressure test: it proves the graph can emit bounded dossiers and summary views without depending on a live Neo4j session
-  - there is now also a tiny local read-only shell under `viewer/`, served by `scripts/serve_graph_views.py`, so the projected dossier pack can be inspected in a browser without introducing an app framework or a live graph API
-  - the current fixed-query-pack run still passes all five queries after the legal import widening pass
-  - the fixed five-query breadth gate stays unchanged at `Q1` through `Q5`, and the graph now also passes a supplemental legal constraint query covering `Boyd` plus the full `Grants Pass` district -> Ninth Circuit -> Supreme Court lineage
-  - the campaign evidence-record bundle has now been regenerated after the accepted 2020 Ralph-loop batch, widening from `25` to `45` campaign evidence `Record` nodes so older OCR/PDF artifacts no longer surface as `missing_target:Record` skips
-  - the first Ralph-loop campaign-money batch recovered enough `2020` QA-backed money to move `Q4` from fail to pass without importing noisy OCR actors
-  - the same batch required a validation-suppression rule for sparse older filings, so the queue now stays bounded at `16` checks across `5` subject filings instead of exploding into empty-reference noise
-  - the first live local Neo4j load and query pass has been run successfully against the projected graph, proving end-to-end continuity for actor, seat-service, filing, money, decision, issue, and validation queries
-- first normalized legal bundle now exists as `legal-precedent-01`:
-  - captured the Boyd TRO, preliminary-injunction, and dismissal orders as durable PDF-backed legal records
-  - the dismissal order is court-origin from the city-linked PDF; the TRO and preliminary-injunction orders are strong public filed-order copies from the Civil Rights Litigation Clearinghouse
-  - extracted a durable court-timeline surface for complaint, TRO, preliminary injunction, dismissal-motion, hearing, and dismissal stages
-  - normalized the first `Case`, `Proceeding`, and `CaseParticipation` objects for `Boyd v. City of San Rafael`
-  - tied that case back into the August 19, 2024 item `5.a` ordinance / resolution chain and the sanctioned-camping program
-  - preserved the remaining provenance gap explicitly: the TRO and preliminary-injunction orders are captured as public filed-order copies, not yet from a court-hosted docket surface
-- second normalized legal bundle now exists as `legal-precedent-02`:
-  - captured the District of Oregon opinion and judgment, the official Ninth Circuit amended opinion, and the official Supreme Court docket and slip opinion for `City of Grants Pass v. Johnson`
-  - normalized district, appellate, and Supreme Court `Case`, `Proceeding`, and `CaseParticipation` objects plus an explicit case-lineage crosswalk
-  - tied San Rafael's June 28 statement, September 2 explainer, and the August 19 response chain back to the Supreme Court precedent through an explicit crosswalk
-  - preserved the remaining supporting-provenance gap explicitly: the San Francisco amicus brief PDF and a direct district-court docket surface are not yet captured
-  - the Boyd / Grants Pass pair now imports into graph-v1 as a supplemental legal lane rather than staying normalized-only
-- source registry seeds
-- source-registry format now expanded to capture platform family, backfill target, change signal, and source-specific quirks
-- source-adapter operations note added to document municipality/county source idiosyncrasies, historical backfill planning, and recurring sync strategy
-- first source-profile matrix added for `San Rafael` and `Marin County`
-- first historical backfill plan added, targeting `2019-01-01` for the initial council, BOS, campaign, and disclosure wave
-- first wave-01 source execution completed for `San Rafael City Council meetings`:
-  - direct raw HTML capture of the archive page
-  - extracted inventory of `263` meeting rows spanning `2019` through `2026`
-  - meeting-type classification across `regular`, `special`, `closed_session`, `special_closed_session`, `special_retreat`, `study_session`, and `cancelled`
-  - artifact-availability tracking for agenda, packet, minutes, and video tabs
-- first narrowed breadth-sprint execution slice completed for `San Rafael City Council 2019+`:
-  - added a repeatable council meeting-page capture workflow over the full archive inventory
-  - captured raw HTML for all `263` meeting pages referenced by the `2019+` archive
-  - extracted direct meeting-page continuity for starts-at time, agenda/packet/minutes/video URLs, and lightweight agenda metadata
-  - normalized a citywide council backbone bundle with `263` `Meeting` nodes and `264` `Record` nodes
-  - widened graph-v1 import scope to include that council backbone without inventing citywide `Decision` or `VoteCast` objects prematurely
-  - made the remaining boundary explicit: citywide agenda-item, decision, and vote extraction is a second pass on the captured meeting pages and linked minutes, not part of the archive-only meeting spine
-- second wave-01 source execution completed for `Marin County Board of Supervisors meetings`:
-  - direct raw HTML capture of the official Granicus publisher archive at `view_id=33`
-  - extracted `317` archived meetings spanning `2019` through `2026`, plus `3` currently listed upcoming events
-  - meeting-type classification across `regular`, `budget`, `joint_meeting`, `truth_act_forum`, and `other`
-  - artifact-availability tracking for agenda, minutes, video, captions, MP3, and MP4 links
-- third wave-01 source execution completed for `Marin County campaign finance`:
-  - added a dedicated yearly-export adapter against the public NetFile portal
-  - captured amended-only yearly export ZIPs for `2019` through `2026`
-  - recorded portal year coverage back to `1997` and current election-tree labels for public election context
-  - confirmed the operating split: yearly export is the historical backfill surface, while RSS remains the near-real-time change feed
-- fourth wave-01 source execution completed for `San Rafael Form 700`:
-  - added a dedicated ASP.NET form-post adapter against the public San Rafael NetFile portal
-  - captured a full visible-history `700 filers` export plus the live portal shell
-  - extracted `1085` filing rows spanning `2018-07-02` through `2026-04-08`
-  - confirmed the wave-01 promotion floor yields `1078` in-scope filings from `2019` forward
-  - confirmed the current platform split: the export is strong for mass filing inventory, while direct document URLs are exposed on only `16` rows in the exported HTML
-- fifth wave-01 source execution started for `San Rafael city-side campaign filings`:
-  - added a discovery-aware election-page capture workflow that starts from the city's own `elections` and `past-elections` index pages
-  - added a derived inventory workflow that uses the San Rafael disclosures page plus those discovered election landing pages to enumerate city-side campaign filing destinations
-  - captured `13` election landing pages spanning `2010` through `2026`
-  - confirmed `9` campaign-bearing election pages: `6` election-level filing-folder pages and `3` candidate-folder pages
-  - captured the two top-level Laserfiche filing destinations and `27` candidate-specific child folder IDs across the November 3, 2020, November 8, 2022, and November 5, 2024 election pages
-  - extracted cycle-specific independent-expenditure filing folder IDs for `2020` and `2022`
-  - confirmed the source-shape breakpoint: the November `2011` through `2018` pages plus the June 7, 2016 page expose election-level campaign filing folders, while `2020+` pages expose candidate-specific filing folders
-  - confirmed that the June 8, 2010, November 2, 2010, June 5, 2018 special, and June 2, 2026 special pages are useful election-context records but do not currently expose campaign-filing destinations
-  - recorded the current adapter boundary explicitly: anonymous Laserfiche folder-listing probes for both top-level campaign folders and a sampled child folder currently fail with session-limit error `[9030]`
-  - confirmed the current working discovery pattern is `elections / past-elections -> election landing page -> campaign filing destination`, with Laserfiche browse probing kept as a secondary experiment rather than the primary discovery path
-- selective raw PDF export is now proven for the high-value city-side `Form 460` subset through the public Laserfiche export-job path
-  - the schedule extractor now uses that PDF text layer to reconcile itemized `Schedule E` payments for the selected filings
-  - added a direct-record follow-on capture workflow for page-linked `DocView` records exposed on the election pages
-  - captured `37` unique page-linked election records from the San Rafael election pages
-  - fully extracted `36` of those records through the public Laserfiche metadata, document-info, and OCR-text endpoints
-  - narrowed the remaining direct-record extraction problem to one holdout: entry `41998` (`Resolution Calling Election` on the June 2, 2026 special-election page)
-  - normalized the direct-record slice into a graph-ready election bundle with:
-    - `13` page-level election objects spanning `2010` through `2026`
-    - `37` record refs tied back to the raw Laserfiche record family
-    - `25` council meeting candidates derived from official record metadata
-    - `21` conservative election decision candidates for call, results, cancellation, unopposed-appointment, and initiative-submission actions
-    - explicit reuse of the existing canonical 2024 seat-specific election objects only where already proven elsewhere
-    - an explicit note that entry `41989` already preserves the 2026 call-election resolution text, so entry `41998` is a completeness gap rather than a blocker for the 2026 election chain
-  - normalized the page-linked campaign discovery layer into a graph-ready discovery bundle with:
-    - `50` record refs spanning the disclosures page, election indices, `9` campaign-bearing election pages, top-level Laserfiche destinations, election-level filing folders, candidate filing folders, IE filing folders, and the repeated IE ordinance record
-    - `11` actor candidates covering the unique city-office candidates currently visible in the `2020`, `2022`, and `2024` mayoral and council races
-    - `15` discovery-stage candidacy candidates tied to existing San Rafael seat IDs and page-level election IDs
-    - an explicit promotion boundary that keeps school-board, city-attorney, and clerk-assessor rows as discovery-only filing-folder records until those institutions and seats have their own canonical layer
-  - promoted the discovery layer into real public folder-listing capture and first filing objects:
-    - added a repeatable Laserfiche folder-listing adapter for San Rafael campaign folders
-    - captured `37` filing-folder listing responses with `33` successful public folder listings and `331` listed document rows
-    - confirmed the stronger source boundary: anonymous folder listing is a real public capture path, not just page-linked discovery
-    - normalized the city-office subset into `14` candidate-linked committees, `228` filing records, and `14` committee-enriched candidacy records
-    - narrowed the remaining gap to direct raw filing-document recovery from the exposed entry ids
-- raw official source captures for case study 01
-- raw criminal-justice source captures for Marin court and sheriff landing surfaces
-- campaign-finance and disclosure layer formalized around `Election`, `Committee`, `Candidacy`, `Filing`, and `EconomicInterestDisclosure`
-- campaign/disclosure source bundle and ingestion checklist for Marin County, San Rafael, and FPPC filing surfaces
-- selected first campaign/disclosure sample basket:
-  - `Mary Sackett for Marin County Supervisor 2026`
-  - `Resource Conservation PAC, sponsored by Marin Resource Recovery`
-  - `Quinn Gardner annual Form 700`
-- first campaign/disclosure execution slice with:
-  - direct raw HTML capture of the Marin NetFile campaign portal home
-  - direct raw XML capture of the Marin campaign RSS feed
-  - direct PDF captures for the selected Mary Sackett Form 497 and Resource Conservation PAC Form 460 filings
-  - direct raw HTML capture of the San Rafael disclosures page and SEI portal
-  - direct raw XML capture of the San Rafael SEI RSS feed
-  - direct PDF capture of the selected Quinn Gardner Form 700
-  - first normalized campaign basket linking `Committee`, `Candidacy`, `Filing`, `EconomicInterestDisclosure`, and campaign `MoneyFlow` candidates
-  - official June 2, 2026 Marin County candidate-status page used to resolve Mary Sackett to `County Supervisor - District 1`
-  - schedule-level extraction from the Resource Conservation PAC Form 460 used to promote sponsor inflows plus candidate and vendor outflows instead of leaving the PAC as a vague outside-money shell
-  - selective city-side `Form 460` OCR capture and first schedule extraction layer:
-    - three OCR-backed San Rafael filings promoted from filing-shell records into row-level extraction artifacts
-    - first city-side schedule bundle with `103` campaign `MoneyFlow` candidates across contributions, one Schedule D candidate contribution, and high-confidence vendor/payee rows
-    - explicit documentation that OCR extraction is usable for joins and recurrence work but still incomplete relative to reported filing totals
-  - Marin Resource Recovery sponsor-name drift resolved conservatively in favor of keeping `Marin Resource Recovery` and `Marin Resource Recovery Center` as separate actors
-  - Form 803 follow-on slice established around San Rafael behested-payment guidance and filing-surface verification:
-    - direct raw captures for the February 5, 2026 City Council governance protocols page/PDF and the January 20, 2026 agenda packet page/PDF
-    - verified that the public San Rafael SEI portal is Form 700-oriented and does not visibly expose a Form 803 filing type
-    - verified the local-versus-state filing boundary: local officials file Form 803 with the local agency, while FPPC's public Form 803 search is state-level
-    - resolved the local filing-surface blocker through the San Rafael public Laserfiche portal
-    - captured the first real local Form 803 sample, `Form 803 - Kate Colin`
-    - promoted the first local `Filing` plus `MoneyFlow: behested_payment` with payor `Pacific Gas and Electric Company`, payee `Canal Alliance`, amount `$5,000`, date `2025-08-08`, and purpose `Affordable Applications Training`
-    - codified the Laserfiche capture path in a repeatable script and confirmed that the broader search census still surfaces only one actual filed local Form 803 as of April 11, 2026
-- first canonical identity tranche added:
-  - dedicated identity-resolution submodel and worked-example docs
-  - first evidence-backed San Rafael canonical seed bundle for city institutions, electeds, and recurring organizations
-  - raw councilmember placeholders in earlier bundles now have a documented promotion path into canonical actor IDs instead of staying permanent pseudo-actors
-  - role claims for the August 19, 2024 council roster are accepted as identity claims without forcing weak seat or district joins
-  - official San Rafael elected-official, City Council, and November 5, 2024 election pages captured as identity evidence
-  - explicit seat candidates and current `SeatService` candidates added for the at-large Mayor and Districts 1-4
-  - `Vice Mayor` clarified as a role layered on a district seat service rather than a separate elected seat
-  - older San Rafael meeting and disclosure bundles backfilled so votes and the first local Form 803 sample now target canonical actor, seat, and `SeatService` IDs
-- first real media pressure test added:
-  - direct raw JSON capture of the August 24, 2024 Mahon Creek Marin IJ article through the public WordPress post API
-  - extracted mention layer preserving article-scoped labels for Rachel Kertz, Katie Fleet, Kevin Bruner, Mark Rivera, and John Stefanski
-  - normalized worked example showing one canonical join, two case-scoped joins, and unresolved article-only mentions held in the review layer
-  - second direct raw JSON capture of the September 20, 2024 site-preparation Marin IJ article chosen for overlap rather than chronology
-  - first recurrence layer showing cross-source recurrence for Mark Shotwell, Mel Burnette, Defense Block Security, and Downtown Streets Team, plus an unresolved repeated Mark Rivera cluster
-  - first cross-domain media join layer connecting `Mark Shotwell / Ritter Center` to official program context and `Downtown Streets Team` to official contract, moneyflow, and decision records
-  - first media-to-disclosure overlap linking `San Rafael Mayor Kate Colin` in the September 20, 2024 Marin IJ article to her later local Form 803 filing and normalized behested-payment moneyflow, explicitly modeled as identity continuity rather than a causal policy-finance claim
-  - first media-to-campaign overlap linking `Rachel Kertz` in the August 24, 2024 Marin IJ article to her public 2024 San Rafael campaign committee, candidacy, and filing trail, explicitly modeled as actor continuity rather than a causal policy-finance claim
-- procurement-layer schema, source bundle, and checklist for Marin County and San Rafael funding and contract workflows
-- selected first procurement sample basket:
-  - county `Board Chambers Audio Visual Refresh / Prime Electric`
-  - city `Downtown Library Renovation Project`
-  - county `State and Local Fiscal Recovery Funds (SLFRF)`
-- first procurement execution slice with:
-  - direct raw HTML captures for the selected San Rafael project, procurement, meeting, and reopening pages
-  - direct city PDF captures for the first and second Downtown Library amendment staff reports
-  - direct city meeting, staff-report, and agenda-packet captures for the September 16, 2024 Downtown Library construction award
-  - direct city grant-acceptance capture plus official California State Library award records for the Downtown Library state-funding lineage
-  - transparent county text-proxy captures for blocked procurement, recovery-plan, and audit surfaces
-  - first normalized procurement basket linking `Procurement`, `Agreement`, `Amendment`, `Program`, `PerformanceReview`, and `MoneyFlow` candidates
-  - captured Marin County Granicus record set for Prime Electric `CB-6`: agenda page, staff report, attachment, and agreement
-  - resolved county-side amount split for Prime Electric: `$994,866.17` contract, `$99,487` contingency, `$49,884` additional project costs, `$1,144,237` authorized project total
-  - resolved the Downtown Library agreement-family boundary in favor of separate `Agreement` objects for Noll & Tam, Unger, and Unico under one shared project
-  - resolved the Downtown Library state-funding claim into two California State Library grant relationships: a `$1,000,000` SB 129 / Building Forward award and a separate `$1,000,000` targeted design-process award
-  - resolved the proxy-to-direct replacement rule: keep `source_id` and `record_id` stable, append new captures, and only change the preferred artifact reference when the semantic record is unchanged
-- permit-layer schema, source bundle, and checklist for Marin County and San Rafael planning workflows
-- first permit execution slice with raw captures for selected city and county project threads plus a normalized project-discovery bundle
-- first appeal-chain split for P4134 with explicit determination, appeal, meeting, and decision candidates
-- selected P4134 child-record captures preserved as proxy text snapshots for the HCR decision, consistency analysis, hearing notice, staff report, signed resolution, and appeal attachment
-- extracted text and metadata for bundle 01
-- a first normalized candidate bundle centered on the August 19, 2024 San Rafael homelessness decision chain
-- a derived record-splitting layer for August 19 item `5.a`, including ordinance, resolution, contract, site-plan, code-of-conduct, and correspondence child records
