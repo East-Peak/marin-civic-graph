@@ -12,3 +12,13 @@ __pycache__/
 *.pyc
 coverage/
 .superpowers/
+
+# v2.0 pipeline-generated artifacts (large, regeneratable)
+data/outbound_audit.jsonl
+data/rehearsal-blobs/
+data/umap_model.pkl
+data/umap_alignment.json
+data/cluster_renames_needed.json
+
+# raw source captures (kept locally; not in repo history after scrub)
+data/raw/

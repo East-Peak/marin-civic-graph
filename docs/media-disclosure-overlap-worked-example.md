@@ -62,7 +62,7 @@ That gives the graph a real bridge between public narrative and public filing da
 
 ## Current Artifact
 
-- overlap example: [media-disclosure-overlap-example-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/media-disclosure-overlap-example-01.json)
+- overlap example: [media-disclosure-overlap-example-01.json](/data/normalized/san-rafael-homelessness-01/media-disclosure-overlap-example-01.json)
 
 ## Current Boundary
 

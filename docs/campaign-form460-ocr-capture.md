@@ -47,9 +47,9 @@ This note does **not** solve on its own:
 - page-image asset URLs
 - full-filing export coverage across the broader city-side campaign archive
 
-Selective raw PDF export is now documented separately in [campaign-form460-pdf-export.md](/Users/tammypais/projects/marin-civic-graph/docs/campaign-form460-pdf-export.md). The OCR path remains useful because it preserves page-level text directly.
+Selective raw PDF export is now documented separately in [campaign-form460-pdf-export.md](/docs/campaign-form460-pdf-export.md). The OCR path remains useful because it preserves page-level text directly.
 
 ## Files
 
-- [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-form460-ocr/2026-04-12.json)
-- [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-form460-ocr-01/bundle-01.json)
+- [2026-04-12.json](/data/extracted/san-rafael-city-campaign-form460-ocr/2026-04-12.json)
+- [bundle-01.json](/data/normalized/san-rafael-city-campaign-form460-ocr-01/bundle-01.json)

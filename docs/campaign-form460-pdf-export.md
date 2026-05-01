@@ -46,6 +46,6 @@ The raw artifact boundary is now solved for the selected `Form 460` filings. The
 
 ## Files
 
-- [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-form460-pdf-export/2026-04-12.json)
-- [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-form460-pdf-01/bundle-01.json)
-- [manifest.json](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/manifest.json)
+- [2026-04-12.json](/data/extracted/san-rafael-city-campaign-form460-pdf-export/2026-04-12.json)
+- [bundle-01.json](/data/normalized/san-rafael-city-campaign-form460-pdf-01/bundle-01.json)
+- [manifest.json](/data/raw/san-rafael-city-campaign-form460-pdf-export/2026-04-12/manifest.json)

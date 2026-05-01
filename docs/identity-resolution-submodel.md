@@ -174,7 +174,7 @@ Useful claim fields:
 
 The first live identity seed bundle is:
 
-- [canonical-seeds-san-rafael-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/canonical-seeds-san-rafael-01.json)
+- [canonical-seeds-san-rafael-01.json](/data/normalized/canonical-seeds-san-rafael-01.json)
 
 It does three bounded things:
 

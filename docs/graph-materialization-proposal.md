@@ -25,14 +25,14 @@ The current bundles already support a narrow but real first import.
 
 Strong existing import candidates:
 
-- [canonical-seeds-san-rafael-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/canonical-seeds-san-rafael-01.json)
-- [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-election-records-01/bundle-01.json)
-- [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-filings-01/bundle-01.json)
-- [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-ie-01/bundle-01.json)
-- [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/campaign-finance-form-803-slice-01/bundle-01.json)
-- [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
-- [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/bundle-01.json)
-- [aug-19-item-5a-record-splits.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/aug-19-item-5a-record-splits.json)
+- [canonical-seeds-san-rafael-01.json](/data/normalized/canonical-seeds-san-rafael-01.json)
+- [bundle-01.json](/data/normalized/san-rafael-election-records-01/bundle-01.json)
+- [bundle-01.json](/data/normalized/san-rafael-city-campaign-filings-01/bundle-01.json)
+- [bundle-01.json](/data/normalized/san-rafael-city-campaign-ie-01/bundle-01.json)
+- [bundle-01.json](/data/normalized/campaign-finance-form-803-slice-01/bundle-01.json)
+- [bundle-01.json](/data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
+- [bundle-01.json](/data/normalized/san-rafael-homelessness-01/bundle-01.json)
+- [aug-19-item-5a-record-splits.json](/data/normalized/san-rafael-homelessness-01/aug-19-item-5a-record-splits.json)
 
 These are enough to stand up a first graph centered on:
 
@@ -262,20 +262,20 @@ Your observation is correct.
 
 The repo already has legal planning and raw captures:
 
-- [judicial-and-oversight-extension.md](/Users/tammypais/projects/marin-civic-graph/docs/judicial-and-oversight-extension.md)
-- [judicial-pressure-test-basket-source-bundle.md](/Users/tammypais/projects/marin-civic-graph/docs/judicial-pressure-test-basket-source-bundle.md)
-- [judicial-pressure-test-basket-ingestion-checklist.md](/Users/tammypais/projects/marin-civic-graph/docs/judicial-pressure-test-basket-ingestion-checklist.md)
-- [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/scotus-grants-pass-docket/2026-04-10/source.html)
-- [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/sf-city-attorney-coalition-injunction-appeal/2026-04-10/source.html)
-- [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-grants-pass-statement/2026-04-10/source.html)
-- [source.html](/Users/tammypais/projects/marin-civic-graph/data/raw/san-rafael-boyd-dismissal-news-release/2026-04-10/source.html)
+- [judicial-and-oversight-extension.md](/docs/judicial-and-oversight-extension.md)
+- [judicial-pressure-test-basket-source-bundle.md](/docs/judicial-pressure-test-basket-source-bundle.md)
+- [judicial-pressure-test-basket-ingestion-checklist.md](/docs/judicial-pressure-test-basket-ingestion-checklist.md)
+- [source.html](/data/raw/scotus-grants-pass-docket/2026-04-10/source.html)
+- [source.html](/data/raw/sf-city-attorney-coalition-injunction-appeal/2026-04-10/source.html)
+- [source.html](/data/raw/san-rafael-grants-pass-statement/2026-04-10/source.html)
+- [source.html](/data/raw/san-rafael-boyd-dismissal-news-release/2026-04-10/source.html)
 
 It now has a clearly named normalized legal bundle:
 
-- [legal-precedent-01.md](/Users/tammypais/projects/marin-civic-graph/docs/legal-precedent-01.md)
-- [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/legal-precedent-01/bundle-01.json)
-- [legal-precedent-02.md](/Users/tammypais/projects/marin-civic-graph/docs/legal-precedent-02.md)
-- [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/legal-precedent-02/bundle-01.json)
+- [legal-precedent-01.md](/docs/legal-precedent-01.md)
+- [bundle-01.json](/data/normalized/legal-precedent-01/bundle-01.json)
+- [legal-precedent-02.md](/docs/legal-precedent-02.md)
+- [bundle-01.json](/data/normalized/legal-precedent-02/bundle-01.json)
 
 It is now strong enough to be imported as a supplemental graph-v1 lane, but not strong enough to change the fixed breadth gate or justify a top-level legal product surface by itself.
 

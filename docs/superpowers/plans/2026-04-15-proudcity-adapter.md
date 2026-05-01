@@ -450,12 +450,12 @@ from .proudcity import ProudCityAdapter
 
 - [ ] **Step 5: Run tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_proudcity_adapter.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_proudcity_adapter.py -v`
 Expected: All PASS
 
 - [ ] **Step 6: Run full test suite**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/ -v`
+Run: `cd /<repo> && python -m pytest tests/ -v`
 Expected: All 286+ PASS
 
 - [ ] **Step 7: Commit**
@@ -508,12 +508,12 @@ Note: San Rafael is deferred — the existing bespoke capture scripts already co
 
 - [ ] **Step 2: Live capture Fairfax**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python scripts/ingest.py --source fairfax-town-council --registry registry/proudcity-sources.yaml`
+Run: `cd /<repo> && python scripts/ingest.py --source fairfax-town-council --registry registry/proudcity-sources.yaml`
 Expected: Meetings from 2019-2026 with agenda/minutes/packet PDF URLs
 
 - [ ] **Step 3: Live capture Belvedere**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python scripts/ingest.py --source belvedere-city-council --registry registry/proudcity-sources.yaml`
+Run: `cd /<repo> && python scripts/ingest.py --source belvedere-city-council --registry registry/proudcity-sources.yaml`
 Expected: Meetings with artifact URLs
 
 - [ ] **Step 4: Normalize and load into Neo4j**

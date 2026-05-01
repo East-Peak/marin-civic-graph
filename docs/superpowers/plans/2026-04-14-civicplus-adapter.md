@@ -184,7 +184,7 @@ class TestParseMeetingRows:
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_civicplus_adapter.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_civicplus_adapter.py -v`
 Expected: FAIL — `ModuleNotFoundError: No module named 'adapters.civicplus'`
 
 - [ ] **Step 3: Implement civicplus.py parsing utilities**
@@ -424,12 +424,12 @@ def get_adapter_class(name: str) -> Type[BaseAdapter]:
 
 - [ ] **Step 5: Run tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_civicplus_adapter.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_civicplus_adapter.py -v`
 Expected: All PASS
 
 - [ ] **Step 6: Run full test suite**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/ -v`
+Run: `cd /<repo> && python -m pytest tests/ -v`
 Expected: All 185+ tests PASS (no regressions)
 
 - [ ] **Step 7: Commit**
@@ -558,7 +558,7 @@ class TestCivicPlusAdapterCapture:
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_civicplus_adapter.py::TestCivicPlusAdapterCapture -v`
+Run: `cd /<repo> && python -m pytest tests/test_civicplus_adapter.py::TestCivicPlusAdapterCapture -v`
 Expected: FAIL — `NotImplementedError`
 
 - [ ] **Step 3: Implement CivicPlusAdapter.capture()**
@@ -679,12 +679,12 @@ class CivicPlusAdapter(BaseAdapter):
 
 - [ ] **Step 4: Run tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_civicplus_adapter.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_civicplus_adapter.py -v`
 Expected: All PASS
 
 - [ ] **Step 5: Run full test suite**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/ -v`
+Run: `cd /<repo> && python -m pytest tests/ -v`
 Expected: All tests PASS
 
 - [ ] **Step 6: Commit**
@@ -736,17 +736,17 @@ sources:
 
 - [ ] **Step 2: Live capture Corte Madera**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python scripts/ingest.py --source corte-madera-town-council --registry registry/civicplus-sources.yaml`
+Run: `cd /<repo> && python scripts/ingest.py --source corte-madera-town-council --registry registry/civicplus-sources.yaml`
 Expected: Meetings captured with agenda URLs, multiple categories
 
 - [ ] **Step 3: Live capture Tiburon**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python scripts/ingest.py --source tiburon-town-council --registry registry/civicplus-sources.yaml`
+Run: `cd /<repo> && python scripts/ingest.py --source tiburon-town-council --registry registry/civicplus-sources.yaml`
 Expected: Meetings captured with agenda + minutes URLs
 
 - [ ] **Step 4: Live capture Mill Valley**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python scripts/ingest.py --source mill-valley-committees --registry registry/civicplus-sources.yaml`
+Run: `cd /<repo> && python scripts/ingest.py --source mill-valley-committees --registry registry/civicplus-sources.yaml`
 Expected: Meetings from various committees (not City Council — they don't use Agenda Center for that)
 
 - [ ] **Step 5: Verify output structure**

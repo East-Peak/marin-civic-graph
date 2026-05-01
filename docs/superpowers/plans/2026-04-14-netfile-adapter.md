@@ -208,7 +208,7 @@ class TestNetFileAdapterCapture:
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_netfile_adapter.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_netfile_adapter.py -v`
 Expected: FAIL
 
 - [ ] **Step 3: Implement netfile.py**
@@ -387,12 +387,12 @@ from .netfile import NetFileAdapter
 
 - [ ] **Step 5: Run tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_netfile_adapter.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_netfile_adapter.py -v`
 Expected: All PASS
 
 - [ ] **Step 6: Run full test suite**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/ -v`
+Run: `cd /<repo> && python -m pytest tests/ -v`
 Expected: All 232+ tests PASS
 
 - [ ] **Step 7: Commit**
@@ -438,12 +438,12 @@ sources:
 
 - [ ] **Step 2: Live capture Marin County campaign finance**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python scripts/ingest.py --source marin-county-campaign-finance --registry registry/netfile-sources.yaml`
+Run: `cd /<repo> && python scripts/ingest.py --source marin-county-campaign-finance --registry registry/netfile-sources.yaml`
 Expected: ZIP exports for 2019-2026, with sheet names extracted
 
 - [ ] **Step 3: Live capture Novato campaign finance**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python scripts/ingest.py --source novato-campaign-finance --registry registry/netfile-sources.yaml`
+Run: `cd /<repo> && python scripts/ingest.py --source novato-campaign-finance --registry registry/netfile-sources.yaml`
 Expected: ZIP exports for 2019-2026
 
 - [ ] **Step 4: Verify output**

@@ -205,7 +205,7 @@ def sample_validation_check():
 
 - [ ] **Step 4: Verify pytest runs**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/ -v --co`
+Run: `cd /<repo> && python -m pytest tests/ -v --co`
 Expected: "no tests ran" (collected 0 items), no import errors
 
 - [ ] **Step 5: Commit**
@@ -471,7 +471,7 @@ class TestCaseParticipationToEdges:
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_migration_mapping.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_migration_mapping.py -v`
 Expected: FAIL — `ModuleNotFoundError: No module named 'migration_mapping'`
 
 - [ ] **Step 3: Implement migration_mapping.py**
@@ -763,7 +763,7 @@ def case_participation_to_edges(
 
 - [ ] **Step 4: Run tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_migration_mapping.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_migration_mapping.py -v`
 Expected: All tests PASS
 
 - [ ] **Step 5: Commit**
@@ -968,7 +968,7 @@ def test_migration_id_map(mini_graph):
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_migrate_graph_v2.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_migrate_graph_v2.py -v`
 Expected: FAIL — `ModuleNotFoundError: No module named 'migrate_graph_v2'`
 
 - [ ] **Step 3: Implement migrate_graph_v2.py**
@@ -1143,12 +1143,12 @@ if __name__ == "__main__":
 
 - [ ] **Step 4: Run tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_migrate_graph_v2.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_migrate_graph_v2.py -v`
 Expected: All tests PASS
 
 - [ ] **Step 5: Run migration against real data**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python scripts/migrate_graph_v2.py`
+Run: `cd /<repo> && python scripts/migrate_graph_v2.py`
 Expected output (approximate):
 ```
 Migration complete:
@@ -1306,7 +1306,7 @@ class TestBuildEdgeBatchQuery:
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_load_neo4j_v2.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_load_neo4j_v2.py -v`
 Expected: FAIL
 
 - [ ] **Step 3: Implement the loader**
@@ -1494,7 +1494,7 @@ if __name__ == "__main__":
 
 - [ ] **Step 4: Run tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_load_neo4j_v2.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_load_neo4j_v2.py -v`
 Expected: All tests PASS
 
 - [ ] **Step 5: Commit**
@@ -1702,12 +1702,12 @@ git commit -m "feat: add Neo4j verification script with count checks and investi
 
 - [ ] **Step 1: Run all unit tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/ -v`
+Run: `cd /<repo> && python -m pytest tests/ -v`
 Expected: All tests PASS
 
 - [ ] **Step 2: Run migration on real data**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python scripts/migrate_graph_v2.py`
+Run: `cd /<repo> && python scripts/migrate_graph_v2.py`
 Expected: Migration report printed, files written to `data/projected/graph-v2/`
 
 - [ ] **Step 3: Review migration report**
@@ -1741,13 +1741,13 @@ export NEO4J_PASSWORD="your-password"
 
 - [ ] **Step 6: Load into Neo4j**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python scripts/load_neo4j_v2.py`
+Run: `cd /<repo> && python scripts/load_neo4j_v2.py`
 
 Expected: Schema applied, nodes loaded, edges loaded, final counts printed
 
 - [ ] **Step 7: Run verification**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python scripts/verify_neo4j_v2.py`
+Run: `cd /<repo> && python scripts/verify_neo4j_v2.py`
 
 Expected: All checks PASS. If any fail, investigate and fix before proceeding.
 

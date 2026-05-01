@@ -14,8 +14,8 @@ Source filings:
 
 Derived outputs:
 
-- [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json)
-- [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
+- [2026-04-12.json](/data/extracted/san-rafael-city-campaign-form460-schedules/2026-04-12.json)
+- [bundle-01.json](/data/normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json)
 - [Reconciliation And Anomaly Model](./reconciliation-and-anomaly-model.md)
 
 ## What This Produced

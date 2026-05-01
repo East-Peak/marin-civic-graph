@@ -32,10 +32,10 @@ That makes it a good pressure test for the review boundary.
 
 The raw article body was captured through the public WordPress post API, not through browser scraping:
 
-- raw capture: [manifest.json](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-ij-2024-08-24-mahon-creek-article/2026-04-11/manifest.json)
-- raw response: [response.json](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-ij-2024-08-24-mahon-creek-article/2026-04-11/response.json)
-- extracted layer: [2026-04-11.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/marin-ij-2024-08-24-mahon-creek-article/2026-04-11.json)
-- normalized worked example: [marin-ij-2024-08-24-mention-claim-example.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/marin-ij-2024-08-24-mention-claim-example.json)
+- raw capture: [manifest.json](/data/raw/marin-ij-2024-08-24-mahon-creek-article/2026-04-11/manifest.json)
+- raw response: [response.json](/data/raw/marin-ij-2024-08-24-mahon-creek-article/2026-04-11/response.json)
+- extracted layer: [2026-04-11.json](/data/extracted/marin-ij-2024-08-24-mahon-creek-article/2026-04-11.json)
+- normalized worked example: [marin-ij-2024-08-24-mention-claim-example.json](/data/normalized/san-rafael-homelessness-01/marin-ij-2024-08-24-mention-claim-example.json)
 
 This matters because it answers the old methodology question directly: at least some Marin IJ records can graduate from citation-only without operator login.
 

@@ -94,9 +94,9 @@ So:
 
 ## Current Artifacts
 
-- cross-domain example: [media-cross-domain-join-example-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/media-cross-domain-join-example-01.json)
-- recurrence example: [marin-ij-recurrence-example-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/marin-ij-recurrence-example-01.json)
-- first mention/claim example: [marin-ij-2024-08-24-mention-claim-example.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/marin-ij-2024-08-24-mention-claim-example.json)
+- cross-domain example: [media-cross-domain-join-example-01.json](/data/normalized/san-rafael-homelessness-01/media-cross-domain-join-example-01.json)
+- recurrence example: [marin-ij-recurrence-example-01.json](/data/normalized/san-rafael-homelessness-01/marin-ij-recurrence-example-01.json)
+- first mention/claim example: [marin-ij-2024-08-24-mention-claim-example.json](/data/normalized/san-rafael-homelessness-01/marin-ij-2024-08-24-mention-claim-example.json)
 
 ## Next Move
 

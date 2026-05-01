@@ -72,6 +72,6 @@ The graph should still refuse to answer, without more evidence:
 
 ## Files
 
-- [media-campaign-overlap-example-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/media-campaign-overlap-example-01.json)
-- [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-filings-01/bundle-01.json)
-- [marin-ij-2024-08-24-mention-claim-example.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/marin-ij-2024-08-24-mention-claim-example.json)
+- [media-campaign-overlap-example-01.json](/data/normalized/san-rafael-homelessness-01/media-campaign-overlap-example-01.json)
+- [bundle-01.json](/data/normalized/san-rafael-city-campaign-filings-01/bundle-01.json)
+- [marin-ij-2024-08-24-mention-claim-example.json](/data/normalized/san-rafael-homelessness-01/marin-ij-2024-08-24-mention-claim-example.json)

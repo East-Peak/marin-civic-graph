@@ -86,7 +86,7 @@ app/                                    # Next.js project root (same pattern as 
 
 Run from repo root:
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 npx create-next-app@latest app --typescript --tailwind --eslint --app --src-dir --no-import-alias --no-turbopack
 ```
 

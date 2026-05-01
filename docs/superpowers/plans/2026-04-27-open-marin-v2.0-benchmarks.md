@@ -146,7 +146,7 @@ class TestCanonicalType:
 - [ ] **Step 2: Run test to verify it fails**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 pytest tests/test_canonical_type.py -v
 ```
 Expected: FAIL with `ModuleNotFoundError: No module named 'canonical_type'`.
@@ -3061,7 +3061,7 @@ Spec §11 v2.0 deliverable: a static-data prototype of `/` that loads the manife
 - [ ] **Step 1: Snapshot current homepage**
 
 ```bash
-cp /Users/tammypais/projects/marin-civic-graph/app/src/app/page.tsx /tmp/page.tsx.v1
+cp /<repo>/app/src/app/page.tsx /tmp/page.tsx.v1
 ```
 
 - [ ] **Step 2: Replace `app/src/app/page.tsx`**
@@ -3233,7 +3233,7 @@ PYTHON_STEPS = [
 - [ ] **Step 2: Smoke test the chain runs (dry-run)**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 # Should fail at the OPENAI_API_KEY check inside build_embeddings.py
 # unless --dry-run is plumbed; main()'s body is filled in Task 16,
 # so for now we just confirm the orchestrator finds each script.
@@ -3600,7 +3600,7 @@ return 0
 - [ ] **Step 4: Run the rehearsal**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 # Source the env from .env.local (project convention)
 set -a && source app/.env.local && set +a
 export OPENAI_API_KEY="<from 1Password>"

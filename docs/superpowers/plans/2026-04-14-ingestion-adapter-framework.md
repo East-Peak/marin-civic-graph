@@ -102,7 +102,7 @@ class TestBaseAdapterContract:
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_granicus_adapter.py::TestAdapterRegistry -v`
+Run: `cd /<repo> && python -m pytest tests/test_granicus_adapter.py::TestAdapterRegistry -v`
 Expected: FAIL — `ModuleNotFoundError: No module named 'adapters'`
 
 - [ ] **Step 3: Implement base.py**
@@ -208,7 +208,7 @@ class GranicusAdapter(BaseAdapter):
 
 - [ ] **Step 6: Run tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_granicus_adapter.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_granicus_adapter.py -v`
 Expected: All 3 tests PASS
 
 - [ ] **Step 7: Commit**
@@ -333,7 +333,7 @@ class TestExtractRows:
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_granicus_adapter.py::TestStripTags -v`
+Run: `cd /<repo> && python -m pytest tests/test_granicus_adapter.py::TestStripTags -v`
 Expected: FAIL — `ImportError: cannot import name 'strip_tags'`
 
 - [ ] **Step 3: Implement shared utilities in granicus.py**
@@ -453,7 +453,7 @@ class GranicusAdapter(BaseAdapter):
 
 - [ ] **Step 4: Run tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_granicus_adapter.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_granicus_adapter.py -v`
 Expected: All tests PASS (shared utilities + registry + base contract)
 
 - [ ] **Step 5: Commit**
@@ -543,7 +543,7 @@ class TestParseLegacy:
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_granicus_adapter.py::TestParseLegacy -v`
+Run: `cd /<repo> && python -m pytest tests/test_granicus_adapter.py::TestParseLegacy -v`
 Expected: FAIL — `ImportError: cannot import name 'parse_legacy'`
 
 - [ ] **Step 3: Implement parse_legacy and parse_legacy_date**
@@ -662,7 +662,7 @@ def parse_legacy(html: str, backfill_from: str = "2019-01-01") -> list[dict]:
 
 - [ ] **Step 4: Run tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_granicus_adapter.py::TestParseLegacy tests/test_granicus_adapter.py::TestParseLegacyDate -v`
+Run: `cd /<repo> && python -m pytest tests/test_granicus_adapter.py::TestParseLegacy tests/test_granicus_adapter.py::TestParseLegacyDate -v`
 Expected: All PASS
 
 - [ ] **Step 5: Commit**
@@ -769,7 +769,7 @@ class TestParseModern:
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_granicus_adapter.py::TestParseModern -v`
+Run: `cd /<repo> && python -m pytest tests/test_granicus_adapter.py::TestParseModern -v`
 Expected: FAIL — `ImportError: cannot import name 'parse_modern'`
 
 - [ ] **Step 3: Implement parse_modern and parse_modern_date**
@@ -927,7 +927,7 @@ def parse_modern(html: str, backfill_from: str = "2019-01-01") -> list[dict]:
 
 - [ ] **Step 4: Run tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_granicus_adapter.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_granicus_adapter.py -v`
 Expected: All tests PASS
 
 - [ ] **Step 5: Commit**
@@ -1045,7 +1045,7 @@ class TestGranicusAdapterCapture:
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_granicus_adapter.py::TestGranicusAdapterCapture -v`
+Run: `cd /<repo> && python -m pytest tests/test_granicus_adapter.py::TestGranicusAdapterCapture -v`
 Expected: FAIL — `NotImplementedError`
 
 - [ ] **Step 3: Implement GranicusAdapter.capture()**
@@ -1131,7 +1131,7 @@ class GranicusAdapter(BaseAdapter):
 
 - [ ] **Step 4: Run tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_granicus_adapter.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_granicus_adapter.py -v`
 Expected: All tests PASS
 
 - [ ] **Step 5: Commit**
@@ -1224,7 +1224,7 @@ class TestResolveSources:
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_ingest_runner.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_ingest_runner.py -v`
 Expected: FAIL — `ModuleNotFoundError`
 
 - [ ] **Step 3: Create sources.yaml**
@@ -1367,12 +1367,12 @@ if __name__ == "__main__":
 
 - [ ] **Step 5: Run tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_ingest_runner.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_ingest_runner.py -v`
 Expected: All PASS
 
 - [ ] **Step 6: Run all tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/ -v`
+Run: `cd /<repo> && python -m pytest tests/ -v`
 Expected: All PASS (migration tests + adapter tests + runner tests)
 
 - [ ] **Step 7: Commit**
@@ -1393,12 +1393,12 @@ Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
 
 - [ ] **Step 1: Run all unit tests first**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/ -v`
+Run: `cd /<repo> && python -m pytest tests/ -v`
 Expected: All PASS
 
 - [ ] **Step 2: Capture Marin County BOS (legacy)**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python scripts/ingest.py --source marin-county-bos`
+Run: `cd /<repo> && python scripts/ingest.py --source marin-county-bos`
 Expected output:
 ```
 Capturing: marin-county-bos
@@ -1418,12 +1418,12 @@ Verify: meeting_count > 300, variant == "legacy"
 
 - [ ] **Step 4: Capture Novato (modern)**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python scripts/ingest.py --source novato-city-council`
+Run: `cd /<repo> && python scripts/ingest.py --source novato-city-council`
 Expected: Variant: modern, Meetings: 250+
 
 - [ ] **Step 5: Capture Sausalito (modern)**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python scripts/ingest.py --source sausalito-city-council`
+Run: `cd /<repo> && python scripts/ingest.py --source sausalito-city-council`
 Expected: Variant: modern, Meetings: 100+
 
 - [ ] **Step 6: Verify all three have correct structure**

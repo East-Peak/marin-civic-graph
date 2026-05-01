@@ -205,7 +205,7 @@ class TestNormalizeCampaignSource:
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_normalize_campaign_finance.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_normalize_campaign_finance.py -v`
 Expected: FAIL — ModuleNotFoundError
 
 - [ ] **Step 3: Implement normalize_campaign_finance.py**
@@ -238,12 +238,12 @@ The script reads the NetFile capture JSON to find which ZIPs were downloaded, th
 
 - [ ] **Step 4: Run tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_normalize_campaign_finance.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_normalize_campaign_finance.py -v`
 Expected: All PASS
 
 - [ ] **Step 5: Run full test suite**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/ -v`
+Run: `cd /<repo> && python -m pytest tests/ -v`
 Expected: All 315+ PASS
 
 - [ ] **Step 6: Commit**

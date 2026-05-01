@@ -244,7 +244,7 @@ Static content. Sections:
 3. **Methodology** — paragraph on primary-source discipline per the spec's Section 1 thesis.
 4. **Jurisdictions** — list of the 11 covered + coverage notes.
 5. **Built with** — tech stack credits.
-6. **Credits** — Stuart Watson (East Peak Advisors); built with Claude (model IDs, session provenance).
+6. **Credits** — Stuart Watson; built with Claude (model IDs, session provenance).
 
 No tests. Server component that fetches catalog counts. Plex Sans for body, VT323 for section headers.
 

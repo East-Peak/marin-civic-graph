@@ -130,7 +130,7 @@ Build step copies these to `app/public/subgraphs/` so Next.js serves them static
 - [ ] **Step 1: Run create-next-app from repo root**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 npx create-next-app@latest app --typescript --tailwind --eslint --app --src-dir --import-alias '@/*' --no-turbopack --use-npm
 ```
 
@@ -148,7 +148,7 @@ Expected: dev server starts on http://localhost:3000, opening it shows the defau
 - [ ] **Step 3: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/
 git commit -m "$(cat <<'EOF'
 scaffold Next.js 16 app for Open Marin frontend
@@ -191,7 +191,7 @@ Expected output includes `neo4j-driver@6.x.x` and `cytoscape@3.x.x`. (Major vers
 - [ ] **Step 4: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/package.json app/package-lock.json
 git commit -m "$(cat <<'EOF'
 install neo4j-driver, cytoscape, vitest for Open Marin
@@ -223,7 +223,7 @@ EOF
 
 - [ ] **Step 2: Create real `.env.local`**
 
-Read actual creds from `/Users/tammypais/Desktop/Neo4j-<INSTANCE-ID>-Created-2026-04-14.txt` (per workspace memory) and write `app/.env.local`:
+Read actual creds from `AuraDB-credentials-file` (per workspace memory) and write `app/.env.local`:
 
 ```bash
 # Use the actual values from the credentials file:
@@ -238,7 +238,7 @@ EOF
 - [ ] **Step 3: Verify .env.local is gitignored**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git check-ignore app/.env.local && echo "OK — gitignored"
 ```
 
@@ -338,7 +338,7 @@ Expected: 1 passed, exit 0.
 
 ```bash
 rm app/src/tests/smoke.test.ts
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/vitest.config.ts app/src/tests/setup.ts app/package.json app/package-lock.json
 git commit -m "$(cat <<'EOF'
 configure Vitest with jsdom + Testing Library setup
@@ -528,7 +528,7 @@ Visit http://localhost:3000 — page should render on the near-black `#07090d` b
 - [ ] **Step 6: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/src/lib/palette.ts app/src/app/layout.tsx app/src/app/globals.css app/tailwind.config.ts
 git commit -m "$(cat <<'EOF'
 add dark theme, palette tokens, IBM Plex + VT323 fonts
@@ -678,7 +678,7 @@ Expected: no errors.
 - [ ] **Step 6: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/src/lib/neo4j.ts app/src/tests/lib/neo4j.test.ts
 git commit -m "$(cat <<'EOF'
 add Neo4j driver singleton + runQuery helper
@@ -840,7 +840,7 @@ cd app && npm run typecheck
 - [ ] **Step 6: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/src/lib/type-display.ts app/src/tests/lib/type-display.test.ts
 git commit -m "$(cat <<'EOF'
 add type-display module: URL forms + display names + corpus lists
@@ -979,7 +979,7 @@ export function resolveIdAlias(id: string, contextType?: NodeType): ResolvedId |
 - [ ] **Step 5: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/src/lib/id-aliases.ts app/src/tests/lib/id-aliases.test.ts
 git commit -m "$(cat <<'EOF'
 add id-aliases: resolve legacy actor-/inst-/eid- prefixes
@@ -1092,7 +1092,7 @@ if __name__ == "__main__":
 - [ ] **Step 3: Apply against AuraDB**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 # Make sure env is loaded (match the project's existing convention for Python scripts).
 # If an .envrc / direnv is not in place, export manually from the credentials file.
 export NEO4J_URI=neo4j+s://<INSTANCE-ID>.databases.neo4j.io
@@ -1199,7 +1199,7 @@ def test_record_search_rank_capped_at_30():
 - [ ] **Step 2: Run — expect failure**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 python3.14 -m pytest tests/scripts/test_build_search_properties.py -v
 ```
 
@@ -1426,7 +1426,7 @@ if __name__ == "__main__":
 - [ ] **Step 4: Run tests — expect pass**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 python3.14 -m pytest tests/scripts/test_build_search_properties.py -v
 ```
 
@@ -1446,7 +1446,7 @@ Expected: prints counts per type, total ~112K updated.
 
 - [ ] **Step 6: Spot-check in AuraDB console**
 
-Open https://console-preview.neo4j.io/?dbid=<INSTANCE-ID> and run:
+Open https://console.neo4j.io/?dbid=<INSTANCE-ID> and run:
 
 ```cypher
 MATCH (n:Person {id: "person-kate-colin"})
@@ -1458,7 +1458,7 @@ Expected: label is a human-readable string, terms contains lowercase tokens, ran
 - [ ] **Step 7: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add scripts/build_search_properties.py tests/scripts/test_build_search_properties.py
 git commit -m "$(cat <<'EOF'
 add search_label / search_terms / search_rank ingestion pass
@@ -1749,7 +1749,7 @@ threads:
 - [ ] **Step 3: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add registry/signature-subgraphs.yaml registry/currently-tracking.yaml
 git commit -m "$(cat <<'EOF'
 add signature-subgraphs.yaml + currently-tracking.yaml registries
@@ -2083,7 +2083,7 @@ if __name__ == "__main__":
 - [ ] **Step 4: Install PyYAML if needed**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 python3.14 -c "import yaml" 2>&1 || pip3.14 install PyYAML
 ```
 
@@ -2287,7 +2287,7 @@ Stop dev server.
 - [ ] **Step 7: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/src/app/api/status/route.ts app/src/tests/api/status.test.ts app/src/lib/api-errors.ts
 git commit -m "$(cat <<'EOF'
 add /api/status endpoint for live status bar
@@ -2403,7 +2403,7 @@ curl -s http://localhost:3000/api/catalog | python3 -m json.tool | head -30
 - [ ] **Step 6: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/src/app/api/catalog/route.ts app/src/tests/api/catalog.test.ts
 git commit -m "$(cat <<'EOF'
 add /api/catalog endpoint for homepage left column
@@ -2512,7 +2512,7 @@ Expected: valid JSON in each case.
 - [ ] **Step 6: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/scripts/copy-subgraphs.mjs app/package.json app/package-lock.json app/.gitignore
 git commit -m "$(cat <<'EOF'
 serve subgraph bundles statically via /subgraphs/
@@ -2715,7 +2715,7 @@ Expected: non-empty `results` array, entities first, Records after (when include
 - [ ] **Step 6: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/src/app/api/search/route.ts app/src/tests/api/search.test.ts
 git commit -m "$(cat <<'EOF'
 add /api/search endpoint with bucketed ranking
@@ -2870,7 +2870,7 @@ export function StatusBar({
 - [ ] **Step 5: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/src/components/layout/status-bar.tsx app/src/tests/components/status-bar.test.tsx
 git commit -m "$(cat <<'EOF'
 add StatusBar component
@@ -3040,7 +3040,7 @@ export function PromptSearch() {
 - [ ] **Step 2: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/src/components/layout/prompt-search.tsx
 git commit -m "$(cat <<'EOF'
 add PromptSearch component
@@ -3179,7 +3179,7 @@ export function CatalogList({ counts }: CatalogListProps) {
 - [ ] **Step 5: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/src/components/home/catalog-list.tsx app/src/tests/components/catalog-list.test.tsx
 git commit -m "$(cat <<'EOF'
 add CatalogList component
@@ -3355,7 +3355,7 @@ export function glowForRole(role: string, colorClass: string | null): { blur: nu
 - [ ] **Step 2: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/src/components/graph/obsidian-style.ts
 git commit -m "$(cat <<'EOF'
 add Obsidian Glow Cytoscape stylesheet + helpers
@@ -3667,7 +3667,7 @@ export function SignatureSubgraph() {
 - [ ] **Step 6: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/src/components/home/signature-subgraph.tsx app/src/tests/components/signature-subgraph.test.tsx app/src/lib/types.ts
 git commit -m "$(cat <<'EOF'
 add SignatureSubgraph component
@@ -3755,7 +3755,7 @@ export async function TrackingThreads() {
 - [ ] **Step 3: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/src/components/home/tracking-threads.tsx app/package.json app/package-lock.json
 git commit -m "$(cat <<'EOF'
 add TrackingThreads server component
@@ -3899,7 +3899,7 @@ Expected: no TypeScript errors, no ESLint blockers, successful Next.js build.
 - [ ] **Step 4: Commit**
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph
+cd /<repo>
 git add app/src/app/page.tsx
 git commit -m "$(cat <<'EOF'
 wire up Open Marin homepage

@@ -30,10 +30,10 @@ That makes it a better recurrence test than an article that only repeats generic
 
 ## Capture Path
 
-- raw capture: [manifest.json](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-ij-2024-09-20-authorized-camp-preparation-article/2026-04-11/manifest.json)
-- raw response: [response.json](/Users/tammypais/projects/marin-civic-graph/data/raw/marin-ij-2024-09-20-authorized-camp-preparation-article/2026-04-11/response.json)
-- extracted layer: [2026-04-11.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/marin-ij-2024-09-20-authorized-camp-preparation-article/2026-04-11.json)
-- recurrence layer: [marin-ij-recurrence-example-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/marin-ij-recurrence-example-01.json)
+- raw capture: [manifest.json](/data/raw/marin-ij-2024-09-20-authorized-camp-preparation-article/2026-04-11/manifest.json)
+- raw response: [response.json](/data/raw/marin-ij-2024-09-20-authorized-camp-preparation-article/2026-04-11/response.json)
+- extracted layer: [2026-04-11.json](/data/extracted/marin-ij-2024-09-20-authorized-camp-preparation-article/2026-04-11.json)
+- recurrence layer: [marin-ij-recurrence-example-01.json](/data/normalized/san-rafael-homelessness-01/marin-ij-recurrence-example-01.json)
 
 Like the first article, this one was captured through the public WordPress post API.
 

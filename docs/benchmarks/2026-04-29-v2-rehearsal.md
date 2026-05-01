@@ -201,7 +201,7 @@ Operational findings to document:
 To complete the v2.0 gate:
 
 ```bash
-cd /Users/tammypais/projects/marin-civic-graph/app
+cd /<repo>/app
 PORT=3100 npm run dev
 # Open http://localhost:3100/ in Chrome with DevTools open.
 # Use Performance tab + FPS meter + Memory snapshot to measure

@@ -235,7 +235,7 @@ class TestNormalizeSource:
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_normalize_meetings.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_normalize_meetings.py -v`
 Expected: FAIL — ModuleNotFoundError
 
 - [ ] **Step 3: Implement normalize_meetings.py**
@@ -583,12 +583,12 @@ if __name__ == "__main__":
 
 - [ ] **Step 4: Run tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/test_normalize_meetings.py -v`
+Run: `cd /<repo> && python -m pytest tests/test_normalize_meetings.py -v`
 Expected: All PASS
 
 - [ ] **Step 5: Run full test suite**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/ -v`
+Run: `cd /<repo> && python -m pytest tests/ -v`
 Expected: All 266+ tests PASS
 
 - [ ] **Step 6: Commit**
@@ -609,7 +609,7 @@ Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
 
 - [ ] **Step 1: Run all unit tests**
 
-Run: `cd /Users/tammypais/projects/marin-civic-graph && python -m pytest tests/ -v`
+Run: `cd /<repo> && python -m pytest tests/ -v`
 Expected: All PASS
 
 - [ ] **Step 2: Normalize Marin County BOS**

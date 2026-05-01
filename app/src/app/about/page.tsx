@@ -175,7 +175,7 @@ export default async function AboutPage() {
             CREDITS
           </h2>
           <p className="font-sans text-[14px] leading-[1.55] text-body">
-            Stuart Watson, East Peak Advisors. Built with Claude.
+            Stuart Watson. Built with Claude.
           </p>
         </section>
       </div>

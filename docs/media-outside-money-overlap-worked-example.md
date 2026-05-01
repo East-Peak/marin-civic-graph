@@ -81,6 +81,6 @@ The project should still refuse to overclaim:
 
 ## Files
 
-- [media-outside-money-overlap-example-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-homelessness-01/media-outside-money-overlap-example-01.json)
-- [bundle-01.json](/Users/tammypais/projects/marin-civic-graph/data/normalized/san-rafael-city-campaign-ie-01/bundle-01.json)
-- [2026-04-12.json](/Users/tammypais/projects/marin-civic-graph/data/extracted/san-rafael-city-campaign-document-probe/2026-04-12.json)
+- [media-outside-money-overlap-example-01.json](/data/normalized/san-rafael-homelessness-01/media-outside-money-overlap-example-01.json)
+- [bundle-01.json](/data/normalized/san-rafael-city-campaign-ie-01/bundle-01.json)
+- [2026-04-12.json](/data/extracted/san-rafael-city-campaign-document-probe/2026-04-12.json)

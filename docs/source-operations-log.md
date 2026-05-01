@@ -93,6 +93,6 @@ Run via `python scripts/ingest.py --source {source_id} --registry registry/netfi
 ## Neo4j AuraDB
 
 - Instance: `<INSTANCE-ID>.databases.neo4j.io` (paid)
-- Credentials: `~/Desktop/Neo4j-<INSTANCE-ID>-Created-2026-04-14.txt`
+- Credentials: `AuraDB-credentials-file`
 - Current state: ~43K nodes / ~68K edges (includes 1K permit sample loaded 2026-04-14)
 - Schema: `registry/neo4j-schema.cypher` (22 constraints, full-text index, 12 property indexes)
