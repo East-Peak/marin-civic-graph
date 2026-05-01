@@ -172,7 +172,7 @@ Until these are measured, criteria 5-7 are UNMEASURED.
 | 8 | Outbound audit: zero ineligible-neighbor leaks | ✓ 0 / 114,348 calls |
 | 9 | Versioned blob upload + manifest round-trip | ✓ (4 cosmetic field bugs documented) |
 
-Server-side measured criteria: **3 PASS, 1 FAIL (#4 payload size), 1 N/A**. Browser-side criteria: **DEFERRED**.
+Server-side measured criteria (#1, #2, #3, #4, #8, #9): **4 PASS** (#1, #2, #8, #9), **1 FAIL** (#4 payload size — calibration finding), **1 N/A** (#3 alignment, first run with no prior frame). Browser-side criteria (#5, #6, #7): **DEFERRED** to manual verification.
 
 ## GO / NO-GO decision
 
@@ -180,7 +180,7 @@ Server-side measured criteria: **3 PASS, 1 FAIL (#4 payload size), 1 N/A**. Brow
 
 Rationale:
 - The pipeline runs end-to-end, including atomic Cypher promote and manifest write. The Constellation is **live in the live AuraDB**.
-- 5 of 9 pass criteria PASS as measured; 1 FAIL (payload size — known calibration miss, fixable by spec amendment); 3 DEFERRED (browser tests, blocked on Stuart's manual run).
+- 4 of 9 pass criteria measured PASS (UMAP fit time, HDBSCAN compute, outbound-leak audit, manifest round-trip); 1 N/A (drift alignment — first run, no prior frame); 1 FAIL (payload size — known calibration miss, fixable by spec amendment); 3 DEFERRED (browser tests, blocked on manual verification).
 - Calibration findings (HDBSCAN params, payload budget, naming quality, manifest cosmetic bugs) are exactly what the v2.0 gate exists to surface.
 
 Required v2.1 spec amendments before Plan v2.1 starts:

@@ -22,7 +22,7 @@ A handful of the most representative pieces:
 ## Status
 
 - **v1 graph in production** at AuraDB (~114K nodes / ~148K edges, 11 Marin jurisdictions, 21 canonical node types).
-- **Plan v2.0 (benchmarks + foundation) shipped 2026-04-29.** The full v2 pipeline ran end-to-end against the live AuraDB; the Constellation is live in the database. Production rehearsal report at [`docs/benchmarks/2026-04-29-v2-rehearsal.md`](./docs/benchmarks/2026-04-29-v2-rehearsal.md). 5 of 9 server-side pass criteria measured pass; 1 (payload size) flagged for spec amendment; 3 client-side criteria deferred to manual browser test. Verdict: **PROVISIONAL GO**.
+- **Plan v2.0 (benchmarks + foundation) shipped 2026-04-29.** The full v2 pipeline ran end-to-end against the live AuraDB; the Constellation is live in the database. Production rehearsal report at [`docs/benchmarks/2026-04-29-v2-rehearsal.md`](./docs/benchmarks/2026-04-29-v2-rehearsal.md). Of 9 pass criteria: 4 measured PASS (UMAP fit time, HDBSCAN compute, outbound-leak audit, manifest round-trip), 1 N/A (drift alignment — first run, no prior frame to align against), 1 FAIL (payload size — calibration miss, fixable by spec amendment), 3 DEFERRED to manual browser test (first-paint, FPS, sprite throughput). Verdict: **PROVISIONAL GO**.
 - **v2.1 (Constellation MVP) is next** — full Cosmograph integration, sprite atlas tiering, region-label rendering, full pipeline cutover.
 
 ## Tech stack
@@ -82,19 +82,19 @@ Start narrow:
 - [Schema v1](./docs/schema-v1.md)
 - [Graph Data Model](./docs/graph-data-model.md)
 - [Graph Materialization Proposal](./docs/graph-materialization-proposal.md)
-- [Architecture Review Checklist](./docs/architecture-review-checklist.md)
-- [Schema Review Response](./docs/schema-review-response.md)
+- [Architecture Review Checklist](./docs/internal/architecture-review-checklist.md)
+- [Schema Review Response](./docs/internal/schema-review-response.md)
 - [Graph Query Pack](./docs/graph-query-pack.md)
 - [Question Set V1](./docs/question-set-v1.md)
-- [Claude Collaboration Handoff](./docs/claude-collaboration-handoff.md)
-- [Daily Log 2026-04-13](./docs/daily-log-2026-04-13.md)
-- [Daily Log 2026-04-14](./docs/daily-log-2026-04-14.md)
+- [Claude Collaboration Handoff](./docs/internal/claude-collaboration-handoff.md)
+- [Daily Log 2026-04-13](./docs/internal/daily-log-2026-04-13.md)
+- [Daily Log 2026-04-14](./docs/internal/daily-log-2026-04-14.md)
 - [Graph View Layer](./docs/graph-view-layer.md)
 - [Graph Read-Model Contracts](./docs/graph-read-model-contracts.md)
-- [Ralph Loop Plan](./docs/ralph-loop-plan.md)
-- [Controlled Breadth Sprint Proposal](./docs/breadth-sprint-proposal.md)
-- [Controlled Breadth Sprint Adversarial Review Checklist](./docs/breadth-sprint-review-checklist.md)
-- [Decision Log](./docs/decision-log.md)
+- [Ralph Loop Plan](./docs/internal/ralph-loop-plan.md)
+- [Controlled Breadth Sprint Proposal](./docs/internal/breadth-sprint-proposal.md)
+- [Controlled Breadth Sprint Adversarial Review Checklist](./docs/internal/breadth-sprint-review-checklist.md)
+- [Decision Log](./docs/internal/decision-log.md)
 - [Graph Joins And Identity](./docs/graph-joins-and-identity.md)
 - [Identity Resolution Submodel](./docs/identity-resolution-submodel.md)
 - [Actor Resolution Worked Example](./docs/actor-resolution-worked-example.md)
@@ -136,14 +136,14 @@ Start narrow:
 - [Source Registry Format](./docs/source-registry-format.md)
 - [Source Adapter And Operations Plan](./docs/source-adapter-and-operations-plan.md)
 - [Source Profile Matrix](./docs/source-profile-matrix.md)
-- [Historical Backfill Wave 01](./docs/historical-backfill-wave-01.md)
+- [Historical Backfill Wave 01](./docs/internal/historical-backfill-wave-01.md)
 - [Seed Source Registry](./registry/README.md)
 - [View Target Manifest](./registry/view-targets.yaml)
 - [Question Set Manifest](./registry/question-set-v1.yaml)
 - [Active Ralph Loop Manifest](./registry/loop-manifests/san-rafael-city-campaign-money-01.json)
 - [Media Attribution Rules](./docs/media-attribution-rules.md)
-- [Open Questions](./docs/open-questions.md)
-- [Backlog](./docs/backlog.md)
+- [Open Questions](./docs/internal/open-questions.md)
+- [Backlog](./docs/internal/backlog.md)
 - [Case Study 01](./docs/case-studies/01-san-rafael-homelessness.md)
 - [Case Study 01 Ingestion Checklist](./docs/case-studies/01-san-rafael-homelessness-ingestion-checklist.md)
 - [Case Study 01 Source Bundle](./docs/case-studies/01-san-rafael-homelessness-source-bundle.md)

@@ -21,4 +21,5 @@ data/umap_alignment.json
 data/cluster_renames_needed.json
 
 # raw source captures (kept locally; not in repo history after scrub)
-data/raw/
+data/raw/*
+!data/raw/README.md

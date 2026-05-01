@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ConstellationCanvas } from "@/lib/cosmograph-mount";
 import { canonicalType } from "@/lib/canonical-type";
+import { urlSegmentForType } from "@/lib/type-display";
 import type { ConstellationPayload } from "@/lib/constellation-types";
 
 const ID_PREFIX_RE = /^[a-z]+-/;
@@ -11,7 +12,7 @@ const ID_PREFIX_RE = /^[a-z]+-/;
 function entityUrlFromId(id: string): string | null {
   const t = canonicalType([], id);
   if (!t) return null;
-  return `/${t.toLowerCase()}/${id.replace(ID_PREFIX_RE, "")}`;
+  return `/${urlSegmentForType(t)}/${id.replace(ID_PREFIX_RE, "")}`;
 }
 
 type LoadState =

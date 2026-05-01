@@ -1,7 +1,7 @@
 {
   "projection_id": "graph-v1",
   "generated_at": "2026-04-14T12:28:40Z",
-  "manifest_path": "/Users/tammypais/projects/marin-civic-graph/registry/import-manifest.yaml",
+  "manifest_path": "registry/import-manifest.yaml",
   "output_dir": "data/projected/graph-v1",
   "bundle_reports": [
     {
