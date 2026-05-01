@@ -35,7 +35,7 @@ This repo is a **portfolio piece**, not an open-source product:
 
 - **It's runnable.** The pipelines, frontend, and tests all run; the v1 graph is live in AuraDB. You're welcome to read, learn from, and reference the architecture decisions.
 - **It's not maintained for community use.** Bug reports and feature requests aren't being triaged. There's no CONTRIBUTING.md and no roadmap commitment outside what's in [`docs/specs/`](./docs/specs/).
-- **It's not licensed for redistribution.** The code is provided source-available under [PolyForm Noncommercial 1.0](./LICENSE) — read, study, fork-locally, but no commercial use or redistribution. Public-record data artifacts are not relicensed.
+- **It's licensed for noncommercial use only.** Provided under [PolyForm Noncommercial 1.0](./LICENSE) — you may read, study, fork, redistribute, and build derivative works for noncommercial purposes. Commercial use of any kind requires a separate license. Public-record data artifacts are not relicensed.
 - **The data is not a product.** All entity data is reconstructed from public sources cited in [`docs/specs/2026-04-14-marin-civic-graph-v1-design.md`](./docs/specs/2026-04-14-marin-civic-graph-v1-design.md). Anyone in the data who wants their public-record information removed from this projection should reach out via the commit trailer email.
 
 The work below the cut is the original product brief — useful as context for why the architecture looks the way it does.
