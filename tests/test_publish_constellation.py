@@ -9,6 +9,7 @@ from publish_constellation import (
     PAYLOAD_SIZE_GZ_BUDGET,
     DRIFT_BUDGET_NODE_PCT,
     DRIFT_BUDGET_CENTROID_PCT,
+    PROMOTE_CYPHER,
     build_payload,
     enforce_drift_budget,
     DriftBudgetExceeded,
@@ -87,3 +88,10 @@ class TestBudgetConstants:
     def test_payload_size_budget_matches_spec(self):
         # Spec §11 v2.0 pass criterion: ≤8MB gzipped.
         assert PAYLOAD_SIZE_GZ_BUDGET == 8 * 1024 * 1024
+
+
+class TestPromoteCypher:
+    def test_step_4_records_size_gz_on_sync_state(self):
+        # Rehearsal 2026-04-29 finding #4: manifest returns size_gz=0
+        # because publish never writes it. Step 4 must SET s.size_gz.
+        assert "s.size_gz = $new_size_gz" in PROMOTE_CYPHER

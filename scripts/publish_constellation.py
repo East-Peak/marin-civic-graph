@@ -142,6 +142,7 @@ MERGE (s:_SyncState {kind: 'constellation'})
 SET s.version_id = $new_version_id,
     s.umap_version = $new_umap_version,
     s.blob_url = $new_blob_url,
+    s.size_gz = $new_size_gz,
     s.updated_at = datetime();
 """
 
@@ -316,6 +317,7 @@ def main() -> int:
                     new_version_id=version_id,
                     new_umap_version=umap_version,
                     new_blob_url=blob_url,
+                    new_size_gz=len(body_gz),
                 )
             tx.commit()
 
