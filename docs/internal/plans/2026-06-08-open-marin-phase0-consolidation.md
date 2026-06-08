@@ -265,7 +265,7 @@ def test_settled_labels_ok():
 >
 > **Milestone B is SPLIT into B-core + B-verify** (B was too big for one loop):
 > - **B-core (B1–B3) — READY TO RUN** (`workspace/goals/2026-06-08-open-marin-phase0-B-core-projector.md`, 2 Codex rounds): build `build_graph_v2.py` reproducing the **`import-manifest.yaml` projection only** (the legacy-Actor/Institution path — `6267→6258` nodes / `21262→21240` edges; the other ~108K live nodes come from direct/pre-projected loads that bypass this path and are out of scope). Pure file projection, **no DB**, proven by a dedicated **projection comparator** (full field set) against a golden captured from the current pipeline. Mandatory two-pass id-map + reproduce build_graph_projection's pre-migration phases (`relationship_passthrough`, alias remaps, dedup, ordering) + shallow `payload_json`.
-> - **B-verify (B4–B5) — after B-core lands:** port the query pack to v2 (metric parity via edge vocabulary; `{ok,failures,metrics}`); load `build_graph_v2` output into a **local scratch Neo4j** (loader now db-scoped, `942dfa8`), export, and prove equivalence over the **projection subset** of the frozen baseline (filter to rebuilt ids; exclude `_SyncState`/derived + null-id; rework `verify_phase0_consolidation` for subset comparison). The loader safety fix already shipped.
+> - **B-verify (the equivalence milestone) is DROPPED (Stuart, 2026-06-08).** Codex round 1 ran a real check and found the **live graph is stale** vs the bundles (18 node-prop diffs, 98 missing rels). Stuart's call: the live graph is **disposable** (weeks old, no dependencies, not production) — overwrite it with current state. Since B-core already proved `build_graph_v2 == legacy pipeline` byte-for-byte, the equivalence-to-a-stale-baseline gate is dead weight. **The only kept piece — the v2 query-pack port — moves into Milestone C**, and the full fresh rebuild (overwrite the live graph) is part of C. "Verify" becomes sane: post-rebuild sensible counts + no legacy labels + v2 query pack passes, NOT byte-equivalence to a discarded snapshot.
 
 ### Task B1: Capture golden fixtures from the CURRENT pipeline
 
@@ -351,6 +351,13 @@ def test_rel_rename_matches_legacy_map():
 ---
 
 ## Milestone C — Retirement, refresh, schema, docs, land
+
+> **Expanded scope (2026-06-08) — C now absorbs the dropped B-verify pieces and a full overwrite:**
+> - **Port the v2 query pack** (from B-verify): `run_graph_query_pack.py` → importable `run_query_pack(projection_dir, schema="v2")` returning `{ok, failures, metrics}`, ported to settled labels + the repo's edge vocabulary. Used by the sane post-rebuild check below.
+> - **Full fresh rebuild that OVERWRITES the live graph with current state** (Stuart: the graph is disposable, just overwrite). Orchestrate all materialization paths fresh: `build_graph_v2` (the ~6K projection) + the pre-projected bundles (permits/campaign/meetings) + the direct extractors (`extract_agenda_items`/`extract_decisions --load`, form700) → into live Aura (or a clean reload). This makes the live graph current AND v2-native-built.
+> - **Sane verify (replaces the dropped equivalence gate):** post-rebuild, assert sensible per-label counts + `assert_no_legacy_labels` + the v2 query pack passes. NOT byte-equivalence to the discarded stale baseline.
+> - **Retire** `build_graph_projection.py` + `graph_projection_lib.py` (if v1-only) + `migrate_graph_v2.py` + `migration_mapping.py` — `build_graph_v2` (B-core, proven byte-equal) is the projector now.
+> - **Priority bump:** back up `data/raw` (rclone) BEFORE leaning on "just rebuild it" — the agenda/decision extractors only re-derive from the 1.8 GB local-only `raw`; if that disk dies, ~13% of the graph is unrecoverable.
 
 ### Task C1: `refresh_openmarin.py --local-only`
 
