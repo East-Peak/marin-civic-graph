@@ -1,4 +1,19 @@
 #!/usr/bin/env python3
+"""build_graph_projection.py — DEPRECATED AS AN ENTRYPOINT (Phase 0, Milestone C).
+
+build_graph_v2.py is THE graph projector. This module is now a reused-internal
+helper library only: build_graph_v2 imports its projection helpers
+(build_actor_alias_map, build_node_envelope, extract_edges_from_object,
+finalize_node_for_output / finalize_edge_for_output, merge_node / merge_edge,
+passthrough_relationships, remap_actor_aliases, should_include_object, and their
+deps) to build the legacy node/edge envelopes in memory, then migrates them to the
+settled v2 schema in a single pass.
+
+Its projector CLI/main is RETIRED: it emitted the legacy Actor/Institution
+graph-v1 projection, which is no longer produced — `main()` now refuses to run and
+points at build_graph_v2. The helpers themselves are intentionally KEPT here for
+reuse; extracting them into a shared library is a separate Phase 0 follow-up.
+"""
 
 from __future__ import annotations
 
@@ -560,164 +575,19 @@ def remap_actor_aliases(edge: dict[str, Any], alias_map: dict[str, str]) -> tupl
 
 
 def main() -> None:
-    args = parse_args()
-    manifest_path = Path(args.manifest).resolve()
-    manifest = read_manifest(manifest_path)
-    output_dir = (
-        (ROOT / manifest["output_dir"]).resolve()
-        if args.output_dir is None
-        else Path(args.output_dir).resolve()
+    """RETIRED projector entrypoint — see the module docstring.
+
+    build_graph_v2 is the projector; this module is a reused-internal helper
+    library only. The legacy Actor/Institution graph-v1 projection is no longer
+    produced here.
+    """
+    raise SystemExit(
+        "build_graph_projection's projector CLI is RETIRED. build_graph_v2 is the "
+        "v2-native projector \u2014 run `python scripts/build_graph_v2.py`. This "
+        "module now exists only as a reused-internal helper library (build_graph_v2 "
+        "imports its projection helpers); regenerating the legacy Actor/Institution "
+        "projection from here is no longer supported."
     )
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    nodes_by_id: dict[str, dict[str, Any]] = {}
-    raw_edges: list[dict[str, Any]] = []
-    bundle_reports: list[dict[str, Any]] = []
-    skipped_edge_reasons: Counter[str] = Counter()
-    skipped_edge_targets: Counter[str] = Counter()
-    node_conflicts: list[dict[str, Any]] = []
-    edge_conflicts: list[dict[str, Any]] = []
-    duplicate_node_count = 0
-    duplicate_edge_count = 0
-
-    for bundle in manifest["bundles"]:
-        bundle_path = (ROOT / bundle["path"]).resolve()
-        payload = load_json(bundle_path)
-        bundle_id = payload.get("bundle_id") or bundle_path.stem
-        bundle_report = {
-            "bundle_id": bundle_id,
-            "path": relpath_for_report(bundle_path, ROOT),
-            "sections": [],
-        }
-        for section in bundle["sections"]:
-            section_name = section["name"]
-            items = payload.get(section_name) or []
-            section_report = {
-                "section": section_name,
-                "mode": section["mode"],
-                "input_count": len(items),
-                "imported_count": 0,
-                "skipped_count": 0,
-                "skip_reasons": Counter(),
-            }
-            if section["mode"] == "relationship_passthrough":
-                passthrough_edges = passthrough_relationships(items, bundle_id)
-                raw_edges.extend(passthrough_edges)
-                section_report["imported_count"] = len(passthrough_edges)
-                bundle_report["sections"].append(
-                    {
-                        **section_report,
-                        "skip_reasons": dict(section_report["skip_reasons"]),
-                    }
-                )
-                continue
-
-            node_type = section["node_type"]
-            promotion_state = section["promotion_state"]
-            for obj in items:
-                include, reason = should_include_object(section, obj)
-                if not include:
-                    section_report["skipped_count"] += 1
-                    section_report["skip_reasons"][reason or "filter"] += 1
-                    continue
-                node = build_node_envelope(
-                    node_type=node_type,
-                    promotion_state=promotion_state,
-                    bundle_id=bundle_id,
-                    section_name=section_name,
-                    obj=obj,
-                )
-                existing = nodes_by_id.get(node["id"])
-                if existing is None:
-                    nodes_by_id[node["id"]] = node
-                else:
-                    duplicate_node_count += 1
-                    merged, conflicts = merge_node(existing, node)
-                    nodes_by_id[node["id"]] = merged
-                    if conflicts:
-                        node_conflicts.append(
-                            {
-                                "id": node["id"],
-                                "bundle_id": bundle_id,
-                                "fields": conflicts,
-                            }
-                        )
-                raw_edges.extend(extract_edges_from_object(node_type, obj, bundle_id))
-                section_report["imported_count"] += 1
-            bundle_report["sections"].append(
-                {
-                    **section_report,
-                    "skip_reasons": dict(section_report["skip_reasons"]),
-                }
-            )
-        bundle_reports.append(bundle_report)
-
-    known_node_ids = set(nodes_by_id)
-    actor_alias_map = build_actor_alias_map(nodes_by_id)
-    edges_by_key: dict[tuple[str, str, str], dict[str, Any]] = {}
-    actor_alias_edge_remaps = 0
-    for edge in raw_edges:
-        edge, remapped = remap_actor_aliases(edge, actor_alias_map)
-        if remapped:
-            actor_alias_edge_remaps += 1
-        if edge["source_id"] not in known_node_ids:
-            skipped_edge_reasons["missing_source"] += 1
-            skipped_edge_targets[edge["source_id"]] += 1
-            continue
-        if edge["target_id"] not in known_node_ids:
-            skipped_edge_reasons[f"missing_target:{edge['target_node_type'] or 'unknown'}"] += 1
-            skipped_edge_targets[edge["target_id"]] += 1
-            continue
-        edge_key = (edge["source_id"], edge["relationship_type"], edge["target_id"])
-        existing = edges_by_key.get(edge_key)
-        if existing is None:
-            edges_by_key[edge_key] = edge
-        else:
-            duplicate_edge_count += 1
-            merged, conflicts = merge_edge(existing, edge)
-            edges_by_key[edge_key] = merged
-            if conflicts:
-                edge_conflicts.append(
-                    {
-                        "source_id": edge["source_id"],
-                        "relationship_type": edge["relationship_type"],
-                        "target_id": edge["target_id"],
-                        "fields": conflicts,
-                    }
-                )
-
-    nodes = sorted(
-        (finalize_node_for_output(node) for node in nodes_by_id.values()),
-        key=lambda item: (item["node_type"], item["id"]),
-    )
-    edges = sorted(
-        (finalize_edge_for_output(edge) for edge in edges_by_key.values()),
-        key=lambda item: (item["relationship_type"], item["source_id"], item["target_id"]),
-    )
-
-    report = {
-        "projection_id": manifest["projection_id"],
-        "generated_at": utc_now_iso(),
-        "manifest_path": str(manifest_path),
-        "output_dir": str(output_dir.relative_to(ROOT)),
-        "bundle_reports": bundle_reports,
-        "node_type_counts": dict(sorted(Counter(node["node_type"] for node in nodes).items())),
-        "edge_type_counts": dict(sorted(Counter(edge["relationship_type"] for edge in edges).items())),
-        "total_nodes": len(nodes),
-        "total_edges": len(edges),
-        "duplicate_node_merges": duplicate_node_count,
-        "duplicate_edge_merges": duplicate_edge_count,
-        "actor_alias_edge_remaps": actor_alias_edge_remaps,
-        "node_conflicts": node_conflicts,
-        "edge_conflicts": edge_conflicts,
-        "skipped_edge_reasons": dict(sorted(skipped_edge_reasons.items())),
-        "top_skipped_edge_targets": skipped_edge_targets.most_common(25),
-    }
-
-    write_jsonl(output_dir / "nodes.jsonl", nodes)
-    write_jsonl(output_dir / "edges.jsonl", edges)
-    write_json(output_dir / "report.json", report)
-    write_json(output_dir / "manifest.snapshot.json", manifest)
 
 
 if __name__ == "__main__":
