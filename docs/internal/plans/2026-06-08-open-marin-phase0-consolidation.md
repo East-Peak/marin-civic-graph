@@ -262,6 +262,10 @@ def test_settled_labels_ok():
 > - **JSONL-vs-baseline must canonicalize loader behavior** (edge dedup by triple, invalid-edge filter, `payload_json` strip, `display_label`/`promotion_state` promotion) before comparing — add `canonicalize_loader_output()`, or require the scratch round-trip.
 > - **Golden coverage** must span every materialization role (legacy bundle, direct nodes.jsonl, direct edges.jsonl, metadata-ignore, dup-edge collapse, missing-endpoint), not just a small legacy slice.
 > - **Metric parity** must port through the repo's edge vocabulary (live v2 has both `AT_MEETING` and direct-extractor `DECIDED_AT`), and the query pack should return `{ok, failures, metrics}` with `verify()` failing on `ok=False`.
+>
+> **Milestone B is SPLIT into B-core + B-verify** (B was too big for one loop):
+> - **B-core (B1–B3) — READY TO RUN** (`workspace/goals/2026-06-08-open-marin-phase0-B-core-projector.md`, 2 Codex rounds): build `build_graph_v2.py` reproducing the **`import-manifest.yaml` projection only** (the legacy-Actor/Institution path — `6267→6258` nodes / `21262→21240` edges; the other ~108K live nodes come from direct/pre-projected loads that bypass this path and are out of scope). Pure file projection, **no DB**, proven by a dedicated **projection comparator** (full field set) against a golden captured from the current pipeline. Mandatory two-pass id-map + reproduce build_graph_projection's pre-migration phases (`relationship_passthrough`, alias remaps, dedup, ordering) + shallow `payload_json`.
+> - **B-verify (B4–B5) — after B-core lands:** port the query pack to v2 (metric parity via edge vocabulary; `{ok,failures,metrics}`); load `build_graph_v2` output into a **local scratch Neo4j** (loader now db-scoped, `942dfa8`), export, and prove equivalence over the **projection subset** of the frozen baseline (filter to rebuilt ids; exclude `_SyncState`/derived + null-id; rework `verify_phase0_consolidation` for subset comparison). The loader safety fix already shipped.
 
 ### Task B1: Capture golden fixtures from the CURRENT pipeline
 
