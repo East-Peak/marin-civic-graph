@@ -38,11 +38,20 @@ import argparse
 import json
 import sys
 from collections import defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 # scripts/ is not a package; ensure sibling modules are importable.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+# Identity stamped into the migration report so downstream readers (the query
+# pack) can attribute a projection without re-deriving it.
+PROJECTION_ID = "graph-v2-native"
+
+
+def _utc_now_iso() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 from graph_projection_lib import DEFAULT_MANIFEST_PATH, ROOT, load_json, read_manifest
 
@@ -223,6 +232,10 @@ def run(manifest_path, output_dir) -> dict:
     manifest = read_manifest(Path(manifest_path).resolve())
     legacy_nodes, legacy_edges = project_legacy(manifest)
     v2_nodes, v2_edges, id_map, report = migrate(legacy_nodes, legacy_edges)
+
+    # Identity for downstream readers (query pack reads migration-report.json).
+    report["projection_id"] = PROJECTION_ID
+    report["generated_at"] = _utc_now_iso()
 
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)

@@ -75,6 +75,18 @@ def test_build_graph_v2_mini_emits_no_legacy_labels(work_dir):
     assert_no_legacy_labels(load_jsonl(candidate / "nodes.jsonl"))
 
 
+def test_build_graph_v2_report_emits_projection_metadata(work_dir):
+    # The query pack reads projection identity from migration-report.json, so the
+    # v2 report must carry projection_id + generated_at (C3 dependency).
+    candidate = work_dir / "v2-candidate"
+    report = build_graph_v2.run(FIXTURES / "mini-manifest.json", candidate)
+    assert report.get("projection_id"), "report must carry a projection_id"
+    assert report.get("generated_at"), "report must carry generated_at"
+    persisted = json.loads((candidate / "migration-report.json").read_text())
+    assert persisted["projection_id"] == report["projection_id"]
+    assert persisted["generated_at"] == report["generated_at"]
+
+
 def test_build_graph_v2_mini_report_shape(work_dir):
     candidate = work_dir / "v2-candidate"
     report = build_graph_v2.run(FIXTURES / "mini-manifest.json", candidate)

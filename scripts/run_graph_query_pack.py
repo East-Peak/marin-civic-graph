@@ -1,4 +1,17 @@
 #!/usr/bin/env python3
+"""run_graph_query_pack.py — the fixed five-query breadth-sprint pack, ported to
+the settled v2 (Person/Organization) schema.
+
+`run_query_pack(projection_dir, schema="v2")` is the importable entrypoint. It
+runs over build_graph_v2's output (data/projected/phase0-bcore/candidate-v2/),
+NOT the retired graph-v1 Actor/Institution projection. C-land is v2-only, so an
+explicit `projection_dir` is REQUIRED — there is no graph-v1 default. Projection
+identity is read from `migration-report.json` (the v2 report), with a graceful
+fallback. IDs and edges are ported to the settled schema; the one place where the
+live graph carries two names for the same edge (Decision → Meeting is `AT_MEETING`
+in the candidate projection and additionally `DECIDED_AT` in the live AuraDB) is
+resolved through `edge_vocabulary` rather than hard-coded.
+"""
 
 from __future__ import annotations
 
@@ -9,22 +22,36 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from graph_projection_lib import DEFAULT_MANIFEST_PATH, ROOT, read_jsonl, read_manifest, write_json
+from edge_vocabulary import spec_to_live
+from graph_projection_lib import ROOT, read_jsonl, write_json
+
+# --- Settled-schema (v2) identities the pack pins on ------------------------
+# Migrated from graph-v1: actor-kate-colin -> person-kate-colin,
+# inst-san-rafael-city-council -> org-san-rafael-city-council.
+KATE_COLIN_ID = "person-kate-colin"
+SAN_RAFAEL_COUNCIL_ID = "org-san-rafael-city-council"
+
+# Decision -> Meeting: AT_MEETING in the candidate projection; the live AuraDB
+# also carries the redundant DECIDED_AT. edge_vocabulary is the source of truth.
+DECISION_MEETING_RELS = tuple(spec_to_live("AT_MEETING"))  # ("AT_MEETING", "DECIDED_AT")
+
+# The form460-schedules OCR bundle is the noisy campaign source; Q4 must never
+# import its actors as settled Person/Organization identities.
+FORM460_BUNDLE = "san-rafael-city-campaign-form460-schedules-01__bundle-01"
+
+# Default v2 projection for the CLI (build_graph_v2's output).
+DEFAULT_PROJECTION_DIR = ROOT / "data" / "projected" / "phase0-bcore" / "candidate-v2"
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run the fixed five-query breadth-sprint pack against the projected graph-v1 payload."
-    )
-    parser.add_argument(
-        "--manifest",
-        default=str(DEFAULT_MANIFEST_PATH),
-        help="Path to the JSON-compatible YAML import manifest.",
+        description="Run the fixed five-query breadth-sprint pack against a v2 "
+        "(Person/Organization) projection produced by build_graph_v2."
     )
     parser.add_argument(
         "--projection-dir",
-        default=None,
-        help="Override projection directory. Defaults to manifest output_dir.",
+        default=str(DEFAULT_PROJECTION_DIR),
+        help="v2 projection directory (default: build_graph_v2's candidate-v2/).",
     )
     parser.add_argument(
         "--output-json",
@@ -128,7 +155,7 @@ def has_outgoing_edge(
 
 
 def count_votes(incoming: dict[str, list[dict[str, Any]]], decision_id: str) -> int:
-    return sum(1 for edge in incoming.get(decision_id, []) if edge["relationship_type"] == "CAST_VOTE_ON")
+    return sum(1 for edge in incoming.get(decision_id, []) if edge["relationship_type"] == "CAST_VOTE")
 
 
 def evidence_record_ids(outgoing: dict[str, list[dict[str, Any]]], source_id: str) -> list[str]:
@@ -146,14 +173,15 @@ def meeting_for_decision(
     outgoing: dict[str, list[dict[str, Any]]],
     node_by_id: dict[str, dict[str, Any]],
 ) -> dict[str, Any] | None:
-    meetings = edge_targets(
-        outgoing,
-        node_by_id,
-        decision_id,
-        relationship_type="DECIDED_AT_MEETING",
-        target_node_type="Meeting",
-    )
-    return meetings[0] if meetings else None
+    # Decision -> Meeting edge is named AT_MEETING here (and DECIDED_AT in the
+    # live AuraDB); both resolve through edge_vocabulary's AT_MEETING entry.
+    for edge in outgoing.get(decision_id, []):
+        if edge["relationship_type"] not in DECISION_MEETING_RELS:
+            continue
+        target = node_by_id.get(edge["target_id"])
+        if target is not None and target["node_type"] == "Meeting":
+            return target
+    return None
 
 
 def is_san_rafael_council_decision(
@@ -163,7 +191,7 @@ def is_san_rafael_council_decision(
 ) -> bool:
     if node["node_type"] != "Decision":
         return False
-    if not has_outgoing_edge(outgoing, node["id"], "DECIDED_BY_INSTITUTION", "inst-san-rafael-city-council"):
+    if not has_outgoing_edge(outgoing, node["id"], "DECIDED_BY", SAN_RAFAEL_COUNCIL_ID):
         return False
     meeting = meeting_for_decision(node["id"], outgoing, node_by_id)
     if not meeting:
@@ -183,7 +211,7 @@ def run_q1(
     outgoing: dict[str, list[dict[str, Any]]],
     incoming: dict[str, list[dict[str, Any]]],
 ) -> dict[str, Any]:
-    actor_id = "actor-kate-colin"
+    actor_id = KATE_COLIN_ID
     actor = node_by_id[actor_id]
 
     seat_services = sorted(
@@ -191,7 +219,7 @@ def run_q1(
             incoming,
             node_by_id,
             actor_id,
-            relationship_type="HELD_BY_ACTOR",
+            relationship_type="HELD_BY",
             source_node_type="SeatService",
         ),
         key=lambda node: node["id"],
@@ -201,7 +229,7 @@ def run_q1(
             incoming,
             node_by_id,
             actor_id,
-            relationship_type="CONTROLLED_BY_ACTOR",
+            relationship_type="CONTROLLED_BY",
             source_node_type="Committee",
         ),
         key=lambda node: node["id"],
@@ -210,7 +238,7 @@ def run_q1(
     filing_ids = set()
     for filing in edge_sources(incoming, node_by_id, actor_id, relationship_type="OFFICIAL_FILER", source_node_type="Filing"):
         filing_ids.add(filing["id"])
-    for filing in edge_sources(incoming, node_by_id, actor_id, relationship_type="FILED_BY_ACTOR", source_node_type="Filing"):
+    for filing in edge_sources(incoming, node_by_id, actor_id, relationship_type="FILED_BY", source_node_type="Filing"):
         filing_ids.add(filing["id"])
     for committee in committees:
         for filing in edge_sources(incoming, node_by_id, committee["id"], relationship_type="FILED_BY_COMMITTEE", source_node_type="Filing"):
@@ -226,7 +254,7 @@ def run_q1(
         (
             node_by_id[edge["target_id"]]
             for edge in outgoing.get(actor_id, [])
-            if edge["relationship_type"] == "CAST_VOTE_ON"
+            if edge["relationship_type"] == "CAST_VOTE"
             and edge["target_id"] in node_by_id
             and is_san_rafael_council_decision(node_by_id[edge["target_id"]], outgoing, node_by_id)
         ),
@@ -293,7 +321,7 @@ def run_q2(
             for node in nodes
             if node["node_type"] == "SeatService"
             and node["properties"].get("status") == "current"
-            and node["properties"].get("institution_id") == "inst-san-rafael-city-council"
+            and node["properties"].get("institution_id") == SAN_RAFAEL_COUNCIL_ID
         ),
         key=lambda node: node["id"],
     )
@@ -412,6 +440,24 @@ def run_q3(
     return result
 
 
+def noisy_campaign_actor_ids(nodes: list[dict[str, Any]]) -> list[str]:
+    """Q4's noisy-actor guard, recast for the settled v2 schema.
+
+    In graph-v1 this keyed on ``node_type == "Actor"`` — a label that no longer
+    exists post-v2, so the check was silently always-false. The invariant is
+    unchanged: the noisy form460-schedules OCR bundle must NOT introduce settled
+    Person/Organization identities into the graph. Returns the offending
+    settled-actor ids (sorted), keyed on actor TYPE + bundle origin, not on the
+    retired ``Actor`` label.
+    """
+    return sorted(
+        node["id"]
+        for node in nodes
+        if node["node_type"] in ("Person", "Organization")
+        and FORM460_BUNDLE in node.get("source_bundle_ids", [])
+    )
+
+
 def run_q4(
     nodes: list[dict[str, Any]],
     node_by_id: dict[str, dict[str, Any]],
@@ -513,12 +559,7 @@ def run_q4(
             cycle_rollup[year]["qa_money_flow_count"] += 1
 
     recurrence_years = sorted(year for year, row in cycle_rollup.items() if row["qa_money_flow_count"] > 0)
-    noisy_actor_nodes = [
-        node["id"]
-        for node in nodes
-        if node["node_type"] == "Actor"
-        and "san-rafael-city-campaign-form460-schedules-01__bundle-01" in node["source_bundle_ids"]
-    ]
+    noisy_actor_nodes = noisy_campaign_actor_ids(nodes)
 
     notes = []
     if len(recurrence_years) >= 2 and not noisy_actor_nodes:
@@ -760,14 +801,71 @@ def build_markdown(report: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def read_projection_metadata(projection_dir) -> dict[str, Any]:
+    """Read projection identity from migration-report.json (the v2 report), NOT
+    the retired graph-v1 report.json. Falls back gracefully if the report
+    predates build_graph_v2's projection_id/generated_at fields, so an older
+    projection never crashes the pack."""
+    path = Path(projection_dir) / "migration-report.json"
+    data = json.loads(path.read_text()) if path.exists() else {}
+    return {
+        "projection_id": data.get("projection_id") or "graph-v2-native",
+        "generated_at": data.get("generated_at") or "unknown",
+        "node_type_counts": data.get("nodes_by_type", {}),
+    }
+
+
+def run_query_pack(projection_dir=None, schema: str = "v2") -> dict[str, Any]:
+    """Run the five-query breadth-sprint pack over a v2 projection.
+
+    C-land is v2-only: there is no graph-v1 default, so `projection_dir` is
+    REQUIRED. Returns ``{ok, failures, metrics, ...}`` where ``ok`` is True iff
+    every core query (Q1–Q5) passes, ``failures`` lists the ids that didn't, and
+    ``metrics`` maps each query id to its metrics block.
+    """
+    if schema != "v2":
+        raise ValueError(
+            f"run_query_pack supports only schema='v2' in Phase 0 C-land; got {schema!r}"
+        )
+    if projection_dir is None:
+        raise ValueError(
+            "run_query_pack(schema='v2') requires an explicit projection_dir "
+            "(there is no graph-v1 default)"
+        )
+    projection_dir = Path(projection_dir).resolve()
+    nodes, edges, node_by_id, outgoing, incoming = build_indexes(projection_dir)
+    meta = read_projection_metadata(projection_dir)
+
+    queries = [
+        run_q1(node_by_id, outgoing, incoming),
+        run_q2(nodes, node_by_id, outgoing, incoming),
+        run_q3(nodes, node_by_id, outgoing, incoming),
+        run_q4(nodes, node_by_id, outgoing, incoming),
+        run_q5(nodes, node_by_id),
+    ]
+    supplemental_queries = [run_l1(nodes, node_by_id, outgoing)]
+    failures = [query["id"] for query in queries if not query["pass"]]
+    return {
+        "ok": not failures,
+        "failures": failures,
+        "metrics": {query["id"]: query["metrics"] for query in queries},
+        "queries": queries,
+        "supplemental_queries": supplemental_queries,
+        "schema": schema,
+        "projection_id": meta["projection_id"],
+        "projection_generated_at": meta["generated_at"],
+        "projection_counts": {
+            "nodes": len(nodes),
+            "edges": len(edges),
+            "node_type_counts": meta["node_type_counts"],
+        },
+    }
+
+
 def main() -> None:
+    """Thin CLI wrapper over run_query_pack: write the JSON + Markdown report."""
     args = parse_args()
-    manifest = read_manifest(Path(args.manifest).resolve())
-    projection_dir = (
-        (ROOT / manifest["output_dir"]).resolve()
-        if args.projection_dir is None
-        else Path(args.projection_dir).resolve()
-    )
+    projection_dir = Path(args.projection_dir).resolve()
     output_json = (
         projection_dir / "query-pack-report.json"
         if args.output_json is None
@@ -779,22 +877,10 @@ def main() -> None:
         else Path(args.output_md).resolve()
     )
 
-    nodes, edges, node_by_id, outgoing, incoming = build_indexes(projection_dir)
-    projection_report = json.loads((projection_dir / "report.json").read_text())
-
-    queries = [
-        run_q1(node_by_id, outgoing, incoming),
-        run_q2(nodes, node_by_id, outgoing, incoming),
-        run_q3(nodes, node_by_id, outgoing, incoming),
-        run_q4(nodes, node_by_id, outgoing, incoming),
-        run_q5(nodes, node_by_id),
-    ]
-    supplemental_queries = [
-        run_l1(nodes, node_by_id, outgoing),
-    ]
-
-    passed = sum(1 for query in queries if query["pass"])
-    failed = [query["id"] for query in queries if not query["pass"]]
+    result = run_query_pack(projection_dir, schema="v2")
+    queries = result["queries"]
+    failed = result["failures"]
+    passed = len(queries) - len(failed)
     if failed == ["Q4"]:
         next_recommendation = (
             "Continue the San Rafael city-office campaign filing backbone, but focus specifically on multi-cycle QA-backed "
@@ -807,22 +893,19 @@ def main() -> None:
 
     report = {
         "generated_at": iso_now(),
-        "engine": "projection_jsonl",
-        "projection_id": projection_report["projection_id"],
-        "projection_report_generated_at": projection_report["generated_at"],
-        "projection_counts": {
-            "nodes": len(nodes),
-            "edges": len(edges),
-            "node_type_counts": projection_report.get("node_type_counts", {}),
-        },
+        "engine": "projection_jsonl_v2",
+        "schema": result["schema"],
+        "projection_id": result["projection_id"],
+        "projection_report_generated_at": result["projection_generated_at"],
+        "projection_counts": result["projection_counts"],
         "summary": {
             "total": len(queries),
             "passed": passed,
-            "failed": len(queries) - passed,
+            "failed": len(failed),
             "failed_query_ids": failed,
         },
         "queries": queries,
-        "supplemental_queries": supplemental_queries,
+        "supplemental_queries": result["supplemental_queries"],
         "next_recommendation": next_recommendation,
     }
 
@@ -833,6 +916,7 @@ def main() -> None:
             {
                 "output_json": str(output_json),
                 "output_md": str(output_md),
+                "ok": result["ok"],
                 "passed": passed,
                 "failed_query_ids": failed,
                 "next_recommendation": next_recommendation,
