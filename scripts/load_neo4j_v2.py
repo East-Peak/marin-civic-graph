@@ -154,16 +154,18 @@ def validate_and_filter_edges(
 # ---------------------------------------------------------------------------
 
 
-def apply_schema(driver, schema_path: Path) -> None:
+def apply_schema(driver, schema_path: Path, database=None) -> None:
     """Read and apply Cypher schema file (constraints + indexes).
 
     Splits on semicolons, skips comment-only or empty segments, and executes
-    each statement in its own transaction.
+    each statement in its own transaction. Writes to `database` (scoped — a
+    bare session would silently hit the default DB; see the scratch-DB safety
+    requirement).
     """
     schema_text = schema_path.read_text(encoding="utf-8")
     statements = schema_text.split(";")
 
-    with driver.session() as session:
+    with driver.session(database=database) as session:
         for raw in statements:
             # Strip whitespace and skip empty or comment-only blocks
             lines = [
@@ -178,13 +180,14 @@ def apply_schema(driver, schema_path: Path) -> None:
             session.run(stmt)
 
 
-def load_nodes(driver, nodes: list[dict], batch_size: int = 500) -> Counter:
+def load_nodes(driver, nodes: list[dict], batch_size: int = 500, database=None) -> Counter:
     """Group nodes by label tuple, load in batches using UNWIND.
 
     Each batch row carries:
         id, props (node properties minus payload_json), display_label, promotion_state
 
-    Returns a Counter of written nodes keyed by node_type.
+    Returns a Counter of written nodes keyed by node_type. Writes to `database`
+    (scoped — never a bare session, which would hit the default/live DB).
     """
     # Group by frozenset-ordered tuple of labels for deterministic grouping
     by_labels: dict[tuple, list[dict]] = {}
@@ -194,7 +197,7 @@ def load_nodes(driver, nodes: list[dict], batch_size: int = 500) -> Counter:
 
     counts: Counter = Counter()
 
-    with driver.session() as session:
+    with driver.session(database=database) as session:
         for labels, group in by_labels.items():
             node_type = group[0]["node_type"]
             query, _ = build_node_batch_query(node_type, list(labels))
@@ -219,13 +222,14 @@ def load_nodes(driver, nodes: list[dict], batch_size: int = 500) -> Counter:
     return counts
 
 
-def load_edges(driver, edges: list[dict], batch_size: int = 500) -> Counter:
+def load_edges(driver, edges: list[dict], batch_size: int = 500, database=None) -> Counter:
     """Group edges by relationship_type, load in batches using UNWIND.
 
     Each batch row carries:
         source_id, target_id, props (edge properties)
 
-    Returns a Counter of written edges keyed by relationship_type.
+    Returns a Counter of written edges keyed by relationship_type. Writes to
+    `database` (scoped — never a bare session, which would hit the default/live DB).
     """
     by_rel: dict[str, list[dict]] = {}
     for edge in edges:
@@ -234,7 +238,7 @@ def load_edges(driver, edges: list[dict], batch_size: int = 500) -> Counter:
 
     counts: Counter = Counter()
 
-    with driver.session() as session:
+    with driver.session(database=database) as session:
         for rel_type, group in by_rel.items():
             query = build_edge_batch_query(rel_type)
 
@@ -356,7 +360,7 @@ def main() -> None:
 
         if not args.skip_schema:
             print(f"Applying schema from: {schema_path}")
-            apply_schema(driver, schema_path)
+            apply_schema(driver, schema_path, database=args.database)
             print("  Schema applied.")
 
         print(f"Reading nodes from: {nodes_path}")
@@ -381,14 +385,14 @@ def main() -> None:
             load_failed = False
 
         print(f"Loading nodes into Neo4j (batch_size={args.batch_size}) ...")
-        node_counts = load_nodes(driver, nodes, batch_size=args.batch_size)
+        node_counts = load_nodes(driver, nodes, batch_size=args.batch_size, database=args.database)
         total_nodes = sum(node_counts.values())
         print(f"  {total_nodes:,} nodes written.")
         for ntype, count in sorted(node_counts.items()):
             print(f"    {ntype:30s} {count:6,d}")
 
         print(f"Loading edges into Neo4j (batch_size={args.batch_size}) ...")
-        edge_counts = load_edges(driver, clean_edges, batch_size=args.batch_size)
+        edge_counts = load_edges(driver, clean_edges, batch_size=args.batch_size, database=args.database)
         total_edges = sum(edge_counts.values())
         print(f"  {total_edges:,} edges written.")
         for rel, count in sorted(edge_counts.items(), key=lambda x: -x[1])[:20]:
