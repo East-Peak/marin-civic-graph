@@ -16,8 +16,8 @@
 
 - **TDD, always:** failing test → run it red → minimal code → run it green → commit. Never implementation before a red test.
 - **Git discipline:** `git branch --show-current` must be `main` immediately before every commit; stage only listed paths (the tree has untracked ambient `data/` — **never `git add -A`**); author must be `stuart@eastpeak.cc`; commit messages end with the Co-Authored-By trailer.
-- **Fixtures live at** `scripts/tests/fixtures/phase0/`. Tests live at `scripts/tests/`.
-- **Run tests from repo root:** `python -m pytest scripts/tests/<file> -v`.
+- **Tests live at `tests/`** (the repo's existing Python test tree — verified; do NOT use `tests/`). **Fixtures at** `tests/fixtures/phase0/`.
+- **Run tests from repo root:** `python -m pytest tests/<file> -v`; "full suite green" means `python -m pytest tests -v`.
 
 ---
 
@@ -46,12 +46,12 @@ Nothing in this milestone changes graph-building behavior. It builds the instrum
 
 **Files:**
 - Create: `scripts/export_graph_baseline.py`
-- Test: `scripts/tests/test_export_graph_baseline.py`
+- Test: `tests/test_export_graph_baseline.py`
 
 - [ ] **Step 1: Write the failing test** (pure helpers — no live DB)
 
 ```python
-# scripts/tests/test_export_graph_baseline.py
+# tests/test_export_graph_baseline.py
 import json, hashlib
 from scripts.export_graph_baseline import (
     assert_live_graph_floors, canonical_node_record, canonical_rel_record, export_sha256,
@@ -84,7 +84,7 @@ def test_export_sha256_is_deterministic():
 
 - [ ] **Step 2: Run red**
 
-Run: `python -m pytest scripts/tests/test_export_graph_baseline.py -v`
+Run: `python -m pytest tests/test_export_graph_baseline.py -v`
 Expected: FAIL (module not found).
 
 - [ ] **Step 3: Implement the helpers + a `main()` that does the live preflight**
@@ -130,19 +130,21 @@ def aura_host(uri: str) -> str:
 # write a sidecar .sha256 + a manifest {host, counts, sha256}. Refuse to overwrite an existing baseline.
 ```
 
-- [ ] **Step 4: Run green** — `python -m pytest scripts/tests/test_export_graph_baseline.py -v` → PASS.
-- [ ] **Step 5: Commit** — `git add scripts/export_graph_baseline.py scripts/tests/test_export_graph_baseline.py && git commit -m "feat(phase0): frozen baseline exporter with live-graph preflight floors"`
+- [ ] **Step 4: Run green** — `python -m pytest tests/test_export_graph_baseline.py -v` → PASS.
+- [ ] **Step 5: Commit** — `git add scripts/export_graph_baseline.py tests/test_export_graph_baseline.py && git commit -m "feat(phase0): frozen baseline exporter with live-graph preflight floors"`
 
 ### Task A2: Materialization manifest + validator
 
+> **PREREQUISITE BLOCKER (Stuart + Tammy decision):** A large share of the bundles that materialize the live ~112K graph are **untracked ambient `data/` work** today (`data/normalized/form700/*`, `marin-county-permits/*`, `marin-county-campaign-finance-*`, and most jurisdiction meeting bundles have 0 git-tracked files). The manifest's reproducibility guarantee requires its inputs to be **git-tracked**. Before A2 can produce a manifest that materializes the full graph, the canonical materialization source set must be **selected and committed** (coordinating with Tammy, since this is mid-batch ambient work — never `git add -A` it blindly). Until then, A2 must `BLOCKED: untracked materialization inputs` rather than build a partial manifest.
+
 **Files:**
 - Create: `registry/v2-materialization-manifest.json`, `scripts/materialization_manifest.py`
-- Test: `scripts/tests/test_materialization_manifest.py`
+- Test: `tests/test_materialization_manifest.py`
 
 - [ ] **Step 1: Failing test**
 
 ```python
-# scripts/tests/test_materialization_manifest.py
+# tests/test_materialization_manifest.py
 import pytest
 from scripts.materialization_manifest import load_manifest, validate_manifest
 
@@ -172,12 +174,12 @@ def test_accepts_tracked_input_with_matching_hash(tmp_path, monkeypatch):
 
 **Files:**
 - Create: `scripts/graph_compare.py`
-- Test: `scripts/tests/test_graph_compare.py`
+- Test: `tests/test_graph_compare.py`
 
 - [ ] **Step 1: Failing test** (the mutation tests are the anti-false-completion guarantee)
 
 ```python
-# scripts/tests/test_graph_compare.py
+# tests/test_graph_compare.py
 from scripts.graph_compare import compare_graphs, VOLATILE_PROPS
 
 BASE_NODES = [{"id": "person-a", "labels": ["Person"], "props": {"name": "A", "ingested_at": "t1"}}]
@@ -215,12 +217,12 @@ def test_denylist_is_small_and_fixed():
 
 **Files:**
 - Create: `scripts/verify_phase0_consolidation.py`
-- Test: `scripts/tests/test_verify_phase0_consolidation.py`
+- Test: `tests/test_verify_phase0_consolidation.py`
 
 - [ ] **Step 1: Failing test** — assert the gate fails when legacy labels are present and passes on a clean equivalent pair.
 
 ```python
-# scripts/tests/test_verify_phase0_consolidation.py
+# tests/test_verify_phase0_consolidation.py
 from scripts.verify_phase0_consolidation import assert_no_legacy_labels
 import pytest
 
@@ -244,8 +246,8 @@ def test_settled_labels_ok():
 ### Task B1: Capture golden fixtures from the CURRENT pipeline
 
 **Files:**
-- Create: `scripts/tests/fixtures/phase0/golden-v2-nodes.jsonl`, `golden-v2-edges.jsonl`, `golden-input-bundles/` (a small but representative slice covering: a person Actor, an org-like Actor of each `actor_type`, an Institution (court + government), an EconomicInterestDisclosure, a CaseParticipation, and pass-through types)
-- Test: `scripts/tests/test_golden_fixtures_present.py`
+- Create: `tests/fixtures/phase0/golden-v2-nodes.jsonl`, `golden-v2-edges.jsonl`, `golden-input-bundles/` (a small but representative slice covering: a person Actor, an org-like Actor of each `actor_type`, an Institution (court + government), an EconomicInterestDisclosure, a CaseParticipation, and pass-through types)
+- Test: `tests/test_golden_fixtures_present.py`
 
 - [ ] **Step 1: Failing test** — assert the golden files exist and are non-empty and contain only settled labels.
 - [ ] **Step 2: Run red.**
@@ -257,12 +259,12 @@ def test_settled_labels_ok():
 
 **Files:**
 - Create: `scripts/graph_v2_transforms.py`
-- Test: `scripts/tests/test_graph_v2_transforms.py`
+- Test: `tests/test_graph_v2_transforms.py`
 
 - [ ] **Step 1: Failing test** — assert the ported transforms reproduce `migration_mapping.py` on representative nodes/edges (import both; assert equality), e.g.:
 
 ```python
-# scripts/tests/test_graph_v2_transforms.py
+# tests/test_graph_v2_transforms.py
 from scripts import migration_mapping as old
 from scripts.graph_v2_transforms import classify_actor, rename_rel, cp_to_party_to
 
@@ -290,7 +292,7 @@ def test_rel_rename_matches_legacy_map():
 
 **Files:**
 - Create: `scripts/build_graph_v2.py`
-- Test: `scripts/tests/test_build_graph_v2.py`
+- Test: `tests/test_build_graph_v2.py`
 
 - [ ] **Step 1: Failing test** — run `build_graph_v2` on the golden input bundles and assert output equals `golden-v2-nodes.jsonl` / `golden-v2-edges.jsonl` exactly (over canonical facts via `compare_graphs`).
 - [ ] **Step 2: Run red.**
@@ -302,7 +304,7 @@ def test_rel_rename_matches_legacy_map():
 
 **Files:**
 - Modify: `scripts/run_graph_query_pack.py`
-- Test: `scripts/tests/test_query_pack_v2_parity.py`
+- Test: `tests/test_query_pack_v2_parity.py`
 
 - [ ] **Step 1: Failing test** — freeze the current v1 query-pack metrics on the fixture slice (a committed `golden-querypack-metrics.json`), then assert the v2-ported pack produces identical metric values when run on the v2 projection of the same slice.
 - [ ] **Step 2: Run red.**
@@ -314,7 +316,7 @@ def test_rel_rename_matches_legacy_map():
 
 **Files:**
 - Modify: `scripts/verify_phase0_consolidation.py` (un-stub the query-pack call)
-- Test: `scripts/tests/test_verify_phase0_consolidation.py` (extend)
+- Test: `tests/test_verify_phase0_consolidation.py` (extend)
 
 - [ ] **Step 1:** Extend the verifier test to assert it invokes `compare_graphs` + the v2 query pack + floors and fails if any fails.
 - [ ] **Step 2: Run red.**
@@ -328,19 +330,19 @@ def test_rel_rename_matches_legacy_map():
 
 ### Task C1: `refresh_openmarin.py --local-only`
 
-**Files:** Modify: `scripts/refresh_openmarin.py` · Test: `scripts/tests/test_refresh_local_only.py`
+**Files:** Modify: `scripts/refresh_openmarin.py` · Test: `tests/test_refresh_local_only.py`
 
 - [ ] **Step 1: Failing test** — assert that with `--local-only`, the planned step list excludes the embedding/UMAP/cluster/`name_clusters`/`publish_constellation` stages and includes only local rebuild + search props + catalog + sync state.
 - [ ] **Step 2: Run red.** **Step 3:** Add a `--local-only` flag that filters `PYTHON_STEPS` to the non-egress subset. **Step 4: Run green.** **Step 5: Commit** — `feat(phase0): refresh_openmarin --local-only (no external egress stages)`
 
 ### Task C2: Retire the legacy path (after goldens protect its semantics)
 
-**Files:** Delete: `scripts/build_graph_projection.py`, `scripts/graph_projection_lib.py` (verify no non-v1 importers first), `scripts/migrate_graph_v2.py`, `scripts/migration_mapping.py`, and their tests · Test: `scripts/tests/test_no_legacy_pipeline_refs.py`
+**Files:** Delete: `scripts/build_graph_projection.py`, `scripts/graph_projection_lib.py` (verify no non-v1 importers first), `scripts/migrate_graph_v2.py`, `scripts/migration_mapping.py`, and their tests · Test: `tests/test_no_legacy_pipeline_refs.py`
 
 - [ ] **Step 1: Failing test**
 
 ```python
-# scripts/tests/test_no_legacy_pipeline_refs.py
+# tests/test_no_legacy_pipeline_refs.py
 import subprocess
 def test_no_live_importers_of_legacy_pipeline():
     # git grep exits 1 on no-match: treat 1 as success, >1 as error
@@ -356,14 +358,14 @@ def test_no_live_importers_of_legacy_pipeline():
 
 ### Task C3: Reconcile schema with `canonical_type.py`
 
-**Files:** Replace: `registry/neo4j-schema.cypher` · Test: `scripts/tests/test_schema_parity.py`
+**Files:** Replace: `registry/neo4j-schema.cypher` · Test: `tests/test_schema_parity.py`
 
 - [ ] **Step 1: Failing test** — parse `registry/neo4j-schema.cypher` constraint labels; assert the node-type set equals `canonical_type.ALL_TYPES` **plus** `{"ValidationCheck"}` (the documented QA carve-out) and the Organization subtype labels; assert no `Actor`/`Institution`/`EconomicInterestDisclosure`/`CaseParticipation`.
 - [ ] **Step 2: Run red.** **Step 3:** Regenerate `neo4j-schema.cypher` from `canonical_type.ALL_TYPES` + subtypes + `ValidationCheck`. **Step 4: Run green.** **Step 5: Commit** — `fix(phase0): schema matches canonical_type (+ ValidationCheck carve-out)`
 
 ### Task C4: Update operational/recovery docs
 
-**Files:** Modify: `README.md`, `docs/graph-query-pack.md`, `docs/internal/claude-collaboration-handoff.md`, `data/projected/README.md` (if present), `AGENTS.md`, `docs/internal/decision-log.md` · Test: `scripts/tests/test_docs_no_legacy_routing.py`
+**Files:** Modify: `README.md`, `docs/graph-query-pack.md`, `docs/internal/claude-collaboration-handoff.md`, `data/projected/README.md` (if present), `AGENTS.md`, `docs/internal/decision-log.md` · Test: `tests/test_docs_no_legacy_routing.py`
 
 - [ ] **Step 1: Failing test** — grep these specific operational docs for "build_graph_projection"/"migrate_graph_v2"/"graph-v1" *as a current instruction* (allow a clearly-marked Historical section) and assert none route a fresh agent to the retired path.
 - [ ] **Step 2: Run red.** **Step 3:** Update each doc to describe the v2-native rebuild (`build_graph_v2` from the manifest → `load_neo4j_v2` → `refresh_openmarin --local-only`); reconcile `AGENTS.md` branch policy + the single typing source (`canonical_type.py` + TS twin). **Step 4: Run green.** **Step 5: Commit** — `docs(phase0): route all recovery docs to the v2-native rebuild`
