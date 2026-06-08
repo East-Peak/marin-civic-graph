@@ -153,6 +153,14 @@ Start narrow:
 
 ## Data Layout
 
+> **Canonical projection (Phase 0, v2):** the graph is built by
+> [`scripts/build_graph_v2.py`](./scripts/build_graph_v2.py) into
+> `data/projected/phase0-bcore/candidate-v2/`, and queried by
+> `run_query_pack(projection_dir, schema="v2")` in
+> [`scripts/run_graph_query_pack.py`](./scripts/run_graph_query_pack.py). The
+> `graph-v1` artifact links below are the **retired** legacy Actor/Institution
+> projection (its `build_graph_projection` CLI and `migrate_graph_v2` are gone).
+
 - [Data README](./data/README.md)
 - [Raw Artifacts](./data/raw/README.md)
 - [Extracted Outputs](./data/extracted/README.md)
@@ -270,9 +278,10 @@ Start narrow:
 - [Boyd Legal Bundle Normalizer](./scripts/normalize_legal_precedent_boyd.py)
 - [Grants Pass Legal Bundle Normalizer](./scripts/normalize_legal_precedent_grants_pass.py)
 - [Graph Projection Helper](./scripts/graph_projection_lib.py)
-- [Graph Projection Builder](./scripts/build_graph_projection.py)
+- [Graph Projection Builder — v2-native, canonical](./scripts/build_graph_v2.py)
+- [Graph Projection Internal Helpers — reused by build_graph_v2; CLI retired](./scripts/build_graph_projection.py)
 - [Graph Projection Smoke Checks](./scripts/graph_smoke_checks.py)
-- [Graph Query Pack Runner](./scripts/run_graph_query_pack.py)
+- [Graph Query Pack Runner — run_query_pack over candidate-v2](./scripts/run_graph_query_pack.py)
 - [Graph View Builder](./scripts/build_graph_views.py)
 - [Local Graph View Server](./scripts/serve_graph_views.py)
 - [Neo4j V1 Loader](./scripts/load_neo4j_v1.py)

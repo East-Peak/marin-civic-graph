@@ -21,8 +21,8 @@ Marin Civic Graph is a primary-source civic-intelligence graph for Marin County,
 The graph is no longer just schema and sample baskets. It now has:
 
 - a live normalized data spine
-- a projection layer
-- a graph-v1 import manifest
+- a v2-native projection layer (`build_graph_v2.py` → `candidate-v2/`; the legacy `build_graph_projection` CLI and `migrate_graph_v2` are retired)
+- an import manifest
 - a local Neo4j load path
 - a fixed query pack
 - a projected JSON read-model layer
@@ -268,11 +268,12 @@ If Claude needs fast orientation, these are the highest-signal files:
 ### Graph materialization
 
 - [import-manifest.yaml](../registry/import-manifest.yaml)
-- [build_graph_projection.py](../scripts/build_graph_projection.py)
+- [build_graph_v2.py](../scripts/build_graph_v2.py) — **the** v2-native projector (manifest → Person/Organization in one pass). Output: `data/projected/phase0-bcore/candidate-v2/`.
+- [build_graph_projection.py](../scripts/build_graph_projection.py) — reused-internal helper library only; its projector CLI is retired (and `migrate_graph_v2` is deleted).
 - [graph_projection_lib.py](../scripts/graph_projection_lib.py)
-- [run_graph_query_pack.py](../scripts/run_graph_query_pack.py)
-- [report.json](../data/projected/graph-v1/report.json)
-- [query-pack-report.json](../data/projected/graph-v1/query-pack-report.json)
+- [run_graph_query_pack.py](../scripts/run_graph_query_pack.py) — `run_query_pack(projection_dir, schema="v2")` over candidate-v2.
+- [migration-report.json](../data/projected/phase0-bcore/candidate-v2/migration-report.json)
+- [query-pack-report.json](../data/projected/phase0-bcore/candidate-v2/query-pack-report.json)
 
 ### Read-model layer
 

@@ -8,7 +8,7 @@ It exists to answer one question: does each new breadth slice make the graph mor
 
 ## Why This Exists
 
-The repo now has enough normalized bundles and graph-v1 projection coverage that the main risk is fragmentation, not missing ontology.
+The repo now has enough normalized bundles and v2 projection coverage that the main risk is fragmentation, not missing ontology.
 
 The query pack is the gate that keeps the sprint honest:
 
@@ -22,22 +22,24 @@ Supplemental queries can be added for adjacent lanes, but they do not change the
 
 ## Current Engine
 
-The canonical runner is:
+The canonical runner is the importable `run_query_pack(projection_dir, schema="v2")`
+in [run_graph_query_pack.py](../scripts/run_graph_query_pack.py). It runs over the
+settled v2 (Person/Organization) projection emitted by
+[build_graph_v2.py](../scripts/build_graph_v2.py) — NOT the retired graph-v1
+Actor/Institution projection. C-land is v2-only, so an explicit `projection_dir`
+is required; the CLI defaults to build_graph_v2's output at
+`data/projected/phase0-bcore/candidate-v2/`:
 
-- [run_graph_query_pack.py](../scripts/run_graph_query_pack.py)
+- `candidate-v2/nodes.jsonl`, `candidate-v2/edges.jsonl`
+- projection identity: `candidate-v2/migration-report.json` (read in place of the
+  retired v1 `report.json`)
 
-It runs against the projected graph-v1 JSONL payload by default:
+Outputs (written next to the projection):
 
-- [report.json](../data/projected/graph-v1/report.json)
-- [nodes.jsonl](../data/projected/graph-v1/nodes.jsonl)
-- [edges.jsonl](../data/projected/graph-v1/edges.jsonl)
+- `query-pack-report.json`
+- `query-pack-report.md`
 
-Outputs:
-
-- [query-pack-report.json](../data/projected/graph-v1/query-pack-report.json)
-- [query-pack-report.md](../data/projected/graph-v1/query-pack-report.md)
-
-This keeps the checkpoint runnable even when a live Neo4j session is not configured in the shell.
+This keeps the checkpoint runnable from repo state even when a live Neo4j session is not configured in the shell.
 
 ## Fixed Queries
 
@@ -95,10 +97,19 @@ Pass condition:
 
 ## Use
 
-Run:
+Run (defaults to build_graph_v2's candidate-v2 projection):
 
 ```bash
-python3 scripts/run_graph_query_pack.py
+python3 scripts/build_graph_v2.py          # (re)build the v2 projection
+python3 scripts/run_graph_query_pack.py    # run the pack over candidate-v2
+```
+
+Or import it directly:
+
+```python
+from run_graph_query_pack import run_query_pack
+result = run_query_pack("data/projected/phase0-bcore/candidate-v2", schema="v2")
+# -> {"ok": ..., "failures": [...], "metrics": {...}, ...}
 ```
 
 The sprint rule is simple:

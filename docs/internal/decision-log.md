@@ -18,6 +18,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-06-08
 
+- **Phase 0 consolidation (Milestone C-land): `build_graph_v2` is THE projector; the legacy two-stage path is retired**
+  - The graph is now projected in one pass by [`scripts/build_graph_v2.py`](../../scripts/build_graph_v2.py) (manifest → settled `Person`/`Organization`), output at `data/projected/phase0-bcore/candidate-v2/`. A fresh agent should build and query the graph via this path only.
+  - Parity is locked by a **committed canonical-sha256 golden** (`tests/fixtures/phase0/golden-current.sha256`, 6258 nodes / 21240 edges): the regression gate asserts `build_graph_v2`'s canonical digest == the committed reference, with no legacy regeneration.
+  - `scripts/migrate_graph_v2.py` is **deleted**. `scripts/build_graph_projection.py` is now a reused-internal helper library only — its `Actor`/`Institution`-emitting projector CLI is **retired** (`main()` refuses to run and points at `build_graph_v2`). Its projection helpers are still imported by `build_graph_v2`; extracting them into a shared lib is a separate follow-up.
+  - The query pack is ported to v2: `run_query_pack(projection_dir, schema="v2") -> {ok, failures, metrics}` in [`scripts/run_graph_query_pack.py`](../../scripts/run_graph_query_pack.py) runs over `candidate-v2/`, requires an explicit `projection_dir`, reads identity from `migration-report.json`, ports edges via `edge_vocabulary`, and recasts Q4's noisy-actor guard off the gone `node_type=="Actor"`. Over `candidate-v2` it is `5/5` passing.
+  - `registry/neo4j-schema.cypher` is pinned by a parity test to `canonical_type.ALL_TYPES + {"ValidationCheck"}` (canonical types only, no per-Organization subtype constraints, no retired labels).
+
 - **The data layer moves to a private sibling repo; the code repo becomes a clean forkable framework**
   - The code repo is public and intended for fork-and-reuse by other municipalities; the data publication decision is separate and deferred. So the bulk civic data (incl. 49K geocoded residential permit records) does **not** belong in permanent public Git history.
   - Normalized bundles (the materialization source of truth) now live in **private `East-Peak/marin-civic-graph-data`**; the code repo's `data/normalized` is a gitignored symlink into it; `data/projected`/`data/baseline` are gitignored (regenerable).
