@@ -43,14 +43,34 @@ def assert_live_graph_floors(total_nodes, total_rels, per_label):
             raise ValueError(f"label {label} count {per_label.get(label,0)} below floor {floor}")
 
 
+def _jsonify(value):
+    """Coerce a Neo4j property value to a JSON-serializable form.
+
+    Live props include neo4j.time temporal types (DateTime/Date/Time) and
+    spatial Points which json.dumps cannot encode. Temporals expose
+    ``isoformat()``; everything else unknown falls back to ``str()``. Native
+    JSON types and (nested) lists/dicts pass through unchanged.
+    """
+    if value is None or isinstance(value, (bool, int, float, str)):
+        return value
+    if isinstance(value, (list, tuple)):
+        return [_jsonify(v) for v in value]
+    if isinstance(value, dict):
+        return {k: _jsonify(v) for k, v in value.items()}
+    iso = getattr(value, "isoformat", None)
+    if callable(iso):
+        return iso()
+    return str(value)
+
+
 def canonical_node_record(node):
     return {"id": node["id"], "labels": sorted(node["labels"]),
-            "props": dict(sorted(node["props"].items()))}
+            "props": {k: _jsonify(v) for k, v in sorted(node["props"].items())}}
 
 
 def canonical_rel_record(rel):
     return {"source": rel["source"], "target": rel["target"], "type": rel["type"],
-            "props": dict(sorted(rel["props"].items()))}
+            "props": {k: _jsonify(v) for k, v in sorted(rel["props"].items())}}
 
 
 def export_sha256(rows):

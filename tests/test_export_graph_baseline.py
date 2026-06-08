@@ -32,6 +32,35 @@ def test_canonical_node_record_is_stable_and_sorted():
     assert list(rec["props"].keys()) == ["a", "b"]   # sorted for stable hashing
     assert rec["id"] == "person-x"
 
+
+class _FakeDateTime:
+    """Stands in for neo4j.time.DateTime — not JSON-serializable, has isoformat()."""
+    def isoformat(self): return "2020-01-02T03:04:05"
+
+
+class _FakePoint:
+    def __str__(self): return "POINT(-122.5 37.9)"
+
+
+def test_canonical_node_record_coerces_neo4j_temporal_props_to_json():
+    # Live Aura props include neo4j.time.DateTime values; canonical facts must be
+    # JSON-serializable so the baseline JSONL can be written and re-read.
+    rec = canonical_node_record(
+        {"id": "filing-1", "labels": ["Filing"],
+         "props": {"filed_at": _FakeDateTime(), "loc": _FakePoint(), "n": 3}})
+    assert rec["props"]["filed_at"] == "2020-01-02T03:04:05"
+    assert rec["props"]["loc"] == "POINT(-122.5 37.9)"
+    assert rec["props"]["n"] == 3
+    json.dumps(rec)  # must not raise
+
+
+def test_canonical_rel_record_coerces_neo4j_temporal_props_to_json():
+    rec = canonical_rel_record(
+        {"source": "a", "target": "b", "type": "FILED_BY",
+         "props": {"observed_at": _FakeDateTime()}})
+    assert rec["props"]["observed_at"] == "2020-01-02T03:04:05"
+    json.dumps(rec)  # must not raise
+
 def test_export_sha256_is_deterministic():
     rows = [{"id": "a"}, {"id": "b"}]
     assert export_sha256(rows) == export_sha256(list(rows))
