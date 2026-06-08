@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -192,6 +193,17 @@ COMMON_REFERENCE_FIELDS = {
 
 def utc_now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def relpath_for_report(path: Path, root: Path) -> str:
+    """Return a relative path string for report metadata, robust to data living
+    outside the code repo.
+
+    Identical to ``str(path.relative_to(root))`` when ``path`` is inside
+    ``root``; falls back to ``os.path.relpath`` (which never raises) when the
+    normalized-data symlink resolves into a sibling repo.
+    """
+    return os.path.relpath(path, root)
 
 
 def parse_args() -> argparse.Namespace:
@@ -574,7 +586,7 @@ def main() -> None:
         bundle_id = payload.get("bundle_id") or bundle_path.stem
         bundle_report = {
             "bundle_id": bundle_id,
-            "path": str(bundle_path.relative_to(ROOT)),
+            "path": relpath_for_report(bundle_path, ROOT),
             "sections": [],
         }
         for section in bundle["sections"]:
