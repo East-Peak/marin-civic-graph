@@ -1,0 +1,37 @@
+{
+  "bundle_id": "phase0-bcore-mini",
+  "actors": [
+    {"id": "actor-jane", "name": "Jane Roe", "actor_type": "person", "observed_labels": ["J. Roe", "Jane R."]},
+    {"id": "actor-acme", "name": "Acme LLC", "actor_type": "business"},
+    {"id": "actor-canon", "name": "Canonical Jane", "actor_type": "person", "resolves_raw_actor_seed_ids": ["actor-jane"]},
+    {"id": "actor-gov", "name": "Parks Agency", "actor_type": "government_agency"}
+  ],
+  "actors_review": [
+    {"id": "actor-jane", "name": "Jane Roe (review dup)", "actor_type": "person", "note": "lower-rank duplicate to exercise merge precedence"}
+  ],
+  "institutions": [
+    {"id": "inst-court", "name": "Superior Court", "institution_type": "court"},
+    {"id": "inst-council", "name": "City Council", "institution_type": "council"}
+  ],
+  "eids": [
+    {"id": "eid-1", "name": "Form 700 — Jane", "filer_actor_id": "actor-jane", "disclosure_type": "annual", "filing_institution_id": "inst-council"}
+  ],
+  "cases": [
+    {"id": "case-1", "name": "Roe v. City"}
+  ],
+  "records": [
+    {"id": "record-ev", "name": "Evidence Doc", "status": "kept"},
+    {"id": "record-ev2", "name": "Attachment Doc", "status": "kept"},
+    {"id": "record-skip", "name": "Filtered-Out Doc", "status": "dropped"}
+  ],
+  "caseparts": [
+    {"id": "casepart-1", "name": "Jane as defendant", "actor_id": "actor-jane", "case_id": "case-1", "role": "defendant", "start_date": "2024-01-01", "evidence_record_ids": ["record-ev"]},
+    {"id": "casepart-2", "name": "Court as forum", "institution_id": "inst-court", "case_id": "case-1", "role": "forum", "evidence_record_ids": ["record-ev2"]}
+  ],
+  "decisions": [
+    {"id": "decision-1", "name": "Council Ruling", "institution_id": "inst-council", "votes": [{"actor_id": "actor-jane", "vote": "aye", "seat_id": "seat-x"}]}
+  ],
+  "record_relationships": [
+    {"source_record_id": "record-ev", "target_record_id": "record-ev2", "relationship_type": "record_attached_to_record", "note": "passthrough survivor"}
+  ]
+}

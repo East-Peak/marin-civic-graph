@@ -1,0 +1,21 @@
+{
+  "manifest_version": 1,
+  "projection_id": "phase0-bcore-mini",
+  "output_dir": "data/projected/phase0-bcore-mini",
+  "bundles": [
+    {
+      "path": "tests/fixtures/phase0/mini-bundle.json",
+      "sections": [
+        {"name": "actors", "mode": "nodes", "node_type": "Actor", "promotion_state": "canonical"},
+        {"name": "actors_review", "mode": "nodes", "node_type": "Actor", "promotion_state": "review"},
+        {"name": "institutions", "mode": "nodes", "node_type": "Institution", "promotion_state": "canonical"},
+        {"name": "eids", "mode": "nodes", "node_type": "EconomicInterestDisclosure", "promotion_state": "canonical"},
+        {"name": "cases", "mode": "nodes", "node_type": "Case", "promotion_state": "canonical"},
+        {"name": "records", "mode": "nodes", "node_type": "Record", "promotion_state": "canonical", "filters": {"status": ["kept"]}},
+        {"name": "caseparts", "mode": "nodes", "node_type": "CaseParticipation", "promotion_state": "canonical"},
+        {"name": "decisions", "mode": "nodes", "node_type": "Decision", "promotion_state": "canonical"},
+        {"name": "record_relationships", "mode": "relationship_passthrough"}
+      ]
+    }
+  ]
+}
