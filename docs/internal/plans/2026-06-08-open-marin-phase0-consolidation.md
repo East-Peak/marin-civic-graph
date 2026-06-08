@@ -16,8 +16,9 @@
 
 - **TDD, always:** failing test → run it red → minimal code → run it green → commit. Never implementation before a red test.
 - **Git discipline:** `git branch --show-current` must be `main` immediately before every commit; stage only listed paths (the tree has untracked ambient `data/` — **never `git add -A`**); author must be `stuart@eastpeak.cc`; commit messages end with the Co-Authored-By trailer.
-- **Tests live at `tests/`** (the repo's existing Python test tree — verified; do NOT use `tests/`). **Fixtures at** `tests/fixtures/phase0/`.
-- **Run tests from repo root:** `python -m pytest tests/<file> -v`; "full suite green" means `python -m pytest tests -v`.
+- **Tests live at `tests/`** (the repo's existing Python test tree — verified; the old `scripts/tests/` path does not exist). **Fixtures at** `tests/fixtures/phase0/`.
+- **Import convention (overrides the `from scripts.X import` shown in the snippets below):** `scripts/` is not a package; tests do `sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))` then `from <module> import ...` (bare name). Adapt every test snippet to this.
+- **Run tests from repo root:** `python -m pytest tests/<file> -v`. `python -m pytest tests` currently errors at collection (`tests/test_name_clusters.py` needs `anthropic`, uninstalled) — so "suite green" = Phase-0 tests pass + no new failures; run the rest with `--ignore=tests/test_name_clusters.py`.
 
 ---
 
