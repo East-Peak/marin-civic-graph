@@ -23,3 +23,8 @@ data/cluster_renames_needed.json
 # raw source captures (kept locally; not in repo history after scrub)
 data/raw/*
 !data/raw/README.md
+
+# data layers — source of truth lives in East-Peak/marin-civic-graph-data (private)
+data/normalized
+data/projected/
+data/baseline/

@@ -1,0 +1,435 @@
+{
+  "manifest_version": 1,
+  "purpose": "Open Marin Phase 0 v2-native materialization \u2014 reproducible, integrity-checked rebuild inputs.",
+  "data_repo": {
+    "url": "git@github.com:East-Peak/marin-civic-graph-data.git",
+    "visibility": "private",
+    "commit": "7a778e27306cba9ec50bb594c603aeb3f251a7d1",
+    "data_root": "normalized/"
+  },
+  "fork_interface": "Forkers point `data_root` at their own data location (env OPENMARIN_DATA_DIR) and regenerate this ledger. The code repo carries no Marin data.",
+  "provenance_caveat": "data/raw is NOT committed anywhere in git; this manifest gives MATERIALIZATION reproducibility, not full upstream lineage.",
+  "input_count": 78,
+  "inputs": [
+    {
+      "path": "normalized/belvedere-city-council-meetings/edges.jsonl",
+      "sha256": "52c81e31ad2e11331a74017b6381be7f5cc82ea35fdb957d7693eceb15803fc4",
+      "bytes": 124182,
+      "lines": 343
+    },
+    {
+      "path": "normalized/belvedere-city-council-meetings/nodes.jsonl",
+      "sha256": "88ddf5bf7ed8a3bbdb255b9d63e3b2198ee6eb9eb7e1e8b6d07a5d9418603f5b",
+      "bytes": 145838,
+      "lines": 249
+    },
+    {
+      "path": "normalized/belvedere-city-council-meetings/normalization-report.json",
+      "sha256": "36c20266568c6367ce96335c9dd0fef54879e01b7bd1add7b9cac6972c69c3ed",
+      "bytes": 229
+    },
+    {
+      "path": "normalized/campaign-finance-form-803-slice-01/bundle-01.json",
+      "sha256": "8f7c9585f11721ad84e097f41cc592c289d14b6e81e1430f920978f582276dc8",
+      "bytes": 9399
+    },
+    {
+      "path": "normalized/campaign-finance-sample-basket-01/bundle-01.json",
+      "sha256": "76eaab09adc1f42728b7b0b4220656d72067aeb5456cab35fa0c3f0632cd3e3a",
+      "bytes": 16735
+    },
+    {
+      "path": "normalized/canonical-issues-01.json",
+      "sha256": "6ecbbafbf93ecfaf3e720229866f5d378f3635bac8374bbd9e9c5ece26e15678",
+      "bytes": 1842
+    },
+    {
+      "path": "normalized/canonical-seeds-san-rafael-01.json",
+      "sha256": "db1203aea7ea1ce2bdadd0477330022265bad0c828e03e666596d314dcf92899",
+      "bytes": 35321
+    },
+    {
+      "path": "normalized/corte-madera-town-council-meetings/edges.jsonl",
+      "sha256": "99582c52ab07578bbd52899cfc745312983908b1f3bb889fd2d2e454870c6433",
+      "bytes": 1102339,
+      "lines": 3237
+    },
+    {
+      "path": "normalized/corte-madera-town-council-meetings/nodes.jsonl",
+      "sha256": "013809d701bf61d4073038d688278c80c46153764ffe5777a355d687a233a5b8",
+      "bytes": 1463956,
+      "lines": 2336
+    },
+    {
+      "path": "normalized/corte-madera-town-council-meetings/normalization-report.json",
+      "sha256": "c8dd7a54585a93d62550c7c8e419cba5efe0ec855cb129cdea6879ef634816e8",
+      "bytes": 239
+    },
+    {
+      "path": "normalized/courtlistener-cases/edges.jsonl",
+      "sha256": "92fafcfdef56f3d9238e2bc50c57aa8e48a7703b55d6c199428297641a02241f",
+      "bytes": 104705,
+      "lines": 851
+    },
+    {
+      "path": "normalized/courtlistener-cases/nodes.jsonl",
+      "sha256": "95f4b0e280cd83532d8484cb6d3156b9acb6ce4077eb9efcba0de73fc4d707f1",
+      "bytes": 295695,
+      "lines": 547
+    },
+    {
+      "path": "normalized/fairfax-town-council-meetings/edges.jsonl",
+      "sha256": "e7b73f354d6c9087629a572f6442559e9f0515af3e6708958e0cc14755d93d21",
+      "bytes": 278863,
+      "lines": 774
+    },
+    {
+      "path": "normalized/fairfax-town-council-meetings/nodes.jsonl",
+      "sha256": "256b4a18a5d0526887fc9fec9e1a6cdb725608a3aed663cae40d6d7e5e5a6f7c",
+      "bytes": 346190,
+      "lines": 602
+    },
+    {
+      "path": "normalized/fairfax-town-council-meetings/normalization-report.json",
+      "sha256": "50d33d0a8dd123df4ae59c6c49b7aaff3d19a16093944908eb2d3c22233abf2c",
+      "bytes": 226
+    },
+    {
+      "path": "normalized/form700/edges.jsonl",
+      "sha256": "d63c4681f29914d058e8425775d55ab62a2a2c09c54676a539546e9e40a7b8b9",
+      "bytes": 4165985,
+      "lines": 19586
+    },
+    {
+      "path": "normalized/form700/nodes.jsonl",
+      "sha256": "f264e8adb92b70ea26d329d7632642e423c8cfeba8ed17e5931d974a71bee591",
+      "bytes": 5384787,
+      "lines": 12147
+    },
+    {
+      "path": "normalized/grant-program-dossiers-01/bundle-01.json",
+      "sha256": "a157098d0968e53a89e9d0ee1d3488a8a5869662c5ce4c825d048a694442c2ec",
+      "bytes": 4291
+    },
+    {
+      "path": "normalized/legal-precedent-01/bundle-01.json",
+      "sha256": "5a5b0d6abb3f49d470d7521a38c9e13f2be93faba9322708b617a009ad58e3e6",
+      "bytes": 16572
+    },
+    {
+      "path": "normalized/legal-precedent-02/bundle-01.json",
+      "sha256": "e8b0874eef41f66a430817402a161ddff7617ab0391b393e312baf9b13e3e315",
+      "bytes": 25497
+    },
+    {
+      "path": "normalized/marin-county-bos-meetings/edges.jsonl",
+      "sha256": "901c578246c7b79342217e50fe842f0dcbbf62e4f95bfdf3b17503d299eba07e",
+      "bytes": 801111,
+      "lines": 2473
+    },
+    {
+      "path": "normalized/marin-county-bos-meetings/nodes.jsonl",
+      "sha256": "fb5354c0208851b6e7230654b47c0b2f66fe7056b418a28b4322398c115593a3",
+      "bytes": 1156413,
+      "lines": 2158
+    },
+    {
+      "path": "normalized/marin-county-bos-meetings/normalization-report.json",
+      "sha256": "0305f8442a02bf559725ba71933e331a0d9b16fbcba913b750d23239e53a4dfb",
+      "bytes": 221
+    },
+    {
+      "path": "normalized/marin-county-campaign-finance-campaign-finance/edges.jsonl",
+      "sha256": "d8d244a0c4f22a36fac418cf302d3da47c3fad7285f0750a29c3d9bd90f279f8",
+      "bytes": 11249082,
+      "lines": 34142
+    },
+    {
+      "path": "normalized/marin-county-campaign-finance-campaign-finance/nodes.jsonl",
+      "sha256": "bfa7aaccc58933ee28482c6b4f06e76263d1b46de8b94a96ffa8b018c70caca8",
+      "bytes": 7039208,
+      "lines": 16688
+    },
+    {
+      "path": "normalized/marin-county-campaign-finance-campaign-finance/normalization-report.json",
+      "sha256": "210c8f30e373f7b5b89eeb5a9da180a11ce4d4592c71d1a7af16582ef68fa9f1",
+      "bytes": 284
+    },
+    {
+      "path": "normalized/marin-county-permits/edges.jsonl",
+      "sha256": "cc893a69ea568306bf10e165b9577e3e6e8e1a4640601fbe70b5bac25544e2f6",
+      "bytes": 6538314,
+      "lines": 49038
+    },
+    {
+      "path": "normalized/marin-county-permits/nodes.jsonl",
+      "sha256": "c7946d9e5909cd0db2b4d74bb0cdf32f6d89f0399e8ba96c2d1f8eb94579d470",
+      "bytes": 34022066,
+      "lines": 49097
+    },
+    {
+      "path": "normalized/mill-valley-committees-meetings/edges.jsonl",
+      "sha256": "afbec9031cd516e37c09b172070520198d7035ae16c6d8221a2498c07b8bb130",
+      "bytes": 610738,
+      "lines": 1859
+    },
+    {
+      "path": "normalized/mill-valley-committees-meetings/nodes.jsonl",
+      "sha256": "aad4ca120048a8ddcfd2ffb99c618d5d41fee1021cdf2f6a823cebb475fa4fc5",
+      "bytes": 786065,
+      "lines": 1319
+    },
+    {
+      "path": "normalized/mill-valley-committees-meetings/normalization-report.json",
+      "sha256": "14d499b9c8cb58147a9ae8069967ea631706b3e8dd9309c5465c4ef924422ef9",
+      "bytes": 232
+    },
+    {
+      "path": "normalized/novato-campaign-finance-campaign-finance/edges.jsonl",
+      "sha256": "5d246dfbcfcddd860ddd05ee12dcec7c9693f86d49095f7b0bd00b14d14b62da",
+      "bytes": 123141,
+      "lines": 387
+    },
+    {
+      "path": "normalized/novato-campaign-finance-campaign-finance/nodes.jsonl",
+      "sha256": "0ec19c9f0a2c5539075bccd769c7059bab617fd360fe468591fa74518690dd15",
+      "bytes": 89981,
+      "lines": 219
+    },
+    {
+      "path": "normalized/novato-campaign-finance-campaign-finance/normalization-report.json",
+      "sha256": "d4980638b4ceace2807d9e4fcb2046dc1a911905d1a96bb8850a95c297378869",
+      "bytes": 262
+    },
+    {
+      "path": "normalized/novato-city-council-meetings/edges.jsonl",
+      "sha256": "22acab085ae665097a1defbde8cef648205ed6287331b049bcbe39b6052609ea",
+      "bytes": 678869,
+      "lines": 2084
+    },
+    {
+      "path": "normalized/novato-city-council-meetings/nodes.jsonl",
+      "sha256": "9bbe8f8ed5f0280e8dc914851904564deb90d7276396868634d963c2d9cd0df1",
+      "bytes": 920066,
+      "lines": 1677
+    },
+    {
+      "path": "normalized/novato-city-council-meetings/normalization-report.json",
+      "sha256": "4704570d446308dc60044fbf1d2096530bd0dfab70c30941f56ce483394e6748",
+      "bytes": 227
+    },
+    {
+      "path": "normalized/permit-sample-basket-01/bundle-01.json",
+      "sha256": "da7df188f2e002586cbc1313d2a63b829f4fbe319c767214a9baa59d3b0fbdbc",
+      "bytes": 11019
+    },
+    {
+      "path": "normalized/permit-sample-basket-01/p4134-appeal-chain.json",
+      "sha256": "9278f64731057044b6785657328cc25d89ebd6c1e055a6673b9ff45c4e17850e",
+      "bytes": 13507
+    },
+    {
+      "path": "normalized/procurement-sample-basket-01/bundle-01.json",
+      "sha256": "47306a2b6abe8e25b3f0739dbf480eb71d3ec923e7814c2ffeabb587d90e4f54",
+      "bytes": 31683
+    },
+    {
+      "path": "normalized/project-dossiers-01/bundle-01.json",
+      "sha256": "1fd70b02c1af8c205a759146ebea067292a3318732f708cd2f369985dd395dec",
+      "bytes": 21348
+    },
+    {
+      "path": "normalized/ross-town-council-meetings/edges.jsonl",
+      "sha256": "9cbd9bd4970779cf7440b4fcc804f3f6b8382fca5be392ac1ade15fe44e6c441",
+      "bytes": 23628,
+      "lines": 71
+    },
+    {
+      "path": "normalized/ross-town-council-meetings/nodes.jsonl",
+      "sha256": "53d862ea5ccc116966df2ebae54f340135c6fb9bf6528c5c72ab7b47c7c584f0",
+      "bytes": 30759,
+      "lines": 54
+    },
+    {
+      "path": "normalized/ross-town-council-meetings/normalization-report.json",
+      "sha256": "5b39182b520a1fd6b49db596cb46fc6cfd7231fedb42e1e16505e23875c1da85",
+      "bytes": 216
+    },
+    {
+      "path": "normalized/san-anselmo-town-council-meetings/edges.jsonl",
+      "sha256": "afa3d6e0caf79d75a6b5ee8401558bcc63234c421d6915089937942bb2f2175d",
+      "bytes": 1419691,
+      "lines": 4155
+    },
+    {
+      "path": "normalized/san-anselmo-town-council-meetings/nodes.jsonl",
+      "sha256": "7ce9e90e0604fe2cbf206c9c0de7db976f869c4ab1b7cfff2802202724aa3141",
+      "bytes": 1862017,
+      "lines": 3243
+    },
+    {
+      "path": "normalized/san-anselmo-town-council-meetings/normalization-report.json",
+      "sha256": "e0199b52b21d99533527903e1afec14f1d26af1030a90eef53188c93d71e7413",
+      "bytes": 237
+    },
+    {
+      "path": "normalized/san-rafael-700-irwin-project-01/bundle-01.json",
+      "sha256": "3c24b5ee60bc97455d10b39ce3a9376e2994a707e9e9620f508568acb165695b",
+      "bytes": 3072
+    },
+    {
+      "path": "normalized/san-rafael-actor-completeness-01/bundle-01.json",
+      "sha256": "0d35ca783e49a2e1db52656fa4a144f778fce9631e0bb2880b9210c93e11f438",
+      "bytes": 10967
+    },
+    {
+      "path": "normalized/san-rafael-camping-ordinance-program-01/bundle-01.json",
+      "sha256": "054f61fab8ce09821ee837896056dd5c7b5920f2ef9f6636f5870e01969a0d05",
+      "bytes": 13683
+    },
+    {
+      "path": "normalized/san-rafael-city-campaign-actors-01/bundle-01.json",
+      "sha256": "9d598e93a5874e18400cffaa3c588b211ea32ef765e2fb095cb925df5181b899",
+      "bytes": 4789
+    },
+    {
+      "path": "normalized/san-rafael-city-campaign-discovery-01/bundle-01.json",
+      "sha256": "8c40ace8645cd22177fe1e29d4fba2bbff4992427203893de20c280f8f1e4023",
+      "bytes": 62801
+    },
+    {
+      "path": "normalized/san-rafael-city-campaign-filings-01/bundle-01.json",
+      "sha256": "e35269dfba43fb84bdff9faa65e47dc67dd5fb747c73ba20d404b6f3d09235bf",
+      "bytes": 426969
+    },
+    {
+      "path": "normalized/san-rafael-city-campaign-form460-ocr-01/bundle-01.json",
+      "sha256": "79c40c89ab110ba367e5804c2109d6d07f8003911d5a1997db0399a103cb3a7c",
+      "bytes": 20900
+    },
+    {
+      "path": "normalized/san-rafael-city-campaign-form460-pdf-01/bundle-01.json",
+      "sha256": "1beaf4034fcf30a68cf824e46ccf34107363e0ee0db70f5b852e8f2bb9d0d98e",
+      "bytes": 20881
+    },
+    {
+      "path": "normalized/san-rafael-city-campaign-form460-schedules-01/bundle-01.json",
+      "sha256": "1d13e6a508916f40647da259ef3222edd44608a867ef1b5714ad0cd9f42e9ed6",
+      "bytes": 171382
+    },
+    {
+      "path": "normalized/san-rafael-city-campaign-ie-01/bundle-01.json",
+      "sha256": "63ac2ff252c1708f23645ab356b2527c389e36a8a7f6f6b23f1f082f3b8be514",
+      "bytes": 9975
+    },
+    {
+      "path": "normalized/san-rafael-city-campaign-records-01/bundle-01.json",
+      "sha256": "c31df8e511cd560f861c5ed33e1d18cc09fd14ec9e2b5534a5e70e901c2ec9f4",
+      "bytes": 41919
+    },
+    {
+      "path": "normalized/san-rafael-city-council-backbone-01/bundle-01.json",
+      "sha256": "9c16f78479af4b33c00d5f50847dee0fd59cbdb25aa6931069b456455d7fde21",
+      "bytes": 675810
+    },
+    {
+      "path": "normalized/san-rafael-city-council-decisions-01/bundle-01.json",
+      "sha256": "4607ea4ed49d20e82bb2e9237ce9cf0ddb02abdd496685b8e258ec644d2af7e1",
+      "bytes": 3500933
+    },
+    {
+      "path": "normalized/san-rafael-election-records-01/bundle-01.json",
+      "sha256": "b95d704af9761c5b545aaec545bc306df3d276247796202a8e31b7b233d140be",
+      "bytes": 71946
+    },
+    {
+      "path": "normalized/san-rafael-homelessness-01/aug-19-item-5a-record-splits.json",
+      "sha256": "6af987b799bb985b5310698aa41d07706905ecfe2e9da0d14d5cc7bc33bf55aa",
+      "bytes": 17009
+    },
+    {
+      "path": "normalized/san-rafael-homelessness-01/bundle-01.json",
+      "sha256": "404dd96eeb5f1abb35c95a6f38f65ecd9d3ada05c0818aec754996b3f60b7fb7",
+      "bytes": 23752
+    },
+    {
+      "path": "normalized/san-rafael-homelessness-01/marin-ij-2024-08-24-mention-claim-example.json",
+      "sha256": "5983f7a0d8713b2c90c55b78b7b1371523507fc6218b4c64269440642b325405",
+      "bytes": 8638
+    },
+    {
+      "path": "normalized/san-rafael-homelessness-01/marin-ij-citation-layer.json",
+      "sha256": "9390fde76fe1cf28ca2112eac955ad5869d2f1ef6ff8f8ccb1eaec2ee7615f9e",
+      "bytes": 5899
+    },
+    {
+      "path": "normalized/san-rafael-homelessness-01/marin-ij-recurrence-example-01.json",
+      "sha256": "f77e1b4892c65efb7530e82e3aaf7172fe3b04f6e483e094a6f0ce0c6c7d65d3",
+      "bytes": 7261
+    },
+    {
+      "path": "normalized/san-rafael-homelessness-01/media-campaign-overlap-example-01.json",
+      "sha256": "0bcea43d0de13637710e3525f8bfacfa53061479edc842f00f420762d01d54f7",
+      "bytes": 4013
+    },
+    {
+      "path": "normalized/san-rafael-homelessness-01/media-cross-domain-join-example-01.json",
+      "sha256": "a9d184ed6701d4e92396fdab2f758aedacbc9bd061a92d789ef15dc9e55b4ae7",
+      "bytes": 6127
+    },
+    {
+      "path": "normalized/san-rafael-homelessness-01/media-disclosure-overlap-example-01.json",
+      "sha256": "4665700bb0f4494cad645200907f19729057e0caf7acc442796c70e00e07f187",
+      "bytes": 3708
+    },
+    {
+      "path": "normalized/san-rafael-homelessness-01/media-outside-money-overlap-example-01.json",
+      "sha256": "771309d2f8935e606954b2f0a03d1e173834f369a6bace03abf84540ba8b1822",
+      "bytes": 5356
+    },
+    {
+      "path": "normalized/san-rafael-merrydale-interim-shelter-project-01/bundle-01.json",
+      "sha256": "f019110ff5a9791ecfa257fc51fca3f4acd04a40f59481d008a0121b6e4d4e41",
+      "bytes": 42150
+    },
+    {
+      "path": "normalized/san-rafael-officeholder-disclosures-01/bundle-01.json",
+      "sha256": "1f6b0001e0a53f49b73b3e1c4cbcc61ad874f6d2b88cd733503f1485e8c3105a",
+      "bytes": 50788
+    },
+    {
+      "path": "normalized/sausalito-city-council-meetings/edges.jsonl",
+      "sha256": "a71a10b7e783268202877356ee5ba5aa5ea2ce803ffe40d0a317618142fb10ca",
+      "bytes": 408822,
+      "lines": 1217
+    },
+    {
+      "path": "normalized/sausalito-city-council-meetings/nodes.jsonl",
+      "sha256": "29ed347dcbe8d4e1f665917902dd02a0c74b8a0ba520b27b6a2aa2234b73ce9c",
+      "bytes": 531431,
+      "lines": 965
+    },
+    {
+      "path": "normalized/sausalito-city-council-meetings/normalization-report.json",
+      "sha256": "c104d00b35e4e0166a0a5edefd987a3cb65490941219a8c0cb021dd375dcbd11",
+      "bytes": 231
+    },
+    {
+      "path": "normalized/tiburon-town-council-granicus-meetings/edges.jsonl",
+      "sha256": "9e6a42b964c44520b030b049c391a1b248395b3b0d895b6c1313d48c12bd987b",
+      "bytes": 942361,
+      "lines": 2651
+    },
+    {
+      "path": "normalized/tiburon-town-council-granicus-meetings/nodes.jsonl",
+      "sha256": "22cbdaa96aa1694d67d9e89498ccc42f65d41e8a39d3e22152b2c58b9622a550",
+      "bytes": 1218281,
+      "lines": 2083
+    },
+    {
+      "path": "normalized/tiburon-town-council-granicus-meetings/normalization-report.json",
+      "sha256": "fdb6d462158680679ba1aba0a291280b5bd480c1b340b1dc0e10b912736b61c9",
+      "bytes": 247
+    }
+  ]
+}
