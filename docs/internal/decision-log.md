@@ -16,6 +16,23 @@ The rule is:
 
 Backfilled on April 12, 2026 from the existing workspace decision set and project history.
 
+## 2026-06-08
+
+- **The next major build is a COI / NGO-legibility layer driven by an autonomous goal-loop "agent swarm"**
+  - North star shifts from the v1 thread-centric pressure comparison (QX-001) to an actor- and organization-centric **legibility** lens: for anyone consuming public resources, make funding-in, influence-out, and accountability legible — *legibility, not accusation*.
+  - The swarm does the tedious 95% (capture → extract → resolve → link → rank); **judgment stays gated** — ambiguous merges and COI candidates are human-adjudicated, never auto-published.
+  - Design spec (Codex-converged over 3 rounds): `docs/specs/2026-06-07-open-marin-coi-ngo-swarm-design.md`.
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-06-08-coi-ngo-legibility-swarm.md`
+
+- **"Do it right": consolidate to a v2-native projection (Phase 0) before any COI work**
+  - The live graph is `Person`/`Organization` (v2), but the bulk rebuild still emits an intermediate `Actor`/`Institution` representation (`build_graph_projection.py` → `migrate_graph_v2.py`) that misled two review rounds.
+  - Phase 0 builds a projection emitting the settled schema directly from a v2 materialization manifest, retires the v1 projection + migration, and makes `canonical_type.py` the sole schema source. Acceptance: canonical-fact-equivalent rebuild (derived state excluded).
+  - The AuraDB instance is confirmed non-load-bearing (rebuildable materialization), which is what licenses the consolidation + the `Mention`/`Claim`-into-core reversal.
+
+- **COI is a derived, gated, neutral artifact — never a graph node, edge, or charged label**
+  - The graph holds facts only; conflicts are sidecar `PatternCandidate` review-queue artifacts with neutral language. Charged pattern names ("pay-to-play," "astroturf") never appear in generated output.
+  - Two load-bearing guardrails: **provable structure, never imputed motive**; **scrutiny up the power gradient** — vulnerable individuals are never modeled, profiled, or externally processed (media/queues are outbound-ineligible end-to-end, enforced with negative tests).
+
 ## 2026-04-14
 
 - **Cross-model collaboration should use a repo-local handoff brief, not chat archaeology**
