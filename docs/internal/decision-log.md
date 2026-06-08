@@ -18,6 +18,13 @@ Backfilled on April 12, 2026 from the existing workspace decision set and projec
 
 ## 2026-06-08
 
+- **The data layer moves to a private sibling repo; the code repo becomes a clean forkable framework**
+  - The code repo is public and intended for fork-and-reuse by other municipalities; the data publication decision is separate and deferred. So the bulk civic data (incl. 49K geocoded residential permit records) does **not** belong in permanent public Git history.
+  - Normalized bundles (the materialization source of truth) now live in **private `East-Peak/marin-civic-graph-data`**; the code repo's `data/normalized` is a gitignored symlink into it; `data/projected`/`data/baseline` are gitignored (regenerable).
+  - `registry/v2-materialization-manifest.json` (committed in the code repo) is the integrity ledger — path + sha256 + counts, pinned to a data-repo commit — and the fork interface (point `data_root` at your own data). This is Codex's "committed hash-ledger" pattern; it gives **materialization** reproducibility (not full upstream lineage — `data/raw` is committed nowhere; rclone backup is a later step).
+  - Verified before acting: nothing residential had leaked (the already-public `graph-v1` slice has 0 address/parcel nodes; the bulk permit layer was untracked).
+  - Detailed note: `~/.openclaw/workspace/decisions/2026-06-08-data-layer-private-repo.md`
+
 - **The next major build is a COI / NGO-legibility layer driven by an autonomous goal-loop "agent swarm"**
   - North star shifts from the v1 thread-centric pressure comparison (QX-001) to an actor- and organization-centric **legibility** lens: for anyone consuming public resources, make funding-in, influence-out, and accountability legible — *legibility, not accusation*.
   - The swarm does the tedious 95% (capture → extract → resolve → link → rank); **judgment stays gated** — ambiguous merges and COI candidates are human-adjudicated, never auto-published.

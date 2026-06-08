@@ -135,7 +135,7 @@ def aura_host(uri: str) -> str:
 
 ### Task A2: Materialization manifest + validator
 
-> **PREREQUISITE BLOCKER (Stuart + Tammy decision):** A large share of the bundles that materialize the live ~112K graph are **untracked ambient `data/` work** today (`data/normalized/form700/*`, `marin-county-permits/*`, `marin-county-campaign-finance-*`, and most jurisdiction meeting bundles have 0 git-tracked files). The manifest's reproducibility guarantee requires its inputs to be **git-tracked**. Before A2 can produce a manifest that materializes the full graph, the canonical materialization source set must be **selected and committed** (coordinating with Tammy, since this is mid-batch ambient work — never `git add -A` it blindly). Until then, A2 must `BLOCKED: untracked materialization inputs` rather than build a partial manifest.
+> **RESOLVED (2026-06-08):** The materialization inputs now live in the **private** repo `East-Peak/marin-civic-graph-data` (the code repo's `data/normalized` is a gitignored symlink into it). `registry/v2-materialization-manifest.json` is **already committed** in the code repo as the integrity ledger (path + sha256 + bytes/lines, pinned to data-repo commit `7a778e2`). So A2's remaining job is the **validator**, not the manifest authoring: confirm the data root resolves and **every input's sha256 matches the committed manifest** (Codex's "committed hash-ledger" escape hatch — not "git ls-files in the code repo," since the data deliberately isn't in the code repo). A2 should regenerate the manifest only when the source set changes, and re-pin the data-repo SHA.
 
 **Files:**
 - Create: `registry/v2-materialization-manifest.json`, `scripts/materialization_manifest.py`
@@ -166,7 +166,7 @@ def test_accepts_tracked_input_with_matching_hash(tmp_path, monkeypatch):
 ```
 
 - [ ] **Step 2: Run red.**
-- [ ] **Step 3: Implement** `load_manifest` (read JSON), `is_git_tracked(path)` (`git ls-files --error-unmatch`), `validate_manifest` (every input git-tracked; if `check_hashes`, recompute sha256 and compare; require `expected_nodes`/`expected_edges` present). Seed `registry/v2-materialization-manifest.json` by enumerating the current `data/normalized/**/bundle*.json` + the settled direct-ingestor JSONL (Form 700) actually loaded today; compute hashes; fill expected counts from a dry projection.
+- [ ] **Step 3: Implement** `load_manifest` (read JSON) and `validate_manifest` against the **committed** ledger: resolve the data root (`OPENMARIN_DATA_DIR`, default the `data/normalized` symlink), recompute each input's sha256 and assert it **matches the manifest** (not "git-tracked in the code repo" — the data deliberately lives in the private data repo), and assert `bytes`/`lines` match. The manifest already exists (`registry/v2-materialization-manifest.json`, 78 inputs, data-repo SHA `7a778e2`); a regenerate mode re-hashes + re-pins the data-repo SHA only when the source set changes. Update the A2 tests accordingly (drop `is_git_tracked`; test sha256-mismatch → raise, match → pass).
 - [ ] **Step 4: Run green.**
 - [ ] **Step 5: Commit** — `feat(phase0): v2 materialization manifest + git-tracked input validator`
 
