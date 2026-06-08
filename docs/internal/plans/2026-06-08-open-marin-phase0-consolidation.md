@@ -254,6 +254,15 @@ def test_settled_labels_ok():
 
 ## Milestone B — v2-native projector + query-pack equivalence
 
+> **Codex round-1 corrections (2026-06-08) — the B prompt needs rework before running, and B5's scope changes:**
+> - **B5 is scoped to the PROJECTION subset, not the whole live graph.** The live graph has a *second* materialization path: `extract_agenda_items.py` / `extract_decisions.py` write `AgendaItem`/`Decision` **directly to Neo4j** (`MERGE`), never through bundles — **0 such nodes are in the manifest** (~15,240 nodes / 13% of the baseline). Phase 0 doesn't touch that path. So B5 proves equivalence over **exactly the node/edge set `build_graph_v2` produces**; direct-extractor nodes are excluded by construction. **Decided: scope to projection subset; the extractors-should-emit-bundles reproducibility gap is a SEPARATE follow-up** (see project doc), not a Phase 0 blocker.
+> - **Exclude derived state from the comparison:** the frozen baseline includes `_SyncState` (regenerated post-load, `id: null`). Filter `_SyncState`/derived labels before diffing; the comparator must not collapse null-id rows (harness gap in A — `export_graph_baseline`/`graph_compare` need a null-id guard).
+> - **Loader safety FIXED** (`942dfa8`): `load_neo4j_v2` now uses database-scoped sessions. B5's scratch load must pass `--database` to a **local/ephemeral Neo4j** (a `phase0scratch` database name inside live Aura is NOT isolation; local Neo4j is installed — use a verified local connection, never the live target).
+> - **Manifest needs roles for the projector:** it's currently a checksum ledger mixing fact files + metadata (`normalization-report.json`). `build_graph_v2` needs explicit input roles (nodes.jsonl / edges.jsonl / legacy-bundle-sections / metadata-ignore) — extend the manifest schema or a sibling materialization plan.
+> - **JSONL-vs-baseline must canonicalize loader behavior** (edge dedup by triple, invalid-edge filter, `payload_json` strip, `display_label`/`promotion_state` promotion) before comparing — add `canonicalize_loader_output()`, or require the scratch round-trip.
+> - **Golden coverage** must span every materialization role (legacy bundle, direct nodes.jsonl, direct edges.jsonl, metadata-ignore, dup-edge collapse, missing-endpoint), not just a small legacy slice.
+> - **Metric parity** must port through the repo's edge vocabulary (live v2 has both `AT_MEETING` and direct-extractor `DECIDED_AT`), and the query pack should return `{ok, failures, metrics}` with `verify()` failing on `ok=False`.
+
 ### Task B1: Capture golden fixtures from the CURRENT pipeline
 
 **Files:**
