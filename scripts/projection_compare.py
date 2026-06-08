@@ -18,6 +18,7 @@ compared as MULTISETS, so order and duplicate counts are accounted for.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from collections import Counter
 from dataclasses import dataclass, field
@@ -97,6 +98,29 @@ class ProjectionDiff:
             for item in items[:n]:
                 lines.append(f"  [{label}] {item}")
         return "\n".join(lines)
+
+
+def projection_digest(nodes: list[dict], edges: list[dict]) -> dict[str, Any]:
+    """A canonical, order-insensitive sha256 digest of a projection.
+
+    Each row is hashed as sorted-key JSON (node `labels` sorted too), and the
+    rows themselves are sorted before hashing. So two projections that
+    compare_projection deems equivalent (same field-for-field multiset,
+    regardless of row order, key order, or label order) yield the SAME digest.
+
+    This is deliberately NOT a raw-file-bytes hash: the legacy golden and a v2
+    candidate can carry identical canonical content while differing in byte
+    layout (key ordering, label ordering), and a raw-bytes hash would false-fail
+    on that. Returns counts plus separate node/edge hashes for diagnostics.
+    """
+    node_rows = sorted(_canon_node(node) for node in nodes)
+    edge_rows = sorted(_canon_edge(edge) for edge in edges)
+    return {
+        "node_count": len(nodes),
+        "edge_count": len(edges),
+        "nodes_sha256": hashlib.sha256("\n".join(node_rows).encode("utf-8")).hexdigest(),
+        "edges_sha256": hashlib.sha256("\n".join(edge_rows).encode("utf-8")).hexdigest(),
+    }
 
 
 def compare_projection(

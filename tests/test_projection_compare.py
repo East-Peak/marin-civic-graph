@@ -14,7 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from projection_compare import compare_projection
+from projection_compare import compare_projection, projection_digest
 
 
 def _node(**over):
@@ -106,3 +106,38 @@ def test_summary_is_human_readable_string():
     result = compare_projection([_node()], [], [_node(display_label="Z")], [])
     assert isinstance(result.summary, str)
     assert "node" in result.summary.lower()
+
+
+# ---------------------------------------------------------------------------
+# projection_digest — canonical (sorted-key JSON, NOT raw bytes) regression hash
+# ---------------------------------------------------------------------------
+
+def test_projection_digest_reports_counts_and_two_hashes():
+    digest = projection_digest([_node(), _node(id="person-b")], [_edge()])
+    assert digest["node_count"] == 2
+    assert digest["edge_count"] == 1
+    assert isinstance(digest["nodes_sha256"], str) and len(digest["nodes_sha256"]) == 64
+    assert isinstance(digest["edges_sha256"], str) and len(digest["edges_sha256"]) == 64
+
+
+def test_projection_digest_is_row_order_insensitive():
+    # Same multiset of rows in a different order -> identical digest. This is
+    # the whole point of a CANONICAL digest: it tracks compare_projection's
+    # multiset equivalence, not raw file byte order.
+    a = projection_digest([_node(id="person-a"), _node(id="person-b")], [_edge()])
+    b = projection_digest([_node(id="person-b"), _node(id="person-a")], [_edge()])
+    assert a == b
+
+
+def test_projection_digest_is_label_order_insensitive():
+    a = projection_digest([_node(labels=["Organization", "Court"])], [])
+    b = projection_digest([_node(labels=["Court", "Organization"])], [])
+    assert a["nodes_sha256"] == b["nodes_sha256"]
+
+
+def test_projection_digest_detects_value_change():
+    base = projection_digest([_node()], [_edge()])
+    changed_node = projection_digest([_node(display_label="DIFFERENT")], [_edge()])
+    changed_edge = projection_digest([_node()], [_edge(source_fields=["other"])])
+    assert base["nodes_sha256"] != changed_node["nodes_sha256"]
+    assert base["edges_sha256"] != changed_edge["edges_sha256"]

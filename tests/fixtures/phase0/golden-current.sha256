@@ -1,0 +1,7 @@
+{
+  "description": "Canonical sha256 of the full phase0-bcore golden (current pipeline), captured 2026-06-08 while migrate_graph_v2 still existed. build_graph_v2 over registry/import-manifest.yaml must reproduce this exactly. Output is gitignored (~18MB); this tiny reference is the committed regression gate.",
+  "node_count": 6258,
+  "edge_count": 21240,
+  "nodes_sha256": "4de6e9167e502d6b0c8cf694ae776e1d2890c542ffecf8db88be29a8b4f1ca5e",
+  "edges_sha256": "d63679b7d9c4e9563793d0a68c25a4fad9e2d267aec95c78795080e735c4f0de"
+}

@@ -1,0 +1,7 @@
+{
+  "description": "Canonical sha256 of the mini-manifest golden (legacy build_graph_projection -> migrate_graph_v2), captured 2026-06-08 while migrate_graph_v2 still existed. build_graph_v2's mini output must reproduce this exactly. Hermetic (committed inputs).",
+  "node_count": 11,
+  "edge_count": 8,
+  "nodes_sha256": "6cdb47243f8e5d0c26e86bd45bf89fa3f22e13143cb0cf2652a09555410324fb",
+  "edges_sha256": "7d75cbaaec4bf650619cd89efb457b463a64cf5876fb35f1b284fdd961379c9c"
+}
