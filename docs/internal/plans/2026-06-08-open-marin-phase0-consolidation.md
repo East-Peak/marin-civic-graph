@@ -26,8 +26,8 @@
 | File | Responsibility | Milestone |
 |------|----------------|-----------|
 | `scripts/export_graph_baseline.py` | Connect to live Aura, assert host fingerprint + count floors, export canonical facts (nodes+rels) to JSONL + sha256 | A |
-| `registry/v2-materialization-manifest.json` | Declares every input that materializes the graph's facts (bundles + direct-ingestor JSONL), each git-tracked, sha256, expected counts | A |
-| `scripts/materialization_manifest.py` | Load + validate the manifest (hashes match, inputs git-tracked, counts present) | A |
+| `registry/v2-materialization-manifest.json` | Declares every input that materializes the graph's facts (bundles + direct-ingestor JSONL), each pinned by sha256 + bytes (+ lines for jsonl); data-repo SHA. **Already committed.** | A |
+| `scripts/materialization_manifest.py` | Load + validate the manifest (resolve data root, **every input's sha256 + bytes match**; lines where present) | A |
 | `scripts/graph_compare.py` | Pure comparator: diff two canonical-fact graph exports over ids/labels/node-props/rels/rel-props, with a FIXED volatile denylist | A |
 | `scripts/verify_phase0_consolidation.py` | The acceptance gate: baseline diff + count floors + no-legacy-labels + ported query pack + smoke | A/B |
 | `scripts/build_graph_v2.py` | The v2-native projector: manifest → `Person`/`Organization` graph-v2 JSONL directly | B |
@@ -145,30 +145,40 @@ def aura_host(uri: str) -> str:
 
 ```python
 # tests/test_materialization_manifest.py
-import pytest
+import hashlib, pytest
 from scripts.materialization_manifest import load_manifest, validate_manifest
 
-def test_rejects_untracked_input(tmp_path, monkeypatch):
-    m = {"inputs": [{"path": "data/x.jsonl", "sha256": "deadbeef", "kind": "direct",
-                     "expected_nodes": 10, "expected_edges": 0}]}
-    # stub: pretend git does NOT track data/x.jsonl
-    monkeypatch.setattr("scripts.materialization_manifest.is_git_tracked", lambda p: False)
-    with pytest.raises(ValueError, match="not git-tracked"):
-        validate_manifest(m, repo_root=tmp_path, check_hashes=False)
+def _root(tmp_path):
+    # paths in the manifest start with "normalized/...", resolved against the data root
+    f = tmp_path / "normalized" / "x.jsonl"; f.parent.mkdir(parents=True); f.write_text("{}\n{}\n")
+    return tmp_path, f
 
-def test_accepts_tracked_input_with_matching_hash(tmp_path, monkeypatch):
-    f = tmp_path / "data" / "x.jsonl"; f.parent.mkdir(parents=True); f.write_text("{}\n")
-    import hashlib; sha = hashlib.sha256(f.read_bytes()).hexdigest()
-    m = {"inputs": [{"path": "data/x.jsonl", "sha256": sha, "kind": "bundle",
-                     "expected_nodes": 1, "expected_edges": 0}]}
-    monkeypatch.setattr("scripts.materialization_manifest.is_git_tracked", lambda p: True)
-    validate_manifest(m, repo_root=tmp_path, check_hashes=True)  # no raise
+def test_sha256_mismatch_raises(tmp_path):
+    root, _ = _root(tmp_path)
+    m = {"inputs": [{"path": "normalized/x.jsonl", "sha256": "deadbeef", "bytes": 6, "lines": 2}]}
+    with pytest.raises(ValueError, match="sha256"):
+        validate_manifest(m, data_root=root)
+
+def test_matching_input_passes(tmp_path):
+    root, f = _root(tmp_path)
+    raw = f.read_bytes()
+    m = {"inputs": [{"path": "normalized/x.jsonl", "sha256": hashlib.sha256(raw).hexdigest(),
+                     "bytes": len(raw), "lines": raw.count(b"\n")}]}
+    validate_manifest(m, data_root=root)  # no raise
+
+def test_lines_optional_for_json_bundles(tmp_path):
+    # .json bundle inputs carry no `lines` key — validator must not require it
+    f = tmp_path / "normalized" / "b.json"; f.write_text('{"a":1}')
+    raw = f.read_bytes()
+    m = {"inputs": [{"path": "normalized/b.json", "sha256": hashlib.sha256(raw).hexdigest(),
+                     "bytes": len(raw)}]}  # no "lines"
+    validate_manifest(m, data_root=tmp_path)  # no raise
 ```
 
 - [ ] **Step 2: Run red.**
-- [ ] **Step 3: Implement** `load_manifest` (read JSON) and `validate_manifest` against the **committed** ledger: resolve the data root (`OPENMARIN_DATA_DIR`, default the `data/normalized` symlink), recompute each input's sha256 and assert it **matches the manifest** (not "git-tracked in the code repo" — the data deliberately lives in the private data repo), and assert `bytes`/`lines` match. The manifest already exists (`registry/v2-materialization-manifest.json`, 78 inputs, data-repo SHA `7a778e2`); a regenerate mode re-hashes + re-pins the data-repo SHA only when the source set changes. Update the A2 tests accordingly (drop `is_git_tracked`; test sha256-mismatch → raise, match → pass).
+- [ ] **Step 3: Implement** `load_manifest` (read JSON) and `validate_manifest(manifest, data_root)`. **Data-root resolution:** `data_root = $OPENMARIN_DATA_DIR` if set (the data-repo root), else `<code-repo>/data` — each manifest path is `normalized/...`, so the file is `data_root / path` (verified: this resolves all 78 inputs when rooted at `data/`, via the `data/normalized` symlink). For each input: recompute sha256 and assert it **matches the manifest**; assert `bytes` matches; assert `lines` matches **only when the key is present** (jsonl-only — 48/78 `.json` inputs have no `lines`). A regenerate mode re-hashes + re-pins the data-repo SHA only when the source set changes. (The manifest is already committed: 78 inputs, data-repo SHA `7a778e2`.)
 - [ ] **Step 4: Run green.**
-- [ ] **Step 5: Commit** — `feat(phase0): v2 materialization manifest + git-tracked input validator`
+- [ ] **Step 5: Commit** — `feat(phase0): materialization manifest sha256 validator`
 
 ### Task A3: Pure graph comparator with fixed denylist + mutation tests
 
@@ -383,6 +393,6 @@ def test_no_live_importers_of_legacy_pipeline():
 ## Self-Review
 
 - **Spec coverage:** §2.5 Phase 0 (v2-native projection, retire v1+migration, canonical_type sole source, materialization manifest, canonical-fact equivalence excluding derived state) → Tasks A1–C5. §8 Phase 0 tests (equivalence diff, verify green, no legacy importers) → A3/A4/B5/C2. ✓
-- **Codex prompt-round findings folded in:** baseline live-Aura fingerprint + floors (A1); clean **scratch** target, no unattended Aura wipe (B5); git-tracked manifest inputs (A2); **fixed** comparator denylist + mutation tests (A3); query-pack **metric parity** (B4); golden parity preserving migration semantics before deletion (B1/B2/C2); `--local-only` refresh (C1); expanded docs retirement incl. handoff/AGENTS (C4); ValidationCheck carve-out (C3). ✓
+- **Codex prompt-round findings folded in:** baseline live-Aura fingerprint + exact-host pin + floors (A1); clean **scratch** target, no unattended Aura wipe (B5); manifest **sha256-ledger** validation (A2, data in private repo); **fixed** comparator denylist + mutation tests (A3); query-pack **metric parity** (B4); golden parity preserving migration semantics before deletion (B1/B2/C2); `--local-only` refresh (C1); expanded docs retirement incl. handoff/AGENTS (C4); ValidationCheck carve-out (C3). ✓
 - **Type consistency:** `compare_graphs` signature used identically in A3/A4/B3/B5; `classify_actor` returns `(node_type, labels, id)` consistently; `VOLATILE_PROPS` is the single fixed set. ✓
 - **No placeholders:** every code/test step shows real code or an exact command. Larger implementation bodies (projector walk, schema regen) reference the specific existing module to lift from, pinned by golden/parity tests. ✓
