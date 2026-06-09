@@ -1,0 +1,15 @@
+{
+  "$comment": "Deliberately malformed registry for testing load_registry() rejection: the AgendaItem graph type is missing its required `outbound_eligible` boolean. load_registry() MUST reject this (no silent default).",
+  "graph_node_types": {
+    "Person":     { "searchable": true,  "outbound_eligible": true },
+    "AgendaItem": { "searchable": false }
+  },
+  "id_prefixes": {
+    "person-": "Person",
+    "agenda-item-": "AgendaItem"
+  },
+  "organization_subtypes": ["Government"],
+  "support_labels": ["ValidationCheck"],
+  "retired_labels": [],
+  "sidecar_artifacts": []
+}

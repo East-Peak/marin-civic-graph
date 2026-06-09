@@ -1,0 +1,76 @@
+{
+  "$comment": "Single source of truth for the Open Marin node-type contract (the MECHANICAL surfaces only — spec §4.6). Per-type UX (display names, catalog grouping, search rank, fact rows, sprite color) stays explicit per type and is NOT centralized here. Python (scripts/canonical_type.py, scripts/outbound_policy.py) and TS (app/src/lib/node-types.generated.ts via codegen) derive their mechanical surfaces from this file. M1a centralizes the existing 21 graph types; it does NOT add new ones. See ~/.openclaw/workspace/decisions/2026-06-08-coi-type-model-and-registry.md.",
+  "graph_node_types": {
+    "Person":       { "searchable": true,  "outbound_eligible": true },
+    "Organization": { "searchable": true,  "outbound_eligible": true },
+    "Committee":    { "searchable": true,  "outbound_eligible": true },
+    "Seat":         { "searchable": false, "outbound_eligible": true },
+    "SeatService":  { "searchable": false, "outbound_eligible": true },
+    "Election":     { "searchable": true,  "outbound_eligible": true },
+    "Candidacy":    { "searchable": false, "outbound_eligible": true },
+    "Meeting":      { "searchable": true,  "outbound_eligible": true },
+    "AgendaItem":   { "searchable": false, "outbound_eligible": true },
+    "Decision":     { "searchable": true,  "outbound_eligible": true },
+    "Filing":       { "searchable": true,  "outbound_eligible": true },
+    "MoneyFlow":    { "searchable": false, "outbound_eligible": true },
+    "Case":         { "searchable": true,  "outbound_eligible": true },
+    "Proceeding":   { "searchable": false, "outbound_eligible": true },
+    "Project":      { "searchable": true,  "outbound_eligible": true },
+    "Program":      { "searchable": true,  "outbound_eligible": true },
+    "Agreement":    { "searchable": true,  "outbound_eligible": true },
+    "Amendment":    { "searchable": true,  "outbound_eligible": true },
+    "Record":       { "searchable": false, "outbound_eligible": true },
+    "Place":        { "searchable": true,  "outbound_eligible": true },
+    "Issue":        { "searchable": true,  "outbound_eligible": true }
+  },
+  "id_prefixes": {
+    "person-": "Person",
+    "org-": "Organization",
+    "committee-": "Committee",
+    "seat-": "Seat",
+    "seatservice-": "SeatService",
+    "election-": "Election",
+    "candidacy-": "Candidacy",
+    "meeting-": "Meeting",
+    "agenda-item-": "AgendaItem",
+    "decision-": "Decision",
+    "filing-": "Filing",
+    "moneyflow-": "MoneyFlow",
+    "case-": "Case",
+    "proceeding-": "Proceeding",
+    "project-": "Project",
+    "program-": "Program",
+    "agreement-": "Agreement",
+    "amendment-": "Amendment",
+    "record-": "Record",
+    "place-": "Place",
+    "issue-": "Issue",
+    "actor-": "Person",
+    "inst-": "Organization",
+    "eid-": "Filing"
+  },
+  "organization_subtypes": [
+    "Government",
+    "Nonprofit",
+    "Business",
+    "Political",
+    "Court",
+    "Department",
+    "Commission"
+  ],
+  "support_labels": [
+    "ValidationCheck"
+  ],
+  "retired_labels": [
+    "Actor",
+    "Institution",
+    "EconomicInterestDisclosure",
+    "CaseParticipation"
+  ],
+  "sidecar_artifacts": [
+    "ResolutionCandidate",
+    "PatternCandidate",
+    "MediaOccurrence",
+    "AttributionClaim"
+  ]
+}
