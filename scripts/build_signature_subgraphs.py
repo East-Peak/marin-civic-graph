@@ -43,33 +43,17 @@ LEGAL_EDGES = set(LEGAL_EDGES_LIVE)
 
 MAX_NODES = 55  # per §5.5 target ≤ 60 nodes; small safety margin.
 
-# Canonical type resolver. Mirrors app/src/lib/canonical-type.ts — keep in sync.
-ORGANIZATION_SUBTYPES = {"Government", "Nonprofit", "Business", "Political", "Court", "Department", "Commission"}
-
-TYPE_BY_ID_PREFIX = {
-    "person-": "Person", "org-": "Organization", "committee-": "Committee",
-    "seat-": "Seat", "seatservice-": "SeatService", "election-": "Election",
-    "candidacy-": "Candidacy", "meeting-": "Meeting", "agendaitem-": "AgendaItem",
-    "decision-": "Decision", "filing-": "Filing", "moneyflow-": "MoneyFlow",
-    "case-": "Case", "proceeding-": "Proceeding", "project-": "Project",
-    "program-": "Program", "agreement-": "Agreement", "amendment-": "Amendment",
-    "record-": "Record", "place-": "Place", "issue-": "Issue",
-    "actor-": "Person", "inst-": "Organization", "eid-": "Filing",
-}
+# Canonical type resolver — registry-derived (single source of truth:
+# registry/node-types.json, via scripts/canonical_type.py). Re-exported so this
+# module keeps a stable canonical_type / TYPE_BY_ID_PREFIX surface, but the
+# prefix map (incl. the REAL `agenda-item-` prefix) lives in exactly ONE place —
+# no hand-rolled second copy to drift stale (M1b: killed the `agendaitem-` bug).
+from canonical_type import (  # noqa: E402
+    TYPE_BY_ID_PREFIX,
+    canonical_type,
+)
 
 KNOWN_TYPES = set(TYPE_BY_ID_PREFIX.values())
-
-
-def canonical_type(labels, node_id):
-    for prefix, type_name in TYPE_BY_ID_PREFIX.items():
-        if node_id.startswith(prefix):
-            return type_name
-    for lbl in labels or []:
-        if lbl in KNOWN_TYPES:
-            return lbl
-    if any(lbl in ORGANIZATION_SUBTYPES for lbl in labels or []):
-        return "Organization"
-    return None
 
 
 def classify_edge_style(rel_type: str) -> str:
