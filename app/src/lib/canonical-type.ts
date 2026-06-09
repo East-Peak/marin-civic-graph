@@ -20,7 +20,10 @@ const TYPE_BY_ID_PREFIX: Record<string, NodeType> = {
   "election-": "Election",
   "candidacy-": "Candidacy",
   "meeting-": "Meeting",
-  "agendaitem-": "AgendaItem",
+  // Real agenda ids are `agenda-item-*` (see scripts/extract_agenda_items.py);
+  // the old `agendaitem-` never matched real data. Kept in parity with
+  // registry/node-types.json id_prefixes + scripts/canonical_type.py.
+  "agenda-item-": "AgendaItem",
   "decision-": "Decision",
   "filing-": "Filing",
   "moneyflow-": "MoneyFlow",
