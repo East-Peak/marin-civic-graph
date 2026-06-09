@@ -1,4 +1,4 @@
-"""Regression test for build_graph_projection report-path computation.
+"""Regression test for projection_helpers report-path computation.
 
 The normalized data lives in a *sibling* private repo (`data/normalized` is a
 gitignored symlink to `../../marin-civic-graph-data/normalized`).  Resolving a
@@ -14,7 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from build_graph_projection import relpath_for_report
+from projection_helpers import relpath_for_report
 
 
 def test_relpath_inside_root_matches_relative_to():

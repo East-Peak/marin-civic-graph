@@ -55,8 +55,8 @@ def _utc_now_iso() -> str:
 
 from graph_projection_lib import DEFAULT_MANIFEST_PATH, ROOT, load_json, read_manifest
 
-# Reuse build_graph_projection's projection phases verbatim.
-from build_graph_projection import (
+# Reuse the shared projection-phase helpers verbatim.
+from projection_helpers import (
     build_actor_alias_map,
     build_node_envelope,
     extract_edges_from_object,

@@ -279,7 +279,7 @@ Start narrow:
 - [Grants Pass Legal Bundle Normalizer](./scripts/normalize_legal_precedent_grants_pass.py)
 - [Graph Projection Helper](./scripts/graph_projection_lib.py)
 - [Graph Projection Builder — v2-native, canonical](./scripts/build_graph_v2.py)
-- [Graph Projection Internal Helpers — reused by build_graph_v2; CLI retired](./scripts/build_graph_projection.py)
+- [Graph Projection Helpers — shared projection phases reused by build_graph_v2](./scripts/projection_helpers.py)
 - [Graph Projection Smoke Checks](./scripts/graph_smoke_checks.py)
 - [Graph Query Pack Runner — run_query_pack over candidate-v2](./scripts/run_graph_query_pack.py)
 - [Graph View Builder](./scripts/build_graph_views.py)

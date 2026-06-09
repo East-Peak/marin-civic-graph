@@ -1,42 +1,31 @@
 #!/usr/bin/env python3
-"""build_graph_projection.py — DEPRECATED AS AN ENTRYPOINT (Phase 0, Milestone C).
+"""projection_helpers.py — shared projection helper library.
 
-build_graph_v2.py is THE graph projector. This module is now a reused-internal
-helper library only: build_graph_v2 imports its projection helpers
+build_graph_v2.py is THE graph projector. It reuses these projection helpers
 (build_actor_alias_map, build_node_envelope, extract_edges_from_object,
 finalize_node_for_output / finalize_edge_for_output, merge_node / merge_edge,
 passthrough_relationships, remap_actor_aliases, should_include_object, and their
-deps) to build the legacy node/edge envelopes in memory, then migrates them to the
-settled v2 schema in a single pass.
+deps) to build the legacy node/edge envelopes in memory, then migrates them to
+the settled v2 schema in a single pass.
 
-Its projector CLI/main is RETIRED: it emitted the legacy Actor/Institution
-graph-v1 projection, which is no longer produced — `main()` now refuses to run and
-points at build_graph_v2. The helpers themselves are intentionally KEPT here for
-reuse; extracting them into a shared library is a separate Phase 0 follow-up.
+These helpers were extracted verbatim from the retired build_graph_projection.py
+(Phase 0): its projector CLI is gone, but the projection phases live on here as a
+shared, behavior-identical library.
 """
 
 from __future__ import annotations
 
-import argparse
-import json
 import os
-from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from graph_projection_lib import (
-    DEFAULT_MANIFEST_PATH,
     PROMOTION_RANK,
-    ROOT,
     derive_display_label,
     infer_node_type_from_id,
-    load_json,
     merge_property_maps,
-    read_manifest,
     sanitize_graph_properties,
-    write_json,
-    write_jsonl,
 )
 
 
@@ -219,21 +208,6 @@ def relpath_for_report(path: Path, root: Path) -> str:
     normalized-data symlink resolves into a sibling repo.
     """
     return os.path.relpath(path, root)
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Build a graph-ready projection from normalized civic bundles.")
-    parser.add_argument(
-        "--manifest",
-        default=str(DEFAULT_MANIFEST_PATH),
-        help="Path to the import manifest. The manifest is stored as JSON-compatible YAML.",
-    )
-    parser.add_argument(
-        "--output-dir",
-        default=None,
-        help="Override output directory. Defaults to the manifest output_dir.",
-    )
-    return parser.parse_args()
 
 
 def should_include_object(section: dict[str, Any], obj: dict[str, Any]) -> tuple[bool, str | None]:
@@ -572,23 +546,3 @@ def remap_actor_aliases(edge: dict[str, Any], alias_map: dict[str, str]) -> tupl
         remapped["target_id"] = alias_map[remapped["target_id"]]
         changed = True
     return remapped, changed
-
-
-def main() -> None:
-    """RETIRED projector entrypoint — see the module docstring.
-
-    build_graph_v2 is the projector; this module is a reused-internal helper
-    library only. The legacy Actor/Institution graph-v1 projection is no longer
-    produced here.
-    """
-    raise SystemExit(
-        "build_graph_projection's projector CLI is RETIRED. build_graph_v2 is the "
-        "v2-native projector \u2014 run `python scripts/build_graph_v2.py`. This "
-        "module now exists only as a reused-internal helper library (build_graph_v2 "
-        "imports its projection helpers); regenerating the legacy Actor/Institution "
-        "projection from here is no longer supported."
-    )
-
-
-if __name__ == "__main__":
-    main()

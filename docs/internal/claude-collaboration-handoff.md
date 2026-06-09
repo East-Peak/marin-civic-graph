@@ -269,7 +269,7 @@ If Claude needs fast orientation, these are the highest-signal files:
 
 - [import-manifest.yaml](../registry/import-manifest.yaml)
 - [build_graph_v2.py](../scripts/build_graph_v2.py) — **the** v2-native projector (manifest → Person/Organization in one pass). Output: `data/projected/phase0-bcore/candidate-v2/`.
-- [build_graph_projection.py](../scripts/build_graph_projection.py) — reused-internal helper library only; its projector CLI is retired (and `migrate_graph_v2` is deleted).
+- [projection_helpers.py](../scripts/projection_helpers.py) — shared projection-phase helpers reused by build_graph_v2 (extracted from the now-deleted build_graph_projection.py; `migrate_graph_v2` is deleted).
 - [graph_projection_lib.py](../scripts/graph_projection_lib.py)
 - [run_graph_query_pack.py](../scripts/run_graph_query_pack.py) — `run_query_pack(projection_dir, schema="v2")` over candidate-v2.
 - [migration-report.json](../data/projected/phase0-bcore/candidate-v2/migration-report.json)
