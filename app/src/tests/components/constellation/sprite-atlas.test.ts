@@ -5,7 +5,7 @@ import {
 import { ALL_TYPES } from "@/lib/type-display";
 
 describe("Tier-A atlas", () => {
-  it("contains 21 types × 3 sizes = 63 sprites", () => {
+  it("contains 22 types × 3 sizes = 66 sprites", () => {
     const atlas = buildTierAAtlas();
     expect(atlas.spriteCount).toBe(ALL_TYPES.length * TIER_A_DOT_SIZES.length);
   });

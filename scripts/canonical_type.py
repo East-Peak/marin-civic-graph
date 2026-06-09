@@ -1,7 +1,7 @@
 """Python port of app/src/lib/canonical-type.ts. Single source of truth for
 node-type resolution in the pipeline. MUST stay in sync with the TS version.
 
-The mechanical contract (the 21 graph types, their id-prefixes, and the
+The mechanical contract (the 22 graph types, their id-prefixes, and the
 Organization subtypes) is DERIVED from registry/node-types.json — the one
 source of truth (spec §4.6). The TS mirror is codegen'd from the same file
 (app/src/lib/node-types.generated.ts). Do not hand-edit ALL_TYPES /

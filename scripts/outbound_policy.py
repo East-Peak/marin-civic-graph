@@ -28,7 +28,7 @@ def load_eligibility(path: Path | str | None = None) -> dict[str, bool]:
 
 
 # Explicit eligibility, derived from registry/node-types.json. v2 ships the
-# entire 21-type ontology as eligible because it's all-public civic data; flip
+# entire 22-type ontology as eligible because it's all-public civic data; flip
 # a type's `outbound_eligible` to false in the registry to gate a sensitive
 # lane. No default-allow — unknown/sidecar/retired names are denied.
 TYPE_ELIGIBILITY: dict[str, bool] = load_eligibility()

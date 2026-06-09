@@ -233,13 +233,14 @@ describe("buildExpandQuery", () => {
   // Fix 3: §6.3 Tier-2 priority table (not Plan 2 Phase-2 table)
   // -------------------------------------------------------------------------
 
-  it("fix 3: §6.3 Tier-2 priority table includes all 21 types", () => {
+  it("fix 3: §6.3 Tier-2 priority table includes all 22 types", () => {
     const { cypher } = buildExpandQuery(base);
     const expectedTypes = [
       "MoneyFlow", "Decision", "Case", "Project", "Program",
       "Agreement", "Amendment", "Filing", "Committee", "Election",
       "Candidacy", "Meeting", "Proceeding", "Person", "Organization",
       "Seat", "SeatService", "AgendaItem", "Record", "Place", "Issue",
+      "Membership",
     ];
     for (const t of expectedTypes) {
       expect(cypher, `missing sub-query for ${t}`).toContain(`(c:${t})`);

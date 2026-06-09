@@ -32,7 +32,7 @@ class TestEligibilityMap:
         assert set(TYPE_ELIGIBILITY) == set(ALL_TYPES)
 
     def test_all_v2_graph_types_eligible(self):
-        # v2 ships the entire 21-type ontology as outbound-eligible (all-public
+        # v2 ships the entire 22-type ontology as outbound-eligible (all-public
         # civic data); every graph type is explicitly true in the registry.
         for t in ALL_TYPES:
             assert is_eligible(t), f"{t} should be eligible per registry"
