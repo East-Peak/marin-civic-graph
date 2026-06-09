@@ -7,14 +7,31 @@ forbidden — see lint rule in scripts/_lint_check_outbound.py (Task 3).
 """
 from __future__ import annotations
 
-from canonical_type import ALL_TYPES
+from pathlib import Path
 
-# Default-deny baseline. v2 ships the entire 21-type ontology as eligible
-# because it's all-public civic data. Future sensitive lanes (criminal
-# records, sealed filings, etc.) will land in INELIGIBLE_TYPES.
-ELIGIBLE_TYPES: set[str] = set(ALL_TYPES)
+from canonical_type import load_registry
 
-INELIGIBLE_TYPES: set[str] = set()
+
+def load_eligibility(path: Path | str | None = None) -> dict[str, bool]:
+    """Build the EXPLICIT per-type outbound-eligibility map from the registry.
+
+    Keys == the graph node types; each value is that type's `outbound_eligible`
+    flag. There is NO default-allow: a type absent from this map is denied by
+    is_eligible(). Raises if the registry is malformed (load_registry validates
+    every required boolean flag is present).
+    """
+    registry = load_registry(path)
+    return {
+        node_type: spec["outbound_eligible"]
+        for node_type, spec in registry["graph_node_types"].items()
+    }
+
+
+# Explicit eligibility, derived from registry/node-types.json. v2 ships the
+# entire 21-type ontology as eligible because it's all-public civic data; flip
+# a type's `outbound_eligible` to false in the registry to gate a sensitive
+# lane. No default-allow — unknown/sidecar/retired names are denied.
+TYPE_ELIGIBILITY: dict[str, bool] = load_eligibility()
 
 # Per-type fields stripped from synthesis text before outbound. Any new
 # entity type with sensitive fields must be added here.
@@ -24,8 +41,12 @@ REDACT_FIELDS: dict[str, list[str]] = {
 
 
 def is_eligible(node_type: str) -> bool:
-    """True iff a node of this type may be sent to OpenAI/Anthropic."""
-    return node_type in ELIGIBLE_TYPES and node_type not in INELIGIBLE_TYPES
+    """True iff a node of this type may be sent to OpenAI/Anthropic.
+
+    Explicit map lookup, default-deny: a type not present in TYPE_ELIGIBILITY
+    (unknown type, sidecar artifact, retired label) is denied.
+    """
+    return TYPE_ELIGIBILITY.get(node_type, False)
 
 
 def _redacted_props(node: dict) -> dict:

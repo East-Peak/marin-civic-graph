@@ -121,6 +121,18 @@ class TestMalformedRegistryRejected:
             load_registry(path=MALFORMED_FIXTURE)
 
 
+class TestOutboundEligibilityDerivation:
+    def test_outbound_keys_equal_all_types(self):
+        from outbound_policy import TYPE_ELIGIBILITY
+        assert set(TYPE_ELIGIBILITY) == set(ALL_TYPES)
+
+    def test_outbound_values_come_from_registry(self):
+        from outbound_policy import TYPE_ELIGIBILITY
+        reg = load_registry()
+        for t, spec in reg["graph_node_types"].items():
+            assert TYPE_ELIGIBILITY[t] == spec["outbound_eligible"]
+
+
 class TestSchemaCoverage:
     def _constraint_labels(self) -> set[str]:
         text = SCHEMA_PATH.read_text(encoding="utf-8")
