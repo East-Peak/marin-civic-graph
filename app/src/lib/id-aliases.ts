@@ -1,56 +1,36 @@
 // app/src/lib/id-aliases.ts
-import type { NodeType } from "./type-display";
+import {
+  TYPE_BY_ID_PREFIX,
+  resolveTypeFromId,
+  type NodeType,
+} from "./node-types.generated";
 
-// Per spec §4.2. Legacy prefixes from earlier projection stages.
-const LEGACY_PREFIX_MAP: Record<string, string> = {
+// Per spec §4.2. Legacy id-STRING rewrites from earlier projection stages
+// (actor-x → person-x). This map only canonicalizes the id text; the TYPE
+// resolution comes from the registry-derived resolveTypeFromId — one source,
+// so the real `agenda-item-` prefix resolves correctly everywhere.
+const LEGACY_ID_REWRITE: Record<string, string> = {
   "actor-": "person-",
   "inst-": "org-",
   "eid-": "filing-",
-};
-
-// Canonical id-prefix → NodeType.
-const CANONICAL_PREFIX_MAP: Record<string, NodeType> = {
-  "person-": "Person",
-  "org-": "Organization",
-  "committee-": "Committee",
-  "seat-": "Seat",
-  "seatservice-": "SeatService",
-  "election-": "Election",
-  "candidacy-": "Candidacy",
-  "meeting-": "Meeting",
-  "agendaitem-": "AgendaItem",
-  "decision-": "Decision",
-  "filing-": "Filing",
-  "moneyflow-": "MoneyFlow",
-  "case-": "Case",
-  "proceeding-": "Proceeding",
-  "project-": "Project",
-  "program-": "Program",
-  "agreement-": "Agreement",
-  "amendment-": "Amendment",
-  "record-": "Record",
-  "place-": "Place",
-  "issue-": "Issue",
 };
 
 export type ResolvedId = { id: string; type: NodeType };
 
 export function resolveIdAlias(id: string, contextType?: NodeType): ResolvedId | null {
   let canonicalId = id;
-  for (const [legacy, canonical] of Object.entries(LEGACY_PREFIX_MAP)) {
+  for (const [legacy, canonical] of Object.entries(LEGACY_ID_REWRITE)) {
     if (id.startsWith(legacy)) {
-      // Only apply if context is compatible (actor- → person- only makes sense for Person).
-      const resolvedType = CANONICAL_PREFIX_MAP[canonical];
+      // Only apply if context is compatible (actor- → person- only makes sense
+      // for Person). The canonical prefix's type comes from the registry map.
+      const resolvedType = TYPE_BY_ID_PREFIX[canonical];
       if (contextType && contextType !== resolvedType) continue;
       canonicalId = canonical + id.slice(legacy.length);
       break;
     }
   }
-  for (const [prefix, type] of Object.entries(CANONICAL_PREFIX_MAP)) {
-    if (canonicalId.startsWith(prefix)) {
-      if (contextType && contextType !== type) return null;
-      return { id: canonicalId, type };
-    }
-  }
-  return null;
+  const type = resolveTypeFromId(canonicalId);
+  if (type === null) return null;
+  if (contextType && contextType !== type) return null;
+  return { id: canonicalId, type };
 }

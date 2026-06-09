@@ -15,7 +15,8 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ColumnDef } from "@/lib/server/data-queries";
-import { urlSegmentForType, type NodeType, ALL_TYPES } from "@/lib/type-display";
+import { urlSegmentForType } from "@/lib/type-display";
+import { resolveTypeFromId } from "@/lib/node-types.generated";
 
 export type DataTableProps = {
   rows: Record<string, unknown>[];
@@ -29,39 +30,13 @@ type SortState = {
   dir: "asc" | "desc";
 } | null;
 
-const NODE_TYPE_SET: ReadonlySet<string> = new Set(ALL_TYPES);
-
 function routeForId(id: string): string | null {
-  if (!id.includes("-")) return null;
-  const prefix = id.slice(0, id.indexOf("-"));
-  // Map prefix -> canonical NodeType. Keep this small and explicit; if a
-  // prefix isn't in the table, we fall back to no-link.
-  const PREFIX_TO_TYPE: Record<string, NodeType> = {
-    person: "Person",
-    org: "Organization",
-    committee: "Committee",
-    seat: "Seat",
-    seatservice: "SeatService",
-    election: "Election",
-    candidacy: "Candidacy",
-    meeting: "Meeting",
-    agendaitem: "AgendaItem",
-    decision: "Decision",
-    filing: "Filing",
-    moneyflow: "MoneyFlow",
-    case: "Case",
-    proceeding: "Proceeding",
-    project: "Project",
-    program: "Program",
-    agreement: "Agreement",
-    amendment: "Amendment",
-    record: "Record",
-    place: "Place",
-    issue: "Issue",
-  };
-  const type = PREFIX_TO_TYPE[prefix];
-  if (!type || !NODE_TYPE_SET.has(type)) return null;
-  const slug = id.slice(id.indexOf("-") + 1);
+  // Resolve the NodeType from the id prefix via the single registry-derived
+  // resolver (handles the multi-hyphen `agenda-item-` prefix that the old
+  // first-hyphen split mis-handled). No known prefix → no link.
+  const type = resolveTypeFromId(id);
+  if (!type) return null;
+  const slug = id.includes("-") ? id.slice(id.indexOf("-") + 1) : id;
   return `/${urlSegmentForType(type)}/${slug}`;
 }
 

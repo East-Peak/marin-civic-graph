@@ -23,7 +23,9 @@ import { ALL_TYPES, type NodeType } from "@/lib/type-display";
 // Visual grouping per the Task 8 note. Preserves spec §6.3 order enough for
 // the user to scan by family. Types not in any group would fall through, so
 // we include every NodeType in exactly one bucket.
-const FILTER_GROUPS: { label: string; types: NodeType[] }[] = [
+// Exported for the node-type parity test (EXHAUSTIVE_GROUPING) — every NodeType
+// must be in exactly one filter group.
+export const FILTER_GROUPS: { label: string; types: NodeType[] }[] = [
   { label: "people", types: ["Person", "Organization", "Committee"] },
   { label: "governance", types: ["Seat", "SeatService", "Meeting", "AgendaItem", "Decision"] },
   { label: "campaigns", types: ["Election", "Candidacy", "Filing", "MoneyFlow"] },

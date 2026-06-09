@@ -2,7 +2,9 @@ import Link from "next/link";
 import { urlSegmentForType, displayNameForType, type NodeType } from "@/lib/type-display";
 
 // Grouping per spec §3.4 — display only; each row still maps to /browse/{type}.
-const GROUPS: { heading: string; types: NodeType[] }[] = [
+// Exported for the node-type parity test (EXHAUSTIVE_GROUPING): these groups +
+// the Record footer section below must cover every NodeType exactly once.
+export const GROUPS: { heading: string; types: NodeType[] }[] = [
   { heading: "People & organizations", types: ["Person", "Organization"] },
   { heading: "Governance", types: ["Meeting", "AgendaItem", "Decision", "Seat", "SeatService"] },
   { heading: "Elections & campaigns", types: ["Election", "Candidacy", "Committee", "Filing", "MoneyFlow"] },

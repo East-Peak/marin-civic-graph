@@ -64,7 +64,9 @@ type ExpandSubSpec = {
 //     ASC, id ASC" per spec; here we approximate by ranking on `item_number`
 //     (the parent date is unknown at sub-query level without an extra join)
 //     and let the outer union ORDER BY fall back to id for determinism.
-const SUB_SPECS: ExpandSubSpec[] = [
+// Exported for the node-type parity test (EXHAUSTIVE_GROUPING) — exactly one
+// expand sub-spec per NodeType.
+export const SUB_SPECS: ExpandSubSpec[] = [
   { typeLabel: "MoneyFlow",    typePriority: 1,  rankingKey: "c.amount DESC, c.flow_date DESC", rankValueExpr: "c.amount",         eventDateExpr: "c.flow_date" },
   { typeLabel: "Decision",     typePriority: 2,  rankingKey: "c.decided_at DESC",                rankValueExpr: "c.decided_at",     eventDateExpr: "c.decided_at" },
   { typeLabel: "Case",         typePriority: 3,  rankingKey: "c.filed_at DESC",                  rankValueExpr: "c.filed_at",       eventDateExpr: "c.filed_at" },

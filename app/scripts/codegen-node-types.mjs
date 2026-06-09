@@ -21,6 +21,14 @@ const OUT_PATH = path.resolve(__dirname, "..", "src", "lib", "node-types.generat
 export function renderNodeTypes(registry) {
   const types = Object.keys(registry.graph_node_types);
   const tuple = types.map((t) => `  "${t}",`).join("\n");
+  // Registry id_prefixes — incl. the real multi-hyphen `agenda-item-` and the
+  // legacy aliases (actor-/inst-/eid-). This is the ONE prefix→type map for TS;
+  // id-aliases.ts + data-table.tsx route through resolveTypeFromId rather than
+  // hand-rolling their own (which is how the `agendaitem-` / first-hyphen-split
+  // bugs crept in).
+  const prefixEntries = Object.entries(registry.id_prefixes)
+    .map(([prefix, type]) => `  "${prefix}": "${type}",`)
+    .join("\n");
   return `// AUTO-GENERATED from registry/node-types.json — DO NOT EDIT BY HAND.
 // Regenerate: node app/scripts/codegen-node-types.mjs
 // The registry is the single source of truth for the node-type contract.
@@ -30,6 +38,31 @@ ${tuple}
 ] as const;
 
 export type NodeType = (typeof ALL_TYPES)[number];
+
+// Canonical id-prefix → NodeType, derived from registry id_prefixes. Includes
+// the real \`agenda-item-\` prefix and the legacy aliases (actor-/inst-/eid-).
+export const TYPE_BY_ID_PREFIX: Record<string, NodeType> = {
+${prefixEntries}
+};
+
+// Longest-prefix-first so a strict-prefix pair (e.g. a hypothetical \`agenda-\`
+// vs \`agenda-item-\`) can never mis-resolve. Today's registry has no such pair,
+// but sorting makes the resolver robust to future additions regardless of map
+// key order.
+const _PREFIXES_LONGEST_FIRST = Object.keys(TYPE_BY_ID_PREFIX).sort(
+  (a, b) => b.length - a.length,
+);
+
+/**
+ * Resolve a node's canonical NodeType from its id prefix. The single shared
+ * id-prefix resolver for the app — returns null for an id with no known prefix.
+ */
+export function resolveTypeFromId(id: string): NodeType | null {
+  for (const prefix of _PREFIXES_LONGEST_FIRST) {
+    if (id.startsWith(prefix)) return TYPE_BY_ID_PREFIX[prefix];
+  }
+  return null;
+}
 `;
 }
 

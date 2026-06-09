@@ -53,6 +53,23 @@ describe("DataTable", () => {
     expect(link.getAttribute("href")).toBe("/decision/sr-merrydale-shelter");
   });
 
+  // M1b RESIDUAL 2 — `agenda-item-*` ids have a multi-hyphen prefix. The old
+  // first-hyphen split (id.slice(0, id.indexOf("-"))) yielded "agenda", which
+  // wasn't in the local PREFIX_TO_TYPE map → agenda items got NO link. Routed
+  // through the registry-derived resolveTypeFromId, the type now resolves and a
+  // link renders with the correct /agenda-item/ url-segment. (The slug round-trip
+  // is a separate, flagged out-of-scope routing residual — assert the segment,
+  // not the slug.)
+  it("links an agenda-item id (was unlinked: first-hyphen split)", () => {
+    const cols: ColumnDef[] = [
+      { key: "id", label: "Agenda id", alignment: "left", link: "entity-route" },
+    ];
+    const rows = [{ id: "agenda-item-2024-08-19-5a" }];
+    render(<DataTable rows={rows} columns={cols} slug="x" />);
+    const link = screen.getByRole("link", { name: "agenda-item-2024-08-19-5a" });
+    expect(link.getAttribute("href")?.startsWith("/agenda-item/")).toBe(true);
+  });
+
   it("sorts DESC on first click of a sortable header, toggles ASC on second", () => {
     render(<DataTable rows={BASE_ROWS} columns={BASE_COLUMNS} slug="x" />);
     const header = screen.getByText(/Decided at/i);

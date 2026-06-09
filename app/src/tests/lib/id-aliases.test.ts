@@ -41,4 +41,14 @@ describe("id-aliases", () => {
   it("returns null for unrecognized ids", () => {
     expect(resolveIdAlias("gibberish-xyz")).toBeNull();
   });
+
+  // M1b RESIDUAL 1 — real agenda ids are `agenda-item-*`; the old hand-rolled
+  // CANONICAL_PREFIX_MAP carried a stale `agendaitem-` key that never matched.
+  // Now routed through the registry-derived resolveTypeFromId (single source).
+  it("resolves the real agenda-item- prefix (was stale agendaitem-)", () => {
+    expect(resolveIdAlias("agenda-item-2024-08-19-5a")).toEqual({
+      id: "agenda-item-2024-08-19-5a",
+      type: "AgendaItem",
+    });
+  });
 });
