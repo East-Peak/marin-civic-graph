@@ -58,6 +58,10 @@ describe("EDGE_WEIGHTS table", () => {
     expect(EDGE_WEIGHTS.CONTROLLED_BY).toBe(3);
     expect(EDGE_WEIGHTS.CANDIDATE_ACTOR).toBe(3); // BY_PERSON live
     expect(EDGE_WEIGHTS.RESULT_OF_ELECTION).toBe(3);
+    // Membership edges (COI spec §4.1, M2a) — same tier as the SeatService
+    // analog's HELD_BY/FOR_SEAT.
+    expect(EDGE_WEIGHTS.MEMBER).toBe(3);
+    expect(EDGE_WEIGHTS.MEMBER_OF_ORG).toBe(3);
   });
 
   it("maps weight-5 AT_MEETING / FILED_BY / PART_OF", () => {

@@ -103,6 +103,12 @@ def test_spec_to_live_in_election_fans_out():
     assert "FILED_FOR_ELECTION" in live
 
 
+def test_spec_to_live_member_edges_unchanged():
+    # COI spec §4.1 (M2a): Membership's edges land live under their spec names.
+    assert spec_to_live("MEMBER") == ["MEMBER"]
+    assert spec_to_live("MEMBER_OF_ORG") == ["MEMBER_OF_ORG"]
+
+
 def test_spec_to_live_constrains_empty_until_materialized():
     # CONSTRAINS has no live equivalent yet. Empty list is correct behavior.
     assert spec_to_live("CONSTRAINS") == []
@@ -158,6 +164,15 @@ def test_phase2_whitelist_includes_program_operator():
     assert "OPERATED_BY" in PHASE2_WHITELIST_LIVE
 
 
+def test_phase2_whitelist_includes_membership_edges():
+    # M2a: a Membership must be discoverable from a Person/Organization
+    # neighborhood, so both its edges are traversable (not universal-excluded).
+    assert "MEMBER" in PHASE2_WHITELIST_LIVE
+    assert "MEMBER_OF_ORG" in PHASE2_WHITELIST_LIVE
+    assert "MEMBER" not in UNIVERSAL_EDGES_LIVE
+    assert "MEMBER_OF_ORG" not in UNIVERSAL_EDGES_LIVE
+
+
 def test_money_edges_live_non_empty():
     # Money-styled edges feed the edge classifier.
     assert "FROM_SOURCE" in MONEY_EDGES_LIVE
@@ -193,6 +208,8 @@ def test_spec_to_live_dict_exhaustive_for_phase2_whitelist():
         "DISCLOSED_IN", "UNDER_AGREEMENT", "AMENDS", "CONTROLLED_BY", "FILED_BY",
         "BY_PERSON", "IN_ELECTION", "FOR_ELECTION", "FOR_PROJECT", "ABOUT_PROJECT",
         "ABOUT_PROGRAM", "PARTY_TO", "CONSTRAINS", "BETWEEN", "HEARD_IN",
+        # COI spec §4.1 (M2a) — Membership edges.
+        "MEMBER", "MEMBER_OF_ORG",
     }
     for name in phase2_spec_names:
         assert name in SPEC_TO_LIVE, f"spec §3 edge {name} missing from SPEC_TO_LIVE"

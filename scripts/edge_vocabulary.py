@@ -1,7 +1,8 @@
 """Spec §3 edge name → live AuraDB edge name(s) mapping.
 
 Single source of truth for the v1 design's §3 relationship ontology against the
-current live projection. Consumed by:
+current live projection, extended by the COI spec §4.1 Membership edges
+(MEMBER, MEMBER_OF_ORG — M2a). Consumed by:
 
 - `scripts/build_signature_subgraphs.py` — Phase-2 whitelist for 2-hop traversal
 - `app/src/lib/edge-vocabulary.ts` — TypeScript mirror for the radial-hero (Plan 2 Batch D)
@@ -95,6 +96,11 @@ SPEC_TO_LIVE: dict[str, list[str]] = {
     "PARTY_TO": ["PARTY_TO"],
     "CONSTRAINS": [],  # not yet materialized in live graph — correct behavior.
     "HEARD_IN": ["HEARD_IN", "HEARD_BY"],
+    # --- COI / membership (COI spec §4.1, M2a) -----------------------------
+    # Membership reifies a person↔org affiliation; both edges land live under
+    # their spec names. Provenance uses the universal EVIDENCED_BY.
+    "MEMBER": ["MEMBER"],
+    "MEMBER_OF_ORG": ["MEMBER_OF_ORG"],
 }
 
 # ---------------------------------------------------------------------------
@@ -147,6 +153,9 @@ _PHASE2_SPEC: list[str] = [
     "DISCLOSED_IN", "UNDER_AGREEMENT", "AMENDS", "CONTROLLED_BY", "FILED_BY",
     "BY_PERSON", "IN_ELECTION", "FOR_ELECTION", "FOR_PROJECT", "ABOUT_PROJECT",
     "ABOUT_PROGRAM", "PARTY_TO", "CONSTRAINS", "BETWEEN", "HEARD_IN",
+    # COI spec §4.1 (M2a): a Membership must be reachable from Person/Org
+    # neighborhoods, so its edges are Phase-2 traversable.
+    "MEMBER", "MEMBER_OF_ORG",
 ]
 
 # Live-only edges with no direct spec §3 equivalent but needed for entity-page

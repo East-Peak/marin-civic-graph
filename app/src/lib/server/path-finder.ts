@@ -67,8 +67,9 @@ export const EDGE_WEIGHTS: Record<string, number> = (() => {
   add(1, ["CONSTRAINS", "CAST_VOTE", "DECIDED_BY", "PARTY_TO"]);
   // Weight 2 — money + amendments.
   add(2, ["FROM_SOURCE", "TO_TARGET", "DISCLOSED_IN", "UNDER_AGREEMENT", "AMENDS"]);
-  // Weight 3 — governance structure.
-  add(3, ["HELD_BY", "FOR_SEAT", "RESULT_OF", "CONTROLLED_BY", "BY_PERSON", "IN_ELECTION", "FOR_ELECTION", "FOR_PROJECT"]);
+  // Weight 3 — governance structure. MEMBER/MEMBER_OF_ORG (COI spec §4.1, M2a)
+  // sit here with HELD_BY/FOR_SEAT, the SeatService analog's edges.
+  add(3, ["HELD_BY", "FOR_SEAT", "RESULT_OF", "CONTROLLED_BY", "BY_PERSON", "IN_ELECTION", "FOR_ELECTION", "FOR_PROJECT", "MEMBER", "MEMBER_OF_ORG"]);
   // Weight 4.
   add(4, ["ABOUT_PROJECT", "ABOUT_PROGRAM", "ABOUT_ITEM", "BETWEEN", "HEARD_IN", "AT_INSTITUTION"]);
   // Weight 5.

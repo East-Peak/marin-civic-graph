@@ -48,6 +48,11 @@ export const SPEC_TO_LIVE: Record<string, string[]> = {
   PARTY_TO: ["PARTY_TO"],
   CONSTRAINS: [], // not yet materialized in live graph — correct behavior.
   HEARD_IN: ["HEARD_IN", "HEARD_BY"],
+  // --- COI / membership (COI spec §4.1, M2a) -------------------------------
+  // Membership reifies a person↔org affiliation; both edges land live under
+  // their spec names. Provenance uses the universal EVIDENCED_BY.
+  MEMBER: ["MEMBER"],
+  MEMBER_OF_ORG: ["MEMBER_OF_ORG"],
 };
 
 // ---------------------------------------------------------------------------
@@ -122,6 +127,8 @@ export const PHASE2_WHITELIST_LIVE: string[] = [
   "HEARD_BY",
   "HEARD_IN",
   "HELD_BY",
+  "MEMBER",
+  "MEMBER_OF_ORG",
   "OFFICIAL_FILER",
   "OPERATED_BY",
   "PARTY_TO",

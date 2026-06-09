@@ -31,7 +31,7 @@ describe("edge-vocabulary", () => {
     }
   });
 
-  it("SPEC_TO_LIVE contains all 26 spec §3 relationship names", () => {
+  it("SPEC_TO_LIVE contains all 28 spec relationship names (26 §3 + 2 COI §4.1)", () => {
     const specNames = [
       "CAST_VOTE",
       "AT_MEETING",
@@ -59,11 +59,23 @@ describe("edge-vocabulary", () => {
       "CONSTRAINS",
       "BETWEEN",
       "HEARD_IN",
+      // COI spec §4.1 (M2a) — Membership edges.
+      "MEMBER",
+      "MEMBER_OF_ORG",
     ];
     for (const name of specNames) {
       expect(SPEC_TO_LIVE[name]).toBeDefined();
     }
-    expect(specNames).toHaveLength(26);
+    expect(specNames).toHaveLength(28);
+  });
+
+  it("Membership edges are traversable (whitelisted, not universal-excluded)", () => {
+    expect(specToLive("MEMBER")).toEqual(["MEMBER"]);
+    expect(specToLive("MEMBER_OF_ORG")).toEqual(["MEMBER_OF_ORG"]);
+    for (const e of ["MEMBER", "MEMBER_OF_ORG"]) {
+      expect(PHASE2_WHITELIST_LIVE).toContain(e);
+      expect(UNIVERSAL_EDGES_LIVE).not.toContain(e);
+    }
   });
 
   it("CONSTRAINS has no live edge — not yet materialized", () => {
