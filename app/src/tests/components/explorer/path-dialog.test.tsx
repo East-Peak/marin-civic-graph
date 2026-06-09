@@ -232,9 +232,15 @@ describe("PathDialog", () => {
       // The retry must have fired a second fetch with loose=true in the URL.
       expect(calls.some((u) => u.includes("loose=true"))).toBe(true);
     });
+    // Assert on the /api/path calls ONLY — they carry `loose=`. The debounced
+    // /api/search autocomplete calls (which can leak across tests under heavy
+    // parallel load — a pending timer from a prior test firing into this shared
+    // `calls` array) don't, so filtering by `loose=` keeps this deterministic
+    // instead of trusting `calls.at(-1)`. Test-isolation only.
     // Pre-fix 14 the retry URL still had loose=false because setLoose(true)
     // hadn't been committed to state by the time onSubmit read it.
-    expect(calls[0]).toContain("loose=false");
-    expect(calls.at(-1)).toContain("loose=true");
+    const pathCalls = calls.filter((u) => u.includes("loose="));
+    expect(pathCalls[0]).toContain("loose=false");
+    expect(pathCalls.at(-1)).toContain("loose=true");
   });
 });
