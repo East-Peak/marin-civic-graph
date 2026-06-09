@@ -1,5 +1,7 @@
 # Open Marin — COI/NGO Legibility Swarm: Design Spec
 
+> **AMENDMENT (2026-06-08) — type model simplified; see `~/.openclaw/workspace/decisions/2026-06-08-coi-type-model-and-registry.md`.** After Phase 0 shipped, building the first COI type revealed adding a graph node type is a ~15-surface change, so: (1) the node-type registry is **centralized first** (Phase 1 M1); (2) the COI layer adds only **two** graph node types — `Membership` + `EconomicInterest` (board-seats linked via `EVIDENCES_MEMBERSHIP`), **not** four. **`Mention`/`Claim` are now SIDECAR read-models, not core graph nodes** — this *reverses* §4.5/§5.1's "Mention/Claim into core"; P6 joins the media sidecar to graph subjects at read time, so media text never enters the embedded/egressed graph. Read §4.1/§4.2/§5/§6 with this in mind.
+
 **Date:** 2026-06-07
 **Status:** Draft — Codex rounds 1–3 + live-AuraDB verification + consolidation decision applied; **design converged** (round 3 found zero P0s; only precision items, all applied)
 **Author:** Claude (Opus 4.8 1M), with Stuart Watson
