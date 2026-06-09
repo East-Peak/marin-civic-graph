@@ -1,11 +1,11 @@
 // Neo4j Schema for Marin Civic Graph
-// Auto-generated for the settled 21-type ontology
+// Auto-generated for the settled 22-type ontology
 // IMPORTANT: Run this schema BEFORE loading any data into the database
 // This file creates unique constraints, full-text indexes, and property indexes
 // for optimal query performance and data integrity.
 
 // ============================================================================
-// Unique Constraints (21 core node types + 1 QA)
+// Unique Constraints (22 core node types + 1 QA)
 // ============================================================================
 // Each node type requires a unique constraint on its id property
 // These ensure data integrity and provide fast lookups by entity ID
@@ -31,6 +31,7 @@ CREATE CONSTRAINT amendment_id_unique IF NOT EXISTS FOR (n:Amendment) REQUIRE n.
 CREATE CONSTRAINT record_id_unique IF NOT EXISTS FOR (n:Record) REQUIRE n.id IS UNIQUE;
 CREATE CONSTRAINT place_id_unique IF NOT EXISTS FOR (n:Place) REQUIRE n.id IS UNIQUE;
 CREATE CONSTRAINT issue_id_unique IF NOT EXISTS FOR (n:Issue) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT membership_id_unique IF NOT EXISTS FOR (n:Membership) REQUIRE n.id IS UNIQUE;
 CREATE CONSTRAINT validationcheck_id_unique IF NOT EXISTS FOR (n:ValidationCheck) REQUIRE n.id IS UNIQUE;
 
 // ============================================================================

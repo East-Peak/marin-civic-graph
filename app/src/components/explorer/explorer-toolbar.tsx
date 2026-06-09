@@ -4,7 +4,7 @@
 //
 // Renders compact Plex-Mono chips for:
 //   - HOP slider (1..4)
-//   - 21 node-type filter chips, grouped visually
+//   - 22 node-type filter chips, grouped visually
 //   - 4 edge-class filter chips
 //   - Time range (paired <input type="date">; fancy two-thumb slider is Plan 4 polish)
 //   - Pathfinding button
@@ -27,7 +27,9 @@ import { ALL_TYPES, type NodeType } from "@/lib/type-display";
 // must be in exactly one filter group.
 export const FILTER_GROUPS: { label: string; types: NodeType[] }[] = [
   { label: "people", types: ["Person", "Organization", "Committee"] },
-  { label: "governance", types: ["Seat", "SeatService", "Meeting", "AgendaItem", "Decision"] },
+  // Membership chips with SeatService — its structural analog (both reified
+  // person↔affiliation connective nodes; M2a predeclared grouping).
+  { label: "governance", types: ["Seat", "SeatService", "Membership", "Meeting", "AgendaItem", "Decision"] },
   { label: "campaigns", types: ["Election", "Candidacy", "Filing", "MoneyFlow"] },
   { label: "projects", types: ["Project", "Program", "Agreement", "Amendment"] },
   { label: "legal", types: ["Case", "Proceeding"] },

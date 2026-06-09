@@ -89,6 +89,9 @@ export const SUB_SPECS: ExpandSubSpec[] = [
   // SeatService: live uses `started_at`. Fallback to `start_date` for
   // forward-compat with the entity-temporal reader.
   { typeLabel: "SeatService",  typePriority: 11, rankingKey: "c.started_at DESC",                rankValueExpr: "c.started_at",     eventDateExpr: "coalesce(c.started_at, c.start_date)" },
+  // Membership (COI spec §4.1): person↔org affiliation, started_at-anchored
+  // like its structural analog SeatService.
+  { typeLabel: "Membership",   typePriority: 11, rankingKey: "c.started_at DESC",                rankValueExpr: "c.started_at",     eventDateExpr: "c.started_at" },
   { typeLabel: "AgendaItem",   typePriority: 12, rankingKey: "c.item_number ASC",                rankValueExpr: "c.item_number",    eventDateExpr: "coalesce(c.parent_meeting_date, c.meeting_date)" },
   { typeLabel: "Record",       typePriority: 13, rankingKey: "c.published_at DESC, c.captured_at DESC", rankValueExpr: "c.published_at", eventDateExpr: "coalesce(c.published_at, c.captured_at)" },
   { typeLabel: "Place",        typePriority: 14, rankingKey: "c.id ASC",                         rankValueExpr: "c.id",             eventDateExpr: "null" },

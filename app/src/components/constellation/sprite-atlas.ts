@@ -24,6 +24,9 @@ const TYPE_COLORS: Record<NodeType, string> = {
   Record: "#e8ecf3",
   Place: "#e8ecf3",
   Issue: "#e8ecf3",
+  // Muted teal — the only unused hue in the pastel band; sits between the
+  // Person blue and Decision green for the person↔org connective type.
+  Membership: "#8fd9c9",
 };
 
 const TYPE_ABBREV: Record<NodeType, string> = {
@@ -34,6 +37,7 @@ const TYPE_ABBREV: Record<NodeType, string> = {
   Case: "CSE", Proceeding: "PRC", Project: "PRJ",
   Program: "PRG", Agreement: "AGR", Amendment: "AMD",
   Record: "REC", Place: "PLC", Issue: "ISS",
+  Membership: "MBR",
 };
 
 export type SpriteAtlas = {

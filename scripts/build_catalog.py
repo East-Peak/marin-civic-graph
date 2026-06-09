@@ -15,7 +15,7 @@ ALL_TYPES = [
     "Person", "Organization", "Committee", "Seat", "SeatService", "Election",
     "Candidacy", "Meeting", "AgendaItem", "Decision", "Filing", "MoneyFlow",
     "Case", "Proceeding", "Project", "Program", "Agreement", "Amendment",
-    "Record", "Place", "Issue",
+    "Record", "Place", "Issue", "Membership",
 ]
 
 OUT = Path(__file__).resolve().parent.parent / "data" / "projected" / "graph-v1" / "catalog.json"

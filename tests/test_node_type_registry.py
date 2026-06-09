@@ -3,7 +3,7 @@
 `registry/node-types.json` is the single source of truth for the type contract.
 These tests pin ONLY the mechanical surfaces derived from it:
   - canonical_type.ALL_TYPES / TYPE_BY_ID_PREFIX / ORGANIZATION_SUBTYPES derive
-    from the registry (ALL_TYPES still == the 21).
+    from the registry (ALL_TYPES == the 22: the original 21 + Membership).
   - every graph type's REAL id prefix resolves via canonical_type (incl. the
     fixed `agenda-item-` prefix; the latent AgendaItem bug).
   - the registry rejects a graph type missing a required boolean flag.
@@ -40,12 +40,14 @@ MALFORMED_FIXTURE = (
     ROOT / "tests" / "fixtures" / "registry" / "malformed-missing-flag.json"
 )
 
-# The settled 21-type ontology (spec §4.1). M1a centralizes; it does NOT add.
+# The settled ontology: the original 21 (spec §4.1, centralized by M1a) plus
+# Membership (COI spec §4.1, added by M2a) — 22 graph types.
 EXPECTED_TYPES = {
     "Person", "Organization", "Committee", "Seat", "SeatService",
     "Election", "Candidacy", "Meeting", "AgendaItem", "Decision",
     "Filing", "MoneyFlow", "Case", "Proceeding", "Project",
     "Program", "Agreement", "Amendment", "Record", "Place", "Issue",
+    "Membership",
 }
 
 
@@ -53,10 +55,10 @@ class TestRegistryFile:
     def test_registry_file_exists(self):
         assert REGISTRY_PATH.is_file(), f"{REGISTRY_PATH} missing"
 
-    def test_graph_node_types_are_exactly_the_21(self):
+    def test_graph_node_types_are_exactly_the_22(self):
         reg = load_registry()
         assert set(reg["graph_node_types"]) == EXPECTED_TYPES
-        assert len(reg["graph_node_types"]) == 21
+        assert len(reg["graph_node_types"]) == 22
 
     def test_every_graph_type_has_both_boolean_flags(self):
         reg = load_registry()
@@ -76,7 +78,7 @@ class TestPythonDerivation:
     def test_all_types_derive_from_registry(self):
         reg = load_registry()
         assert list(ALL_TYPES) == list(reg["graph_node_types"].keys())
-        assert len(ALL_TYPES) == 21
+        assert len(ALL_TYPES) == 22
 
     def test_prefix_map_derives_from_registry(self):
         reg = load_registry()

@@ -6,7 +6,9 @@ import { urlSegmentForType, displayNameForType, type NodeType } from "@/lib/type
 // the Record footer section below must cover every NodeType exactly once.
 export const GROUPS: { heading: string; types: NodeType[] }[] = [
   { heading: "People & organizations", types: ["Person", "Organization"] },
-  { heading: "Governance", types: ["Meeting", "AgendaItem", "Decision", "Seat", "SeatService"] },
+  // Membership sits with SeatService — its structural analog (both are
+  // reified person↔affiliation connective nodes; M2a predeclared grouping).
+  { heading: "Governance", types: ["Meeting", "AgendaItem", "Decision", "Seat", "SeatService", "Membership"] },
   { heading: "Elections & campaigns", types: ["Election", "Candidacy", "Committee", "Filing", "MoneyFlow"] },
   { heading: "Programs, projects, agreements", types: ["Program", "Project", "Agreement", "Amendment"] },
   { heading: "Legal", types: ["Case", "Proceeding"] },

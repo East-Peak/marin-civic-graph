@@ -211,6 +211,13 @@ export function propKeyForFactLabel(type: NodeType, label: string): string {
     Issue: {
       description: "description",
     },
+    Membership: {
+      person: "person_name",
+      organization: "organization_name",
+      role: "role",
+      period: "started_at",
+      source: "source_basis",
+    },
   };
   return MAP[type][key] ?? key.replace(/\s+/g, "_");
 }

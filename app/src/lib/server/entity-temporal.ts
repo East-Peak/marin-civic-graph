@@ -51,6 +51,9 @@ export function effectiveEventDate(
       return null;
     case "SeatService":
       return s(props.started_at) ?? s(props.start_date);
+    case "Membership":
+      // Range treatment (started_at → ended_at) deferred, same as SeatService.
+      return s(props.started_at);
     // Durable types — always visible, no ribbon mark.
     case "Person":
     case "Organization":

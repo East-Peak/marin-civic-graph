@@ -36,7 +36,7 @@ class TestCanonicalType:
         assert canonical_type(["RandomLabel"], "no-prefix-id") is None
 
     def test_all_types_count_matches_ts(self):
-        assert len(ALL_TYPES) == 21
+        assert len(ALL_TYPES) == 22
 
     def test_org_subtypes_match_ts(self):
         assert ORGANIZATION_SUBTYPES == {

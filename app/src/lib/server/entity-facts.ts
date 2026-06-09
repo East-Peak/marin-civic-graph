@@ -181,6 +181,15 @@ export function factsForEntity(
           { key: "Name", value: s(props.name) },
           { key: "Description", value: s(props.description) },
         ];
+      case "Membership":
+        // COI spec §4.1 — person↔org affiliation (board/officer/staff).
+        return [
+          { key: "Person", value: s(props.person_name) },
+          { key: "Organization", value: s(props.organization_name) },
+          { key: "Role", value: s(props.role) },
+          { key: "Period", value: period(props.started_at, props.ended_at) },
+          { key: "Source", value: s(props.source_basis) },
+        ];
       default: {
         const _exhaustive: never = type;
         void _exhaustive;

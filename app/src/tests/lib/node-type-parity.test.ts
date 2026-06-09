@@ -81,7 +81,7 @@ function realIdFor(prefix: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// EXHAUSTIVE_MAP — keyed Record<NodeType,…>; exactly the 21 keys, no extras.
+// EXHAUSTIVE_MAP — keyed Record<NodeType,…>; exactly the 22 keys, no extras.
 // ---------------------------------------------------------------------------
 describe("EXHAUSTIVE_MAP surfaces key every NodeType (and no extras)", () => {
   it.each([

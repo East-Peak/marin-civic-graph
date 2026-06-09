@@ -23,6 +23,7 @@ export const ALL_TYPES = [
   "Record",
   "Place",
   "Issue",
+  "Membership",
 ] as const;
 
 export type NodeType = (typeof ALL_TYPES)[number];
@@ -67,6 +68,7 @@ const DISPLAY_NAMES: Record<NodeType, string> = {
   Record: "Source records",
   Place: "Places",
   Issue: "Issues",
+  Membership: "Memberships",
 };
 
 // Convert PascalCase to kebab-case for URLs.

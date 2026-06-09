@@ -275,7 +275,7 @@ describe("buildExpandQuery", () => {
     // Each sub-query must emit `AS event_date`. Count occurrences ≥ active
     // type count.
     const matches = cypher.match(/AS event_date/g) ?? [];
-    expect(matches.length).toBeGreaterThanOrEqual(21);
+    expect(matches.length).toBeGreaterThanOrEqual(22);
   });
 
   it("fix 4: outer SELECT carries event_date forward", () => {

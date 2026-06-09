@@ -58,7 +58,7 @@ describe("factsForEntity", () => {
     expect(map["ID"]).toBe("project-350-merrydale-interim-shelter");
   });
 
-  it("returns a non-empty array for each of the 21 node types", () => {
+  it("returns a non-empty array for each of the 22 node types", () => {
     for (const type of ALL_TYPES as readonly NodeType[]) {
       const rows = factsForEntity(type, { id: `${type}-sample` });
       expect(rows.length, `type=${type}`).toBeGreaterThan(0);

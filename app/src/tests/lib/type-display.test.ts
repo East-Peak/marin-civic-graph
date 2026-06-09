@@ -16,8 +16,8 @@ describe("type-display", () => {
     expect(displayNameForType("SeatService")).toBe("Seat services");
   });
 
-  it("ALL_TYPES lists all 21 node types", () => {
-    expect(ALL_TYPES).toHaveLength(21);
+  it("ALL_TYPES lists all 22 node types", () => {
+    expect(ALL_TYPES).toHaveLength(22);
     expect(ALL_TYPES).toContain("Person");
     expect(ALL_TYPES).toContain("Record");
   });

@@ -24,6 +24,7 @@ export const ALL_TYPES = [
   "Record",
   "Place",
   "Issue",
+  "Membership",
 ] as const;
 
 export type NodeType = (typeof ALL_TYPES)[number];
@@ -52,6 +53,7 @@ export const TYPE_BY_ID_PREFIX: Record<string, NodeType> = {
   "record-": "Record",
   "place-": "Place",
   "issue-": "Issue",
+  "membership-": "Membership",
   "actor-": "Person",
   "inst-": "Organization",
   "eid-": "Filing",
