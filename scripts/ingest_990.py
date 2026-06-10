@@ -32,6 +32,7 @@ Outputs:
 
 from __future__ import annotations
 
+import difflib
 import logging
 import re
 import xml.etree.ElementTree as ET
@@ -442,3 +443,99 @@ def build_memberships(
         for record_id in sorted(entry["records"]):
             edges.append(build_evidenced_by_edge(membership_id, record_id))
     return nodes, edges
+
+
+# ---------------------------------------------------------------------------
+# Resolver — deterministic SAME_AS + ResolutionCandidate sidecar (Decision 6)
+# ---------------------------------------------------------------------------
+
+# Trailing corporate suffixes stripped during name normalization. Bounded by
+# design — this is a tie-breaker for exact-equality after cleanup, not a
+# general company-name canonicalizer.
+_NAME_SUFFIXES = {"inc", "incorporated", "llc", "corp"}
+
+# Minimum difflib ratio for a name-similarity ResolutionCandidate. Below this
+# the pair produces nothing — no edge, no candidate.
+_SIMILARITY_THRESHOLD = 0.85
+
+
+def _normalize_ein(value: Any) -> str | None:
+    """Digits only; None when absent or no digits survive."""
+    if not value:
+        return None
+    digits = re.sub(r"\D", "", str(value))
+    return digits or None
+
+
+def _normalize_name(value: str) -> str:
+    """Casefold, collapse non-alphanumeric runs to single spaces, and strip
+    trailing corporate suffixes (inc/incorporated/llc/corp) repeatedly.
+    """
+    tokens = re.sub(r"[^0-9a-z]+", " ", value.casefold()).split()
+    while tokens and tokens[-1] in _NAME_SUFFIXES:
+        tokens.pop()
+    return " ".join(tokens)
+
+
+def propose_org_resolutions(
+    new_orgs: list[dict[str, Any]],
+    existing_orgs: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Pure resolver: (SAME_AS edges, ResolutionCandidate dicts).
+
+    Deterministic auto-merge on exact normalized-EIN equality ONLY (both
+    sides must carry an EIN) — that pair is a settled join, so nothing is
+    queued for it. Everything else is bounded stdlib-only name evidence that
+    lands in the JSONL review sidecar, never in the graph: exact
+    normalized-name equality (conf 0.9), else difflib ratio ≥ 0.85
+    (conf = the 2dp ratio). Name similarity alone NEVER merges.
+
+    `existing_orgs` is injected (`[{id, display_label, ein?}]`) — no graph
+    access here; the operator feeds a real export at run time.
+    """
+    same_as_edges: list[dict[str, Any]] = []
+    candidates: list[dict[str, Any]] = []
+
+    for new in new_orgs:
+        new_ein = _normalize_ein(new.get("ein"))
+        new_name = new["display_label"]
+        for existing in existing_orgs:
+            existing_ein = _normalize_ein(existing.get("ein"))
+            if new_ein and existing_ein and new_ein == existing_ein:
+                same_as_edges.append(
+                    {
+                        "source_id": new["id"],
+                        "target_id": existing["id"],
+                        "relationship_type": "SAME_AS",
+                        "properties": {"basis": "ein_exact"},
+                    }
+                )
+                continue  # settled deterministically — queue nothing
+
+            existing_name = existing["display_label"]
+            if _normalize_name(new_name) == _normalize_name(existing_name):
+                signals = ["normalized_name_exact"]
+                confidence = 0.9
+            else:
+                ratio = difflib.SequenceMatcher(
+                    None, new_name.casefold(), existing_name.casefold()
+                ).ratio()
+                if ratio < _SIMILARITY_THRESHOLD:
+                    continue
+                confidence = round(ratio, 2)
+                signals = [f"name_similarity:{confidence}"]
+
+            candidates.append(
+                {
+                    "subject_ref": new["id"],
+                    "candidate_ref": existing["id"],
+                    "signals": signals,
+                    "confidence": confidence,
+                    "status": "queued",
+                    "evidence_record_ids": list(
+                        new.get("evidence_record_ids", [])
+                    ),
+                }
+            )
+
+    return same_as_edges, candidates
