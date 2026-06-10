@@ -23,7 +23,8 @@ Renamed (same semantic, different live name):
 
 Split by source/target type:
   PART_OF         → PART_OF_MEETING (AgendaItem→Meeting), PART_OF_CASE (Proceeding→Case)
-  FILED_BY        → FILED_BY (Person), FILED_BY_COMMITTEE, OFFICIAL_FILER
+  FILED_BY        → FILED_BY (Person), FILED_BY_COMMITTEE, OFFICIAL_FILER,
+                    FILED_BY_ORG (M2b: Form 990 Filing → filing Organization)
   CONTROLLED_BY   → CONTROLLED_BY, CONTROLLED_BY_COMMITTEE (Candidacy side)
   HEARD_IN        → HEARD_IN (Case), HEARD_BY (Proceeding)
   IN_ELECTION     → FILED_FOR_ELECTION, RELATED_TO_ELECTION
@@ -79,7 +80,9 @@ SPEC_TO_LIVE: dict[str, list[str]] = {
     "AMENDS": ["AMENDS_AGREEMENT"],
     # --- Committee / filing ----------------------------------------------
     "CONTROLLED_BY": ["CONTROLLED_BY", "CONTROLLED_BY_COMMITTEE"],
-    "FILED_BY": ["FILED_BY", "FILED_BY_COMMITTEE", "OFFICIAL_FILER"],
+    # FILED_BY_ORG (M2b): Form 990 Filing → the filing Organization — the
+    # org-filer variant, following the FILED_BY_COMMITTEE precedent.
+    "FILED_BY": ["FILED_BY", "FILED_BY_COMMITTEE", "OFFICIAL_FILER", "FILED_BY_ORG"],
     "BY_PERSON": ["CANDIDATE_ACTOR"],
     "IN_ELECTION": ["FILED_FOR_ELECTION", "RELATED_TO_ELECTION"],
     "FOR_ELECTION": ["FOR_ELECTION"],

@@ -277,13 +277,15 @@ ${projectMustShow("n", "1", "'AT_MEETING'")}
 }
 
 function buildFilingMustShow(): string {
-  // FILED_BY → FILED_BY, FILED_BY_COMMITTEE, OFFICIAL_FILER
+  // FILED_BY → FILED_BY, FILED_BY_COMMITTEE, OFFICIAL_FILER, FILED_BY_ORG
   // FOR_ELECTION → FOR_ELECTION
   // DISCLOSED_IN → DISCLOSED_IN_FILING
   return `
-// Person or Committee via FILED_BY (ring 1)
+// Person, Committee, or Organization via FILED_BY (ring 1).
+// Organization joined deliberately with FILED_BY_ORG (M2b) — a Form 990
+// Filing's filer is the org itself.
 MATCH (f:Filing {id: $focus_id})-[:${specEdges("FILED_BY")}]->(n)
-WHERE n:Person OR n:Committee
+WHERE n:Person OR n:Committee OR n:Organization
 ${projectMustShow("n", "1", "'FILED_BY'")}
 
 UNION

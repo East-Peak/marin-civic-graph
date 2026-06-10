@@ -86,8 +86,19 @@ describe("edge-vocabulary", () => {
     expect(specToLive("TOTALLY_MADE_UP_EDGE")).toEqual([]);
   });
 
-  it("FILED_BY resolves to 3 live edges", () => {
-    expect(specToLive("FILED_BY")).toEqual(["FILED_BY", "FILED_BY_COMMITTEE", "OFFICIAL_FILER"]);
+  it("FILED_BY resolves to 4 live edges", () => {
+    // FILED_BY_ORG (M2b): Form 990 Filing → filing Organization.
+    expect(specToLive("FILED_BY")).toEqual([
+      "FILED_BY",
+      "FILED_BY_COMMITTEE",
+      "OFFICIAL_FILER",
+      "FILED_BY_ORG",
+    ]);
+  });
+
+  it("FILED_BY_ORG is Phase-2 traversable", () => {
+    expect(PHASE2_WHITELIST_LIVE).toContain("FILED_BY_ORG");
+    expect(UNIVERSAL_EDGES_LIVE).not.toContain("FILED_BY_ORG");
   });
 
   it("UNIVERSAL_EDGES_LIVE carries core structural edges", () => {

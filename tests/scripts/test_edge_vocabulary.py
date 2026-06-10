@@ -58,11 +58,14 @@ def test_spec_to_live_renamed_between():
 
 
 def test_spec_to_live_filed_by_fans_out():
-    # FILED_BY → FILED_BY (Person), FILED_BY_COMMITTEE, OFFICIAL_FILER (named filer).
-    live = spec_to_live("FILED_BY")
-    assert "FILED_BY" in live
-    assert "FILED_BY_COMMITTEE" in live
-    assert "OFFICIAL_FILER" in live
+    # FILED_BY → FILED_BY (Person), FILED_BY_COMMITTEE, OFFICIAL_FILER (named
+    # filer), FILED_BY_ORG (M2b: Form 990 Filing → filing Organization).
+    assert spec_to_live("FILED_BY") == [
+        "FILED_BY",
+        "FILED_BY_COMMITTEE",
+        "OFFICIAL_FILER",
+        "FILED_BY_ORG",
+    ]
 
 
 def test_spec_to_live_controlled_by_fans_out():
@@ -153,9 +156,10 @@ def test_phase2_whitelist_includes_core_governance():
 def test_phase2_whitelist_includes_filing_edges():
     # Form 803-style filings need FILED_WITH / FILED_DURING_SEAT_SERVICE / FILED_FOR_SEAT
     # to reach the receiving agency, holder's tenure, and target seat.
+    # FILED_BY_ORG (M2b) makes a 990 Filing's org filer Phase-2 reachable.
     for edge in ("FILED_BY", "FILED_BY_COMMITTEE", "OFFICIAL_FILER",
-                 "FILED_WITH", "FILED_DURING_SEAT_SERVICE", "FILED_FOR_SEAT",
-                 "DISCLOSED_IN_FILING"):
+                 "FILED_BY_ORG", "FILED_WITH", "FILED_DURING_SEAT_SERVICE",
+                 "FILED_FOR_SEAT", "DISCLOSED_IN_FILING"):
         assert edge in PHASE2_WHITELIST_LIVE
 
 

@@ -31,7 +31,9 @@ export const SPEC_TO_LIVE: Record<string, string[]> = {
   AMENDS: ["AMENDS_AGREEMENT"],
   // --- Committee / filing -------------------------------------------------
   CONTROLLED_BY: ["CONTROLLED_BY", "CONTROLLED_BY_COMMITTEE"],
-  FILED_BY: ["FILED_BY", "FILED_BY_COMMITTEE", "OFFICIAL_FILER"],
+  // FILED_BY_ORG (M2b): Form 990 Filing → the filing Organization — the
+  // org-filer variant, following the FILED_BY_COMMITTEE precedent.
+  FILED_BY: ["FILED_BY", "FILED_BY_COMMITTEE", "OFFICIAL_FILER", "FILED_BY_ORG"],
   BY_PERSON: ["CANDIDATE_ACTOR"],
   IN_ELECTION: ["FILED_FOR_ELECTION", "RELATED_TO_ELECTION"],
   FOR_ELECTION: ["FOR_ELECTION"],
@@ -117,6 +119,7 @@ export const PHASE2_WHITELIST_LIVE: string[] = [
   "DISCLOSED_IN_FILING",
   "FILED_BY",
   "FILED_BY_COMMITTEE",
+  "FILED_BY_ORG",
   "FILED_DURING_SEAT_SERVICE",
   "FILED_FOR_ELECTION",
   "FILED_FOR_SEAT",

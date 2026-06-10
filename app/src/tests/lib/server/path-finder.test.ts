@@ -71,6 +71,11 @@ describe("EDGE_WEIGHTS table", () => {
     expect(EDGE_WEIGHTS.PART_OF_CASE).toBe(5);
   });
 
+  it("resolves FILED_BY_ORG (M2b) via spec-name expansion, equal to FILED_BY", () => {
+    expect(EDGE_WEIGHTS.FILED_BY_ORG).toBe(EDGE_WEIGHTS.FILED_BY);
+    expect(EDGE_WEIGHTS.FILED_BY_ORG).toBe(5);
+  });
+
   it("omits universal edges from the weight table", () => {
     expect(EDGE_WEIGHTS.EVIDENCED_BY).toBeUndefined();
     expect(EDGE_WEIGHTS.IN_JURISDICTION).toBeUndefined();

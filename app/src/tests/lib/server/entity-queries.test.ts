@@ -48,13 +48,16 @@ describe("entity-queries", () => {
     expect(q).toContain("AT_MEETING");
   });
 
-  it("buildMustShowQuery(Filing) resolves FILED_BY to its 3 live variants", () => {
+  it("buildMustShowQuery(Filing) resolves FILED_BY to its 4 live variants", () => {
     const q = buildMustShowQuery("Filing");
     expect(q).toContain("FILED_BY");
     expect(q).toContain("FILED_BY_COMMITTEE");
     expect(q).toContain("OFFICIAL_FILER");
+    expect(q).toContain("FILED_BY_ORG"); // M2b: 990 Filing → filing Organization
     expect(q).toContain("FOR_ELECTION");
     expect(q).toContain("DISCLOSED_IN_FILING");
+    // The org filer must survive the must-show target-label filter.
+    expect(q).toContain("n:Organization");
   });
 
   it("buildMustShowQuery(Committee) wires CONTROLLED_BY + FILED_BY", () => {
