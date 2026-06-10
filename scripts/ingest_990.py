@@ -38,6 +38,17 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
+# M2a builders — imported, never forked (the goal contract; tests assert the
+# function identity). Membership ids, envelopes, and edge shapes all come from
+# membership_builders so the 990 lane stays in lock-step with Form 700's.
+from membership_builders import (
+    build_evidenced_by_edge,
+    build_member_edge,
+    build_member_of_org_edge,
+    build_membership_node,
+    slugify,
+)
+
 logger = logging.getLogger("ingest_990")
 
 # ---------------------------------------------------------------------------
@@ -250,3 +261,184 @@ def parse_return_file(path: Path) -> dict[str, Any] | None:
     return parse_return_xml(
         path.read_text(encoding="utf-8"), object_id=object_id
     )
+
+
+# ---------------------------------------------------------------------------
+# Builders — parsed return dicts → graph ontology envelopes
+# ---------------------------------------------------------------------------
+
+
+def _org_id(ein: str) -> str:
+    return f"org-990-ein-{ein}"
+
+
+def _record_id(ein: str, tax_year: str) -> str:
+    return f"record-990-{ein}-{tax_year}"
+
+
+def build_org_node(parsed: dict[str, Any]) -> dict[str, Any]:
+    """Organization(+Nonprofit) node. EIN IS the identity — the same filer
+    across tax years collapses to one node.
+    """
+    props: dict[str, Any] = {
+        "ein": parsed["ein"],
+        "legal_name": parsed["legal_name"],
+        "legal_name_raw": parsed["legal_name_raw"],
+    }
+    if "nonprofit_status" in parsed:
+        props["nonprofit_status"] = parsed["nonprofit_status"]
+    props["source"] = "irs-990"
+    return {
+        "id": _org_id(parsed["ein"]),
+        "node_type": "Organization",
+        "labels": ["Organization", "Nonprofit"],
+        "display_label": parsed["legal_name"],
+        "properties": props,
+    }
+
+
+def build_990_filing_node(parsed: dict[str, Any]) -> dict[str, Any]:
+    """Year-scoped Filing fact for one return — revenue facts live here,
+    never flattened onto the Organization.
+
+    `gov_revenue_share` is computed only when both inputs are present and
+    revenue > 0. `revenue_scope` accompanies any `gov_grants_amount` (coverage
+    honesty): it is an aggregate annual fact, never a confirmed local claim.
+    """
+    ein, tax_year = parsed["ein"], parsed["tax_year"]
+    props: dict[str, Any] = {
+        "filing_type": "form_990",
+        "ein": ein,
+        "tax_year": tax_year,
+    }
+    total_revenue = parsed.get("total_revenue")
+    if total_revenue is not None:
+        props["total_revenue"] = total_revenue
+    gov_grants = parsed.get("gov_grants_amount")
+    if gov_grants is not None:
+        props["gov_grants_amount"] = gov_grants
+        if total_revenue is not None and total_revenue > 0:
+            props["gov_revenue_share"] = round(gov_grants / total_revenue, 4)
+        props["revenue_scope"] = "form_990_aggregate_government_grants"
+    return {
+        "id": f"filing-990-{ein}-{tax_year}",
+        "node_type": "Filing",
+        "labels": ["Filing"],
+        "display_label": f"Form 990 — {parsed['legal_name']} — TY {tax_year}",
+        "properties": props,
+    }
+
+
+def build_990_record_node(parsed: dict[str, Any]) -> dict[str, Any]:
+    """Record node for the return document itself (provenance target of every
+    EVIDENCED_BY edge this ingestor emits). source_url only when explicitly
+    known — never derived.
+    """
+    ein, tax_year = parsed["ein"], parsed["tax_year"]
+    props: dict[str, Any] = {"ein": ein, "tax_year": tax_year}
+    if parsed.get("source_url"):
+        props["source_url"] = parsed["source_url"]
+    if parsed.get("object_id"):
+        props["object_id"] = parsed["object_id"]
+    return {
+        "id": _record_id(ein, tax_year),
+        "node_type": "Record",
+        "labels": ["Record"],
+        "display_label": (
+            f"IRS Form 990 e-file return — {parsed['legal_name']} — TY {tax_year}"
+        ),
+        "properties": props,
+    }
+
+
+def build_990_person_node(officer: dict[str, str], ein: str) -> dict[str, Any]:
+    """Person node for a qualifying Part VII officer/director.
+
+    EIN-scoped id ON PURPOSE: the same name at two different orgs must never
+    auto-merge. Cross-org person identity is deferred to a later
+    person-resolution lane (M2d/M4) — M2b ships no person resolver.
+    """
+    return {
+        "id": f"person-990-{ein}-{slugify(officer['name'])}",
+        "node_type": "Person",
+        "labels": ["Person"],
+        "display_label": officer["name"],
+        "properties": {
+            "name": officer["name"],
+            "name_raw": officer["name_raw"],
+            "source": "irs-990",
+        },
+    }
+
+
+def build_filed_by_org_edge(filing_id: str, org_id: str) -> dict[str, Any]:
+    """FILED_BY_ORG edge from a Filing node to the filing Organization — the
+    org-filer variant under spec FILED_BY (the FILED_BY_COMMITTEE precedent).
+    """
+    return {
+        "source_id": filing_id,
+        "target_id": org_id,
+        "relationship_type": "FILED_BY_ORG",
+        "properties": {},
+    }
+
+
+def build_memberships(
+    parsed_returns: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Person + Membership nodes (and their edges) across parsed returns.
+
+    Multi-year dedupe: when the same membership id recurs across years, keep
+    ONE node whose evidence_record_ids is the sorted union across years and
+    whose source_basis (and display fields) come from the EARLIEST observed
+    year; emit one EVIDENCED_BY edge per distinct record. The result is
+    independent of input order.
+    """
+    persons: dict[str, dict[str, Any]] = {}
+    # membership id → {"year", "node", "records", "person_id", "org_id"}
+    accumulated: dict[str, dict[str, Any]] = {}
+
+    for parsed in parsed_returns:
+        ein, tax_year = parsed["ein"], parsed["tax_year"]
+        org_id = _org_id(ein)
+        record_id = _record_id(ein, tax_year)
+        for officer in parsed["officers"]:
+            person_node = build_990_person_node(officer, ein)
+            persons.setdefault(person_node["id"], person_node)
+            node = build_membership_node(
+                person_id=person_node["id"],
+                person_name=officer["name"],
+                organization_id=org_id,
+                organization_name=parsed["legal_name"],
+                role=officer["role"],
+                confidence=0.95,
+                source_basis=f"irs_990_{tax_year}",
+                evidence_record_ids=[record_id],
+            )
+            entry = accumulated.get(node["id"])
+            if entry is None:
+                accumulated[node["id"]] = {
+                    "year": int(tax_year),
+                    "node": node,
+                    "records": {record_id},
+                    "person_id": person_node["id"],
+                    "org_id": org_id,
+                }
+            else:
+                entry["records"].add(record_id)
+                if int(tax_year) < entry["year"]:
+                    entry["year"] = int(tax_year)
+                    entry["node"] = node
+
+    nodes: list[dict[str, Any]] = list(persons.values())
+    edges: list[dict[str, Any]] = []
+    for membership_id in sorted(accumulated):
+        entry = accumulated[membership_id]
+        node = entry["node"]
+        node["properties"]["evidence_record_ids"] = sorted(entry["records"])
+        nodes.append(node)
+        edges.append(build_member_edge(membership_id, entry["person_id"]))
+        edges.append(build_member_of_org_edge(membership_id, entry["org_id"]))
+        for record_id in sorted(entry["records"]):
+            edges.append(build_evidenced_by_edge(membership_id, record_id))
+    return nodes, edges
