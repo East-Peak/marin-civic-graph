@@ -23,6 +23,55 @@ prefix `ASST_AGG_`) are published in aggregate precisely because the
 underlying recipients are individuals/PII-redacted — they are SKIPPED, never
 ingested; no Person nodes from this source; skip logs carry the award id +
 marker only, never the recipient string.
+
+Operator procedure
+==================
+
+1. Download (outside this module). One request series PER award-type group
+   — the API returns 400 when `award_type_codes` mixes groups (grants
+   ``02/03/04/05``, direct payments ``06/10``, contracts, loans, other) —
+   paging until `page_metadata.hasNext` is false and writing each response
+   body verbatim as one JSON file under ``data/raw/usaspending/``::
+
+       POST https://api.usaspending.gov/api/v2/search/spending_by_award/
+       Content-Type: application/json
+
+       {
+         "filters": {
+           "award_type_codes": ["02", "03", "04", "05"],
+           "recipient_locations": [
+             {"country": "USA", "state": "CA", "county": "041"}
+           ],
+           "time_period": [
+             {"start_date": "2022-10-01", "end_date": "2025-09-30"}
+           ]
+         },
+         "fields": ["Award ID", "Recipient Name", "Award Amount",
+                    "Awarding Agency", "Awarding Sub Agency",
+                    "Funding Agency", "Funding Sub Agency", "Start Date",
+                    "End Date", "Award Type", "CFDA Number", "recipient_id",
+                    "generated_internal_id", "Recipient UEI",
+                    "Recipient Business Categories"],
+         "page": 1,
+         "limit": 100,
+         "sort": "Award Amount",
+         "order": "desc"
+       }
+
+   The API returns ONLY the requested ``fields``, and the ``sort`` field
+   must be among them. ``tests/fixtures/usaspending/SOURCES.md`` records
+   the exact staged-capture bodies and capture-time findings.
+
+2. Normalize: ``python scripts/ingest_usaspending.py`` (add
+   ``--existing-orgs <export.json>`` — a JSON array of existing graph orgs
+   ``{id, display_label, ein?, uei?}`` — to resolve recipients against the
+   live graph's export). Outputs ``data/normalized/usaspending/
+   nodes.jsonl|edges.jsonl`` plus the review sidecar
+   ``data/review/resolution-candidates-usaspending.jsonl`` — review the
+   queued candidates before acting on anything judged.
+
+3. Load: rerun with ``--load`` (requires ``NEO4J_PASSWORD``); the Neo4j
+   driver import stays lazy inside this step.
 """
 from __future__ import annotations
 
