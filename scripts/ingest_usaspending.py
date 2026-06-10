@@ -34,6 +34,7 @@ from typing import Any
 # Shared helpers — imported, never forked (M2b/M2a precedent).
 from ingest_990 import title_if_allcaps
 from membership_builders import slugify
+from org_resolution import propose_org_resolutions
 
 logger = logging.getLogger("ingest_usaspending")
 
@@ -341,3 +342,56 @@ def build_award_edges(
             "properties": {},
         },
     ]
+
+
+# ---------------------------------------------------------------------------
+# Resolver wiring — recipient refs → shared resolver (Decision 6)
+# ---------------------------------------------------------------------------
+
+
+def build_recipient_refs(
+    recipient_nodes: list[dict[str, Any]],
+    org_id_by_award: dict[str, str],
+) -> list[dict[str, Any]]:
+    """Resolver refs for the recipient orgs, sorted by org id:
+    `{id, display_label, uei?, evidence_record_ids[]}` — the uei key is
+    OMITTED (never None-filled) when the recipient group carried none, and
+    evidence_record_ids are the sorted Record ids of every award the org
+    received in this batch.
+    """
+    records_by_org: dict[str, set[str]] = {}
+    for award_id, org_id in org_id_by_award.items():
+        records_by_org.setdefault(org_id, set()).add(_record_id(award_id))
+
+    refs: list[dict[str, Any]] = []
+    for node in sorted(recipient_nodes, key=lambda n: n["id"]):
+        ref: dict[str, Any] = {
+            "id": node["id"],
+            "display_label": node["display_label"],
+        }
+        uei = node["properties"].get("uei")
+        if uei:
+            ref["uei"] = uei
+        ref["evidence_record_ids"] = sorted(records_by_org[node["id"]])
+        refs.append(ref)
+    return refs
+
+
+def resolve_recipient_orgs(
+    recipient_nodes: list[dict[str, Any]],
+    org_id_by_award: dict[str, str],
+    existing_orgs: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Recipient refs → the SHARED resolver with identity_keys=("ein","uei"):
+    (SAME_AS edges, ResolutionCandidate dicts).
+
+    A USASpending ref carries no EIN, so uei-exact is the only deterministic
+    lane into the existing graph; today's real export carries neither key,
+    so in practice this emits ZERO SAME_AS (spec §4.4 — enrichment-only
+    until recipient resolution is reviewed). Candidates are sidecar JSONL
+    material only — never nodes, never edges.
+    """
+    refs = build_recipient_refs(recipient_nodes, org_id_by_award)
+    return propose_org_resolutions(
+        refs, existing_orgs, identity_keys=("ein", "uei")
+    )
