@@ -26,13 +26,23 @@ marker only, never the recipient string.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import logging
+import os
+import sys
 from pathlib import Path
 from typing import Any
 
-# Shared helpers — imported, never forked (M2b/M2a precedent).
-from ingest_990 import title_if_allcaps
+# Shared helpers — imported, never forked (M2b/M2a precedent). The I/O trio
+# is ingest_990's parse/build/resolve/write plumbing reused verbatim;
+# _load_into_neo4j keeps the driver import lazy inside itself.
+from ingest_990 import (
+    _load_existing_orgs,
+    _load_into_neo4j,
+    _write_jsonl,
+    title_if_allcaps,
+)
 from membership_builders import slugify
 from org_resolution import propose_org_resolutions
 
@@ -41,6 +51,11 @@ logger = logging.getLogger("ingest_usaspending")
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
+
+ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_INPUT_DIR = ROOT / "data" / "raw" / "usaspending"
+OUTPUT_DIR = ROOT / "data" / "normalized" / "usaspending"
+REVIEW_DIR = ROOT / "data" / "review"
 
 # Aggregate award records: county-level rollups whose underlying recipients
 # are individuals (PII-redacted) — the structural skip marker (Decision 2).
@@ -395,3 +410,164 @@ def resolve_recipient_orgs(
     return propose_org_resolutions(
         refs, existing_orgs, identity_keys=("ein", "uei")
     )
+
+
+# ---------------------------------------------------------------------------
+# Pipeline assembly — parse / build / resolve (Decision 7)
+# ---------------------------------------------------------------------------
+
+
+def build_nodes_and_edges(
+    awards: list[dict[str, Any]],
+    existing_orgs: list[dict[str, Any]] | None = None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    """Assemble the full batch: (nodes, edges, resolution_candidates).
+
+    Dedupe first (repeated award ids collapse; disagreement fails loud),
+    then sort by award id so repeat runs over the same inputs are
+    byte-identical downstream — no timestamps anywhere. Deterministic
+    SAME_AS edges from the resolver join the edges output; everything
+    judged returns as candidates for the JSONL review sidecar — never
+    nodes, never edges.
+    """
+    awards = sorted(dedupe_awards(awards), key=lambda a: a["award_id"])
+
+    recipient_nodes, recipient_by_award = build_recipient_org_nodes(awards)
+    agency_nodes, agency_by_award = build_agency_org_nodes(awards)
+
+    nodes = sorted(recipient_nodes, key=lambda n: n["id"]) + sorted(
+        agency_nodes, key=lambda n: n["id"]
+    )
+    edges: list[dict[str, Any]] = []
+    for award in awards:
+        nodes.append(build_moneyflow_node(award))
+        nodes.append(build_award_record_node(award))
+        edges.extend(
+            build_award_edges(
+                award,
+                recipient_by_award[award["award_id"]],
+                agency_by_award[award["award_id"]],
+            )
+        )
+
+    same_as_edges, candidates = resolve_recipient_orgs(
+        recipient_nodes, recipient_by_award, existing_orgs or []
+    )
+    edges.extend(same_as_edges)
+    return nodes, edges, candidates
+
+
+# ---------------------------------------------------------------------------
+# CLI — mirrors ingest_990 (no fetching; --load is the operator step)
+# ---------------------------------------------------------------------------
+
+
+def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Ingest already-downloaded USASpending prime-award JSON pages "
+            "into the Marin Civic Graph (no fetching — see the module "
+            "docstring for the operator download procedure)."
+        )
+    )
+    parser.add_argument(
+        "--input-dir",
+        default=str(DEFAULT_INPUT_DIR),
+        help=(
+            "Directory of downloaded spending_by_award response pages "
+            f"(default: {DEFAULT_INPUT_DIR})"
+        ),
+    )
+    parser.add_argument(
+        "--output-dir",
+        default=str(OUTPUT_DIR),
+        help=f"Directory to write nodes.jsonl / edges.jsonl (default: {OUTPUT_DIR})",
+    )
+    parser.add_argument(
+        "--review-dir",
+        default=str(REVIEW_DIR),
+        help=f"Directory for the resolution-candidates sidecar (default: {REVIEW_DIR})",
+    )
+    parser.add_argument(
+        "--existing-orgs",
+        default=None,
+        help=(
+            "JSON array of existing graph orgs ({id, display_label, ein?, "
+            "uei?}) to resolve against. Omit to skip resolution entirely."
+        ),
+    )
+    parser.add_argument(
+        "--load",
+        action="store_true",
+        help="Load nodes and edges into Neo4j after writing (operator step).",
+    )
+    parser.add_argument("--uri", default=os.getenv("NEO4J_URI", "bolt://localhost:7687"))
+    parser.add_argument("--user", default=os.getenv("NEO4J_USER", "neo4j"))
+    parser.add_argument("--password", default=os.getenv("NEO4J_PASSWORD"))
+    parser.add_argument("--database", default=os.getenv("NEO4J_DATABASE", "neo4j"))
+    parser.add_argument("--batch-size", type=int, default=500)
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> None:
+    args = _parse_args(argv)
+
+    input_dir = Path(args.input_dir)
+    json_paths = sorted(input_dir.glob("*.json"))
+    if not json_paths:
+        print(f"ERROR: no JSON files found in {input_dir}", file=sys.stderr)
+        sys.exit(1)
+
+    awards: list[dict[str, Any]] = []
+    for path in json_paths:
+        awards.extend(parse_awards_file(path))
+    print(f"Parsed {len(awards)} awards from {len(json_paths)} pages in {input_dir}")
+
+    existing_orgs = (
+        _load_existing_orgs(Path(args.existing_orgs))
+        if args.existing_orgs
+        else None
+    )
+
+    nodes, edges, candidates = build_nodes_and_edges(awards, existing_orgs)
+    counts = {
+        ntype: sum(1 for n in nodes if n["node_type"] == ntype)
+        for ntype in ("Organization", "MoneyFlow", "Record")
+    }
+    print(
+        "  "
+        + ", ".join(f"{count} {ntype}" for ntype, count in counts.items())
+        + f", {len(edges)} edges, {len(candidates)} resolution candidates"
+    )
+
+    output_dir = Path(args.output_dir)
+    nodes_path = output_dir / "nodes.jsonl"
+    edges_path = output_dir / "edges.jsonl"
+    review_path = Path(args.review_dir) / "resolution-candidates-usaspending.jsonl"
+    print(f"Writing nodes to: {nodes_path}")
+    _write_jsonl(nodes_path, nodes)
+    print(f"Writing edges to: {edges_path}")
+    _write_jsonl(edges_path, edges)
+    print(f"Writing resolution candidates to: {review_path}")
+    _write_jsonl(review_path, candidates)
+
+    if args.load:
+        if not args.password:
+            print(
+                "ERROR: NEO4J_PASSWORD is required (--password or NEO4J_PASSWORD env var).",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+        _load_into_neo4j(
+            nodes=nodes,
+            edges=edges,
+            uri=args.uri,
+            user=args.user,
+            password=args.password,
+            database=args.database,
+            batch_size=args.batch_size,
+        )
+
+
+if __name__ == "__main__":
+    main()
