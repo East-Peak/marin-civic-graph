@@ -24,9 +24,12 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from build_dual_role_candidates import (  # noqa: E402
+    build_components,
+    build_join_links,
     collect_same_as_edges,
     extract_funding_in,
     extract_influence_out,
+    load_approved_resolutions,
     load_envelope_dirs,
 )
 from ingest_990 import main as ingest_990_main  # noqa: E402
@@ -313,3 +316,210 @@ def test_influence_out_evidence_targets_dangle_by_design():
         for entry in entries:
             for record_id in entry["evidence_record_ids"]:
                 assert record_id not in nodes_by_id
+
+
+# ---------------------------------------------------------------------------
+# Join core — lanes A/B/C, Decision 2
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture(scope="module")
+def malt_queued_row(tmp_path_factory: pytest.TempPathFactory) -> dict:
+    """The REAL queued MALT pair: ingest_990 on the committed fixtures with
+    existing-orgs = the influence-out campaign org stubs (the operator's
+    graph export). The resolver queues the normalized-name-exact pair —
+    this is the row the operator reviews."""
+    base = tmp_path_factory.mktemp("resolver")
+    existing = base / "existing-orgs.json"
+    existing.write_text(
+        json.dumps(
+            [
+                {
+                    "id": MALT_CAMPAIGN_ORG,
+                    "display_label": "Marin Agricultural Land Trust",
+                },
+                {
+                    "id": CAM_CAMPAIGN_ORG,
+                    "display_label": "Community Action Marin",
+                },
+            ]
+        ),
+        encoding="utf-8",
+    )
+    ingest_990_main(
+        [
+            "--input-dir", str(FIXTURES_990),
+            "--output-dir", str(base / "normalized"),
+            "--review-dir", str(base / "review"),
+            "--existing-orgs", str(existing),
+        ]
+    )
+    review = base / "review" / "resolution-candidates-990.jsonl"
+    rows = [json.loads(line) for line in review.read_text().splitlines()]
+    matches = [r for r in rows if r["candidate_ref"] == MALT_CAMPAIGN_ORG]
+    assert len(matches) == 1
+    row = matches[0]
+    assert row["subject_ref"] == MALT_ORG
+    assert row["signals"] == ["normalized_name_exact"]
+    assert row["confidence"] == 0.9
+    assert row["status"] == "queued"
+    return row
+
+
+KNOWN_IDS = {MALT_ORG, MCF_ORG, CAM_ORG, MALT_CAMPAIGN_ORG, CAM_CAMPAIGN_ORG}
+
+
+def test_approved_extract_loads_and_dedupes(malt_queued_row: dict, tmp_path: Path):
+    # The operator approves the real queued row and exports the approved-only
+    # extract; an idempotent re-export (the same row twice) loads once.
+    approved = {**malt_queued_row, "status": "approved"}
+    path = tmp_path / "approved.jsonl"
+    path.write_text(json.dumps(approved) + "\n" + json.dumps(approved) + "\n")
+    rows = load_approved_resolutions(path, KNOWN_IDS)
+    assert rows == [approved]
+
+
+def test_mixed_status_review_file_fails_loud(malt_queued_row: dict, tmp_path: Path):
+    # Passing the annotated reviewed queue instead of the approved-only
+    # extract is an error by design — §4.3 vocabulary (queued/approved/
+    # rejected), all realistic operator annotation states.
+    approved = {**malt_queued_row, "status": "approved"}
+    still_queued = dict(malt_queued_row)
+    rejected = {
+        "subject_ref": MCF_ORG,
+        "candidate_ref": CAM_CAMPAIGN_ORG,
+        "signals": ["name_similarity:0.86"],
+        "confidence": 0.86,
+        "status": "rejected",
+        "evidence_record_ids": ["record-990-943007979-2022"],
+    }
+    path = tmp_path / "reviewed-queue.jsonl"
+    path.write_text(
+        "".join(json.dumps(r) + "\n" for r in [approved, still_queued, rejected])
+    )
+    with pytest.raises(ValueError, match="queued"):
+        load_approved_resolutions(path, KNOWN_IDS)
+
+
+def test_stale_approved_refs_fail_loud(malt_queued_row: dict, tmp_path: Path):
+    # A stale approval (ref absent from the loaded inputs) is operator
+    # error, never silently skipped.
+    approved = {**malt_queued_row, "status": "approved"}
+    stale_candidate = {**approved, "candidate_ref": "org-not-in-these-inputs"}
+    path = tmp_path / "approved.jsonl"
+    path.write_text(json.dumps(stale_candidate) + "\n")
+    with pytest.raises(ValueError, match="org-not-in-these-inputs"):
+        load_approved_resolutions(path, KNOWN_IDS)
+
+    stale_subject = {**approved, "subject_ref": "org-990-ein-000000000"}
+    path.write_text(json.dumps(stale_subject) + "\n")
+    with pytest.raises(ValueError, match="org-990-ein-000000000"):
+        load_approved_resolutions(path, KNOWN_IDS)
+
+
+def test_same_as_allowlist_gates_the_deterministic_lane(malt_queued_row: dict):
+    # Allowlisted bases pass with basis carried through; a review-derived or
+    # unknown-provenance basis must never silently enter the deterministic
+    # lane.
+    ein_edge = {
+        "source_id": MCF_ORG,
+        "target_id": "org-marin-community-foundation",
+        "relationship_type": "SAME_AS",
+        "properties": {"basis": "ein_exact"},
+    }
+    uei_edge = {
+        "source_id": CAM_ORG,
+        "target_id": CAM_CAMPAIGN_ORG,
+        "relationship_type": "SAME_AS",
+        "properties": {"basis": "uei_exact"},
+    }
+    assert build_join_links([ein_edge, uei_edge], []) == [
+        {
+            "funding_org_ref": MCF_ORG,
+            "influence_org_ref": "org-marin-community-foundation",
+            "basis": "same_as:ein_exact",
+        },
+        {
+            "funding_org_ref": CAM_ORG,
+            "influence_org_ref": CAM_CAMPAIGN_ORG,
+            "basis": "same_as:uei_exact",
+        },
+    ]
+    name_basis = {**ein_edge, "properties": {"basis": "normalized_name_exact"}}
+    with pytest.raises(ValueError, match="normalized_name_exact"):
+        build_join_links([name_basis], [])
+    no_basis = {**ein_edge, "properties": {}}
+    with pytest.raises(ValueError, match="SAME_AS"):
+        build_join_links([no_basis], [])
+
+
+def test_approved_rows_become_links_with_signals_carried(malt_queued_row: dict):
+    approved = {**malt_queued_row, "status": "approved"}
+    assert build_join_links([], [approved]) == [
+        {
+            "funding_org_ref": MALT_ORG,
+            "influence_org_ref": MALT_CAMPAIGN_ORG,
+            "basis": "approved_resolution",
+            "signals": ["normalized_name_exact"],
+            "confidence": 0.9,
+        }
+    ]
+
+
+def test_queued_rows_never_join(funding_dirs: list[Path], malt_queued_row: dict):
+    # The real queued MALT pair exists in the review sidecar — but with no
+    # approval there is NO link, and the funding-side and campaign-side MALT
+    # orgs stay in separate components (the judgment gate).
+    nodes_by_id, edges = load_envelope_dirs(funding_dirs)
+    funding = extract_funding_in(nodes_by_id, edges)
+    influence_nodes, influence_edges = load_envelope_dirs([FIXTURES_INFLUENCE])
+    influence = extract_influence_out(influence_nodes, influence_edges)
+
+    components = build_components(set(funding), set(influence), [])
+    by_member = {member: tuple(c) for c in components for member in c}
+    assert by_member[MALT_ORG] == (MALT_ORG,)
+    assert by_member[MALT_CAMPAIGN_ORG] == (MALT_CAMPAIGN_ORG,)
+
+    # The approved link merges exactly that pair and nothing else.
+    approved_link = build_join_links([], [{**malt_queued_row, "status": "approved"}])
+    components = build_components(set(funding), set(influence), approved_link)
+    by_member = {member: tuple(c) for c in components for member in c}
+    assert by_member[MALT_ORG] == (MALT_ORG, MALT_CAMPAIGN_ORG)
+    assert by_member[CAM_ORG] == (CAM_ORG,)
+
+
+def test_component_assembly_is_deterministic_and_link_order_free(
+    funding_dirs: list[Path], malt_queued_row: dict
+):
+    nodes_by_id, edges = load_envelope_dirs(funding_dirs)
+    funding = extract_funding_in(nodes_by_id, edges)
+    influence_nodes, influence_edges = load_envelope_dirs([FIXTURES_INFLUENCE])
+    influence = extract_influence_out(influence_nodes, influence_edges)
+    links = build_join_links(
+        [
+            {
+                "source_id": CAM_ORG,
+                "target_id": CAM_CAMPAIGN_ORG,
+                "relationship_type": "SAME_AS",
+                "properties": {"basis": "uei_exact"},
+            }
+        ],
+        [{**malt_queued_row, "status": "approved"}],
+    )
+    forward = build_components(set(funding), set(influence), links)
+    backward = build_components(set(funding), set(influence), list(reversed(links)))
+    assert forward == backward
+    # Sorted members, components ordered by first member — and a SAME_AS
+    # target joins its component even when it carries no leg itself.
+    assert [CAM_CAMPAIGN_ORG, CAM_ORG] in forward
+    assert all(c == sorted(c) for c in forward)
+    assert forward == sorted(forward)
+
+
+def test_lane_a_identical_id_is_one_component():
+    # Lane A id_exact: the same org id carrying both legs is trivially one
+    # component with no link required (future-proof).
+    components = build_components(
+        {MALT_CAMPAIGN_ORG}, {MALT_CAMPAIGN_ORG}, []
+    )
+    assert components == [[MALT_CAMPAIGN_ORG]]

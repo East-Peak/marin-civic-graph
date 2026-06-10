@@ -224,3 +224,120 @@ def collect_same_as_edges(edges: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """SAME_AS edges from any loaded edges output, basis carried verbatim
     (the deterministic-allowlist gate is the join lane's responsibility)."""
     return [e for e in edges if e["relationship_type"] == "SAME_AS"]
+
+
+# ---------------------------------------------------------------------------
+# Join core — lanes A/B/C, Decision 2
+# ---------------------------------------------------------------------------
+
+# Lane B allowlist: the ingestors' deterministic key merges. A SAME_AS edge
+# with any other (or no) basis must never silently enter this lane.
+DETERMINISTIC_SAME_AS_BASES = ("ein_exact", "uei_exact")
+
+
+def load_approved_resolutions(
+    path: Path, known_org_ids: set[str]
+) -> list[dict[str, Any]]:
+    """Load the operator's approved-only extract of the reviewed queue.
+
+    Every row must carry `status: "approved"` exactly — passing the
+    annotated mixed-status review file is an error by design. A row whose
+    `subject_ref`/`candidate_ref` is absent from the loaded inputs is a
+    stale approval — operator error, never silently skipped. Byte-identical
+    duplicate rows dedupe silently (idempotent re-exports).
+    """
+    rows: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for row in _read_jsonl(Path(path)):
+        canon = _canonical(row)
+        if canon in seen:
+            continue
+        seen.add(canon)
+        status = row.get("status")
+        if status != "approved":
+            raise ValueError(
+                "approved-resolutions file must be an approved-only extract; "
+                f"found status {status!r} for pair "
+                f"({row.get('subject_ref')!r}, {row.get('candidate_ref')!r})"
+            )
+        for field in ("subject_ref", "candidate_ref"):
+            ref = row.get(field)
+            if ref not in known_org_ids:
+                raise ValueError(
+                    f"approved resolution {field} {ref!r} is not present in "
+                    "the loaded inputs (stale approval)"
+                )
+        rows.append(row)
+    return rows
+
+
+def build_join_links(
+    same_as_edges: list[dict[str, Any]],
+    approved_rows: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Join links for lanes B and C, one per connection, both endpoints
+    named (lane A — identical id — needs no link). SAME_AS bases must be in
+    the deterministic allowlist; approved rows carry their signals and
+    confidence through for the audit trail."""
+    links: list[dict[str, Any]] = []
+    for edge in same_as_edges:
+        basis = edge["properties"].get("basis")
+        if basis not in DETERMINISTIC_SAME_AS_BASES:
+            raise ValueError(
+                f"SAME_AS edge {edge['source_id']!r} -> {edge['target_id']!r} "
+                f"has basis {basis!r} — not in the deterministic allowlist "
+                f"{sorted(DETERMINISTIC_SAME_AS_BASES)}"
+            )
+        links.append(
+            {
+                "funding_org_ref": edge["source_id"],
+                "influence_org_ref": edge["target_id"],
+                "basis": f"same_as:{basis}",
+            }
+        )
+    for row in approved_rows:
+        link: dict[str, Any] = {
+            "funding_org_ref": row["subject_ref"],
+            "influence_org_ref": row["candidate_ref"],
+            "basis": "approved_resolution",
+        }
+        if "signals" in row:
+            link["signals"] = row["signals"]
+        if "confidence" in row:
+            link["confidence"] = row["confidence"]
+        links.append(link)
+    return links
+
+
+def build_components(
+    funding_org_ids: set[str],
+    influence_org_ids: set[str],
+    links: list[dict[str, Any]],
+) -> list[list[str]]:
+    """Connected components over {funding orgs ∪ influence orgs} plus link
+    endpoints (a link endpoint joins its component even when it carries no
+    leg itself). Deterministic: members sorted, components ordered by first
+    member — link order never matters."""
+    parent: dict[str, str] = {}
+
+    def find(org: str) -> str:
+        parent.setdefault(org, org)
+        while parent[org] != org:
+            parent[org] = parent[parent[org]]
+            org = parent[org]
+        return org
+
+    def union(a: str, b: str) -> None:
+        root_a, root_b = find(a), find(b)
+        if root_a != root_b:
+            parent[root_b] = root_a
+
+    for org in funding_org_ids | influence_org_ids:
+        find(org)
+    for link in links:
+        union(link["funding_org_ref"], link["influence_org_ref"])
+
+    members: dict[str, list[str]] = {}
+    for org in parent:
+        members.setdefault(find(org), []).append(org)
+    return sorted(sorted(group) for group in members.values())
