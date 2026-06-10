@@ -14,6 +14,7 @@ ResolutionCandidate is withheld pending review.
 """
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 from typing import Any
@@ -612,3 +613,203 @@ def assemble_table(
     withheld_rows.sort(key=lambda r: r["subject_ref"])
 
     return candidate_rows + withheld_rows, counts
+
+
+# ---------------------------------------------------------------------------
+# Pipeline + CLI — the operator sequence
+# ---------------------------------------------------------------------------
+
+DEFAULT_REVIEW_DIR = Path("data/review")
+TABLE_FILENAME = "dual-role-candidates.jsonl"
+COVERAGE_FILENAME = "dual-role-coverage.json"
+
+
+def _merge_nodes_across_classes(
+    funding_nodes: dict[str, dict[str, Any]],
+    influence_nodes: dict[str, dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    """One node map for label lookups. Decision 1's divergence rule holds
+    across input classes too: the same id re-emitted with a differing
+    payload fails loud, never pick-one."""
+    merged = dict(funding_nodes)
+    for node_id, node in influence_nodes.items():
+        prior = merged.get(node_id)
+        if prior is None:
+            merged[node_id] = node
+        elif _canonical(prior) != _canonical(node):
+            raise ValueError(
+                f"node id {node_id!r} loaded twice with differing payloads"
+            )
+    return merged
+
+
+def load_queued_resolutions(
+    paths: list[Path] | tuple[Path, ...],
+) -> list[dict[str, Any]]:
+    """Queued rows from the resolver review sidecars — withholding and
+    coverage input ONLY, never joining. Rows dedupe by full-row equality
+    across files (idempotent re-exports); approved rows are consumed via
+    the approved-only extract and rejected rows are decided non-identities —
+    neither withholds, so both are dropped here."""
+    rows: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for path in paths:
+        for row in _read_jsonl(Path(path)):
+            canon = _canonical(row)
+            if canon in seen:
+                continue
+            seen.add(canon)
+            if row.get("status") == "queued":
+                rows.append(row)
+    return rows
+
+
+def build_read_model(
+    funding_dirs: list[Path],
+    influence_dirs: list[Path],
+    approved_path: Path | None = None,
+    sidecar_paths: list[Path] | tuple[Path, ...] = (),
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """The full pipeline over envelope dirs: load and extract legs PER INPUT
+    CLASS (a campaign flow TO_TARGETing an org must never register as
+    funding-in), join on lanes A/B/C, withhold on queued pairs, and return
+    (rows, coverage). Coverage inputs count the deduped loaded evidence;
+    the table partition counts components (Decision 7)."""
+    funding_nodes, funding_edges = load_envelope_dirs(funding_dirs)
+    influence_nodes, influence_edges = load_envelope_dirs(influence_dirs)
+    nodes_by_id = _merge_nodes_across_classes(funding_nodes, influence_nodes)
+    funding = extract_funding_in(funding_nodes, funding_edges)
+    influence = extract_influence_out(influence_nodes, influence_edges)
+
+    same_as_edges: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for edge in collect_same_as_edges(funding_edges + influence_edges):
+        canon = _canonical(edge)
+        if canon not in seen:
+            seen.add(canon)
+            same_as_edges.append(edge)
+
+    approved_rows = (
+        load_approved_resolutions(approved_path, set(nodes_by_id))
+        if approved_path is not None
+        else []
+    )
+    queued_rows = load_queued_resolutions(sidecar_paths)
+    links = build_join_links(same_as_edges, approved_rows)
+    rows, table_counts = assemble_table(
+        nodes_by_id, funding, influence, links, queued_rows
+    )
+    coverage = {
+        "inputs": {
+            "approved_resolutions": len(approved_rows),
+            "funding_in_orgs": len(funding),
+            "gov_grant_positive_filings": sum(
+                len(legs.get("form_990", [])) for legs in funding.values()
+            ),
+            "influence_out_flows": sum(
+                len(entries) for entries in influence.values()
+            ),
+            "influence_out_orgs": len(influence),
+            "queued_resolutions": len(queued_rows),
+            "usaspending_award_flows": sum(
+                len(legs.get("usaspending", [])) for legs in funding.values()
+            ),
+        },
+        "table": table_counts,
+    }
+    return rows, coverage
+
+
+def write_read_model(
+    review_dir: Path,
+    rows: list[dict[str, Any]],
+    coverage: dict[str, Any],
+) -> None:
+    """Write the table + coverage summary under the review dir (Decision 7
+    serialization: one `sort_keys=True` line per row; coverage pretty-printed
+    with a trailing newline — two runs over the same inputs byte-identical)."""
+    review_dir = Path(review_dir)
+    review_dir.mkdir(parents=True, exist_ok=True)
+    (review_dir / TABLE_FILENAME).write_text(
+        "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows),
+        encoding="utf-8",
+    )
+    (review_dir / COVERAGE_FILENAME).write_text(
+        json.dumps(coverage, sort_keys=True, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Build the dual-role candidate read model from ingestor envelope "
+            "dirs — a JSONL sidecar under the review dir, never the graph "
+            "(see the module docstring for the operator sequence)."
+        )
+    )
+    parser.add_argument(
+        "--funding-in",
+        nargs="+",
+        required=True,
+        help="Envelope dirs carrying funding-in evidence (990, USASpending).",
+    )
+    parser.add_argument(
+        "--influence-out",
+        nargs="+",
+        required=True,
+        help="Envelope dirs carrying campaign-finance flows.",
+    )
+    parser.add_argument(
+        "--approved-resolutions",
+        default=None,
+        help=(
+            "Approved-only extract of the reviewed resolution queue "
+            "(omit to join on the deterministic lanes alone)."
+        ),
+    )
+    parser.add_argument(
+        "--resolution-sidecars",
+        nargs="*",
+        default=[],
+        help=(
+            "Resolver review sidecars; queued rows withhold would-be rows "
+            "(they never join)."
+        ),
+    )
+    parser.add_argument(
+        "--review-dir",
+        default=str(DEFAULT_REVIEW_DIR),
+        help=(
+            "Directory for the table + coverage summary "
+            f"(default: {DEFAULT_REVIEW_DIR})"
+        ),
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> None:
+    args = _parse_args(argv)
+    rows, coverage = build_read_model(
+        funding_dirs=[Path(d) for d in args.funding_in],
+        influence_dirs=[Path(d) for d in args.influence_out],
+        approved_path=(
+            Path(args.approved_resolutions) if args.approved_resolutions else None
+        ),
+        sidecar_paths=[Path(p) for p in args.resolution_sidecars],
+    )
+    table = coverage["table"]
+    print(
+        f"Assembled {table['candidate_rows']} candidate rows, "
+        f"{table['withheld_pending_resolution']} withheld pending resolution "
+        f"({table['funding_in_only']} funding-in-only, "
+        f"{table['influence_out_only']} influence-out-only components)"
+    )
+    review_dir = Path(args.review_dir)
+    print(f"Writing table to: {review_dir / TABLE_FILENAME}")
+    print(f"Writing coverage to: {review_dir / COVERAGE_FILENAME}")
+    write_read_model(review_dir, rows, coverage)
+
+
+if __name__ == "__main__":
+    main()

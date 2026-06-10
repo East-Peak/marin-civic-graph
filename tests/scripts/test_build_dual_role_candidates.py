@@ -15,6 +15,7 @@ TO_TARGET-only negative). The suite must leave `git status` untouched.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -33,6 +34,7 @@ from build_dual_role_candidates import (  # noqa: E402
     extract_influence_out,
     load_approved_resolutions,
     load_envelope_dirs,
+    main as build_dual_role_main,
 )
 from ingest_990 import main as ingest_990_main  # noqa: E402
 from ingest_usaspending import main as ingest_usaspending_main  # noqa: E402
@@ -938,3 +940,385 @@ def test_assembly_is_deterministic_and_link_order_free(
     second = assemble_table(*args, links, queued)
     reordered = assemble_table(*args, list(reversed(links)), queued)
     assert first == second == reordered
+
+
+# ---------------------------------------------------------------------------
+# Pipeline + CLI + e2e — the operator sequence on real fixtures
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture(scope="module")
+def operator_run(tmp_path_factory: pytest.TempPathFactory) -> dict:
+    """The operator's front half, run once: both REAL ingestors over their
+    committed fixtures with --existing-orgs = the campaign org stubs (the
+    operator's graph export). Yields the two envelope dirs the builder
+    consumes plus the two resolver sidecars the operator reviews."""
+    base = tmp_path_factory.mktemp("operator-run")
+    existing = base / "existing-orgs.json"
+    existing.write_text(
+        json.dumps(
+            [
+                {
+                    "id": MALT_CAMPAIGN_ORG,
+                    "display_label": "Marin Agricultural Land Trust",
+                },
+                {
+                    "id": CAM_CAMPAIGN_ORG,
+                    "display_label": "Community Action Marin",
+                },
+            ]
+        ),
+        encoding="utf-8",
+    )
+    dir_990 = base / "990" / "normalized"
+    dir_usasp = base / "usaspending" / "normalized"
+    review_990 = base / "990" / "review"
+    review_usasp = base / "usaspending" / "review"
+    ingest_990_main(
+        [
+            "--input-dir", str(FIXTURES_990),
+            "--output-dir", str(dir_990),
+            "--review-dir", str(review_990),
+            "--existing-orgs", str(existing),
+        ]
+    )
+    ingest_usaspending_main(
+        [
+            "--input-dir", str(FIXTURES_USASP),
+            "--output-dir", str(dir_usasp),
+            "--review-dir", str(review_usasp),
+            "--existing-orgs", str(existing),
+        ]
+    )
+    return {
+        "funding_dirs": [dir_990, dir_usasp],
+        "sidecars": [
+            review_990 / "resolution-candidates-990.jsonl",
+            review_usasp / "resolution-candidates-usaspending.jsonl",
+        ],
+    }
+
+
+def _run_builder(
+    operator_run: dict, review_dir: Path, *extra: str
+) -> tuple[list[dict], dict, str, str]:
+    """One operator builder invocation; returns (rows, coverage, table_text,
+    coverage_text) read back from the review dir."""
+    build_dual_role_main(
+        [
+            "--funding-in", *(str(d) for d in operator_run["funding_dirs"]),
+            "--influence-out", str(FIXTURES_INFLUENCE),
+            "--resolution-sidecars", *(str(p) for p in operator_run["sidecars"]),
+            "--review-dir", str(review_dir),
+            *extra,
+        ]
+    )
+    table_text = (review_dir / "dual-role-candidates.jsonl").read_text(
+        encoding="utf-8"
+    )
+    coverage_text = (review_dir / "dual-role-coverage.json").read_text(
+        encoding="utf-8"
+    )
+    rows = [json.loads(line) for line in table_text.splitlines()]
+    return rows, json.loads(coverage_text), table_text, coverage_text
+
+
+def test_cli_requires_both_input_classes(tmp_path: Path):
+    with pytest.raises(SystemExit):
+        build_dual_role_main([])
+    with pytest.raises(SystemExit):
+        build_dual_role_main(["--funding-in", str(tmp_path)])
+    with pytest.raises(SystemExit):
+        build_dual_role_main(["--influence-out", str(tmp_path)])
+
+
+def test_e2e_pre_approval_run_withholds(operator_run: dict, tmp_path: Path):
+    # The whole operator sequence with nothing approved yet: the real queued
+    # MALT pair withholds its would-be row; the real queued CAM pair has one
+    # leg and withholds nothing. Both output files pinned byte-exact
+    # (Decision 7 serialization).
+    rows, coverage, table_text, coverage_text = _run_builder(
+        operator_run, tmp_path / "review"
+    )
+    expected_row = {
+        "subject_ref": MALT_CAMPAIGN_ORG,
+        "subject_label": "Marin Agricultural Land Trust",
+        "status": "withheld_pending_resolution",
+        "dependency_refs": [
+            {"subject_ref": MALT_ORG, "candidate_ref": MALT_CAMPAIGN_ORG}
+        ],
+        "coverage_note": COVERAGE_NOTE,
+    }
+    expected_coverage = {
+        "inputs": {
+            "approved_resolutions": 0,
+            "funding_in_orgs": 10,
+            "gov_grant_positive_filings": 1,
+            "influence_out_flows": 9,
+            "influence_out_orgs": 3,
+            "queued_resolutions": 2,
+            "usaspending_award_flows": 20,
+        },
+        "table": {
+            "candidate_rows": 0,
+            "funding_in_only": 9,
+            "influence_out_only": 2,
+            "withheld_pending_resolution": 1,
+        },
+    }
+    assert rows == [expected_row]
+    assert table_text == json.dumps(expected_row, sort_keys=True) + "\n"
+    assert coverage == expected_coverage
+    assert coverage_text == (
+        json.dumps(expected_coverage, sort_keys=True, indent=2) + "\n"
+    )
+
+
+def test_e2e_post_approval_run_surfaces_rank_1(
+    operator_run: dict, tmp_path: Path
+):
+    # The operator approves the real queued 990 pair (an explicit act on the
+    # reviewed row) and exports the approved-only extract; the sidecars stay
+    # passed as-queued (annotate-in-place is operator-normal), so the pair
+    # also lands in the surfaced row's dependency_refs.
+    queued_990 = [
+        json.loads(line)
+        for line in operator_run["sidecars"][0].read_text(encoding="utf-8").splitlines()
+    ]
+    assert len(queued_990) == 1  # the real MALT pair
+    approved_path = tmp_path / "approved.jsonl"
+    approved_path.write_text(
+        json.dumps({**queued_990[0], "status": "approved"}) + "\n",
+        encoding="utf-8",
+    )
+    rows, coverage, _, _ = _run_builder(
+        operator_run,
+        tmp_path / "review",
+        "--approved-resolutions", str(approved_path),
+    )
+    expected = _malt_candidate_row()
+    expected["dependency_refs"] = [
+        {"subject_ref": MALT_ORG, "candidate_ref": MALT_CAMPAIGN_ORG}
+    ]
+    assert rows == [expected]
+    assert coverage["inputs"]["approved_resolutions"] == 1
+    assert coverage["inputs"]["queued_resolutions"] == 2
+    assert coverage["table"] == {
+        "candidate_rows": 1,
+        "funding_in_only": 9,
+        "influence_out_only": 2,
+        "withheld_pending_resolution": 0,
+    }
+
+
+def test_e2e_runs_are_byte_identical(operator_run: dict, tmp_path: Path):
+    # Two runs over the same inputs produce byte-identical outputs — no
+    # timestamps, no environment leakage (Decision 7).
+    queued_990 = [
+        json.loads(line)
+        for line in operator_run["sidecars"][0].read_text(encoding="utf-8").splitlines()
+    ]
+    approved_path = tmp_path / "approved.jsonl"
+    approved_path.write_text(
+        json.dumps({**queued_990[0], "status": "approved"}) + "\n",
+        encoding="utf-8",
+    )
+    digests = []
+    for run in ("first", "second"):
+        review_dir = tmp_path / run
+        _run_builder(
+            operator_run, review_dir, "--approved-resolutions", str(approved_path)
+        )
+        digests.append(
+            tuple(
+                hashlib.sha256((review_dir / name).read_bytes()).hexdigest()
+                for name in ("dual-role-candidates.jsonl", "dual-role-coverage.json")
+            )
+        )
+    assert digests[0] == digests[1]
+
+
+def test_rejected_pairs_neither_join_nor_withhold(
+    operator_run: dict, tmp_path: Path
+):
+    # A reviewed sidecar in §4.3 vocabulary: the real MALT row still queued,
+    # an approved row (consumed only via the approved-only extract — its
+    # presence here must not join), and a rejected pair that WOULD carry both
+    # legs if queued (CAM funding-in, Alten influence-out) — a decided
+    # non-identity neither joins nor withholds.
+    queued_990 = [
+        json.loads(line)
+        for line in operator_run["sidecars"][0].read_text(encoding="utf-8").splitlines()
+    ]
+    malt_row = queued_990[0]
+    reviewed = tmp_path / "reviewed.jsonl"
+    reviewed.write_text(
+        "".join(
+            json.dumps(r) + "\n"
+            for r in [
+                malt_row,
+                {**malt_row, "status": "approved"},
+                {
+                    "subject_ref": CAM_ORG,
+                    "candidate_ref": "org-alten-construction-inc",
+                    "signals": ["name_similarity:0.86"],
+                    "confidence": 0.86,
+                    "status": "rejected",
+                    "evidence_record_ids": [
+                        "record-usasp-asst_non_09ch011669_075"
+                    ],
+                },
+            ]
+        ),
+        encoding="utf-8",
+    )
+    review_dir = tmp_path / "review"
+    build_dual_role_main(
+        [
+            "--funding-in", *(str(d) for d in operator_run["funding_dirs"]),
+            "--influence-out", str(FIXTURES_INFLUENCE),
+            "--resolution-sidecars", str(reviewed),
+            "--review-dir", str(review_dir),
+        ]
+    )
+    rows = [
+        json.loads(line)
+        for line in (review_dir / "dual-role-candidates.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    coverage = json.loads(
+        (review_dir / "dual-role-coverage.json").read_text(encoding="utf-8")
+    )
+    assert [r["status"] for r in rows] == ["withheld_pending_resolution"]
+    assert rows[0]["subject_ref"] == MALT_CAMPAIGN_ORG
+    assert coverage["inputs"]["queued_resolutions"] == 1
+    assert coverage["table"] == {
+        "candidate_rows": 0,
+        "funding_in_only": 9,
+        "influence_out_only": 2,
+        "withheld_pending_resolution": 1,
+    }
+
+
+def test_cross_class_node_divergence_fails_loud(
+    operator_run: dict, tmp_path: Path
+):
+    # An influence-out bundle that re-emits a funding-side org id with a
+    # DIFFERING payload: Decision 1's divergence rule holds ACROSS input
+    # classes too — never silently pick one label for the same id.
+    nodes_text = (operator_run["funding_dirs"][0] / "nodes.jsonl").read_text(
+        encoding="utf-8"
+    )
+    malt_node = next(
+        row
+        for row in (json.loads(line) for line in nodes_text.splitlines())
+        if row["id"] == MALT_ORG
+    )
+    doctored = tmp_path / "doctored"
+    doctored.mkdir()
+    (doctored / "nodes.jsonl").write_text(
+        json.dumps({**malt_node, "display_label": "Different Label"}) + "\n",
+        encoding="utf-8",
+    )
+    (doctored / "edges.jsonl").write_text("", encoding="utf-8")
+    with pytest.raises(ValueError, match=MALT_ORG):
+        build_dual_role_main(
+            [
+                "--funding-in", *(str(d) for d in operator_run["funding_dirs"]),
+                "--influence-out", str(FIXTURES_INFLUENCE), str(doctored),
+                "--review-dir", str(tmp_path / "review"),
+            ]
+        )
+
+
+def test_same_as_lane_joins_through_the_pipeline(tmp_path: Path):
+    # Lane B end to end: ingest_990 against an existing graph org keyed by
+    # MALT's EIN (operator-shaped test construction, the M2b/M2c precedent —
+    # the committed bundles carry no real cross-class EIN/UEI overlap) emits
+    # the deterministic SAME_AS merge; the builder joins through it with no
+    # approval needed.
+    existing = tmp_path / "existing-orgs.json"
+    existing.write_text(
+        json.dumps(
+            [{"id": "org-3qc-inc", "display_label": "3QC, Inc.", "ein": "94-2689383"}]
+        ),
+        encoding="utf-8",
+    )
+    dir_990 = tmp_path / "normalized"
+    ingest_990_main(
+        [
+            "--input-dir", str(FIXTURES_990),
+            "--output-dir", str(dir_990),
+            "--review-dir", str(tmp_path / "ingest-review"),
+            "--existing-orgs", str(existing),
+        ]
+    )
+    review_dir = tmp_path / "review"
+    build_dual_role_main(
+        [
+            "--funding-in", str(dir_990),
+            "--influence-out", str(FIXTURES_INFLUENCE),
+            "--review-dir", str(review_dir),
+        ]
+    )
+    rows = [
+        json.loads(line)
+        for line in (review_dir / "dual-role-candidates.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    assert rows == [
+        {
+            "subject_ref": "org-3qc-inc",
+            "subject_label": "3QC, Inc.",
+            "status": "candidate",
+            "joined_via": [
+                {
+                    "funding_org_ref": MALT_ORG,
+                    "influence_org_ref": "org-3qc-inc",
+                    "basis": "same_as:ein_exact",
+                }
+            ],
+            "funding_in": _malt_candidate_row()["funding_in"],
+            "influence_out": {
+                "flow_count": 1,
+                "amount_total": 1000.0,
+                "first_flow_date": "2022-04-01",
+                "last_flow_date": "2022-04-01",
+                "flow_types": ["contribution"],
+                "coverage_scope": "netfile_campaign_finance_export",
+                "evidence_record_ids": [
+                    "record-marin-county-campaign-finance-export-2022"
+                ],
+            },
+            "evidence_record_ids": [
+                "record-990-942689383-2022",
+                "record-marin-county-campaign-finance-export-2022",
+            ],
+            "dependency_refs": [],
+            "coverage_note": COVERAGE_NOTE,
+            "rank": 1,
+            "rank_basis": "influence_out_amount_total",
+        }
+    ]
+    coverage = json.loads(
+        (review_dir / "dual-role-coverage.json").read_text(encoding="utf-8")
+    )
+    assert coverage == {
+        "inputs": {
+            "approved_resolutions": 0,
+            "funding_in_orgs": 1,
+            "gov_grant_positive_filings": 1,
+            "influence_out_flows": 9,
+            "influence_out_orgs": 3,
+            "queued_resolutions": 0,
+            "usaspending_award_flows": 0,
+        },
+        "table": {
+            "candidate_rows": 1,
+            "funding_in_only": 0,
+            "influence_out_only": 2,
+            "withheld_pending_resolution": 0,
+        },
+    }
