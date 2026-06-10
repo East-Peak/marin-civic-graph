@@ -1,13 +1,17 @@
-"""Tests for scripts/build_dual_role_candidates.py — funding-in readers (M2d unit 1).
+"""Tests for scripts/build_dual_role_candidates.py — the dual-role read model (M2d).
 
 The read model consumes ingestor-envelope JSONL dirs only (no database, no
-fetching). Inputs here are GENERATED, not staged: the real ingest_990 /
+fetching). Funding-in inputs are GENERATED, not staged: the real ingest_990 /
 ingest_usaspending CLIs run on their committed fixtures into tmp_path, and the
-loader/extractor are asserted against that real output. Loader dedupe per
+loader/extractors are asserted against that real output. The influence-out
+input is the staged byte-verbatim slice of the real NetFile-derived campaign
+bundle in tests/fixtures/dual_role/influence-out/. Loader dedupe per
 Decision 1 (nodes by id, byte-identical collapse silently, divergent payload
-fails loud; edges by full-row equality); funding legs per Decision 3 (990
+fails loud; edges by full-row equality, campaign-superset keys tolerated by
+normalizing to the v2 envelope); funding legs per Decision 3 (990
 gov-grant-positive Filings via FILED_BY_ORG — the MCF negative; USASpending
-flows via TO_TARGET). The suite must leave `git status` untouched.
+flows via TO_TARGET); influence-out legs FROM_SOURCE-direction-exact (the CAM
+TO_TARGET-only negative). The suite must leave `git status` untouched.
 """
 from __future__ import annotations
 
@@ -22,6 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 from build_dual_role_candidates import (  # noqa: E402
     collect_same_as_edges,
     extract_funding_in,
+    extract_influence_out,
     load_envelope_dirs,
 )
 from ingest_990 import main as ingest_990_main  # noqa: E402
@@ -29,10 +34,15 @@ from ingest_usaspending import main as ingest_usaspending_main  # noqa: E402
 
 FIXTURES_990 = Path(__file__).resolve().parents[1] / "fixtures" / "990"
 FIXTURES_USASP = Path(__file__).resolve().parents[1] / "fixtures" / "usaspending"
+FIXTURES_INFLUENCE = (
+    Path(__file__).resolve().parents[1] / "fixtures" / "dual_role" / "influence-out"
+)
 
 MALT_ORG = "org-990-ein-942689383"
 MCF_ORG = "org-990-ein-943007979"
 CAM_ORG = "org-usasp-uei-JZ9FLAVMPEB9"
+MALT_CAMPAIGN_ORG = "org-marin-agricultural-land-trust"
+CAM_CAMPAIGN_ORG = "org-community-action-marin"
 
 
 @pytest.fixture(scope="module")
@@ -202,3 +212,104 @@ def test_same_as_edges_collected_with_basis(tmp_path: Path):
             "properties": {"basis": "ein_exact"},
         }
     ]
+
+
+# ---------------------------------------------------------------------------
+# Influence-out — campaign superset tolerated, FROM_SOURCE-direction-exact
+# ---------------------------------------------------------------------------
+
+
+def test_campaign_superset_envelope_normalizes_to_v2():
+    # The campaign bundle carries extra promotion_state/qa_lane/source_* keys
+    # on every row — the loader tolerates them by normalizing to the v2
+    # envelope, so dedupe and every downstream read see one shape.
+    nodes_by_id, edges = load_envelope_dirs([FIXTURES_INFLUENCE])
+    assert len(nodes_by_id) == 19
+    assert len(edges) == 30
+    for node in nodes_by_id.values():
+        assert set(node) == {
+            "id", "node_type", "labels", "display_label", "properties",
+        }
+    for edge in edges:
+        assert set(edge) == {
+            "source_id", "target_id", "relationship_type", "properties",
+        }
+
+
+def test_influence_out_is_from_source_direction_exact():
+    nodes_by_id, edges = load_envelope_dirs([FIXTURES_INFLUENCE])
+    flows = extract_influence_out(nodes_by_id, edges)
+    # MALT sources 6 real flows — amounts verbatim (one REAL negative),
+    # entries in flow-id order, dangling evidence ids carried as-is.
+    assert flows[MALT_CAMPAIGN_ORG] == [
+        {
+            "flow_id": "moneyflow-1424535-EXP21",
+            "amount": -7307.5,
+            "flow_date": "2020-06-16",
+            "flow_type": "contribution",
+            "evidence_record_ids": ["record-marin-county-campaign-finance-export-2020"],
+        },
+        {
+            "flow_id": "moneyflow-1424535-INC4",
+            "amount": 10000.0,
+            "flow_date": "2020-03-06",
+            "flow_type": "contribution",
+            "evidence_record_ids": ["record-marin-county-campaign-finance-export-2020"],
+        },
+        {
+            "flow_id": "moneyflow-1444863-Pp5X1tktd8nP",
+            "amount": 56000.0,
+            "flow_date": "2022-06-06",
+            "flow_type": "contribution",
+            "evidence_record_ids": ["record-marin-county-campaign-finance-export-2022"],
+        },
+        {
+            "flow_id": "moneyflow-1444863-WLcNvnGn98LV",
+            "amount": 42000.0,
+            "flow_date": "2022-06-03",
+            "flow_type": "contribution",
+            "evidence_record_ids": ["record-marin-county-campaign-finance-export-2022"],
+        },
+        {
+            "flow_id": "moneyflow-1444863-jFpQhLaJMEFZ",
+            "amount": 42000.0,
+            "flow_date": "2022-05-16",
+            "flow_type": "contribution",
+            "evidence_record_ids": ["record-marin-county-campaign-finance-export-2022"],
+        },
+        {
+            "flow_id": "moneyflow-1444863-juXUJhrbP8bL",
+            "amount": 10000.0,
+            "flow_date": "2022-05-02",
+            "flow_type": "contribution",
+            "evidence_record_ids": ["record-marin-county-campaign-finance-export-2022"],
+        },
+    ]
+    # CAM appears in the real bundle ONLY as the TO_TARGET of its flow —
+    # money TO the org is not influence-out (the direction negative).
+    assert CAM_CAMPAIGN_ORG not in flows
+    # That flow's FROM_SOURCE is a Committee node — sources credit an
+    # influence-out leg only when the source node is an Organization.
+    assert "committee-netfile-1474069" not in flows
+    # The two other contributor orgs in the slice carry their own flows.
+    assert [f["flow_id"] for f in flows["org-3qc-inc"]] == [
+        "moneyflow-1447634-dQZzVLJUhseS"
+    ]
+    assert [f["flow_id"] for f in flows["org-alten-construction-inc"]] == [
+        "moneyflow-1436437-5nlEO5NWLpm9",
+        "moneyflow-1447634-ie8hUWpb9FdG",
+    ]
+    assert set(flows) == {
+        MALT_CAMPAIGN_ORG, "org-3qc-inc", "org-alten-construction-inc",
+    }
+
+
+def test_influence_out_evidence_targets_dangle_by_design():
+    # The campaign slice's EVIDENCED_BY targets are record ids whose Record
+    # nodes live in a different bundle — carried verbatim, never resolved.
+    nodes_by_id, edges = load_envelope_dirs([FIXTURES_INFLUENCE])
+    flows = extract_influence_out(nodes_by_id, edges)
+    for entries in flows.values():
+        for entry in entries:
+            for record_id in entry["evidence_record_ids"]:
+                assert record_id not in nodes_by_id

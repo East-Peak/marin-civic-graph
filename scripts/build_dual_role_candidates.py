@@ -20,6 +20,12 @@ from typing import Any
 
 USASPENDING_COVERAGE_SCOPE = "usaspending_prime_award_total_obligation"
 
+# The v2 envelope. Campaign bundles emit a SUPERSET (extra promotion_state /
+# qa_lane / source_* keys) — tolerated by projecting every row down to these
+# keys at load, so dedupe and every downstream read see one shape.
+_NODE_KEYS = ("id", "node_type", "labels", "display_label", "properties")
+_EDGE_KEYS = ("source_id", "target_id", "relationship_type", "properties")
+
 
 # ---------------------------------------------------------------------------
 # Loader — envelope dirs, Decision 1 dedupe
@@ -38,12 +44,17 @@ def _canonical(row: dict[str, Any]) -> str:
     return json.dumps(row, sort_keys=True)
 
 
+def _project(row: dict[str, Any], keys: tuple[str, ...]) -> dict[str, Any]:
+    return {key: row[key] for key in keys if key in row}
+
+
 def load_envelope_dirs(
     dirs: list[Path],
 ) -> tuple[dict[str, dict[str, Any]], list[dict[str, Any]]]:
     """Load + merge envelope dirs into deduped node/edge sets.
 
-    Nodes dedupe by id — byte-identical re-emissions collapse silently
+    Every row is normalized to the v2 envelope (campaign-superset keys
+    dropped). Nodes dedupe by id — identical re-emissions collapse silently
     (overlapping bundles and a dir passed twice are operator-normal); the
     same id with a DIFFERING payload fails loud, never pick-one. Edges
     dedupe by full-row equality, first occurrence kept in load order.
@@ -54,7 +65,8 @@ def load_envelope_dirs(
     seen_edges: set[str] = set()
     for directory in dirs:
         directory = Path(directory)
-        for row in _read_jsonl(directory / "nodes.jsonl"):
+        for raw in _read_jsonl(directory / "nodes.jsonl"):
+            row = _project(raw, _NODE_KEYS)
             node_id = row["id"]
             canon = _canonical(row)
             prior = node_canon.get(node_id)
@@ -65,7 +77,8 @@ def load_envelope_dirs(
                 raise ValueError(
                     f"node id {node_id!r} loaded twice with differing payloads"
                 )
-        for row in _read_jsonl(directory / "edges.jsonl"):
+        for raw in _read_jsonl(directory / "edges.jsonl"):
+            row = _project(raw, _EDGE_KEYS)
             canon = _canonical(row)
             if canon not in seen_edges:
                 seen_edges.add(canon)
@@ -154,6 +167,52 @@ def extract_funding_in(
         if "usaspending" in legs:
             legs["usaspending"].sort(key=lambda e: e["flow_id"])
     return funding
+
+
+# ---------------------------------------------------------------------------
+# Influence-out legs — Decision 3: FROM_SOURCE-direction-exact, orgs only
+# ---------------------------------------------------------------------------
+
+
+def extract_influence_out(
+    nodes_by_id: dict[str, dict[str, Any]],
+    edges: list[dict[str, Any]],
+) -> dict[str, list[dict[str, Any]]]:
+    """Influence-out flows per org over the influence-out inputs.
+
+    A campaign MoneyFlow is influence-out evidence for org G only when a
+    FROM_SOURCE edge names G as the SOURCE and G is an Organization node
+    (a TO_TARGET flow is money TO the org — never influence-out; Person
+    contributors and committee sources are out of scope). Amounts are
+    carried verbatim (negatives kept); EVIDENCED_BY targets are record ids
+    whose Record nodes may live in other bundles — carried as-is, never
+    resolved. Entries held per-flow in flow-id order (downstream totals
+    sum in this order for float determinism).
+    """
+    evidence = _evidence_by_source(edges)
+    flows: dict[str, list[dict[str, Any]]] = {}
+    for edge in edges:
+        if edge["relationship_type"] != "FROM_SOURCE":
+            continue
+        source = nodes_by_id.get(edge["source_id"])
+        flow = nodes_by_id.get(edge["target_id"])
+        if source is None or source["node_type"] != "Organization":
+            continue
+        if flow is None or flow["node_type"] != "MoneyFlow":
+            continue
+        props = flow["properties"]
+        flows.setdefault(edge["source_id"], []).append(
+            {
+                "flow_id": flow["id"],
+                "amount": props["amount"],
+                "flow_date": props["flow_date"],
+                "flow_type": props["flow_type"],
+                "evidence_record_ids": sorted(evidence.get(flow["id"], [])),
+            }
+        )
+    for entries in flows.values():
+        entries.sort(key=lambda e: e["flow_id"])
+    return flows
 
 
 # ---------------------------------------------------------------------------
