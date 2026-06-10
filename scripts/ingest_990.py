@@ -18,14 +18,20 @@ This module has NO fetch code. The operator download procedure:
   3. Place the XML files in data/raw/990/ (or pass --input-dir).
 
 Usage:
-  # Parse + build + resolve from a local directory (no network, no DB)
+  # Parse + build from a local directory (no network, no DB)
   python scripts/ingest_990.py --input-dir data/raw/990
+
+  # Resolve against an export of existing graph orgs — a JSON array of
+  # {id, display_label, ein?} dicts. Exact-EIN matches emit SAME_AS edges;
+  # everything else lands in the review sidecar. Omit to skip resolution.
+  python scripts/ingest_990.py --input-dir data/raw/990 \
+      --existing-orgs data/review/existing-orgs.json
 
   # Also load the emitted nodes/edges into Neo4j (operator step; requires
   # NEO4J_URI / NEO4J_USER / NEO4J_PASSWORD env vars)
   python scripts/ingest_990.py --input-dir data/raw/990 --load
 
-Outputs:
+Outputs (override with --output-dir / --review-dir):
   data/normalized/990/nodes.jsonl + edges.jsonl   (gitignored data layer)
   data/review/resolution-candidates-990.jsonl     (sidecar review queue)
 """
