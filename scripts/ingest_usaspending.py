@@ -31,6 +31,10 @@ import logging
 from pathlib import Path
 from typing import Any
 
+# Shared helpers — imported, never forked (M2b/M2a precedent).
+from ingest_990 import title_if_allcaps
+from membership_builders import slugify
+
 logger = logging.getLogger("ingest_usaspending")
 
 # ---------------------------------------------------------------------------
@@ -107,3 +111,233 @@ def parse_awards_page(data: dict[str, Any]) -> list[dict[str, Any]]:
 def parse_awards_file(path: Path) -> list[dict[str, Any]]:
     """One downloaded response page on disk → parsed award dicts."""
     return parse_awards_page(json.loads(Path(path).read_text()))
+
+
+# ---------------------------------------------------------------------------
+# In-batch award dedupe (Decision 3)
+# ---------------------------------------------------------------------------
+
+
+def dedupe_awards(awards: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Collapse repeated award ids to one row (first occurrence kept) —
+    fails loud when duplicates DISAGREE on amount. Real pagination never
+    repeats an award id; this guards operator re-downloads of the same page.
+    """
+    seen: dict[str, dict[str, Any]] = {}
+    deduped: list[dict[str, Any]] = []
+    for award in awards:
+        award_id = award["award_id"]
+        prior = seen.get(award_id)
+        if prior is None:
+            seen[award_id] = award
+            deduped.append(award)
+        elif prior["amount"] != award["amount"]:
+            raise ValueError(
+                f"duplicate award {award_id} disagrees on amount: "
+                f"{prior['amount']} != {award['amount']}"
+            )
+    return deduped
+
+
+# ---------------------------------------------------------------------------
+# Builders — recipient/agency orgs, MoneyFlow, Record (Decisions 3–4)
+# ---------------------------------------------------------------------------
+
+
+def build_recipient_org_nodes(
+    awards: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], dict[str, str]]:
+    """Recipient Organization nodes + an award_id → org id map.
+
+    TWO-PASS identity (Decision 3): pass 1 groups rows by `recipient_id`
+    (a UEI-only row anchors its own group); pass 2 assigns the whole group
+    `org-usasp-uei-<UEI>` when ANY row carries a UEI, else
+    `org-usasp-rid-<recipient_id lowercased>` — a row-local choice would
+    split one recipient across two ids when UEI coverage is patchy.
+
+    NO `Nonprofit` label from this source, ever: business categories are
+    null on every real row; nonprofit-ness arrives only via reviewed
+    cross-source 990 resolution.
+    """
+    # Pass 1 — group by recipient_id (UEI anchors the no-recipient_id case;
+    # the parser already skipped rows with neither).
+    groups: dict[str, list[dict[str, Any]]] = {}
+    for award in awards:
+        group_key = award["recipient_id"] or f"uei:{award['uei']}"
+        groups.setdefault(group_key, []).append(award)
+
+    nodes: list[dict[str, Any]] = []
+    org_id_by_award: dict[str, str] = {}
+    for group_rows in groups.values():
+        ueis = {row["uei"] for row in group_rows if row["uei"]}
+        if len(ueis) > 1:
+            # Defensive — contradicts the recipient_id grouping contract;
+            # not constructible from real rows under the fixture rules.
+            raise ValueError(
+                f"recipient group {group_rows[0]['recipient_id']!r} carries "
+                f"multiple distinct UEIs: {sorted(ueis)}"
+            )
+        first = group_rows[0]
+        if ueis:
+            org_id = f"org-usasp-uei-{next(iter(ueis))}"
+        else:
+            org_id = f"org-usasp-rid-{first['recipient_id'].lower()}"
+
+        name_raw = first["recipient_name"]
+        props: dict[str, Any] = {
+            "name": title_if_allcaps(name_raw),
+            "name_raw": name_raw,
+        }
+        if ueis:
+            props["uei"] = next(iter(ueis))
+        if first["recipient_id"]:
+            props["recipient_id"] = first["recipient_id"]
+        props["source"] = "usaspending"
+
+        nodes.append(
+            {
+                "id": org_id,
+                "node_type": "Organization",
+                "labels": ["Organization"],
+                "display_label": title_if_allcaps(name_raw),
+                "properties": props,
+            }
+        )
+        for row in group_rows:
+            org_id_by_award[row["award_id"]] = org_id
+
+    return nodes, org_id_by_award
+
+
+def build_agency_org_nodes(
+    awards: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], dict[str, str]]:
+    """Awarding-agency Organization nodes (deduped on slug) + award map.
+
+    Id base is the API's `agency_slug` (stable, already id-safe); a missing
+    slug falls back to the slugified awarding-agency name; neither → loud.
+    """
+    nodes: list[dict[str, Any]] = []
+    by_slug: dict[str, str] = {}
+    org_id_by_award: dict[str, str] = {}
+    for award in awards:
+        slug = award["agency_slug"]
+        if not slug and award["awarding_agency"]:
+            slug = slugify(award["awarding_agency"])
+        if not slug:
+            raise ValueError(
+                f"award {award['award_id']} has neither agency_slug nor an "
+                "awarding agency name"
+            )
+        org_id = f"org-usasp-agency-{slug}"
+        if slug not in by_slug:
+            by_slug[slug] = org_id
+            nodes.append(
+                {
+                    "id": org_id,
+                    "node_type": "Organization",
+                    "labels": ["Organization"],
+                    "display_label": award["awarding_agency"],
+                    "properties": {
+                        "name": award["awarding_agency"],
+                        "agency_slug": slug,
+                        "source": "usaspending",
+                    },
+                }
+            )
+        org_id_by_award[award["award_id"]] = org_id
+    return nodes, org_id_by_award
+
+
+def _moneyflow_id(award_id: str) -> str:
+    return f"moneyflow-usasp-{award_id.lower()}"
+
+
+def _record_id(award_id: str) -> str:
+    return f"record-usasp-{award_id.lower()}"
+
+
+def build_moneyflow_node(award: dict[str, Any]) -> dict[str, Any]:
+    """Award-level MoneyFlow fact (funding-IN ledger entry).
+
+    `coverage_scope` is the coverage-honesty marker: the amount is the
+    award-LIFETIME total obligation from the prime-award search endpoint —
+    never a confirmed annual or local-dollar claim. Funding agency fields
+    are stored whenever present (the appropriation source); the FROM_SOURCE
+    edge endpoint is always the awarding agency (Decision 5).
+    """
+    props: dict[str, Any] = {
+        "amount": award["amount"],
+        "flow_type": "federal_award",
+        "award_category": award["award_type"],
+        "award_id": award["award_id"],
+    }
+    for key in (
+        "start_date",
+        "end_date",
+    ):
+        if award[key]:
+            props[key] = award[key]
+    if award["cfda_number"]:
+        props["assistance_listing"] = award["cfda_number"]
+    props["awarding_agency"] = award["awarding_agency"]
+    for key in ("awarding_sub_agency", "funding_agency", "funding_sub_agency"):
+        if award[key]:
+            props[key] = award[key]
+    props["coverage_scope"] = "usaspending_prime_award_total_obligation"
+    props["source"] = "usaspending"
+    return {
+        "id": _moneyflow_id(award["award_id"]),
+        "node_type": "MoneyFlow",
+        "labels": ["MoneyFlow"],
+        "display_label": f"federal_award ${award['amount']:.2f}",
+        "properties": props,
+    }
+
+
+def build_award_record_node(award: dict[str, Any]) -> dict[str, Any]:
+    """Record node for the award's USASpending profile page (provenance
+    target of the EVIDENCED_BY edge). The URL embeds the verbatim-case
+    generated_internal_id — it is case-sensitive.
+    """
+    award_id = award["award_id"]
+    return {
+        "id": _record_id(award_id),
+        "node_type": "Record",
+        "labels": ["Record"],
+        "display_label": f"USASpending award {award_id}",
+        "properties": {
+            "award_id": award_id,
+            "source_url": f"https://www.usaspending.gov/award/{award_id}",
+        },
+    }
+
+
+def build_award_edges(
+    award: dict[str, Any], recipient_org_id: str, agency_org_id: str
+) -> list[dict[str, Any]]:
+    """The three award edges (CF MoneyFlow direction precedent): awarding
+    agency —FROM_SOURCE→ MoneyFlow —TO_TARGET→ recipient; MoneyFlow
+    —EVIDENCED_BY→ Record.
+    """
+    moneyflow_id = _moneyflow_id(award["award_id"])
+    return [
+        {
+            "source_id": agency_org_id,
+            "target_id": moneyflow_id,
+            "relationship_type": "FROM_SOURCE",
+            "properties": {},
+        },
+        {
+            "source_id": moneyflow_id,
+            "target_id": recipient_org_id,
+            "relationship_type": "TO_TARGET",
+            "properties": {},
+        },
+        {
+            "source_id": moneyflow_id,
+            "target_id": _record_id(award["award_id"]),
+            "relationship_type": "EVIDENCED_BY",
+            "properties": {},
+        },
+    ]
