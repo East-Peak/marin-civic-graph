@@ -1,0 +1,229 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Return xmlns="http://www.irs.gov/efile" returnVersion="2024v5.0">
+  <ReturnHeader binaryAttachmentCnt="0">
+    <ReturnTs>2025-03-17T19:00:05Z</ReturnTs>
+    <TaxPeriodEndDt>2024-12-31</TaxPeriodEndDt>
+    <ReturnTypeCd>990EZ</ReturnTypeCd>
+    <TaxPeriodBeginDt>2024-01-01</TaxPeriodBeginDt>
+    <Filer>
+      <EIN>946077085</EIN>
+      <BusinessName>
+        <BusinessNameLine1Txt>SAUSALITO FOUNDATION</BusinessNameLine1Txt>
+      </BusinessName>
+      <BusinessNameControlTxt>SAUS</BusinessNameControlTxt>
+      <PhoneNum>0000000000</PhoneNum>
+      <USAddress>
+        <AddressLine1Txt>PO BOX 567</AddressLine1Txt>
+        <CityNm>SAUSALITO</CityNm>
+        <StateAbbreviationCd>CA</StateAbbreviationCd>
+        <ZIPCd>94966</ZIPCd>
+      </USAddress>
+    </Filer>
+    <BusinessOfficerGrp>
+      <PersonNm>Felicity Kirsch</PersonNm>
+      <PersonTitleTxt>co-treasurer</PersonTitleTxt>
+      <PhoneNum>4154970194</PhoneNum>
+      <SignatureDt>2025-03-17</SignatureDt>
+    </BusinessOfficerGrp>
+    <IRSResponsiblePrtyInfoCurrInd>true</IRSResponsiblePrtyInfoCurrInd>
+    <TaxYr>2024</TaxYr>
+    <BuildTS>2025-03-06 01:10:19Z</BuildTS>
+  </ReturnHeader>
+  <ReturnData documentCnt="4">
+    <IRS990EZ documentId="POSTCARDb3474db">
+      <MethodOfAccountingCashInd>X</MethodOfAccountingCashInd>
+      <Organization501c3Ind referenceDocumentId="990xScheduleA" referenceDocumentName="IRS990ScheduleA">X</Organization501c3Ind>
+      <TypeOfOrganizationCorpInd>X</TypeOfOrganizationCorpInd>
+      <GrossReceiptsAmt>65122</GrossReceiptsAmt>
+      <InfoInScheduleOPartIInd>X</InfoInScheduleOPartIInd>
+      <ContributionsGiftsGrantsEtcAmt>64642</ContributionsGiftsGrantsEtcAmt>
+      <ProgramServiceRevenueAmt>0</ProgramServiceRevenueAmt>
+      <MembershipDuesAmt>0</MembershipDuesAmt>
+      <InvestmentIncomeAmt>0</InvestmentIncomeAmt>
+      <SaleOfAssetsGrossAmt>0</SaleOfAssetsGrossAmt>
+      <CostOrOtherBasisExpenseSaleAmt>0</CostOrOtherBasisExpenseSaleAmt>
+      <GainOrLossFromSaleOfAssetsAmt>0</GainOrLossFromSaleOfAssetsAmt>
+      <GamingGrossIncomeAmt>0</GamingGrossIncomeAmt>
+      <FundraisingGrossIncomeAmt>0</FundraisingGrossIncomeAmt>
+      <SpecialEventsDirectExpensesAmt>0</SpecialEventsDirectExpensesAmt>
+      <SpecialEventsNetIncomeLossAmt>0</SpecialEventsNetIncomeLossAmt>
+      <GrossSalesOfInventoryAmt>480</GrossSalesOfInventoryAmt>
+      <CostOfGoodsSoldAmt>587</CostOfGoodsSoldAmt>
+      <GrossProfitLossSlsOfInvntryAmt>-107</GrossProfitLossSlsOfInvntryAmt>
+      <OtherRevenueTotalAmt>0</OtherRevenueTotalAmt>
+      <TotalRevenueAmt>64535</TotalRevenueAmt>
+      <GrantsAndSimilarAmountsPaidAmt>1000</GrantsAndSimilarAmountsPaidAmt>
+      <BenefitsPaidToOrForMembersAmt>0</BenefitsPaidToOrForMembersAmt>
+      <SalariesOtherCompEmplBnftAmt>0</SalariesOtherCompEmplBnftAmt>
+      <FeesAndOtherPymtToIndCntrctAmt>300</FeesAndOtherPymtToIndCntrctAmt>
+      <OccupancyRentUtltsAndMaintAmt>0</OccupancyRentUtltsAndMaintAmt>
+      <PrintingPublicationsPostageAmt>349</PrintingPublicationsPostageAmt>
+      <OtherExpensesTotalAmt>114885</OtherExpensesTotalAmt>
+      <TotalExpensesAmt>116534</TotalExpensesAmt>
+      <ExcessOrDeficitForYearAmt>-51999</ExcessOrDeficitForYearAmt>
+      <NetAssetsOrFundBalancesBOYAmt>101471</NetAssetsOrFundBalancesBOYAmt>
+      <OtherChangesInNetAssetsAmt>0</OtherChangesInNetAssetsAmt>
+      <NetAssetsOrFundBalancesEOYAmt>49472</NetAssetsOrFundBalancesEOYAmt>
+      <CashSavingsAndInvestmentsGrp>
+        <BOYAmt>96471</BOYAmt>
+        <EOYAmt>44472</EOYAmt>
+      </CashSavingsAndInvestmentsGrp>
+      <LandAndBuildingsGrp>
+        <BOYAmt>0</BOYAmt>
+        <EOYAmt>0</EOYAmt>
+      </LandAndBuildingsGrp>
+      <OtherAssetsTotalDetail>
+        <BOYAmt>5000</BOYAmt>
+        <EOYAmt>5000</EOYAmt>
+      </OtherAssetsTotalDetail>
+      <Form990TotalAssetsGrp>
+        <BOYAmt>101471</BOYAmt>
+        <EOYAmt>49472</EOYAmt>
+      </Form990TotalAssetsGrp>
+      <SumOfTotalLiabilitiesGrp>
+        <BOYAmt>0</BOYAmt>
+        <EOYAmt>0</EOYAmt>
+      </SumOfTotalLiabilitiesGrp>
+      <NetAssetsOrFundBalancesGrp>
+        <BOYAmt>101471</BOYAmt>
+        <EOYAmt>49472</EOYAmt>
+      </NetAssetsOrFundBalancesGrp>
+      <InfoInScheduleOPartIIIInd>X</InfoInScheduleOPartIIIInd>
+      <PrimaryExemptPurposeTxt>See Schedule 0</PrimaryExemptPurposeTxt>
+      <ProgramSrvcAccomplishmentGrp>
+        <DescriptionProgramSrvcAccomTxt>Sausalito Art Tunnel Project</DescriptionProgramSrvcAccomTxt>
+        <ProgramServiceExpensesAmt>76518</ProgramServiceExpensesAmt>
+      </ProgramSrvcAccomplishmentGrp>
+      <ProgramSrvcAccomplishmentGrp>
+        <DescriptionProgramSrvcAccomTxt>Sea Lion Project</DescriptionProgramSrvcAccomTxt>
+        <ProgramServiceExpensesAmt>35513</ProgramServiceExpensesAmt>
+      </ProgramSrvcAccomplishmentGrp>
+      <TotalProgramServiceExpensesAmt>112031</TotalProgramServiceExpensesAmt>
+      <OfficerDirectorTrusteeEmplGrp>
+        <PersonNm>Rip Hunter</PersonNm>
+        <TitleTxt>President</TitleTxt>
+        <AverageHrsPerWkDevotedToPosRt>2.00</AverageHrsPerWkDevotedToPosRt>
+        <CompensationAmt>0</CompensationAmt>
+        <EmployeeBenefitProgramAmt>0</EmployeeBenefitProgramAmt>
+        <ExpenseAccountOtherAllwncAmt>0</ExpenseAccountOtherAllwncAmt>
+      </OfficerDirectorTrusteeEmplGrp>
+      <ActivitiesNotPreviouslyRptInd>false</ActivitiesNotPreviouslyRptInd>
+      <ChgMadeToOrgnzngDocNotRptInd>false</ChgMadeToOrgnzngDocNotRptInd>
+      <OrganizationHadUBIInd>false</OrganizationHadUBIInd>
+      <SubjectToProxyTaxInd>false</SubjectToProxyTaxInd>
+      <OrganizationDissolvedEtcInd>false</OrganizationDissolvedEtcInd>
+      <Form1120PolFiledInd>false</Form1120PolFiledInd>
+      <MadeLoansToFromOfficersInd>false</MadeLoansToFromOfficersInd>
+      <EngagedInExcessBenefitTransInd>false</EngagedInExcessBenefitTransInd>
+      <ProhibitedTaxShelterTransInd>false</ProhibitedTaxShelterTransInd>
+      <BooksInCareOfDetail>
+        <PersonNm>Felicity Kirsch</PersonNm>
+        <USAddress>
+          <AddressLine1Txt>PO Box567</AddressLine1Txt>
+          <CityNm>Sausalito</CityNm>
+          <StateAbbreviationCd>CA</StateAbbreviationCd>
+          <ZIPCd>94966</ZIPCd>
+        </USAddress>
+        <PhoneNum>4154970194</PhoneNum>
+      </BooksInCareOfDetail>
+      <ForeignFinancialAccountInd>
+                            false
+                        </ForeignFinancialAccountInd>
+      <ForeignOfficeInd>
+                            false
+                        </ForeignOfficeInd>
+      <DonorAdvisedFndsInd>false</DonorAdvisedFndsInd>
+      <OperateHospitalInd>false</OperateHospitalInd>
+      <TanningServicesProvidedInd>false</TanningServicesProvidedInd>
+      <RelatedOrganizationCtrlEntInd>false</RelatedOrganizationCtrlEntInd>
+      <TransactionWithControlEntInd>false</TransactionWithControlEntInd>
+      <PoliticalCampaignActyInd>false</PoliticalCampaignActyInd>
+      <LobbyingActivitiesInd>false</LobbyingActivitiesInd>
+      <SchoolOperatingInd>false</SchoolOperatingInd>
+      <TrnsfrExmptNonChrtblRltdOrgInd>false</TrnsfrExmptNonChrtblRltdOrgInd>
+      <PartVIOfCompOfHghstPdEmplTxt>NONE</PartVIOfCompOfHghstPdEmplTxt>
+      <PartVIHghstPdCntrctProfSrvcTxt>NONE</PartVIHghstPdCntrctProfSrvcTxt>
+      <FiledScheduleAInd>true</FiledScheduleAInd>
+    </IRS990EZ>
+    <IRS990ScheduleA documentId="990xScheduleA">
+      <PublicOrganization170Ind>X</PublicOrganization170Ind>
+      <GiftsGrantsContriRcvd170Grp>
+        <CurrentTaxYearMinus3YearsAmt>18543</CurrentTaxYearMinus3YearsAmt>
+        <CurrentTaxYearMinus2YearsAmt>100771</CurrentTaxYearMinus2YearsAmt>
+        <CurrentTaxYearMinus1YearAmt>82465</CurrentTaxYearMinus1YearAmt>
+        <CurrentTaxYearAmt>64642</CurrentTaxYearAmt>
+        <TotalAmt>266421</TotalAmt>
+      </GiftsGrantsContriRcvd170Grp>
+      <TaxRevLeviedOrgnztnlBnft170Grp></TaxRevLeviedOrgnztnlBnft170Grp>
+      <GovtFurnSrvcFcltsVl170Grp></GovtFurnSrvcFcltsVl170Grp>
+      <TotalCalendarYear170Grp>
+        <CurrentTaxYearMinus3YearsAmt>18543</CurrentTaxYearMinus3YearsAmt>
+        <CurrentTaxYearMinus2YearsAmt>100771</CurrentTaxYearMinus2YearsAmt>
+        <CurrentTaxYearMinus1YearAmt>82465</CurrentTaxYearMinus1YearAmt>
+        <CurrentTaxYearAmt>64642</CurrentTaxYearAmt>
+        <TotalAmt>266421</TotalAmt>
+      </TotalCalendarYear170Grp>
+      <PublicSupportTotal170Amt>266421</PublicSupportTotal170Amt>
+      <GrossInvestmentIncome170Grp></GrossInvestmentIncome170Grp>
+      <UnrelatedBusinessNetIncm170Grp></UnrelatedBusinessNetIncm170Grp>
+      <OtherIncome170Grp>
+        <CurrentTaxYearAmt>480</CurrentTaxYearAmt>
+        <TotalAmt>480</TotalAmt>
+      </OtherIncome170Grp>
+      <TotalSupportAmt>266901</TotalSupportAmt>
+      <First5Years170Ind>X</First5Years170Ind>
+      <PublicSupportCY170Pct>0.99</PublicSupportCY170Pct>
+      <PublicSupportPY170Pct>0</PublicSupportPY170Pct>
+      <GiftsGrantsContrisRcvd509Grp></GiftsGrantsContrisRcvd509Grp>
+      <GrossReceiptsAdmissionsGrp></GrossReceiptsAdmissionsGrp>
+      <GrossReceiptsNonUnrltBusGrp></GrossReceiptsNonUnrltBusGrp>
+      <TaxRevLeviedOrgnztnlBnft509Grp></TaxRevLeviedOrgnztnlBnft509Grp>
+      <GovtFurnSrvcFcltsVl509Grp></GovtFurnSrvcFcltsVl509Grp>
+      <Total509Grp></Total509Grp>
+      <AmountsRcvdDsqlfyPersonGrp></AmountsRcvdDsqlfyPersonGrp>
+      <SubstantialContributorsAmtGrp></SubstantialContributorsAmtGrp>
+      <SubstAndDsqlfyPrsnsTotGrp></SubstAndDsqlfyPrsnsTotGrp>
+      <PublicSupportTotal509Amt>0</PublicSupportTotal509Amt>
+      <GrossInvestmentIncome509Grp></GrossInvestmentIncome509Grp>
+      <Post1975UBTIGrp></Post1975UBTIGrp>
+      <InvestmentIncomeAndUBTIGrp></InvestmentIncomeAndUBTIGrp>
+      <NetIncomeFromOtherUBIGrp></NetIncomeFromOtherUBIGrp>
+      <OtherIncome509Grp></OtherIncome509Grp>
+      <TotalSupportCalendarYearGrp>
+        <CurrentTaxYearMinus4YearsAmt>0</CurrentTaxYearMinus4YearsAmt>
+        <CurrentTaxYearMinus3YearsAmt>0</CurrentTaxYearMinus3YearsAmt>
+        <CurrentTaxYearMinus2YearsAmt>0</CurrentTaxYearMinus2YearsAmt>
+        <CurrentTaxYearMinus1YearAmt>0</CurrentTaxYearMinus1YearAmt>
+        <CurrentTaxYearAmt>0</CurrentTaxYearAmt>
+        <TotalAmt>0</TotalAmt>
+      </TotalSupportCalendarYearGrp>
+      <PublicSupportCY509Pct>0</PublicSupportCY509Pct>
+      <PublicSupportPY509Pct>0</PublicSupportPY509Pct>
+      <InvestmentIncomeCYPct>0</InvestmentIncomeCYPct>
+      <InvestmentIncomePYPct>0</InvestmentIncomePYPct>
+      <Form990SchAType3FuncIntGrp></Form990SchAType3FuncIntGrp>
+    </IRS990ScheduleA>
+    <IRS990ScheduleB documentId="990xScheduleB">
+      <ContributorInformationGrp>
+        <ContributorNum>RESTRICTED</ContributorNum>
+        <ContributorBusinessName>
+          <BusinessNameLine1>RESTRICTED</BusinessNameLine1>
+        </ContributorBusinessName>
+        <ContributorUSAddress>
+          <AddressLine1>RESTRICTED</AddressLine1>
+          <AddressLine2>RESTRICTED</AddressLine2>
+          <City>RESTRICTED</City>
+          <State>RESTRICTED</State>
+          <ZIPCode>RESTRICTED</ZIPCode>
+        </ContributorUSAddress>
+        <TotalContributionsAmt>RESTRICTED</TotalContributionsAmt>
+      </ContributorInformationGrp>
+    </IRS990ScheduleB>
+    <IRS990ScheduleO documentId="990xScheduleO">
+      <SupplementalInformationDetail>
+        <FormAndLineReferenceDesc>Schedule O:</FormAndLineReferenceDesc>
+        <ExplanationTxt>FORM 990-EZ PART 1, LINE Bank Charges. $60 Registration Fees/Licenses $408 Websites $1422 Insurance $1471 Projects Production and Repair. $109,899 Fundraising $1219 Videography. $500 FORM 990-EZ PART 1, LINE 10 Donation $1,000 FORM 990-EZ PART II, LINE 24, Other Assets Art. Beginning$5,000. Ending $5,000 FORM 990-EZ PART 111 ORGANIZATIONS PURPOSE To support the artistic, cultural, and historical heritage of Sausalito</ExplanationTxt>
+      </SupplementalInformationDetail>
+    </IRS990ScheduleO>
+  </ReturnData>
+</Return>
