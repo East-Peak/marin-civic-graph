@@ -11,6 +11,30 @@ Inputs are the ingestors' envelope dirs (`nodes.jsonl` + `edges.jsonl`),
 consumed as-is. Joins are deterministic-only (identical id / allowlisted
 SAME_AS / operator-approved resolutions); anything resting on a queued
 ResolutionCandidate is withheld pending review.
+
+Operator runbook — the full M2d sequence:
+
+1. Export the graph's Organization stubs (id + display_label, plus ein/uei
+   where known) and run BOTH funding-in ingestors with ``--existing-orgs``
+   pointing at that export. Each writes an envelope dir plus a
+   resolution-candidates review sidecar.
+2. Review the sidecars: annotate every queued row approved / rejected /
+   still-queued (spec §4.3 vocabulary), in place.
+3. EXTRACT the approved rows into their own file. Never pass the
+   mixed-status reviewed queue as ``--approved-resolutions`` — the loader
+   fails loud on any non-approved status by design.
+4. Run this builder: ``--funding-in <990 dir> <usaspending dir>
+   --influence-out <campaign dir> --approved-resolutions <approved-only
+   file> --resolution-sidecars <both reviewed sidecars> [--qa-orgs
+   <private list>]``.
+5. Read the table, coverage summary, and QA report privately under the
+   review dir. The QA list and its report are operator-private: never
+   commit them, never quote them into other outputs.
+
+Coverage honesty: funding-in is broad-coverage evidence (USASpending
+prime-award obligations; Form 990 aggregate government grants) — the
+confirmed local-spend leg is milestone M3. Downstream, M5's P4 pattern
+consumes rows with status "candidate" only.
 """
 from __future__ import annotations
 
@@ -18,6 +42,8 @@ import argparse
 import json
 from pathlib import Path
 from typing import Any
+
+from org_resolution import _normalize_name
 
 USASPENDING_COVERAGE_SCOPE = "usaspending_prime_award_total_obligation"
 
@@ -669,12 +695,14 @@ def build_read_model(
     influence_dirs: list[Path],
     approved_path: Path | None = None,
     sidecar_paths: list[Path] | tuple[Path, ...] = (),
-) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+) -> tuple[list[dict[str, Any]], dict[str, Any], dict[str, Any]]:
     """The full pipeline over envelope dirs: load and extract legs PER INPUT
     CLASS (a campaign flow TO_TARGETing an org must never register as
     funding-in), join on lanes A/B/C, withhold on queued pairs, and return
-    (rows, coverage). Coverage inputs count the deduped loaded evidence;
-    the table partition counts components (Decision 7)."""
+    (rows, coverage, inputs). Coverage inputs count the deduped loaded
+    evidence; the table partition counts components (Decision 7). The third
+    element carries the loaded inputs the QA classifier reads — the QA list
+    itself never enters this function."""
     funding_nodes, funding_edges = load_envelope_dirs(funding_dirs)
     influence_nodes, influence_edges = load_envelope_dirs(influence_dirs)
     nodes_by_id = _merge_nodes_across_classes(funding_nodes, influence_nodes)
@@ -717,7 +745,12 @@ def build_read_model(
         },
         "table": table_counts,
     }
-    return rows, coverage
+    inputs = {
+        "nodes_by_id": nodes_by_id,
+        "funding": funding,
+        "influence": influence,
+    }
+    return rows, coverage, inputs
 
 
 def write_read_model(
@@ -736,6 +769,145 @@ def write_read_model(
     )
     (review_dir / COVERAGE_FILENAME).write_text(
         json.dumps(coverage, sort_keys=True, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+# ---------------------------------------------------------------------------
+# QA mode — Decision 7. Operator-private: reads the finished table, never
+# shapes it. Nothing from the QA list or its report is ever echoed to stdout
+# or any other output.
+# ---------------------------------------------------------------------------
+
+QA_REPORT_FILENAME = "dual-role-qa-report.jsonl"
+
+
+def load_qa_entries(path: Path) -> list[dict[str, str]]:
+    """The operator's QA list: a JSON array of entries, each carrying EXACTLY
+    one selector — ``ref`` XOR ``label``. Duplicates are preserved in input
+    order (the report comes back row-for-row). The fail-loud message echoes
+    the entry's keys only, never its values — the list is private."""
+    entries = json.loads(Path(path).read_text(encoding="utf-8"))
+    for entry in entries:
+        selectors = [key for key in ("ref", "label") if key in entry]
+        if len(selectors) != 1:
+            raise ValueError(
+                "QA entry must carry exactly one selector (ref XOR label): "
+                f"keys {sorted(entry)!r}"
+            )
+    return entries
+
+
+def _row_org_refs(row: dict[str, Any]) -> tuple[set[str], set[str]]:
+    """A row's org refs, split by how the row vouches for them: the join
+    surface (subject + joined_via endpoints) vs the pending dependency
+    pairs (both fields — a pending pair vouches for neither side)."""
+    join_refs = {row["subject_ref"]}
+    for link in row.get("joined_via", []):
+        join_refs.add(link["funding_org_ref"])
+        join_refs.add(link["influence_org_ref"])
+    pair_refs: set[str] = set()
+    for pair in row["dependency_refs"]:
+        pair_refs.add(pair["subject_ref"])
+        pair_refs.add(pair["candidate_ref"])
+    return join_refs, pair_refs
+
+
+def build_qa_report(
+    entries: list[dict[str, str]],
+    rows: list[dict[str, Any]],
+    nodes_by_id: dict[str, dict[str, Any]],
+    funding: dict[str, dict[str, list[dict[str, Any]]]],
+    influence: dict[str, list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
+    """One report row per (entry, matched table row), entries in input order,
+    matched rows in row-subject_ref ASC (Decision 7, round 5 pin).
+
+    Per matched row: a candidate row matched on its join surface ->
+    ``surfaced`` with the row's rank (a label resolving to several orgs of
+    the same row reports once — surfaced wins, round 6 pin); a candidate row
+    matched ONLY through dependency pairs -> ``withheld_pending_resolution``
+    with the matching pairs and no rank; a withheld row matched anywhere ->
+    ``withheld_pending_resolution`` with the row's full pairs and no rank.
+
+    An entry matching no row emits exactly one {query, outcome} row by
+    precedence: unknown to the deduped inputs -> ``not_found_in_inputs``;
+    known but no resolved org carries funding-in -> ``no_funding_in_evidence``;
+    else -> ``no_influence_out_flows``."""
+
+    def _resolves(entry: dict[str, str], ref: str) -> bool:
+        if "ref" in entry:
+            return ref == entry["ref"]
+        label = (nodes_by_id.get(ref) or {}).get("display_label")
+        return bool(label) and _normalize_name(label) == _normalize_name(
+            entry["label"]
+        )
+
+    rows_by_subject = sorted(rows, key=lambda r: r["subject_ref"])
+    report: list[dict[str, Any]] = []
+    for entry in entries:
+        matched_any = False
+        for row in rows_by_subject:
+            join_refs, pair_refs = _row_org_refs(row)
+            join_matched = any(_resolves(entry, ref) for ref in join_refs) or (
+                "label" in entry
+                and _normalize_name(row["subject_label"])
+                == _normalize_name(entry["label"])
+            )
+            pair_matched = {ref for ref in pair_refs if _resolves(entry, ref)}
+            if not join_matched and not pair_matched:
+                continue
+            matched_any = True
+            if row["status"] == "candidate" and join_matched:
+                report.append(
+                    {
+                        "query": entry,
+                        "matched_subject_ref": row["subject_ref"],
+                        "outcome": "surfaced",
+                        "rank": row["rank"],
+                    }
+                )
+            elif row["status"] == "candidate":
+                report.append(
+                    {
+                        "query": entry,
+                        "matched_subject_ref": row["subject_ref"],
+                        "outcome": "withheld_pending_resolution",
+                        "dependency_refs": [
+                            pair
+                            for pair in row["dependency_refs"]
+                            if pair["subject_ref"] in pair_matched
+                            or pair["candidate_ref"] in pair_matched
+                        ],
+                    }
+                )
+            else:
+                report.append(
+                    {
+                        "query": entry,
+                        "matched_subject_ref": row["subject_ref"],
+                        "outcome": "withheld_pending_resolution",
+                        "dependency_refs": row["dependency_refs"],
+                    }
+                )
+        if matched_any:
+            continue
+        resolved = {ref for ref in nodes_by_id if _resolves(entry, ref)}
+        if not resolved:
+            outcome = "not_found_in_inputs"
+        elif not resolved & set(funding):
+            outcome = "no_funding_in_evidence"
+        else:
+            outcome = "no_influence_out_flows"
+        report.append({"query": entry, "outcome": outcome})
+    return report
+
+
+def write_qa_report(review_dir: Path, report: list[dict[str, Any]]) -> None:
+    """Decision 7 serialization, same as the table — one sort_keys line per
+    report row."""
+    (Path(review_dir) / QA_REPORT_FILENAME).write_text(
+        "".join(json.dumps(row, sort_keys=True) + "\n" for row in report),
         encoding="utf-8",
     )
 
@@ -778,6 +950,15 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--qa-orgs",
+        default=None,
+        help=(
+            "Operator-private QA list (JSON array, one selector per entry — "
+            "ref XOR label). Reads the finished table, never shapes it; "
+            "never commit the list or its report."
+        ),
+    )
+    parser.add_argument(
         "--review-dir",
         default=str(DEFAULT_REVIEW_DIR),
         help=(
@@ -790,7 +971,7 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> None:
     args = _parse_args(argv)
-    rows, coverage = build_read_model(
+    rows, coverage, inputs = build_read_model(
         funding_dirs=[Path(d) for d in args.funding_in],
         influence_dirs=[Path(d) for d in args.influence_out],
         approved_path=(
@@ -809,6 +990,19 @@ def main(argv: list[str] | None = None) -> None:
     print(f"Writing table to: {review_dir / TABLE_FILENAME}")
     print(f"Writing coverage to: {review_dir / COVERAGE_FILENAME}")
     write_read_model(review_dir, rows, coverage)
+    if args.qa_orgs:
+        # QA runs AFTER the table is written: it reads the finished rows and
+        # never shapes them. Only the report path is printed — never the
+        # list, never the report contents (operator-private).
+        report = build_qa_report(
+            load_qa_entries(Path(args.qa_orgs)),
+            rows,
+            inputs["nodes_by_id"],
+            inputs["funding"],
+            inputs["influence"],
+        )
+        print(f"Writing QA report to: {review_dir / QA_REPORT_FILENAME}")
+        write_qa_report(review_dir, report)
 
 
 if __name__ == "__main__":

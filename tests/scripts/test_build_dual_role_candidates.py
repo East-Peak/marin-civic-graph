@@ -29,11 +29,13 @@ from build_dual_role_candidates import (  # noqa: E402
     assemble_table,
     build_components,
     build_join_links,
+    build_qa_report,
     collect_same_as_edges,
     extract_funding_in,
     extract_influence_out,
     load_approved_resolutions,
     load_envelope_dirs,
+    load_qa_entries,
     main as build_dual_role_main,
 )
 from ingest_990 import main as ingest_990_main  # noqa: E402
@@ -1322,3 +1324,333 @@ def test_same_as_lane_joins_through_the_pipeline(tmp_path: Path):
             "withheld_pending_resolution": 0,
         },
     }
+
+
+# ---------------------------------------------------------------------------
+# QA mode — Decision 7. The QA list is operator-private: it reads the
+# finished table and never shapes it. Tests exercise QA only with orgs
+# already present in the committed fixtures.
+# ---------------------------------------------------------------------------
+
+
+def test_qa_entry_selector_is_ref_xor_label(tmp_path: Path):
+    # Each entry carries EXACTLY one selector. Both or neither fail loud,
+    # echoing the entry's KEYS only — never its values (the list is private).
+    both = tmp_path / "both.json"
+    both.write_text(
+        json.dumps([{"ref": MALT_ORG, "label": "Marin Agricultural Land Trust"}]),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="exactly one selector"):
+        load_qa_entries(both)
+
+    neither = tmp_path / "neither.json"
+    neither.write_text(json.dumps([{}]), encoding="utf-8")
+    with pytest.raises(ValueError, match="exactly one selector"):
+        load_qa_entries(neither)
+
+    # Valid entries load verbatim — duplicates preserved, input order kept.
+    valid = tmp_path / "valid.json"
+    entries = [
+        {"ref": MALT_ORG},
+        {"label": "Community Action Marin"},
+        {"ref": MALT_ORG},
+    ]
+    valid.write_text(json.dumps(entries), encoding="utf-8")
+    assert load_qa_entries(valid) == entries
+
+
+def _post_approval_rows(table_inputs: dict, malt_queued_row: dict) -> list[dict]:
+    """The post-approval table WITH the queued pair still in the sidecars
+    (annotate-in-place): one MALT candidate row carrying the pair in its
+    dependency_refs — the same-row alias surface."""
+    approved = {**malt_queued_row, "status": "approved"}
+    links = build_join_links([], [approved])
+    rows, _ = assemble_table(
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+        links,
+        [malt_queued_row],
+    )
+    return rows
+
+
+def test_qa_surfaced_by_ref_and_by_label_with_same_row_alias(
+    table_inputs: dict, malt_queued_row: dict
+):
+    # A ref hitting a joined_via endpoint surfaces with the row's rank. A
+    # label resolving to MULTIPLE orgs of the SAME row (the subject AND the
+    # joined_via/dependency_refs alias) reports once — surfaced wins within
+    # the row (Decision 7, round 6 pin).
+    rows = _post_approval_rows(table_inputs, malt_queued_row)
+    assert rows[0]["dependency_refs"] != []  # the alias surface is live
+    entries = [
+        {"ref": MALT_ORG},
+        {"label": "Marin Agricultural Land Trust"},
+    ]
+    report = build_qa_report(
+        entries,
+        rows,
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+    )
+    assert report == [
+        {
+            "query": {"ref": MALT_ORG},
+            "matched_subject_ref": MALT_CAMPAIGN_ORG,
+            "outcome": "surfaced",
+            "rank": 1,
+        },
+        {
+            "query": {"label": "Marin Agricultural Land Trust"},
+            "matched_subject_ref": MALT_CAMPAIGN_ORG,
+            "outcome": "surfaced",
+            "rank": 1,
+        },
+    ]
+
+
+def test_qa_withheld_row_match_reports_pairs_and_no_rank(
+    table_inputs: dict, malt_queued_row: dict
+):
+    # Any match against a withheld row — subject ref, label, or an org named
+    # only in its dependency pairs — reports the row's FULL pairs and never
+    # a rank (round 3 pin).
+    rows, _ = assemble_table(
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+        [],
+        [malt_queued_row],
+    )
+    entries = [
+        {"ref": MALT_CAMPAIGN_ORG},
+        {"label": "Marin Agricultural Land Trust"},
+        {"ref": MALT_ORG},
+    ]
+    report = build_qa_report(
+        entries,
+        rows,
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+    )
+    assert report == [
+        {
+            "query": entry,
+            "matched_subject_ref": MALT_CAMPAIGN_ORG,
+            "outcome": "withheld_pending_resolution",
+            "dependency_refs": [
+                {"subject_ref": MALT_ORG, "candidate_ref": MALT_CAMPAIGN_ORG}
+            ],
+        }
+        for entry in entries
+    ]
+    assert all("rank" not in row for row in report)
+
+
+def test_qa_dependency_only_match_on_candidate_row(
+    table_inputs: dict, malt_queued_row: dict
+):
+    # An org named ONLY in a candidate row's dependency_refs (never a join
+    # endpoint) reports withheld_pending_resolution with the MATCHING pairs
+    # and no rank — the row's surfacing does not vouch for the pending pair.
+    approved = {**malt_queued_row, "status": "approved"}
+    links = build_join_links([], [approved])
+    rows, _ = assemble_table(
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+        links,
+        [{"subject_ref": MALT_ORG, "candidate_ref": "org-3qc-inc"}],
+    )
+    report = build_qa_report(
+        [{"ref": "org-3qc-inc"}],
+        rows,
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+    )
+    assert report == [
+        {
+            "query": {"ref": "org-3qc-inc"},
+            "matched_subject_ref": MALT_CAMPAIGN_ORG,
+            "outcome": "withheld_pending_resolution",
+            "dependency_refs": [
+                {"subject_ref": MALT_ORG, "candidate_ref": "org-3qc-inc"}
+            ],
+        }
+    ]
+
+
+def test_qa_multi_row_match_one_report_row_per_row(
+    table_inputs: dict, malt_queued_row: dict
+):
+    # One entry matching N table rows emits N report rows, each carrying its
+    # own row's outcome, in row-subject_ref ASC order (round 5 pin): the
+    # bridging queued pair lands MALT_ORG in BOTH candidate rows'
+    # dependency_refs — dependency-only on one, join endpoint on the other.
+    approved = {**malt_queued_row, "status": "approved"}
+    links = build_join_links([], [approved]) + [
+        {
+            "funding_org_ref": CAM_ORG,
+            "influence_org_ref": "org-3qc-inc",
+            "basis": "approved_resolution",
+        }
+    ]
+    rows, counts = assemble_table(
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+        links,
+        [{"subject_ref": MALT_ORG, "candidate_ref": "org-3qc-inc"}],
+    )
+    assert counts["candidate_rows"] == 2
+    report = build_qa_report(
+        [{"ref": MALT_ORG}],
+        rows,
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+    )
+    assert report == [
+        {
+            "query": {"ref": MALT_ORG},
+            "matched_subject_ref": "org-3qc-inc",
+            "outcome": "withheld_pending_resolution",
+            "dependency_refs": [
+                {"subject_ref": MALT_ORG, "candidate_ref": "org-3qc-inc"}
+            ],
+        },
+        {
+            "query": {"ref": MALT_ORG},
+            "matched_subject_ref": MALT_CAMPAIGN_ORG,
+            "outcome": "surfaced",
+            "rank": 1,
+        },
+    ]
+
+
+def test_qa_unmatched_precedence(table_inputs: dict, malt_queued_row: dict):
+    # An entry matching no table row classifies by precedence: unknown to the
+    # deduped inputs -> not_found_in_inputs; known but carrying no funding-in
+    # evidence -> no_funding_in_evidence (the MCF case); else ->
+    # no_influence_out_flows (the CAM case). A label resolving to BOTH CAM
+    # orgs still classifies once — funding-in is present via the USASpending
+    # org. Each unmatched entry emits exactly one {query, outcome} row.
+    approved = {**malt_queued_row, "status": "approved"}
+    links = build_join_links([], [approved])
+    rows, _ = assemble_table(
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+        links,
+        [],
+    )
+    entries = [
+        {"ref": "org-not-in-these-inputs"},
+        {"ref": MCF_ORG},
+        {"ref": CAM_ORG},
+        {"label": "Marin Community Foundation"},
+        {"label": "Community Action Marin"},
+    ]
+    report = build_qa_report(
+        entries,
+        rows,
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+    )
+    assert report == [
+        {"query": {"ref": "org-not-in-these-inputs"}, "outcome": "not_found_in_inputs"},
+        {"query": {"ref": MCF_ORG}, "outcome": "no_funding_in_evidence"},
+        {"query": {"ref": CAM_ORG}, "outcome": "no_influence_out_flows"},
+        {
+            "query": {"label": "Marin Community Foundation"},
+            "outcome": "no_funding_in_evidence",
+        },
+        {
+            "query": {"label": "Community Action Marin"},
+            "outcome": "no_influence_out_flows",
+        },
+    ]
+
+
+def test_qa_duplicate_entries_emit_duplicate_rows(table_inputs: dict):
+    # Duplicate entries are preserved, never deduped (round 6 pin) — the
+    # operator's list comes back row-for-row.
+    rows, _ = assemble_table(
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+        [],
+        [],
+    )
+    report = build_qa_report(
+        [{"ref": MCF_ORG}, {"ref": MCF_ORG}],
+        rows,
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+    )
+    assert report == [
+        {"query": {"ref": MCF_ORG}, "outcome": "no_funding_in_evidence"},
+        {"query": {"ref": MCF_ORG}, "outcome": "no_funding_in_evidence"},
+    ]
+
+
+def test_e2e_qa_run_writes_report_and_leaves_table_bytes_identical(
+    operator_run: dict, tmp_path: Path
+):
+    # QA-invariance (Decision 7): the table and coverage bytes are identical
+    # with and without --qa-orgs — the QA list reads the finished table and
+    # never shapes it. The report lands ONLY in the QA run's review dir.
+    queued_990 = [
+        json.loads(line)
+        for line in operator_run["sidecars"][0].read_text(encoding="utf-8").splitlines()
+    ]
+    approved_path = tmp_path / "approved.jsonl"
+    approved_path.write_text(
+        json.dumps({**queued_990[0], "status": "approved"}) + "\n",
+        encoding="utf-8",
+    )
+    qa_path = tmp_path / "qa-orgs.json"
+    qa_path.write_text(
+        json.dumps([{"ref": MALT_ORG}, {"ref": CAM_ORG}, {"ref": MCF_ORG}]),
+        encoding="utf-8",
+    )
+    review_a = tmp_path / "review-a"
+    review_b = tmp_path / "review-b"
+    _run_builder(
+        operator_run, review_a, "--approved-resolutions", str(approved_path)
+    )
+    _run_builder(
+        operator_run,
+        review_b,
+        "--approved-resolutions", str(approved_path),
+        "--qa-orgs", str(qa_path),
+    )
+    for name in ("dual-role-candidates.jsonl", "dual-role-coverage.json"):
+        assert (
+            hashlib.sha256((review_a / name).read_bytes()).hexdigest()
+            == hashlib.sha256((review_b / name).read_bytes()).hexdigest()
+        )
+    assert not (review_a / "dual-role-qa-report.jsonl").exists()
+    expected_report = [
+        {
+            "query": {"ref": MALT_ORG},
+            "matched_subject_ref": MALT_CAMPAIGN_ORG,
+            "outcome": "surfaced",
+            "rank": 1,
+        },
+        {"query": {"ref": CAM_ORG}, "outcome": "no_influence_out_flows"},
+        {"query": {"ref": MCF_ORG}, "outcome": "no_funding_in_evidence"},
+    ]
+    report_text = (review_b / "dual-role-qa-report.jsonl").read_text(
+        encoding="utf-8"
+    )
+    assert report_text == "".join(
+        json.dumps(row, sort_keys=True) + "\n" for row in expected_report
+    )
