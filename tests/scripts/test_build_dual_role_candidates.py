@@ -24,6 +24,8 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from build_dual_role_candidates import (  # noqa: E402
+    COVERAGE_NOTE,
+    assemble_table,
     build_components,
     build_join_links,
     collect_same_as_edges,
@@ -523,3 +525,416 @@ def test_lane_a_identical_id_is_one_component():
         {MALT_CAMPAIGN_ORG}, {MALT_CAMPAIGN_ORG}, []
     )
     assert components == [[MALT_CAMPAIGN_ORG]]
+
+
+# ---------------------------------------------------------------------------
+# Table assembly — Decisions 4/5/6
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture(scope="module")
+def table_inputs(funding_dirs: list[Path]) -> dict:
+    """Assembly inputs, legs extracted PER INPUT CLASS — funding legs over the
+    funding-in dirs only, influence legs over the influence-out dir only. The
+    real campaign slice carries a MoneyFlow TO_TARGETing an Organization (the
+    CAM flow), which would falsely register as a funding leg if extraction
+    crossed input classes. Node maps merge for label lookups (the bundles'
+    id namespaces are disjoint)."""
+    funding_nodes, funding_edges = load_envelope_dirs(funding_dirs)
+    influence_nodes, influence_edges = load_envelope_dirs([FIXTURES_INFLUENCE])
+    return {
+        "nodes": {**funding_nodes, **influence_nodes},
+        "funding": extract_funding_in(funding_nodes, funding_edges),
+        "influence": extract_influence_out(influence_nodes, influence_edges),
+    }
+
+
+def _malt_candidate_row() -> dict:
+    """The full post-approval MALT candidate row — every value a real ground
+    truth from the committed fixtures (goal doc COMPLETION 3)."""
+    return {
+        "subject_ref": MALT_CAMPAIGN_ORG,
+        "subject_label": "Marin Agricultural Land Trust",
+        "status": "candidate",
+        "joined_via": [
+            {
+                "funding_org_ref": MALT_ORG,
+                "influence_org_ref": MALT_CAMPAIGN_ORG,
+                "basis": "approved_resolution",
+                "signals": ["normalized_name_exact"],
+                "confidence": 0.9,
+            }
+        ],
+        "funding_in": {
+            "form_990": [
+                {
+                    "tax_year": "2022",
+                    "gov_grants_amount": 3150000,
+                    "gov_revenue_share": 0.4278,
+                    "total_revenue": 7362936,
+                    "revenue_scope": "form_990_aggregate_government_grants",
+                    "evidence_record_ids": ["record-990-942689383-2022"],
+                }
+            ]
+        },
+        "influence_out": {
+            "flow_count": 6,
+            "amount_total": 152692.5,
+            "first_flow_date": "2020-03-06",
+            "last_flow_date": "2022-06-06",
+            "flow_types": ["contribution"],
+            "coverage_scope": "netfile_campaign_finance_export",
+            "evidence_record_ids": [
+                "record-marin-county-campaign-finance-export-2020",
+                "record-marin-county-campaign-finance-export-2022",
+            ],
+        },
+        "evidence_record_ids": [
+            "record-990-942689383-2022",
+            "record-marin-county-campaign-finance-export-2020",
+            "record-marin-county-campaign-finance-export-2022",
+        ],
+        "dependency_refs": [],
+        "coverage_note": COVERAGE_NOTE,
+        "rank": 1,
+        "rank_basis": "influence_out_amount_total",
+    }
+
+
+def test_coverage_note_is_the_pinned_constant():
+    assert COVERAGE_NOTE == (
+        "Dual-role candidate from broad-coverage sources (USASpending "
+        "prime-award obligations; Form 990 aggregate government grants; "
+        "NetFile campaign-finance exports). Identity joins are deterministic "
+        "or operator-reviewed. Not a confirmed local-dollar claim; "
+        "local-spend coverage is milestone M3. Rank orders rows by "
+        "campaign-finance dollars only and does not assess severity."
+    )
+
+
+def test_pre_approval_queued_pair_withholds_the_row(
+    table_inputs: dict, malt_queued_row: dict
+):
+    # The real queued MALT pair with no approval: the would-be row is
+    # withheld with EXACTLY the pinned 5-key subset — no rank, no joined_via,
+    # no dollar blocks, no evidence (Decision 5).
+    rows, counts = assemble_table(
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+        [],
+        [malt_queued_row],
+    )
+    assert rows == [
+        {
+            "subject_ref": MALT_CAMPAIGN_ORG,
+            "subject_label": "Marin Agricultural Land Trust",
+            "status": "withheld_pending_resolution",
+            "dependency_refs": [
+                {"subject_ref": MALT_ORG, "candidate_ref": MALT_CAMPAIGN_ORG}
+            ],
+            "coverage_note": COVERAGE_NOTE,
+        }
+    ]
+    assert counts == {
+        "candidate_rows": 0,
+        "funding_in_only": 9,
+        "influence_out_only": 2,
+        "withheld_pending_resolution": 1,
+    }
+
+
+def test_post_approval_candidate_row_is_complete_and_rank_1(
+    table_inputs: dict, malt_queued_row: dict
+):
+    links = build_join_links([], [{**malt_queued_row, "status": "approved"}])
+    rows, counts = assemble_table(
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+        links,
+        [],
+    )
+    assert rows == [_malt_candidate_row()]
+    assert counts == {
+        "candidate_rows": 1,
+        "funding_in_only": 9,
+        "influence_out_only": 2,
+        "withheld_pending_resolution": 0,
+    }
+
+
+def test_queued_pair_inside_a_candidate_component_attaches_not_withholds(
+    table_inputs: dict, malt_queued_row: dict
+):
+    # The operator approved the pair but the sidecar still carries the queued
+    # row (annotate-in-place is operator-normal): Decision 5(ii) — a queued
+    # pair touching a candidate component creates NO withheld row and is
+    # recorded in that row's dependency_refs.
+    links = build_join_links([], [{**malt_queued_row, "status": "approved"}])
+    rows, counts = assemble_table(
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+        links,
+        [malt_queued_row],
+    )
+    expected = _malt_candidate_row()
+    expected["dependency_refs"] = [
+        {"subject_ref": MALT_ORG, "candidate_ref": MALT_CAMPAIGN_ORG}
+    ]
+    assert rows == [expected]
+    assert counts == {
+        "candidate_rows": 1,
+        "funding_in_only": 9,
+        "influence_out_only": 2,
+        "withheld_pending_resolution": 0,
+    }
+
+
+def test_queued_component_with_one_leg_is_not_withheld(table_inputs: dict):
+    # The REAL CAM pair the usaspending resolver queues: CAM carries
+    # funding-in, but org-community-action-marin sources no flows — the
+    # queued component has ONE leg, so withholding does not apply and the
+    # component counts in funding_in_only (Decision 5(iii): both legs only).
+    queued = [{"subject_ref": CAM_ORG, "candidate_ref": CAM_CAMPAIGN_ORG}]
+    rows, counts = assemble_table(
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+        [],
+        queued,
+    )
+    assert rows == []
+    assert counts == {
+        "candidate_rows": 0,
+        "funding_in_only": 10,
+        "influence_out_only": 3,
+        "withheld_pending_resolution": 0,
+    }
+
+
+def test_approved_join_without_influence_flows_yields_no_row(table_inputs: dict):
+    # Approving the CAM pair merges the component but adds no influence leg
+    # (the TO_TARGET-only direction negative) — rows are for both-legs
+    # components ONLY; the merged component counts once in funding_in_only.
+    links = [
+        {
+            "funding_org_ref": CAM_ORG,
+            "influence_org_ref": CAM_CAMPAIGN_ORG,
+            "basis": "approved_resolution",
+        }
+    ]
+    rows, counts = assemble_table(
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+        links,
+        [],
+    )
+    assert rows == []
+    assert counts == {
+        "candidate_rows": 0,
+        "funding_in_only": 10,
+        "influence_out_only": 3,
+        "withheld_pending_resolution": 0,
+    }
+
+
+def test_usaspending_lane_aggregates_per_decision_4(table_inputs: dict):
+    # Mechanism link (operator-shaped test construction, the M2b/M2c
+    # precedent): joining a USASpending recipient to a flow-sourcing org
+    # exercises the usaspending aggregate block — the committed fixtures
+    # carry no real recipient identity that also sources campaign flows.
+    links = [
+        {
+            "funding_org_ref": CAM_ORG,
+            "influence_org_ref": "org-3qc-inc",
+            "basis": "approved_resolution",
+        }
+    ]
+    rows, counts = assemble_table(
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+        links,
+        [],
+    )
+    assert len(rows) == 1
+    row = rows[0]
+    assert row["subject_ref"] == "org-3qc-inc"
+    assert row["subject_label"] == "3QC, Inc."
+    # Lane present only with evidence: no form_990 key for this component.
+    assert row["funding_in"] == {
+        "usaspending": {
+            "award_count": 2,
+            "obligation_total": 38960291.2,
+            "coverage_scope": "usaspending_prime_award_total_obligation",
+            "evidence_record_ids": [
+                "record-usasp-asst_non_09ch011669_075",
+                "record-usasp-asst_non_09ch013338_075",
+            ],
+        }
+    }
+    assert row["influence_out"] == {
+        "flow_count": 1,
+        "amount_total": 1000.0,
+        "first_flow_date": "2022-04-01",
+        "last_flow_date": "2022-04-01",
+        "flow_types": ["contribution"],
+        "coverage_scope": "netfile_campaign_finance_export",
+        "evidence_record_ids": [
+            "record-marin-county-campaign-finance-export-2022"
+        ],
+    }
+    # Top-level evidence = sorted union of both legs'.
+    assert row["evidence_record_ids"] == [
+        "record-marin-county-campaign-finance-export-2022",
+        "record-usasp-asst_non_09ch011669_075",
+        "record-usasp-asst_non_09ch013338_075",
+    ]
+    assert (row["rank"], row["rank_basis"]) == (1, "influence_out_amount_total")
+    assert counts == {
+        "candidate_rows": 1,
+        "funding_in_only": 9,
+        "influence_out_only": 2,
+        "withheld_pending_resolution": 0,
+    }
+
+
+def test_alias_approvals_merge_components_and_aggregate_flows(
+    table_inputs: dict, malt_queued_row: dict
+):
+    # Decision 2: one funding org approved to two campaign name-stubs is the
+    # expected alias case — components merge, every link stays listed in
+    # joined_via, and influence flows aggregate across the merged orgs in
+    # flow-id order. subject_ref = the smallest influence-out member.
+    alias_link = {
+        "funding_org_ref": MALT_ORG,
+        "influence_org_ref": "org-3qc-inc",
+        "basis": "approved_resolution",
+    }
+    links = build_join_links([], [{**malt_queued_row, "status": "approved"}])
+    rows, counts = assemble_table(
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+        links + [alias_link],
+        [],
+    )
+    assert len(rows) == 1
+    row = rows[0]
+    assert row["subject_ref"] == "org-3qc-inc"
+    assert row["subject_label"] == "3QC, Inc."
+    assert row["joined_via"] == [
+        alias_link,
+        {
+            "funding_org_ref": MALT_ORG,
+            "influence_org_ref": MALT_CAMPAIGN_ORG,
+            "basis": "approved_resolution",
+            "signals": ["normalized_name_exact"],
+            "confidence": 0.9,
+        },
+    ]
+    assert row["funding_in"] == _malt_candidate_row()["funding_in"]
+    assert row["influence_out"]["flow_count"] == 7
+    assert row["influence_out"]["amount_total"] == 153692.5
+    assert row["influence_out"]["first_flow_date"] == "2020-03-06"
+    assert row["influence_out"]["last_flow_date"] == "2022-06-06"
+    assert counts == {
+        "candidate_rows": 1,
+        "funding_in_only": 9,
+        "influence_out_only": 1,
+        "withheld_pending_resolution": 0,
+    }
+
+
+def test_withheld_rows_sort_after_ranked_rows(
+    table_inputs: dict, malt_queued_row: dict
+):
+    # One ranked candidate + one disjoint queued both-legs component: the
+    # withheld row sorts AFTER every ranked row (Decision 5).
+    links = build_join_links([], [{**malt_queued_row, "status": "approved"}])
+    queued = [
+        {"subject_ref": CAM_ORG, "candidate_ref": "org-alten-construction-inc"}
+    ]
+    rows, counts = assemble_table(
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+        links,
+        queued,
+    )
+    assert [r["status"] for r in rows] == [
+        "candidate",
+        "withheld_pending_resolution",
+    ]
+    assert rows[0] == _malt_candidate_row()
+    assert rows[1] == {
+        "subject_ref": "org-alten-construction-inc",
+        "subject_label": "Alten Construction Inc.",
+        "status": "withheld_pending_resolution",
+        "dependency_refs": [
+            {
+                "subject_ref": CAM_ORG,
+                "candidate_ref": "org-alten-construction-inc",
+            }
+        ],
+        "coverage_note": COVERAGE_NOTE,
+    }
+    assert counts == {
+        "candidate_rows": 1,
+        "funding_in_only": 8,
+        "influence_out_only": 1,
+        "withheld_pending_resolution": 1,
+    }
+
+
+def test_rows_never_carry_envelope_keys(
+    table_inputs: dict, malt_queued_row: dict
+):
+    # Sidecar-never-envelope (M2c precedent), over BOTH row shapes.
+    links = build_join_links([], [{**malt_queued_row, "status": "approved"}])
+    queued = [
+        {"subject_ref": CAM_ORG, "candidate_ref": "org-alten-construction-inc"}
+    ]
+    rows, _ = assemble_table(
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+        links,
+        queued,
+    )
+    envelope_keys = {
+        "id", "node_type", "labels", "properties",
+        "source_id", "target_id", "relationship_type",
+    }
+    assert {r["status"] for r in rows} == {
+        "candidate", "withheld_pending_resolution",
+    }
+    for row in rows:
+        assert not envelope_keys & set(row)
+
+
+def test_assembly_is_deterministic_and_link_order_free(
+    table_inputs: dict, malt_queued_row: dict
+):
+    links = build_join_links([], [{**malt_queued_row, "status": "approved"}]) + [
+        {
+            "funding_org_ref": CAM_ORG,
+            "influence_org_ref": CAM_CAMPAIGN_ORG,
+            "basis": "approved_resolution",
+        }
+    ]
+    queued = [
+        {"subject_ref": CAM_ORG, "candidate_ref": "org-alten-construction-inc"}
+    ]
+    args = (
+        table_inputs["nodes"],
+        table_inputs["funding"],
+        table_inputs["influence"],
+    )
+    first = assemble_table(*args, links, queued)
+    second = assemble_table(*args, links, queued)
+    reordered = assemble_table(*args, list(reversed(links)), queued)
+    assert first == second == reordered
