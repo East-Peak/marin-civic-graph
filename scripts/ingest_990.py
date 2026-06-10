@@ -32,9 +32,13 @@ Outputs:
 
 from __future__ import annotations
 
+import argparse
 import difflib
+import json
 import logging
+import os
 import re
+import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
@@ -539,3 +543,258 @@ def propose_org_resolutions(
             )
 
     return same_as_edges, candidates
+
+
+# ---------------------------------------------------------------------------
+# Pipeline assembly — parse / build / resolve (Decision 7)
+# ---------------------------------------------------------------------------
+
+
+def build_nodes_and_edges(
+    parsed_returns: list[dict[str, Any]],
+    existing_orgs: list[dict[str, Any]] | None = None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    """Assemble the full batch: (nodes, edges, resolution_candidates).
+
+    In-batch dedupe: the same EIN across years collapses to ONE org node
+    (earliest tax year's, matching the membership source_basis rule); one
+    Filing + Record per return; memberships via `build_memberships` (which
+    owns the multi-year membership dedupe). Deterministic SAME_AS edges from
+    the resolver join the edges output; everything non-deterministic returns
+    as candidates for the JSONL review sidecar — never nodes, never edges.
+
+    Ordering is fully deterministic (sorted by EIN + tax year) so repeat runs
+    over the same inputs are byte-identical downstream.
+    """
+    returns = sorted(parsed_returns, key=lambda p: (p["ein"], p["tax_year"]))
+
+    orgs: dict[str, dict[str, Any]] = {}
+    org_records: dict[str, set[str]] = {}
+    filings: list[dict[str, Any]] = []
+    records: list[dict[str, Any]] = []
+    edges: list[dict[str, Any]] = []
+
+    for parsed in returns:
+        org_id = _org_id(parsed["ein"])
+        orgs.setdefault(org_id, build_org_node(parsed))  # earliest year wins
+        org_records.setdefault(org_id, set()).add(
+            _record_id(parsed["ein"], parsed["tax_year"])
+        )
+
+        filing = build_990_filing_node(parsed)
+        record = build_990_record_node(parsed)
+        filings.append(filing)
+        records.append(record)
+        edges.append(build_filed_by_org_edge(filing["id"], org_id))
+        edges.append(build_evidenced_by_edge(filing["id"], record["id"]))
+
+    membership_nodes, membership_edges = build_memberships(returns)
+    edges.extend(membership_edges)
+
+    new_org_refs = [
+        {
+            "id": org_id,
+            "display_label": orgs[org_id]["display_label"],
+            "ein": orgs[org_id]["properties"]["ein"],
+            "evidence_record_ids": sorted(org_records[org_id]),
+        }
+        for org_id in sorted(orgs)
+    ]
+    same_as_edges, candidates = propose_org_resolutions(
+        new_org_refs, existing_orgs or []
+    )
+    edges.extend(same_as_edges)
+
+    nodes = (
+        [orgs[org_id] for org_id in sorted(orgs)]
+        + filings
+        + records
+        + membership_nodes
+    )
+    return nodes, edges, candidates
+
+
+# ---------------------------------------------------------------------------
+# I/O helpers
+# ---------------------------------------------------------------------------
+
+
+def _write_jsonl(path: Path, records: list[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as fh:
+        for record in records:
+            fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+
+def _load_existing_orgs(path: Path) -> list[dict[str, Any]]:
+    """Operator-supplied existing-org export: a JSON array of
+    `{id, display_label, ein?}` dicts (see the module docstring).
+    """
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, list):
+        raise ValueError(f"existing-orgs file must be a JSON array: {path}")
+    return data
+
+
+# ---------------------------------------------------------------------------
+# Neo4j loader — operator step; driver import stays lazy in here
+# ---------------------------------------------------------------------------
+
+
+def _load_into_neo4j(
+    nodes: list[dict],
+    edges: list[dict],
+    uri: str,
+    user: str,
+    password: str,
+    database: str = "neo4j",
+    batch_size: int = 500,
+) -> None:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from load_neo4j_v2 import load_edges, load_nodes
+
+    try:
+        from neo4j import GraphDatabase
+    except ImportError:
+        print(
+            "ERROR: neo4j Python driver not installed. Run: pip install neo4j",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    print(f"Connecting to Neo4j: {uri} (database={database})")
+    driver = GraphDatabase.driver(uri, auth=(user, password))
+    try:
+        driver.verify_connectivity()
+        print("  Connection verified.")
+
+        print(f"Loading {len(nodes):,} nodes (batch_size={batch_size}) ...")
+        node_counts = load_nodes(driver, nodes, batch_size=batch_size)
+        total_nodes = sum(node_counts.values())
+        print(f"  {total_nodes:,} nodes written.")
+        for ntype, count in sorted(node_counts.items()):
+            print(f"    {ntype:30s} {count:6,d}")
+
+        print(f"Loading {len(edges):,} edges (batch_size={batch_size}) ...")
+        edge_counts = load_edges(driver, edges, batch_size=batch_size)
+        total_edges = sum(edge_counts.values())
+        print(f"  {total_edges:,} edges written.")
+        for rel, count in sorted(edge_counts.items(), key=lambda x: -x[1]):
+            print(f"    {rel:40s} {count:6,d}")
+    finally:
+        driver.close()
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+
+
+def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Ingest already-downloaded IRS Form 990 e-file XML into the "
+            "Marin Civic Graph (no fetching — see the module docstring for "
+            "the operator download procedure)."
+        )
+    )
+    parser.add_argument(
+        "--input-dir",
+        default=str(DEFAULT_INPUT_DIR),
+        help=f"Directory of downloaded 990 XML files (default: {DEFAULT_INPUT_DIR})",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default=str(OUTPUT_DIR),
+        help=f"Directory to write nodes.jsonl / edges.jsonl (default: {OUTPUT_DIR})",
+    )
+    parser.add_argument(
+        "--review-dir",
+        default=str(REVIEW_DIR),
+        help=f"Directory for the resolution-candidates sidecar (default: {REVIEW_DIR})",
+    )
+    parser.add_argument(
+        "--existing-orgs",
+        default=None,
+        help=(
+            "JSON array of existing graph orgs ({id, display_label, ein?}) "
+            "to resolve against. Omit to skip resolution entirely."
+        ),
+    )
+    parser.add_argument(
+        "--load",
+        action="store_true",
+        help="Load nodes and edges into Neo4j after writing (operator step).",
+    )
+    parser.add_argument("--uri", default=os.getenv("NEO4J_URI", "bolt://localhost:7687"))
+    parser.add_argument("--user", default=os.getenv("NEO4J_USER", "neo4j"))
+    parser.add_argument("--password", default=os.getenv("NEO4J_PASSWORD"))
+    parser.add_argument("--database", default=os.getenv("NEO4J_DATABASE", "neo4j"))
+    parser.add_argument("--batch-size", type=int, default=500)
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> None:
+    args = _parse_args(argv)
+
+    input_dir = Path(args.input_dir)
+    xml_paths = sorted(input_dir.glob("*.xml"))
+    if not xml_paths:
+        print(f"ERROR: no XML files found in {input_dir}", file=sys.stderr)
+        sys.exit(1)
+
+    parsed_returns = []
+    for path in xml_paths:
+        parsed = parse_return_file(path)
+        if parsed is not None:
+            parsed_returns.append(parsed)
+    print(f"Parsed {len(parsed_returns)} of {len(xml_paths)} returns from {input_dir}")
+
+    existing_orgs = (
+        _load_existing_orgs(Path(args.existing_orgs))
+        if args.existing_orgs
+        else None
+    )
+
+    nodes, edges, candidates = build_nodes_and_edges(parsed_returns, existing_orgs)
+    counts = {
+        ntype: sum(1 for n in nodes if n["node_type"] == ntype)
+        for ntype in ("Organization", "Filing", "Record", "Person", "Membership")
+    }
+    print(
+        "  "
+        + ", ".join(f"{count} {ntype}" for ntype, count in counts.items())
+        + f", {len(edges)} edges, {len(candidates)} resolution candidates"
+    )
+
+    output_dir = Path(args.output_dir)
+    nodes_path = output_dir / "nodes.jsonl"
+    edges_path = output_dir / "edges.jsonl"
+    review_path = Path(args.review_dir) / "resolution-candidates-990.jsonl"
+    print(f"Writing nodes to: {nodes_path}")
+    _write_jsonl(nodes_path, nodes)
+    print(f"Writing edges to: {edges_path}")
+    _write_jsonl(edges_path, edges)
+    print(f"Writing resolution candidates to: {review_path}")
+    _write_jsonl(review_path, candidates)
+
+    if args.load:
+        if not args.password:
+            print(
+                "ERROR: NEO4J_PASSWORD is required (--password or NEO4J_PASSWORD env var).",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+        _load_into_neo4j(
+            nodes=nodes,
+            edges=edges,
+            uri=args.uri,
+            user=args.user,
+            password=args.password,
+            database=args.database,
+            batch_size=args.batch_size,
+        )
+
+
+if __name__ == "__main__":
+    main()
