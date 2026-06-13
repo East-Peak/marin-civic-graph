@@ -352,6 +352,28 @@ class TestResolutionE2E:
         assert {"MEMBER", "MEMBER_OF_ORG", "EVIDENCED_BY"} <= rels
 
     @full_basket
+    def test_full_bundle_edge_spine(self, tmp_path):
+        # COMPLETION 6: over the whole basket, every EconomicInterest has exactly
+        # one inbound DISCLOSED_AS (Filing→EI) and ≥1 EVIDENCED_BY (EI→Record),
+        # and every parsed Filing has exactly one FILED_BY (Filing→Person).
+        r = run(interiors_dirs=[INTERIORS_DIR], out_dir=tmp_path / "o",
+                review_dir=tmp_path / "r", existing_orgs=EXISTING)
+        edges = r["edges"]
+        record_ids = {n["id"] for n in r["nodes"] if n["node_type"] == "Record"}
+        person_ids = {n["id"] for n in r["nodes"] if n["node_type"] == "Person"}
+        for ei in [n for n in r["nodes"] if n["node_type"] == "EconomicInterest"]:
+            disc = [e for e in edges if e["relationship_type"] == "DISCLOSED_AS"
+                    and e["target_id"] == ei["id"]]
+            assert len(disc) == 1 and disc[0]["source_id"] == ei["properties"]["filing_id"]
+            ev = [e for e in edges if e["relationship_type"] == "EVIDENCED_BY"
+                  and e["source_id"] == ei["id"]]
+            assert len(ev) >= 1 and all(e["target_id"] in record_ids for e in ev)
+        for filing in [n for n in r["nodes"] if n["node_type"] == "Filing"]:
+            fb = [e for e in edges if e["relationship_type"] == "FILED_BY"
+                  and e["source_id"] == filing["id"]]
+            assert len(fb) == 1 and fb[0]["target_id"] in person_ids
+
+    @full_basket
     def test_real_property_rows_never_enter_resolution(self, tmp_path):
         r = run(interiors_dirs=[INTERIORS_DIR], out_dir=tmp_path / "o",
                 review_dir=tmp_path / "r", existing_orgs=EXISTING)
