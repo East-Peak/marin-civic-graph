@@ -135,3 +135,126 @@ class TestImageDirIteration:
         # committable image-ids must all appear, sorted.
         assert names == sorted(names)
         assert "216307037" in names and "216872504" in names
+
+
+# ---------------------------------------------------------------------------
+# Unit 5 — assembly + reconciliation
+# ---------------------------------------------------------------------------
+from extract_form700_interiors import (  # noqa: E402
+    SCHEDULE_ORDER,
+    extract_filing,
+    parse_all_schedules,
+)
+from ingest_form700 import build_filing_node, normalize_name  # noqa: E402
+
+WERBY_DIR = INTERIORS_DIR / "216262973"
+werby_present = pytest.mark.skipif(
+    not (WERBY_DIR / "document.pdf").is_file(), reason="local-only PDF absent"
+)
+
+
+class TestParseAllSchedules:
+    def test_jones_schedule_counts(self):
+        by_sched, unparsed, skipped_none = parse_all_schedules(JONES / "document.pdf")
+        assert len(by_sched["A-1"]) == 2
+        assert len(by_sched["A-2"]) == 3
+        assert len(by_sched["C"]) == 1
+        assert skipped_none == 1  # the literal-None part-3
+        assert unparsed == []
+
+
+class TestExtractFiling:
+    def test_jones_six_economic_interest_nodes_with_spine(self):
+        result = extract_filing(JONES)
+        env = result["envelope"]
+        assert env["extraction_status"] == "parsed"
+        ei = [n for n in result["nodes"] if n["node_type"] == "EconomicInterest"]
+        assert len(ei) == 6  # A-1:2 + A-2:3 + C:1
+        # Filing id is byte-identical to the NetFile-index path.
+        md = env  # filing_id stored on envelope
+        expected_fid = build_filing_node(
+            {"filer_name": "Jones, Sarah", "filed_at": "2026-03-24",
+             "statement_type": "Annual", "job_title": "Director of Community Development",
+             "department": "Community Development Agency"},
+            agency_id="cmar", agency_label="Marin County",
+        )["id"]
+        assert env["filing_id"] == expected_fid
+        # Edge spine: every EI has exactly one inbound DISCLOSED_AS (Filing→EI)
+        # and ≥1 EVIDENCED_BY (EI→Record).
+        for node in ei:
+            disclosed = [e for e in result["edges"]
+                         if e["relationship_type"] == "DISCLOSED_AS" and e["target_id"] == node["id"]]
+            assert len(disclosed) == 1
+            assert disclosed[0]["source_id"] == env["filing_id"]
+            ev = [e for e in result["edges"]
+                  if e["relationship_type"] == "EVIDENCED_BY" and e["source_id"] == node["id"]]
+            assert len(ev) >= 1
+            assert ev[0]["target_id"] == "record-form700-interior-216307037"
+        # Exactly one FILED_BY (Filing→Person).
+        filed = [e for e in result["edges"] if e["relationship_type"] == "FILED_BY"]
+        assert len(filed) == 1
+        assert filed[0]["source_id"] == env["filing_id"]
+        # Record + Person + Filing nodes present.
+        assert any(n["node_type"] == "Record" for n in result["nodes"])
+        assert any(n["node_type"] == "Person" for n in result["nodes"])
+        assert any(n["node_type"] == "Filing" for n in result["nodes"])
+        # No validationchecks — cover §4 reconciles with parsed schedules.
+        assert env["validation_checks"] == []
+
+    def test_line_ordinals_are_per_schedule_document_order(self):
+        result = extract_filing(JONES)
+        ei = [n for n in result["nodes"] if n["node_type"] == "EconomicInterest"]
+        a1 = [n for n in ei if n["properties"]["schedule"] == "A-1"]
+        assert a1[0]["id"].endswith("-a-1-1")
+        assert a1[1]["id"].endswith("-a-1-2")
+
+    def test_alden_cover_only_clean_noop(self):
+        result = extract_filing(ALDEN)
+        env = result["envelope"]
+        assert env["extraction_status"] == "parsed"
+        assert [n for n in result["nodes"] if n["node_type"] == "EconomicInterest"] == []
+        assert env["validation_checks"] == []
+        assert env["schedule_line_counts"] == {}
+
+    def test_no_text_layer_envelope_only_zero_graph_rows(self):
+        result = extract_filing(JONES, text_extractor=lambda _p: "   ")
+        env = result["envelope"]
+        assert env["extraction_status"] == "no_text_layer"
+        assert result["nodes"] == []  # zero graph rows
+        assert result["edges"] == []
+        assert len(env["validation_checks"]) == 1
+        vc = env["validation_checks"][0]
+        # validationcheck subject is the Filing id derived from metadata.
+        assert vc["subject_node_id"] == env["filing_id"]
+        assert vc["subject_node_type"] == "Filing"
+
+    def test_constructed_filer_mismatch_zero_nodes_plus_validationcheck(self, tmp_path):
+        # Construct a filing whose metadata filer_name disagrees with the cover.
+        d = tmp_path / "216307037"
+        d.mkdir()
+        import shutil
+        shutil.copy(JONES / "document.pdf", d / "document.pdf")
+        md = json.loads((JONES / "metadata.json").read_text())
+        md["filer_name"] = "Wrongname, Imposter"  # cover still says Jones, Sarah
+        (d / "metadata.json").write_text(json.dumps(md))
+        result = extract_filing(d)
+        env = result["envelope"]
+        assert env["extraction_status"] == "filer_mismatch"
+        assert result["nodes"] == []
+        assert len(env["validation_checks"]) == 1
+        assert env["validation_checks"][0]["subject_node_type"] == "Filing"
+
+    @werby_present
+    def test_werby_51_nodes_by_schedule(self):
+        result = extract_filing(WERBY_DIR)
+        env = result["envelope"]
+        counts = env["schedule_line_counts"]
+        assert counts == {"A-1": 21, "A-2": 15, "B": 4, "C": 7, "D": 4}
+        ei = [n for n in result["nodes"] if n["node_type"] == "EconomicInterest"]
+        assert len(ei) == 51
+        assert env["validation_checks"] == []
+
+
+class TestScheduleOrder:
+    def test_schedule_order_constant(self):
+        assert SCHEDULE_ORDER == ["A-1", "A-2", "B", "C", "D", "E"]
