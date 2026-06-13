@@ -1,0 +1,19 @@
+{
+  "filer_name": "Alden, John",
+  "filed_at": "2026-06-09",
+  "statement_type": "Assuming",
+  "job_title": "Inspector General",
+  "department": "Office of the County Executive",
+  "agency_id": "cmar",
+  "agency_label": "Marin County",
+  "image_id": "216872504",
+  "source_url": "https://netfile.com/Connect2/api/public/image/216872504",
+  "filing_guid": "5f18d053-ac8c-4fe4-8109-3ba02804dbaf",
+  "amends_filing_guid": null,
+  "period_start": "2025-05-26",
+  "period_end": "2026-05-26",
+  "pages": 1,
+  "schedules": [],
+  "pdf_sha256": "4d2d01f33c1f1e11ab46d3d517c0f62c7df471b8783f20bdbcc8cbc55c57f1b8",
+  "local_only": false
+}

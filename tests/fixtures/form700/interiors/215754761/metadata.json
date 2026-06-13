@@ -1,0 +1,23 @@
+{
+  "filer_name": "Holm, James Alexander",
+  "filed_at": "2026-02-19",
+  "statement_type": "Annual",
+  "job_title": "Police Lieutenant",
+  "department": "Police Department",
+  "agency_id": "raf",
+  "agency_label": "City of San Rafael",
+  "image_id": "215754761",
+  "source_url": "https://netfile.com/Connect2/api/public/image/215754761",
+  "filing_guid": "998e94bf-c2f2-452d-a9eb-0c5d84eab46d",
+  "amends_filing_guid": null,
+  "period_start": "2025-01-01",
+  "period_end": "2025-12-31",
+  "pages": 4,
+  "schedules": [
+    "A-1",
+    "A-2",
+    "B"
+  ],
+  "pdf_sha256": "7547f3bd55a746e9a9fdd4a6b3f4b93cd66eea50e519761eb9973b85a91188c4",
+  "local_only": true
+}

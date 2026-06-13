@@ -1,0 +1,25 @@
+{
+  "filer_name": "Werby, Todd",
+  "filed_at": "2026-03-22",
+  "statement_type": "Annual",
+  "job_title": "Retirement Board member",
+  "department": "Retirement Board",
+  "agency_id": "cmar",
+  "agency_label": "Marin County",
+  "image_id": "216262973",
+  "source_url": "https://netfile.com/Connect2/api/public/image/216262973",
+  "filing_guid": "7ce3eaa4-5ff4-495f-bdd0-eaaf05322d6b",
+  "amends_filing_guid": null,
+  "period_start": "2025-01-01",
+  "period_end": "2025-12-31",
+  "pages": 19,
+  "schedules": [
+    "A-1",
+    "A-2",
+    "B",
+    "C",
+    "D"
+  ],
+  "pdf_sha256": "3dfab978fb13edf9d2e2736b85ee368d5d00ccc5ac4215493200446fdaded1f9",
+  "local_only": true
+}

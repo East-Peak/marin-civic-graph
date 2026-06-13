@@ -1,0 +1,21 @@
+{
+  "filer_name": "Lara, Lindsay",
+  "filed_at": "2026-02-20",
+  "statement_type": "Annual",
+  "job_title": "City Clerk",
+  "department": "City Clerk",
+  "agency_id": "raf",
+  "agency_label": "City of San Rafael",
+  "image_id": "215774405",
+  "source_url": "https://netfile.com/Connect2/api/public/image/215774405",
+  "filing_guid": "72eb5ff6-7f69-472e-9b11-f128dacbdd74",
+  "amends_filing_guid": null,
+  "period_start": "2025-01-01",
+  "period_end": "2025-12-31",
+  "pages": 2,
+  "schedules": [
+    "C"
+  ],
+  "pdf_sha256": "2dd6c5dfd570f26699eceacf4278f73366a407356edf4bdb661816f0d244d07e",
+  "local_only": false
+}

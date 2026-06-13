@@ -1,0 +1,21 @@
+{
+  "filer_name": "Fusenig, Sara",
+  "filed_at": "2026-03-09",
+  "statement_type": "Annual",
+  "job_title": "Administrative Services Director",
+  "department": "District Attorney",
+  "agency_id": "cmar",
+  "agency_label": "Marin County",
+  "image_id": "216034157",
+  "source_url": "https://netfile.com/Connect2/api/public/image/216034157",
+  "filing_guid": "9fb0bb1b-a5d2-4dec-84eb-01b073de1737",
+  "amends_filing_guid": "c642ebba-0ae3-4ce4-8342-c5161246c5c4",
+  "period_start": "2025-01-01",
+  "period_end": "2025-12-31",
+  "pages": 2,
+  "schedules": [
+    "E"
+  ],
+  "pdf_sha256": "64007ca1538c3b0bd859d1adff6fcd281337328dbaec20118bbacebb7c8d6794",
+  "local_only": false
+}

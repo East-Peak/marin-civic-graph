@@ -1,0 +1,9 @@
+# Schedule-B-bearing filings: the PDFs print residential street addresses /
+# APNs in their text layer, so they are pinned by sha256 in metadata.json but
+# never committed to this public repo. Re-fetch via metadata.json source_url.
+216262973/document.pdf
+215754761/document.pdf
+
+# Local-only list of address strings the extractor must strip. Committing the
+# list would itself publish the addresses.
+LOCAL_ONLY_STRIPPED_STRINGS.json

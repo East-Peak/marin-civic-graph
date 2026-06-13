@@ -1,0 +1,23 @@
+{
+  "filer_name": "Jones, Sarah",
+  "filed_at": "2026-03-24",
+  "statement_type": "Annual",
+  "job_title": "Director of Community Development",
+  "department": "Community Development Agency",
+  "agency_id": "cmar",
+  "agency_label": "Marin County",
+  "image_id": "216307037",
+  "source_url": "https://netfile.com/Connect2/api/public/image/216307037",
+  "filing_guid": "eaaaa366-ebf7-4d65-9dc2-4069c69f0f85",
+  "amends_filing_guid": null,
+  "period_start": "2025-01-01",
+  "period_end": "2025-12-31",
+  "pages": 4,
+  "schedules": [
+    "A-1",
+    "A-2",
+    "C"
+  ],
+  "pdf_sha256": "22efd40a9de20573d9e5b045654850cd0c19c59ead365a84b174d2316cf0b83c",
+  "local_only": false
+}
