@@ -27,6 +27,10 @@ const TYPE_COLORS: Record<NodeType, string> = {
   // Muted teal — the only unused hue in the pastel band; sits between the
   // Person blue and Decision green for the person↔org connective type.
   Membership: "#8fd9c9",
+  // Muted sand — distinct from MoneyFlow's brighter gold (#f2c77a); the Form 700
+  // disclosure connective (Filing→Organization) reads as economic without
+  // implying a transactional money flow.
+  EconomicInterest: "#e3cfa3",
 };
 
 const TYPE_ABBREV: Record<NodeType, string> = {
@@ -37,7 +41,7 @@ const TYPE_ABBREV: Record<NodeType, string> = {
   Case: "CSE", Proceeding: "PRC", Project: "PRJ",
   Program: "PRG", Agreement: "AGR", Amendment: "AMD",
   Record: "REC", Place: "PLC", Issue: "ISS",
-  Membership: "MBR",
+  Membership: "MBR", EconomicInterest: "ECI",
 };
 
 export type SpriteAtlas = {

@@ -31,7 +31,7 @@ describe("edge-vocabulary", () => {
     }
   });
 
-  it("SPEC_TO_LIVE contains all 28 spec relationship names (26 §3 + 2 COI §4.1)", () => {
+  it("SPEC_TO_LIVE contains all 30 spec relationship names (26 §3 + 2 COI §4.1 + 2 COI §4.2)", () => {
     const specNames = [
       "CAST_VOTE",
       "AT_MEETING",
@@ -62,11 +62,14 @@ describe("edge-vocabulary", () => {
       // COI spec §4.1 (M2a) — Membership edges.
       "MEMBER",
       "MEMBER_OF_ORG",
+      // COI spec §4.2 (M4) — Form 700 disclosure edges.
+      "DISCLOSED_AS",
+      "INTEREST_IN",
     ];
     for (const name of specNames) {
       expect(SPEC_TO_LIVE[name]).toBeDefined();
     }
-    expect(specNames).toHaveLength(28);
+    expect(specNames).toHaveLength(30);
   });
 
   it("Membership edges are traversable (whitelisted, not universal-excluded)", () => {
@@ -75,6 +78,17 @@ describe("edge-vocabulary", () => {
     for (const e of ["MEMBER", "MEMBER_OF_ORG"]) {
       expect(PHASE2_WHITELIST_LIVE).toContain(e);
       expect(UNIVERSAL_EDGES_LIVE).not.toContain(e);
+    }
+  });
+
+  it("Form 700 disclosure edges traversable, non-money (COI spec §4.2, M4)", () => {
+    expect(specToLive("DISCLOSED_AS")).toEqual(["DISCLOSED_AS"]);
+    expect(specToLive("INTEREST_IN")).toEqual(["INTEREST_IN"]);
+    for (const e of ["DISCLOSED_AS", "INTEREST_IN"]) {
+      expect(PHASE2_WHITELIST_LIVE).toContain(e);
+      expect(UNIVERSAL_EDGES_LIVE).not.toContain(e);
+      // Disclosure relations, not transactional money flows (Predeclared 2).
+      expect(MONEY_EDGES_LIVE).not.toContain(e);
     }
   });
 

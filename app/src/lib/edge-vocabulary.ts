@@ -55,6 +55,12 @@ export const SPEC_TO_LIVE: Record<string, string[]> = {
   // their spec names. Provenance uses the universal EVIDENCED_BY.
   MEMBER: ["MEMBER"],
   MEMBER_OF_ORG: ["MEMBER_OF_ORG"],
+  // --- COI / Form 700 interiors (spec §4.2, M4) ----------------------------
+  // DISCLOSED_AS reifies a disclosure line off its Filing; INTEREST_IN links a
+  // resolved disclosure to the Organization it names (approved-only). Both land
+  // live under their spec names; provenance uses the universal EVIDENCED_BY.
+  DISCLOSED_AS: ["DISCLOSED_AS"],
+  INTEREST_IN: ["INTEREST_IN"],
 };
 
 // ---------------------------------------------------------------------------
@@ -116,6 +122,7 @@ export const PHASE2_WHITELIST_LIVE: string[] = [
   "COUNTERPARTY_ACTOR",
   "DECIDED_AT",
   "DECIDED_BY",
+  "DISCLOSED_AS",
   "DISCLOSED_IN_FILING",
   "FILED_BY",
   "FILED_BY_COMMITTEE",
@@ -130,6 +137,7 @@ export const PHASE2_WHITELIST_LIVE: string[] = [
   "HEARD_BY",
   "HEARD_IN",
   "HELD_BY",
+  "INTEREST_IN",
   "MEMBER",
   "MEMBER_OF_ORG",
   "OFFICIAL_FILER",

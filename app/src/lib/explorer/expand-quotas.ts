@@ -42,6 +42,7 @@ export const EXPAND_QUOTAS: Record<NodeType, TypeQuota> = {
   Seat:        { hop1: 2, hop2: 4, hop3: 8,  hop4: 12 },
   SeatService: { hop1: 2, hop2: 4, hop3: 8,  hop4: 12 },
   Membership:  { hop1: 2, hop2: 4, hop3: 8,  hop4: 12 },
+  EconomicInterest: { hop1: 2, hop2: 4, hop3: 8,  hop4: 12 },
   AgendaItem:  { hop1: 2, hop2: 4, hop3: 8,  hop4: 12 },
   Record:      { hop1: 2, hop2: 4, hop3: 8,  hop4: 12 },
   Place:       { hop1: 1, hop2: 2, hop3: 4,  hop4: 6 },

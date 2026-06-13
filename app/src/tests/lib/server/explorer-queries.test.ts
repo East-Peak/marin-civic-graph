@@ -233,14 +233,14 @@ describe("buildExpandQuery", () => {
   // Fix 3: §6.3 Tier-2 priority table (not Plan 2 Phase-2 table)
   // -------------------------------------------------------------------------
 
-  it("fix 3: §6.3 Tier-2 priority table includes all 22 types", () => {
+  it("fix 3: §6.3 Tier-2 priority table includes all 23 types", () => {
     const { cypher } = buildExpandQuery(base);
     const expectedTypes = [
       "MoneyFlow", "Decision", "Case", "Project", "Program",
       "Agreement", "Amendment", "Filing", "Committee", "Election",
       "Candidacy", "Meeting", "Proceeding", "Person", "Organization",
       "Seat", "SeatService", "AgendaItem", "Record", "Place", "Issue",
-      "Membership",
+      "Membership", "EconomicInterest",
     ];
     for (const t of expectedTypes) {
       expect(cypher, `missing sub-query for ${t}`).toContain(`(c:${t})`);
@@ -276,7 +276,7 @@ describe("buildExpandQuery", () => {
     // Each sub-query must emit `AS event_date`. Count occurrences ≥ active
     // type count.
     const matches = cypher.match(/AS event_date/g) ?? [];
-    expect(matches.length).toBeGreaterThanOrEqual(22);
+    expect(matches.length).toBeGreaterThanOrEqual(23);
   });
 
   it("fix 4: outer SELECT carries event_date forward", () => {

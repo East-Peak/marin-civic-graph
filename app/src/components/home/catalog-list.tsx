@@ -8,7 +8,9 @@ export const GROUPS: { heading: string; types: NodeType[] }[] = [
   { heading: "People & organizations", types: ["Person", "Organization"] },
   // Membership sits with SeatService — its structural analog (both are
   // reified person↔affiliation connective nodes; M2a predeclared grouping).
-  { heading: "Governance", types: ["Meeting", "AgendaItem", "Decision", "Seat", "SeatService", "Membership"] },
+  // EconomicInterest (Form 700 disclosure) joins the COI/governance layer —
+  // coherent with its governance-tier edge weight (M4 predeclared grouping).
+  { heading: "Governance", types: ["Meeting", "AgendaItem", "Decision", "Seat", "SeatService", "Membership", "EconomicInterest"] },
   { heading: "Elections & campaigns", types: ["Election", "Candidacy", "Committee", "Filing", "MoneyFlow"] },
   { heading: "Programs, projects, agreements", types: ["Program", "Project", "Agreement", "Amendment"] },
   { heading: "Legal", types: ["Case", "Proceeding"] },

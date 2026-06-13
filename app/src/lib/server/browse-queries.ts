@@ -218,6 +218,13 @@ export function propKeyForFactLabel(type: NodeType, label: string): string {
       period: "started_at",
       source: "source_basis",
     },
+    EconomicInterest: {
+      "interest type": "interest_type",
+      counterparty: "counterparty_name_raw",
+      amount: "amount_band",
+      position: "position",
+      schedule: "schedule",
+    },
   };
   return MAP[type][key] ?? key.replace(/\s+/g, "_");
 }

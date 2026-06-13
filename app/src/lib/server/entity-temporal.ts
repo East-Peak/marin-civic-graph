@@ -54,6 +54,11 @@ export function effectiveEventDate(
     case "Membership":
       // Range treatment (started_at → ended_at) deferred, same as SeatService.
       return s(props.started_at);
+    case "EconomicInterest":
+      // A Form 700 disclosure line carries no own event date — acquired/disposed
+      // /gift dates live in the extraction envelope, not the node. Its temporal
+      // anchor is the parent Filing's filed_at, reached via DISCLOSED_AS.
+      return null;
     // Durable types — always visible, no ribbon mark.
     case "Person":
     case "Organization":

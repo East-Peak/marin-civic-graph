@@ -4,7 +4,7 @@
 // Per spec §5.4 + §6.3 + Plan 3 Task 5:
 //
 //   * `ExplorerState` captures the full investigation state: focus, hop
-//     slider, per-type node filters (22), edge-class filters (4),
+//     slider, per-type node filters (23), edge-class filters (4),
 //     time-slider range, and the client-side loaded-nodes / loaded-edges
 //     memoization (for dedup + refresh continuity).
 //

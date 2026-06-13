@@ -21,7 +21,7 @@ const registryTypes = Object.keys(registry.graph_node_types);
 describe("node-types codegen mirror", () => {
   it("generated ALL_TYPES equals the registry graph node types (order + membership)", () => {
     expect([...GENERATED_ALL_TYPES]).toEqual(registryTypes);
-    expect(GENERATED_ALL_TYPES).toHaveLength(22);
+    expect(GENERATED_ALL_TYPES).toHaveLength(23);
   });
 
   it("the committed generated file is up to date (not stale vs registry)", () => {

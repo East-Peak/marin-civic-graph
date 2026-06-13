@@ -62,6 +62,10 @@ describe("EDGE_WEIGHTS table", () => {
     // analog's HELD_BY/FOR_SEAT.
     expect(EDGE_WEIGHTS.MEMBER).toBe(3);
     expect(EDGE_WEIGHTS.MEMBER_OF_ORG).toBe(3);
+    // Form 700 disclosure edges (COI spec §4.2, M4) — governance tier; COI
+    // paths walk Person→Filing→EconomicInterest→Organization.
+    expect(EDGE_WEIGHTS.DISCLOSED_AS).toBe(3);
+    expect(EDGE_WEIGHTS.INTEREST_IN).toBe(3);
   });
 
   it("maps weight-5 AT_MEETING / FILED_BY / PART_OF", () => {

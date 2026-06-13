@@ -3,7 +3,8 @@
 `registry/node-types.json` is the single source of truth for the type contract.
 These tests pin ONLY the mechanical surfaces derived from it:
   - canonical_type.ALL_TYPES / TYPE_BY_ID_PREFIX / ORGANIZATION_SUBTYPES derive
-    from the registry (ALL_TYPES == the 22: the original 21 + Membership).
+    from the registry (ALL_TYPES == the 23: the original 21 + Membership +
+    EconomicInterest).
   - every graph type's REAL id prefix resolves via canonical_type (incl. the
     fixed `agenda-item-` prefix; the latent AgendaItem bug).
   - the registry rejects a graph type missing a required boolean flag.
@@ -41,13 +42,14 @@ MALFORMED_FIXTURE = (
 )
 
 # The settled ontology: the original 21 (spec §4.1, centralized by M1a) plus
-# Membership (COI spec §4.1, added by M2a) — 22 graph types.
+# Membership (COI spec §4.1, added by M2a) and EconomicInterest (Form 700
+# interiors, added by M4) — 23 graph types.
 EXPECTED_TYPES = {
     "Person", "Organization", "Committee", "Seat", "SeatService",
     "Election", "Candidacy", "Meeting", "AgendaItem", "Decision",
     "Filing", "MoneyFlow", "Case", "Proceeding", "Project",
     "Program", "Agreement", "Amendment", "Record", "Place", "Issue",
-    "Membership",
+    "Membership", "EconomicInterest",
 }
 
 
@@ -55,10 +57,10 @@ class TestRegistryFile:
     def test_registry_file_exists(self):
         assert REGISTRY_PATH.is_file(), f"{REGISTRY_PATH} missing"
 
-    def test_graph_node_types_are_exactly_the_22(self):
+    def test_graph_node_types_are_exactly_the_23(self):
         reg = load_registry()
         assert set(reg["graph_node_types"]) == EXPECTED_TYPES
-        assert len(reg["graph_node_types"]) == 22
+        assert len(reg["graph_node_types"]) == 23
 
     def test_every_graph_type_has_both_boolean_flags(self):
         reg = load_registry()
@@ -78,7 +80,7 @@ class TestPythonDerivation:
     def test_all_types_derive_from_registry(self):
         reg = load_registry()
         assert list(ALL_TYPES) == list(reg["graph_node_types"].keys())
-        assert len(ALL_TYPES) == 22
+        assert len(ALL_TYPES) == 23
 
     def test_prefix_map_derives_from_registry(self):
         reg = load_registry()
@@ -155,3 +157,31 @@ class TestSchemaCoverage:
         labels = self._constraint_labels()
         for support in reg["support_labels"]:
             assert support in labels, f"schema missing constraint for {support}"
+
+
+class TestEconomicInterestRegistration:
+    """M4 — EconomicInterest (the 23rd graph type) flag choices are deliberate,
+    not defaults; pin them so a later edit must consciously change the decision.
+    """
+
+    def test_economic_interest_is_a_graph_type_with_its_prefix(self):
+        reg = load_registry()
+        assert "EconomicInterest" in reg["graph_node_types"]
+        assert reg["id_prefixes"]["economicinterest-"] == "EconomicInterest"
+
+    def test_economic_interest_not_searchable_reached_through_endpoints(self):
+        # A reified Form 700 disclosure line is reached through its Filing /
+        # Person / Organization endpoints, not free-text search — same call as
+        # Membership. searchable=false keeps it out of INDEXED_TYPES.
+        reg = load_registry()
+        assert reg["graph_node_types"]["EconomicInterest"]["searchable"] is False
+
+    def test_economic_interest_outbound_eligible_scrutiny_up_the_gradient(self):
+        # Form 700s are officials' own statutorily public disclosures — scrutiny
+        # up the power gradient; deliberately outbound-eligible (contrast the
+        # planned Mention/Claim ineligibility).
+        from outbound_policy import is_eligible
+
+        reg = load_registry()
+        assert reg["graph_node_types"]["EconomicInterest"]["outbound_eligible"] is True
+        assert is_eligible("EconomicInterest") is True

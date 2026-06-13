@@ -4,7 +4,7 @@
 //
 // Renders compact Plex-Mono chips for:
 //   - HOP slider (1..4)
-//   - 22 node-type filter chips, grouped visually
+//   - 23 node-type filter chips, grouped visually
 //   - 4 edge-class filter chips
 //   - Time range (paired <input type="date">; fancy two-thumb slider is Plan 4 polish)
 //   - Pathfinding button
@@ -29,7 +29,9 @@ export const FILTER_GROUPS: { label: string; types: NodeType[] }[] = [
   { label: "people", types: ["Person", "Organization", "Committee"] },
   // Membership chips with SeatService — its structural analog (both reified
   // person↔affiliation connective nodes; M2a predeclared grouping).
-  { label: "governance", types: ["Seat", "SeatService", "Membership", "Meeting", "AgendaItem", "Decision"] },
+  // EconomicInterest (Form 700 disclosure) joins the COI/governance layer
+  // (M4 predeclared grouping; coherent with its governance-tier edge weight).
+  { label: "governance", types: ["Seat", "SeatService", "Membership", "EconomicInterest", "Meeting", "AgendaItem", "Decision"] },
   { label: "campaigns", types: ["Election", "Candidacy", "Filing", "MoneyFlow"] },
   { label: "projects", types: ["Project", "Program", "Agreement", "Amendment"] },
   { label: "legal", types: ["Case", "Proceeding"] },

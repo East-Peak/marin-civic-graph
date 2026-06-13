@@ -190,6 +190,17 @@ export function factsForEntity(
           { key: "Period", value: period(props.started_at, props.ended_at) },
           { key: "Source", value: s(props.source_basis) },
         ];
+      case "EconomicInterest":
+        // COI spec §4.2 — a Form 700 disclosure line. amount_band XOR amount
+        // (banded schedules vs. exact-value gift/travel); position present only
+        // when the filer disclosed a business position.
+        return [
+          { key: "Interest type", value: s(props.interest_type) },
+          { key: "Counterparty", value: s(props.counterparty_name_raw) },
+          { key: "Amount", value: s(props.amount_band ?? props.amount) },
+          { key: "Position", value: s(props.position) },
+          { key: "Schedule", value: s(props.schedule) },
+        ];
       default: {
         const _exhaustive: never = type;
         void _exhaustive;

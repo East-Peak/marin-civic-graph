@@ -16,10 +16,11 @@ describe("type-display", () => {
     expect(displayNameForType("SeatService")).toBe("Seat services");
   });
 
-  it("ALL_TYPES lists all 22 node types", () => {
-    expect(ALL_TYPES).toHaveLength(22);
+  it("ALL_TYPES lists all 23 node types", () => {
+    expect(ALL_TYPES).toHaveLength(23);
     expect(ALL_TYPES).toContain("Person");
     expect(ALL_TYPES).toContain("Record");
+    expect(ALL_TYPES).toContain("EconomicInterest");
   });
 
   it("INDEXED_TYPES is the 14 default search corpus (Record excluded)", () => {

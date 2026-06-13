@@ -63,7 +63,7 @@ SIDECAR_ARTIFACTS = list(_REGISTRY["sidecar_artifacts"])
 
 # ---------------------------------------------------------------------------
 # EXHAUSTIVE_GROUPING — build_catalog bakes a count per type; it must enumerate
-# exactly the registry's 22, each once. (Teeth-demo target.)
+# exactly the registry's 23, each once. (Teeth-demo target.)
 # ---------------------------------------------------------------------------
 class TestCatalogExhaustive:
     def test_build_catalog_all_types_equals_registry(self):
@@ -77,7 +77,7 @@ class TestCatalogExhaustive:
         import build_catalog
 
         assert sorted(build_catalog.ALL_TYPES) == sorted(REGISTRY_TYPES)
-        assert len(build_catalog.ALL_TYPES) == len(set(build_catalog.ALL_TYPES)) == 22
+        assert len(build_catalog.ALL_TYPES) == len(set(build_catalog.ALL_TYPES)) == 23
 
 
 # ---------------------------------------------------------------------------

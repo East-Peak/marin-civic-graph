@@ -37,6 +37,7 @@ const TYPE_BY_ID_PREFIX: Record<string, NodeType> = {
   "place-": "Place",
   "issue-": "Issue",
   "membership-": "Membership",
+  "economicinterest-": "EconomicInterest",
   // Legacy
   "actor-": "Person",
   "inst-": "Organization",

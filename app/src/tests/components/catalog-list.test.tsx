@@ -28,6 +28,7 @@ describe("CatalogList", () => {
           Place: 0,
           Issue: 0,
           Membership: 0,
+          EconomicInterest: 0,
           Record: 38412,
         }}
       />,

@@ -2,7 +2,8 @@
 
 Single source of truth for the v1 design's §3 relationship ontology against the
 current live projection, extended by the COI spec §4.1 Membership edges
-(MEMBER, MEMBER_OF_ORG — M2a). Consumed by:
+(MEMBER, MEMBER_OF_ORG — M2a) and the §4.2 Form 700 disclosure edges
+(DISCLOSED_AS, INTEREST_IN — M4). Consumed by:
 
 - `scripts/build_signature_subgraphs.py` — Phase-2 whitelist for 2-hop traversal
 - `app/src/lib/edge-vocabulary.ts` — TypeScript mirror for the radial-hero (Plan 2 Batch D)
@@ -104,6 +105,13 @@ SPEC_TO_LIVE: dict[str, list[str]] = {
     # their spec names. Provenance uses the universal EVIDENCED_BY.
     "MEMBER": ["MEMBER"],
     "MEMBER_OF_ORG": ["MEMBER_OF_ORG"],
+    # --- COI / Form 700 interiors (spec §4.2, M4) --------------------------
+    # DISCLOSED_AS reifies a Form 700 disclosure line off its Filing;
+    # INTEREST_IN links a resolved disclosure to the Organization it names
+    # (approved-only — Form 700 lines carry no identity key). Both land live
+    # under their spec names; provenance uses the universal EVIDENCED_BY.
+    "DISCLOSED_AS": ["DISCLOSED_AS"],
+    "INTEREST_IN": ["INTEREST_IN"],
 }
 
 # ---------------------------------------------------------------------------
@@ -159,6 +167,10 @@ _PHASE2_SPEC: list[str] = [
     # COI spec §4.1 (M2a): a Membership must be reachable from Person/Org
     # neighborhoods, so its edges are Phase-2 traversable.
     "MEMBER", "MEMBER_OF_ORG",
+    # COI spec §4.2 (M4): the Form 700 disclosure layer must be traversable —
+    # P2 walks Person→Filing→EconomicInterest→Organization. This milestone's
+    # purpose, so both edges are Phase-2 whitelisted.
+    "DISCLOSED_AS", "INTEREST_IN",
 ]
 
 # Live-only edges with no direct spec §3 equivalent but needed for entity-page
