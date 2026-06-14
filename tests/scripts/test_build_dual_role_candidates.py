@@ -1058,6 +1058,7 @@ def test_e2e_pre_approval_run_withholds(operator_run: dict, tmp_path: Path):
             "gov_grant_positive_filings": 1,
             "influence_out_flows": 9,
             "influence_out_orgs": 3,
+            "marincounty_contract_flows": 0,
             "queued_resolutions": 2,
             "usaspending_award_flows": 20,
         },
@@ -1314,6 +1315,7 @@ def test_same_as_lane_joins_through_the_pipeline(tmp_path: Path):
             "gov_grant_positive_filings": 1,
             "influence_out_flows": 9,
             "influence_out_orgs": 3,
+            "marincounty_contract_flows": 0,
             "queued_resolutions": 0,
             "usaspending_award_flows": 0,
         },
@@ -1654,3 +1656,39 @@ def test_e2e_qa_run_writes_report_and_leaves_table_bytes_identical(
     assert report_text == "".join(
         json.dumps(row, sort_keys=True) + "\n" for row in expected_report
     )
+
+
+# ---------------------------------------------------------------------------
+# M3: marin_county_delegated_contracts funding lane (Codex round-2 major)
+# ---------------------------------------------------------------------------
+def _mf(mid, scope, amount):
+    return {"id": mid, "node_type": "MoneyFlow", "labels": ["MoneyFlow"],
+            "display_label": "", "properties": {"amount": amount, "coverage_scope": scope}}
+
+
+def test_county_contract_flow_lanes_separately_never_as_usaspending():
+    from build_dual_role_candidates import (
+        extract_funding_in, MARIN_COUNTY_COVERAGE_SCOPE, USASPENDING_COVERAGE_SCOPE)
+    org = {"id": "org-x", "node_type": "Organization", "labels": ["Organization"],
+           "display_label": "X", "properties": {}}
+    county = _mf("moneyflow-marincontract-abc", MARIN_COUNTY_COVERAGE_SCOPE, "10000")
+    usasp = _mf("moneyflow-usasp-1", USASPENDING_COVERAGE_SCOPE, 5000.0)
+    nodes = {n["id"]: n for n in (org, county, usasp)}
+    edges = [{"source_id": county["id"], "target_id": "org-x", "relationship_type": "TO_TARGET", "properties": {}},
+             {"source_id": usasp["id"], "target_id": "org-x", "relationship_type": "TO_TARGET", "properties": {}}]
+    legs = extract_funding_in(nodes, edges)["org-x"]
+    assert [e["flow_id"] for e in legs["marin_county_delegated_contracts"]] == ["moneyflow-marincontract-abc"]
+    assert [e["flow_id"] for e in legs["usaspending"]] == ["moneyflow-usasp-1"]
+    # the County flow is NEVER in the usaspending lane
+    assert "moneyflow-marincontract-abc" not in {e["flow_id"] for e in legs["usaspending"]}
+
+
+def test_unknown_coverage_scope_moneyflow_is_not_funding_in():
+    from build_dual_role_candidates import extract_funding_in
+    org = {"id": "org-y", "node_type": "Organization", "labels": ["Organization"],
+           "display_label": "Y", "properties": {}}
+    mystery = _mf("moneyflow-mystery-1", "some_unrecognized_scope", 1.0)
+    nodes = {n["id"]: n for n in (org, mystery)}
+    edges = [{"source_id": mystery["id"], "target_id": "org-y", "relationship_type": "TO_TARGET", "properties": {}}]
+    # unrecognized coverage_scope is NOT funding-in evidence — never mislabeled
+    assert extract_funding_in(nodes, edges) == {}

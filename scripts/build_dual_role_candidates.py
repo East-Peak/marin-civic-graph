@@ -41,11 +41,23 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+from decimal import Decimal
 from typing import Any
 
 from org_resolution import _normalize_name
 
 USASPENDING_COVERAGE_SCOPE = "usaspending_prime_award_total_obligation"
+MARIN_COUNTY_COVERAGE_SCOPE = "marin_county_delegated_contracts"
+
+# Funding-IN MoneyFlow legs are laned by their coverage_scope so each source is
+# summarized under its OWN semantics (USASpending award-lifetime obligations vs
+# County delegated-contract amounts) — never mislabeled as one another. A
+# TO_TARGET→Org MoneyFlow whose coverage_scope is not a recognized funding source
+# is NOT funding-in evidence (skipped, never silently lumped in).
+_MONEYFLOW_FUNDING_LANE = {
+    USASPENDING_COVERAGE_SCOPE: "usaspending",
+    MARIN_COUNTY_COVERAGE_SCOPE: "marin_county_delegated_contracts",
+}
 
 # The v2 envelope. Campaign bundles emit a SUPERSET (extra promotion_state /
 # qa_lane / source_* keys) — tolerated by projecting every row down to these
@@ -178,21 +190,24 @@ def extract_funding_in(
         if target is None or target["node_type"] != "Organization":
             continue
         props = flow["properties"]
+        lane = _MONEYFLOW_FUNDING_LANE.get(props.get("coverage_scope"))
+        if lane is None:
+            # Not a recognized funding-in source — never mislabel it.
+            continue
         entry = {
             "flow_id": flow["id"],
             "amount": props["amount"],
             "coverage_scope": props["coverage_scope"],
             "evidence_record_ids": sorted(evidence.get(flow["id"], [])),
         }
-        funding.setdefault(edge["target_id"], {}).setdefault(
-            "usaspending", []
-        ).append(entry)
+        funding.setdefault(edge["target_id"], {}).setdefault(lane, []).append(entry)
 
     for legs in funding.values():
         if "form_990" in legs:
             legs["form_990"].sort(key=lambda e: e["tax_year"])
-        if "usaspending" in legs:
-            legs["usaspending"].sort(key=lambda e: e["flow_id"])
+        for money_lane in ("usaspending", "marin_county_delegated_contracts"):
+            if money_lane in legs:
+                legs[money_lane].sort(key=lambda e: e["flow_id"])
     return funding
 
 
@@ -454,6 +469,33 @@ def _candidate_row(
             ),
         }
 
+    # Marin County delegated-contracts lane — its OWN semantics (contract amounts
+    # are exact Decimal whole dollars, NOT federal award obligations; a SLICE of
+    # County spend, not the full checkbook). Never emitted as `usaspending`.
+    contract_flows: list[dict[str, Any]] = []
+    for member in component:
+        contract_flows.extend(
+            funding.get(member, {}).get("marin_county_delegated_contracts", [])
+        )
+    contract_flows.sort(key=lambda f: f["flow_id"])
+    if contract_flows:
+        contract_total = Decimal("0")
+        amount_present = 0
+        for flow in contract_flows:
+            if flow["amount"] is not None:
+                contract_total += Decimal(str(flow["amount"]))
+                amount_present += 1
+        funding_in["marin_county_delegated_contracts"] = {
+            "contract_count": len(contract_flows),
+            "amount_present_count": amount_present,
+            "amount_total": str(contract_total),
+            "coverage_scope": MARIN_COUNTY_COVERAGE_SCOPE,
+            "not_full_checkbook": True,
+            "evidence_record_ids": sorted(
+                {rid for f in contract_flows for rid in f["evidence_record_ids"]}
+            ),
+        }
+
     flows: list[dict[str, Any]] = []
     for member in component:
         flows.extend(influence.get(member, []))
@@ -476,6 +518,7 @@ def _candidate_row(
     evidence_record_ids = sorted(
         {rid for e in form_990 for rid in e["evidence_record_ids"]}
         | {rid for f in award_flows for rid in f["evidence_record_ids"]}
+        | {rid for f in contract_flows for rid in f["evidence_record_ids"]}
         | set(influence_out["evidence_record_ids"])
     )
 
@@ -738,6 +781,10 @@ def build_read_model(
                 len(entries) for entries in influence.values()
             ),
             "influence_out_orgs": len(influence),
+            "marincounty_contract_flows": sum(
+                len(legs.get("marin_county_delegated_contracts", []))
+                for legs in funding.values()
+            ),
             "queued_resolutions": len(queued_rows),
             "usaspending_award_flows": sum(
                 len(legs.get("usaspending", [])) for legs in funding.values()
