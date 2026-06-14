@@ -30,6 +30,7 @@ coverage honesty on every flow.
 from __future__ import annotations
 
 import csv
+import hashlib
 import re
 from decimal import Decimal
 from pathlib import Path
@@ -37,6 +38,61 @@ from typing import Any
 
 # The "Review Contract" cell is "<contract#> (<url>)" — pull the URL out.
 _URL_RE = re.compile(r"https?://[^)\s]+")
+
+HEURISTIC_VERSION = "v1"
+
+# Org-ness tokens (advisory only). Calibrated against the staged file.
+_ORG_TOKEN_RE = re.compile(
+    r"\b(inc|llc|l\.l\.c|corp|co|company|ltd|llp|lp|associates|partners|group|"
+    r"foundation|fund|trust|services|service|systems|solutions|center|centre|"
+    r"school|district|university|college|institute|hospital|clinic|church|"
+    r"department|county|city|state|agency|authority|commission|board|society|"
+    r"association|council|coalition|alliance|network|consulting|engineering|"
+    r"construction|enterprises|technologies|tech|holdings|capital|properties|"
+    r"realty|bank|insurance|medical|health|works|club|league|union|pta|usa|"
+    r"academy|productions|entertainment|music|dance|chorus|symphony)\b",
+    re.I,
+)
+
+
+def _looks_org(name: str) -> bool:
+    return bool(_ORG_TOKEN_RE.search(name)) or "," in name or "&" in name
+
+
+def _looks_person(name: str) -> bool:
+    # Exactly two alphabetic words, no org token — a weak "personal name" signal.
+    return (
+        not _looks_org(name)
+        and bool(re.fullmatch(r"[A-Za-z][A-Za-z.'-]+ [A-Za-z][A-Za-z.'-]+", name.strip()))
+    )
+
+
+def slugify(value: str) -> str:
+    value = value.lower().strip()
+    value = re.sub(r"[^a-z0-9]+", "-", value)
+    return value.strip("-")
+
+
+def _row_uid(data_portal_id: str) -> str:
+    """Row-stable, collision-free key from the (unique) raw Data Portal ID.
+    A hash, because the raw id embeds a truncated vendor name and slugs collide."""
+    return hashlib.sha1(data_portal_id.encode("utf-8")).hexdigest()[:12]
+
+
+def moneyflow_id(data_portal_id: str) -> str:
+    return f"moneyflow-marincontract-{_row_uid(data_portal_id)}"
+
+
+def record_id(data_portal_id: str) -> str:
+    return f"record-marincontract-{_row_uid(data_portal_id)}"
+
+
+COUNTY_ID = "org-marincounty"
+
+
+def department_id(department: str) -> str:
+    """Case-insensitive-stable department node id."""
+    return f"org-marincounty-dept-{slugify(department)}"
 
 # CSV display-header → normalized key. (The SODA API field names differ; the CSV
 # export uses these human headers.)
@@ -91,3 +147,184 @@ def source_profile(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "amount_missing_count": len(rows) - len(present),
         "spaced_slash_count": sum(1 for r in rows if " / " in r["vendor_name_raw"]),
     }
+
+
+# ---------------------------------------------------------------------------
+# Recipient classification — advisory hint only, never proof (Codex round 1)
+# ---------------------------------------------------------------------------
+
+def classify_recipient(vendor_name_raw: str) -> dict[str, Any]:
+    """Guarded vendor-name handling. Returns the resolution-facing name, an
+    optional person side kept ONLY as provenance (never a node), and a GRADED
+    `recipient_kind_hint` — advisory, used for review-priority/suppression, never
+    as proof of org-ness. The raw name is always preserved upstream.
+
+    Slash split is guarded: only a spaced ``person-like / org-like`` form is
+    split; ``CSW/STUBER-STROEH`` (no spaces, org/org) is left whole.
+    """
+    name = vendor_name_raw.strip()
+    if " / " in name:
+        left, right = (s.strip() for s in name.split(" / ", 1))
+        if _looks_person(left) and _looks_org(right):
+            return {
+                "recipient_name_resolved": right,
+                "person_side": left,
+                "recipient_kind_hint": "explicit_org_from_split",
+                "classification_basis": "spaced_slash_person_org",
+                "heuristic_version": HEURISTIC_VERSION,
+            }
+
+    if _looks_org(name):
+        token = _ORG_TOKEN_RE.search(name)
+        return {
+            "recipient_name_resolved": name,
+            "person_side": None,
+            "recipient_kind_hint": "org_token_present",
+            "classification_basis": f"org_token:{token.group(0).lower()}" if token else "org_punct",
+            "heuristic_version": HEURISTIC_VERSION,
+        }
+    if _looks_person(name):
+        return {
+            "recipient_name_resolved": name,
+            "person_side": None,
+            "recipient_kind_hint": "person_name_pattern",
+            "classification_basis": "two_word_alpha",
+            "heuristic_version": HEURISTIC_VERSION,
+        }
+    return {
+        "recipient_name_resolved": name,
+        "person_side": None,
+        "recipient_kind_hint": "ambiguous",
+        "classification_basis": "no_signal",
+        "heuristic_version": HEURISTIC_VERSION,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Source nodes — County + departments (Government; up the power gradient)
+# ---------------------------------------------------------------------------
+
+def build_county_node() -> dict[str, Any]:
+    return {
+        "id": COUNTY_ID,
+        "node_type": "Organization",
+        "labels": ["Organization", "Government"],
+        "display_label": "County of Marin",
+        "properties": {"org_subtype": "Government", "source": "marin_county_open_data"},
+    }
+
+
+def build_department_node(department: str) -> dict[str, Any]:
+    # Deterministic display from the id slug (case variants collapse to one node).
+    display = slugify(department).replace("-", " ").title()
+    return {
+        "id": department_id(department),
+        "node_type": "Organization",
+        "labels": ["Organization", "Government"],
+        "display_label": f"{display}, County of Marin",
+        "properties": {
+            "org_subtype": "Government",
+            "parent_org_id": COUNTY_ID,
+            "source": "marin_county_open_data",
+        },
+    }
+
+
+def build_source_nodes(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """County root + one Government node per distinct department, sorted."""
+    nodes = [build_county_node()]
+    seen: set[str] = set()
+    for dept in sorted({r["department"] for r in rows}, key=lambda d: department_id(d)):
+        did = department_id(dept)
+        if did in seen:
+            continue
+        seen.add(did)
+        nodes.append(build_department_node(dept))
+    return nodes
+
+
+# ---------------------------------------------------------------------------
+# MoneyFlow + Record builders
+# ---------------------------------------------------------------------------
+
+def build_moneyflow_node(row: dict[str, Any], classification: dict[str, Any]) -> dict[str, Any]:
+    """One funding-IN MoneyFlow per contract row. The recipient name lives ONLY
+    in `recipient_name_raw` — never in any indexed/displayed field. The display
+    label carries the amount, never the recipient (ethics: no individual is
+    surfaced)."""
+    amount = row["amount"]
+    props: dict[str, Any] = {
+        "flow_type": "delegated_contract",
+        "coverage_scope": "marin_county_delegated_contracts",
+        "amount_semantics": "delegated_contract_amount",
+        "not_full_checkbook": True,
+        "not_invoice_payment": True,
+        "source": "marin_county_open_data",
+        "dataset_id": "rp6f-b7dy",
+        "data_portal_id": row["data_portal_id"],
+        "department_raw": row["department"],
+        "month_and_year": row["month_and_year"],
+        "recipient_name_raw": row["vendor_name_raw"],
+        "recipient_kind_hint": classification["recipient_kind_hint"],
+        "classification_basis": classification["classification_basis"],
+        "heuristic_version": classification["heuristic_version"],
+    }
+    if amount is None:
+        props["amount"] = None
+        props["amount_missing"] = True
+        display_amount = "amount n/a"
+    else:
+        props["amount"] = str(amount)
+        display_amount = f"${amount}"
+    if row["contract_number"]:
+        props["contract_number"] = row["contract_number"]
+    if classification["person_side"]:
+        # Provenance/contact text only — never a node, never an indexed field.
+        props["contract_contact_person"] = classification["person_side"]
+    return {
+        "id": moneyflow_id(row["data_portal_id"]),
+        "node_type": "MoneyFlow",
+        "labels": ["MoneyFlow"],
+        "display_label": f"delegated_contract {display_amount}",
+        "properties": props,
+    }
+
+
+def build_record_node(row: dict[str, Any]) -> dict[str, Any]:
+    """One Record per source row (Data Portal ID), independent of PDF presence.
+    Display carries the opaque row uid, never the recipient name."""
+    uid = _row_uid(row["data_portal_id"])
+    props: dict[str, Any] = {
+        "data_portal_id": row["data_portal_id"],
+        "source_dataset": "rp6f-b7dy",
+        "source": "marin_county_open_data",
+    }
+    if row["review_contract"]:
+        props["review_contract_url"] = row["review_contract"]
+    return {
+        "id": record_id(row["data_portal_id"]),
+        "node_type": "Record",
+        "labels": ["Record"],
+        "display_label": f"Marin County delegated-contract row {uid}",
+        "properties": props,
+    }
+
+
+def build_flow_edges(row: dict[str, Any]) -> list[dict[str, Any]]:
+    """FROM_SOURCE (department → MoneyFlow) + EVIDENCED_BY (MoneyFlow → Record).
+    NO TO_TARGET — the recipient edge is approved-only (Unit 4)."""
+    mid = moneyflow_id(row["data_portal_id"])
+    return [
+        {
+            "source_id": department_id(row["department"]),
+            "target_id": mid,
+            "relationship_type": "FROM_SOURCE",
+            "properties": {},
+        },
+        {
+            "source_id": mid,
+            "target_id": record_id(row["data_portal_id"]),
+            "relationship_type": "EVIDENCED_BY",
+            "properties": {},
+        },
+    ]
