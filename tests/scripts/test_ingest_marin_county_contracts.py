@@ -11,6 +11,7 @@ Codex round-1+2 reviewed this design (8 + 1 findings folded).
 """
 from __future__ import annotations
 
+import json
 import sys
 from decimal import Decimal
 from pathlib import Path
@@ -208,3 +209,92 @@ class TestFlowEdges:
         assert fs["target_id"] == moneyflow_id(cam["data_portal_id"])
         ev = next(e for e in edges if e["relationship_type"] == "EVIDENCED_BY")
         assert ev["source_id"] == moneyflow_id(cam["data_portal_id"])
+
+
+# ---------------------------------------------------------------------------
+# Unit 4 — fact-ref resolution + approved-loader (TO_TARGET, approved-only)
+# ---------------------------------------------------------------------------
+from ingest_marin_county_contracts import (  # noqa: E402
+    build_recipient_groups,
+    build_to_target_edges,
+    collision_report,
+    load_approved_resolutions,
+    recipient_group_id,
+    resolve_recipients,
+)
+
+
+class TestRecipientGroups:
+    def test_groups_collapse_name_variants_track_evidence(self):
+        rows = parse_contract_rows(FIXTURE)
+        groups = build_recipient_groups(rows)
+        # CAM's two rows collapse to one recipient group with both row uids.
+        cam_key = recipient_group_id("Community Action Marin")
+        cam = groups[cam_key]
+        assert len(cam["moneyflow_ids"]) == 2
+        assert len(cam["data_portal_ids"]) == 2
+        assert "COMMUNITY ACTION MARIN" in cam["raw_variants"]
+        # the slash row resolves to the ORG side for grouping
+        gs = groups[recipient_group_id("Good Shepherd Lutheran School")]
+        assert "Lisa Ravina / Good Shepherd Lutheran School" in gs["raw_variants"]
+
+    def test_collision_report_surfaces_multivariant_groups(self):
+        # A group whose rows carry >1 distinct raw vendor string is flagged for
+        # review (Codex: auditable name collapse, never silent).
+        rows = parse_contract_rows(FIXTURE)
+        report = collision_report(build_recipient_groups(rows))
+        # fixture has no intentional variant collisions; report is a (possibly
+        # empty) list of {group_id, raw_variants, data_portal_ids}.
+        assert isinstance(report, list)
+        for entry in report:
+            assert len(entry["raw_variants"]) > 1
+
+
+class TestResolution:
+    def test_no_identity_key_means_same_as_empty(self):
+        rows = parse_contract_rows(FIXTURE)
+        groups = build_recipient_groups(rows)
+        existing = [{"id": "org-test-cam", "display_label": "Community Action Marin"}]
+        candidates = resolve_recipients(groups, existing)
+        # name-only → at least the CAM name-exact candidate; SAME_AS asserted empty
+        subjects = {c["subject_ref"] for c in candidates}
+        assert recipient_group_id("Community Action Marin") in subjects
+        cam_cand = next(c for c in candidates
+                        if c["subject_ref"] == recipient_group_id("Community Action Marin"))
+        assert cam_cand["candidate_ref"] == "org-test-cam"
+
+    def test_no_existing_orgs_no_candidates(self):
+        groups = build_recipient_groups(parse_contract_rows(FIXTURE))
+        assert resolve_recipients(groups, []) == []
+
+
+class TestApprovedLoaderAndToTarget:
+    def test_approved_only_to_target_to_all_group_rows(self, tmp_path):
+        rows = parse_contract_rows(FIXTURE)
+        groups = build_recipient_groups(rows)
+        cam_key = recipient_group_id("Community Action Marin")
+        p = tmp_path / "approved.jsonl"
+        p.write_text(json.dumps({"subject_ref": cam_key,
+                                 "candidate_ref": "org-test-cam", "status": "approved"}) + "\n")
+        approved = load_approved_resolutions(
+            p, emitted_group_ids=set(groups), existing_org_ids={"org-test-cam"})
+        edges = build_to_target_edges(approved, groups)
+        # one TO_TARGET per CAM MoneyFlow (both rows), all → the approved org
+        assert len(edges) == 2
+        assert all(e["relationship_type"] == "TO_TARGET" for e in edges)
+        assert all(e["target_id"] == "org-test-cam" for e in edges)
+        assert {e["source_id"] for e in edges} == set(groups[cam_key]["moneyflow_ids"])
+
+    def test_loader_fails_loud_on_bad_status_or_stale_refs(self, tmp_path):
+        groups = build_recipient_groups(parse_contract_rows(FIXTURE))
+        good_key = next(iter(groups))
+        for bad, match in [
+            ({"subject_ref": good_key, "candidate_ref": "org-x", "status": "queued"}, "status"),
+            ({"subject_ref": "marincontract-recipient-ghost", "candidate_ref": "org-x", "status": "approved"}, "subject_ref"),
+            ({"subject_ref": good_key, "candidate_ref": "org-ghost", "status": "approved"}, "candidate_ref"),
+        ]:
+            p = tmp_path / "a.jsonl"
+            p.write_text(json.dumps(bad) + "\n")
+            with pytest.raises(ValueError, match=match):
+                load_approved_resolutions(p, emitted_group_ids=set(groups),
+                                          existing_org_ids={"org-x"})

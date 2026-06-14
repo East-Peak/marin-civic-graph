@@ -328,3 +328,148 @@ def build_flow_edges(row: dict[str, Any]) -> list[dict[str, Any]]:
             "properties": {},
         },
     ]
+
+
+# ---------------------------------------------------------------------------
+# Recipient resolution — name-only, review-gated; TO_TARGET is approved-only
+# ---------------------------------------------------------------------------
+
+import json  # noqa: E402
+
+from org_resolution import propose_org_resolutions  # noqa: E402
+
+_NAME_SUFFIXES = {"llc", "inc", "incorporated", "corp", "ltd", "co", "lp", "llp"}
+
+
+def _normalize_recipient_name(name: str) -> str:
+    """Group key normalizer: lowercase, punctuation→space, drop trailing
+    org-suffix tokens, collapse whitespace. Moderate — variants collapse, and
+    the collision report makes every multi-variant collapse auditable."""
+    cleaned = re.sub(r"[^a-z0-9]+", " ", name.lower()).strip()
+    tokens = cleaned.split()
+    while tokens and tokens[-1] in _NAME_SUFFIXES:
+        tokens.pop()
+    return " ".join(tokens) or cleaned
+
+
+def recipient_group_id(name: str) -> str:
+    """Stable recipient-group key (NOT a node id — no recipient node exists)."""
+    return f"marincontract-recipient-{slugify(_normalize_recipient_name(name))}"
+
+
+def build_recipient_groups(rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    """Group rows by normalized recipient name. Each group tracks its MoneyFlow
+    ids, Data Portal ids, raw vendor variants, departments, and hints — the
+    evidence an operator needs to approve / split / fail closed. No node."""
+    groups: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        cls = classify_recipient(row["vendor_name_raw"])
+        resolved = cls["recipient_name_resolved"]
+        gid = recipient_group_id(resolved)
+        g = groups.setdefault(gid, {
+            "group_id": gid,
+            "resolved_names": set(),
+            "raw_variants": set(),
+            "moneyflow_ids": set(),
+            "data_portal_ids": set(),
+            "record_ids": set(),
+            "departments": set(),
+            "recipient_kind_hints": set(),
+        })
+        g["resolved_names"].add(resolved)
+        g["raw_variants"].add(row["vendor_name_raw"])
+        g["moneyflow_ids"].add(moneyflow_id(row["data_portal_id"]))
+        g["data_portal_ids"].add(row["data_portal_id"])
+        g["record_ids"].add(record_id(row["data_portal_id"]))
+        g["departments"].add(row["department"])
+        g["recipient_kind_hints"].add(cls["recipient_kind_hint"])
+    # Freeze sets to sorted lists + pick a representative display label.
+    for g in groups.values():
+        g["display_label"] = max(sorted(g["resolved_names"]), key=len)
+        for key in ("resolved_names", "raw_variants", "moneyflow_ids",
+                    "data_portal_ids", "record_ids", "departments", "recipient_kind_hints"):
+            g[key] = sorted(g[key])
+    return groups
+
+
+def collision_report(groups: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    """Groups whose rows carry more than one distinct raw vendor string — the
+    auditable record of name collapse (Codex: never silent)."""
+    return [
+        {"group_id": g["group_id"], "raw_variants": g["raw_variants"],
+         "data_portal_ids": g["data_portal_ids"]}
+        for g in sorted(groups.values(), key=lambda g: g["group_id"])
+        if len(g["raw_variants"]) > 1
+    ]
+
+
+def resolve_recipients(
+    groups: dict[str, dict[str, Any]], existing_orgs: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Run the shared resolver over recipient-group refs. These carry NO identity
+    key (names only), so the resolver's SAME_AS list MUST come back empty — assert
+    it. Returns the queued ResolutionCandidate rows (name-signal only)."""
+    refs = [
+        {"id": g["group_id"], "display_label": g["display_label"],
+         "evidence_record_ids": g["record_ids"]}
+        for g in sorted(groups.values(), key=lambda g: g["group_id"])
+    ]
+    same_as, candidates = propose_org_resolutions(refs, existing_orgs)
+    if same_as:
+        raise ValueError(
+            f"resolver returned {len(same_as)} SAME_AS edge(s); County vendors "
+            f"carry no identity key, so M3 must auto-merge nothing"
+        )
+    return candidates
+
+
+def load_approved_resolutions(
+    path: Path, *, emitted_group_ids: set[str], existing_org_ids: set[str]
+) -> list[dict[str, Any]]:
+    """Operator-approved (recipient-group → existing Organization) resolutions.
+
+    Re-implemented for M3's FACT-ref semantics (NOT M2d's org-to-org loader):
+    `subject_ref` must be a recipient group emitted THIS run, `candidate_ref` an
+    id present in --existing-orgs. status != approved or a stale ref → fail loud;
+    byte-identical duplicates dedupe."""
+    approved: list[dict[str, Any]] = []
+    seen: set[tuple[str, str]] = set()
+    for lineno, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        raw = raw.strip()
+        if not raw:
+            continue
+        row = json.loads(raw)
+        if row.get("status") != "approved":
+            raise ValueError(f"approved line {lineno}: status is {row.get('status')!r}, "
+                             f"expected 'approved'")
+        subject, candidate = row.get("subject_ref"), row.get("candidate_ref")
+        if subject not in emitted_group_ids:
+            raise ValueError(f"approved line {lineno}: subject_ref is not a recipient "
+                             f"group emitted this run")
+        if candidate not in existing_org_ids:
+            raise ValueError(f"approved line {lineno}: candidate_ref is not an id in "
+                             f"--existing-orgs")
+        key = (subject, candidate)
+        if key in seen:
+            continue
+        seen.add(key)
+        approved.append({"subject_ref": subject, "candidate_ref": candidate})
+    return approved
+
+
+def build_to_target_edges(
+    approved: list[dict[str, Any]], groups: dict[str, dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Approved-only: every MoneyFlow in an approved recipient group gets a
+    TO_TARGET edge to the operator-confirmed existing Organization."""
+    edges: list[dict[str, Any]] = []
+    for row in approved:
+        group = groups[row["subject_ref"]]
+        for mid in group["moneyflow_ids"]:
+            edges.append({
+                "source_id": mid,
+                "target_id": row["candidate_ref"],
+                "relationship_type": "TO_TARGET",
+                "properties": {},
+            })
+    return edges
