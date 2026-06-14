@@ -29,3 +29,6 @@ data/normalized
 data/projected/
 data/baseline/
 data/review/
+
+# Live-graph read-only exports (operator-local; never committed)
+data/exports/
