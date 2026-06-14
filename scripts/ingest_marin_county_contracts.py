@@ -473,3 +473,163 @@ def build_to_target_edges(
                 "properties": {},
             })
     return edges
+
+
+# ---------------------------------------------------------------------------
+# Orchestration + coverage + CLI
+# ---------------------------------------------------------------------------
+
+_SIDECAR_NAME = "resolution-candidates-marincounty-contracts.jsonl"
+_COVERAGE_NAME = "marincounty-contracts-coverage.json"
+_COLLISION_NAME = "marincounty-contracts-name-collisions.json"
+CAPTURE_DATE = "2026-06-10"  # the staging capture (no Date.now in pure code)
+
+
+def build_coverage(
+    rows: list[dict[str, Any]],
+    groups: dict[str, dict[str, Any]],
+    *,
+    queued_candidate_count: int,
+    approved_group_count: int,
+) -> dict[str, Any]:
+    """Coverage-honesty object — machine-readable that this is a SLICE of County
+    spend, never the full checkbook. amount_total is an exact Decimal string."""
+    prof = source_profile(rows)
+    return {
+        "dataset": {
+            "dataset_id": "rp6f-b7dy",
+            "coverage_scope": "marin_county_delegated_contracts",
+            "amount_semantics": "delegated_contract_amount",
+            "not_full_checkbook": True,
+            "not_invoice_payment": True,
+            "source": "marin_county_open_data",
+            "capture_date": CAPTURE_DATE,
+        },
+        "rows": {
+            "captured": prof["row_count"],
+            "amount_present": prof["amount_present_count"],
+            "amount_missing": prof["amount_missing_count"],
+        },
+        "amount_total": str(prof["amount_total"]),
+        "departments": len({department_id(r["department"]) for r in rows}),
+        "recipients": {
+            "groups": len(groups),
+            "with_name_variants": sum(1 for g in groups.values() if len(g["raw_variants"]) > 1),
+        },
+        "resolution": {
+            "queued_candidates": queued_candidate_count,
+            "approved_groups": approved_group_count,
+            "unresolved_groups": len(groups) - approved_group_count,
+        },
+    }
+
+
+def _write_jsonl(rows: list[dict[str, Any]], path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("".join(json.dumps(r, sort_keys=True) + "\n" for r in rows), encoding="utf-8")
+
+
+def run(
+    *,
+    input_csv: Path,
+    out_dir: Path,
+    review_dir: Path,
+    existing_orgs: list[dict[str, Any]] | None = None,
+    approved_path: Path | None = None,
+    write_outputs: bool = True,
+) -> dict[str, Any]:
+    """Ingest the delegated-contracts CSV → source/MoneyFlow/Record nodes + the
+    funding spine, recipient resolution candidates, and approved-only TO_TARGET.
+    Pure: never fetches, never touches a DB. Ties out to the exact source total."""
+    existing_orgs = existing_orgs or []
+    rows = parse_contract_rows(input_csv)
+
+    nodes: list[dict[str, Any]] = list(build_source_nodes(rows))
+    edges: list[dict[str, Any]] = []
+    for row in rows:
+        cls = classify_recipient(row["vendor_name_raw"])
+        nodes.append(build_moneyflow_node(row, cls))
+        nodes.append(build_record_node(row))
+        edges.extend(build_flow_edges(row))
+
+    groups = build_recipient_groups(rows)
+    candidates = resolve_recipients(groups, existing_orgs)
+
+    existing_org_ids = {o["id"] for o in existing_orgs}
+    approved: list[dict[str, Any]] = []
+    if approved_path is not None:
+        approved = load_approved_resolutions(
+            approved_path, emitted_group_ids=set(groups), existing_org_ids=existing_org_ids)
+    approved_keys = {(a["subject_ref"], a["candidate_ref"]) for a in approved}
+    approved_group_ids = {a["subject_ref"] for a in approved}
+
+    edges.extend(build_to_target_edges(approved, groups))
+
+    queued = [c for c in candidates if (c["subject_ref"], c["candidate_ref"]) not in approved_keys]
+    collisions = collision_report(groups)
+    coverage = build_coverage(
+        rows, groups,
+        queued_candidate_count=len(queued),
+        approved_group_count=len(approved_group_ids))
+
+    if write_outputs:
+        _write_jsonl(sorted(nodes, key=lambda n: n["id"]), out_dir / "nodes.jsonl")
+        _write_jsonl(
+            sorted(edges, key=lambda e: (e["source_id"], e["relationship_type"], e["target_id"])),
+            out_dir / "edges.jsonl")
+        (out_dir / _COVERAGE_NAME).write_text(
+            json.dumps(coverage, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+        (out_dir / _COLLISION_NAME).write_text(
+            json.dumps(collisions, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+        review_dir.mkdir(parents=True, exist_ok=True)
+        _write_jsonl(sorted(queued, key=lambda c: json.dumps(c, sort_keys=True)),
+                     review_dir / _SIDECAR_NAME)
+
+    return {
+        "nodes": nodes, "edges": edges, "coverage": coverage,
+        "candidates": candidates, "queued": queued, "groups": groups,
+        "collisions": collisions,
+    }
+
+
+def _load_existing_orgs(path: Path | None) -> list[dict[str, Any]]:
+    if path is None:
+        return []
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return data if isinstance(data, list) else data.get("organizations", [])
+
+
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Ingest County of Marin delegated contracts (M3 leg-1).")
+    parser.add_argument("--input", required=True, type=Path, help="delegated-contracts CSV")
+    parser.add_argument("--out-dir", required=True, type=Path)
+    parser.add_argument("--review-dir", type=Path, default=Path("data/review"))
+    parser.add_argument("--existing-orgs", type=Path, default=None)
+    parser.add_argument("--approved-resolutions", type=Path, default=None)
+    parser.add_argument("--load", action="store_true", help="operator-gated: load into Neo4j")
+    args = parser.parse_args(argv)
+
+    result = run(
+        input_csv=args.input, out_dir=args.out_dir, review_dir=args.review_dir,
+        existing_orgs=_load_existing_orgs(args.existing_orgs),
+        approved_path=args.approved_resolutions)
+
+    cov = result["coverage"]
+    print(
+        f"marin county delegated contracts: {cov['rows']['captured']} rows / "
+        f"${cov['amount_total']} ({cov['dataset']['coverage_scope']}, NOT full checkbook); "
+        f"{cov['departments']} departments; {cov['recipients']['groups']} recipient groups; "
+        f"resolution queued={cov['resolution']['queued_candidates']} "
+        f"approved={cov['resolution']['approved_groups']} "
+        f"unresolved={cov['resolution']['unresolved_groups']}")
+
+    if args.load:  # pragma: no cover - operator-only
+        import importlib
+        importlib.import_module("load_neo4j_v2").load_bundle(args.out_dir)  # type: ignore
+    return 0
+
+
+if __name__ == "__main__":  # pragma: no cover
+    raise SystemExit(main())

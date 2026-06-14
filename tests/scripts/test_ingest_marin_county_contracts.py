@@ -298,3 +298,81 @@ class TestApprovedLoaderAndToTarget:
             with pytest.raises(ValueError, match=match):
                 load_approved_resolutions(p, emitted_group_ids=set(groups),
                                           existing_org_ids={"org-x"})
+
+
+# ---------------------------------------------------------------------------
+# Unit 5 — run() / coverage / CLI / $141M tie-out e2e
+# ---------------------------------------------------------------------------
+import hashlib  # noqa: E402
+
+from ingest_marin_county_contracts import main, run  # noqa: E402
+
+_NODE_DISPLAY_FIELDS = ("display_label",)
+_NODE_PROP_LEAK_FIELDS = ("name", "search_label", "description")
+
+
+class TestRunFixtureE2E:
+    def test_nodes_edges_and_coverage_tie_out(self, tmp_path):
+        r = run(input_csv=FIXTURE, out_dir=tmp_path / "o", review_dir=tmp_path / "r",
+                write_outputs=True)
+        mf = [n for n in r["nodes"] if n["node_type"] == "MoneyFlow"]
+        rec = [n for n in r["nodes"] if n["node_type"] == "Record"]
+        gov = [n for n in r["nodes"] if "Government" in n["labels"]]
+        assert len(mf) == 9 and len(rec) == 9
+        assert any(n["id"] == "org-marincounty" for n in gov)
+        # spine: FROM_SOURCE + EVIDENCED_BY per row, NO TO_TARGET pre-approval
+        rels = {e["relationship_type"] for e in r["edges"]}
+        assert rels == {"FROM_SOURCE", "EVIDENCED_BY"}
+        # coverage ties out to the fixture's Decimal total
+        assert r["coverage"]["amount_total"] == "112059"
+        assert r["coverage"]["dataset"]["not_full_checkbook"] is True
+
+    def test_recipient_names_never_leak_into_node_display_or_search(self, tmp_path):
+        r = run(input_csv=FIXTURE, out_dir=tmp_path / "o", review_dir=tmp_path / "r",
+                write_outputs=False)
+        names = [row["vendor_name_raw"] for row in parse_contract_rows(FIXTURE)]
+        for n in r["nodes"]:
+            for f in _NODE_DISPLAY_FIELDS:
+                assert not any(v in (n.get(f) or "") for v in names), f"leak in {f}"
+            for f in _NODE_PROP_LEAK_FIELDS:
+                assert not any(v in (n["properties"].get(f) or "") for v in names), f"leak in props.{f}"
+
+    def test_post_approval_to_target_appears(self, tmp_path):
+        existing = [{"id": "org-test-cam", "display_label": "Community Action Marin"}]
+        pre = run(input_csv=FIXTURE, out_dir=tmp_path / "o1", review_dir=tmp_path / "r1",
+                  existing_orgs=existing, write_outputs=False)
+        cam_cand = next(c for c in pre["candidates"]
+                        if c["candidate_ref"] == "org-test-cam")
+        approved = tmp_path / "approved.jsonl"
+        approved.write_text(json.dumps({**cam_cand, "status": "approved"}) + "\n")
+        post = run(input_csv=FIXTURE, out_dir=tmp_path / "o2", review_dir=tmp_path / "r2",
+                   existing_orgs=existing, approved_path=approved, write_outputs=False)
+        tt = [e for e in post["edges"] if e["relationship_type"] == "TO_TARGET"]
+        assert len(tt) == 2  # both CAM rows → the approved org
+        assert all(e["target_id"] == "org-test-cam" for e in tt)
+        assert post["coverage"]["resolution"]["approved_groups"] == 1
+
+    def test_cli_stdout_runs(self, tmp_path, capsys):
+        main(["--input", str(FIXTURE), "--out-dir", str(tmp_path / "o"),
+              "--review-dir", str(tmp_path / "r")])
+        out = capsys.readouterr().out
+        assert "NOT full checkbook" in out and "112059" in out
+
+
+class TestFullCsvE2E:
+    @full_csv
+    def test_full_run_ties_out_to_141M_and_is_deterministic(self, tmp_path):
+        def run_once(tag):
+            run(input_csv=FULL_CSV, out_dir=tmp_path / tag, review_dir=tmp_path / f"rev{tag}")
+            digests = {}
+            for f in sorted((tmp_path / tag).rglob("*")):
+                if f.is_file():
+                    digests[f.name] = hashlib.sha256(f.read_bytes()).hexdigest()
+            return digests
+        a = run_once("a")
+        b = run_once("b")
+        assert a == b  # two runs byte-identical
+        cov = json.loads((tmp_path / "a" / "marincounty-contracts-coverage.json").read_text())
+        assert cov["amount_total"] == "141238172"      # exact tie-out
+        assert cov["rows"]["captured"] == 6898
+        assert cov["dataset"]["not_full_checkbook"] is True
