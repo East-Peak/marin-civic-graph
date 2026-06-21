@@ -32,3 +32,6 @@ data/review/
 
 # Live-graph read-only exports (operator-local; never committed)
 data/exports/
+
+# Identity-assertion ledger — operator-local, never committed (Identity Control A)
+data/identity/
