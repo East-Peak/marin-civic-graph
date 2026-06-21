@@ -35,8 +35,21 @@ from __future__ import annotations
 
 import csv
 import re
+import sys
 from pathlib import Path
 from typing import Any, Iterable, Mapping
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from identity_egress_gate import POLICY_VERSION, gate_ingestor_same_as  # noqa: E402
+from identity_ledger import make_assertion  # noqa: E402
+from identity_resolution_adapter import (  # noqa: E402
+    normalize_resolution_candidate_for_artifact,
+)
+from org_resolution import propose_org_resolutions  # noqa: E402
+
+# This lane's source-system stamp + the registry id key-prefix it mints.
+SOURCE_SYSTEM = "irs_bmf"
 
 # Two-digit IRS subsection code → subtype class (Predeclared 2). A SEPARATE
 # signal from Identity Control A's `entity_class`; never feeds the class gate.
@@ -170,3 +183,96 @@ def parse_bmf_csv(path: str | Path) -> dict[str, Any]:
         if missing:
             raise ValueError(f"BMF CSV {path} missing required columns: {missing}")
         return parse_bmf_rows(list(reader))
+
+
+# ---------------------------------------------------------------------------
+# Unit 2 — resolution wiring (Predeclared 3)
+# ---------------------------------------------------------------------------
+
+# The BMF registry-evidence fields surfaced onto a review candidate (so the
+# operator approves against the hard key + locale + subtype, never a bare name).
+# City/state are CORROBORATION on the review packet, NEVER an auto-approver.
+_REGISTRY_EVIDENCE_FIELDS = ("city", "state", "irs_subsection_class", "ein")
+
+
+def enrich_review_candidate(
+    candidate: Mapping[str, Any], registry_by_id: Mapping[str, dict[str, Any]]
+) -> dict[str, Any]:
+    """A resolver candidate → a review artifact: `confidence` renamed to
+    `signal_strength` (a signal, never a probability) plus the registry locale,
+    subtype, and EIN attached as REVIEW EVIDENCE under `registry_*` keys.
+
+    The registry ref is the resolver's `subject_ref` (the BMF org is the "new"
+    side of `propose_org_resolutions`). A demoted relationship candidate (no
+    `confidence`) passes through the rename untouched."""
+    out = normalize_resolution_candidate_for_artifact(dict(candidate))
+    registry = registry_by_id.get(candidate.get("subject_ref"))
+    if registry is not None:
+        for field in _REGISTRY_EVIDENCE_FIELDS:
+            if registry.get(field) is not None:
+                out[f"registry_{field}"] = registry[field]
+    return out
+
+
+def resolve_registry_refs(
+    registry_refs: list[dict[str, Any]],
+    existing_orgs: list[dict[str, Any]],
+    *,
+    policy_version: str = POLICY_VERSION,
+    source_system: str = SOURCE_SYSTEM,
+) -> dict[str, Any]:
+    """Run staged registry refs through the shared resolver + Identity Control A.
+
+    Returns ``{"same_as_edges", "assertions", "review_candidates"}``:
+    - a matching EIN/UEI on BOTH sides → a `deterministic` ledger assertion and a
+      gated SAME_AS edge stamped with its id (the ONE permitted auto-merge);
+    - everything else (name signals, identity-conflict, demoted relationship
+      semantics) → a queued review candidate enriched with the registry evidence.
+
+    Name similarity alone NEVER merges (the resolver's contract); city is only
+    corroboration on the review packet."""
+    same_as, candidates = propose_org_resolutions(
+        registry_refs, existing_orgs, identity_keys=("ein", "uei")
+    )
+    gated_same_as, assertions, demoted = gate_ingestor_same_as(
+        same_as, registry_refs, existing_orgs,
+        source_system=source_system, policy_version=policy_version,
+    )
+    registry_by_id = {r["id"]: r for r in registry_refs}
+    review_candidates = [
+        enrich_review_candidate(c, registry_by_id) for c in (*candidates, *demoted)
+    ]
+    return {
+        "same_as_edges": gated_same_as,
+        "assertions": assertions,
+        "review_candidates": review_candidates,
+    }
+
+
+def assertion_for_approved_candidate(
+    candidate: Mapping[str, Any],
+    *,
+    subject: dict[str, Any],
+    target: dict[str, Any],
+    basis: str,
+    reviewer: str,
+    decided_at: str,
+    policy_version: str = POLICY_VERSION,
+) -> dict[str, Any]:
+    """Write the ledger assertion for an operator-APPROVED candidate.
+
+    The pinned evidence mapping (Codex r2): the candidate carries
+    `evidence_record_ids` (the resolver's field); the ledger API takes
+    `evidence_refs` — map one to the other, never drop the evidence."""
+    return make_assertion(
+        subject_ref=candidate["subject_ref"],
+        target_ref=candidate["candidate_ref"],
+        status="approved",
+        basis=basis,
+        subject=subject,
+        target=target,
+        reviewer=reviewer,
+        decided_at=decided_at,
+        policy_version=policy_version,
+        evidence_refs=list(candidate.get("evidence_record_ids", [])),
+    )
