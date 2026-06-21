@@ -415,5 +415,99 @@ def assertion_for_approved_casos_candidate(
     )
 
 
+# ---------------------------------------------------------------------------
+# Unit 4 — the redaction gate (Predeclared 6; the load-bearing new invariant)
+# ---------------------------------------------------------------------------
+
+# The ONLY fields a published / egress artifact may carry. Everything else (street
+# addresses, ZIPs, person names, agents, principals) is dropped.
+PUBLISHABLE_FIELDS = (
+    "sos_id", "display_label", "entity_type", "entity_status",
+    "formation_date", "principal_city", "principal_state",
+)
+
+# Forbidden KEY-name substrings — a structural guard that catches a person/address
+# field leaking by name even if its value isn't a known sentinel (Codex r2 #4).
+# `principal_city`/`principal_state` are whitelisted and contain none of these.
+_FORBIDDEN_KEY_SUBSTRINGS = (
+    "address", "postal", "zip", "first_name", "middle_name", "last_name",
+    "agent_name", "physical", "position_type", "mailing", "street",
+)
+_DEFAULT_SENTINELS = ("REDACT_ME",)
+
+
+def publishable_casos_fields(ref: dict[str, Any]) -> dict[str, Any]:
+    """The whitelist projection — ONLY entity-level fields, never a street address,
+    ZIP, person name, agent, or principal."""
+    return {k: ref[k] for k in PUBLISHABLE_FIELDS if ref.get(k) not in (None, "")}
+
+
+def scan_for_forbidden(
+    obj: Any,
+    *,
+    sentinels: tuple[str, ...] = _DEFAULT_SENTINELS,
+    forbidden_keys: tuple[str, ...] = _FORBIDDEN_KEY_SUBSTRINGS,
+    _path: str = "",
+) -> list[str]:
+    """Recursive structural + value leak scan → a list of violations (empty = clean).
+
+    Flags any dict KEY whose name contains a forbidden substring, and any string
+    VALUE (anywhere) containing a sentinel. Used by the redaction tests, the e2e,
+    and the final pre-completion sweep over every artifact + log + the evidence."""
+    violations: list[str] = []
+    if isinstance(obj, dict):
+        for key, value in obj.items():
+            kl = str(key).lower()
+            if any(fk in kl for fk in forbidden_keys):
+                violations.append(f"{_path}.{key}: forbidden key name")
+            violations.extend(scan_for_forbidden(
+                value, sentinels=sentinels, forbidden_keys=forbidden_keys, _path=f"{_path}.{key}"
+            ))
+    elif isinstance(obj, (list, tuple)):
+        for i, value in enumerate(obj):
+            violations.extend(scan_for_forbidden(
+                value, sentinels=sentinels, forbidden_keys=forbidden_keys, _path=f"{_path}[{i}]"
+            ))
+    else:
+        text = str(obj)
+        for sentinel in sentinels:
+            if sentinel in text:
+                violations.append(f"{_path}: sentinel {sentinel!r}")
+    return violations
+
+
+def parse_casos_agents(
+    lines: Iterable[str],
+) -> Iterator[tuple[str | None, bool]]:
+    """STREAM `Agents.csv` → `(entity_num, individual_agent)` per row, reading ONLY
+    `ENTITY_NUM` + `AGENT_TYPE`. The natural-person columns (FIRST/LAST_NAME,
+    PHYSICAL_ADDRESS…) are NEVER read — so the output carries no person data."""
+    header: dict[str, int] | None = None
+    for line in lines:
+        fields = line.rstrip("\n").split(DELIMITER)
+        if header is None:
+            header = {name: i for i, name in enumerate(fields)}
+            continue
+
+        def cell(col: str) -> str:
+            idx = header.get(col)
+            return fields[idx].strip() if idx is not None and idx < len(fields) else ""
+
+        num = _normalize_sos_id(cell("ENTITY_NUM"))
+        is_individual = cell("AGENT_TYPE").strip().lower() == "individual agent"
+        yield num, is_individual
+
+
+def individual_agent_flags(lines: Iterable[str]) -> dict[str, bool]:
+    """`{entity_num -> has-an-individual-(natural-person)-registered-agent}` — the
+    only thing this lane derives from the agent file; the agent's name/address is
+    never read or published."""
+    flags: dict[str, bool] = {}
+    for num, is_individual in parse_casos_agents(lines):
+        if num is not None:
+            flags[num] = flags.get(num, False) or is_individual
+    return flags
+
+
 # Register at import so any importer of this module can use the `sos_id` key.
 register_sos_id_normalizer()
