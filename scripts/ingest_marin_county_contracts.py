@@ -375,10 +375,16 @@ def build_recipient_groups(rows: list[dict[str, Any]]) -> dict[str, dict[str, An
             "record_ids": set(),
             "departments": set(),
             "recipient_kind_hints": set(),
+            # raw vendor string → the MoneyFlow ids it produced. Lets an approval
+            # draw TO_TARGET ONLY for the reviewed variants — never the whole
+            # collapsed group (Identity Control A, Predeclared 5).
+            "moneyflow_ids_by_variant": {},
         })
         g["resolved_names"].add(resolved)
         g["raw_variants"].add(row["vendor_name_raw"])
-        g["moneyflow_ids"].add(moneyflow_id(row["data_portal_id"]))
+        mid = moneyflow_id(row["data_portal_id"])
+        g["moneyflow_ids"].add(mid)
+        g["moneyflow_ids_by_variant"].setdefault(row["vendor_name_raw"], set()).add(mid)
         g["data_portal_ids"].add(row["data_portal_id"])
         g["record_ids"].add(record_id(row["data_portal_id"]))
         g["departments"].add(row["department"])
@@ -389,6 +395,10 @@ def build_recipient_groups(rows: list[dict[str, Any]]) -> dict[str, dict[str, An
         for key in ("resolved_names", "raw_variants", "moneyflow_ids",
                     "data_portal_ids", "record_ids", "departments", "recipient_kind_hints"):
             g[key] = sorted(g[key])
+        g["moneyflow_ids_by_variant"] = {
+            variant: sorted(mids)
+            for variant, mids in sorted(g["moneyflow_ids_by_variant"].items())
+        }
     return groups
 
 
@@ -459,20 +469,44 @@ def load_approved_resolutions(
 
 def build_to_target_edges(
     approved: list[dict[str, Any]], groups: dict[str, dict[str, Any]]
-) -> list[dict[str, Any]]:
-    """Approved-only: every MoneyFlow in an approved recipient group gets a
-    TO_TARGET edge to the operator-confirmed existing Organization."""
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Approved-only TO_TARGET, edge-level (Identity Control A, Predeclared 5).
+
+    Each approved row carries `reviewed_raw_variants` + an `assertion_id`. A
+    TO_TARGET edge is drawn ONLY for the MoneyFlows whose raw vendor string is in
+    the reviewed set — NEVER the whole collapsed group. A raw variant present in
+    the current group but NOT in the approved set is a fresh `alias_expansion`
+    candidate (returned, no edge): approving a group is not a licence to attach
+    spellings the operator never saw.
+
+    Returns (to_target_edges, alias_expansion_candidates). Each edge cites the
+    approval's `assertion_id`.
+    """
     edges: list[dict[str, Any]] = []
+    alias_expansions: list[dict[str, Any]] = []
     for row in approved:
         group = groups[row["subject_ref"]]
-        for mid in group["moneyflow_ids"]:
-            edges.append({
-                "source_id": mid,
-                "target_id": row["candidate_ref"],
-                "relationship_type": "TO_TARGET",
-                "properties": {},
-            })
-    return edges
+        by_variant = group["moneyflow_ids_by_variant"]
+        reviewed = set(row.get("reviewed_raw_variants") or group["raw_variants"])
+        assertion_id = row.get("assertion_id")
+        for variant, mids in by_variant.items():
+            if variant in reviewed:
+                for mid in mids:
+                    edges.append({
+                        "source_id": mid,
+                        "target_id": row["candidate_ref"],
+                        "relationship_type": "TO_TARGET",
+                        "properties": ({"assertion_id": assertion_id} if assertion_id else {}),
+                    })
+            else:
+                alias_expansions.append({
+                    "subject_ref": row["subject_ref"],
+                    "candidate_ref": row["candidate_ref"],
+                    "raw_variant": variant,
+                    "basis": "alias_expansion",
+                    "status": "queued",
+                })
+    return edges, alias_expansions
 
 
 # ---------------------------------------------------------------------------
@@ -563,9 +597,13 @@ def run(
     approved_keys = {(a["subject_ref"], a["candidate_ref"]) for a in approved}
     approved_group_ids = {a["subject_ref"] for a in approved}
 
-    edges.extend(build_to_target_edges(approved, groups))
+    to_target_edges, alias_expansions = build_to_target_edges(approved, groups)
+    edges.extend(to_target_edges)
 
     queued = [c for c in candidates if (c["subject_ref"], c["candidate_ref"]) not in approved_keys]
+    # Unreviewed raw variants under an approved group → fresh queued candidates,
+    # never silent attaches (Identity Control A, Predeclared 5).
+    queued = queued + alias_expansions
     collisions = collision_report(groups)
     coverage = build_coverage(
         rows, groups,

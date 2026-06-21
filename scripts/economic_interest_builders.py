@@ -140,18 +140,21 @@ def build_disclosed_as_edge(filing_id: str, economic_interest_id: str) -> dict[s
     }
 
 
-def build_interest_in_edge(economic_interest_id: str, organization_id: str) -> dict[str, Any]:
+def build_interest_in_edge(
+    economic_interest_id: str, organization_id: str, assertion_id: str | None = None
+) -> dict[str, Any]:
     """Build an INTEREST_IN edge from an EconomicInterest node to an Organization.
 
     Gated by the caller: emitted only for an operator-approved counterparty
     resolution (Form 700 lines carry no deterministic identity key, so this
-    never auto-fires — see extract_form700_interiors.py).
+    never auto-fires — see extract_form700_interiors.py). When the approval is
+    backed by a ledger assertion, its id is cited on the edge (Identity Control A).
     """
     return {
         "source_id": economic_interest_id,
         "target_id": organization_id,
         "relationship_type": "INTEREST_IN",
-        "properties": {},
+        "properties": ({"assertion_id": assertion_id} if assertion_id else {}),
     }
 
 

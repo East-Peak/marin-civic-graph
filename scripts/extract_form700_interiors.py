@@ -692,7 +692,7 @@ def apply_resolutions(
 
     for row in approved:
         ei_id, org_id = row["subject_ref"], row["candidate_ref"]
-        interest_edges.append(build_interest_in_edge(ei_id, org_id))
+        interest_edges.append(build_interest_in_edge(ei_id, org_id, row.get("assertion_id")))
 
         interest = interest_by_node[ei_id]
         meta = metadata_by_node[ei_id]

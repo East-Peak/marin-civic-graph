@@ -182,3 +182,13 @@ class TestEdges:
         assert edge["source_id"] == "economicinterest-y"
         assert edge["target_id"] == "record-z"
         assert edge["relationship_type"] == "EVIDENCED_BY"
+
+
+class TestInterestInAssertionCitation:
+    def test_interest_in_cites_assertion_when_approved(self):
+        e = build_interest_in_edge("economicinterest-x", "org-y", "assertion-123")
+        assert e["properties"]["assertion_id"] == "assertion-123"
+
+    def test_interest_in_unassserted_has_empty_props(self):
+        e = build_interest_in_edge("economicinterest-x", "org-y")
+        assert e["properties"] == {}

@@ -278,12 +278,42 @@ class TestApprovedLoaderAndToTarget:
                                  "candidate_ref": "org-test-cam", "status": "approved"}) + "\n")
         approved = load_approved_resolutions(
             p, emitted_group_ids=set(groups), existing_org_ids={"org-test-cam"})
-        edges = build_to_target_edges(approved, groups)
-        # one TO_TARGET per CAM MoneyFlow (both rows), all → the approved org
-        assert len(edges) == 2
+        edges, aliases = build_to_target_edges(approved, groups)
+        # CAM is single-variant, so all (both) MoneyFlows are reviewed → both edges.
+        assert len(edges) == 2 and aliases == []
         assert all(e["relationship_type"] == "TO_TARGET" for e in edges)
         assert all(e["target_id"] == "org-test-cam" for e in edges)
         assert {e["source_id"] for e in edges} == set(groups[cam_key]["moneyflow_ids"])
+
+    def test_edge_level_only_reviewed_variant_gets_to_target(self):
+        # Two raw variants in one group (the ARBORSCIENCE / ARBORSCIENCE LLC case).
+        # Approve ONLY variant A → only A's MoneyFlow gets TO_TARGET; variant B
+        # yields a queued alias_expansion and NO edge (Identity Control A).
+        from ingest_marin_county_contracts import build_recipient_groups, moneyflow_id
+        rows = [
+            {"vendor_name_raw": "ARBORSCIENCE", "department": "PARKS", "amount": None,
+             "data_portal_id": "dp-A", "month_and_year": "Jan 2024", "contract_number": "",
+             "review_contract": None},
+            {"vendor_name_raw": "ARBORSCIENCE LLC", "department": "PARKS", "amount": None,
+             "data_portal_id": "dp-B", "month_and_year": "Feb 2024", "contract_number": "",
+             "review_contract": None},
+        ]
+        groups = build_recipient_groups(rows)
+        gid = next(iter(groups))
+        assert len(groups[gid]["raw_variants"]) == 2
+        approved = [{
+            "subject_ref": gid, "candidate_ref": "org-arbor",
+            "reviewed_raw_variants": ["ARBORSCIENCE"], "assertion_id": "assertion-abc",
+        }]
+        edges, aliases = build_to_target_edges(approved, groups)
+        assert len(edges) == 1
+        assert edges[0]["source_id"] == moneyflow_id("dp-A")
+        assert edges[0]["properties"]["assertion_id"] == "assertion-abc"
+        # variant B → no edge, a queued alias_expansion
+        assert moneyflow_id("dp-B") not in {e["source_id"] for e in edges}
+        assert len(aliases) == 1
+        assert aliases[0]["raw_variant"] == "ARBORSCIENCE LLC"
+        assert aliases[0]["basis"] == "alias_expansion" and aliases[0]["status"] == "queued"
 
     def test_loader_fails_loud_on_bad_status_or_stale_refs(self, tmp_path):
         groups = build_recipient_groups(parse_contract_rows(FIXTURE))
