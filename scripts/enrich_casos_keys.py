@@ -36,7 +36,10 @@ from typing import Any, Iterable, Iterator
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from org_resolution import KEY_NORMALIZERS  # noqa: E402
+from org_resolution import KEY_NORMALIZERS, _normalize_name, propose_org_resolutions  # noqa: E402
+from identity_resolution_adapter import (  # noqa: E402
+    normalize_resolution_candidate_for_artifact,
+)
 
 # This lane's source-system stamp + the registry id key-prefix it mints.
 SOURCE_SYSTEM = "ca_sos"
@@ -178,6 +181,154 @@ def dedupe_casos_refs(
                 ],
             })
     return deduped, conflicts
+
+
+# ---------------------------------------------------------------------------
+# Unit 2 — significant-token pre-block + union candidate generation (Predeclared 3)
+# ---------------------------------------------------------------------------
+
+# Corporate stopwords dropped before significant-token blocking — generic tokens
+# that carry no disambiguating signal (so the block keys on "ghilotti"/"miller",
+# not "company"/"group").
+_CORPORATE_STOPWORDS = frozenset({
+    "inc", "incorporated", "llc", "corp", "corporation", "company", "co",
+    "group", "lp", "llp", "the", "and", "of", "jv", "fund",
+})
+
+# token-overlap candidate strength (review-only; ranks below the resolver's
+# normalized-name-exact 0.9 / difflib>=0.85 candidates). Never an auto-approver.
+_TOKEN_OVERLAP_STRENGTH = 0.5
+
+# entity-status rank for the deterministic cap sort (Active first).
+_STATUS_RANK = {"active": 0}
+
+
+def significant_tokens(name: str) -> set[str]:
+    """`_normalize_name` tokens minus the corporate stopwords — the blocking key."""
+    return {t for t in _normalize_name(name).split() if t not in _CORPORATE_STOPWORDS}
+
+
+def _status_rank(status: str) -> int:
+    s = (status or "").strip().lower()
+    if s in _STATUS_RANK:
+        return _STATUS_RANK[s]
+    if s.startswith("suspended"):
+        return 1
+    if s.startswith("terminated") or s.startswith("converted"):
+        return 2
+    return 3
+
+
+def _resolver_candidates(refs, existing):
+    """Resolver path: normalized-name-exact / difflib>=0.85 → signal_strength
+    candidates (the resolver emits `confidence`; the adapter renames it)."""
+    _edges, raw = propose_org_resolutions(refs, [existing], identity_keys=("sos_id",))
+    out = []
+    for cand in raw:
+        c = normalize_resolution_candidate_for_artifact(cand)  # confidence → signal_strength
+        out.append(c)
+    return out
+
+
+def _token_overlap(a: set[str], b: set[str]) -> bool:
+    """A review-worthy overlap: >=2 shared significant tokens, or one set ⊆ other."""
+    shared = a & b
+    return len(shared) >= 2 or (a and a <= b) or (b and b <= a)
+
+
+def block_casos_against_existing(
+    filings_lines: Iterable[str],
+    existing_orgs: list[dict[str, Any]],
+    *,
+    cap: int = 25,
+) -> dict[str, Any]:
+    """Stream the Filings export, pre-block on significant tokens, and generate the
+    UNION of resolver + token-overlap queued candidates per existing org (capped).
+
+    Memory-safe: only SOS refs that share a significant token with some existing
+    org are held (the matched buckets), never the full file."""
+    register_sos_id_normalizer()
+    existing_tokens = {e["id"]: significant_tokens(e["display_label"]) for e in existing_orgs}
+    existing_by_id = {e["id"]: e for e in existing_orgs}
+    token_index: dict[str, list[str]] = {}
+    for eid, toks in existing_tokens.items():
+        for t in toks:
+            token_index.setdefault(t, []).append(eid)
+
+    # Stream → per-existing buckets of matched SOS rows (a LIST per existing: each
+    # matched row is added once, so a same-number CONFLICT pair lands as two refs
+    # and `dedupe_casos_refs` can see/flag it — keying by sos_id here would drop
+    # the second conflict row before detection).
+    buckets: dict[str, list[dict[str, Any]]] = {e["id"]: [] for e in existing_orgs}
+    for ref, _skip in parse_casos_filings(filings_lines):
+        if ref is None:
+            continue
+        sos_toks = significant_tokens(ref["display_label"])
+        matched: set[str] = set()
+        for t in sos_toks:
+            matched.update(token_index.get(t, ()))
+        for eid in matched:
+            buckets[eid].append(ref)
+
+    candidates: list[dict[str, Any]] = []
+    conflicts: list[dict[str, Any]] = []
+    capped: list[dict[str, Any]] = []
+    pool_pairs = 0
+
+    for eid, bucket in buckets.items():
+        if not bucket:
+            continue
+        existing = existing_by_id[eid]
+        refs, bucket_conflicts = dedupe_casos_refs(bucket)
+        conflicts.extend(bucket_conflicts)
+        pool_pairs += len(refs)
+
+        # (a) resolver path
+        resolver_cands = _resolver_candidates(refs, existing)
+        resolved_sos = set()
+        merged: list[dict[str, Any]] = []
+        ref_by_id = {r["id"]: r for r in refs}
+        for c in resolver_cands:
+            ref = ref_by_id.get(c["subject_ref"])
+            if ref is None:
+                continue
+            resolved_sos.add(ref["sos_id"])
+            merged.append({
+                **c,
+                "sos_id": ref["sos_id"],
+                "status": "queued",
+                "entity_status": ref["entity_status"],
+            })
+        # (b) token-overlap path — only for refs the resolver did not already pick
+        e_toks = existing_tokens[eid]
+        for ref in refs:
+            if ref["sos_id"] in resolved_sos:
+                continue
+            if _token_overlap(significant_tokens(ref["display_label"]), e_toks):
+                merged.append({
+                    "subject_ref": ref["id"],
+                    "candidate_ref": eid,
+                    "sos_id": ref["sos_id"],
+                    "signals": ["significant_token_overlap"],
+                    "signal_strength": _TOKEN_OVERLAP_STRENGTH,
+                    "status": "queued",
+                    "entity_status": ref["entity_status"],
+                    "evidence_record_ids": list(ref["evidence_record_ids"]),
+                })
+
+        # deterministic cap sort: (-signal_strength, status_rank, sos_id)
+        merged.sort(key=lambda c: (-c["signal_strength"], _status_rank(c["entity_status"]), c["sos_id"]))
+        if len(merged) > cap:
+            capped.append({"candidate_ref": eid, "dropped": len(merged) - cap})
+            merged = merged[:cap]
+        candidates.extend(merged)
+
+    return {
+        "candidates": candidates,
+        "pool_size": pool_pairs,
+        "conflicts": conflicts,
+        "capped": capped,
+    }
 
 
 # Register at import so any importer of this module can use the `sos_id` key.
