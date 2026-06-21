@@ -27,6 +27,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from identity_ledger import PUBLISHING_STATUSES  # noqa: E402
 from org_resolution import KEY_NORMALIZERS  # noqa: E402
+from enrich_casos_keys import register_sos_id_normalizer  # noqa: E402
+
+# Lane 2: register the `sos_id` normalizer at import so the enriched export can
+# normalize/surface it regardless of import order (Codex r2 #2). The enriched
+# function re-registers defensively too.
+register_sos_id_normalizer()
 
 ORGS_QUERY = (
     "MATCH (n:Organization) "
@@ -43,15 +49,25 @@ ORGS_QUERY = (
 # Bases on a SAME_AS that legitimately carry a hard key (self-identity merges
 # and operator key-approvals). A relationship basis (sponsor/parent/PAC/dba/
 # project, or the resolver's `relationship_candidate`) carries NO key.
-_KEY_BEARING_BASES = frozenset(
-    {"ein_exact", "uei_exact", "operator_approved_ein", "operator_approved_uei"}
-)
+_KEY_BEARING_BASES = frozenset({
+    "ein_exact", "uei_exact", "operator_approved_ein", "operator_approved_uei",
+    "sos_id_exact", "operator_approved_sos_id",  # Lane 2
+})
+
+# The hard identity keys the enriched export surfaces (each ledger-validated
+# identically). Lane 2 adds `sos_id`; ein/uei behavior is unchanged.
+IDENTITY_KEYS = ("ein", "uei", "sos_id")
+
+# Entity-level attributes surfaced when exactly one ledger-validated value exists
+# (own + valid links): the BMF subtype (Lane 1) + the CA-SOS status/type/date
+# (Lane 2). All whitelist-safe — never a street address / ZIP / person field.
+PASSTHROUGH_ATTRS = ("irs_subsection_class", "entity_status", "entity_type", "formation_date")
 
 # An OWN `n.ein`/`n.uei` is trusted as a deterministic key only when the node's
 # provenance is recognized via fields that already exist (Codex r2 — there is no
 # invented `key_source`): a known `n.source`, or a registry key-prefixed id.
-_TRUSTED_SOURCES = frozenset({"irs-990", "marin_county_open_data", "usaspending"})
-_TRUSTED_ID_PREFIXES = ("org-990-ein-", "org-bmf-ein-", "org-usasp-uei-")
+_TRUSTED_SOURCES = frozenset({"irs-990", "marin_county_open_data", "usaspending", "ca_sos"})
+_TRUSTED_ID_PREFIXES = ("org-990-ein-", "org-bmf-ein-", "org-usasp-uei-", "org-casos-")
 
 # The live enrichment query (operator-gated; tested against a fake session, never
 # run by the loop). Per Organization: its own keys/source/subtype, edge-degree,
@@ -66,13 +82,18 @@ ENRICHED_ORGS_QUERY = (
     "  edge_source_id: startNode(r).id, "
     "  edge_target_id: endNode(r).id, "
     "  assertion_id: r.assertion_id, "
-    "  ein: m.ein, uei: m.uei, "
-    "  irs_subsection_class: m.irs_subsection_class "
+    "  ein: m.ein, uei: m.uei, sos_id: m.sos_id, "
+    "  irs_subsection_class: m.irs_subsection_class, "
+    "  entity_status: m.entity_status, entity_type: m.entity_type, "
+    "  formation_date: m.formation_date "
     "} END) AS raw_links "
     "RETURN n.id AS id, "
     "  coalesce(n.display_label, n.name) AS display_label, "
-    "  n.ein AS own_ein, n.uei AS own_uei, n.source AS own_source, "
+    "  n.ein AS own_ein, n.uei AS own_uei, n.sos_id AS own_sos_id, "
+    "  n.source AS own_source, "
     "  n.irs_subsection_class AS own_irs_subsection_class, "
+    "  n.entity_status AS own_entity_status, n.entity_type AS own_entity_type, "
+    "  n.formation_date AS own_formation_date, "
     "  COUNT { (n)--() } AS degree, "
     "  [l IN raw_links WHERE l IS NOT NULL] AS key_links "
     "ORDER BY n.id"
@@ -125,6 +146,7 @@ def org_ref_from_enriched_record(
     SAME_AS). A disagreement withholds the key and records `identity_key_conflict`.
     An own key on a node with unrecognized provenance is `review_keys`-only, never
     deterministic. `irs_subsection_class` + `degree` ride along."""
+    register_sos_id_normalizer()  # defensive — survive a deleted/hostile registration
     ref: dict[str, Any] = {"id": record["id"]}
     if record.get("display_label"):
         ref["display_label"] = record["display_label"]
@@ -132,12 +154,12 @@ def org_ref_from_enriched_record(
         ref["degree"] = record["degree"]
 
     own_trusted = _own_key_trusted(record)
-    trusted: dict[str, dict[str, set[str]]] = {"ein": {}, "uei": {}}
+    trusted: dict[str, dict[str, set[str]]] = {k: {} for k in IDENTITY_KEYS}
     review_only: dict[str, str] = {}
-    subtypes: dict[str, set[str]] = {}
+    attrs: dict[str, dict[str, set[str]]] = {a: {} for a in PASSTHROUGH_ATTRS}
 
-    # Own keys — trusted only with recognized provenance, else review-only.
-    for key in ("ein", "uei"):
+    # Own keys/attrs — trusted only with recognized provenance, else review-only.
+    for key in IDENTITY_KEYS:
         value = KEY_NORMALIZERS[key](record.get(f"own_{key}"))
         if value is None:
             continue
@@ -145,25 +167,27 @@ def org_ref_from_enriched_record(
             trusted[key].setdefault(value, set()).add("own")
         else:
             review_only[key] = value
-    own_subtype = record.get("own_irs_subsection_class")
-    if own_trusted and own_subtype:
-        subtypes.setdefault(own_subtype, set()).add("own")
+    for attr in PASSTHROUGH_ATTRS:
+        own_val = record.get(f"own_{attr}")
+        if own_trusted and own_val:
+            attrs[attr].setdefault(own_val, set()).add("own")
 
-    # Linked keys — only over a ledger-VALID approved/deterministic SAME_AS.
+    # Linked keys/attrs — only over a ledger-VALID approved/deterministic SAME_AS.
     for link in record.get("key_links") or []:
         if _link_orientation(link, assertions_by_id) is None:
             continue
         aid = link.get("assertion_id")
-        for key in ("ein", "uei"):
+        for key in IDENTITY_KEYS:
             value = KEY_NORMALIZERS[key](link.get(key))
             if value is not None:
                 trusted[key].setdefault(value, set()).add(aid)
-        subtype = link.get("irs_subsection_class")
-        if subtype:
-            subtypes.setdefault(subtype, set()).add(aid)
+        for attr in PASSTHROUGH_ATTRS:
+            linked_val = link.get(attr)
+            if linked_val:
+                attrs[attr].setdefault(linked_val, set()).add(aid)
 
     conflicts: list[dict[str, Any]] = []
-    for key in ("ein", "uei"):
+    for key in IDENTITY_KEYS:
         values = trusted[key]
         if len(values) == 1:
             ref[key] = next(iter(values))
@@ -177,8 +201,9 @@ def org_ref_from_enriched_record(
                 ),
             })
 
-    if len(subtypes) == 1:
-        ref["irs_subsection_class"] = next(iter(subtypes))
+    for attr in PASSTHROUGH_ATTRS:
+        if len(attrs[attr]) == 1:
+            ref[attr] = next(iter(attrs[attr]))
     if review_only:
         ref["review_keys"] = review_only
     if conflicts:
@@ -197,6 +222,41 @@ def enrich_existing_orgs(
     refs = [org_ref_from_enriched_record(dict(r), by_id) for r in session.run(ENRICHED_ORGS_QUERY)]
     refs.sort(key=lambda r: r["id"])
     return refs
+
+
+def write_enriched_orgs(
+    out_path: Path, session: Any, assertions: list[dict[str, Any]]
+) -> int:
+    """Write the ledger-validated enriched org refs to JSON (session-injectable —
+    a fake session in tests, a real driver session in the operator path). The
+    emitted refs carry only hard keys + entity-level attributes — never a street
+    address / ZIP / person field. NEVER writes the graph."""
+    refs = enrich_existing_orgs(session, assertions)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(refs, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return len(refs)
+
+
+def export_enriched_orgs(out_path: Path, assertions_path: Path) -> int:
+    """OPERATOR-GATED enriched export: read the ledger, run the read-only enriched
+    query against the live DB, and write the surfaced keys. NEVER run by the goal
+    loop (it needs NEO4J_* creds + a live graph); tested offline via
+    `write_enriched_orgs` against a fake session."""
+    from neo4j import GraphDatabase  # lazy: no DB dependency at import time
+    from identity_ledger import read_assertions
+
+    _load_env_local(Path(__file__).resolve().parent.parent / "app" / ".env.local")
+    uri = os.environ["NEO4J_URI"]
+    auth = (os.environ["NEO4J_USER"], os.environ["NEO4J_PASSWORD"])
+    database = os.environ.get("NEO4J_DATABASE", "neo4j")
+    assertions = read_assertions(Path(assertions_path))
+
+    driver = GraphDatabase.driver(uri, auth=auth)
+    try:
+        with driver.session(database=database) as session:
+            return write_enriched_orgs(out_path, session, assertions)
+    finally:
+        driver.close()
 
 
 def _load_env_local(path: Path) -> None:
@@ -244,9 +304,26 @@ def export_orgs(out_path: Path) -> int:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Read-only export of live Organization nodes.")
     parser.add_argument("--out", required=True, type=Path)
+    parser.add_argument(
+        "--enriched",
+        action="store_true",
+        help="Operator-gated: surface ledger-validated hard keys (ein/uei/sos_id) "
+        "+ entity-level attributes (needs --assertions + NEO4J_* creds).",
+    )
+    parser.add_argument(
+        "--assertions",
+        type=Path,
+        help="Path to the identity-assertion ledger JSONL (required with --enriched).",
+    )
     args = parser.parse_args(argv)
-    n = export_orgs(args.out)
-    print(f"exported {n} Organization refs → {args.out}")
+    if args.enriched:
+        if not args.assertions:
+            parser.error("--enriched requires --assertions <ledger.jsonl>")
+        n = export_enriched_orgs(args.out, args.assertions)
+        print(f"exported {n} enriched Organization refs → {args.out}")
+    else:
+        n = export_orgs(args.out)
+        print(f"exported {n} Organization refs → {args.out}")
     return 0
 
 
