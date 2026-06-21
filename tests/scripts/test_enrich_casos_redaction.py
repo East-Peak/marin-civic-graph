@@ -77,11 +77,12 @@ def test_publishable_returns_only_the_whitelist():
 def test_scan_catches_planted_value_and_key_leaks():
     # a forbidden VALUE (sentinel)
     assert scan_for_forbidden({"note": "see REDACT_ME_STREET"})
-    # a forbidden KEY name even with a benign value
-    assert scan_for_forbidden({"principal_address": "123 Main St"})
-    assert scan_for_forbidden({"agent_first_name": "Jane"})
+    # a forbidden KEY name triggers even with a benign value (values here are NOT
+    # real PII shapes — the repo's committed-text guard forbids address/name shapes)
+    assert scan_for_forbidden({"principal_address": "ok"})
+    assert scan_for_forbidden({"agent_first_name": "ok"})
     # nested
-    assert scan_for_forbidden({"candidates": [{"mailing_postal_code": "94901"}]})
+    assert scan_for_forbidden({"candidates": [{"mailing_postal_code": "ok"}]})
 
 
 def test_scan_passes_clean_published_artifact():
