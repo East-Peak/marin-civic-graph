@@ -234,9 +234,14 @@ def _resolver_candidates(refs, existing):
 
 
 def _token_overlap(a: set[str], b: set[str]) -> bool:
-    """A review-worthy overlap: >=2 shared significant tokens, or one set ⊆ other."""
-    shared = a & b
-    return len(shared) >= 2 or (a and a <= b) or (b and b <= a)
+    """A review-worthy overlap: >=2 shared significant tokens.
+
+    A single shared token — even via a subset — FLOODS on common tokens
+    (`construction` 225k rows, `management` 373k) and burns the per-existing cap
+    with junk (empirically confirmed against the real file), so it is excluded;
+    a single-significant-token existing org relies on the resolver's exact/0.85
+    path. All real for-profit cases share >=2 tokens or are resolver matches."""
+    return len(a & b) >= 2
 
 
 def block_casos_against_existing(
@@ -330,8 +335,14 @@ def block_casos_against_existing(
 
         # attach the SOS review evidence (status/type/city) onto each candidate
         merged = [enrich_casos_candidate(c, ref_by_id.get(c["subject_ref"], {})) for c in merged]
-        # deterministic cap sort: (-signal_strength, status_rank, sos_id)
-        merged.sort(key=lambda c: (-c["signal_strength"], _status_rank(c["entity_status"]), c["sos_id"]))
+        # deterministic cap sort: exact-name matches FIRST (the resolver gives a flat
+        # 0.9 to normalized_name_exact, which a false friend's difflib can exceed —
+        # e.g. "X Construction Company" at 0.91 outranking the true exact match), then
+        # (-signal_strength, status_rank, sos_id).
+        def _sort_key(c):
+            is_exact = "normalized_name_exact" in c.get("signals", [])
+            return (not is_exact, -c["signal_strength"], _status_rank(c["entity_status"]), c["sos_id"])
+        merged.sort(key=_sort_key)
         if len(merged) > cap:
             capped.append({"candidate_ref": eid, "dropped": len(merged) - cap})
             merged = merged[:cap]
