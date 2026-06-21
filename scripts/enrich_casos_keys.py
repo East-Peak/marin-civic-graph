@@ -29,10 +29,11 @@ Operator runbook (the download is the OPERATOR step — this module never fetche
 """
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
-from typing import Any, Iterable, Iterator
+from typing import Any, Iterable, Iterator, Mapping
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -262,9 +263,18 @@ def block_casos_against_existing(
     # and `dedupe_casos_refs` can see/flag it — keying by sos_id here would drop
     # the second conflict row before detection).
     buckets: dict[str, list[dict[str, Any]]] = {e["id"]: [] for e in existing_orgs}
-    for ref, _skip in parse_casos_filings(filings_lines):
+    stats: dict[str, Any] = {
+        "filings_rows_scanned": 0,
+        "prefix_shapes": {},
+        "skipped": {},
+    }
+    for ref, skip in parse_casos_filings(filings_lines):
+        stats["filings_rows_scanned"] += 1
         if ref is None:
+            stats["skipped"][skip] = stats["skipped"].get(skip, 0) + 1
             continue
+        shape = entity_num_prefix_shape(ref["sos_id"])
+        stats["prefix_shapes"][shape] = stats["prefix_shapes"].get(shape, 0) + 1
         sos_toks = significant_tokens(ref["display_label"])
         matched: set[str] = set()
         for t in sos_toks:
@@ -332,6 +342,7 @@ def block_casos_against_existing(
         "pool_size": pool_pairs,
         "conflicts": conflicts,
         "capped": capped,
+        "stats": stats,
     }
 
 
@@ -509,5 +520,123 @@ def individual_agent_flags(lines: Iterable[str]) -> dict[str, bool]:
     return flags
 
 
+# ---------------------------------------------------------------------------
+# Unit 6 — coverage report + DB-free CLI (Predeclared 8, 10)
+# ---------------------------------------------------------------------------
+
+# Honest scope of the SOS key source (Codex r1-analog minor).
+SOURCE_LIMITATION = (
+    "CA SOS registered business entities, statewide; an entity may be "
+    "Marin-active under an out-of-area registered/agent address"
+)
+
+
+def build_casos_coverage_report(
+    block_result: dict[str, Any],
+    existing_orgs: list[dict[str, Any]],
+    *,
+    policy_version: str = POLICY_VERSION,
+    enriched_refs: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """The coverage report — the keyless tail is PUBLISHED, never implied resolved.
+
+    Carries only counts + ids + entity-level metadata; never a person/address
+    field (redaction-clean by construction)."""
+    candidates = block_result["candidates"]
+    stats = block_result.get("stats", {})
+    with_candidates = {c["candidate_ref"] for c in candidates}
+    keyless_ids = sorted(e["id"] for e in existing_orgs if e["id"] not in with_candidates)
+    enriched = enriched_refs or []
+    return {
+        "policy_version": policy_version,
+        "source_limitation": SOURCE_LIMITATION,
+        "filings": {
+            "rows_scanned": stats.get("filings_rows_scanned", 0),
+            "prefix_shapes": stats.get("prefix_shapes", {}),
+            "entity_num_missing": stats.get("skipped", {}).get("entity_num_missing", 0),
+        },
+        "resolution": {
+            "candidate_pool_size": block_result.get("pool_size", 0),
+            "name_candidates_queued": len(candidates),
+            "casos_row_conflict": len(block_result.get("conflicts", [])),
+            "capped_existing_orgs": len(block_result.get("capped", [])),
+        },
+        "existing_orgs": {
+            "total": len(existing_orgs),
+            "with_candidates": len(with_candidates),
+            "keyless_tail": len(keyless_ids),
+            "keyless_ids": keyless_ids,
+        },
+        "enrichment": {
+            "identity_key_conflict": sum(1 for r in enriched if r.get("identity_key_conflict")),
+            "orgs_with_surfaced_sos_id": sum(1 for r in enriched if r.get("sos_id")),
+        },
+        "redaction": {
+            # The lane publishes only the entity-level whitelist; no person/address
+            # field is ever emitted (proven by the redaction leak scan).
+            "person_fields_published": 0,
+        },
+    }
+
+
+def _load_existing_orgs(path: str | Path) -> list[dict[str, Any]]:
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(data, list):
+        raise ValueError(f"existing-orgs file must be a JSON array: {path}")
+    return data
+
+
+def _write_jsonl(path: Path, rows: Iterable[Mapping[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as fh:
+        for row in rows:
+            fh.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Stream the staged Filings CSV → token-block → write the review sidecar +
+    coverage report. Touches NO database (the enriched live export is the operator
+    step in `export_existing_orgs.py`). Streams the 3.6 GB file line by line."""
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description=(
+            "Identity Enrichment Lane 2 (CA-SOS): stream a staged CA SOS Filings "
+            "export, block it against an existing-orgs export, and write the review "
+            "queue + coverage report. No network, no database (see the module "
+            "docstring for the operator download runbook)."
+        )
+    )
+    parser.add_argument("--filings", required=True, type=Path, help="Operator-staged CA SOS Filings.csv (*|*-delimited).")
+    parser.add_argument("--existing-orgs", required=True, help="JSON array of existing org refs.")
+    parser.add_argument("--review-dir", required=True, type=Path, help="Output dir for review queue + coverage report.")
+    args = parser.parse_args(argv)
+
+    existing = _load_existing_orgs(args.existing_orgs)
+    with open(args.filings, encoding="utf-8") as fh:  # streamed line by line
+        result = block_casos_against_existing(fh, existing)
+    report = build_casos_coverage_report(result, existing)
+
+    review_dir: Path = args.review_dir
+    review_dir.mkdir(parents=True, exist_ok=True)
+    _write_jsonl(review_dir / "resolution-candidates-casos.jsonl", result["candidates"])
+    (review_dir / "coverage-casos.json").write_text(
+        json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+
+    print(
+        f"Filings: {report['filings']['rows_scanned']} scanned, "
+        f"{report['filings']['entity_num_missing']} missing-num | "
+        f"candidates: {report['resolution']['name_candidates_queued']} queued "
+        f"({report['resolution']['candidate_pool_size']} pool) | "
+        f"existing: {report['existing_orgs']['keyless_tail']}/{report['existing_orgs']['total']} keyless"
+    )
+    return 0
+
+
 # Register at import so any importer of this module can use the `sos_id` key.
 register_sos_id_normalizer()
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
