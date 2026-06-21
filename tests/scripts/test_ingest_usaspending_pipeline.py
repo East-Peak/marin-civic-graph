@@ -94,12 +94,17 @@ def test_same_as_lands_in_edges_output():
         }
     ]
     _, edges, candidates = build_nodes_and_edges(cam_awards, existing)
-    assert {
-        "source_id": f"org-usasp-uei-{CAM_UEI}",
-        "target_id": "org-existing-cam",
-        "relationship_type": "SAME_AS",
-        "properties": {"basis": "uei_exact"},
-    } in edges
+    # Identity Control A: SAME_AS routed through the egress gate — a self-identity
+    # UEI merge is stamped with a `deterministic` assertion id (basis preserved).
+    same_as = [
+        e for e in edges
+        if e["relationship_type"] == "SAME_AS"
+        and e["source_id"] == f"org-usasp-uei-{CAM_UEI}"
+        and e["target_id"] == "org-existing-cam"
+    ]
+    assert len(same_as) == 1
+    assert same_as[0]["properties"]["basis"] == "uei_exact"
+    assert same_as[0]["properties"]["assertion_id"].startswith("assertion-")
     assert candidates == []
 
 

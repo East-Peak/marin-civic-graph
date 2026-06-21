@@ -67,6 +67,7 @@ from org_resolution import (  # noqa: F401  (re-export)
     _normalize_name,
     propose_org_resolutions,
 )
+from identity_egress_gate import gate_ingestor_same_as
 
 logger = logging.getLogger("ingest_990")
 
@@ -521,7 +522,16 @@ def build_nodes_and_edges(
     same_as_edges, candidates = propose_org_resolutions(
         new_org_refs, existing_orgs or []
     )
-    edges.extend(same_as_edges)
+    # Identity Control A: route resolver SAME_AS through the egress gate. Each
+    # allowed self-identity merge becomes a `deterministic` ledger assertion and
+    # the edge is stamped with its id; a relationship-semantics merge is demoted
+    # to a queued candidate. Real 990 data shares no EINs with the graph yet, so
+    # this is a no-op (empty SAME_AS in, empty out).
+    gated_same_as, _assertions, demoted = gate_ingestor_same_as(
+        same_as_edges, new_org_refs, existing_orgs or [], source_system="form_990"
+    )
+    edges.extend(gated_same_as)
+    candidates.extend(demoted)
 
     nodes = (
         [orgs[org_id] for org_id in sorted(orgs)]

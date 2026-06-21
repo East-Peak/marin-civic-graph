@@ -213,14 +213,17 @@ def test_same_as_edges_collected_with_basis(tmp_path: Path):
         ]
     )
     _, edges = load_envelope_dirs([out_dir])
-    assert collect_same_as_edges(edges) == [
-        {
-            "source_id": MCF_ORG,
-            "target_id": "org-marin-community-foundation",
-            "relationship_type": "SAME_AS",
-            "properties": {"basis": "ein_exact"},
-        }
-    ]
+    # Identity Control A: ingest_990's SAME_AS is now routed through the egress
+    # gate, so the collected merge carries a `deterministic` assertion id
+    # (basis preserved) — the dual-role same_as lane is audited end to end.
+    collected = collect_same_as_edges(edges)
+    assert len(collected) == 1
+    edge = collected[0]
+    assert edge["source_id"] == MCF_ORG
+    assert edge["target_id"] == "org-marin-community-foundation"
+    assert edge["relationship_type"] == "SAME_AS"
+    assert edge["properties"]["basis"] == "ein_exact"
+    assert edge["properties"]["assertion_id"].startswith("assertion-")
 
 
 # ---------------------------------------------------------------------------

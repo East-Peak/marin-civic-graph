@@ -94,6 +94,7 @@ from ingest_990 import (
 )
 from membership_builders import slugify
 from org_resolution import propose_org_resolutions
+from identity_egress_gate import gate_ingestor_same_as
 
 logger = logging.getLogger("ingest_usaspending")
 
@@ -502,7 +503,15 @@ def build_nodes_and_edges(
     same_as_edges, candidates = resolve_recipient_orgs(
         recipient_nodes, recipient_by_award, existing_orgs or []
     )
-    edges.extend(same_as_edges)
+    # Identity Control A: route resolver SAME_AS through the egress gate (a
+    # self-identity merge → a `deterministic` ledger assertion stamped on the
+    # edge; a relationship-semantics merge → demoted to a queued candidate).
+    # Real USASpending data shares no keys with the graph yet → a no-op.
+    gated_same_as, _assertions, demoted = gate_ingestor_same_as(
+        same_as_edges, recipient_nodes, existing_orgs or [], source_system="usaspending"
+    )
+    edges.extend(gated_same_as)
+    candidates.extend(demoted)
     return nodes, edges, candidates
 
 

@@ -113,12 +113,18 @@ def test_same_as_lands_in_edges_output():
         }
     ]
     _, edges, candidates = build_nodes_and_edges(parse_all(), existing)
-    assert {
-        "source_id": "org-990-ein-943007979",
-        "target_id": "org-marin-community-foundation",
-        "relationship_type": "SAME_AS",
-        "properties": {"basis": "ein_exact"},
-    } in edges
+    # Identity Control A: the SAME_AS is now routed through the egress gate, so a
+    # self-identity EIN merge is stamped with a `deterministic` assertion id
+    # (basis preserved). The edge still lands in the output, now audited.
+    same_as = [
+        e for e in edges
+        if e["relationship_type"] == "SAME_AS"
+        and e["source_id"] == "org-990-ein-943007979"
+        and e["target_id"] == "org-marin-community-foundation"
+    ]
+    assert len(same_as) == 1
+    assert same_as[0]["properties"]["basis"] == "ein_exact"
+    assert same_as[0]["properties"]["assertion_id"].startswith("assertion-")
     assert candidates == []
 
 
