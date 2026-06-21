@@ -37,6 +37,8 @@ from typing import Any, Iterable, Iterator
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from org_resolution import KEY_NORMALIZERS, _normalize_name, propose_org_resolutions  # noqa: E402
+from identity_egress_gate import POLICY_VERSION, gate_ingestor_same_as  # noqa: E402
+from identity_ledger import make_assertion  # noqa: E402
 from identity_resolution_adapter import (  # noqa: E402
     normalize_resolution_candidate_for_artifact,
 )
@@ -316,6 +318,8 @@ def block_casos_against_existing(
                     "evidence_record_ids": list(ref["evidence_record_ids"]),
                 })
 
+        # attach the SOS review evidence (status/type/city) onto each candidate
+        merged = [enrich_casos_candidate(c, ref_by_id.get(c["subject_ref"], {})) for c in merged]
         # deterministic cap sort: (-signal_strength, status_rank, sos_id)
         merged.sort(key=lambda c: (-c["signal_strength"], _status_rank(c["entity_status"]), c["sos_id"]))
         if len(merged) > cap:
@@ -329,6 +333,86 @@ def block_casos_against_existing(
         "conflicts": conflicts,
         "capped": capped,
     }
+
+
+# ---------------------------------------------------------------------------
+# Unit 3 — resolution wiring: deterministic gate + review wrapper + approval
+# ---------------------------------------------------------------------------
+
+# SOS review-evidence fields attached to a candidate (so the operator approves
+# against the hard entity number + status/type/locale — Novato vs Stockton — not
+# a bare name). All entity-level; NEVER a street address / ZIP / person field.
+_REVIEW_EVIDENCE = ("entity_status", "entity_type", "formation_date", "principal_city", "principal_state")
+
+
+def enrich_casos_candidate(
+    candidate: dict[str, Any], ref: dict[str, Any]
+) -> dict[str, Any]:
+    """Attach the SOS entity-level review evidence (`registry_*`) onto a candidate.
+
+    The candidate already carries `signal_strength` (the adapter renamed
+    `confidence`). Only whitelist fields are copied — never a raw SOS row."""
+    out = normalize_resolution_candidate_for_artifact(dict(candidate))
+    for field in _REVIEW_EVIDENCE:
+        if ref.get(field) is not None:
+            out[f"registry_{field}"] = ref[field]
+    return out
+
+
+def resolve_casos_deterministic(
+    sos_refs: list[dict[str, Any]],
+    existing_orgs: list[dict[str, Any]],
+    *,
+    policy_version: str = POLICY_VERSION,
+    source_system: str = SOURCE_SYSTEM,
+) -> dict[str, Any]:
+    """Run SOS refs through the shared resolver + Identity Control A's egress gate.
+
+    A matching `sos_id` on BOTH sides → an egress-gated `deterministic` ledger
+    assertion + a SAME_AS stamped with its id (the ONE permitted auto-merge — used
+    on constructed keyed fixtures; the real export carries no `sos_id`). A name
+    match → a `queued` candidate. Name similarity alone NEVER merges."""
+    register_sos_id_normalizer()
+    same_as, candidates = propose_org_resolutions(
+        sos_refs, existing_orgs, identity_keys=("sos_id",)
+    )
+    gated, assertions, demoted = gate_ingestor_same_as(
+        same_as, sos_refs, existing_orgs,
+        source_system=source_system, policy_version=policy_version,
+    )
+    return {
+        "same_as_edges": gated,
+        "assertions": assertions,
+        "candidates": candidates,
+        "demoted": demoted,
+    }
+
+
+def assertion_for_approved_casos_candidate(
+    candidate: dict[str, Any],
+    *,
+    subject: dict[str, Any],
+    target: dict[str, Any],
+    reviewer: str,
+    decided_at: str,
+    policy_version: str = POLICY_VERSION,
+) -> dict[str, Any]:
+    """Write the ledger assertion for an operator-APPROVED `sos_id` candidate.
+
+    The pinned evidence mapping: the candidate carries `evidence_record_ids` (the
+    resolver's field); the ledger takes `evidence_refs` — map one to the other."""
+    return make_assertion(
+        subject_ref=candidate["subject_ref"],
+        target_ref=candidate["candidate_ref"],
+        status="approved",
+        basis="operator_approved_sos_id",
+        subject=subject,
+        target=target,
+        reviewer=reviewer,
+        decided_at=decided_at,
+        policy_version=policy_version,
+        evidence_refs=list(candidate.get("evidence_record_ids", [])),
+    )
 
 
 # Register at import so any importer of this module can use the `sos_id` key.
