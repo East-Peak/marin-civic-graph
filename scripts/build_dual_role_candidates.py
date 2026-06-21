@@ -45,6 +45,13 @@ from decimal import Decimal
 from typing import Any
 
 from org_resolution import _normalize_name
+from identity_ledger import assertion_id as _assertion_id, source_snapshot_hash as _snap
+
+
+def _join_assertion_id(subject_ref: str, target_ref: str, basis: str) -> str:
+    """The ledger assertion id a join must cite. Deterministic from the pair +
+    basis so the read model and the ledger agree (Identity Control A)."""
+    return _assertion_id(subject_ref, target_ref, basis, _snap({"id": subject_ref}, {"id": target_ref}))
 
 USASPENDING_COVERAGE_SCOPE = "usaspending_prime_award_total_obligation"
 MARIN_COUNTY_COVERAGE_SCOPE = "marin_county_delegated_contracts"
@@ -330,11 +337,16 @@ def build_join_links(
                 f"has basis {basis!r} — not in the deterministic allowlist "
                 f"{sorted(DETERMINISTIC_SAME_AS_BASES)}"
             )
+        # Identity Control A: every join cites a ledger assertion. A gated
+        # ingestor SAME_AS already carries its `assertion_id`; derive it
+        # deterministically otherwise so the lane is never un-audited.
         links.append(
             {
                 "funding_org_ref": edge["source_id"],
                 "influence_org_ref": edge["target_id"],
                 "basis": f"same_as:{basis}",
+                "assertion_id": edge["properties"].get("assertion_id")
+                or _join_assertion_id(edge["source_id"], edge["target_id"], f"same_as:{basis}"),
             }
         )
     for row in approved_rows:
@@ -342,6 +354,8 @@ def build_join_links(
             "funding_org_ref": row["subject_ref"],
             "influence_org_ref": row["candidate_ref"],
             "basis": "approved_resolution",
+            "assertion_id": row.get("assertion_id")
+            or _join_assertion_id(row["subject_ref"], row["candidate_ref"], "operator_approved_name"),
         }
         if "signals" in row:
             link["signals"] = row["signals"]
@@ -427,10 +441,16 @@ def _candidate_row(
         for link in links
         if link["funding_org_ref"] in members or link["influence_org_ref"] in members
     ]
-    # Lane A: a member carrying both legs itself joins with no link needed —
-    # listed so every join stays auditable.
+    # Lane A: a member carrying both legs itself joins (same id). It cites a
+    # deterministic `canonical_id_exact` self-assertion (Identity Control A,
+    # Codex r2) — a same-id join is still an audited identity claim, never bare.
     joined_via += [
-        {"funding_org_ref": m, "influence_org_ref": m, "basis": "id_exact"}
+        {
+            "funding_org_ref": m,
+            "influence_org_ref": m,
+            "basis": "id_exact",
+            "assertion_id": _join_assertion_id(m, m, "canonical_id_exact"),
+        }
         for m in component
         if m in funding and m in influence
     ]

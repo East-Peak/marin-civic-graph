@@ -406,3 +406,43 @@ class TestFullCsvE2E:
         assert cov["amount_total"] == "141238172"      # exact tie-out
         assert cov["rows"]["captured"] == 6898
         assert cov["dataset"]["not_full_checkbook"] is True
+
+
+# ---------------------------------------------------------------------------
+# Identity Control A — real-71 egress-gate e2e (COMPLETION 8, executed-or-BLOCKED)
+# ---------------------------------------------------------------------------
+EXPORT = REPO_ROOT / "data" / "exports" / "existing-orgs.json"
+real_present = pytest.mark.skipif(
+    not (FULL_CSV.is_file() and EXPORT.is_file()),
+    reason="real County CSV + 1,346-org export absent (contributor checkout)",
+)
+
+
+class TestRealEgressGateE2E:
+    @real_present
+    def test_no_name_match_reaches_a_public_join_without_approval(self, tmp_path):
+        import json as _json
+        from ingest_marin_county_contracts import run
+        existing = _json.loads(EXPORT.read_text())
+        # Pre-approval: the real 71 candidates queue; the gate lets NO TO_TARGET
+        # edge reach the public output without an approval (the cardinal rule).
+        r = run(input_csv=FULL_CSV, out_dir=tmp_path / "o", review_dir=tmp_path / "r",
+                existing_orgs=existing, write_outputs=False)
+        assert len(r["candidates"]) == 71
+        assert all(c["status"] == "queued" for c in r["candidates"])
+        assert [e for e in r["edges"] if e["relationship_type"] == "TO_TARGET"] == []
+
+        # Approve exactly one real candidate (an operator act) → exactly that
+        # group's MoneyFlows get a TO_TARGET, each citing an assertion id.
+        cam = next(c for c in r["candidates"] if c["candidate_ref"] == "org-community-action-marin")
+        approved = tmp_path / "approved.jsonl"
+        approved.write_text(_json.dumps({
+            "subject_ref": cam["subject_ref"], "candidate_ref": cam["candidate_ref"],
+            "status": "approved", "assertion_id": "assertion-real-cam",
+        }) + "\n")
+        r2 = run(input_csv=FULL_CSV, out_dir=tmp_path / "o2", review_dir=tmp_path / "r2",
+                 existing_orgs=existing, approved_path=approved, write_outputs=False)
+        tt = [e for e in r2["edges"] if e["relationship_type"] == "TO_TARGET"]
+        assert len(tt) >= 1
+        assert all(e["target_id"] == "org-community-action-marin" for e in tt)
+        assert all(e["properties"]["assertion_id"] == "assertion-real-cam" for e in tt)

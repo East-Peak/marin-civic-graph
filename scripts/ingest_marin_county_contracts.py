@@ -463,7 +463,15 @@ def load_approved_resolutions(
         if key in seen:
             continue
         seen.add(key)
-        approved.append({"subject_ref": subject, "candidate_ref": candidate})
+        entry: dict[str, Any] = {"subject_ref": subject, "candidate_ref": candidate}
+        # Identity Control A: carry the ledger assertion id + the reviewed raw
+        # variants through, so build_to_target_edges can cite the assertion and
+        # enforce edge-level (reviewed-variant-only) attachment.
+        if row.get("assertion_id"):
+            entry["assertion_id"] = row["assertion_id"]
+        if row.get("reviewed_raw_variants"):
+            entry["reviewed_raw_variants"] = row["reviewed_raw_variants"]
+        approved.append(entry)
     return approved
 
 

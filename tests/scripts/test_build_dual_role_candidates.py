@@ -37,6 +37,7 @@ from build_dual_role_candidates import (  # noqa: E402
     load_envelope_dirs,
     load_qa_entries,
     main as build_dual_role_main,
+    _join_assertion_id,  # Identity Control A: joins cite a ledger assertion
 )
 from ingest_990 import main as ingest_990_main  # noqa: E402
 from ingest_usaspending import main as ingest_usaspending_main  # noqa: E402
@@ -442,18 +443,13 @@ def test_same_as_allowlist_gates_the_deterministic_lane(malt_queued_row: dict):
         "relationship_type": "SAME_AS",
         "properties": {"basis": "uei_exact"},
     }
-    assert build_join_links([ein_edge, uei_edge], []) == [
-        {
-            "funding_org_ref": MCF_ORG,
-            "influence_org_ref": "org-marin-community-foundation",
-            "basis": "same_as:ein_exact",
-        },
-        {
-            "funding_org_ref": CAM_ORG,
-            "influence_org_ref": CAM_CAMPAIGN_ORG,
-            "basis": "same_as:uei_exact",
-        },
+    links = build_join_links([ein_edge, uei_edge], [])
+    # Identity Control A: each join now cites a ledger assertion id.
+    assert [(l["funding_org_ref"], l["influence_org_ref"], l["basis"]) for l in links] == [
+        (MCF_ORG, "org-marin-community-foundation", "same_as:ein_exact"),
+        (CAM_ORG, CAM_CAMPAIGN_ORG, "same_as:uei_exact"),
     ]
+    assert all(l["assertion_id"].startswith("assertion-") for l in links)
     name_basis = {**ein_edge, "properties": {"basis": "normalized_name_exact"}}
     with pytest.raises(ValueError, match="normalized_name_exact"):
         build_join_links([name_basis], [])
@@ -464,15 +460,15 @@ def test_same_as_allowlist_gates_the_deterministic_lane(malt_queued_row: dict):
 
 def test_approved_rows_become_links_with_signals_carried(malt_queued_row: dict):
     approved = {**malt_queued_row, "status": "approved"}
-    assert build_join_links([], [approved]) == [
-        {
-            "funding_org_ref": MALT_ORG,
-            "influence_org_ref": MALT_CAMPAIGN_ORG,
-            "basis": "approved_resolution",
-            "signals": ["normalized_name_exact"],
-            "confidence": 0.9,
-        }
-    ]
+    links = build_join_links([], [approved])
+    assert len(links) == 1
+    link = links[0]
+    assert link["funding_org_ref"] == MALT_ORG
+    assert link["influence_org_ref"] == MALT_CAMPAIGN_ORG
+    assert link["basis"] == "approved_resolution"
+    assert link["signals"] == ["normalized_name_exact"]
+    assert link["confidence"] == 0.9
+    assert link["assertion_id"].startswith("assertion-")   # Identity Control A
 
 
 def test_queued_rows_never_join(funding_dirs: list[Path], malt_queued_row: dict):
@@ -568,6 +564,7 @@ def _malt_candidate_row() -> dict:
                 "funding_org_ref": MALT_ORG,
                 "influence_org_ref": MALT_CAMPAIGN_ORG,
                 "basis": "approved_resolution",
+                "assertion_id": _join_assertion_id(MALT_ORG, MALT_CAMPAIGN_ORG, "operator_approved_name"),
                 "signals": ["normalized_name_exact"],
                 "confidence": 0.9,
             }
@@ -839,6 +836,7 @@ def test_alias_approvals_merge_components_and_aggregate_flows(
             "funding_org_ref": MALT_ORG,
             "influence_org_ref": MALT_CAMPAIGN_ORG,
             "basis": "approved_resolution",
+            "assertion_id": _join_assertion_id(MALT_ORG, MALT_CAMPAIGN_ORG, "operator_approved_name"),
             "signals": ["normalized_name_exact"],
             "confidence": 0.9,
         },
@@ -1274,6 +1272,15 @@ def test_same_as_lane_joins_through_the_pipeline(tmp_path: Path):
         .read_text(encoding="utf-8")
         .splitlines()
     ]
+    # Identity Control A: the same_as lane cites the GATED ingestor assertion id
+    # (basis ein_exact, real-ref fingerprints — not derivable here). Assert it is
+    # present, then strip it so the rest of the row can be pinned exactly.
+    assert len(rows) == 1
+    assert rows[0]["joined_via"][0]["assertion_id"].startswith("assertion-")
+    rows[0]["joined_via"] = [
+        {k: v for k, v in link.items() if k != "assertion_id"}
+        for link in rows[0]["joined_via"]
+    ]
     assert rows == [
         {
             "subject_ref": "org-3qc-inc",
@@ -1695,3 +1702,36 @@ def test_unknown_coverage_scope_moneyflow_is_not_funding_in():
     edges = [{"source_id": mystery["id"], "target_id": "org-y", "relationship_type": "TO_TARGET", "properties": {}}]
     # unrecognized coverage_scope is NOT funding-in evidence — never mislabeled
     assert extract_funding_in(nodes, edges) == {}
+
+
+# ---------------------------------------------------------------------------
+# Identity Control A — every dual-role join lane cites a ledger assertion
+# ---------------------------------------------------------------------------
+def test_id_exact_lane_cites_canonical_self_assertion():
+    # A member carrying both legs (same id) joins via id_exact — and must cite a
+    # canonical_id_exact self-assertion, never a bare join (Codex r2).
+    from build_dual_role_candidates import build_components, assemble_table
+    nodes = {
+        "org-dual": {"id": "org-dual", "node_type": "Organization", "labels": ["Organization"],
+                     "display_label": "Dual Co", "properties": {}},
+    }
+    funding = {"org-dual": {"form_990": [{"tax_year": "2022", "gov_grants_amount": 100,
+              "revenue_scope": "form_990_aggregate_government_grants", "evidence_record_ids": []}]}}
+    influence = {"org-dual": [{"flow_id": "mf-1", "amount": 5.0, "flow_date": "2022-01-01",
+                "flow_type": "campaign_contribution", "evidence_record_ids": []}]}
+    components = build_components(set(funding), set(influence), [])
+    rows, _ = assemble_table(nodes, funding, influence, [], [])
+    assert len(rows) == 1
+    id_exact = [l for l in rows[0]["joined_via"] if l["basis"] == "id_exact"]
+    assert len(id_exact) == 1
+    assert id_exact[0]["assertion_id"] == _join_assertion_id("org-dual", "org-dual", "canonical_id_exact")
+    assert id_exact[0]["assertion_id"].startswith("assertion-")
+
+
+def test_every_join_lane_carries_an_assertion_id():
+    # same_as + approved_resolution links both cite assertions (the gate).
+    same_as = [{"source_id": "f", "target_id": "i", "relationship_type": "SAME_AS",
+                "properties": {"basis": "ein_exact"}}]
+    approved = [{"subject_ref": "f2", "candidate_ref": "i2", "status": "approved"}]
+    links = build_join_links(same_as, approved)
+    assert all(l.get("assertion_id", "").startswith("assertion-") for l in links)
