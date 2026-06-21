@@ -80,6 +80,14 @@ def _record(**over):
 # --------------------------------------------------------------------------
 
 
+def test_enriched_query_link_filter_includes_sos_id():
+    """The link WHERE must accept sos_id-only key nodes — else CA-SOS keys are
+    filtered out against the real DB (a fake session can't catch this; found live)."""
+    from export_existing_orgs import ENRICHED_ORGS_QUERY
+    link_filter = ENRICHED_ORGS_QUERY.split("WITH n")[0]
+    assert "m.sos_id IS NOT NULL" in link_filter
+
+
 def test_sos_id_direct_orientation_surfaces_key_and_attributes():
     a = _approved()
     rec = _record(key_links=[_link(a["id"], edge_source=KEY_NODE["id"], edge_target=EXISTING["id"])])

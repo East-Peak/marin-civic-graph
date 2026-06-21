@@ -76,7 +76,8 @@ _TRUSTED_ID_PREFIXES = ("org-990-ein-", "org-bmf-ein-", "org-usasp-uei-", "org-c
 ENRICHED_ORGS_QUERY = (
     "MATCH (n:Organization) "
     "OPTIONAL MATCH (n)-[r:SAME_AS]-(m) "
-    "  WHERE r.assertion_id IS NOT NULL AND (m.ein IS NOT NULL OR m.uei IS NOT NULL) "
+    "  WHERE r.assertion_id IS NOT NULL "
+    "    AND (m.ein IS NOT NULL OR m.uei IS NOT NULL OR m.sos_id IS NOT NULL) "
     "WITH n, collect(CASE WHEN m IS NULL THEN NULL ELSE { "
     "  linked_node_id: m.id, "
     "  edge_source_id: startNode(r).id, "
