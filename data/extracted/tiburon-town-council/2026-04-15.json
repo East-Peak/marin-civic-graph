@@ -1,0 +1,30 @@
+{
+  "capture_id": "tiburon-town-council__2026-04-15",
+  "source_id": "tiburon-town-council",
+  "adapter": "civicplus",
+  "captured_at": "2026-04-15T13:02:44Z",
+  "url": "https://townoftiburon.org/AgendaCenter",
+  "jurisdiction_id": "place-tiburon",
+  "institution_id": "org-tiburon-town-council",
+  "raw_artifact": "data/raw/tiburon-town-council/2026-04-15/source.html",
+  "meeting_count": 0,
+  "artifact_counts": {},
+  "categories": [
+    "Town Council",
+    "Design Review Board",
+    "Heritage & Arts Commission",
+    "Parks, Open Space, & Trails Commission",
+    "Planning Commission"
+  ],
+  "meetings": [],
+  "record_refs": [
+    {
+      "id": "record-tiburon-town-council-agenda-center-2026-04-15",
+      "record_type": "agenda_center_page",
+      "source_id": "tiburon-town-council",
+      "artifact_path": "data/raw/tiburon-town-council/2026-04-15/source.html",
+      "captured_at": "2026-04-15T13:02:44Z"
+    }
+  ],
+  "errors": []
+}

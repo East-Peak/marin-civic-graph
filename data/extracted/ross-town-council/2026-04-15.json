@@ -1,0 +1,465 @@
+{
+  "capture_id": "ross-town-council__2026-04-15",
+  "source_id": "ross-town-council",
+  "adapter": "drupal_ross",
+  "captured_at": "2026-04-15T14:07:54Z",
+  "url": "https://townofrossca.gov/meetings",
+  "jurisdiction_id": "place-ross",
+  "institution_id": "org-ross-town-council",
+  "raw_artifact": "data/raw/ross-town-council/2026-04-15/source.html",
+  "meeting_count": 19,
+  "artifact_counts": {
+    "agenda": 13,
+    "staff_reports": 11,
+    "minutes": 8
+  },
+  "meetings": [
+    {
+      "meeting_id": "meeting-ross-town-council-2026-04-21-row-1",
+      "date": "2026-04-21",
+      "title": "Advisory Design Review Group - Cancelled",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "staff_reports": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 1
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2026-04-23-row-2",
+      "date": "2026-04-23",
+      "title": "Town of Ross Annual Budget Workshop",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "staff_reports": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 2
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2026-04-29-row-3",
+      "date": "2026-04-29",
+      "title": "Ross Town Council Meeting",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "staff_reports": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 3
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2026-05-14-row-4",
+      "date": "2026-05-14",
+      "title": "Ross Town Council Meeting - Moved to April 29, 2026",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "staff_reports": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 4
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2026-04-02-row-5",
+      "date": "2026-04-02",
+      "title": "Ross Town Council Meeting",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/4577/agenda_april_2_2026_with_cj_edits.pdf"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "staff_reports": {
+          "available": true,
+          "url": "https://townofrossca.gov/towncouncil/page/ross-town-council-meeting-1"
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 5
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2026-03-17-row-6",
+      "date": "2026-03-17",
+      "title": "Advisory Design Review Group",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/advisory_design_review_group/meeting/4595/adr_agenda_march_17_2026.pdf"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "staff_reports": {
+          "available": true,
+          "url": "https://townofrossca.gov/advisorydesignreview/page/advisory-design-review-group-0"
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 6
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2026-03-12-row-7",
+      "date": "2026-03-12",
+      "title": "Ross Town Council Meeting",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/4576/special_meeting_closed_session_agenda_031226_bs_language.pdf"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "staff_reports": {
+          "available": true,
+          "url": "https://townofrossca.gov/towncouncil/page/ross-town-council-meeting-0"
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 7
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2026-02-12-row-8",
+      "date": "2026-02-12",
+      "title": "Ross Town Council Meeting",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/4573/special_meeting_closed_session_agenda_021226_bs_edits.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/4573/february_12_2026.pdf"
+        },
+        "staff_reports": {
+          "available": true,
+          "url": "https://townofrossca.gov/towncouncil/page/ross-town-council-meeting"
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 8
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2026-02-10-row-9",
+      "date": "2026-02-10",
+      "title": "Advisory Design Review Group Meeting -CANCELLED",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "staff_reports": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 9
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2026-01-20-row-10",
+      "date": "2026-01-20",
+      "title": "Advisory Design Review Group",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/advisory_design_review_group/meeting/4571/adr_agenda_january_20_2026.pdf"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "staff_reports": {
+          "available": true,
+          "url": "https://townofrossca.gov/advisorydesignreview/page/advisory-design-review-group"
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 10
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2026-01-08-row-11",
+      "date": "2026-01-08",
+      "title": "Town Council Meeting",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/4570/special_meeting_closed_session_agenda_jan_8_2026.pdf"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "staff_reports": {
+          "available": true,
+          "url": "https://townofrossca.gov/towncouncil/page/town-council-meeting-278"
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 11
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2025-12-16-row-12",
+      "date": "2025-12-16",
+      "title": "Advisory Design Review Group Meeting",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/advisory_design_review_group/meeting/4496/adr_agenda_december_16_2025.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/advisory_design_review_group/meeting/4496/adr_minutes_december_16_2025.pdf"
+        },
+        "staff_reports": {
+          "available": true,
+          "url": "https://townofrossca.gov/advisorydesignreview/page/advisory-design-review-group-meeting-175"
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 12
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2025-12-11-row-13",
+      "date": "2025-12-11",
+      "title": "Town Council Meeting",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/4453/special_meeting_closed_session_agenda_dec_11_2025_web.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/4453/december_11_2025_special.pdf"
+        },
+        "staff_reports": {
+          "available": true,
+          "url": "https://townofrossca.gov/towncouncil/page/town-council-meeting-277"
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 13
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2025-12-11-row-14",
+      "date": "2025-12-11",
+      "title": "Town Council Closed Session",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/4567/special_meeting_closed_session_agenda_dec_11_2025_web.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/4567/december_11_2025_special.pdf"
+        },
+        "staff_reports": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 14
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2025-11-21-row-15",
+      "date": "2025-11-21",
+      "title": "Special Meeting of the Ross Town Council",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/4566/final_special_meeting_agenda_nov_21_2025.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/4566/november_21_2025.pdf"
+        },
+        "staff_reports": {
+          "available": true,
+          "url": "https://townofrossca.gov/towncouncil/page/special-meeting-ross-town-council"
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 15
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2025-11-18-row-16",
+      "date": "2025-11-18",
+      "title": "Advisory Design Review Group Meeting",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/advisory_design_review_group/meeting/4495/adr_agenda_november_18_2025.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/advisory_design_review_group/meeting/4495/adr_minutes_november_18_2025.pdf"
+        },
+        "staff_reports": {
+          "available": true,
+          "url": "https://townofrossca.gov/advisorydesignreview/page/advisory-design-review-group-meeting-174"
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 16
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2025-11-13-row-17",
+      "date": "2025-11-13",
+      "title": "Town Council Meeting",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/4452/agenda_november_13_2025.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/4452/november_13_2025.pdf"
+        },
+        "staff_reports": {
+          "available": true,
+          "url": "https://townofrossca.gov/towncouncil/page/town-council-meeting-276"
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 17
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2025-11-06-row-18",
+      "date": "2025-11-06",
+      "title": "Town Council Special Meeting Closed Session",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/4563/special_meeting_closed_session_agenda_nov_6_2025_bs_edits.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/4563/november_6_2025_closed_session.pdf"
+        },
+        "staff_reports": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 18
+    },
+    {
+      "meeting_id": "meeting-ross-town-council-2025-10-21-row-19",
+      "date": "2025-10-21",
+      "title": "Advisory Design Review Group Meeting -CANCELLED",
+      "meeting_type": "regular",
+      "institution_id": "org-ross-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "staff_reports": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townofrossca.gov/meetings",
+      "source_row_number": 19
+    }
+  ],
+  "record_refs": [
+    {
+      "id": "record-ross-town-council-meetings-page-2026-04-15",
+      "record_type": "meeting_list_page",
+      "source_id": "ross-town-council",
+      "artifact_path": "data/raw/ross-town-council/2026-04-15/source.html",
+      "captured_at": "2026-04-15T14:07:54Z"
+    }
+  ],
+  "errors": []
+}

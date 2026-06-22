@@ -1,0 +1,4726 @@
+{
+  "capture_id": "fairfax-town-council__2026-04-15",
+  "source_id": "fairfax-town-council",
+  "adapter": "proudcity",
+  "captured_at": "2026-04-15T13:54:01Z",
+  "url": "https://townoffairfaxca.gov/meetings/",
+  "jurisdiction_id": "place-fairfax",
+  "institution_id": "org-fairfax-town-council",
+  "raw_artifact": "data/raw/fairfax-town-council/2026-04-15/source.html",
+  "meeting_count": 174,
+  "artifact_counts": {
+    "agenda": 168,
+    "packet": 113,
+    "minutes": 144
+  },
+  "meetings": [
+    {
+      "meeting_id": "meeting-fairfax-town-council-council-meeting-2026-05-06",
+      "date": null,
+      "title": "Town Council Meeting",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/event/council-meeting-2026-05-06/",
+      "source_row_number": 1
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-council-meeting-2026-06-03",
+      "date": null,
+      "title": "Town Council Meeting",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/event/council-meeting-2026-06-03/",
+      "source_row_number": 2
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-council-meeting-2026-07-01",
+      "date": null,
+      "title": "Town Council Meeting",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/event/council-meeting-2026-07-01/",
+      "source_row_number": 3
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-january-10-2024",
+      "date": "2024-01-10",
+      "title": "Special Town Council Meeting: January 10, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/11/01-10-24-Special-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2024/01/Item-1.-PARC-Interviews.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/2024/03/TC-Minutes-2024-01-10.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-january-10-2024/",
+      "source_row_number": 4
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-january-24-2024",
+      "date": "2024-01-24",
+      "title": "Town Council Meeting: January 24, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/11/01-24-24-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/11/Item-1-Ord.-WHO-Zoning-Amendments.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/2024/03/TC-Minutes-2024-01-24-Special.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-january-24-2024/",
+      "source_row_number": 5
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-february-7-2024",
+      "date": "2024-02-07",
+      "title": "Town Council Meeting: February 7, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2024/02/02-07-24-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2024/02/Item-1-Childrens-Center-Council-Memo.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/2024/03/TC-Minutes-2024-02-07.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-february-7-2024/",
+      "source_row_number": 6
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-february-29-2024",
+      "date": "2024-02-29",
+      "title": "Special Town Council Meeting: February 29, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2024/02/02-29-24-Special-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2024/02/Item-1.-79-Wood-Lane-min.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/02/TC-Minutes-2024-02-29-Special.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-february-29-2024/",
+      "source_row_number": 7
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-march-6-2024",
+      "date": "2024-03-06",
+      "title": "Town Council Meeting: March 6, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/11/03-06-24-TC-Agenda-1.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2024/03/Item-1.-Staff-Report-Interviews-and-Appointments.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/02/TC-Minutes-2024-03-06.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-march-6-2024/",
+      "source_row_number": 8
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-march-6-2024",
+      "date": "2024-03-06",
+      "title": "Special Town Council Meeting: March 6, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2024/03/03-06-24-Special-TC-Agenda-1.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2024/03/Item-1.-ATT-Letter.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/02/TC-Minutes-2024-03-06.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-march-6-2024/",
+      "source_row_number": 9
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-march-29-2024",
+      "date": "2024-03-29",
+      "title": "Special Town Council Meeting: March 29, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/03/03-29-23-Special-TC-Agenda-Council-Retreat.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/03/TC-Minutes-2024-03-29-Special-Retreat.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-march-29-2024/",
+      "source_row_number": 10
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-april-3-2024",
+      "date": "2024-04-03",
+      "title": "Town Council Meeting: April 3, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2023/11/04-03-24-TC-Agenda-Closed-Session.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2023/11/Item-1.-Staff-Report-Interviews-and-Appointments.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/03/TC-Minutes-2024-04-03.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-april-3-2024/",
+      "source_row_number": 11
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-april-3-2024",
+      "date": "2024-04-03",
+      "title": "Special Town Council Meeting: April 3, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/04/04-03-24-Special-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/04/Wall-Property-Letter-to-CA-Coastal-Conservancy.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/03/TC-Minutes-2024-04-03.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-april-3-2024/",
+      "source_row_number": 12
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-may-1-2024",
+      "date": "2024-05-01",
+      "title": "Town Council Meeting: May 1, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2023/04/05-01-24-TC-Agenda-Closed-Session.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2023/11/Special-Item-1.-Staff-Report-Interviews-and-Appointments.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2023/04/TC-Minutes-2024-05-01.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-may-1-2024/",
+      "source_row_number": 13
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-may-8-2024",
+      "date": "2024-05-08",
+      "title": "Special Town Council Meeting: May 8, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/05/Town-Council-Agenda-REVISED-Special-Budget-Workshop.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/05/Item-1.-Road-Repair-Bond-Measure-Scientific-Survey-Results.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/05/TC-Minutes-2024-05-08-Special.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-may-8-2024/",
+      "source_row_number": 14
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-may-16-2024",
+      "date": "2024-05-16",
+      "title": "Closed Session Town Council Meeting: May 16, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/05/05-16-24-TC-Special-Closed-Session.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-may-16-2024/",
+      "source_row_number": 15
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-may-22-2024",
+      "date": "2024-05-22",
+      "title": "Special Town Council Meeting: May 22, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/05/05-22-24-TC-Special-Agenda-5-22-24.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/05/Item-1.-Proposed-FY24-25-Budget.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2023/04/TC-Minutes-2024-05-22-Special.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-may-22-2024/",
+      "source_row_number": 16
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-may-29-2024",
+      "date": "2024-05-29",
+      "title": "Special Town Council Meeting: May 29, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/05/05-29-24-REVISED-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/05/Item-1.-Calling-for-Election-Election-Consolidation-Candidate-Statements-and-Initiative-Measure.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/05/TC-Minutes-2024-05-29-Special.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-may-29-2024/",
+      "source_row_number": 17
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-june-5-2024",
+      "date": "2024-06-05",
+      "title": "Town Council Meeting: June 5, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/05/06-05-24-TC-Agenda-1.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/05/Special-Item-1.-Interviews.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/11/TC-Minutes-2024-06-05.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-june-5-2024/",
+      "source_row_number": 18
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-july-17-2024",
+      "date": "2024-07-17",
+      "title": "Town Council Meeting: July 17, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/06/07-17-24-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/06/Item-1.-Planning-Commission-Interview.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/11/TC-Minutes-2024-07-17.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-july-17-2024/",
+      "source_row_number": 19
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-august-7-2024",
+      "date": null,
+      "title": "Town Council Meeting: August, 7, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/08/08-07-24-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/08/Item-1.-Staff-Report-Office-of-Emergency-Management-Presentation.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/07/TC-Minutes-2024-08-07.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-august-7-2024/",
+      "source_row_number": 20
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-september-4-2024",
+      "date": "2024-09-04",
+      "title": "Town Council Meeting: September 4, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/08/09-04-24-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/08/Special-Item-1.-Boards-and-Commissions-Interviews.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/08/TC-Minutes-2024-09-04.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-september-4-2024/",
+      "source_row_number": 21
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-october-16-2024",
+      "date": "2024-10-16",
+      "title": "Town Council Meeting: October 16, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/10/10-16-24-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/10/Presentation-Item-Age-Friendly-10th-Anniversary.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/08/TC-Minutes-2024-10-16-.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-october-16-2024/",
+      "source_row_number": 22
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-november-6-2024",
+      "date": "2024-11-06",
+      "title": "Town Council Meeting: November 6, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/11/TC-Agenda-2024-11-06.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/11/Special-Item-1.-Open-Space-Interview.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/10/TC-Minutes-2024-11-06.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-november-6-2024/",
+      "source_row_number": 23
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-november-19-2024",
+      "date": "2024-11-19",
+      "title": "Special Town Council Meeting: November 19, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/11/11-19-24-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/11/Item-1.-DRAFT-08-07-24-TC-Minutes.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/10/TC-Minutes-2024-11-19-Special.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-november-19-2024/",
+      "source_row_number": 24
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-december-4-2024",
+      "date": "2024-12-04",
+      "title": "Town Council Meeting: December 4, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/11/12-04-24-TC-Agenda-1.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/11/Item-2.-Resolution-Certifying-Election-Results.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/11/TC-Minutes-2024-12-04.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-december-4-2024/",
+      "source_row_number": 25
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-december-18-2024",
+      "date": "2024-12-18",
+      "title": "Special Town Council Meeting: December 18, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/12/12-18-24-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/12/Item-1.-Anti-Camping-Ordinance-1st-Reading.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2024/11/TC-Minutes-2024-12-18-Special.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-december-18-2024/",
+      "source_row_number": 26
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-january-10-2023",
+      "date": "2023-01-10",
+      "title": "Special Town Council Meeting: January 10, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/01/01-10-23-Special-TC-Agenda-emergency-dec.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/01/Item-1-Reso-AB361.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/01/1-10-23-TC-Special-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-january-10-2023/",
+      "source_row_number": 27
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-january-10-2023",
+      "date": "2023-01-10",
+      "title": "Town Council Meeting: January 10, 2023 (CANCELED)",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/01/01-10-23-Cancellation-notice.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-january-10-2023/",
+      "source_row_number": 28
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-february-1-2023",
+      "date": "2023-02-01",
+      "title": "Town Council Meeting: February 1, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/01/02-01-23-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/01/Special-Meeting-Item-1-FOSC-Int.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/07/02-01-23-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-february-1-2023/",
+      "source_row_number": 29
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-february-15-2023",
+      "date": "2023-02-15",
+      "title": "Special Town Council Meeting: February 15, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/02/02-15-23-TC-SPEC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/02/Item-1-RVFD-Leadership-Governeance.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/07/02-15-23-TC-Spec-minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-february-15-2023/",
+      "source_row_number": 30
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-march-1-2023",
+      "date": "2023-03-01",
+      "title": "Town Council Meeting: March 1, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/02/03-01-23-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/02/1-Special-Meeting-Item-1-Interviews.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/07/03-01-23-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-march-1-2023/",
+      "source_row_number": 31
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-march-17-2023",
+      "date": "2023-03-17",
+      "title": "Special Town Council Meeting: March 17, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/03/03-17-23-TC-Agenda-Retreat.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/07/03-17-23-TC-Spec-Minutes-Retreat.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-march-17-2023/",
+      "source_row_number": 32
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-april-5-2023",
+      "date": "2023-04-05",
+      "title": "Town Council Meeting: April 5, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/01/04-05-23-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/03/1-Special-Meeting-Item-1-Interviews-and-Apptmts.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/07/04-05-23-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-april-5-2023/",
+      "source_row_number": 33
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-april-19-2023",
+      "date": "2023-04-19",
+      "title": "Special Town Council Meeting: April 19, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/04/04-19-23-TC-SPEC-Agenda-HE-NOP.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/04/Item-1-Housing-Element-Draft-NOP.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/04/04-19-23-TC-Spec-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-april-19-2023/",
+      "source_row_number": 34
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-may-3-2023",
+      "date": "2023-05-03",
+      "title": "Town Council Meeting: May 3, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/04/05-03-23-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/04/Item-2-Financials-MAR23.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/04/05-03-23-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-may-3-2023/",
+      "source_row_number": 35
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-may-19-2023",
+      "date": "2023-05-19",
+      "title": "Special Town Council Meeting: May 19, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/05/05-19-23-TC-Spec-Agenda-Budget-Workshop.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/05/Item-1-Draft-budget-FY-23-24.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/09/05-19-23-TC-Spec-Minutes-Budget-Workshop.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-may-19-2023/",
+      "source_row_number": 36
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-in-closed-session-may-30-2023",
+      "date": "2023-05-30",
+      "title": "Special Town Council Meeting in Closed Session: May 30, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/05/05-30-23-TC-SPEC-Closed-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-in-closed-session-may-30-2023/",
+      "source_row_number": 37
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-june-7-2023",
+      "date": "2023-06-07",
+      "title": "Town Council Meeting: June 7, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/06/06-07-23-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/06/Item-1-Interview-Appointment-Climate-Action-Committee-and-Emergency-Preparedness-Committee.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/09/06-07-23-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-june-7-2023/",
+      "source_row_number": 38
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-june-21-2023",
+      "date": "2023-06-21",
+      "title": "Special Town Council Meeting: June 21, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/06/06-21-23-TC-SPEC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/06/Item-1-Rent-Stabilization-and-Just-Cause-min.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/09/06-21-23-TC-Spec-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-june-21-2023/",
+      "source_row_number": 39
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-in-closed-session-june-28-2023",
+      "date": "2023-06-28",
+      "title": "Special Town Council Meeting in Closed Session: June 28, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/06/06-28-23-TC-SPEC-Closed-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-in-closed-session-june-28-2023/",
+      "source_row_number": 40
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-july-12-2023",
+      "date": "2023-07-12",
+      "title": "Town Council Meeting: July 12, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/07/07-12-23-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/07/1.-Interview-Appointment-Emergency-Preparedness-Committee.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/10/07-12-23-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-july-12-2023/",
+      "source_row_number": 41
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-in-closed-session-july-26-2023",
+      "date": "2023-07-26",
+      "title": "Special Town Council Meeting in Closed Session: July 26, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/07/07-26-23-TC-SPEC-Closed-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-in-closed-session-july-26-2023/",
+      "source_row_number": 42
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-august-2-2023",
+      "date": "2023-08-02",
+      "title": "Town Council Meeting: August 2, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/07/08-02-23-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/07/Item-01.-Planning-Commission-Interview.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/10/08-02-23-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-august-2-2023/",
+      "source_row_number": 43
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-august-7-2023",
+      "date": "2023-08-07",
+      "title": "Special Town Council Meeting: August 7, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/08/08-07-23-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/08/Item-1-Reso-correcting-tax-rate-Meas-K.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/10/08-07-23-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-august-7-2023/",
+      "source_row_number": 44
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-august-29-2023",
+      "date": "2023-08-29",
+      "title": "Special Town Council Meeting in Closed Session: August 29, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/08/08-29-23-TC-SPEC-Closed-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-august-29-2023/",
+      "source_row_number": 45
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-september-6-2023",
+      "date": "2023-09-06",
+      "title": "Town Council Meeting: September 6, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/05/09-06-23-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/08/Item-1.-EV-Acceleration-Strategy.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/11/09-06-23-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-september-6-2023/",
+      "source_row_number": 46
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-september-6-2023",
+      "date": "2023-09-06",
+      "title": "Special Town Council Meeting: September 6, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/09/09-06-23-TC-SPEC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/09/Staff-Report-Wall-Property-MOST-agrmt-c1.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/11/09-06-23-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-september-6-2023/",
+      "source_row_number": 47
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-september-13-2023",
+      "date": "2023-09-13",
+      "title": "Special Town Council Meeting: September 13, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/09/09-13-23-TC-SPEC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/09/79-Wood-Lane-e-packet.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/11/09-13-23-TC-Spec-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-september-13-2023/",
+      "source_row_number": 48
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-october-4-2023",
+      "date": "2023-10-04",
+      "title": "Town Council Meeting: October 4, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/09/10-04-23-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/09/Item-1.-Ordinance-Gas-Stations.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/11/10-04-23-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-october-4-2023/",
+      "source_row_number": 49
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-october-4-2023",
+      "date": "2023-10-04",
+      "title": "Special Town Council Meeting: October 4, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/10/10-04-23-TC-SPEC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/10/10-04-23-TC-SPEC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/11/10-04-23-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-october-4-2023/",
+      "source_row_number": 50
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-october-18-2023",
+      "date": "2023-10-18",
+      "title": "Special Town Council Meeting: October 18, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/10/10-18-23-TC-SPEC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/10/Item-1.-Open-Space-Applicant-Interview.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/05/10-18-23-TC-Special-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-october-18-2023/",
+      "source_row_number": 51
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-november-1-2023",
+      "date": "2023-11-01",
+      "title": "Town Council Meeting: November 1, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/05/11-01-23-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/10/Item-1.-Reso-MSS-Rates-Application.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/05/11-01-23-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-november-1-2023/",
+      "source_row_number": 52
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-december-6-2023",
+      "date": "2023-12-06",
+      "title": "Town Council Meeting: December 6, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/05/12-06-23-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/05/Item-1.-Council-Reorganization.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2023/05/TC-Minutes-2023-12-06.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-december-6-2023/",
+      "source_row_number": 53
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-december-13-2023",
+      "date": "2023-12-13",
+      "title": "Special Town Council Meeting: December 13, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/10/12-13-23-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2023/10/Item-2-EIR-and-Housing-Element-adoption-links.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2023/10/TC-Minutes-2023-12-13.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-december-13-2023/",
+      "source_row_number": 54
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-january-19-2022",
+      "date": "2022-01-19",
+      "title": "Town Council Meeting: January 19, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/01/01-19-22-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/01/Item-1-Reso-AB-361-virtual-meetings.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/01/01-19-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-january-19-2022/",
+      "source_row_number": 55
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-in-closed-session-february-1-2022",
+      "date": "2022-02-01",
+      "title": "Town Council Special Meeting in Closed Session: February 1, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/01/02-01-22-TC-Special-Closed-Session-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-in-closed-session-february-1-2022/",
+      "source_row_number": 56
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-february-2-2022",
+      "date": "2022-02-02",
+      "title": "Town Council Meeting: February 2, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/01/02-02-22-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/01/Item-4-Reso-AB-361-virtual-meetings.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/01/02-02-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-february-2-2022/",
+      "source_row_number": 57
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-march-2-2022",
+      "date": "2022-03-02",
+      "title": "Town Council Meeting: March 2, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/02/03-02-22-TC-Agenda_Revised.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/02/Spec-Item-1-CAC-appoint-NL.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/02/03-02-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-march-2-2022/",
+      "source_row_number": 58
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-march-2-2022",
+      "date": "2022-03-02",
+      "title": "Town Council Special Meeting: March 2, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/03/03-02-22-TC-SPEC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/03/Item-1-Support-AB-2282.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/03/03-02-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-march-2-2022/",
+      "source_row_number": 59
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-march-11-2022",
+      "date": "2022-03-11",
+      "title": "Town Council Special Meeting: March 11, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/03/03-11-22-TC-Spec-Agenda-Strategic-Plannning.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/03/03-11-22-TC-Spec-Minutes.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-march-11-2022/",
+      "source_row_number": 60
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-in-closed-session-march-24-2022",
+      "date": "2022-03-24",
+      "title": "Town Council Special Meeting in Closed Session: March 24, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/03/03-24-22-TC-Special-Closed-Session-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-in-closed-session-march-24-2022/",
+      "source_row_number": 61
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-march-30-2022",
+      "date": "2022-03-30",
+      "title": "Town Council Special Meeting: March 30, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/03/03-30-22-TC-Special-Mtg-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/03/Item-1-Emergency-Reso-Pine-Drive.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/03/03-30-22-TC-Spec-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-march-30-2022/",
+      "source_row_number": 62
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-april-6-2022",
+      "date": "2022-04-06",
+      "title": "Town Council Meeting: April 6, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/04/04-06-22-TC-AMENDED-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/04/Item-2-Proclamation-Doug-Wilson.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/04/04-06-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-april-6-2022/",
+      "source_row_number": 63
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-to-conduct-a-retreat-april-15-2022",
+      "date": "2022-04-15",
+      "title": "Town Council Special Meeting to Conduct a Retreat: April 15, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/04/04-15-22-TC-Agenda-Retreat.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/04/05-12-22-TC-Spec-Minutes.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-to-conduct-a-retreat-april-15-2022/",
+      "source_row_number": 64
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-may-4-2022",
+      "date": "2022-05-04",
+      "title": "Town Council Meeting: May 4, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/04/05-04-22-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/04/Item-1-Reso-AB-361-Resolution.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/04/05-04-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-may-4-2022/",
+      "source_row_number": 65
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-may-12-2022",
+      "date": "2022-05-12",
+      "title": "Town Council Special Meeting: May 12, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/05/05-12-22-TC-Spec-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/06/PowerPoint-Presentation-EMC.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/04/05-12-22-TC-Spec-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-may-12-2022/",
+      "source_row_number": 66
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-budget-workshop-may-13-2022",
+      "date": "2022-05-13",
+      "title": "Town Council Budget Workshop: May 13, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/05/05-13-22-TC-Spec-Agenda-Budget-Workshop.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/05/Item-2.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/05/05-13-22-TC-Spec-Minutes-Budget-Workshop.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-budget-workshop-may-13-2022/",
+      "source_row_number": 67
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-june-1-2022-2",
+      "date": "2022-06-01",
+      "title": "Town Council Meeting: June 1, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/05/06-01-22-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/05/06-01-22-TC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/05/06-01-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-june-1-2022-2/",
+      "source_row_number": 68
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-june-1-2022",
+      "date": "2022-06-01",
+      "title": "Town Council Meeting: June 1, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/05/06-01-22-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/05/Item-1-AB-361.pdf"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-june-1-2022/",
+      "source_row_number": 69
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-in-closed-session-june-14-2022",
+      "date": "2022-06-14",
+      "title": "Town Council Special Meeting \u2013 in Closed Session: June 14, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/06/06-14-22-TC-Special-Closed-Session-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-in-closed-session-june-14-2022/",
+      "source_row_number": 70
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-2-june-15-2022",
+      "date": "2022-06-15",
+      "title": "Town Council Special Meeting #2: June 15, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/06/06-15-22-TC-Spec-Agenda-2.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/06/Item-1-Management-Reso.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/06/06-15-22-TC-Spec-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-2-june-15-2022/",
+      "source_row_number": 71
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-june-15-2022",
+      "date": "2022-06-15",
+      "title": "Town Council Special Meeting: June 15, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/05/06-15-22-TC-Spec-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/06/Item-1-AB-361.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/06/06-15-22-TC-Spec-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-june-15-2022/",
+      "source_row_number": 72
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-july-6-2022",
+      "date": "2022-07-06",
+      "title": "Town Council Meeting: July 6, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/07/07-06-22-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/07/1-SPEC-Meeting-Item-1-PARC.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/06/07-06-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-july-6-2022/",
+      "source_row_number": 73
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-in-closed-session-july-12-2022",
+      "date": "2022-07-12",
+      "title": "Town Council Meeting In Closed Session: July 12, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/07/07-12-22-TC-Special-Closed-Session-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-in-closed-session-july-12-2022/",
+      "source_row_number": 74
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-continued-adjourned-meeting-july-12-2022",
+      "date": "2022-07-12",
+      "title": "Town Council Continued Adjourned Meeting: July 12, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/07/07-12-22-Adjourned-reg-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/07/Item-18-Childrens-Center-Support.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/07/07-12-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-continued-adjourned-meeting-july-12-2022/",
+      "source_row_number": 75
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-august-3-2022",
+      "date": "2022-08-03",
+      "title": "Town Council Meeting: August 3, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/07/08-03-22-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/08/2022.8.3-Homelessness.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/07/08-03-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-august-3-2022/",
+      "source_row_number": 76
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-august-3-2022",
+      "date": "2022-08-03",
+      "title": "Town Council Special Meeting: August 3, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/08/Item-1-Reso-agreement-for-DPW-Loren-Umbertis.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/07/08-03-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-august-3-2022/",
+      "source_row_number": 77
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-august-9-2022",
+      "date": "2022-08-09",
+      "title": "Town Council Special Meeting: August 9, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/08/08-09-22-TC-SPEC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/08/Item-1-HE-ad-hoc-appt.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/08/08-09-22-TC-minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-august-9-2022/",
+      "source_row_number": 78
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-september-7-2022",
+      "date": "2022-09-07",
+      "title": "Town Council Meeting: September 7, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/08/09-07-22-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/09/SPECIAL-Item-1-CAC-Interview-Appointment-N-Luttinger.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/08/9-07-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-september-7-2022/",
+      "source_row_number": 79
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-in-closed-session-september-21-2022",
+      "date": "2022-09-21",
+      "title": "Town Council Meeting in Closed Session: September 21, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/09/09-21-22-TC-Closed-SPEC-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-in-closed-session-september-21-2022/",
+      "source_row_number": 80
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-september-21-2022",
+      "date": "2022-09-21",
+      "title": "Town Council Special Meeting: September 21, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/09/09-21-22-TC-SPEC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/09/Item-1-Notice-SEIU-MOU-2022-24.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/08/09-21-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-september-21-2022/",
+      "source_row_number": 81
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-in-closed-session-october-6-2022",
+      "date": "2022-10-06",
+      "title": "Town Council Special Meeting in Closed Session: October 6, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/10/10-06-22-TC-Closed-SPEC-Closed-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-in-closed-session-october-6-2022/",
+      "source_row_number": 82
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-october-6-2022",
+      "date": "2022-10-06",
+      "title": "Town Council Meeting: October 6, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/09/10-06-22-TC-Agenda.docx.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/09/1-SPEC-Meeting-Item-1-FOSC-Application.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/09/10-6-22-TC-minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-october-6-2022/",
+      "source_row_number": 83
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-october-11-2022",
+      "date": "2022-10-11",
+      "title": "Town Council Special Meeting: October 11, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/10/10-11-22-TC-SPEC-Agenda.docx.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/10/Item-2-Reso-SEIU-MOU-FY-22-24.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/10/10-11-22-TC-minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-october-11-2022/",
+      "source_row_number": 84
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-october-13-2022",
+      "date": "2022-10-13",
+      "title": "Town Council Special Meeting: October 13, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/10/10-13-22-TC-SPEC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/10/Item-1-Reso-HE-agreement.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/10/10-13-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-october-13-2022/",
+      "source_row_number": 85
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-november-2-2022",
+      "date": "2022-11-02",
+      "title": "Town Council Meeting: November 2, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/10/11-02-22-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/10/Item-1-Reso-AB-361-Nov.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/09/11-02-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-november-2-2022/",
+      "source_row_number": 86
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-november-16-2022",
+      "date": "2022-11-16",
+      "title": "Special Town Council Meeting: November 16, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/11/11-16-22-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/11/Item-1-CAC-interview-P-Costello.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/11/11-16-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-november-16-2022/",
+      "source_row_number": 87
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-december-7-2022",
+      "date": "2022-12-07",
+      "title": "Town Council Meeting: December 7, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/12/12-07-22-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/12/Item-1-Ord-New-Gas-Sta-pohibit-2nd-rdg.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/09/12-07-22-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-december-7-2022/",
+      "source_row_number": 88
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-closed-session-january-12-2021",
+      "date": "2021-01-12",
+      "title": "Town Council Special Meeting \u2013 Closed Session: January 12, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/01/01-12-21-TC-Special-Closed-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-closed-session-january-12-2021/",
+      "source_row_number": 89
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-january-20-2021",
+      "date": "2021-01-20",
+      "title": "Town Council Meeting: January 20, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/01/01-20-21-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/01/Item-1-Oct-Nov-TC-Minutes.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/12/01-20-21-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-january-20-2021/",
+      "source_row_number": 90
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-february-3-2021",
+      "date": "2021-02-03",
+      "title": "Town Council Meeting: February 3, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/01/02-03-21-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/01/Special-Meeting-Item-1-Int-Appt-FOSC-app.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/01/2-3-21-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-february-3-2021/",
+      "source_row_number": 91
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-community-listening-session-regarding-the-renaming-of-sfd-february-6-2021",
+      "date": "2021-02-06",
+      "title": "Town Council Special Meeting \u2013 Community Listening Session Regarding the Renaming of SFD: February 6, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-community-listening-session-regarding-the-renaming-of-sfd-february-6-2021/",
+      "source_row_number": 92
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-february-17-2021",
+      "date": "2021-02-17",
+      "title": "Town Council Special Meeting: February 17, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/02/02-17-21-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/02/Item-1-Draft-12-16-20-TC-Spec-Minutes.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/01/2-17-21-TC-Spec-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-february-17-2021/",
+      "source_row_number": 93
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-march-3-2021",
+      "date": "2021-03-03",
+      "title": "Town Council Meeting: March 3, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/02/03-03-21-TC-Agenda_revised.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/02/Item-1-Financials-Sep-Dec-2020.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/02/3-3-21-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-march-3-2021/",
+      "source_row_number": 94
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-climate-action-committee-joint-study-session-march-17-2021",
+      "date": "2021-03-17",
+      "title": "Town Council-Climate Action Committee Joint Study Session: March 17, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/03/03-17-21-TC-CAC-Joint-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/03/Item-1.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/03/3-17-21-Spec-TC-CAC-Joint-Mtg-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-climate-action-committee-joint-study-session-march-17-2021/",
+      "source_row_number": 95
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-march-17-2021",
+      "date": "2021-03-17",
+      "title": "Town Council Special Meeting: March 17, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/03/03-17-21-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/03/Item-1-housing-presentation.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/03/3-17-21-TC-Spec-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-march-17-2021/",
+      "source_row_number": 96
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-annual-retreat-march-26-2021",
+      "date": "2021-03-26",
+      "title": "Town Council Special Meeting \u2013 Annual Retreat: March 26, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/03/3-26-20-TC-Agenda-Retreat.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/03/3-26-21-TC-Spec-Minutes-Retreat.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-annual-retreat-march-26-2021/",
+      "source_row_number": 97
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-annual-retreat-march-27-2021",
+      "date": "2021-03-27",
+      "title": "Town Council Special Meeting March 27, 2021 \u2013 CANCELLED",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/03/3-27-20-TC-Agenda-Retreat-Saturday.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-annual-retreat-march-27-2021/",
+      "source_row_number": 98
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-april-7-2021",
+      "date": "2021-04-07",
+      "title": "Town Council Meeting: April 7, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/04/04-07-21-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/04/Spec-Meeting-Item-1-interview-FOSC.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/03/4-7-21-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-april-7-2021/",
+      "source_row_number": 99
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-joint-study-session-with-the-planning-commission-and-town-council-april-21-2021",
+      "date": "2021-04-21",
+      "title": "Town Council-Planning Commission Joint Study Session: April 21, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/04/04-21-21-TC-PC-Joint-Special-Agenda-PC.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/04/Item-1-Joint-Session-Housing-Elem-update.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/04/4-21-21-TC-SpecJoint-PC-minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-joint-study-session-with-the-planning-commission-and-town-council-april-21-2021/",
+      "source_row_number": 100
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-april-21-2021",
+      "date": "2021-04-21",
+      "title": "Town Council Special Meeting: April 21, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/04/04-21-21-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/04/Item-1-Tree-Maint-Plan.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/04/4-21-21-TC-SpecJoint-PC-minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-april-21-2021/",
+      "source_row_number": 101
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-may-5-2021",
+      "date": "2021-05-05",
+      "title": "Town Council Meeting: May 5, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/04/05-05-21-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/04/1-SPEC-Meeting-Item-1-PC-interviews.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/04/5-5-21-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-may-5-2021/",
+      "source_row_number": 102
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-may-27-2021",
+      "date": "2021-05-27",
+      "title": "Town Council \u2013 Budget Workshop: May 27, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/05/05-27-21-TC-Spec-Meeting-Budget-Workshop.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/05/Staff-Report-Budget-Workshop-FY22.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/04/5-27-21-TC-Minutes-budget-ws.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-may-27-2021/",
+      "source_row_number": 103
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-june-1-2021",
+      "date": "2021-06-01",
+      "title": "Town Council Special Closed Session Meeting: June 1, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/05/06-01-21-TC-Special-Closed-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-june-1-2021/",
+      "source_row_number": 104
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-june-2-2021",
+      "date": "2021-06-02",
+      "title": "Town Council Meeting: June 2, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/05/06-02-21-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/05/Item-1-Financials-April21.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/05/6-2-21-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-june-2-2021/",
+      "source_row_number": 105
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-closed-session-june-16-2021",
+      "date": "2021-06-16",
+      "title": "Town Council Special Meeting \u2013 Closed Session: June 16, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/06/06-16-21-TC-Special-Closed-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-closed-session-june-16-2021/",
+      "source_row_number": 106
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-resj-joint-meeting-june-16-2021",
+      "date": "2021-06-16",
+      "title": "Town Council \u2013 RESJ Joint Meeting: June 16, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/06/06-16-21-TC-RESJ-Joint-Special-Agenda-AMENDED.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/06/6-16-21-TC-RESJ-Spec-Joint.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-resj-joint-meeting-june-16-2021/",
+      "source_row_number": 107
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-june-16-2021",
+      "date": "2021-06-16",
+      "title": "Town Council Special Meeting: June 16, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/06/06-16-21-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/06/Item-1-Resos-setting-taxes.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/06/6-16-21-TC-Spec-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-june-16-2021/",
+      "source_row_number": 108
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-in-closed-session-june-18-2021",
+      "date": "2021-06-18",
+      "title": "Town Council Special Meeting \u2013 in Closed Session: June 18, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/06/06-18-21-TC-Special-Closed-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-in-closed-session-june-18-2021/",
+      "source_row_number": 109
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-july-1-2021",
+      "date": "2021-07-01",
+      "title": "Town Council Special Meeting: July 1, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/06/07-01-21-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/07/arp-worksheet.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/06/7-01-21-TC-Minutes-ARPA-Workshop.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-july-1-2021/",
+      "source_row_number": 110
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-july-7-2021",
+      "date": "2021-07-07",
+      "title": "Town Council Meeting: July 7, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/06/07-07-21-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/07/Item-1-Police-Chief-ratification-empl-agreement.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/06/7-07-21-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-july-7-2021/",
+      "source_row_number": 111
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-august-4-2021",
+      "date": "2021-08-04",
+      "title": "Town Council Meeting: August 4, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/07/08-04-21-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/07/Special-Meeting-Item-1-Comm-Aging-Interview-Appointments.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/07/08-04-21-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-august-4-2021/",
+      "source_row_number": 112
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-september-1-2021",
+      "date": "2021-09-01",
+      "title": "Town Council Meeting: September 1, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/08/09-01-21-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/08/Spec-Item-1-Interview-appt-AHC.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/08/09-01-21-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-september-1-2021/",
+      "source_row_number": 113
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-september-22-2021",
+      "date": "2021-09-22",
+      "title": "Town Council Special Joint Meeting with the Planning Commission: September 22, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/09/09-22-21-TC-PC-Joint-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/09/Item-1-Housing-Element.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/08/09-22-21-Spec-Joint-TC-PC-minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-september-22-2021/",
+      "source_row_number": 114
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-september-22-2021-2",
+      "date": "2021-09-22",
+      "title": "Town Council Special Meeting: September 22, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/09/09-22-21-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/09/Item-1-Reso-Appoint-Approve-interim-public-works-director.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/08/09-22-21-TC-Spec-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-september-22-2021-2/",
+      "source_row_number": 115
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-october-6-2021",
+      "date": "2021-10-06",
+      "title": "Town Council Meeting: October 6, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/10/10-06-21-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/10/Spec-Mtg-Item-1-PARC-intrvw-apptmt.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/09/10-06-21-TC-minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-october-6-2021/",
+      "source_row_number": 116
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-in-closed-session-october-20-2021",
+      "date": "2021-10-20",
+      "title": "Town Council Special Meeting in Closed Session: October 20, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/10/10-20-21-TC-Special-Closed-Session-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/10/10-20-21-TC-Special-Minutes.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-in-closed-session-october-20-2021/",
+      "source_row_number": 117
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-october-20-2021",
+      "date": "2021-10-20",
+      "title": "Town Council Special Meeting: October 20, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/10/10-20-21-Revised-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/10/Item-1-Vegetation-Management-Grant-Program.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2021/10/1be36b95-tc-minutes-2021-10-20-special.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-october-20-2021/",
+      "source_row_number": 118
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-november-3-2021",
+      "date": "2021-11-03",
+      "title": "Town Council Meeting: November 3, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/10/11-03-21-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/11/Presentation-on-Homelessness.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/10/11-03-21-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-november-3-2021/",
+      "source_row_number": 119
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-closed-session-november-18-2021",
+      "date": "2021-11-18",
+      "title": "Town Council Special Meeting \u2013 Closed Session: November 18, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/11/11-18-21-TC-Special-Closed-Session-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-closed-session-november-18-2021/",
+      "source_row_number": 120
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-in-closed-session-november-23-2021",
+      "date": "2021-11-23",
+      "title": "Town Council Special Meeting in Closed Session: November 23, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/11/11-23-21-TC-Special-Closed-Session-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-in-closed-session-november-23-2021/",
+      "source_row_number": 121
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-december-1-2021",
+      "date": "2021-12-01",
+      "title": "Town Council Meeting: December 1, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/11/12-01-21-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/11/Special-Meeting-Item-1-FOSC-application.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2021/11/TC-Minutes-2021-12-01.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-december-1-2021/",
+      "source_row_number": 122
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-in-closed-session-december-9-2021",
+      "date": "2021-12-09",
+      "title": "Town Council Special Meeting in Closed Session: December 9, 2021 \u2013 CANCELLED",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/12/12-09-21-TC-Special-Closed-Session-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-in-closed-session-december-9-2021/",
+      "source_row_number": 123
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-continued-regular-meeting-december-15-2021",
+      "date": "2021-12-15",
+      "title": "Town Council Continued Regular Meeting: December 15, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/12/12-15-21-TC-Continued-Regular-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/12/Item-1-Town-manager-apptmt-and-agreement.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2021/12/TC-Minutes-2021-12-15-Adjourned.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-continued-regular-meeting-december-15-2021/",
+      "source_row_number": 124
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-december-15-2021",
+      "date": "2021-12-15",
+      "title": "Town Council Special Meeting: December 15, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/12/12-15-21-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/12/Item-1-09-22-21-draft-Spec-Joint-TC-PC-minutes.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2021/12/TC-Minutes-2021-12-15-Special-1.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-december-15-2021/",
+      "source_row_number": 125
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-special-town-council-meeting-2-december-15-2021",
+      "date": "2021-12-15",
+      "title": "Special Town Council Meeting (#2): December 15, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/12/12-15-21-TC-Special-Mtg2-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2021/12/Item-1-Emergency-Resolution-SFD-Blvd.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/2021/12/TC-Minutes-2021-12-15-Special-2.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/special-town-council-meeting-2-december-15-2021/",
+      "source_row_number": 126
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-january-15-2020",
+      "date": "2020-01-15",
+      "title": "Town Council Meeting: January 15, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/01/Item-1-Financials-Nov-2019.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/01/1-15-20-Regular-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-january-15-2020/",
+      "source_row_number": 127
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-february-5-2020",
+      "date": "2020-02-05",
+      "title": "Town Council Meeting: February 5, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/01/1Special-Meeting-Item-1.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/01/2-5-20-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-february-5-2020/",
+      "source_row_number": 128
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-march-4-2020",
+      "date": "2020-03-04",
+      "title": "Town Council Meeting: March 4, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/02/Item-1-JAN-20-Financials-Staff-Report.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/02/3-4-20-Regular-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-march-4-2020/",
+      "source_row_number": 129
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-march-17-2020",
+      "date": "2020-03-17",
+      "title": "Town Council Special Meeting: March 17, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/03/3-17-20-TC-Special-Meeting-Item.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/03/3-17-20-Spec-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-march-17-2020/",
+      "source_row_number": 130
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-april-1-2020-adjourned",
+      "date": "2020-04-01",
+      "title": "Town Council Meeting: April 1, 2020 \u2013 CANCELLED",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-april-1-2020-adjourned/",
+      "source_row_number": 131
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-april-15-2020",
+      "date": "2020-04-15",
+      "title": "Town Council Meeting: April 15, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/04/1-Draft-TC_min_3-4-20.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/03/4-15-20-Adjourned-Regular-Special-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-april-15-2020/",
+      "source_row_number": 132
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-april-15-2020",
+      "date": "2020-04-15",
+      "title": "Town Council Special Meeting: April 15, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/04/Staff-Report-business-assistance-program.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-april-15-2020/",
+      "source_row_number": 133
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-april-21-2020",
+      "date": "2020-04-21",
+      "title": "Town Council Special Meeting \u2013 Closed Session: April 21, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/04/04-21-20-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-april-21-2020/",
+      "source_row_number": 134
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-may-6-2020",
+      "date": "2020-05-06",
+      "title": "Town Council Meeting: May 6, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/05/Item-1-Financials-Feb20.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/04/5-6-20-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-may-6-2020/",
+      "source_row_number": 135
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-budget-workshop-may-15-2020",
+      "date": "2020-05-15",
+      "title": "Town Council Special Meeting \u2013 Budget Workshop: May 15, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/05/Budget-Part-1-of-2.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/05/5-15-20-TC-Spec-Minutes-Budget-WS.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-budget-workshop-may-15-2020/",
+      "source_row_number": 136
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-may-20-2020",
+      "date": "2020-05-20",
+      "title": "Town Council Special Meeting \u2013 Closed Session: May 20, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/05/05-20-20-TC-Special-Closed-Agenda.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-may-20-2020/",
+      "source_row_number": 137
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-may-27-2020",
+      "date": "2020-05-27",
+      "title": "Town Council Special Meeting \u2013 Business Outdoor Spaces: May 27, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/05/05-27-20-TC-Special-downtown-business.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/05/5-27-20-TC-Spec-Minutes-Downtown-biz-WS.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-may-27-2020/",
+      "source_row_number": 138
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-june-3-2020",
+      "date": "2020-06-03",
+      "title": "Town Council Meeting: June 3, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/05/06-03-20-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/05/Item-1-Financials-March.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/05/6-3-20-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-june-3-2020/",
+      "source_row_number": 139
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-june-17-2020",
+      "date": "2020-06-17",
+      "title": "Town Council Special Meeting: June 17, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/06/06-17-20-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/06/Item-1-Report-on-racial-equity-committee.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/06/6-17-20S-TC-Spec-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-june-17-2020/",
+      "source_row_number": 140
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-july-1-2020",
+      "date": "2020-07-01",
+      "title": "Town Council Meeting: July 1, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/06/07-01-20-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/06/Item-1-Special-Meeting-PC-Application.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/3026be96-7-1-20-tc-minutes-.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-july-1-2020/",
+      "source_row_number": 141
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-listening-session-july-15-2020",
+      "date": "2020-07-15",
+      "title": "Town Council Special Meeting \u2013 Listening Session: July 15, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/07/07-15-20-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/07/Item-1-listening-session-committee-formation.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/015a3f7b-7-15-20-tc-spec-minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-listening-session-july-15-2020/",
+      "source_row_number": 142
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-august-5-2020",
+      "date": "2020-08-05",
+      "title": "Town Council Meeting: August 5, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/07/08-05-20-TC-Agenda-1.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/07/Item-1-JUN-20-Financials.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/74f45d17-8-5-20-tc-minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-august-5-2020/",
+      "source_row_number": 143
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-august-12-2020",
+      "date": "2020-08-12",
+      "title": "Town Council Special Meeting: August 12, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/08/08-12-20-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/08/Staff-Report-RESJ-interviews.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/08/8-12-20-TC-Spec-Minutes-RESJ-interviews.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-august-12-2020/",
+      "source_row_number": 144
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-august-19-2020",
+      "date": "2020-08-19",
+      "title": "Town Council Special Meeting: August 19, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/08/08-19-20-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/08/Item-1-Staff-Report-with-Attachment.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/08/8-19-20-TC-FFA-Spec-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-august-19-2020/",
+      "source_row_number": 145
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-september-2-2020",
+      "date": "2020-09-02",
+      "title": "Town Council Meeting: September 2, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/08/09-02-20-TC-Agenda-1.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/08/Special-Mtg-Item-1-Staff-Report-Reso-RESJ-formation.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/08/9-2-20-Town-Council-and-Fairfax-Financing-Authority-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-september-2-2020/",
+      "source_row_number": 146
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-october-7-2020",
+      "date": "2020-10-07",
+      "title": "Town Council Meeting: October 7, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/4c7a5fe6-10-07-20-tc-agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/9348058b-item-1-refinancing-pension-obligations.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/09/10-7-20-TC-Reg-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-october-7-2020/",
+      "source_row_number": 147
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-october-7-2020",
+      "date": "2020-10-07",
+      "title": "Town Council Special Meeting: October 7, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/74a1ff35-10-07-20-tc-special-agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/047e20ca-special-item-1-staff-report-rhna.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/09/10-7-20-TC-Reg-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-october-7-2020/",
+      "source_row_number": 148
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-october-21-2020",
+      "date": "2020-10-21",
+      "title": "Town Council Special Meeting: October 21, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/10/0a994d23-10-21-20-tc-special-agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/10/4ec7f2f5-item-1-update-residential-rental-assistance-program.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-october-21-2020/",
+      "source_row_number": 149
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-continued-special-meeting-october-28-2020",
+      "date": "2020-10-28",
+      "title": "Town Council Continued Special Meeting: October 28, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/10/3cc958b6-10-28-20-tc-continued-special-agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/10/48db764d-item-1-update-residential-rental-assistance-program-oct-28.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/10/10-28-20-TC-Spec-minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-continued-special-meeting-october-28-2020/",
+      "source_row_number": 150
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-october-28-2020",
+      "date": "2020-10-28",
+      "title": "Town Council Special Meeting: October 28, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/10/886d3697-10-28-20-tc-special-agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/10/0c90dcce-item-1-staff-report-tup-ord-and-reso.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/10/10-28-20-TC-Spec-minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-october-28-2020/",
+      "source_row_number": 151
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-november-4-2020",
+      "date": "2020-11-04",
+      "title": "Town Council Meeting: November 4, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/10/11-04-20-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/10/Item-1-Staff-report-JUL-AUG-20-Financials.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/10/11-4-20-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-november-4-2020/",
+      "source_row_number": 152
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-november-18-2020",
+      "date": "2020-11-18",
+      "title": "Town Council Special Meeting: November 18, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/11/11-18-20-TC-Special-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/11/Item-1-Staff-Report-Interviews-Appointments.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/11/11-18-20-TC-Spec-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-november-18-2020/",
+      "source_row_number": 153
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-december-2-2020",
+      "date": "2020-12-02",
+      "title": "Town Council Meeting: December 2, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/11/12-02-20-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/11/Item-1-Council-reports.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/11/12-2-20-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-december-2-2020/",
+      "source_row_number": 154
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-december-16-2020",
+      "date": "2020-12-16",
+      "title": "Town Council Special Meeting: December 16, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/12/12-16-20-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/12/Item-1-Staff-Report-Interviews-Appointments.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/12/12-16-20-TC-Spec-and-Spec-2-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-december-16-2020/",
+      "source_row_number": 155
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-2-december-16-2020",
+      "date": "2020-12-16",
+      "title": "Town Council Special Meeting #2: December 16, 2020",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/12/12-16-20-TC-Special-Agenda-2.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/12/SPECIAL-Item-1-staff-report-subcommmittee-to-form-disaster-preparedness-committee.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/12/12-16-20-TC-Spec-and-Spec-2-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-2-december-16-2020/",
+      "source_row_number": 156
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-january-16-2019",
+      "date": "2019-01-16",
+      "title": "Town Council Meeting: January 16, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/01/Item-1-Financials-Nov18.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/01/1-16-19-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-january-16-2019/",
+      "source_row_number": 157
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-adjourned-regular-town-council-meeting-january-23-2019",
+      "date": "2019-01-23",
+      "title": "Adjourned Regular Town Council Meeting: January 23, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/01/Item-1-Financials-Nov18-1.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/01/1-23-19-TC-Adj-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/adjourned-regular-town-council-meeting-january-23-2019/",
+      "source_row_number": 158
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-february-6-2019",
+      "date": "2019-02-06",
+      "title": "Town Council Meeting: February 6, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/02/Special-Meeting-Item-1-AIR-appointment.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/01/2-06-19-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-february-6-2019/",
+      "source_row_number": 159
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-march-6-2018",
+      "date": "2019-03-06",
+      "title": "Town Council Meeting: March 6, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/03/Special-Item-1-Interview-Vol-Bd.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/04/03-06-19-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-march-6-2018/",
+      "source_row_number": 160
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-annual-retreat-march-15-2019",
+      "date": "2019-03-15",
+      "title": "Town Council Special Meeting \u2013 Annual Retreat March 15, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/03/03-15-19-TC-Special-Agenda-Retreat.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/03/03-15-19-TC-Spec-Minutes-Retreat.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-annual-retreat-march-15-2019/",
+      "source_row_number": 161
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-april-3-2019",
+      "date": "2019-04-03",
+      "title": "Town Council Meeting: April 3, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/03/1-Special-Item-1-Interview-Appt-Tree-Comm.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/06/4-03-19-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-april-3-2019/",
+      "source_row_number": 162
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-april-23-2019",
+      "date": "2019-04-23",
+      "title": "Town Council Special Meeting: April 23, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/04/Item-1-Ord-Wireless-Telecom-Facilities-5G.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/06/4-23-19-TC-Special-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-april-23-2019/",
+      "source_row_number": 163
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-may-1-2019",
+      "date": "2019-05-01",
+      "title": "Town Council Meeting: May 1, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/04/Item-1-Financials-Mar19.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/06/5-1-19-TC-Minutes-1.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-may-1-2019/",
+      "source_row_number": 164
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-may-1-2019",
+      "date": "2019-05-01",
+      "title": "Town Council Special Meeting: May 1, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/04/Special-Meeting-Item-1-Reso-Team-Marine.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/06/5-1-19-TC-Minutes.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-may-1-2019/",
+      "source_row_number": 165
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-budget-workshop-may-10-2019",
+      "date": "2019-05-10",
+      "title": "Town Council Special Meeting \u2013 Budget Workshop: May 10, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/05/Staff-Report-Budget-Workshop-2019.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/05/5-10-19-TC-Spec-Minutes-Budget-WS.pdf"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-budget-workshop-may-10-2019/",
+      "source_row_number": 166
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-june-5-2019",
+      "date": null,
+      "title": "Town Council Meeting: June, 5, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/05/Item-1-Financials-Apr19.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/05/6-5-19-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-june-5-2019/",
+      "source_row_number": 167
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-july-17-2019",
+      "date": "2019-07-17",
+      "title": "Town Council Meeting: July 17, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/07/Item-1-Financials-May19.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/07/7-17-19-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-july-17-2019/",
+      "source_row_number": 168
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-august-7-2019",
+      "date": "2019-08-07",
+      "title": "Town Council Meeting: August 7, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/08/Special-Meeting-Agenda-Item-1.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/08/8-7-19-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-august-7-2019/",
+      "source_row_number": 169
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-september-4-2019",
+      "date": "2019-09-04",
+      "title": "Town Council Meeting: September 4, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/08/Item-1-Planning-Commission-Proclamation.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/08/9-4-19-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-september-4-2019/",
+      "source_row_number": 170
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-october-2-2019",
+      "date": "2019-10-02",
+      "title": "Town Council Meeting: October 2, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/09/Item-1-Proclamation-Rose-Taber.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/09/10-2-19-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-october-2-2019/",
+      "source_row_number": 171
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-november-6-2019",
+      "date": "2019-11-06",
+      "title": "Town Council Meeting: November 6, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/11/Special-Item-1-Tree-app.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/10/11-6-19-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-november-6-2019/",
+      "source_row_number": 172
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-december-4-2019",
+      "date": "2019-12-04",
+      "title": "Town Council Meeting: December 4, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/11/item-1-nov-minutes.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/11/12-04-19-TC-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-december-4-2019/",
+      "source_row_number": 173
+    },
+    {
+      "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-december-18-2019",
+      "date": "2019-12-18",
+      "title": "Town Council Special Meeting: December 18, 2019",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/12/Item-1-Bus-Shelter-Staff-Report.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2019/12/12-18-19-TC-Spec-minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-special-meeting-december-18-2019/",
+      "source_row_number": 174
+    }
+  ],
+  "record_refs": [
+    {
+      "id": "record-fairfax-town-council-meetings-page-2026-04-15",
+      "record_type": "meeting_list_page",
+      "source_id": "fairfax-town-council",
+      "artifact_path": "data/raw/fairfax-town-council/2026-04-15/source.html",
+      "captured_at": "2026-04-15T13:54:01Z"
+    }
+  ],
+  "errors": []
+}

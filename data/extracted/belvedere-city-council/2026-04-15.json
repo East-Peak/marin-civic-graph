@@ -1,0 +1,2619 @@
+{
+  "capture_id": "belvedere-city-council__2026-04-15",
+  "source_id": "belvedere-city-council",
+  "adapter": "proudcity",
+  "captured_at": "2026-04-15T14:08:05Z",
+  "url": "https://www.cityofbelvedere.org/city-council-meetings/",
+  "jurisdiction_id": "place-belvedere",
+  "institution_id": "org-belvedere-city-council",
+  "raw_artifact": "data/raw/belvedere-city-council/2026-04-15/source.html",
+  "meeting_count": 96,
+  "artifact_counts": {
+    "packet": 95,
+    "minutes": 55
+  },
+  "meetings": [
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-may-11-2026",
+      "date": "2026-05-11",
+      "title": "City Council Meeting: May 11, 2026",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-may-11-2026/",
+      "source_row_number": 1
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-april-13-2026",
+      "date": "2026-04-13",
+      "title": "City Council Meeting: April 13, 2026",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2026/04/55e9fdb5-2026-04-13-cc-agenda.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-april-13-2026/",
+      "source_row_number": 2
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-march-9-2026",
+      "date": "2026-03-09",
+      "title": "City Council Meeting: March 9, 2026",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2026/03/4bc004f1-2026-03-09-cc-agenda.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-march-9-2026/",
+      "source_row_number": 3
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-annual-planning-session-retreat-february-23-2026",
+      "date": "2026-02-23",
+      "title": "City Council Annual Planning Session Retreat: February 23, 2026",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2026/02/4ae82dbd-2026-retreat-agenda.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-annual-planning-session-retreat-february-23-2026/",
+      "source_row_number": 4
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-febraury-9-2026",
+      "date": "2026-02-09",
+      "title": "City Council Meeting: February 9, 2026",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2026/02/9274db3e-2026-02-09-cc-agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2026/03/2c98daaf-signed-2026-02-09-minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-febraury-9-2026/",
+      "source_row_number": 5
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-january-12-2026",
+      "date": "2026-01-12",
+      "title": "City Council Meeting: January 12, 2026",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2026/01/ad47ca67-2026-01-12-cc-agenda.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-january-12-2026/",
+      "source_row_number": 6
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-december-8-2025",
+      "date": "2025-12-08",
+      "title": "City Council Meeting: December 8, 2025",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/12/ed1d305a-2025-12-08-cc-agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2026/02/84857cdf-2025-12-08-signed-minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-december-8-2025/",
+      "source_row_number": 7
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-special-city-council-meeting-december-3-2025",
+      "date": "2025-12-03",
+      "title": "Special City Council Meeting: December 3, 2025",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/12/7772ebed-2025-12-03-special-cc-agenda.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/special-city-council-meeting-december-3-2025/",
+      "source_row_number": 8
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-november-10-2025",
+      "date": "2025-11-10",
+      "title": "City Council Meeting: November 10, 2025",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/11/c71368d4-2025-11-10-cc-agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/10/47e2ac99-nov-2025-signed-minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-november-10-2025/",
+      "source_row_number": 9
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting",
+      "date": "2025-10-13",
+      "title": "City Council Meeting: October 13, 2025",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/10/fed163d6-2025-10-13-cc-agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/09/130b6bb6-signed-min.-2025-10-13-regular.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting/",
+      "source_row_number": 10
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-september-8-2025",
+      "date": "2025-09-08",
+      "title": "City Council Meeting: September 8, 2025",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/09/2025-09-08-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/10/1e0b1cde-signed-minutes-09-08-2025.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-september-8-2025/",
+      "source_row_number": 11
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-special-city-council-meeting-september-2-2025",
+      "date": "2025-09-02",
+      "title": "Special City Council Meeting: September 2, 2025",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/08/2025-09-02-CC-Special-Closed-Session-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/10/1e0b1cde-signed-minutes-09-08-2025.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/special-city-council-meeting-september-2-2025/",
+      "source_row_number": 12
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-special-city-council-meeting-august-19-2025",
+      "date": "2025-08-19",
+      "title": "Special City Council Meeting: August 19, 2025",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/08/2025-08-19-CC-Special-Closed-Session-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/08/2025-08-19-CC-Special-Closed-Session-Agenda.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/special-city-council-meeting-august-19-2025/",
+      "source_row_number": 13
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-august-11-2025",
+      "date": "2025-08-11",
+      "title": "City Council Meeting: August 11, 2025",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/08/2025-08-11-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/07/Signed-Minutes-2025-08-11.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-august-11-2025/",
+      "source_row_number": 14
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-july-14-2025",
+      "date": "2025-07-14",
+      "title": "City Council Meeting: July 14, 2025",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/07/2025-07-14-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/06/Signed-Minutes-July-14-2025.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-july-14-2025/",
+      "source_row_number": 15
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-june-9-2025",
+      "date": "2025-06-09",
+      "title": "City Council Meeting: June 9, 2025",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/06/2025-06-09-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/07/Signed-Minutes-06-09-2025.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-june-9-2025/",
+      "source_row_number": 16
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-may-12-2025",
+      "date": "2025-05-12",
+      "title": "City Council Meeting: May 12, 2025",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/05/2025-05-12CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/04/Signed-Minutes-May-2025.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-may-12-2025/",
+      "source_row_number": 17
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-april-14-2025",
+      "date": "2025-04-14",
+      "title": "City Council Meeting: April 14, 2025",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/04/2025-04-14-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/05/Signed-Minutes-2025-04-14.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-april-14-2025/",
+      "source_row_number": 18
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-march-10-2025",
+      "date": "2025-03-10",
+      "title": "City Council Meeting: March 10, 2025",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/03/2025-03-10-CC-Agenda.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-march-10-2025/",
+      "source_row_number": 19
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-february-10-2025",
+      "date": "2025-02-10",
+      "title": "City Council Meeting: February 10, 2025",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/01/2025-02-10-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/01/Signed-Minutes-2025-02-10.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-february-10-2025/",
+      "source_row_number": 20
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-january-13-2025",
+      "date": "2025-01-13",
+      "title": "City Council Meeting: January 13, 2025",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2025/01/2025-01-13-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/11/Signed-Minutes-1-13-2025.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-january-13-2025/",
+      "source_row_number": 21
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-december-9-2024",
+      "date": "2024-12-09",
+      "title": "City Council Meeting: December 9, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/12/2024-12-09-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/11/Signed-Minutes-2024-12-09.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-december-9-2024/",
+      "source_row_number": 22
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-november-12-2024",
+      "date": "2024-11-12",
+      "title": "City Council Meeting: November 12, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/11/2024-11-12-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/09/Signed-Minutes-2024-11-12.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-november-12-2024/",
+      "source_row_number": 23
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-october-14-2024",
+      "date": "2024-10-14",
+      "title": "City Council Meeting: October 14, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/10/2024-10-14-CC-Agenda.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-october-14-2024/",
+      "source_row_number": 24
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-september-9-2024",
+      "date": "2024-09-09",
+      "title": "City Council Meeting: September 9, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/09/2024-09-09-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/10/Signed-Minutes-9-9-2024.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-september-9-2024/",
+      "source_row_number": 25
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-august-12-2024",
+      "date": "2024-08-12",
+      "title": "City Council Meeting: August 12, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/08/2024-8-12-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/07/Signed-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-august-12-2024/",
+      "source_row_number": 26
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-july-08-2024",
+      "date": "2024-07-08",
+      "title": "City Council Meeting: July 08, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/07/2024-7-08-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/06/Signed-Minutes-07-08-2024.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-july-08-2024/",
+      "source_row_number": 27
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-june-10-2024",
+      "date": "2024-06-10",
+      "title": "City Council Meeting: June 10, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/06/2024-6-10-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/06/6-10-2024-Signed-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-june-10-2024/",
+      "source_row_number": 28
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-may-13-2024",
+      "date": "2024-05-13",
+      "title": "City Council Meeting: May 13, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/05/2024-05-13-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/05-13-2024-Signed-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-may-13-2024/",
+      "source_row_number": 29
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-regular-meeting-april-8-2024",
+      "date": "2024-04-08",
+      "title": "City Council Regular Meeting: April 8, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/2024-4-08-CC-Agenda-4.5.2024.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/04-08-2024-Signed-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-regular-meeting-april-8-2024/",
+      "source_row_number": 30
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-special-meeting-march-27-2024",
+      "date": "2024-03-27",
+      "title": "City Council Special Meeting: Annual Retreat, March 27, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/03/2024-3-27-SPECIAL-AGENDA.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-special-meeting-march-27-2024/",
+      "source_row_number": 31
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-regular-meeting-march-11-2024",
+      "date": "2024-03-11",
+      "title": "City Council Regular Meeting: March 11, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/2024/03/2024-3-12-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Signed-Minutes-3-11-2024.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-regular-meeting-march-11-2024/",
+      "source_row_number": 32
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-regular-meeting-february-12-2024",
+      "date": "2024-02-12",
+      "title": "City Council Regular Meeting: February 12, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2024/02/CC-Agenda-02-12-2024.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Signed-Minutes-2-12-2024.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-regular-meeting-february-12-2024/",
+      "source_row_number": 33
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-regular-meeting-january-22-2024",
+      "date": "2024-01-22",
+      "title": "City Council Regular Meeting: January 22, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2024/01/2024-1-22-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2024/02/2024-01-22-Regular-Signed-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-regular-meeting-january-22-2024/",
+      "source_row_number": 34
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-special-meeting-january-16-2024-at-530-pm",
+      "date": "2024-01-16",
+      "title": "City Council Special Meeting: January 16, 2024",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2024/01/2024-01-16-Special-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2024/02/2024-01-16-Special-Signed-Mintes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-special-meeting-january-16-2024-at-530-pm/",
+      "source_row_number": 35
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-december-11-2023",
+      "date": "2023-12-11",
+      "title": "City Council Meeting: December 11, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/12/2023-12-11-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2024/02/2023-12-11-Regular-Signed-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-december-11-2023/",
+      "source_row_number": 36
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-october-9-2023-2",
+      "date": "2023-11-13",
+      "title": "City Council Meeting: November 13, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/11/2023-11-13-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/09/2023-11-13-Signed-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-october-9-2023-2/",
+      "source_row_number": 37
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-october-9-2023",
+      "date": "2023-10-09",
+      "title": "City Council Meeting: October 9, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/10/2023-10-09-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/09/2023-10-09-Signed-Minutes.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-october-9-2023/",
+      "source_row_number": 38
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-september-11-2023",
+      "date": "2023-09-11",
+      "title": "City Council Meeting: September 11, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/09/2023.09.11-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/09/2023-09-11-Regular.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-september-11-2023/",
+      "source_row_number": 39
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-august-14-2023",
+      "date": "2023-08-14",
+      "title": "City Council Meeting: August 14, 2023 \u2013 Closed & Regular",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/09/2023.08-14-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/06/2023-08-14-Regular.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-august-14-2023/",
+      "source_row_number": 40
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-july-12-2023-2",
+      "date": "2023-07-10",
+      "title": "City Council Meeting: July 10, 2023 \u2013 Closed & Regular",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/09/2023.07-10-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/09/2023-07-10-Regular.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-july-12-2023-2/",
+      "source_row_number": 41
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-june-12-2023",
+      "date": "2023-06-12",
+      "title": "City Council Meeting: June 12, 2023 \u2013 Special Closed Session & Regular",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Closed-Session-Special-Agenda-And-Regular-Agenda.pdf"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-june-12-2023/",
+      "source_row_number": 42
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-may-8-2023",
+      "date": "2023-05-08",
+      "title": "City Council Meeting: May 8, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/09/2023.05.08-CC-Agenda.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/09/2023-05-08-Regular.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-may-8-2023/",
+      "source_row_number": 43
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-april-10-2023",
+      "date": "2023-04-10",
+      "title": "City Council Meeting: April 10, 2023 \u2013 Closed Session & Regular",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/09/Amended-Agenda-4-10-2023.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/09/2023-04-10-Regular.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-april-10-2023/",
+      "source_row_number": 44
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-special-closed-session-and-special-meeting-march-30-2023",
+      "date": "2023-03-30",
+      "title": "City Council Meeting: March 30, 2023 \u2013 Special Closed Session",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/09/2023.03.30-CC-Closed-Session-Special-cc.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-special-closed-session-and-special-meeting-march-30-2023/",
+      "source_row_number": 45
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-march-13-2023",
+      "date": "2023-03-13",
+      "title": "City Council Meeting: March 13, 2023 \u2013 Special Closed Session & Regular",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/09/2023.03.13-CC-Special-and-Regular-Agenda-w-links.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/09/2023-03-13-Regular.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-march-13-2023/",
+      "source_row_number": 46
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-special-meeting-and-annual-planning-session-march-1-2023",
+      "date": "2023-03-01",
+      "title": "City Council Meeting: March 1, 2023 \u2013 Special Annual Planning Session",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/08/2023.03.01-CC-Special-Agenda-web-PC.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-special-meeting-and-annual-planning-session-march-1-2023/",
+      "source_row_number": 47
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-special-meeting-community-information-on-coyotes-february-13-2023",
+      "date": "2023-02-16",
+      "title": "City Council Meeting: February 16, 2023 \u2013 Special Coyote Update",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/08/2023.02.16-CC-Special-Web-PC-Links.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-special-meeting-community-information-on-coyotes-february-13-2023/",
+      "source_row_number": 48
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-february-13-2023",
+      "date": "2023-02-13",
+      "title": "City Council Meeting: February 13, 2023 \u2013 Special Closed Session & Regular",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/09/2023.02.13-CC-Spec-and-Reg-Agenda-w-links-web-version.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-february-13-2023/",
+      "source_row_number": 49
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-the-city-council-special-meeting-and-annual-planning-session-meeting-for-wednesday-january-25-2023-will-be-rescheduled-to-a-later-date",
+      "date": "2023-01-25",
+      "title": "City Council Meeting: Wednesday, January 25, 2023 \u2013 Special Annual Planning Session \u2013 Rescheduled",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/08/2023.01.25-CC-Notice-of-Cancellation.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/the-city-council-special-meeting-and-annual-planning-session-meeting-for-wednesday-january-25-2023-will-be-rescheduled-to-a-later-date/",
+      "source_row_number": 50
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-special-closed-session-and-special-meeting-january-24-2023",
+      "date": "2023-01-24",
+      "title": "City Council Meeting: January 24, 2023 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/08/2023.01.24-CC-Agenda-Packet-Special-WEB.pdf"
+        },
+        "video": {
+          "available": false,
+          "url": null
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-special-closed-session-and-special-meeting-january-24-2023/",
+      "source_row_number": 51
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-january-9-2023-2",
+      "date": "2023-01-09",
+      "title": "City Council Meeting: January 9, 2023",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/uploads/2023/08/2023.01.09-CC-Agenda-Revised.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-january-9-2023-2/",
+      "source_row_number": 52
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-december-12-2022",
+      "date": "2022-12-12",
+      "title": "City Council Meeting: December 12, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-12.12.2022-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-december-12-2022/",
+      "source_row_number": 53
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-november-14-2022",
+      "date": "2022-11-14",
+      "title": "City Council Meeting: November 14, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-11.14.2022-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-november-14-2022/",
+      "source_row_number": 54
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-november-9-2022-special",
+      "date": "2022-11-09",
+      "title": "City Council Meeting: November 9, 2022 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-11.09.2022-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-november-9-2022-special/",
+      "source_row_number": 55
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-joint-city-council-and-planning-commission-meeting-october-20-2022-housing-element-workshop",
+      "date": "2022-10-20",
+      "title": "Joint City Council and Planning Commission Meeting: October 20, 2022 \u2013 Housing Element Workshop",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Planning-Commission-10.20.2022-Housing-Element-Workshop.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/joint-city-council-and-planning-commission-meeting-october-20-2022-housing-element-workshop/",
+      "source_row_number": 56
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-october-10-2022",
+      "date": "2022-10-10",
+      "title": "City Council Meeting: October 10, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-10.10.2022-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2022-10-10-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-october-10-2022/",
+      "source_row_number": 57
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-september-12-2022",
+      "date": "2022-09-12",
+      "title": "City Council Meeting: September 12, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-09.12.2022-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2022-09-12-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-september-12-2022/",
+      "source_row_number": 58
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-special-meeting-august-11-2022",
+      "date": "2022-08-11",
+      "title": "City Council Meeting: August 11, 2022 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-08.11.2022-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-special-meeting-august-11-2022/",
+      "source_row_number": 59
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-august-8-2022",
+      "date": "2022-08-08",
+      "title": "City Council Meeting: August 8, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-08.08.2022-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2022-08-08-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-august-8-2022/",
+      "source_row_number": 60
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-july-11-2022",
+      "date": "2022-07-11",
+      "title": "City Council Meeting: July 11, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-07.11.2022-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2022-07-11-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-july-11-2022/",
+      "source_row_number": 61
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-june-13-2022",
+      "date": "2022-06-13",
+      "title": "City Council Meeting: June 13, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-06.13.2022-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2022-06-13-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-june-13-2022/",
+      "source_row_number": 62
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-june-6-2022-special",
+      "date": "2022-06-06",
+      "title": "City Council Meeting: June 6, 2022 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-06.06.2022-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-june-6-2022-special/",
+      "source_row_number": 63
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-may-9-2022",
+      "date": "2022-05-09",
+      "title": "City Council Meeting: May 9, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-05.09.2022-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2022-05-09-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-may-9-2022/",
+      "source_row_number": 64
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-april-7-2022-special",
+      "date": "2022-04-07",
+      "title": "City Council Meeting: April 7, 2022 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-04.07.2022-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-april-7-2022-special/",
+      "source_row_number": 65
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-april-4-2022-special",
+      "date": "2022-04-04",
+      "title": "City Council Meeting: April 4, 2022 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-04.04.2022-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-april-4-2022-special/",
+      "source_row_number": 66
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-march-23-2022-special",
+      "date": "2022-03-23",
+      "title": "City Council Meeting: March 23, 2022 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/2022-03-23-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-march-23-2022-special/",
+      "source_row_number": 67
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-march-22-2022-special",
+      "date": "2022-03-22",
+      "title": "City Council Meeting: March 22, 2022 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/2022-03-22-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-march-22-2022-special/",
+      "source_row_number": 68
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-march-14-2022",
+      "date": "2022-03-14",
+      "title": "City Council Meeting: March 14, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-03.14.2022-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2022-03-14-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-march-14-2022/",
+      "source_row_number": 69
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-february-24-2022-special",
+      "date": "2022-02-24",
+      "title": "City Council Meeting: February 24, 2022 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-02.24.2022-Special.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2022-02-24-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-february-24-2022-special/",
+      "source_row_number": 70
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-february-14-2022",
+      "date": "2022-02-14",
+      "title": "City Council Meeting: February 14, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-02.14.2022-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2022-02-14-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-february-14-2022/",
+      "source_row_number": 71
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-january-27-2022-special",
+      "date": "2022-01-27",
+      "title": "City Council Meeting: January 27, 2022 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-01.24.2022-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-january-27-2022-special/",
+      "source_row_number": 72
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-january-24-2022-special",
+      "date": "2022-01-24",
+      "title": "City Council Meeting: January 24, 2022 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-01.24.2022-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-january-24-2022-special/",
+      "source_row_number": 73
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-january-10-2022",
+      "date": "2022-01-10",
+      "title": "City Council Meeting: January 10, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-01.10.2022-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-january-10-2022/",
+      "source_row_number": 74
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-december-21-2021-special",
+      "date": "2021-12-21",
+      "title": "City Council Meeting: December 21, 2021 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-12.21.2021-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-december-21-2021-special/",
+      "source_row_number": 75
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-december-13-2021",
+      "date": "2021-12-13",
+      "title": "City Council Meeting: December 13, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-12.13.2021-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-december-13-2021/",
+      "source_row_number": 76
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-november-29-2021-special",
+      "date": "2021-11-29",
+      "title": "City Council Meeting: November 29, 2021 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-11.29.2021-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-november-29-2021-special/",
+      "source_row_number": 77
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-november-8-2021",
+      "date": "2021-11-08",
+      "title": "City Council Meeting: November 8, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-11.08.2021-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2021-11-08-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-november-8-2021/",
+      "source_row_number": 78
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-november-3-2021-special",
+      "date": "2021-11-03",
+      "title": "City Council Meeting: November 3, 2021 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-11.03.2021-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-november-3-2021-special/",
+      "source_row_number": 79
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-october-11-2021",
+      "date": "2021-10-11",
+      "title": "City Council Meeting: October 11, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-10.11.2021-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2021-10-11-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-october-11-2021/",
+      "source_row_number": 80
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-september-13-2021-canceled",
+      "date": "2021-09-13",
+      "title": "City Council Meeting: September 13, 2021 \u2013 Canceled",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-09.13.2021-Cancelled.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-september-13-2021-canceled/",
+      "source_row_number": 81
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-august-9-2021",
+      "date": "2021-08-09",
+      "title": "City Council Meeting: August 9, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-08.09.2021-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2021-08-09-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-august-9-2021/",
+      "source_row_number": 82
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-july-29-2021-special",
+      "date": "2021-07-29",
+      "title": "City Council Meeting: July 29, 2021 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-07.29.2021-Special.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2021-07-29-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-july-29-2021-special/",
+      "source_row_number": 83
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-july-12-2021",
+      "date": "2021-07-12",
+      "title": "City Council Meeting: July 12, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-07.12.2021-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2021-07-12-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-july-12-2021/",
+      "source_row_number": 84
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-july-2-2021-special",
+      "date": "2021-07-02",
+      "title": "City Council Meeting: July 2, 2021 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-07.02.2021-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-july-2-2021-special/",
+      "source_row_number": 85
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-june-17-2021-special",
+      "date": "2021-06-17",
+      "title": "City Council Meeting: June 17, 2021 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-06.17.2021-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-june-17-2021-special/",
+      "source_row_number": 86
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-june-14-2021",
+      "date": "2021-06-14",
+      "title": "City Council Meeting: June 14, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-06.14.2021-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2021-06-14-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-june-14-2021/",
+      "source_row_number": 87
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-may-20-2021-special",
+      "date": "2021-05-20",
+      "title": "City Council Meeting: May 20, 2021 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-05.20.2021-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-may-20-2021-special/",
+      "source_row_number": 88
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-may-10-2021",
+      "date": "2021-05-10",
+      "title": "City Council Meeting: May 10, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-05.10.2021-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2021-05-10-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-may-10-2021/",
+      "source_row_number": 89
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-april-12-2021",
+      "date": "2021-04-12",
+      "title": "City Council Meeting: April 12, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-04.12.2021-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2021-04-12-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-april-12-2021/",
+      "source_row_number": 90
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-april-6-2021-special",
+      "date": "2021-04-06",
+      "title": "City Council Meeting: April 6, 2021 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-04.06.2021-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-april-6-2021-special/",
+      "source_row_number": 91
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-march-8-2021",
+      "date": "2021-03-08",
+      "title": "City Council Meeting: March 8, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-03.08.2021-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2021-03-08-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-march-8-2021/",
+      "source_row_number": 92
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-february-8-2021",
+      "date": "2021-02-08",
+      "title": "City Council Meeting: February 8, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-02.08.2021-Regular.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2021-02-08-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-february-8-2021/",
+      "source_row_number": 93
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-february-2-2021-special",
+      "date": "2021-02-02",
+      "title": "City Council Meeting: February 2, 2021 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-02.02.2021-Special.pdf"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/Minutes-2021-02-02-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-february-2-2021-special/",
+      "source_row_number": 94
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-january-19-2021-special",
+      "date": "2021-01-19",
+      "title": "City Council Meeting: January 19, 2021 \u2013 Special",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-2021-01-19-Special.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-january-19-2021-special/",
+      "source_row_number": 95
+    },
+    {
+      "meeting_id": "meeting-belvedere-city-council-city-council-meeting-january-11-2021",
+      "date": "2021-01-11",
+      "title": "City Council Meeting: January 11, 2021",
+      "meeting_type": "regular",
+      "institution_id": "org-belvedere-city-council",
+      "artifacts": {
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/belvedereca/2024/04/City-Council-2021-01-11-Regular.pdf"
+        },
+        "agenda": {
+          "available": false,
+          "url": null
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://www.cityofbelvedere.org/meetings/city-council-meeting-january-11-2021/",
+      "source_row_number": 96
+    }
+  ],
+  "record_refs": [
+    {
+      "id": "record-belvedere-city-council-meetings-page-2026-04-15",
+      "record_type": "meeting_list_page",
+      "source_id": "belvedere-city-council",
+      "artifact_path": "data/raw/belvedere-city-council/2026-04-15/source.html",
+      "captured_at": "2026-04-15T14:08:05Z"
+    }
+  ],
+  "errors": []
+}

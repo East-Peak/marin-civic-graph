@@ -1,0 +1,1095 @@
+{
+  "capture_id": "corte-madera-town-council__2026-04-14",
+  "source_id": "corte-madera-town-council",
+  "adapter": "civicplus",
+  "captured_at": "2026-04-14T21:09:40Z",
+  "url": "https://cortemadera.gov/AgendaCenter",
+  "jurisdiction_id": "place-corte-madera",
+  "institution_id": "org-corte-madera-town-council",
+  "raw_artifact": "data/raw/corte-madera-town-council/2026-04-14/source.html",
+  "meeting_count": 44,
+  "artifact_counts": {
+    "agenda": 44,
+    "minutes": 15
+  },
+  "categories": [
+    "Town Council",
+    "Bicycle Pedestrian Advisory Committee",
+    "Climate Action Committee",
+    "Finance Advisory Committee",
+    "Fire Council - Central Marin Fire Authority",
+    "Flood Control Board",
+    "Parks and Recreation Commission",
+    "Planning Commission",
+    "Sales Tax Citizens' Oversight Committee",
+    "Sanitary District No. 2 Board"
+  ],
+  "meetings": [
+    {
+      "date": "2026-04-07",
+      "title": "The agenda for the April 7, 2026 Town Council regular meeting",
+      "category": "Town Council",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_04072026-1620"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 1,
+      "agenda_id": "1620",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1620"
+    },
+    {
+      "date": "2026-03-17",
+      "title": "The agenda for the March 17, 2026 Town Council special meeting",
+      "category": "Town Council",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_03172026-1614"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Minutes/_03172026-1614"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 2,
+      "agenda_id": "1614",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1614"
+    },
+    {
+      "date": "2026-03-17",
+      "title": "The agenda for the March 17, 2026 Town Council regular meeting",
+      "category": "Town Council",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_03172026-1615"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Minutes/_03172026-1615"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 3,
+      "agenda_id": "1615",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1615"
+    },
+    {
+      "date": "2026-03-03",
+      "title": "The agenda for the March 3, 2026 council closed session special meeting",
+      "category": "Town Council",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_03032026-1609"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Minutes/_03032026-1609"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 4,
+      "agenda_id": "1609",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1609"
+    },
+    {
+      "date": "2026-03-03",
+      "title": "The agenda for the March 3, 2026 Town Council regular meeting",
+      "category": "Town Council",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_03032026-1610"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Minutes/_03032026-1610"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 5,
+      "agenda_id": "1610",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1610"
+    },
+    {
+      "date": "2026-02-17",
+      "title": "The agenda for the February 17, 2026 Town Council regular meeting",
+      "category": "Town Council",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_02172026-1605"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Minutes/_02172026-1605"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 6,
+      "agenda_id": "1605",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1605"
+    },
+    {
+      "date": "2026-02-03",
+      "title": "The agenda for the February 3, 2026 Town Council regular meeting",
+      "category": "Town Council",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_02032026-1597"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Minutes/_02032026-1597"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 7,
+      "agenda_id": "1597",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1597"
+    },
+    {
+      "date": "2026-01-23",
+      "title": "Agenda/packet for the January 23, 2026 Joint Town Council/Sanitary District No. 2 Board Strategic Planning Workshop",
+      "category": "Town Council",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_01232026-1590"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Minutes/_01232026-1590"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 8,
+      "agenda_id": "1590",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1590"
+    },
+    {
+      "date": "2026-01-20",
+      "title": "The agenda for the January 20, 2026 Town Council regular meeting",
+      "category": "Town Council",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_01202026-1589"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Minutes/_01202026-1589"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 9,
+      "agenda_id": "1589",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1589"
+    },
+    {
+      "date": "2026-01-06",
+      "title": "The agenda for the January 6, 2026 Town Council special meeting to be held immediately upon conclusion of the regular meeting",
+      "category": "Town Council",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_01062026-1585"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Minutes/_01062026-1585"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 10,
+      "agenda_id": "1585",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1585"
+    },
+    {
+      "date": "2026-01-06",
+      "title": "The agenda for the January 6, 2026 council closed session special meeting",
+      "category": "Town Council",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_01062026-1581"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Minutes/_01062026-1581"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 11,
+      "agenda_id": "1581",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1581"
+    },
+    {
+      "date": "2026-01-06",
+      "title": "The agenda for the January 6, 2026 Town Council regular meeting",
+      "category": "Town Council",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_01062026-1583"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Minutes/_01062026-1583"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 12,
+      "agenda_id": "1583",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1583"
+    },
+    {
+      "date": "2026-03-09",
+      "title": "The Agenda for the March 09, 2026 Bicycle Pedestrian Advisory Committee (BPAC) Meeting",
+      "category": "Bicycle Pedestrian Advisory Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_03092026-1611"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 13,
+      "agenda_id": "1611",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1611"
+    },
+    {
+      "date": "2026-01-12",
+      "title": "NOTICE OF CANCELLATION of the January 12, 2026 meeting of the Bicycle Pedestrian Advisory Committee.",
+      "category": "Bicycle Pedestrian Advisory Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_01122026-1586"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 14,
+      "agenda_id": "1586",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1586"
+    },
+    {
+      "date": "2026-04-15",
+      "title": "The agenda packet for the April 15, 2026 Regular Meeting of the Climate Action Committee",
+      "category": "Climate Action Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_04152026-1621"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 15,
+      "agenda_id": "1621",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1621"
+    },
+    {
+      "date": "2026-03-18",
+      "title": "The agenda packet for the March 18, 2026 Regular Meeting of the Climate Action Committee",
+      "category": "Climate Action Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_03182026-1613"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 16,
+      "agenda_id": "1613",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1613"
+    },
+    {
+      "date": "2026-02-18",
+      "title": "The agenda packet for the February 18, 2026 Regular Meeting of the Climate Action Committee",
+      "category": "Climate Action Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_02182026-1603"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 17,
+      "agenda_id": "1603",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1603"
+    },
+    {
+      "date": "2026-01-21",
+      "title": "The agenda packet for the January 21, 2026 Regular Meeting of the Climate Action Committee",
+      "category": "Climate Action Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_01212026-1592"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Minutes/_01212026-1592"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 18,
+      "agenda_id": "1592",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1592"
+    },
+    {
+      "date": "2026-02-05",
+      "title": "02/05/2026 Finance Advisory Committee meeting",
+      "category": "Finance Advisory Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_02052026-1599"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 19,
+      "agenda_id": "1599",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1599"
+    },
+    {
+      "date": "2026-02-12",
+      "title": "The agenda for the February 12, 2026 regular meeting of the Fire Council of the Central Marin Fire Authority.",
+      "category": "Fire Council - Central Marin Fire Authority",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_02122026-1602"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 20,
+      "agenda_id": "1602",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1602"
+    },
+    {
+      "date": "2026-01-29",
+      "title": "The agenda for the January 29, 2026 closed session special meeting of the Central Marin Fire Council",
+      "category": "Fire Council - Central Marin Fire Authority",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_01292026-1596"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Minutes/_01292026-1596"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 21,
+      "agenda_id": "1596",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1596"
+    },
+    {
+      "date": "2026-04-13",
+      "title": "NOTICE OF CANCELLATION - The April 13, 2026 regular meeting of the Corte Madera Flood Control Board has been cancelled.",
+      "category": "Flood Control Board",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_04132026-1622"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 22,
+      "agenda_id": "1622",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1622"
+    },
+    {
+      "date": "2026-02-09",
+      "title": "Flood Control Board Agenda for the February 09, 2026 Meeting",
+      "category": "Flood Control Board",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_02092026-1600"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 23,
+      "agenda_id": "1600",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1600"
+    },
+    {
+      "date": "2026-01-28",
+      "title": "Flood Control Board Agenda for January 28, 2026 Special Meeting (Flood Recovery Workshop)",
+      "category": "Flood Control Board",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_01282026-1595"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 24,
+      "agenda_id": "1595",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1595"
+    },
+    {
+      "date": "2026-03-23",
+      "title": "Agenda Packet for the March 23, 2026 Parks and Recreation Commission regular meeting.",
+      "category": "Parks and Recreation Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_03232026-1618"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 25,
+      "agenda_id": "1618",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1618"
+    },
+    {
+      "date": "2026-02-23",
+      "title": "Cancellation Notice for the February 23, 2026 regular meeting",
+      "category": "Parks and Recreation Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_02232026-1606"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 26,
+      "agenda_id": "1606",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1606"
+    },
+    {
+      "date": "2026-01-26",
+      "title": "Agenda Packet for the January 26, 2026 Parks and Recreation Commission regular meeting.",
+      "category": "Parks and Recreation Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_01262026-1593"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 27,
+      "agenda_id": "1593",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1593"
+    },
+    {
+      "date": "2026-01-08",
+      "title": "Agenda Packet for the January 8, 2026 Parks and Recreation Commission special regular meeting.",
+      "category": "Parks and Recreation Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_01082026-1584"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Minutes/_01082026-1584"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 28,
+      "agenda_id": "1584",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1584"
+    },
+    {
+      "date": "2026-04-14",
+      "title": "Agenda for the April 14, 2026 Planning Commission Meeting",
+      "category": "Planning Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_04142026-1623"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 29,
+      "agenda_id": "1623",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1623"
+    },
+    {
+      "date": "2026-03-24",
+      "title": "Agenda for the March 24, 2026 Planning Commission Meeting",
+      "category": "Planning Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_03242026-1617"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 30,
+      "agenda_id": "1617",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1617"
+    },
+    {
+      "date": "2026-03-10",
+      "title": "Agenda for the March 10, 2026 Planning Commission Meeting",
+      "category": "Planning Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_03102026-1612"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 31,
+      "agenda_id": "1612",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1612"
+    },
+    {
+      "date": "2026-02-24",
+      "title": "Notice of Cancellation for the February 24, 2026 Planning Commission Meeting",
+      "category": "Planning Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_02242026-1607"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 32,
+      "agenda_id": "1607",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1607"
+    },
+    {
+      "date": "2026-02-10",
+      "title": "Agenda for the February 10, 2026 Planning Commission Meeting",
+      "category": "Planning Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_02102026-1601"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 33,
+      "agenda_id": "1601",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1601"
+    },
+    {
+      "date": "2026-01-27",
+      "title": "Notice of Cancellation for the January 27, 2026 Planning Commission Meeting",
+      "category": "Planning Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_01272026-1594"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 34,
+      "agenda_id": "1594",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1594"
+    },
+    {
+      "date": "2026-01-13",
+      "title": "Notice of Cancellation for the January 13, 2026 Planning Commission Meeting",
+      "category": "Planning Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_01132026-1587"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 35,
+      "agenda_id": "1587",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1587"
+    },
+    {
+      "date": "2025-03-19",
+      "title": "The agenda packet for the March 19, 2025 meeting of the Sales Tax Citizens' Oversight Committee",
+      "category": "Sales Tax Citizens' Oversight Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_03192025-1481"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 36,
+      "agenda_id": "1481",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1481"
+    },
+    {
+      "date": "2026-04-07",
+      "title": "The April 7, 2026 regular meeting of the Board Members of Sanitary District No. 2 has been cancelled.",
+      "category": "Sanitary District No. 2 Board",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_04072026-1619"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 37,
+      "agenda_id": "1619",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1619"
+    },
+    {
+      "date": "2026-03-17",
+      "title": "The March 17, 2026 regular meeting of the Board Members of Sanitary District No. 2 has been cancelled.",
+      "category": "Sanitary District No. 2 Board",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_03172026-1616"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 38,
+      "agenda_id": "1616",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1616"
+    },
+    {
+      "date": "2026-03-03",
+      "title": "The March 3, 2026 regular meeting of the Board Members of Sanitary District No. 2 has been cancelled.",
+      "category": "Sanitary District No. 2 Board",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_03032026-1608"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 39,
+      "agenda_id": "1608",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1608"
+    },
+    {
+      "date": "2026-02-17",
+      "title": "The February 17, 2026 regular meeting of the Board Members of Sanitary District No. 2 has been cancelled.",
+      "category": "Sanitary District No. 2 Board",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_02172026-1604"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 40,
+      "agenda_id": "1604",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1604"
+    },
+    {
+      "date": "2026-02-03",
+      "title": "The February 3, 2026 regular meeting of the Board Members of Sanitary District No. 2 has been cancelled.",
+      "category": "Sanitary District No. 2 Board",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_02032026-1598"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 41,
+      "agenda_id": "1598",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1598"
+    },
+    {
+      "date": "2026-01-23",
+      "title": "The agenda for January 23, 2026 Joint Town Council/Sanitary District No. 2 Board Strategic Planning Workshop",
+      "category": "Sanitary District No. 2 Board",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_01232026-1591"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Minutes/_01232026-1591"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 42,
+      "agenda_id": "1591",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1591"
+    },
+    {
+      "date": "2026-01-20",
+      "title": "The January 20, 2026 regular meeting of the Board Members of Sanitary District No. 2 has been cancelled.",
+      "category": "Sanitary District No. 2 Board",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_01202026-1588"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 43,
+      "agenda_id": "1588",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1588"
+    },
+    {
+      "date": "2026-01-06",
+      "title": "The January 6, 2026 regular meeting of the Board Members of Sanitary District No. 2 has been cancelled.",
+      "category": "Sanitary District No. 2 Board",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cortemadera.gov/AgendaCenter/ViewFile/Agenda/_01062026-1582"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 44,
+      "agenda_id": "1582",
+      "institution_id": "org-corte-madera-town-council",
+      "meeting_id": "meeting-corte-madera-town-council-1582"
+    }
+  ],
+  "record_refs": [
+    {
+      "id": "record-corte-madera-town-council-agenda-center-2026-04-14",
+      "record_type": "agenda_center_page",
+      "source_id": "corte-madera-town-council",
+      "artifact_path": "data/raw/corte-madera-town-council/2026-04-14/source.html",
+      "captured_at": "2026-04-14T21:09:40Z"
+    }
+  ],
+  "errors": []
+}

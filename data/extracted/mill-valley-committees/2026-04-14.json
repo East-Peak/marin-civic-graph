@@ -1,0 +1,1048 @@
+{
+  "capture_id": "mill-valley-committees__2026-04-14",
+  "source_id": "mill-valley-committees",
+  "adapter": "civicplus",
+  "captured_at": "2026-04-14T21:10:08Z",
+  "url": "https://cityofmillvalley.org/AgendaCenter",
+  "jurisdiction_id": "place-mill-valley",
+  "institution_id": "org-mill-valley-committees",
+  "raw_artifact": "data/raw/mill-valley-committees/2026-04-14/source.html",
+  "meeting_count": 42,
+  "artifact_counts": {
+    "agenda": 42,
+    "minutes": 9,
+    "packet": 2
+  },
+  "categories": [
+    "Arts Commission",
+    "Design Advisory Committee",
+    "Emergency Preparedness Commission",
+    "Infrastructure Funding Study Committee",
+    "Library Board of Trustees",
+    "Parks & Recreation Commission",
+    "Planning Commission",
+    "Sewerage Agency of Southern Marin Board of Commissioners",
+    "Transportation & Mobility Advisory Committee",
+    "Zoning Administrator"
+  ],
+  "meetings": [
+    {
+      "date": "2026-04-14",
+      "title": "Arts Commission Regular Meeting Agenda (PDF)",
+      "category": "Arts Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_04142026-575"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 1,
+      "agenda_id": "575",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-575"
+    },
+    {
+      "date": "2026-03-10",
+      "title": "Arts Commission Regular Meeting Agenda (PDF)",
+      "category": "Arts Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_03102026-564"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 2,
+      "agenda_id": "564",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-564"
+    },
+    {
+      "date": "2026-02-10",
+      "title": "Arts Commission Regular Meeting Agenda (PDF)",
+      "category": "Arts Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_02102026-554"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 3,
+      "agenda_id": "554",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-554"
+    },
+    {
+      "date": "2026-01-13",
+      "title": "Arts Commission Regular Meeting Agenda (PDF)",
+      "category": "Arts Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_01132026-547"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Minutes/_01132026-547"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 4,
+      "agenda_id": "547",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-547"
+    },
+    {
+      "date": "2021-10-20",
+      "title": "Design Advisory Committee Agenda 10/20/2021 (PDF)",
+      "category": "Design Advisory Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_10202021-118"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 5,
+      "agenda_id": "118",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-118"
+    },
+    {
+      "date": "2021-10-20",
+      "title": "Design Advisory Committee Presentation (PDF)",
+      "category": "Design Advisory Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_10202021-119"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 6,
+      "agenda_id": "119",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-119"
+    },
+    {
+      "date": "2021-04-21",
+      "title": "Design Advisory Committee Regular Meeting Materials",
+      "category": "Design Advisory Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_04212021-33"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 7,
+      "agenda_id": "33",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-33"
+    },
+    {
+      "date": "2021-03-17",
+      "title": "Design Advisory Committee Regular Meeting Materials",
+      "category": "Design Advisory Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_03172021-34"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_03172021-34?packet=true"
+        }
+      },
+      "source_row_number": 8,
+      "agenda_id": "34",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-34"
+    },
+    {
+      "date": "2026-04-09",
+      "title": "Emergency Preparedness Commission Agenda April 9, 2026",
+      "category": "Emergency Preparedness Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_04092026-572"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 9,
+      "agenda_id": "572",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-572"
+    },
+    {
+      "date": "2026-03-12",
+      "title": "Emergency Preparedness Commission Agenda March 12, 2026",
+      "category": "Emergency Preparedness Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_03122026-562"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 10,
+      "agenda_id": "562",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-562"
+    },
+    {
+      "date": "2026-02-12",
+      "title": "Emergency Preparedness Commission Agenda February 12, 2026",
+      "category": "Emergency Preparedness Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_02122026-553"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Minutes/_02122026-553"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 11,
+      "agenda_id": "553",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-553"
+    },
+    {
+      "date": "2026-01-08",
+      "title": "Emergency Preparedness Commission Agenda January 8, 2026",
+      "category": "Emergency Preparedness Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_01082026-544"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Minutes/_01082026-544"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 12,
+      "agenda_id": "544",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-544"
+    },
+    {
+      "date": "2023-11-15",
+      "title": "Infrastructure Funding Study Committee Meeting Agenda, November 15, 2023",
+      "category": "Infrastructure Funding Study Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_11152023-318"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 13,
+      "agenda_id": "318",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-318"
+    },
+    {
+      "date": "2023-11-08",
+      "title": "Infrastructure Funding Study Committee Meeting Agenda, November 8, 2023",
+      "category": "Infrastructure Funding Study Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_11082023-314"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 14,
+      "agenda_id": "314",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-314"
+    },
+    {
+      "date": "2023-10-24",
+      "title": "Infrastructure Funding Study Committee Meeting Agenda, October 24, 2023",
+      "category": "Infrastructure Funding Study Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_10242023-311"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 15,
+      "agenda_id": "311",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-311"
+    },
+    {
+      "date": "2023-10-03",
+      "title": "Infrastructure Funding Study Committee Meeting Agenda, October 3, 2023",
+      "category": "Infrastructure Funding Study Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_10032023-303"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 16,
+      "agenda_id": "303",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-303"
+    },
+    {
+      "date": "2023-09-11",
+      "title": "Infrastructure Funding Study Committee Meeting Agenda, September 11, 2023",
+      "category": "Infrastructure Funding Study Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_09112023-294"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Minutes/_09112023-294"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 17,
+      "agenda_id": "294",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-294"
+    },
+    {
+      "date": "2026-04-02",
+      "title": "Library Board of Trustees Regular Meeting Agenda (PDF)",
+      "category": "Library Board of Trustees",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_04022026-571"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 18,
+      "agenda_id": "571",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-571"
+    },
+    {
+      "date": "2026-03-12",
+      "title": "Library Board of Trustees Regular Meeting Notice of Cancellation (PDF)",
+      "category": "Library Board of Trustees",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_03122026-565"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 19,
+      "agenda_id": "565",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-565"
+    },
+    {
+      "date": "2026-02-12",
+      "title": "Library Board of Trustees Regular Meeting Agenda (PDF)",
+      "category": "Library Board of Trustees",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_02122026-556"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 20,
+      "agenda_id": "556",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-556"
+    },
+    {
+      "date": "2026-01-08",
+      "title": "Library Board of Trustees Regular Meeting Agenda (PDF)",
+      "category": "Library Board of Trustees",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_01082026-546"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Minutes/_01082026-546"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 21,
+      "agenda_id": "546",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-546"
+    },
+    {
+      "date": "2026-03-31",
+      "title": "Parks & Recreation Special Meeting Agenda (PDF)",
+      "category": "Parks & Recreation Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_03312026-570"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 22,
+      "agenda_id": "570",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-570"
+    },
+    {
+      "date": "2026-03-04",
+      "title": "Parks & Recreation Regular Meeting Agenda (PDF)",
+      "category": "Parks & Recreation Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_03042026-561"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 23,
+      "agenda_id": "561",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-561"
+    },
+    {
+      "date": "2026-02-04",
+      "title": "Parks and Recreation Commission Regular Meeting Agenda (PDF)",
+      "category": "Parks & Recreation Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_02042026-552"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 24,
+      "agenda_id": "552",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-552"
+    },
+    {
+      "date": "2026-01-07",
+      "title": "Parks and Recreation Commission Regular Meeting - Notice of Cancellation (PDF)",
+      "category": "Parks & Recreation Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_01072026-545"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 25,
+      "agenda_id": "545",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-545"
+    },
+    {
+      "date": "2026-04-14",
+      "title": "Planning Commission Agenda",
+      "category": "Planning Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_04142026-573"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 26,
+      "agenda_id": "573",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-573"
+    },
+    {
+      "date": "2026-03-24",
+      "title": "Planning Commission Agenda",
+      "category": "Planning Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_03242026-568"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 27,
+      "agenda_id": "568",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-568"
+    },
+    {
+      "date": "2026-03-10",
+      "title": "Planning Commission Agenda",
+      "category": "Planning Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_03102026-563"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 28,
+      "agenda_id": "563",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-563"
+    },
+    {
+      "date": "2026-02-24",
+      "title": "Planning Commission Agenda",
+      "category": "Planning Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_02242026-560"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 29,
+      "agenda_id": "560",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-560"
+    },
+    {
+      "date": "2026-02-10",
+      "title": "Planning Commission Agenda",
+      "category": "Planning Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_02102026-555"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 30,
+      "agenda_id": "555",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-555"
+    },
+    {
+      "date": "2026-01-27",
+      "title": "Planning Commission Agenda",
+      "category": "Planning Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_01272026-551"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 31,
+      "agenda_id": "551",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-551"
+    },
+    {
+      "date": "2026-01-13",
+      "title": "Planning Commission Agenda",
+      "category": "Planning Commission",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_01132026-543"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 32,
+      "agenda_id": "543",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-543"
+    },
+    {
+      "date": "2026-04-16",
+      "title": "Sewerage Agency of Southern Marin Board of Commissioners Regular Meeting Agenda",
+      "category": "Sewerage Agency of Southern Marin Board of Commissioners",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_04162026-574"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 33,
+      "agenda_id": "574",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-574"
+    },
+    {
+      "date": "2026-03-12",
+      "title": "Sewerage Agency of Southern Marin Board of Commissioners Meeting CANCELLED",
+      "category": "Sewerage Agency of Southern Marin Board of Commissioners",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_03122026-569"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_03122026-569?packet=true"
+        }
+      },
+      "source_row_number": 34,
+      "agenda_id": "569",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-569"
+    },
+    {
+      "date": "2026-02-19",
+      "title": "Sewerage Agency of Southern Marin Board of Commissioners Regular Meeting Agenda",
+      "category": "Sewerage Agency of Southern Marin Board of Commissioners",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_02192026-558"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 35,
+      "agenda_id": "558",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-558"
+    },
+    {
+      "date": "2026-02-19",
+      "title": "Sewerage Agency of Southern Marin Board of Commissioners Closed Session Agenda",
+      "category": "Sewerage Agency of Southern Marin Board of Commissioners",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_02192026-559"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 36,
+      "agenda_id": "559",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-559"
+    },
+    {
+      "date": "2026-01-15",
+      "title": "Sewerage Agency of Southern Marin Board of Commissioners Regular Meeting Packet",
+      "category": "Sewerage Agency of Southern Marin Board of Commissioners",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_01152026-548"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Minutes/_01152026-548"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 37,
+      "agenda_id": "548",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-548"
+    },
+    {
+      "date": "2026-03-23",
+      "title": "Traffic & Mobility Advisory Committee (TMAC) Agenda \u2014 March 23, 2026",
+      "category": "Transportation & Mobility Advisory Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_03232026-567"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 38,
+      "agenda_id": "567",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-567"
+    },
+    {
+      "date": "2026-01-21",
+      "title": "Traffic & Mobility Advisory Committee (TMAC) Agenda \u2014 January 21, 2026",
+      "category": "Transportation & Mobility Advisory Committee",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_01212026-550"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Minutes/_01212026-550"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 39,
+      "agenda_id": "550",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-550"
+    },
+    {
+      "date": "2026-03-17",
+      "title": "Zoning Administrator Agenda",
+      "category": "Zoning Administrator",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_03172026-566"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Minutes/_03172026-566"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 40,
+      "agenda_id": "566",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-566"
+    },
+    {
+      "date": "2026-02-17",
+      "title": "Zoning Administrator Agenda",
+      "category": "Zoning Administrator",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_02172026-557"
+        },
+        "minutes": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Minutes/_02172026-557"
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 41,
+      "agenda_id": "557",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-557"
+    },
+    {
+      "date": "2026-01-20",
+      "title": "Zoning Administrator Agenda",
+      "category": "Zoning Administrator",
+      "meeting_type": "regular",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://cityofmillvalley.org/AgendaCenter/ViewFile/Agenda/_01202026-549"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "packet": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_row_number": 42,
+      "agenda_id": "549",
+      "institution_id": "org-mill-valley-committees",
+      "meeting_id": "meeting-mill-valley-committees-549"
+    }
+  ],
+  "record_refs": [
+    {
+      "id": "record-mill-valley-committees-agenda-center-2026-04-14",
+      "record_type": "agenda_center_page",
+      "source_id": "mill-valley-committees",
+      "artifact_path": "data/raw/mill-valley-committees/2026-04-14/source.html",
+      "captured_at": "2026-04-14T21:10:08Z"
+    }
+  ],
+  "errors": []
+}
