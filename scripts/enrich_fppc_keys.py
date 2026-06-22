@@ -26,9 +26,18 @@ import re
 from pathlib import Path
 from typing import Any
 
-from org_resolution import KEY_NORMALIZERS
+from org_resolution import KEY_NORMALIZERS, propose_org_resolutions
+from identity_ledger import read_assertions, write_assertions
+from enrich_org_keys import assertion_for_approved_candidate
+
+POLICY_VERSION = "fppc-lane-v1"
 
 _YEAR_TOKEN = re.compile(r"\b(?:19|20)\d{2}\b")
+
+# Synthetic FPPC key-anchor id prefix (mirrors Lane 1 `org-bmf-ein-*` / Lane 2
+# `org-casos-*`). An approved attach links `org-fppc-<committee_id>` to the real
+# `org-*`. Registered in the exporter's trusted prefixes + dedup's anchor set.
+FPPC_ANCHOR_PREFIX = "org-fppc-"
 
 
 def _normalize_committee_id(value: Any) -> str | None:
@@ -167,3 +176,128 @@ def parse_filername(path: Path, *, allowlist: frozenset[str] | None = None) -> l
             "source": "cal_access",
         })
     return refs
+
+
+# ---------------------------------------------------------------------------
+# Year-gated resolution (Predeclared 3/4) — org-* contributor committees
+# (name-only in source) -> committee_id, via the resolver's name signal GATED on
+# election year. All proposals are `queued`; NONE auto-attached (cardinal rule);
+# the lane NEVER proposes a candidate spanning two distinct FILER_IDs.
+# ---------------------------------------------------------------------------
+
+
+def resolve_committee_ids(
+    org_nodes: list[dict[str, Any]], registry_refs: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Propose `queued` committee_id candidates linking an `org-*` contributor
+    committee to a `org-fppc-<committee_id>` anchor. YEAR GATE: an org only
+    matches a registry ref whose election_year EQUALS the org's name-year (None
+    matches None — a perennial committee; any year mismatch, incl. one-sided, is
+    skipped). If exactly one committee_id matches it is proposed; 0 or >1
+    (ambiguous) is WITHHELD — never a guess, never a cross-cycle collapse."""
+    register_committee_id_normalizer()
+    candidates: list[dict[str, Any]] = []
+    for org in org_nodes:
+        if org.get("node_type") != "Organization":
+            continue
+        org_name = org["display_label"]
+        org_year = _election_year(org_name)
+        matches: dict[str, list[dict[str, Any]]] = {}
+        for ref in registry_refs:
+            if org_year != ref.get("election_year"):
+                continue  # YEAR GATE — cycle safety
+            _edges, cands = propose_org_resolutions(
+                [{"id": org["id"], "display_label": org_name}],
+                [{"id": ref["committee_id"], "display_label": ref["display_label"]}],
+                identity_keys=(),
+            )
+            if cands:
+                matches.setdefault(ref["committee_id"], []).append(cands[0])
+        if len(matches) != 1:
+            continue  # 0 = no match; >1 = ambiguous -> withhold
+        committee_id, hits = next(iter(matches.items()))
+        best = max(hits, key=lambda c: c.get("confidence", 0))
+        # convention (EIN/sos/County): subject = the new key anchor, candidate =
+        # the existing org. SAME_AS (anchor -> org) + the approved assertion follow.
+        candidates.append({
+            "subject_ref": FPPC_ANCHOR_PREFIX + committee_id,
+            "candidate_ref": org["id"],
+            "committee_id": committee_id,
+            "signals": best["signals"],
+            "confidence": best.get("confidence"),
+            "status": "queued",
+            "election_year": org_year,
+            "evidence_record_ids": [],
+            "source": "fppc_committee_id",
+        })
+    return sorted(candidates, key=lambda c: (c["candidate_ref"], c["committee_id"]))
+
+
+# ---------------------------------------------------------------------------
+# Approve flow (Predeclared 5, Codex r1 blocker). build_attach.py builds all
+# attaches at once and write_assertions-OVERWRITES, so a 3rd lane needs a
+# read-merge-write that PRESERVES the existing ledger rows.
+# ---------------------------------------------------------------------------
+
+
+def merge_approved_assertions(
+    new_assertions: list[dict[str, Any]], ledger_path: Path
+) -> list[dict[str, Any]]:
+    """Read the existing ledger, add `new_assertions`, write back — PRESERVING
+    every existing row (the live key-attach assertions must survive byte-for-byte).
+    De-dup by assertion id: an exact-payload duplicate is a no-op; the SAME id
+    with a DIFFERENT payload FAILS LOUD (assertion ids exclude reviewer/date/
+    evidence, so a divergent payload is a real conflict, never a silent mutation)."""
+    ledger_path = Path(ledger_path)
+    by_id = {a["id"]: a for a in read_assertions(ledger_path)}
+    for assertion in new_assertions:
+        aid = assertion["id"]
+        prior = by_id.get(aid)
+        if prior is None:
+            by_id[aid] = assertion
+        elif json.dumps(prior, sort_keys=True) != json.dumps(assertion, sort_keys=True):
+            raise ValueError(
+                f"assertion {aid} already exists with a DIFFERENT payload — "
+                "refusing to mutate the ledger (fix the conflict explicitly)"
+            )
+        # else: exact duplicate -> no-op
+    merged = list(by_id.values())
+    write_assertions(merged, ledger_path)
+    return merged
+
+
+def build_committee_attach(
+    candidate: dict[str, Any],
+    real_org_ref: dict[str, Any],
+    *,
+    reviewer: str,
+    decided_at: str,
+    policy_version: str = POLICY_VERSION,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """For an operator-APPROVED committee_id candidate, build (assertion, SAME_AS
+    edge) — mirroring build_attach.py: subject = the `org-fppc-<id>` key anchor
+    (carrying committee_id + entity_class committee), target = the real `org-*`;
+    basis `operator_approved_committee_id`; SAME_AS anchor -> org citing the
+    assertion id. Reuses the shipped `assertion_for_approved_candidate`."""
+    anchor_id = candidate["subject_ref"]
+    committee_id = candidate["committee_id"]
+    subject = {
+        "id": anchor_id,
+        "display_label": real_org_ref.get("display_label", anchor_id),
+        "committee_id": committee_id,
+        "entity_class": "committee",
+        "source": "fppc",
+    }
+    target = real_org_ref if real_org_ref.get("id") else {"id": candidate["candidate_ref"]}
+    assertion = assertion_for_approved_candidate(
+        candidate, subject=subject, target=target,
+        basis="operator_approved_committee_id",
+        reviewer=reviewer, decided_at=decided_at, policy_version=policy_version,
+    )
+    same_as = {
+        "source_id": anchor_id,
+        "target_id": candidate["candidate_ref"],
+        "relationship_type": "SAME_AS",
+        "properties": {"basis": "operator_approved_committee_id", "assertion_id": assertion["id"]},
+    }
+    return assertion, same_as

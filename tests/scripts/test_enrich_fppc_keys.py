@@ -14,13 +14,32 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from org_resolution import KEY_NORMALIZERS  # noqa: E402
+import json  # noqa: E402
+
 from enrich_fppc_keys import (  # noqa: E402
+    FPPC_ANCHOR_PREFIX,
     _election_year,
     _normalize_committee_id,
+    build_committee_attach,
     filer_spine_refs,
+    merge_approved_assertions,
     parse_filername,
     register_committee_id_normalizer,
+    resolve_committee_ids,
 )
+from identity_ledger import read_assertions, write_assertions  # noqa: E402
+
+_LIVE_LEDGER = Path(__file__).resolve().parents[2] / "data" / "identity" / "assertions.jsonl"
+
+
+def _org(org_id, name):
+    return {"id": org_id, "node_type": "Organization", "labels": ["Organization"],
+            "display_label": name, "properties": {}}
+
+
+def _reg(committee_id, name, year):
+    return {"committee_id": committee_id, "display_label": name,
+            "election_year": year, "source": "cal_access"}
 
 _FILERNAME_FIXTURE = (
     Path(__file__).resolve().parents[1] / "fixtures" / "fppc" / "filername_slice.tsv"
@@ -144,6 +163,128 @@ def test_parse_filername_cp1252_allowlist_and_aliases():
     # election_year derived from the name token
     assert all(r["election_year"] == "2022" for r in by_id["1439160"])
     assert by_id["1456428"][0]["election_year"] == "2026"
-    # CP1252 decoding: the accented committee name round-trips (not mojibake)
-    assert "COMITÉ LATINO PARA MARIN 2024" in {r["display_label"] for r in refs}
+    assert "LATINO COALITION FOR MARIN 2024" in {r["display_label"] for r in refs}
     assert all(r["source"] == "cal_access" for r in refs)
+
+
+def test_parse_filername_decodes_cp1252_bytes(tmp_path):
+    # The real Cal-Access files are CP1252, not UTF-8 — prove the parser decodes a
+    # genuine non-UTF-8 byte (É = 0xC9). Generated to tmp (never committed: a
+    # committed non-UTF-8 byte would break the repo-wide UTF-8 text scans).
+    f = tmp_path / "filername_cp1252.tsv"
+    rows = [
+        ["FILER_ID", "NAML", "FILER_TYPE"],
+        ["1470900", "COMITÉ LATINO PARA MARIN 2024", "RECIPIENT COMMITTEE"],
+    ]
+    f.write_bytes(("\n".join("\t".join(r) for r in rows) + "\n").encode("cp1252"))
+    assert b"\xc9" in f.read_bytes()  # genuinely non-UTF-8
+    refs = parse_filername(f)
+    assert refs[0]["display_label"] == "COMITÉ LATINO PARA MARIN 2024"  # decoded, not mojibake
+
+
+# --------------------------------------------------------------------------
+# Unit 4 — year-gated resolution (org name -> committee_id, queued only)
+# --------------------------------------------------------------------------
+
+_BONTA_REGISTRY = [
+    _reg("1439160", "Bonta for Attorney General 2022", "2022"),
+    _reg("1456428", "Bonta for Attorney General 2026", "2026"),
+]
+
+
+def test_year_gate_picks_matching_cycle_only():
+    orgs = [_org("org-bonta-for-attorney-general-2022", "Bonta for Attorney General 2022")]
+    cands = resolve_committee_ids(orgs, _BONTA_REGISTRY)
+    assert len(cands) == 1
+    c = cands[0]
+    assert c["committee_id"] == "1439160"                          # 2022, NOT 2026
+    # convention (matches EIN/sos/County): subject = the key anchor, candidate = the existing org
+    assert c["subject_ref"] == FPPC_ANCHOR_PREFIX + "1439160"
+    assert c["candidate_ref"] == "org-bonta-for-attorney-general-2022"
+    assert c["status"] == "queued"                                 # NEVER auto-attached
+    assert c["election_year"] == "2022"
+
+
+def test_no_year_org_against_yearly_refs_withheld():
+    orgs = [_org("org-bonta-for-attorney-general", "Bonta for Attorney General")]  # no year
+    assert resolve_committee_ids(orgs, _BONTA_REGISTRY) == []      # cannot disambiguate cycle
+
+
+def test_perennial_no_year_both_sides_matches():
+    reg = [_reg("1352318", "Marin Association of Public Employees PAC", None)]
+    orgs = [_org("org-mape-pac", "Marin Association of Public Employees PAC")]
+    cands = resolve_committee_ids(orgs, reg)
+    assert len(cands) == 1 and cands[0]["committee_id"] == "1352318"
+
+
+def test_no_name_match_no_candidate():
+    orgs = [_org("org-acme-llc", "Acme Plumbing LLC")]
+    assert resolve_committee_ids(orgs, _BONTA_REGISTRY) == []
+
+
+def test_ambiguous_same_year_two_committee_ids_withheld():
+    reg = [
+        _reg("2000001", "Friends of the Library 2024", "2024"),
+        _reg("2000002", "Friends of the Library 2024", "2024"),  # same name+year, different id
+    ]
+    orgs = [_org("org-friends-of-the-library-2024", "Friends of the Library 2024")]
+    assert resolve_committee_ids(orgs, reg) == []                  # >1 committee_id -> withheld
+
+
+# --------------------------------------------------------------------------
+# Unit 5 — read-merge-write ledger helper (Codex r1 blocker) + attach builder
+# --------------------------------------------------------------------------
+
+def _assertion(aid, status="approved", basis="operator_approved_committee_id"):
+    return {"id": aid, "status": status, "basis": basis, "subject_ref": "s", "target_ref": "t"}
+
+
+def test_merge_preserves_existing_and_adds_new(tmp_path):
+    ledger = tmp_path / "assertions.jsonl"
+    write_assertions([_assertion("assertion-aaa"), _assertion("assertion-bbb")], ledger)
+    merge_approved_assertions([_assertion("assertion-ccc")], ledger)
+    ids = {a["id"] for a in read_assertions(ledger)}
+    assert ids == {"assertion-aaa", "assertion-bbb", "assertion-ccc"}
+
+
+def test_merge_exact_duplicate_is_noop(tmp_path):
+    ledger = tmp_path / "assertions.jsonl"
+    write_assertions([_assertion("assertion-aaa")], ledger)
+    merge_approved_assertions([_assertion("assertion-aaa")], ledger)  # identical -> no-op
+    assert len(read_assertions(ledger)) == 1
+
+
+def test_merge_same_id_different_payload_fails_loud(tmp_path):
+    ledger = tmp_path / "assertions.jsonl"
+    write_assertions([_assertion("assertion-aaa", status="approved")], ledger)
+    with pytest.raises(ValueError, match="assertion-aaa"):
+        merge_approved_assertions([_assertion("assertion-aaa", status="rejected_entity_distinct")], ledger)
+
+
+def test_merge_seeds_live_68_and_all_survive(tmp_path):
+    # Codex r1 blocker / Completion 5: the live 68 attach rows survive byte-for-byte
+    assert _LIVE_LEDGER.is_file(), "BLOCKED: live ledger missing"
+    seeded = tmp_path / "assertions.jsonl"
+    original_lines = _LIVE_LEDGER.read_text(encoding="utf-8").splitlines()
+    seeded.write_text("\n".join(original_lines) + "\n", encoding="utf-8")
+    assert len(original_lines) == 68
+    merge_approved_assertions([_assertion("assertion-new-committee")], seeded)
+    out_lines = set(seeded.read_text(encoding="utf-8").splitlines())
+    assert set(original_lines) <= out_lines        # every one of the 68 survives byte-for-byte
+    assert len(out_lines) == 69
+
+
+def test_build_committee_attach_assertion_and_same_as():
+    cand = {"subject_ref": "org-fppc-1439160", "candidate_ref": "org-bonta-for-attorney-general-2022",
+            "committee_id": "1439160", "evidence_record_ids": []}
+    real = {"id": "org-bonta-for-attorney-general-2022", "display_label": "Bonta for Attorney General 2022"}
+    assertion, same_as = build_committee_attach(
+        cand, real, reviewer="stuart@eastpeak.cc", decided_at="2026-06-22")
+    assert assertion["status"] == "approved"
+    assert assertion["basis"] == "operator_approved_committee_id"
+    assert assertion["subject_ref"] == "org-fppc-1439160"        # anchor
+    assert assertion["target_ref"] == "org-bonta-for-attorney-general-2022"  # real org
+    assert same_as["source_id"] == "org-fppc-1439160" and same_as["target_id"] == "org-bonta-for-attorney-general-2022"
+    assert same_as["relationship_type"] == "SAME_AS"
+    assert same_as["properties"]["basis"] == "operator_approved_committee_id"
+    assert same_as["properties"]["assertion_id"] == assertion["id"]
