@@ -343,6 +343,19 @@ def test_hard_key_conflict_refuses_component():
     assert any(r.startswith("hard_key_conflict") for r in out["refused"][0]["reasons"])
 
 
+def test_assemble_reads_only_dedup_basis_ignores_attach_assertions():
+    # the live 68-row attach ledger (status approved, basis operator_approved_ein,
+    # linking an org-bmf-ein-* anchor to a real org) must be IGNORED by assembly —
+    # NOT consumed as a merge (Predeclared 10).
+    refs = {r["id"]: r for r in [_ref("org-real", "Real Org", ein="1")]}
+    attach = [{
+        "subject_ref": "org-bmf-ein-1", "target_ref": "org-real",
+        "status": "approved", "basis": "operator_approved_ein",
+    }]
+    out = assemble_components(attach, refs)
+    assert out["accepted"] == [] and out["refused"] == []  # ignored, not a dedup assertion
+
+
 def test_anchor_containing_component_refused():
     refs = {r["id"]: r for r in [_ref("org-real", "Real", ein="1")]}
     asserts = [_merge("org-real", "org-bmf-ein-1")]
@@ -442,3 +455,29 @@ def test_e2e_real_export_deterministic_clusters_and_reversible_merge():
     assert "Organization" in graph["nodes"][dup]["labels"]           # label kept
     rollback_component_merge(graph, record)
     assert canonical_graph(graph) == before                          # byte-identical
+
+
+def test_e2e_real_68_row_ledger_yields_zero_anchor_merges():
+    # Completion 1b: over the CURRENT live attach ledger (68 operator_approved_*
+    # rows linking org-bmf-ein-*/org-casos-* anchors to real orgs) PLUS the dedup
+    # deterministic assertions, assembly produces ZERO anchor-into-org merges.
+    assert _REAL_EXPORT.is_file(), "BLOCKED: real enriched org export missing"
+    ledger = Path(__file__).resolve().parents[2] / "data/identity/assertions.jsonl"
+    assert ledger.is_file(), "BLOCKED: live attach ledger missing"
+    import identity_ledger  # noqa: E402
+
+    attach = identity_ledger.read_assertions(ledger)
+    assert len(attach) == 68
+    assert all(not str(a.get("basis", "")).startswith("org_dedup") for a in attach)
+
+    refs = load_org_refs(_REAL_EXPORT)
+    refs_by_id = {r["id"]: r for r in refs}
+    det = deterministic_dedup_assertions(refs, reviewer="dedup_pass", policy_version="dedup-v1")
+
+    out = assemble_components(attach + det, refs_by_id)
+    # attach rows are IGNORED (non-dedup basis) -> zero anchor in any component
+    for comp in out["accepted"] + out["refused"]:
+        assert not any(is_anchor(m) for m in comp["members"])
+    # only the 6 real dedup clusters merge; the 68 attach rows contribute none
+    assert len(out["accepted"]) == 6
+    assert out["refused"] == []

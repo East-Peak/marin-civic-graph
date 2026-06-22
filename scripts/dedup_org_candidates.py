@@ -218,6 +218,11 @@ def assemble_components(
     rejected: set[frozenset[str]] = set()
     nodes: set[str] = set()
     for a in assertions:
+        # Predeclared 10: assembly reads ONLY dedup-basis (org_dedup_*) rows.
+        # The live key-attach assertions (basis operator_approved_ein/sos_id,
+        # status approved) are a SEPARATE namespace — ignored, never a merge.
+        if not str(a.get("basis", "")).startswith("org_dedup"):
+            continue
         subject, target = a["subject_ref"], a["target_ref"]
         if a["status"] in _MERGE_STATUSES:
             nodes.update((subject, target))
