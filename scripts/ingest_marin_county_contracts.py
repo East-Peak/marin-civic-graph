@@ -274,7 +274,13 @@ def build_moneyflow_node(row: dict[str, Any], classification: dict[str, Any]) ->
         props["amount_missing"] = True
         display_amount = "amount n/a"
     else:
-        props["amount"] = str(amount)
+        # The graph wants a NUMERIC amount (Neo4j aggregation can't sum a
+        # string). Contracts are whole dollars → emit an exact int; fall back
+        # to float only if a future capture ever carries cents (never truncate).
+        # Coverage amount_total stays exact Decimal (computed from row amounts).
+        props["amount"] = (
+            int(amount) if amount == amount.to_integral_value() else float(amount)
+        )
         display_amount = f"${amount}"
     if row["contract_number"]:
         props["contract_number"] = row["contract_number"]

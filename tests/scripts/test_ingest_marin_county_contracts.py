@@ -153,12 +153,15 @@ class TestMoneyFlowAndRecord:
         # row-stable: rebuilding yields the same id
         assert moneyflow_id(rows[0]["data_portal_id"]) == flows[0]["id"]
 
-    def test_moneyflow_carries_decimal_amount_and_coverage_honesty(self):
+    def test_moneyflow_carries_numeric_amount_and_coverage_honesty(self):
         rows = parse_contract_rows(FIXTURE)
         cam = next(r for r in rows if r["vendor_name_raw"] == "COMMUNITY ACTION MARIN")
         f = build_moneyflow_node(cam, classify_recipient(cam["vendor_name_raw"]))
         p = f["properties"]
-        assert p["amount"] == "10000"                          # Decimal serialized as string
+        # The graph wants a NUMERIC amount (Neo4j aggregation); whole-dollar
+        # contracts emit an exact int, never a string.
+        assert p["amount"] == 10000
+        assert isinstance(p["amount"], int)
         assert p["coverage_scope"] == "marin_county_delegated_contracts"
         assert p["amount_semantics"] == "delegated_contract_amount"
         assert p["not_full_checkbook"] is True
@@ -173,6 +176,20 @@ class TestMoneyFlowAndRecord:
         f = build_moneyflow_node(empty, classify_recipient(empty["vendor_name_raw"]))
         assert f["properties"].get("amount") is None
         assert f["properties"]["amount_missing"] is True
+
+    def test_fractional_amount_emitted_as_float_not_truncated(self):
+        # All real rows are whole dollars, but a future capture could carry
+        # cents — a fractional amount must not be silently truncated to int.
+        row = {
+            "data_portal_id": "row-cents-1", "vendor_name_raw": "ACME LLC",
+            "department": "PARKS", "amount": Decimal("100.50"),
+            "contract_number": "", "month_and_year": "Jan-2024",
+            "review_contract": None,
+        }
+        f = build_moneyflow_node(row, classify_recipient(row["vendor_name_raw"]))
+        p = f["properties"]
+        assert p["amount"] == 100.5
+        assert isinstance(p["amount"], float)
 
     def test_recipient_name_never_leaks_into_searchable_fields(self):
         # Ethics machine-check (Codex nit): the raw recipient name lives ONLY in
