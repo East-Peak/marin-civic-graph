@@ -369,3 +369,76 @@ def test_name_tier_excludes_shared_hard_key_pairs():
         _ref("org-k-b", "Kiddo Mill Valley Schools", ein="942848305"),
     ]
     assert name_tier_candidates(refs) == []
+
+
+# ---------------------------------------------------------------------------
+# Unit 6 — real keyed e2e (Completion 7). EXECUTED over the live enriched
+# export, never skipped; BLOCKS (fails loud) if the export is genuinely absent.
+# ---------------------------------------------------------------------------
+
+import copy as _copy  # noqa: E402
+from dedup_merge_applier import (  # noqa: E402
+    apply_component_merge,
+    canonical_graph,
+    rollback_component_merge,
+)
+
+_REAL_EXPORT = Path(__file__).resolve().parents[2] / "data/exports/existing-orgs-enriched.json"
+
+
+def test_e2e_real_export_deterministic_clusters_and_reversible_merge():
+    assert _REAL_EXPORT.is_file(), (
+        "BLOCKED: real enriched org export missing — "
+        "data/exports/existing-orgs-enriched.json"
+    )
+    refs = load_org_refs(_REAL_EXPORT)
+    refs_by_id = {r["id"]: r for r in refs}
+    # anchors excluded from the candidate input
+    assert not any(is_anchor(r["id"]) for r in refs)
+    assert len(refs) == 1346
+
+    det = deterministic_dedup_assertions(refs, reviewer="dedup_pass", policy_version="dedup-v1")
+    assert all(a["basis"] == "org_dedup_key_exact" for a in det)
+    assert all(a["status"] == "deterministic" for a in det)
+
+    assembly = assemble_components(det, refs_by_id)
+    assert assembly["refused"] == []                       # no anchor/conflict/rejected
+    accepted = assembly["accepted"]
+    assert len(accepted) == 6                              # the 6 deterministic clusters
+    sizes = sorted(len(c["members"]) for c in accepted)
+    assert sizes == [2, 2, 2, 2, 3, 4]                     # 15 nodes total
+    assert sum(sizes) == 15
+    # the MWPAC x4 cluster is present and all-committee (merges into one)
+    mwpac = next(c for c in accepted if len(c["members"]) == 4)
+    assert all("political-action-committee" in m for m in mwpac["members"])
+    # every canonical is the highest-degree real member of its cluster
+    for comp in accepted:
+        best = max(comp["members"], key=lambda m: (refs_by_id[m].get("degree") or 0, ))
+        assert comp["canonical"] == choose_canonical([refs_by_id[m] for m in comp["members"]])
+        assert (refs_by_id[comp["canonical"]].get("degree") or 0) == (refs_by_id[best].get("degree") or 0)
+
+    # name tier: unkeyed tail -> queued; affiliate divergences -> needs_careful_review
+    names = name_tier_candidates(refs)
+    assert names and all(c["status"] == "queued" for c in names)
+    assert any(c["review_tier"] == "needs_careful_review" for c in names)
+
+    # constructed reversible merge of ONE real cluster (KIDDO x2) on a fixture graph
+    kiddo = next(c for c in accepted
+                 if any("kiddo" in m for m in c["members"]))
+    canon = kiddo["canonical"]
+    dup = next(m for m in kiddo["members"] if m != canon)
+    graph = {
+        "nodes": {
+            canon: {"id": canon, "labels": ["Organization"], "properties": {"ein": "942848305"}},
+            dup: {"id": dup, "labels": ["Organization"], "properties": {"ein": "942848305"}},
+            "dept": {"id": "dept", "labels": ["Organization"], "properties": {}},
+        },
+        "edges": {(dup, "TO_TARGET", "dept"): {"amount": 7}},
+    }
+    before = canonical_graph(_copy.deepcopy(graph))
+    record = apply_component_merge(graph, kiddo)
+    assert (canon, "TO_TARGET", "dept") in graph["edges"]            # repointed onto canonical
+    assert graph["nodes"][dup]["properties"]["dedup_superseded_by"] == canon
+    assert "Organization" in graph["nodes"][dup]["labels"]           # label kept
+    rollback_component_merge(graph, record)
+    assert canonical_graph(graph) == before                          # byte-identical
