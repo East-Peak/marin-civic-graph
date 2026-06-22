@@ -128,3 +128,132 @@ def summarize_attribution(
         "approved_dollars": int(approved_dollars),
         "total_dollars": int(new_dollars + approved_dollars),
     }
+
+
+# ---------------------------------------------------------------------------
+# Envelope writer (pure) + OPERATOR-GATED load. The loop NEVER loads; the live
+# write is an operator step. No top-level neo4j import — the CLI does the lazy
+# GraphDatabase import; load_envelope takes an already-connected driver and is
+# database-scoped (mirrors load_neo4j_v2, which had the unscoped-session bug).
+# ---------------------------------------------------------------------------
+
+import json
+from pathlib import Path
+
+
+def write_envelope(
+    nodes: list[dict[str, Any]], edges: list[dict[str, Any]], out_dir: Path
+) -> dict[str, int]:
+    """Write nodes.jsonl + edges.jsonl to `out_dir` (created). Pure, offline —
+    this is what the loop produces; the operator loads it later."""
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "nodes.jsonl").write_text(
+        "".join(json.dumps(n, ensure_ascii=False) + "\n" for n in nodes), encoding="utf-8"
+    )
+    (out_dir / "edges.jsonl").write_text(
+        "".join(json.dumps(e, ensure_ascii=False) + "\n" for e in edges), encoding="utf-8"
+    )
+    return {"nodes_written": len(nodes), "edges_written": len(edges)}
+
+
+def load_envelope(driver, envelope_dir: Path, *, database: str) -> dict[str, int]:
+    """OPERATOR-GATED. Read the envelope + load via load_neo4j_v2's
+    database-scoped load_nodes/load_edges. `database` is REQUIRED (never the
+    implicit default/live DB). Runbook BEFORE calling:
+      1. Snapshot/backup the target Neo4j database.
+      2. Confirm `database` is the intended target (a scratch DB first).
+      3. Reload-order: do NOT blind-reload the County source after the vendor
+         orgs are deduped until a merge-map-aware loader exists (else edges to
+         tombstoned ids reappear) — see the goal doc Predeclared 6.
+    """
+    envelope_dir = Path(envelope_dir)
+    nodes = [
+        json.loads(line)
+        for line in (envelope_dir / "nodes.jsonl").read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    edges = [
+        json.loads(line)
+        for line in (envelope_dir / "edges.jsonl").read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    from load_neo4j_v2 import load_nodes, load_edges  # lazy; no top-level neo4j
+    load_nodes(driver, nodes, database=database)
+    load_edges(driver, edges, database=database)
+    return {"nodes_loaded": len(nodes), "edges_loaded": len(edges)}
+
+
+def coverage_report(
+    rows: list[dict[str, Any]],
+    groups: dict[str, dict[str, Any]],
+    *,
+    approved_group_ids: set[str],
+) -> dict[str, Any]:
+    """Honest coverage: the dual tie-out + group/vendor/person counts +
+    denylist-clean. (Enumerating existing-org name matches as dedup candidates is
+    the dedup follow-on's job, not Phase A's hot path — see Predeclared 6.)"""
+    nodes = build_vendor_org_nodes(groups, approved_group_ids=approved_group_ids)
+    person_orgs = sum(
+        1 for n in nodes if "person_name_pattern" in n["properties"]["recipient_kind_hints"]
+    )
+    denied = ("person", "address", "street", "zip", "phone")
+    denylist_clean = all(
+        not any(d in k.lower() for d in denied)
+        and "contract_contact_person" not in k.lower() and "person_side" not in k.lower()
+        for n in nodes for k in n["properties"]
+    )
+    return {
+        **summarize_attribution(rows, groups, approved_group_ids=approved_group_ids),
+        "groups_total": len(groups),
+        "approved_groups": len(approved_group_ids & set(groups)),
+        "person_vendor_orgs": person_orgs,
+        "denylist_clean": denylist_clean,
+    }
+
+
+def _load_approved_group_ids(path: Path) -> set[str]:
+    return {
+        json.loads(line)["subject_ref"]
+        for line in Path(path).read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    }
+
+
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+    from ingest_marin_county_contracts import build_recipient_groups, parse_contract_rows
+
+    p = argparse.ArgumentParser(description="County Attribution Phase A — vendor org creation + TO_TARGET")
+    p.add_argument("--input", type=Path, required=True, help="delegated-contracts.csv")
+    p.add_argument("--approved", type=Path, required=True, help="approved-resolutions.jsonl (the 43)")
+    p.add_argument("--out-dir", type=Path, required=True, help="envelope output dir")
+    p.add_argument("--load", action="store_true", help="OPERATOR-GATED: load the envelope live")
+    p.add_argument("--uri"); p.add_argument("--user"); p.add_argument("--password")
+    p.add_argument("--database", help="REQUIRED with --load (never the implicit default)")
+    args = p.parse_args(argv)
+
+    rows = parse_contract_rows(args.input)
+    groups = build_recipient_groups(rows)
+    approved = _load_approved_group_ids(args.approved)
+    nodes = build_vendor_org_nodes(groups, approved_group_ids=approved)
+    edges = build_vendor_to_target_edges(groups, approved_group_ids=approved)
+    write_envelope(nodes, edges, args.out_dir)
+    report = coverage_report(rows, groups, approved_group_ids=approved)
+    print(json.dumps(report, indent=2))
+
+    if args.load:
+        if not args.database:
+            p.error("--load requires --database (never the implicit default/live DB)")
+        print("OPERATOR LOAD: snapshot the DB first; confirm --database is the intended target.")
+        from neo4j import GraphDatabase  # lazy — no top-level neo4j import
+        driver = GraphDatabase.driver(args.uri, auth=(args.user, args.password))
+        try:
+            print(json.dumps(load_envelope(driver, args.out_dir, database=args.database), indent=2))
+        finally:
+            driver.close()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
