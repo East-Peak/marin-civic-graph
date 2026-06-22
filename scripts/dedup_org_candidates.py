@@ -161,6 +161,107 @@ def deterministic_dedup_assertions(
 
 
 # ---------------------------------------------------------------------------
+# Canonical-node selection (Predeclared 3) — deterministic + pinned.
+# (a) a node carrying a hard key beats one without; (b) tie -> highest degree
+# (null/missing degree sorts as 0 — a thin synthetic anchor never wins);
+# (c) tie -> lexically-smallest id.
+# ---------------------------------------------------------------------------
+
+
+def _has_hard_key(ref: dict[str, Any]) -> bool:
+    return any(ref.get(key) for key in _DEDUP_KEYS)
+
+
+def _degree(ref: dict[str, Any]) -> int:
+    value = ref.get("degree")
+    return value if isinstance(value, int) else 0  # null/missing/non-int -> 0
+
+
+def choose_canonical(refs: list[dict[str, Any]]) -> str:
+    """The surviving node's id for a cluster: hard-key > degree > lexical id."""
+    return min(
+        refs, key=lambda r: (not _has_hard_key(r), -_degree(r), r["id"])
+    )["id"]
+
+
+# ---------------------------------------------------------------------------
+# Component assembly (Predeclared 5, 10) — connected components of MERGE-intent
+# (deterministic/approved) dedup-basis assertions. A component is REFUSED (never
+# a silent over-merge) if it contains an anchor, a rejected_entity_distinct pair
+# (the SPLIT guard), or >1 distinct value for the same hard key.
+# ---------------------------------------------------------------------------
+
+_MERGE_STATUSES: frozenset[str] = frozenset({"deterministic", "approved"})
+
+
+def assemble_components(
+    assertions: list[dict[str, Any]], refs_by_id: dict[str, dict[str, Any]]
+) -> dict[str, list[dict[str, Any]]]:
+    """Partition merge-intent assertions into accepted components (each with a
+    chosen canonical) and refused components (each with reasons). Only
+    `deterministic`/`approved` dedup-basis assertions form components; an
+    un-approved (e.g. `queued`) pair never rides transitivity.
+    `rejected_entity_distinct` pairs are read by STATUS for the SPLIT guard."""
+    register_sos_id_normalizer()
+    parent: dict[str, str] = {}
+
+    def find(x: str) -> str:
+        parent.setdefault(x, x)
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def union(a: str, b: str) -> None:
+        parent[find(a)] = find(b)
+
+    rejected: set[frozenset[str]] = set()
+    nodes: set[str] = set()
+    for a in assertions:
+        subject, target = a["subject_ref"], a["target_ref"]
+        if a["status"] in _MERGE_STATUSES:
+            nodes.update((subject, target))
+            union(subject, target)
+        elif a["status"] == "rejected_entity_distinct":
+            rejected.add(frozenset((subject, target)))
+
+    components: dict[str, list[str]] = defaultdict(list)
+    for node in nodes:
+        components[find(node)].append(node)
+
+    accepted: list[dict[str, Any]] = []
+    refused: list[dict[str, Any]] = []
+    for members in components.values():
+        members = sorted(set(members))
+        member_set = set(members)
+        reasons: list[str] = []
+        if any(is_anchor(m) for m in members):
+            reasons.append("contains_anchor")
+        if any(pair <= member_set for pair in rejected):
+            reasons.append("rejected_pair")
+        for key in _DEDUP_KEYS:
+            values = {
+                KEY_NORMALIZERS[key](refs_by_id[m].get(key))
+                for m in members if m in refs_by_id
+            }
+            values.discard(None)
+            if len(values) > 1:
+                reasons.append(f"hard_key_conflict:{key}")
+                break
+        if reasons:
+            refused.append({"members": members, "reasons": reasons})
+        else:
+            accepted.append({
+                "members": members,
+                "canonical": choose_canonical([refs_by_id[m] for m in members]),
+            })
+    return {
+        "accepted": sorted(accepted, key=lambda c: c["members"]),
+        "refused": sorted(refused, key=lambda c: c["members"]),
+    }
+
+
+# ---------------------------------------------------------------------------
 # Name tier — the resolver, pairwise on name-blocked N=2 pairs (Predeclared 1).
 # Queued, NEVER merged. Class-mismatch + shared-key pairs are excluded; an
 # affiliate-token divergence routes the candidate to needs_careful_review.

@@ -20,6 +20,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from dedup_org_candidates import (  # noqa: E402
     affiliate_token_divergence,
+    assemble_components,
+    choose_canonical,
     deterministic_dedup_assertions,
     is_anchor,
     load_org_refs,
@@ -27,6 +29,10 @@ from dedup_org_candidates import (  # noqa: E402
     run_dedup_pass,
     structural_class,
 )
+
+
+def _merge(subject, target, status="approved", basis="org_dedup_operator_approved"):
+    return {"subject_ref": subject, "target_ref": target, "status": status, "basis": basis}
 import org_resolution  # noqa: E402
 
 
@@ -251,6 +257,109 @@ def test_run_dedup_pass_is_deterministic_byte_identical(tmp_path):
     run_dedup_pass(export, dedup_ledger_path=d2, sidecar_path=s2, **kw)
     assert d1.read_bytes() == d2.read_bytes()
     assert s1.read_bytes() == s2.read_bytes()
+
+
+# ---------------------------------------------------------------------------
+# Unit 2 — canonical-node selection (Predeclared 3: hard-key -> degree -> id)
+# ---------------------------------------------------------------------------
+
+def test_choose_canonical_hard_key_beats_no_key():
+    # (a) a node carrying a hard key wins over one without — even at lower degree
+    refs = [
+        _ref("org-keyed", "Keyed Org", ein="111111111", degree=1),
+        _ref("org-bare", "Bare Org", degree=100),
+    ]
+    assert choose_canonical(refs) == "org-keyed"
+
+
+def test_choose_canonical_same_key_picks_highest_degree():
+    # (b) deterministic tier: all share the key -> the best-connected real org wins
+    refs = [
+        _ref("org-thin", "KIDDO thin", ein="942848305", degree=3),
+        _ref("org-fat", "KIDDO fat", ein="942848305", degree=9),
+    ]
+    assert choose_canonical(refs) == "org-fat"
+
+
+def test_choose_canonical_degree_tie_breaks_on_lexical_id():
+    refs = [
+        _ref("org-zzz", "Z", ein="1", degree=5),
+        _ref("org-aaa", "A", ein="1", degree=5),
+    ]
+    assert choose_canonical(refs) == "org-aaa"
+
+
+def test_choose_canonical_null_degree_sorts_as_zero():
+    # a missing/null degree (e.g. a thin anchor) loses to any positive degree
+    refs = [
+        _ref("org-anchorish", "no degree", ein="1"),          # degree absent -> 0
+        _ref("org-real", "real", ein="1", degree=1),
+    ]
+    assert choose_canonical(refs) == "org-real"
+    refs2 = [_ref("org-x", "x", ein="1", degree=None), _ref("org-y", "y", ein="1", degree=2)]
+    assert choose_canonical(refs2) == "org-y"
+
+
+# ---------------------------------------------------------------------------
+# Unit 3 — approved-component assembly + SPLIT guard + key-conflict/anchor refusal
+# ---------------------------------------------------------------------------
+
+def test_transitive_chain_merges_all_three():
+    refs = {r["id"]: r for r in [
+        _ref("org-a", "Org A", ein="1", degree=2),
+        _ref("org-b", "Org B", ein="1", degree=9),
+        _ref("org-c", "Org C", ein="1", degree=1),
+    ]}
+    asserts = [_merge("org-a", "org-b"), _merge("org-b", "org-c")]
+    out = assemble_components(asserts, refs)
+    assert len(out["accepted"]) == 1 and out["refused"] == []
+    comp = out["accepted"][0]
+    assert comp["members"] == ["org-a", "org-b", "org-c"]
+    assert comp["canonical"] == "org-b"  # highest degree
+
+
+def test_split_guard_refuses_component_with_rejected_pair():
+    refs = {r["id"]: r for r in [
+        _ref("org-a", "A", ein="1"), _ref("org-b", "B", ein="1"), _ref("org-c", "C", ein="1"),
+    ]}
+    asserts = [
+        _merge("org-a", "org-b"), _merge("org-b", "org-c"),
+        _merge("org-a", "org-c", status="rejected_entity_distinct"),
+    ]
+    out = assemble_components(asserts, refs)
+    assert out["accepted"] == []
+    assert len(out["refused"]) == 1
+    assert "rejected_pair" in out["refused"][0]["reasons"]
+
+
+def test_hard_key_conflict_refuses_component():
+    # an A-B-C chain whose ends carry DIFFERENT EINs must not silently merge
+    refs = {r["id"]: r for r in [
+        _ref("org-a", "A", ein="111"), _ref("org-b", "B"), _ref("org-c", "C", ein="222"),
+    ]}
+    asserts = [_merge("org-a", "org-b"), _merge("org-b", "org-c")]
+    out = assemble_components(asserts, refs)
+    assert out["accepted"] == []
+    assert any(r.startswith("hard_key_conflict") for r in out["refused"][0]["reasons"])
+
+
+def test_anchor_containing_component_refused():
+    refs = {r["id"]: r for r in [_ref("org-real", "Real", ein="1")]}
+    asserts = [_merge("org-real", "org-bmf-ein-1")]
+    out = assemble_components(asserts, refs)
+    assert out["accepted"] == []
+    assert "contains_anchor" in out["refused"][0]["reasons"]
+
+
+def test_unapproved_pair_does_not_ride_transitivity():
+    # a `queued` (B,C) is NOT a merge — C must not join {A,B}
+    refs = {r["id"]: r for r in [
+        _ref("org-a", "A", ein="1"), _ref("org-b", "B", ein="1"), _ref("org-c", "C", ein="1"),
+    ]}
+    asserts = [_merge("org-a", "org-b"), _merge("org-b", "org-c", status="queued")]
+    out = assemble_components(asserts, refs)
+    assert len(out["accepted"]) == 1
+    assert out["accepted"][0]["members"] == ["org-a", "org-b"]  # C excluded
 
 
 def test_name_tier_excludes_shared_hard_key_pairs():
