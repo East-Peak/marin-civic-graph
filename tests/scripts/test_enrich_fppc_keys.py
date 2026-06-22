@@ -28,8 +28,14 @@ from enrich_fppc_keys import (  # noqa: E402
     resolve_committee_ids,
 )
 from identity_ledger import read_assertions, write_assertions  # noqa: E402
+from enrich_fppc_keys import load_filer_spine, roi_preflight  # noqa: E402
+from dedup_org_candidates import deterministic_dedup_assertions  # noqa: E402
 
 _LIVE_LEDGER = Path(__file__).resolve().parents[2] / "data" / "identity" / "assertions.jsonl"
+_CAMPAIGN_BUNDLE = (
+    Path(__file__).resolve().parents[2]
+    / "data" / "normalized" / "marin-county-campaign-finance-campaign-finance" / "nodes.jsonl"
+)
 
 
 def _org(org_id, name):
@@ -288,3 +294,36 @@ def test_build_committee_attach_assertion_and_same_as():
     assert same_as["relationship_type"] == "SAME_AS"
     assert same_as["properties"]["basis"] == "operator_approved_committee_id"
     assert same_as["properties"]["assertion_id"] == assertion["id"]
+
+
+# --------------------------------------------------------------------------
+# Unit 8 — ROI preflight + real e2e (executed, not skipped)
+# --------------------------------------------------------------------------
+
+def test_e2e_real_filer_spine_coverage_and_resolve_to_dedup_merge():
+    assert _CAMPAIGN_BUNDLE.is_file(), "BLOCKED: campaign bundle missing"
+    spine = load_filer_spine(_CAMPAIGN_BUNDLE)
+    org_nodes = [
+        json.loads(l) for l in _CAMPAIGN_BUNDLE.read_text(encoding="utf-8").splitlines()
+        if l.strip() and json.loads(l).get("node_type") == "Organization"
+    ]
+    report = roi_preflight(org_nodes, spine)
+    assert report["registry_refs"] == 115           # the in-graph filer spine (tier 1)
+    assert report["committee_id_candidates"] >= 50   # real tier-1 coverage (executed)
+
+    cands = resolve_committee_ids(org_nodes, spine)
+    # a real name-variant dup pair resolves to the SAME committee_id (the lane's value)
+    hilliard = {c["candidate_ref"] for c in cands if c["committee_id"] == "1470249"}
+    assert len(hilliard) == 2 and all(c["status"] == "queued" for c in cands)
+
+    # post-approval: those two org refs now carry committee_id 1470249 -> the dedup
+    # deterministic tier MERGES them; a different-cycle committee (different id) stays distinct.
+    refs = [
+        {"id": oid, "display_label": "Cathryn Hilliard for Southern Marin Fire 2024",
+         "committee_id": "1470249"} for oid in sorted(hilliard)
+    ] + [{"id": "org-other-2026", "display_label": "Someone Else for Office 2026",
+          "committee_id": "1456428"}]
+    asserts = deterministic_dedup_assertions(refs, reviewer="dedup_pass", policy_version="dedup-v1")
+    merged_ids = {a["subject_ref"] for a in asserts} | {a["target_ref"] for a in asserts}
+    assert merged_ids == set(sorted(hilliard))        # the pair merges
+    assert "org-other-2026" not in merged_ids         # different committee_id never merges

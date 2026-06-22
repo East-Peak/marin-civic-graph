@@ -34,6 +34,7 @@ from dedup_org_candidates import (  # noqa: E402
 def _merge(subject, target, status="approved", basis="org_dedup_operator_approved"):
     return {"subject_ref": subject, "target_ref": target, "status": status, "basis": basis}
 import org_resolution  # noqa: E402
+import dedup_org_candidates as _doc  # noqa: E402
 
 
 def _ref(org_id, label, **kw):
@@ -455,6 +456,54 @@ def test_e2e_real_export_deterministic_clusters_and_reversible_merge():
     assert "Organization" in graph["nodes"][dup]["labels"]           # label kept
     rollback_component_merge(graph, record)
     assert canonical_graph(graph) == before                          # byte-identical
+
+
+def test_fppc_committee_id_in_dedup_keys_and_anchor_prefix():
+    assert "committee_id" in _doc._DEDUP_KEYS
+    assert "org-fppc-" in _doc.ANCHOR_PREFIXES
+    assert is_anchor("org-fppc-1439160")  # excluded from candidates
+
+
+def test_committee_id_cluster_merges_overriding_name_class():
+    # both share committee_id 1439160; name-derived class differs (org vs committee)
+    # — committee_id presence overrides class so they STILL merge (Predeclared 7c).
+    refs = [
+        _ref("org-bonta-ag-2022", "Bonta for Attorney General 2022",
+             committee_id="1439160"),                                  # name -> organization
+        _ref("org-bonta-ag-cmte-2022", "Bonta for AG Committee 2022",
+             committee_id="1439160"),                                  # name -> committee
+    ]
+    asserts = deterministic_dedup_assertions(refs, **_DET_KW)
+    assert len(asserts) == 1 and asserts[0]["basis"] == "org_dedup_key_exact"
+
+
+def test_committee_id_different_ids_never_merge():
+    refs = [
+        _ref("org-bonta-2022", "Bonta for Attorney General 2022", committee_id="1439160"),
+        _ref("org-bonta-2026", "Bonta for Attorney General 2026", committee_id="1456428"),
+    ]
+    assert deterministic_dedup_assertions(refs, **_DET_KW) == []  # distinct ids -> no group
+
+
+def test_committee_id_same_id_different_year_refused_cycle_guard():
+    # the rare rename-reuse-across-cycles: SAME committee_id, different name-years
+    # -> cycle guard refuses the merge (Predeclared 7d / Codex r2).
+    refs = [
+        _ref("org-x-2022", "Reuse Committee 2022", committee_id="9999999"),
+        _ref("org-x-2026", "Reuse Committee 2026", committee_id="9999999"),
+    ]
+    assert deterministic_dedup_assertions(refs, **_DET_KW) == []
+
+
+def test_dedup_self_registers_committee_id_normalizer():
+    org_resolution.KEY_NORMALIZERS.pop("committee_id", None)
+    refs = [
+        _ref("org-a", "Same Committee 2024", committee_id="2222222"),
+        _ref("org-b", "Same Committee 2024 Variant", committee_id="2222222"),
+    ]
+    asserts = deterministic_dedup_assertions(refs, **_DET_KW)
+    assert len(asserts) == 1
+    assert "committee_id" in org_resolution.KEY_NORMALIZERS  # re-registered
 
 
 def test_e2e_real_68_row_ledger_yields_zero_anchor_merges():

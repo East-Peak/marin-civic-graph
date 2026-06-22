@@ -301,3 +301,27 @@ def build_committee_attach(
         "properties": {"basis": "operator_approved_committee_id", "assertion_id": assertion["id"]},
     }
     return assertion, same_as
+
+
+# ---------------------------------------------------------------------------
+# ROI preflight + coverage honesty (Predeclared 9, Codex r1). Reports how much
+# of the org-* committee universe the lane can key, before any approval.
+# ---------------------------------------------------------------------------
+
+
+def roi_preflight(
+    org_nodes: list[dict[str, Any]], registry_refs: list[dict[str, Any]]
+) -> dict[str, int]:
+    """Coverage report: org-* committee nodes, registry refs, year-gated
+    committee_id candidates, and the keyable / unkeyed split. No silent
+    truncation — the unkeyed remainder stays in the dedup name-tier queue."""
+    candidates = resolve_committee_ids(org_nodes, registry_refs)
+    keyable = {c["candidate_ref"] for c in candidates}
+    org_ids = {o["id"] for o in org_nodes if o.get("node_type") == "Organization"}
+    return {
+        "org_nodes": len(org_ids),
+        "registry_refs": len(registry_refs),
+        "committee_id_candidates": len(candidates),
+        "orgs_keyable": len(keyable),
+        "orgs_unkeyed": len(org_ids - keyable),
+    }

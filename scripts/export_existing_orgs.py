@@ -28,11 +28,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from identity_ledger import PUBLISHING_STATUSES  # noqa: E402
 from org_resolution import KEY_NORMALIZERS  # noqa: E402
 from enrich_casos_keys import register_sos_id_normalizer  # noqa: E402
+from enrich_fppc_keys import register_committee_id_normalizer  # noqa: E402
 
-# Lane 2: register the `sos_id` normalizer at import so the enriched export can
-# normalize/surface it regardless of import order (Codex r2 #2). The enriched
-# function re-registers defensively too.
+# Lanes 2/3: register the `sos_id`/`committee_id` normalizers at import so the
+# enriched export can normalize/surface them regardless of import order (Codex
+# r2 #2). The enriched function re-registers defensively too.
 register_sos_id_normalizer()
+register_committee_id_normalizer()
 
 ORGS_QUERY = (
     "MATCH (n:Organization) "
@@ -52,11 +54,12 @@ ORGS_QUERY = (
 _KEY_BEARING_BASES = frozenset({
     "ein_exact", "uei_exact", "operator_approved_ein", "operator_approved_uei",
     "sos_id_exact", "operator_approved_sos_id",  # Lane 2
+    "operator_approved_committee_id",  # Lane 3 (FPPC committee_id — name-resolved, operator-approved)
 })
 
 # The hard identity keys the enriched export surfaces (each ledger-validated
-# identically). Lane 2 adds `sos_id`; ein/uei behavior is unchanged.
-IDENTITY_KEYS = ("ein", "uei", "sos_id")
+# identically). Lane 2 adds `sos_id`; Lane 3 adds `committee_id`.
+IDENTITY_KEYS = ("ein", "uei", "sos_id", "committee_id")
 
 # Entity-level attributes surfaced when exactly one ledger-validated value exists
 # (own + valid links): the BMF subtype (Lane 1) + the CA-SOS status/type/date
@@ -67,7 +70,7 @@ PASSTHROUGH_ATTRS = ("irs_subsection_class", "entity_status", "entity_type", "fo
 # provenance is recognized via fields that already exist (Codex r2 — there is no
 # invented `key_source`): a known `n.source`, or a registry key-prefixed id.
 _TRUSTED_SOURCES = frozenset({"irs-990", "marin_county_open_data", "usaspending", "ca_sos"})
-_TRUSTED_ID_PREFIXES = ("org-990-ein-", "org-bmf-ein-", "org-usasp-uei-", "org-casos-")
+_TRUSTED_ID_PREFIXES = ("org-990-ein-", "org-bmf-ein-", "org-usasp-uei-", "org-casos-", "org-fppc-")
 
 # The live enrichment query (operator-gated; tested against a fake session, never
 # run by the loop). Per Organization: its own keys/source/subtype, edge-degree,
@@ -77,20 +80,21 @@ ENRICHED_ORGS_QUERY = (
     "MATCH (n:Organization) "
     "OPTIONAL MATCH (n)-[r:SAME_AS]-(m) "
     "  WHERE r.assertion_id IS NOT NULL "
-    "    AND (m.ein IS NOT NULL OR m.uei IS NOT NULL OR m.sos_id IS NOT NULL) "
+    "    AND (m.ein IS NOT NULL OR m.uei IS NOT NULL OR m.sos_id IS NOT NULL "
+    "         OR m.committee_id IS NOT NULL) "
     "WITH n, collect(CASE WHEN m IS NULL THEN NULL ELSE { "
     "  linked_node_id: m.id, "
     "  edge_source_id: startNode(r).id, "
     "  edge_target_id: endNode(r).id, "
     "  assertion_id: r.assertion_id, "
-    "  ein: m.ein, uei: m.uei, sos_id: m.sos_id, "
+    "  ein: m.ein, uei: m.uei, sos_id: m.sos_id, committee_id: m.committee_id, "
     "  irs_subsection_class: m.irs_subsection_class, "
     "  entity_status: m.entity_status, entity_type: m.entity_type, "
     "  formation_date: m.formation_date "
     "} END) AS raw_links "
     "RETURN n.id AS id, "
     "  coalesce(n.display_label, n.name) AS display_label, "
-    "  n.ein AS own_ein, n.uei AS own_uei, n.sos_id AS own_sos_id, "
+    "  n.ein AS own_ein, n.uei AS own_uei, n.sos_id AS own_sos_id, n.committee_id AS own_committee_id, "
     "  n.source AS own_source, "
     "  n.irs_subsection_class AS own_irs_subsection_class, "
     "  n.entity_status AS own_entity_status, n.entity_type AS own_entity_type, "
@@ -148,6 +152,7 @@ def org_ref_from_enriched_record(
     An own key on a node with unrecognized provenance is `review_keys`-only, never
     deterministic. `irs_subsection_class` + `degree` ride along."""
     register_sos_id_normalizer()  # defensive — survive a deleted/hostile registration
+    register_committee_id_normalizer()  # Lane 3 — same defensive registration
     ref: dict[str, Any] = {"id": record["id"]}
     if record.get("display_label"):
         ref["display_label"] = record["display_label"]

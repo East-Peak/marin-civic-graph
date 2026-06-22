@@ -37,10 +37,11 @@ from typing import Any
 
 from org_resolution import KEY_NORMALIZERS, propose_org_resolutions  # noqa: F401
 from enrich_casos_keys import register_sos_id_normalizer
+from enrich_fppc_keys import register_committee_id_normalizer, _election_year
 from identity_ledger import make_assertion, write_assertions
 
 # Synthetic identity-anchor key nodes — NOT real orgs; excluded from candidates.
-ANCHOR_PREFIXES: tuple[str, ...] = ("org-bmf-ein-", "org-casos-", "org-usasp-uei-")
+ANCHOR_PREFIXES: tuple[str, ...] = ("org-bmf-ein-", "org-casos-", "org-usasp-uei-", "org-fppc-")
 
 # Name-derived structural class (the enriched export carries no entity_class).
 # A committee/PAC token => `committee`, else `organization`. Word-boundary
@@ -91,6 +92,16 @@ def structural_class(name: str) -> str:
     return "organization"
 
 
+def _effective_class(ref: dict[str, Any]) -> str:
+    """Structural class for a ref. A ref carrying a `committee_id` IS a committee
+    (Lane 3 / Predeclared 7c) — that overrides the name-token heuristic, which
+    would mis-class a committee like "Bonta for AG 2022" (no committee token) as
+    an organization and wrongly block a same-committee_id merge."""
+    if ref.get("committee_id"):
+        return "committee"
+    return structural_class(ref["display_label"])
+
+
 def _affiliate_tokens_present(name: str) -> frozenset[str]:
     padded = _norm_tokens(name)
     return frozenset(t for t in _AFFILIATE_TOKENS if f" {t} " in padded)
@@ -109,7 +120,7 @@ def affiliate_token_divergence(name_a: str, name_b: str) -> bool:
 # never overrides a committee<->organization mismatch (Predeclared 4).
 # ---------------------------------------------------------------------------
 
-_DEDUP_KEYS: tuple[str, ...] = ("ein", "uei", "sos_id")
+_DEDUP_KEYS: tuple[str, ...] = ("ein", "uei", "sos_id", "committee_id")
 DEDUP_KEY_BASIS = "org_dedup_key_exact"
 
 
@@ -122,6 +133,7 @@ def deterministic_dedup_assertions(
     assembly. Written directly via make_assertion (no resolver, no egress gate).
     Calls register_sos_id_normalizer() first so the sos_id key resolves."""
     register_sos_id_normalizer()
+    register_committee_id_normalizer()
     refs_by_id = {r["id"]: r for r in refs}
 
     groups: dict[tuple[str, str], list[str]] = defaultdict(list)
@@ -132,16 +144,25 @@ def deterministic_dedup_assertions(
                 groups[(key, value)].append(r["id"])
 
     assertions: dict[str, dict[str, Any]] = {}
-    for (_key, _value), ids in sorted(groups.items()):
+    for (key, _value), ids in sorted(groups.items()):
         if len(set(ids)) < 2:
             continue
         by_class: dict[str, list[str]] = defaultdict(list)
         for oid in ids:
-            by_class[structural_class(refs_by_id[oid]["display_label"])].append(oid)
+            by_class[_effective_class(refs_by_id[oid])].append(oid)
         for _cls, members in sorted(by_class.items()):
             members = sorted(set(members))
             if len(members) < 2:
                 continue  # same-class guard: a lone member of a class never merges
+            # Cycle guard (Lane 3 / Predeclared 7d): a committee_id is cycle-
+            # distinct, but a committee can rarely rename-and-reuse one id across
+            # cycles — a committee_id group spanning >1 name-election-year is the
+            # reuse case; refuse it (never auto-merge across cycles).
+            if key == "committee_id":
+                years = {_election_year(refs_by_id[m]["display_label"]) for m in members}
+                years.discard(None)
+                if len(years) > 1:
+                    continue
             pivot = members[0]
             for other in members[1:]:
                 subject_ref, target_ref = sorted((pivot, other))
@@ -203,6 +224,7 @@ def assemble_components(
     un-approved (e.g. `queued`) pair never rides transitivity.
     `rejected_entity_distinct` pairs are read by STATUS for the SPLIT guard."""
     register_sos_id_normalizer()
+    register_committee_id_normalizer()
     parent: dict[str, str] = {}
 
     def find(x: str) -> str:
@@ -295,6 +317,7 @@ def name_tier_candidates(refs: list[dict[str, Any]]) -> list[dict[str, Any]]:
     mismatches, and pairs sharing a hard key (the deterministic tier's job). An
     affiliate-token divergence tags the candidate `needs_careful_review`."""
     register_sos_id_normalizer()
+    register_committee_id_normalizer()
     keys_by_id = {r["id"]: _key_set(r) for r in refs}
 
     blocks: dict[str, list[dict[str, Any]]] = defaultdict(list)
@@ -316,7 +339,7 @@ def name_tier_candidates(refs: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 if pair in seen_pairs:
                     continue
                 seen_pairs.add(pair)
-                if structural_class(a["display_label"]) != structural_class(b["display_label"]):
+                if _effective_class(a) != _effective_class(b):
                     continue  # class mismatch — never a candidate
                 if keys_by_id[a["id"]] & keys_by_id[b["id"]]:
                     continue  # shared hard key — deterministic tier handles it
