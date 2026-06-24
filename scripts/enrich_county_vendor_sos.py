@@ -17,10 +17,28 @@ confidence-tiered. All shipped modules are CONSUMED, never edited.
 """
 from __future__ import annotations
 
+from collections import defaultdict
+from difflib import SequenceMatcher
+from pathlib import Path
 from typing import Any
 
-from org_resolution import _NAME_SUFFIXES, _normalize_name  # consumed, never edited
-from enrich_casos_keys import significant_tokens  # consumed, never edited
+from org_resolution import (  # consumed, never edited
+    _NAME_SUFFIXES,
+    _normalize_name,
+    propose_org_resolutions,
+)
+from enrich_casos_keys import (  # consumed, never edited
+    parse_casos_agents,
+    parse_casos_filings,
+    publishable_casos_fields,
+    scan_for_forbidden,
+    significant_tokens,
+)
+from enrich_org_keys import assertion_for_approved_candidate  # consumed, never edited
+from enrich_county_vendor_eins import length_band_ok  # consumed (Phase-B lossless bound)
+
+POLICY_VERSION = "county-vendor-sos-v1"
+_SIMILARITY_THRESHOLD = 0.85
 
 # Strip the EXACT suffix set `_normalize_name` strips, longest-first (so
 # `incorporated` is peeled before `inc`), repeated (so a fused `...llcinc` → '').
@@ -55,24 +73,6 @@ def blocks_to(sos_ref: dict[str, Any], vendor_ref: dict[str, Any]) -> bool:
     if significant_tokens(sos_name) & significant_tokens(vendor_name):
         return True
     return compact_key(sos_name) == compact_key(vendor_name)
-
-
-from collections import defaultdict
-from difflib import SequenceMatcher
-
-from org_resolution import propose_org_resolutions  # consumed, never edited
-from enrich_org_keys import assertion_for_approved_candidate  # consumed, never edited
-
-POLICY_VERSION = "county-vendor-sos-v1"
-_SOS_ANCHOR_PREFIX = "org-casos-"
-from enrich_casos_keys import (  # consumed, never edited
-    parse_casos_filings,
-    parse_casos_agents,
-    publishable_casos_fields,
-)
-from enrich_county_vendor_eins import length_band_ok  # consumed (Phase-B lossless bound)
-
-_SIMILARITY_THRESHOLD = 0.85
 
 
 def _prefilter(vendor_cf: str, sos_cf: str, vendor_norm: str, sos_norm: str) -> bool:
@@ -235,3 +235,116 @@ def build_sos_attach(candidate, vendor_ref, *, reviewer, decided_at, policy_vers
         "properties": {"basis": "operator_approved_sos_id", "assertion_id": assertion["id"]},
     }
     return assertion, same_as
+
+
+def coverage_report(resolve_output, vendor_orgs) -> dict[str, Any]:
+    """Honest coverage + blocker diagnostics (Pre 10): tier split, token-vs-compact
+    (did the compact key add anything?), needs-careful-review, reused sos_ids,
+    conflicts, pool shape, individual-agent status."""
+    cands = resolve_output["candidates"]
+    stats = resolve_output["stats"]
+    vendor_by_id = {v["id"]: v for v in vendor_orgs}
+    per_vendor: dict[str, int] = defaultdict(int)
+    sos_to_vendors: dict[str, set[str]] = defaultdict(set)
+    exact = difflib_tier = ncr = token_matched = compact_only = 0
+    for c in cands:
+        vid = c["vendor_ref"]
+        per_vendor[vid] += 1
+        sos_to_vendors[c["sos_ref"]["sos_id"]].add(vid)
+        if "normalized_name_exact" in c.get("signals", []):
+            exact += 1
+        else:
+            difflib_tier += 1
+        if c.get("needs_careful_review"):
+            ncr += 1
+        v = vendor_by_id.get(vid)
+        sos_name = c["sos_ref"].get("display_label", "")
+        if v and significant_tokens(v["display_label"]) & significant_tokens(sos_name):
+            token_matched += 1
+        else:
+            compact_only += 1
+    counts = sorted(per_vendor.values())
+
+    def _pct(p: float) -> int:
+        return counts[min(len(counts) - 1, int(p * len(counts)))] if counts else 0
+
+    return {
+        "vendor_orgs_total": len(vendor_orgs),
+        "with_sos_candidate": len(per_vendor),
+        "exact_tier": exact,
+        "difflib_tier": difflib_tier,
+        "needs_careful_review": ncr,
+        "token_matched": token_matched,
+        "compact_only": compact_only,
+        "sos_id_reused_across_vendors": sum(1 for vs in sos_to_vendors.values() if len(vs) > 1),
+        "conflicts": len(resolve_output["conflicts"]),
+        "individual_agent_status": stats.get("individual_agent_status"),
+        "individual_agent_count": stats.get("individual_agent_count"),
+        "rows_scanned": stats["rows_scanned"],
+        "block_pairs_evaluated": stats["block_pairs_evaluated"],
+        "resolver_pairs_evaluated": stats["resolver_pairs_evaluated"],
+        "max_per_vendor_hits": max(counts) if counts else 0,
+        "p95_per_vendor_hits": _pct(0.95),
+    }
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Pure build: write QUEUED vendor→sos_id candidates + coverage for operator
+    review. NO attach/dedup/load (operator steps). A redaction sweep
+    (`scan_for_forbidden`) gates every artifact before it is written.
+
+    Operator approve→attach runbook: for each APPROVED candidate, call
+    `build_sos_attach(candidate, vendor_ref, reviewer=..., decided_at=...)` →
+    append the assertion to the ledger + draw the SAME_AS; re-export enriched
+    (`export_existing_orgs --enriched`) so the vendor surfaces its `sos_id`; then
+    run the shipped dedup so vendor↔existing-firm collapse by hard key."""
+    import argparse
+    import json
+
+    p = argparse.ArgumentParser(description="County Attribution Phase C — propose vendor sos_ids (queued)")
+    p.add_argument("--vendors-inline", help="JSON list of {id, display_label} (testing/small)")
+    p.add_argument("--input", type=Path, help="delegated-contracts.csv")
+    p.add_argument("--approved", type=Path, help="approved-resolutions.jsonl (the 43)")
+    p.add_argument("--filings", type=Path, required=True, help="CA-SOS Filings.csv")
+    p.add_argument("--agents", type=Path, help="CA-SOS Agents.csv (optional — natural-person-agent flag)")
+    p.add_argument("--out-dir", type=Path, required=True, help="review output dir")
+    args = p.parse_args(argv)
+
+    if args.vendors_inline:
+        vendors = json.loads(args.vendors_inline)
+    else:
+        if not (args.input and args.approved):
+            p.error("provide --vendors-inline OR both --input and --approved")
+        from enrich_county_vendor_eins import _load_vendor_orgs  # consumed (Phase-B loader)
+        vendors = _load_vendor_orgs(args.input, args.approved)
+
+    def filings_factory():
+        return open(args.filings, encoding="utf-8", errors="replace")
+
+    agents_factory = None
+    if args.agents:
+        def agents_factory():  # noqa: E306
+            return open(args.agents, encoding="utf-8", errors="replace")
+
+    out = resolve_vendor_sos(vendors, filings_factory, agents_factory=agents_factory)
+    report = coverage_report(out, vendors)
+
+    violations = scan_for_forbidden(out["candidates"]) + scan_for_forbidden(out["conflicts"]) + scan_for_forbidden(report)
+    if violations:
+        raise SystemExit(f"REDACTION VIOLATION (refusing to write): {violations[:5]}")
+
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "vendor-sos-candidates.jsonl").write_text(
+        "".join(json.dumps(c, ensure_ascii=False) + "\n" for c in out["candidates"]), encoding="utf-8")
+    (out_dir / "conflicts.jsonl").write_text(
+        "".join(json.dumps(c, ensure_ascii=False) + "\n" for c in out["conflicts"]), encoding="utf-8")
+    (out_dir / "coverage.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(json.dumps(report, indent=2))
+    print("QUEUED only — NO sos_id attached. Operator: review the candidates, then build_sos_attach "
+          "each APPROVED one (assertion + SAME_AS) → ledger → re-export enriched → dedup.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
