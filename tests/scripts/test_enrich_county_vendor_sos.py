@@ -309,14 +309,18 @@ def test_e2e_real_casos_sos_coverage_redaction_and_budgets():
     elapsed = time.time() - t
     rep = coverage_report(out, vorgs)
 
-    # CONCRETE budgets (Codex r3) — actuals well under
-    assert out["stats"]["resolver_pairs_evaluated"] < 10_000_000
-    assert elapsed < 5400                                    # 90-min wall-clock budget
+    # CONCRETE budgets (Codex r3) — the lossless prefilter cut 137.6M → 224k (99.84%)
+    assert out["stats"]["block_pairs_evaluated"] == 137_612_921
+    assert out["stats"]["resolver_pairs_evaluated"] == 224_393      # ≪ the 10M ceiling
+    assert elapsed < 5400                                            # 90-min wall-clock budget (actual ~7.6min)
     # redaction: NO person/address/agent data in ANY artifact
     assert scan_for_forbidden(out["candidates"]) == []
     assert scan_for_forbidden(out["conflicts"]) == []
     assert scan_for_forbidden(rep) == []
-    # coverage: resolver-tier firm matches surfaced; the compact key added value
-    assert rep["with_sos_candidate"] >= 100
-    assert rep["compact_only"] >= 1
+    # coverage (pinned exact over the 2026-06-01 staged Filings.csv)
+    assert rep["with_sos_candidate"] == 1047
+    assert rep["exact_tier"] == 964
+    assert rep["compact_only"] == 10                                # the compact key's no-shared-token catches
+    assert rep["conflicts"] == 0
+    assert rep["individual_agent_status"] == "applied"
     print("PHASE-C E2E:", _json.dumps(rep))
