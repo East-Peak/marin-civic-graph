@@ -55,3 +55,119 @@ def blocks_to(sos_ref: dict[str, Any], vendor_ref: dict[str, Any]) -> bool:
     if significant_tokens(sos_name) & significant_tokens(vendor_name):
         return True
     return compact_key(sos_name) == compact_key(vendor_name)
+
+
+from collections import defaultdict
+from difflib import SequenceMatcher
+
+from org_resolution import propose_org_resolutions  # consumed, never edited
+from enrich_casos_keys import parse_casos_filings, publishable_casos_fields  # consumed
+from enrich_county_vendor_eins import length_band_ok  # consumed (Phase-B lossless bound)
+
+_SIMILARITY_THRESHOLD = 0.85
+
+
+def _prefilter(vendor_cf: str, sos_cf: str, vendor_norm: str, sos_norm: str) -> bool:
+    """LOSSLESS gate before the expensive resolver: the equality branch
+    (`_normalize_name` match) OR the difflib branch's UPPER BOUNDS — the length
+    band + `quick_ratio` (both ≥ `ratio`). Drops only pairs the resolver could
+    never accept; cuts the 137.6M blocked pairs to the resolver survivors."""
+    if vendor_norm == sos_norm:
+        return True
+    if not length_band_ok(len(vendor_cf), len(sos_cf)):
+        return False
+    return SequenceMatcher(None, vendor_cf, sos_cf).quick_ratio() >= _SIMILARITY_THRESHOLD
+
+
+def _needs_careful_review(vendor_norm: str, sos_norm: str) -> bool:
+    """A SHORT normalized key (e.g. `AB Inc`→`ab`) is brittle — flag for the operator."""
+    return min(len(vendor_norm.replace(" ", "")), len(sos_norm.replace(" ", ""))) <= 4
+
+
+def _build_candidate(resolver_cand, sos_ref, vendor_norm, sos_norm):
+    """Enrich a resolver-tier candidate to the EXACT Phase-C schema (raw direction +
+    presentation + nested redacted sos_ref + flags). `individual_agent` is filled
+    later (Unit 4 — the candidate-filtered Agents pass)."""
+    return {
+        **resolver_cand,  # subject_ref, candidate_ref, signals, confidence, status, evidence_record_ids
+        "vendor_ref": resolver_cand["candidate_ref"],
+        "sos_anchor_ref": resolver_cand["subject_ref"],
+        "sos_ref": publishable_casos_fields(sos_ref),
+        "individual_agent": None,
+        "needs_careful_review": _needs_careful_review(vendor_norm, sos_norm),
+    }
+
+
+def resolve_pass1(vendor_orgs, filings_lines):
+    """Pass 1: stream Filings → block (token/compact index) → LOSSLESS prefilter →
+    `propose_org_resolutions(identity_keys=("sos_id",))` on survivors → resolver-tier
+    HITS only (never full buckets). Key-less vendors → queued name candidates, no
+    same_as. Returns hits + hit_pairs + per-vendor info + stats."""
+    tok_index: dict[str, list[str]] = defaultdict(list)
+    compact_index: dict[str, list[str]] = defaultdict(list)
+    vinfo: dict[str, tuple] = {}
+    for v in vendor_orgs:
+        label = v["display_label"]
+        vinfo[v["id"]] = (v, label.casefold(), _normalize_name(label))
+        for t in significant_tokens(label):
+            tok_index[t].append(v["id"])
+        compact_index[compact_key(label)].append(v["id"])
+
+    hits: list[dict[str, Any]] = []
+    hit_pairs: set[tuple[str, str]] = set()
+    stats = {"rows_scanned": 0, "block_pairs_evaluated": 0, "resolver_pairs_evaluated": 0}
+    for ref, _skip in parse_casos_filings(filings_lines):
+        if ref is None:
+            continue
+        stats["rows_scanned"] += 1
+        sname = ref["display_label"]
+        scf, snorm = sname.casefold(), _normalize_name(sname)
+        blocked: set[str] = set()
+        for t in significant_tokens(sname):
+            blocked.update(tok_index.get(t, ()))
+        blocked.update(compact_index.get(compact_key(sname), ()))
+        for vid in blocked:
+            stats["block_pairs_evaluated"] += 1
+            vendor, vcf, vnorm = vinfo[vid]
+            if not _prefilter(vcf, scf, vnorm, snorm):
+                continue
+            stats["resolver_pairs_evaluated"] += 1
+            _edges, cands = propose_org_resolutions([ref], [vendor], identity_keys=("sos_id",))
+            for cand in cands:
+                hits.append(_build_candidate(cand, ref, vnorm, snorm))
+                hit_pairs.add((vid, ref["sos_id"]))
+    return {"hits": hits, "hit_pairs": hit_pairs, "vinfo": vinfo, "stats": stats}
+
+
+def conflict_pass2(filings_lines, hit_pairs, vinfo):
+    """Pass 2: re-stream Filings over hit sos_ids; record `(display_label,
+    entity_type)` variants ONLY from rows that `blocks_to` the vendor (re-applied —
+    `dedupe_casos_refs` only ever sees blocked rows, so a non-blocking same-sos_id
+    row must not create a false conflict). A `(vendor, sos_id)` with ≥2 variants is
+    a `casos_row_conflict`."""
+    hit_vids_by_sos: dict[str, set[str]] = defaultdict(set)
+    for vid, sos_id in hit_pairs:
+        hit_vids_by_sos[sos_id].add(vid)
+    variants: dict[tuple[str, str], set[tuple]] = defaultdict(set)
+    for ref, _skip in parse_casos_filings(filings_lines):
+        if ref is None or ref["sos_id"] not in hit_vids_by_sos:
+            continue
+        for vid in hit_vids_by_sos[ref["sos_id"]]:
+            if blocks_to(ref, vinfo[vid][0]):
+                variants[(vid, ref["sos_id"])].add((ref["display_label"], ref["entity_type"]))
+    return {pair for pair, vs in variants.items() if len(vs) > 1}
+
+
+def resolve_vendor_sos(vendor_orgs, filings_factory):
+    """Two-pass orchestrator (the factory yields a FRESH line iterator per pass).
+    Pass 1 → resolver-tier hits; pass 2 → `casos_row_conflict`; candidates =
+    hits whose (vendor, sos_id) is not conflicted. QUEUED only — no attach."""
+    p1 = resolve_pass1(vendor_orgs, filings_factory())
+    conflicted = conflict_pass2(filings_factory(), p1["hit_pairs"], p1["vinfo"])
+    candidates = [h for h in p1["hits"]
+                  if (h["vendor_ref"], h["sos_ref"]["sos_id"]) not in conflicted]
+    conflicts = [{"vendor_ref": vid, "sos_id": sos_id, "reason": "casos_row_conflict"}
+                 for vid, sos_id in sorted(conflicted)]
+    stats = dict(p1["stats"], candidates=len(candidates), conflicts=len(conflicts))
+    return {"candidates": candidates, "conflicts": conflicts, "stats": stats,
+            "same_as_edges": [], "assertions": []}
