@@ -115,3 +115,35 @@ def test_dedup_reject():
 def test_reserved_case_type_permits_no_write():
     with pytest.raises(ValueError, match="reserved"):
         rm.operator_action_to_ledger(_act("relationship_candidate", "approve"))
+
+
+# --- Unit 5: MergePlan (dry-run over a scratch graph) ----------------------
+
+def test_merge_plan_counts_collision_and_selfloop():
+    graph = {
+        "nodes": {"org-a": {"properties": {}}, "org-b": {"properties": {}}, "org-x": {"properties": {}}},
+        "edges": {
+            ("org-b", "TO_TARGET", "org-x"): {"amount": 1},   # repoints → collides with org-a's edge
+            ("org-a", "TO_TARGET", "org-x"): {"amount": 2},   # pre-existing → collapse
+            ("org-b", "REL", "org-a"): {},                    # org-b→org-a → self-loop on merge → drop
+        },
+    }
+    comp = {"members": ["org-a", "org-b"], "canonical": "org-a"}
+    plan = rm.build_merge_plan(comp, graph)
+    assert plan["canonical_id"] == "org-a"
+    assert plan["superseded_ids"] == ["org-b"]
+    assert plan["collision_count"] == 1
+    assert plan["selfloop_drops"] == 1
+    assert plan["edge_ops_count"] == 2
+    assert plan["node_policy"] == "tombstone_no_field_merge"
+    assert plan["edge_policy"] == "apoc_merge_relationship_collapse"
+
+
+def test_merge_plan_is_a_dry_run_does_not_mutate_input():
+    graph = {
+        "nodes": {"org-a": {"properties": {}}, "org-b": {"properties": {}}, "org-x": {"properties": {}}},
+        "edges": {("org-b", "TO_TARGET", "org-x"): {"amount": 1}},
+    }
+    rm.build_merge_plan({"members": ["org-a", "org-b"], "canonical": "org-a"}, graph)
+    assert ("org-b", "TO_TARGET", "org-x") in graph["edges"]  # original edge untouched
+    assert "dedup_superseded_by" not in graph["nodes"]["org-b"]["properties"]

@@ -14,10 +14,12 @@ derive from the full, possibly-PII subject/target).
 """
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 from typing import Any
 
+from dedup_merge_applier import apply_component_merge
 from enrich_casos_keys import scan_for_forbidden  # consume the shipped recursive leak scan
 from identity_ledger import make_assertion
 from reconciliation_cases import OperatorAction, rejection_status, validate_action
@@ -44,6 +46,28 @@ def forbidden_violations(obj: Any) -> list[str]:
     Returns a list of violations ([] = clean). The emitter asserts this is empty over
     the FINAL serialized rows before writing."""
     return scan_for_forbidden(obj)
+
+
+# --- MergePlan (entity_dedup_merge only; spec §5.3) -------------------------
+
+def build_merge_plan(component: dict[str, Any], graph: dict[str, Any]) -> dict[str, Any]:
+    """Dry-run the dedup merge over a SCRATCH copy of ``graph`` → the MergePlan (counts
+    only). Computed from ``dedup_merge_applier.apply_component_merge`` (NOT component
+    membership alone), so ``edge_ops_count`` / ``selfloop_drops`` / ``collision_count``
+    reflect the real applier. Never mutates the input graph. NODE policy =
+    tombstone_no_field_merge; EDGE policy = parallel edges collapse via
+    ``apoc.merge.relationship`` (the ``collapse`` op)."""
+    record = apply_component_merge(copy.deepcopy(graph), component)
+    edge_ops = record["edge_ops"]
+    return {
+        "canonical_id": record["canonical_id"],
+        "superseded_ids": list(record["superseded_ids"]),
+        "edge_ops_count": len(edge_ops),
+        "selfloop_drops": sum(1 for o in edge_ops if o["op"] == "selfloop_drop"),
+        "collision_count": sum(1 for o in edge_ops if o["op"] == "collapse"),
+        "node_policy": "tombstone_no_field_merge",
+        "edge_policy": "apoc_merge_relationship_collapse",
+    }
 
 
 # --- OperatorAction → ledger write (spec §5.2.1 action matrix) ---------------
