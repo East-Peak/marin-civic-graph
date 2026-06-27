@@ -144,3 +144,46 @@ def test_same_anchor_and_normalizer_within_keytype_ok():
             relationship_only=True, dedup_eligibility=False,
             allowed_merge_semantics=(), key_semantics="committee")
     reg.validate_registry([a, b])  # must not raise
+
+
+# --- Unit 4: generated views parity (locked to BASE_SHA) -------------------
+
+def test_anchor_prefixes_parity():
+    assert reg.ANCHOR_PREFIXES == ("org-bmf-ein-", "org-casos-", "org-usasp-uei-", "org-fppc-")
+    assert type(reg.ANCHOR_PREFIXES) is tuple
+
+
+def test_dedup_keys_parity():
+    expected = ("ein", "uei", "sos_id", "committee_id")
+    assert reg.generate_dedup_keys() == expected
+    assert reg._DEDUP_KEYS == expected
+    assert type(reg._DEDUP_KEYS) is tuple
+
+
+def test_key_bearing_bases_parity():
+    expected = frozenset({
+        "ein_exact", "uei_exact", "operator_approved_ein", "operator_approved_uei",
+        "sos_id_exact", "operator_approved_sos_id", "operator_approved_committee_id",
+    })
+    assert reg._KEY_BEARING_BASES == expected
+    assert type(reg._KEY_BEARING_BASES) is frozenset
+
+
+def test_dedup_keys_membership_crosscheck_fires_on_drift(monkeypatch):
+    # if the registry adds a dedup-eligible key not in the historical order, fail loud
+    extra = _mk(key_type="duns", normalizer=kn._normalize_ein, anchor_prefix="org-duns-",
+                dedup_eligibility=True)
+    monkeypatch.setattr(reg, "REGISTRY", reg.REGISTRY + (extra,))
+    with pytest.raises(ValueError, match="drift"):
+        reg.generate_dedup_keys()
+
+
+# --- Unit 5: KEY_NORMALIZERS static view (parity-locked to BASE_SHA) --------
+
+def test_key_normalizers_static_parity():
+    kns = reg.KEY_NORMALIZERS
+    assert type(kns) is dict
+    # STATIC view = ein/uei only; sos_id/committee_id are lane-registered at runtime
+    assert set(kns) == {"ein", "uei"}
+    assert kns["ein"] is kn._normalize_ein
+    assert kns["uei"] is kn._normalize_uei

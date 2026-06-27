@@ -146,3 +146,77 @@ def validate_registry(entries) -> None:
 
 
 validate_registry(REGISTRY)
+
+
+# --- generated compatibility views (parity-locked to BASE_SHA) --------------
+# Consumers import these names in place of their former inline literals. The
+# parity tests prove each equals its BASE_SHA value before any consumer rewires.
+
+def generate_anchor_prefixes() -> tuple[str, ...]:
+    """Distinct anchor prefixes in REGISTRY order (committee_id's two scoped
+    entries collapse to one). DERIVED — the entry order reproduces the BASE_SHA
+    tuple exactly."""
+    out: list[str] = []
+    for e in REGISTRY:
+        if e.anchor_prefix not in out:
+            out.append(e.anchor_prefix)
+    return tuple(out)
+
+
+# BASE_SHA-historical view order; MEMBERSHIP is cross-checked against the
+# registry so order and registry cannot drift apart.
+_DEDUP_KEY_ORDER: tuple[str, ...] = ("ein", "uei", "sos_id", "committee_id")
+
+
+def generate_dedup_keys() -> tuple[str, ...]:
+    """Dedup-eligible key_types. Membership derives from the registry
+    (``dedup_eligibility``); the order is the BASE_SHA-historical sequence,
+    cross-checked against that membership."""
+    eligible = {e.key_type for e in REGISTRY if e.dedup_eligibility}
+    if set(_DEDUP_KEY_ORDER) != eligible:
+        raise ValueError(
+            f"_DEDUP_KEYS order/registry drift: {_DEDUP_KEY_ORDER} vs "
+            f"dedup-eligible {sorted(eligible)}"
+        )
+    return _DEDUP_KEY_ORDER
+
+
+_KEY_BEARING_BASES_HISTORICAL: frozenset[str] = frozenset(
+    {
+        "ein_exact", "uei_exact", "operator_approved_ein", "operator_approved_uei",
+        "sos_id_exact", "operator_approved_sos_id",  # Lane 2
+        "operator_approved_committee_id",  # Lane 3 (committee_id — name-resolved, operator-approved)
+    }
+)
+
+
+def generate_key_bearing_bases() -> frozenset[str]:
+    """Bases on a SAME_AS that legitimately carry a hard key (self-identity exact
+    merges + operator key-approvals). Cross-checked: every dedup-eligible key has
+    its ``operator_approved_<key>`` basis present (committee_id is operator-only —
+    name-resolved, never deterministic-``_exact``)."""
+    for e in REGISTRY:
+        if e.dedup_eligibility:
+            basis = f"operator_approved_{e.key_type}"
+            if basis not in _KEY_BEARING_BASES_HISTORICAL:
+                raise ValueError(f"missing key-bearing basis {basis!r} for dedup key {e.key_type!r}")
+    return _KEY_BEARING_BASES_HISTORICAL
+
+
+def generate_key_normalizers() -> dict[str, Callable[[Any], str | None]]:
+    """The STATIC ``KEY_NORMALIZERS`` dict — only the non-runtime-registered keys
+    (ein, uei). The runtime keys (sos_id, committee_id) are added by their lanes'
+    ``register_*_normalizer`` at import, exactly as at BASE_SHA. Returns a fresh
+    MUTABLE dict: the lanes mutate it, and ``org_resolution`` imports THIS object
+    (object identity), so a single shared dict carries both static + runtime keys."""
+    out: dict[str, Callable[[Any], str | None]] = {}
+    for e in REGISTRY:
+        if not e.runtime_registered:
+            out[e.key_type] = e.normalizer
+    return out
+
+
+ANCHOR_PREFIXES: tuple[str, ...] = generate_anchor_prefixes()
+_DEDUP_KEYS: tuple[str, ...] = generate_dedup_keys()
+_KEY_BEARING_BASES: frozenset[str] = generate_key_bearing_bases()
+KEY_NORMALIZERS: dict[str, Callable[[Any], str | None]] = generate_key_normalizers()
