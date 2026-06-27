@@ -147,3 +147,109 @@ def test_merge_plan_is_a_dry_run_does_not_mutate_input():
     rm.build_merge_plan({"members": ["org-a", "org-b"], "canonical": "org-a"}, graph)
     assert ("org-b", "TO_TARGET", "org-x") in graph["edges"]  # original edge untouched
     assert "dedup_superseded_by" not in graph["nodes"]["org-b"]["properties"]
+
+
+# --- Unit 6: ledger status + ai_reviews + envelope serialization ----------
+
+import json as _json  # noqa: E402
+from identity_ledger import make_assertion, write_assertions  # noqa: E402
+
+
+def _assertion(subject_ref, target_ref, status, basis="b", **kw):
+    return make_assertion(
+        subject_ref=subject_ref, target_ref=target_ref, status=status, basis=basis,
+        subject={"id": subject_ref, "display_label": "S"},
+        target={"id": target_ref, "display_label": "T"},
+        reviewer="stuart@eastpeak.cc", decided_at="2026-06-27", policy_version="v1", **kw,
+    )
+
+
+def _ref(local_id):
+    return rc.EntityRef(source_id="ein", local_id=local_id, display_label=local_id,
+                        public_fields={"display_label": local_id}, provenance={"adapter": "ein"})
+
+
+def _join(jid="j1"):
+    return rc.CandidateJoin(candidate_id=jid, left_ref=_ref("a"), right_ref=_ref("b"),
+                            signals=["normalized_name_exact"], signal_strength=0.9)
+
+
+def _attach_case(**kw):
+    base = dict(schema_version=rc.SCHEMA_VERSION, case_id="c1", case_type="identity_key_attach",
+                candidate_joins=[_join()], actionability="actionable")
+    base.update(kw)
+    return rc.ReconciliationCase(**base)
+
+
+def test_load_ledger_missing_fails_loud(tmp_path):
+    with pytest.raises(FileNotFoundError):
+        rm.load_ledger(tmp_path / "nope.jsonl")
+    assert rm.load_ledger(tmp_path / "nope.jsonl", allow_missing=True) == []
+
+
+def test_load_ledger_reads(tmp_path):
+    p = tmp_path / "l.jsonl"
+    write_assertions([_assertion("s", "t", "approved")], p)
+    assert len(rm.load_ledger(p)) == 1
+
+
+def test_ledger_status_none_approved_rejected():
+    assert rm.ledger_status([], "s", "t")["status"] == "none"
+    a = _assertion("s", "t", "approved")
+    out = rm.ledger_status([a], "s", "t")
+    assert out["status"] == "approved" and out["assertion_refs"] == [a["id"]]
+    r = _assertion("s", "t", "rejected_entity_distinct")
+    assert rm.ledger_status([r], "s", "t")["status"] == "rejected_entity_distinct"
+
+
+def test_ledger_status_superseded():
+    a = _assertion("s", "t", "approved")
+    a["superseded_by"] = "other-id"
+    assert rm.ledger_status([a], "s", "t")["status"] == "superseded"
+
+
+def test_ledger_status_requeue_review_after_elapsed():
+    a = _assertion("s", "t", "approved", review_after="2026-01-01")
+    out = rm.ledger_status([a], "s", "t", now="2026-06-27")
+    assert out["status"] == "requeued" and out["requeue_reason"] == "review_after_elapsed"
+
+
+def test_ledger_status_requeue_fingerprint_drift():
+    a = _assertion("s", "t", "approved")
+    out = rm.ledger_status([a], "s", "t", now="2026-06-27",
+                           current_subject={"id": "s", "display_label": "CHANGED"})
+    assert out["status"] == "requeued" and out["requeue_reason"] == "fingerprint_drift"
+
+
+def test_ai_reviews_maps_confidence_advisory():
+    revs = rm.ai_reviews_from_verdicts(
+        [{"vendor_id": "v", "proposed_key": "k", "verdict": "same", "confidence": 0.9,
+          "reason": "exact", "vendor_name": "V"}]
+    )
+    assert revs[0]["signal_strength"] == 0.9
+    assert revs[0]["verdict"] == "same"
+    assert revs[0]["input_hash"].startswith("ai-")
+    assert "confidence" not in _json.dumps(revs)  # mapped away
+
+
+def test_build_case_row_serializes_and_leak_gates():
+    a = _assertion("org-bmf-ein-1", "org-vendor", "approved")
+    case = _attach_case(current_ledger_status="approved", ledger_assertion_refs=[a["id"]],
+                        ai_reviews=rm.ai_reviews_from_verdicts([{"vendor_id": "org-vendor",
+                        "proposed_key": "1", "verdict": "same", "confidence": 0.9, "reason": "ok"}]))
+    row = rm.build_case_row(case)
+    assert row["case_type"] == "identity_key_attach"
+    assert len(row["candidate_joins"]) == 1
+    assert row["current_ledger_status"] == "approved"
+    assert "confidence" not in _json.dumps(row)
+
+
+def test_build_case_row_rejects_reserved():
+    case = _attach_case(case_type="relationship_candidate")
+    with pytest.raises(ValueError, match="reserved"):
+        rm.build_case_row(case)
+
+
+def test_emit_jsonl_clean():
+    lines = rm.emit_jsonl([_attach_case()])
+    assert len(lines) == 1 and lines[0].endswith("\n")
