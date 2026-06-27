@@ -23,7 +23,9 @@ from typing import Any
 from dedup_merge_applier import apply_component_merge
 from enrich_casos_keys import scan_for_forbidden  # consume the shipped recursive leak scan
 from identity_ledger import fingerprint, make_assertion, read_assertions, should_requeue
+from reconciliation_adapters import CommitteeAdapter, EinAdapter, SosAdapter
 from reconciliation_cases import (
+    SCHEMA_VERSION,
     CandidateJoin,
     EntityRef,
     OperatorAction,
@@ -273,3 +275,126 @@ def emit_jsonl(cases: list[ReconciliationCase]) -> list[str]:
     if final:
         raise ValueError(f"emitted JSONL failed the final leak gate: {final}")
     return [ln + "\n" for ln in lines]
+
+
+# --- orchestrator + CLI (Unit 8) --------------------------------------------
+#
+# Operator runbook:
+#   .venv/bin/python scripts/reconciliation_read_model.py \
+#       --candidates data/review/<lane>-candidates.jsonl ... \
+#       --ledger data/identity/assertions.jsonl --ledger data/identity/dedup-assertions.jsonl \
+#       --verdicts data/review/keying-adjudicated/verdicts.jsonl \
+#       --out data/review/reconciliation/read-model.jsonl
+# Writes the versioned read model + a <out>.coverage.json. The workbench UI (Tranche 2)
+# consumes the read model; this script never touches the live graph.
+
+_ADAPTERS_BY_SOURCE = {"ein": EinAdapter, "sos_id": SosAdapter, "committee_id": CommitteeAdapter}
+
+_ACTIONABILITY = {
+    "none": "actionable",
+    "requeued": "needs_review",
+    "approved": "resolved",
+    "deterministic": "resolved",
+    "superseded": "resolved",
+    "rejected_current_evidence": "resolved",
+    "rejected_entity_distinct": "resolved",
+}
+
+
+def detect_source(row: dict[str, Any]) -> str:
+    """Route a precomputed candidate row to its adapter source by shape/anchor prefix."""
+    anchor = str(row.get("subject_ref", ""))
+    if "registry_ein" in row or anchor.startswith("org-bmf-ein-"):
+        return "ein"
+    if "sos_ref" in row or anchor.startswith("org-casos-"):
+        return "sos_id"
+    if "committee_id" in row or anchor.startswith("org-fppc-"):
+        return "committee_id"
+    raise ValueError(f"cannot detect adapter source for candidate {row.get('subject_ref')!r}")
+
+
+def build_attach_read_model(
+    candidate_rows: list[dict[str, Any]],
+    *,
+    ledger_assertions: list[dict[str, Any]] = (),
+    verdict_rows: list[dict[str, Any]] = (),
+    now: str | None = None,
+) -> list[ReconciliationCase]:
+    """Collapse precomputed attach candidates (EIN/sos/committee) into identity_key_attach
+    ReconciliationCases, attaching ledger status (via the read-model wrapper) + advisory
+    ai_reviews (by vendor). Dedup-merge cases are assembled separately (they need a graph)."""
+    by_source: dict[str, list[dict[str, Any]]] = {}
+    for r in candidate_rows:
+        by_source.setdefault(detect_source(r), []).append(r)
+    verdicts_by_vendor: dict[str, list[dict[str, Any]]] = {}
+    for v in verdict_rows:
+        verdicts_by_vendor.setdefault(v.get("vendor_id"), []).append(v)
+
+    ledger = list(ledger_assertions)
+    cases: list[ReconciliationCase] = []
+    for source, rows in by_source.items():
+        for join in _ADAPTERS_BY_SOURCE[source](rows).emit_candidates():
+            subject_ref, target_ref = join.right_ref.local_id, join.left_ref.local_id
+            st = ledger_status(ledger, subject_ref, target_ref, now=now)
+            cases.append(ReconciliationCase(
+                schema_version=SCHEMA_VERSION,
+                case_id=f"attach|{join.candidate_id}",
+                case_type="identity_key_attach",
+                candidate_joins=[join],
+                actionability=_ACTIONABILITY.get(st["status"], "actionable"),
+                current_ledger_status=st["status"],
+                ledger_assertion_refs=st["assertion_refs"],
+                ai_reviews=ai_reviews_from_verdicts(verdicts_by_vendor.get(target_ref, [])),
+            ))
+    return cases
+
+
+def coverage(cases: list[ReconciliationCase]) -> dict[str, Any]:
+    from collections import Counter
+
+    by_source = Counter(c.candidate_joins[0].left_ref.source_id for c in cases if c.candidate_joins)
+    by_status = Counter(c.current_ledger_status for c in cases)
+    by_type = Counter(c.case_type for c in cases)
+    return {
+        "cases": len(cases),
+        "by_source": dict(by_source),
+        "by_case_type": dict(by_type),
+        "by_ledger_status": dict(by_status),
+    }
+
+
+def _load_jsonl(path: str) -> list[dict[str, Any]]:
+    return [json.loads(ln) for ln in Path(path).read_text(encoding="utf-8").splitlines() if ln.strip()]
+
+
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+
+    p = argparse.ArgumentParser(description="Emit the reconciliation candidate read model (JSONL).")
+    p.add_argument("--candidates", nargs="+", required=True, help="precomputed candidate JSONL file(s)")
+    p.add_argument("--ledger", action="append", default=[], help="ledger JSONL (repeatable)")
+    p.add_argument("--verdicts", help="synthetic AI-adjudicator verdict JSONL (optional)")
+    p.add_argument("--out", required=True, help="output read-model JSONL path")
+    p.add_argument("--now", default=None, help="injected 'now' (YYYY-MM-DD) for requeue derivation")
+    a = p.parse_args(argv)
+
+    rows: list[dict[str, Any]] = []
+    for f in a.candidates:
+        rows.extend(_load_jsonl(f))
+    ledger: list[dict[str, Any]] = []
+    for lf in a.ledger:
+        ledger.extend(load_ledger(lf, allow_missing=True))
+    verdicts = _load_jsonl(a.verdicts) if a.verdicts else []
+
+    cases = build_attach_read_model(rows, ledger_assertions=ledger, verdict_rows=verdicts, now=a.now)
+    out = Path(a.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("".join(emit_jsonl(cases)), encoding="utf-8")
+    cov = coverage(cases)
+    out.with_suffix(".coverage.json").write_text(json.dumps(cov, indent=2), encoding="utf-8")
+    print(json.dumps(cov))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
