@@ -10,7 +10,7 @@
 
 Open Marin is a public civic-accountability graph (Neo4j + Next.js) that makes public money and political influence legible — its flagship output being "dual-role" organizations that both receive public money and act politically (lobby/donate).
 
-The decision driving this spec: generalize the Marin-specific identity-reconciliation machinery into a **generic, open-source, region-agnostic toolkit** other municipalities can adopt — a "reconciliation workbench" modeled on RevOps dedup tools (Salesforce / HubSpot / Data Grimmer): side-by-side record compare, confidence + AI recommendation, merge / reject / unsure — with one civic superpower beyond standard CRM dedup: **preview what a join *does* to the graph**. Generic-by-design from the start; Marin is the first wired adapter.
+The decision driving this spec: generalize the Marin-specific identity-reconciliation machinery into a **generic, open-source, region-agnostic toolkit** other municipalities can adopt — a "reconciliation workbench" modeled on RevOps dedup tools (Salesforce / HubSpot / DataGroomr): side-by-side record compare, confidence + AI recommendation, merge / reject / unsure — with one civic superpower beyond standard CRM dedup: **preview what a join *does* to the graph**. Generic-by-design from the start; Marin is the first wired adapter.
 
 ### What already exists (shipped, ~1,400 tests, Codex-hardened, byte-stable)
 
