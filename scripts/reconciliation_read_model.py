@@ -19,6 +19,16 @@ import json
 from typing import Any
 
 from enrich_casos_keys import scan_for_forbidden  # consume the shipped recursive leak scan
+from identity_ledger import make_assertion
+from reconciliation_cases import OperatorAction, rejection_status, validate_action
+
+# Ledger namespacing (spec §5.2): attach assertions and dedup assertions live in
+# distinct files; dedup bases are prefixed `org_dedup` and ONLY they assemble into
+# merge components. An attach assertion can never enter a dedup component.
+ATTACH_LEDGER = "data/identity/assertions.jsonl"
+DEDUP_LEDGER = "data/identity/dedup-assertions.jsonl"
+
+POLICY_VERSION = "recon-read-model-v1"
 
 
 def public_hash(public_fields: dict[str, Any]) -> str:
@@ -34,3 +44,60 @@ def forbidden_violations(obj: Any) -> list[str]:
     Returns a list of violations ([] = clean). The emitter asserts this is empty over
     the FINAL serialized rows before writing."""
     return scan_for_forbidden(obj)
+
+
+# --- OperatorAction → ledger write (spec §5.2.1 action matrix) ---------------
+
+def operator_action_to_ledger(
+    action: OperatorAction,
+    *,
+    attach_builder=None,
+    candidate: dict[str, Any] | None = None,
+    vendor_ref: dict[str, Any] | None = None,
+    subject: dict[str, Any] | None = None,
+    target: dict[str, Any] | None = None,
+    policy_version: str = POLICY_VERSION,
+) -> dict[str, Any] | None:
+    """Map one ``OperatorAction`` to its ledger write, routed to the correct namespace.
+
+    Returns ``None`` for ``unsure`` (no write), else a dict
+    ``{ledger, assertion, same_as}``. ``identity_key_attach``/approve delegates to the
+    lane's ``build_*_attach`` (``attach_builder``) → (assertion, SAME_AS) into the
+    ATTACH ledger; reject writes an attach-namespace rejection assertion. ``entity_dedup_merge``
+    writes an ``org_dedup_operator_*`` assertion into the DEDUP ledger (approve = status
+    ``approved``, basis ``org_dedup_operator_approved`` — the human name-tier merge, NOT
+    the deterministic same-key path). Attach bases are never ``org_dedup*``."""
+    validate_action(action.case_type, action.action, action.rejection_kind)
+    if action.action == "unsure":
+        return None
+
+    if action.case_type == "identity_key_attach":
+        if action.action == "approve":
+            if attach_builder is None:
+                raise ValueError("identity_key_attach/approve requires an attach_builder")
+            assertion, same_as = attach_builder(
+                candidate, vendor_ref,
+                reviewer=action.reviewer, decided_at=action.decided_at, policy_version=policy_version,
+            )
+            return {"ledger": ATTACH_LEDGER, "assertion": assertion, "same_as": same_as}
+        # reject → attach-namespace rejection status (never org_dedup*)
+        assertion = make_assertion(
+            subject_ref=subject["id"], target_ref=target["id"],
+            status=rejection_status(action.rejection_kind),
+            basis=f"operator_rejected_{action.key_type}",
+            subject=subject, target=target,
+            reviewer=action.reviewer, decided_at=action.decided_at, policy_version=policy_version,
+        )
+        return {"ledger": ATTACH_LEDGER, "assertion": assertion, "same_as": None}
+
+    # entity_dedup_merge → DEDUP ledger, org_dedup_operator_* basis
+    if action.action == "approve":
+        status, basis = "approved", "org_dedup_operator_approved"
+    else:
+        status, basis = rejection_status(action.rejection_kind), "org_dedup_operator_rejected"
+    assertion = make_assertion(
+        subject_ref=subject["id"], target_ref=target["id"], status=status, basis=basis,
+        subject=subject, target=target,
+        reviewer=action.reviewer, decided_at=action.decided_at, policy_version=policy_version,
+    )
+    return {"ledger": DEDUP_LEDGER, "assertion": assertion, "same_as": None}

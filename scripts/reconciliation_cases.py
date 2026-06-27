@@ -74,6 +74,22 @@ class ReconciliationCase:
     graph_context_refs: dict[str, Any] = field(default_factory=dict)
 
 
+@dataclass
+class OperatorAction:
+    """The write-command the Tranche-2 workbench UI emits for one case. Carries the
+    DECISION; the data needed to build the ledger assertion (candidate / refs) is
+    supplied to the mapping at write time. ``key_type`` is required for attach;
+    ``rejection_kind`` for reject."""
+
+    case_id: str
+    case_type: str
+    action: str
+    reviewer: str
+    decided_at: str
+    key_type: str | None = None
+    rejection_kind: str | None = None
+
+
 def rejection_status(rejection_kind: str) -> str:
     """Map an OperatorAction ``rejection_kind`` to the ledger rejection STATUS."""
     if rejection_kind not in REJECTION_KINDS:
