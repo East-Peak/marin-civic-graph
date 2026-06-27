@@ -1,0 +1,10 @@
+# Optional, script-only Python dependencies (NOT required for the test suite).
+#
+#   .venv/bin/pip install -r requirements-optional.txt
+#
+# umap-learn powers scripts/build_umap.py (dimensionality reduction for the
+# embedding-cluster visual). It pulls numba/llvmlite, which historically conflict
+# with numpy>=2.1 — installing it may downgrade numpy or fail. Install it
+# deliberately, in a dedicated env if a numpy pin is needed. No test depends on it.
+
+umap-learn

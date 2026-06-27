@@ -1,0 +1,22 @@
+# Python dependencies for marin-civic-graph (scripts/ + tests/).
+# Pinned to the versions validated on this machine (2026-06-27).
+#
+# Setup (isolated, reproducible):
+#   python3 -m venv .venv
+#   .venv/bin/pip install -r requirements.txt
+#   .venv/bin/python -m pytest          # run the suite inside the venv
+#
+# Note: Homebrew's Python is "externally managed" (PEP 668) and refuses
+# system-wide installs — use the venv above rather than `pip install` globally.
+
+anthropic==0.112.0
+hdbscan==0.8.42
+neo4j==5.28.3
+numpy==2.4.4
+openpyxl==3.1.5
+pypdf==6.7.1
+pytest==9.0.3
+requests==2.33.1
+scipy==1.17.1
+voyageai==0.3.7
+PyYAML==6.0.3
