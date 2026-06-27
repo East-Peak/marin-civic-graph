@@ -39,9 +39,10 @@ from org_resolution import KEY_NORMALIZERS, propose_org_resolutions  # noqa: F40
 from enrich_casos_keys import register_sos_id_normalizer
 from enrich_fppc_keys import register_committee_id_normalizer, _election_year
 from identity_ledger import make_assertion, write_assertions
+from identity_key_registry import ANCHOR_PREFIXES, _DEDUP_KEYS  # generated views (Goal 0)
 
 # Synthetic identity-anchor key nodes — NOT real orgs; excluded from candidates.
-ANCHOR_PREFIXES: tuple[str, ...] = ("org-bmf-ein-", "org-casos-", "org-usasp-uei-", "org-fppc-")
+# ANCHOR_PREFIXES is generated from identity_key_registry (imported above).
 
 # Name-derived structural class (the enriched export carries no entity_class).
 # A committee/PAC token => `committee`, else `organization`. Word-boundary
@@ -120,7 +121,7 @@ def affiliate_token_divergence(name_a: str, name_b: str) -> bool:
 # never overrides a committee<->organization mismatch (Predeclared 4).
 # ---------------------------------------------------------------------------
 
-_DEDUP_KEYS: tuple[str, ...] = ("ein", "uei", "sos_id", "committee_id")
+# _DEDUP_KEYS is generated from identity_key_registry (imported above).
 DEDUP_KEY_BASIS = "org_dedup_key_exact"
 
 

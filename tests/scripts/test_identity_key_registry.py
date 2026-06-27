@@ -181,9 +181,27 @@ def test_dedup_keys_membership_crosscheck_fires_on_drift(monkeypatch):
 # --- Unit 5: KEY_NORMALIZERS static view (parity-locked to BASE_SHA) --------
 
 def test_key_normalizers_static_parity():
-    kns = reg.KEY_NORMALIZERS
-    assert type(kns) is dict
-    # STATIC view = ein/uei only; sos_id/committee_id are lane-registered at runtime
-    assert set(kns) == {"ein", "uei"}
-    assert kns["ein"] is kn._normalize_ein
-    assert kns["uei"] is kn._normalize_uei
+    # The STATIC view is what the generator produces — independent of the live
+    # shared dict, which the lanes mutate at import (adding sos_id/committee_id).
+    static = reg.generate_key_normalizers()
+    assert type(static) is dict
+    assert set(static) == {"ein", "uei"}
+    assert static["ein"] is kn._normalize_ein
+    assert static["uei"] is kn._normalize_uei
+    # The live shared dict maps ein/uei to the same callables (may also carry the
+    # runtime keys once a lane has registered them — order-independent assertion).
+    assert reg.KEY_NORMALIZERS["ein"] is kn._normalize_ein
+    assert reg.KEY_NORMALIZERS["uei"] is kn._normalize_uei
+
+
+# --- Unit 6: object-identity (one shared KEY_NORMALIZERS dict) --------------
+
+def test_key_normalizers_object_identity():
+    import org_resolution as o  # noqa: E402
+    # the matcher imports the registry's dict — the SAME object, not a copy
+    assert reg.KEY_NORMALIZERS is o.KEY_NORMALIZERS
+    # importing a consumer registers the runtime keys into that same shared dict
+    import export_existing_orgs  # noqa: F401, E402  (register_sos_id + register_committee_id at import)
+    assert reg.KEY_NORMALIZERS is o.KEY_NORMALIZERS  # still the same object after register_*
+    assert o.KEY_NORMALIZERS["sos_id"] is kn._normalize_sos_id
+    assert o.KEY_NORMALIZERS["committee_id"] is kn._normalize_committee_id

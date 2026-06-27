@@ -38,6 +38,7 @@ from typing import Any, Iterable, Iterator, Mapping
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from org_resolution import KEY_NORMALIZERS, _normalize_name, propose_org_resolutions  # noqa: E402
+from identity_key_normalizers import _normalize_sos_id  # noqa: E402  (shared; Goal 0 re-export)
 from identity_egress_gate import POLICY_VERSION, gate_ingestor_same_as  # noqa: E402
 from identity_ledger import make_assertion  # noqa: E402
 from identity_resolution_adapter import (  # noqa: E402
@@ -63,22 +64,9 @@ _WHITELIST_COLUMNS = {
 DELIMITER = "*|*"
 
 
-def _normalize_sos_id(value: Any) -> str | None:
-    """Format-agnostic CA SOS entity-number normalizer.
-
-    Uppercase; strip a single leading `C`/`c` (OpenCorporates' display form —
-    the raw SOS file has no prefix); remove all non-alphanumerics; PRESERVE
-    leading zeros (7-digit corp numbers are zero-padded). Accepts any resulting
-    non-empty alphanumeric token, so `0257045`, `202118310837`, and
-    `B20260076487` all key. Empty / no-surviving-alphanumeric → None (never a
-    fabricated key)."""
-    if value is None:
-        return None
-    text = str(value).strip().upper()
-    if text.startswith("C"):
-        text = text[1:]
-    text = re.sub(r"[^0-9A-Z]", "", text)
-    return text or None
+# _normalize_sos_id is re-exported from identity_key_normalizers (Goal 0 — the
+# single shared home for the key normalizers; imported above). register_sos_id_normalizer
+# registers that shared callable into KEY_NORMALIZERS.
 
 
 def register_sos_id_normalizer() -> None:

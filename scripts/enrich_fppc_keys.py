@@ -27,6 +27,7 @@ from pathlib import Path
 from typing import Any
 
 from org_resolution import KEY_NORMALIZERS, propose_org_resolutions
+from identity_key_normalizers import _normalize_committee_id  # shared; Goal 0 re-export
 from identity_ledger import read_assertions, write_assertions
 from enrich_org_keys import assertion_for_approved_candidate
 
@@ -40,16 +41,9 @@ _YEAR_TOKEN = re.compile(r"\b(?:19|20)\d{2}\b")
 FPPC_ANCHOR_PREFIX = "org-fppc-"
 
 
-def _normalize_committee_id(value: Any) -> str | None:
-    """Strict numeric FPPC committee id. Accepts a clean 1–9 digit numeric value
-    (CAL Format allows ≤9); whitespace stripped; ints coerced. Anything else —
-    `Pending`/`Unknown`, empty, overlength (>9 digits), or any non-digit
-    character (letters, dots, an SOS-style `C` prefix) — is None (never a
-    fabricated or wrong-shape key)."""
-    if value is None:
-        return None
-    text = str(value).strip()
-    return text if text.isdigit() and 1 <= len(text) <= 9 else None
+# _normalize_committee_id is re-exported from identity_key_normalizers (Goal 0 —
+# the single shared home for the key normalizers; imported above).
+# register_committee_id_normalizer registers that shared callable into KEY_NORMALIZERS.
 
 
 def register_committee_id_normalizer() -> None:

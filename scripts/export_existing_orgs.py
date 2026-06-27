@@ -29,6 +29,7 @@ from identity_ledger import PUBLISHING_STATUSES  # noqa: E402
 from org_resolution import KEY_NORMALIZERS  # noqa: E402
 from enrich_casos_keys import register_sos_id_normalizer  # noqa: E402
 from enrich_fppc_keys import register_committee_id_normalizer  # noqa: E402
+from identity_key_registry import _KEY_BEARING_BASES  # noqa: E402  (generated view, Goal 0)
 
 # Lanes 2/3: register the `sos_id`/`committee_id` normalizers at import so the
 # enriched export can normalize/surface them regardless of import order (Codex
@@ -51,11 +52,7 @@ ORGS_QUERY = (
 # Bases on a SAME_AS that legitimately carry a hard key (self-identity merges
 # and operator key-approvals). A relationship basis (sponsor/parent/PAC/dba/
 # project, or the resolver's `relationship_candidate`) carries NO key.
-_KEY_BEARING_BASES = frozenset({
-    "ein_exact", "uei_exact", "operator_approved_ein", "operator_approved_uei",
-    "sos_id_exact", "operator_approved_sos_id",  # Lane 2
-    "operator_approved_committee_id",  # Lane 3 (FPPC committee_id — name-resolved, operator-approved)
-})
+# _KEY_BEARING_BASES is generated from identity_key_registry (imported above).
 
 # The hard identity keys the enriched export surfaces (each ledger-validated
 # identically). Lane 2 adds `sos_id`; Lane 3 adds `committee_id`.
