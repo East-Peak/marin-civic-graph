@@ -210,6 +210,7 @@ def ai_reviews_from_verdicts(
             "model": model,
             "prompt_version": prompt_version,
             "input_hash": "ai-" + hashlib.sha256(seed.encode("utf-8")).hexdigest()[:12],
+            "proposed_key": r.get("proposed_key"),
             "verdict": r["verdict"],
             "reason": r.get("reason", ""),
             "signal_strength": float(r.get("confidence", r.get("signal_strength", 0.0))),
@@ -255,6 +256,8 @@ def build_case_row(case: ReconciliationCase) -> dict[str, Any]:
         "ledger_assertion_refs": case.ledger_assertion_refs,
         "ai_reviews": case.ai_reviews,
         "graph_context_refs": case.graph_context_refs,
+        "review_flags": case.review_flags,
+        "bulk_eligible": case.bulk_eligible,
     }
     if case.component is not None:
         row["component"] = case.component
@@ -313,6 +316,29 @@ def detect_source(row: dict[str, Any]) -> str:
     raise ValueError(f"cannot detect adapter source for candidate {row.get('subject_ref')!r}")
 
 
+BULK_AI_THRESHOLD = 0.9
+_KEY_FIELD_BY_SOURCE = {"ein": "registry_ein", "sos_id": "sos_id", "committee_id": "committee_id"}
+
+
+def _proposed_key(join: CandidateJoin) -> str | None:
+    """The candidate's key value (for matching verdicts by (vendor, proposed_key))."""
+    field_name = _KEY_FIELD_BY_SOURCE.get(join.left_ref.source_id, "")
+    v = join.right_ref.public_fields.get(field_name)
+    return str(v) if v is not None else None
+
+
+def _compute_bulk_eligible(join: CandidateJoin, matching_reviews: list[dict[str, Any]], *, single: bool) -> bool:
+    """Bulk eligibility (spec §5.3, fail-safe). Requires an exact signal, a KEY-MATCHING
+    AI `same` ≥ threshold, not-careful, and the only candidate for the vendor's key."""
+    signal_ok = "normalized_name_exact" in join.signals
+    ai_ok = any(
+        r.get("verdict") == "same" and float(r.get("signal_strength", 0.0)) >= BULK_AI_THRESHOLD
+        for r in matching_reviews
+    )
+    careful_ok = join.review_flags.get("needs_careful_review") is not True
+    return bool(signal_ok and ai_ok and careful_ok and single)
+
+
 def build_attach_read_model(
     candidate_rows: list[dict[str, Any]],
     *,
@@ -321,21 +347,31 @@ def build_attach_read_model(
     now: str | None = None,
 ) -> list[ReconciliationCase]:
     """Collapse precomputed attach candidates (EIN/sos/committee) into identity_key_attach
-    ReconciliationCases, attaching ledger status (via the read-model wrapper) + advisory
-    ai_reviews (by vendor). Dedup-merge cases are assembled separately (they need a graph)."""
+    ReconciliationCases: ledger-status overlay, advisory ai_reviews matched per
+    (vendor_id, proposed_key), review_flags, and a computed bulk_eligible. Dedup-merge
+    cases are assembled separately (they need a graph)."""
     by_source: dict[str, list[dict[str, Any]]] = {}
     for r in candidate_rows:
         by_source.setdefault(detect_source(r), []).append(r)
-    verdicts_by_vendor: dict[str, list[dict[str, Any]]] = {}
+    # per-key verdict index (Codex r2 — a same-vendor verdict for a DIFFERENT key must not count)
+    verdicts_by_key: dict[tuple[Any, str], list[dict[str, Any]]] = {}
     for v in verdict_rows:
-        verdicts_by_vendor.setdefault(v.get("vendor_id"), []).append(v)
+        verdicts_by_key.setdefault((v.get("vendor_id"), str(v.get("proposed_key"))), []).append(v)
 
     ledger = list(ledger_assertions)
     cases: list[ReconciliationCase] = []
     for source, rows in by_source.items():
-        for join in _ADAPTERS_BY_SOURCE[source](rows).emit_candidates():
+        joins = list(_ADAPTERS_BY_SOURCE[source](rows).emit_candidates())
+        per_vendor: dict[str, int] = {}
+        for j in joins:
+            per_vendor[j.left_ref.local_id] = per_vendor.get(j.left_ref.local_id, 0) + 1
+        for join in joins:
             subject_ref, target_ref = join.right_ref.local_id, join.left_ref.local_id
             st = ledger_status(ledger, subject_ref, target_ref, now=now)
+            matching = ai_reviews_from_verdicts(
+                verdicts_by_key.get((target_ref, str(_proposed_key(join))), [])
+            )
+            single = per_vendor.get(target_ref, 0) == 1
             cases.append(ReconciliationCase(
                 schema_version=SCHEMA_VERSION,
                 case_id=f"attach|{join.candidate_id}",
@@ -344,7 +380,9 @@ def build_attach_read_model(
                 actionability=_ACTIONABILITY.get(st["status"], "actionable"),
                 current_ledger_status=st["status"],
                 ledger_assertion_refs=st["assertion_refs"],
-                ai_reviews=ai_reviews_from_verdicts(verdicts_by_vendor.get(target_ref, [])),
+                ai_reviews=matching,
+                review_flags=dict(join.review_flags),
+                bulk_eligible=_compute_bulk_eligible(join, matching, single=single),
             ))
     return cases
 

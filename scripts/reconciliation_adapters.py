@@ -37,6 +37,10 @@ class ReconciliationAdapter:
     def _right_display(self, raw: dict[str, Any]) -> str:
         return raw["subject_ref"]
 
+    def _review_flags(self, raw: dict[str, Any]) -> dict[str, Any]:
+        """Per-source review flags surfaced for bulk-gating. Base = none."""
+        return {}
+
     def redaction_policy(self) -> dict[str, Any]:
         raise NotImplementedError
 
@@ -84,6 +88,7 @@ class ReconciliationAdapter:
             right_ref=right,
             signals=list(raw.get("signals", [])),
             signal_strength=float(strength),
+            review_flags=self._review_flags(raw),
         )
 
 
@@ -116,6 +121,10 @@ class SosAdapter(ReconciliationAdapter):
 
     def _right_display(self, raw: dict[str, Any]) -> str:
         return raw.get("sos_ref", {}).get("display_label", raw["subject_ref"])
+
+    def _review_flags(self, raw: dict[str, Any]) -> dict[str, Any]:
+        # CA-SOS carries needs_careful_review; absent ⇒ True (fail-safe: bulk-ineligible).
+        return {"needs_careful_review": bool(raw.get("needs_careful_review", True))}
 
     def redaction_policy(self) -> dict[str, Any]:
         return {

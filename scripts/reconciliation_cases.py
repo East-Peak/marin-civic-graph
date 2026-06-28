@@ -17,7 +17,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-SCHEMA_VERSION = "recon-read-model-v1"
+SCHEMA_VERSION = "recon-read-model-v2"  # v2: additive review_flags + bulk_eligible
 
 ACTIVE_CASE_TYPES: frozenset[str] = frozenset({"identity_key_attach", "entity_dedup_merge"})
 RESERVED_CASE_TYPES: frozenset[str] = frozenset({"relationship_candidate", "pattern_candidate"})
@@ -55,6 +55,7 @@ class CandidateJoin:
     signal_strength: float
     subject_fingerprint: str | None = None
     target_fingerprint: str | None = None
+    review_flags: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -72,6 +73,8 @@ class ReconciliationCase:
     component: dict[str, Any] | None = None
     merge_plan: dict[str, Any] | None = None
     graph_context_refs: dict[str, Any] = field(default_factory=dict)
+    review_flags: dict[str, Any] = field(default_factory=dict)
+    bulk_eligible: bool = False
 
 
 @dataclass
