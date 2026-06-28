@@ -82,7 +82,7 @@ def test_attach_reject_status_and_no_same_as():
     )
     assert w["ledger"] == rm.ATTACH_LEDGER
     assert w["assertion"]["status"] == "rejected_entity_distinct"
-    assert w["assertion"]["basis"] == "operator_rejected_ein"
+    assert w["assertion"]["basis"] == "operator_rejected_ein_entity_distinct"  # kind-encoded (Refinement A)
     assert not w["assertion"]["basis"].startswith("org_dedup")
     assert w["same_as"] is None
 
@@ -109,12 +109,32 @@ def test_dedup_reject():
         _act("entity_dedup_merge", "reject", rejection_kind="current_evidence"), subject=subj, target=tgt,
     )
     assert w["assertion"]["status"] == "rejected_current_evidence"
-    assert w["assertion"]["basis"] == "org_dedup_operator_rejected"
+    assert w["assertion"]["basis"] == "org_dedup_operator_rejected_current_evidence"  # kind-encoded (Refinement A)
 
 
 def test_reserved_case_type_permits_no_write():
     with pytest.raises(ValueError, match="reserved"):
         rm.operator_action_to_ledger(_act("relationship_candidate", "approve"))
+
+
+def test_rejection_basis_carries_no_key_and_changed_kind_is_distinct():
+    # Refinement A: rejection bases never surface a key (not in _KEY_BEARING_BASES)...
+    import sys as _sys
+    from pathlib import Path as _P
+    _sys.path.insert(0, str(_P(__file__).resolve().parents[2] / "scripts"))
+    from export_existing_orgs import _KEY_BEARING_BASES  # noqa: E402
+    assert "operator_rejected_ein_entity_distinct" not in _KEY_BEARING_BASES
+    assert "org_dedup_operator_rejected_current_evidence" not in _KEY_BEARING_BASES
+    # ...and a CHANGED rejection-kind yields a DISTINCT assertion id (so supersede can mint a clean id)
+    subj, tgt = {"id": "org-bmf-ein-1", "display_label": "x"}, {"id": "org-v", "display_label": "V"}
+    a1 = rm.operator_action_to_ledger(
+        _act("identity_key_attach", "reject", key_type="ein", rejection_kind="current_evidence"),
+        subject=subj, target=tgt)
+    a2 = rm.operator_action_to_ledger(
+        _act("identity_key_attach", "reject", key_type="ein", rejection_kind="entity_distinct"),
+        subject=subj, target=tgt)
+    assert a1["assertion"]["id"] != a2["assertion"]["id"]
+    assert a1["assertion"]["basis"] == "operator_rejected_ein_current_evidence"
 
 
 # --- Unit 5: MergePlan (dry-run over a scratch graph) ----------------------

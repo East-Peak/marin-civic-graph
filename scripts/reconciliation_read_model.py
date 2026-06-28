@@ -119,7 +119,7 @@ def operator_action_to_ledger(
         assertion = make_assertion(
             subject_ref=subject["id"], target_ref=target["id"],
             status=rejection_status(action.rejection_kind),
-            basis=f"operator_rejected_{action.key_type}",
+            basis=f"operator_rejected_{action.key_type}_{action.rejection_kind}",
             subject=subject, target=target,
             reviewer=action.reviewer, decided_at=action.decided_at, policy_version=policy_version,
         )
@@ -129,7 +129,7 @@ def operator_action_to_ledger(
     if action.action == "approve":
         status, basis = "approved", "org_dedup_operator_approved"
     else:
-        status, basis = rejection_status(action.rejection_kind), "org_dedup_operator_rejected"
+        status, basis = rejection_status(action.rejection_kind), f"org_dedup_operator_rejected_{action.rejection_kind}"
     assertion = make_assertion(
         subject_ref=subject["id"], target_ref=target["id"], status=status, basis=basis,
         subject=subject, target=target,
