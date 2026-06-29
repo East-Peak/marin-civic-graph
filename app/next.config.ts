@@ -19,7 +19,11 @@ if (!LOCAL_OPERATOR) {
 }
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Pin the Turbopack workspace root to THIS app dir. Without it, Next 16 infers the root
+  // from the nearest lockfile and can select a stray parent lockfile (e.g. ~/package-lock.json),
+  // which roots tracing outside the project and drops every App Router route (build emits
+  // only a pages /404). Anchored to the config file's dir so it's correct from any cwd.
+  turbopack: { root: HERE },
 };
 
 export default nextConfig;
