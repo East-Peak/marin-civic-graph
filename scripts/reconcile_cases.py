@@ -52,3 +52,22 @@ def overlay_cases(
         c.setdefault("bulk_eligible", False)
         out.append(c)
     return out
+
+
+def main(argv: list[str] | None = None) -> int:
+    """CLI: emit the overlaid cases as a JSON array to stdout (consumed by the operator
+    workbench's /api/reconcile/cases route via subprocess)."""
+    import argparse
+    import json as _json
+
+    p = argparse.ArgumentParser(description="Overlay live ledger status on the read model.")
+    p.add_argument("--read-model", required=True)
+    p.add_argument("--ledger", action="append", default=[], help="ledger JSONL (repeatable)")
+    p.add_argument("--now", default=None)
+    a = p.parse_args(argv)
+    print(_json.dumps(overlay_cases(a.read_model, a.ledger, now=a.now)))
+    return 0
+
+
+if __name__ == "__main__":  # pragma: no cover
+    raise SystemExit(main())

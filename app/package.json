@@ -6,7 +6,7 @@
     "predev": "node scripts/copy-operator-workbench.mjs && node scripts/copy-subgraphs.mjs",
     "dev": "next dev",
     "predev:operator": "OPERATOR_WORKBENCH=1 node scripts/copy-operator-workbench.mjs && node scripts/copy-subgraphs.mjs",
-    "dev:operator": "OPERATOR_WORKBENCH=1 next dev -H 127.0.0.1",
+    "dev:operator": "OPERATOR_WORKBENCH=1 OPERATOR_REPO_ROOT=$(cd .. && pwd) OPERATOR_PYTHON=$(cd .. && pwd)/.venv/bin/python next dev -H 127.0.0.1",
     "prebuild": "node scripts/copy-operator-workbench.mjs && node scripts/copy-subgraphs.mjs",
     "build": "next build",
     "start": "next start",

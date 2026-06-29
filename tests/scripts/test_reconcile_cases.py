@@ -57,3 +57,13 @@ def test_overlay_never_mutates_the_source_file(tmp_path):
     before = rmf.read_bytes()
     rc.overlay_cases(rmf, [led])
     assert rmf.read_bytes() == before  # static read model untouched
+
+
+def test_cli_emits_overlaid_cases_json(tmp_path, capsys):
+    import reconcile_cases as rc
+    rmf = _write_read_model(tmp_path)
+    led = _write_ledger(tmp_path)
+    code = rc.main(["--read-model", str(rmf), "--ledger", str(led)])
+    assert code == 0
+    out = json.loads(capsys.readouterr().out)
+    assert isinstance(out, list) and out[0]["current_ledger_status"] == "approved"

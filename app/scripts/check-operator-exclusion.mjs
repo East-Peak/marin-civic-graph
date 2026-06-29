@@ -44,9 +44,12 @@ function operatorRoutesIn(manifest) {
 console.log("[A] operator build — both operator routes must be PRESENT");
 const present = operatorRoutesIn(build(true));
 const hasPage = present.some((t) => t.includes("/reconcile") && !t.includes("/api/"));
-const hasApi = present.some((t) => t.includes("/api/reconcile/decide"));
-if (!hasPage || !hasApi) {
-  throw new Error(`operator build missing routes (page=${hasPage}, api=${hasApi}); saw: ${present.join(", ") || "none"}`);
+const hasDecideApi = present.some((t) => t.includes("/api/reconcile/decide"));
+const hasCasesApi = present.some((t) => t.includes("/api/reconcile/cases"));
+if (!hasPage || !hasDecideApi || !hasCasesApi) {
+  throw new Error(
+    `operator build missing routes (page=${hasPage}, decide=${hasDecideApi}, cases=${hasCasesApi}); saw: ${present.join(", ") || "none"}`,
+  );
 }
 console.log(`  ✓ present: ${present.join(", ")}`);
 
