@@ -3,16 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "node scripts/copy-subgraphs.mjs",
+    "predev": "node scripts/copy-operator-workbench.mjs && node scripts/copy-subgraphs.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/copy-subgraphs.mjs",
+    "predev:operator": "OPERATOR_WORKBENCH=1 node scripts/copy-operator-workbench.mjs && node scripts/copy-subgraphs.mjs",
+    "dev:operator": "OPERATOR_WORKBENCH=1 next dev -H 127.0.0.1",
+    "prebuild": "node scripts/copy-operator-workbench.mjs && node scripts/copy-subgraphs.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "verify": "npm run typecheck && npm run lint && npm test"
+    "verify": "npm run typecheck && npm run lint && npm test",
+    "check:operator-exclusion": "node scripts/check-operator-exclusion.mjs"
   },
   "dependencies": {
     "@cosmograph/cosmos": "^1.6.1",
