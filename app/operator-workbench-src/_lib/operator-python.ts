@@ -29,6 +29,9 @@ export function repoPath(...segments: string[]): string {
 export const DATA = {
   readModel: () => repoPath("data", "review", "reconciliation", "read-model.jsonl"),
   attachLedger: () => repoPath("data", "identity", "assertions.jsonl"),
+  einCandidates: () => repoPath("data", "review", "phaseB-ein-review", "vendor-ein-candidates.jsonl"),
+  sosCandidates: () => repoPath("data", "review", "phaseC-sos-review", "vendor-sos-candidates.jsonl"),
+  attachDir: () => repoPath("data", "review", "attach"),
 };
 
 export function runPython<T = unknown>(script: string, args: string[]): T {

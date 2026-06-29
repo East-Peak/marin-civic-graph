@@ -203,3 +203,20 @@ def test_handoff_edge_last_write_wins_no_dup(tmp_path):
     edges = _jsonl(att / "edges.jsonl")
     assert len(edges) == 1  # upserted, not duplicated
     assert edges[0]["properties"]["assertion_id"] == out["same_as"]["properties"]["assertion_id"] != "OLD"
+
+
+def test_approve_reject_approve_reactivates_not_existing(tmp_path):
+    """Codex Slice-4 HIGH: re-approving after a reject must REACTIVATE (one live = the
+    re-approve), not return 'existing' and leave the reject live."""
+    led, att = tmp_path / "l.jsonl", tmp_path / "attach"
+    first = _approve_handoff(led, att)              # created (approve A)
+    _reject_call(led)                               # reject B supersedes A
+    again = _approve_handoff(led, att)              # approve A again → must reactivate
+    assert again["result"] == "superseded"
+    rows = _rows(led)
+    live = [a for a in rows if a.get("superseded_by") is None]
+    assert len(live) == 1
+    assert live[0]["status"] == "approved" and live[0]["id"] == first["assertion"]["id"]
+    # the handoff edge points at the now-live approve assertion
+    edge = json.loads((att / "edges.jsonl").read_text().splitlines()[0])
+    assert edge["properties"]["assertion_id"] == live[0]["id"]

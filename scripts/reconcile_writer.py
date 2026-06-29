@@ -161,26 +161,25 @@ def apply_decision(
         sref, tref = canonical["subject_ref"], canonical["target_ref"]
 
         existing = next((a for a in ledger if a["id"] == cid), None)
-        if existing is not None:  # idempotent: same decision (decided_at excluded from id)
+        if existing is not None and existing.get("superseded_by") is None:
+            # live + identical decision → idempotent no-op (decided_at excluded from the id)
             result, persisted, wrote = "existing", existing, False
         else:
             wrote = True
-            prior_live = _live_for_pair(ledger, sref, tref)
-            if prior_live:  # changed decision → supersede the prior live (canonical id is the new one)
-                superseded_ids = {a["id"] for a in prior_live}
-                ledger = [
-                    ({**a, "status": "superseded", "superseded_by": cid} if a["id"] in superseded_ids else a)
-                    for a in ledger
-                ]
-                persisted = {**canonical, "supersedes": sorted(superseded_ids)[0]}
-                ledger.append(persisted)
-                live = _live_for_pair(ledger, sref, tref)
-                assert len(live) == 1 and live[0]["id"] == cid, "supersede must leave exactly one live"
-                result = "superseded"
-            else:
-                persisted = canonical
-                ledger.append(persisted)
-                result = "created"
+            # Drop any STALE (superseded) row carrying the canonical id — reactivation (e.g.
+            # approve → reject → approve) re-adds the canonical assertion as the LIVE one.
+            ledger = [a for a in ledger if a["id"] != cid]
+            prior_live = _live_for_pair(ledger, sref, tref)  # current live row(s) for the pair (different id)
+            superseded_ids = {a["id"] for a in prior_live}
+            ledger = [
+                ({**a, "status": "superseded", "superseded_by": cid} if a["id"] in superseded_ids else a)
+                for a in ledger
+            ]
+            persisted = {**canonical, "supersedes": (sorted(superseded_ids)[0] if superseded_ids else None)}
+            ledger.append(persisted)
+            live = _live_for_pair(ledger, sref, tref)
+            assert len(live) == 1 and live[0]["id"] == cid, "must leave exactly one live per pair"
+            result = "superseded" if superseded_ids else "created"
 
         if wrote:
             _atomic_write_assertions(ledger, ledger_path)
