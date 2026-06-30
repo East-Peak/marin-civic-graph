@@ -13,8 +13,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { Case, ContextEntry } from "../_lib/bench-types";
 import {
+  applyControls,
   bucketize,
+  DEFAULT_CONTROLS,
   displayName,
+  investigationLinks,
   KEY_FIELD,
   proposedKey,
   statusAfter,
@@ -23,6 +26,8 @@ import {
   type BenchRow,
   type Bucket,
   type DecideResponse,
+  type QueueControls,
+  type SortKey,
 } from "../_lib/bench-logic";
 
 type Props = {
@@ -72,12 +77,30 @@ export function Bench({ initialCases, context, reviewer = "operator", ctxError =
   const [bulkText, setBulkText] = useState("");
   const [deselected, setDeselected] = useState<Set<string>>(() => new Set());
   const [bulkRunning, setBulkRunning] = useState(false);
+  const [controls, setControls] = useState<QueueControls>(DEFAULT_CONTROLS);
   // Per-case in-flight guard (authoritative + synchronous, so two events in one tick can't
   // both submit the same case). The optimistic move also unmounts the case's controls.
   const inFlight = useRef<Set<string>>(new Set());
 
   const buckets = useMemo(() => bucketize(rows, context), [rows, context]);
-  const activeList = buckets[tab];
+  // The displayed list = the active bucket after the operator's filters + sort.
+  const activeList = useMemo(() => applyControls(buckets[tab], context, controls), [buckets, tab, context, controls]);
+  const bucketTotal = buckets[tab].length;
+  // Any change to the visible set (tab, filter, sort, deselection) clears a typed bulk
+  // confirmation, so an armed count can never apply to a set the operator didn't review.
+  const resetArm = useCallback(() => setBulkText(""), []);
+  const setSort = (key: SortKey) => {
+    setControls((c) =>
+      c.sortKey === key
+        ? { ...c, sortDir: c.sortDir === "asc" ? "desc" : "asc" }
+        : { ...c, sortKey: key, sortDir: key === "name" ? "asc" : "desc" },
+    );
+    resetArm();
+  };
+  const changeControls = (fn: (c: QueueControls) => QueueControls) => {
+    setControls(fn);
+    resetArm();
+  };
   const counts = useMemo(
     () => ({
       needsReview: buckets.needsReview.length,
@@ -172,9 +195,11 @@ export function Bench({ initialCases, context, reviewer = "operator", ctxError =
   }, [activeList, effectiveId, decide]);
 
   // --- bulk path (recommended tab) ------------------------------------------
+  // Targets = what's visible in the recommended queue (filters applied) minus deselected,
+  // so "Approve N" matches exactly what the operator sees.
   const bulkTargets = useMemo(
-    () => buckets.recommended.filter((r) => !deselected.has(r.case_id)),
-    [buckets.recommended, deselected],
+    () => (tab === "recommended" ? activeList.filter((r) => !deselected.has(r.case_id)) : []),
+    [tab, activeList, deselected],
   );
   const bulkArmed = bulkText.trim() === String(bulkTargets.length) && bulkTargets.length > 0 && !bulkRunning;
 
@@ -182,9 +207,13 @@ export function Bench({ initialCases, context, reviewer = "operator", ctxError =
     if (!bulkArmed) return;
     setBulkRunning(true);
     setError(null);
-    // Freeze the exact target set (id + prior status) the operator confirmed, so a
-    // failed write reverts to its real prior rather than an assumed "none".
-    const targets = bulkTargets.map((r) => ({ id: r.case_id, prior: r.displayStatus }));
+    // Freeze the exact target set (id + prior status) the operator confirmed, skipping any
+    // case already being decided individually, and claim them in the in-flight guard so a
+    // concurrent single decision can't double-submit. A failed write reverts to its real prior.
+    const targets = bulkTargets
+      .filter((r) => !inFlight.current.has(r.case_id))
+      .map((r) => ({ id: r.case_id, prior: r.displayStatus }));
+    targets.forEach((t) => inFlight.current.add(t.id));
     const ids = new Set(targets.map((t) => t.id));
     setRows((rs) => rs.map((r) => (ids.has(r.case_id) ? { ...r, displayStatus: "approved" } : r)));
     for (const { id, prior } of targets) {
@@ -195,6 +224,8 @@ export function Bench({ initialCases, context, reviewer = "operator", ctxError =
       } catch (err: unknown) {
         setRows((rs) => rs.map((r) => (r.case_id === id ? { ...r, displayStatus: prior } : r))); // revert to prior
         setError(`${id}: ${err instanceof Error ? err.message : String(err)}`);
+      } finally {
+        inFlight.current.delete(id);
       }
     }
     setBulkText("");
@@ -220,7 +251,10 @@ export function Bench({ initialCases, context, reviewer = "operator", ctxError =
             <button
               key={key}
               data-testid={`tab-${key}`}
-              onClick={() => setTab(key)}
+              onClick={() => {
+                setTab(key);
+                resetArm();
+              }}
               style={{
                 padding: "5px 12px",
                 borderRadius: 6,
@@ -247,10 +281,11 @@ export function Bench({ initialCases, context, reviewer = "operator", ctxError =
       <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
         {/* Queue */}
         <section style={{ width: 420, borderRight: "1px solid #e5e5e5", overflow: "auto" }}>
+          <Controls controls={controls} setControls={changeControls} setSort={setSort} showing={activeList.length} total={bucketTotal} />
           {tab === "recommended" ? (
             <BulkBar
               targetCount={bulkTargets.length}
-              total={buckets.recommended.length}
+              total={bucketTotal}
               armed={bulkArmed}
               running={bulkRunning}
               text={bulkText}
@@ -288,14 +323,15 @@ export function Bench({ initialCases, context, reviewer = "operator", ctxError =
                         checked={!deselected.has(r.case_id)}
                         disabled={bulkRunning}
                         onClick={(e) => e.stopPropagation()}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           setDeselected((d) => {
                             const n = new Set(d);
                             if (e.target.checked) n.delete(r.case_id);
                             else n.add(r.case_id);
                             return n;
-                          })
-                        }
+                          });
+                          resetArm();
+                        }}
                       />
                     ) : null}
                     <div style={{ flex: 1, minWidth: 0 }}>
@@ -327,6 +363,116 @@ export function Bench({ initialCases, context, reviewer = "operator", ctxError =
   );
 }
 
+const chipStyle = (active: boolean) =>
+  ({
+    padding: "2px 8px",
+    borderRadius: 4,
+    border: "1px solid",
+    borderColor: active ? "#2563eb" : "#ddd",
+    background: active ? "#eff6ff" : "#fff",
+    color: active ? "#1d4ed8" : "#555",
+    cursor: "pointer",
+    fontSize: 11,
+  }) as const;
+
+const VERDICTS: [QueueControls["verdict"], string][] = [
+  ["all", "All"],
+  ["same", "Same"],
+  ["different", "Different"],
+  ["unsure", "Unsure"],
+];
+const NAMES: [QueueControls["nameMatch"], string][] = [
+  ["all", "All"],
+  ["exact", "Exact"],
+  ["fuzzy", "Fuzzy"],
+];
+const MONEYS: [number, string][] = [
+  [0, "Any $"],
+  [10000, "≥$10k"],
+  [50000, "≥$50k"],
+  [100000, "≥$100k"],
+];
+const SORTS: [SortKey, string][] = [
+  ["money", "$"],
+  ["name", "Name"],
+  ["ai", "AI"],
+];
+
+function Controls({
+  controls,
+  setControls,
+  setSort,
+  showing,
+  total,
+}: {
+  controls: QueueControls;
+  setControls: (fn: (c: QueueControls) => QueueControls) => void;
+  setSort: (k: SortKey) => void;
+  showing: number;
+  total: number;
+}) {
+  const set = (patch: Partial<QueueControls>) => setControls((c) => ({ ...c, ...patch }));
+  const group = (label: string, children: ReactNode) => (
+    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+      <span style={{ fontSize: 10, color: "#999", textTransform: "uppercase" }}>{label}</span>
+      {children}
+    </div>
+  );
+  return (
+    <div style={{ position: "sticky", top: 0, zIndex: 1, background: "#fff", borderBottom: "1px solid #e5e5e5", padding: "8px 10px", display: "flex", flexDirection: "column", gap: 6 }}>
+      <input
+        data-testid="q-search"
+        value={controls.search}
+        onChange={(e) => set({ search: e.target.value })}
+        placeholder="search name / registry / key…"
+        style={{ padding: "4px 8px", border: "1px solid #ccc", borderRadius: 4, fontSize: 12 }}
+      />
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+        {group(
+          "AI",
+          VERDICTS.map(([v, label]) => (
+            <button key={v} data-testid={`q-verdict-${v}`} onClick={() => set({ verdict: v })} style={chipStyle(controls.verdict === v)}>
+              {label}
+            </button>
+          )),
+        )}
+        {group(
+          "Name",
+          NAMES.map(([v, label]) => (
+            <button key={v} data-testid={`q-name-${v}`} onClick={() => set({ nameMatch: v })} style={chipStyle(controls.nameMatch === v)}>
+              {label}
+            </button>
+          )),
+        )}
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+        {group(
+          "$≥",
+          MONEYS.map(([v, label]) => (
+            <button key={v} data-testid={`q-money-${v}`} onClick={() => set({ minMoney: v })} style={chipStyle(controls.minMoney === v)}>
+              {label}
+            </button>
+          )),
+        )}
+        {group(
+          "Sort",
+          SORTS.map(([v, label]) => {
+            const active = controls.sortKey === v;
+            return (
+              <button key={v} data-testid={`q-sort-${v}`} onClick={() => setSort(v)} style={chipStyle(active)}>
+                {label} {active ? (controls.sortDir === "asc" ? "▲" : "▼") : ""}
+              </button>
+            );
+          }),
+        )}
+      </div>
+      <div style={{ fontSize: 11, color: "#999" }}>
+        showing {showing.toLocaleString()} of {total.toLocaleString()}
+      </div>
+    </div>
+  );
+}
+
 function BulkBar(props: {
   targetCount: number;
   total: number;
@@ -339,8 +485,9 @@ function BulkBar(props: {
   return (
     <div style={{ padding: "12px 12px", borderBottom: "1px solid #e5e5e5", background: "#fafafa" }}>
       <div style={{ fontSize: 12, color: "#555", marginBottom: 6 }}>
-        {props.total} bulk-eligible (exact name + key, AI&nbsp;≥&nbsp;0.9, no collision). Deselect any to exclude, then type
-        the count <strong>{props.targetCount}</strong> to confirm.
+        <strong>{props.targetCount}</strong> selected
+        {props.targetCount !== props.total ? ` (of ${props.total} recommended)` : ""} — exact name + key, AI&nbsp;≥&nbsp;0.9,
+        no collision. Deselect to exclude, then type <strong>{props.targetCount}</strong> to confirm.
       </div>
       <div style={{ display: "flex", gap: 6 }}>
         <input
@@ -450,6 +597,15 @@ function CaseDetail({
           )}
           {row.bulk_eligible ? <div style={{ color: "#16a34a", marginTop: 6, fontSize: 12 }}>✓ bulk-eligible</div> : null}
         </div>
+      </div>
+
+      <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "4px 0" }}>
+        <span style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 0.5, color: "#999" }}>Investigate</span>
+        {investigationLinks(row).map((l) => (
+          <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, color: "#2563eb" }}>
+            {l.label} ↗
+          </a>
+        ))}
       </div>
 
       <div style={{ display: "flex", gap: 8, marginTop: 16 }}>

@@ -7,26 +7,42 @@ import { render, screen, fireEvent, act, waitFor, within } from "@testing-librar
 import { Bench } from "../../../operator-workbench-src/reconcile/Bench";
 import type { Case, ContextEntry } from "../../../operator-workbench-src/_lib/bench-types";
 
-function mkCase(over: Partial<Case> & { vendor?: string; src?: string; key?: string } = {}): Case {
+type CaseOver = Partial<Case> & {
+  vendor?: string;
+  src?: string;
+  key?: string;
+  name?: string;
+  regName?: string;
+  city?: string;
+  signals?: string[];
+  aiVerdict?: string;
+  aiConf?: number;
+};
+
+function mkCase(over: CaseOver = {}): Case {
   const vendor = over.vendor ?? "org-county-vendor-1";
   const src = over.src ?? "ein";
   const keyField = src === "ein" ? "registry_ein" : "sos_id";
+  const pubFields: Record<string, unknown> = { [keyField]: over.key ?? "94-3041517" };
+  if (over.city) pubFields.principal_city = over.city;
   return {
     case_id: over.case_id ?? `attach|anchor-1|${vendor}`,
     candidate_joins: over.candidate_joins ?? [
       {
-        left_ref: { source_id: src, local_id: vendor, display_label: "RAW VENDOR", public_fields: {} },
+        left_ref: { source_id: src, local_id: vendor, display_label: over.name ?? "RAW VENDOR", public_fields: {} },
         right_ref: {
           source_id: src,
           local_id: "anchor-1",
-          display_label: "Registry Name",
-          public_fields: { [keyField]: over.key ?? "94-3041517" },
+          display_label: over.regName ?? "Registry Name",
+          public_fields: pubFields,
         },
-        signals: ["normalized_name_exact"],
+        signals: over.signals ?? ["normalized_name_exact"],
         signal_strength: 0.95,
       },
     ],
-    ai_reviews: over.ai_reviews ?? [{ verdict: "same", reason: "exact name + key", signal_strength: 0.97 }],
+    ai_reviews: over.ai_reviews ?? [
+      { verdict: over.aiVerdict ?? "same", reason: "exact name + key", signal_strength: over.aiConf ?? 0.97 },
+    ],
     current_ledger_status: over.current_ledger_status ?? "none",
     bulk_eligible: over.bulk_eligible ?? false,
     review_flags: over.review_flags ?? {},
@@ -229,5 +245,73 @@ describe("Bench", () => {
     // not stuck optimistic — the row is back in needs-review
     expect(screen.getByTestId("tab-needsReview").textContent).toMatch(/1/);
     expect(screen.getByTestId("tab-done").textContent).toMatch(/0/);
+  });
+});
+
+describe("Bench queue controls", () => {
+  const rowIds = () => screen.getAllByTestId(/^row-/).map((el) => el.getAttribute("data-testid"));
+  const cases = [
+    mkCase({ case_id: "a", vendor: "v1", aiVerdict: "same", aiConf: 0.95, signals: ["normalized_name_exact"], name: "Alpha Foundation" }),
+    mkCase({ case_id: "b", vendor: "v2", aiVerdict: "different", aiConf: 0.4, signals: ["token_overlap"], name: "Beta LLC" }),
+    mkCase({ case_id: "c", vendor: "v3", aiVerdict: "unsure", aiConf: 0.6, signals: ["token_overlap"], name: "Gamma Trust" }),
+  ];
+  const ctx = {
+    v1: mkCtx({ money_total: 900, display_label: "Alpha Foundation" }),
+    v2: mkCtx({ money_total: 100, display_label: "Beta LLC" }),
+    v3: mkCtx({ money_total: 5000, display_label: "Gamma Trust" }),
+  };
+
+  it("filters the visible queue by free-text search", () => {
+    render(<Bench initialCases={cases} context={ctx} />);
+    act(() => {
+      fireEvent.change(screen.getByTestId("q-search"), { target: { value: "gamma" } });
+    });
+    expect(rowIds()).toEqual(["row-c"]);
+  });
+
+  it("filters by AI verdict", () => {
+    render(<Bench initialCases={cases} context={ctx} />);
+    act(() => {
+      fireEvent.click(screen.getByTestId("q-verdict-different"));
+    });
+    expect(rowIds()).toEqual(["row-b"]);
+  });
+
+  it("toggles sort direction on the active key", () => {
+    render(<Bench initialCases={cases} context={ctx} />);
+    // default money desc: 5000, 900, 100
+    expect(rowIds()).toEqual(["row-c", "row-a", "row-b"]);
+    act(() => {
+      fireEvent.click(screen.getByTestId("q-sort-money")); // active key → flip to asc
+    });
+    expect(rowIds()).toEqual(["row-b", "row-a", "row-c"]);
+  });
+
+  it("disarms the bulk confirmation when a filter changes (no stale-set approve)", () => {
+    const bulk = [
+      mkCase({ case_id: "b1", vendor: "v1", bulk_eligible: true }),
+      mkCase({ case_id: "b2", vendor: "v2", bulk_eligible: true }),
+    ];
+    render(<Bench initialCases={bulk} context={{ v1: mkCtx(), v2: mkCtx() }} />);
+    act(() => {
+      fireEvent.click(screen.getByTestId("tab-recommended"));
+    });
+    act(() => {
+      fireEvent.change(screen.getByTestId("bulk-confirm"), { target: { value: "2" } });
+    });
+    expect((screen.getByTestId("bulk-approve") as HTMLButtonElement).disabled).toBe(false);
+    // changing a filter must clear the typed confirmation → button disarms
+    act(() => {
+      fireEvent.click(screen.getByTestId("q-name-exact"));
+    });
+    expect((screen.getByTestId("bulk-confirm") as HTMLInputElement).value).toBe("");
+    expect((screen.getByTestId("bulk-approve") as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it("renders investigation links in the detail pane", () => {
+    render(<Bench initialCases={[mkCase({ case_id: "c1", vendor: "v1", src: "ein", key: "94-3041517", name: "Buckelew" })]} context={{ v1: mkCtx({ display_label: "Buckelew Programs" }) }} />);
+    const pp = screen.getByRole("link", { name: /ProPublica/i });
+    expect(pp).toHaveAttribute("href", "https://projects.propublica.org/nonprofits/organizations/943041517");
+    expect(screen.getByRole("link", { name: /Web search/i })).toHaveAttribute("href", expect.stringContaining("google.com/search"));
   });
 });

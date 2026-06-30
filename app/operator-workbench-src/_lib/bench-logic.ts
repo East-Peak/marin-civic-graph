@@ -93,6 +93,112 @@ export function bucketOf(status: string, recommended: boolean): Bucket {
   return recommended ? "recommended" : "needsReview"; // none | requeued
 }
 
+/** First AI verdict ("same" | "different" | "unsure"), or null when none. */
+export function aiVerdictOf(c: Case): string | null {
+  return c.ai_reviews[0]?.verdict ?? null;
+}
+
+/** AI confidence for sorting; -1 when there's no review (sorts to the bottom). */
+export function aiConfidenceOf(c: Case): number {
+  return c.ai_reviews[0]?.signal_strength ?? -1;
+}
+
+/** Whether the candidate matched on a normalized-exact name (the strong name signal). */
+export function isNameExact(c: Case): boolean {
+  return (c.candidate_joins[0].signals ?? []).includes("normalized_name_exact");
+}
+
+// --- queue controls: filter + sort within the active bucket ------------------
+
+export type SortKey = "money" | "name" | "ai";
+export type SortDir = "asc" | "desc";
+export type VerdictFilter = "all" | "same" | "different" | "unsure";
+export type NameFilter = "all" | "exact" | "fuzzy";
+
+export type QueueControls = {
+  search: string;
+  verdict: VerdictFilter;
+  nameMatch: NameFilter;
+  minMoney: number;
+  sortKey: SortKey;
+  sortDir: SortDir;
+};
+
+export const DEFAULT_CONTROLS: QueueControls = {
+  search: "",
+  verdict: "all",
+  nameMatch: "all",
+  minMoney: 0,
+  sortKey: "money",
+  sortDir: "desc",
+};
+
+const haystack = (c: Case, ctx: ContextEntry | undefined): string =>
+  [
+    displayName(c, ctx),
+    c.candidate_joins[0].left_ref.display_label,
+    c.candidate_joins[0].right_ref.display_label,
+    vendorId(c),
+    proposedKey(c),
+  ]
+    .join(" ")
+    .toLowerCase();
+
+/** Filter + sort the active bucket per the operator's controls. Pure; the component owns
+ *  the control state and calls this for the displayed list. */
+export function applyControls(
+  rows: BenchRow[],
+  ctx: Record<string, ContextEntry>,
+  controls: QueueControls,
+): BenchRow[] {
+  const q = controls.search.trim().toLowerCase();
+  let out = rows;
+  if (q.length >= 2) out = out.filter((r) => haystack(r, ctx[vendorId(r)]).includes(q)); // min length avoids "a"/"10" matching everything
+  if (controls.verdict !== "all") out = out.filter((r) => aiVerdictOf(r) === controls.verdict);
+  if (controls.nameMatch !== "all") out = out.filter((r) => isNameExact(r) === (controls.nameMatch === "exact"));
+  if (controls.minMoney > 0) out = out.filter((r) => moneyOf(r, ctx) >= controls.minMoney);
+
+  const sign = controls.sortDir === "asc" ? 1 : -1;
+  // Stable, direction-independent tie-break on case_id (intentional — predictable ordering).
+  const byId = (a: BenchRow, b: BenchRow) => a.case_id.localeCompare(b.case_id);
+  return [...out].sort((a, b) => {
+    let d = 0;
+    if (controls.sortKey === "name") d = displayName(a, ctx[vendorId(a)]).localeCompare(displayName(b, ctx[vendorId(b)]));
+    else if (controls.sortKey === "ai") d = aiConfidenceOf(a) - aiConfidenceOf(b);
+    else d = moneyOf(a, ctx) - moneyOf(b, ctx);
+    return sign * d || byId(a, b);
+  });
+}
+
+// --- investigation deep-links (operator opens these to verify a candidate) --
+
+export type InvestigationLink = { label: string; url: string };
+
+/** External links to investigate a candidate from the bench. Source registries first
+ *  (ProPublica for EIN nonprofits, CA SOS bizfile for SOS entities), then a web search.
+ *  We don't ingest websites, so search is the substitute. The web search uses the
+ *  REGISTRY anchor's org name + city — both public registry fields, and the anchor is an
+ *  org by construction (it carries a corporate/EIN id) — never the raw vendor string,
+ *  which keeps any natural-person-shaped vendor label out of the outbound query. */
+export function investigationLinks(c: Case): InvestigationLink[] {
+  const join = c.candidate_joins[0];
+  const src = join.left_ref.source_id;
+  const orgName = join.right_ref.display_label;
+  const city = join.right_ref.public_fields.principal_city;
+  const links: InvestigationLink[] = [];
+
+  if (src === "ein") {
+    const ein = proposedKey(c).replace(/\D/g, "");
+    if (/^\d{9}$/.test(ein)) links.push({ label: "ProPublica 990s", url: `https://projects.propublica.org/nonprofits/organizations/${ein}` });
+  } else if (src === "sos_id") {
+    links.push({ label: "CA SOS bizfile", url: "https://bizfileonline.sos.ca.gov/search/business" });
+  }
+
+  const q = encodeURIComponent([orgName, city].filter(Boolean).join(" "));
+  if (q) links.push({ label: "Web search", url: `https://www.google.com/search?q=${q}` });
+  return links;
+}
+
 export type Buckets = Record<Bucket, BenchRow[]>;
 
 /** Partition rows into the four queues. needs-review and recommended are sorted by

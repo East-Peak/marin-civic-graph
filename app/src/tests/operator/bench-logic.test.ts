@@ -12,30 +12,52 @@ import {
   clientBulkEligible,
   bucketOf,
   bucketize,
+  aiVerdictOf,
+  isNameExact,
+  applyControls,
+  investigationLinks,
+  DEFAULT_CONTROLS,
   type BenchRow,
+  type QueueControls,
 } from "../../../operator-workbench-src/_lib/bench-logic";
 import type { Case, ContextEntry } from "../../../operator-workbench-src/_lib/bench-types";
 
-function mkCase(over: Partial<Case> & { vendor?: string; src?: string; key?: string } = {}): Case {
+type CaseOver = Partial<Case> & {
+  vendor?: string;
+  src?: string;
+  key?: string;
+  name?: string;
+  regName?: string;
+  city?: string;
+  signals?: string[];
+  aiVerdict?: string;
+  aiConf?: number;
+};
+
+function mkCase(over: CaseOver = {}): Case {
   const vendor = over.vendor ?? "org-county-vendor-1";
   const src = over.src ?? "ein";
   const keyField = src === "ein" ? "registry_ein" : "sos_id";
+  const pubFields: Record<string, unknown> = { [keyField]: over.key ?? "123456789" };
+  if (over.city) pubFields.principal_city = over.city;
   return {
     case_id: over.case_id ?? `attach|anchor-1|${vendor}`,
     candidate_joins: over.candidate_joins ?? [
       {
-        left_ref: { source_id: src, local_id: vendor, display_label: "RAW VENDOR NAME", public_fields: {} },
+        left_ref: { source_id: src, local_id: vendor, display_label: over.name ?? "RAW VENDOR NAME", public_fields: {} },
         right_ref: {
           source_id: src,
           local_id: "anchor-1",
-          display_label: "Registry Name",
-          public_fields: { [keyField]: over.key ?? "123456789" },
+          display_label: over.regName ?? "Registry Name",
+          public_fields: pubFields,
         },
-        signals: ["normalized_name_exact"],
+        signals: over.signals ?? ["normalized_name_exact"],
         signal_strength: 0.95,
       },
     ],
-    ai_reviews: over.ai_reviews ?? [{ verdict: "same", reason: "exact name + key", signal_strength: 0.97 }],
+    ai_reviews: over.ai_reviews ?? [
+      { verdict: over.aiVerdict ?? "same", reason: "exact name + key", signal_strength: over.aiConf ?? 0.97 },
+    ],
     current_ledger_status: over.current_ledger_status ?? "none",
     bulk_eligible: over.bulk_eligible ?? false,
     review_flags: over.review_flags ?? {},
@@ -197,5 +219,86 @@ describe("bucketize", () => {
     const b = bucketize(cases.map((c) => row(c)), ctx);
     expect(b.recommended).toHaveLength(0);
     expect(b.needsReview.map((r) => r.case_id)).toEqual(["x"]);
+  });
+});
+
+describe("aiVerdictOf / isNameExact", () => {
+  it("reads the first AI verdict", () => {
+    expect(aiVerdictOf(mkCase({ aiVerdict: "different" }))).toBe("different");
+  });
+  it("returns null when there is no AI review", () => {
+    expect(aiVerdictOf(mkCase({ ai_reviews: [] }))).toBeNull();
+  });
+  it("detects a normalized-name-exact signal", () => {
+    expect(isNameExact(mkCase({ signals: ["normalized_name_exact"] }))).toBe(true);
+    expect(isNameExact(mkCase({ signals: ["token_overlap"] }))).toBe(false);
+  });
+});
+
+describe("applyControls", () => {
+  const ctx: Record<string, ContextEntry> = {
+    v1: mkCtx({ money_total: 900, display_label: "Alpha Foundation" }),
+    v2: mkCtx({ money_total: 100, display_label: "Beta LLC" }),
+    v3: mkCtx({ money_total: 5000, display_label: "Gamma Trust" }),
+  };
+  const rows = [
+    row(mkCase({ case_id: "a", vendor: "v1", aiVerdict: "same", aiConf: 0.95, signals: ["normalized_name_exact"], regName: "Alpha" })),
+    row(mkCase({ case_id: "b", vendor: "v2", aiVerdict: "different", aiConf: 0.4, signals: ["token_overlap"], regName: "Beta" })),
+    row(mkCase({ case_id: "c", vendor: "v3", aiVerdict: "unsure", aiConf: 0.6, signals: ["token_overlap"], regName: "Gamma" })),
+  ];
+  const ctrl = (over: Partial<QueueControls>): QueueControls => ({ ...DEFAULT_CONTROLS, ...over });
+
+  it("defaults to money descending (matches the queue default)", () => {
+    expect(applyControls(rows, ctx, DEFAULT_CONTROLS).map((r) => r.case_id)).toEqual(["c", "a", "b"]); // 5000, 900, 100
+  });
+  it("sorts money ascending when direction flips", () => {
+    expect(applyControls(rows, ctx, ctrl({ sortKey: "money", sortDir: "asc" })).map((r) => r.case_id)).toEqual(["b", "a", "c"]);
+  });
+  it("sorts by AI confidence", () => {
+    expect(applyControls(rows, ctx, ctrl({ sortKey: "ai", sortDir: "desc" })).map((r) => r.case_id)).toEqual(["a", "c", "b"]); // .95,.6,.4
+  });
+  it("filters by AI verdict", () => {
+    expect(applyControls(rows, ctx, ctrl({ verdict: "same" })).map((r) => r.case_id)).toEqual(["a"]);
+    expect(applyControls(rows, ctx, ctrl({ verdict: "different" })).map((r) => r.case_id)).toEqual(["b"]);
+  });
+  it("filters by name-match exactness", () => {
+    expect(applyControls(rows, ctx, ctrl({ nameMatch: "exact" })).map((r) => r.case_id)).toEqual(["a"]);
+    expect(new Set(applyControls(rows, ctx, ctrl({ nameMatch: "fuzzy" })).map((r) => r.case_id))).toEqual(new Set(["b", "c"]));
+  });
+  it("filters by a money floor", () => {
+    expect(applyControls(rows, ctx, ctrl({ minMoney: 500 })).map((r) => r.case_id)).toEqual(["c", "a"]); // 5000, 900
+  });
+  it("searches across vendor name, registry name, and key (case-insensitive)", () => {
+    expect(applyControls(rows, ctx, ctrl({ search: "gamma" })).map((r) => r.case_id)).toEqual(["c"]);
+    expect(applyControls(rows, ctx, ctrl({ search: "BETA" })).map((r) => r.case_id)).toEqual(["b"]);
+  });
+  it("ignores a too-short search (< 2 chars) rather than false-matching everything", () => {
+    expect(applyControls(rows, ctx, ctrl({ search: "a" })).map((r) => r.case_id).length).toBe(3);
+  });
+});
+
+describe("investigationLinks", () => {
+  it("links an EIN case to ProPublica (9 digits) + a web search on the registry org name", () => {
+    const links = investigationLinks(mkCase({ src: "ein", key: "94-3041517", regName: "Buckelew Programs", city: "Novato" }));
+    expect(links.find((l) => /propublica/i.test(l.url))?.url).toBe("https://projects.propublica.org/nonprofits/organizations/943041517");
+    const ws = links.find((l) => /google\.com\/search/.test(l.url));
+    expect(decodeURIComponent(ws!.url)).toContain("Buckelew Programs");
+    expect(decodeURIComponent(ws!.url)).toContain("Novato");
+  });
+  it("omits ProPublica for a malformed (non-9-digit) EIN", () => {
+    const links = investigationLinks(mkCase({ src: "ein", key: "12" }));
+    expect(links.some((l) => /propublica/.test(l.url))).toBe(false);
+    expect(links.some((l) => /google\.com\/search/.test(l.url))).toBe(true);
+  });
+  it("links an SOS case to CA bizfile + a web search", () => {
+    const links = investigationLinks(mkCase({ src: "sos_id", key: "1085358", regName: "Wra, Inc.", city: "San Rafael" }));
+    expect(links.some((l) => /bizfileonline\.sos\.ca\.gov/.test(l.url))).toBe(true);
+    expect(links.some((l) => /google\.com\/search/.test(l.url))).toBe(true);
+  });
+  it("searches the registry org name, never the raw vendor string (redaction-safe)", () => {
+    const links = investigationLinks(mkCase({ src: "ein", key: "123456789", name: "JOHN Q SMITH", regName: "Smith Foundation" }));
+    const ws = links.find((l) => /google\.com\/search/.test(l.url))!;
+    expect(decodeURIComponent(ws.url)).toContain("Smith Foundation");
+    expect(decodeURIComponent(ws.url)).not.toContain("JOHN Q SMITH");
   });
 });
