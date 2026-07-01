@@ -1,7 +1,7 @@
 # Research Adjudication Rubric — deep-research verdicts for the Attach Workbench
 
 **Date:** 2026-07-01
-**Status:** GREEN — Codex-converged in 3 rounds (15 → 4 → 2 LOW nits, all folded). Next: calibration pilot (§7).
+**Status:** GREEN — Codex-converged over 5 rounds (15 → 4 → 2 nits; delegation amendment: 7 → 2 nits). All folded. Next: tribunal calibration pilot (§7).
 **Scope:** V1 of the deep-research adjudication fleet: Claude-Code-owned research agents that investigate identity-attach candidates (County vendor == IRS/CA-SOS registry entity?) wall-to-wall online and emit evidence-backed verdicts into the EXISTING read-model pipe. Replaces the synthetic county-keying adjudicator's verdicts. The bench (Tranche-2 Slices 1–3.1) renders them; the human still owns every attach.
 
 ---
@@ -20,12 +20,19 @@ adversarial verifier tries to refute it. Output feeds `reconciliation_read_model
 unchanged; the bench then shows *"same 0.94 — EIN appears on the org's 2023 990; SOS address matches
 the County record"* with links, and review collapses from research to confirmation.
 
-**Cardinal rule preserved:** verdicts are advisory. Nothing here writes the ledger, the graph, or
-the handoff. The operator (or the rule-gated, typed-count bulk path) makes every decision.
+**Cardinal rule, as amended (v4):** research verdicts are advisory. The fleet itself never writes
+the ledger, the graph, or the handoff. The SOLE exception is the §9a policy-execution slice: after
+the pilot gates pass and the operator signs the auto-approve policy, a separate apply step may
+write ledger assertions through the existing `reconcile_decide` path — for §9a's exact predicate
+only, with the operator's signature and the eligibility snapshot recorded on every assertion.
+"Human owns every claim" is preserved at the policy level: a human signed the rule; the machine
+applies it; the ledger records both.
 
 ## 2. Non-goals (V1)
 
-- No auto-writes of any decision. No change to `reconcile_writer` / `reconcile_decide`.
+- No writes by the research/verification agents themselves, ever. The §9a apply step is the only
+  writer, is a separate slice, and goes through the unchanged `reconcile_writer` /
+  `reconcile_decide` path — no new write machinery.
 - No natural-person research (see §5 guard). No person data in any emitted artifact.
 - No standalone/generalized research service (that is V2, after this pattern proves out here).
 - No re-scoring of `signal_strength` on candidate joins; only `ai_reviews` are replaced.
@@ -171,10 +178,12 @@ sources (name the conflict in `conflicts`), thin footprint, tool failures, or th
 
 ## 6. Adversarial verification
 
-An independent skeptic agent tries to **refute** the researcher using the cited evidence:
-(a) does each URL actually support its `fact`? (b) is there a distinguishing fact the researcher
-missed? (c) for batched vendors (§8), review the vendor's FULL candidate set — when any candidate
-is `same`, confirm the per-pair distinguishing facts actually discriminate between candidates.
+An independent skeptic agent tries to **refute** the researcher:
+(a) does each URL actually support its `fact`? (b) a **bounded independent contradiction search**
+(own web operations, not just the packet): hunt for a distinguishing fact or a stronger competing
+entity the researcher missed — mandatory for every auto-qualifying `same` (§9a); (c) for batched
+vendors (§8), review the vendor's FULL candidate set — when any candidate is `same`, confirm the
+per-pair distinguishing facts actually discriminate between candidates.
 Refuted ⇒ the row is downgraded to `unsure`, both sides summarized, and the pre-downgrade position
 is preserved for audit/calibration (`verifier.refuted = true`, `verifier.original_verdict`,
 `verifier.original_confidence` — refutation rates are reported by original class). Verification
@@ -192,25 +201,57 @@ elevated rate (>10% in any class) pauses the run for rubric review.
   Selected by Claude, listed by case_id.
 - **Blind protocol (leak-proof by construction):** the 30 case inputs (candidate join fields +
   money context only) are **frozen to a file BEFORE Stuart labels anything**. Agents run from the
-  frozen file only — no repo access, no read model, no ledger, no bench state. Stuart's labels and
-  the fleet run can then proceed in either order.
-- **Ground truth:** Stuart decides those 30 in the bench (his ledger decisions ARE the labels).
-- **Grading — all six must hold:**
-  1. **Zero false-SAME**: no fleet-`same` that Stuart rejected. One occurrence fails the pilot.
-  2. **Agreement ≥ 93%** on positioned cases. *Positioned = fleet verdict ∈ {same, different};
-     fleet-`unsure` rows are excluded from this denominator by definition* (gates 4–5 are the
-     anti-abstention controls).
-  3. **High-confidence perfection:** fleet `same` at ≥0.9 agrees with Stuart 100%.
-  4. **Coverage (anti-unsure-gaming):** the fleet takes a position on ≥ 2/3 of cases overall AND
-     within each stratum — it cannot pass by abstaining on the hard ones.
-  5. **Recall of true attaches:** of the cases Stuart approves, the fleet said `same` on ≥ 75%
-     (an over-cautious fleet that misses the actual attaches is useless even if precise).
-  6. **Unsure honesty:** fleet-`unsure` cases skew toward ones Stuart found hard/slow (qualitative
-     read of the diff, together).
-- **Output:** a per-case diff report (fleet vs human, with evidence) reviewed together; rubric
-  amendments folded and, if material, a 10-case re-run of the affected class.
+  frozen file only — no repo access, no read model, no ledger, no bench state.
+- **No human labels (v4 amendment — operator's call):** the operator delegates per-case judgment
+  to the fleet. Human labels are not oracle knowledge here (the operator would be doing the same
+  web research, slower), so calibration is replaced by **model-diverse consistency checks** —
+  cross-examination by voices that share a rubric but not a model family — plus an
+  **evidence-integrity audit**. This is honestly weaker than independent ground truth: shared
+  rubric and overlapping search surfaces can correlate errors. The mitigations are the verifier's
+  mandatory independent contradiction search (§6b), the conclusion-level audit (§9a), and the
+  one-way-ratchet rule (dissent can only remove a `same`, never create one).
+- **The tribunal, per case:**
+  1. **Two blind researchers** — model A (Fable) and model B (Sonnet) — same rubric, same frozen
+     input, unaware of each other. (Doubles as the model A/B that prices the scale run.)
+  2. **Adversarial verifier** (Fable) on every verdict from both researchers (§6 rules).
+  3. **Cross-vendor skeptic:** Codex (gpt-5.5) reads the case's combined evidence packets and
+     issues its own verdict FROM THE WRITTEN EVIDENCE (no new research) — the guard against
+     Claude-family correlated blind spots.
+  4. **Conviction requires unanimity:** `same` stands only if both researchers said `same`, no
+     verifier refutation, and Codex concurs. ANY dissent on a `same` → judge round (Fable, full
+     evidence, may resolve `different` or drop to `unsure`) — dissent is a one-way ratchet toward
+     caution, never toward `same`. The compacted feed carries the tribunal outcome.
+  5. **Main-loop audit (full identity chain, not just fact-on-page):** the orchestrating session
+     reads all 30 evidence packets and re-fetches a sample of citations per class, adjudicating the
+     WHOLE chain: anchor identity (registry record is what the row claims), vendor-side identity
+     (the cited footprint is actually this County vendor's), key-sighting qualification (per-lane
+     §4 rules), candidate discrimination, and no unresolved conflict or stronger competing entity.
+     A citation can be real and its fact true while the conclusion is still the wrong org — the
+     audit answers the conclusion, not the citation.
+- **Grading — all five must hold:**
+  1. **Zero unresolved `same` conflicts:** no case ships as `same` with any tribunal dissent.
+  2. **Evidence integrity:** every audited citation supports its fact; one fabricated/misread
+     citation in a `same` row fails the pilot.
+  3. **Coverage (anti-unsure-gaming):** the tribunal takes a position on ≥ 2/3 of cases overall
+     AND within each stratum.
+  4. **Cross-model agreement ≥ 85%** between researchers A and B on positioned cases (*positioned
+     = verdict ∈ {same, different}*); lower means the rubric under-determines the answer.
+  5. **Competing-candidate discrimination:** the two deliberately-included competing-key vendors
+     (each with 2 candidate rows) resolve to at most one `same` per vendor with per-pair
+     distinguishing facts.
+- **Output:** a conviction report (per-case tribunal record with evidence) + the **auto-approve
+  policy for the operator's one-time signature** (§9a). Rubric amendments folded; material changes
+  re-run the affected class (10 cases).
+- **Failure attribution (mandatory on any failed gate):** each failed case is tagged with a
+  failure mode — rubric/prompt ambiguity · model/search failure · source insufficiency ·
+  pipeline/schema error — before any re-run, so retries can't quietly relabel systematic model
+  weakness as rubric tuning. Rubric fixes re-run the affected class; model failures change the
+  model or the §8 tiering, not the rubric.
+- **Asymmetry note:** unanimity protects `same` (the auto-appliable verdict). `different` is and
+  stays ADVISORY — it is never auto-applied, and it never suppresses a candidate from future
+  review or re-research.
 - The 30-case pilot is a **smoke gate**, sized to catch systematic rubric failures, not to prove
-  rare-error rates. The bulk-expansion lane has its own larger precision gate (§9).
+  rare-error rates. The auto-approve lane has its own larger evidence-audit gate (§9a).
 
 ## 8. Scale run (after the pilot passes)
 
@@ -230,19 +271,38 @@ elevated rate (>10% in any class) pauses the run for rubric review.
 
 ## 9. Downstream follow-ons (separate slices, not V1)
 
-- **Bulk-eligibility expansion:** today's bulk gate requires the mechanical `normalized_name_exact`
-  signal — high precision, poor recall ("10,000 Degrees" vs "Ten Thousand Degrees" fails). After
-  calibration, `_compute_bulk_eligible` gains a research lane requiring ALL of:
-  `verdict == same` AND **`key_sighted == true`** (the literal-key-on-vendor-material bar — soft
-  registry-field agreement NEVER qualifies) AND `confidence >= 0.9` AND `verifier.ran AND NOT
-  refuted` AND single candidate AND not `needs_careful_review`. Name-exactness is no longer
-  required — the mechanical anchor is replaced by a *harder* mechanical anchor (a literal key
-  sighting), not by agent judgment.
-  **Bulk-expansion gate (in addition to the pilot):** before the lane is enabled, Stuart reviews a
-  stratified sample (n ≥ 40; EIN/SOS × exact/fuzzy × $ tiers) of research-bulk-qualifying rows in
-  the bench with their evidence; **zero false-SAME required**. Additive read-model contract bump
-  (schema_version), TDD + Codex like every read-model change. The typed-count human confirmation
-  and the client collision gate stay exactly as they are.
+- **9a. Auto-approve policy (the delegation contract — v4 amendment):** per-case human review is
+  removed by the operator's deliberate delegation, recorded as a **one-time signed policy**:
+  *"apply `approve` to every case where `verdict == same` AND `key_sighted == true` AND
+  `confidence >= 0.9` AND tribunal-unanimous (no researcher dissent, no verifier refutation, Codex
+  concurrence) AND single candidate AND not `needs_careful_review`."*
+  - **Enablement gate (conclusion-level, zero failures):** before the first auto-batch, a
+    stratified sample (n ≥ 40; EIN/SOS × exact/fuzzy × $ tiers) of qualifying rows passes the
+    main-loop audit adjudicating the FULL identity chain per §7.5 — including, per audited row, an
+    independently re-fetched literal key sighting, at least one independently confirmed identity
+    dimension beyond name, and an explicit falsification attempt (search for a stronger competing
+    entity). This replaces the earlier human-review gate and is deliberately conclusion-level: the
+    pilot's consistency gates cannot measure shared wrongness; this audit is what stands in for it.
+  - **Apply-time eligibility (no stale writes):** the preview/apply step rebuilds eligibility
+    FRESH — from the compacted feed, the CURRENT read model (candidate sets, `needs_careful_review`),
+    the CURRENT ledger (status still `none`), and a live collision check — immediately before
+    writing. Each assertion records the policy hash and the eligibility-snapshot hash. **Drift
+    detection is a hash comparison:** preview computes and stores the eligibility snapshot + hash;
+    apply recomputes the snapshot immediately before the first write; any mismatch aborts the
+    whole batch before any assertion lands. A tribunal row can never be applied against a world it
+    wasn't computed for.
+  - **Execution:** decisions are applied through the existing `reconcile_decide` path — one
+    assertion per case, `reviewer: "research-fleet-v1/policy-<operator>-<date>"` — so the ledger
+    forever records that a machine applied a human-signed policy. Per batch, the operator gets a
+    preview (count, $, evidence links) and gives ONE go/no-go — the sole recurring human moment,
+    seconds per batch.
+  - Non-qualifying rows (`same` without key sighting, split tribunals, `unsure`) stay in the bench
+    queue with their evidence rendered — reviewable whenever, never auto-applied.
+- **Bulk-eligibility expansion (bench lane; subsumed by 9a if enabled):** `_compute_bulk_eligible`
+  gains a research lane with the SAME qualifying predicate as 9a (name-exactness no longer
+  required — the mechanical anchor is replaced by a *harder* one: a literal key sighting, never
+  agent judgment alone). Additive read-model contract bump (schema_version), TDD + Codex like
+  every read-model change.
 - **Evidence links in the bench:** render `evidence[]` (and the verifier note) in the AI panel.
 - **V2 generalized tool:** productize the fleet (own repo, batch API, any entity-resolution
   dataset) once the pattern has cleared real Marin volume.
@@ -251,8 +311,9 @@ elevated rate (>10% in any class) pauses the run for rubric review.
 
 The append log + compacted feed are the audit artifacts: every row carries model, version,
 timestamps, evidence URLs with access times, per-case cost, and the verifier outcome. Both are
-operator-local (gitignored) like all `data/review/` products. Ledger assertions continue to record
-only the operator's decision; research provenance stays in the advisory layer. If a research
+operator-local (gitignored) like all `data/review/` products. Ledger assertions record the
+operator/policy decision plus the §9a policy-execution metadata (policy hash,
+eligibility-snapshot hash); detailed research provenance stays in the advisory layer. If a research
 verdict later proves wrong, the fix is the normal one: supersede the assertion in the bench (the
 writer already handles supersession), fix/re-run the affected rows, recompact, regenerate.
 
@@ -315,3 +376,47 @@ writer already handles supersession), fix/re-run the affected rows, recompact, r
    redaction floor (§5.5).
 
 **Round-3 verdict: CONVERGED** — "No critical/high/medium contract defects remain."
+
+### v4 amendment — 2026-07-01 (operator decision: no per-case human labeling/review)
+
+Stuart delegated per-case judgment to the fleet ("I don't want a human in the loop; argue it out
+between yourselves and come to strong conviction"). Human labels replaced by **tribunal
+calibration** (§7: two blind researchers Fable+Sonnet, adversarial verifier, Codex cross-vendor
+skeptic on written evidence, unanimity-or-caution, main-loop evidence-integrity re-fetch audit)
+and per-case review replaced by the **signed auto-approve policy** (§9a: human owns the policy,
+machine applies it, ledger records both; batch preview go/no-go is the sole recurring human
+moment). Round 4 reviews this amendment.
+
+### Round 4 — 2026-07-01 (on the v4 amendment): 7 findings (1 CRITICAL / 3 HIGH / 3 MEDIUM) — ALL FOLDED
+
+1. **CRITICAL** §1/§2 still said "nothing writes the ledger," contradicting §9a → cardinal rule
+   rewritten: fleet never writes; §9a apply step is the sole, exactly-scoped exception, signature +
+   snapshot recorded on every assertion (§1, §2).
+2. **HIGH** policy predicate unenforceable at apply time (stale tribunal rows vs changed world) →
+   apply-time eligibility rebuilt fresh (feed + current read model + current ledger + live
+   collision); policy hash + eligibility-snapshot hash on each assertion; abort-and-regenerate on
+   drift (§9a).
+3. **HIGH** tribunal independence overstated (shared rubric/inputs; Codex can't fetch) → reframed
+   as "model-diverse consistency checks" with the weakness named; verifier's contradiction search
+   made a mandatory LIVE bounded search for every auto-qualifying `same` (§6b, §7).
+4. **HIGH** evidence audit could pass real-but-locally-true citations with a wrong conclusion →
+   audit adjudicates the full identity chain (anchor identity, vendor identity, key-sighting
+   qualification, discrimination, competing entities), conclusion-level (§7.5).
+5. **MEDIUM** gates measure consistency, not shared wrongness → §9a enablement audit is
+   conclusion-level: per-row independent key-sighting re-fetch + independent identity dimension +
+   explicit falsification attempt; zero failures (§9a).
+6. **MEDIUM** failure attribution unspecified → mandatory failure-mode tagging (rubric ambiguity /
+   model failure / source insufficiency / pipeline error) before any re-run (§7).
+7. **MEDIUM** `different` not equally calibrated → asymmetry note: `different` stays advisory,
+   never auto-applied, never suppresses future review (§7).
+
+**Round-4 verdict: another-round-needed** (CRITICAL contradiction + apply-time gap) → v5.
+
+### Round 5 — 2026-07-01: 2 LOW wording nits — ALL FOLDED → **CONVERGED**
+
+1. **LOW** §10 "assertions record only the operator's decision" undercut §9a's required metadata →
+   assertions record decision + policy hash + eligibility-snapshot hash (§10).
+2. **LOW** drift detection implicit → named protocol: preview stores snapshot+hash, apply
+   recomputes immediately before the first write, mismatch aborts the whole batch (§9a).
+
+**Round-5 verdict: CONVERGED** — "Everything else from Round 4 appears folded."
