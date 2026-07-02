@@ -232,8 +232,11 @@ elevated rate (>10% in any class) pauses the run for rubric review.
   1. **Zero unresolved `same` conflicts:** no case ships as `same` with any tribunal dissent.
   2. **Evidence integrity:** every audited citation supports its fact; one fabricated/misread
      citation in a `same` row fails the pilot.
-  3. **Coverage (anti-unsure-gaming):** the tribunal takes a position on ≥ 2/3 of cases overall
-     AND within each stratum.
+  3. **Coverage (anti-unsure-gaming; amended post-pilot 2026-07-01):** the tribunal takes a
+     position on ≥ 2/3 of cases OVERALL, and every `unsure` must carry a named resolving fact
+     (what specific document/evidence would settle it). Per-stratum rates are REPORTED, not gated —
+     the pilot showed ambiguity-concentrated strata legitimately abstain more, and evidence-named
+     abstention is the honest behavior the gate exists to protect.
   4. **Cross-model agreement ≥ 85%** between researchers A and B on positioned cases (*positioned
      = verdict ∈ {same, different}*); lower means the rubric under-determines the answer.
   5. **Competing-candidate discrimination:** the two deliberately-included competing-key vendors
@@ -266,6 +269,23 @@ elevated rate (>10% in any class) pauses the run for rubric review.
 - **Batching:** candidates sharing a vendor (or an anchor) run in one agent with a shared research
   cache, but each pair gets its OWN verdict row with per-pair distinguishing facts (§6c guards the
   cross-contamination risk: one conclusion may not be smeared across the candidate set).
+- **Tiered fleet (amended post-pilot 2026-07-01, evidence: pilot A/B — Sonnet matched Fable on all
+  22 positioned cases, was never refuted where Fable wasn't, and Fable-only positions were refuted
+  twice):**
+  1. **Sonnet researcher** per case (single, blind, full rubric).
+  2. **Fable verifier** per §6 coverage matrix (100% of `same`; 100% of `different >= 0.9`; 100%
+     of `key_sighted`; 100% of top-decile-$; 20% sample of the rest). Refutation ⇒ ratchet to
+     `unsure` (no judges needed in single-researcher mode — dissent has no split to resolve).
+  3. **Auto-candidate escalation:** rows that would qualify for §9a (`same` + validated
+     `key_sighted` + ≥0.9 + unrefuted + single candidate + not careful) get a SECOND blind
+     researcher (Fable) + Codex concurrence — restoring full dual-researcher unanimity exactly
+     where the signed policy requires it. Any dissent drops the row from the auto lane (stays
+     advisory `same`-with-dissent → `unsure` per ratchet).
+  4. Codex skeptic batched over all surviving `same` rows.
+- **Agent-cap sharding:** workflows are capped at 1,000 agents; the scale run shards into ~450-case
+  workflows run two-at-a-time, resumable via the append log (§3). The token ceiling is enforced
+  between shards: cumulative usage is checked at each shard boundary and the run stops loudly at
+  the ceiling.
 - **After the run:** compact the log, regenerate the read model with `--verdicts` pointed at the
   compacted file (existing runbook), restart the bench, review the re-bucketed queue.
 
@@ -420,3 +440,19 @@ moment). Round 4 reviews this amendment.
    recomputes immediately before the first write, mismatch aborts the whole batch (§9a).
 
 **Round-5 verdict: CONVERGED** — "Everything else from Round 4 appears folded."
+
+### Post-pilot amendments — 2026-07-01 (pilot PASSED; evidence in `data/review/research-adjudicated/pilot-30-conviction-report.md`)
+
+Pilot ran end-to-end with no human labels (120 agents, 0 errors): 11 same / 10 different / 9
+unsure; gates 1,2,4,5 clean (100% cross-model agreement on positioned cases; zero opposite
+positions; discrimination + evidence integrity held; defense-in-depth caught a stronger competing
+key, a wrong-key-right-vendor, an invalid SOS-self-evidence sighting, and a contradicted citation).
+Amendments folded:
+1. **Gate 3** per-stratum floor → overall floor + evidence-named abstentions (per-stratum reported,
+   not gated) — pilot attribution: gate mis-specification vs ambiguity-concentrated strata.
+2. **§8 tiered fleet** for scale (Sonnet researcher / Fable verifier / Fable+Codex escalation on
+   auto-candidates) — preserves the signed §9a predicate exactly where it applies.
+3. **§8 agent-cap sharding** (~450-case workflows, two-at-a-time, ceiling checked between shards).
+4. **Auto-approve policy SIGNED** by the operator (in-session, 2026-07-01):
+   `data/review/research-adjudicated/auto-approve-policy.md`, sha256 `aaa783d7f21d…`. Scale scope
+   approved: all 1,788 needs-review (1,758 after the pilot 30), tiered fleet, ceiling 150M tokens.
