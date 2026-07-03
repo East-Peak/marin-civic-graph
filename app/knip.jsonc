@@ -1,0 +1,22 @@
+{
+	"$schema": "https://unpkg.com/knip@6/schema.json",
+	// Dead-code gate (2026-07-03). Gates dead FILES + unused DEPENDENCIES so new
+	// dead code fails `verify`. Export/type checks deferred to a later triage.
+	"include": ["files", "dependencies"],
+	"ignore": [
+		// --- FALSE POSITIVES — keep permanently ---
+		// Build-copied into src/app/(operator-workbench)/ by
+		// scripts/copy-operator-workbench.mjs (predev/prebuild); not dead.
+		"operator-workbench-src/**",
+		"src/lib/operator-gate.ts", // consumed by the operator-workbench feature
+		// --- BASELINED pending the deletion manifest (genuine dead candidates,
+		//     awaiting consent + Codex verification; remove from here once deleted) ---
+		"src/components/home/tracking-threads.tsx",
+		"src/components/layout/prompt-search.tsx",
+		"scripts/smoke-data-queries.mjs"
+	],
+	"ignoreDependencies": [
+		"@types/cytoscape", // FALSE POSITIVE: ambient types for cytoscape (used in src)
+		"yaml" // BASELINED: only imported by tracking-threads.tsx (a deletion candidate)
+	]
+}
