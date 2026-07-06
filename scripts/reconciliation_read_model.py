@@ -34,11 +34,7 @@ from reconciliation_cases import (
     validate_action,
     validate_case,
 )
-from reconciliation_registry import (
-    ANCHOR_PREFIX_BY_SOURCE,
-    KEY_FIELD_BY_SOURCE,
-    LEDGER_ACTIONABILITY,
-)
+from reconciliation_registry import KEY_FIELD_BY_SOURCE, KEY_SOURCES, LEDGER_ACTIONABILITY
 
 # Ledger namespacing (spec §5.2): attach assertions and dedup assertions live in
 # distinct files; dedup bases are prefixed `org_dedup` and ONLY they assemble into
@@ -248,15 +244,10 @@ def _ref_row(ref: EntityRef) -> dict[str, Any]:
 
 
 def _join_row(j: CandidateJoin) -> dict[str, Any]:
-    row: dict[str, Any] = {
+    return {
         "candidate_id": j.candidate_id, "left_ref": _ref_row(j.left_ref),
         "right_ref": _ref_row(j.right_ref), "signals": j.signals, "signal_strength": j.signal_strength,
     }
-    if j.subject_fingerprint is not None:
-        row["subject_fingerprint"] = j.subject_fingerprint
-    if j.target_fingerprint is not None:
-        row["target_fingerprint"] = j.target_fingerprint
-    return row
 
 
 def build_case_row(case: ReconciliationCase) -> dict[str, Any]:
@@ -309,20 +300,27 @@ def emit_jsonl(cases: list[ReconciliationCase]) -> list[str]:
 # Writes the versioned read model + a <out>.coverage.json. The workbench UI (Tranche 2)
 # consumes the read model; this script never touches the live graph.
 
-_ADAPTERS_BY_SOURCE = {"ein": EinAdapter, "sos_id": SosAdapter, "committee_id": CommitteeAdapter}
+_ADAPTER_CLASSES = (EinAdapter, SosAdapter, CommitteeAdapter)
+_ADAPTERS_BY_SOURCE = {adapter.source_id: adapter for adapter in _ADAPTER_CLASSES}
+if set(_ADAPTERS_BY_SOURCE) != set(KEY_SOURCES):
+    raise ValueError(
+        "reconciliation adapters drift from registry key_sources: "
+        f"adapters={sorted(_ADAPTERS_BY_SOURCE)} registry={sorted(KEY_SOURCES)}"
+    )
 
 _ACTIONABILITY = dict(LEDGER_ACTIONABILITY)
 
 
 def detect_source(row: dict[str, Any]) -> str:
-    """Route a precomputed candidate row to its adapter source by shape/anchor prefix."""
-    anchor = str(row.get("subject_ref", ""))
-    if "registry_ein" in row or anchor.startswith(ANCHOR_PREFIX_BY_SOURCE["ein"]):
-        return "ein"
-    if "sos_ref" in row or anchor.startswith(ANCHOR_PREFIX_BY_SOURCE["sos_id"]):
-        return "sos_id"
-    if "committee_id" in row or anchor.startswith(ANCHOR_PREFIX_BY_SOURCE["committee_id"]):
-        return "committee_id"
+    """Route a precomputed candidate row to its adapter source by registry spec."""
+    for source, spec in KEY_SOURCES.items():
+        adapter = _ADAPTERS_BY_SOURCE[source]
+        if adapter.matches_source(
+            row,
+            public_key_field=spec["public_key_field"],
+            anchor_prefix=spec["anchor_prefix"],
+        ):
+            return source
     raise ValueError(f"cannot detect adapter source for candidate {row.get('subject_ref')!r}")
 
 

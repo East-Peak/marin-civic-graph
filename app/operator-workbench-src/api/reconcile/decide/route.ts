@@ -55,6 +55,7 @@ export async function POST(request: Request) {
     "--read-model", DATA.readModel(),
     "--ein-candidates", DATA.einCandidates(),
     "--sos-candidates", DATA.sosCandidates(),
+    "--committee-candidates", DATA.committeeCandidates(),
     "--ledger", DATA.attachLedger(),
     "--attach-dir", DATA.attachDir(),
   ];

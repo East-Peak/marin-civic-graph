@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from dataclasses import fields
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
@@ -262,6 +263,24 @@ def test_build_case_row_serializes_and_leak_gates():
     assert len(row["candidate_joins"]) == 1
     assert row["current_ledger_status"] == "approved"
     assert "confidence" not in _json.dumps(row)
+
+
+def test_candidate_join_private_fingerprints_are_not_dataclass_fields():
+    names = {f.name for f in fields(rc.CandidateJoin)}
+    assert "subject_fingerprint" not in names
+    assert "target_fingerprint" not in names
+
+
+def test_candidate_join_private_fingerprints_do_not_leak_if_attached():
+    join = _join()
+    join.subject_fingerprint = "private-subject-hash"
+    join.target_fingerprint = "private-target-hash"
+    row = rm.build_case_row(_attach_case(candidate_joins=[join]))
+    emitted_join = row["candidate_joins"][0]
+    assert "subject_fingerprint" not in emitted_join
+    assert "target_fingerprint" not in emitted_join
+    assert "private-subject-hash" not in _json.dumps(row)
+    assert "private-target-hash" not in _json.dumps(row)
 
 
 def test_build_case_row_rejects_reserved():

@@ -163,10 +163,11 @@ describe("clientBulkEligible", () => {
   it("is false when graph context is unavailable (cannot confirm no-collision)", () => {
     expect(clientBulkEligible(row(eligible), undefined)).toBe(false);
   });
-  it("is false for committee_id rows because Lane 3 decisions are R3 scope", () => {
+  it("is true for committee_id rows now that Lane 3 decisions are wired", () => {
     const committee = mkCase({ src: "committee_id", key: "1470249", bulk_eligible: true });
-    expect(nonActionableReason(committee)).toMatch(/committee_id.*R3/i);
-    expect(clientBulkEligible(row(committee), mkCtx())).toBe(false);
+    expect(nonActionableReason(committee)).toBeNull();
+    expect(proposedKey(committee)).toBe("1470249");
+    expect(clientBulkEligible(row(committee), mkCtx())).toBe(true);
   });
 });
 

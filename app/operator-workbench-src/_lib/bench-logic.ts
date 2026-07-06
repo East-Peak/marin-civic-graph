@@ -33,11 +33,7 @@ export function proposedKey(c: Case): string {
   return caseRefs(c).proposedKey;
 }
 
-export function nonActionableReason(c: Case): string | null {
-  const source = c.candidate_joins[0].left_ref.source_id;
-  if (source === "committee_id") {
-    return "committee_id rows are R3 Lane 3 scope and non-actionable in this bench.";
-  }
+export function nonActionableReason(_c: Case): string | null {
   return null;
 }
 

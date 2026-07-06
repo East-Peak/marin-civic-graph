@@ -4,6 +4,7 @@ artifacts (+ ledger + verdicts) into the versioned read model JSONL + a coverage
 from __future__ import annotations
 
 import json
+import inspect
 import sys
 from pathlib import Path
 
@@ -12,6 +13,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 import reconciliation_read_model as rm  # noqa: E402
+from reconciliation_registry import ANCHOR_PREFIX_BY_SOURCE, KEY_FIELD_BY_SOURCE, KEY_SOURCES  # noqa: E402
 from enrich_casos_keys import scan_for_forbidden  # noqa: E402
 
 EIN_RAW = {"subject_ref": "org-bmf-ein-953667812", "candidate_ref": "org-marincontract-recipient-x",
@@ -34,6 +36,18 @@ def test_detect_source():
     assert rm.detect_source(FPPC_RAW) == "committee_id"
     with pytest.raises(ValueError, match="detect"):
         rm.detect_source({"subject_ref": "org-mystery-1"})
+
+
+def test_detect_source_and_adapter_maps_are_registry_derived():
+    assert set(rm._ADAPTERS_BY_SOURCE) == set(KEY_SOURCES)
+    assert rm._KEY_FIELD_BY_SOURCE == KEY_FIELD_BY_SOURCE
+    for source, field in KEY_FIELD_BY_SOURCE.items():
+        assert rm.detect_source({"subject_ref": "org-not-an-anchor", field: "public-key"}) == source
+    for source, prefix in ANCHOR_PREFIX_BY_SOURCE.items():
+        assert rm.detect_source({"subject_ref": f"{prefix}123"}) == source
+    source = inspect.getsource(rm.detect_source)
+    assert "registry_ein" not in source
+    assert "committee_id" not in source
 
 
 def test_build_attach_read_model_collapses_all_three_shapes():

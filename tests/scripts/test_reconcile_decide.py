@@ -4,6 +4,7 @@ No DB; scratch ledgers only."""
 from __future__ import annotations
 
 import json
+import inspect
 import sys
 from pathlib import Path
 
@@ -12,7 +13,9 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 import reconcile_decide as rd  # noqa: E402
+import identity_attach  # noqa: E402
 import reconciliation_read_model as rm  # noqa: E402
+from reconciliation_registry import KEY_SOURCES  # noqa: E402
 from test_reconciliation_cli import EIN_RAW, FPPC_RAW, SOS_RAW  # noqa: E402
 
 EIN_CASE = "attach|org-bmf-ein-953667812|org-marincontract-recipient-x"
@@ -84,6 +87,90 @@ def test_approve_sos_uses_real_casos_name(tmp_path):
     assert node["display_label"] == "Example LLC" and node["properties"]["sos_id"] == "0289793"
 
 
+def test_decide_lanes_are_registry_derived():
+    assert set(rd._LANES) == set(KEY_SOURCES)
+    source = inspect.getsource(rd)
+    assert "build_ein_attach" not in source
+    assert "build_sos_attach" not in source
+
+
+def test_approve_committee_preserves_audit_metadata_and_materializes_handoff(monkeypatch, tmp_path):
+    committee = {**FPPC_RAW, "evidence_record_ids": ["record-fppc-1470249"]}
+    rmf = _read_model(tmp_path, [committee])
+    candf = _cand_file(tmp_path, "committee.jsonl", committee)
+    led, att = tmp_path / "ledger.jsonl", tmp_path / "attach"
+    captured = {}
+    real_make_assertion = identity_attach.make_assertion
+
+    def spy_make_assertion(**kwargs):
+        captured["subject"] = dict(kwargs["subject"])
+        captured["target"] = dict(kwargs["target"])
+        return real_make_assertion(**kwargs)
+
+    monkeypatch.setattr(identity_attach, "make_assertion", spy_make_assertion)
+
+    out = rd.decide(
+        FPPC_CASE,
+        "approve",
+        reviewer="operator",
+        decided_at="2026-07-06T00:00:00Z",
+        read_model_path=rmf,
+        candidate_paths={"committee_id": candf},
+        ledger_path=led,
+        attach_dir=att,
+        policy_version="policy-committee-v1",
+        policy_hash="sha256:committee-policy",
+        eligibility_snapshot_hash="sha256:committee-eligibility",
+    )
+
+    assert out["result"] == "created"
+    assertion = out["assertion"]
+    assert assertion["basis"] == "operator_approved_committee_id"
+    assert assertion["policy_version"] == "policy-committee-v1"
+    assert assertion["policy_hash"] == "sha256:committee-policy"
+    assert assertion["eligibility_snapshot_hash"] == "sha256:committee-eligibility"
+    assert assertion["evidence_refs"] == ["record-fppc-1470249"]
+    assert captured["subject"]["committee_id"] == "1470249"
+    assert captured["subject"]["entity_class"] == "committee"
+    assert captured["subject"]["source"] == "fppc"
+    node = json.loads((att / "nodes.jsonl").read_text().splitlines()[0])
+    assert node["id"] == "org-fppc-1470249"
+    assert node["node_type"] == "Organization"
+    assert node["properties"]["committee_id"] == "1470249"
+    assert node["properties"]["entity_class"] == "committee"
+    assert node["properties"]["source"] == "fppc"
+    edge = json.loads((att / "edges.jsonl").read_text().splitlines()[0])
+    assert edge["relationship_type"] == "SAME_AS"
+    assert edge["source_id"] == "org-fppc-1470249"
+    assert edge["target_id"] == "org-example-committee"
+    assert edge["properties"]["basis"] == "operator_approved_committee_id"
+    assert edge["properties"]["assertion_id"] == assertion["id"]
+
+
+def test_cli_accepts_committee_candidate_path(tmp_path, capsys):
+    committee = {**FPPC_RAW, "evidence_record_ids": ["record-fppc-1470249"]}
+    rmf = _read_model(tmp_path, [committee])
+    candf = _cand_file(tmp_path, "committee.jsonl", committee)
+    led, att = tmp_path / "ledger.jsonl", tmp_path / "attach"
+
+    rc = rd.main([
+        "--case-id", FPPC_CASE,
+        "--action", "approve",
+        "--reviewer", "operator",
+        "--decided-at", "2026-07-06T00:00:00Z",
+        "--read-model", str(rmf),
+        "--committee-candidates", str(candf),
+        "--ledger", str(led),
+        "--attach-dir", str(att),
+        "--policy-hash", "sha256:policy",
+        "--eligibility-snapshot-hash", "sha256:eligibility",
+    ])
+
+    assert rc == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["assertion"]["basis"] == "operator_approved_committee_id"
+
+
 def test_reject_uses_reconciliation_ref_accessors(monkeypatch, tmp_path):
     rmf = _read_model(tmp_path, [EIN_RAW])
     monkeypatch.setattr(rd, "anchor_id_of", lambda case: "anchor-from-helper")
@@ -138,9 +225,9 @@ def test_unknown_case_id_fails_loud(tmp_path):
                   read_model_path=rmf, candidate_paths={}, ledger_path=tmp_path / "l.jsonl", attach_dir=tmp_path / "a")
 
 
-def test_committee_decide_error_names_r3_scope(tmp_path):
+def test_approve_missing_committee_candidate_file_fails_loud(tmp_path):
     rmf = _read_model(tmp_path, [FPPC_RAW])
-    with pytest.raises(ValueError, match=r"committee_id.*R3|R3.*committee_id"):
+    with pytest.raises(ValueError, match=r"no candidate file.*committee_id|committee_id.*candidate file"):
         rd.decide(
             FPPC_CASE,
             "approve",

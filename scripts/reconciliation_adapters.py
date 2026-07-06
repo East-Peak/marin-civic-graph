@@ -41,6 +41,17 @@ class ReconciliationAdapter:
         """Per-source review flags surfaced for bulk-gating. Base = none."""
         return {}
 
+    @classmethod
+    def matches_source(
+        cls,
+        raw: dict[str, Any],
+        *,
+        public_key_field: str,
+        anchor_prefix: str,
+    ) -> bool:
+        """Whether this adapter can consume ``raw`` under the registry source spec."""
+        return public_key_field in raw or str(raw.get("subject_ref", "")).startswith(anchor_prefix)
+
     def redaction_policy(self) -> dict[str, Any]:
         raise NotImplementedError
 
@@ -118,6 +129,20 @@ class SosAdapter(ReconciliationAdapter):
     def _right_public_fields(self, raw: dict[str, Any]) -> dict[str, Any]:
         sos = raw.get("sos_ref", {})
         return {k: sos[k] for k in self._PUBLISHABLE if k in sos}
+
+    @classmethod
+    def matches_source(
+        cls,
+        raw: dict[str, Any],
+        *,
+        public_key_field: str,
+        anchor_prefix: str,
+    ) -> bool:
+        return super().matches_source(
+            raw,
+            public_key_field=public_key_field,
+            anchor_prefix=anchor_prefix,
+        ) or "sos_ref" in raw
 
     def _right_display(self, raw: dict[str, Any]) -> str:
         return raw.get("sos_ref", {}).get("display_label", raw["subject_ref"])

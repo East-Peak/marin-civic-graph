@@ -18,4 +18,10 @@ describe("operator workbench reconciliation overlay script", () => {
     expect(route).not.toContain('"reconcile_cases.py"');
     expect(page).not.toContain('"reconcile_cases.py"');
   });
+
+  it("passes the committee candidate file through the decide route", () => {
+    const route = src("api", "reconcile", "decide", "route.ts");
+    expect(route).toContain('"--committee-candidates"');
+    expect(route).toContain("DATA.committeeCandidates()");
+  });
 });

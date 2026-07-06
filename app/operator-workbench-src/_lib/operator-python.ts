@@ -31,6 +31,7 @@ export const DATA = {
   attachLedger: () => repoPath("data", "identity", "assertions.jsonl"),
   einCandidates: () => repoPath("data", "review", "phaseB-ein-review", "vendor-ein-candidates.jsonl"),
   sosCandidates: () => repoPath("data", "review", "phaseC-sos-review", "vendor-sos-candidates.jsonl"),
+  committeeCandidates: () => repoPath("data", "review", "fppc-committee-review", "committee-candidates.jsonl"),
   attachDir: () => repoPath("data", "review", "attach"),
 };
 

@@ -46,15 +46,13 @@ class EntityRef:
 
 @dataclass
 class CandidateJoin:
-    """Pairwise evidence inside a case. Fingerprints are PUBLIC-derived only (or None)."""
+    """Pairwise public evidence inside a case."""
 
     candidate_id: str
     left_ref: EntityRef
     right_ref: EntityRef
     signals: list[str]
     signal_strength: float
-    subject_fingerprint: str | None = None
-    target_fingerprint: str | None = None
     review_flags: dict[str, Any] = field(default_factory=dict)
 
 

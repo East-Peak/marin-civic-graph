@@ -10,10 +10,11 @@ import json
 from pathlib import Path
 from typing import Any, Callable
 
-from enrich_county_vendor_eins import build_ein_attach
-from enrich_county_vendor_sos import build_sos_attach
+from identity_attach import build_anchor_subject, build_attach
+from identity_key_registry import REGISTRY, IdentityKeyEntry
 from reconcile_writer import apply_decision
 from reconciliation_cases import OperatorAction
+from reconciliation_registry import KEY_SOURCES
 from reconciliation_refs import anchor_id_of, vendor_id_of, vendor_ref_of
 
 
@@ -22,23 +23,51 @@ def _node(anchor_id: str, display: str, props: dict[str, Any]) -> dict[str, Any]
             "display_label": display, "properties": props}
 
 
-def _ein_anchor(raw: dict[str, Any], vendor_ref: dict[str, Any]) -> dict[str, Any]:
-    anchor = raw["subject_ref"]
-    ein = raw.get("ein") or anchor.rsplit("-", 1)[-1]
-    return _node(anchor, vendor_ref.get("display_label", anchor), {"source": "irs_bmf", "registry_ein": ein})
+def _attach_entry(source: str) -> IdentityKeyEntry:
+    matches = [
+        e for e in REGISTRY
+        if (
+            e.key_type == source
+            and e.key_semantics == "self"
+            and e.dedup_eligibility
+            and not e.relationship_only
+        )
+    ]
+    if len(matches) != 1:
+        raise ValueError(f"expected exactly one attachable registry entry for {source!r}")
+    return matches[0]
 
 
-def _sos_anchor(raw: dict[str, Any], vendor_ref: dict[str, Any]) -> dict[str, Any]:
-    anchor, sos = raw["subject_ref"], raw["sos_ref"]
-    return _node(anchor, sos.get("display_label", anchor), {"source": "ca_sos", "sos_id": sos["sos_id"]})
+def _attach_builder(entry: IdentityKeyEntry) -> Callable:
+    def builder(candidate: dict[str, Any], vendor_ref: dict[str, Any], **kwargs):
+        return build_attach(entry, candidate, vendor_ref, **kwargs)
+
+    return builder
 
 
-# lane → (attach builder, anchor-node builder). Mirrors build_*_attach's subject so the
-# materialized graph node matches the assertion the writer stamps.
-_LANES: dict[str, dict[str, Callable]] = {
-    "ein": {"builder": build_ein_attach, "anchor": _ein_anchor},
-    "sos_id": {"builder": build_sos_attach, "anchor": _sos_anchor},
-}
+def _anchor_builder(entry: IdentityKeyEntry) -> Callable:
+    def anchor(raw: dict[str, Any], vendor_ref: dict[str, Any]) -> dict[str, Any]:
+        subject = build_anchor_subject(entry, raw, vendor_ref)
+        display = str(subject.get("display_label") or subject["id"])
+        props = {}
+        for key, value in subject.items():
+            if key in {"id", "display_label"}:
+                continue
+            props[entry.public_key_field if key == entry.key_type else key] = value
+        return _node(str(subject["id"]), display, props)
+
+    return anchor
+
+
+def _build_lanes() -> dict[str, dict[str, Callable]]:
+    lanes: dict[str, dict[str, Callable]] = {}
+    for source in KEY_SOURCES:
+        entry = _attach_entry(source)
+        lanes[source] = {"builder": _attach_builder(entry), "anchor": _anchor_builder(entry)}
+    return lanes
+
+
+_LANES = _build_lanes()
 
 
 def _load_case(read_model_path: str | Path, case_id: str) -> dict[str, Any]:
@@ -85,11 +114,6 @@ def decide(
     vendor_read_ref = vendor_ref_of(case)
     source = vendor_read_ref["source_id"]
     if source not in _LANES:
-        if source == "committee_id":
-            raise ValueError(
-                "unsupported source for decide: 'committee_id' is a committee Lane 3/R3 row; "
-                "committee approvals are intentionally non-actionable until R3 wires the FPPC candidate path"
-            )
         raise ValueError(f"unsupported source for decide: {source!r}")
     subject_ref = anchor_id_of(case)
     candidate_ref = vendor_id_of(case)
@@ -136,6 +160,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--read-model", required=True)
     p.add_argument("--ein-candidates", default=None)
     p.add_argument("--sos-candidates", default=None)
+    p.add_argument("--committee-candidates", default=None)
     p.add_argument("--ledger", required=True)
     p.add_argument("--attach-dir", required=True)
     p.add_argument("--now", default=None)
@@ -149,6 +174,8 @@ def main(argv: list[str] | None = None) -> int:
         candidate_paths["ein"] = a.ein_candidates
     if a.sos_candidates:
         candidate_paths["sos_id"] = a.sos_candidates
+    if a.committee_candidates:
+        candidate_paths["committee_id"] = a.committee_candidates
 
     result = decide(
         a.case_id, a.action, reviewer=a.reviewer, decided_at=a.decided_at,
