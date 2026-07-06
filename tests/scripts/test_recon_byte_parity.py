@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 import reconcile_auto_policy as auto_policy  # noqa: E402
 import reconciliation_read_model as read_model  # noqa: E402
+import verdict_feed  # noqa: E402
 
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures" / "recon_byte_fixtures"
@@ -72,5 +73,44 @@ def test_read_model_byte_fixture_hash_is_pinned():
 
 def test_auto_policy_preview_byte_fixture_hash_is_pinned():
     actual = _auto_preview_bytes()
+    assert _sha256(actual) == AUTO_PREVIEW_SHA256
+    assert actual == (FIXTURES / "expected-auto-policy-preview.json").read_bytes()
+
+
+def test_read_model_bytes_unchanged_with_v1_verdict_feed_rows():
+    v1_verdicts = [
+        verdict_feed.upgrade_legacy(
+            row,
+            provenance_defaults={"model": "byte-fixture", "run": "read-model"},
+        )
+        for row in _load_jsonl("read-model-verdicts.jsonl")
+    ]
+    cases = read_model.build_attach_read_model(
+        _load_jsonl("mixed-candidates.jsonl"),
+        verdict_rows=v1_verdicts,
+    )
+    actual = "".join(read_model.emit_jsonl(cases)).encode("utf-8")
+
+    assert _sha256(actual) == READ_MODEL_SHA256
+    assert actual == (FIXTURES / "expected-read-model.jsonl").read_bytes()
+
+
+def test_auto_policy_preview_bytes_unchanged_with_v1_verdict_feed_rows():
+    v1_verdicts = [
+        verdict_feed.upgrade_legacy(
+            row,
+            provenance_defaults={"model": "byte-fixture", "run": "auto-policy"},
+        )
+        for row in _load_jsonl("auto-policy-verdicts.jsonl")
+    ]
+    preview = auto_policy.build_preview(
+        verdict_rows=v1_verdicts,
+        second_research_rows=_load_json("auto-policy-second-research.json")["results"],
+        read_model_cases=_read_model_rows(),
+        context_by_vendor=_load_json("auto-policy-context.json"),
+        policy_hash=POLICY_HASH,
+    )
+    actual = (json.dumps(preview, indent=2, sort_keys=True) + "\n").encode("utf-8")
+
     assert _sha256(actual) == AUTO_PREVIEW_SHA256
     assert actual == (FIXTURES / "expected-auto-policy-preview.json").read_bytes()

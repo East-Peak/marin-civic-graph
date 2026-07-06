@@ -8,6 +8,7 @@ collision context. No ledger writes here.
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -136,6 +137,37 @@ def test_preview_eligibility_ignores_old_bulk_eligible_and_hashes_snapshot():
     assert preview["eligibility_snapshot_hash"].startswith("sha256:")
 
 
+def test_preview_accepts_v1_verdict_feed_rows_with_nested_verification():
+    preview = ap.build_preview(
+        verdict_rows=[
+            {
+                "schema_version": "verdict-feed-v1",
+                "vendor_id": "vendor-a",
+                "proposed_key": "911930327",
+                "verdict": "same",
+                "confidence": 0.93,
+                "provenance": {"model": "unit", "run": "r5"},
+                "verification": {
+                    "key_sighted": True,
+                    "verify_ok": True,
+                    "refuted": False,
+                    "ks_valid": True,
+                },
+                "source_proposed_key": "org-bmf-ein-911930327",
+                "gid": 13,
+                "auto_candidate": True,
+            }
+        ],
+        second_research_rows=[second()],
+        read_model_cases=[case()],
+        context_by_vendor={"vendor-a": context()},
+        policy_hash=POLICY_HASH,
+    )
+
+    assert preview["eligible_count"] == 1
+    assert preview["eligible"][0]["literal_key"] == "911930327"
+
+
 def test_preview_requires_second_research_and_skeptic_concurrence():
     preview = ap.build_preview(
         verdict_rows=[verdict()],
@@ -249,8 +281,14 @@ def _write_apply_inputs(tmp_path, *, context_row=None):
     return verdicts, read_model, second_research, context_file, preview_file, candidates
 
 
+def _mark_context_fresh(context_file: Path, preview_file: Path) -> None:
+    fresh = preview_file.stat().st_mtime + 1
+    os.utime(context_file, (fresh, fresh))
+
+
 def test_apply_batch_recomputes_snapshot_and_stamps_policy_metadata(tmp_path):
     verdicts, read_model, second_research, context_file, preview_file, candidates = _write_apply_inputs(tmp_path)
+    _mark_context_fresh(context_file, preview_file)
     ledger = tmp_path / "ledger.jsonl"
     attach_dir = tmp_path / "attach"
     result = ap.apply_batch(
@@ -280,9 +318,34 @@ def test_apply_batch_recomputes_snapshot_and_stamps_policy_metadata(tmp_path):
 
 def test_apply_batch_aborts_on_snapshot_drift_before_writing(tmp_path):
     verdicts, read_model, second_research, context_file, preview_file, candidates = _write_apply_inputs(tmp_path)
+    _mark_context_fresh(context_file, preview_file)
     context_file.write_text(json.dumps({"vendor-a": context(money_total=21000)}) + "\n", encoding="utf-8")
+    _mark_context_fresh(context_file, preview_file)
     ledger = tmp_path / "ledger.jsonl"
     with pytest.raises(ValueError, match="snapshot drift"):
+        ap.apply_batch(
+            verdicts=verdicts,
+            second_research=second_research,
+            read_model=read_model,
+            context=context_file,
+            preview=preview_file,
+            policy_hash=POLICY_HASH,
+            candidate_paths={"ein": candidates},
+            ledger=ledger,
+            attach_dir=tmp_path / "attach",
+            reviewer=ap.RESEARCH_POLICY_REVIEWER,
+            decided_at="2026-07-03T20:00:00Z",
+        )
+    assert not ledger.exists()
+
+
+def test_apply_batch_refuses_context_older_than_approved_preview(tmp_path):
+    verdicts, read_model, second_research, context_file, preview_file, candidates = _write_apply_inputs(tmp_path)
+    stale = preview_file.stat().st_mtime - 10
+    os.utime(context_file, (stale, stale))
+    ledger = tmp_path / "ledger.jsonl"
+
+    with pytest.raises(ValueError, match="stale collision context"):
         ap.apply_batch(
             verdicts=verdicts,
             second_research=second_research,

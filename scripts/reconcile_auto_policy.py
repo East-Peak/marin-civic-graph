@@ -20,6 +20,7 @@ from enrich_casos_keys import scan_for_forbidden
 from identity_key_registry import ANCHOR_PREFIXES
 import reconcile_decide
 from reconciliation_refs import anchor_id_of, literal_key_of, vendor_id_of
+import verdict_feed
 
 
 # Reviewer identity per the SIGNED policy document (data/review/research-adjudicated/
@@ -69,6 +70,8 @@ def literal_proposed_key(row: dict[str, Any]) -> str:
 
 
 def normalized_verdict_row(row: dict[str, Any]) -> dict[str, Any]:
+    if row.get("schema_version") == verdict_feed.SCHEMA_VERSION:
+        return verdict_feed.validate_row(dict(row))
     out = dict(row)
     literal = literal_proposed_key(row)
     if out.get("proposed_key") != literal and "source_proposed_key" not in out:
@@ -79,6 +82,19 @@ def normalized_verdict_row(row: dict[str, Any]) -> dict[str, Any]:
 
 def normalized_verdict_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [normalized_verdict_row(r) for r in rows]
+
+
+def _policy_verdict_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    out = []
+    for row in normalized_verdict_rows(rows):
+        if row.get("schema_version") == verdict_feed.SCHEMA_VERSION:
+            policy_row = dict(row)
+            verification = policy_row.pop("verification", {})
+            policy_row.update(verification)
+            out.append(policy_row)
+        else:
+            out.append(row)
+    return out
 
 
 def _load_second_research(path: str | Path) -> list[dict[str, Any]]:
@@ -158,7 +174,7 @@ def build_preview(
     context_by_vendor: dict[str, dict[str, Any]],
     policy_hash: str,
 ) -> dict[str, Any]:
-    verdicts = normalized_verdict_rows(verdict_rows)
+    verdicts = _policy_verdict_rows(verdict_rows)
     second_by_pair = {_pair_from_second(r): r for r in second_research_rows}
     cases_by_pair = _index_cases(read_model_cases)
     counts = _candidate_counts(read_model_cases)
@@ -268,7 +284,7 @@ def _build_preview_from_paths(
     policy_hash: str,
 ) -> dict[str, Any]:
     return build_preview(
-        verdict_rows=_load_jsonl(verdicts),
+        verdict_rows=verdict_feed.load_feed([verdicts]),
         second_research_rows=_load_second_research(second_research),
         read_model_cases=_load_jsonl(read_model),
         context_by_vendor=_load_json(context),
@@ -325,6 +341,23 @@ def _preflight_apply_inputs(
             raise ValueError(f"ledger drift before apply for {case_id}: live assertion already exists")
 
 
+def _ensure_fresh_context(
+    *,
+    context: str | Path,
+    preview: str | Path,
+    allow_stale_context: bool,
+) -> None:
+    if allow_stale_context:
+        return
+    context_path = Path(context)
+    preview_path = Path(preview)
+    if context_path.stat().st_mtime_ns < preview_path.stat().st_mtime_ns:
+        raise ValueError(
+            "stale collision context: context file is older than the approved preview; "
+            "regenerate the context after preview or pass --allow-stale-context"
+        )
+
+
 def apply_batch(
     *,
     verdicts: str | Path,
@@ -340,8 +373,14 @@ def apply_batch(
     decided_at: str,
     now: str | None = None,
     policy_version: str = AUTO_APPROVE_POLICY_VERSION,
+    allow_stale_context: bool = False,
 ) -> dict[str, Any]:
     approved_preview = _load_json(preview)
+    _ensure_fresh_context(
+        context=context,
+        preview=preview,
+        allow_stale_context=allow_stale_context,
+    )
     recomputed = _build_preview_from_paths(
         verdicts=verdicts,
         second_research=second_research,
@@ -436,6 +475,7 @@ def _cmd_apply(args: argparse.Namespace) -> int:
         decided_at=args.decided_at,
         now=args.now,
         policy_version=args.policy_version,
+        allow_stale_context=args.allow_stale_context,
     )
     print(json.dumps(result, sort_keys=True))
     return 0
@@ -474,6 +514,7 @@ def main(argv: list[str] | None = None) -> int:
     apply.add_argument("--policy-version", default=AUTO_APPROVE_POLICY_VERSION)
     apply.add_argument("--decided-at", required=True)
     apply.add_argument("--now", default=None)
+    apply.add_argument("--allow-stale-context", action="store_true")
     apply.set_defaults(func=_cmd_apply)
 
     args = parser.parse_args(argv)

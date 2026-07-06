@@ -35,6 +35,7 @@ from reconciliation_cases import (
     validate_case,
 )
 from reconciliation_registry import KEY_FIELD_BY_SOURCE, KEY_SOURCES, LEDGER_ACTIONABILITY
+from verdict_feed import load_feed
 
 # Ledger namespacing (spec §5.2): attach assertions and dedup assertions live in
 # distinct files; dedup bases are prefixed `org_dedup` and ONLY they assemble into
@@ -430,7 +431,7 @@ def main(argv: list[str] | None = None) -> int:
     ledger: list[dict[str, Any]] = []
     for lf in a.ledger:
         ledger.extend(load_ledger(lf))
-    verdicts = _load_jsonl(a.verdicts) if a.verdicts else []
+    verdicts = load_feed([a.verdicts]) if a.verdicts else []
 
     cases = build_attach_read_model(rows, ledger_assertions=ledger, verdict_rows=verdicts, now=a.now)
     out = Path(a.out)

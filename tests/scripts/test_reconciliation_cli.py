@@ -87,6 +87,27 @@ def test_cli_writes_read_model_and_coverage(tmp_path):
     assert scan_for_forbidden(rows) == []  # the written read model is leak-clean
 
 
+def test_cli_verdict_feed_conflicts_fail_loud(tmp_path):
+    cf = tmp_path / "cands.jsonl"
+    cf.write_text(json.dumps(EIN_RAW) + "\n", encoding="utf-8")
+    vf = tmp_path / "verdicts.jsonl"
+    first = {
+        "schema_version": "verdict-feed-v1",
+        "vendor_id": "org-marincontract-recipient-x",
+        "proposed_key": "953667812",
+        "verdict": "same",
+        "confidence": 0.95,
+        "provenance": {"model": "unit", "run": "r5"},
+    }
+    second = {**first, "verdict": "different"}
+    vf.write_text(json.dumps(first) + "\n" + json.dumps(second) + "\n", encoding="utf-8")
+    out = tmp_path / "rm.jsonl"
+
+    with pytest.raises(ValueError, match="conflicting verdict feed duplicate"):
+        rm.main(["--candidates", str(cf), "--verdicts", str(vf), "--out", str(out)])
+    assert not out.exists()
+
+
 def test_cli_explicit_missing_ledger_fails_loud(tmp_path):
     cf = tmp_path / "cands.jsonl"
     cf.write_text(json.dumps(EIN_RAW) + "\n", encoding="utf-8")
