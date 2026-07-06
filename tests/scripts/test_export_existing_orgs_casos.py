@@ -1,12 +1,12 @@
-"""Tests for export_existing_orgs.py — Lane 2 Unit 5: surface sos_id (+ defensive
-registration + the operator-gated enriched export mode).
+"""Tests for export_existing_orgs.py — Lane 2 Unit 5: surface sos_id (+ static
+normalizer view + the operator-gated enriched export mode).
 
 The export is refactored to an identity-key config and extended to surface
 `sos_id` with the SAME ledger-validation as `ein`/`uei` (orientation
 direct/inverse/wrong-pair, supersession, key-bearing basis, multi-key conflict,
 own-key provenance) plus the SOS entity-level attributes. The shipped `ein`/`uei`
 behavior is FROZEN (guarded by the unchanged Lane-1 test file). Codex r2 #2/#5:
-the enriched path re-registers `sos_id` defensively, and an operator-gated
+the enriched path consumes the immutable registry view, and an operator-gated
 `--enriched` write path emits the approved key as real JSON (fake-session tested).
 """
 from __future__ import annotations
@@ -14,8 +14,6 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
-
-import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
@@ -34,16 +32,6 @@ KEY_NODE = {
     "entity_type": "Stock Corporation - CA - General", "formation_date": "04/23/1992",
 }
 EXISTING = {"id": "org-ghilotti-construction-company", "display_label": "Ghilotti Construction Company"}
-
-
-@pytest.fixture(autouse=True)
-def _restore_key_normalizers():
-    snapshot = dict(KEY_NORMALIZERS)
-    try:
-        yield
-    finally:
-        KEY_NORMALIZERS.clear()
-        KEY_NORMALIZERS.update(snapshot)
 
 
 def _approved():
@@ -174,12 +162,12 @@ class _FakeSession:
         return iter(self._records)
 
 
-def test_enriched_path_reregisters_sos_id_after_deletion():
-    KEY_NORMALIZERS.pop("sos_id", None)  # simulate a hostile import order / mutation
+def test_enriched_path_consumes_static_sos_id_normalizer():
+    assert KEY_NORMALIZERS["sos_id"] is not None
     a = _approved()
     rec = _record(key_links=[_link(a["id"], edge_source=KEY_NODE["id"], edge_target=EXISTING["id"])])
     refs = enrich_existing_orgs(_FakeSession([rec]), [a])
-    assert refs[0]["sos_id"] == "1819837"  # re-registered defensively
+    assert refs[0]["sos_id"] == "1819837"
 
 
 def test_operator_enriched_write_emits_exactly_one_approved_sos_id(tmp_path):

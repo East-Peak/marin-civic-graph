@@ -31,9 +31,8 @@ from enrich_casos_keys import register_sos_id_normalizer  # noqa: E402
 from enrich_fppc_keys import register_committee_id_normalizer  # noqa: E402
 from identity_key_registry import _KEY_BEARING_BASES  # noqa: E402  (generated view, Goal 0)
 
-# Lanes 2/3: register the `sos_id`/`committee_id` normalizers at import so the
-# enriched export can normalize/surface them regardless of import order (Codex
-# r2 #2). The enriched function re-registers defensively too.
+# Lanes 2/3: validate the `sos_id`/`committee_id` normalizers at import so the
+# enriched export's import-order coverage remains explicit.
 register_sos_id_normalizer()
 register_committee_id_normalizer()
 
@@ -148,8 +147,6 @@ def org_ref_from_enriched_record(
     SAME_AS). A disagreement withholds the key and records `identity_key_conflict`.
     An own key on a node with unrecognized provenance is `review_keys`-only, never
     deterministic. `irs_subsection_class` + `degree` ride along."""
-    register_sos_id_normalizer()  # defensive — survive a deleted/hostile registration
-    register_committee_id_normalizer()  # Lane 3 — same defensive registration
     ref: dict[str, Any] = {"id": record["id"]}
     if record.get("display_label"):
         ref["display_label"] = record["display_label"]

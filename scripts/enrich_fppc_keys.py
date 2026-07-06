@@ -6,7 +6,8 @@ so the shipped graph-org-dedup deterministic tier merges name-variant committee
 dups and keeps different-election-cycle committees DISTINCT (Bonta-AG-2022 vs
 -2026 carry different FPPC ids). Third lane on the shipped machinery (Lane 1 EIN
 `enrich_org_keys`, Lane 2 CA-SOS `enrich_casos_keys`); `org_resolution.py` is
-NEVER edited — the `committee_id` normalizer is registered at runtime.
+NEVER edited — the `committee_id` normalizer is validated by a compatibility
+shim against the immutable registry view.
 
 Sources (both read from disk; no network/DB in the loop):
   - tier 1: the `committee-netfile-*` filer nodes in the normalized campaign
@@ -43,20 +44,18 @@ FPPC_ANCHOR_PREFIX = "org-fppc-"
 
 # _normalize_committee_id is re-exported from identity_key_normalizers (Goal 0 —
 # the single shared home for the key normalizers; imported above).
-# register_committee_id_normalizer registers that shared callable into KEY_NORMALIZERS.
+# register_committee_id_normalizer validates that shared callable against KEY_NORMALIZERS.
 
 
 def register_committee_id_normalizer() -> None:
-    """Idempotently register `_normalize_committee_id` under `"committee_id"` in
-    the shared `KEY_NORMALIZERS`. Refuses to clobber a foreign registration (a
-    stray mutation fails loud rather than silently winning). Called by every
-    module that uses the key — `org_resolution.py` itself is never edited."""
+    """Validate `_normalize_committee_id` under `"committee_id"` in the shared
+    immutable `KEY_NORMALIZERS`. This is a no-op shim that preserves the old
+    clobber-refusal contract: missing or foreign registrations fail loud rather
+    than silently changing resolver behavior."""
     existing = KEY_NORMALIZERS.get("committee_id")
-    if existing is None:
-        KEY_NORMALIZERS["committee_id"] = _normalize_committee_id
-    elif existing is not _normalize_committee_id:
+    if existing is not _normalize_committee_id:
         raise RuntimeError(
-            "KEY_NORMALIZERS['committee_id'] is already registered to a different "
+            "KEY_NORMALIZERS['committee_id'] is not registered to the expected "
             f"callable ({existing!r}); refusing to clobber it"
         )
 
@@ -189,7 +188,6 @@ def resolve_committee_ids(
     matches None — a perennial committee; any year mismatch, incl. one-sided, is
     skipped). If exactly one committee_id matches it is proposed; 0 or >1
     (ambiguous) is WITHHELD — never a guess, never a cross-cycle collapse."""
-    register_committee_id_normalizer()
     candidates: list[dict[str, Any]] = []
     for org in org_nodes:
         if org.get("node_type") != "Organization":

@@ -15,7 +15,8 @@ and the lanes import both this module and ``identity_key_normalizers``.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Callable
+from types import MappingProxyType
+from typing import Any, Callable, Mapping
 
 import identity_key_normalizers as _kn
 
@@ -204,19 +205,25 @@ def generate_key_bearing_bases() -> frozenset[str]:
 
 
 def generate_key_normalizers() -> dict[str, Callable[[Any], str | None]]:
-    """The STATIC ``KEY_NORMALIZERS`` dict — only the non-runtime-registered keys
-    (ein, uei). The runtime keys (sos_id, committee_id) are added by their lanes'
-    ``register_*_normalizer`` at import, exactly as at BASE_SHA. Returns a fresh
-    MUTABLE dict: the lanes mutate it, and ``org_resolution`` imports THIS object
-    (object identity), so a single shared dict carries both static + runtime keys."""
+    """Complete ``KEY_NORMALIZERS`` mapping generated from the registry.
+
+    Returns a fresh dict for parity tests and construction; the exported
+    ``KEY_NORMALIZERS`` below is an immutable read-through view over this table.
+    Scoped entries that share a key_type must share the same normalizer (already
+    validated at import), so duplicate key_types collapse deterministically.
+    """
     out: dict[str, Callable[[Any], str | None]] = {}
     for e in REGISTRY:
-        if not e.runtime_registered:
+        existing = out.get(e.key_type)
+        if existing is None:
             out[e.key_type] = e.normalizer
+        elif existing is not e.normalizer:
+            raise ValueError(f"key_type {e.key_type!r} has multiple normalizers")
     return out
 
 
 ANCHOR_PREFIXES: tuple[str, ...] = generate_anchor_prefixes()
 _DEDUP_KEYS: tuple[str, ...] = generate_dedup_keys()
 _KEY_BEARING_BASES: frozenset[str] = generate_key_bearing_bases()
-KEY_NORMALIZERS: dict[str, Callable[[Any], str | None]] = generate_key_normalizers()
+_KEY_NORMALIZER_TABLE = generate_key_normalizers()
+KEY_NORMALIZERS: Mapping[str, Callable[[Any], str | None]] = MappingProxyType(_KEY_NORMALIZER_TABLE)

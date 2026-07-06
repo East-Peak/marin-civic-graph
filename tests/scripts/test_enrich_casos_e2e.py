@@ -108,7 +108,7 @@ class TestRealCaSosE2E:
 
 
 def test_operator_approval_surfaces_exactly_one_real_sos_id(tmp_path):
-    KEY_NORMALIZERS.pop("sos_id", None)  # also exercises defensive re-registration
+    assert KEY_NORMALIZERS["sos_id"] is not None
     key_node = {
         "id": "org-casos-1819837", "display_label": "Ghilotti Construction Company, Inc.",
         "sos_id": "1819837", "entity_status": "Active",

@@ -36,8 +36,7 @@ from pathlib import Path
 from typing import Any
 
 from org_resolution import KEY_NORMALIZERS, propose_org_resolutions  # noqa: F401
-from enrich_casos_keys import register_sos_id_normalizer
-from enrich_fppc_keys import register_committee_id_normalizer, _election_year
+from enrich_fppc_keys import _election_year
 from identity_ledger import make_assertion, write_assertions
 from identity_key_registry import ANCHOR_PREFIXES, _DEDUP_KEYS  # generated views (Goal 0)
 
@@ -132,9 +131,7 @@ def deterministic_dedup_assertions(
     org groups of size >1. Each group becomes a STAR from its lexically-smallest
     member (N-1 assertions, subject<target) — enough to form one component in
     assembly. Written directly via make_assertion (no resolver, no egress gate).
-    Calls register_sos_id_normalizer() first so the sos_id key resolves."""
-    register_sos_id_normalizer()
-    register_committee_id_normalizer()
+    The registry's immutable KEY_NORMALIZERS view already carries every key."""
     refs_by_id = {r["id"]: r for r in refs}
 
     groups: dict[tuple[str, str], list[str]] = defaultdict(list)
@@ -224,8 +221,6 @@ def assemble_components(
     `deterministic`/`approved` dedup-basis assertions form components; an
     un-approved (e.g. `queued`) pair never rides transitivity.
     `rejected_entity_distinct` pairs are read by STATUS for the SPLIT guard."""
-    register_sos_id_normalizer()
-    register_committee_id_normalizer()
     parent: dict[str, str] = {}
 
     def find(x: str) -> str:
@@ -317,8 +312,6 @@ def name_tier_candidates(refs: list[dict[str, Any]]) -> list[dict[str, Any]]:
     Excludes: self-pairs, symmetric dups, committee<->organization class
     mismatches, and pairs sharing a hard key (the deterministic tier's job). An
     affiliate-token divergence tags the candidate `needs_careful_review`."""
-    register_sos_id_normalizer()
-    register_committee_id_normalizer()
     keys_by_id = {r["id"]: _key_set(r) for r in refs}
 
     blocks: dict[str, list[dict[str, Any]]] = defaultdict(list)

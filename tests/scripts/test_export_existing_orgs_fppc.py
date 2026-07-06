@@ -8,11 +8,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from org_resolution import KEY_NORMALIZERS  # noqa: E402
 from export_existing_orgs import (  # noqa: E402
     ENRICHED_ORGS_QUERY,
     IDENTITY_KEYS,
@@ -26,16 +23,6 @@ KEY_NODE = {"id": "org-fppc-1439160", "display_label": "Bonta for Attorney Gener
             "committee_id": "1439160"}
 EXISTING = {"id": "org-bonta-for-attorney-general-2022",
             "display_label": "Bonta for Attorney General 2022"}
-
-
-@pytest.fixture(autouse=True)
-def _restore_key_normalizers():
-    snapshot = dict(KEY_NORMALIZERS)
-    try:
-        yield
-    finally:
-        KEY_NORMALIZERS.clear()
-        KEY_NORMALIZERS.update(snapshot)
 
 
 def _approved(target=EXISTING):

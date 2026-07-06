@@ -4,9 +4,9 @@ The CA Secretary-of-State Filings parser. The teeth:
 - `_normalize_sos_id` is FORMAT-AGNOSTIC: 7-digit zero-padded corps, 12-digit
   LLC/LP, AND `B`-prefixed numbers all normalize; a leading `C` (OpenCorporates'
   display form) is stripped; leading zeros are PRESERVED; empty → None.
-- `register_sos_id_normalizer()` is idempotent and refuses to clobber a foreign
-  registration — so `org_resolution.py` stays byte-identical and there is no
-  import-order hazard. Tests snapshot/restore `KEY_NORMALIZERS`.
+- `register_sos_id_normalizer()` is an idempotent validating shim that refuses a
+  foreign registration — so `org_resolution.py` stays byte-identical and there is
+  no import-order hazard.
 - `parse_casos_filings` STREAMS (yields per row; never materializes the 3.6 GB
   file) and reads ONLY the entity-level whitelist into refs — never the street
   address / ZIP columns the fixture carries as sentinels.
@@ -17,12 +17,12 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from types import MappingProxyType
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from org_resolution import KEY_NORMALIZERS  # noqa: E402
 import enrich_casos_keys  # noqa: E402
 from enrich_casos_keys import (  # noqa: E402
     _normalize_sos_id,
@@ -34,18 +34,6 @@ from enrich_casos_keys import (  # noqa: E402
 
 FIXTURES = Path(__file__).resolve().parents[1] / "fixtures" / "identity_enrichment_casos"
 FILINGS_SLICE = FIXTURES / "filings_slice.csv"
-
-
-@pytest.fixture(autouse=True)
-def _restore_key_normalizers():
-    """Snapshot/restore KEY_NORMALIZERS so a lane registration never leaks across
-    tests (Codex r2 #2)."""
-    snapshot = dict(KEY_NORMALIZERS)
-    try:
-        yield
-    finally:
-        KEY_NORMALIZERS.clear()
-        KEY_NORMALIZERS.update(snapshot)
 
 
 # --------------------------------------------------------------------------
@@ -85,20 +73,23 @@ def test_normalize_empty_is_none_never_fabricated():
 # --------------------------------------------------------------------------
 
 
-def test_register_adds_sos_id_normalizer():
-    KEY_NORMALIZERS.pop("sos_id", None)
+def test_register_validates_sos_id_normalizer():
     register_sos_id_normalizer()
-    assert KEY_NORMALIZERS["sos_id"] is _normalize_sos_id
+    assert enrich_casos_keys.KEY_NORMALIZERS["sos_id"] is _normalize_sos_id
 
 
 def test_register_is_idempotent():
     register_sos_id_normalizer()
     register_sos_id_normalizer()  # second call must not raise
-    assert KEY_NORMALIZERS["sos_id"] is _normalize_sos_id
+    assert enrich_casos_keys.KEY_NORMALIZERS["sos_id"] is _normalize_sos_id
 
 
-def test_register_refuses_to_clobber_foreign_registration():
-    KEY_NORMALIZERS["sos_id"] = lambda v: "foreign"
+def test_register_refuses_foreign_registration(monkeypatch):
+    monkeypatch.setattr(
+        enrich_casos_keys,
+        "KEY_NORMALIZERS",
+        MappingProxyType({"sos_id": lambda v: "foreign"}),
+    )
     with pytest.raises(Exception):
         register_sos_id_normalizer()
 

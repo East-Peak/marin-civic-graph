@@ -13,11 +13,8 @@ import json
 import sys
 from pathlib import Path
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from org_resolution import KEY_NORMALIZERS  # noqa: E402
 from enrich_casos_keys import (  # noqa: E402
     block_casos_against_existing,
     build_casos_coverage_report,
@@ -34,16 +31,6 @@ EXISTING = [
     {"id": "org-miller-pacific-engineering-group", "display_label": "Miller Pacific Engineering Group"},
     {"id": "org-unmatched-vendor", "display_label": "Totally Unmatched Vendor LLC"},
 ]
-
-
-@pytest.fixture(autouse=True)
-def _restore_key_normalizers():
-    snapshot = dict(KEY_NORMALIZERS)
-    try:
-        yield
-    finally:
-        KEY_NORMALIZERS.clear()
-        KEY_NORMALIZERS.update(snapshot)
 
 
 def test_block_returns_streaming_stats():

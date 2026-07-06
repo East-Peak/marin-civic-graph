@@ -8,10 +8,10 @@ operator stages the CA SOS "BE Master Unload" (`data/raw/ca-sos/Filings.csv`,
 3.6 GB file) into keyed registry org refs for the shared resolver.
 
 Reuses Lane 1's resolver/ledger/gate/export. THREE things are new:
-  1. `sos_id` — a new identity key, registered into the shared resolver's
-     `KEY_NORMALIZERS` at RUNTIME via the idempotent, non-clobbering
-     `register_sos_id_normalizer()` (so `org_resolution.py` stays byte-identical
-     and there is no import-order hazard).
+  1. `sos_id` — a new identity key, validated against the shared resolver's
+     immutable `KEY_NORMALIZERS` via the idempotent, non-clobbering
+     `register_sos_id_normalizer()` shim (so `org_resolution.py` stays
+     byte-identical and import-order coverage remains explicit).
   2. Scale + recall — a streaming significant-token pre-block (see
      `block_casos_against_existing`, a later unit) reduces 9.44M rows to a tiny
      candidate pool before any resolution.
@@ -66,20 +66,18 @@ DELIMITER = "*|*"
 
 # _normalize_sos_id is re-exported from identity_key_normalizers (Goal 0 — the
 # single shared home for the key normalizers; imported above). register_sos_id_normalizer
-# registers that shared callable into KEY_NORMALIZERS.
+# validates that shared callable against KEY_NORMALIZERS.
 
 
 def register_sos_id_normalizer() -> None:
-    """Idempotently register `_normalize_sos_id` under `"sos_id"` in the shared
-    `KEY_NORMALIZERS`. Refuses to clobber a foreign registration (so a stray test
-    mutation fails loud rather than silently winning). Called at import by every
-    module that uses the key — `org_resolution.py` itself is never edited."""
+    """Validate `_normalize_sos_id` under `"sos_id"` in the shared immutable
+    `KEY_NORMALIZERS`. This is a no-op shim that preserves the old clobber-
+    refusal contract: missing or foreign registrations fail loud rather than
+    silently changing resolver behavior."""
     existing = KEY_NORMALIZERS.get("sos_id")
-    if existing is None:
-        KEY_NORMALIZERS["sos_id"] = _normalize_sos_id
-    elif existing is not _normalize_sos_id:
+    if existing is not _normalize_sos_id:
         raise RuntimeError(
-            "KEY_NORMALIZERS['sos_id'] is already registered to a different "
+            "KEY_NORMALIZERS['sos_id'] is not registered to the expected "
             f"callable ({existing!r}); refusing to clobber it"
         )
 
@@ -243,7 +241,6 @@ def block_casos_against_existing(
 
     Memory-safe: only SOS refs that share a significant token with some existing
     org are held (the matched buckets), never the full file."""
-    register_sos_id_normalizer()
     existing_tokens = {e["id"]: significant_tokens(e["display_label"]) for e in existing_orgs}
     existing_by_id = {e["id"]: e for e in existing_orgs}
     token_index: dict[str, list[str]] = {}
@@ -382,7 +379,6 @@ def resolve_casos_deterministic(
     assertion + a SAME_AS stamped with its id (the ONE permitted auto-merge — used
     on constructed keyed fixtures; the real export carries no `sos_id`). A name
     match → a `queued` candidate. Name similarity alone NEVER merges."""
-    register_sos_id_normalizer()
     same_as, candidates = propose_org_resolutions(
         sos_refs, existing_orgs, identity_keys=("sos_id",)
     )

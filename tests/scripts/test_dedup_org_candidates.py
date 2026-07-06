@@ -144,10 +144,8 @@ def test_singletons_and_no_key_emit_nothing():
     assert deterministic_dedup_assertions(refs, **_DET_KW) == []
 
 
-def test_sos_id_tier_works_and_self_registers_normalizer():
-    # Deleting the sos_id normalizer then running proves the pass registers it
-    # itself (Predeclared 1) rather than relying on import side effects.
-    org_resolution.KEY_NORMALIZERS.pop("sos_id", None)
+def test_sos_id_tier_works_with_static_registry_normalizer():
+    assert org_resolution.KEY_NORMALIZERS["sos_id"] is not None
     refs = [
         _ref("org-ghil-b", "Ghilotti Construction Company", sos_id="1819837"),
         _ref("org-ghil-a", "Ghilotti Construction", sos_id="1819837"),
@@ -155,7 +153,7 @@ def test_sos_id_tier_works_and_self_registers_normalizer():
     asserts = deterministic_dedup_assertions(refs, **_DET_KW)
     assert len(asserts) == 1
     assert asserts[0]["basis"] == "org_dedup_key_exact"
-    assert "sos_id" in org_resolution.KEY_NORMALIZERS  # re-registered
+    assert "sos_id" in org_resolution.KEY_NORMALIZERS
 
 
 # ---------------------------------------------------------------------------
@@ -495,15 +493,15 @@ def test_committee_id_same_id_different_year_refused_cycle_guard():
     assert deterministic_dedup_assertions(refs, **_DET_KW) == []
 
 
-def test_dedup_self_registers_committee_id_normalizer():
-    org_resolution.KEY_NORMALIZERS.pop("committee_id", None)
+def test_dedup_uses_static_committee_id_normalizer():
+    assert org_resolution.KEY_NORMALIZERS["committee_id"] is not None
     refs = [
         _ref("org-a", "Same Committee 2024", committee_id="2222222"),
         _ref("org-b", "Same Committee 2024 Variant", committee_id="2222222"),
     ]
     asserts = deterministic_dedup_assertions(refs, **_DET_KW)
     assert len(asserts) == 1
-    assert "committee_id" in org_resolution.KEY_NORMALIZERS  # re-registered
+    assert "committee_id" in org_resolution.KEY_NORMALIZERS
 
 
 def test_e2e_real_ledger_yields_zero_anchor_merges():

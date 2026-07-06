@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from types import MappingProxyType
 
 import pytest
 
@@ -55,7 +56,8 @@ def test_normalizer_is_shared_callable():
 
 
 def test_runtime_registered_flags():
-    # ein/uei are STATIC in KEY_NORMALIZERS; sos_id/committee_id are lane-registered
+    # Historical lane shims still carry import-order coverage, but the registry
+    # now owns every normalizer statically.
     assert reg.entry("ein", "self").runtime_registered is False
     assert reg.entry("uei", "self").runtime_registered is False
     assert reg.entry("sos_id", "self").runtime_registered is True
@@ -178,29 +180,42 @@ def test_dedup_keys_membership_crosscheck_fires_on_drift(monkeypatch):
         reg.generate_dedup_keys()
 
 
-# --- Unit 5: KEY_NORMALIZERS static view (parity-locked to BASE_SHA) --------
+# --- Unit 5: KEY_NORMALIZERS complete immutable view (R2) -------------------
 
-def test_key_normalizers_static_parity():
-    # The STATIC view is what the generator produces — independent of the live
-    # shared dict, which the lanes mutate at import (adding sos_id/committee_id).
-    static = reg.generate_key_normalizers()
-    assert type(static) is dict
-    assert set(static) == {"ein", "uei"}
-    assert static["ein"] is kn._normalize_ein
-    assert static["uei"] is kn._normalize_uei
-    # The live shared dict maps ein/uei to the same callables (may also carry the
-    # runtime keys once a lane has registered them — order-independent assertion).
-    assert reg.KEY_NORMALIZERS["ein"] is kn._normalize_ein
-    assert reg.KEY_NORMALIZERS["uei"] is kn._normalize_uei
+def test_key_normalizers_generated_complete_matches_post_registration_dict():
+    # R2 parity lock: the new complete generator must equal the old world after
+    # lane import-time registration populated the shared mutable dict.
+    import org_resolution as o  # noqa: E402
+    import enrich_casos_keys  # noqa: E402
+    import enrich_fppc_keys  # noqa: E402
+
+    enrich_casos_keys.register_sos_id_normalizer()
+    enrich_fppc_keys.register_committee_id_normalizer()
+
+    generated = reg.generate_key_normalizers()
+    post_registration = dict(o.KEY_NORMALIZERS)
+    assert generated == post_registration
+    assert set(generated) == {"ein", "uei", "sos_id", "committee_id"}
+    assert generated["ein"] is kn._normalize_ein
+    assert generated["uei"] is kn._normalize_uei
+    assert generated["sos_id"] is kn._normalize_sos_id
+    assert generated["committee_id"] is kn._normalize_committee_id
+
+
+def test_key_normalizers_view_is_immutable():
+    assert type(reg.KEY_NORMALIZERS) is MappingProxyType
+    with pytest.raises(TypeError):
+        reg.KEY_NORMALIZERS["sos_id"] = kn._normalize_sos_id
 
 
 # --- Unit 6: object-identity (one shared KEY_NORMALIZERS dict) --------------
 
 def test_key_normalizers_object_identity():
     import org_resolution as o  # noqa: E402
-    # the matcher imports the registry's dict — the SAME object, not a copy
+    # the matcher imports the registry's immutable view — the SAME object, not a copy
     assert reg.KEY_NORMALIZERS is o.KEY_NORMALIZERS
-    # importing a consumer registers the runtime keys into that same shared dict
+    # importing a consumer still exercises the lane shim path; the shim validates
+    # that the view already carries the expected callable.
     import export_existing_orgs  # noqa: F401, E402  (register_sos_id + register_committee_id at import)
     assert reg.KEY_NORMALIZERS is o.KEY_NORMALIZERS  # still the same object after register_*
     assert o.KEY_NORMALIZERS["sos_id"] is kn._normalize_sos_id

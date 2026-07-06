@@ -12,11 +12,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from org_resolution import KEY_NORMALIZERS  # noqa: E402
 from enrich_casos_keys import (  # noqa: E402
     PUBLISHABLE_FIELDS,
     block_casos_against_existing,
@@ -30,16 +27,6 @@ FIXTURES = Path(__file__).resolve().parents[1] / "fixtures" / "identity_enrichme
 FILINGS_SLICE = FIXTURES / "filings_slice.csv"
 AGENTS_SLICE = FIXTURES / "agents_slice.csv"
 PRINCIPALS_SLICE = FIXTURES / "principals_slice.csv"
-
-
-@pytest.fixture(autouse=True)
-def _restore_key_normalizers():
-    snapshot = dict(KEY_NORMALIZERS)
-    try:
-        yield
-    finally:
-        KEY_NORMALIZERS.clear()
-        KEY_NORMALIZERS.update(snapshot)
 
 
 POLLUTED_REF = {
