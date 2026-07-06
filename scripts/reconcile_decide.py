@@ -72,6 +72,9 @@ def decide(
     ledger_path: str | Path,
     attach_dir: str | Path,
     now: str | None = None,
+    policy_version: str | None = None,
+    policy_hash: str | None = None,
+    eligibility_snapshot_hash: str | None = None,
 ) -> dict[str, Any]:
     """Resolve a case + decision and persist it via the writer. Approve reads the raw
     candidate (evidence preserved) and materializes the SAME_AS node+edge handoff;
@@ -99,12 +102,18 @@ def decide(
             action, candidate=raw, vendor_ref=vendor_ref, attach_builder=lane["builder"],
             anchor_node=lane["anchor"](raw, vendor_ref),
             ledger_path=ledger_path, attach_dir=attach_dir, now=now,
+            **({} if policy_version is None else {"policy_version": policy_version}),
+            policy_hash=policy_hash,
+            eligibility_snapshot_hash=eligibility_snapshot_hash,
         )
 
     # reject / unsure — no raw candidate / no handoff
     return apply_decision(
         action, subject={"id": subject_ref}, target={"id": candidate_ref},
         ledger_path=ledger_path, attach_dir=attach_dir, now=now,
+        **({} if policy_version is None else {"policy_version": policy_version}),
+        policy_hash=policy_hash,
+        eligibility_snapshot_hash=eligibility_snapshot_hash,
     )
 
 
@@ -123,6 +132,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--ledger", required=True)
     p.add_argument("--attach-dir", required=True)
     p.add_argument("--now", default=None)
+    p.add_argument("--policy-version", default=None)
+    p.add_argument("--policy-hash", default=None)
+    p.add_argument("--eligibility-snapshot-hash", default=None)
     a = p.parse_args(argv)
 
     candidate_paths: dict[str, str] = {}
@@ -135,6 +147,8 @@ def main(argv: list[str] | None = None) -> int:
         a.case_id, a.action, reviewer=a.reviewer, decided_at=a.decided_at,
         rejection_kind=a.rejection_kind, read_model_path=a.read_model,
         candidate_paths=candidate_paths, ledger_path=a.ledger, attach_dir=a.attach_dir, now=a.now,
+        policy_version=a.policy_version, policy_hash=a.policy_hash,
+        eligibility_snapshot_hash=a.eligibility_snapshot_hash,
     )
     print(json.dumps(result))
     return 0

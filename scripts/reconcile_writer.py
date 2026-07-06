@@ -136,6 +136,8 @@ def apply_decision(
     anchor_node: dict[str, Any] | None = None,
     now: str | None = None,
     policy_version: str = POLICY_VERSION,
+    policy_hash: str | None = None,
+    eligibility_snapshot_hash: str | None = None,
 ) -> dict[str, Any]:
     """Persist one operator decision. ATTACH-ONLY. Returns
     ``{result: created|existing|superseded|unsure, assertion, same_as}``. File-locked +
@@ -148,6 +150,7 @@ def apply_decision(
     write = operator_action_to_ledger(
         action, attach_builder=attach_builder, candidate=candidate, vendor_ref=vendor_ref,
         subject=subject, target=target, policy_version=policy_version,
+        policy_hash=policy_hash, eligibility_snapshot_hash=eligibility_snapshot_hash,
     )
     if write is None:  # unsure → no write
         return {"result": "unsure", "assertion": None, "same_as": None}

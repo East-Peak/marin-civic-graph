@@ -92,6 +92,8 @@ def operator_action_to_ledger(
     subject: dict[str, Any] | None = None,
     target: dict[str, Any] | None = None,
     policy_version: str = POLICY_VERSION,
+    policy_hash: str | None = None,
+    eligibility_snapshot_hash: str | None = None,
 ) -> dict[str, Any] | None:
     """Map one ``OperatorAction`` to its ledger write, routed to the correct namespace.
 
@@ -110,9 +112,18 @@ def operator_action_to_ledger(
         if action.action == "approve":
             if attach_builder is None:
                 raise ValueError("identity_key_attach/approve requires an attach_builder")
+            builder_kwargs = {
+                "reviewer": action.reviewer,
+                "decided_at": action.decided_at,
+                "policy_version": policy_version,
+            }
+            if policy_hash is not None:
+                builder_kwargs["policy_hash"] = policy_hash
+            if eligibility_snapshot_hash is not None:
+                builder_kwargs["eligibility_snapshot_hash"] = eligibility_snapshot_hash
             assertion, same_as = attach_builder(
                 candidate, vendor_ref,
-                reviewer=action.reviewer, decided_at=action.decided_at, policy_version=policy_version,
+                **builder_kwargs,
             )
             return {"ledger": ATTACH_LEDGER, "assertion": assertion, "same_as": same_as}
         # reject → attach-namespace rejection status (never org_dedup*)
@@ -122,6 +133,7 @@ def operator_action_to_ledger(
             basis=f"operator_rejected_{action.key_type}_{action.rejection_kind}",
             subject=subject, target=target,
             reviewer=action.reviewer, decided_at=action.decided_at, policy_version=policy_version,
+            policy_hash=policy_hash, eligibility_snapshot_hash=eligibility_snapshot_hash,
         )
         return {"ledger": ATTACH_LEDGER, "assertion": assertion, "same_as": None}
 
@@ -134,6 +146,7 @@ def operator_action_to_ledger(
         subject_ref=subject["id"], target_ref=target["id"], status=status, basis=basis,
         subject=subject, target=target,
         reviewer=action.reviewer, decided_at=action.decided_at, policy_version=policy_version,
+        policy_hash=policy_hash, eligibility_snapshot_hash=eligibility_snapshot_hash,
     )
     return {"ledger": DEDUP_LEDGER, "assertion": assertion, "same_as": None}
 

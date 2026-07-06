@@ -283,6 +283,8 @@ def assertion_for_approved_candidate(
     reviewer: str,
     decided_at: str,
     policy_version: str = POLICY_VERSION,
+    policy_hash: str | None = None,
+    eligibility_snapshot_hash: str | None = None,
 ) -> dict[str, Any]:
     """Write the ledger assertion for an operator-APPROVED candidate.
 
@@ -299,6 +301,8 @@ def assertion_for_approved_candidate(
         reviewer=reviewer,
         decided_at=decided_at,
         policy_version=policy_version,
+        policy_hash=policy_hash,
+        eligibility_snapshot_hash=eligibility_snapshot_hash,
         evidence_refs=list(candidate.get("evidence_record_ids", [])),
     )
 

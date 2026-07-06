@@ -207,7 +207,16 @@ def resolve_vendor_sos(vendor_orgs, filings_factory, *, agents_factory=None):
             "same_as_edges": [], "assertions": []}
 
 
-def build_sos_attach(candidate, vendor_ref, *, reviewer, decided_at, policy_version=POLICY_VERSION):
+def build_sos_attach(
+    candidate,
+    vendor_ref,
+    *,
+    reviewer,
+    decided_at,
+    policy_version=POLICY_VERSION,
+    policy_hash=None,
+    eligibility_snapshot_hash=None,
+):
     """For an operator-APPROVED sos_id candidate, build (assertion, SAME_AS) —
     mirrors Phase-B `build_ein_attach`. subject = the `org-casos-<sos_id>` key
     anchor (carrying sos_id), target = the vendor; basis `operator_approved_sos_id`;
@@ -227,6 +236,7 @@ def build_sos_attach(candidate, vendor_ref, *, reviewer, decided_at, policy_vers
         candidate, subject=subject, target=target,
         basis="operator_approved_sos_id",
         reviewer=reviewer, decided_at=decided_at, policy_version=policy_version,
+        policy_hash=policy_hash, eligibility_snapshot_hash=eligibility_snapshot_hash,
     )
     same_as = {
         "source_id": anchor_id,

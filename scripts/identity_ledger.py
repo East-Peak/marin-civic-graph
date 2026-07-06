@@ -109,13 +109,15 @@ def make_assertion(
     legacy_projection: bool = False,
     review_after: str | None = None,
     supersedes: str | None = None,
+    policy_hash: str | None = None,
+    eligibility_snapshot_hash: str | None = None,
 ) -> dict[str, Any]:
     """Build one IdentityAssertion record (Predeclared 1 schema). `decided_at`
     is operator-supplied — NEVER a clock."""
     if status not in STATUSES:
         raise ValueError(f"unknown status {status!r}; must be one of {sorted(STATUSES)}")
     snap = source_snapshot_hash(subject, target)
-    return {
+    assertion = {
         "id": assertion_id(subject_ref, target_ref, basis, snap),
         "subject_ref": subject_ref,
         "target_ref": target_ref,
@@ -134,6 +136,11 @@ def make_assertion(
         "superseded_by": None,
         "review_after": review_after,
     }
+    if policy_hash is not None:
+        assertion["policy_hash"] = policy_hash
+    if eligibility_snapshot_hash is not None:
+        assertion["eligibility_snapshot_hash"] = eligibility_snapshot_hash
+    return assertion
 
 
 def supersede(

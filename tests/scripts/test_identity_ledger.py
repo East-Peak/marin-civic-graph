@@ -108,6 +108,20 @@ class TestMakeAssertion:
         assert a["reviewed_raw_variants"] == ["Z CO", "Z COMPANY"]
         assert a["reviewer"] == "stuart@eastpeak.cc"
 
+    def test_policy_applied_assertion_carries_policy_and_snapshot_hashes(self):
+        a = make_assertion(
+            subject_ref="org-bmf-ein-1", target_ref="org-vendor", status="approved",
+            basis="operator_approved_ein", subject=_ref("org-bmf-ein-1", "Anchor", ein="1"),
+            target=_ref("org-vendor", "Vendor"),
+            reviewer="research-fleet-v1/policy-stuart-2026-07-01",
+            decided_at="2026-07-03T20:00:00Z",
+            policy_version="research-fleet-v1/policy-stuart-2026-07-01",
+            policy_hash="h-policy",
+            eligibility_snapshot_hash="sha256:snapshot",
+        )
+        assert a["policy_hash"] == "h-policy"
+        assert a["eligibility_snapshot_hash"] == "sha256:snapshot"
+
 
 class TestReadWriteRoundTrip:
     def test_write_then_read_sorted_deterministic(self, tmp_path):

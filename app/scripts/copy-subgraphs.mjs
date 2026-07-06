@@ -16,12 +16,6 @@ async function main() {
   await cp(SRC, DEST, { recursive: true });
   console.log(`copied subgraph bundles → ${DEST}`);
 
-  // Also copy currently-tracking.yaml for static serving.
-  const REGISTRY_YAML = path.resolve(__dirname, "..", "..", "registry", "currently-tracking.yaml");
-  const REGISTRY_DEST = path.resolve(__dirname, "..", "public", "currently-tracking.yaml");
-  await cp(REGISTRY_YAML, REGISTRY_DEST);
-  console.log(`copied threads registry → ${REGISTRY_DEST}`);
-
   // Catalog counts — baked bundle per spec §3.7 (not a live query per request).
   const CATALOG_SRC = path.resolve(__dirname, "..", "..", "data", "projected", "graph-v1", "catalog.json");
   const CATALOG_DEST = path.resolve(__dirname, "..", "public", "catalog.json");

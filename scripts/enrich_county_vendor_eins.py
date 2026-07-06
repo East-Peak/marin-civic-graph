@@ -184,6 +184,8 @@ def build_ein_attach(
     reviewer: str,
     decided_at: str,
     policy_version: str = POLICY_VERSION,
+    policy_hash: str | None = None,
+    eligibility_snapshot_hash: str | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """For an operator-APPROVED EIN candidate, build (assertion, SAME_AS edge) —
     mirrors FPPC `build_committee_attach`. subject = the `org-bmf-ein-<ein>` key
@@ -204,6 +206,7 @@ def build_ein_attach(
         candidate, subject=subject, target=target,
         basis="operator_approved_ein",
         reviewer=reviewer, decided_at=decided_at, policy_version=policy_version,
+        policy_hash=policy_hash, eligibility_snapshot_hash=eligibility_snapshot_hash,
     )
     same_as = {
         "source_id": anchor_id,

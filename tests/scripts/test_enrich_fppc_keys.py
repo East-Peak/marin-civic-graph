@@ -267,17 +267,21 @@ def test_merge_same_id_different_payload_fails_loud(tmp_path):
         merge_approved_assertions([_assertion("assertion-aaa", status="rejected_entity_distinct")], ledger)
 
 
-def test_merge_seeds_live_68_and_all_survive(tmp_path):
-    # Codex r1 blocker / Completion 5: the live 68 attach rows survive byte-for-byte
+def test_merge_seeds_live_ledger_and_all_survive(tmp_path):
+    # Codex r1 blocker / Completion 5: the live attach rows survive byte-for-byte
     assert _LIVE_LEDGER.is_file(), "BLOCKED: live ledger missing"
     seeded = tmp_path / "assertions.jsonl"
     original_lines = _LIVE_LEDGER.read_text(encoding="utf-8").splitlines()
+    assert original_lines
     seeded.write_text("\n".join(original_lines) + "\n", encoding="utf-8")
-    assert len(original_lines) == 68
-    merge_approved_assertions([_assertion("assertion-new-committee")], seeded)
-    out_lines = set(seeded.read_text(encoding="utf-8").splitlines())
-    assert set(original_lines) <= out_lines        # every one of the 68 survives byte-for-byte
-    assert len(out_lines) == 69
+    new_assertion = _assertion("assertion-new-committee")
+    expected_new_line = json.dumps(new_assertion, sort_keys=True)
+    assert new_assertion["id"] not in {json.loads(line)["id"] for line in original_lines}
+    merge_approved_assertions([new_assertion], seeded)
+    out_lines = seeded.read_text(encoding="utf-8").splitlines()
+    assert set(original_lines) <= set(out_lines)   # every original survives byte-for-byte
+    assert expected_new_line in out_lines
+    assert len(out_lines) == len(original_lines) + 1
 
 
 def test_build_committee_attach_assertion_and_same_as():

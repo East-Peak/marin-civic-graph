@@ -48,6 +48,28 @@ def test_approve_ein_preserves_evidence_and_materializes_handoff(tmp_path):
     assert edge["relationship_type"] == "SAME_AS" and edge["properties"]["assertion_id"] == out["assertion"]["id"]
 
 
+def test_approve_ein_records_auto_policy_metadata(tmp_path):
+    ein = {**EIN_RAW, "evidence_record_ids": ["ev-1"]}
+    rmf = _read_model(tmp_path, [ein])
+    candf = _cand_file(tmp_path, "ein.jsonl", ein)
+    led, att = tmp_path / "ledger.jsonl", tmp_path / "attach"
+    out = rd.decide(
+        EIN_CASE, "approve",
+        reviewer="research-fleet-v1/policy-stuart-2026-07-01",
+        decided_at="2026-07-03T20:00:00Z",
+        read_model_path=rmf,
+        candidate_paths={"ein": candf},
+        ledger_path=led,
+        attach_dir=att,
+        policy_version="research-fleet-v1/policy-stuart-2026-07-01",
+        policy_hash="h-policy",
+        eligibility_snapshot_hash="sha256:snapshot",
+    )
+    assert out["assertion"]["policy_version"] == "research-fleet-v1/policy-stuart-2026-07-01"
+    assert out["assertion"]["policy_hash"] == "h-policy"
+    assert out["assertion"]["eligibility_snapshot_hash"] == "sha256:snapshot"
+
+
 def test_approve_sos_uses_real_casos_name(tmp_path):
     sos = {**SOS_RAW, "evidence_record_ids": ["ev-9"]}
     rmf = _read_model(tmp_path, [sos])

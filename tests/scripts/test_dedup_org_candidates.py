@@ -345,7 +345,7 @@ def test_hard_key_conflict_refuses_component():
 
 
 def test_assemble_reads_only_dedup_basis_ignores_attach_assertions():
-    # the live 68-row attach ledger (status approved, basis operator_approved_ein,
+    # the live 78-row attach ledger (status approved, basis operator_approved_ein,
     # linking an org-bmf-ein-* anchor to a real org) must be IGNORED by assembly —
     # NOT consumed as a merge (Predeclared 10).
     refs = {r["id"]: r for r in [_ref("org-real", "Real Org", ein="1")]}
@@ -506,8 +506,8 @@ def test_dedup_self_registers_committee_id_normalizer():
     assert "committee_id" in org_resolution.KEY_NORMALIZERS  # re-registered
 
 
-def test_e2e_real_68_row_ledger_yields_zero_anchor_merges():
-    # Completion 1b: over the CURRENT live attach ledger (68 operator_approved_*
+def test_e2e_real_ledger_yields_zero_anchor_merges():
+    # Completion 1b: over the CURRENT live attach ledger (operator_approved_*
     # rows linking org-bmf-ein-*/org-casos-* anchors to real orgs) PLUS the dedup
     # deterministic assertions, assembly produces ZERO anchor-into-org merges.
     assert _REAL_EXPORT.is_file(), "BLOCKED: real enriched org export missing"
@@ -516,17 +516,16 @@ def test_e2e_real_68_row_ledger_yields_zero_anchor_merges():
     import identity_ledger  # noqa: E402
 
     attach = identity_ledger.read_assertions(ledger)
-    assert len(attach) == 68
+    assert attach
     assert all(not str(a.get("basis", "")).startswith("org_dedup") for a in attach)
 
     refs = load_org_refs(_REAL_EXPORT)
     refs_by_id = {r["id"]: r for r in refs}
     det = deterministic_dedup_assertions(refs, reviewer="dedup_pass", policy_version="dedup-v1")
 
+    expected = assemble_components(det, refs_by_id)
     out = assemble_components(attach + det, refs_by_id)
+    assert out == expected
     # attach rows are IGNORED (non-dedup basis) -> zero anchor in any component
     for comp in out["accepted"] + out["refused"]:
         assert not any(is_anchor(m) for m in comp["members"])
-    # only the 6 real dedup clusters merge; the 68 attach rows contribute none
-    assert len(out["accepted"]) == 6
-    assert out["refused"] == []
