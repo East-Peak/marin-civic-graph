@@ -1,0 +1,3 @@
+{"vendor_id":"org-vendor-alpha","proposed_key":"111111111","verdict":"same","confidence":0.97,"reason":"synthetic exact ein"}
+{"vendor_id":"org-vendor-beta","proposed_key":"0222222","verdict":"same","confidence":0.92,"reason":"synthetic exact sos"}
+{"vendor_id":"org-committee-gamma","proposed_key":"3333333","verdict":"unsure","confidence":0.50,"reason":"committee lane held for later wiring"}

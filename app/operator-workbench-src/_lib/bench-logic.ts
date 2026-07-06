@@ -2,7 +2,9 @@
 // bucketing, the client-side bulk gate (incl. the graph collision filter), the
 // decision→display-status mapping, and small display helpers. Kept separate from the
 // component so it is unit-testable (see src/tests/operator/bench-logic.test.ts).
+import { caseRefs, KEY_FIELD } from "./case-refs";
 import type { Case, ContextEntry } from "./bench-types";
+export { KEY_FIELD };
 
 /** The case decorated with a session-local display status (starts at the ledger status,
  *  updates from the writer's response after each decision). */
@@ -16,24 +18,14 @@ export type DecideResponse = {
   same_as: unknown;
 };
 
-/** Registry key field by lane (which public field holds the proposed identity key). */
-export const KEY_FIELD: Record<string, string> = {
-  ein: "registry_ein",
-  sos_id: "sos_id",
-  committee_id: "committee_id",
-};
-
 export const usd = (n: number): string => `$${Math.round(n).toLocaleString("en-US")}`;
 
 /** The vendor org id (context is keyed by this). */
-export const vendorId = (c: Case): string => c.candidate_joins[0].left_ref.local_id;
+export const vendorId = (c: Case): string => caseRefs(c).vendorId;
 
 /** The proposed identity key (the registry anchor's public key field), or an em-dash. */
 export function proposedKey(c: Case): string {
-  const j = c.candidate_joins[0];
-  const field = KEY_FIELD[j.left_ref.source_id];
-  const v = field ? j.right_ref.public_fields[field] : undefined;
-  return v == null || v === "" ? "—" : String(v);
+  return caseRefs(c).proposedKey;
 }
 
 export function nonActionableReason(c: Case): string | null {

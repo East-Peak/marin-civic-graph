@@ -14,6 +14,7 @@ from enrich_county_vendor_eins import build_ein_attach
 from enrich_county_vendor_sos import build_sos_attach
 from reconcile_writer import apply_decision
 from reconciliation_cases import OperatorAction
+from reconciliation_refs import anchor_id_of, vendor_id_of, vendor_ref_of
 
 
 def _node(anchor_id: str, display: str, props: dict[str, Any]) -> dict[str, Any]:
@@ -81,7 +82,8 @@ def decide(
     reject/unsure write only the ledger row (or nothing)."""
     case = _load_case(read_model_path, case_id)
     join = case["candidate_joins"][0]
-    source = join["left_ref"]["source_id"]
+    vendor_read_ref = vendor_ref_of(case)
+    source = vendor_read_ref["source_id"]
     if source not in _LANES:
         if source == "committee_id":
             raise ValueError(
@@ -89,8 +91,8 @@ def decide(
                 "committee approvals are intentionally non-actionable until R3 wires the FPPC candidate path"
             )
         raise ValueError(f"unsupported source for decide: {source!r}")
-    subject_ref = join["right_ref"]["local_id"]
-    candidate_ref = join["left_ref"]["local_id"]
+    subject_ref = anchor_id_of(case)
+    candidate_ref = vendor_id_of(case)
     action = OperatorAction(
         case_id=case_id, case_type=case["case_type"], action=action_name,
         reviewer=reviewer, decided_at=decided_at, key_type=source, rejection_kind=rejection_kind,
@@ -101,7 +103,7 @@ def decide(
         if cand_path is None:
             raise ValueError(f"no candidate file provided for source {source!r}")
         raw = _load_raw_candidate(cand_path, subject_ref, candidate_ref)
-        vendor_ref = {"id": candidate_ref, "display_label": join["left_ref"]["display_label"]}
+        vendor_ref = {"id": candidate_ref, "display_label": vendor_read_ref["display_label"]}
         lane = _LANES[source]
         return apply_decision(
             action, candidate=raw, vendor_ref=vendor_ref, attach_builder=lane["builder"],

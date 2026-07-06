@@ -84,6 +84,34 @@ def test_approve_sos_uses_real_casos_name(tmp_path):
     assert node["display_label"] == "Example LLC" and node["properties"]["sos_id"] == "0289793"
 
 
+def test_reject_uses_reconciliation_ref_accessors(monkeypatch, tmp_path):
+    rmf = _read_model(tmp_path, [EIN_RAW])
+    monkeypatch.setattr(rd, "anchor_id_of", lambda case: "anchor-from-helper")
+    monkeypatch.setattr(rd, "vendor_id_of", lambda case: "vendor-from-helper")
+    captured = {}
+
+    def fake_apply_decision(action, **kwargs):
+        captured.update(kwargs)
+        return {"result": "created", "assertion": None, "same_as": None}
+
+    monkeypatch.setattr(rd, "apply_decision", fake_apply_decision)
+
+    rd.decide(
+        EIN_CASE,
+        "reject",
+        reviewer="op",
+        decided_at="2026-06-29T00:00:00Z",
+        rejection_kind="entity_distinct",
+        read_model_path=rmf,
+        candidate_paths={},
+        ledger_path=tmp_path / "l.jsonl",
+        attach_dir=tmp_path / "attach",
+    )
+
+    assert captured["subject"]["id"] == "anchor-from-helper"
+    assert captured["target"]["id"] == "vendor-from-helper"
+
+
 def test_reject_writes_rejection_no_handoff(tmp_path):
     rmf = _read_model(tmp_path, [EIN_RAW])
     led, att = tmp_path / "ledger.jsonl", tmp_path / "attach"

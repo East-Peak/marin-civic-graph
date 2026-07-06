@@ -1,0 +1,44 @@
+{
+  "results": [
+    {
+      "gid": 1,
+      "vendor_id": "org-vendor-alpha",
+      "literal_key": "111111111",
+      "organization": "Alpha Services",
+      "second_researcher": {
+        "verdict": "same",
+        "confidence": 0.96,
+        "key_sighted_valid": true
+      },
+      "skeptic": {
+        "concurrence": true,
+        "refuted": false
+      },
+      "evidence": [
+        {
+          "url": "https://example.org/alpha-evidence"
+        }
+      ]
+    },
+    {
+      "gid": 2,
+      "vendor_id": "org-vendor-beta",
+      "literal_key": "0222222",
+      "organization": "Beta Civic LLC",
+      "second_researcher": {
+        "verdict": "same",
+        "confidence": 0.93,
+        "key_sighted_valid": true
+      },
+      "skeptic": {
+        "concurrence": true,
+        "refuted": false
+      },
+      "evidence": [
+        {
+          "url": "https://example.org/beta-evidence"
+        }
+      ]
+    }
+  ]
+}

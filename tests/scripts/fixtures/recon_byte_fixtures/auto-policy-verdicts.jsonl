@@ -1,0 +1,2 @@
+{"gid":1,"vendor_id":"org-vendor-alpha","proposed_key":"org-bmf-ein-111111111","verdict":"same","confidence":0.97,"key_sighted":true,"verify_ok":true,"refuted":false,"ks_valid":true,"auto_candidate":true}
+{"gid":2,"vendor_id":"org-vendor-beta","proposed_key":"org-casos-0222222","verdict":"same","confidence":0.92,"key_sighted":true,"verify_ok":true,"refuted":false,"ks_valid":true,"auto_candidate":true}

@@ -19,6 +19,7 @@ from typing import Any
 from enrich_casos_keys import scan_for_forbidden
 from identity_key_registry import ANCHOR_PREFIXES
 import reconcile_decide
+from reconciliation_refs import anchor_id_of, literal_key_of, vendor_id_of
 
 
 # Reviewer identity per the SIGNED policy document (data/review/research-adjudicated/
@@ -92,20 +93,15 @@ def _join(case: dict[str, Any]) -> dict[str, Any]:
 
 
 def _vendor_id(case: dict[str, Any]) -> str:
-    return _join(case)["left_ref"]["local_id"]
+    return vendor_id_of(case)
 
 
 def _anchor_id(case: dict[str, Any]) -> str:
-    return _join(case)["right_ref"]["local_id"]
+    return anchor_id_of(case)
 
 
 def _case_literal_key(case: dict[str, Any]) -> str:
-    right = _join(case)["right_ref"]
-    fields = right.get("public_fields", {})
-    key = fields.get("registry_ein") or fields.get("sos_id") or fields.get("committee_id")
-    if key is not None:
-        return str(key)
-    return literal_proposed_key({"proposed_key": right.get("local_id", "")})
+    return literal_key_of(case)
 
 
 def _pair_from_second(row: dict[str, Any]) -> tuple[str, str]:

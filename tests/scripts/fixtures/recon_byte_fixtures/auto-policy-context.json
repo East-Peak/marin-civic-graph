@@ -1,0 +1,18 @@
+{
+  "org-vendor-alpha": {
+    "display_label": "Alpha Services",
+    "money_total": 1200,
+    "flow_count": 2,
+    "departments": ["Health and Human Services"],
+    "key_collision": false,
+    "collides_with": []
+  },
+  "org-vendor-beta": {
+    "display_label": "Beta Civic",
+    "money_total": 4500,
+    "flow_count": 3,
+    "departments": ["Public Works"],
+    "key_collision": true,
+    "collides_with": ["org-existing-beta"]
+  }
+}

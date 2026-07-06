@@ -110,6 +110,17 @@ def test_normalized_verdict_preserves_original_anchor_key_for_audit():
     assert out["source_proposed_key"] == "org-bmf-ein-911930327"
 
 
+def test_case_ref_private_helpers_delegate_to_reconciliation_refs(monkeypatch):
+    c = case()
+    monkeypatch.setattr(ap, "vendor_id_of", lambda case: "vendor-from-helper")
+    monkeypatch.setattr(ap, "anchor_id_of", lambda case: "anchor-from-helper")
+    monkeypatch.setattr(ap, "literal_key_of", lambda case: "literal-from-helper")
+
+    assert ap._vendor_id(c) == "vendor-from-helper"
+    assert ap._anchor_id(c) == "anchor-from-helper"
+    assert ap._case_literal_key(c) == "literal-from-helper"
+
+
 def test_preview_eligibility_ignores_old_bulk_eligible_and_hashes_snapshot():
     preview = ap.build_preview(
         verdict_rows=[verdict()],

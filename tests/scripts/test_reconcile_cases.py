@@ -42,6 +42,16 @@ def test_overlay_status_none_without_ledger(tmp_path):
     assert "review_flags" in cases[0] and "bulk_eligible" in cases[0]
 
 
+def test_pair_delegates_to_reconciliation_refs(monkeypatch):
+    monkeypatch.setattr(rc, "anchor_id_of", lambda case: "anchor-from-helper")
+    monkeypatch.setattr(rc, "vendor_id_of", lambda case: "vendor-from-helper")
+
+    assert rc._pair({"case_id": "c", "candidate_joins": [{"left_ref": {}, "right_ref": {}}]}) == (
+        "anchor-from-helper",
+        "vendor-from-helper",
+    )
+
+
 def test_overlay_reflects_ledger_approval_and_recomputes_actionability(tmp_path):
     rmf = _write_read_model(tmp_path)
     led = _write_ledger(tmp_path)

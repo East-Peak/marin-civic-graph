@@ -13,13 +13,12 @@ from pathlib import Path
 from typing import Any
 
 from reconciliation_read_model import _ACTIONABILITY, ledger_status, load_ledger
+from reconciliation_refs import anchor_id_of, vendor_id_of
 
 
 def _pair(case: dict[str, Any]) -> tuple[str, str]:
-    """(subject_ref, target_ref) for the attach pair — matches build_attach_read_model:
-    subject = right_ref (registry anchor), target = left_ref (vendor)."""
-    join = case["candidate_joins"][0]
-    return join["right_ref"]["local_id"], join["left_ref"]["local_id"]
+    """(subject_ref, target_ref) for the attach pair."""
+    return anchor_id_of(case), vendor_id_of(case)
 
 
 def overlay_cases(

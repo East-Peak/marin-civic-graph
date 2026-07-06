@@ -1,0 +1,42 @@
+{
+  "considered_count": 2,
+  "eligibility_snapshot_hash": "sha256:019f2a0b62847b79677764ffe24d2bdc64b39805a1a97845a28bc1691ba90eb0",
+  "eligible": [
+    {
+      "anchor_id": "org-bmf-ein-111111111",
+      "case_id": "attach|org-bmf-ein-111111111|org-vendor-alpha",
+      "confidence": 0.97,
+      "departments": [
+        "Health and Human Services"
+      ],
+      "display_label": "Alpha Services",
+      "evidence_urls": [
+        "https://example.org/alpha-evidence"
+      ],
+      "flow_count": 2,
+      "gid": 1,
+      "literal_key": "111111111",
+      "money_total": 1200.0,
+      "source_proposed_key": "org-bmf-ein-111111111",
+      "vendor_id": "org-vendor-alpha"
+    }
+  ],
+  "eligible_case_ids": [
+    "attach|org-bmf-ein-111111111|org-vendor-alpha"
+  ],
+  "eligible_count": 1,
+  "ineligible": [
+    {
+      "gid": 2,
+      "literal_key": "0222222",
+      "reasons": [
+        "live_collision"
+      ],
+      "source_proposed_key": "org-casos-0222222",
+      "vendor_id": "org-vendor-beta"
+    }
+  ],
+  "ineligible_count": 1,
+  "money_total": 1200.0,
+  "policy_hash": "h-recon-r1a-fixture-policy"
+}
