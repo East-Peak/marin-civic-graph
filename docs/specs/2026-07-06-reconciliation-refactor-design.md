@@ -1,7 +1,7 @@
 # Reconciliation subsystem — whole-vertical architecture assessment & refactor design
 
 **Date:** 2026-07-06 · **Author:** Claude (Fable 5), full-vertical read (~5.5k lines Python across 18
-modules, ~1k lines bench TS) · **Status:** DRAFT — pending Codex adversarial review + Stuart go/no-go.
+modules, ~1k lines bench TS) · **Status:** COMPLETE (2026-07-06) — all tranches landed: R0 061adfb · R1a 489686a · R1b 6a5f93f · R2 a6426cd · R4 b917292 · R3a 94e5d9f · R3b dbfafff · R5 (this commit). 786 pytest / 71 vitest green; byte-parity fixtures held across every tranche.
 
 ## 0. Verdict
 
