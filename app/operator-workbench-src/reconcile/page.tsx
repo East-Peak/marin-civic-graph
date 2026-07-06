@@ -1,6 +1,6 @@
 // Operator-local route group — copied into src/app/(operator-workbench)/ ONLY under
 // OPERATOR_WORKBENCH=1. NEVER in a public build. Server component: gate + fetch the
-// overlaid cases (reconcile_cases) + best-effort Neo4j consequence context, then hand the
+// overlaid cases (reconciliation_overlay) + best-effort Neo4j consequence context, then hand the
 // serializable data to the interactive client bench (Slice 3). The write path the bench
 // POSTs to (/api/reconcile/decide) is itself build-excluded + runtime-gated.
 import { notFound } from "next/navigation";
@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 
 export default async function ReconcilePage() {
   if (!operatorEnabled()) notFound(); // defense-in-depth if ever shipped/leaked
-  const cases = runPython<Case[]>("reconcile_cases.py", [
+  const cases = runPython<Case[]>("reconciliation_overlay.py", [
     "--read-model", DATA.readModel(),
     "--ledger", DATA.attachLedger(),
   ]);

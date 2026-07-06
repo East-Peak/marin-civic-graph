@@ -38,10 +38,11 @@ Layer 3 — egress + apply
   dedup_merge_applier.py      reversible merge, full preimage journal      (244)
 
 Read/write model (operator surface)
+  Naming rule: reconciliation_* = domain/read side; reconcile_* = operator write actions.
   reconciliation_cases.py     domain model (ReconciliationCase envelope)   (134)
   reconciliation_adapters.py  candidate artifacts → CandidateJoin          (148)
   reconciliation_read_model   emitter: adapters+ledger+verdicts → JSONL    (451)
-  reconcile_cases.py          live-ledger overlay for the bench queue      (73)
+  reconciliation_overlay.py   live-ledger overlay for the bench queue      (73)
   reconcile_decide.py         case + decision → writer call                (158)
   reconcile_writer.py         locked/atomic/idempotent ledger writes       (192)
   reconcile_auto_policy.py    §9a preview/drift-check/apply                (476)

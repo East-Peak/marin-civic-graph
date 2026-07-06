@@ -1,18 +1,24 @@
-"""Goal A Unit 5 — reconcile_cases.overlay_cases: overlay live ledger status on the
-static read model, recompute actionability, never mutate the source. No DB."""
+"""Goal A Unit 5 — reconciliation_overlay.overlay_cases: overlay live ledger status on the
+static read model, recompute actionability, never mutate the source. No DB.
+
+The deprecated reconcile_cases.py path stays executable until the operator routes finish
+their R3 migration window.
+"""
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-import reconcile_cases as rc  # noqa: E402
+import reconciliation_overlay as rc  # noqa: E402
 import reconciliation_read_model as rm  # noqa: E402
 from identity_ledger import make_assertion  # noqa: E402
 from test_reconciliation_cli import EIN_RAW  # reuse the EIN candidate fixture  # noqa: E402
 
+SCRIPTS = Path(__file__).resolve().parents[2] / "scripts"
 SUBJECT, TARGET = "org-bmf-ein-953667812", "org-marincontract-recipient-x"
 
 
@@ -70,10 +76,23 @@ def test_overlay_never_mutates_the_source_file(tmp_path):
 
 
 def test_cli_emits_overlaid_cases_json(tmp_path, capsys):
-    import reconcile_cases as rc
+    import reconciliation_overlay as rc
     rmf = _write_read_model(tmp_path)
     led = _write_ledger(tmp_path)
     code = rc.main(["--read-model", str(rmf), "--ledger", str(led)])
     assert code == 0
     out = json.loads(capsys.readouterr().out)
     assert isinstance(out, list) and out[0]["current_ledger_status"] == "approved"
+
+
+def test_deprecated_reconcile_cases_script_path_matches_reconciliation_overlay_cli(tmp_path):
+    rmf = _write_read_model(tmp_path)
+    led = _write_ledger(tmp_path)
+    args = ["--read-model", str(rmf), "--ledger", str(led)]
+
+    new_out = subprocess.check_output([sys.executable, str(SCRIPTS / "reconciliation_overlay.py"), *args], text=True)
+    old_out = subprocess.check_output([sys.executable, str(SCRIPTS / "reconcile_cases.py"), *args], text=True)
+
+    assert old_out == new_out
+    parsed = json.loads(old_out)
+    assert parsed[0]["current_ledger_status"] == "approved"

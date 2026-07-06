@@ -1,7 +1,7 @@
 // Shared read-model case types for the Identity Attach Workbench bench (Slice 3).
 // React-free and server-free so both the server page and the client component (and the
 // TDD'd bench-logic) can share one contract. Mirrors the JSONL the Goal-1 emitter +
-// reconcile_cases overlay produce (see scripts/reconciliation_read_model.py).
+// reconciliation_overlay produce (see scripts/reconciliation_read_model.py).
 //
 // ContextEntry is re-exported type-only from operator-context (the value module pulls in
 // the Neo4j driver, which is server-only — a type re-export is erased and stays safe in
