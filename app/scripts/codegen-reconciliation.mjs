@@ -29,6 +29,12 @@ function renderStringTuple(values) {
   return values.map((value) => `  "${value}",`).join("\n");
 }
 
+function renderStringMap(obj, indent = "    ") {
+  return Object.entries(obj)
+    .map(([key, value]) => `${indent}"${key}": "${value}",`)
+    .join("\n");
+}
+
 /** Render reconciliation.generated.ts from the parsed registry. Pure - no I/O. */
 export function renderReconciliationRegistry(registry) {
   const actionabilityEntries = renderObjectEntries(
@@ -44,6 +50,11 @@ export function renderReconciliationRegistry(registry) {
     source_id: "${spec.source_id}",
     public_key_field: "${spec.public_key_field}",
     anchor_prefix: "${spec.anchor_prefix}",
+    anchor_source: "${spec.anchor_source}",
+    attach_basis: "${spec.attach_basis}",
+    anchor_subject_fields: {
+${renderStringMap(spec.anchor_subject_fields, "      ")}
+    },
   }`,
   );
   const keyFieldEntries = Object.values(registry.key_sources)

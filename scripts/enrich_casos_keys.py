@@ -44,6 +44,8 @@ from identity_ledger import make_assertion  # noqa: E402
 from identity_resolution_adapter import (  # noqa: E402
     normalize_resolution_candidate_for_artifact,
 )
+from identity_attach import emit_candidate  # noqa: E402
+from identity_key_registry import entry as identity_key_entry  # noqa: E402
 
 # This lane's source-system stamp + the registry id key-prefix it mints.
 SOURCE_SYSTEM = "ca_sos"
@@ -359,11 +361,12 @@ def enrich_casos_candidate(
 
     The candidate already carries `signal_strength` (the adapter renamed
     `confidence`). Only whitelist fields are copied — never a raw SOS row."""
-    out = normalize_resolution_candidate_for_artifact(dict(candidate))
-    for field in _REVIEW_EVIDENCE:
-        if ref.get(field) is not None:
-            out[f"registry_{field}"] = ref[field]
-    return out
+    return emit_candidate(
+        identity_key_entry("sos_id", "self"),
+        candidate,
+        ref,
+        registry_evidence_fields=_REVIEW_EVIDENCE,
+    )
 
 
 def resolve_casos_deterministic(

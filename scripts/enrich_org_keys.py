@@ -68,9 +68,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from identity_egress_gate import POLICY_VERSION, gate_ingestor_same_as  # noqa: E402
 from identity_ledger import make_assertion  # noqa: E402
-from identity_resolution_adapter import (  # noqa: E402
-    normalize_resolution_candidate_for_artifact,
-)
+from identity_attach import emit_candidate  # noqa: E402
+from identity_key_registry import entry as identity_key_entry  # noqa: E402
 from org_resolution import propose_org_resolutions  # noqa: E402
 
 # This lane's source-system stamp + the registry id key-prefix it mints.
@@ -230,13 +229,12 @@ def enrich_review_candidate(
     The registry ref is the resolver's `subject_ref` (the BMF org is the "new"
     side of `propose_org_resolutions`). A demoted relationship candidate (no
     `confidence`) passes through the rename untouched."""
-    out = normalize_resolution_candidate_for_artifact(dict(candidate))
-    registry = registry_by_id.get(candidate.get("subject_ref"))
-    if registry is not None:
-        for field in _REGISTRY_EVIDENCE_FIELDS:
-            if registry.get(field) is not None:
-                out[f"registry_{field}"] = registry[field]
-    return out
+    return emit_candidate(
+        identity_key_entry("ein", "self"),
+        candidate,
+        registry_by_id.get(candidate.get("subject_ref")),
+        registry_evidence_fields=_REGISTRY_EVIDENCE_FIELDS,
+    )
 
 
 def resolve_registry_refs(

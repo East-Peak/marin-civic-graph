@@ -33,7 +33,14 @@ EXPECTED_TOP_LEVEL = frozenset(
 EXPECTED_STATUS_KEYS = frozenset({"actionability"})
 EXPECTED_BUCKET_KEYS = frozenset({"rejected", "done", "known_statuses"})
 EXPECTED_KEY_SOURCE_KEYS = frozenset(
-    {"source_id", "public_key_field", "anchor_prefix"}
+    {
+        "source_id",
+        "public_key_field",
+        "anchor_prefix",
+        "anchor_source",
+        "attach_basis",
+        "anchor_subject_fields",
+    }
 )
 EXPECTED_KEY_SOURCES = frozenset({"ein", "sos_id", "committee_id"})
 EXPECTED_PUBLIC_KEY_FIELDS = {
@@ -101,7 +108,7 @@ def _validate_buckets(buckets: Any, ledger_statuses: dict[str, Any]) -> None:
 
 
 def _identity_self_sources() -> dict[str, dict[str, str]]:
-    out: dict[str, dict[str, str]] = {}
+    out: dict[str, dict[str, Any]] = {}
     for entry in identity_key_registry.REGISTRY:
         if (
             entry.key_type in EXPECTED_KEY_SOURCES
@@ -111,6 +118,10 @@ def _identity_self_sources() -> dict[str, dict[str, str]]:
             out[entry.key_type] = {
                 "source_id": entry.key_type,
                 "anchor_prefix": entry.anchor_prefix,
+                "public_key_field": entry.public_key_field,
+                "anchor_source": entry.anchor_source,
+                "attach_basis": entry.attach_basis,
+                "anchor_subject_fields": dict(entry.anchor_subject_fields),
             }
     return out
 
@@ -129,7 +140,17 @@ def _validate_key_sources(key_sources: Any) -> None:
             raise ValueError(f"key_sources[{source!r}] must be an object")
         _reject_unknown_keys(f"key_sources[{source!r}]", spec, EXPECTED_KEY_SOURCE_KEYS)
         for key, value in spec.items():
-            if not isinstance(value, str) or not value:
+            if key == "anchor_subject_fields":
+                if (
+                    not isinstance(value, dict)
+                    or not value
+                    or not all(isinstance(k, str) and k for k in value)
+                    or not all(isinstance(v, str) and v for v in value.values())
+                ):
+                    raise ValueError(
+                        f"key_sources[{source!r}][{key!r}] must be a non-empty string map"
+                    )
+            elif not isinstance(value, str) or not value:
                 raise ValueError(f"key_sources[{source!r}][{key!r}] must be a non-empty string")
         if spec["source_id"] != source:
             raise ValueError(
@@ -144,7 +165,11 @@ def _validate_key_sources(key_sources: Any) -> None:
         expected_identity = identity_sources.get(source)
         actual_identity = {
             "source_id": spec["source_id"],
+            "public_key_field": spec["public_key_field"],
             "anchor_prefix": spec["anchor_prefix"],
+            "anchor_source": spec["anchor_source"],
+            "attach_basis": spec["attach_basis"],
+            "anchor_subject_fields": spec["anchor_subject_fields"],
         }
         if actual_identity != expected_identity:
             raise ValueError(

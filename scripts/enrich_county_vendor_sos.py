@@ -34,8 +34,9 @@ from enrich_casos_keys import (  # consumed, never edited
     scan_for_forbidden,
     significant_tokens,
 )
-from enrich_org_keys import assertion_for_approved_candidate  # consumed, never edited
 from enrich_county_vendor_eins import length_band_ok  # consumed (Phase-B lossless bound)
+from identity_attach import build_attach as build_identity_attach
+from identity_key_registry import entry as identity_key_entry
 
 POLICY_VERSION = "county-vendor-sos-v1"
 _SIMILARITY_THRESHOLD = 0.85
@@ -223,28 +224,16 @@ def build_sos_attach(
     SAME_AS anchor → vendor citing the assertion id. The assertion alone writes the
     ledger row; the SAME_AS is what `export_existing_orgs --enriched` reads to
     surface the vendor's `sos_id`."""
-    anchor_id = candidate["subject_ref"]
-    sos_id = candidate["sos_ref"]["sos_id"]
-    subject = {
-        "id": anchor_id,
-        "display_label": candidate["sos_ref"].get("display_label", anchor_id),
-        "sos_id": sos_id,
-        "source": "ca_sos",
-    }
-    target = vendor_ref if vendor_ref.get("id") else {"id": candidate["candidate_ref"]}
-    assertion = assertion_for_approved_candidate(
-        candidate, subject=subject, target=target,
-        basis="operator_approved_sos_id",
-        reviewer=reviewer, decided_at=decided_at, policy_version=policy_version,
-        policy_hash=policy_hash, eligibility_snapshot_hash=eligibility_snapshot_hash,
+    return build_identity_attach(
+        identity_key_entry("sos_id", "self"),
+        candidate,
+        vendor_ref,
+        reviewer=reviewer,
+        decided_at=decided_at,
+        policy_version=policy_version,
+        policy_hash=policy_hash,
+        eligibility_snapshot_hash=eligibility_snapshot_hash,
     )
-    same_as = {
-        "source_id": anchor_id,
-        "target_id": candidate["candidate_ref"],
-        "relationship_type": "SAME_AS",
-        "properties": {"basis": "operator_approved_sos_id", "assertion_id": assertion["id"]},
-    }
-    return assertion, same_as
 
 
 def coverage_report(resolve_output, vendor_orgs) -> dict[str, Any]:

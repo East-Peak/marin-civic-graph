@@ -30,9 +30,10 @@ from typing import Any
 from org_resolution import _normalize_name  # consumed, never edited
 from enrich_org_keys import (  # consumed, never edited
     resolve_registry_refs,
-    assertion_for_approved_candidate,
     parse_bmf_csv,
 )
+from identity_attach import build_attach as build_identity_attach
+from identity_key_registry import entry as identity_key_entry
 
 POLICY_VERSION = "county-vendor-ein-v1"
 _EIN_ANCHOR_PREFIX = "org-bmf-ein-"
@@ -193,28 +194,16 @@ def build_ein_attach(
     `operator_approved_ein`; SAME_AS anchor → vendor citing the assertion id.
     `assertion_for_approved_candidate` alone writes only the ledger row — the
     SAME_AS is what `export_existing_orgs --enriched` reads to surface the ein."""
-    anchor_id = candidate["subject_ref"]
-    ein = candidate.get("ein") or anchor_id[len(_EIN_ANCHOR_PREFIX):]
-    subject = {
-        "id": anchor_id,
-        "display_label": vendor_ref.get("display_label", anchor_id),
-        "ein": ein,
-        "source": "irs_bmf",
-    }
-    target = vendor_ref if vendor_ref.get("id") else {"id": candidate["candidate_ref"]}
-    assertion = assertion_for_approved_candidate(
-        candidate, subject=subject, target=target,
-        basis="operator_approved_ein",
-        reviewer=reviewer, decided_at=decided_at, policy_version=policy_version,
-        policy_hash=policy_hash, eligibility_snapshot_hash=eligibility_snapshot_hash,
+    return build_identity_attach(
+        identity_key_entry("ein", "self"),
+        candidate,
+        vendor_ref,
+        reviewer=reviewer,
+        decided_at=decided_at,
+        policy_version=policy_version,
+        policy_hash=policy_hash,
+        eligibility_snapshot_hash=eligibility_snapshot_hash,
     )
-    same_as = {
-        "source_id": anchor_id,
-        "target_id": candidate["candidate_ref"],
-        "relationship_type": "SAME_AS",
-        "properties": {"basis": "operator_approved_ein", "assertion_id": assertion["id"]},
-    }
-    return assertion, same_as
 
 
 def _load_vendor_orgs(input_csv, approved_path) -> list[dict[str, Any]]:

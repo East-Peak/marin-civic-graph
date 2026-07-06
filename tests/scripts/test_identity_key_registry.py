@@ -73,6 +73,39 @@ def test_anchor_prefix_per_key_type():
     assert reg.entry("committee_id", "related_committee_pointer").anchor_prefix == "org-fppc-"
 
 
+def test_lane_metadata_for_attach_framework():
+    ein = reg.entry("ein", "self")
+    assert ein.public_key_field == "registry_ein"
+    assert ein.anchor_source == "irs_bmf"
+    assert ein.attach_basis == "operator_approved_ein"
+    assert dict(ein.anchor_subject_fields) == {
+        "display_label": "vendor_ref.display_label|anchor_id",
+        "ein": "candidate.ein|anchor_suffix",
+        "source": "const:irs_bmf",
+    }
+
+    sos = reg.entry("sos_id", "self")
+    assert sos.public_key_field == "sos_id"
+    assert sos.anchor_source == "ca_sos"
+    assert sos.attach_basis == "operator_approved_sos_id"
+    assert dict(sos.anchor_subject_fields) == {
+        "display_label": "candidate.sos_ref.display_label|anchor_id",
+        "sos_id": "candidate.sos_ref.sos_id",
+        "source": "const:ca_sos",
+    }
+
+    committee = reg.entry("committee_id", "self_committee")
+    assert committee.public_key_field == "committee_id"
+    assert committee.anchor_source == "fppc"
+    assert committee.attach_basis == "operator_approved_committee_id"
+    assert dict(committee.anchor_subject_fields) == {
+        "display_label": "vendor_ref.display_label|anchor_id",
+        "committee_id": "candidate.committee_id",
+        "entity_class": "const:committee",
+        "source": "const:fppc",
+    }
+
+
 def test_entry_missing_raises():
     with pytest.raises(KeyError):
         reg.entry("nope", "self")
@@ -85,7 +118,13 @@ def _mk(**over):
         key_type="ein", semantics_scope="self", normalizer=kn._normalize_ein,
         anchor_prefix="org-x-", eligible_entity_classes=("organization",),
         key_semantics="self", allowed_merge_semantics=("self",), relationship_only=False,
-        dedup_eligibility=True, runtime_registered=False,
+        dedup_eligibility=True, runtime_registered=False, public_key_field="registry_ein",
+        anchor_source="irs_bmf", attach_basis="operator_approved_ein",
+        anchor_subject_fields=(
+            ("display_label", "vendor_ref.display_label|anchor_id"),
+            ("ein", "candidate.ein|anchor_suffix"),
+            ("source", "const:irs_bmf"),
+        ),
     )
     base.update(over)
     return reg.IdentityKeyEntry(**base)
@@ -110,7 +149,19 @@ def test_reject_nonself_merge_eligible():
 
 def test_reject_duplicate_anchor_across_keytypes():
     a = _mk(key_type="ein", anchor_prefix="org-dup-")
-    b = _mk(key_type="uei", normalizer=kn._normalize_uei, anchor_prefix="org-dup-")
+    b = _mk(
+        key_type="uei",
+        normalizer=kn._normalize_uei,
+        anchor_prefix="org-dup-",
+        public_key_field="uei",
+        anchor_source="usaspending",
+        attach_basis="operator_approved_uei",
+        anchor_subject_fields=(
+            ("display_label", "vendor_ref.display_label|anchor_id"),
+            ("uei", "candidate.uei|anchor_suffix"),
+            ("source", "const:usaspending"),
+        ),
+    )
     with pytest.raises(ValueError, match="anchor_prefix"):
         reg.validate_registry([a, b])
 
@@ -129,22 +180,74 @@ def test_reject_bad_entity_class():
 
 
 def test_reject_mismatched_normalizer_within_keytype():
+    committee_fields = (
+        ("display_label", "vendor_ref.display_label|anchor_id"),
+        ("committee_id", "candidate.committee_id"),
+        ("entity_class", "const:committee"),
+        ("source", "const:fppc"),
+    )
     a = _mk(key_type="committee_id", semantics_scope="a",
-            normalizer=kn._normalize_committee_id, anchor_prefix="org-fppc-")
+            normalizer=kn._normalize_committee_id, anchor_prefix="org-fppc-",
+            public_key_field="committee_id", anchor_source="fppc",
+            attach_basis="operator_approved_committee_id",
+            anchor_subject_fields=committee_fields)
     b = _mk(key_type="committee_id", semantics_scope="b",
-            normalizer=kn._normalize_ein, anchor_prefix="org-fppc-")
+            normalizer=kn._normalize_ein, anchor_prefix="org-fppc-",
+            public_key_field="committee_id", anchor_source="fppc",
+            attach_basis="operator_approved_committee_id",
+            anchor_subject_fields=committee_fields)
     with pytest.raises(ValueError, match="normalizer"):
         reg.validate_registry([a, b])
+
+
+def test_reject_bad_attach_basis():
+    with pytest.raises(ValueError, match="attach_basis"):
+        reg.validate_registry([_mk(attach_basis="operator_approved_wrong")])
+
+
+def test_reject_bad_anchor_subject_fields():
+    with pytest.raises(ValueError, match="anchor_subject_fields"):
+        reg.validate_registry([_mk(anchor_subject_fields=())])
+    with pytest.raises(ValueError, match="public key"):
+        reg.validate_registry([
+            _mk(anchor_subject_fields=(
+                ("display_label", "vendor_ref.display_label|anchor_id"),
+                ("source", "const:irs_bmf"),
+            ))
+        ])
+    with pytest.raises(ValueError, match="selector"):
+        reg.validate_registry([
+            _mk(anchor_subject_fields=(
+                ("display_label", "badselector"),
+                ("ein", "candidate.ein|anchor_suffix"),
+                ("source", "const:irs_bmf"),
+            ))
+        ])
 
 
 def test_same_anchor_and_normalizer_within_keytype_ok():
     a = _mk(key_type="committee_id", semantics_scope="self_committee",
             normalizer=kn._normalize_committee_id, anchor_prefix="org-fppc-",
-            eligible_entity_classes=("committee",))
+            eligible_entity_classes=("committee",), public_key_field="committee_id",
+            anchor_source="fppc", attach_basis="operator_approved_committee_id",
+            anchor_subject_fields=(
+                ("display_label", "vendor_ref.display_label|anchor_id"),
+                ("committee_id", "candidate.committee_id"),
+                ("entity_class", "const:committee"),
+                ("source", "const:fppc"),
+            ))
     b = _mk(key_type="committee_id", semantics_scope="rel",
             normalizer=kn._normalize_committee_id, anchor_prefix="org-fppc-",
             relationship_only=True, dedup_eligibility=False,
-            allowed_merge_semantics=(), key_semantics="committee")
+            allowed_merge_semantics=(), key_semantics="committee",
+            public_key_field="committee_id", anchor_source="fppc",
+            attach_basis="operator_approved_committee_id",
+            anchor_subject_fields=(
+                ("display_label", "vendor_ref.display_label|anchor_id"),
+                ("committee_id", "candidate.committee_id"),
+                ("entity_class", "const:committee"),
+                ("source", "const:fppc"),
+            ))
     reg.validate_registry([a, b])  # must not raise
 
 

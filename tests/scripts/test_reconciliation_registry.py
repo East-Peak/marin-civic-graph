@@ -64,6 +64,10 @@ def test_key_sources_cross_check_identity_key_registry_anchor_prefixes():
         e.key_type: {
             "source_id": e.key_type,
             "anchor_prefix": e.anchor_prefix,
+            "public_key_field": e.public_key_field,
+            "anchor_source": e.anchor_source,
+            "attach_basis": e.attach_basis,
+            "anchor_subject_fields": dict(e.anchor_subject_fields),
         }
         for e in identity_keys.REGISTRY
         if e.key_type in {"ein", "sos_id", "committee_id"}
@@ -75,6 +79,10 @@ def test_key_sources_cross_check_identity_key_registry_anchor_prefixes():
         key: {
             "source_id": spec["source_id"],
             "anchor_prefix": spec["anchor_prefix"],
+            "public_key_field": spec["public_key_field"],
+            "anchor_source": spec["anchor_source"],
+            "attach_basis": spec["attach_basis"],
+            "anchor_subject_fields": spec["anchor_subject_fields"],
         }
         for key, spec in KEY_SOURCES.items()
     } == identity_self_sources
@@ -112,6 +120,17 @@ def test_registry_validation_rejects_key_source_drift(tmp_path):
     bad = json.loads(json.dumps(registry))
     bad["key_sources"]["ein"]["anchor_prefix"] = "org-drift-"
     p = tmp_path / "drift.json"
+    p.write_text(json.dumps(bad), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="identity_key_registry"):
+        load_registry(p)
+
+
+def test_registry_validation_rejects_anchor_subject_field_drift(tmp_path):
+    registry = load_registry()
+    bad = json.loads(json.dumps(registry))
+    bad["key_sources"]["committee_id"]["anchor_subject_fields"]["entity_class"] = "const:organization"
+    p = tmp_path / "subject-drift.json"
     p.write_text(json.dumps(bad), encoding="utf-8")
 
     with pytest.raises(ValueError, match="identity_key_registry"):

@@ -42,6 +42,10 @@ class IdentityKeyEntry:
     relationship_only: bool
     dedup_eligibility: bool
     runtime_registered: bool
+    public_key_field: str
+    anchor_source: str
+    attach_basis: str
+    anchor_subject_fields: tuple[tuple[str, str], ...]
 
 
 # Entry order is chosen so the generated ANCHOR_PREFIXES view (deduped in this
@@ -54,18 +58,39 @@ REGISTRY: tuple[IdentityKeyEntry, ...] = (
         anchor_prefix="org-bmf-ein-", eligible_entity_classes=("organization",),
         key_semantics="self", allowed_merge_semantics=("self",),
         relationship_only=False, dedup_eligibility=True, runtime_registered=False,
+        public_key_field="registry_ein", anchor_source="irs_bmf",
+        attach_basis="operator_approved_ein",
+        anchor_subject_fields=(
+            ("display_label", "vendor_ref.display_label|anchor_id"),
+            ("ein", "candidate.ein|anchor_suffix"),
+            ("source", "const:irs_bmf"),
+        ),
     ),
     IdentityKeyEntry(
         key_type="sos_id", semantics_scope="self", normalizer=_kn._normalize_sos_id,
         anchor_prefix="org-casos-", eligible_entity_classes=("organization",),
         key_semantics="self", allowed_merge_semantics=("self",),
         relationship_only=False, dedup_eligibility=True, runtime_registered=True,
+        public_key_field="sos_id", anchor_source="ca_sos",
+        attach_basis="operator_approved_sos_id",
+        anchor_subject_fields=(
+            ("display_label", "candidate.sos_ref.display_label|anchor_id"),
+            ("sos_id", "candidate.sos_ref.sos_id"),
+            ("source", "const:ca_sos"),
+        ),
     ),
     IdentityKeyEntry(
         key_type="uei", semantics_scope="self", normalizer=_kn._normalize_uei,
         anchor_prefix="org-usasp-uei-", eligible_entity_classes=("organization",),
         key_semantics="self", allowed_merge_semantics=("self",),
         relationship_only=False, dedup_eligibility=True, runtime_registered=False,
+        public_key_field="uei", anchor_source="usaspending",
+        attach_basis="operator_approved_uei",
+        anchor_subject_fields=(
+            ("display_label", "vendor_ref.display_label|anchor_id"),
+            ("uei", "candidate.uei|anchor_suffix"),
+            ("source", "const:usaspending"),
+        ),
     ),
     IdentityKeyEntry(
         key_type="committee_id", semantics_scope="self_committee",
@@ -73,6 +98,14 @@ REGISTRY: tuple[IdentityKeyEntry, ...] = (
         eligible_entity_classes=("committee",), key_semantics="self",
         allowed_merge_semantics=("self",), relationship_only=False,
         dedup_eligibility=True, runtime_registered=True,
+        public_key_field="committee_id", anchor_source="fppc",
+        attach_basis="operator_approved_committee_id",
+        anchor_subject_fields=(
+            ("display_label", "vendor_ref.display_label|anchor_id"),
+            ("committee_id", "candidate.committee_id"),
+            ("entity_class", "const:committee"),
+            ("source", "const:fppc"),
+        ),
     ),
     IdentityKeyEntry(
         key_type="committee_id", semantics_scope="related_committee_pointer",
@@ -80,6 +113,14 @@ REGISTRY: tuple[IdentityKeyEntry, ...] = (
         eligible_entity_classes=("organization",), key_semantics="committee",
         allowed_merge_semantics=(), relationship_only=True,
         dedup_eligibility=False, runtime_registered=True,
+        public_key_field="committee_id", anchor_source="fppc",
+        attach_basis="operator_approved_committee_id",
+        anchor_subject_fields=(
+            ("display_label", "vendor_ref.display_label|anchor_id"),
+            ("committee_id", "candidate.committee_id"),
+            ("entity_class", "const:committee"),
+            ("source", "const:fppc"),
+        ),
     ),
 )
 
@@ -100,9 +141,50 @@ def entries_for(key_type: str) -> tuple[IdentityKeyEntry, ...]:
 # --- validator (fail-loud; runs at import over the real REGISTRY) -----------
 
 KNOWN_ENTITY_CLASSES = frozenset({"organization", "committee"})
+KNOWN_ANCHOR_SOURCES = frozenset({"irs_bmf", "ca_sos", "usaspending", "fppc"})
 _KNOWN_NORMALIZERS = frozenset(
     {_kn._normalize_ein, _kn._normalize_uei, _kn._normalize_sos_id, _kn._normalize_committee_id}
 )
+_PUBLIC_KEY_FIELDS = {
+    "ein": "registry_ein",
+    "uei": "uei",
+    "sos_id": "sos_id",
+    "committee_id": "committee_id",
+}
+_SELECTOR_PREFIXES = ("candidate.", "vendor_ref.", "const:")
+
+
+def _validate_anchor_selector(tag: str, selector: str) -> None:
+    if not isinstance(selector, str) or not selector:
+        raise ValueError(f"{tag}: anchor_subject_fields selector must be a non-empty string")
+    for part in selector.split("|"):
+        if part in {"anchor_id", "anchor_suffix"}:
+            continue
+        if any(part.startswith(prefix) and len(part) > len(prefix) for prefix in _SELECTOR_PREFIXES):
+            continue
+        raise ValueError(f"{tag}: invalid anchor_subject_fields selector {selector!r}")
+
+
+def _anchor_subject_map(e: IdentityKeyEntry) -> dict[str, str]:
+    if (
+        not isinstance(e.anchor_subject_fields, tuple)
+        or not e.anchor_subject_fields
+        or not all(isinstance(pair, tuple) and len(pair) == 2 for pair in e.anchor_subject_fields)
+    ):
+        raise ValueError(
+            f"{e.key_type}/{e.semantics_scope}: anchor_subject_fields must be a non-empty "
+            "tuple of (field, selector) pairs"
+        )
+    out: dict[str, str] = {}
+    for field, selector in e.anchor_subject_fields:
+        tag = f"{e.key_type}/{e.semantics_scope}"
+        if not isinstance(field, str) or not field:
+            raise ValueError(f"{tag}: anchor_subject_fields field must be a non-empty string")
+        if field in out:
+            raise ValueError(f"{tag}: duplicate anchor_subject_fields field {field!r}")
+        _validate_anchor_selector(tag, selector)
+        out[field] = selector
+    return out
 
 
 def validate_registry(entries) -> None:
@@ -126,6 +208,34 @@ def validate_registry(entries) -> None:
                 f"{tag}: invalid eligible_entity_classes {e.eligible_entity_classes!r} "
                 f"(known: {sorted(KNOWN_ENTITY_CLASSES)})"
             )
+        if e.public_key_field != _PUBLIC_KEY_FIELDS.get(e.key_type):
+            raise ValueError(
+                f"{tag}: public_key_field {e.public_key_field!r} does not match "
+                f"expected {_PUBLIC_KEY_FIELDS.get(e.key_type)!r}"
+            )
+        if e.anchor_source not in KNOWN_ANCHOR_SOURCES:
+            raise ValueError(f"{tag}: unknown anchor_source {e.anchor_source!r}")
+        expected_basis = f"operator_approved_{e.key_type}"
+        if e.attach_basis != expected_basis:
+            raise ValueError(
+                f"{tag}: attach_basis {e.attach_basis!r} does not match {expected_basis!r}"
+            )
+        subject_fields = _anchor_subject_map(e)
+        if e.key_type not in subject_fields:
+            raise ValueError(
+                f"{tag}: anchor_subject_fields must include public key field {e.key_type!r}"
+            )
+        if subject_fields.get("source") != f"const:{e.anchor_source}":
+            raise ValueError(
+                f"{tag}: anchor_subject_fields source must be const:{e.anchor_source}"
+            )
+        if e.key_type == "committee_id" and e.semantics_scope == "self_committee":
+            if subject_fields.get("entity_class") != "const:committee":
+                raise ValueError(
+                    f"{tag}: committee anchor_subject_fields must keep entity_class committee"
+                )
+            if subject_fields.get("source") != "const:fppc":
+                raise ValueError(f"{tag}: committee anchor_subject_fields must keep source fppc")
 
     by_anchor: dict[str, set[str]] = {}
     for e in entries:

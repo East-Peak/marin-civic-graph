@@ -30,7 +30,8 @@ from typing import Any
 from org_resolution import KEY_NORMALIZERS, propose_org_resolutions
 from identity_key_normalizers import _normalize_committee_id  # shared; Goal 0 re-export
 from identity_ledger import read_assertions, write_assertions
-from enrich_org_keys import assertion_for_approved_candidate
+from identity_attach import build_attach as build_identity_attach
+from identity_key_registry import entry as identity_key_entry
 
 POLICY_VERSION = "fppc-lane-v1"
 
@@ -273,29 +274,16 @@ def build_committee_attach(
     (carrying committee_id + entity_class committee), target = the real `org-*`;
     basis `operator_approved_committee_id`; SAME_AS anchor -> org citing the
     assertion id. Reuses the shipped `assertion_for_approved_candidate`."""
-    anchor_id = candidate["subject_ref"]
-    committee_id = candidate["committee_id"]
-    subject = {
-        "id": anchor_id,
-        "display_label": real_org_ref.get("display_label", anchor_id),
-        "committee_id": committee_id,
-        "entity_class": "committee",
-        "source": "fppc",
-    }
-    target = real_org_ref if real_org_ref.get("id") else {"id": candidate["candidate_ref"]}
-    assertion = assertion_for_approved_candidate(
-        candidate, subject=subject, target=target,
-        basis="operator_approved_committee_id",
-        reviewer=reviewer, decided_at=decided_at, policy_version=policy_version,
-        policy_hash=policy_hash, eligibility_snapshot_hash=eligibility_snapshot_hash,
+    return build_identity_attach(
+        identity_key_entry("committee_id", "self_committee"),
+        candidate,
+        real_org_ref,
+        reviewer=reviewer,
+        decided_at=decided_at,
+        policy_version=policy_version,
+        policy_hash=policy_hash,
+        eligibility_snapshot_hash=eligibility_snapshot_hash,
     )
-    same_as = {
-        "source_id": anchor_id,
-        "target_id": candidate["candidate_ref"],
-        "relationship_type": "SAME_AS",
-        "properties": {"basis": "operator_approved_committee_id", "assertion_id": assertion["id"]},
-    }
-    return assertion, same_as
 
 
 # ---------------------------------------------------------------------------

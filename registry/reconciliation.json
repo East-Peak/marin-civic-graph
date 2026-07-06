@@ -48,17 +48,39 @@
     "ein": {
       "source_id": "ein",
       "public_key_field": "registry_ein",
-      "anchor_prefix": "org-bmf-ein-"
+      "anchor_prefix": "org-bmf-ein-",
+      "anchor_source": "irs_bmf",
+      "attach_basis": "operator_approved_ein",
+      "anchor_subject_fields": {
+        "display_label": "vendor_ref.display_label|anchor_id",
+        "ein": "candidate.ein|anchor_suffix",
+        "source": "const:irs_bmf"
+      }
     },
     "sos_id": {
       "source_id": "sos_id",
       "public_key_field": "sos_id",
-      "anchor_prefix": "org-casos-"
+      "anchor_prefix": "org-casos-",
+      "anchor_source": "ca_sos",
+      "attach_basis": "operator_approved_sos_id",
+      "anchor_subject_fields": {
+        "display_label": "candidate.sos_ref.display_label|anchor_id",
+        "sos_id": "candidate.sos_ref.sos_id",
+        "source": "const:ca_sos"
+      }
     },
     "committee_id": {
       "source_id": "committee_id",
       "public_key_field": "committee_id",
-      "anchor_prefix": "org-fppc-"
+      "anchor_prefix": "org-fppc-",
+      "anchor_source": "fppc",
+      "attach_basis": "operator_approved_committee_id",
+      "anchor_subject_fields": {
+        "display_label": "vendor_ref.display_label|anchor_id",
+        "committee_id": "candidate.committee_id",
+        "entity_class": "const:committee",
+        "source": "const:fppc"
+      }
     }
   }
 }
