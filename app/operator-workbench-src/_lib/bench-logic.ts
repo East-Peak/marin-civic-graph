@@ -4,6 +4,11 @@
 // component so it is unit-testable (see src/tests/operator/bench-logic.test.ts).
 import { caseRefs, KEY_FIELD } from "./case-refs";
 import type { Case, ContextEntry } from "./bench-types";
+import {
+  BENCH_DONE_STATUSES,
+  BENCH_KNOWN_STATUSES,
+  BENCH_REJECTED_STATUSES,
+} from "./reconciliation.generated";
 export { KEY_FIELD };
 
 /** The case decorated with a session-local display status (starts at the ledger status,
@@ -46,19 +51,11 @@ export function moneyOf(c: Case, ctx: Record<string, ContextEntry>): number {
   return ctx[vendorId(c)]?.money_total ?? -1;
 }
 
-const REJECTED = new Set(["rejected_current_evidence", "rejected_entity_distinct"]);
-const DONE = new Set(["approved", "superseded", "deterministic", "unsure"]);
+const REJECTED = new Set<string>(BENCH_REJECTED_STATUSES);
+const DONE = new Set<string>(BENCH_DONE_STATUSES);
 
 /** The ledger statuses the writer can stamp — anything else echoed back is untrusted. */
-const KNOWN_STATUSES = new Set([
-  "none",
-  "requeued",
-  "approved",
-  "superseded",
-  "deterministic",
-  "rejected_current_evidence",
-  "rejected_entity_distinct",
-]);
+const KNOWN_STATUSES = new Set<string>(BENCH_KNOWN_STATUSES);
 
 /** New display status after a decision — prefer the server's echoed assertion status (when
  *  it's a status we recognize), else derive it from the action (+ rejection kind). An

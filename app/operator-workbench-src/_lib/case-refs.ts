@@ -1,11 +1,8 @@
 import type { Case } from "./bench-types";
+import { KEY_FIELD_BY_SOURCE } from "./reconciliation.generated";
 
 /** Registry key field by lane (which anchor public field holds the proposed identity key). */
-export const KEY_FIELD: Record<string, string> = {
-  ein: "registry_ein",
-  sos_id: "sos_id",
-  committee_id: "committee_id",
-};
+export const KEY_FIELD: Record<string, string> = KEY_FIELD_BY_SOURCE;
 
 export type CaseRefs = {
   vendorId: string;

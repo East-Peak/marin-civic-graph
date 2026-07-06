@@ -34,6 +34,11 @@ from reconciliation_cases import (
     validate_action,
     validate_case,
 )
+from reconciliation_registry import (
+    ANCHOR_PREFIX_BY_SOURCE,
+    KEY_FIELD_BY_SOURCE,
+    LEDGER_ACTIONABILITY,
+)
 
 # Ledger namespacing (spec §5.2): attach assertions and dedup assertions live in
 # distinct files; dedup bases are prefixed `org_dedup` and ONLY they assemble into
@@ -306,31 +311,23 @@ def emit_jsonl(cases: list[ReconciliationCase]) -> list[str]:
 
 _ADAPTERS_BY_SOURCE = {"ein": EinAdapter, "sos_id": SosAdapter, "committee_id": CommitteeAdapter}
 
-_ACTIONABILITY = {
-    "none": "actionable",
-    "requeued": "needs_review",
-    "approved": "resolved",
-    "deterministic": "resolved",
-    "superseded": "resolved",
-    "rejected_current_evidence": "resolved",
-    "rejected_entity_distinct": "resolved",
-}
+_ACTIONABILITY = dict(LEDGER_ACTIONABILITY)
 
 
 def detect_source(row: dict[str, Any]) -> str:
     """Route a precomputed candidate row to its adapter source by shape/anchor prefix."""
     anchor = str(row.get("subject_ref", ""))
-    if "registry_ein" in row or anchor.startswith("org-bmf-ein-"):
+    if "registry_ein" in row or anchor.startswith(ANCHOR_PREFIX_BY_SOURCE["ein"]):
         return "ein"
-    if "sos_ref" in row or anchor.startswith("org-casos-"):
+    if "sos_ref" in row or anchor.startswith(ANCHOR_PREFIX_BY_SOURCE["sos_id"]):
         return "sos_id"
-    if "committee_id" in row or anchor.startswith("org-fppc-"):
+    if "committee_id" in row or anchor.startswith(ANCHOR_PREFIX_BY_SOURCE["committee_id"]):
         return "committee_id"
     raise ValueError(f"cannot detect adapter source for candidate {row.get('subject_ref')!r}")
 
 
 BULK_AI_THRESHOLD = 0.9
-_KEY_FIELD_BY_SOURCE = {"ein": "registry_ein", "sos_id": "sos_id", "committee_id": "committee_id"}
+_KEY_FIELD_BY_SOURCE = dict(KEY_FIELD_BY_SOURCE)
 
 
 def _proposed_key(join: CandidateJoin) -> str | None:
