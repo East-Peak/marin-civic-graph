@@ -434,7 +434,7 @@ def main(argv: list[str] | None = None) -> int:
         rows.extend(_load_jsonl(f))
     ledger: list[dict[str, Any]] = []
     for lf in a.ledger:
-        ledger.extend(load_ledger(lf, allow_missing=True))
+        ledger.extend(load_ledger(lf))
     verdicts = _load_jsonl(a.verdicts) if a.verdicts else []
 
     cases = build_attach_read_model(rows, ledger_assertions=ledger, verdict_rows=verdicts, now=a.now)

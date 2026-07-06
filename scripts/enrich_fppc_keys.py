@@ -267,6 +267,8 @@ def build_committee_attach(
     reviewer: str,
     decided_at: str,
     policy_version: str = POLICY_VERSION,
+    policy_hash: str | None = None,
+    eligibility_snapshot_hash: str | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """For an operator-APPROVED committee_id candidate, build (assertion, SAME_AS
     edge) — mirroring build_attach.py: subject = the `org-fppc-<id>` key anchor
@@ -287,6 +289,7 @@ def build_committee_attach(
         candidate, subject=subject, target=target,
         basis="operator_approved_committee_id",
         reviewer=reviewer, decided_at=decided_at, policy_version=policy_version,
+        policy_hash=policy_hash, eligibility_snapshot_hash=eligibility_snapshot_hash,
     )
     same_as = {
         "source_id": anchor_id,

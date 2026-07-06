@@ -13,10 +13,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 import reconcile_decide as rd  # noqa: E402
 import reconciliation_read_model as rm  # noqa: E402
-from test_reconciliation_cli import EIN_RAW, SOS_RAW  # noqa: E402
+from test_reconciliation_cli import EIN_RAW, FPPC_RAW, SOS_RAW  # noqa: E402
 
 EIN_CASE = "attach|org-bmf-ein-953667812|org-marincontract-recipient-x"
 SOS_CASE = "attach|org-casos-0289793|org-marincontract-recipient-y"
+FPPC_CASE = "attach|org-fppc-1470249|org-example-committee"
 
 
 def _read_model(tmp_path, raws):
@@ -107,3 +108,18 @@ def test_unknown_case_id_fails_loud(tmp_path):
     with pytest.raises(ValueError, match="case_id"):
         rd.decide("attach|nope|nope", "unsure", reviewer="op", decided_at="2026-06-29T00:00:00Z",
                   read_model_path=rmf, candidate_paths={}, ledger_path=tmp_path / "l.jsonl", attach_dir=tmp_path / "a")
+
+
+def test_committee_decide_error_names_r3_scope(tmp_path):
+    rmf = _read_model(tmp_path, [FPPC_RAW])
+    with pytest.raises(ValueError, match=r"committee_id.*R3|R3.*committee_id"):
+        rd.decide(
+            FPPC_CASE,
+            "approve",
+            reviewer="op",
+            decided_at="2026-07-06T00:00:00Z",
+            read_model_path=rmf,
+            candidate_paths={},
+            ledger_path=tmp_path / "l.jsonl",
+            attach_dir=tmp_path / "a",
+        )

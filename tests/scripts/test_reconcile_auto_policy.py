@@ -16,6 +16,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 import reconcile_auto_policy as ap  # noqa: E402
+from identity_key_registry import ANCHOR_PREFIXES  # noqa: E402
 
 
 POLICY_HASH = "h-policy"
@@ -93,9 +94,13 @@ def context(**over):
     return ctx
 
 
-def test_literal_key_normalization_handles_bmf_and_casos_anchor_ids():
+def test_literal_key_normalization_uses_registry_anchor_prefixes():
+    assert "org-fppc-" in ANCHOR_PREFIXES
+    assert "org-usasp-uei-" in ANCHOR_PREFIXES
     assert ap.literal_proposed_key({"proposed_key": "org-bmf-ein-911930327"}) == "911930327"
     assert ap.literal_proposed_key({"proposed_key": "org-casos-0289793"}) == "0289793"
+    assert ap.literal_proposed_key({"proposed_key": "org-fppc-1470249"}) == "1470249"
+    assert ap.literal_proposed_key({"proposed_key": "org-usasp-uei-UEI123456789"}) == "UEI123456789"
     assert ap.literal_proposed_key({"proposed_key": "941156528"}) == "941156528"
 
 
@@ -253,7 +258,8 @@ def test_apply_batch_recomputes_snapshot_and_stamps_policy_metadata(tmp_path):
     assertion = json.loads(ledger.read_text(encoding="utf-8").splitlines()[0])
     assert result["applied_count"] == 1
     assert assertion["reviewer"] == ap.RESEARCH_POLICY_REVIEWER
-    assert assertion["policy_version"] == ap.RESEARCH_POLICY_REVIEWER
+    assert assertion["policy_version"] == ap.AUTO_APPROVE_POLICY_VERSION
+    assert assertion["policy_version"] != assertion["reviewer"]
     assert assertion["policy_hash"] == POLICY_HASH
     assert assertion["eligibility_snapshot_hash"] == result["eligibility_snapshot_hash"]
     assert assertion["evidence_refs"] == ["ev-1", "ev-2"]
@@ -280,3 +286,15 @@ def test_apply_batch_aborts_on_snapshot_drift_before_writing(tmp_path):
             decided_at="2026-07-03T20:00:00Z",
         )
     assert not ledger.exists()
+
+
+def test_auto_policy_artifact_writers_refuse_poisoned_payloads(tmp_path):
+    poisoned_jsonl = tmp_path / "poisoned.jsonl"
+    with pytest.raises(ValueError, match="redaction"):
+        ap._write_jsonl(poisoned_jsonl, [{"vendor_id": "vendor-a", "reason": "REDACT_ME_STREET"}])
+    assert not poisoned_jsonl.exists()
+
+    poisoned_json = tmp_path / "poisoned.json"
+    with pytest.raises(ValueError, match="redaction"):
+        ap._write_json(poisoned_json, {"principal_address": "not publishable"})
+    assert not poisoned_json.exists()

@@ -22,7 +22,7 @@ type CaseOver = Partial<Case> & {
 function mkCase(over: CaseOver = {}): Case {
   const vendor = over.vendor ?? "org-county-vendor-1";
   const src = over.src ?? "ein";
-  const keyField = src === "ein" ? "registry_ein" : "sos_id";
+  const keyField = src === "ein" ? "registry_ein" : src === "committee_id" ? "committee_id" : "sos_id";
   const pubFields: Record<string, unknown> = { [keyField]: over.key ?? "94-3041517" };
   if (over.city) pubFields.principal_city = over.city;
   return {
@@ -245,6 +245,24 @@ describe("Bench", () => {
     // not stuck optimistic — the row is back in needs-review
     expect(screen.getByTestId("tab-needsReview").textContent).toMatch(/1/);
     expect(screen.getByTestId("tab-done").textContent).toMatch(/0/);
+  });
+
+  it("marks committee_id rows non-actionable and suppresses decisions", () => {
+    const fetchMock = vi.fn<(u: RequestInfo | URL, i?: RequestInit) => Promise<Response>>(() => okJson({ result: "created", assertion: { status: "approved" }, same_as: {} }));
+    vi.stubGlobal("fetch", fetchMock);
+    render(<Bench initialCases={[mkCase({ case_id: "committee-case", vendor: "committee-vendor", src: "committee_id", key: "1470249" })]} context={{ "committee-vendor": mkCtx() }} />);
+
+    const detail = within(screen.getByTestId("detail"));
+    expect(screen.getByText(/committee_id.*R3.*non-actionable/i)).toBeInTheDocument();
+    expect(detail.getByRole("button", { name: /^Approve$/i })).toBeDisabled();
+    expect(detail.getByRole("button", { name: /^Reject \(evidence\)$/i })).toBeDisabled();
+    expect(detail.getByRole("button", { name: /^Reject \(distinct\)$/i })).toBeDisabled();
+    expect(detail.getByRole("button", { name: /^Unsure$/i })).toBeDisabled();
+
+    act(() => {
+      fireEvent.keyDown(window, { key: "a" });
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });
 

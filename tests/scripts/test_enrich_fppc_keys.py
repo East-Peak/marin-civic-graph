@@ -300,6 +300,22 @@ def test_build_committee_attach_assertion_and_same_as():
     assert same_as["properties"]["assertion_id"] == assertion["id"]
 
 
+def test_build_committee_attach_records_auto_policy_hashes():
+    cand = {"subject_ref": "org-fppc-1439160", "candidate_ref": "org-bonta-for-attorney-general-2022",
+            "committee_id": "1439160", "evidence_record_ids": []}
+    real = {"id": "org-bonta-for-attorney-general-2022", "display_label": "Bonta for Attorney General 2022"}
+    assertion, _same_as = build_committee_attach(
+        cand,
+        real,
+        reviewer="stuart@eastpeak.cc",
+        decided_at="2026-07-06",
+        policy_hash="h-policy",
+        eligibility_snapshot_hash="sha256:snapshot",
+    )
+    assert assertion["policy_hash"] == "h-policy"
+    assert assertion["eligibility_snapshot_hash"] == "sha256:snapshot"
+
+
 # --------------------------------------------------------------------------
 # Unit 8 — ROI preflight + real e2e (executed, not skipped)
 # --------------------------------------------------------------------------

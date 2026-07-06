@@ -19,6 +19,7 @@ import {
   displayName,
   investigationLinks,
   KEY_FIELD,
+  nonActionableReason,
   proposedKey,
   statusAfter,
   usd,
@@ -148,8 +149,10 @@ export function Bench({ initialCases, context, reviewer = "operator", ctxError =
   const decide = useCallback(
     (caseId: string, action: Action, kind?: RejectionKind) => {
       if (inFlight.current.has(caseId)) return; // already deciding this case
-      const prior = rows.find((r) => r.case_id === caseId)?.displayStatus;
+      const target = rows.find((r) => r.case_id === caseId);
+      const prior = target?.displayStatus;
       if (prior === undefined) return;
+      if (target && nonActionableReason(target)) return;
       inFlight.current.add(caseId);
       // optimistic: advance selection to the next case (decide always targets the
       // current selection), then move this one out of the active queue
@@ -540,6 +543,7 @@ function CaseDetail({
   const j = row.candidate_joins[0];
   const ai = row.ai_reviews[0];
   const pubFields = j.right_ref.public_fields;
+  const nonActionable = nonActionableReason(row);
   const card = { border: "1px solid #e5e5e5", borderRadius: 8, padding: 16, flex: 1, minWidth: 0 } as const;
   return (
     <div>
@@ -608,21 +612,38 @@ function CaseDetail({
         ))}
       </div>
 
+      {nonActionable ? (
+        <div role="note" style={{ marginTop: 12, padding: "8px 10px", border: "1px solid #facc15", background: "#fefce8", color: "#854d0e", fontSize: 13 }}>
+          {nonActionable}
+        </div>
+      ) : null}
+
       <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
-        <ActionButton color="#16a34a" onClick={() => onDecide(row.case_id, "approve")}>Approve</ActionButton>
-        <ActionButton color="#d97706" onClick={() => onDecide(row.case_id, "reject", "current_evidence")}>Reject (evidence)</ActionButton>
-        <ActionButton color="#dc2626" onClick={() => onDecide(row.case_id, "reject", "entity_distinct")}>Reject (distinct)</ActionButton>
-        <ActionButton color="#6b7280" onClick={() => onDecide(row.case_id, "unsure")}>Unsure</ActionButton>
+        <ActionButton color="#16a34a" disabled={Boolean(nonActionable)} onClick={() => onDecide(row.case_id, "approve")}>Approve</ActionButton>
+        <ActionButton color="#d97706" disabled={Boolean(nonActionable)} onClick={() => onDecide(row.case_id, "reject", "current_evidence")}>Reject (evidence)</ActionButton>
+        <ActionButton color="#dc2626" disabled={Boolean(nonActionable)} onClick={() => onDecide(row.case_id, "reject", "entity_distinct")}>Reject (distinct)</ActionButton>
+        <ActionButton color="#6b7280" disabled={Boolean(nonActionable)} onClick={() => onDecide(row.case_id, "unsure")}>Unsure</ActionButton>
       </div>
     </div>
   );
 }
 
-function ActionButton({ color, onClick, children }: { color: string; onClick: () => void; children: ReactNode }) {
+function ActionButton({ color, disabled = false, onClick, children }: { color: string; disabled?: boolean; onClick: () => void; children: ReactNode }) {
+  const activeColor = disabled ? "#9ca3af" : color;
   return (
     <button
+      disabled={disabled}
       onClick={onClick}
-      style={{ padding: "8px 16px", borderRadius: 6, border: `1px solid ${color}`, background: "#fff", color, cursor: "pointer", fontSize: 14, fontWeight: 500 }}
+      style={{
+        padding: "8px 16px",
+        borderRadius: 6,
+        border: `1px solid ${activeColor}`,
+        background: disabled ? "#f9fafb" : "#fff",
+        color: activeColor,
+        cursor: disabled ? "not-allowed" : "pointer",
+        fontSize: 14,
+        fontWeight: 500,
+      }}
     >
       {children}
     </button>

@@ -16,6 +16,7 @@ import {
   isNameExact,
   applyControls,
   investigationLinks,
+  nonActionableReason,
   DEFAULT_CONTROLS,
   type BenchRow,
   type QueueControls,
@@ -37,7 +38,7 @@ type CaseOver = Partial<Case> & {
 function mkCase(over: CaseOver = {}): Case {
   const vendor = over.vendor ?? "org-county-vendor-1";
   const src = over.src ?? "ein";
-  const keyField = src === "ein" ? "registry_ein" : "sos_id";
+  const keyField = src === "ein" ? "registry_ein" : src === "committee_id" ? "committee_id" : "sos_id";
   const pubFields: Record<string, unknown> = { [keyField]: over.key ?? "123456789" };
   if (over.city) pubFields.principal_city = over.city;
   return {
@@ -161,6 +162,11 @@ describe("clientBulkEligible", () => {
   });
   it("is false when graph context is unavailable (cannot confirm no-collision)", () => {
     expect(clientBulkEligible(row(eligible), undefined)).toBe(false);
+  });
+  it("is false for committee_id rows because Lane 3 decisions are R3 scope", () => {
+    const committee = mkCase({ src: "committee_id", key: "1470249", bulk_eligible: true });
+    expect(nonActionableReason(committee)).toMatch(/committee_id.*R3/i);
+    expect(clientBulkEligible(row(committee), mkCtx())).toBe(false);
   });
 });
 

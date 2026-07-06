@@ -73,6 +73,19 @@ def test_cli_writes_read_model_and_coverage(tmp_path):
     assert scan_for_forbidden(rows) == []  # the written read model is leak-clean
 
 
+def test_cli_explicit_missing_ledger_fails_loud(tmp_path):
+    cf = tmp_path / "cands.jsonl"
+    cf.write_text(json.dumps(EIN_RAW) + "\n", encoding="utf-8")
+    out = tmp_path / "rm.jsonl"
+    with pytest.raises(FileNotFoundError, match="ledger path"):
+        rm.main([
+            "--candidates", str(cf),
+            "--ledger", str(tmp_path / "typoed-ledger.jsonl"),
+            "--out", str(out),
+        ])
+    assert not out.exists()
+
+
 # --- Unit 2: review_flags + bulk_eligible + per-key AI matching ------------
 
 SOS_EXACT = {**SOS_RAW, "signals": ["normalized_name_exact"], "needs_careful_review": False}

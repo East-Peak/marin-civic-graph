@@ -83,6 +83,11 @@ def decide(
     join = case["candidate_joins"][0]
     source = join["left_ref"]["source_id"]
     if source not in _LANES:
+        if source == "committee_id":
+            raise ValueError(
+                "unsupported source for decide: 'committee_id' is a committee Lane 3/R3 row; "
+                "committee approvals are intentionally non-actionable until R3 wires the FPPC candidate path"
+            )
         raise ValueError(f"unsupported source for decide: {source!r}")
     subject_ref = join["right_ref"]["local_id"]
     candidate_ref = join["left_ref"]["local_id"]

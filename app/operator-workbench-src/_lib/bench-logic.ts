@@ -36,6 +36,14 @@ export function proposedKey(c: Case): string {
   return v == null || v === "" ? "—" : String(v);
 }
 
+export function nonActionableReason(c: Case): string | null {
+  const source = c.candidate_joins[0].left_ref.source_id;
+  if (source === "committee_id") {
+    return "committee_id rows are R3 Lane 3 scope and non-actionable in this bench.";
+  }
+  return null;
+}
+
 /** The best display name: the graph's real label, falling back to the raw vendor ref. */
 export function displayName(c: Case, ctx: ContextEntry | undefined): string {
   return ctx?.display_label ?? c.candidate_joins[0].left_ref.display_label;
@@ -80,6 +88,7 @@ export function statusAfter(
  *  unresolved status, AND a live graph confirmation of no key collision. Absent context
  *  ⇒ ineligible (we never bulk-approve without confirming no-collision). */
 export function clientBulkEligible(r: BenchRow, ctx: ContextEntry | undefined): boolean {
+  if (nonActionableReason(r)) return false;
   if (!r.bulk_eligible) return false;
   if (r.displayStatus !== "none") return false;
   if (!ctx) return false; // graph context unavailable — fail safe

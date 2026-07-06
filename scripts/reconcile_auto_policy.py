@@ -16,10 +16,16 @@ import json
 from pathlib import Path
 from typing import Any
 
+from enrich_casos_keys import scan_for_forbidden
+from identity_key_registry import ANCHOR_PREFIXES
 import reconcile_decide
 
 
+# Reviewer identity per the SIGNED policy document (data/review/research-adjudicated/
+# auto-approve-policy.md) — the 12 applied assertions carry this exact string; do not change.
 RESEARCH_POLICY_REVIEWER = "research-fleet-v1/policy-stuart-2026-07-01"
+# Distinct policy-version stamp (F8c): policy_version must never default to the reviewer.
+AUTO_APPROVE_POLICY_VERSION = "auto-approve-policy-2026-07-01"
 
 
 def _stable_hash(obj: Any) -> str:
@@ -36,12 +42,18 @@ def _load_json(path: str | Path) -> Any:
 
 
 def _write_json(path: str | Path, obj: Any) -> None:
+    violations = scan_for_forbidden(obj)
+    if violations:
+        raise ValueError(f"redaction gate failed for {path}: {violations}")
     out = Path(path)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(obj, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def _write_jsonl(path: str | Path, rows: list[dict[str, Any]]) -> None:
+    violations = scan_for_forbidden(rows)
+    if violations:
+        raise ValueError(f"redaction gate failed for {path}: {violations}")
     out = Path(path)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("".join(json.dumps(r, sort_keys=True) + "\n" for r in rows), encoding="utf-8")
@@ -49,7 +61,7 @@ def _write_jsonl(path: str | Path, rows: list[dict[str, Any]]) -> None:
 
 def literal_proposed_key(row: dict[str, Any]) -> str:
     proposed = str(row.get("proposed_key", ""))
-    for prefix in ("org-bmf-ein-", "org-casos-"):
+    for prefix in ANCHOR_PREFIXES:
         if proposed.startswith(prefix):
             return proposed[len(prefix):]
     return proposed
@@ -331,7 +343,7 @@ def apply_batch(
     reviewer: str,
     decided_at: str,
     now: str | None = None,
-    policy_version: str = RESEARCH_POLICY_REVIEWER,
+    policy_version: str = AUTO_APPROVE_POLICY_VERSION,
 ) -> dict[str, Any]:
     approved_preview = _load_json(preview)
     recomputed = _build_preview_from_paths(
@@ -463,7 +475,7 @@ def main(argv: list[str] | None = None) -> int:
     apply.add_argument("--ledger", required=True)
     apply.add_argument("--attach-dir", required=True)
     apply.add_argument("--reviewer", default=RESEARCH_POLICY_REVIEWER)
-    apply.add_argument("--policy-version", default=RESEARCH_POLICY_REVIEWER)
+    apply.add_argument("--policy-version", default=AUTO_APPROVE_POLICY_VERSION)
     apply.add_argument("--decided-at", required=True)
     apply.add_argument("--now", default=None)
     apply.set_defaults(func=_cmd_apply)
