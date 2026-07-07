@@ -1,9 +1,9 @@
-"""Bake the local public serving substrate from composed graph-v2 inputs.
+"""Bake the local public serving substrate from composed graph inputs.
 
-S0 intentionally stays small: it mirrors the live load inputs that currently
-reach Aura (graph-v2 projection plus the operator attach overlay), strips
-vector/staging properties, writes the SQLite skeleton, and emits a source of
-truth count report.
+S0b supports both the old projection-sized bake and the full live-graph export
+source. Live-export mode composes the full export with the operator attach
+overlay, strips vector/staging properties, writes the SQLite skeleton, and
+emits a source-of-truth count/drift report.
 """
 from __future__ import annotations
 
@@ -26,6 +26,8 @@ DEFAULT_EDGE_SOURCES = (
     Path("data/projected/graph-v2/edges.jsonl"),
     Path("data/review/attach/edges.jsonl"),
 )
+DEFAULT_LIVE_EXPORT_DIR = Path("data/exports/live-graph-export")
+DEFAULT_ATTACH_OVERLAY_DIR = Path("data/review/attach")
 DEFAULT_REGISTRY_PATH = Path("registry/node-types.json")
 DEFAULT_SQLITE_PATH = Path("data/exports/public-substrate.sqlite")
 DEFAULT_REPORT_PATH = Path("data/exports/substrate-bake-report.json")
@@ -76,18 +78,30 @@ def _read_jsonl(path: Path) -> list[dict]:
 
 
 def _load_known_types(registry_path: Path) -> set[str]:
+    registry = _load_type_registry(registry_path)
+    return registry["known_types"]
+
+
+def _load_type_registry(registry_path: Path) -> dict:
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    graph_types = set(registry.get("graph_node_types", {}))
+    support_labels = set(registry.get("support_labels", []))
     known = set(registry.get("graph_node_types", {}))
     known.update(registry.get("support_labels", []))
-    return known
+    return {
+        "known_types": known,
+        "graph_types": graph_types,
+        "support_labels": support_labels,
+        "organization_subtypes": set(registry.get("organization_subtypes", [])),
+        "id_prefixes": dict(registry.get("id_prefixes", {})),
+    }
 
 
 def _is_stripped_property(key: str) -> bool:
     return (
         key == "payload_json"
         or key == "embedding"
-        or key == "umap"
-        or key.startswith("umap_")
+        or key.startswith("umap")
         or key.endswith("_pending")
     )
 
@@ -104,8 +118,10 @@ def _clean_props(props: dict | None) -> dict:
 def _node_live_props(row: dict) -> dict:
     props = _clean_props(row.get("properties"))
     # load_neo4j_v2 sets these as top-level Neo4j properties outside row.props.
-    props["display_label"] = row.get("display_label", "")
-    props["promotion_state"] = row.get("promotion_state", "")
+    if "display_label" in row:
+        props["display_label"] = row.get("display_label", "")
+    if "promotion_state" in row:
+        props["promotion_state"] = row.get("promotion_state", "")
     return props
 
 
@@ -149,6 +165,62 @@ def _validate_node_types(rows: Iterable[dict], known_types: set[str]) -> None:
             "Unknown node_type values not present in registry/node-types.json: "
             + ", ".join(unknown)
         )
+
+
+def _infer_node_type(row: dict, type_registry: dict) -> str | None:
+    node_id = str(row["id"])
+    labels = [str(label) for label in row.get("labels") or []]
+    for prefix, node_type in type_registry["id_prefixes"].items():
+        if node_id.startswith(prefix):
+            return str(node_type)
+    for label in labels:
+        if label in type_registry["graph_types"]:
+            return label
+    if any(label in type_registry["organization_subtypes"] for label in labels):
+        return "Organization"
+    for label in labels:
+        if label in type_registry["support_labels"]:
+            return label
+    return None
+
+
+def _normalize_node_row(row: dict, type_registry: dict) -> dict:
+    normalized = dict(row)
+    normalized["id"] = str(row["id"])
+    normalized["labels"] = [str(label) for label in row.get("labels") or []]
+    if "node_type" not in normalized:
+        node_type = _infer_node_type(normalized, type_registry)
+        if node_type is None:
+            raise ValueError(
+                "Unable to infer node_type for live-export node "
+                f"{normalized['id']!r} with labels {normalized['labels']!r}"
+            )
+        normalized["node_type"] = node_type
+    if not normalized["labels"]:
+        normalized["labels"] = [str(normalized["node_type"])]
+    normalized["properties"] = normalized.get("properties") or {}
+    return normalized
+
+
+def _normalize_edge_row(row: dict) -> dict:
+    try:
+        source_id = row["source_id"]
+    except KeyError:
+        source_id = row["start_id"]
+    try:
+        target_id = row["target_id"]
+    except KeyError:
+        target_id = row["end_id"]
+    rel = row.get("relationship_type", row.get("type"))
+    if rel is None:
+        raise ValueError(f"Edge row missing relationship type: {row!r}")
+    properties = row["properties"] if "properties" in row else row.get("props", {})
+    return {
+        "source_id": str(source_id),
+        "relationship_type": str(rel),
+        "target_id": str(target_id),
+        "properties": properties or {},
+    }
 
 
 def _group_nodes_like_loader(rows: list[dict]) -> OrderedDict[tuple[str, ...], list[dict]]:
@@ -210,6 +282,68 @@ def _compose_edges(rows: list[dict]) -> tuple[dict[tuple[str, str, str], BakedEd
         "input_duplicate_edge_triples": len(duplicate_edges),
         "input_duplicate_edge_rows": sum(duplicate_edges.values()) - len(duplicate_edges),
     }
+
+
+def _edge_triple(row: dict) -> tuple[str, str, str]:
+    return (
+        str(row["source_id"]),
+        str(row["relationship_type"]),
+        str(row["target_id"]),
+    )
+
+
+def _is_stamped_same_as(row: dict) -> bool:
+    return (
+        row.get("relationship_type") == "SAME_AS"
+        and bool((row.get("properties") or {}).get("assertion_id"))
+    )
+
+
+def _is_legacy_unstamped_same_as(row: dict) -> bool:
+    return (
+        row.get("relationship_type") == "SAME_AS"
+        and not (row.get("properties") or {}).get("assertion_id")
+    )
+
+
+def _triple_report(key: tuple[str, str, str]) -> dict:
+    return {"source": key[0], "rel": key[1], "target": key[2]}
+
+
+def _live_export_edge_composition(
+    live_edges: list[dict],
+    overlay_edges: list[dict],
+) -> tuple[list[dict], dict]:
+    live_stamped = {_edge_triple(row) for row in live_edges if _is_stamped_same_as(row)}
+    overlay_stamped = {
+        _edge_triple(row) for row in overlay_edges if _is_stamped_same_as(row)
+    }
+    overlay_missing_live = sorted(overlay_stamped - live_stamped)
+    live_missing_overlay = sorted(live_stamped - overlay_stamped)
+    legacy_unstamped_count = sum(
+        1 for row in live_edges if _is_legacy_unstamped_same_as(row)
+    )
+
+    # The overlay is the stamped SAME_AS authority. Keep legacy unstamped live
+    # SAME_AS for parity, but drop every live stamped SAME_AS before appending
+    # overlay edges.
+    composed_edges = [
+        row for row in live_edges if not _is_stamped_same_as(row)
+    ] + overlay_edges
+    drift = {
+        "live_stamped_count": len(live_stamped),
+        "overlay_stamped_count": len(overlay_stamped),
+        "overlay_rows_missing_live_count": len(overlay_missing_live),
+        "overlay_rows_missing_live_sample": [
+            _triple_report(key) for key in overlay_missing_live[:20]
+        ],
+        "live_stamped_rows_missing_overlay_count": len(live_missing_overlay),
+        "live_stamped_rows_missing_overlay_sample": [
+            _triple_report(key) for key in live_missing_overlay[:20]
+        ],
+        "legacy_unstamped_count": legacy_unstamped_count,
+    }
+    return composed_edges, drift
 
 
 def _missing_endpoint_report(
@@ -349,26 +483,62 @@ def _write_report(report_path: Path, report: dict) -> None:
 
 
 def bake_substrate(
-    node_sources: Iterable[Path | str] = DEFAULT_NODE_SOURCES,
-    edge_sources: Iterable[Path | str] = DEFAULT_EDGE_SOURCES,
+    node_sources: Iterable[Path | str] | None = None,
+    edge_sources: Iterable[Path | str] | None = None,
     registry_path: Path | str = DEFAULT_REGISTRY_PATH,
     sqlite_path: Path | str = DEFAULT_SQLITE_PATH,
     report_path: Path | str = DEFAULT_REPORT_PATH,
+    *,
+    source: str = "projection",
+    live_export_dir: Path | str = DEFAULT_LIVE_EXPORT_DIR,
+    attach_overlay_dir: Path | str = DEFAULT_ATTACH_OVERLAY_DIR,
 ) -> dict:
-    node_paths = [Path(path) for path in node_sources]
-    edge_paths = [Path(path) for path in edge_sources]
     registry = Path(registry_path)
     sqlite_out = Path(sqlite_path)
     report_out = Path(report_path)
 
-    node_rows: list[dict] = []
-    edge_rows: list[dict] = []
-    for path in node_paths:
-        node_rows.extend(_read_jsonl(path))
-    for path in edge_paths:
-        edge_rows.extend(_read_jsonl(path))
+    if source not in {"projection", "live-export"}:
+        raise ValueError("source must be 'projection' or 'live-export'")
 
-    known_types = _load_known_types(registry)
+    type_registry = _load_type_registry(registry)
+    known_types = type_registry["known_types"]
+    same_as_overlay_drift: dict | None = None
+
+    if source == "live-export":
+        live_dir = Path(live_export_dir)
+        overlay_dir = Path(attach_overlay_dir)
+        node_paths = [live_dir / "nodes.jsonl", overlay_dir / "nodes.jsonl"]
+        edge_paths = [live_dir / "edges.jsonl", overlay_dir / "edges.jsonl"]
+        live_nodes = [
+            _normalize_node_row(row, type_registry)
+            for row in _read_jsonl(node_paths[0])
+        ]
+        overlay_nodes = [
+            _normalize_node_row(row, type_registry)
+            for row in _read_jsonl(node_paths[1])
+        ]
+        live_edges = [_normalize_edge_row(row) for row in _read_jsonl(edge_paths[0])]
+        overlay_edges = [
+            _normalize_edge_row(row) for row in _read_jsonl(edge_paths[1])
+        ]
+        node_rows = live_nodes + overlay_nodes
+        edge_rows, same_as_overlay_drift = _live_export_edge_composition(
+            live_edges, overlay_edges
+        )
+    else:
+        node_paths = [Path(path) for path in (node_sources or DEFAULT_NODE_SOURCES)]
+        edge_paths = [Path(path) for path in (edge_sources or DEFAULT_EDGE_SOURCES)]
+        node_rows = [
+            _normalize_node_row(row, type_registry)
+            for path in node_paths
+            for row in _read_jsonl(path)
+        ]
+        edge_rows = [
+            _normalize_edge_row(row)
+            for path in edge_paths
+            for row in _read_jsonl(path)
+        ]
+
     _validate_node_types(node_rows, known_types)
     nodes, node_validation = _compose_nodes(node_rows)
     edges, edge_validation = _compose_edges(edge_rows)
@@ -385,12 +555,15 @@ def bake_substrate(
     }
     report = {
         "inputs": {
+            "source": source,
             "node_sources": _source_strings(node_paths),
             "edge_sources": _source_strings(edge_paths),
             "registry": registry.as_posix(),
             "composition_note": (
-                "Mirrors scripts/load_neo4j_v2.py plus data/review/run_load.py "
-                "attach overlay; no network or production writes."
+                "Projection mode mirrors the historical graph-v2 projection plus "
+                "attach overlay. Live-export mode composes the full live export "
+                "with the attach overlay and treats overlay stamped SAME_AS as "
+                "authoritative; no network or production writes happen during bake."
             ),
         },
         "totals": {
@@ -409,6 +582,8 @@ def bake_substrate(
         },
         "validation": validation,
     }
+    if same_as_overlay_drift is not None:
+        report["same_as_overlay_drift"] = same_as_overlay_drift
     _write_report(report_out, report)
     return report
 
@@ -443,7 +618,13 @@ def _print_summary(report: dict, sqlite_path: Path, report_path: Path) -> None:
 
 def _parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Bake data/exports/public-substrate.sqlite from composed graph-v2 inputs."
+        description="Bake data/exports/public-substrate.sqlite from public graph inputs."
+    )
+    parser.add_argument(
+        "--source",
+        choices=("projection", "live-export"),
+        default="projection",
+        help="Input source mode (default: projection).",
     )
     parser.add_argument(
         "--node-source",
@@ -458,6 +639,18 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
         type=Path,
         dest="edge_sources",
         help="Edge JSONL input. Repeat to override defaults.",
+    )
+    parser.add_argument(
+        "--live-export-dir",
+        type=Path,
+        default=DEFAULT_LIVE_EXPORT_DIR,
+        help=f"Live export dir for --source live-export (default: {DEFAULT_LIVE_EXPORT_DIR})",
+    )
+    parser.add_argument(
+        "--attach-overlay-dir",
+        type=Path,
+        default=DEFAULT_ATTACH_OVERLAY_DIR,
+        help=f"Attach overlay dir for --source live-export (default: {DEFAULT_ATTACH_OVERLAY_DIR})",
     )
     parser.add_argument(
         "--registry",
@@ -491,6 +684,9 @@ def main(argv: list[str] | None = None) -> int:
             registry_path=args.registry,
             sqlite_path=args.sqlite,
             report_path=args.report,
+            source=args.source,
+            live_export_dir=args.live_export_dir,
+            attach_overlay_dir=args.attach_overlay_dir,
         )
     except Exception as exc:
         print(f"ERROR: {exc}", file=sys.stderr)

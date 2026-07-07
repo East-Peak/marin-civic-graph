@@ -169,6 +169,22 @@ size & perf gates pass at projection scale. Live Aura: **130,480 nodes / 168,615
    parity (they can never be cited — join_citation is fail-closed) and get flagged for later audit.
 4. P1 (identity badges) and P4 (lineage, 72 edges live) remain IN — their data is proven live.
 
+### S0b — full-scale results (2026-07-07, real export + bake)
+
+Export: 130,480 nodes / 168,615 rels from live Aura, embeddings stripped at the wire.
+**SQLite: 206MB / 250MB budget (82%)** — PASSES, but headroom is thin against ~14%/month graph
+growth. Bench at scale: **196ms wall / 234MB RSS** to load full adjacency (107,932 sources) — the
+cold-start proxy passes. Compose verified: baked artifact carries all **80 stamped SAME_AS**
+(overlay-authoritative). Drift fully characterized: one-directional — live is missing 21 of the 80
+stamped edges (0 the other way; sample points at a partially-loaded BMF attach batch), + 22 legacy
+unstamped. Live lag self-heals at cutover (post-cutover the bake IS the source); until then the
+public app merely lacks 21 verified joins it never had.
+
+**Size decision: proceed local-artifact for v1.** (a) bake report gains a size trendline; (b) S1
+adds a prop-slimming pass once the parity matrix names exactly which properties each surface reads
+(Records' text payloads are the obvious bulk); (c) Turso stays warm as the fallback — the SQL
+interface is identical, so the swap is a hosting change, not a redesign. Revisit at 235MB.
+
 ## 7. Review round 1 (2026-07-07)
 
 Codex adversarial review: 11 findings, all folded. The two that changed the plan: **F1** —
