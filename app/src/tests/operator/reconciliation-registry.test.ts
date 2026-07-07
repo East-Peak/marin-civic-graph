@@ -8,6 +8,8 @@ import {
   BENCH_DONE_STATUSES,
   BENCH_KNOWN_STATUSES,
   BENCH_REJECTED_STATUSES,
+  CONFIDENCE_BAND_ORDER,
+  CONFIDENCE_BAND_THRESHOLDS,
   KEY_FIELD_BY_SOURCE,
   LEDGER_ACTIONABILITY,
 } from "../../../operator-workbench-src/_lib/reconciliation.generated";
@@ -60,5 +62,14 @@ describe("reconciliation registry codegen mirror", () => {
       committee_id: "committee_id",
     });
     expect(KEY_FIELD).toEqual(KEY_FIELD_BY_SOURCE);
+  });
+
+  it("exports identity confidence band constants from the registry", () => {
+    expect([...CONFIDENCE_BAND_ORDER]).toEqual(["high", "medium", "low"]);
+    expect(CONFIDENCE_BAND_THRESHOLDS).toEqual({
+      high_min_confidence: 0.8,
+      medium_min_confidence: 0.65,
+      high_min_dimensions: 2,
+    });
   });
 });

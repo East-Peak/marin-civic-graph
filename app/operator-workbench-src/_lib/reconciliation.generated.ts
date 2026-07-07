@@ -37,6 +37,18 @@ export const BENCH_KNOWN_STATUSES = [
   "rejected_entity_distinct",
 ] as const;
 
+export const CONFIDENCE_BAND_ORDER = [
+  "high",
+  "medium",
+  "low",
+] as const;
+
+export const CONFIDENCE_BAND_THRESHOLDS = {
+  "high_min_confidence": 0.8,
+  "medium_min_confidence": 0.65,
+  "high_min_dimensions": 2,
+} as const;
+
 export const KEY_SOURCE_SPECS = {
   "ein": {
     source_id: "ein",

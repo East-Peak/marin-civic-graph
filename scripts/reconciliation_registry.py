@@ -28,10 +28,21 @@ EXPECTED_LEDGER_STATUSES: tuple[str, ...] = (
 )
 EXPECTED_ACTIONABILITY = frozenset({"actionable", "needs_review", "resolved"})
 EXPECTED_TOP_LEVEL = frozenset(
-    {"$comment", "ledger_statuses", "bench_display_buckets", "key_sources"}
+    {
+        "$comment",
+        "ledger_statuses",
+        "bench_display_buckets",
+        "key_sources",
+        "confidence_bands",
+    }
 )
 EXPECTED_STATUS_KEYS = frozenset({"actionability"})
 EXPECTED_BUCKET_KEYS = frozenset({"rejected", "done", "known_statuses"})
+EXPECTED_CONFIDENCE_BAND_KEYS = frozenset({"order", "thresholds"})
+EXPECTED_CONFIDENCE_BAND_ORDER = ("high", "medium", "low")
+EXPECTED_CONFIDENCE_THRESHOLD_KEYS = frozenset(
+    {"high_min_confidence", "medium_min_confidence", "high_min_dimensions"}
+)
 EXPECTED_KEY_SOURCE_KEYS = frozenset(
     {
         "source_id",
@@ -105,6 +116,53 @@ def _validate_buckets(buckets: Any, ledger_statuses: dict[str, Any]) -> None:
             raise ValueError(
                 f"bench_display_buckets[{bucket_name!r}] unknown statuses: {unknown}"
             )
+
+
+def _validate_confidence_bands(confidence_bands: Any) -> None:
+    if not isinstance(confidence_bands, dict):
+        raise ValueError("reconciliation registry confidence_bands must be an object")
+    _reject_unknown_keys("confidence_bands", confidence_bands, EXPECTED_CONFIDENCE_BAND_KEYS)
+    order = confidence_bands["order"]
+    if not isinstance(order, list) or tuple(order) != EXPECTED_CONFIDENCE_BAND_ORDER:
+        raise ValueError(
+            "reconciliation registry confidence_bands.order must be exactly "
+            f"{list(EXPECTED_CONFIDENCE_BAND_ORDER)}, got {order!r}"
+        )
+    thresholds = confidence_bands["thresholds"]
+    if not isinstance(thresholds, dict):
+        raise ValueError("reconciliation registry confidence_bands.thresholds must be an object")
+    _reject_unknown_keys(
+        "confidence_bands.thresholds",
+        thresholds,
+        EXPECTED_CONFIDENCE_THRESHOLD_KEYS,
+    )
+    for key in ("high_min_confidence", "medium_min_confidence"):
+        value = thresholds[key]
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise ValueError(
+                f"reconciliation registry confidence_bands.thresholds.{key} "
+                "must be numeric"
+            )
+        if not 0 <= float(value) <= 1:
+            raise ValueError(
+                f"reconciliation registry confidence_bands.thresholds.{key} "
+                "must be in [0, 1]"
+            )
+    if thresholds["high_min_confidence"] < thresholds["medium_min_confidence"]:
+        raise ValueError(
+            "reconciliation registry confidence_bands.thresholds.high_min_confidence "
+            "must be >= medium_min_confidence"
+        )
+    high_min_dimensions = thresholds["high_min_dimensions"]
+    if (
+        isinstance(high_min_dimensions, bool)
+        or not isinstance(high_min_dimensions, int)
+        or high_min_dimensions != 2
+    ):
+        raise ValueError(
+            "reconciliation registry confidence_bands.thresholds.high_min_dimensions "
+            "must be exactly 2"
+        )
 
 
 def _identity_self_sources() -> dict[str, dict[str, str]]:
@@ -190,6 +248,7 @@ def load_registry(path: Path | str | None = None) -> dict[str, Any]:
     _validate_ledger_statuses(registry["ledger_statuses"])
     _validate_buckets(registry["bench_display_buckets"], registry["ledger_statuses"])
     _validate_key_sources(registry["key_sources"])
+    _validate_confidence_bands(registry["confidence_bands"])
     return registry
 
 
@@ -206,6 +265,10 @@ BENCH_BUCKETS: dict[str, tuple[str, ...]] = {
 KEY_SOURCES: dict[str, dict[str, str]] = {
     key: dict(values)
     for key, values in _REGISTRY["key_sources"].items()
+}
+CONFIDENCE_BANDS: dict[str, Any] = {
+    "order": tuple(_REGISTRY["confidence_bands"]["order"]),
+    "thresholds": dict(_REGISTRY["confidence_bands"]["thresholds"]),
 }
 KEY_FIELD_BY_SOURCE: dict[str, str] = {
     spec["source_id"]: spec["public_key_field"]

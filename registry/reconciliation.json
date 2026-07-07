@@ -44,6 +44,18 @@
       "rejected_entity_distinct"
     ]
   },
+  "confidence_bands": {
+    "order": [
+      "high",
+      "medium",
+      "low"
+    ],
+    "thresholds": {
+      "high_min_confidence": 0.8,
+      "medium_min_confidence": 0.65,
+      "high_min_dimensions": 2
+    }
+  },
   "key_sources": {
     "ein": {
       "source_id": "ein",

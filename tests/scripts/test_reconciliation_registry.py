@@ -18,6 +18,7 @@ import identity_key_registry as identity_keys  # noqa: E402
 import reconciliation_read_model as read_model  # noqa: E402
 from reconciliation_registry import (  # noqa: E402
     BENCH_BUCKETS,
+    CONFIDENCE_BANDS,
     KEY_SOURCES,
     LEDGER_ACTIONABILITY,
     load_registry,
@@ -56,6 +57,17 @@ def test_bench_bucket_registry_matches_existing_contract():
             "rejected_current_evidence",
             "rejected_entity_distinct",
         ),
+    }
+
+
+def test_confidence_bands_registry_matches_identity_confidence_contract():
+    assert CONFIDENCE_BANDS == {
+        "order": ("high", "medium", "low"),
+        "thresholds": {
+            "high_min_confidence": 0.80,
+            "medium_min_confidence": 0.65,
+            "high_min_dimensions": 2,
+        },
     }
 
 
@@ -123,6 +135,28 @@ def test_registry_validation_rejects_key_source_drift(tmp_path):
     p.write_text(json.dumps(bad), encoding="utf-8")
 
     with pytest.raises(ValueError, match="identity_key_registry"):
+        load_registry(p)
+
+
+def test_registry_validation_rejects_confidence_band_drift(tmp_path):
+    registry = load_registry()
+    bad = json.loads(json.dumps(registry))
+    bad["confidence_bands"]["order"] = ["medium", "high", "low"]
+    p = tmp_path / "band-order-drift.json"
+    p.write_text(json.dumps(bad), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="confidence_bands.order"):
+        load_registry(p)
+
+
+def test_registry_validation_rejects_confidence_threshold_drift(tmp_path):
+    registry = load_registry()
+    bad = json.loads(json.dumps(registry))
+    bad["confidence_bands"]["thresholds"]["high_min_dimensions"] = 1
+    p = tmp_path / "band-threshold-drift.json"
+    p.write_text(json.dumps(bad), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="high_min_dimensions"):
         load_registry(p)
 
 

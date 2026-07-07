@@ -44,6 +44,11 @@ export function renderReconciliationRegistry(registry) {
   const rejectedTuple = renderStringTuple(registry.bench_display_buckets.rejected);
   const doneTuple = renderStringTuple(registry.bench_display_buckets.done);
   const knownTuple = renderStringTuple(registry.bench_display_buckets.known_statuses);
+  const confidenceBandTuple = renderStringTuple(registry.confidence_bands.order);
+  const confidenceThresholdEntries = renderObjectEntries(
+    registry.confidence_bands.thresholds,
+    (value) => JSON.stringify(value),
+  );
   const keySourceEntries = renderObjectEntries(
     registry.key_sources,
     (spec) => `{
@@ -83,6 +88,14 @@ ${doneTuple}
 export const BENCH_KNOWN_STATUSES = [
 ${knownTuple}
 ] as const;
+
+export const CONFIDENCE_BAND_ORDER = [
+${confidenceBandTuple}
+] as const;
+
+export const CONFIDENCE_BAND_THRESHOLDS = {
+${confidenceThresholdEntries}
+} as const;
 
 export const KEY_SOURCE_SPECS = {
 ${keySourceEntries}

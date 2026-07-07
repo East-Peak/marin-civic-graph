@@ -3,6 +3,12 @@
 The verdict feed is an audit-chain input, not an incidental JSONL convention:
 duplicates are explicit, schema validation is fail-loud, and researcher free text
 passes through the same redaction scanner as published reconciliation artifacts.
+
+v1.1 keeps ``schema_version == "verdict-feed-v1"`` and adds optional validated
+``dimensions`` and structured ``evidence`` fields for the derived
+identity-confidence projection. Legacy raw research rows map
+``registry_match_dims`` to ``dimensions`` and ``evidence[]`` to a no-free-text
+shape; raw ``evidence[].fact`` is never copied into the verdict feed.
 """
 from __future__ import annotations
 
@@ -17,8 +23,21 @@ SCHEMA_VERSION = "verdict-feed-v1"
 VERDICTS = frozenset({"same", "different", "unsure"})
 VERIFICATION_FIELDS = frozenset({"verify_ok", "refuted", "ks_valid", "key_sighted"})
 PROVENANCE_FIELDS = frozenset({"model", "run", "tranche"})
+EVIDENCE_FIELDS = frozenset({"source", "supports", "url_or_record_id"})
+EVIDENCE_SOURCES = frozenset(
+    {"org_site", "county_open_data", "propublica", "sos_registry", "news", "other"}
+)
+EVIDENCE_SUPPORTS = frozenset({"same", "context"})
 OPTIONAL_FIELDS = frozenset(
-    {"verification", "reason", "source_proposed_key", "gid", "auto_candidate"}
+    {
+        "verification",
+        "reason",
+        "source_proposed_key",
+        "gid",
+        "auto_candidate",
+        "dimensions",
+        "evidence",
+    }
 )
 REQUIRED_FIELDS = frozenset(
     {"schema_version", "vendor_id", "proposed_key", "verdict", "confidence", "provenance"}
@@ -73,6 +92,46 @@ def _validate_verification(value: Any) -> None:
             raise ValueError(f"verdict feed verification.{field} must be a boolean")
 
 
+def _validate_dimensions(value: Any) -> None:
+    if not isinstance(value, list):
+        raise ValueError("verdict feed dimensions must be a list")
+    for i, item in enumerate(value):
+        if not isinstance(item, str) or not item:
+            raise ValueError(f"verdict feed dimensions[{i}] must be a non-empty string")
+
+
+def _validate_evidence(value: Any) -> None:
+    if not isinstance(value, list):
+        raise ValueError("verdict feed evidence must be a list")
+    for i, item in enumerate(value):
+        if not isinstance(item, dict):
+            raise ValueError(f"verdict feed evidence[{i}] must be an object")
+        missing = EVIDENCE_FIELDS - set(item)
+        unknown = set(item) - EVIDENCE_FIELDS
+        if missing or unknown:
+            raise ValueError(
+                f"verdict feed evidence[{i}] missing {sorted(missing)} "
+                f"unknown {sorted(unknown)}"
+            )
+        source = item["source"]
+        if source not in EVIDENCE_SOURCES:
+            raise ValueError(
+                f"verdict feed evidence[{i}].source must be one of "
+                f"{sorted(EVIDENCE_SOURCES)}"
+            )
+        supports = item["supports"]
+        if supports not in EVIDENCE_SUPPORTS:
+            raise ValueError(
+                f"verdict feed evidence[{i}].supports must be one of "
+                f"{sorted(EVIDENCE_SUPPORTS)}"
+            )
+        url_or_record_id = item["url_or_record_id"]
+        if not isinstance(url_or_record_id, str) or not url_or_record_id:
+            raise ValueError(
+                f"verdict feed evidence[{i}].url_or_record_id must be a non-empty string"
+            )
+
+
 def validate_row(row: dict[str, Any]) -> dict[str, Any]:
     """Validate one v1 verdict row and return it unchanged."""
     if not isinstance(row, dict):
@@ -106,6 +165,10 @@ def validate_row(row: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("verdict feed source_proposed_key must be a string")
     if "auto_candidate" in row and not isinstance(row["auto_candidate"], bool):
         raise ValueError("verdict feed auto_candidate must be a boolean")
+    if "dimensions" in row:
+        _validate_dimensions(row["dimensions"])
+    if "evidence" in row:
+        _validate_evidence(row["evidence"])
 
     violations = scan_for_forbidden(row)
     if violations:
@@ -148,6 +211,83 @@ def _verification_from_legacy(row: dict[str, Any]) -> dict[str, bool]:
     return verification
 
 
+def _dimensions_from_legacy(row: dict[str, Any]) -> list[str] | None:
+    if "registry_match_dims" not in row:
+        return None
+    dimensions = row["registry_match_dims"]
+    _validate_dimensions(dimensions)
+    return list(dimensions)
+
+
+def _source_from_legacy_evidence(source: Any) -> str:
+    if not isinstance(source, str) or not source:
+        return "other"
+    normalized = source.strip().lower()
+    if normalized in {"org_site", "organization_site", "official_org_site"}:
+        return "org_site"
+    if normalized in {"gov_open_data", "county_open_data"}:
+        return "county_open_data"
+    if normalized in {"local_read_model", "ca_sos", "sos_registry"}:
+        return "sos_registry"
+    if normalized.startswith("propublica"):
+        return "propublica"
+    if normalized in {"news", "local_news", "newspaper", "media"}:
+        return "news"
+    return "other"
+
+
+def _supports_from_legacy_evidence(supports: Any) -> str:
+    if not isinstance(supports, str) or not supports:
+        raise ValueError("legacy verdict feed evidence.supports must be a non-empty string")
+    normalized = supports.strip().lower()
+    if normalized in EVIDENCE_SUPPORTS:
+        return normalized
+    context_markers = (
+        "caveat",
+        "conflict",
+        "nonqualifying",
+        "person_shape",
+        "status_context",
+        "status_caveat",
+        "payment_purpose_not_specific",
+        "thin_public_footprint",
+    )
+    if any(marker in normalized for marker in context_markers):
+        return "context"
+    return "same"
+
+
+def _evidence_url_from_legacy(item: dict[str, Any]) -> str:
+    value = item.get("url_or_record_id", item.get("url", item.get("record_id")))
+    if not isinstance(value, str) or not value:
+        raise ValueError(
+            "legacy verdict feed evidence entries must carry a non-empty url, "
+            "record_id, or url_or_record_id"
+        )
+    return value
+
+
+def _evidence_from_legacy(row: dict[str, Any]) -> list[dict[str, str]] | None:
+    if "evidence" not in row:
+        return None
+    evidence = row["evidence"]
+    if not isinstance(evidence, list):
+        raise ValueError("legacy verdict feed evidence must be a list")
+    out: list[dict[str, str]] = []
+    for i, item in enumerate(evidence):
+        if not isinstance(item, dict):
+            raise ValueError(f"legacy verdict feed evidence[{i}] must be an object")
+        out.append(
+            {
+                "source": _source_from_legacy_evidence(item.get("source")),
+                "supports": _supports_from_legacy_evidence(item.get("supports")),
+                "url_or_record_id": _evidence_url_from_legacy(item),
+            }
+        )
+    _validate_evidence(out)
+    return out
+
+
 def upgrade_legacy(
     row: dict[str, Any],
     *,
@@ -173,6 +313,12 @@ def upgrade_legacy(
     verification = _verification_from_legacy(row)
     if verification:
         out["verification"] = verification
+    dimensions = _dimensions_from_legacy(row)
+    if dimensions is not None:
+        out["dimensions"] = dimensions
+    evidence = _evidence_from_legacy(row)
+    if evidence is not None:
+        out["evidence"] = evidence
     for field in ("reason", "gid", "auto_candidate"):
         if field in row and row[field] is not None:
             out[field] = row[field]
@@ -200,7 +346,7 @@ def _canonical(row: dict[str, Any]) -> str:
 
 def _conflict_fields(first: dict[str, Any], second: dict[str, Any]) -> list[str]:
     fields = []
-    for field in ("confidence", "verdict", "verification"):
+    for field in ("confidence", "verdict", "verification", "dimensions", "evidence"):
         if first.get(field) != second.get(field):
             fields.append(field)
     return sorted(fields)

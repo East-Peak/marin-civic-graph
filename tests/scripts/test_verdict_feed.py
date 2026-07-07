@@ -39,6 +39,26 @@ def v1_row(**over):
     return row
 
 
+def v11_row(**over):
+    row = v1_row(
+        dimensions=["normalized_name_exact", "county_hhs_context"],
+        evidence=[
+            {
+                "source": "county_open_data",
+                "supports": "same",
+                "url_or_record_id": "https://data.marincounty.gov/resource/rp6f-b7dy.json",
+            },
+            {
+                "source": "org_site",
+                "supports": "context",
+                "url_or_record_id": "https://example.org/about",
+            },
+        ],
+    )
+    row.update(over)
+    return row
+
+
 def _write_jsonl(path: Path, rows: list[dict]) -> None:
     path.write_text("".join(json.dumps(row, sort_keys=True) + "\n" for row in rows), encoding="utf-8")
 
@@ -52,6 +72,66 @@ def test_validate_v1_row_round_trips_through_loader(tmp_path):
     loaded = vf.load_feed([p])
 
     assert loaded == [row]
+
+
+def test_validate_v11_optional_dimensions_and_evidence_round_trip(tmp_path):
+    row = v11_row()
+    assert vf.validate_row(row) == row
+    p = tmp_path / "feed.jsonl"
+    _write_jsonl(p, [row])
+
+    loaded = vf.load_feed([p])
+
+    assert loaded == [row]
+
+
+@pytest.mark.parametrize(
+    "over,match",
+    [
+        ({"dimensions": "normalized_name_exact"}, "dimensions"),
+        ({"dimensions": ["normalized_name_exact", ""]}, "dimensions"),
+        ({"evidence": {"source": "org_site"}}, "evidence"),
+        (
+            {
+                "evidence": [
+                    {
+                        "source": "blog",
+                        "supports": "same",
+                        "url_or_record_id": "https://example.org",
+                    }
+                ]
+            },
+            "source",
+        ),
+        (
+            {
+                "evidence": [
+                    {
+                        "source": "org_site",
+                        "supports": "identity",
+                        "url_or_record_id": "https://example.org",
+                    }
+                ]
+            },
+            "supports",
+        ),
+        (
+            {
+                "evidence": [
+                    {
+                        "source": "org_site",
+                        "supports": "same",
+                        "url": "https://example.org",
+                    }
+                ]
+            },
+            "unknown",
+        ),
+    ],
+)
+def test_validate_v11_optional_fields_fail_loud_on_bad_shapes(over, match):
+    with pytest.raises(ValueError, match=match):
+        vf.validate_row(v11_row(**over))
 
 
 def test_validate_rejects_prefixed_key_bad_confidence_and_forbidden_text():
@@ -119,6 +199,20 @@ def test_summarize_conflicts_surfaces_duplicate_conflict_fields():
             "second": v1_row(verdict="different", confidence=0.88),
         }
     ]
+
+
+def test_duplicate_conflicts_include_optional_v11_fields(tmp_path):
+    p = tmp_path / "feed.jsonl"
+    first = v11_row(dimensions=["normalized_name_exact"])
+    second = v11_row(dimensions=["normalized_name_exact", "county_hhs_context"])
+    _write_jsonl(p, [first, second])
+
+    with pytest.raises(vf.VerdictFeedConflictError) as exc:
+        vf.load_feed([p])
+    assert '"dimensions": ["normalized_name_exact"]' in str(exc.value)
+
+    conflicts = vf.summarize_conflicts([first, second])
+    assert conflicts[0]["fields"] == ["dimensions"]
 
 
 def test_upgrade_legacy_pilot_verdict_shape_to_v1():
@@ -216,3 +310,80 @@ def test_upgrade_legacy_tranche_shape_to_v1():
         "gid": 1487,
         "auto_candidate": False,
     }
+
+
+def test_upgrade_legacy_maps_tranche_dimensions_and_structured_evidence_without_facts():
+    legacy = {
+        "gid": 1669,
+        "vendor_id": "org-marincontract-recipient-soil-and-shadow",
+        "literal_key": "201603310399",
+        "proposed_key": "org-casos-201603310399",
+        "verdict": "same",
+        "confidence": 0.84,
+        "researcher": "codex-2026-07-04",
+        "registry_match_dims": [
+            "normalized_name_exact",
+            "active_ca_llc",
+            "county_hhs_context",
+        ],
+        "evidence": [
+            {
+                "fact": "Marin delegated-contract rows list Soil And Shadow LLC.",
+                "source": "gov_open_data",
+                "supports": "vendor_footprint",
+                "url": "https://data.marincounty.gov/resource/rp6f-b7dy.json",
+            },
+            {
+                "fact": "Soil and Shadow's own site presents leadership training services.",
+                "source": "org_site",
+                "supports": "service_footprint",
+                "url": "https://soilandshadow.com/",
+            },
+            {
+                "fact": "The local read model anchor is an active California LLC.",
+                "source": "local_read_model",
+                "supports": "status_context",
+                "url": "data/review/research-adjudicated/scale-checkpoint/second-wave-overlaid-read-model.jsonl",
+            },
+            {
+                "fact": "Conference listing only.",
+                "source": "event_directory",
+                "supports": "service_footprint",
+                "url": "https://example.org/event",
+            },
+        ],
+        "key_sighted": False,
+        "verify_ok": False,
+        "ks_valid": False,
+    }
+
+    upgraded = vf.upgrade_legacy(legacy)
+
+    assert upgraded["dimensions"] == [
+        "normalized_name_exact",
+        "active_ca_llc",
+        "county_hhs_context",
+    ]
+    assert upgraded["evidence"] == [
+        {
+            "source": "county_open_data",
+            "supports": "same",
+            "url_or_record_id": "https://data.marincounty.gov/resource/rp6f-b7dy.json",
+        },
+        {
+            "source": "org_site",
+            "supports": "same",
+            "url_or_record_id": "https://soilandshadow.com/",
+        },
+        {
+            "source": "sos_registry",
+            "supports": "context",
+            "url_or_record_id": "data/review/research-adjudicated/scale-checkpoint/second-wave-overlaid-read-model.jsonl",
+        },
+        {
+            "source": "other",
+            "supports": "same",
+            "url_or_record_id": "https://example.org/event",
+        },
+    ]
+    assert "Soil And Shadow" not in json.dumps(upgraded, sort_keys=True)
