@@ -14,6 +14,8 @@
 import { runQuery } from "@/lib/neo4j";
 import { jsonError } from "@/lib/api-errors";
 import { findDataQuery, applyFilterDefaults } from "@/lib/server/data-queries";
+import { runDataQuerySql } from "@/lib/server/data-queries-sql";
+import { servingBackend } from "@/lib/server/substrate";
 
 const MAX_SLUG_LENGTH = 100;
 const MAX_FILTER_VALUE_LENGTH = 500;
@@ -79,9 +81,19 @@ export async function GET(
     }
   }
 
-  const { query, params: cypherParams } = def.cypher(filters);
-
   try {
+    if (servingBackend() === "substrate") {
+      const result = runDataQuerySql(def, filters);
+      return Response.json({
+        slug,
+        built_at: new Date().toISOString(),
+        columns: def.columns,
+        rows: result.rows,
+        ...(result.as_of_date ? { as_of_date: result.as_of_date } : {}),
+      });
+    }
+
+    const { query, params: cypherParams } = def.cypher(filters);
     const records = await runQuery(query, cypherParams);
     const rows = records.map((r) => {
       const row: Record<string, unknown> = {};
