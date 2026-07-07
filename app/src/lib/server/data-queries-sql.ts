@@ -9,7 +9,6 @@ type SqlParam = string | number | null;
 type SqlBuilt = {
   sql: string;
   params: Record<string, SqlParam>;
-  includeAsOfDate?: boolean;
 };
 
 type SqlBuilder = (filters: Record<string, string>) => SqlBuilt;
@@ -58,11 +57,8 @@ function missingProp(alias: string, key: string): string {
   return `(json_type(${alias}.props, '$.${key}') IS NULL OR json_type(${alias}.props, '$.${key}') = 'null' OR ${prop(alias, key)} = '')`;
 }
 
-function readAsOfDate(): string | undefined {
-  const row = getSubstrateDb()
-    .prepare("SELECT value FROM meta WHERE key = 'as_of_date'")
-    .get() as { value: string } | undefined;
-  return row?.value;
+function nullableDescOrder(column: string): string {
+  return `(${column} IS NULL) DESC, ${column} DESC, id ASC`;
 }
 
 function projectRows(rows: Record<string, unknown>[], columns: ColumnDef[]) {
@@ -95,7 +91,7 @@ const sanRafaelDecisions: SqlBuilder = (filters) => {
         AND ${prop("d", "decided_at")} >= @from_date
         AND ${prop("d", "decided_at")} <= @to_date
         AND (@institution_id IS NULL OR ${prop("d", "institution_id")} = @institution_id)
-      ORDER BY decided_at DESC, id ASC
+      ORDER BY ${nullableDescOrder("decided_at")}
       LIMIT 500
     `,
     params: {
@@ -134,7 +130,7 @@ const moneyFlowsByYear: SqlBuilder = (filters) => {
         AND coalesce(${amountExpr("m")}, 0) >= @min_amount
         AND (@year_prefix IS NULL OR ${prop("m", "flow_date")} LIKE @year_prefix || '%')
         AND (@flow_type IS NULL OR ${prop("m", "flow_type")} = @flow_type)
-      ORDER BY flow_date DESC, id ASC
+      ORDER BY ${nullableDescOrder("flow_date")}
       LIMIT 500
     `,
     params: {
@@ -172,7 +168,7 @@ const filingsByFiler: SqlBuilder = (filters) => {
           OR filer.id = @filer_id
           OR ${prop("f", "filed_by")} = @filer_id
         )
-      ORDER BY signed_at DESC, id ASC
+      ORDER BY ${nullableDescOrder("signed_at")}
       LIMIT 500
     `,
     params: {
@@ -188,14 +184,11 @@ const currentOfficeholders: SqlBuilder = (filters) => {
   const jurisdictionId = nonEmpty(filters.jurisdiction_id);
   return {
     sql: `
-      WITH current(as_of_date) AS (
-        SELECT value FROM meta WHERE key = 'as_of_date'
-      ),
-      services AS (
+      WITH services AS (
         SELECT DISTINCT
           p.id AS person_id,
           svc.id AS service_id
-        FROM current, nodes p
+        FROM nodes p
         JOIN edges held_edge
           ON held_edge.rel = 'HELD_BY'
          AND (held_edge.source = p.id OR held_edge.target = p.id)
@@ -212,7 +205,9 @@ const currentOfficeholders: SqlBuilder = (filters) => {
           ON seat.id = seat_edge.target
          AND seat.type = 'Seat'
         WHERE p.type = 'Person'
-          AND (${prop("svc", "ended_at")} IS NULL OR ${prop("svc", "ended_at")} = '' OR ${prop("svc", "ended_at")} >= current.as_of_date)
+          -- Spec section 6 parity wart: live Cypher compares ended_at strings to date(),
+          -- which evaluates null, so only missing/blank ended_at rows are current.
+          AND (${prop("svc", "ended_at")} IS NULL OR ${prop("svc", "ended_at")} = '')
           AND (
             @jurisdiction_id IS NULL
             OR ${prop("seat", "jurisdiction_id")} = @jurisdiction_id
@@ -256,7 +251,6 @@ const currentOfficeholders: SqlBuilder = (filters) => {
       LIMIT 500
     `,
     params: { jurisdiction_id: jurisdictionId },
-    includeAsOfDate: true,
   };
 };
 
@@ -293,7 +287,7 @@ const agreementsForProject: SqlBuilder = (filters) => {
             WHERE project_edge.source = a.id OR project_edge.target = a.id
           )
         )
-      ORDER BY effective_date DESC, id ASC
+      ORDER BY ${nullableDescOrder("effective_date")}
       LIMIT 500
     `,
     params: { project_id: projectId },
@@ -323,7 +317,10 @@ const legalProceedings: SqlBuilder = (filters) => {
         JOIN nodes linked
           ON linked.id = edge.target
          AND linked.type IN ('Program', 'Project')
-        UNION
+        -- UNION ALL, not UNION: live Cypher (c)-[]-(link) has no DISTINCT and
+        -- emits one row per EDGE INSTANCE - reciprocal RELATES_TO_PROGRAM /
+        -- RELATES_TO_CASE pairs each contribute a row.
+        UNION ALL
         SELECT edge.target AS case_id, linked.id AS link_id
         FROM edges edge
         JOIN nodes linked
@@ -335,7 +332,7 @@ const legalProceedings: SqlBuilder = (filters) => {
         ON link.id = link_match.link_id
       WHERE pr.type = 'Proceeding'
         AND (@case_id IS NULL OR c.id = @case_id)
-      ORDER BY occurred_at DESC, id ASC
+      ORDER BY ${nullableDescOrder("occurred_at")}
       LIMIT 500
     `,
     params: { case_id: caseId },
@@ -360,7 +357,7 @@ const evidenceRecords: SqlBuilder = (filters) => {
         ON r.id = evidence_edge.target
        AND r.type = 'Record'
       WHERE target.id = @target_id
-      ORDER BY captured_at DESC, id ASC
+      ORDER BY ${nullableDescOrder("captured_at")}
       LIMIT 500
     `,
     params: { target_id: targetId },
@@ -539,8 +536,5 @@ export function runDataQuerySql(
   const result: DataQuerySqlResult = {
     rows: projectRows(rows, def.columns),
   };
-  if (built.includeAsOfDate) {
-    result.as_of_date = readAsOfDate();
-  }
   return result;
 }
