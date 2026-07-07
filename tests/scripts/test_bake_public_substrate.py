@@ -207,6 +207,60 @@ def _browse_fixture(tmp_path: Path) -> tuple[list[Path], list[Path], Path, Path,
     return [nodes_path], [edges_path], registry, sqlite_path, report_path
 
 
+def _search_fixture(tmp_path: Path) -> tuple[list[Path], list[Path], Path, Path, Path]:
+    nodes_path = _write_jsonl(
+        tmp_path / "graph-v2/nodes.jsonl",
+        [
+            {
+                "id": "person-kate-colin",
+                "node_type": "Person",
+                "labels": ["Person"],
+                "properties": {
+                    "name": "Kate Colin",
+                    "search_rank": 25,
+                    "search_key_fact": "Former San Rafael mayor",
+                    "search_last_activity": "2024-11-05",
+                    "jurisdiction_name": "San Rafael",
+                },
+            },
+            {
+                "id": "org-terms-only",
+                "node_type": "Organization",
+                "labels": ["Organization"],
+                "properties": {
+                    "search_terms": "transit oversight climate",
+                    "jurisdiction_name": "Marin County",
+                },
+            },
+            {
+                "id": "record-colin-staff-report",
+                "node_type": "Record",
+                "labels": ["Record"],
+                "properties": {
+                    "name": "Colin staff report",
+                    "search_terms": "agenda packet",
+                    "captured_at": "2026-06-15T10:30:00Z",
+                },
+            },
+            {
+                "id": "decision-title-only",
+                "node_type": "Decision",
+                "labels": ["Decision"],
+                "properties": {
+                    "title": "Title-only browse label",
+                    "decided_at": "2026-07-01",
+                },
+            },
+        ],
+    )
+    edges_path = _write_jsonl(tmp_path / "graph-v2/edges.jsonl", [])
+    _set_mtime_date([nodes_path, edges_path], "2026-07-06")
+    registry = _write_registry(tmp_path / "registry/node-types.json")
+    sqlite_path = tmp_path / "public-substrate.sqlite"
+    report_path = tmp_path / "substrate-bake-report.json"
+    return [nodes_path], [edges_path], registry, sqlite_path, report_path
+
+
 def _live_export_fixture(tmp_path: Path) -> tuple[Path, Path, Path, Path, Path]:
     live_dir = tmp_path / "live-graph-export"
     attach_dir = tmp_path / "attach"
@@ -565,6 +619,146 @@ def test_browse_rows_label_lower_supports_case_insensitive_substring_search(
     assert "idx_browse_rows_label_lower" in indexes
 
 
+def test_search_fts_is_contentless_and_joins_back_to_nodes_by_rowid(
+    tmp_path: Path,
+) -> None:
+    node_sources, edge_sources, registry, sqlite_path, report_path = _search_fixture(
+        tmp_path
+    )
+
+    bake_substrate(node_sources, edge_sources, registry, sqlite_path, report_path)
+
+    with sqlite3.connect(sqlite_path) as conn:
+        ddl = conn.execute(
+            "SELECT sql FROM sqlite_master WHERE name = 'search_fts'"
+        ).fetchone()[0]
+        rows = {
+            row[0]: row[1:]
+            for row in conn.execute(
+                """
+                SELECT n.id, n.search_label, json_extract(n.props, '$.search_terms')
+                FROM search_fts
+                JOIN nodes n ON n.rowid = search_fts.rowid
+                ORDER BY n.id
+                """
+            )
+        }
+        raw_fts_rows = conn.execute(
+            """
+            SELECT search_fts.rowid, search_fts.search_label, search_fts.search_terms
+            FROM search_fts
+            ORDER BY search_fts.rowid
+            """
+        ).fetchall()
+        matches = conn.execute(
+            """
+            SELECT n.id, n.type, n.search_label, json_extract(n.props, '$.search_rank')
+            FROM search_fts
+            JOIN nodes n ON n.rowid = search_fts.rowid
+            WHERE search_fts MATCH ?
+            ORDER BY bm25(search_fts), n.id
+            """,
+            ("colin",),
+        ).fetchall()
+        search_term_match = conn.execute(
+            """
+            SELECT n.id
+            FROM search_fts
+            JOIN nodes n ON n.rowid = search_fts.rowid
+            WHERE search_fts MATCH ?
+            ORDER BY n.id
+            """,
+            ("climate",),
+        ).fetchall()
+        fallback_label_match = conn.execute(
+            """
+            SELECT n.id
+            FROM search_fts
+            JOIN nodes n ON n.rowid = search_fts.rowid
+            WHERE search_fts MATCH ?
+            ORDER BY n.id
+            """,
+            ("title",),
+        ).fetchall()
+        ranked = conn.execute(
+            """
+            SELECT n.id, bm25(search_fts)
+            FROM search_fts
+            JOIN nodes n ON n.rowid = search_fts.rowid
+            WHERE search_fts MATCH ?
+            ORDER BY bm25(search_fts), n.id
+            """,
+            ("colin",),
+        ).fetchall()
+
+    assert "content=''" in ddl
+    assert "tokenize='unicode61'" in ddl
+    assert rows == {
+        "org-terms-only": ("org-terms-only", "transit oversight climate"),
+        "decision-title-only": ("Title-only browse label", None),
+        "person-kate-colin": ("Kate Colin", None),
+        "record-colin-staff-report": ("Colin staff report", "agenda packet"),
+    }
+    assert {row[0] for row in raw_fts_rows} == {1, 2, 3, 4}
+    assert all(search_label is None for _, search_label, _ in raw_fts_rows)
+    assert all(search_terms is None for _, _, search_terms in raw_fts_rows)
+    assert ("person-kate-colin", "Person", "Kate Colin", 25) in matches
+    assert ("record-colin-staff-report", "Record", "Colin staff report", None) in matches
+    assert search_term_match == [("org-terms-only",)]
+    assert fallback_label_match == [("decision-title-only",)]
+    assert all(isinstance(score, float) for _, score in ranked)
+
+
+def test_search_meta_is_absent_and_envelope_fields_resolve_from_node_props(
+    tmp_path: Path,
+) -> None:
+    node_sources, edge_sources, registry, sqlite_path, report_path = _search_fixture(
+        tmp_path
+    )
+
+    bake_substrate(node_sources, edge_sources, registry, sqlite_path, report_path)
+
+    with sqlite3.connect(sqlite_path) as conn:
+        search_meta = conn.execute(
+            """
+            SELECT name
+            FROM sqlite_master
+            WHERE name = 'search_meta'
+            """
+        ).fetchall()
+        row = conn.execute(
+            """
+            SELECT
+                n.id,
+                n.type,
+                n.search_label,
+                json_extract(n.props, '$.search_rank'),
+                json_extract(n.props, '$.search_key_fact'),
+                json_extract(n.props, '$.search_last_activity'),
+                json_extract(n.props, '$.jurisdiction_name'),
+                json_extract(n.props, '$.captured_at')
+            FROM search_fts
+            JOIN nodes n ON n.rowid = search_fts.rowid
+            WHERE search_fts MATCH ?
+            ORDER BY bm25(search_fts), n.id
+            LIMIT 1
+            """,
+            ("colin",),
+        ).fetchone()
+
+    assert search_meta == []
+    assert row == (
+        "person-kate-colin",
+        "Person",
+        "Kate Colin",
+        25,
+        "Former San Rafael mayor",
+        "2024-11-05",
+        "San Rafael",
+        None,
+    )
+
+
 def test_meta_manifest_and_catalog_use_export_mtime_as_of_date(
     tmp_path: Path,
 ) -> None:
@@ -585,10 +779,10 @@ def test_meta_manifest_and_catalog_use_export_mtime_as_of_date(
     )
 
     assert meta["as_of_date"] == "2026-07-06"
-    assert meta["bake_version"] == "S1b-1"
+    assert meta["bake_version"] == "S2a-2"
     assert status_manifest == {
         "as_of_date": "2026-07-06",
-        "bake_version": "S1b-1",
+        "bake_version": "S2a-2",
         "edge_count": 0,
         "jurisdiction_count": 1,
         "node_count": 5,

@@ -33,7 +33,7 @@ DEFAULT_REGISTRY_PATH = Path("registry/node-types.json")
 DEFAULT_SQLITE_PATH = Path("data/exports/public-substrate.sqlite")
 DEFAULT_REPORT_PATH = Path("data/exports/substrate-bake-report.json")
 SQLITE_BUDGET_BYTES = 250 * 1024 * 1024
-BAKE_VERSION = "S1b-1"
+BAKE_VERSION = "S2a-2"
 JURISDICTION_PLACE_TYPES = frozenset(("city", "town", "county"))
 
 NODE_GATE_TYPES = ("Membership", "EconomicInterest")
@@ -331,6 +331,25 @@ def _json_prop_value_or_none(props: dict, key: str | None) -> str | None:
     if key is None or key not in props:
         return None
     return _json_dumps_stable(props[key])
+
+
+def _text_prop_or_none(props: dict, key: str) -> str | None:
+    value = props.get(key)
+    if value is None or value == "":
+        return None
+    if isinstance(value, list | tuple):
+        parts = [str(item) for item in value if item is not None and item != ""]
+        return " ".join(parts) if parts else None
+    return str(value)
+
+
+def _search_fts_row(node: BakedNode, rowid: int) -> tuple[int, str, str]:
+    search_terms = _text_prop_or_none(node.props, "search_terms")
+    return (
+        rowid,
+        node.search_label,
+        search_terms or "",
+    )
 
 
 def _search_label(row: dict, props: dict) -> str:
@@ -672,6 +691,13 @@ def _write_sqlite(
                     col2_key TEXT,
                     col2_value TEXT
                 );
+                CREATE VIRTUAL TABLE search_fts
+                    USING fts5(
+                        search_label,
+                        search_terms,
+                        content='',
+                        tokenize='unicode61'
+                    );
                 CREATE TABLE meta (
                     key TEXT PRIMARY KEY,
                     value TEXT NOT NULL
@@ -723,6 +749,7 @@ def _write_sqlite(
                     ON browse_rows(label_lower);
                 """
             )
+            node_items = sorted(nodes.values(), key=lambda item: item.id)
             conn.executemany(
                 "INSERT INTO nodes(id, type, search_label, props) VALUES (?, ?, ?, ?)",
                 [
@@ -732,9 +759,10 @@ def _write_sqlite(
                         node.search_label,
                         _json_dumps_stable(node.props),
                     )
-                    for node in sorted(nodes.values(), key=lambda item: item.id)
+                    for node in node_items
                 ],
             )
+            node_rowids = dict(conn.execute("SELECT id, rowid FROM nodes"))
             conn.executemany(
                 """
                 INSERT INTO browse_rows(
@@ -760,9 +788,19 @@ def _write_sqlite(
                         col2_key,
                         _json_prop_value_or_none(node.props, col2_key),
                     )
-                    for node in sorted(nodes.values(), key=lambda item: item.id)
+                    for node in node_items
                     for browse_label in [_browse_search_label(node)]
                     for col1_key, col2_key in [_browse_column_keys_for_type(node.type)]
+                ],
+            )
+            conn.executemany(
+                """
+                INSERT INTO search_fts(rowid, search_label, search_terms)
+                VALUES (?, ?, ?)
+                """,
+                [
+                    _search_fts_row(node, node_rowids[node.id])
+                    for node in node_items
                 ],
             )
             conn.executemany(
