@@ -346,6 +346,26 @@ def _live_publishing_assertion(
     return matches[0] if matches else None
 
 
+def _live_publishing_assertions_by_pair(
+    ledger_assertions: Iterable[dict[str, Any]],
+) -> dict[tuple[str, str], dict[str, Any]]:
+    by_pair: dict[tuple[str, str], dict[str, Any]] = {}
+    for assertion in ledger_assertions:
+        if assertion.get("superseded_by") is not None or not is_publishing(assertion):
+            continue
+        subject_ref = assertion.get("subject_ref")
+        target_ref = assertion.get("target_ref")
+        if not isinstance(subject_ref, str) or not subject_ref:
+            raise ValueError("publishing assertion subject_ref must be a non-empty string")
+        if not isinstance(target_ref, str) or not target_ref:
+            raise ValueError("publishing assertion target_ref must be a non-empty string")
+        pair = (subject_ref, target_ref)
+        if pair in by_pair:
+            raise ValueError(f"multiple live publishing assertions for pair {subject_ref!r}|{target_ref!r}")
+        by_pair[pair] = assertion
+    return by_pair
+
+
 def _context_for(context_by_vendor: Mapping[str, Any], vendor_id: str) -> dict[str, Any]:
     entry = context_by_vendor.get(vendor_id, {})
     if not isinstance(entry, dict):
@@ -430,6 +450,161 @@ def build_confidence(
         }
         records.append(validate_record(record))
     return records
+
+
+def mask_against_ledger(
+    records: Iterable[dict[str, Any]],
+    ledger_assertions: Iterable[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Read-side mask for confidence records superseded by live assertions."""
+    live_by_pair = _live_publishing_assertions_by_pair(ledger_assertions)
+    masked: list[dict[str, Any]] = []
+    for raw in records:
+        record = validate_record(dict(raw))
+        assertion = live_by_pair.get((record["subject_ref"], record["target_ref"]))
+        if assertion is None:
+            masked.append(record)
+            continue
+        updated = dict(record)
+        updated["status"] = "superseded_by_assertion"
+        updated["superseded_by"] = assertion["id"]
+        masked.append(validate_record(updated))
+    return masked
+
+
+def _record_pair(record: Mapping[str, Any]) -> tuple[str, str]:
+    return (str(record["subject_ref"]), str(record["target_ref"]))
+
+
+def _feed_pair(row: Mapping[str, Any]) -> tuple[str, str]:
+    return (str(row["vendor_id"]), str(row["proposed_key"]))
+
+
+def _pair_for_feed_row(
+    row: Mapping[str, Any],
+    case_by_feed_pair: Mapping[tuple[str, str], dict[str, Any]],
+) -> tuple[str, str]:
+    feed_pair = _feed_pair(row)
+    case = case_by_feed_pair.get(feed_pair)
+    if case is None:
+        raise ValueError(f"no read-model case for verdict feed pair {feed_pair!r}")
+    return (anchor_id_of(case), vendor_id_of(case))
+
+
+def _is_refuted(row: Mapping[str, Any]) -> bool:
+    verification = row.get("verification")
+    return isinstance(verification, dict) and verification.get("refuted") is True
+
+
+def _current_snapshot_hashes(read_model_cases: Iterable[Any]) -> dict[tuple[str, str], str]:
+    current: dict[tuple[str, str], str] = {}
+    for item in read_model_cases:
+        case = _case_row(item)
+        if case.get("case_type") != "identity_key_attach":
+            continue
+        subject_ref = anchor_id_of(case)
+        target_ref = vendor_id_of(case)
+        pair = (subject_ref, target_ref)
+        snap = source_snapshot_hash(_snapshot_ref(anchor_ref_of(case)), _snapshot_ref(vendor_ref_of(case)))
+        if pair in current and current[pair] != snap:
+            raise ValueError(f"conflicting current snapshots for pair {subject_ref!r}|{target_ref!r}")
+        current[pair] = snap
+    return current
+
+
+def _retire_contradicted(record: dict[str, Any]) -> dict[str, Any]:
+    retired = dict(record)
+    retired["status"] = "retired_contradicted"
+    retired["superseded_by"] = None
+    return validate_record(retired)
+
+
+def _mark_stale(record: dict[str, Any]) -> dict[str, Any]:
+    stale = dict(record)
+    stale["status"] = "stale"
+    stale["superseded_by"] = None
+    return validate_record(stale)
+
+
+def apply_run(
+    existing_records: Iterable[dict[str, Any]],
+    new_feed_rows: Iterable[dict[str, Any]],
+    read_model_cases: Iterable[Any],
+    ledger_assertions: Iterable[dict[str, Any]],
+    context_by_vendor: Mapping[str, Any],
+    *,
+    computed_at: str,
+) -> list[dict[str, Any]]:
+    """Apply one verdict run to an existing confidence projection.
+
+    ``same`` rows rebuild the pair's confidence record, ``different`` and
+    verifier-refuted rows retire an active record, and ``unsure`` rows leave the
+    existing pair untouched. Live ledger assertions are then masked in the same
+    way read consumers mask them.
+    """
+    cases = [_case_row(case) for case in read_model_cases]
+    case_by_feed_pair, _candidate_counts = _index_cases(cases)
+    by_pair: dict[tuple[str, str], dict[str, Any]] = {}
+    for raw in existing_records:
+        record = validate_record(dict(raw))
+        pair = _record_pair(record)
+        if pair in by_pair:
+            raise ValueError(f"duplicate existing confidence pair {pair!r}")
+        by_pair[pair] = record
+
+    ledger = list(ledger_assertions)
+    context = dict(context_by_vendor or {})
+    for raw in new_feed_rows:
+        row = validate_feed_row(dict(raw))
+        pair = _pair_for_feed_row(row, case_by_feed_pair)
+        if row["verdict"] == "unsure" and not _is_refuted(row):
+            continue
+        if row["verdict"] == "different" or _is_refuted(row):
+            existing = by_pair.get(pair)
+            if existing is not None and existing["status"] == "active":
+                by_pair[pair] = _retire_contradicted(existing)
+            continue
+        built = build_confidence([row], cases, ledger, context, computed_at=computed_at)
+        if built:
+            by_pair[pair] = built[0]
+
+    current_hashes = _current_snapshot_hashes(cases)
+    for pair, record in list(by_pair.items()):
+        if record["status"] != "active":
+            continue
+        current_hash = current_hashes.get(pair)
+        if current_hash is not None and current_hash != record["source_snapshot_hash"]:
+            by_pair[pair] = _mark_stale(record)
+
+    masked = mask_against_ledger(by_pair.values(), ledger)
+    return sorted(masked, key=lambda record: record["id"])
+
+
+def rollup_totals(
+    records: Iterable[dict[str, Any]],
+    money_by_vendor: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Classify vendor money once: verified, high-confidence, or unattributed."""
+    status_by_vendor: dict[str, str] = {}
+    for raw in records:
+        record = validate_record(dict(raw))
+        vendor = record["target_ref"]
+        if record["status"] == "superseded_by_assertion":
+            status_by_vendor[vendor] = "verified"
+        elif (
+            record["status"] == "active"
+            and record["band"] == "high"
+            and status_by_vendor.get(vendor) != "verified"
+        ):
+            status_by_vendor[vendor] = "high_confidence"
+
+    totals: dict[str, Any] = {"verified": 0, "high_confidence": 0, "unattributed": 0}
+    for vendor, amount in money_by_vendor.items():
+        if not isinstance(vendor, str) or not vendor:
+            raise ValueError("money_by_vendor keys must be non-empty vendor refs")
+        bucket = status_by_vendor.get(vendor, "unattributed")
+        totals[bucket] += amount
+    return totals
 
 
 def write_confidence(records: Iterable[dict[str, Any]], path: str | Path) -> None:

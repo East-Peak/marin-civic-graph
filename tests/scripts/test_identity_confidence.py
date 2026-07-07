@@ -187,6 +187,166 @@ def test_build_masks_live_publishing_assertion_for_pair():
     assert record["superseded_by"] == assertion["id"]
 
 
+def test_mask_against_ledger_is_read_side_and_idempotent():
+    record = ic.build_confidence([_feed()], [_case()], [], {}, computed_at=COMPUTED_AT)[0]
+    queued = make_assertion(
+        subject_ref="org-casos-0123456",
+        target_ref="org-marincontract-recipient-alpha",
+        status="queued",
+        basis="operator_review",
+        subject={"id": "org-casos-0123456", "display_label": "Alpha Services LLC", "sos_id": "0123456"},
+        target={"id": "org-marincontract-recipient-alpha", "display_label": "County Vendor Alpha"},
+        reviewer="stuart@eastpeak.cc",
+        decided_at="2026-07-06T10:00:00Z",
+        policy_version="v1",
+    )
+    approved = {**queued, "status": "approved"}
+
+    assert ic.mask_against_ledger([record], [queued]) == [record]
+
+    masked_once = ic.mask_against_ledger([record], [approved])
+    masked_twice = ic.mask_against_ledger(masked_once, [approved])
+
+    assert masked_once == masked_twice
+    assert masked_once[0]["status"] == "superseded_by_assertion"
+    assert masked_once[0]["superseded_by"] == approved["id"]
+    assert record["status"] == "active"
+    assert record["superseded_by"] is None
+
+
+def test_apply_run_lifecycle_matrix_same_different_same_creates_fresh_active_record():
+    case = _case()
+    first = ic.apply_run(
+        [],
+        [_feed(provenance={"model": "research-fleet", "run": "run-a"})],
+        [case],
+        [],
+        {},
+        computed_at=COMPUTED_AT,
+    )
+
+    retired = ic.apply_run(
+        first,
+        [_feed(verdict="different", confidence=0.91, provenance={"model": "research-fleet", "run": "run-b"})],
+        [case],
+        [],
+        {},
+        computed_at="2026-07-06T13:00:00Z",
+    )
+
+    refreshed = ic.apply_run(
+        retired,
+        [_feed(confidence=0.88, provenance={"model": "research-fleet", "run": "run-c"}, gid=1499)],
+        [case],
+        [],
+        {},
+        computed_at="2026-07-06T14:00:00Z",
+    )
+
+    assert first[0]["status"] == "active"
+    assert retired[0]["id"] == first[0]["id"]
+    assert retired[0]["status"] == "retired_contradicted"
+    assert retired[0]["source_row"] == {"run": "run-a", "gid": 1487}
+    assert refreshed[0]["id"] == first[0]["id"]
+    assert refreshed[0]["status"] == "active"
+    assert refreshed[0]["signals"]["confidence"] == 0.88
+    assert refreshed[0]["source_row"] == {"run": "run-c", "gid": 1499}
+
+
+def test_apply_run_refuted_retires_and_unsure_leaves_existing_active_record_untouched():
+    case = _case()
+    existing = ic.build_confidence([_feed()], [case], [], {}, computed_at=COMPUTED_AT)
+
+    unchanged = ic.apply_run(
+        existing,
+        [_feed(verdict="unsure", confidence=0.50, provenance={"model": "research-fleet", "run": "run-b"})],
+        [case],
+        [],
+        {},
+        computed_at="2026-07-06T13:00:00Z",
+    )
+    assert unchanged == existing
+
+    retired = ic.apply_run(
+        existing,
+        [
+            _feed(
+                verdict="same",
+                confidence=0.86,
+                provenance={"model": "research-fleet", "run": "run-c"},
+                reason="verifier refuted this proposed continuity",
+            )
+            | {"verification": {"refuted": True}},
+        ],
+        [case],
+        [],
+        {},
+        computed_at="2026-07-06T14:00:00Z",
+    )
+
+    assert retired[0]["status"] == "retired_contradicted"
+    assert retired[0]["signals"] == existing[0]["signals"]
+
+
+def test_apply_run_marks_active_record_stale_when_current_ref_fingerprint_drifts():
+    case = _case()
+    existing = ic.build_confidence([_feed()], [case], [], {}, computed_at=COMPUTED_AT)
+    drifted_case = json.loads(json.dumps(case))
+    right_ref = drifted_case["candidate_joins"][0]["right_ref"]
+    right_ref["display_label"] = "Alpha Services LLC Updated"
+    right_ref["public_fields"]["display_label"] = "Alpha Services LLC Updated"
+
+    stale = ic.apply_run(
+        existing,
+        [],
+        [drifted_case],
+        [],
+        {},
+        computed_at="2026-07-06T13:00:00Z",
+    )
+
+    assert stale[0]["id"] == existing[0]["id"]
+    assert stale[0]["status"] == "stale"
+    assert stale[0]["band"] == existing[0]["band"]
+    assert stale[0]["source_snapshot_hash"] == existing[0]["source_snapshot_hash"]
+
+
+def test_approve_during_rebuild_masks_then_durably_stamps_without_double_counting():
+    case = _case()
+    records = ic.build_confidence([_feed()], [case], [], {}, computed_at=COMPUTED_AT)
+    assertion = make_assertion(
+        subject_ref="org-casos-0123456",
+        target_ref="org-marincontract-recipient-alpha",
+        status="approved",
+        basis="operator_approved_sos_id",
+        subject={"id": "org-casos-0123456", "display_label": "Alpha Services LLC", "sos_id": "0123456"},
+        target={"id": "org-marincontract-recipient-alpha", "display_label": "County Vendor Alpha"},
+        reviewer="stuart@eastpeak.cc",
+        decided_at="2026-07-06T12:30:00Z",
+        policy_version="v1",
+    )
+
+    masked = ic.mask_against_ledger(records, [assertion])
+    durable = ic.apply_run(
+        records,
+        [],
+        [case],
+        [assertion],
+        {},
+        computed_at="2026-07-06T13:00:00Z",
+    )
+    totals = ic.rollup_totals(masked + records, {"org-marincontract-recipient-alpha": 100})
+
+    assert masked[0]["status"] == "superseded_by_assertion"
+    assert durable[0]["status"] == "superseded_by_assertion"
+    assert durable[0]["superseded_by"] == assertion["id"]
+    assert totals == {
+        "verified": 100,
+        "high_confidence": 0,
+        "unattributed": 0,
+    }
+
+
 @pytest.mark.parametrize(
     ("bad_row", "match"),
     [
