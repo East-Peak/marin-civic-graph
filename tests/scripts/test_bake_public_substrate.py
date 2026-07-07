@@ -646,7 +646,11 @@ def test_data_query_support_indexes_are_created(tmp_path: Path) -> None:
     assert "idx_nodes_agreement_data_query" in index_sql
     assert "idx_nodes_proceeding_data_query" in index_sql
     assert "idx_nodes_record_data_query" in index_sql
-    assert "idx_edges_rel_source_target" in index_sql
+    # Deliberately absent (§6 size budget): serving paths never enter edges
+    # rel-first, and browse/search read browse_rows/FTS — not a nodes(type,
+    # search_label) index.
+    assert "idx_edges_rel_source_target" not in index_sql
+    assert "idx_nodes_type_search_label_id" not in index_sql
 
 
 def test_report_is_redaction_scan_clean(tmp_path: Path) -> None:

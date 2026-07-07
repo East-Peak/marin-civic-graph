@@ -680,10 +680,12 @@ def _write_sqlite(
                     ON edges(source, rel, target);
                 CREATE INDEX idx_edges_target_rel_source
                     ON edges(target, rel, source);
-                CREATE INDEX idx_edges_rel_source_target
-                    ON edges(rel, source, target);
-                CREATE INDEX idx_nodes_type_search_label_id
-                    ON nodes(type, search_label, id);
+                -- Deliberately NO rel-first edge index and NO nodes(type,
+                -- search_label) index: every serving path enters edges by
+                -- source/target (graph engine, edges-among-selected), browse
+                -- reads browse_rows, and search reads FTS (S2). Rel-first
+                -- scans are bake-time only. Dropping both saves ~29MB (§6
+                -- size budget).
                 CREATE INDEX idx_nodes_decision_data_query
                     ON nodes(
                         type,
