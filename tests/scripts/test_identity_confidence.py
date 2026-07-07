@@ -161,6 +161,21 @@ def test_pair_stable_id_and_snapshot_are_idempotent_across_provenance_changes():
     assert first["source_row"] == {"run": "run-a", "gid": 1487}
 
 
+def test_build_dedupes_identical_read_model_rows_for_candidate_count():
+    case = _case()
+    duplicate = json.loads(json.dumps(case))
+
+    record = ic.build_confidence(
+        [_feed()],
+        [case, duplicate],
+        [],
+        {},
+        computed_at=COMPUTED_AT,
+    )[0]
+
+    assert record["band"] == "high"
+
+
 def test_build_masks_live_publishing_assertion_for_pair():
     case = _case()
     assertion = make_assertion(

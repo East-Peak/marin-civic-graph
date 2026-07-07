@@ -9,13 +9,14 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import sys
 import tempfile
 from pathlib import Path
 from string import hexdigits
 from typing import Any, Iterable, Mapping
 
 from enrich_casos_keys import scan_for_forbidden
-from identity_ledger import is_publishing, source_snapshot_hash
+from identity_ledger import is_publishing, read_assertions, source_snapshot_hash
 from reconciliation_refs import anchor_id_of, anchor_ref_of, literal_key_of, vendor_id_of, vendor_ref_of
 from reconciliation_registry import CONFIDENCE_BANDS
 from verdict_feed import (
@@ -213,10 +214,13 @@ def band_of(
     candidate_count: int,
     needs_careful_review: bool,
     key_collision: bool,
+    collision_info_available: bool = True,
 ) -> str | None:
     """Derive the v1 confidence band for one verdict row."""
     if isinstance(candidate_count, bool) or not isinstance(candidate_count, int) or candidate_count < 1:
         raise ValueError("candidate_count must be a positive integer")
+    if not isinstance(collision_info_available, bool):
+        raise ValueError("collision_info_available must be a boolean")
     verdict = row.get("verdict")
     if verdict != "same":
         if verdict in {"unsure", "different"}:
@@ -238,6 +242,7 @@ def band_of(
         ("high_dimensions", len(dimensions) >= high_min_dimensions),
         ("single_candidate", candidate_count == 1),
         ("not_careful", needs_careful_review is not True),
+        ("collision_context", collision_info_available is True),
     )
     if key_collision:
         return "low"
@@ -272,20 +277,28 @@ def _index_cases(
     read_model_cases: Iterable[Any],
 ) -> tuple[dict[tuple[str, str], dict[str, Any]], dict[str, int]]:
     by_feed_pair: dict[tuple[str, str], dict[str, Any]] = {}
-    candidate_counts: dict[str, int] = {}
+    candidate_pairs_by_vendor: dict[str, set[tuple[str, str]]] = {}
     rows = [_case_row(case) for case in read_model_cases]
     for case in rows:
         if case.get("case_type") != "identity_key_attach":
             continue
         vendor_id = vendor_id_of(case)
-        candidate_counts[vendor_id] = candidate_counts.get(vendor_id, 0) + 1
+        candidate_pairs_by_vendor.setdefault(vendor_id, set()).add(
+            (anchor_id_of(case), literal_key_of(case))
+        )
     for case in rows:
         if case.get("case_type") != "identity_key_attach":
             continue
         key = (vendor_id_of(case), literal_key_of(case))
         if key in by_feed_pair:
-            raise ValueError(f"duplicate read-model case for vendor/key {key!r}")
+            if json.dumps(by_feed_pair[key], sort_keys=True) == json.dumps(case, sort_keys=True):
+                continue
+            raise ValueError(f"conflicting read-model cases for vendor/key {key!r}")
         by_feed_pair[key] = case
+    candidate_counts = {
+        vendor_id: len(candidate_pairs)
+        for vendor_id, candidate_pairs in candidate_pairs_by_vendor.items()
+    }
     return by_feed_pair, candidate_counts
 
 
@@ -410,11 +423,13 @@ def build_confidence(
         )
         needs_careful_review = bool(case.get("review_flags", {}).get("needs_careful_review", False))
         key_collision = bool(vendor_context.get("key_collision", False))
+        collision_info_available = bool(vendor_context.get("collision_info_available", True))
         band = band_of(
             row,
             candidate_count=candidate_count,
             needs_careful_review=needs_careful_review,
             key_collision=key_collision,
+            collision_info_available=collision_info_available,
         )
         if band is None:
             continue
@@ -638,3 +653,106 @@ def write_confidence(records: Iterable[dict[str, Any]], path: str | Path) -> Non
         if os.path.exists(tmp):
             os.unlink(tmp)
         raise
+
+
+def _read_jsonl(path: str | Path) -> list[dict[str, Any]]:
+    return [
+        json.loads(line)
+        for line in Path(path).read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+
+def _load_context(paths: Iterable[str | Path]) -> dict[str, dict[str, Any]]:
+    context: dict[str, dict[str, Any]] = {}
+    for path in paths:
+        raw = json.loads(Path(path).read_text(encoding="utf-8"))
+        if not isinstance(raw, dict):
+            raise ValueError(f"identity confidence context must be an object: {path}")
+        for vendor_id, entry in raw.items():
+            if not isinstance(vendor_id, str) or not vendor_id:
+                raise ValueError(f"identity confidence context vendor id must be non-empty: {path}")
+            if not isinstance(entry, dict):
+                raise ValueError(f"identity confidence context[{vendor_id!r}] must be an object")
+            merged = dict(entry)
+            merged.setdefault("collision_info_available", True)
+            context[vendor_id] = merged
+    return context
+
+
+def _load_backfill_feed(path: str | Path) -> list[dict[str, Any]]:
+    from verdict_feed import upgrade_legacy
+
+    by_pair: dict[tuple[str, str], dict[str, Any]] = {}
+    for raw in _read_jsonl(path):
+        row = upgrade_legacy(raw)
+        by_pair[(row["vendor_id"], row["proposed_key"])] = row
+    return list(by_pair.values())
+
+
+def _no_collision_info_context(read_model_cases: Iterable[Any]) -> dict[str, dict[str, Any]]:
+    context: dict[str, dict[str, Any]] = {}
+    for item in read_model_cases:
+        case = _case_row(item)
+        if case.get("case_type") != "identity_key_attach":
+            continue
+        context[vendor_id_of(case)] = {"collision_info_available": False}
+    return context
+
+
+def _summary(records: Iterable[dict[str, Any]], *, out: str | Path, context_source: str) -> dict[str, Any]:
+    bands = {band: 0 for band in sorted(BANDS)}
+    statuses = {status: 0 for status in sorted(STATUSES)}
+    rows = list(records)
+    for record in rows:
+        bands[record["band"]] += 1
+        statuses[record["status"]] += 1
+    return {
+        "out": str(out),
+        "records": len(rows),
+        "bands": bands,
+        "statuses": statuses,
+        "masked_by_assertion": statuses["superseded_by_assertion"],
+        "context_source": context_source,
+    }
+
+
+def main(argv: list[str] | None = None) -> int:
+    """CLI: rebuild the operator-local identity confidence projection."""
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Build derived identity confidence JSONL.")
+    parser.add_argument("--verdicts", action="append", required=True, help="verdict feed JSONL")
+    parser.add_argument("--read-model", required=True, help="reconciliation read-model JSONL")
+    parser.add_argument("--ledger", required=True, help="identity assertion ledger JSONL")
+    parser.add_argument("--out", required=True, help="output confidence JSONL")
+    parser.add_argument("--context", action="append", default=[], help="optional vendor context JSON")
+    parser.add_argument("--computed-at", required=True)
+    args = parser.parse_args(argv)
+
+    read_model_cases = _read_jsonl(args.read_model)
+    ledger_assertions = read_assertions(Path(args.ledger))
+    if args.context:
+        context = _load_context(args.context)
+        context_source = "explicit-context"
+    else:
+        context = _no_collision_info_context(read_model_cases)
+        context_source = "no-collision-info"
+
+    records: list[dict[str, Any]] = []
+    for path in args.verdicts:
+        records = apply_run(
+            records,
+            _load_backfill_feed(path),
+            read_model_cases,
+            ledger_assertions,
+            context,
+            computed_at=args.computed_at,
+        )
+    write_confidence(records, args.out)
+    print(json.dumps(_summary(records, out=args.out, context_source=context_source), sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":  # pragma: no cover
+    raise SystemExit(main(sys.argv[1:]))

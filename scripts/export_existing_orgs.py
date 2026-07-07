@@ -36,6 +36,8 @@ from identity_key_registry import _KEY_BEARING_BASES  # noqa: E402  (generated v
 register_sos_id_normalizer()
 register_committee_id_normalizer()
 
+CANONICAL_ASSERTIONS_PATH = Path("data/identity/assertions.jsonl")
+
 ORGS_QUERY = (
     "MATCH (n:Organization) "
     "RETURN n.id AS id, "
@@ -237,7 +239,23 @@ def write_enriched_orgs(
     return len(refs)
 
 
-def export_enriched_orgs(out_path: Path, assertions_path: Path) -> int:
+def _canonical_assertions_path() -> Path:
+    return Path(__file__).resolve().parent.parent / CANONICAL_ASSERTIONS_PATH
+
+
+def _resolve_canonical_assertions_path(assertions_path: Path | None) -> Path:
+    canonical = _canonical_assertions_path()
+    if assertions_path is None:
+        return canonical
+    if Path(assertions_path).resolve() != canonical.resolve():
+        raise ValueError(
+            "export_existing_orgs --enriched only reads the canonical assertion ledger "
+            f"{CANONICAL_ASSERTIONS_PATH}; got {assertions_path}"
+        )
+    return canonical
+
+
+def export_enriched_orgs(out_path: Path, assertions_path: Path | None = None) -> int:
     """OPERATOR-GATED enriched export: read the ledger, run the read-only enriched
     query against the live DB, and write the surfaced keys. NEVER run by the goal
     loop (it needs NEO4J_* creds + a live graph); tested offline via
@@ -249,7 +267,7 @@ def export_enriched_orgs(out_path: Path, assertions_path: Path) -> int:
     uri = os.environ["NEO4J_URI"]
     auth = (os.environ["NEO4J_USER"], os.environ["NEO4J_PASSWORD"])
     database = os.environ.get("NEO4J_DATABASE", "neo4j")
-    assertions = read_assertions(Path(assertions_path))
+    assertions = read_assertions(_resolve_canonical_assertions_path(assertions_path))
 
     driver = GraphDatabase.driver(uri, auth=auth)
     try:
@@ -313,12 +331,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--assertions",
         type=Path,
-        help="Path to the identity-assertion ledger JSONL (required with --enriched).",
+        help="Canonical identity assertion ledger JSONL; only data/identity/assertions.jsonl is accepted.",
     )
     args = parser.parse_args(argv)
     if args.enriched:
-        if not args.assertions:
-            parser.error("--enriched requires --assertions <ledger.jsonl>")
         n = export_enriched_orgs(args.out, args.assertions)
         print(f"exported {n} enriched Organization refs → {args.out}")
     else:

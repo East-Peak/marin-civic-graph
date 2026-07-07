@@ -9,8 +9,15 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SRC = path.resolve(__dirname, "..", "..", "data", "projected", "graph-v1", "signature-subgraphs");
 const DEST = path.resolve(__dirname, "..", "public", "subgraphs");
+const PUBLIC = path.resolve(__dirname, "..", "public");
+const FORBIDDEN_PUBLIC_ARTIFACTS = [
+  path.join(PUBLIC, "confidence.jsonl"),
+  path.join(PUBLIC, "identity", "confidence.jsonl"),
+  path.join(PUBLIC, "reconciliation-overlay.json"),
+];
 
 async function main() {
+  await Promise.all(FORBIDDEN_PUBLIC_ARTIFACTS.map((artifact) => rm(artifact, { force: true })));
   await rm(DEST, { recursive: true, force: true });
   await mkdir(DEST, { recursive: true });
   await cp(SRC, DEST, { recursive: true });

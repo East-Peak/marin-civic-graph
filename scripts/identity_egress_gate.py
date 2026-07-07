@@ -94,7 +94,13 @@ def join_citation(assertion: dict[str, Any]) -> str | None:
     """The id to cite in a public join, or None when the assertion is
     non-publishing (the gate that keeps queued/rejected/superseded off the
     public graph)."""
-    return assertion["id"] if is_publishing(assertion) else None
+    assertion_id = assertion.get("id")
+    if not isinstance(assertion_id, str) or not assertion_id.startswith("assertion-"):
+        raise ValueError(
+            "join_citation refuses non-assertion identity records; "
+            f"expected id to start with 'assertion-', got {assertion_id!r}"
+        )
+    return assertion_id if is_publishing(assertion) else None
 
 
 # Default policy version stamped on assertions this milestone writes.
