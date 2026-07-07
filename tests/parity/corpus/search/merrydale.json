@@ -44,16 +44,6 @@
         "type": "Project"
       },
       {
-        "id": "decision-2026-02-17-350-merrydale-project-services-authorization",
-        "jurisdiction": null,
-        "key_fact": "350 Merrydale project services resolution",
-        "last_activity": "2026-02-17",
-        "rank": 98,
-        "route": "/decision/2026-02-17-350-merrydale-project-services-authorization",
-        "search_label": "350 Merrydale project services resolution",
-        "type": "Decision"
-      },
-      {
         "id": "agreement-350-merrydale-newmark-brokerage",
         "jurisdiction": null,
         "key_fact": "350 Merrydale Newmark brokerage services agreement",
@@ -82,6 +72,16 @@
         "route": "/agreement/350-merrydale-purchase-and-sale",
         "search_label": "350 Merrydale purchase and sale agreement",
         "type": "Agreement"
+      },
+      {
+        "id": "decision-2026-02-17-350-merrydale-project-services-authorization",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale project services resolution",
+        "last_activity": "2026-02-17",
+        "rank": 98,
+        "route": "/decision/2026-02-17-350-merrydale-project-services-authorization",
+        "search_label": "350 Merrydale project services resolution",
+        "type": "Decision"
       },
       {
         "id": "amendment-350-merrydale-lca-design-services-2026-02-17",
@@ -114,6 +114,16 @@
         "type": "Agreement"
       },
       {
+        "id": "agenda-item-2025-12-01-san-rafael-city-council-4b",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2025-12-01-san-rafael-city-council-4b",
+        "search_label": "350 Merrydale Ordinance Adoption",
+        "type": "AgendaItem"
+      },
+      {
         "id": "decision-2025-11-17-350-merrydale-county-grant-approval",
         "jurisdiction": null,
         "key_fact": "350 Merrydale county grant and affordable housing agreement resolution",
@@ -122,6 +132,126 @@
         "route": "/decision/2025-11-17-350-merrydale-county-grant-approval",
         "search_label": "350 Merrydale county grant and affordable housing agreement resolution",
         "type": "Decision"
+      },
+      {
+        "id": "agenda-item-2022-04-18-san-rafael-city-council-7b",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2022-04-18-san-rafael-city-council-7b",
+        "search_label": "Merrydale Road Multi-Use Path Connection Alternatives",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2023-06-05-san-rafael-city-council-5b",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2023-06-05-san-rafael-city-council-5b",
+        "search_label": "Housing Element Zoning Maps - 380 Merrydale Road",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2026-01-20-san-rafael-city-council-2f",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2026-01-20-san-rafael-city-council-2f",
+        "search_label": "South Merrydale Road \u2013 Civic Center Connector Pathway Project",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "moneyflow-2025-11-17-350-merrydale-brokerage-services",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/2025-11-17-350-merrydale-brokerage-services",
+        "search_label": "moneyflow-2025-11-17-350-merrydale-brokerage-services",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-2025-11-17-350-merrydale-county-grant",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/2025-11-17-350-merrydale-county-grant",
+        "search_label": "moneyflow-2025-11-17-350-merrydale-county-grant",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-2025-11-17-350-merrydale-property-acquisition",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/2025-11-17-350-merrydale-property-acquisition",
+        "search_label": "moneyflow-2025-11-17-350-merrydale-property-acquisition",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-2026-02-17-350-merrydale-swinerton-services",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/2026-02-17-350-merrydale-swinerton-services",
+        "search_label": "moneyflow-2026-02-17-350-merrydale-swinerton-services",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-2026-02-17-350-merrydale-lca-design-amendment",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/2026-02-17-350-merrydale-lca-design-amendment",
+        "search_label": "moneyflow-2026-02-17-350-merrydale-lca-design-amendment",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "agenda-item-2020-02-03-san-rafael-city-council-7a",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2020-02-03-san-rafael-city-council-7a",
+        "search_label": "New 45-Unit Townhome Development - 350 Merrydale Road/3833 Redwood Hwy",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2020-02-18-san-rafael-city-council-5c",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2020-02-18-san-rafael-city-council-5c",
+        "search_label": "New 45-Unit Townhome Development - 350 Merrydale Road/3833 Redwood Hwy",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2025-04-07-san-rafael-city-council-special-4m",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2025-04-07-san-rafael-city-council-special-4m",
+        "search_label": "South Merrydale Road \u2013 Civic Center Connector (Rafael Meadows) Project Grant Funding",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2026-03-16-san-rafael-city-council-4a",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2026-03-16-san-rafael-city-council-4a",
+        "search_label": "Encampment Resolution Fund Round 3 Grant and 350 Merrydale Interim Shelter Project",
+        "type": "AgendaItem"
       }
     ]
   },

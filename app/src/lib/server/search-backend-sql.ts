@@ -6,6 +6,7 @@ import { urlSegmentForType } from "@/lib/type-display";
 import type { SearchResponse, SearchResult } from "@/lib/server/search-backend";
 
 const SEARCH_LIMIT = 50;
+const SEARCH_PREFILTER_LIMIT = 200;
 
 type StoredSearchNode = {
   id: string;
@@ -79,37 +80,58 @@ export async function runSearchSubstrate(
     entities = db
       .prepare(
         `
-          SELECT n.id, n.type, n.search_label, n.props
-          FROM search_fts
-          JOIN nodes n ON n.rowid = search_fts.rowid
-          WHERE search_fts MATCH ?
-            AND n.type != 'Record'
+          SELECT id, type, search_label, props
+          FROM (
+            SELECT
+              n.id,
+              n.type,
+              n.search_label,
+              n.props,
+              (-bm25(search_fts)) * 100
+                + coalesce(json_extract(n.props, '$.search_rank'), 0) AS combined_rank
+            FROM search_fts
+            JOIN nodes n ON n.rowid = search_fts.rowid
+            WHERE search_fts MATCH ?
+              AND n.type != 'Record'
+            ORDER BY bm25(search_fts) ASC
+            LIMIT ?
+          )
           ORDER BY
-            bm25(search_fts) ASC,
-            json_extract(n.props, '$.search_rank') DESC,
-            n.id ASC
+            combined_rank DESC,
+            id ASC
           LIMIT ?
         `,
       )
-      .all(ftsQuery, SEARCH_LIMIT) as StoredSearchNode[];
+      .all(ftsQuery, SEARCH_PREFILTER_LIMIT, SEARCH_LIMIT) as StoredSearchNode[];
 
     if (includeRecords) {
       records = db
         .prepare(
           `
-            SELECT n.id, n.type, n.search_label, n.props
-            FROM search_fts
-            JOIN nodes n ON n.rowid = search_fts.rowid
-            WHERE search_fts MATCH ?
-              AND n.type = 'Record'
+            SELECT id, type, search_label, props
+            FROM (
+              SELECT
+                n.id,
+                n.type,
+                n.search_label,
+                n.props,
+                (-bm25(search_fts)) * 100
+                  + coalesce(json_extract(n.props, '$.search_rank'), 0) AS combined_rank
+              FROM search_fts
+              JOIN nodes n ON n.rowid = search_fts.rowid
+              WHERE search_fts MATCH ?
+                AND n.type = 'Record'
+              ORDER BY bm25(search_fts) ASC
+              LIMIT ?
+            )
             ORDER BY
-              bm25(search_fts) ASC,
-              json_extract(n.props, '$.captured_at') DESC,
-              n.id ASC
+              combined_rank DESC,
+              json_extract(props, '$.captured_at') DESC,
+              id ASC
             LIMIT ?
           `,
         )
-        .all(ftsQuery, SEARCH_LIMIT) as StoredSearchNode[];
+        .all(ftsQuery, SEARCH_PREFILTER_LIMIT, SEARCH_LIMIT) as StoredSearchNode[];
     }
   }
 

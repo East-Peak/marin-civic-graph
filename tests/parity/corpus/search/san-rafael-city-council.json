@@ -14,26 +14,6 @@
         "type": "Organization"
       },
       {
-        "id": "org-city-of-san-rafael",
-        "jurisdiction": null,
-        "key_fact": "City of San Rafael \u00b7 city_government",
-        "last_activity": "2026-02-17",
-        "rank": 100,
-        "route": "/organization/city-of-san-rafael",
-        "search_label": "City of San Rafael",
-        "type": "Organization"
-      },
-      {
-        "id": "org-san-rafael-city-clerk",
-        "jurisdiction": null,
-        "key_fact": "San Rafael City Clerk \u00b7 filing_officer",
-        "last_activity": "2025-09-04",
-        "rank": 92,
-        "route": "/organization/san-rafael-city-clerk",
-        "search_label": "San Rafael City Clerk",
-        "type": "Organization"
-      },
-      {
         "id": "org-rachel-kertz-for-san-rafael-city-council",
         "jurisdiction": null,
         "key_fact": "Rachel Kertz for San Rafael City Council",
@@ -54,14 +34,24 @@
         "type": "Organization"
       },
       {
-        "id": "place-san-rafael",
+        "id": "org-city-of-san-rafael",
         "jurisdiction": null,
-        "key_fact": "San Rafael",
-        "last_activity": "2026-06-02",
+        "key_fact": "City of San Rafael \u00b7 city_government",
+        "last_activity": "2026-02-17",
         "rank": 100,
-        "route": "/place/san-rafael",
-        "search_label": "San Rafael",
-        "type": "Place"
+        "route": "/organization/city-of-san-rafael",
+        "search_label": "City of San Rafael",
+        "type": "Organization"
+      },
+      {
+        "id": "org-san-rafael-city-clerk",
+        "jurisdiction": null,
+        "key_fact": "San Rafael City Clerk \u00b7 filing_officer",
+        "last_activity": "2025-09-04",
+        "rank": 92,
+        "route": "/organization/san-rafael-city-clerk",
+        "search_label": "San Rafael City Clerk",
+        "type": "Organization"
       },
       {
         "id": "meeting-2026-03-16-san-rafael-city-council",
@@ -384,16 +374,6 @@
         "type": "Meeting"
       },
       {
-        "id": "meeting-2025-10-06-san-rafael-city-council-special",
-        "jurisdiction": null,
-        "key_fact": "San Rafael City Council meeting \u00b7 2025-10-06",
-        "last_activity": "2025-10-06",
-        "rank": 91,
-        "route": "/meeting/2025-10-06-san-rafael-city-council-special",
-        "search_label": "San Rafael City Council meeting \u2014 2025-10-06",
-        "type": "Meeting"
-      },
-      {
         "id": "meeting-2024-02-05-san-rafael-city-council",
         "jurisdiction": null,
         "key_fact": "San Rafael City Council meeting \u00b7 2024-02-05",
@@ -421,16 +401,6 @@
         "rank": 77,
         "route": "/meeting/2024-04-02-san-rafael-city-council",
         "search_label": "San Rafael City Council meeting \u2014 2024-04-02",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-2025-06-23-san-rafael-city-council-special",
-        "jurisdiction": null,
-        "key_fact": "San Rafael City Council meeting \u00b7 2025-06-23",
-        "last_activity": "2025-06-23",
-        "rank": 90,
-        "route": "/meeting/2025-06-23-san-rafael-city-council-special",
-        "search_label": "San Rafael City Council meeting \u2014 2025-06-23",
         "type": "Meeting"
       },
       {
@@ -474,16 +444,6 @@
         "type": "Meeting"
       },
       {
-        "id": "org-kertz-for-san-rafael-city-council-2024-committee-to-re-elect-rachel",
-        "jurisdiction": null,
-        "key_fact": "Kertz for San Rafael City Council 2024",
-        "last_activity": "2024-09-30",
-        "rank": 83,
-        "route": "/organization/kertz-for-san-rafael-city-council-2024-committee-to-re-elect-rachel",
-        "search_label": "Kertz for San Rafael City Council 2024",
-        "type": "Organization"
-      },
-      {
         "id": "meeting-2023-11-06-san-rafael-city-council",
         "jurisdiction": null,
         "key_fact": "San Rafael City Council meeting \u00b7 2023-11-06",
@@ -501,6 +461,46 @@
         "rank": 75,
         "route": "/meeting/2023-11-20-san-rafael-city-council",
         "search_label": "San Rafael City Council meeting \u2014 2023-11-20",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2023-12-18-san-rafael-city-council",
+        "jurisdiction": null,
+        "key_fact": "San Rafael City Council meeting \u00b7 2023-12-18",
+        "last_activity": "2023-12-18",
+        "rank": 75,
+        "route": "/meeting/2023-12-18-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2023-12-18",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2023-12-04-san-rafael-city-council",
+        "jurisdiction": null,
+        "key_fact": "San Rafael City Council meeting \u00b7 2023-12-04",
+        "last_activity": "2023-12-04",
+        "rank": 74,
+        "route": "/meeting/2023-12-04-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2023-12-04",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2023-07-17-san-rafael-city-council",
+        "jurisdiction": null,
+        "key_fact": "San Rafael City Council meeting \u00b7 2023-07-17",
+        "last_activity": "2023-07-17",
+        "rank": 73,
+        "route": "/meeting/2023-07-17-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2023-07-17",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2023-08-21-san-rafael-city-council",
+        "jurisdiction": null,
+        "key_fact": "San Rafael City Council meeting \u00b7 2023-08-21",
+        "last_activity": "2023-08-21",
+        "rank": 73,
+        "route": "/meeting/2023-08-21-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2023-08-21",
         "type": "Meeting"
       }
     ]

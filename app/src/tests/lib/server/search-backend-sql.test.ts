@@ -132,6 +132,54 @@ const bucketNodes: NodeFixture[] = [
   },
 ];
 
+const blendedRankNodes: NodeFixture[] = [
+  {
+    id: "agendaitem-housing-low-rank",
+    type: "AgendaItem",
+    searchLabel: "Housing",
+    props: {
+      search_rank: 1,
+      search_terms: "housing",
+    },
+  },
+  {
+    id: "person-housing-high-rank",
+    type: "Person",
+    searchLabel: "Housing discussion",
+    props: {
+      search_rank: 90,
+      search_terms: "housing",
+    },
+  },
+  {
+    id: "agendaitem-emergency-strong-match",
+    type: "AgendaItem",
+    searchLabel: "Emergency shelter emergency shelter emergency shelter",
+    props: {
+      search_rank: 0,
+      search_terms: "emergency shelter emergency shelter emergency shelter",
+    },
+  },
+  {
+    id: "person-emergency-high-rank",
+    type: "Person",
+    searchLabel: "Emergency shelter",
+    props: {
+      search_rank: 90,
+      search_terms: "",
+    },
+  },
+  ...Array.from({ length: 20 }, (_, index) => ({
+    id: `person-ranking-distractor-${String(index).padStart(2, "0")}`,
+    type: "Person",
+    searchLabel: "Unrelated civic process",
+    props: {
+      search_rank: 0,
+      search_terms: "county meeting budget",
+    },
+  })),
+];
+
 describe("runSearchSubstrate", () => {
   beforeEach(() => {
     vi.resetModules();
@@ -183,6 +231,30 @@ describe("runSearchSubstrate", () => {
       "record-shelter-new",
       "record-shelter-exact",
       "record-shelter-old",
+    ]);
+  });
+
+  it("lets search_rank lift high-rank entities above comparable procedural matches", async () => {
+    process.env.SUBSTRATE_DB_PATH = writeFixtureDb(blendedRankNodes);
+    const { runSearchSubstrate } = await import("@/lib/server/search-backend-sql");
+
+    const payload = await runSearchSubstrate("housing", false);
+
+    expect(payload.results.map((result) => result.id)).toEqual([
+      "person-housing-high-rank",
+      "agendaitem-housing-low-rank",
+    ]);
+  });
+
+  it("keeps full-text relevance dominant over search_rank for much stronger matches", async () => {
+    process.env.SUBSTRATE_DB_PATH = writeFixtureDb(blendedRankNodes);
+    const { runSearchSubstrate } = await import("@/lib/server/search-backend-sql");
+
+    const payload = await runSearchSubstrate("emergency shelter", false);
+
+    expect(payload.results.map((result) => result.id)).toEqual([
+      "agendaitem-emergency-strong-match",
+      "person-emergency-high-rank",
     ]);
   });
 
