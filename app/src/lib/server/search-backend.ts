@@ -10,6 +10,8 @@
 
 import "server-only";
 import { runQuery } from "@/lib/neo4j";
+import { runSearchSubstrate } from "@/lib/server/search-backend-sql";
+import { servingBackend } from "@/lib/server/substrate";
 import { urlSegmentForType, type NodeType } from "@/lib/type-display";
 import { canonicalType } from "@/lib/canonical-type";
 
@@ -76,6 +78,10 @@ export async function runSearch(
   q: string,
   includeRecords: boolean,
 ): Promise<SearchResponse> {
+  if (servingBackend() === "substrate") {
+    return runSearchSubstrate(q, includeRecords);
+  }
+
   const qLucene = escapeLucene(q);
   const cypher = `
     // Stage 0: exact id (bypasses include_records)
