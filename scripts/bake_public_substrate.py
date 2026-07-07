@@ -15,6 +15,7 @@ import sys
 import tempfile
 from collections import Counter, OrderedDict
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
 
@@ -32,6 +33,8 @@ DEFAULT_REGISTRY_PATH = Path("registry/node-types.json")
 DEFAULT_SQLITE_PATH = Path("data/exports/public-substrate.sqlite")
 DEFAULT_REPORT_PATH = Path("data/exports/substrate-bake-report.json")
 SQLITE_BUDGET_BYTES = 250 * 1024 * 1024
+BAKE_VERSION = "S1b-1"
+JURISDICTION_PLACE_TYPES = frozenset(("city", "town", "county"))
 
 NODE_GATE_TYPES = ("Membership", "EconomicInterest")
 EDGE_GATE_RELS = (
@@ -41,6 +44,172 @@ EDGE_GATE_RELS = (
     "MEMBER_OF_ORG",
     "DERIVED_FROM_RECORD",
 )
+
+# Python mirror of browse-queries.ts columnsForType + propKeyForFactLabel.
+# Keep this self-contained so the bake can run without the TS app toolchain.
+BROWSE_FACT_LABELS_BY_TYPE: dict[str, tuple[str, ...]] = {
+    "Person": ("Name", "Current seat", "Jurisdiction", "Aliases"),
+    "Decision": ("Decided", "Institution", "Vote", "Status"),
+    "Project": ("Name", "Status", "Address", "Jurisdiction"),
+    "Program": ("Name", "Status", "Type", "Jurisdiction"),
+    "Case": ("Caption", "Docket", "Filed", "Closed", "Status"),
+    "Meeting": ("Title", "Date", "Institution", "Type"),
+    "Filing": ("Type", "Signed", "Period", "Filer"),
+    "Committee": ("Name", "FPPC ID", "Treasurer", "Candidate"),
+    "Organization": ("Name", "Subtype", "Jurisdiction", "Website"),
+    "MoneyFlow": ("Amount", "Date", "Type", "Schedule"),
+    "Seat": ("Title", "Institution", "Jurisdiction"),
+    "SeatService": ("Seat", "Person", "Start", "End"),
+    "Election": ("Title", "Date", "Type", "Jurisdiction"),
+    "Candidacy": ("Candidate", "Seat", "Election", "Outcome"),
+    "AgendaItem": ("Heading", "Meeting", "Date", "Item"),
+    "Proceeding": ("Title", "Date", "Case", "Type"),
+    "Agreement": ("Title", "Type", "Effective", "Parties"),
+    "Amendment": ("Title", "Parent", "Effective"),
+    "Record": ("Record type", "Captured", "Artifact", "Public URL"),
+    "Place": ("Name", "Type", "Parent"),
+    "Issue": ("Name", "Description"),
+    "Membership": ("Person", "Organization", "Role", "Period", "Source"),
+    "EconomicInterest": (
+        "Interest type",
+        "Counterparty",
+        "Amount",
+        "Position",
+        "Schedule",
+    ),
+}
+
+BROWSE_PROP_KEY_MAP: dict[str, dict[str, str]] = {
+    "Person": {
+        "current seat": "current_seat_display",
+        "jurisdiction": "jurisdiction_name",
+        "aliases": "aliases",
+    },
+    "Decision": {
+        "decided": "decided_at",
+        "institution": "institution_name",
+        "vote": "vote_summary",
+        "status": "status",
+    },
+    "Project": {
+        "status": "status",
+        "address": "address",
+        "jurisdiction": "jurisdiction_name",
+    },
+    "Program": {
+        "status": "status",
+        "type": "program_type",
+        "jurisdiction": "jurisdiction_name",
+    },
+    "Case": {
+        "caption": "caption",
+        "docket": "docket_number",
+        "filed": "filed_at",
+        "closed": "closed_at",
+        "status": "status",
+    },
+    "Meeting": {
+        "title": "title",
+        "date": "meeting_date",
+        "institution": "institution_name",
+        "type": "meeting_type",
+    },
+    "Filing": {
+        "type": "filing_type",
+        "signed": "signed_at",
+        "period": "period_start",
+        "filer": "filed_by_name",
+    },
+    "Committee": {
+        "fppc id": "fppc_id",
+        "treasurer": "treasurer",
+        "candidate": "candidate_name",
+    },
+    "Organization": {
+        "subtype": "subtype",
+        "jurisdiction": "jurisdiction_name",
+        "website": "website",
+    },
+    "MoneyFlow": {
+        "amount": "amount",
+        "date": "flow_date",
+        "type": "flow_type",
+        "schedule": "source_schedule",
+    },
+    "Seat": {
+        "title": "title",
+        "institution": "institution_name",
+        "jurisdiction": "jurisdiction_name",
+    },
+    "SeatService": {
+        "seat": "seat_title",
+        "person": "person_name",
+        "start": "started_at",
+        "end": "ended_at",
+    },
+    "Election": {
+        "title": "name",
+        "date": "election_date",
+        "type": "election_type",
+        "jurisdiction": "jurisdiction_name",
+    },
+    "Candidacy": {
+        "candidate": "person_name",
+        "seat": "seat_title",
+        "election": "election_name",
+        "outcome": "outcome",
+    },
+    "AgendaItem": {
+        "heading": "heading",
+        "meeting": "meeting_title",
+        "date": "meeting_date",
+        "item": "item_number",
+    },
+    "Proceeding": {
+        "title": "title",
+        "date": "occurred_at",
+        "case": "case_caption",
+        "type": "proceeding_type",
+    },
+    "Agreement": {
+        "title": "title",
+        "type": "agreement_type",
+        "effective": "effective_date",
+        "parties": "parties",
+    },
+    "Amendment": {
+        "title": "title",
+        "parent": "parent_title",
+        "effective": "effective_date",
+    },
+    "Record": {
+        "record type": "record_type",
+        "captured": "captured_at",
+        "artifact": "preferred_display_artifact",
+        "public url": "preferred_public_url",
+    },
+    "Place": {
+        "type": "place_type",
+        "parent": "parent_name",
+    },
+    "Issue": {
+        "description": "description",
+    },
+    "Membership": {
+        "person": "person_name",
+        "organization": "organization_name",
+        "role": "role",
+        "period": "started_at",
+        "source": "source_basis",
+    },
+    "EconomicInterest": {
+        "interest type": "interest_type",
+        "counterparty": "counterparty_name_raw",
+        "amount": "amount_band",
+        "position": "position",
+        "schedule": "schedule",
+    },
+}
 
 
 @dataclass
@@ -118,6 +287,8 @@ def _clean_props(props: dict | None) -> dict:
 def _node_live_props(row: dict) -> dict:
     props = _clean_props(row.get("properties"))
     # load_neo4j_v2 sets these as top-level Neo4j properties outside row.props.
+    if "search_label" in row:
+        props["search_label"] = row.get("search_label", "")
     if "display_label" in row:
         props["display_label"] = row.get("display_label", "")
     if "promotion_state" in row:
@@ -131,6 +302,35 @@ def _edge_live_props(row: dict) -> dict:
 
 def _json_dumps_stable(value: object) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def _prop_key_for_fact_label(node_type: str, label: str) -> str:
+    key = label.lower()
+    return BROWSE_PROP_KEY_MAP.get(node_type, {}).get(key, "_".join(key.split()))
+
+
+def _browse_column_keys_for_type(node_type: str) -> tuple[str | None, str | None]:
+    extras = [
+        _prop_key_for_fact_label(node_type, label)
+        for label in BROWSE_FACT_LABELS_BY_TYPE.get(node_type, ())
+        if label not in {"ID", "Name"}
+    ]
+    padded = [*extras[:2], None, None]
+    return padded[0], padded[1]
+
+
+def _browse_search_label(node: BakedNode) -> str:
+    for key in ("search_label", "name"):
+        value = node.props.get(key)
+        if value:
+            return str(value)
+    return node.id
+
+
+def _json_prop_value_or_none(props: dict, key: str | None) -> str | None:
+    if key is None or key not in props:
+        return None
+    return _json_dumps_stable(props[key])
 
 
 def _search_label(row: dict, props: dict) -> str:
@@ -392,10 +592,49 @@ def _gate_counts(nodes: dict[str, BakedNode], edges: dict[tuple[str, str, str], 
     return counts
 
 
+def _source_as_of_date(paths: Iterable[Path]) -> str:
+    latest_mtime = max(path.stat().st_mtime for path in paths)
+    return datetime.fromtimestamp(latest_mtime, timezone.utc).date().isoformat()
+
+
+def _jurisdiction_count(nodes: dict[str, BakedNode]) -> int:
+    return sum(
+        1
+        for node in nodes.values()
+        if node.type == "Place"
+        and node.props.get("place_type") in JURISDICTION_PLACE_TYPES
+    )
+
+
+def _status_manifest(
+    nodes: dict[str, BakedNode],
+    edges: dict[tuple[str, str, str], BakedEdge],
+    as_of_date: str,
+) -> dict:
+    node_counts = Counter(node.type for node in nodes.values())
+    return {
+        "as_of_date": as_of_date,
+        "bake_version": BAKE_VERSION,
+        "node_count": len(nodes),
+        "edge_count": len(edges),
+        "jurisdiction_count": _jurisdiction_count(nodes),
+        "per_type_counts": dict(sorted(node_counts.items())),
+    }
+
+
+def _catalog_payload(status_manifest: dict) -> dict:
+    return {
+        **status_manifest,
+        "built_at": status_manifest["as_of_date"],
+        "counts": dict(status_manifest["per_type_counts"]),
+    }
+
+
 def _write_sqlite(
     sqlite_path: Path,
     nodes: dict[str, BakedNode],
     edges: dict[tuple[str, str, str], BakedEdge],
+    as_of_date: str,
 ) -> None:
     sqlite_path.parent.mkdir(parents=True, exist_ok=True)
     fd, temp_name = tempfile.mkstemp(
@@ -423,12 +662,63 @@ def _write_sqlite(
                     rel TEXT NOT NULL,
                     target TEXT NOT NULL
                 );
+                CREATE TABLE browse_rows (
+                    id TEXT PRIMARY KEY,
+                    type TEXT NOT NULL,
+                    search_label TEXT NOT NULL,
+                    label_lower TEXT NOT NULL,
+                    col1_key TEXT,
+                    col1_value TEXT,
+                    col2_key TEXT,
+                    col2_value TEXT
+                );
+                CREATE TABLE meta (
+                    key TEXT PRIMARY KEY,
+                    value TEXT NOT NULL
+                );
                 CREATE INDEX idx_edges_source_rel_target
                     ON edges(source, rel, target);
                 CREATE INDEX idx_edges_target_rel_source
                     ON edges(target, rel, source);
+                CREATE INDEX idx_edges_rel_source_target
+                    ON edges(rel, source, target);
                 CREATE INDEX idx_nodes_type_search_label_id
                     ON nodes(type, search_label, id);
+                CREATE INDEX idx_nodes_decision_data_query
+                    ON nodes(
+                        type,
+                        json_extract(props, '$.decided_at'),
+                        json_extract(props, '$.institution_id')
+                    )
+                    WHERE type = 'Decision';
+                CREATE INDEX idx_nodes_moneyflow_data_query
+                    ON nodes(
+                        type,
+                        json_extract(props, '$.flow_date'),
+                        json_extract(props, '$.amount'),
+                        json_extract(props, '$.flow_type')
+                    )
+                    WHERE type = 'MoneyFlow';
+                CREATE INDEX idx_nodes_filing_data_query
+                    ON nodes(
+                        type,
+                        json_extract(props, '$.signed_at'),
+                        json_extract(props, '$.filing_type')
+                    )
+                    WHERE type = 'Filing';
+                CREATE INDEX idx_nodes_agreement_data_query
+                    ON nodes(type, json_extract(props, '$.effective_date'))
+                    WHERE type = 'Agreement';
+                CREATE INDEX idx_nodes_proceeding_data_query
+                    ON nodes(type, json_extract(props, '$.occurred_at'))
+                    WHERE type = 'Proceeding';
+                CREATE INDEX idx_nodes_record_data_query
+                    ON nodes(type, json_extract(props, '$.captured_at'))
+                    WHERE type = 'Record';
+                CREATE INDEX idx_browse_rows_type_id
+                    ON browse_rows(type, id);
+                CREATE INDEX idx_browse_rows_label_lower
+                    ON browse_rows(label_lower);
                 """
             )
             conn.executemany(
@@ -444,6 +734,36 @@ def _write_sqlite(
                 ],
             )
             conn.executemany(
+                """
+                INSERT INTO browse_rows(
+                    id,
+                    type,
+                    search_label,
+                    label_lower,
+                    col1_key,
+                    col1_value,
+                    col2_key,
+                    col2_value
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                [
+                    (
+                        node.id,
+                        node.type,
+                        browse_label,
+                        browse_label.lower(),
+                        col1_key,
+                        _json_prop_value_or_none(node.props, col1_key),
+                        col2_key,
+                        _json_prop_value_or_none(node.props, col2_key),
+                    )
+                    for node in sorted(nodes.values(), key=lambda item: item.id)
+                    for browse_label in [_browse_search_label(node)]
+                    for col1_key, col2_key in [_browse_column_keys_for_type(node.type)]
+                ],
+            )
+            conn.executemany(
                 "INSERT INTO edges(source, rel, target) VALUES (?, ?, ?)",
                 [
                     (edge.source, edge.rel, edge.target)
@@ -451,6 +771,13 @@ def _write_sqlite(
                         edges.values(),
                         key=lambda item: (item.source, item.rel, item.target),
                     )
+                ],
+            )
+            conn.executemany(
+                "INSERT INTO meta(key, value) VALUES (?, ?)",
+                [
+                    ("as_of_date", as_of_date),
+                    ("bake_version", BAKE_VERSION),
                 ],
             )
             conn.execute("PRAGMA optimize")
@@ -542,8 +869,15 @@ def bake_substrate(
     _validate_node_types(node_rows, known_types)
     nodes, node_validation = _compose_nodes(node_rows)
     edges, edge_validation = _compose_edges(edge_rows)
+    as_of_date = _source_as_of_date([*node_paths, *edge_paths])
+    status_manifest = _status_manifest(nodes, edges, as_of_date)
 
-    _write_sqlite(sqlite_out, nodes, edges)
+    _write_sqlite(sqlite_out, nodes, edges, as_of_date)
+    _write_report(sqlite_out.parent / "status_manifest.json", status_manifest)
+    _write_report(
+        sqlite_out.parent / "catalog.json",
+        _catalog_payload(status_manifest),
+    )
     sqlite_size = sqlite_out.stat().st_size
     node_counts = Counter(node.type for node in nodes.values())
     edge_counts = Counter(edge.rel for edge in edges.values())
@@ -569,6 +903,15 @@ def bake_substrate(
         "totals": {
             "nodes": len(nodes),
             "edges": len(edges),
+        },
+        "metadata": {
+            "as_of_date": as_of_date,
+            "bake_version": BAKE_VERSION,
+            "jurisdiction_count": status_manifest["jurisdiction_count"],
+            "status_manifest": (
+                sqlite_out.parent / "status_manifest.json"
+            ).as_posix(),
+            "catalog": (sqlite_out.parent / "catalog.json").as_posix(),
         },
         "node_counts_by_type": dict(sorted(node_counts.items())),
         "edge_counts_by_rel": dict(sorted(edge_counts.items())),
