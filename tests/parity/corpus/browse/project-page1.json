@@ -1,0 +1,428 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "status",
+        "label": "Status"
+      },
+      {
+        "key": "address",
+        "label": "Address"
+      }
+    ],
+    "next_cursor": "permit-marin-IN_B10678_10678",
+    "rows": [
+      {
+        "address": "7 GENEVA WAY, SAN RAFAEL, CA 94903",
+        "id": "permit-marin-IN_B10577_10577",
+        "route": "/project/marin-IN_B10577_10577",
+        "search_label": "permit-marin-IN_B10577_10577",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "15 WASHINGTON PARK AVE, MILL VALLEY, CA 94941",
+        "id": "permit-marin-IN_B10579_10579",
+        "route": "/project/marin-IN_B10579_10579",
+        "search_label": "permit-marin-IN_B10579_10579",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "14 CARSON RD, WOODACRE, CA 94973",
+        "id": "permit-marin-IN_B10580_10580",
+        "route": "/project/marin-IN_B10580_10580",
+        "search_label": "permit-marin-IN_B10580_10580",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "14 PARK AVE, DILLON BEACH, CA 94929",
+        "id": "permit-marin-IN_B10583_10583",
+        "route": "/project/marin-IN_B10583_10583",
+        "search_label": "permit-marin-IN_B10583_10583",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "90 WESTWOOD DR, KENTFIELD, CA 94904",
+        "id": "permit-marin-IN_B10585_10585",
+        "route": "/project/marin-IN_B10585_10585",
+        "search_label": "permit-marin-IN_B10585_10585",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "63 ALTURA AVE, BOLINAS, CA 94924",
+        "id": "permit-marin-IN_B10588_10588",
+        "route": "/project/marin-IN_B10588_10588",
+        "search_label": "permit-marin-IN_B10588_10588",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "35 MADRONE AVE, WOODACRE, CA 94973",
+        "id": "permit-marin-IN_B10594_10594",
+        "route": "/project/marin-IN_B10594_10594",
+        "search_label": "permit-marin-IN_B10594_10594",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "4 LOS CERROS DR, GREENBRAE, CA 94904",
+        "id": "permit-marin-IN_B10595_10595",
+        "route": "/project/marin-IN_B10595_10595",
+        "search_label": "permit-marin-IN_B10595_10595",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "906 CENTRO WAY, MILL VALLEY, CA 94941",
+        "id": "permit-marin-IN_B10596_10596",
+        "route": "/project/marin-IN_B10596_10596",
+        "search_label": "permit-marin-IN_B10596_10596",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "1 EAGLE ROCK RD, MILL VALLEY, CA 94941",
+        "id": "permit-marin-IN_B10597_10597",
+        "route": "/project/marin-IN_B10597_10597",
+        "search_label": "permit-marin-IN_B10597_10597",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "447 ALAMEDA DEL PRADO, NOVATO, CA 94949",
+        "id": "permit-marin-IN_B10598_10598",
+        "route": "/project/marin-IN_B10598_10598",
+        "search_label": "permit-marin-IN_B10598_10598",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "311 SEYMOUR LN, MILL VALLEY, CA 94941",
+        "id": "permit-marin-IN_B10601_10601",
+        "route": "/project/marin-IN_B10601_10601",
+        "search_label": "permit-marin-IN_B10601_10601",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "11 CENTRAL DR, MILL VALLEY, CA 94941",
+        "id": "permit-marin-IN_B10603_10603",
+        "route": "/project/marin-IN_B10603_10603",
+        "search_label": "permit-marin-IN_B10603_10603",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "55 MARINE DR, SAN RAFAEL, CA 94901",
+        "id": "permit-marin-IN_B10605_10605",
+        "route": "/project/marin-IN_B10605_10605",
+        "search_label": "permit-marin-IN_B10605_10605",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "10 MILLAND DR, MILL VALLEY, CA 94941",
+        "id": "permit-marin-IN_B10607_10607",
+        "route": "/project/marin-IN_B10607_10607",
+        "search_label": "permit-marin-IN_B10607_10607",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "5 KATRINA LN, SAN ANSELMO, CA 94960",
+        "id": "permit-marin-IN_B10608_10608",
+        "route": "/project/marin-IN_B10608_10608",
+        "search_label": "permit-marin-IN_B10608_10608",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "821 FLAXBERRY LN, SAN RAFAEL, CA 94903",
+        "id": "permit-marin-IN_B10609_10609",
+        "route": "/project/marin-IN_B10609_10609",
+        "search_label": "permit-marin-IN_B10609_10609",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "115 MT LASSEN DR, SAN RAFAEL, CA 94903",
+        "id": "permit-marin-IN_B10610_10610",
+        "route": "/project/marin-IN_B10610_10610",
+        "search_label": "permit-marin-IN_B10610_10610",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "613 KERNBERRY DR, SAN RAFAEL, CA 94903",
+        "id": "permit-marin-IN_B10611_10611",
+        "route": "/project/marin-IN_B10611_10611",
+        "search_label": "permit-marin-IN_B10611_10611",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "1118 IDYLBERRY RD, SAN RAFAEL, CA 94903",
+        "id": "permit-marin-IN_B10612_10612",
+        "route": "/project/marin-IN_B10612_10612",
+        "search_label": "permit-marin-IN_B10612_10612",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "638 GALERITA WAY, SAN RAFAEL, CA 94903",
+        "id": "permit-marin-IN_B10613_10613",
+        "route": "/project/marin-IN_B10613_10613",
+        "search_label": "permit-marin-IN_B10613_10613",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "73 MARINA BLVD, SAN RAFAEL, CA 94901",
+        "id": "permit-marin-IN_B10614_10614",
+        "route": "/project/marin-IN_B10614_10614",
+        "search_label": "permit-marin-IN_B10614_10614",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "39 REED BLVD, MILL VALLEY, CA 94941",
+        "id": "permit-marin-IN_B10618_10618",
+        "route": "/project/marin-IN_B10618_10618",
+        "search_label": "permit-marin-IN_B10618_10618",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "20 OAK GROVE AVE, WOODACRE, CA 94973",
+        "id": "permit-marin-IN_B10620_10620",
+        "route": "/project/marin-IN_B10620_10620",
+        "search_label": "permit-marin-IN_B10620_10620",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "1500 BUTTERFIELD RD, SAN ANSELMO, CA 94960",
+        "id": "permit-marin-IN_B10621_10621",
+        "route": "/project/marin-IN_B10621_10621",
+        "search_label": "permit-marin-IN_B10621_10621",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "932 ALTURAS WAY, MILL VALLEY, CA 94941",
+        "id": "permit-marin-IN_B10622_10622",
+        "route": "/project/marin-IN_B10622_10622",
+        "search_label": "permit-marin-IN_B10622_10622",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "340 SCHOOL RD, NOVATO, CA 94945",
+        "id": "permit-marin-IN_B10625_10625",
+        "route": "/project/marin-IN_B10625_10625",
+        "search_label": "permit-marin-IN_B10625_10625",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "310 OLIVE AVE, NOVATO, CA 94945",
+        "id": "permit-marin-IN_B10628_10628",
+        "route": "/project/marin-IN_B10628_10628",
+        "search_label": "permit-marin-IN_B10628_10628",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "325 ELLEN DR, SAN RAFAEL, CA 94903",
+        "id": "permit-marin-IN_B10630_10630",
+        "route": "/project/marin-IN_B10630_10630",
+        "search_label": "permit-marin-IN_B10630_10630",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "1 ANTON WAY, NOVATO, CA 94945",
+        "id": "permit-marin-IN_B10633_10633",
+        "route": "/project/marin-IN_B10633_10633",
+        "search_label": "permit-marin-IN_B10633_10633",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "31 MT FORAKER DR, SAN RAFAEL, CA 94903",
+        "id": "permit-marin-IN_B10634_10634",
+        "route": "/project/marin-IN_B10634_10634",
+        "search_label": "permit-marin-IN_B10634_10634",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "20 MONTEGO KEY, NOVATO, CA 94949",
+        "id": "permit-marin-IN_B10637_10637",
+        "route": "/project/marin-IN_B10637_10637",
+        "search_label": "permit-marin-IN_B10637_10637",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "567 CEDARBERRY LN, SAN RAFAEL, CA 94903",
+        "id": "permit-marin-IN_B10638_10638",
+        "route": "/project/marin-IN_B10638_10638",
+        "search_label": "permit-marin-IN_B10638_10638",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "290 SEA VIEW AVE, SAN RAFAEL, CA 94901",
+        "id": "permit-marin-IN_B10640_10640",
+        "route": "/project/marin-IN_B10640_10640",
+        "search_label": "permit-marin-IN_B10640_10640",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "124 OAK SHADE LN, NOVATO, CA 94945",
+        "id": "permit-marin-IN_B10641_10641",
+        "route": "/project/marin-IN_B10641_10641",
+        "search_label": "permit-marin-IN_B10641_10641",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "180 DEER HOLLOW RD, SAN ANSELMO, CA 94960",
+        "id": "permit-marin-IN_B10642_10642",
+        "route": "/project/marin-IN_B10642_10642",
+        "search_label": "permit-marin-IN_B10642_10642",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "2901 HEATHERSTONE DR, SAN RAFAEL, CA 94903",
+        "id": "permit-marin-IN_B10643_10643",
+        "route": "/project/marin-IN_B10643_10643",
+        "search_label": "permit-marin-IN_B10643_10643",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "174 CALLE DEL ARROYO, STINSON BEACH, CA 94970",
+        "id": "permit-marin-IN_B10645_10645",
+        "route": "/project/marin-IN_B10645_10645",
+        "search_label": "permit-marin-IN_B10645_10645",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "33 MAPLE AVE, KENTFIELD, CA 94904",
+        "id": "permit-marin-IN_B10646_10646",
+        "route": "/project/marin-IN_B10646_10646",
+        "search_label": "permit-marin-IN_B10646_10646",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "27 CORTE MORADA, GREENBRAE, CA 94904",
+        "id": "permit-marin-IN_B10650_10650",
+        "route": "/project/marin-IN_B10650_10650",
+        "search_label": "permit-marin-IN_B10650_10650",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "163 OAK MANOR DR, FAIRFAX, CA 94930",
+        "id": "permit-marin-IN_B10653_10653",
+        "route": "/project/marin-IN_B10653_10653",
+        "search_label": "permit-marin-IN_B10653_10653",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "40 CORTE PATENCIO, GREENBRAE, CA 94904",
+        "id": "permit-marin-IN_B10663_10663",
+        "route": "/project/marin-IN_B10663_10663",
+        "search_label": "permit-marin-IN_B10663_10663",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "311 VIA RECODO, MILL VALLEY, CA 94941",
+        "id": "permit-marin-IN_B10664_10664",
+        "route": "/project/marin-IN_B10664_10664",
+        "search_label": "permit-marin-IN_B10664_10664",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "30 STETSON AVE, KENTFIELD, CA 94904",
+        "id": "permit-marin-IN_B10665_10665",
+        "route": "/project/marin-IN_B10665_10665",
+        "search_label": "permit-marin-IN_B10665_10665",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "327 DURANT WAY, MILL VALLEY, CA 94941",
+        "id": "permit-marin-IN_B10666_10666",
+        "route": "/project/marin-IN_B10666_10666",
+        "search_label": "permit-marin-IN_B10666_10666",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "1 DEER TRL, NOVATO, CA 94947",
+        "id": "permit-marin-IN_B10667_10667",
+        "route": "/project/marin-IN_B10667_10667",
+        "search_label": "permit-marin-IN_B10667_10667",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "520 MIDVALE WAY, MILL VALLEY, CA 94941",
+        "id": "permit-marin-IN_B10669_10669",
+        "route": "/project/marin-IN_B10669_10669",
+        "search_label": "permit-marin-IN_B10669_10669",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "371 COUNTYVIEW DR, MILL VALLEY, CA 94941",
+        "id": "permit-marin-IN_B10670_10670",
+        "route": "/project/marin-IN_B10670_10670",
+        "search_label": "permit-marin-IN_B10670_10670",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "6 RIDGE VIEW LN, POINT REYES STATION, CA 94956",
+        "id": "permit-marin-IN_B10675_10675",
+        "route": "/project/marin-IN_B10675_10675",
+        "search_label": "permit-marin-IN_B10675_10675",
+        "status": null,
+        "type": "Project"
+      },
+      {
+        "address": "7 LEONA DR, SAN RAFAEL, CA 94903",
+        "id": "permit-marin-IN_B10678_10678",
+        "route": "/project/marin-IN_B10678_10678",
+        "search_label": "permit-marin-IN_B10678_10678",
+        "status": null,
+        "type": "Project"
+      }
+    ],
+    "type": "Project"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/project"
+  }
+}

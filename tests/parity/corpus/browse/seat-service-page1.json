@@ -1,0 +1,428 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "seat_title",
+        "label": "Seat"
+      },
+      {
+        "key": "person_name",
+        "label": "Person"
+      }
+    ],
+    "next_cursor": "seatservice-sandeep-karkal-novato-2025",
+    "rows": [
+      {
+        "id": "seatservice-alice-fredericks-tiburon-2022",
+        "person_name": null,
+        "route": "/seat-service/alice-fredericks-tiburon-2022",
+        "search_label": "seatservice-alice-fredericks-tiburon-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-barbara-coler-fairfax-2024",
+        "person_name": null,
+        "route": "/seat-service/barbara-coler-fairfax-2024",
+        "search_label": "seatservice-barbara-coler-fairfax-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-bill-kircher-ross-2024",
+        "person_name": null,
+        "route": "/seat-service/bill-kircher-ross-2024",
+        "search_label": "seatservice-bill-kircher-ross-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-brian-colbert-marin-county-2025",
+        "person_name": null,
+        "route": "/seat-service/brian-colbert-marin-county-2025",
+        "search_label": "seatservice-brian-colbert-marin-county-2025",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-caroline-joachim-mill-valley-2024",
+        "person_name": null,
+        "route": "/seat-service/caroline-joachim-mill-valley-2024",
+        "search_label": "seatservice-caroline-joachim-mill-valley-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-catherine-way-larkspur-2022",
+        "person_name": null,
+        "route": "/seat-service/catherine-way-larkspur-2022",
+        "search_label": "seatservice-catherine-way-larkspur-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-chantel-walker-san-anselmo-2024",
+        "person_name": null,
+        "route": "/seat-service/chantel-walker-san-anselmo-2024",
+        "search_label": "seatservice-chantel-walker-san-anselmo-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-dennis-rodoni-marin-county-2025",
+        "person_name": null,
+        "route": "/seat-service/dennis-rodoni-marin-county-2025",
+        "search_label": "seatservice-dennis-rodoni-marin-county-2025",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-eileen-burke-san-anselmo-2024",
+        "person_name": null,
+        "route": "/seat-service/eileen-burke-san-anselmo-2024",
+        "search_label": "seatservice-eileen-burke-san-anselmo-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-eli-beckman-corte-madera-2022",
+        "person_name": null,
+        "route": "/seat-service/eli-beckman-corte-madera-2022",
+        "search_label": "seatservice-eli-beckman-corte-madera-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-eli-hill-d2-current",
+        "person_name": null,
+        "route": "/seat-service/eli-hill-d2-current",
+        "search_label": "seatservice-eli-hill-d2-current",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-elizabeth-robbins-ross-2022",
+        "person_name": null,
+        "route": "/seat-service/elizabeth-robbins-ross-2022",
+        "search_label": "seatservice-elizabeth-robbins-ross-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-eric-lucan-marin-county-2023",
+        "person_name": null,
+        "route": "/seat-service/eric-lucan-marin-county-2023",
+        "search_label": "seatservice-eric-lucan-marin-county-2023",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-frank-egger-fairfax-2024",
+        "person_name": null,
+        "route": "/seat-service/frank-egger-fairfax-2024",
+        "search_label": "seatservice-frank-egger-fairfax-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-fred-casissa-corte-madera-2024",
+        "person_name": null,
+        "route": "/seat-service/fred-casissa-corte-madera-2024",
+        "search_label": "seatservice-fred-casissa-corte-madera-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-gabe-paulson-larkspur-2024",
+        "person_name": null,
+        "route": "/seat-service/gabe-paulson-larkspur-2024",
+        "search_label": "seatservice-gabe-paulson-larkspur-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-holli-thier-tiburon-2024",
+        "person_name": null,
+        "route": "/seat-service/holli-thier-tiburon-2024",
+        "search_label": "seatservice-holli-thier-tiburon-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-ian-patrick-sobieski-sausalito-2024",
+        "person_name": null,
+        "route": "/seat-service/ian-patrick-sobieski-sausalito-2024",
+        "search_label": "seatservice-ian-patrick-sobieski-sausalito-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-isaac-nikfar-tiburon-2024",
+        "person_name": null,
+        "route": "/seat-service/isaac-nikfar-tiburon-2024",
+        "search_label": "seatservice-isaac-nikfar-tiburon-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-jack-ryan-tiburon-2022",
+        "person_name": null,
+        "route": "/seat-service/jack-ryan-tiburon-2022",
+        "search_label": "seatservice-jack-ryan-tiburon-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-james-andrews-corte-madera-2024",
+        "person_name": null,
+        "route": "/seat-service/james-andrews-corte-madera-2024",
+        "search_label": "seatservice-james-andrews-corte-madera-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-jane-cooper-belvedere-2022",
+        "person_name": null,
+        "route": "/seat-service/jane-cooper-belvedere-2022",
+        "search_label": "seatservice-jane-cooper-belvedere-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-jill-james-hoffman-sausalito-2022",
+        "person_name": null,
+        "route": "/seat-service/jill-james-hoffman-sausalito-2022",
+        "search_label": "seatservice-jill-james-hoffman-sausalito-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-joan-cox-sausalito-2022",
+        "person_name": null,
+        "route": "/seat-service/joan-cox-sausalito-2022",
+        "search_label": "seatservice-joan-cox-sausalito-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-jon-welner-tiburon-2022",
+        "person_name": null,
+        "route": "/seat-service/jon-welner-tiburon-2022",
+        "search_label": "seatservice-jon-welner-tiburon-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-julie-mcmillan-ross-2022",
+        "person_name": null,
+        "route": "/seat-service/julie-mcmillan-ross-2022",
+        "search_label": "seatservice-julie-mcmillan-ross-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-kate-colin-mayor-2020-term",
+        "person_name": null,
+        "route": "/seat-service/kate-colin-mayor-2020-term",
+        "search_label": "seatservice-kate-colin-mayor-2020-term",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-kate-colin-mayor-current",
+        "person_name": null,
+        "route": "/seat-service/kate-colin-mayor-current",
+        "search_label": "seatservice-kate-colin-mayor-current",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-katherine-jones-mill-valley-2024",
+        "person_name": null,
+        "route": "/seat-service/katherine-jones-mill-valley-2024",
+        "search_label": "seatservice-katherine-jones-mill-valley-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-kevin-burke-belvedere-2024",
+        "person_name": null,
+        "route": "/seat-service/kevin-burke-belvedere-2024",
+        "search_label": "seatservice-kevin-burke-belvedere-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-kevin-jacobs-novato-2024",
+        "person_name": null,
+        "route": "/seat-service/kevin-jacobs-novato-2024",
+        "search_label": "seatservice-kevin-jacobs-novato-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-lisel-blash-fairfax-2022",
+        "person_name": null,
+        "route": "/seat-service/lisel-blash-fairfax-2022",
+        "search_label": "seatservice-lisel-blash-fairfax-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-maika-llorens-gulati-d1-2020-term",
+        "person_name": null,
+        "route": "/seat-service/maika-llorens-gulati-d1-2020-term",
+        "search_label": "seatservice-maika-llorens-gulati-d1-2020-term",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-maika-llorens-gulati-d1-current",
+        "person_name": null,
+        "route": "/seat-service/maika-llorens-gulati-d1-current",
+        "search_label": "seatservice-maika-llorens-gulati-d1-current",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-maribeth-bushey-d3-current",
+        "person_name": null,
+        "route": "/seat-service/maribeth-bushey-d3-current",
+        "search_label": "seatservice-maribeth-bushey-d3-current",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-mary-sackett-marin-county-2023",
+        "person_name": null,
+        "route": "/seat-service/mary-sackett-marin-county-2023",
+        "search_label": "seatservice-mary-sackett-marin-county-2023",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-mathew-salter-ross-2024",
+        "person_name": null,
+        "route": "/seat-service/mathew-salter-ross-2024",
+        "search_label": "seatservice-mathew-salter-ross-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-max-perrey-mill-valley-2022",
+        "person_name": null,
+        "route": "/seat-service/max-perrey-mill-valley-2022",
+        "search_label": "seatservice-max-perrey-mill-valley-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-melissa-blaustein-sausalito-2024",
+        "person_name": null,
+        "route": "/seat-service/melissa-blaustein-sausalito-2024",
+        "search_label": "seatservice-melissa-blaustein-sausalito-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-michael-ghiringhelli-fairfax-2024",
+        "person_name": null,
+        "route": "/seat-service/michael-ghiringhelli-fairfax-2024",
+        "search_label": "seatservice-michael-ghiringhelli-fairfax-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-pat-carapiet-belvedere-2024",
+        "person_name": null,
+        "route": "/seat-service/pat-carapiet-belvedere-2024",
+        "search_label": "seatservice-pat-carapiet-belvedere-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-pat-eklund-novato-2022",
+        "person_name": null,
+        "route": "/seat-service/pat-eklund-novato-2022",
+        "search_label": "seatservice-pat-eklund-novato-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-pat-ravasio-corte-madera-2022",
+        "person_name": null,
+        "route": "/seat-service/pat-ravasio-corte-madera-2022",
+        "search_label": "seatservice-pat-ravasio-corte-madera-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-peter-mark-belvedere-2022",
+        "person_name": null,
+        "route": "/seat-service/peter-mark-belvedere-2022",
+        "search_label": "seatservice-peter-mark-belvedere-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-rachel-farac-novato-2022",
+        "person_name": null,
+        "route": "/seat-service/rachel-farac-novato-2022",
+        "search_label": "seatservice-rachel-farac-novato-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-rachel-kertz-d4-2020-term",
+        "person_name": null,
+        "route": "/seat-service/rachel-kertz-d4-2020-term",
+        "search_label": "seatservice-rachel-kertz-d4-2020-term",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-rachel-kertz-d4-current",
+        "person_name": null,
+        "route": "/seat-service/rachel-kertz-d4-current",
+        "search_label": "seatservice-rachel-kertz-d4-current",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-rosa-thomas-corte-madera-2022",
+        "person_name": null,
+        "route": "/seat-service/rosa-thomas-corte-madera-2022",
+        "search_label": "seatservice-rosa-thomas-corte-madera-2022",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-sally-wilkinson-belvedere-2024",
+        "person_name": null,
+        "route": "/seat-service/sally-wilkinson-belvedere-2024",
+        "search_label": "seatservice-sally-wilkinson-belvedere-2024",
+        "seat_title": null,
+        "type": "SeatService"
+      },
+      {
+        "id": "seatservice-sandeep-karkal-novato-2025",
+        "person_name": null,
+        "route": "/seat-service/sandeep-karkal-novato-2025",
+        "search_label": "seatservice-sandeep-karkal-novato-2025",
+        "seat_title": null,
+        "type": "SeatService"
+      }
+    ],
+    "type": "SeatService"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/seat-service"
+  }
+}

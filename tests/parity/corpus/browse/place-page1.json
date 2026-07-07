@@ -1,0 +1,428 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "place_type",
+        "label": "Type"
+      },
+      {
+        "key": "parent_name",
+        "label": "Parent"
+      }
+    ],
+    "next_cursor": "place-san-francisco",
+    "rows": [
+      {
+        "id": "place-350-merrydale-road",
+        "parent_name": null,
+        "place_type": "address",
+        "route": "/place/350-merrydale-road",
+        "search_label": "350 Merrydale Road",
+        "type": "Place"
+      },
+      {
+        "id": "place-700-irwin-st",
+        "parent_name": null,
+        "place_type": "address",
+        "route": "/place/700-irwin-st",
+        "search_label": "700 Irwin Street",
+        "type": "Place"
+      },
+      {
+        "id": "place-\\mill-valley",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/\\mill-valley",
+        "search_label": "place-\\mill-valley",
+        "type": "Place"
+      },
+      {
+        "id": "place-alameda-(sausalito)",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/alameda-(sausalito)",
+        "search_label": "place-alameda-(sausalito)",
+        "type": "Place"
+      },
+      {
+        "id": "place-albert-park",
+        "parent_name": null,
+        "place_type": "park",
+        "route": "/place/albert-park",
+        "search_label": "Albert Park",
+        "type": "Place"
+      },
+      {
+        "id": "place-andersen-drive",
+        "parent_name": null,
+        "place_type": "street",
+        "route": "/place/andersen-drive",
+        "search_label": "Andersen Drive",
+        "type": "Place"
+      },
+      {
+        "id": "place-belvedere",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/belvedere",
+        "search_label": "Belvedere",
+        "type": "Place"
+      },
+      {
+        "id": "place-bolinas",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/bolinas",
+        "search_label": "place-bolinas",
+        "type": "Place"
+      },
+      {
+        "id": "place-california",
+        "parent_name": null,
+        "place_type": "state",
+        "route": "/place/california",
+        "search_label": "California",
+        "type": "Place"
+      },
+      {
+        "id": "place-corte-madera",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/corte-madera",
+        "search_label": "Corte Madera",
+        "type": "Place"
+      },
+      {
+        "id": "place-dillon-beach",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/dillon-beach",
+        "search_label": "place-dillon-beach",
+        "type": "Place"
+      },
+      {
+        "id": "place-downtown-library-1100-e-st",
+        "parent_name": null,
+        "place_type": "facility",
+        "route": "/place/downtown-library-1100-e-st",
+        "search_label": "Downtown Library, 1100 E Street, San Rafael",
+        "type": "Place"
+      },
+      {
+        "id": "place-fairfax",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/fairfax",
+        "search_label": "Fairfax",
+        "type": "Place"
+      },
+      {
+        "id": "place-fallon",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/fallon",
+        "search_label": "place-fallon",
+        "type": "Place"
+      },
+      {
+        "id": "place-forest-knolls",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/forest-knolls",
+        "search_label": "place-forest-knolls",
+        "type": "Place"
+      },
+      {
+        "id": "place-francisco-boulevard-west",
+        "parent_name": null,
+        "place_type": "street",
+        "route": "/place/francisco-boulevard-west",
+        "search_label": "Francisco Boulevard West",
+        "type": "Place"
+      },
+      {
+        "id": "place-grants-pass-oregon",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/grants-pass-oregon",
+        "search_label": "Grants Pass",
+        "type": "Place"
+      },
+      {
+        "id": "place-greenbrae",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/greenbrae",
+        "search_label": "place-greenbrae",
+        "type": "Place"
+      },
+      {
+        "id": "place-greenbrae,-ca",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/greenbrae,-ca",
+        "search_label": "place-greenbrae,-ca",
+        "type": "Place"
+      },
+      {
+        "id": "place-inverness",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/inverness",
+        "search_label": "place-inverness",
+        "type": "Place"
+      },
+      {
+        "id": "place-inverness,-ca",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/inverness,-ca",
+        "search_label": "place-inverness,-ca",
+        "type": "Place"
+      },
+      {
+        "id": "place-kentfield",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/kentfield",
+        "search_label": "place-kentfield",
+        "type": "Place"
+      },
+      {
+        "id": "place-lagunitas",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/lagunitas",
+        "search_label": "place-lagunitas",
+        "type": "Place"
+      },
+      {
+        "id": "place-larkspur",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/larkspur",
+        "search_label": "Larkspur",
+        "type": "Place"
+      },
+      {
+        "id": "place-lindaro-street",
+        "parent_name": null,
+        "place_type": "street",
+        "route": "/place/lindaro-street",
+        "search_label": "Lindaro Street",
+        "type": "Place"
+      },
+      {
+        "id": "place-mahon-creek-path",
+        "parent_name": null,
+        "place_type": "corridor",
+        "route": "/place/mahon-creek-path",
+        "search_label": "Mahon Creek Path",
+        "type": "Place"
+      },
+      {
+        "id": "place-marin-city",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/marin-city",
+        "search_label": "place-marin-city",
+        "type": "Place"
+      },
+      {
+        "id": "place-marin-county",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/marin-county",
+        "search_label": "Marin County",
+        "type": "Place"
+      },
+      {
+        "id": "place-marshall",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/marshall",
+        "search_label": "place-marshall",
+        "type": "Place"
+      },
+      {
+        "id": "place-menzies-parking-lot",
+        "parent_name": null,
+        "place_type": "parking_lot",
+        "route": "/place/menzies-parking-lot",
+        "search_label": "Menzies Parking Lot",
+        "type": "Place"
+      },
+      {
+        "id": "place-mill-valley",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/mill-valley",
+        "search_label": "Mill Valley",
+        "type": "Place"
+      },
+      {
+        "id": "place-montego-bay",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/montego-bay",
+        "search_label": "place-montego-bay",
+        "type": "Place"
+      },
+      {
+        "id": "place-muir-beach",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/muir-beach",
+        "search_label": "place-muir-beach",
+        "type": "Place"
+      },
+      {
+        "id": "place-nicasio",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/nicasio",
+        "search_label": "place-nicasio",
+        "type": "Place"
+      },
+      {
+        "id": "place-novato",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/novato",
+        "search_label": "Novato",
+        "type": "Place"
+      },
+      {
+        "id": "place-olema",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/olema",
+        "search_label": "place-olema",
+        "type": "Place"
+      },
+      {
+        "id": "place-oregon",
+        "parent_name": null,
+        "place_type": "state",
+        "route": "/place/oregon",
+        "search_label": "Oregon",
+        "type": "Place"
+      },
+      {
+        "id": "place-petaluma",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/petaluma",
+        "search_label": "place-petaluma",
+        "type": "Place"
+      },
+      {
+        "id": "place-petaluma,-ca",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/petaluma,-ca",
+        "search_label": "place-petaluma,-ca",
+        "type": "Place"
+      },
+      {
+        "id": "place-point-reyes",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/point-reyes",
+        "search_label": "place-point-reyes",
+        "type": "Place"
+      },
+      {
+        "id": "place-point-reyes-station",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/point-reyes-station",
+        "search_label": "place-point-reyes-station",
+        "type": "Place"
+      },
+      {
+        "id": "place-poit-reyes",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/poit-reyes",
+        "search_label": "place-poit-reyes",
+        "type": "Place"
+      },
+      {
+        "id": "place-pt-reyes",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/pt-reyes",
+        "search_label": "place-pt-reyes",
+        "type": "Place"
+      },
+      {
+        "id": "place-pt-reyes-station",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/pt-reyes-station",
+        "search_label": "place-pt-reyes-station",
+        "type": "Place"
+      },
+      {
+        "id": "place-pt.-reyes",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/pt.-reyes",
+        "search_label": "place-pt.-reyes",
+        "type": "Place"
+      },
+      {
+        "id": "place-pt.-reyes-station",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/pt.-reyes-station",
+        "search_label": "place-pt.-reyes-station",
+        "type": "Place"
+      },
+      {
+        "id": "place-ross",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/ross",
+        "search_label": "Ross",
+        "type": "Place"
+      },
+      {
+        "id": "place-san-anselmo",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/san-anselmo",
+        "search_label": "San Anselmo",
+        "type": "Place"
+      },
+      {
+        "id": "place-san-anselmo,-ca",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/san-anselmo,-ca",
+        "search_label": "place-san-anselmo,-ca",
+        "type": "Place"
+      },
+      {
+        "id": "place-san-francisco",
+        "parent_name": null,
+        "place_type": "city",
+        "route": "/place/san-francisco",
+        "search_label": "San Francisco",
+        "type": "Place"
+      }
+    ],
+    "type": "Place"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/place"
+  }
+}

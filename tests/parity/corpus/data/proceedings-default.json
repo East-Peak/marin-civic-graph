@@ -1,0 +1,317 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "alignment": "left",
+        "key": "case_caption",
+        "label": "Case caption",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "proceeding_type",
+        "label": "Type",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "occurred_at",
+        "label": "Date",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "affected_program",
+        "label": "Affected"
+      },
+      {
+        "alignment": "left",
+        "key": "id",
+        "label": "Proceeding id",
+        "link": "entity-route"
+      }
+    ],
+    "rows": [
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-dismissal-order-2024-08-07",
+        "occurred_at": "2024-08-07",
+        "proceeding_type": "dismissal_order"
+      },
+      {
+        "affected_program": "San Rafael sanctioned camping program",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-dismissal-order-2024-08-07",
+        "occurred_at": "2024-08-07",
+        "proceeding_type": "dismissal_order"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-dismissal-order-2024-08-07",
+        "occurred_at": "2024-08-07",
+        "proceeding_type": "dismissal_order"
+      },
+      {
+        "affected_program": "San Rafael sanctioned camping program",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-dismissal-order-2024-08-07",
+        "occurred_at": "2024-08-07",
+        "proceeding_type": "dismissal_order"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-motion-hearing-2024-07-15",
+        "occurred_at": "2024-07-15",
+        "proceeding_type": "motion_hearing"
+      },
+      {
+        "affected_program": "San Rafael sanctioned camping program",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-motion-hearing-2024-07-15",
+        "occurred_at": "2024-07-15",
+        "proceeding_type": "motion_hearing"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-motion-hearing-2024-07-15",
+        "occurred_at": "2024-07-15",
+        "proceeding_type": "motion_hearing"
+      },
+      {
+        "affected_program": "San Rafael sanctioned camping program",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-motion-hearing-2024-07-15",
+        "occurred_at": "2024-07-15",
+        "proceeding_type": "motion_hearing"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "City of Grants Pass v. Johnson",
+        "id": "proceeding-grants-pass-opinion-2024-06-28",
+        "occurred_at": "2024-06-28",
+        "proceeding_type": "opinion"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "City of Grants Pass v. Johnson",
+        "id": "proceeding-grants-pass-opinion-2024-06-28",
+        "occurred_at": "2024-06-28",
+        "proceeding_type": "opinion"
+      },
+      {
+        "affected_program": "San Rafael sanctioned camping program",
+        "case_caption": "City of Grants Pass v. Johnson",
+        "id": "proceeding-grants-pass-opinion-2024-06-28",
+        "occurred_at": "2024-06-28",
+        "proceeding_type": "opinion"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-motion-to-dismiss-filed-2024-05-10",
+        "occurred_at": "2024-05-10",
+        "proceeding_type": "motion_to_dismiss_filing"
+      },
+      {
+        "affected_program": "San Rafael sanctioned camping program",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-motion-to-dismiss-filed-2024-05-10",
+        "occurred_at": "2024-05-10",
+        "proceeding_type": "motion_to_dismiss_filing"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-motion-to-dismiss-filed-2024-05-10",
+        "occurred_at": "2024-05-10",
+        "proceeding_type": "motion_to_dismiss_filing"
+      },
+      {
+        "affected_program": "San Rafael sanctioned camping program",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-motion-to-dismiss-filed-2024-05-10",
+        "occurred_at": "2024-05-10",
+        "proceeding_type": "motion_to_dismiss_filing"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "City of Grants Pass v. Johnson",
+        "id": "proceeding-grants-pass-oral-argument-2024-04-22",
+        "occurred_at": "2024-04-22",
+        "proceeding_type": "oral_argument"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "City of Grants Pass v. Johnson",
+        "id": "proceeding-grants-pass-oral-argument-2024-04-22",
+        "occurred_at": "2024-04-22",
+        "proceeding_type": "oral_argument"
+      },
+      {
+        "affected_program": "San Rafael sanctioned camping program",
+        "case_caption": "City of Grants Pass v. Johnson",
+        "id": "proceeding-grants-pass-oral-argument-2024-04-22",
+        "occurred_at": "2024-04-22",
+        "proceeding_type": "oral_argument"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "City of Grants Pass v. Johnson",
+        "id": "proceeding-grants-pass-cert-granted-2024-01-12",
+        "occurred_at": "2024-01-12",
+        "proceeding_type": "cert_grant"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "City of Grants Pass v. Johnson",
+        "id": "proceeding-grants-pass-cert-granted-2024-01-12",
+        "occurred_at": "2024-01-12",
+        "proceeding_type": "cert_grant"
+      },
+      {
+        "affected_program": "San Rafael sanctioned camping program",
+        "case_caption": "City of Grants Pass v. Johnson",
+        "id": "proceeding-grants-pass-cert-granted-2024-01-12",
+        "occurred_at": "2024-01-12",
+        "proceeding_type": "cert_grant"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-preliminary-injunction-2023-10-19",
+        "occurred_at": "2023-10-19",
+        "proceeding_type": "preliminary_injunction_order"
+      },
+      {
+        "affected_program": "San Rafael sanctioned camping program",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-preliminary-injunction-2023-10-19",
+        "occurred_at": "2023-10-19",
+        "proceeding_type": "preliminary_injunction_order"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-preliminary-injunction-2023-10-19",
+        "occurred_at": "2023-10-19",
+        "proceeding_type": "preliminary_injunction_order"
+      },
+      {
+        "affected_program": "San Rafael sanctioned camping program",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-preliminary-injunction-2023-10-19",
+        "occurred_at": "2023-10-19",
+        "proceeding_type": "preliminary_injunction_order"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "City of Grants Pass v. Johnson",
+        "id": "proceeding-grants-pass-cert-petition-filed-2023-08-22",
+        "occurred_at": "2023-08-22",
+        "proceeding_type": "cert_petition_filing"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "City of Grants Pass v. Johnson",
+        "id": "proceeding-grants-pass-cert-petition-filed-2023-08-22",
+        "occurred_at": "2023-08-22",
+        "proceeding_type": "cert_petition_filing"
+      },
+      {
+        "affected_program": "San Rafael sanctioned camping program",
+        "case_caption": "City of Grants Pass v. Johnson",
+        "id": "proceeding-grants-pass-cert-petition-filed-2023-08-22",
+        "occurred_at": "2023-08-22",
+        "proceeding_type": "cert_petition_filing"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-tro-granted-2023-08-15",
+        "occurred_at": "2023-08-15",
+        "proceeding_type": "temporary_restraining_order"
+      },
+      {
+        "affected_program": "San Rafael sanctioned camping program",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-tro-granted-2023-08-15",
+        "occurred_at": "2023-08-15",
+        "proceeding_type": "temporary_restraining_order"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-tro-granted-2023-08-15",
+        "occurred_at": "2023-08-15",
+        "proceeding_type": "temporary_restraining_order"
+      },
+      {
+        "affected_program": "San Rafael sanctioned camping program",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-tro-granted-2023-08-15",
+        "occurred_at": "2023-08-15",
+        "proceeding_type": "temporary_restraining_order"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-complaint-filed-2023-08-11",
+        "occurred_at": "2023-08-11",
+        "proceeding_type": "complaint_filing"
+      },
+      {
+        "affected_program": "San Rafael sanctioned camping program",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-complaint-filed-2023-08-11",
+        "occurred_at": "2023-08-11",
+        "proceeding_type": "complaint_filing"
+      },
+      {
+        "affected_program": "San Rafael camping ordinance implementation and enforcement",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-complaint-filed-2023-08-11",
+        "occurred_at": "2023-08-11",
+        "proceeding_type": "complaint_filing"
+      },
+      {
+        "affected_program": "San Rafael sanctioned camping program",
+        "case_caption": "Boyd v. City of San Rafael",
+        "id": "proceeding-boyd-complaint-filed-2023-08-11",
+        "occurred_at": "2023-08-11",
+        "proceeding_type": "complaint_filing"
+      },
+      {
+        "affected_program": null,
+        "case_caption": "Johnson v. City of Grants Pass",
+        "id": "proceeding-grants-pass-ninth-circuit-amended-opinion-2023-07-05",
+        "occurred_at": "2023-07-05",
+        "proceeding_type": "amended_opinion"
+      },
+      {
+        "affected_program": null,
+        "case_caption": "Blake v. City of Grants Pass",
+        "id": "proceeding-grants-pass-district-judgment-2020-08-26",
+        "occurred_at": "2020-08-26",
+        "proceeding_type": "judgment_and_injunction"
+      },
+      {
+        "affected_program": null,
+        "case_caption": "Blake v. City of Grants Pass",
+        "id": "proceeding-grants-pass-district-opinion-order-2020-07-22",
+        "occurred_at": "2020-07-22",
+        "proceeding_type": "opinion_and_order"
+      }
+    ],
+    "slug": "legal-proceedings-affecting-local"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/data/legal-proceedings-affecting-local"
+  }
+}

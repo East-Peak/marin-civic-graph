@@ -1,0 +1,46 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "alignment": "left",
+        "key": "person_name",
+        "label": "Person",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "seat_display",
+        "label": "Seat",
+        "sortable": true
+      },
+      {
+        "alignment": "right",
+        "key": "form_700_count",
+        "label": "Form 700",
+        "sortable": true
+      },
+      {
+        "alignment": "right",
+        "key": "form_803_count",
+        "label": "Form 803",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "id",
+        "label": "Person id",
+        "link": "entity-route"
+      }
+    ],
+    "rows": [],
+    "slug": "current-officeholders-form-coverage"
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "jurisdiction_id": "place-san-rafael"
+    },
+    "url_path": "/api/data/current-officeholders-form-coverage"
+  }
+}

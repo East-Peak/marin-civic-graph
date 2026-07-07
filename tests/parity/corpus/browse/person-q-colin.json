@@ -1,0 +1,118 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "current_seat_display",
+        "label": "Current seat"
+      },
+      {
+        "key": "jurisdiction_name",
+        "label": "Jurisdiction"
+      }
+    ],
+    "next_cursor": null,
+    "rows": [
+      {
+        "current_seat_display": null,
+        "id": "person-catherine-colin",
+        "jurisdiction_name": null,
+        "route": "/person/catherine-colin",
+        "search_label": "Catherine Colin",
+        "type": "Person"
+      },
+      {
+        "current_seat_display": null,
+        "id": "person-colin-alley",
+        "jurisdiction_name": null,
+        "route": "/person/colin-alley",
+        "search_label": "Colin Alley",
+        "type": "Person"
+      },
+      {
+        "current_seat_display": null,
+        "id": "person-colin-catherine",
+        "jurisdiction_name": null,
+        "route": "/person/colin-catherine",
+        "search_label": "Catherine Colin",
+        "type": "Person"
+      },
+      {
+        "current_seat_display": null,
+        "id": "person-colin-coffey",
+        "jurisdiction_name": null,
+        "route": "/person/colin-coffey",
+        "search_label": "Colin Coffey",
+        "type": "Person"
+      },
+      {
+        "current_seat_display": null,
+        "id": "person-colin-kate",
+        "jurisdiction_name": null,
+        "route": "/person/colin-kate",
+        "search_label": "Kate Colin",
+        "type": "Person"
+      },
+      {
+        "current_seat_display": null,
+        "id": "person-colin-katie",
+        "jurisdiction_name": null,
+        "route": "/person/colin-katie",
+        "search_label": "Katie Colin",
+        "type": "Person"
+      },
+      {
+        "current_seat_display": null,
+        "id": "person-colin-leary",
+        "jurisdiction_name": null,
+        "route": "/person/colin-leary",
+        "search_label": "Colin Leary",
+        "type": "Person"
+      },
+      {
+        "current_seat_display": null,
+        "id": "person-colin-margarita",
+        "jurisdiction_name": null,
+        "route": "/person/colin-margarita",
+        "search_label": "Margarita Colin",
+        "type": "Person"
+      },
+      {
+        "current_seat_display": null,
+        "id": "person-colin-marquez",
+        "jurisdiction_name": null,
+        "route": "/person/colin-marquez",
+        "search_label": "Colin Marquez",
+        "type": "Person"
+      },
+      {
+        "current_seat_display": null,
+        "id": "person-hamblin-colin",
+        "jurisdiction_name": null,
+        "route": "/person/hamblin-colin",
+        "search_label": "Colin Hamblin",
+        "type": "Person"
+      },
+      {
+        "current_seat_display": null,
+        "id": "person-kate-colin",
+        "jurisdiction_name": null,
+        "route": "/person/kate-colin",
+        "search_label": "Kate Colin",
+        "type": "Person"
+      }
+    ],
+    "type": "Person"
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "q": "colin"
+    },
+    "url_path": "/api/browse/person"
+  }
+}

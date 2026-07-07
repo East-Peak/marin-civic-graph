@@ -1,0 +1,14 @@
+{
+  "http_status": 200,
+  "payload": {
+    "found": false
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "from": "seat-belvedere-seat-1",
+      "to": "doc-2023-12-14-implementation-plan"
+    },
+    "url_path": "/api/path"
+  }
+}

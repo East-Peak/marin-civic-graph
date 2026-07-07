@@ -1,0 +1,185 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "alignment": "left",
+        "key": "record_type",
+        "label": "Record type",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "captured_at",
+        "label": "Captured at",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "preferred_display_artifact",
+        "label": "Artifact"
+      },
+      {
+        "alignment": "left",
+        "key": "preferred_public_url",
+        "label": "Public URL"
+      },
+      {
+        "alignment": "left",
+        "key": "id",
+        "label": "Record id",
+        "link": "entity-route"
+      }
+    ],
+    "rows": [
+      {
+        "captured_at": null,
+        "id": "record-2024-11-04-san-rafael-city-council-special-minutes",
+        "preferred_display_artifact": "Minutes pdf PDF",
+        "preferred_public_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2024/11/CC-SA-Minutes-2024-11-04.pdf",
+        "record_type": "minutes_pdf"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2024-11-04-san-rafael-city-council-special-page",
+        "preferred_display_artifact": "Meeting page page",
+        "preferred_public_url": "https://www.cityofsanrafael.org/meetings/city-council-november-4-2024/",
+        "record_type": "meeting_page"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2025-11-17-350-merrydale-resolution-county-grant-and-affordable-housing",
+        "preferred_display_artifact": "Resolution PDF",
+        "preferred_public_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/5e2fbbbf-agenda-packet-2025-11-17-rev-3.pdf",
+        "record_type": "resolution"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2025-11-17-350-merrydale-resolution-purchase-and-brokerage",
+        "preferred_display_artifact": "Resolution PDF",
+        "preferred_public_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/5e2fbbbf-agenda-packet-2025-11-17-rev-3.pdf",
+        "record_type": "resolution"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2025-11-17-350-merrydale-staff-report",
+        "preferred_display_artifact": "Staff report PDF",
+        "preferred_public_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/84d3410c-6.a-declaration-of-shelter-crisis-and-approval-of-related-actions-and-aquisition-of-the-property-at-350-merrydale-road-rev.pdf",
+        "record_type": "staff_report"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2025-11-17-san-rafael-city-council-agenda-packet",
+        "preferred_display_artifact": "Agenda packet PDF",
+        "preferred_public_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/5e2fbbbf-agenda-packet-2025-11-17-rev-3.pdf",
+        "record_type": "agenda_packet"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2025-11-17-san-rafael-city-council-minutes",
+        "preferred_display_artifact": "Minutes pdf PDF",
+        "preferred_public_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/12/d2ca1a56-cc-minutes-2025-11-17.pdf",
+        "record_type": "minutes_pdf"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2025-11-17-san-rafael-city-council-page",
+        "preferred_display_artifact": "Meeting page page",
+        "preferred_public_url": "https://www.cityofsanrafael.org/meetings/city-council-november-17-2025/",
+        "record_type": "meeting_page"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2025-12-01-san-rafael-city-council-minutes",
+        "preferred_display_artifact": "Minutes pdf PDF",
+        "preferred_public_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2025/12/a8d08824-cc-minutes-2025-12-01.pdf",
+        "record_type": "minutes_pdf"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2025-12-01-san-rafael-city-council-page",
+        "preferred_display_artifact": "Meeting page page",
+        "preferred_public_url": "https://www.cityofsanrafael.org/meetings/city-council-december-1-2025/",
+        "record_type": "meeting_page"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2026-02-17-350-merrydale-lca-amendment",
+        "preferred_display_artifact": "Amendment attachment PDF",
+        "preferred_public_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/08989132-agenda-packet-2026-02-17.pdf",
+        "record_type": "amendment_attachment"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2026-02-17-350-merrydale-resolution-project-services",
+        "preferred_display_artifact": "Resolution PDF",
+        "preferred_public_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/08989132-agenda-packet-2026-02-17.pdf",
+        "record_type": "resolution"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2026-02-17-350-merrydale-staff-report",
+        "preferred_display_artifact": "Staff report PDF",
+        "preferred_public_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/78e1be80-2.b-350-merrydale-road-interim-shelter.pdf",
+        "record_type": "staff_report"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2026-02-17-350-merrydale-swinerton-psa",
+        "preferred_display_artifact": "Agreement attachment PDF",
+        "preferred_public_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/08989132-agenda-packet-2026-02-17.pdf",
+        "record_type": "agreement_attachment"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2026-02-17-san-rafael-city-council-agenda-packet",
+        "preferred_display_artifact": "Agenda packet PDF",
+        "preferred_public_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/08989132-agenda-packet-2026-02-17.pdf",
+        "record_type": "agenda_packet"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2026-02-17-san-rafael-city-council-minutes",
+        "preferred_display_artifact": "Minutes pdf PDF",
+        "preferred_public_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2026/03/9ec66f80-cc-minutes-2026-02-17.pdf",
+        "record_type": "minutes_pdf"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2026-02-17-san-rafael-city-council-page",
+        "preferred_display_artifact": "Meeting page page",
+        "preferred_public_url": "https://www.cityofsanrafael.org/meetings/city-council-tuesday-february-17-2026/",
+        "record_type": "meeting_page"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2026-03-16-san-rafael-city-council-minutes",
+        "preferred_display_artifact": "Minutes pdf PDF",
+        "preferred_public_url": "https://storage.googleapis.com/proudcity/sanrafaelca/2026/04/24e79735-cc-minutes-2026-03-16.pdf",
+        "record_type": "minutes_pdf"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2026-03-16-san-rafael-city-council-page",
+        "preferred_display_artifact": "Meeting page page",
+        "preferred_public_url": "https://www.cityofsanrafael.org/meetings/city-council-march-16-2026/",
+        "record_type": "meeting_page"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-sanctioned-camping-area-page",
+        "preferred_display_artifact": "Official program page page",
+        "preferred_public_url": "https://www.cityofsanrafael.org/sanctioned-camping-area/",
+        "record_type": "official_program_page"
+      }
+    ],
+    "slug": "evidence-records-supporting"
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "target_id": "project-san-rafael-350-merrydale-interim-shelter"
+    },
+    "url_path": "/api/data/evidence-records-supporting"
+  }
+}

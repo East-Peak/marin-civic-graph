@@ -1,0 +1,428 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "filing_type",
+        "label": "Type"
+      },
+      {
+        "key": "signed_at",
+        "label": "Signed"
+      }
+    ],
+    "next_cursor": "filing-form700-cmar-2019-01-15-korten-max-annual-director-of-parks-open-space-marin-county-parks",
+    "rows": [
+      {
+        "filing_type": "form_803",
+        "id": "filing-2025-09-04-kate-colin-form-803",
+        "route": "/filing/2025-09-04-kate-colin-form-803",
+        "search_label": "Form 803 \u00b7 2025-09-04",
+        "signed_at": "2025-09-04",
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-04-ridgway-michael-annual-undersheriff-marin-county-sheriff-s-department",
+        "route": "/filing/form700-cmar-2019-01-04-ridgway-michael-annual-undersheriff-marin-county-sheriff-s-department",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-04-stock-amy-annual-governing-board-member-ross-valley-school-district",
+        "route": "/filing/form700-cmar-2019-01-04-stock-amy-annual-governing-board-member-ross-valley-school-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-04-stock-amy-leaving-office-governing-board-member-ross-valley-school-district",
+        "route": "/filing/form700-cmar-2019-01-04-stock-amy-leaving-office-governing-board-member-ross-valley-school-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-05-futterman-michael-annual-governing-board-member-tamalpais-union-high-school-district",
+        "route": "/filing/form700-cmar-2019-01-05-futterman-michael-annual-governing-board-member-tamalpais-union-high-school-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-07-anderson-laura-annual-governing-board-member-tamalpais-union-high-school-district",
+        "route": "/filing/form700-cmar-2019-01-07-anderson-laura-annual-governing-board-member-tamalpais-union-high-school-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-07-anderson-laura-leaving-office-governing-board-member-tamalpais-union-high-school-district",
+        "route": "/filing/form700-cmar-2019-01-07-anderson-laura-leaving-office-governing-board-member-tamalpais-union-high-school-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-07-ford-chuck-annual-governing-board-member-tamalpais-union-high-school-district",
+        "route": "/filing/form700-cmar-2019-01-07-ford-chuck-annual-governing-board-member-tamalpais-union-high-school-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-07-ford-chuck-leaving-office-governing-board-member-tamalpais-union-high-school-district",
+        "route": "/filing/form700-cmar-2019-01-07-ford-chuck-leaving-office-governing-board-member-tamalpais-union-high-school-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-08-benson-richard-annual-assessor-recorder-county-clerk-assessor-recorder-county-clerk",
+        "route": "/filing/form700-cmar-2019-01-08-benson-richard-annual-assessor-recorder-county-clerk-assessor-recorder-county-clerk",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-08-benson-richard-leaving-office-assessor-recorder-county-clerk-assessor-recorder-county-clerk",
+        "route": "/filing/form700-cmar-2019-01-08-benson-richard-leaving-office-assessor-recorder-county-clerk-assessor-recorder-county-clerk",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-08-dreikosen-eric-annual-board-member-district-manager-marin-emergency-radio-authority-marinwood-community-services-district",
+        "route": "/filing/form700-cmar-2019-01-08-dreikosen-eric-annual-board-member-district-manager-marin-emergency-radio-authority-marinwood-community-services-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-08-galli-james-annual-director-novato-fire-protection-district",
+        "route": "/filing/form700-cmar-2019-01-08-galli-james-annual-director-novato-fire-protection-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-08-green-leah-annual-director-marinwood-community-services-district",
+        "route": "/filing/form700-cmar-2019-01-08-green-leah-annual-director-marinwood-community-services-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-08-halley-mary-annual-district-manager-muir-beach-community-services-district",
+        "route": "/filing/form700-cmar-2019-01-08-halley-mary-annual-district-manager-muir-beach-community-services-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-08-hills-leighton-annual-director-muir-beach-community-services-district",
+        "route": "/filing/form700-cmar-2019-01-08-hills-leighton-annual-director-muir-beach-community-services-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-08-naylor-jeffrey-annual-board-member-director-marin-emergency-radio-authority-marinwood-community-services-district",
+        "route": "/filing/form700-cmar-2019-01-08-naylor-jeffrey-annual-board-member-director-marin-emergency-radio-authority-marinwood-community-services-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-08-oyserman-sivan-assuming-office-director-marinwood-community-services-district",
+        "route": "/filing/form700-cmar-2019-01-08-oyserman-sivan-assuming-office-director-marinwood-community-services-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-08-slavitz-jeff-annual-director-member-richardson-bay-sanitary-district-sewerage-agency-of-southern-marin",
+        "route": "/filing/form700-cmar-2019-01-08-slavitz-jeff-annual-director-member-richardson-bay-sanitary-district-sewerage-agency-of-southern-marin",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-09-comstock-lyndon-annual-director-bolinas-community-public-utility-district",
+        "route": "/filing/form700-cmar-2019-01-09-comstock-lyndon-annual-director-bolinas-community-public-utility-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-09-holland-wade-assuming-office-general-manager-inverness-public-utility-district",
+        "route": "/filing/form700-cmar-2019-01-09-holland-wade-assuming-office-general-manager-inverness-public-utility-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-09-trusheim-frank-annual-director-richardson-bay-sanitary-district",
+        "route": "/filing/form700-cmar-2019-01-09-trusheim-frank-annual-director-richardson-bay-sanitary-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-09-white-mark-annual-board-member-member-board-of-directors-director-marin-emergency-radio-authority-marin-wildfire-protection-authority-stinson-beach-fire-protection-district",
+        "route": "/filing/form700-cmar-2019-01-09-white-mark-annual-board-member-member-board-of-directors-director-marin-emergency-radio-authority-marin-wildfire-protection-authority-stinson-beach-fire-protection-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-10-davis-william-annual-director-novato-fire-protection-district",
+        "route": "/filing/form700-cmar-2019-01-10-davis-william-annual-director-novato-fire-protection-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-10-roberts-lynda-annual-registrar-of-voters-registrar-of-voters",
+        "route": "/filing/form700-cmar-2019-01-10-roberts-lynda-annual-registrar-of-voters-registrar-of-voters",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-11-barrow-joshua-annual-governing-board-member-sausalito-marin-city-school-district",
+        "route": "/filing/form700-cmar-2019-01-11-barrow-joshua-annual-governing-board-member-sausalito-marin-city-school-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-11-benvenuti-sue-annual-director-richardson-bay-sanitary-district",
+        "route": "/filing/form700-cmar-2019-01-11-benvenuti-sue-annual-director-richardson-bay-sanitary-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-11-berberian-ed-annual-district-attorney-district-attorney",
+        "route": "/filing/form700-cmar-2019-01-11-berberian-ed-annual-district-attorney-district-attorney",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-11-berberian-ed-leaving-office-district-attorney-district-attorney",
+        "route": "/filing/form700-cmar-2019-01-11-berberian-ed-leaving-office-district-attorney-district-attorney",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-11-perez-andres-annual-deputy-district-attorney-iv-district-attorney",
+        "route": "/filing/form700-cmar-2019-01-11-perez-andres-annual-deputy-district-attorney-iv-district-attorney",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-11-tucker-johnny-annual-district-manager-richardson-bay-sanitary-district",
+        "route": "/filing/form700-cmar-2019-01-11-tucker-johnny-annual-district-manager-richardson-bay-sanitary-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-12-aliotti-john-annual-technology-systems-coordinator-district-attorney",
+        "route": "/filing/form700-cmar-2019-01-12-aliotti-john-annual-technology-systems-coordinator-district-attorney",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-13-perry-izabela-annual-director-marinwood-community-services-district",
+        "route": "/filing/form700-cmar-2019-01-13-perry-izabela-annual-director-marinwood-community-services-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-14-brown-julie-annual-board-member-strawberry-design-review-board",
+        "route": "/filing/form700-cmar-2019-01-14-brown-julie-annual-board-member-strawberry-design-review-board",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-14-chayka-james-annual-superintendent-marin-county-parks",
+        "route": "/filing/form700-cmar-2019-01-14-chayka-james-annual-superintendent-marin-county-parks",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-14-clavaud-donna-annual-director-tomales-village-community-services-district",
+        "route": "/filing/form700-cmar-2019-01-14-clavaud-donna-annual-director-tomales-village-community-services-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-14-finkelstein-james-annual-commissioner-human-resources-personnel-commission",
+        "route": "/filing/form700-cmar-2019-01-14-finkelstein-james-annual-commissioner-human-resources-personnel-commission",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-14-fleming-peter-annual-director-southern-marin-fire-protection-district",
+        "route": "/filing/form700-cmar-2019-01-14-fleming-peter-annual-director-southern-marin-fire-protection-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-14-gale-sally-annual-board-member-marin-resource-conservation-district",
+        "route": "/filing/form700-cmar-2019-01-14-gale-sally-annual-board-member-marin-resource-conservation-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-14-giacomini-robert-annual-board-member-marin-resource-conservation-district",
+        "route": "/filing/form700-cmar-2019-01-14-giacomini-robert-annual-board-member-marin-resource-conservation-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-14-halyard-carla-annual-commissioner-human-resources-personnel-commission",
+        "route": "/filing/form700-cmar-2019-01-14-halyard-carla-annual-commissioner-human-resources-personnel-commission",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-14-kauffman-juli-annual-governing-board-member-kentfield-school-district",
+        "route": "/filing/form700-cmar-2019-01-14-kauffman-juli-annual-governing-board-member-kentfield-school-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-14-kauffman-juli-leaving-office-governing-board-member-kentfield-school-district",
+        "route": "/filing/form700-cmar-2019-01-14-kauffman-juli-leaving-office-governing-board-member-kentfield-school-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-14-martin-mischon-annual-chief-of-natural-resources-and-science-marin-county-parks",
+        "route": "/filing/form700-cmar-2019-01-14-martin-mischon-annual-chief-of-natural-resources-and-science-marin-county-parks",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-14-martinelli-peter-annual-board-member-marin-resource-conservation-district",
+        "route": "/filing/form700-cmar-2019-01-14-martinelli-peter-annual-board-member-marin-resource-conservation-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-14-moretti-michael-annual-board-member-marin-resource-conservation-district",
+        "route": "/filing/form700-cmar-2019-01-14-moretti-michael-annual-board-member-marin-resource-conservation-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-14-o-brien-stephanie-annual-governing-board-member-marin-community-college-district",
+        "route": "/filing/form700-cmar-2019-01-14-o-brien-stephanie-annual-governing-board-member-marin-community-college-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-14-sawyer-terry-annual-board-member-marin-resource-conservation-district",
+        "route": "/filing/form700-cmar-2019-01-14-sawyer-terry-annual-board-member-marin-resource-conservation-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-14-scolari-nancy-annual-executive-director-marin-resource-conservation-district",
+        "route": "/filing/form700-cmar-2019-01-14-scolari-nancy-annual-executive-director-marin-resource-conservation-district",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      },
+      {
+        "filing_type": "form_700",
+        "id": "filing-form700-cmar-2019-01-15-korten-max-annual-director-of-parks-open-space-marin-county-parks",
+        "route": "/filing/form700-cmar-2019-01-15-korten-max-annual-director-of-parks-open-space-marin-county-parks",
+        "search_label": "Form 700",
+        "signed_at": null,
+        "type": "Filing"
+      }
+    ],
+    "type": "Filing"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/filing"
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "http_status": 200,
+  "payload": {
+    "query": "canal",
+    "results": [
+      {
+        "id": "org-canal-alliance",
+        "jurisdiction": null,
+        "key_fact": "Canal Alliance",
+        "last_activity": "2025-08-22",
+        "rank": 93,
+        "route": "/organization/canal-alliance",
+        "search_label": "Canal Alliance",
+        "type": "Organization"
+      },
+      {
+        "id": "decision-2020-11-02-san-rafael-city-council-5a-resolution-adoption-14867",
+        "jurisdiction": null,
+        "key_fact": "Canal Policy Working Group",
+        "last_activity": "2020-11-02",
+        "rank": 72,
+        "route": "/decision/2020-11-02-san-rafael-city-council-5a-resolution-adoption-14867",
+        "search_label": "Canal Policy Working Group",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2023-06-20-san-rafael-city-council-6b-resolution-adoption-15234",
+        "jurisdiction": null,
+        "key_fact": "Canal Street Underground Utility District",
+        "last_activity": "2023-06-20",
+        "rank": 74,
+        "route": "/decision/2023-06-20-san-rafael-city-council-6b-resolution-adoption-15234",
+        "search_label": "Canal Street Underground Utility District",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2022-06-21-san-rafael-city-council-6a-resolution-adoption-15099",
+        "jurisdiction": null,
+        "key_fact": "Canal Community Based Transportation Plan",
+        "last_activity": "2022-06-21",
+        "rank": 72,
+        "route": "/decision/2022-06-21-san-rafael-city-council-6a-resolution-adoption-15099",
+        "search_label": "Canal Community Based Transportation Plan",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2021-05-03-san-rafael-city-council-5f-resolution-adoption-14907",
+        "jurisdiction": null,
+        "key_fact": "Canal Neighborhood Pedestrian Improvements Project",
+        "last_activity": "2021-05-03",
+        "rank": 70,
+        "route": "/decision/2021-05-03-san-rafael-city-council-5f-resolution-adoption-14907",
+        "search_label": "Canal Neighborhood Pedestrian Improvements Project",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2025-04-07-san-rafael-city-council-special-4k-resolution-adoption-15394",
+        "jurisdiction": null,
+        "key_fact": "San Rafael Canal Crossing Project Funding Agreement",
+        "last_activity": "2025-04-07",
+        "rank": 87,
+        "route": "/decision/2025-04-07-san-rafael-city-council-special-4k-resolution-adoption-15394",
+        "search_label": "San Rafael Canal Crossing Project Funding Agreement",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2022-12-19-san-rafael-city-council-4e-resolution-adoption-15174",
+        "jurisdiction": null,
+        "key_fact": "Canal Community Resilience Planning Project (Project #31100)",
+        "last_activity": "2022-12-19",
+        "rank": 70,
+        "route": "/decision/2022-12-19-san-rafael-city-council-4e-resolution-adoption-15174",
+        "search_label": "Canal Community Resilience Planning Project (Project #31100)",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2024-09-16-san-rafael-city-council-4f-resolution-adoption-15344",
+        "jurisdiction": null,
+        "key_fact": "Canal Active Transportation Experience Improvements Project Funding Agreement",
+        "last_activity": "2024-09-16",
+        "rank": 82,
+        "route": "/decision/2024-09-16-san-rafael-city-council-4f-resolution-adoption-15344",
+        "search_label": "Canal Active Transportation Experience Improvements Project Funding Agreement",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2021-10-18-san-rafael-city-council-5e-resolution-adoption-14987",
+        "jurisdiction": null,
+        "key_fact": "Consultant Services for Canal Community-Based Transportation Plan",
+        "last_activity": "2021-10-18",
+        "rank": 72,
+        "route": "/decision/2021-10-18-san-rafael-city-council-5e-resolution-adoption-14987",
+        "search_label": "Consultant Services for Canal Community-Based Transportation Plan",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2022-02-07-san-rafael-city-council-5h-resolution-adoption-15028",
+        "jurisdiction": null,
+        "key_fact": "Temporary Street Closure to Support Voces Del Canal",
+        "last_activity": "2022-02-07",
+        "rank": 70,
+        "route": "/decision/2022-02-07-san-rafael-city-council-5h-resolution-adoption-15028",
+        "search_label": "Temporary Street Closure to Support Voces Del Canal",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2023-02-06-san-rafael-city-council-4d-resolution-adoption-15041-15187",
+        "jurisdiction": null,
+        "key_fact": "2021 Affordable Housing NOFA Funding Recommendation - Canal Alliance Alternative",
+        "last_activity": "2023-02-06",
+        "rank": 70,
+        "route": "/decision/2023-02-06-san-rafael-city-council-4d-resolution-adoption-15041-15187",
+        "search_label": "2021 Affordable Housing NOFA Funding Recommendation - Canal Alliance Alternative",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2025-04-21-san-rafael-city-council-special-4d-resolution-adoption-15399",
+        "jurisdiction": null,
+        "key_fact": "Canal Alliance and The Multicultural Center of Marin Agreement Amendments",
+        "last_activity": "2025-04-21",
+        "rank": 88,
+        "route": "/decision/2025-04-21-san-rafael-city-council-special-4d-resolution-adoption-15399",
+        "search_label": "Canal Alliance and The Multicultural Center of Marin Agreement Amendments",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2022-10-03-san-rafael-city-council-6b-resolution-adoption-15137",
+        "jurisdiction": null,
+        "key_fact": "FY 2022-23 City of San Rafael Canal Maintenance Dredging",
+        "last_activity": "2022-10-03",
+        "rank": 72,
+        "route": "/decision/2022-10-03-san-rafael-city-council-6b-resolution-adoption-15137",
+        "search_label": "FY 2022-23 City of San Rafael Canal Maintenance Dredging",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2021-05-17-san-rafael-city-council-5f-resolution-adoption-14916",
+        "jurisdiction": null,
+        "key_fact": "Temporary Street Closure to Support Vaccination Efforts in the Canal",
+        "last_activity": "2021-05-17",
+        "rank": 70,
+        "route": "/decision/2021-05-17-san-rafael-city-council-5f-resolution-adoption-14916",
+        "search_label": "Temporary Street Closure to Support Vaccination Efforts in the Canal",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2021-08-02-san-rafael-city-council-5b-resolution-adoption-14957",
+        "jurisdiction": null,
+        "key_fact": "Temporary Street Closure to Support Vaccination Efforts in the Canal Neighborhood",
+        "last_activity": "2021-08-02",
+        "rank": 70,
+        "route": "/decision/2021-08-02-san-rafael-city-council-5b-resolution-adoption-14957",
+        "search_label": "Temporary Street Closure to Support Vaccination Efforts in the Canal Neighborhood",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2022-05-02-san-rafael-city-council-5j-resolution-adoption-15064",
+        "jurisdiction": null,
+        "key_fact": "Temporary Street Closure to Support Vaccination Efforts in the Canal Neighborhood",
+        "last_activity": "2022-05-02",
+        "rank": 70,
+        "route": "/decision/2022-05-02-san-rafael-city-council-5j-resolution-adoption-15064",
+        "search_label": "Temporary Street Closure to Support Vaccination Efforts in the Canal Neighborhood",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2022-12-05-san-rafael-city-council-special-2e-resolution-adoption-15164",
+        "jurisdiction": null,
+        "key_fact": "Temporary Street Closure to Support Vaccination Efforts in the Canal Neighborhood",
+        "last_activity": "2022-12-05",
+        "rank": 71,
+        "route": "/decision/2022-12-05-san-rafael-city-council-special-2e-resolution-adoption-15164",
+        "search_label": "Temporary Street Closure to Support Vaccination Efforts in the Canal Neighborhood",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2022-06-06-san-rafael-city-council-5l-resolution-adoption-15080",
+        "jurisdiction": null,
+        "key_fact": "Temporary Street Closure to Support Canal Alliance Community Fair Event and Ongoing",
+        "last_activity": "2022-06-06",
+        "rank": 70,
+        "route": "/decision/2022-06-06-san-rafael-city-council-5l-resolution-adoption-15080",
+        "search_label": "Temporary Street Closure to Support Canal Alliance Community Fair Event and Ongoing",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2022-04-04-san-rafael-city-council-5e-resolution-adoption-15053",
+        "jurisdiction": null,
+        "key_fact": "Temporary Street Closure to Support an Open House for the Canal Community Based",
+        "last_activity": "2022-04-04",
+        "rank": 70,
+        "route": "/decision/2022-04-04-san-rafael-city-council-5e-resolution-adoption-15053",
+        "search_label": "Temporary Street Closure to Support an Open House for the Canal Community Based",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2024-04-15-san-rafael-city-council-4h-approval-approved-the-canal-arts-public-art-proposal-to-paint-a-mural-on-the-exterior-of",
+        "jurisdiction": null,
+        "key_fact": "Approved the Canal Arts public art proposal to paint a mural on the exterior of the Albert J. Boro",
+        "last_activity": "2024-04-15",
+        "rank": 81,
+        "route": "/decision/2024-04-15-san-rafael-city-council-4h-approval-approved-the-canal-arts-public-art-proposal-to-paint-a-mural-on-the-exterior-of",
+        "search_label": "Approved the Canal Arts public art proposal to paint a mural on the exterior of the Albert J. Boro",
+        "type": "Decision"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "q": "canal"
+    },
+    "url_path": "/api/search"
+  }
+}

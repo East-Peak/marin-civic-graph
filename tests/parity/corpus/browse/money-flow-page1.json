@@ -1,0 +1,428 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "amount",
+        "label": "Amount"
+      },
+      {
+        "key": "flow_date",
+        "label": "Date"
+      }
+    ],
+    "next_cursor": "moneyflow-1277176-CLGgeKWjGpFa",
+    "rows": [
+      {
+        "amount": 1000,
+        "flow_date": "2024-04-30",
+        "id": "moneyflow-1242561-Ckk8lh1b9YWc",
+        "route": "/money-flow/1242561-Ckk8lh1b9YWc",
+        "search_label": "moneyflow-1242561-Ckk8lh1b9YWc",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 1000,
+        "flow_date": "2025-05-09",
+        "id": "moneyflow-1242561-aKZSHxW3TiLd",
+        "route": "/money-flow/1242561-aKZSHxW3TiLd",
+        "search_label": "moneyflow-1242561-aKZSHxW3TiLd",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 4000,
+        "flow_date": "2022-06-10",
+        "id": "moneyflow-126043-2rP5p545QldZ",
+        "route": "/money-flow/126043-2rP5p545QldZ",
+        "search_label": "moneyflow-126043-2rP5p545QldZ",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 391,
+        "flow_date": "2025-10-31",
+        "id": "moneyflow-126043-CnLwRI9d3ttG",
+        "route": "/money-flow/126043-CnLwRI9d3ttG",
+        "search_label": "moneyflow-126043-CnLwRI9d3ttG",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 406,
+        "flow_date": "2025-12-31",
+        "id": "moneyflow-126043-GnDIXc2PHCxG",
+        "route": "/money-flow/126043-GnDIXc2PHCxG",
+        "search_label": "moneyflow-126043-GnDIXc2PHCxG",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 2000,
+        "flow_date": "2022-06-10",
+        "id": "moneyflow-126043-NFQDUZe4QB4G",
+        "route": "/money-flow/126043-NFQDUZe4QB4G",
+        "search_label": "moneyflow-126043-NFQDUZe4QB4G",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 2000,
+        "flow_date": "2023-02-13",
+        "id": "moneyflow-126043-PyiZB4khMZai",
+        "route": "/money-flow/126043-PyiZB4khMZai",
+        "search_label": "moneyflow-126043-PyiZB4khMZai",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 381,
+        "flow_date": "2025-09-30",
+        "id": "moneyflow-126043-lmCwrc9sPVJt",
+        "route": "/money-flow/126043-lmCwrc9sPVJt",
+        "search_label": "moneyflow-126043-lmCwrc9sPVJt",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 396,
+        "flow_date": "2025-11-30",
+        "id": "moneyflow-126043-lyDqGMCTNXR3",
+        "route": "/money-flow/126043-lyDqGMCTNXR3",
+        "search_label": "moneyflow-126043-lyDqGMCTNXR3",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 3500,
+        "flow_date": "2022-08-30",
+        "id": "moneyflow-126043-nkHDW6xUcNxs",
+        "route": "/money-flow/126043-nkHDW6xUcNxs",
+        "search_label": "moneyflow-126043-nkHDW6xUcNxs",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 381,
+        "flow_date": "2025-08-30",
+        "id": "moneyflow-126043-oSbDSTWnUhMY",
+        "route": "/money-flow/126043-oSbDSTWnUhMY",
+        "search_label": "moneyflow-126043-oSbDSTWnUhMY",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 250,
+        "flow_date": "2019-01-03",
+        "id": "moneyflow-1277176-1cx7xVQ9xPNf",
+        "route": "/money-flow/1277176-1cx7xVQ9xPNf",
+        "search_label": "moneyflow-1277176-1cx7xVQ9xPNf",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 500,
+        "flow_date": "2019-06-03",
+        "id": "moneyflow-1277176-1iJhnAupajEu",
+        "route": "/money-flow/1277176-1iJhnAupajEu",
+        "search_label": "moneyflow-1277176-1iJhnAupajEu",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 5391.97,
+        "flow_date": "2019-07-24",
+        "id": "moneyflow-1277176-2CDUbj76XH8R",
+        "route": "/money-flow/1277176-2CDUbj76XH8R",
+        "search_label": "moneyflow-1277176-2CDUbj76XH8R",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 120,
+        "flow_date": "2019-07-01",
+        "id": "moneyflow-1277176-2ZZujRvSj3Vk",
+        "route": "/money-flow/1277176-2ZZujRvSj3Vk",
+        "search_label": "moneyflow-1277176-2ZZujRvSj3Vk",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 500,
+        "flow_date": "2019-10-04",
+        "id": "moneyflow-1277176-2c8rxoEgdof7",
+        "route": "/money-flow/1277176-2c8rxoEgdof7",
+        "search_label": "moneyflow-1277176-2c8rxoEgdof7",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 250,
+        "flow_date": "2019-05-13",
+        "id": "moneyflow-1277176-2kWLIVIkTmK2",
+        "route": "/money-flow/1277176-2kWLIVIkTmK2",
+        "search_label": "moneyflow-1277176-2kWLIVIkTmK2",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 150,
+        "flow_date": "2021-07-07",
+        "id": "moneyflow-1277176-2ldpM8ClRX1H",
+        "route": "/money-flow/1277176-2ldpM8ClRX1H",
+        "search_label": "moneyflow-1277176-2ldpM8ClRX1H",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 295.83,
+        "flow_date": "2020-03-09",
+        "id": "moneyflow-1277176-3IkXwu8vgb7U",
+        "route": "/money-flow/1277176-3IkXwu8vgb7U",
+        "search_label": "moneyflow-1277176-3IkXwu8vgb7U",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 227,
+        "flow_date": "2019-07-18",
+        "id": "moneyflow-1277176-3QHmgnBbXPJO",
+        "route": "/money-flow/1277176-3QHmgnBbXPJO",
+        "search_label": "moneyflow-1277176-3QHmgnBbXPJO",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 500,
+        "flow_date": "2019-06-24",
+        "id": "moneyflow-1277176-3ZuW6ynfkgAA",
+        "route": "/money-flow/1277176-3ZuW6ynfkgAA",
+        "search_label": "moneyflow-1277176-3ZuW6ynfkgAA",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 250,
+        "flow_date": "2019-10-04",
+        "id": "moneyflow-1277176-3dfIjTVHmyCH",
+        "route": "/money-flow/1277176-3dfIjTVHmyCH",
+        "search_label": "moneyflow-1277176-3dfIjTVHmyCH",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 750,
+        "flow_date": "2019-03-13",
+        "id": "moneyflow-1277176-3ijLwDadzwzN",
+        "route": "/money-flow/1277176-3ijLwDadzwzN",
+        "search_label": "moneyflow-1277176-3ijLwDadzwzN",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 104,
+        "flow_date": "2021-02-09",
+        "id": "moneyflow-1277176-3xuyF7CVXcRe",
+        "route": "/money-flow/1277176-3xuyF7CVXcRe",
+        "search_label": "moneyflow-1277176-3xuyF7CVXcRe",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 100,
+        "flow_date": "2019-08-12",
+        "id": "moneyflow-1277176-4GYmfAUR8X8u",
+        "route": "/money-flow/1277176-4GYmfAUR8X8u",
+        "search_label": "moneyflow-1277176-4GYmfAUR8X8u",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 400,
+        "flow_date": "2019-08-26",
+        "id": "moneyflow-1277176-4VFiXbqiDmZo",
+        "route": "/money-flow/1277176-4VFiXbqiDmZo",
+        "search_label": "moneyflow-1277176-4VFiXbqiDmZo",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 109,
+        "flow_date": "2022-07-11",
+        "id": "moneyflow-1277176-4VPFARnJLbs8",
+        "route": "/money-flow/1277176-4VPFARnJLbs8",
+        "search_label": "moneyflow-1277176-4VPFARnJLbs8",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 500,
+        "flow_date": "2021-08-24",
+        "id": "moneyflow-1277176-4hTCAzKvcNUu",
+        "route": "/money-flow/1277176-4hTCAzKvcNUu",
+        "search_label": "moneyflow-1277176-4hTCAzKvcNUu",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 1000,
+        "flow_date": "2021-07-12",
+        "id": "moneyflow-1277176-54pptGkNNj72",
+        "route": "/money-flow/1277176-54pptGkNNj72",
+        "search_label": "moneyflow-1277176-54pptGkNNj72",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 500,
+        "flow_date": "2020-05-01",
+        "id": "moneyflow-1277176-5DmxRq13xlno",
+        "route": "/money-flow/1277176-5DmxRq13xlno",
+        "search_label": "moneyflow-1277176-5DmxRq13xlno",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 100,
+        "flow_date": "2020-02-10",
+        "id": "moneyflow-1277176-5TyBoBX6W5Qo",
+        "route": "/money-flow/1277176-5TyBoBX6W5Qo",
+        "search_label": "moneyflow-1277176-5TyBoBX6W5Qo",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 250,
+        "flow_date": "2019-04-01",
+        "id": "moneyflow-1277176-5bNkRdeeXSVF",
+        "route": "/money-flow/1277176-5bNkRdeeXSVF",
+        "search_label": "moneyflow-1277176-5bNkRdeeXSVF",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 250,
+        "flow_date": "2019-07-08",
+        "id": "moneyflow-1277176-5y8wpaT6eC5g",
+        "route": "/money-flow/1277176-5y8wpaT6eC5g",
+        "search_label": "moneyflow-1277176-5y8wpaT6eC5g",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 120,
+        "flow_date": "2019-06-24",
+        "id": "moneyflow-1277176-61HYsXxJecmf",
+        "route": "/money-flow/1277176-61HYsXxJecmf",
+        "search_label": "moneyflow-1277176-61HYsXxJecmf",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 532.07,
+        "flow_date": "2021-07-21",
+        "id": "moneyflow-1277176-65YIPxwRxfiM",
+        "route": "/money-flow/1277176-65YIPxwRxfiM",
+        "search_label": "moneyflow-1277176-65YIPxwRxfiM",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 122,
+        "flow_date": "2019-09-05",
+        "id": "moneyflow-1277176-6V3HVGlfTeOw",
+        "route": "/money-flow/1277176-6V3HVGlfTeOw",
+        "search_label": "moneyflow-1277176-6V3HVGlfTeOw",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 250,
+        "flow_date": "2019-06-24",
+        "id": "moneyflow-1277176-6iJY8OZhm5Fu",
+        "route": "/money-flow/1277176-6iJY8OZhm5Fu",
+        "search_label": "moneyflow-1277176-6iJY8OZhm5Fu",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 250,
+        "flow_date": "2021-08-20",
+        "id": "moneyflow-1277176-6rbB9efkUOdn",
+        "route": "/money-flow/1277176-6rbB9efkUOdn",
+        "search_label": "moneyflow-1277176-6rbB9efkUOdn",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 243,
+        "flow_date": "2019-09-24",
+        "id": "moneyflow-1277176-6y6LAazB5ByG",
+        "route": "/money-flow/1277176-6y6LAazB5ByG",
+        "search_label": "moneyflow-1277176-6y6LAazB5ByG",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 100,
+        "flow_date": "2019-05-10",
+        "id": "moneyflow-1277176-7GOprCrDeE2e",
+        "route": "/money-flow/1277176-7GOprCrDeE2e",
+        "search_label": "moneyflow-1277176-7GOprCrDeE2e",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 112.66,
+        "flow_date": "2020-03-05",
+        "id": "moneyflow-1277176-8oY4TwXGxxa8",
+        "route": "/money-flow/1277176-8oY4TwXGxxa8",
+        "search_label": "moneyflow-1277176-8oY4TwXGxxa8",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 333.07,
+        "flow_date": "2019-05-22",
+        "id": "moneyflow-1277176-ABuObiN9HUZZ",
+        "route": "/money-flow/1277176-ABuObiN9HUZZ",
+        "search_label": "moneyflow-1277176-ABuObiN9HUZZ",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 250,
+        "flow_date": "2019-09-10",
+        "id": "moneyflow-1277176-AkLa9ZX3Ctc8",
+        "route": "/money-flow/1277176-AkLa9ZX3Ctc8",
+        "search_label": "moneyflow-1277176-AkLa9ZX3Ctc8",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 1000,
+        "flow_date": "2021-07-07",
+        "id": "moneyflow-1277176-AlxwibfJ96Ab",
+        "route": "/money-flow/1277176-AlxwibfJ96Ab",
+        "search_label": "moneyflow-1277176-AlxwibfJ96Ab",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 100,
+        "flow_date": "2019-03-11",
+        "id": "moneyflow-1277176-BDURa6Hu6Cqy",
+        "route": "/money-flow/1277176-BDURa6Hu6Cqy",
+        "search_label": "moneyflow-1277176-BDURa6Hu6Cqy",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 166.8,
+        "flow_date": "2019-05-13",
+        "id": "moneyflow-1277176-BLW6lOEzrHJk",
+        "route": "/money-flow/1277176-BLW6lOEzrHJk",
+        "search_label": "moneyflow-1277176-BLW6lOEzrHJk",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 145.44,
+        "flow_date": "2019-10-21",
+        "id": "moneyflow-1277176-BdLLSnQQN6Lq",
+        "route": "/money-flow/1277176-BdLLSnQQN6Lq",
+        "search_label": "moneyflow-1277176-BdLLSnQQN6Lq",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 321.25,
+        "flow_date": "2019-12-20",
+        "id": "moneyflow-1277176-Bn5Y4KGgd1j1",
+        "route": "/money-flow/1277176-Bn5Y4KGgd1j1",
+        "search_label": "moneyflow-1277176-Bn5Y4KGgd1j1",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 104,
+        "flow_date": "2021-03-09",
+        "id": "moneyflow-1277176-CJuTdgdIKclP",
+        "route": "/money-flow/1277176-CJuTdgdIKclP",
+        "search_label": "moneyflow-1277176-CJuTdgdIKclP",
+        "type": "MoneyFlow"
+      },
+      {
+        "amount": 250,
+        "flow_date": "2019-07-15",
+        "id": "moneyflow-1277176-CLGgeKWjGpFa",
+        "route": "/money-flow/1277176-CLGgeKWjGpFa",
+        "search_label": "moneyflow-1277176-CLGgeKWjGpFa",
+        "type": "MoneyFlow"
+      }
+    ],
+    "type": "MoneyFlow"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/money-flow"
+  }
+}

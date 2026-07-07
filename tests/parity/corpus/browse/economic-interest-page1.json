@@ -1,0 +1,27 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "interest_type",
+        "label": "Interest type"
+      },
+      {
+        "key": "counterparty_name_raw",
+        "label": "Counterparty"
+      }
+    ],
+    "next_cursor": null,
+    "rows": [],
+    "type": "EconomicInterest"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/economic-interest"
+  }
+}

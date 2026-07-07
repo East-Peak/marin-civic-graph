@@ -1,0 +1,428 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "record_type",
+        "label": "Record type"
+      },
+      {
+        "key": "captured_at",
+        "label": "Captured"
+      }
+    ],
+    "next_cursor": "record-2019-09-03-san-rafael-city-council-page",
+    "rows": [
+      {
+        "captured_at": null,
+        "id": "doc-2023-12-14-implementation-plan",
+        "record_type": null,
+        "route": "/record/2023-12-14-implementation-plan",
+        "search_label": "Record",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "doc-2024-06-14-homelessness-update",
+        "record_type": null,
+        "route": "/record/2024-06-14-homelessness-update",
+        "search_label": "Record",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "doc-2024-06-28-grants-pass-statement",
+        "record_type": null,
+        "route": "/record/2024-06-28-grants-pass-statement",
+        "search_label": "Record",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "doc-2024-08-08-boyd-dismissal-release",
+        "record_type": null,
+        "route": "/record/2024-08-08-boyd-dismissal-release",
+        "search_label": "Record",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "doc-2024-08-19-item-5a-report",
+        "record_type": null,
+        "route": "/record/2024-08-19-item-5a-report",
+        "search_label": "Record",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "doc-2024-08-19-minutes",
+        "record_type": null,
+        "route": "/record/2024-08-19-minutes",
+        "search_label": "Record",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "doc-2024-08-19-staff-report",
+        "record_type": null,
+        "route": "/record/2024-08-19-staff-report",
+        "search_label": "Record",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "doc-2025-01-24-homelessness-update",
+        "record_type": null,
+        "route": "/record/2025-01-24-homelessness-update",
+        "search_label": "Record",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-01-07-san-rafael-city-council-cancelled-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-01-07-san-rafael-city-council-cancelled-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-01-22-san-rafael-city-council-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-01-22-san-rafael-city-council-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-01-22-san-rafael-city-council-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-01-22-san-rafael-city-council-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-01-22-san-rafael-city-council-special-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-01-22-san-rafael-city-council-special-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-01-22-san-rafael-city-council-special-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-01-22-san-rafael-city-council-special-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-02-04-san-rafael-city-council-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-02-04-san-rafael-city-council-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-02-04-san-rafael-city-council-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-02-04-san-rafael-city-council-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-02-19-san-rafael-city-council-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-02-19-san-rafael-city-council-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-02-19-san-rafael-city-council-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-02-19-san-rafael-city-council-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-03-04-san-rafael-city-council-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-03-04-san-rafael-city-council-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-03-04-san-rafael-city-council-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-03-04-san-rafael-city-council-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-03-18-san-rafael-city-council-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-03-18-san-rafael-city-council-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-03-18-san-rafael-city-council-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-03-18-san-rafael-city-council-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-04-02-san-rafael-city-council-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-04-02-san-rafael-city-council-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-04-02-san-rafael-city-council-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-04-02-san-rafael-city-council-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-04-02-san-rafael-city-council-special-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-04-02-san-rafael-city-council-special-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-04-15-san-rafael-city-council-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-04-15-san-rafael-city-council-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-04-15-san-rafael-city-council-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-04-15-san-rafael-city-council-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-04-15-san-rafael-city-council-special-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-04-15-san-rafael-city-council-special-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-05-06-san-rafael-city-council-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-05-06-san-rafael-city-council-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-05-06-san-rafael-city-council-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-05-06-san-rafael-city-council-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-05-06-san-rafael-city-council-special-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-05-06-san-rafael-city-council-special-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-05-06-san-rafael-city-council-special-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-05-06-san-rafael-city-council-special-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-05-20-san-rafael-city-council-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-05-20-san-rafael-city-council-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-05-20-san-rafael-city-council-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-05-20-san-rafael-city-council-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-06-03-san-rafael-city-council-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-06-03-san-rafael-city-council-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-06-03-san-rafael-city-council-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-06-03-san-rafael-city-council-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-06-10-san-rafael-city-council-special-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-06-10-san-rafael-city-council-special-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-06-10-san-rafael-city-council-special-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-06-10-san-rafael-city-council-special-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-06-17-san-rafael-city-council-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-06-17-san-rafael-city-council-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-06-17-san-rafael-city-council-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-06-17-san-rafael-city-council-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-06-17-san-rafael-city-council-special-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-06-17-san-rafael-city-council-special-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-07-15-san-rafael-city-council-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-07-15-san-rafael-city-council-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-07-15-san-rafael-city-council-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-07-15-san-rafael-city-council-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-08-05-san-rafael-city-council-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-08-05-san-rafael-city-council-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-08-05-san-rafael-city-council-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-08-05-san-rafael-city-council-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-08-05-san-rafael-city-council-special-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-08-05-san-rafael-city-council-special-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-08-05-san-rafael-city-council-special-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-08-05-san-rafael-city-council-special-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-08-19-san-rafael-city-council-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-08-19-san-rafael-city-council-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-08-19-san-rafael-city-council-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-08-19-san-rafael-city-council-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-09-03-san-rafael-city-council-minutes",
+        "record_type": "minutes_pdf",
+        "route": "/record/2019-09-03-san-rafael-city-council-minutes",
+        "search_label": "Minutes Pdf",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-2019-09-03-san-rafael-city-council-page",
+        "record_type": "meeting_page",
+        "route": "/record/2019-09-03-san-rafael-city-council-page",
+        "search_label": "Meeting Page",
+        "type": "Record"
+      }
+    ],
+    "type": "Record"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/record"
+  }
+}

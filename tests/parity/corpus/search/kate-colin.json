@@ -1,0 +1,515 @@
+{
+  "http_status": 200,
+  "payload": {
+    "query": "kate colin",
+    "results": [
+      {
+        "id": "person-kate-colin",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2026-03-16",
+        "rank": 100,
+        "route": "/person/kate-colin",
+        "search_label": "Kate Colin",
+        "type": "Person"
+      },
+      {
+        "id": "person-colin-kate",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-05-14",
+        "rank": 95,
+        "route": "/person/colin-kate",
+        "search_label": "Kate Colin",
+        "type": "Person"
+      },
+      {
+        "id": "org-kate-colin-for-san-rafael",
+        "jurisdiction": null,
+        "key_fact": "Kate Colin for San Rafael",
+        "last_activity": "2024-10-07",
+        "rank": 83,
+        "route": "/organization/kate-colin-for-san-rafael",
+        "search_label": "Kate Colin for San Rafael",
+        "type": "Organization"
+      },
+      {
+        "id": "committee-kate-colin-for-mayor-2020",
+        "jurisdiction": null,
+        "key_fact": "Kate Colin for Mayor 2020",
+        "last_activity": "2020-12-18",
+        "rank": 71,
+        "route": "/committee/kate-colin-for-mayor-2020",
+        "search_label": "Kate Colin for Mayor 2020",
+        "type": "Committee"
+      },
+      {
+        "id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "jurisdiction": null,
+        "key_fact": "Kate Colin for San Rafael Mayor 2024",
+        "last_activity": "2024-11-05",
+        "rank": 87,
+        "route": "/committee/kate-colin-for-san-rafael-mayor-2024",
+        "search_label": "Kate Colin for San Rafael Mayor 2024",
+        "type": "Committee"
+      },
+      {
+        "id": "org-kate-colin-for-san-rafael-mayor-2024",
+        "jurisdiction": null,
+        "key_fact": "Kate Colin for San Rafael Mayor 2024",
+        "last_activity": "2024-10-01",
+        "rank": 85,
+        "route": "/organization/kate-colin-for-san-rafael-mayor-2024",
+        "search_label": "Kate Colin for San Rafael Mayor 2024",
+        "type": "Organization"
+      },
+      {
+        "id": "person-colin-leary",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2026-04-02",
+        "rank": 99,
+        "route": "/person/colin-leary",
+        "search_label": "Colin Leary",
+        "type": "Person"
+      },
+      {
+        "id": "person-colin-marquez",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2026-02-03",
+        "rank": 98,
+        "route": "/person/colin-marquez",
+        "search_label": "Colin Marquez",
+        "type": "Person"
+      },
+      {
+        "id": "person-catherine-colin",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-03-30",
+        "rank": 95,
+        "route": "/person/catherine-colin",
+        "search_label": "Catherine Colin",
+        "type": "Person"
+      },
+      {
+        "id": "person-colin-catherine",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2024-10-11",
+        "rank": 88,
+        "route": "/person/colin-catherine",
+        "search_label": "Catherine Colin",
+        "type": "Person"
+      },
+      {
+        "id": "person-colin-margarita",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2024-10-29",
+        "rank": 88,
+        "route": "/person/colin-margarita",
+        "search_label": "Margarita Colin",
+        "type": "Person"
+      },
+      {
+        "id": "person-kate-stanford",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2026-04-01",
+        "rank": 100,
+        "route": "/person/kate-stanford",
+        "search_label": "Kate Stanford",
+        "type": "Person"
+      },
+      {
+        "id": "person-colin-katie",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2024-01-22",
+        "rank": 79,
+        "route": "/person/colin-katie",
+        "search_label": "Katie Colin",
+        "type": "Person"
+      },
+      {
+        "id": "person-hamblin-colin",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2023-12-20",
+        "rank": 79,
+        "route": "/person/hamblin-colin",
+        "search_label": "Colin Hamblin",
+        "type": "Person"
+      },
+      {
+        "id": "person-kate-anderson",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2026-02-10",
+        "rank": 98,
+        "route": "/person/kate-anderson",
+        "search_label": "Kate Anderson",
+        "type": "Person"
+      },
+      {
+        "id": "person-miller-kate",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-09-15",
+        "rank": 93,
+        "route": "/person/miller-kate",
+        "search_label": "Kate Miller",
+        "type": "Person"
+      },
+      {
+        "id": "person-colin-alley",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2019-04-03",
+        "rank": 72,
+        "route": "/person/colin-alley",
+        "search_label": "Colin Alley",
+        "type": "Person"
+      },
+      {
+        "id": "person-colin-coffey",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2021-03-22",
+        "rank": 72,
+        "route": "/person/colin-coffey",
+        "search_label": "Colin Coffey",
+        "type": "Person"
+      },
+      {
+        "id": "person-mcnear-kate",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2024-10-14",
+        "rank": 86,
+        "route": "/person/mcnear-kate",
+        "search_label": "Kate McNear",
+        "type": "Person"
+      },
+      {
+        "id": "person-taplin-kate",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2024-09-13",
+        "rank": 84,
+        "route": "/person/taplin-kate",
+        "search_label": "Kate Taplin",
+        "type": "Person"
+      },
+      {
+        "id": "person-littleboy-kate",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2024-08-13",
+        "rank": 83,
+        "route": "/person/littleboy-kate",
+        "search_label": "Kate Littleboy",
+        "type": "Person"
+      },
+      {
+        "id": "person-travis-kate",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2024-07-29",
+        "rank": 83,
+        "route": "/person/travis-kate",
+        "search_label": "Kate Travis",
+        "type": "Person"
+      },
+      {
+        "id": "person-kate-lane",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2024-02-15",
+        "rank": 79,
+        "route": "/person/kate-lane",
+        "search_label": "Kate Lane",
+        "type": "Person"
+      },
+      {
+        "id": "person-kain-kate",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2023-12-31",
+        "rank": 78,
+        "route": "/person/kain-kate",
+        "search_label": "Kate Kain",
+        "type": "Person"
+      },
+      {
+        "id": "person-jaquet-kate",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2023-08-19",
+        "rank": 75,
+        "route": "/person/jaquet-kate",
+        "search_label": "Kate Jaquet",
+        "type": "Person"
+      },
+      {
+        "id": "person-kate-powers",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2019-03-18",
+        "rank": 73,
+        "route": "/person/kate-powers",
+        "search_label": "Kate Powers",
+        "type": "Person"
+      },
+      {
+        "id": "person-sears-kate",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2019-09-26",
+        "rank": 73,
+        "route": "/person/sears-kate",
+        "search_label": "Kate Sears",
+        "type": "Person"
+      },
+      {
+        "id": "person-duhamel-kate",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2022-02-25",
+        "rank": 72,
+        "route": "/person/duhamel-kate",
+        "search_label": "Kate Duhamel",
+        "type": "Person"
+      },
+      {
+        "id": "person-hoj-kate",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2021-07-12",
+        "rank": 72,
+        "route": "/person/hoj-kate",
+        "search_label": "Kate Hoj",
+        "type": "Person"
+      },
+      {
+        "id": "person-levinson-kate",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2023-02-01",
+        "rank": 72,
+        "route": "/person/levinson-kate",
+        "search_label": "Kate Levinson",
+        "type": "Person"
+      },
+      {
+        "id": "person-meader-kate",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2022-07-21",
+        "rank": 72,
+        "route": "/person/meader-kate",
+        "search_label": "Kate Meader",
+        "type": "Person"
+      },
+      {
+        "id": "person-powers-kate",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2022-01-06",
+        "rank": 72,
+        "route": "/person/powers-kate",
+        "search_label": "Kate Powers",
+        "type": "Person"
+      },
+      {
+        "id": "org-colin-for-san-rafael-mayor-2024-kate",
+        "jurisdiction": null,
+        "key_fact": "Colin for San Rafael Mayor 2024",
+        "last_activity": "2024-09-30",
+        "rank": 83,
+        "route": "/organization/colin-for-san-rafael-mayor-2024-kate",
+        "search_label": "Colin for San Rafael Mayor 2024",
+        "type": "Organization"
+      },
+      {
+        "id": "org-kate-collin-for-mayor",
+        "jurisdiction": null,
+        "key_fact": "Kate Collin for Mayor",
+        "last_activity": "2024-07-03",
+        "rank": 82,
+        "route": "/organization/kate-collin-for-mayor",
+        "search_label": "Kate Collin for Mayor",
+        "type": "Organization"
+      },
+      {
+        "id": "filing-2025-09-04-kate-colin-form-803",
+        "jurisdiction": null,
+        "key_fact": "Form 803 \u00b7 2025-09-04",
+        "last_activity": "2025-08-08",
+        "rank": 86,
+        "route": "/filing/2025-09-04-kate-colin-form-803",
+        "search_label": "Form 803 \u00b7 2025-09-04",
+        "type": "Filing"
+      },
+      {
+        "id": "committee-netfile-1377140",
+        "jurisdiction": null,
+        "key_fact": "Kate Sears for Supervisor 2016",
+        "last_activity": "2019-07-22",
+        "rank": 68,
+        "route": "/committee/netfile-1377140",
+        "search_label": "Kate Sears for Supervisor 2016",
+        "type": "Committee"
+      },
+      {
+        "id": "filing-form700-raf-2020-05-28-colin-catherine-annual",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2020-05-28",
+        "rank": 63,
+        "route": "/filing/form700-raf-2020-05-28-colin-catherine-annual",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-raf-2025-03-30-colin-catherine-annual-mayor-city-council",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2025-03-30",
+        "rank": 80,
+        "route": "/filing/form700-raf-2025-03-30-colin-catherine-annual-mayor-city-council",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-raf-2020-05-28-colin-catherine-annual-row-2",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2020-05-28",
+        "rank": 63,
+        "route": "/filing/form700-raf-2020-05-28-colin-catherine-annual-row-2",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2025-03-30",
+        "rank": 83,
+        "route": "/filing/san-rafael-form700-2025-03-30-colin-catherine-annual-mayor-city-council",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-cmar-2026-04-01-stanford-kate-annual-county-counsel-lv-county-counsel",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2026-04-01",
+        "rank": 88,
+        "route": "/filing/form700-cmar-2026-04-01-stanford-kate-annual-county-counsel-lv-county-counsel",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-cmar-2026-04-02-leary-colin-annual-general-counsel-marin-healthcare-district",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2026-04-02",
+        "rank": 88,
+        "route": "/filing/form700-cmar-2026-04-02-leary-colin-annual-general-counsel-marin-healthcare-district",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-ctm-2026-02-03-marquez-colin-annual-field-project-manager-public-works",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2026-02-03",
+        "rank": 87,
+        "route": "/filing/form700-ctm-2026-02-03-marquez-colin-annual-field-project-manager-public-works",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-cmar-2025-03-27-stanford-kate-annual-county-counsel-lv-county-counsel",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2025-03-27",
+        "rank": 80,
+        "route": "/filing/form700-cmar-2025-03-27-stanford-kate-annual-county-counsel-lv-county-counsel",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-raf-2026-02-10-anderson-kate-annual-open-space-hazard-coordinator-fire-department",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2026-02-10",
+        "rank": 87,
+        "route": "/filing/form700-raf-2026-02-10-anderson-kate-annual-open-space-hazard-coordinator-fire-department",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-cmar-2025-03-24-leary-colin-annual-general-counsel-marin-healthcare-district",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2025-03-24",
+        "rank": 80,
+        "route": "/filing/form700-cmar-2025-03-24-leary-colin-annual-general-counsel-marin-healthcare-district",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-ctm-2025-03-03-marquez-colin-annual-field-project-manager-public-works",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2025-03-03",
+        "rank": 79,
+        "route": "/filing/form700-ctm-2025-03-03-marquez-colin-annual-field-project-manager-public-works",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-cmar-2024-02-29-stanford-kate-annual-county-counsel-lv-county-counsel",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2024-02-29",
+        "rank": 71,
+        "route": "/filing/form700-cmar-2024-02-29-stanford-kate-annual-county-counsel-lv-county-counsel",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-cmar-2019-04-03-alley-colin-leaving-office-commissioner-architectural-commission",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2019-04-03",
+        "rank": 63,
+        "route": "/filing/form700-cmar-2019-04-03-alley-colin-leaving-office-commissioner-architectural-commission",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-raf-2025-02-04-anderson-kate-annual-open-space-hazard-coordinator-fire-department",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2025-02-04",
+        "rank": 78,
+        "route": "/filing/form700-raf-2025-02-04-anderson-kate-annual-open-space-hazard-coordinator-fire-department",
+        "search_label": "Form 700",
+        "type": "Filing"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "q": "kate colin"
+    },
+    "url_path": "/api/search"
+  }
+}

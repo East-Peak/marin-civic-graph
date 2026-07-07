@@ -1,0 +1,11 @@
+{
+  "http_status": 404,
+  "payload": {
+    "error": "entity not found"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/parity-entity/record/2023-12-14-implementation-plan"
+  }
+}

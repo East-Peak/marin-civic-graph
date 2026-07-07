@@ -1,0 +1,4053 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "alignment": "left",
+        "key": "decision_title",
+        "label": "Decision",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "decided_at",
+        "label": "Decided at",
+        "sortable": true
+      },
+      {
+        "alignment": "right",
+        "key": "money_amount",
+        "label": "Amount",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "flow_date",
+        "label": "Flow date",
+        "sortable": true
+      },
+      {
+        "alignment": "right",
+        "key": "days_delta",
+        "label": "\u0394 days",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "id",
+        "label": "Flow id",
+        "link": "entity-route"
+      }
+    ],
+    "rows": [
+      {
+        "days_delta": 0,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-07",
+        "id": "moneyflow-1461276-uxhixOtpYiWL",
+        "money_amount": 3000
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-07",
+        "id": "moneyflow-1461276-uxhixOtpYiWL",
+        "money_amount": 3000
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-16",
+        "id": "moneyflow-1277670-EXP1412",
+        "money_amount": 114.5
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-16",
+        "id": "moneyflow-1456997-YhO1fWBXgdUx",
+        "money_amount": 270
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-16",
+        "id": "moneyflow-1461276-PfkAvNRMB9CF",
+        "money_amount": 72.76
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-16",
+        "id": "moneyflow-1462337-WuflRlVojGoI",
+        "money_amount": 21
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-16",
+        "id": "moneyflow-1464553-EXP248",
+        "money_amount": 2000.49
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-16",
+        "id": "moneyflow-1475234-W1A5haju1ne3",
+        "money_amount": 400.23
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1454722-ng1Oc3mEvG7g",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1454722-ng1Oc3mEvG7g",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1456997-62nxLDKTzhvc",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1456997-62nxLDKTzhvc",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1461685-1lRT3fJg3tNq",
+        "money_amount": 242
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1461685-1lRT3fJg3tNq",
+        "money_amount": 242
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1461685-CDC1AxUu4eEn",
+        "money_amount": 1391.47
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1461685-CDC1AxUu4eEn",
+        "money_amount": 1391.47
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1461685-rSDpAxyUUWa7",
+        "money_amount": 60
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1461685-rSDpAxyUUWa7",
+        "money_amount": 60
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1462337-OiTgHXMoszau",
+        "money_amount": 21
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1462337-OiTgHXMoszau",
+        "money_amount": 21
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1464553-EXP176",
+        "money_amount": 2.13
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1464553-EXP176",
+        "money_amount": 2.13
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1464553-INC174",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1464553-INC174",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1470402-9WzqwtYy8IyI",
+        "money_amount": 15.51
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1470402-9WzqwtYy8IyI",
+        "money_amount": 15.51
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1470402-SMXXrDAC2hed",
+        "money_amount": 713.4
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1470402-SMXXrDAC2hed",
+        "money_amount": 713.4
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1470402-YpTBhwKsQrwj",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1470402-YpTBhwKsQrwj",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1471467-INC94",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1471467-INC94",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1472475-8OQjoZd2dPTv",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1472475-8OQjoZd2dPTv",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1472475-OtCni5A92fNG",
+        "money_amount": 650
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1472475-OtCni5A92fNG",
+        "money_amount": 650
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1473651-ij2NmeWjTpLb",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1473651-ij2NmeWjTpLb",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1474069-RNbbrGxJhFSH",
+        "money_amount": 600
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1474069-RNbbrGxJhFSH",
+        "money_amount": 600
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1474678-X6KXloadNk54",
+        "money_amount": 112.24
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1474678-X6KXloadNk54",
+        "money_amount": 112.24
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1474678-eCW1Z8MefMsW",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1474678-eCW1Z8MefMsW",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1474678-lvxVnLaMFte7",
+        "money_amount": 50
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1474678-lvxVnLaMFte7",
+        "money_amount": 50
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1474678-pyTMlSHzrIlM",
+        "money_amount": 180
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1474678-pyTMlSHzrIlM",
+        "money_amount": 180
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1474678-qLHoR9SbDetl",
+        "money_amount": 360
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1474678-qLHoR9SbDetl",
+        "money_amount": 360
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1474678-tpAVPAYUMAAz",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1474678-tpAVPAYUMAAz",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1475586-CInKldPNmW4D",
+        "money_amount": 200
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-1475586-CInKldPNmW4D",
+        "money_amount": 200
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-2024-09-16-mark-kamena-committee-kate-colin-for-san-rafael-mayor-2024-25",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-16",
+        "id": "moneyflow-2024-09-16-mark-kamena-committee-kate-colin-for-san-rafael-mayor-2024-25",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-06-03",
+        "decision_title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "flow_date": "2024-06-03",
+        "id": "moneyflow-1461276-xjcjvVt8gfuk",
+        "money_amount": 34.35
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2024-06-03",
+        "decision_title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "flow_date": "2024-06-03",
+        "id": "moneyflow-1461877-UG48rBbHYil2",
+        "money_amount": 285
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-18",
+        "id": "moneyflow-1458380-EXP361",
+        "money_amount": 220.8
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-18",
+        "id": "moneyflow-1458380-INC275",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-18",
+        "id": "moneyflow-1458380-INC276",
+        "money_amount": 50
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-18",
+        "id": "moneyflow-1458380-INC277",
+        "money_amount": 50
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-18",
+        "id": "moneyflow-1458380-INC279",
+        "money_amount": 125
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-18",
+        "id": "moneyflow-1458380-INC280",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-18",
+        "id": "moneyflow-1458380-INC281",
+        "money_amount": 50
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2022-12-19",
+        "decision_title": "decision-2022-12-19-downtown-carnegie-grant-acceptance \u00b7 2022-12-19",
+        "flow_date": "2022-12-19",
+        "id": "moneyflow-1436315-EXP526",
+        "money_amount": 45
+      },
+      {
+        "days_delta": 0,
+        "decided_at": "2020-06-15",
+        "decision_title": "Call the November 3, 2020 general municipal election \u00b7 2020-06-15",
+        "flow_date": "2020-06-15",
+        "id": "moneyflow-1426626-3Dl6lCIvjtw6",
+        "money_amount": 1.03
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-08",
+        "id": "moneyflow-1461276-7Kh8cKLcFbuI",
+        "money_amount": 3000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-08",
+        "id": "moneyflow-1461276-7Kh8cKLcFbuI",
+        "money_amount": 3000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-08",
+        "id": "moneyflow-1461276-LugjKPjl7Woz",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-08",
+        "id": "moneyflow-1461276-LugjKPjl7Woz",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-17",
+        "id": "moneyflow-1343255-hU7Ac8EScglo",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-17",
+        "id": "moneyflow-1461276-GizTAdxDhthE",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-17",
+        "id": "moneyflow-1461276-XfN8b1KO4CV2",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-17",
+        "id": "moneyflow-1461276-iDxULwfhhKB7",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-17",
+        "id": "moneyflow-1462337-sXGt2fOw5Onr",
+        "money_amount": 144
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1456997-RDBTbmA2Rc5V",
+        "money_amount": 200
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1456997-RDBTbmA2Rc5V",
+        "money_amount": 200
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1456997-UHHMvL8hZWSi",
+        "money_amount": 12
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1456997-UHHMvL8hZWSi",
+        "money_amount": 12
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1461276-3JITXYhRU4Sx",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1461276-3JITXYhRU4Sx",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1461276-HM6kB62Izicc",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1461276-HM6kB62Izicc",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1461276-KMZL6OC9vaXU",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1461276-KMZL6OC9vaXU",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1461276-LSUXNKBQlCYK",
+        "money_amount": 125
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1461276-LSUXNKBQlCYK",
+        "money_amount": 125
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1461276-OI4nPJRkQfbG",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1461276-OI4nPJRkQfbG",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1461276-iX4NCVXokhK2",
+        "money_amount": 200
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1461276-iX4NCVXokhK2",
+        "money_amount": 200
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1461276-kvSZOd13vZGI",
+        "money_amount": 3000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1461276-kvSZOd13vZGI",
+        "money_amount": 3000
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1461276-ps5d8dJhKzWJ",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1461276-ps5d8dJhKzWJ",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1461276-yLmEYdyyD4p7",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1461276-yLmEYdyyD4p7",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1461685-9hQrtWzcukOI",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1461685-9hQrtWzcukOI",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1461685-npiWvQoblHMR",
+        "money_amount": 4500
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1461685-npiWvQoblHMR",
+        "money_amount": 4500
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1461685-phIDGCM2bbWE",
+        "money_amount": 1900
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1461685-phIDGCM2bbWE",
+        "money_amount": 1900
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1464553-INC177",
+        "money_amount": 9999
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1464553-INC177",
+        "money_amount": 9999
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1464553-INC178",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1464553-INC178",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1470262-EXP68",
+        "money_amount": 2000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1470262-EXP68",
+        "money_amount": 2000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1470262-EXP73",
+        "money_amount": 1100
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1470262-EXP73",
+        "money_amount": 1100
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1470262-INC66",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1470262-INC66",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1470262-INC72",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1470262-INC72",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1470262-INC76",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1470262-INC76",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1470402-8RQrtDnG3Pew",
+        "money_amount": 75
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1470402-8RQrtDnG3Pew",
+        "money_amount": 75
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1470402-BhGZm8ffPgkl",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1470402-BhGZm8ffPgkl",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1470402-cdqwEqLeKfP1",
+        "money_amount": 45.94
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1470402-cdqwEqLeKfP1",
+        "money_amount": 45.94
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1470402-lJuHBMjMML78",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1470402-lJuHBMjMML78",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1471467-INC93",
+        "money_amount": 262.09
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1471467-INC93",
+        "money_amount": 262.09
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1471467-INC95",
+        "money_amount": 105.03
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1471467-INC95",
+        "money_amount": 105.03
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1472475-JRu5MXyLBiq3",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1472475-JRu5MXyLBiq3",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1472475-z7hbjMw7JmdE",
+        "money_amount": 200
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1472475-z7hbjMw7JmdE",
+        "money_amount": 200
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1474410-IDT4",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1474410-IDT4",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1474410-IDT5",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-15",
+        "id": "moneyflow-1474410-IDT5",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1474410-IDT6",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1474410-IDT6",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1475234-o5j2CftVdkWS",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-1475234-o5j2CftVdkWS",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-2024-09-17-mike-mcguire-for-insurance-commissioner-2026-committee-rachel-kertz-for-san-rafael-city-council-2024-19",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-2024-09-17-mike-mcguire-for-insurance-commissioner-2026-committee-rachel-kertz-for-san-rafael-city-council-2024-19",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-2024-09-17-moulton-peters-for-supervisor-2028-committee-committee-rachel-kertz-for-san-rafael-city-council-2024-18",
+        "money_amount": 150
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-17",
+        "id": "moneyflow-2024-09-17-moulton-peters-for-supervisor-2028-committee-committee-rachel-kertz-for-san-rafael-city-council-2024-18",
+        "money_amount": 150
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-06-03",
+        "decision_title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "flow_date": "2024-06-04",
+        "id": "moneyflow-1347886-EXP4",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-06-03",
+        "decision_title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "flow_date": "2024-06-04",
+        "id": "moneyflow-1461685-TLLfao27JXf5",
+        "money_amount": 59.96
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-06-03",
+        "decision_title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "flow_date": "2024-06-04",
+        "id": "moneyflow-1461685-TkQ2ZSjrAIlH",
+        "money_amount": 16.23
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-06-03",
+        "decision_title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "flow_date": "2024-06-04",
+        "id": "moneyflow-1461685-Tm69IdUYN3Hl",
+        "money_amount": 162.3
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-06-03",
+        "decision_title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "flow_date": "2024-06-04",
+        "id": "moneyflow-1461685-YrxsBHZVNzV1",
+        "money_amount": 42.86
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2024-06-03",
+        "decision_title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "flow_date": "2024-06-02",
+        "id": "moneyflow-1461685-klf4eVacoJRA",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2024-06-03",
+        "decision_title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "flow_date": "2024-06-04",
+        "id": "moneyflow-1461685-vPFbNwauAPX3",
+        "money_amount": 83.49
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-19",
+        "id": "moneyflow-1458090-EXP44",
+        "money_amount": 115
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-19",
+        "id": "moneyflow-1458380-INC271",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-19",
+        "id": "moneyflow-1458380-INC273",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-19",
+        "id": "moneyflow-1458380-INC274",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-17",
+        "id": "moneyflow-1458380-INC286",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-17",
+        "id": "moneyflow-1458380-INC291",
+        "money_amount": 50
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-17",
+        "id": "moneyflow-1458380-INC292",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-17",
+        "id": "moneyflow-1458380-INC294",
+        "money_amount": 200
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-17",
+        "id": "moneyflow-1458380-INC295",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-17",
+        "id": "moneyflow-1458380-INC297",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-19",
+        "id": "moneyflow-1461276-pq2tTZzghkDZ",
+        "money_amount": 1023.01
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-19",
+        "id": "moneyflow-1461685-JpNJF3aCI3k4",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 1,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-17",
+        "id": "moneyflow-1461685-yeFsSDV18ufo",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2022-12-19",
+        "decision_title": "decision-2022-12-19-downtown-carnegie-grant-acceptance \u00b7 2022-12-19",
+        "flow_date": "2022-12-20",
+        "id": "moneyflow-1454722-DvlKfu8KfER3",
+        "money_amount": 2500
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2022-12-19",
+        "decision_title": "decision-2022-12-19-downtown-carnegie-grant-acceptance \u00b7 2022-12-19",
+        "flow_date": "2022-12-20",
+        "id": "moneyflow-1454722-c2AxBOlleJfr",
+        "money_amount": 18.93
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2022-12-19",
+        "decision_title": "decision-2022-12-19-downtown-carnegie-grant-acceptance \u00b7 2022-12-19",
+        "flow_date": "2022-12-20",
+        "id": "moneyflow-1454722-kGQThTgEHat3",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2022-12-19",
+        "decision_title": "decision-2022-12-19-downtown-carnegie-grant-acceptance \u00b7 2022-12-19",
+        "flow_date": "2022-12-20",
+        "id": "moneyflow-1456788-dWsHxJzFzqvc",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2020-06-15",
+        "decision_title": "Call the November 3, 2020 general municipal election \u00b7 2020-06-15",
+        "flow_date": "2020-06-16",
+        "id": "moneyflow-1424535-EXP20",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -1,
+        "decided_at": "2020-06-15",
+        "decision_title": "Call the November 3, 2020 general municipal election \u00b7 2020-06-15",
+        "flow_date": "2020-06-16",
+        "id": "moneyflow-1424535-EXP21",
+        "money_amount": -7307.5
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-09",
+        "id": "moneyflow-1356291-WX9zaQoEMiFG",
+        "money_amount": 119.8
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-09",
+        "id": "moneyflow-1356291-WX9zaQoEMiFG",
+        "money_amount": 119.8
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-05",
+        "id": "moneyflow-1462337-8becL6bSMC4p",
+        "money_amount": 1635.87
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-05",
+        "id": "moneyflow-1462337-8becL6bSMC4p",
+        "money_amount": 1635.87
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-09",
+        "id": "moneyflow-1479798-IDT6",
+        "money_amount": 200
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-09",
+        "id": "moneyflow-1479798-IDT6",
+        "money_amount": 200
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-18",
+        "id": "moneyflow-1474410-EXP60",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-18",
+        "id": "moneyflow-930791-EXP1474",
+        "money_amount": 296.5
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1277670-EXP1405",
+        "money_amount": 104.5
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1277670-EXP1405",
+        "money_amount": 104.5
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1461685-37zSxFFPbl6K",
+        "money_amount": 200
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1461685-37zSxFFPbl6K",
+        "money_amount": 200
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-14",
+        "id": "moneyflow-1461685-PkLUofm2DfwU",
+        "money_amount": 120
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-14",
+        "id": "moneyflow-1461685-PkLUofm2DfwU",
+        "money_amount": 120
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-14",
+        "id": "moneyflow-1470402-Ffg8Mx2ZfS7j",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-14",
+        "id": "moneyflow-1470402-Ffg8Mx2ZfS7j",
+        "money_amount": 150
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1470402-Ih34XZPQE2bK",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1470402-Ih34XZPQE2bK",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1470402-Xlbw8lhbBaj7",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1470402-Xlbw8lhbBaj7",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1470402-XmasgvA51spd",
+        "money_amount": 150
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1470402-XmasgvA51spd",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-14",
+        "id": "moneyflow-1470402-mInZnNcyl3Sg",
+        "money_amount": 99.4
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-14",
+        "id": "moneyflow-1470402-mInZnNcyl3Sg",
+        "money_amount": 99.4
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1470402-no4wcsKnKJAg",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1470402-no4wcsKnKJAg",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-14",
+        "id": "moneyflow-1470402-xODQCeLQ8fvb",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-14",
+        "id": "moneyflow-1470402-xODQCeLQ8fvb",
+        "money_amount": 150
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1471240-Iq8wUdZeEI5j",
+        "money_amount": 2800
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1471240-Iq8wUdZeEI5j",
+        "money_amount": 2800
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-14",
+        "id": "moneyflow-1471467-EXP71",
+        "money_amount": 5290
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-14",
+        "id": "moneyflow-1471467-EXP71",
+        "money_amount": 5290
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-14",
+        "id": "moneyflow-1471467-EXP78",
+        "money_amount": 2000
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-14",
+        "id": "moneyflow-1471467-EXP78",
+        "money_amount": 2000
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-14",
+        "id": "moneyflow-1471467-INC91",
+        "money_amount": 25
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-14",
+        "id": "moneyflow-1471467-INC91",
+        "money_amount": 25
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-14",
+        "id": "moneyflow-1471467-INC92",
+        "money_amount": 25
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-14",
+        "id": "moneyflow-1471467-INC92",
+        "money_amount": 25
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1471467-INC96",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1471467-INC96",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1471467-INC97",
+        "money_amount": 750
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1471467-INC97",
+        "money_amount": 750
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1471467-INC98",
+        "money_amount": 300
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1471467-INC98",
+        "money_amount": 300
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1471467-INC99",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1471467-INC99",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1472475-5AO1m1I6sWlD",
+        "money_amount": 2500
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1472475-5AO1m1I6sWlD",
+        "money_amount": 2500
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1472475-5v8iJk2hAQvi",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1472475-5v8iJk2hAQvi",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1472475-IeV14cYEQcYU",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1472475-IeV14cYEQcYU",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1472475-iiCfBo6UoGQu",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1472475-iiCfBo6UoGQu",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1474678-jkTbTACpgIeE",
+        "money_amount": 525
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1474678-jkTbTACpgIeE",
+        "money_amount": 525
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1474791-INC1",
+        "money_amount": 1500
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-18",
+        "id": "moneyflow-1474791-INC1",
+        "money_amount": 1500
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2024-06-03",
+        "decision_title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "flow_date": "2024-06-05",
+        "id": "moneyflow-1456997-89sXbMHeRLH5",
+        "money_amount": 161.46
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2024-06-03",
+        "decision_title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "flow_date": "2024-06-01",
+        "id": "moneyflow-1461685-6HmHxUWhOV1O",
+        "money_amount": 122.25
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-20",
+        "id": "moneyflow-1458380-INC263",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-20",
+        "id": "moneyflow-1458380-INC264",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-20",
+        "id": "moneyflow-1458380-INC266",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-20",
+        "id": "moneyflow-1458380-INC267",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-20",
+        "id": "moneyflow-1458380-INC268",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-20",
+        "id": "moneyflow-1458380-INC269",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-20",
+        "id": "moneyflow-1458380-INC270",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-16",
+        "id": "moneyflow-1458380-INC298",
+        "money_amount": 50
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-16",
+        "id": "moneyflow-1458380-INC299",
+        "money_amount": 50
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-16",
+        "id": "moneyflow-1458380-INC300",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-16",
+        "id": "moneyflow-1458380-INC301",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-20",
+        "id": "moneyflow-1461685-hez8jQVPvJlg",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-20",
+        "id": "moneyflow-1461685-yqkWqA8FIC76",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-20",
+        "id": "moneyflow-1461877-dCMqhYKMTLmD",
+        "money_amount": 2.08
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-16",
+        "id": "moneyflow-1462337-GHzQpUA7vhtm",
+        "money_amount": 165
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-20",
+        "id": "moneyflow-1462337-JA6mlLyiQHqB",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-16",
+        "id": "moneyflow-1462337-LJtVhKclUyXQ",
+        "money_amount": 150
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2022-12-19",
+        "decision_title": "decision-2022-12-19-downtown-carnegie-grant-acceptance \u00b7 2022-12-19",
+        "flow_date": "2022-12-21",
+        "id": "moneyflow-1448412-y2vCaPECOgP3",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2022-12-19",
+        "decision_title": "decision-2022-12-19-downtown-carnegie-grant-acceptance \u00b7 2022-12-19",
+        "flow_date": "2022-12-21",
+        "id": "moneyflow-1454722-C4Wl8vFa4CRQ",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2020-06-15",
+        "decision_title": "Call the November 3, 2020 general municipal election \u00b7 2020-06-15",
+        "flow_date": "2020-06-13",
+        "id": "moneyflow-1422676-CogENc4SMYQu",
+        "money_amount": 11651.2
+      },
+      {
+        "days_delta": 2,
+        "decided_at": "2020-06-15",
+        "decision_title": "Call the November 3, 2020 general municipal election \u00b7 2020-06-15",
+        "flow_date": "2020-06-13",
+        "id": "moneyflow-1426626-LWOvfKz9x3os",
+        "money_amount": 3.2
+      },
+      {
+        "days_delta": -2,
+        "decided_at": "2020-06-15",
+        "decision_title": "Call the November 3, 2020 general municipal election \u00b7 2020-06-15",
+        "flow_date": "2020-06-17",
+        "id": "moneyflow-1426626-r6qO7jZc7Bjz",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-10",
+        "id": "moneyflow-1356291-ibBWj3aOEhmS",
+        "money_amount": 12000
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-10",
+        "id": "moneyflow-1356291-ibBWj3aOEhmS",
+        "money_amount": 12000
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-10",
+        "id": "moneyflow-1461276-EWwnZOwl1ud4",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-10",
+        "id": "moneyflow-1461276-EWwnZOwl1ud4",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-04",
+        "id": "moneyflow-1479035-MxCQquMR9PxP",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-04",
+        "id": "moneyflow-1479035-MxCQquMR9PxP",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-04",
+        "id": "moneyflow-1479035-aaJEDwHuoZnU",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-04",
+        "id": "moneyflow-1479035-aaJEDwHuoZnU",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-04",
+        "id": "moneyflow-1479035-oDjHVoEiBxnO",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-04",
+        "id": "moneyflow-1479035-oDjHVoEiBxnO",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-04",
+        "id": "moneyflow-1479798-EXP18",
+        "money_amount": 456.96
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-04",
+        "id": "moneyflow-1479798-EXP18",
+        "money_amount": 456.96
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-19",
+        "id": "moneyflow-1343255-3b1AoYYFB5MT",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-13",
+        "id": "moneyflow-1343255-8clfcbwQZvYi",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-19",
+        "id": "moneyflow-1343255-YuJx2GZr7dta",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-13",
+        "id": "moneyflow-1461276-tp6XnCce2vDM",
+        "money_amount": 132.37
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-19",
+        "id": "moneyflow-1461276-zczHPw6sQBZY",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-19",
+        "id": "moneyflow-1470262-INC306",
+        "money_amount": 6013.02
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-19",
+        "id": "moneyflow-1471240-1agl8sEocsQ2",
+        "money_amount": 15000
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-19",
+        "id": "moneyflow-1471240-I2JAfiGmxIu6",
+        "money_amount": 15000
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-19",
+        "id": "moneyflow-1471240-iE4BFcZ7y88x",
+        "money_amount": 15000
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-19",
+        "id": "moneyflow-1471240-oZwWWQRejVY5",
+        "money_amount": 20000
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-19",
+        "id": "moneyflow-1471240-z8CicSGZqbQq",
+        "money_amount": 3400
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1454722-XpzyA2zeTetS",
+        "money_amount": 200
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1454722-XpzyA2zeTetS",
+        "money_amount": 200
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1461276-hCTB6kLkhDlg",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1461276-hCTB6kLkhDlg",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1461276-nPOOTpG5Mvx3",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1461276-nPOOTpG5Mvx3",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1461685-2XUbRDIFtQiW",
+        "money_amount": 119.41
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1461685-2XUbRDIFtQiW",
+        "money_amount": 119.41
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1461685-48L4SXhgJLJv",
+        "money_amount": 104
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1461685-48L4SXhgJLJv",
+        "money_amount": 104
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1461685-5Bn67rCTR2RG",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1461685-5Bn67rCTR2RG",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1461685-Fdyw8hgn4N38",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1461685-Fdyw8hgn4N38",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1461685-KiadFjcnjAKV",
+        "money_amount": 140
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1461685-KiadFjcnjAKV",
+        "money_amount": 140
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1461685-eCIiLaxxL2CF",
+        "money_amount": 150.18
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1461685-eCIiLaxxL2CF",
+        "money_amount": 150.18
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1461685-fx7bZSX7Fb3w",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1461685-fx7bZSX7Fb3w",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1461685-xhtZMn6qyz1h",
+        "money_amount": 5500
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1461685-xhtZMn6qyz1h",
+        "money_amount": 5500
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1464553-EXP175",
+        "money_amount": 25.88
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1464553-EXP175",
+        "money_amount": 25.88
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1464553-INC171",
+        "money_amount": 4000
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1464553-INC171",
+        "money_amount": 4000
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1464553-INC179",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1464553-INC179",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1467594-xkgjipcBLlzj",
+        "money_amount": 319.79
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1467594-xkgjipcBLlzj",
+        "money_amount": 319.79
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1470262-INC75",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1470262-INC75",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1470402-7RkBVReJ29xw",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1470402-7RkBVReJ29xw",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1470402-Oaz9WFmzeLrn",
+        "money_amount": 9.82
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1470402-Oaz9WFmzeLrn",
+        "money_amount": 9.82
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1470402-Xb49Vsa4ZQ4G",
+        "money_amount": 200
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1470402-Xb49Vsa4ZQ4G",
+        "money_amount": 200
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1471467-INC100",
+        "money_amount": 262.09
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1471467-INC100",
+        "money_amount": 262.09
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1471467-INC101",
+        "money_amount": 50
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1471467-INC101",
+        "money_amount": 50
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1471467-INC102",
+        "money_amount": 50
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1471467-INC102",
+        "money_amount": 50
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1471467-INC70",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1471467-INC70",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1472475-ILQ44ZXNcsOp",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1472475-ILQ44ZXNcsOp",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1472475-QNJ5geRoQkSI",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1472475-QNJ5geRoQkSI",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1472475-lBdQ2UNuxqkv",
+        "money_amount": 150
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1472475-lBdQ2UNuxqkv",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1472475-p7RRdrNgxoGF",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1472475-p7RRdrNgxoGF",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1472475-xC8Whpvell1G",
+        "money_amount": 3000
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1472475-xC8Whpvell1G",
+        "money_amount": 3000
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1473953-ZwrwQMKxyLFv",
+        "money_amount": 260.73
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1473953-ZwrwQMKxyLFv",
+        "money_amount": 260.73
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1473953-luupOsRzbbJK",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1473953-luupOsRzbbJK",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1473953-pqPUFgXbb6t6",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1473953-pqPUFgXbb6t6",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1474410-IDT2",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1474410-IDT2",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1474410-IDT3",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1474410-IDT3",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1474410-IDT7",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1474410-IDT7",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1474678-ejIvylchbSjQ",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-1474678-ejIvylchbSjQ",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1474791-INC2",
+        "money_amount": 49500
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1474791-INC2",
+        "money_amount": 49500
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1474791-INC21",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1474791-INC21",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1474791-INC3",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1474791-INC3",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1475234-ghLvS95462B4",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-1475234-ghLvS95462B4",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-2024-09-13-diana-maier-committee-rachel-kertz-for-san-rafael-city-council-2024-17",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-2024-09-13-diana-maier-committee-rachel-kertz-for-san-rafael-city-council-2024-17",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-2024-09-13-jenni-er-knoll-committee-kate-colin-for-san-rafael-mayor-2024-28",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-2024-09-13-jenni-er-knoll-committee-kate-colin-for-san-rafael-mayor-2024-28",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-2024-09-19-aaron-lamstein-m-committee-rachel-kertz-for-san-rafael-city-council-2024-20",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-2024-09-19-aaron-lamstein-m-committee-rachel-kertz-for-san-rafael-city-council-2024-20",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-930791-EXP1442",
+        "money_amount": 1547.17
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-13",
+        "id": "moneyflow-930791-EXP1442",
+        "money_amount": 1547.17
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-Pending-uLxPrZL9OIkW",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-19",
+        "id": "moneyflow-Pending-uLxPrZL9OIkW",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-06-03",
+        "decision_title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "flow_date": "2024-06-06",
+        "id": "moneyflow-1352318-EXP439",
+        "money_amount": 5500
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-06-03",
+        "decision_title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "flow_date": "2024-05-31",
+        "id": "moneyflow-1352318-INC437",
+        "money_amount": 5000
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2024-06-03",
+        "decision_title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "flow_date": "2024-06-06",
+        "id": "moneyflow-1453724-EXP40",
+        "money_amount": 340.25
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-06-03",
+        "decision_title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "flow_date": "2024-05-31",
+        "id": "moneyflow-1461276-nhGKixhIoKEU",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2024-06-03",
+        "decision_title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "flow_date": "2024-05-31",
+        "id": "moneyflow-1462337-Vn2eXehopKst",
+        "money_amount": 74.32
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-15",
+        "id": "moneyflow-1456997-LzpqlSLdO9X2",
+        "money_amount": 120
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-21",
+        "id": "moneyflow-1458380-INC258",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-21",
+        "id": "moneyflow-1458380-INC259",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-21",
+        "id": "moneyflow-1458380-INC261",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-21",
+        "id": "moneyflow-1458380-INC262",
+        "money_amount": 50
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-21",
+        "id": "moneyflow-1461877-u222MC9qBFzT",
+        "money_amount": 50.24
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-15",
+        "id": "moneyflow-1462337-Sn1wkqeA8Br4",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2023-09-18",
+        "decision_title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18",
+        "flow_date": "2023-09-15",
+        "id": "moneyflow-1462337-jOL892QHvs7M",
+        "money_amount": 150
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2022-12-19",
+        "decision_title": "decision-2022-12-19-downtown-carnegie-grant-acceptance \u00b7 2022-12-19",
+        "flow_date": "2022-12-22",
+        "id": "moneyflow-1442465-YB1H4RU7UFsn",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2022-12-19",
+        "decision_title": "decision-2022-12-19-downtown-carnegie-grant-acceptance \u00b7 2022-12-19",
+        "flow_date": "2022-12-16",
+        "id": "moneyflow-1453724-EXP5",
+        "money_amount": 315.95
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2022-12-19",
+        "decision_title": "decision-2022-12-19-downtown-carnegie-grant-acceptance \u00b7 2022-12-19",
+        "flow_date": "2022-12-22",
+        "id": "moneyflow-1455519-wVDDxg3zp7J5",
+        "money_amount": 1341.06
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2022-12-19",
+        "decision_title": "decision-2022-12-19-downtown-carnegie-grant-acceptance \u00b7 2022-12-19",
+        "flow_date": "2022-12-22",
+        "id": "moneyflow-1456788-SOpTbV5IJrVR",
+        "money_amount": 2000
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2022-12-19",
+        "decision_title": "decision-2022-12-19-downtown-carnegie-grant-acceptance \u00b7 2022-12-19",
+        "flow_date": "2022-12-16",
+        "id": "moneyflow-1456788-sek8yso9Vyuw",
+        "money_amount": 346.1
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2022-12-19",
+        "decision_title": "decision-2022-12-19-downtown-carnegie-grant-acceptance \u00b7 2022-12-19",
+        "flow_date": "2022-12-22",
+        "id": "moneyflow-760140-EXP20",
+        "money_amount": 140.7
+      },
+      {
+        "days_delta": 3,
+        "decided_at": "2022-12-19",
+        "decision_title": "decision-2022-12-19-downtown-carnegie-grant-acceptance \u00b7 2022-12-19",
+        "flow_date": "2022-12-16",
+        "id": "moneyflow-930791-EXP1274",
+        "money_amount": 1987.65
+      },
+      {
+        "days_delta": -3,
+        "decided_at": "2020-06-15",
+        "decision_title": "Call the November 3, 2020 general municipal election \u00b7 2020-06-15",
+        "flow_date": "2020-06-18",
+        "id": "moneyflow-1426626-ixTEfUdtutdI",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-11",
+        "id": "moneyflow-1453724-EXP68",
+        "money_amount": 572.47
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-11",
+        "id": "moneyflow-1453724-EXP68",
+        "money_amount": 572.47
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-03",
+        "id": "moneyflow-1454722-AJUHwndQMjUH",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-03",
+        "id": "moneyflow-1454722-AJUHwndQMjUH",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-03",
+        "id": "moneyflow-1454722-XrFqOPi5IXBB",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-03",
+        "id": "moneyflow-1454722-XrFqOPi5IXBB",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-11",
+        "id": "moneyflow-1461276-UkGOvc7c9WBj",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-11",
+        "id": "moneyflow-1461276-UkGOvc7c9WBj",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-03",
+        "id": "moneyflow-1479035-2KLkCZrH5hML",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-03",
+        "id": "moneyflow-1479035-2KLkCZrH5hML",
+        "money_amount": 1000
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-03",
+        "id": "moneyflow-1479035-RrWcEUCQTj4V",
+        "money_amount": 156.56
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-03",
+        "id": "moneyflow-1479035-RrWcEUCQTj4V",
+        "money_amount": 156.56
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-03",
+        "id": "moneyflow-1479035-oaACBMGA3Y3r",
+        "money_amount": 1125
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-03",
+        "id": "moneyflow-1479035-oaACBMGA3Y3r",
+        "money_amount": 1125
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-03",
+        "id": "moneyflow-1479798-IDT4",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2025-04-07",
+        "decision_title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07",
+        "flow_date": "2025-04-03",
+        "id": "moneyflow-1479798-IDT4",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-12",
+        "id": "moneyflow-1343255-2qC1UIkgEvsy",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-12",
+        "id": "moneyflow-1343255-64tnhCE35lVj",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-12",
+        "id": "moneyflow-1343255-FBUJDYxO3DHI",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-12",
+        "id": "moneyflow-1343255-rRiboN5iZE6J",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-20",
+        "id": "moneyflow-1454722-y8DvParbflel",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-12",
+        "id": "moneyflow-1455519-CFgFzrzSsGDZ",
+        "money_amount": 2038.94
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-20",
+        "id": "moneyflow-1474678-PMtW9dyFYHFO",
+        "money_amount": 883.35
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-20",
+        "id": "moneyflow-1474678-STJ78hr6yrni",
+        "money_amount": 883.36
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-20",
+        "id": "moneyflow-1474678-zQXchbnhXh5y",
+        "money_amount": 883.35
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-12-16",
+        "decision_title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16",
+        "flow_date": "2024-12-12",
+        "id": "moneyflow-970816-NB1MikbYsUso",
+        "money_amount": 50
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1352318-EXP456",
+        "money_amount": 1500
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1352318-EXP456",
+        "money_amount": 1500
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1454722-JHLh6VOSDmeF",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1454722-JHLh6VOSDmeF",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1454722-itr2KCB6zlRY",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1454722-itr2KCB6zlRY",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1456997-7Rk6Ykbku4lA",
+        "money_amount": 35
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1456997-7Rk6Ykbku4lA",
+        "money_amount": 35
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1461276-5oQBQ796Qovn",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1461276-5oQBQ796Qovn",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1461276-blAQP7NosQ9s",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1461276-blAQP7NosQ9s",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1461276-e5sYcwna7a4u",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1461276-e5sYcwna7a4u",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1461276-kgZpgDkCTSCF",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1461276-kgZpgDkCTSCF",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1461276-lIuA7ORqbuFp",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1461276-lIuA7ORqbuFp",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1461685-1U1QfKL1oNBH",
+        "money_amount": 94
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1461685-1U1QfKL1oNBH",
+        "money_amount": 94
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1461685-2TRbkr1bniVg",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1461685-2TRbkr1bniVg",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1461685-ktDvg3vL7C2e",
+        "money_amount": 154
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1461685-ktDvg3vL7C2e",
+        "money_amount": 154
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1464553-EXP172",
+        "money_amount": 7
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1464553-EXP172",
+        "money_amount": 7
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1464553-EXP183",
+        "money_amount": 638
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1464553-EXP183",
+        "money_amount": 638
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1464553-INC181",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1464553-INC181",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-E8M2LyM9ChGK",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-E8M2LyM9ChGK",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-GKBf8dFiFqZ1",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-GKBf8dFiFqZ1",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-K6RwEUe3NTph",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-K6RwEUe3NTph",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-Ms3iNcSvabkz",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-Ms3iNcSvabkz",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-aourzQWWN22o",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-aourzQWWN22o",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-cLuceqp3BmZW",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-cLuceqp3BmZW",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-egQzW2RNKqfk",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-egQzW2RNKqfk",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-fe3yL55wOExy",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-fe3yL55wOExy",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-gAVC8pLv2Gve",
+        "money_amount": 150
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1470377-gAVC8pLv2Gve",
+        "money_amount": 150
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1471467-INC104",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1471467-INC104",
+        "money_amount": 250
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1471467-INC67",
+        "money_amount": 105.03
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1471467-INC67",
+        "money_amount": 105.03
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1471467-INC68",
+        "money_amount": 200
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1471467-INC68",
+        "money_amount": 200
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1471467-INC69",
+        "money_amount": 100
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1471467-INC69",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1472475-26An61vWxHs5",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1472475-26An61vWxHs5",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1472475-JqAdIdUPPVKC",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1472475-JqAdIdUPPVKC",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1472475-LXanvVe8LsQd",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1472475-LXanvVe8LsQd",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1472475-eLsWksGS8bhC",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1472475-eLsWksGS8bhC",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1474479-4oHpAsmzr3hi",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1474479-4oHpAsmzr3hi",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1474479-hq2hNoN9B7To",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1474479-hq2hNoN9B7To",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1474479-sySNmRWInxMo",
+        "money_amount": 666.66
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1474479-sySNmRWInxMo",
+        "money_amount": 666.66
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1474479-uUXT1BwBv9vs",
+        "money_amount": 123.06
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1474479-uUXT1BwBv9vs",
+        "money_amount": 123.06
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1475234-Y6aE4k2tF12B",
+        "money_amount": 200
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1475234-Y6aE4k2tF12B",
+        "money_amount": 200
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1475234-jf6LrXcC67lr",
+        "money_amount": 200
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-1475234-jf6LrXcC67lr",
+        "money_amount": 200
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1475234-yVpMRvpFwYd6",
+        "money_amount": 500
+      },
+      {
+        "days_delta": 4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-12",
+        "id": "moneyflow-1475234-yVpMRvpFwYd6",
+        "money_amount": 500
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-2024-09-20-democratic-central-committee-of-marin-id-committee-kate-colin-for-san-rafael-mayor-2024-11",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-2024-09-20-democratic-central-committee-of-marin-id-committee-kate-colin-for-san-rafael-mayor-2024-11",
+        "money_amount": 250
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-2024-09-20-kevin-jacobs-committee-kate-colin-for-san-rafael-mayor-2024-22",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-2024-09-20-kevin-jacobs-committee-kate-colin-for-san-rafael-mayor-2024-22",
+        "money_amount": 100
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-930791-EXP1443",
+        "money_amount": 3000
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-930791-EXP1443",
+        "money_amount": 3000
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-930791-EXP1444",
+        "money_amount": 2000
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-930791-EXP1444",
+        "money_amount": 2000
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-930791-EXP1445",
+        "money_amount": 1500
+      },
+      {
+        "days_delta": -4,
+        "decided_at": "2024-09-16",
+        "decision_title": "decision-2024-09-16-unger-award \u00b7 2024-09-16",
+        "flow_date": "2024-09-20",
+        "id": "moneyflow-930791-EXP1445",
+        "money_amount": 1500
+      }
+    ],
+    "slug": "campaign-money-near-decisions"
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "window_days": "30"
+    },
+    "url_path": "/api/data/campaign-money-near-decisions"
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "name",
+        "label": "Title"
+      },
+      {
+        "key": "election_date",
+        "label": "Date"
+      }
+    ],
+    "next_cursor": null,
+    "rows": [
+      {
+        "election_date": "2010-06-08",
+        "id": "election-2010-06-08-san-rafael-library-special",
+        "name": null,
+        "route": "/election/2010-06-08-san-rafael-library-special",
+        "search_label": "special_municipal \u2014 2010-06-08",
+        "type": "Election"
+      },
+      {
+        "election_date": "2010-11-02",
+        "id": "election-2010-11-02-san-rafael-paramedic-special",
+        "name": null,
+        "route": "/election/2010-11-02-san-rafael-paramedic-special",
+        "search_label": "special_municipal \u2014 2010-11-02",
+        "type": "Election"
+      },
+      {
+        "election_date": "2011-11-08",
+        "id": "election-2011-11-08-san-rafael-general",
+        "name": null,
+        "route": "/election/2011-11-08-san-rafael-general",
+        "search_label": "general_municipal \u2014 2011-11-08",
+        "type": "Election"
+      },
+      {
+        "election_date": "2013-11-05",
+        "id": "election-2013-11-05-san-rafael-general",
+        "name": null,
+        "route": "/election/2013-11-05-san-rafael-general",
+        "search_label": "general_municipal \u2014 2013-11-05",
+        "type": "Election"
+      },
+      {
+        "election_date": "2015-11-03",
+        "id": "election-2015-11-03-san-rafael-general",
+        "name": null,
+        "route": "/election/2015-11-03-san-rafael-general",
+        "search_label": "general_municipal \u2014 2015-11-03",
+        "type": "Election"
+      },
+      {
+        "election_date": "2016-06-07",
+        "id": "election-2016-06-07-san-rafael-library-special",
+        "name": null,
+        "route": "/election/2016-06-07-san-rafael-library-special",
+        "search_label": "special_municipal \u2014 2016-06-07",
+        "type": "Election"
+      },
+      {
+        "election_date": "2017-11-07",
+        "id": "election-2017-11-07-san-rafael-general",
+        "name": null,
+        "route": "/election/2017-11-07-san-rafael-general",
+        "search_label": "general_municipal \u2014 2017-11-07",
+        "type": "Election"
+      },
+      {
+        "election_date": "2018-06-05",
+        "id": "election-2018-06-05-san-rafael-measure-g-special",
+        "name": null,
+        "route": "/election/2018-06-05-san-rafael-measure-g-special",
+        "search_label": "special_municipal \u2014 2018-06-05",
+        "type": "Election"
+      },
+      {
+        "election_date": "2018-11-06",
+        "id": "election-2018-11-06-san-rafael-general",
+        "name": null,
+        "route": "/election/2018-11-06-san-rafael-general",
+        "search_label": "general_municipal \u2014 2018-11-06",
+        "type": "Election"
+      },
+      {
+        "election_date": "2020-11-03",
+        "id": "election-2020-11-03-san-rafael-council-district-1-general",
+        "name": null,
+        "route": "/election/2020-11-03-san-rafael-council-district-1-general",
+        "search_label": "general_municipal \u2014 2020-11-03",
+        "type": "Election"
+      },
+      {
+        "election_date": "2020-11-03",
+        "id": "election-2020-11-03-san-rafael-council-district-4-general",
+        "name": null,
+        "route": "/election/2020-11-03-san-rafael-council-district-4-general",
+        "search_label": "general_municipal \u2014 2020-11-03",
+        "type": "Election"
+      },
+      {
+        "election_date": "2020-11-03",
+        "id": "election-2020-11-03-san-rafael-general",
+        "name": null,
+        "route": "/election/2020-11-03-san-rafael-general",
+        "search_label": "general_municipal \u2014 2020-11-03",
+        "type": "Election"
+      },
+      {
+        "election_date": "2020-11-03",
+        "id": "election-2020-11-03-san-rafael-mayor-general",
+        "name": null,
+        "route": "/election/2020-11-03-san-rafael-mayor-general",
+        "search_label": "general_municipal \u2014 2020-11-03",
+        "type": "Election"
+      },
+      {
+        "election_date": "2022-11-08",
+        "id": "election-2022-11-08-san-rafael-council-district-2-general",
+        "name": null,
+        "route": "/election/2022-11-08-san-rafael-council-district-2-general",
+        "search_label": "general_municipal \u2014 2022-11-08",
+        "type": "Election"
+      },
+      {
+        "election_date": "2022-11-08",
+        "id": "election-2022-11-08-san-rafael-council-district-3-general",
+        "name": null,
+        "route": "/election/2022-11-08-san-rafael-council-district-3-general",
+        "search_label": "general_municipal \u2014 2022-11-08",
+        "type": "Election"
+      },
+      {
+        "election_date": "2022-11-08",
+        "id": "election-2022-11-08-san-rafael-general",
+        "name": null,
+        "route": "/election/2022-11-08-san-rafael-general",
+        "search_label": "general_municipal \u2014 2022-11-08",
+        "type": "Election"
+      },
+      {
+        "election_date": "2024-11-05",
+        "id": "election-2024-11-05-san-rafael-council-district-1-general",
+        "name": null,
+        "route": "/election/2024-11-05-san-rafael-council-district-1-general",
+        "search_label": "general_municipal \u2014 2024-11-05",
+        "type": "Election"
+      },
+      {
+        "election_date": "2024-11-05",
+        "id": "election-2024-11-05-san-rafael-council-district-4-general",
+        "name": null,
+        "route": "/election/2024-11-05-san-rafael-council-district-4-general",
+        "search_label": "general_municipal \u2014 2024-11-05",
+        "type": "Election"
+      },
+      {
+        "election_date": "2024-11-05",
+        "id": "election-2024-11-05-san-rafael-general",
+        "name": null,
+        "route": "/election/2024-11-05-san-rafael-general",
+        "search_label": "general_municipal \u2014 2024-11-05",
+        "type": "Election"
+      },
+      {
+        "election_date": "2024-11-05",
+        "id": "election-2024-11-05-san-rafael-mayor-general",
+        "name": null,
+        "route": "/election/2024-11-05-san-rafael-mayor-general",
+        "search_label": "general_municipal \u2014 2024-11-05",
+        "type": "Election"
+      },
+      {
+        "election_date": "2026-06-02",
+        "id": "election-2026-06-02-san-rafael-library-special",
+        "name": null,
+        "route": "/election/2026-06-02-san-rafael-library-special",
+        "search_label": "special_municipal \u2014 2026-06-02",
+        "type": "Election"
+      }
+    ],
+    "type": "Election"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/election"
+  }
+}

@@ -1,0 +1,211 @@
+{
+  "http_status": 200,
+  "payload": {
+    "cap": 20,
+    "edges": [
+      {
+        "source": "candidacy-kate-colin-san-rafael-mayor-2020",
+        "style": "governance",
+        "target": "committee-kate-colin-for-mayor-2020",
+        "type": "CONTROLLED_BY_COMMITTEE"
+      },
+      {
+        "source": "candidacy-kate-colin-san-rafael-mayor-2020",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "CANDIDATE_ACTOR"
+      },
+      {
+        "source": "committee-kate-colin-for-mayor-2020",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "CONTROLLED_BY"
+      },
+      {
+        "source": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "CONTROLLED_BY"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28439",
+        "style": "governance",
+        "target": "committee-kate-colin-for-mayor-2020",
+        "type": "FILED_BY_COMMITTEE"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28439",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "FILED_BY"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28450",
+        "style": "governance",
+        "target": "committee-kate-colin-for-mayor-2020",
+        "type": "FILED_BY_COMMITTEE"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28450",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "FILED_BY"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28597",
+        "style": "governance",
+        "target": "committee-kate-colin-for-mayor-2020",
+        "type": "FILED_BY_COMMITTEE"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28597",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "FILED_BY"
+      },
+      {
+        "source": "person-kate-colin",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-kate-colin",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-6a-resolution-adoption-14626",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-kate-colin",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-7a-resolution-adoption-14627-14628-14629-14630",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-kate-colin",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-7b-acceptance-accepted-informational-report-on-draft-action-plan",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "seatservice-kate-colin-mayor-2020-term",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "HELD_BY"
+      },
+      {
+        "source": "seatservice-kate-colin-mayor-current",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "HELD_BY"
+      }
+    ],
+    "new_count": 12,
+    "nodes": [
+      {
+        "event_date": null,
+        "id": "candidacy-kate-colin-san-rafael-mayor-2020",
+        "label": "candidacy-kate-colin-san-rafael-mayor-2020",
+        "ring": 1,
+        "route": "/candidacy/kate-colin-san-rafael-mayor-2020",
+        "type": "Candidacy"
+      },
+      {
+        "event_date": null,
+        "id": "committee-kate-colin-for-mayor-2020",
+        "label": "Kate Colin for Mayor 2020",
+        "ring": 1,
+        "route": "/committee/kate-colin-for-mayor-2020",
+        "type": "Committee"
+      },
+      {
+        "event_date": null,
+        "id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "label": "Kate Colin for San Rafael Mayor 2024",
+        "ring": 1,
+        "route": "/committee/kate-colin-for-san-rafael-mayor-2024",
+        "type": "Committee"
+      },
+      {
+        "event_date": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-4-consent-calendar-approval",
+        "label": "approve Consent Calendar Items:",
+        "ring": 1,
+        "route": "/decision/2019-01-22-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "Decision"
+      },
+      {
+        "event_date": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-6a-resolution-adoption-14626",
+        "label": "\u201c TEFRA\u201d Public Hearing for Tax-Exempt Financing - 55 Fairfax Street",
+        "ring": 1,
+        "route": "/decision/2019-01-22-san-rafael-city-council-6a-resolution-adoption-14626",
+        "type": "Decision"
+      },
+      {
+        "event_date": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-7a-resolution-adoption-14627-14628-14629-14630",
+        "label": "Professional Service Agreements for General Plan 2040 Technical Support",
+        "ring": 1,
+        "route": "/decision/2019-01-22-san-rafael-city-council-7a-resolution-adoption-14627-14628-14629-14630",
+        "type": "Decision"
+      },
+      {
+        "event_date": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-7b-acceptance-accepted-informational-report-on-draft-action-plan",
+        "label": "Accepted informational report on draft Action Plan",
+        "ring": 1,
+        "route": "/decision/2019-01-22-san-rafael-city-council-7b-acceptance-accepted-informational-report-on-draft-action-plan",
+        "type": "Decision"
+      },
+      {
+        "event_date": null,
+        "id": "filing-san-rafael-campaign-entry-28439",
+        "label": "Form 410",
+        "ring": 1,
+        "route": "/filing/san-rafael-campaign-entry-28439",
+        "type": "Filing"
+      },
+      {
+        "event_date": null,
+        "id": "filing-san-rafael-campaign-entry-28450",
+        "label": "Form 460",
+        "ring": 1,
+        "route": "/filing/san-rafael-campaign-entry-28450",
+        "type": "Filing"
+      },
+      {
+        "event_date": null,
+        "id": "filing-san-rafael-campaign-entry-28597",
+        "label": "Form 410",
+        "ring": 1,
+        "route": "/filing/san-rafael-campaign-entry-28597",
+        "type": "Filing"
+      },
+      {
+        "event_date": "2020-12-07",
+        "id": "seatservice-kate-colin-mayor-2020-term",
+        "label": "seatservice-kate-colin-mayor-2020-term",
+        "ring": 1,
+        "route": "/seat-service/kate-colin-mayor-2020-term",
+        "type": "SeatService"
+      },
+      {
+        "event_date": "2024-12-16",
+        "id": "seatservice-kate-colin-mayor-current",
+        "label": "seatservice-kate-colin-mayor-current",
+        "ring": 1,
+        "route": "/seat-service/kate-colin-mayor-current",
+        "type": "SeatService"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "focus": "person-kate-colin",
+      "hop": "1"
+    },
+    "url_path": "/api/expand"
+  }
+}

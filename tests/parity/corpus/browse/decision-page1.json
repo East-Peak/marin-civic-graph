@@ -1,0 +1,428 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "decided_at",
+        "label": "Decided"
+      },
+      {
+        "key": "institution_name",
+        "label": "Institution"
+      }
+    ],
+    "next_cursor": "decision-2019-03-04-san-rafael-city-council-4d-resolution-adoption-14643",
+    "rows": [
+      {
+        "decided_at": "2010-02-16",
+        "id": "decision-2010-06-08-san-rafael-library-special-call",
+        "institution_name": null,
+        "route": "/decision/2010-06-08-san-rafael-library-special-call",
+        "search_label": "Call the June 8, 2010 special election for the library parcel-tax measure \u00b7 2010-02-16",
+        "type": "Decision"
+      },
+      {
+        "decided_at": "2010-07-06",
+        "id": "decision-2010-06-08-san-rafael-library-special-results",
+        "institution_name": null,
+        "route": "/decision/2010-06-08-san-rafael-library-special-results",
+        "search_label": "Declare canvass of returns for the June 8, 2010 special election \u00b7 2010-07-06",
+        "type": "Decision"
+      },
+      {
+        "decided_at": "2010-07-19",
+        "id": "decision-2010-11-02-san-rafael-paramedic-special-call",
+        "institution_name": null,
+        "route": "/decision/2010-11-02-san-rafael-paramedic-special-call",
+        "search_label": "Call the November 2, 2010 special election for the paramedic tax measure \u00b7 2010-07-19",
+        "type": "Decision"
+      },
+      {
+        "decided_at": "2010-12-06",
+        "id": "decision-2010-11-02-san-rafael-paramedic-special-results",
+        "institution_name": null,
+        "route": "/decision/2010-11-02-san-rafael-paramedic-special-results",
+        "search_label": "Declare canvass of returns for the November 2, 2010 special election \u00b7 2010-12-06",
+        "type": "Decision"
+      },
+      {
+        "decided_at": "2011-06-06",
+        "id": "decision-2011-11-08-san-rafael-general-call",
+        "institution_name": null,
+        "route": "/decision/2011-11-08-san-rafael-general-call",
+        "search_label": "Call the November 8, 2011 general municipal election \u00b7 2011-06-06",
+        "type": "Decision"
+      },
+      {
+        "decided_at": "2011-12-05",
+        "id": "decision-2011-11-08-san-rafael-general-results",
+        "institution_name": null,
+        "route": "/decision/2011-11-08-san-rafael-general-results",
+        "search_label": "Declare canvass of returns for the November 8, 2011 general municipal election \u00b7 2011-12-05",
+        "type": "Decision"
+      },
+      {
+        "decided_at": "2013-05-06",
+        "id": "decision-2013-11-05-san-rafael-general-call",
+        "institution_name": null,
+        "route": "/decision/2013-11-05-san-rafael-general-call",
+        "search_label": "Call the November 5, 2013 general municipal election and submit Measure E to the voters \u00b7 2013-05-06",
+        "type": "Decision"
+      },
+      {
+        "decided_at": "2013-12-02",
+        "id": "decision-2013-11-05-san-rafael-general-results",
+        "institution_name": null,
+        "route": "/decision/2013-11-05-san-rafael-general-results",
+        "search_label": "Declare canvass of returns for the November 5, 2013 general municipal election \u00b7 2013-12-02",
+        "type": "Decision"
+      },
+      {
+        "decided_at": "2015-06-15",
+        "id": "decision-2015-11-03-san-rafael-general-call",
+        "institution_name": null,
+        "route": "/decision/2015-11-03-san-rafael-general-call",
+        "search_label": "Call the November 3, 2015 general municipal election \u00b7 2015-06-15",
+        "type": "Decision"
+      },
+      {
+        "decided_at": "2015-08-17",
+        "id": "decision-2015-11-03-san-rafael-general-cancel-and-appoint",
+        "institution_name": null,
+        "route": "/decision/2015-11-03-san-rafael-general-cancel-and-appoint",
+        "search_label": "Appoint unopposed candidates and cancel the November 3, 2015 election \u00b7 2015-08-17",
+        "type": "Decision"
+      },
+      {
+        "decided_at": "2016-07-18",
+        "id": "decision-2016-06-07-san-rafael-library-special-results",
+        "institution_name": null,
+        "route": "/decision/2016-06-07-san-rafael-library-special-results",
+        "search_label": "Declare canvass of returns for the June 7, 2016 library special election \u00b7 2016-07-18",
+        "type": "Decision"
+      },
+      {
+        "decided_at": "2017-08-21",
+        "id": "decision-2017-11-07-san-rafael-general-cancel",
+        "institution_name": null,
+        "route": "/decision/2017-11-07-san-rafael-general-cancel",
+        "search_label": "Cancel the November 7, 2017 general municipal election \u00b7 2017-08-21",
+        "type": "Decision"
+      },
+      {
+        "decided_at": "2018-03-05",
+        "id": "decision-2018-06-05-san-rafael-measure-g-call",
+        "institution_name": null,
+        "route": "/decision/2018-06-05-san-rafael-measure-g-call",
+        "search_label": "Call the June 5, 2018 special election for Measure G \u00b7 2018-03-05",
+        "type": "Decision"
+      },
+      {
+        "decided_at": "2018-07-16",
+        "id": "decision-2018-06-05-san-rafael-measure-g-results",
+        "institution_name": null,
+        "route": "/decision/2018-06-05-san-rafael-measure-g-results",
+        "search_label": "Declare canvass of returns for the June 5, 2018 Measure G special election \u00b7 2018-07-16",
+        "type": "Decision"
+      },
+      {
+        "decided_at": "2018-06-04",
+        "id": "decision-2018-11-06-san-rafael-general-call",
+        "institution_name": null,
+        "route": "/decision/2018-11-06-san-rafael-general-call",
+        "search_label": "Call the November 6, 2018 general municipal election \u00b7 2018-06-04",
+        "type": "Decision"
+      },
+      {
+        "decided_at": "2018-12-17",
+        "id": "decision-2018-11-06-san-rafael-general-results",
+        "institution_name": null,
+        "route": "/decision/2018-11-06-san-rafael-general-results",
+        "search_label": "Declare canvass of returns for the November 6, 2018 general municipal election \u00b7 2018-12-17",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-1a-report-acceptance-accepted-report",
+        "institution_name": null,
+        "route": "/decision/2019-01-22-san-rafael-city-council-1a-report-acceptance-accepted-report",
+        "search_label": "Accepted report",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-4-consent-calendar-approval",
+        "institution_name": null,
+        "route": "/decision/2019-01-22-san-rafael-city-council-4-consent-calendar-approval",
+        "search_label": "approve Consent Calendar Items:",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-4a-minutes-approval-approved-as-submitted",
+        "institution_name": null,
+        "route": "/decision/2019-01-22-san-rafael-city-council-4a-minutes-approval-approved-as-submitted",
+        "search_label": "Approved as submitted",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-4b-staff-recommendation-approval-approved-staff-recommendation",
+        "institution_name": null,
+        "route": "/decision/2019-01-22-san-rafael-city-council-4b-staff-recommendation-approval-approved-staff-recommendation",
+        "search_label": "Approved staff recommendation",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-4c-staff-recommendation-approval-approved-staff-recommendation",
+        "institution_name": null,
+        "route": "/decision/2019-01-22-san-rafael-city-council-4c-staff-recommendation-approval-approved-staff-recommendation",
+        "search_label": "Approved staff recommendation",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-4d-resolution-adoption-14621",
+        "institution_name": null,
+        "route": "/decision/2019-01-22-san-rafael-city-council-4d-resolution-adoption-14621",
+        "search_label": "Legislative Advocacy Services",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-4e-report-acceptance-accepted-report",
+        "institution_name": null,
+        "route": "/decision/2019-01-22-san-rafael-city-council-4e-report-acceptance-accepted-report",
+        "search_label": "Accepted report",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-4f-report-acceptance-accepted-report",
+        "institution_name": null,
+        "route": "/decision/2019-01-22-san-rafael-city-council-4f-report-acceptance-accepted-report",
+        "search_label": "Accepted report",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-4g-resolution-adoption-14622",
+        "institution_name": null,
+        "route": "/decision/2019-01-22-san-rafael-city-council-4g-resolution-adoption-14622",
+        "search_label": "FY 2018-19 Fleet Vehicle Purchases: Two Fire Engines",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-4h-resolution-adoption-14623-14624",
+        "institution_name": null,
+        "route": "/decision/2019-01-22-san-rafael-city-council-4h-resolution-adoption-14623-14624",
+        "search_label": "Approved in the Essential Facilities Strategic Plan Budget to Amend the Professional Services",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-4i-resolution-adoption-14625",
+        "institution_name": null,
+        "route": "/decision/2019-01-22-san-rafael-city-council-4i-resolution-adoption-14625",
+        "search_label": "Engineering Services Associate with 2017 Storm Damage Repairs",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-4j-staff-recommendation-approval-approved-staff-recommendation",
+        "institution_name": null,
+        "route": "/decision/2019-01-22-san-rafael-city-council-4j-staff-recommendation-approval-approved-staff-recommendation",
+        "search_label": "Approved staff recommendation",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-6a-resolution-adoption-14626",
+        "institution_name": null,
+        "route": "/decision/2019-01-22-san-rafael-city-council-6a-resolution-adoption-14626",
+        "search_label": "\u201c TEFRA\u201d Public Hearing for Tax-Exempt Financing - 55 Fairfax Street",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-7a-resolution-adoption-14627-14628-14629-14630",
+        "institution_name": null,
+        "route": "/decision/2019-01-22-san-rafael-city-council-7a-resolution-adoption-14627-14628-14629-14630",
+        "search_label": "Professional Service Agreements for General Plan 2040 Technical Support",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-7b-acceptance-accepted-informational-report-on-draft-action-plan",
+        "institution_name": null,
+        "route": "/decision/2019-01-22-san-rafael-city-council-7b-acceptance-accepted-informational-report-on-draft-action-plan",
+        "search_label": "Accepted informational report on draft Action Plan",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-02-04-san-rafael-city-council-4-consent-calendar-approval",
+        "institution_name": null,
+        "route": "/decision/2019-02-04-san-rafael-city-council-4-consent-calendar-approval",
+        "search_label": "approve Consent Calendar",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-02-04-san-rafael-city-council-4a-staff-recommendation-approval-approved-staff-recommendation",
+        "institution_name": null,
+        "route": "/decision/2019-02-04-san-rafael-city-council-4a-staff-recommendation-approval-approved-staff-recommendation",
+        "search_label": "Approved staff recommendation",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-02-04-san-rafael-city-council-4b-resolution-adoption-14631",
+        "institution_name": null,
+        "route": "/decision/2019-02-04-san-rafael-city-council-4b-resolution-adoption-14631",
+        "search_label": "Network Support Services",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-02-04-san-rafael-city-council-4c-resolution-adoption-14632",
+        "institution_name": null,
+        "route": "/decision/2019-02-04-san-rafael-city-council-4c-resolution-adoption-14632",
+        "search_label": "Resolution of Appreciation to Tim Gilbert",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-02-04-san-rafael-city-council-6a-resolution-adoption-14633-14634-14635",
+        "institution_name": null,
+        "route": "/decision/2019-02-04-san-rafael-city-council-6a-resolution-adoption-14633-14634-14635",
+        "search_label": "Southern Heights Bridge Replacement Project",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-02-04-san-rafael-city-council-7a-report-acceptance-accepted-report-and-provided-direction-to-staff",
+        "institution_name": null,
+        "route": "/decision/2019-02-04-san-rafael-city-council-7a-report-acceptance-accepted-report-and-provided-direction-to-staff",
+        "search_label": "Accepted report and provided direction to staff",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-02-19-san-rafael-city-council-4-consent-calendar-approval",
+        "institution_name": null,
+        "route": "/decision/2019-02-19-san-rafael-city-council-4-consent-calendar-approval",
+        "search_label": "approve Consent Calendar",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-02-19-san-rafael-city-council-4a-minutes-approval-approved-as-submitted",
+        "institution_name": null,
+        "route": "/decision/2019-02-19-san-rafael-city-council-4a-minutes-approval-approved-as-submitted",
+        "search_label": "Approved as submitted",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-02-19-san-rafael-city-council-4b-resolution-adoption-14566-14636",
+        "institution_name": null,
+        "route": "/decision/2019-02-19-san-rafael-city-council-4b-resolution-adoption-14566-14636",
+        "search_label": "Conflict of Interest Code",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-02-19-san-rafael-city-council-4c-resolution-adoption-14637",
+        "institution_name": null,
+        "route": "/decision/2019-02-19-san-rafael-city-council-4c-resolution-adoption-14637",
+        "search_label": "Server Administration Support Services",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-02-19-san-rafael-city-council-4d-resolution-adoption-14638",
+        "institution_name": null,
+        "route": "/decision/2019-02-19-san-rafael-city-council-4d-resolution-adoption-14638",
+        "search_label": "Canine Ares Retirement",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-02-19-san-rafael-city-council-4e-resolution-adoption-14639-14640",
+        "institution_name": null,
+        "route": "/decision/2019-02-19-san-rafael-city-council-4e-resolution-adoption-14639-14640",
+        "search_label": "Grand Avenue Pathway Connector Project",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-02-19-san-rafael-city-council-6a-continuance-continued-item-6-a-to-a-future-city-council-meeting",
+        "institution_name": null,
+        "route": "/decision/2019-02-19-san-rafael-city-council-6a-continuance-continued-item-6-a-to-a-future-city-council-meeting",
+        "search_label": "Continued Item 6.a to a future City Council meeting",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-02-19-san-rafael-city-council-6b-report-acceptance-accepted-report-and-provided-direction-to-staff",
+        "institution_name": null,
+        "route": "/decision/2019-02-19-san-rafael-city-council-6b-report-acceptance-accepted-report-and-provided-direction-to-staff",
+        "search_label": "Accepted report and provided direction to staff",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-03-04-san-rafael-city-council-4-consent-calendar-approval",
+        "institution_name": null,
+        "route": "/decision/2019-03-04-san-rafael-city-council-4-consent-calendar-approval",
+        "search_label": "approve Consent Calendar Items:",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-03-04-san-rafael-city-council-4a-minutes-approval-approved-minutes-as-submitted",
+        "institution_name": null,
+        "route": "/decision/2019-03-04-san-rafael-city-council-4a-minutes-approval-approved-minutes-as-submitted",
+        "search_label": "Approved Minutes as submitted",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-03-04-san-rafael-city-council-4b-resolution-adoption-14641",
+        "institution_name": null,
+        "route": "/decision/2019-03-04-san-rafael-city-council-4b-resolution-adoption-14641",
+        "search_label": "Citizen of the Year 2019",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-03-04-san-rafael-city-council-4c-resolution-adoption-14642",
+        "institution_name": null,
+        "route": "/decision/2019-03-04-san-rafael-city-council-4c-resolution-adoption-14642",
+        "search_label": "Migration from Vievu to Axon Body-Worn Cameras",
+        "type": "Decision"
+      },
+      {
+        "decided_at": null,
+        "id": "decision-2019-03-04-san-rafael-city-council-4d-resolution-adoption-14643",
+        "institution_name": null,
+        "route": "/decision/2019-03-04-san-rafael-city-council-4d-resolution-adoption-14643",
+        "search_label": "FY 2018-19 Local Transportation Sales Tax Measures A & B Allocation",
+        "type": "Decision"
+      }
+    ],
+    "type": "Decision"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/decision"
+  }
+}

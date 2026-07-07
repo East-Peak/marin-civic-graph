@@ -1,0 +1,428 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "heading",
+        "label": "Heading"
+      },
+      {
+        "key": "meeting_title",
+        "label": "Meeting"
+      }
+    ],
+    "next_cursor": "agenda-item-2019-02-19-san-rafael-city-council-4e",
+    "rows": [
+      {
+        "heading": "Open Session \u2013 Council Chambers, City Hall",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-1",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-1",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-1",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "San Rafael Successor Agency",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-1a",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-1a",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-1a",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Closed Session \u2013 Third Floor Conference Room, City Hall",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-2",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-2",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-2",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Closed Session \u2013 Third Floor Conference Room, City Hall",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-3",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-3",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-3",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Consent Calendar",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-4",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-4",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-4",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Consent Calendar",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-4a",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-4a",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-4a",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Consent Calendar",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-4b",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-4b",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-4b",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Consent Calendar",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-4c",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-4c",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-4c",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Consent Calendar",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-4d",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-4d",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-4d",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Services, For A Period Beginning January 1, 2019 And Ending December 31, 2020,",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-4e",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-4e",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-4e",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "05 (Cd)",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-4f",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-4f",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-4f",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "05 (Cd)",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-4g",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-4g",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-4g",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Type 1 And One Type 6 Engine For The Fire Department For A Not-To-Exceed",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-4h",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-4h",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-4h",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Facilities Projects (Fire Station 52 And The Fire Station 57) As Necessary For",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-4i",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-4i",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-4i",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Engineering Support In Association With The 2017 Storm Damage Repairs, In",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-4j",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-4j",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-4j",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Special Presentation",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-5",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-5",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-5",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Special Presentation",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-5a",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-5a",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-5a",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Public Hearing",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-6",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-6",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-6",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Public Hearing",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-6a",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-6a",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-6a",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Other Agenda Items",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-7",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-7",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-7",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Other Agenda Items",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-7a",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-7a",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-7a",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "With A Two-Year Term And Two Optional One-Year Extensions For A Total",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-7b",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-7b",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-7b",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Councilmember Reports / Requests For Future Agenda Items",
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-8",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-8",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-8",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": null,
+        "id": "agenda-item-2019-01-22-san-rafael-city-council-special-1",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-01-22-san-rafael-city-council-special-1",
+        "search_label": "agenda-item-2019-01-22-san-rafael-city-council-special-1",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "San Rafael Successor Agency",
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-1",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-1",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-1",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": null,
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-2",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-2",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-2",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": null,
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-2a",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-2a",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-2a",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": null,
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-2b",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-2b",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-2b",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": null,
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-2c",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-2c",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-2c",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "City Manager'S Report",
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-3",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-3",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-3",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Consent Calendar",
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-4",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-4",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-4",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Consent Calendar",
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-4a",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-4a",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-4a",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Consent Calendar",
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-4b",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-4b",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-4b",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Professional Services Agreement With Marinit, Inc. For Network Support",
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-4c",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-4c",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-4c",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Special Presentation",
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-5",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-5",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-5",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Special Presentation",
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-5a",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-5a",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-5a",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Public Hearing",
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-6",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-6",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-6",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Public Hearing",
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-6a",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-6a",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-6a",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Other Agenda Items",
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-7",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-7",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-7",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Other Agenda Items",
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-7a",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-7a",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-7a",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Councilmember Reports / Requests For Future Agenda Items",
+        "id": "agenda-item-2019-02-04-san-rafael-city-council-8",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-8",
+        "search_label": "agenda-item-2019-02-04-san-rafael-city-council-8",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Open Session \u2013 Council Chambers, City Hall",
+        "id": "agenda-item-2019-02-19-san-rafael-city-council-1",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-19-san-rafael-city-council-1",
+        "search_label": "agenda-item-2019-02-19-san-rafael-city-council-1",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Closed Session \u2013 Third Floor Conference Room, City Hall",
+        "id": "agenda-item-2019-02-19-san-rafael-city-council-2",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-19-san-rafael-city-council-2",
+        "search_label": "agenda-item-2019-02-19-san-rafael-city-council-2",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Closed Session \u2013 Third Floor Conference Room, City Hall",
+        "id": "agenda-item-2019-02-19-san-rafael-city-council-3",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-19-san-rafael-city-council-3",
+        "search_label": "agenda-item-2019-02-19-san-rafael-city-council-3",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Consent Calendar",
+        "id": "agenda-item-2019-02-19-san-rafael-city-council-4",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-19-san-rafael-city-council-4",
+        "search_label": "agenda-item-2019-02-19-san-rafael-city-council-4",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Consent Calendar",
+        "id": "agenda-item-2019-02-19-san-rafael-city-council-4a",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-19-san-rafael-city-council-4a",
+        "search_label": "agenda-item-2019-02-19-san-rafael-city-council-4a",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Consent Calendar",
+        "id": "agenda-item-2019-02-19-san-rafael-city-council-4b",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-19-san-rafael-city-council-4b",
+        "search_label": "agenda-item-2019-02-19-san-rafael-city-council-4b",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Employee Positions And Disclosure Categories, To Be Incorporated Into The",
+        "id": "agenda-item-2019-02-19-san-rafael-city-council-4c",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-19-san-rafael-city-council-4c",
+        "search_label": "agenda-item-2019-02-19-san-rafael-city-council-4c",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Professional Services Agreement With Insite Networks, Inc. For Server",
+        "id": "agenda-item-2019-02-19-san-rafael-city-council-4d",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-19-san-rafael-city-council-4d",
+        "search_label": "agenda-item-2019-02-19-san-rafael-city-council-4d",
+        "type": "AgendaItem"
+      },
+      {
+        "heading": "Years Of Service",
+        "id": "agenda-item-2019-02-19-san-rafael-city-council-4e",
+        "meeting_title": null,
+        "route": "/agenda-item/item-2019-02-19-san-rafael-city-council-4e",
+        "search_label": "agenda-item-2019-02-19-san-rafael-city-council-4e",
+        "type": "AgendaItem"
+      }
+    ],
+    "type": "AgendaItem"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/agenda-item"
+  }
+}

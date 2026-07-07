@@ -1,0 +1,428 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "fppc_id",
+        "label": "FPPC ID"
+      },
+      {
+        "key": "treasurer",
+        "label": "Treasurer"
+      }
+    ],
+    "next_cursor": "committee-netfile-1441638",
+    "rows": [
+      {
+        "fppc_id": null,
+        "id": "committee-eli-hill-for-san-rafael-city-council-2022",
+        "route": "/committee/eli-hill-for-san-rafael-city-council-2022",
+        "search_label": "Eli Hill for San Rafael City Council 2022",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-gerrod-herndon-for-san-rafael-city-council-2022",
+        "route": "/committee/gerrod-herndon-for-san-rafael-city-council-2022",
+        "search_label": "Gerrod Herndon for San Rafael City Council 2022",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-greg-knell-for-city-council-2020",
+        "route": "/committee/greg-knell-for-city-council-2020",
+        "search_label": "Greg Knell for City Council 2020",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-jonathan-frieman-for-san-rafael-city-council-2022",
+        "route": "/committee/jonathan-frieman-for-san-rafael-city-council-2022",
+        "search_label": "Jonathan Frieman for San Rafael City Council 2022",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-kate-colin-for-mayor-2020",
+        "route": "/committee/kate-colin-for-mayor-2020",
+        "search_label": "Kate Colin for Mayor 2020",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "route": "/committee/kate-colin-for-san-rafael-mayor-2024",
+        "search_label": "Kate Colin for San Rafael Mayor 2024",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-mahmoud-a-shirazi-for-mayor-2020",
+        "route": "/committee/mahmoud-a-shirazi-for-mayor-2020",
+        "search_label": "Mahmoud A. Shirazi for Mayor 2020",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-mahmoud-a-shirazi-for-san-rafael-mayor-2024",
+        "route": "/committee/mahmoud-a-shirazi-for-san-rafael-mayor-2024",
+        "search_label": "Mahmoud A. Shirazi for San Rafael Mayor 2024",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-maika-llorens-gulati-for-san-rafael-city-council-2020",
+        "route": "/committee/maika-llorens-gulati-for-san-rafael-city-council-2020",
+        "search_label": "Maika Llorens Gulati for San Rafael City Council 2020",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-maika-llorens-gulati-for-san-rafael-city-council-2024",
+        "route": "/committee/maika-llorens-gulati-for-san-rafael-city-council-2024",
+        "search_label": "Maika Llorens Gulati for San Rafael City Council 2024",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-maribeth-bushey-for-city-council-2022",
+        "route": "/committee/maribeth-bushey-for-city-council-2022",
+        "search_label": "Maribeth Bushey for City Council 2022",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-mark-galperin-for-city-council-2024",
+        "route": "/committee/mark-galperin-for-city-council-2024",
+        "search_label": "Mark Galperin for City Council 2024",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1242561",
+        "route": "/committee/netfile-1242561",
+        "search_label": "Marin County Deputy Sheriff's Association PAC",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-126043",
+        "route": "/committee/netfile-126043",
+        "search_label": "Novato Federation of Teachers COPE",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1277176",
+        "route": "/committee/netfile-1277176",
+        "search_label": "Judy Arnold for Supervisor 2018",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1277670",
+        "route": "/committee/netfile-1277670",
+        "search_label": "Working Families Issues Committee, sponsored by the California Labor Federation, AFL-CIO",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1278465",
+        "route": "/committee/netfile-1278465",
+        "search_label": "Progressive Democracy of America-Marin",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1281286",
+        "route": "/committee/netfile-1281286",
+        "search_label": "San Rafael Chamber of Commerce C-PAC",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1287131",
+        "route": "/committee/netfile-1287131",
+        "search_label": "Alliance to Save Our Hospital",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1299228",
+        "route": "/committee/netfile-1299228",
+        "search_label": "San Rafael Chamber of Commerce M-PAC",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1332045",
+        "route": "/committee/netfile-1332045",
+        "search_label": "Marin Women's Political Action Committee",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1343255",
+        "route": "/committee/netfile-1343255",
+        "search_label": "Katie Rice for Supervisor 2016",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1347886",
+        "route": "/committee/netfile-1347886",
+        "search_label": "Resource Conservation PAC Sponsored by Marin Resource Recovery",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1352318",
+        "route": "/committee/netfile-1352318",
+        "search_label": "Marin Association of Public Employees Political Action Committee",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1356291",
+        "route": "/committee/netfile-1356291",
+        "search_label": "Yes on B for Marin County Library, committee major funding from Friends of Marin County Free Library and Marin County Library Foundation",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1377140",
+        "route": "/committee/netfile-1377140",
+        "search_label": "Kate Sears for Supervisor 2016",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1383042",
+        "route": "/committee/netfile-1383042",
+        "search_label": "Rodoni for Supervisor 2020",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1392466",
+        "route": "/committee/netfile-1392466",
+        "search_label": "Committee to Elect Anna Pletcher District Attorney 2018",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1401131",
+        "route": "/committee/netfile-1401131",
+        "search_label": "Novato Stands United PAC",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1401931",
+        "route": "/committee/netfile-1401931",
+        "search_label": "Shelly Scott for Assessor-Recorder-Clerk 2022",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1408680",
+        "route": "/committee/netfile-1408680",
+        "search_label": "Yes on AA - Committee to Keep Marin Moving",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1419944",
+        "route": "/committee/netfile-1419944",
+        "search_label": "Moulton-Peters for Supervisor 2020",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1420696",
+        "route": "/committee/netfile-1420696",
+        "search_label": "No on D: Protect, Connect, and Restore the San Geronimo Valley 2020",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1420988",
+        "route": "/committee/netfile-1420988",
+        "search_label": "YES on E for Reed Schools",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1422676",
+        "route": "/committee/netfile-1422676",
+        "search_label": "Committee for Wildfire Safety - Yes on C, Committee Major Funding from Christian Larsen",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1423087",
+        "route": "/committee/netfile-1423087",
+        "search_label": "Stay Green, Keep SMART 2020 - Yes on I",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1424130",
+        "route": "/committee/netfile-1424130",
+        "search_label": "Committee for Excellent Novato Schools 2020 - Yes on A",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1424162",
+        "route": "/committee/netfile-1424162",
+        "search_label": "Yes on B for High-Quality Schools",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1424535",
+        "route": "/committee/netfile-1424535",
+        "search_label": "Preserve Parks, Open Space, and Agriculture in Marin County",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1426626",
+        "route": "/committee/netfile-1426626",
+        "search_label": "Paul da Silva for Marin College Board 2020",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1431561",
+        "route": "/committee/netfile-1431561",
+        "search_label": "Cristine Soto DeBerry for Southern Marin Fire Protection District 2020",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1435627",
+        "route": "/committee/netfile-1435627",
+        "search_label": "Adam McGill for Marin County Sheriff-Coroner 2022",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1435887",
+        "route": "/committee/netfile-1435887",
+        "search_label": "Jamie Scardina for Sheriff-Coroner 2022",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1436315",
+        "route": "/committee/netfile-1436315",
+        "search_label": "Re-elect Lori Frugoli District Attorney 2022",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1436437",
+        "route": "/committee/netfile-1436437",
+        "search_label": "Yes on Measures G & H for San Rafael Schools",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1437870",
+        "route": "/committee/netfile-1437870",
+        "search_label": "Eric Lucan for Marin County Supervisor 2022",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1438378",
+        "route": "/committee/netfile-1438378",
+        "search_label": "Morrison for County Supervisor 2022",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1438401",
+        "route": "/committee/netfile-1438401",
+        "search_label": "Marin City Incorporation Exploratory Committee",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1441139",
+        "route": "/committee/netfile-1441139",
+        "search_label": "Limeta for Novato Unified School District Trustee 2022",
+        "treasurer": null,
+        "type": "Committee"
+      },
+      {
+        "fppc_id": null,
+        "id": "committee-netfile-1441638",
+        "route": "/committee/netfile-1441638",
+        "search_label": "Gina Daly for Supervisor 2022",
+        "treasurer": null,
+        "type": "Committee"
+      }
+    ],
+    "type": "Committee"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/committee"
+  }
+}

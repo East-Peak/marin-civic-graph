@@ -1,0 +1,428 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "subtype",
+        "label": "Subtype"
+      },
+      {
+        "key": "jurisdiction_name",
+        "label": "Jurisdiction"
+      }
+    ],
+    "next_cursor": "org-apache-signs",
+    "rows": [
+      {
+        "id": "org-250-entrada-drive-llc",
+        "jurisdiction_name": null,
+        "route": "/organization/250-entrada-drive-llc",
+        "search_label": "250 Entrada Drive LLC",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-321-professional-center-llc-philip-chigos",
+        "jurisdiction_name": null,
+        "route": "/organization/321-professional-center-llc-philip-chigos",
+        "search_label": "321 Professional Center LLC(Philip Chigos)",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-3qc-inc",
+        "jurisdiction_name": null,
+        "route": "/organization/3qc-inc",
+        "search_label": "3QC, Inc.",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-401-san-rafael-inc",
+        "jurisdiction_name": null,
+        "route": "/organization/401-san-rafael-inc",
+        "search_label": "401 San Rafael Inc",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-700-706-3rd-llc",
+        "jurisdiction_name": null,
+        "route": "/organization/700-706-3rd-llc",
+        "search_label": "700-706 3RD LLC",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-700-irwin-street-partners-llc",
+        "jurisdiction_name": null,
+        "route": "/organization/700-irwin-street-partners-llc",
+        "search_label": "700 Irwin Street Partners, LLC",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-a-fork-full-of-earth",
+        "jurisdiction_name": null,
+        "route": "/organization/a-fork-full-of-earth",
+        "search_label": "A Fork Full of Earth",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-a-g-e-graphics-llc",
+        "jurisdiction_name": null,
+        "route": "/organization/a-g-e-graphics-llc",
+        "search_label": "A.G.E. Graphics, LLC",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-a-g-screen-printing-llc",
+        "jurisdiction_name": null,
+        "route": "/organization/a-g-screen-printing-llc",
+        "search_label": "A & G Screen Printing, LLC",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-aaron-peskin-for-mayor",
+        "jurisdiction_name": null,
+        "route": "/organization/aaron-peskin-for-mayor",
+        "search_label": "Aaron Peskin for Mayor",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-abbey-for-novato",
+        "jurisdiction_name": null,
+        "route": "/organization/abbey-for-novato",
+        "search_label": "Abbey for Novato",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-access-4-bikes",
+        "jurisdiction_name": null,
+        "route": "/organization/access-4-bikes",
+        "search_label": "Access 4 Bikes",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-access4bikes",
+        "jurisdiction_name": null,
+        "route": "/organization/access4bikes",
+        "search_label": "Access4Bikes",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-ackerman-for-town-council-2024",
+        "jurisdiction_name": null,
+        "route": "/organization/ackerman-for-town-council-2024",
+        "search_label": "Ackerman for Town Council 2024",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-acqua-hotel",
+        "jurisdiction_name": null,
+        "route": "/organization/acqua-hotel",
+        "search_label": "Acqua Hotel",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-act-blue",
+        "jurisdiction_name": null,
+        "route": "/organization/act-blue",
+        "search_label": "Act Blue",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-actblue",
+        "jurisdiction_name": null,
+        "route": "/organization/actblue",
+        "search_label": "ACTBlue",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-actblue-technical-services",
+        "jurisdiction_name": null,
+        "route": "/organization/actblue-technical-services",
+        "search_label": "ActBlue Technical Services",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-admail-west",
+        "jurisdiction_name": null,
+        "route": "/organization/admail-west",
+        "search_label": "Admail West",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-affinity-insurance-services",
+        "jurisdiction_name": null,
+        "route": "/organization/affinity-insurance-services",
+        "search_label": "Affinity Insurance Services",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-afl-cio-committee-on-political-education-north-bay-labor-council",
+        "jurisdiction_name": null,
+        "route": "/organization/afl-cio-committee-on-political-education-north-bay-labor-council",
+        "search_label": "AFL-CIO Committee on Political Education",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-afsaneh-zolfaghari-for-reed-union-school-district-2022",
+        "jurisdiction_name": null,
+        "route": "/organization/afsaneh-zolfaghari-for-reed-union-school-district-2022",
+        "search_label": "Afsaneh Zolfaghari for Reed Union School District 2022",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-ag-jobs-west-llc",
+        "jurisdiction_name": null,
+        "route": "/organization/ag-jobs-west-llc",
+        "search_label": "AG Jobs West LLC",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-aga-hospitality-group-llc",
+        "jurisdiction_name": null,
+        "route": "/organization/aga-hospitality-group-llc",
+        "search_label": "AGA Hospitality Group LLC",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-alfred-twu",
+        "jurisdiction_name": null,
+        "route": "/organization/alfred-twu",
+        "search_label": "Alfred Twu",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-all-three-for-mill-valley",
+        "jurisdiction_name": null,
+        "route": "/organization/all-three-for-mill-valley",
+        "search_label": "All Three for Mill Valley",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-allana-buick-bers",
+        "jurisdiction_name": null,
+        "route": "/organization/allana-buick-bers",
+        "search_label": "Allana, Buick, & Bers",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-alliance-forge",
+        "jurisdiction_name": null,
+        "route": "/organization/alliance-forge",
+        "search_label": "Alliance Forge",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-alpha-graphics",
+        "jurisdiction_name": null,
+        "route": "/organization/alpha-graphics",
+        "search_label": "Alpha Graphics",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-alphabet-inc",
+        "jurisdiction_name": null,
+        "route": "/organization/alphabet-inc",
+        "search_label": "Alphabet Inc",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-alphagraphics",
+        "jurisdiction_name": null,
+        "route": "/organization/alphagraphics",
+        "search_label": "Alphagraphics",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-alten-construction-inc",
+        "jurisdiction_name": null,
+        "route": "/organization/alten-construction-inc",
+        "search_label": "Alten Construction Inc.",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-amalgamated-transit-union-local-1575",
+        "jurisdiction_name": null,
+        "route": "/organization/amalgamated-transit-union-local-1575",
+        "search_label": "Amalgamated Transit Union Local 1575",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-amazon",
+        "jurisdiction_name": null,
+        "route": "/organization/amazon",
+        "search_label": "Amazon",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-amazon-com",
+        "jurisdiction_name": null,
+        "route": "/organization/amazon-com",
+        "search_label": "Amazon.com",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-american-express",
+        "jurisdiction_name": null,
+        "route": "/organization/american-express",
+        "search_label": "American Express",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-american-federation-of-labor-north-bay-labor-council",
+        "jurisdiction_name": null,
+        "route": "/organization/american-federation-of-labor-north-bay-labor-council",
+        "search_label": "American Federation of Labor & North Bay Labor Council",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-american-legion-post-179",
+        "jurisdiction_name": null,
+        "route": "/organization/american-legion-post-179",
+        "search_label": "American Legion Post 179",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-ammi-publishing-comp-inc",
+        "jurisdiction_name": null,
+        "route": "/organization/ammi-publishing-comp-inc",
+        "search_label": "Ammi Publishing Comp. Inc",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-amms",
+        "jurisdiction_name": null,
+        "route": "/organization/amms",
+        "search_label": "AMMS",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-ams-net-inc",
+        "jurisdiction_name": null,
+        "route": "/organization/ams-net-inc",
+        "search_label": "AMS.NET, Inc.",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-amy-lopez",
+        "jurisdiction_name": null,
+        "route": "/organization/amy-lopez",
+        "search_label": "Amy Lopez",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-amy-peele-for-city-council",
+        "jurisdiction_name": null,
+        "route": "/organization/amy-peele-for-city-council",
+        "search_label": "Amy Peele for City Council",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-amy-peele-for-city-council-2019",
+        "jurisdiction_name": null,
+        "route": "/organization/amy-peele-for-city-council-2019",
+        "search_label": "Amy Peele for City Council 2019",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-amy-peele-for-novato-city-council-2019",
+        "jurisdiction_name": null,
+        "route": "/organization/amy-peele-for-novato-city-council-2019",
+        "search_label": "Amy Peele for Novato City Council 2019",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-andre-charles",
+        "jurisdiction_name": null,
+        "route": "/organization/andre-charles",
+        "search_label": "Andre Charles",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-andrew-martelle",
+        "jurisdiction_name": null,
+        "route": "/organization/andrew-martelle",
+        "search_label": "Andrew Martelle",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-anedot",
+        "jurisdiction_name": null,
+        "route": "/organization/anedot",
+        "search_label": "Anedot",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-anedot-inc",
+        "jurisdiction_name": null,
+        "route": "/organization/anedot-inc",
+        "search_label": "Anedot, Inc.",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-apache-signs",
+        "jurisdiction_name": null,
+        "route": "/organization/apache-signs",
+        "search_label": "Apache Signs",
+        "subtype": null,
+        "type": "Organization"
+      }
+    ],
+    "type": "Organization"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/organization"
+  }
+}

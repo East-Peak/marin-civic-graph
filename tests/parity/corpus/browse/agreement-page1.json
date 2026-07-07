@@ -1,0 +1,116 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "title",
+        "label": "Title"
+      },
+      {
+        "key": "agreement_type",
+        "label": "Type"
+      }
+    ],
+    "next_cursor": null,
+    "rows": [
+      {
+        "agreement_type": "affordable_housing_agreement",
+        "id": "agreement-350-merrydale-affordable-housing",
+        "route": "/agreement/350-merrydale-affordable-housing",
+        "search_label": "350 Merrydale affordable housing agreement",
+        "title": null,
+        "type": "Agreement"
+      },
+      {
+        "agreement_type": "grant_agreement",
+        "id": "agreement-350-merrydale-county-grant",
+        "route": "/agreement/350-merrydale-county-grant",
+        "search_label": "350 Merrydale county grant agreement",
+        "title": null,
+        "type": "Agreement"
+      },
+      {
+        "agreement_type": "professional_services_agreement",
+        "id": "agreement-350-merrydale-lca-design-services",
+        "route": "/agreement/350-merrydale-lca-design-services",
+        "search_label": "350 Merrydale LCA design services agreement",
+        "title": null,
+        "type": "Agreement"
+      },
+      {
+        "agreement_type": "professional_services_agreement",
+        "id": "agreement-350-merrydale-newmark-brokerage",
+        "route": "/agreement/350-merrydale-newmark-brokerage",
+        "search_label": "350 Merrydale Newmark brokerage services agreement",
+        "title": null,
+        "type": "Agreement"
+      },
+      {
+        "agreement_type": "purchase_and_sale_agreement",
+        "id": "agreement-350-merrydale-purchase-and-sale",
+        "route": "/agreement/350-merrydale-purchase-and-sale",
+        "search_label": "350 Merrydale purchase and sale agreement",
+        "title": null,
+        "type": "Agreement"
+      },
+      {
+        "agreement_type": "professional_services_agreement",
+        "id": "agreement-350-merrydale-swinerton-project-management",
+        "route": "/agreement/350-merrydale-swinerton-project-management",
+        "search_label": "350 Merrydale Swinerton project and construction management agreement",
+        "title": null,
+        "type": "Agreement"
+      },
+      {
+        "agreement_type": "grant_agreement",
+        "id": "agreement-csl-downtown-carnegie-building-forward",
+        "route": "/agreement/csl-downtown-carnegie-building-forward",
+        "search_label": "agreement-csl-downtown-carnegie-building-forward",
+        "title": null,
+        "type": "Agreement"
+      },
+      {
+        "agreement_type": "grant_agreement",
+        "id": "agreement-csl-downtown-carnegie-targeted-design-grant",
+        "route": "/agreement/csl-downtown-carnegie-targeted-design-grant",
+        "search_label": "agreement-csl-downtown-carnegie-targeted-design-grant",
+        "title": null,
+        "type": "Agreement"
+      },
+      {
+        "agreement_type": "professional_services_agreement",
+        "id": "agreement-noll-and-tam-downtown-library",
+        "route": "/agreement/noll-and-tam-downtown-library",
+        "search_label": "agreement-noll-and-tam-downtown-library",
+        "title": null,
+        "type": "Agreement"
+      },
+      {
+        "agreement_type": "construction_contract",
+        "id": "agreement-unger-downtown-library-construction",
+        "route": "/agreement/unger-downtown-library-construction",
+        "search_label": "agreement-unger-downtown-library-construction",
+        "title": null,
+        "type": "Agreement"
+      },
+      {
+        "agreement_type": "professional_services_agreement",
+        "id": "agreement-unico-downtown-library-construction-management",
+        "route": "/agreement/unico-downtown-library-construction-management",
+        "search_label": "agreement-unico-downtown-library-construction-management",
+        "title": null,
+        "type": "Agreement"
+      }
+    ],
+    "type": "Agreement"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/agreement"
+  }
+}
