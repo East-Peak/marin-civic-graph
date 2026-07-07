@@ -1,7 +1,6 @@
 # Identity-confidence architecture — design
 
-**Date:** 2026-07-06 · **Author:** Claude (Fable 5) · **Status:** DRAFT — pending Codex adversarial
-review + Stuart go/no-go. · **Input contract:** verdict-feed v1 (`scripts/verdict_feed.py`, R5).
+**Date:** 2026-07-06 · **Author:** Claude (Fable 5) · **Status:** COMPLETE (2026-07-07) — C1a b1d6a0b · C1b 8305003 · C2 d241cc6 · C3 21a1a8f · C4 (this commit). Live confidence.jsonl: 241 records (92 medium/149 low/12 masked); highs unlock on a collision-context re-run. · **Input contract:** verdict-feed v1 (`scripts/verdict_feed.py`, R5).
 
 ## 0. The problem
 
