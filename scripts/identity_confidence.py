@@ -669,7 +669,16 @@ def _load_context(paths: Iterable[str | Path]) -> dict[str, dict[str, Any]]:
         raw = json.loads(Path(path).read_text(encoding="utf-8"))
         if not isinstance(raw, dict):
             raise ValueError(f"identity confidence context must be an object: {path}")
-        for vendor_id, entry in raw.items():
+        if "context_by_vendor" in raw:
+            generated_at = raw.get("generated_at")
+            if not isinstance(generated_at, str) or not generated_at:
+                raise ValueError(f"identity confidence context generated_at must be non-empty: {path}")
+            raw_context = raw["context_by_vendor"]
+            if not isinstance(raw_context, dict):
+                raise ValueError(f"identity confidence context_by_vendor must be an object: {path}")
+        else:
+            raw_context = raw
+        for vendor_id, entry in raw_context.items():
             if not isinstance(vendor_id, str) or not vendor_id:
                 raise ValueError(f"identity confidence context vendor id must be non-empty: {path}")
             if not isinstance(entry, dict):

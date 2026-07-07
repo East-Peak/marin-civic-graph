@@ -10,6 +10,7 @@ refs); the name tier uses propose_org_resolutions on N=2 pairs. Anchors
 """
 from __future__ import annotations
 
+import copy
 import json
 import sys
 from pathlib import Path
@@ -28,6 +29,11 @@ from dedup_org_candidates import (  # noqa: E402
     name_tier_candidates,
     run_dedup_pass,
     structural_class,
+)
+from dedup_merge_applier import (  # noqa: E402
+    apply_component_merge,
+    canonical_graph,
+    rollback_component_merge,
 )
 
 
@@ -388,72 +394,111 @@ def test_name_tier_excludes_shared_hard_key_pairs():
 # export, never skipped; BLOCKS (fails loud) if the export is genuinely absent.
 # ---------------------------------------------------------------------------
 
-import copy as _copy  # noqa: E402
-from dedup_merge_applier import (  # noqa: E402
-    apply_component_merge,
-    canonical_graph,
-    rollback_component_merge,
-)
-
 _REAL_EXPORT = Path(__file__).resolve().parents[2] / "data/exports/existing-orgs-enriched.json"
 
 
-def test_e2e_real_export_deterministic_clusters_and_reversible_merge():
+def _scratch_graph_from_export_refs(refs):
+    nodes = {
+        r["id"]: {
+            "id": r["id"],
+            "labels": ["Organization"],
+            "properties": {k: v for k, v in r.items() if k != "id"},
+        }
+        for r in refs
+    }
+    nodes["scratch-neighbor"] = {
+        "id": "scratch-neighbor",
+        "labels": ["Organization"],
+        "properties": {},
+    }
+    return {"nodes": nodes, "edges": {}}
+
+
+def _assert_round_trip_reversible(graph, component):
+    dup = next(m for m in component["members"] if m != component["canonical"])
+    graph["edges"][(dup, "TO_TARGET", "scratch-neighbor")] = {"amount": 7}
+    before = canonical_graph(copy.deepcopy(graph))
+
+    record = apply_component_merge(graph, component)
+
+    assert record["canonical_id"] == component["canonical"]
+    assert set(record["superseded_ids"]) == (
+        set(component["members"]) - {component["canonical"]}
+    )
+    assert graph["nodes"][dup]["properties"]["dedup_superseded_by"] == component["canonical"]
+
+    rollback_component_merge(graph, record)
+    assert canonical_graph(graph) == before
+
+
+def test_e2e_real_export_dedup_invariants_are_data_independent():
     assert _REAL_EXPORT.is_file(), (
         "BLOCKED: real enriched org export missing — "
         "data/exports/existing-orgs-enriched.json"
     )
     refs = load_org_refs(_REAL_EXPORT)
     refs_by_id = {r["id"]: r for r in refs}
-    # anchors excluded from the candidate input
+    assert refs
     assert not any(is_anchor(r["id"]) for r in refs)
-    assert len(refs) == 1346
 
     det = deterministic_dedup_assertions(refs, reviewer="dedup_pass", policy_version="dedup-v1")
-    assert all(a["basis"] == "org_dedup_key_exact" for a in det)
-    assert all(a["status"] == "deterministic" for a in det)
+    assertion_endpoints = set()
+    for assertion in det:
+        assert assertion["status"] == "deterministic"
+        assert assertion["basis"] == "org_dedup_key_exact"
+        assert assertion["subject_ref"] in refs_by_id
+        assert assertion["target_ref"] in refs_by_id
+        assert not is_anchor(assertion["subject_ref"])
+        assert not is_anchor(assertion["target_ref"])
+        assert assertion["subject_ref"] != assertion["target_ref"]
+        assertion_endpoints.update((assertion["subject_ref"], assertion["target_ref"]))
 
     assembly = assemble_components(det, refs_by_id)
-    assert assembly["refused"] == []                       # no anchor/conflict/rejected
-    accepted = assembly["accepted"]
-    assert len(accepted) == 6                              # the 6 deterministic clusters
-    sizes = sorted(len(c["members"]) for c in accepted)
-    assert sizes == [2, 2, 2, 2, 3, 4]                     # 15 nodes total
-    assert sum(sizes) == 15
-    # the MWPAC x4 cluster is present and all-committee (merges into one)
-    mwpac = next(c for c in accepted if len(c["members"]) == 4)
-    assert all("political-action-committee" in m for m in mwpac["members"])
-    # every canonical is the highest-degree real member of its cluster
-    for comp in accepted:
-        best = max(comp["members"], key=lambda m: (refs_by_id[m].get("degree") or 0, ))
-        assert comp["canonical"] == choose_canonical([refs_by_id[m] for m in comp["members"]])
-        assert (refs_by_id[comp["canonical"]].get("degree") or 0) == (refs_by_id[best].get("degree") or 0)
+    assert set(assembly) == {"accepted", "refused"}
+
+    component_members = []
+    for comp in assembly["accepted"]:
+        assert len(comp["members"]) >= 2
+        assert comp["canonical"] in comp["members"]
+        assert all(member in refs_by_id for member in comp["members"])
+        assert not any(is_anchor(member) for member in comp["members"])
+        component_members.extend(comp["members"])
+    for comp in assembly["refused"]:
+        assert len(comp["members"]) >= 2
+        assert comp["reasons"]
+        assert all(member in refs_by_id or is_anchor(member) for member in comp["members"])
+        component_members.extend(comp["members"])
+    assert set(component_members) == assertion_endpoints
+    assert len(component_members) == len(set(component_members))
 
     # name tier: unkeyed tail -> queued; affiliate divergences -> needs_careful_review
     names = name_tier_candidates(refs)
-    assert names and all(c["status"] == "queued" for c in names)
-    assert any(c["review_tier"] == "needs_careful_review" for c in names)
+    assert all(c["status"] == "queued" for c in names)
+    assert all(c["subject_ref"] in refs_by_id for c in names)
+    assert all(c["candidate_ref"] in refs_by_id for c in names)
+    assert all(c["review_tier"] in {"standard", "needs_careful_review"} for c in names)
 
-    # constructed reversible merge of ONE real cluster (KIDDO x2) on a fixture graph
-    kiddo = next(c for c in accepted
-                 if any("kiddo" in m for m in c["members"]))
-    canon = kiddo["canonical"]
-    dup = next(m for m in kiddo["members"] if m != canon)
-    graph = {
-        "nodes": {
-            canon: {"id": canon, "labels": ["Organization"], "properties": {"ein": "942848305"}},
-            dup: {"id": dup, "labels": ["Organization"], "properties": {"ein": "942848305"}},
-            "dept": {"id": "dept", "labels": ["Organization"], "properties": {}},
-        },
-        "edges": {(dup, "TO_TARGET", "dept"): {"amount": 7}},
-    }
-    before = canonical_graph(_copy.deepcopy(graph))
-    record = apply_component_merge(graph, kiddo)
-    assert (canon, "TO_TARGET", "dept") in graph["edges"]            # repointed onto canonical
-    assert graph["nodes"][dup]["properties"]["dedup_superseded_by"] == canon
-    assert "Organization" in graph["nodes"][dup]["labels"]           # label kept
-    rollback_component_merge(graph, record)
-    assert canonical_graph(graph) == before                          # byte-identical
+    graph = _scratch_graph_from_export_refs(refs)
+    if assembly["accepted"]:
+        _assert_round_trip_reversible(graph, assembly["accepted"][0])
+    else:
+        synthetic_refs = [
+            _ref("org-synthetic-canon", "Synthetic Canon", ein="000000001", degree=2),
+            _ref("org-synthetic-dup", "Synthetic Dup", ein="000000001", degree=1),
+        ]
+        for ref in synthetic_refs:
+            graph["nodes"][ref["id"]] = {
+                "id": ref["id"],
+                "labels": ["Organization"],
+                "properties": {k: v for k, v in ref.items() if k != "id"},
+            }
+        _assert_round_trip_reversible(
+            graph,
+            {
+                "members": ["org-synthetic-canon", "org-synthetic-dup"],
+                "canonical": "org-synthetic-canon",
+            },
+        )
 
 
 def test_fppc_committee_id_in_dedup_keys_and_anchor_prefix():

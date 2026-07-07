@@ -207,6 +207,59 @@ def test_backfill_cli_without_collision_context_caps_high_candidate_at_medium(tm
     assert ledger.read_text(encoding="utf-8") == original_ledger
 
 
+def test_backfill_cli_with_wrapped_collision_context_unlocks_high_band(tmp_path):
+    verdicts = tmp_path / "verdicts.jsonl"
+    read_model = tmp_path / "read-model.jsonl"
+    ledger = tmp_path / "assertions.jsonl"
+    context = tmp_path / "context.json"
+    out = tmp_path / "confidence.jsonl"
+
+    verdicts.write_text(json.dumps(_feed()) + "\n", encoding="utf-8")
+    read_model.write_text(json.dumps(_case()) + "\n", encoding="utf-8")
+    ledger.write_text("", encoding="utf-8")
+    context.write_text(
+        json.dumps(
+            {
+                "generated_at": COMPUTED_AT,
+                "context_by_vendor": {
+                    "org-marincontract-recipient-alpha": {
+                        "display_label": "County Vendor Alpha",
+                        "money_total": 100,
+                        "flow_count": 1,
+                        "departments": ["Test Department"],
+                        "key_collision": False,
+                        "collides_with": [],
+                    }
+                },
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    code = ic.main(
+        [
+            "--verdicts",
+            str(verdicts),
+            "--read-model",
+            str(read_model),
+            "--ledger",
+            str(ledger),
+            "--context",
+            str(context),
+            "--out",
+            str(out),
+            "--computed-at",
+            COMPUTED_AT,
+        ]
+    )
+
+    assert code == 0
+    row = json.loads(out.read_text(encoding="utf-8"))
+    assert row["band"] == "high"
+    assert row["status"] == "active"
+
+
 def test_backfill_cli_compacts_legacy_duplicate_pairs_last_append_wins(tmp_path):
     verdicts = tmp_path / "verdicts.jsonl"
     read_model = tmp_path / "read-model.jsonl"
