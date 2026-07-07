@@ -149,7 +149,27 @@ Rules: same machine as R- and C-series — Codex executes under TDD, review-gate
 never weakened, ~1,500-line tranches, redaction scan on any artifact-shape change (baked substrate
 inherits the graph's egress guarantees: it bakes only what the live public graph already exposes).
 
-## 6. Review round 1 (2026-07-07)
+## 6. S0 source-of-truth proof — results (2026-07-07)
+
+Local composed bake: 6,307 nodes / 21,236 edges / **14MB SQLite / 52ms + 76MB adjacency load** —
+size & perf gates pass at projection scale. Live Aura: **130,480 nodes / 168,615 rels**. Verdicts:
+
+1. **G1 REVISED (confirmed at scale): the projected JSONL dirs are a ~5% curated slice, not the
+   graph.** The bake source becomes a **full live-graph export sans embeddings** (Aura today, local
+   Docker post-cutover), composed with the attach overlay. Projection dirs feed only
+   constellation/signature artifacts. **S0b: full export → re-bake → RE-MEASURE size/perf** — at
+   ~20× nodes the 250MB budget is genuinely in play; the Turso fallback decision waits on that
+   number, as designed.
+2. **P3 CUT from v1**: the COI labels/edges (Membership, EconomicInterest, INTEREST_IN,
+   DISCLOSED_AS, MEMBER, MEMBER_OF_ORG) are absent from LIVE Aura too — builders shipped, loads
+   never ran. Reinstating P3 requires an operator-gated COI load first (own decision, own runbook).
+3. **Identity-overlay drift found**: ledger/overlay carry 80 stamped SAME_AS; live has 59 stamped +
+   22 legacy unstamped (pre-identity, empty props). Reconcile before the first real bake (drift
+   report scope); overlay is authoritative for stamped rows. Legacy 22 stay as plain edges for
+   parity (they can never be cited — join_citation is fail-closed) and get flagged for later audit.
+4. P1 (identity badges) and P4 (lineage, 72 edges live) remain IN — their data is proven live.
+
+## 7. Review round 1 (2026-07-07)
 
 Codex adversarial review: 11 findings, all folded. The two that changed the plan: **F1** —
 `/api/constellation-manifest` is a live Neo4j route (missed in the initial read; now S1 scope), and
