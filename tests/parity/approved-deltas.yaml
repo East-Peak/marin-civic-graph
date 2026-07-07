@@ -1,0 +1,18 @@
+- surface: data
+  case: campaign-money-30d
+  reason: live tie order underdetermined for pairs sharing abs delta + decided_at — same flow id ties across decisions
+- surface: data
+  case: campaign-money-90d
+  reason: live tie order underdetermined for pairs sharing abs delta + decided_at — same flow id ties across decisions
+- surface: status
+  case: status
+  reason: composed artifact is overlay-authoritative — carries 21 stamped SAME_AS edges + anchor nodes live lags
+- surface: data
+  case: money-default
+  reason: live carries duplicate-id vendor stub nodes (59 pairs, ingestion bug per spec 4.2); the bake MERGEs them, so target_name resolves to the enriched node while live binds the bare stub
+- surface: data
+  case: proceedings-default
+  reason: link order within a proceeding group is underdetermined on live (no ORDER BY on link in the Cypher); row COUNTS and all values match
+- surface: data
+  case: proceedings-boyd
+  reason: link order within a proceeding group is underdetermined on live (no ORDER BY on link in the Cypher); row COUNTS and all values match

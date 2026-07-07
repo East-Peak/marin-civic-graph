@@ -185,6 +185,19 @@ adds a prop-slimming pass once the parity matrix names exactly which properties 
 (Records' text payloads are the obvious bulk); (c) Turso stays warm as the fallback — the SQL
 interface is identical, so the swap is a hosting change, not a redesign. Revisit at 235MB.
 
+### S1b — first ports + replay outcome (2026-07-07)
+
+/api/data (all 10) + /api/status serve from the substrate behind SERVING_BACKEND; corpus replay:
+**11 PASS + 6 approved-delta WARN, 0 FAIL** (parity_run exit 0). The harness caught four defect
+classes on first replay — two port bugs (Cypher-vs-SQLite NULL ordering; UNION deduping what live
+multiplies per edge instance) and **three live warts now pinned as approved deltas**:
+1. Query #4's `svc.ended_at >= date()` compares string to date — null in Cypher — so the clause has
+   never matched on live; the port mimics the wart (fix post-cutover as a declared change).
+2. Live carries 59 duplicate-id node pairs (enriched copy + bare stub — the ingestion bug spec §4.2
+   guards against); the bake MERGEs them, so some rows resolve enriched names live can't.
+3. Two orderings underdetermined on live (campaign-money ties; proceedings link order — no ORDER BY
+   on link): captured-stable but semantically accidental.
+
 ## 7. Review round 1 (2026-07-07)
 
 Codex adversarial review: 11 findings, all folded. The two that changed the plan: **F1** —

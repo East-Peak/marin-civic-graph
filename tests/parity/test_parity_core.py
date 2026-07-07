@@ -245,3 +245,34 @@ def test_load_deltas_and_apply_deltas_downgrades_matching_mismatches_to_warnings
     )
     assert errors == ['$.results[0].id: expected "a", got "b"']
     assert warnings == []
+
+
+def test_committed_approved_deltas_pin_known_replay_drift():
+    deltas = load_deltas(Path(__file__).parent / "approved-deltas.yaml")
+
+    assert deltas == [
+        {
+            "surface": "data",
+            "case": "campaign-money-30d",
+            "reason": (
+                "live tie order underdetermined for pairs sharing abs delta + decided_at "
+                "\u2014 same flow id ties across decisions"
+            ),
+        },
+        {
+            "surface": "data",
+            "case": "campaign-money-90d",
+            "reason": (
+                "live tie order underdetermined for pairs sharing abs delta + decided_at "
+                "\u2014 same flow id ties across decisions"
+            ),
+        },
+        {
+            "surface": "status",
+            "case": "status",
+            "reason": (
+                "composed artifact is overlay-authoritative \u2014 carries 21 stamped "
+                "SAME_AS edges + anchor nodes live lags"
+            ),
+        },
+    ]
