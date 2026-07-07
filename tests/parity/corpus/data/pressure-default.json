@@ -1,0 +1,99 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "alignment": "left",
+        "key": "thread_name",
+        "label": "Thread",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "type",
+        "label": "Type",
+        "sortable": true
+      },
+      {
+        "alignment": "right",
+        "key": "money_pressure",
+        "label": "Money",
+        "sortable": true
+      },
+      {
+        "alignment": "right",
+        "key": "legal_pressure",
+        "label": "Legal",
+        "sortable": true
+      },
+      {
+        "alignment": "right",
+        "key": "evidence_density",
+        "label": "Evidence",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "id",
+        "label": "Id",
+        "link": "entity-route"
+      }
+    ],
+    "rows": [
+      {
+        "evidence_density": 20,
+        "id": "project-san-rafael-350-merrydale-interim-shelter",
+        "legal_pressure": 0,
+        "money_pressure": 15337953,
+        "thread_name": "350 Merrydale Interim Shelter Project",
+        "type": "Project"
+      },
+      {
+        "evidence_density": 6,
+        "id": "project-downtown-library-renovation",
+        "legal_pressure": 0,
+        "money_pressure": 4310536.82,
+        "thread_name": "Downtown Library Renovation Project",
+        "type": "Project"
+      },
+      {
+        "evidence_density": 9,
+        "id": "case-boyd-v-city-of-san-rafael",
+        "legal_pressure": 6,
+        "money_pressure": 0,
+        "thread_name": "Boyd v. City of San Rafael",
+        "type": "Case"
+      },
+      {
+        "evidence_density": 6,
+        "id": "program-san-rafael-camping-ordinance-implementation",
+        "legal_pressure": 0,
+        "money_pressure": 0,
+        "thread_name": "San Rafael camping ordinance implementation and enforcement",
+        "type": "Program"
+      },
+      {
+        "evidence_density": 4,
+        "id": "program-san-rafael-sanctioned-camping",
+        "legal_pressure": 0,
+        "money_pressure": 0,
+        "thread_name": "San Rafael sanctioned camping program",
+        "type": "Program"
+      },
+      {
+        "evidence_density": 2,
+        "id": "project-700-irwin-st",
+        "legal_pressure": 0,
+        "money_pressure": 0,
+        "thread_name": "700 Irwin St.",
+        "type": "Project"
+      }
+    ],
+    "slug": "local-pressure-ranking-sr"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/data/local-pressure-ranking-sr"
+  }
+}

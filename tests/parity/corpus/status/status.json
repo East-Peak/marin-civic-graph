@@ -1,0 +1,15 @@
+{
+  "http_status": 200,
+  "payload": {
+    "connected": true,
+    "edge_count": 168615,
+    "jurisdiction_count": 50,
+    "node_count": 130480,
+    "subgraphs_built_at": "2026-04-19T22:26:24+00:00"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/status"
+  }
+}

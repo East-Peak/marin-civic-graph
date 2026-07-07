@@ -1,0 +1,60 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "title",
+        "label": "Title"
+      },
+      {
+        "key": "parent_title",
+        "label": "Parent"
+      }
+    ],
+    "next_cursor": null,
+    "rows": [
+      {
+        "id": "amendment-350-merrydale-lca-design-services-2026-02-17",
+        "parent_title": null,
+        "route": "/amendment/350-merrydale-lca-design-services-2026-02-17",
+        "search_label": "350 Merrydale LCA design services amendment",
+        "title": null,
+        "type": "Amendment"
+      },
+      {
+        "id": "amendment-noll-and-tam-first",
+        "parent_title": null,
+        "route": "/amendment/noll-and-tam-first",
+        "search_label": "amendment-noll-and-tam-first",
+        "title": null,
+        "type": "Amendment"
+      },
+      {
+        "id": "amendment-noll-and-tam-second",
+        "parent_title": null,
+        "route": "/amendment/noll-and-tam-second",
+        "search_label": "amendment-noll-and-tam-second",
+        "title": null,
+        "type": "Amendment"
+      },
+      {
+        "id": "amendment-unger-second",
+        "parent_title": null,
+        "route": "/amendment/unger-second",
+        "search_label": "amendment-unger-second",
+        "title": null,
+        "type": "Amendment"
+      }
+    ],
+    "type": "Amendment"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/amendment"
+  }
+}

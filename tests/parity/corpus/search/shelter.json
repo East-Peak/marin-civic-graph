@@ -1,0 +1,35 @@
+{
+  "http_status": 200,
+  "payload": {
+    "query": "shelter",
+    "results": [
+      {
+        "id": "project-san-rafael-350-merrydale-interim-shelter",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale Interim Shelter Project \u00b7 active",
+        "last_activity": "2026-03-16",
+        "rank": 100,
+        "route": "/project/san-rafael-350-merrydale-interim-shelter",
+        "search_label": "350 Merrydale Interim Shelter Project",
+        "type": "Project"
+      },
+      {
+        "id": "decision-2022-05-02-san-rafael-city-council-5i-resolution-adoption-15063",
+        "jurisdiction": null,
+        "key_fact": "Advertising Transit Shelter Agreement",
+        "last_activity": "2022-05-02",
+        "rank": 70,
+        "route": "/decision/2022-05-02-san-rafael-city-council-5i-resolution-adoption-15063",
+        "search_label": "Advertising Transit Shelter Agreement",
+        "type": "Decision"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "q": "shelter"
+    },
+    "url_path": "/api/search"
+  }
+}

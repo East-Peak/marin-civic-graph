@@ -1,0 +1,14 @@
+{
+  "http_status": 200,
+  "payload": {
+    "query": "willdan",
+    "results": []
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "q": "willdan"
+    },
+    "url_path": "/api/search"
+  }
+}

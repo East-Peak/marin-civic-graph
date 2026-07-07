@@ -1,0 +1,33 @@
+{
+  "http_status": 200,
+  "payload": {
+    "cap": 20,
+    "edges": [
+      {
+        "source": "moneyflow-1277176-lTjjSqojccL4",
+        "style": "money",
+        "target": "org-250-entrada-drive-llc",
+        "type": "TO_TARGET"
+      }
+    ],
+    "new_count": 1,
+    "nodes": [
+      {
+        "event_date": "2019-06-17",
+        "id": "moneyflow-1277176-lTjjSqojccL4",
+        "label": "moneyflow-1277176-lTjjSqojccL4",
+        "ring": 1,
+        "route": "/money-flow/1277176-lTjjSqojccL4",
+        "type": "MoneyFlow"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "focus": "org-250-entrada-drive-llc",
+      "hop": "1"
+    },
+    "url_path": "/api/expand"
+  }
+}

@@ -1,0 +1,515 @@
+{
+  "http_status": 200,
+  "payload": {
+    "query": "housing",
+    "results": [
+      {
+        "id": "agreement-350-merrydale-affordable-housing",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale affordable housing agreement",
+        "last_activity": "2025-11-17",
+        "rank": 86,
+        "route": "/agreement/350-merrydale-affordable-housing",
+        "search_label": "350 Merrydale affordable housing agreement",
+        "type": "Agreement"
+      },
+      {
+        "id": "decision-2019-06-03-san-rafael-city-council-5a-motion-approval",
+        "jurisdiction": null,
+        "key_fact": "Rental Housing Ordinances",
+        "last_activity": "2019-06-03",
+        "rank": 72,
+        "route": "/decision/2019-06-03-san-rafael-city-council-5a-motion-approval",
+        "search_label": "Rental Housing Ordinances",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2021-04-19-san-rafael-city-council-5c-resolution-adoption-14899",
+        "jurisdiction": null,
+        "key_fact": "Housing Element Update",
+        "last_activity": "2021-04-19",
+        "rank": 70,
+        "route": "/decision/2021-04-19-san-rafael-city-council-5c-resolution-adoption-14899",
+        "search_label": "Housing Element Update",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2020-11-02-san-rafael-city-council-5d-resolution-adoption-14869",
+        "jurisdiction": null,
+        "key_fact": "Affordable Housing Trust Fund Allocation",
+        "last_activity": "2020-11-02",
+        "rank": 72,
+        "route": "/decision/2020-11-02-san-rafael-city-council-5d-resolution-adoption-14869",
+        "search_label": "Affordable Housing Trust Fund Allocation",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2022-03-21-san-rafael-city-council-7b-resolution-adoption-15049",
+        "jurisdiction": null,
+        "key_fact": "Permanent Local Housing Allocation (PHLA)",
+        "last_activity": "2022-03-21",
+        "rank": 72,
+        "route": "/decision/2022-03-21-san-rafael-city-council-7b-resolution-adoption-15049",
+        "search_label": "Permanent Local Housing Allocation (PHLA)",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2023-05-01-san-rafael-city-council-4c-resolution-adoption-15203",
+        "jurisdiction": null,
+        "key_fact": "Permanent Local Housing Allocation (PLHA)",
+        "last_activity": "2023-05-01",
+        "rank": 71,
+        "route": "/decision/2023-05-01-san-rafael-city-council-4c-resolution-adoption-15203",
+        "search_label": "Permanent Local Housing Allocation (PLHA)",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2019-06-17-san-rafael-city-council-4d-motion-approval",
+        "jurisdiction": null,
+        "key_fact": "Rental Housing Dispute Resolution Ordinance Adoption",
+        "last_activity": "2019-06-17",
+        "rank": 72,
+        "route": "/decision/2019-06-17-san-rafael-city-council-4d-motion-approval",
+        "search_label": "Rental Housing Dispute Resolution Ordinance Adoption",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2022-03-07-san-rafael-city-council-7a-resolution-adoption-15041",
+        "jurisdiction": null,
+        "key_fact": "2021 Affordable Housing NOFA Funding Recommendation",
+        "last_activity": "2022-03-07",
+        "rank": 72,
+        "route": "/decision/2022-03-07-san-rafael-city-council-7a-resolution-adoption-15041",
+        "search_label": "2021 Affordable Housing NOFA Funding Recommendation",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2025-08-18-san-rafael-city-council-6a-resolution-adoption-14890",
+        "jurisdiction": null,
+        "key_fact": "Affordable Housing Requirements for Residential Development Projects",
+        "last_activity": "2025-08-18",
+        "rank": 92,
+        "route": "/decision/2025-08-18-san-rafael-city-council-6a-resolution-adoption-14890",
+        "search_label": "Affordable Housing Requirements for Residential Development Projects",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2020-01-21-san-rafael-city-council-6b-resolution-adoption-14760",
+        "jurisdiction": null,
+        "key_fact": "Guidelines for the Affordable Housing Trust Fund",
+        "last_activity": "2020-01-21",
+        "rank": 70,
+        "route": "/decision/2020-01-21-san-rafael-city-council-6b-resolution-adoption-14760",
+        "search_label": "Guidelines for the Affordable Housing Trust Fund",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2022-05-16-san-rafael-city-council-5e-resolution-adoption-15068",
+        "jurisdiction": null,
+        "key_fact": "Community Engagement, Equity & Housing Policy Consulting Services",
+        "last_activity": "2022-05-16",
+        "rank": 70,
+        "route": "/decision/2022-05-16-san-rafael-city-council-5e-resolution-adoption-15068",
+        "search_label": "Community Engagement, Equity & Housing Policy Consulting Services",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2021-07-19-san-rafael-city-council-7b-resolution-adoption-14947-14890",
+        "jurisdiction": null,
+        "key_fact": "Request for Modification of Affordable Housing Requirements",
+        "last_activity": "2021-07-19",
+        "rank": 72,
+        "route": "/decision/2021-07-19-san-rafael-city-council-7b-resolution-adoption-14947-14890",
+        "search_label": "Request for Modification of Affordable Housing Requirements",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2025-11-17-350-merrydale-county-grant-approval",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale county grant and affordable housing agreement resolution",
+        "last_activity": "2025-11-17",
+        "rank": 95,
+        "route": "/decision/2025-11-17-350-merrydale-county-grant-approval",
+        "search_label": "350 Merrydale county grant and affordable housing agreement resolution",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2025-09-02-san-rafael-city-council-7a-resolution-adoption-14890",
+        "jurisdiction": null,
+        "key_fact": "Affordable Housing Requirements for Residential Development Projects (REMOVED)",
+        "last_activity": "2025-09-02",
+        "rank": 90,
+        "route": "/decision/2025-09-02-san-rafael-city-council-7a-resolution-adoption-14890",
+        "search_label": "Affordable Housing Requirements for Residential Development Projects (REMOVED)",
+        "type": "Decision"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-1023",
+        "jurisdiction": null,
+        "key_fact": "Housing Element Advisory Committee - Special Meeting \u00b7 2023-05-31",
+        "last_activity": "2023-05-31",
+        "rank": 65,
+        "route": "/meeting/san-anselmo-town-council-1023",
+        "search_label": "Housing Element Advisory Committee - Special Meeting \u2014 2023-05-31",
+        "type": "Meeting"
+      },
+      {
+        "id": "decision-2022-10-17-san-rafael-city-council-4i-resolution-adoption-15142-15143-15144-15145",
+        "jurisdiction": null,
+        "key_fact": "Resolution Verifying Compliance with State Housing Laws",
+        "last_activity": "2022-10-17",
+        "rank": 71,
+        "route": "/decision/2022-10-17-san-rafael-city-council-4i-resolution-adoption-15142-15143-15144-15145",
+        "search_label": "Resolution Verifying Compliance with State Housing Laws",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2019-11-18-san-rafael-city-council-4e-resolution-adoption-14738",
+        "jurisdiction": null,
+        "key_fact": "Affordable Housing Agreement for 211-215 Belle Avenue",
+        "last_activity": "2019-11-18",
+        "rank": 71,
+        "route": "/decision/2019-11-18-san-rafael-city-council-4e-resolution-adoption-14738",
+        "search_label": "Affordable Housing Agreement for 211-215 Belle Avenue",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2025-04-07-san-rafael-city-council-special-4e-resolution-adoption-15388",
+        "jurisdiction": null,
+        "key_fact": "Diversity, Equity, Inclusion, Belonging and Housing Consulting Services Agreement",
+        "last_activity": "2025-04-07",
+        "rank": 87,
+        "route": "/decision/2025-04-07-san-rafael-city-council-special-4e-resolution-adoption-15388",
+        "search_label": "Diversity, Equity, Inclusion, Belonging and Housing Consulting Services Agreement",
+        "type": "Decision"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-784",
+        "jurisdiction": null,
+        "key_fact": "Housing Element Advisory Committee Meeting No. 1 \u00b7 2022-07-11",
+        "last_activity": "2022-07-11",
+        "rank": 64,
+        "route": "/meeting/san-anselmo-town-council-784",
+        "search_label": "Housing Element Advisory Committee Meeting No. 1 \u2014 2022-07-11",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-788",
+        "jurisdiction": null,
+        "key_fact": "Housing Element Advisory Committee Meeting No. 2 \u00b7 2022-07-25",
+        "last_activity": "2022-07-25",
+        "rank": 64,
+        "route": "/meeting/san-anselmo-town-council-788",
+        "search_label": "Housing Element Advisory Committee Meeting No. 2 \u2014 2022-07-25",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-815",
+        "jurisdiction": null,
+        "key_fact": "Housing Element Advisory Committee Meeting No. 3 \u00b7 2022-09-01",
+        "last_activity": "2022-09-01",
+        "rank": 64,
+        "route": "/meeting/san-anselmo-town-council-815",
+        "search_label": "Housing Element Advisory Committee Meeting No. 3 \u2014 2022-09-01",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-826",
+        "jurisdiction": null,
+        "key_fact": "Housing Element Advisory Committee Meeting No. 4 \u00b7 2022-09-26",
+        "last_activity": "2022-09-26",
+        "rank": 64,
+        "route": "/meeting/san-anselmo-town-council-826",
+        "search_label": "Housing Element Advisory Committee Meeting No. 4 \u2014 2022-09-26",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-848",
+        "jurisdiction": null,
+        "key_fact": "Housing Element Advisory Committee Meeting No. 5 \u00b7 2022-11-03",
+        "last_activity": "2022-11-03",
+        "rank": 64,
+        "route": "/meeting/san-anselmo-town-council-848",
+        "search_label": "Housing Element Advisory Committee Meeting No. 5 \u2014 2022-11-03",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-872",
+        "jurisdiction": null,
+        "key_fact": "Housing Element Advisory Committee Meeting No. 6 \u00b7 2022-12-15",
+        "last_activity": "2022-12-15",
+        "rank": 64,
+        "route": "/meeting/san-anselmo-town-council-872",
+        "search_label": "Housing Element Advisory Committee Meeting No. 6 \u2014 2022-12-15",
+        "type": "Meeting"
+      },
+      {
+        "id": "decision-2022-07-18-san-rafael-city-council-5a-motion-approval",
+        "jurisdiction": null,
+        "key_fact": "SB 9 Housing Development and Urban Lot Split Regulations",
+        "last_activity": "2022-07-18",
+        "rank": 72,
+        "route": "/decision/2022-07-18-san-rafael-city-council-5a-motion-approval",
+        "search_label": "SB 9 Housing Development and Urban Lot Split Regulations",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2023-07-17-san-rafael-city-council-6c-resolution-adoption-15244",
+        "jurisdiction": null,
+        "key_fact": "2023 Affordable Housing Notice of Funding Availability Funding Recommendation",
+        "last_activity": "2023-07-17",
+        "rank": 75,
+        "route": "/decision/2023-07-17-san-rafael-city-council-6c-resolution-adoption-15244",
+        "search_label": "2023 Affordable Housing Notice of Funding Availability Funding Recommendation",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2021-12-06-san-rafael-city-council-5e-resolution-adoption-15003",
+        "jurisdiction": null,
+        "key_fact": "Citizens Advisory Committee on Economic Development and Affordable Housing",
+        "last_activity": "2021-12-06",
+        "rank": 71,
+        "route": "/decision/2021-12-06-san-rafael-city-council-5e-resolution-adoption-15003",
+        "search_label": "Citizens Advisory Committee on Economic Development and Affordable Housing",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2023-02-06-san-rafael-city-council-4d-resolution-adoption-15041-15187",
+        "jurisdiction": null,
+        "key_fact": "2021 Affordable Housing NOFA Funding Recommendation - Canal Alliance Alternative",
+        "last_activity": "2023-02-06",
+        "rank": 70,
+        "route": "/decision/2023-02-06-san-rafael-city-council-4d-resolution-adoption-15041-15187",
+        "search_label": "2021 Affordable Housing NOFA Funding Recommendation - Canal Alliance Alternative",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2026-03-16-san-rafael-city-council-3b-acceptance-accepted-the-general-plan-and-housing-element-annual-progress-report-for-2025-an",
+        "jurisdiction": null,
+        "key_fact": "Accepted the General Plan and Housing Element Annual Progress Report for 2025 and directed",
+        "last_activity": "2026-03-16",
+        "rank": 97,
+        "route": "/decision/2026-03-16-san-rafael-city-council-3b-acceptance-accepted-the-general-plan-and-housing-element-annual-progress-report-for-2025-an",
+        "search_label": "Accepted the General Plan and Housing Element Annual Progress Report for 2025 and directed",
+        "type": "Decision"
+      },
+      {
+        "id": "filing-form700-cmar-2026-01-15-wyatt-kathleen-annual-director-of-housing-operations-program-manager-director-of-housing-operations-housing-authority-of-marin-housing-authority-of-marin-marin-housing-authority",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2026-01-15",
+        "rank": 86,
+        "route": "/filing/form700-cmar-2026-01-15-wyatt-kathleen-annual-director-of-housing-operations-program-manager-director-of-housing-operations-housing-authority-of-marin-housing-authority-of-marin-marin-housing-authority",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-787",
+        "jurisdiction": null,
+        "key_fact": "Housing Element Advisory Committee Information Session No. 1 \u00b7 2022-07-21",
+        "last_activity": "2022-07-21",
+        "rank": 64,
+        "route": "/meeting/san-anselmo-town-council-787",
+        "search_label": "Housing Element Advisory Committee Information Session No. 1 \u2014 2022-07-21",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-813",
+        "jurisdiction": null,
+        "key_fact": "Housing Element Advisory Committee Information Session No. 2 \u00b7 2022-08-25",
+        "last_activity": "2022-08-25",
+        "rank": 64,
+        "route": "/meeting/san-anselmo-town-council-813",
+        "search_label": "Housing Element Advisory Committee Information Session No. 2 \u2014 2022-08-25",
+        "type": "Meeting"
+      },
+      {
+        "id": "decision-2024-03-04-san-rafael-city-council-6a-motion-approval",
+        "jurisdiction": null,
+        "key_fact": "General Plan and Housing Element Annual Progress Reports and Updated Informational",
+        "last_activity": "2024-03-04",
+        "rank": 80,
+        "route": "/decision/2024-03-04-san-rafael-city-council-6a-motion-approval",
+        "search_label": "General Plan and Housing Element Annual Progress Reports and Updated Informational",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2022-09-19-san-rafael-city-council-special-1a-resolution-adoption-15124",
+        "jurisdiction": null,
+        "key_fact": "Grand Jury Report - Affordable Housing: Time for Collaboration in Marin",
+        "last_activity": "2022-09-19",
+        "rank": 72,
+        "route": "/decision/2022-09-19-san-rafael-city-council-special-1a-resolution-adoption-15124",
+        "search_label": "Grand Jury Report - Affordable Housing: Time for Collaboration in Marin",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2024-05-20-san-rafael-city-council-4c-resolution-adoption-15286",
+        "jurisdiction": null,
+        "key_fact": "City-Owned Property as Exempt Surplus Land, and Affordable Housing Development",
+        "last_activity": "2024-05-20",
+        "rank": 80,
+        "route": "/decision/2024-05-20-san-rafael-city-council-4c-resolution-adoption-15286",
+        "search_label": "City-Owned Property as Exempt Surplus Land, and Affordable Housing Development",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2023-05-15-san-rafael-city-council-5i-resolution-adoption-15215",
+        "jurisdiction": null,
+        "key_fact": "Resolution Adopting the San Rafael 2023-2031 Housing Element and Amending",
+        "last_activity": "2023-05-15",
+        "rank": 73,
+        "route": "/decision/2023-05-15-san-rafael-city-council-5i-resolution-adoption-15215",
+        "search_label": "Resolution Adopting the San Rafael 2023-2031 Housing Element and Amending",
+        "type": "Decision"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-932",
+        "jurisdiction": null,
+        "key_fact": "Joint Planning Commission and Housing Element Advisory Committee - Special Meeting \u00b7 2023-05-15",
+        "last_activity": "2023-05-15",
+        "rank": 66,
+        "route": "/meeting/san-anselmo-town-council-932",
+        "search_label": "Joint Planning Commission and Housing Element Advisory Committee - Special Meeting \u2014 2023-05-15",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-belvedere-city-council-joint-city-council-and-planning-commission-meeting-october-20-2022-housing-element-workshop",
+        "jurisdiction": null,
+        "key_fact": "Joint City Council and Planning Commission Meeting: October 20, 2022 \u2013 Housing Element Workshop \u00b7 2022-10-20",
+        "last_activity": "2022-10-20",
+        "rank": 64,
+        "route": "/meeting/belvedere-city-council-joint-city-council-and-planning-commission-meeting-october-20-2022-housing-element-workshop",
+        "search_label": "Joint City Council and Planning Commission Meeting: October 20, 2022 \u2013 Housing Element Workshop \u2014 2022-10-20",
+        "type": "Meeting"
+      },
+      {
+        "id": "decision-2022-12-05-san-rafael-city-council-3a-approval-approved-submission-of-the-hcd-draft-2023-2031-san-rafael-housing-element-to-the",
+        "jurisdiction": null,
+        "key_fact": "Approved submission of the HCD Draft 2023-2031 San Rafael Housing Element to the California",
+        "last_activity": "2022-12-05",
+        "rank": 72,
+        "route": "/decision/2022-12-05-san-rafael-city-council-3a-approval-approved-submission-of-the-hcd-draft-2023-2031-san-rafael-housing-element-to-the",
+        "search_label": "Approved submission of the HCD Draft 2023-2031 San Rafael Housing Element to the California",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2020-10-05-san-rafael-city-council-6i-resolution-adoption-14861-14862",
+        "jurisdiction": null,
+        "key_fact": "Resolution Approving a Housing Trust Grant to Homeward Bound of Marin for",
+        "last_activity": "2020-10-05",
+        "rank": 72,
+        "route": "/decision/2020-10-05-san-rafael-city-council-6i-resolution-adoption-14861-14862",
+        "search_label": "Resolution Approving a Housing Trust Grant to Homeward Bound of Marin for",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2024-04-15-san-rafael-city-council-7a-resolution-adoption-15244-15284",
+        "jurisdiction": null,
+        "key_fact": "Authorize Affordable Housing Trust Fund Award to Include Renovation of Units in an",
+        "last_activity": "2024-04-15",
+        "rank": 81,
+        "route": "/decision/2024-04-15-san-rafael-city-council-7a-resolution-adoption-15244-15284",
+        "search_label": "Authorize Affordable Housing Trust Fund Award to Include Renovation of Units in an",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2023-08-21-san-rafael-city-council-6a-resolution-adoption-15250",
+        "jurisdiction": null,
+        "key_fact": "Response to Grand Jury Report \u2013 Build More ADUs \u2013 An Rx to Increase Marin\u2019s Housing",
+        "last_activity": "2023-08-21",
+        "rank": 75,
+        "route": "/decision/2023-08-21-san-rafael-city-council-6a-resolution-adoption-15250",
+        "search_label": "Response to Grand Jury Report \u2013 Build More ADUs \u2013 An Rx to Increase Marin\u2019s Housing",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2024-09-03-san-rafael-city-council-6b-approval-approved-the-implementation-of-the-rolling-application-process-for-the-affordabl",
+        "jurisdiction": null,
+        "key_fact": "Approved the implementation of the rolling application process for the Affordable Housing Trust",
+        "last_activity": "2024-09-03",
+        "rank": 84,
+        "route": "/decision/2024-09-03-san-rafael-city-council-6b-approval-approved-the-implementation-of-the-rolling-application-process-for-the-affordabl",
+        "search_label": "Approved the implementation of the rolling application process for the Affordable Housing Trust",
+        "type": "Decision"
+      },
+      {
+        "id": "filing-form700-cmar-2026-03-03-carroll-kimberly-annual-executive-director-executive-director-housing-authority-of-marin-marin-housing-authority",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2026-03-03",
+        "rank": 87,
+        "route": "/filing/form700-cmar-2026-03-03-carroll-kimberly-annual-executive-director-executive-director-housing-authority-of-marin-marin-housing-authority",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-cmar-2026-01-15-dolan-kimberly-annual-chief-financial-officer-chief-financial-officer-housing-authority-of-marin-marin-housing-authority",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2026-01-15",
+        "rank": 86,
+        "route": "/filing/form700-cmar-2026-01-15-dolan-kimberly-annual-chief-financial-officer-chief-financial-officer-housing-authority-of-marin-marin-housing-authority",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-cmar-2026-03-25-canson-sarah-annual-tenant-commissioner-director-board-of-commissioners-housing-authority-of-marin-marin-city-community-services-district-marin-housing-authority",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2026-03-25",
+        "rank": 88,
+        "route": "/filing/form700-cmar-2026-03-25-canson-sarah-annual-tenant-commissioner-director-board-of-commissioners-housing-authority-of-marin-marin-city-community-services-district-marin-housing-authority",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-raf-2026-02-19-captanian-alexis-annual-housing-program-manager-community-development",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2026-02-19",
+        "rank": 87,
+        "route": "/filing/form700-raf-2026-02-19-captanian-alexis-annual-housing-program-manager-community-development",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-nvo-2026-01-27-brand-mark-annual-committee-member-housing-and-homeless-committee",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2026-01-27",
+        "rank": 87,
+        "route": "/filing/form700-nvo-2026-01-27-brand-mark-annual-committee-member-housing-and-homeless-committee",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-nvo-2026-02-21-meecham-will-annual-committee-member-housing-and-homeless-committee",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2026-02-21",
+        "rank": 87,
+        "route": "/filing/form700-nvo-2026-02-21-meecham-will-annual-committee-member-housing-and-homeless-committee",
+        "search_label": "Form 700",
+        "type": "Filing"
+      },
+      {
+        "id": "filing-form700-cmar-2026-01-15-semenova-anna-annual-executive-assistant-housing-authority-of-marin",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2026-01-15",
+        "rank": 86,
+        "route": "/filing/form700-cmar-2026-01-15-semenova-anna-annual-executive-assistant-housing-authority-of-marin",
+        "search_label": "Form 700",
+        "type": "Filing"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "q": "housing"
+    },
+    "url_path": "/api/search"
+  }
+}

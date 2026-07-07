@@ -1,0 +1,87 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "alignment": "left",
+        "key": "agreement_name",
+        "label": "Agreement",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "effective_date",
+        "label": "Effective date",
+        "sortable": true
+      },
+      {
+        "alignment": "right",
+        "key": "amount",
+        "label": "Amount",
+        "sortable": true
+      },
+      {
+        "alignment": "right",
+        "key": "amendment_count",
+        "label": "Amendments",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "id",
+        "label": "Agreement id",
+        "link": "entity-route"
+      }
+    ],
+    "rows": [
+      {
+        "agreement_name": "350 Merrydale LCA design services agreement",
+        "amendment_count": 1,
+        "amount": null,
+        "effective_date": "2026-02-17",
+        "id": "agreement-350-merrydale-lca-design-services"
+      },
+      {
+        "agreement_name": "350 Merrydale Swinerton project and construction management agreement",
+        "amendment_count": 0,
+        "amount": null,
+        "effective_date": "2026-02-17",
+        "id": "agreement-350-merrydale-swinerton-project-management"
+      },
+      {
+        "agreement_name": "350 Merrydale affordable housing agreement",
+        "amendment_count": 0,
+        "amount": null,
+        "effective_date": "2025-11-17",
+        "id": "agreement-350-merrydale-affordable-housing"
+      },
+      {
+        "agreement_name": "350 Merrydale county grant agreement",
+        "amendment_count": 0,
+        "amount": null,
+        "effective_date": "2025-11-17",
+        "id": "agreement-350-merrydale-county-grant"
+      },
+      {
+        "agreement_name": "350 Merrydale Newmark brokerage services agreement",
+        "amendment_count": 0,
+        "amount": null,
+        "effective_date": "2025-11-17",
+        "id": "agreement-350-merrydale-newmark-brokerage"
+      },
+      {
+        "agreement_name": "350 Merrydale purchase and sale agreement",
+        "amendment_count": 0,
+        "amount": null,
+        "effective_date": "2025-11-17",
+        "id": "agreement-350-merrydale-purchase-and-sale"
+      }
+    ],
+    "slug": "agreements-and-amendments-for-project"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/data/agreements-and-amendments-for-project"
+  }
+}

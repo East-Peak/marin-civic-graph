@@ -1,0 +1,132 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "title",
+        "label": "Title"
+      },
+      {
+        "key": "occurred_at",
+        "label": "Date"
+      }
+    ],
+    "next_cursor": null,
+    "rows": [
+      {
+        "id": "proceeding-boyd-complaint-filed-2023-08-11",
+        "occurred_at": "2023-08-11",
+        "route": "/proceeding/boyd-complaint-filed-2023-08-11",
+        "search_label": "proceeding-boyd-complaint-filed-2023-08-11",
+        "title": null,
+        "type": "Proceeding"
+      },
+      {
+        "id": "proceeding-boyd-dismissal-order-2024-08-07",
+        "occurred_at": "2024-08-07",
+        "route": "/proceeding/boyd-dismissal-order-2024-08-07",
+        "search_label": "proceeding-boyd-dismissal-order-2024-08-07",
+        "title": null,
+        "type": "Proceeding"
+      },
+      {
+        "id": "proceeding-boyd-motion-hearing-2024-07-15",
+        "occurred_at": "2024-07-15",
+        "route": "/proceeding/boyd-motion-hearing-2024-07-15",
+        "search_label": "proceeding-boyd-motion-hearing-2024-07-15",
+        "title": null,
+        "type": "Proceeding"
+      },
+      {
+        "id": "proceeding-boyd-motion-to-dismiss-filed-2024-05-10",
+        "occurred_at": "2024-05-10",
+        "route": "/proceeding/boyd-motion-to-dismiss-filed-2024-05-10",
+        "search_label": "proceeding-boyd-motion-to-dismiss-filed-2024-05-10",
+        "title": null,
+        "type": "Proceeding"
+      },
+      {
+        "id": "proceeding-boyd-preliminary-injunction-2023-10-19",
+        "occurred_at": "2023-10-19",
+        "route": "/proceeding/boyd-preliminary-injunction-2023-10-19",
+        "search_label": "proceeding-boyd-preliminary-injunction-2023-10-19",
+        "title": null,
+        "type": "Proceeding"
+      },
+      {
+        "id": "proceeding-boyd-tro-granted-2023-08-15",
+        "occurred_at": "2023-08-15",
+        "route": "/proceeding/boyd-tro-granted-2023-08-15",
+        "search_label": "proceeding-boyd-tro-granted-2023-08-15",
+        "title": null,
+        "type": "Proceeding"
+      },
+      {
+        "id": "proceeding-grants-pass-cert-granted-2024-01-12",
+        "occurred_at": "2024-01-12",
+        "route": "/proceeding/grants-pass-cert-granted-2024-01-12",
+        "search_label": "proceeding-grants-pass-cert-granted-2024-01-12",
+        "title": null,
+        "type": "Proceeding"
+      },
+      {
+        "id": "proceeding-grants-pass-cert-petition-filed-2023-08-22",
+        "occurred_at": "2023-08-22",
+        "route": "/proceeding/grants-pass-cert-petition-filed-2023-08-22",
+        "search_label": "proceeding-grants-pass-cert-petition-filed-2023-08-22",
+        "title": null,
+        "type": "Proceeding"
+      },
+      {
+        "id": "proceeding-grants-pass-district-judgment-2020-08-26",
+        "occurred_at": "2020-08-26",
+        "route": "/proceeding/grants-pass-district-judgment-2020-08-26",
+        "search_label": "proceeding-grants-pass-district-judgment-2020-08-26",
+        "title": null,
+        "type": "Proceeding"
+      },
+      {
+        "id": "proceeding-grants-pass-district-opinion-order-2020-07-22",
+        "occurred_at": "2020-07-22",
+        "route": "/proceeding/grants-pass-district-opinion-order-2020-07-22",
+        "search_label": "proceeding-grants-pass-district-opinion-order-2020-07-22",
+        "title": null,
+        "type": "Proceeding"
+      },
+      {
+        "id": "proceeding-grants-pass-ninth-circuit-amended-opinion-2023-07-05",
+        "occurred_at": "2023-07-05",
+        "route": "/proceeding/grants-pass-ninth-circuit-amended-opinion-2023-07-05",
+        "search_label": "proceeding-grants-pass-ninth-circuit-amended-opinion-2023-07-05",
+        "title": null,
+        "type": "Proceeding"
+      },
+      {
+        "id": "proceeding-grants-pass-opinion-2024-06-28",
+        "occurred_at": "2024-06-28",
+        "route": "/proceeding/grants-pass-opinion-2024-06-28",
+        "search_label": "proceeding-grants-pass-opinion-2024-06-28",
+        "title": null,
+        "type": "Proceeding"
+      },
+      {
+        "id": "proceeding-grants-pass-oral-argument-2024-04-22",
+        "occurred_at": "2024-04-22",
+        "route": "/proceeding/grants-pass-oral-argument-2024-04-22",
+        "search_label": "proceeding-grants-pass-oral-argument-2024-04-22",
+        "title": null,
+        "type": "Proceeding"
+      }
+    ],
+    "type": "Proceeding"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/proceeding"
+  }
+}

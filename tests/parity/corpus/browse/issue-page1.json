@@ -1,0 +1,45 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "description",
+        "label": "Description"
+      }
+    ],
+    "next_cursor": null,
+    "rows": [
+      {
+        "description": null,
+        "id": "issue-camping-ordinance",
+        "route": "/issue/camping-ordinance",
+        "search_label": "Camping Ordinance",
+        "type": "Issue"
+      },
+      {
+        "description": null,
+        "id": "issue-encampments",
+        "route": "/issue/encampments",
+        "search_label": "Encampments",
+        "type": "Issue"
+      },
+      {
+        "description": null,
+        "id": "issue-homelessness",
+        "route": "/issue/homelessness",
+        "search_label": "Homelessness",
+        "type": "Issue"
+      }
+    ],
+    "type": "Issue"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/issue"
+  }
+}

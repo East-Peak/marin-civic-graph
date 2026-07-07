@@ -1,0 +1,428 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "title",
+        "label": "Title"
+      },
+      {
+        "key": "meeting_date",
+        "label": "Date"
+      }
+    ],
+    "next_cursor": "meeting-2019-11-18-san-rafael-city-council",
+    "rows": [
+      {
+        "id": "meeting-2010-02-16-san-rafael-city-council",
+        "meeting_date": "2010-02-16",
+        "route": "/meeting/2010-02-16-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2010-02-16",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2010-03-15-san-rafael-city-council",
+        "meeting_date": "2010-03-15",
+        "route": "/meeting/2010-03-15-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2010-03-15",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2010-07-06-san-rafael-city-council",
+        "meeting_date": "2010-07-06",
+        "route": "/meeting/2010-07-06-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2010-07-06",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2010-07-19-san-rafael-city-council",
+        "meeting_date": "2010-07-19",
+        "route": "/meeting/2010-07-19-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2010-07-19",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2010-08-02-san-rafael-city-council",
+        "meeting_date": "2010-08-02",
+        "route": "/meeting/2010-08-02-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2010-08-02",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2010-09-07-san-rafael-city-council",
+        "meeting_date": "2010-09-07",
+        "route": "/meeting/2010-09-07-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2010-09-07",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2010-12-06-san-rafael-city-council",
+        "meeting_date": "2010-12-06",
+        "route": "/meeting/2010-12-06-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2010-12-06",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2011-06-06-san-rafael-city-council",
+        "meeting_date": "2011-06-06",
+        "route": "/meeting/2011-06-06-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2011-06-06",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2011-12-05-san-rafael-city-council",
+        "meeting_date": "2011-12-05",
+        "route": "/meeting/2011-12-05-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2011-12-05",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2013-05-06-san-rafael-city-council",
+        "meeting_date": "2013-05-06",
+        "route": "/meeting/2013-05-06-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2013-05-06",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2013-08-05-san-rafael-city-council",
+        "meeting_date": "2013-08-05",
+        "route": "/meeting/2013-08-05-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2013-08-05",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2013-12-02-san-rafael-city-council",
+        "meeting_date": "2013-12-02",
+        "route": "/meeting/2013-12-02-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2013-12-02",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2015-06-15-san-rafael-city-council",
+        "meeting_date": "2015-06-15",
+        "route": "/meeting/2015-06-15-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2015-06-15",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2015-08-17-san-rafael-city-council",
+        "meeting_date": "2015-08-17",
+        "route": "/meeting/2015-08-17-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2015-08-17",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2016-07-18-san-rafael-city-council",
+        "meeting_date": "2016-07-18",
+        "route": "/meeting/2016-07-18-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2016-07-18",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2017-08-21-san-rafael-city-council",
+        "meeting_date": "2017-08-21",
+        "route": "/meeting/2017-08-21-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2017-08-21",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2018-03-05-san-rafael-city-council",
+        "meeting_date": "2018-03-05",
+        "route": "/meeting/2018-03-05-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2018-03-05",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2018-06-04-san-rafael-city-council",
+        "meeting_date": "2018-06-04",
+        "route": "/meeting/2018-06-04-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2018-06-04",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2018-07-16-san-rafael-city-council",
+        "meeting_date": "2018-07-16",
+        "route": "/meeting/2018-07-16-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2018-07-16",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2018-12-17-san-rafael-city-council",
+        "meeting_date": "2018-12-17",
+        "route": "/meeting/2018-12-17-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2018-12-17",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-01-07-san-rafael-city-council-cancelled",
+        "meeting_date": "2019-01-07",
+        "route": "/meeting/2019-01-07-san-rafael-city-council-cancelled",
+        "search_label": "San Rafael City Council meeting \u2014 2019-01-07",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-01-22-san-rafael-city-council",
+        "meeting_date": "2019-01-22",
+        "route": "/meeting/2019-01-22-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-01-22",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-01-22-san-rafael-city-council-special",
+        "meeting_date": "2019-01-22",
+        "route": "/meeting/2019-01-22-san-rafael-city-council-special",
+        "search_label": "San Rafael City Council meeting \u2014 2019-01-22",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-02-04-san-rafael-city-council",
+        "meeting_date": "2019-02-04",
+        "route": "/meeting/2019-02-04-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-02-04",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-02-19-san-rafael-city-council",
+        "meeting_date": "2019-02-19",
+        "route": "/meeting/2019-02-19-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-02-19",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-03-04-san-rafael-city-council",
+        "meeting_date": "2019-03-04",
+        "route": "/meeting/2019-03-04-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-03-04",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-03-18-san-rafael-city-council",
+        "meeting_date": "2019-03-18",
+        "route": "/meeting/2019-03-18-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-03-18",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-04-02-san-rafael-city-council",
+        "meeting_date": "2019-04-02",
+        "route": "/meeting/2019-04-02-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-04-02",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-04-02-san-rafael-city-council-special",
+        "meeting_date": "2019-04-02",
+        "route": "/meeting/2019-04-02-san-rafael-city-council-special",
+        "search_label": "San Rafael City Council meeting \u2014 2019-04-02",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-04-15-san-rafael-city-council",
+        "meeting_date": "2019-04-15",
+        "route": "/meeting/2019-04-15-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-04-15",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-04-15-san-rafael-city-council-special",
+        "meeting_date": "2019-04-15",
+        "route": "/meeting/2019-04-15-san-rafael-city-council-special",
+        "search_label": "San Rafael City Council meeting \u2014 2019-04-15",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-05-06-san-rafael-city-council",
+        "meeting_date": "2019-05-06",
+        "route": "/meeting/2019-05-06-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-05-06",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-05-06-san-rafael-city-council-special",
+        "meeting_date": "2019-05-06",
+        "route": "/meeting/2019-05-06-san-rafael-city-council-special",
+        "search_label": "San Rafael City Council meeting \u2014 2019-05-06",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-05-20-san-rafael-city-council",
+        "meeting_date": "2019-05-20",
+        "route": "/meeting/2019-05-20-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-05-20",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-06-03-san-rafael-city-council",
+        "meeting_date": "2019-06-03",
+        "route": "/meeting/2019-06-03-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-06-03",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-06-10-san-rafael-city-council-special",
+        "meeting_date": "2019-06-10",
+        "route": "/meeting/2019-06-10-san-rafael-city-council-special",
+        "search_label": "San Rafael City Council meeting \u2014 2019-06-10",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-06-17-san-rafael-city-council",
+        "meeting_date": "2019-06-17",
+        "route": "/meeting/2019-06-17-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-06-17",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-06-17-san-rafael-city-council-special",
+        "meeting_date": "2019-06-17",
+        "route": "/meeting/2019-06-17-san-rafael-city-council-special",
+        "search_label": "San Rafael City Council meeting \u2014 2019-06-17",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-07-15-san-rafael-city-council",
+        "meeting_date": "2019-07-15",
+        "route": "/meeting/2019-07-15-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-07-15",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-08-05-san-rafael-city-council",
+        "meeting_date": "2019-08-05",
+        "route": "/meeting/2019-08-05-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-08-05",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-08-05-san-rafael-city-council-special",
+        "meeting_date": "2019-08-05",
+        "route": "/meeting/2019-08-05-san-rafael-city-council-special",
+        "search_label": "San Rafael City Council meeting \u2014 2019-08-05",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-08-19-san-rafael-city-council",
+        "meeting_date": "2019-08-19",
+        "route": "/meeting/2019-08-19-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-08-19",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-09-03-san-rafael-city-council",
+        "meeting_date": "2019-09-03",
+        "route": "/meeting/2019-09-03-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-09-03",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-09-16-san-rafael-city-council",
+        "meeting_date": "2019-09-16",
+        "route": "/meeting/2019-09-16-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-09-16",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-10-07-san-rafael-city-council",
+        "meeting_date": "2019-10-07",
+        "route": "/meeting/2019-10-07-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-10-07",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-10-07-san-rafael-city-council-special",
+        "meeting_date": "2019-10-07",
+        "route": "/meeting/2019-10-07-san-rafael-city-council-special",
+        "search_label": "San Rafael City Council meeting \u2014 2019-10-07",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-10-21-san-rafael-city-council",
+        "meeting_date": "2019-10-21",
+        "route": "/meeting/2019-10-21-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-10-21",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-10-29-san-rafael-city-council",
+        "meeting_date": "2019-10-29",
+        "route": "/meeting/2019-10-29-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-10-29",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-11-04-san-rafael-city-council",
+        "meeting_date": "2019-11-04",
+        "route": "/meeting/2019-11-04-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-11-04",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-2019-11-18-san-rafael-city-council",
+        "meeting_date": "2019-11-18",
+        "route": "/meeting/2019-11-18-san-rafael-city-council",
+        "search_label": "San Rafael City Council meeting \u2014 2019-11-18",
+        "title": "San Rafael City Council meeting",
+        "type": "Meeting"
+      }
+    ],
+    "type": "Meeting"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/meeting"
+  }
+}

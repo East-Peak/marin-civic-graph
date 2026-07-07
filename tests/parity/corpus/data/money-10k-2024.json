@@ -1,0 +1,452 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "alignment": "left",
+        "key": "flow_date",
+        "label": "Flow date",
+        "sortable": true
+      },
+      {
+        "alignment": "right",
+        "key": "amount",
+        "label": "Amount",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "flow_type",
+        "label": "Type",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "source_name",
+        "label": "Source"
+      },
+      {
+        "alignment": "left",
+        "key": "target_name",
+        "label": "Target"
+      },
+      {
+        "alignment": "left",
+        "key": "id",
+        "label": "Flow id",
+        "link": "entity-route"
+      }
+    ],
+    "rows": [
+      {
+        "amount": 12000,
+        "flow_date": "2024-12-31",
+        "flow_type": "contribution",
+        "id": "moneyflow-1471467-PAY181",
+        "source_name": null,
+        "target_name": "Robert Sandoval for Marin Municipal Water District Director 2024"
+      },
+      {
+        "amount": 11626.98,
+        "flow_date": "2024-12-26",
+        "flow_type": "contribution",
+        "id": "moneyflow-1471240-Qb8V5fnAIEnz",
+        "source_name": null,
+        "target_name": "Larry Russell PhD for Marin Municipal Water District V2024"
+      },
+      {
+        "amount": 15000,
+        "flow_date": "2024-12-19",
+        "flow_type": "contribution",
+        "id": "moneyflow-1471240-1agl8sEocsQ2",
+        "source_name": null,
+        "target_name": "Larry Russell PhD for Marin Municipal Water District V2024"
+      },
+      {
+        "amount": 15000,
+        "flow_date": "2024-12-19",
+        "flow_type": "contribution",
+        "id": "moneyflow-1471240-I2JAfiGmxIu6",
+        "source_name": null,
+        "target_name": "Larry Russell PhD for Marin Municipal Water District V2024"
+      },
+      {
+        "amount": 15000,
+        "flow_date": "2024-12-19",
+        "flow_type": "contribution",
+        "id": "moneyflow-1471240-iE4BFcZ7y88x",
+        "source_name": null,
+        "target_name": "Larry Russell PhD for Marin Municipal Water District V2024"
+      },
+      {
+        "amount": 20000,
+        "flow_date": "2024-12-19",
+        "flow_type": "contribution",
+        "id": "moneyflow-1471240-oZwWWQRejVY5",
+        "source_name": null,
+        "target_name": "Larry Russell PhD for Marin Municipal Water District V2024"
+      },
+      {
+        "amount": 10585.4,
+        "flow_date": "2024-12-06",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1471467-EXP174",
+        "source_name": null,
+        "target_name": "Four Waters Media, Inc"
+      },
+      {
+        "amount": 68000,
+        "flow_date": "2024-11-29",
+        "flow_type": "contribution",
+        "id": "moneyflow-1461877-jEsYIyyL1JNq",
+        "source_name": null,
+        "target_name": "Gabe Paulson for Marin Supervisor 2024"
+      },
+      {
+        "amount": 15000,
+        "flow_date": "2024-11-23",
+        "flow_type": "contribution",
+        "id": "moneyflow-1461685-1AXka72FcHHJ",
+        "source_name": null,
+        "target_name": "Friends of Heather McPhail Sridharan for Marin County Supervisor 2024"
+      },
+      {
+        "amount": 25000.98,
+        "flow_date": "2024-11-23",
+        "flow_type": "contribution",
+        "id": "moneyflow-1461685-64d9JSMlzkgh",
+        "source_name": null,
+        "target_name": "Friends of Heather McPhail Sridharan for Marin County Supervisor 2024"
+      },
+      {
+        "amount": 10000,
+        "flow_date": "2024-11-23",
+        "flow_type": "contribution",
+        "id": "moneyflow-1461685-qAb4dMYCuRGc",
+        "source_name": null,
+        "target_name": "Friends of Heather McPhail Sridharan for Marin County Supervisor 2024"
+      },
+      {
+        "amount": 10000,
+        "flow_date": "2024-11-12",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1474791-EXP120",
+        "source_name": null,
+        "target_name": "Team CivX"
+      },
+      {
+        "amount": 32443.35,
+        "flow_date": "2024-11-11",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1461685-imAg2tP9heXM",
+        "source_name": null,
+        "target_name": "Cornerstone Printing"
+      },
+      {
+        "amount": 19725.52,
+        "flow_date": "2024-11-07",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1471240-pDAWHDBn4WLO",
+        "source_name": null,
+        "target_name": "Pacific Print Resources"
+      },
+      {
+        "amount": 43879.9,
+        "flow_date": "2024-11-05",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1464553-EXP242",
+        "source_name": null,
+        "target_name": "TeamCivX"
+      },
+      {
+        "amount": 16500,
+        "flow_date": "2024-10-30",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1461276-OEes1LHlLIWg",
+        "source_name": null,
+        "target_name": "Compete Digital"
+      },
+      {
+        "amount": 17500,
+        "flow_date": "2024-10-28",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1474791-EXP56",
+        "source_name": null,
+        "target_name": "Team CivX"
+      },
+      {
+        "amount": 15741.1,
+        "flow_date": "2024-10-28",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1474791-EXP57",
+        "source_name": null,
+        "target_name": "Team CivX"
+      },
+      {
+        "amount": 14689.42,
+        "flow_date": "2024-10-28",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1474791-EXP89",
+        "source_name": null,
+        "target_name": "Team CivX"
+      },
+      {
+        "amount": 57978.71,
+        "flow_date": "2024-10-22",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1464553-EXP222",
+        "source_name": null,
+        "target_name": "TeamCivX"
+      },
+      {
+        "amount": 10308.55,
+        "flow_date": "2024-10-17",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1476491-pTJj4oOb3eXO",
+        "source_name": null,
+        "target_name": "TeamCivX"
+      },
+      {
+        "amount": 12550.71,
+        "flow_date": "2024-10-03",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1467594-YjLqaMAh24jb",
+        "source_name": null,
+        "target_name": "Cornerstone Printing"
+      },
+      {
+        "amount": 15000,
+        "flow_date": "2024-10-02",
+        "flow_type": "contribution",
+        "id": "moneyflow-1467594-8n56xebbGIlw",
+        "source_name": null,
+        "target_name": "Jack Kenney for Marin Municipal Water Board District 2 2024"
+      },
+      {
+        "amount": 10000,
+        "flow_date": "2024-09-26",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1461276-X1NgDHrRNLGY",
+        "source_name": null,
+        "target_name": "Compete Digital"
+      },
+      {
+        "amount": 10982.6,
+        "flow_date": "2024-09-23",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1464553-EXP184",
+        "source_name": null,
+        "target_name": "TeamCivX"
+      },
+      {
+        "amount": 49500,
+        "flow_date": "2024-09-21",
+        "flow_type": "contribution",
+        "id": "moneyflow-1474791-INC7",
+        "source_name": null,
+        "target_name": "Save Our Services - Yes on M"
+      },
+      {
+        "amount": 10000,
+        "flow_date": "2024-09-20",
+        "flow_type": "expenditure",
+        "id": "moneyflow-930791-EXP1451",
+        "source_name": null,
+        "target_name": "Yes on H for Firefighter Health & Safety, SF Fire Fighters Local 798"
+      },
+      {
+        "amount": 49500,
+        "flow_date": "2024-09-19",
+        "flow_type": "contribution",
+        "id": "moneyflow-1474791-INC2",
+        "source_name": null,
+        "target_name": "Save Our Services - Yes on M"
+      },
+      {
+        "amount": 10000,
+        "flow_date": "2024-09-10",
+        "flow_type": "contribution",
+        "id": "moneyflow-1464553-INC165",
+        "source_name": null,
+        "target_name": "Committee for Safe and Modern TUHSD Schools - Yes on A"
+      },
+      {
+        "amount": 25118.01,
+        "flow_date": "2024-06-26",
+        "flow_type": "contribution",
+        "id": "moneyflow-1470377-mLPSrE3ebTck",
+        "source_name": null,
+        "target_name": "Moulton-Peters for Supervisor 2028"
+      },
+      {
+        "amount": 10000,
+        "flow_date": "2024-06-23",
+        "flow_type": "contribution",
+        "id": "moneyflow-1356291-DG9pc763fFAn",
+        "source_name": null,
+        "target_name": "Yes on B for Marin County Library, committee major funding from Friends of Marin County Free Library and Marin County Library Foundation"
+      },
+      {
+        "amount": 25118.01,
+        "flow_date": "2024-05-16",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1458380-EXP464",
+        "source_name": null,
+        "target_name": "Moulton-Peters for Supervisor 2028"
+      },
+      {
+        "amount": 15000,
+        "flow_date": "2024-05-07",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1461260-EXP309",
+        "source_name": null,
+        "target_name": "CleanSweep Campaigns/TBWBHL, Inc."
+      },
+      {
+        "amount": 31694.73,
+        "flow_date": "2024-04-16",
+        "flow_type": "contribution",
+        "id": "moneyflow-1466828-VzLW4gNXyfaj",
+        "source_name": null,
+        "target_name": "No On Measure A (Sponsored by Coalition of Sensible Taxpayers)"
+      },
+      {
+        "amount": 20000,
+        "flow_date": "2024-04-04",
+        "flow_type": "contribution",
+        "id": "moneyflow-1461260-INC294",
+        "source_name": null,
+        "target_name": "Ryan O'Neil for Supervisor District 2 - 2024"
+      },
+      {
+        "amount": 12000,
+        "flow_date": "2024-03-29",
+        "flow_type": "contribution",
+        "id": "moneyflow-1356291-MZznn6KRZabt",
+        "source_name": null,
+        "target_name": "Yes on B for Marin County Library, committee major funding from Friends of Marin County Free Library and Marin County Library Foundation"
+      },
+      {
+        "amount": 18969.99,
+        "flow_date": "2024-03-22",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1461877-qFGeKb74EwEx",
+        "source_name": null,
+        "target_name": "Breakpoint Sales"
+      },
+      {
+        "amount": 14192.04,
+        "flow_date": "2024-03-22",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1464553-EXP103",
+        "source_name": null,
+        "target_name": "TeamCivX"
+      },
+      {
+        "amount": 10168.84,
+        "flow_date": "2024-03-18",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1461276-VQKhNmJMKMBz",
+        "source_name": null,
+        "target_name": "Press Print Inc."
+      },
+      {
+        "amount": 48534.12,
+        "flow_date": "2024-03-04",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1464553-EXP95",
+        "source_name": null,
+        "target_name": "TeamCivX"
+      },
+      {
+        "amount": 60000,
+        "flow_date": "2024-03-04",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1464553-EXP99",
+        "source_name": null,
+        "target_name": "TeamCivX"
+      },
+      {
+        "amount": 16864.35,
+        "flow_date": "2024-03-04",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1466828-aY7QGxQ9MOF9",
+        "source_name": null,
+        "target_name": "Press Print Inc."
+      },
+      {
+        "amount": 12798.81,
+        "flow_date": "2024-03-04",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1466828-elNbodbotGjr",
+        "source_name": null,
+        "target_name": "Press Print Inc."
+      },
+      {
+        "amount": 16457.92,
+        "flow_date": "2024-02-23",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1466828-X7EVdZJWJf9S",
+        "source_name": null,
+        "target_name": "Press Print Inc."
+      },
+      {
+        "amount": 20000,
+        "flow_date": "2024-02-21",
+        "flow_type": "contribution",
+        "id": "moneyflow-1466828-ErYWoyFKVbr9",
+        "source_name": null,
+        "target_name": "No On Measure A (Sponsored by Coalition of Sensible Taxpayers)"
+      },
+      {
+        "amount": 26907.12,
+        "flow_date": "2024-02-06",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1464553-EXP56",
+        "source_name": null,
+        "target_name": "TeamCivX"
+      },
+      {
+        "amount": 10002.95,
+        "flow_date": "2024-02-01",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1461276-XeOlmG2G6CVG",
+        "source_name": null,
+        "target_name": "Press Print Inc."
+      },
+      {
+        "amount": 16000,
+        "flow_date": "2024-01-31",
+        "flow_type": "expenditure",
+        "id": "moneyflow-1461276-Wjg1kC2JvHkS",
+        "source_name": null,
+        "target_name": "Compete Digital"
+      },
+      {
+        "amount": 15000,
+        "flow_date": "2024-01-04",
+        "flow_type": "contribution",
+        "id": "moneyflow-1464553-INC17",
+        "source_name": null,
+        "target_name": "Committee for Safe and Modern TUHSD Schools - Yes on A"
+      },
+      {
+        "amount": 10000,
+        "flow_date": "2024-01-02",
+        "flow_type": "contribution",
+        "id": "moneyflow-1352318-INC412",
+        "source_name": null,
+        "target_name": "Marin Association of Public Employees Political Action Committee"
+      }
+    ],
+    "slug": "money-flows-by-year"
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "min_amount": "10000",
+      "year": "2024"
+    },
+    "url_path": "/api/data/money-flows-by-year"
+  }
+}

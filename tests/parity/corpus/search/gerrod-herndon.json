@@ -1,0 +1,35 @@
+{
+  "http_status": 200,
+  "payload": {
+    "query": "gerrod herndon",
+    "results": [
+      {
+        "id": "person-gerrod-herndon",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 76,
+        "route": "/person/gerrod-herndon",
+        "search_label": "Gerrod Herndon",
+        "type": "Person"
+      },
+      {
+        "id": "committee-gerrod-herndon-for-san-rafael-city-council-2022",
+        "jurisdiction": null,
+        "key_fact": "Gerrod Herndon for San Rafael City Council 2022",
+        "last_activity": "2022-11-08",
+        "rank": 66,
+        "route": "/committee/gerrod-herndon-for-san-rafael-city-council-2022",
+        "search_label": "Gerrod Herndon for San Rafael City Council 2022",
+        "type": "Committee"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "q": "gerrod herndon"
+    },
+    "url_path": "/api/search"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "alignment": "left",
+        "key": "category",
+        "label": "Category",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "description",
+        "label": "Description"
+      },
+      {
+        "alignment": "right",
+        "key": "count",
+        "label": "Count",
+        "sortable": true
+      }
+    ],
+    "rows": [
+      {
+        "category": "decisions.missing_decided_at",
+        "count": 4069,
+        "description": "Decisions with no decided_at date"
+      },
+      {
+        "category": "money_flows.missing_amount",
+        "count": 19,
+        "description": "Money flows with no amount"
+      },
+      {
+        "category": "filings.missing_signed_at",
+        "count": 10046,
+        "description": "Filings with no signed_at date"
+      },
+      {
+        "category": "records.orphan_no_target",
+        "count": 42,
+        "description": "Records not attached to any target"
+      },
+      {
+        "category": "agreements.missing_effective_date",
+        "count": 5,
+        "description": "Agreements with no effective_date"
+      }
+    ],
+    "slug": "qa-validation-gaps"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/data/qa-validation-gaps"
+  }
+}

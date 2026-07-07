@@ -1,0 +1,515 @@
+{
+  "http_status": 200,
+  "payload": {
+    "query": "library",
+    "results": [
+      {
+        "id": "org-california-state-library",
+        "jurisdiction": null,
+        "key_fact": "California State Library \u00b7 state_agency",
+        "last_activity": null,
+        "rank": 73,
+        "route": "/organization/california-state-library",
+        "search_label": "California State Library",
+        "type": "Organization"
+      },
+      {
+        "id": "project-downtown-library-renovation",
+        "jurisdiction": null,
+        "key_fact": "Downtown Library Renovation Project \u00b7 reopened",
+        "last_activity": "2025-04-07",
+        "rank": 92,
+        "route": "/project/downtown-library-renovation",
+        "search_label": "Downtown Library Renovation Project",
+        "type": "Project"
+      },
+      {
+        "id": "org-marin-county-library-foundation",
+        "jurisdiction": null,
+        "key_fact": "Marin County Library Foundation",
+        "last_activity": "2025-06-05",
+        "rank": 89,
+        "route": "/organization/marin-county-library-foundation",
+        "search_label": "Marin County Library Foundation",
+        "type": "Organization"
+      },
+      {
+        "id": "org-friends-corte-madera-library",
+        "jurisdiction": null,
+        "key_fact": "Friends Corte Madera Library",
+        "last_activity": "2025-05-01",
+        "rank": 87,
+        "route": "/organization/friends-corte-madera-library",
+        "search_label": "Friends Corte Madera Library",
+        "type": "Organization"
+      },
+      {
+        "id": "org-friends-of-the-fairfax-library",
+        "jurisdiction": null,
+        "key_fact": "Friends of the Fairfax Library",
+        "last_activity": "2025-06-03",
+        "rank": 89,
+        "route": "/organization/friends-of-the-fairfax-library",
+        "search_label": "Friends of the Fairfax Library",
+        "type": "Organization"
+      },
+      {
+        "id": "program-csl-building-forward",
+        "jurisdiction": null,
+        "key_fact": "California State Library Building Forward Library Facilities Improvement Program \u00b7 active",
+        "last_activity": "2022-12-19",
+        "rank": 70,
+        "route": "/program/csl-building-forward",
+        "search_label": "California State Library Building Forward Library Facilities Improvement Program",
+        "type": "Program"
+      },
+      {
+        "id": "agreement-unger-downtown-library-construction",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-04-07",
+        "rank": 81,
+        "route": "/agreement/unger-downtown-library-construction",
+        "search_label": "agreement-unger-downtown-library-construction",
+        "type": "Agreement"
+      },
+      {
+        "id": "org-friends-of-the-marin-city-library",
+        "jurisdiction": null,
+        "key_fact": "Friends of the Marin City Library",
+        "last_activity": "2025-07-01",
+        "rank": 90,
+        "route": "/organization/friends-of-the-marin-city-library",
+        "search_label": "Friends of the Marin City Library",
+        "type": "Organization"
+      },
+      {
+        "id": "org-friends-of-the-corte-madera-library",
+        "jurisdiction": null,
+        "key_fact": "Friends of the Corte Madera Library",
+        "last_activity": "2024-05-10",
+        "rank": 79,
+        "route": "/organization/friends-of-the-corte-madera-library",
+        "search_label": "Friends of the Corte Madera Library",
+        "type": "Organization"
+      },
+      {
+        "id": "agreement-noll-and-tam-downtown-library",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-04-07",
+        "rank": 81,
+        "route": "/agreement/noll-and-tam-downtown-library",
+        "search_label": "agreement-noll-and-tam-downtown-library",
+        "type": "Agreement"
+      },
+      {
+        "id": "agreement-unico-downtown-library-construction-management",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2024-09-16",
+        "rank": 76,
+        "route": "/agreement/unico-downtown-library-construction-management",
+        "search_label": "agreement-unico-downtown-library-construction-management",
+        "type": "Agreement"
+      },
+      {
+        "id": "org-friends-of-the-marin-county-free-library",
+        "jurisdiction": null,
+        "key_fact": "Friends of the Marin County Free Library",
+        "last_activity": "2025-04-10",
+        "rank": 88,
+        "route": "/organization/friends-of-the-marin-county-free-library",
+        "search_label": "Friends of the Marin County Free Library",
+        "type": "Organization"
+      },
+      {
+        "id": "committee-netfile-1356291",
+        "jurisdiction": null,
+        "key_fact": "Yes on B for Marin County Library, committee major funding from Friends of Marin County Free Library and Marin County Library Foundation",
+        "last_activity": "2025-07-01",
+        "rank": 87,
+        "route": "/committee/netfile-1356291",
+        "search_label": "Yes on B for Marin County Library, committee major funding from Friends of Marin County Free Library and Marin County Library Foundation",
+        "type": "Committee"
+      },
+      {
+        "id": "program-csl-targeted-grants",
+        "jurisdiction": null,
+        "key_fact": "California State Library Targeted Grants \u00b7 active",
+        "last_activity": null,
+        "rank": 69,
+        "route": "/program/csl-targeted-grants",
+        "search_label": "California State Library Targeted Grants",
+        "type": "Program"
+      },
+      {
+        "id": "place-downtown-library-1100-e-st",
+        "jurisdiction": null,
+        "key_fact": "Downtown Library, 1100 E Street, San Rafael",
+        "last_activity": null,
+        "rank": 56,
+        "route": "/place/downtown-library-1100-e-st",
+        "search_label": "Downtown Library, 1100 E Street, San Rafael",
+        "type": "Place"
+      },
+      {
+        "id": "decision-2024-07-15-san-rafael-city-council-4h-resolution-adoption-15320",
+        "jurisdiction": null,
+        "key_fact": "San Rafael Public Library Foundation Donation for Constructing a New Library",
+        "last_activity": "2024-07-15",
+        "rank": 81,
+        "route": "/decision/2024-07-15-san-rafael-city-council-4h-resolution-adoption-15320",
+        "search_label": "San Rafael Public Library Foundation Donation for Constructing a New Library",
+        "type": "Decision"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-2708",
+        "jurisdiction": null,
+        "key_fact": "Library Advisory Board \u00b7 2025-11-13",
+        "last_activity": "2025-11-13",
+        "rank": 87,
+        "route": "/meeting/san-anselmo-town-council-2708",
+        "search_label": "Library Advisory Board \u2014 2025-11-13",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-2710",
+        "jurisdiction": null,
+        "key_fact": "Library Advisory Board \u00b7 2026-01-09",
+        "last_activity": "2026-01-09",
+        "rank": 87,
+        "route": "/meeting/san-anselmo-town-council-2710",
+        "search_label": "Library Advisory Board \u2014 2026-01-09",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-2689",
+        "jurisdiction": null,
+        "key_fact": "Library Advisory Board \u00b7 2025-09-11",
+        "last_activity": "2025-09-11",
+        "rank": 84,
+        "route": "/meeting/san-anselmo-town-council-2689",
+        "search_label": "Library Advisory Board \u2014 2025-09-11",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-2578",
+        "jurisdiction": null,
+        "key_fact": "Library Advisory Board \u00b7 2025-07-10",
+        "last_activity": "2025-07-10",
+        "rank": 83,
+        "route": "/meeting/san-anselmo-town-council-2578",
+        "search_label": "Library Advisory Board \u2014 2025-07-10",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-2570",
+        "jurisdiction": null,
+        "key_fact": "Library Advisory Board \u00b7 2025-05-08",
+        "last_activity": "2025-05-08",
+        "rank": 82,
+        "route": "/meeting/san-anselmo-town-council-2570",
+        "search_label": "Library Advisory Board \u2014 2025-05-08",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-2565",
+        "jurisdiction": null,
+        "key_fact": "Library Advisory Board \u00b7 2025-01-09",
+        "last_activity": "2025-01-09",
+        "rank": 80,
+        "route": "/meeting/san-anselmo-town-council-2565",
+        "search_label": "Library Advisory Board \u2014 2025-01-09",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-997",
+        "jurisdiction": null,
+        "key_fact": "Library Advisory Board \u00b7 2023-09-14",
+        "last_activity": "2023-09-14",
+        "rank": 68,
+        "route": "/meeting/san-anselmo-town-council-997",
+        "search_label": "Library Advisory Board \u2014 2023-09-14",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-1011",
+        "jurisdiction": null,
+        "key_fact": "Library Advisory Board \u00b7 2023-07-13",
+        "last_activity": "2023-07-13",
+        "rank": 66,
+        "route": "/meeting/san-anselmo-town-council-1011",
+        "search_label": "Library Advisory Board \u2014 2023-07-13",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-1021",
+        "jurisdiction": null,
+        "key_fact": "Library Advisory Board \u00b7 2023-05-11",
+        "last_activity": "2023-05-11",
+        "rank": 65,
+        "route": "/meeting/san-anselmo-town-council-1021",
+        "search_label": "Library Advisory Board \u2014 2023-05-11",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-1038",
+        "jurisdiction": null,
+        "key_fact": "Library Advisory Board \u00b7 2022-01-13",
+        "last_activity": "2022-01-13",
+        "rank": 64,
+        "route": "/meeting/san-anselmo-town-council-1038",
+        "search_label": "Library Advisory Board \u2014 2022-01-13",
+        "type": "Meeting"
+      },
+      {
+        "id": "decision-2019-09-16-san-rafael-city-council-5c-resolution-adoption-14726",
+        "jurisdiction": null,
+        "key_fact": "Library and Recreation Personnel Changes",
+        "last_activity": "2019-09-16",
+        "rank": 72,
+        "route": "/decision/2019-09-16-san-rafael-city-council-5c-resolution-adoption-14726",
+        "search_label": "Library and Recreation Personnel Changes",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-2025-04-07-san-rafael-city-council-special-4h-resolution-adoption-15390",
+        "jurisdiction": null,
+        "key_fact": "San Rafael Public Library Book Purchase",
+        "last_activity": "2025-04-07",
+        "rank": 87,
+        "route": "/decision/2025-04-07-san-rafael-city-council-special-4h-resolution-adoption-15390",
+        "search_label": "San Rafael Public Library Book Purchase",
+        "type": "Decision"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-2692",
+        "jurisdiction": null,
+        "key_fact": "Library Parcel Tax Oversight Committee \u00b7 2025-12-02",
+        "last_activity": "2025-12-02",
+        "rank": 86,
+        "route": "/meeting/san-anselmo-town-council-2692",
+        "search_label": "Library Parcel Tax Oversight Committee \u2014 2025-12-02",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-2563",
+        "jurisdiction": null,
+        "key_fact": "Library Parcel Tax Oversight Committee \u00b7 2025-06-10",
+        "last_activity": "2025-06-10",
+        "rank": 83,
+        "route": "/meeting/san-anselmo-town-council-2563",
+        "search_label": "Library Parcel Tax Oversight Committee \u2014 2025-06-10",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-2693",
+        "jurisdiction": null,
+        "key_fact": "Library Parcel Tax Oversight Committee \u00b7 2025-06-10",
+        "last_activity": "2025-06-10",
+        "rank": 83,
+        "route": "/meeting/san-anselmo-town-council-2693",
+        "search_label": "Library Parcel Tax Oversight Committee \u2014 2025-06-10",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-2316",
+        "jurisdiction": null,
+        "key_fact": "Library Parcel Tax Oversight Committee \u00b7 2024-10-23",
+        "last_activity": "2024-10-23",
+        "rank": 77,
+        "route": "/meeting/san-anselmo-town-council-2316",
+        "search_label": "Library Parcel Tax Oversight Committee \u2014 2024-10-23",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-san-anselmo-town-council-1024",
+        "jurisdiction": null,
+        "key_fact": "Library Parcel Tax Oversight Committee \u00b7 2023-06-01",
+        "last_activity": "2023-06-01",
+        "rank": 65,
+        "route": "/meeting/san-anselmo-town-council-1024",
+        "search_label": "Library Parcel Tax Oversight Committee \u2014 2023-06-01",
+        "type": "Meeting"
+      },
+      {
+        "id": "decision-2021-07-06-san-rafael-city-council-7b-resolution-adoption-14944",
+        "jurisdiction": null,
+        "key_fact": "Proposed Library and Recreation Department Fee Update",
+        "last_activity": "2021-07-06",
+        "rank": 72,
+        "route": "/decision/2021-07-06-san-rafael-city-council-7b-resolution-adoption-14944",
+        "search_label": "Proposed Library and Recreation Department Fee Update",
+        "type": "Decision"
+      },
+      {
+        "id": "meeting-mill-valley-committees-571",
+        "jurisdiction": null,
+        "key_fact": "Library Board of Trustees Regular Meeting Agenda (PDF) \u00b7 2026-04-02",
+        "last_activity": "2026-04-02",
+        "rank": 90,
+        "route": "/meeting/mill-valley-committees-571",
+        "search_label": "Library Board of Trustees Regular Meeting Agenda (PDF) \u2014 2026-04-02",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-mill-valley-committees-546",
+        "jurisdiction": null,
+        "key_fact": "Library Board of Trustees Regular Meeting Agenda (PDF) \u00b7 2026-01-08",
+        "last_activity": "2026-01-08",
+        "rank": 89,
+        "route": "/meeting/mill-valley-committees-546",
+        "search_label": "Library Board of Trustees Regular Meeting Agenda (PDF) \u2014 2026-01-08",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-mill-valley-committees-556",
+        "jurisdiction": null,
+        "key_fact": "Library Board of Trustees Regular Meeting Agenda (PDF) \u00b7 2026-02-12",
+        "last_activity": "2026-02-12",
+        "rank": 89,
+        "route": "/meeting/mill-valley-committees-556",
+        "search_label": "Library Board of Trustees Regular Meeting Agenda (PDF) \u2014 2026-02-12",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-mill-valley-committees-520",
+        "jurisdiction": null,
+        "key_fact": "Library Board of Trustees Regular Meeting Agenda (PDF) \u00b7 2025-10-09",
+        "last_activity": "2025-10-09",
+        "rank": 87,
+        "route": "/meeting/mill-valley-committees-520",
+        "search_label": "Library Board of Trustees Regular Meeting Agenda (PDF) \u2014 2025-10-09",
+        "type": "Meeting"
+      },
+      {
+        "id": "decision-2026-06-02-san-rafael-library-special-call",
+        "jurisdiction": null,
+        "key_fact": "Call the June 2, 2026 special election for the library services parcel-tax measure \u00b7 2026-02-17",
+        "last_activity": "2026-06-02",
+        "rank": 97,
+        "route": "/decision/2026-06-02-san-rafael-library-special-call",
+        "search_label": "Call the June 2, 2026 special election for the library services parcel-tax measure \u00b7 2026-02-17",
+        "type": "Decision"
+      },
+      {
+        "id": "meeting-mill-valley-committees-512",
+        "jurisdiction": null,
+        "key_fact": "Library Board of Trustees Regular Meeting Agenda (PDF) \u00b7 2025-09-11",
+        "last_activity": "2025-09-11",
+        "rank": 86,
+        "route": "/meeting/mill-valley-committees-512",
+        "search_label": "Library Board of Trustees Regular Meeting Agenda (PDF) \u2014 2025-09-11",
+        "type": "Meeting"
+      },
+      {
+        "id": "decision-2019-07-15-san-rafael-city-council-4e-resolution-adoption-14693",
+        "jurisdiction": null,
+        "key_fact": "Security Services for the Library and Community Centers",
+        "last_activity": "2019-07-15",
+        "rank": 71,
+        "route": "/decision/2019-07-15-san-rafael-city-council-4e-resolution-adoption-14693",
+        "search_label": "Security Services for the Library and Community Centers",
+        "type": "Decision"
+      },
+      {
+        "id": "meeting-mill-valley-committees-495",
+        "jurisdiction": null,
+        "key_fact": "Library Board of Trustees Regular Meeting Agenda (PDF) \u00b7 2025-07-10",
+        "last_activity": "2025-07-10",
+        "rank": 85,
+        "route": "/meeting/mill-valley-committees-495",
+        "search_label": "Library Board of Trustees Regular Meeting Agenda (PDF) \u2014 2025-07-10",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-mill-valley-committees-478",
+        "jurisdiction": null,
+        "key_fact": "Library Board of Trustees Regular Meeting Agenda (PDF) \u00b7 2025-05-08",
+        "last_activity": "2025-05-08",
+        "rank": 84,
+        "route": "/meeting/mill-valley-committees-478",
+        "search_label": "Library Board of Trustees Regular Meeting Agenda (PDF) \u2014 2025-05-08",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-mill-valley-committees-499",
+        "jurisdiction": null,
+        "key_fact": "Library Board of Trustees Regular Meeting Agenda (PDF) \u00b7 2025-06-12",
+        "last_activity": "2025-06-12",
+        "rank": 83,
+        "route": "/meeting/mill-valley-committees-499",
+        "search_label": "Library Board of Trustees Regular Meeting Agenda (PDF) \u2014 2025-06-12",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-mill-valley-committees-440",
+        "jurisdiction": null,
+        "key_fact": "Library Board of Trustees Regular Meeting Agenda (PDF) \u00b7 2025-03-13",
+        "last_activity": "2025-03-13",
+        "rank": 82,
+        "route": "/meeting/mill-valley-committees-440",
+        "search_label": "Library Board of Trustees Regular Meeting Agenda (PDF) \u2014 2025-03-13",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-mill-valley-committees-431",
+        "jurisdiction": null,
+        "key_fact": "Library Board of Trustees Regular Meeting Agenda (PDF) \u00b7 2025-02-13",
+        "last_activity": "2025-02-13",
+        "rank": 81,
+        "route": "/meeting/mill-valley-committees-431",
+        "search_label": "Library Board of Trustees Regular Meeting Agenda (PDF) \u2014 2025-02-13",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-mill-valley-committees-470",
+        "jurisdiction": null,
+        "key_fact": "Library Board of Trustees Regular Meeting Agenda (PDF) \u00b7 2025-04-17",
+        "last_activity": "2025-04-17",
+        "rank": 81,
+        "route": "/meeting/mill-valley-committees-470",
+        "search_label": "Library Board of Trustees Regular Meeting Agenda (PDF) \u2014 2025-04-17",
+        "type": "Meeting"
+      },
+      {
+        "id": "decision-2016-06-07-san-rafael-library-special-results",
+        "jurisdiction": null,
+        "key_fact": "Declare canvass of returns for the June 7, 2016 library special election \u00b7 2016-07-18",
+        "last_activity": "2016-07-18",
+        "rank": 71,
+        "route": "/decision/2016-06-07-san-rafael-library-special-results",
+        "search_label": "Declare canvass of returns for the June 7, 2016 library special election \u00b7 2016-07-18",
+        "type": "Decision"
+      },
+      {
+        "id": "meeting-mill-valley-committees-400",
+        "jurisdiction": null,
+        "key_fact": "Library Board of Trustees Regular Meeting Agenda (PDF) \u00b7 2024-10-10",
+        "last_activity": "2024-10-10",
+        "rank": 80,
+        "route": "/meeting/mill-valley-committees-400",
+        "search_label": "Library Board of Trustees Regular Meeting Agenda (PDF) \u2014 2024-10-10",
+        "type": "Meeting"
+      },
+      {
+        "id": "meeting-mill-valley-committees-408",
+        "jurisdiction": null,
+        "key_fact": "Library Board of Trustees Regular Meeting Agenda (PDF) \u00b7 2024-11-14",
+        "last_activity": "2024-11-14",
+        "rank": 80,
+        "route": "/meeting/mill-valley-committees-408",
+        "search_label": "Library Board of Trustees Regular Meeting Agenda (PDF) \u2014 2024-11-14",
+        "type": "Meeting"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "q": "library"
+    },
+    "url_path": "/api/search"
+  }
+}

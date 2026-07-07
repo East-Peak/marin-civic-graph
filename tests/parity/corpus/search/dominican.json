@@ -1,0 +1,25 @@
+{
+  "http_status": 200,
+  "payload": {
+    "query": "dominican",
+    "results": [
+      {
+        "id": "org-dominican-university-of-california",
+        "jurisdiction": null,
+        "key_fact": "Dominican University of California",
+        "last_activity": "2021-03-02",
+        "rank": 70,
+        "route": "/organization/dominican-university-of-california",
+        "search_label": "Dominican University of California",
+        "type": "Organization"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "q": "dominican"
+    },
+    "url_path": "/api/search"
+  }
+}

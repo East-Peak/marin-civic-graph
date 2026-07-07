@@ -1,0 +1,4049 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "alignment": "left",
+        "key": "flow_date",
+        "label": "Flow date",
+        "sortable": true
+      },
+      {
+        "alignment": "right",
+        "key": "amount",
+        "label": "Amount",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "flow_type",
+        "label": "Type",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "source_name",
+        "label": "Source"
+      },
+      {
+        "alignment": "left",
+        "key": "target_name",
+        "label": "Target"
+      },
+      {
+        "alignment": "left",
+        "key": "id",
+        "label": "Flow id",
+        "link": "entity-route"
+      }
+    ],
+    "rows": [
+      {
+        "amount": 850000,
+        "flow_date": null,
+        "flow_type": null,
+        "id": "moneyflow-2024-08-19-defense-block-contract",
+        "source_name": null,
+        "target_name": "Defense Block Security"
+      },
+      {
+        "amount": 200000,
+        "flow_date": null,
+        "flow_type": null,
+        "id": "moneyflow-2024-08-19-dst-contract",
+        "source_name": null,
+        "target_name": "Downtown Streets Team"
+      },
+      {
+        "amount": 5999241,
+        "flow_date": null,
+        "flow_type": null,
+        "id": "moneyflow-2024-08-19-erf3-joint-award",
+        "source_name": "Cal ICH",
+        "target_name": "City of San Rafael"
+      },
+      {
+        "amount": 675000,
+        "flow_date": null,
+        "flow_type": null,
+        "id": "moneyflow-2024-08-19-fs-global-contract",
+        "source_name": null,
+        "target_name": "FS Global Solutions"
+      },
+      {
+        "amount": 2256400,
+        "flow_date": null,
+        "flow_type": null,
+        "id": "moneyflow-2024-08-19-grants-fund-283-appropriation",
+        "source_name": null,
+        "target_name": null
+      },
+      {
+        "amount": 165000,
+        "flow_date": null,
+        "flow_type": null,
+        "id": "moneyflow-2024-08-19-other-junk-contract",
+        "source_name": null,
+        "target_name": "Other Junk Co."
+      },
+      {
+        "amount": 500000,
+        "flow_date": null,
+        "flow_type": null,
+        "id": "moneyflow-2024-08-19-startup-costs",
+        "source_name": null,
+        "target_name": null
+      },
+      {
+        "amount": 112400,
+        "flow_date": null,
+        "flow_type": null,
+        "id": "moneyflow-2024-08-19-wehope-contract",
+        "source_name": null,
+        "target_name": "WeHope"
+      },
+      {
+        "amount": 201000,
+        "flow_date": null,
+        "flow_type": "contract_authorization",
+        "id": "moneyflow-2025-11-17-350-merrydale-brokerage-services",
+        "source_name": null,
+        "target_name": "Cornish and Carey Commercial (d/b/a Newmark)"
+      },
+      {
+        "amount": 8000000,
+        "flow_date": null,
+        "flow_type": "grant_award",
+        "id": "moneyflow-2025-11-17-350-merrydale-county-grant",
+        "source_name": null,
+        "target_name": null
+      },
+      {
+        "amount": 6700000,
+        "flow_date": null,
+        "flow_type": "property_acquisition_authorization",
+        "id": "moneyflow-2025-11-17-350-merrydale-property-acquisition",
+        "source_name": null,
+        "target_name": null
+      },
+      {
+        "amount": 207250,
+        "flow_date": null,
+        "flow_type": "amendment_authorization",
+        "id": "moneyflow-2026-02-17-350-merrydale-lca-design-amendment",
+        "source_name": null,
+        "target_name": "LCA Architects"
+      },
+      {
+        "amount": 229703,
+        "flow_date": null,
+        "flow_type": "contract_authorization",
+        "id": "moneyflow-2026-02-17-350-merrydale-swinerton-services",
+        "source_name": null,
+        "target_name": "Swinerton Management & Consulting"
+      },
+      {
+        "amount": 2659.56,
+        "flow_date": null,
+        "flow_type": "campaign_expenditure",
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-ac-hotel-san-rafael-mtg-1",
+        "source_name": null,
+        "target_name": null
+      },
+      {
+        "amount": 1010.8,
+        "flow_date": null,
+        "flow_type": "campaign_expenditure",
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-anedot-fnd-2",
+        "source_name": null,
+        "target_name": "Anedot"
+      },
+      {
+        "amount": 1150,
+        "flow_date": null,
+        "flow_type": "campaign_expenditure",
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-city-of-san-rafael-fil-11",
+        "source_name": null,
+        "target_name": null
+      },
+      {
+        "amount": 4099.49,
+        "flow_date": null,
+        "flow_type": "campaign_expenditure",
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-cornerstone-printing-pos-12",
+        "source_name": null,
+        "target_name": null
+      },
+      {
+        "amount": 1014.23,
+        "flow_date": null,
+        "flow_type": "campaign_expenditure",
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-donor-stack-llc-web-14",
+        "source_name": null,
+        "target_name": null
+      },
+      {
+        "amount": 1574,
+        "flow_date": null,
+        "flow_type": "campaign_expenditure",
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-16",
+        "source_name": null,
+        "target_name": "Four Waters Media, Inc"
+      },
+      {
+        "amount": 4291,
+        "flow_date": null,
+        "flow_type": "campaign_expenditure",
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-19",
+        "source_name": null,
+        "target_name": "Four Waters Media, Inc"
+      },
+      {
+        "amount": 1000,
+        "flow_date": null,
+        "flow_type": "campaign_expenditure",
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-cns-21",
+        "source_name": null,
+        "target_name": "PMCohen Public Affairs"
+      },
+      {
+        "amount": 1000,
+        "flow_date": null,
+        "flow_type": "campaign_expenditure",
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-cns-24",
+        "source_name": null,
+        "target_name": "PMCohen Public Affairs"
+      },
+      {
+        "amount": 1625,
+        "flow_date": null,
+        "flow_type": "campaign_expenditure",
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-uncoded-23",
+        "source_name": null,
+        "target_name": "PMCohen Public Affairs"
+      },
+      {
+        "amount": 1000,
+        "flow_date": null,
+        "flow_type": "campaign_expenditure",
+        "id": "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-andre-charles-cns-2",
+        "source_name": null,
+        "target_name": null
+      },
+      {
+        "amount": 1200,
+        "flow_date": null,
+        "flow_type": "campaign_expenditure",
+        "id": "moneyflow-committee-rachel-kertz-for-san-rafael-city-council-2024-political-data-inc-pol-3",
+        "source_name": null,
+        "target_name": null
+      },
+      {
+        "amount": 1000000,
+        "flow_date": null,
+        "flow_type": "grant_award",
+        "id": "moneyflow-downtown-carnegie-building-forward-grant-2022",
+        "source_name": null,
+        "target_name": null
+      },
+      {
+        "amount": 1000000,
+        "flow_date": null,
+        "flow_type": "grant_award",
+        "id": "moneyflow-downtown-carnegie-targeted-design-grant",
+        "source_name": null,
+        "target_name": null
+      },
+      {
+        "amount": 49600,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-00003c05a55c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-burgess-earl-c"
+      },
+      {
+        "amount": 7500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0001c75a00db",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-jackson-lewis-pc"
+      },
+      {
+        "amount": 4000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-001050d593d1",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-brown-miller-communications"
+      },
+      {
+        "amount": 32444,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0021ca55cf15",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-bethany-dominik-consulting"
+      },
+      {
+        "amount": 30000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-002807b5981d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-maxim-healthcare-services-holdings"
+      },
+      {
+        "amount": 3500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-002b1a157ba3",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ballard-watkins-construction-serv"
+      },
+      {
+        "amount": 49500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-002cb886a17d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-emerson-elizabeth"
+      },
+      {
+        "amount": 25000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-002f7081ea9e",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-horizon-water-and-environment"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-00335782e9ac",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-parisi-transportation-consulting"
+      },
+      {
+        "amount": 49725,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0034122122a7",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-sicular-environmental-consulting"
+      },
+      {
+        "amount": 2600,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-004132fe2047",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-pushing-education"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0049c23d7686",
+        "source_name": null,
+        "target_name": "Miller Pacific Engineering Group"
+      },
+      {
+        "amount": 34650,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-004db4cd5420",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-meeks-coates-eaton-architects"
+      },
+      {
+        "amount": 15750,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-005597f0fc66",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-florez-veda"
+      },
+      {
+        "amount": 21950,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0058e6672170",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-lps-hearing-officers"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-005d0ee2b286",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-cinquini-passarino"
+      },
+      {
+        "amount": 35000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0063299142be",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-spahr-center"
+      },
+      {
+        "amount": 8332,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0077c741317d",
+        "source_name": null,
+        "target_name": "City of San Rafael"
+      },
+      {
+        "amount": 16800,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0078c9f27c27",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-facilities-by-design"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0089bf3af66a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-best-best-krieger"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-00956f5f5205",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-morrow-gloria"
+      },
+      {
+        "amount": 24615,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-009b802bb02e",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-psychwest-clinical-psychology"
+      },
+      {
+        "amount": 3800,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-00a0f1d47b0c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-salas-obrien-engineers-inc-addendum"
+      },
+      {
+        "amount": 2500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-00a5bc92b788",
+        "source_name": null,
+        "target_name": "Miller Pacific Engineering Group"
+      },
+      {
+        "amount": 3075,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-00b173bd22a6",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-garrett-law"
+      },
+      {
+        "amount": 3000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-00bca218fb2d",
+        "source_name": null,
+        "target_name": "Norbay Consulting"
+      },
+      {
+        "amount": 39009,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-00bf5f226ccb",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-treatment-center"
+      },
+      {
+        "amount": 1260,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-00c09afe4d1b",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-enriching-lives-through-music"
+      },
+      {
+        "amount": 14785,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-00c5980cd8eb",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-ballet"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-00c954cb39c9",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-george-jeffrey-s"
+      },
+      {
+        "amount": 33925,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-00d200effbdb",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-hamilton-roth-jay"
+      },
+      {
+        "amount": 11562,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-00d9eb74da91",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-west-marin-senior-services"
+      },
+      {
+        "amount": 49500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-00e2065fa8e0",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-juan-lopez-dba-amistad-associates"
+      },
+      {
+        "amount": 12056,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-00ecef6ad5d6",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-monte-s-chapel-of-the-hills"
+      },
+      {
+        "amount": 11690,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-00f419fecfc3",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-fire-safe-marin"
+      },
+      {
+        "amount": 3285,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-010b7e9cb390",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-deanna-david-llc-dba-just-dance-academy"
+      },
+      {
+        "amount": 3650,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0116e77c36b5",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-questa-engineering"
+      },
+      {
+        "amount": 12000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-013178b5e85d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-global-mobile"
+      },
+      {
+        "amount": 20618,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0143e33577cc",
+        "source_name": null,
+        "target_name": "Homeward Bound of Marin"
+      },
+      {
+        "amount": 5000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-015c641a4f47",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-o-rorke"
+      },
+      {
+        "amount": 10240,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-015f267df804",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-kimley-horn-and-associates"
+      },
+      {
+        "amount": 20200,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0163185d5bf8",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-california-cpa-education-foundation"
+      },
+      {
+        "amount": 6000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-017686170b39",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-on-point-land-management"
+      },
+      {
+        "amount": 28050,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-017a8d4dd91c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-csw-stuber-stroeh-engineering-group"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-018822b27582",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-balance-hydrologics"
+      },
+      {
+        "amount": 13750,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-018aa64b759c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-kawahara-julie-a"
+      },
+      {
+        "amount": 16485,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-018f61e3fa05",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-bio-defense-network"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-01a65c8e2cfd",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-goodwill-industries-of-san-francisco"
+      },
+      {
+        "amount": 25559,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-01acaa09c923",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-clementi-mark-a"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-01cccc81e281",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-boster-kobayashi-assoc"
+      },
+      {
+        "amount": 7000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-01d55623f6a9",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-sustainable-marin"
+      },
+      {
+        "amount": 10763,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-01deea7bd3a4",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-desilva-shelana"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-01e5e1dca756",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-tonks-ian"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-01e6a899dcbb",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-specialty-surgery-center"
+      },
+      {
+        "amount": 9214,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-01e7b1db665f",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-finnegan-investigative-services"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-01e84cca9a6a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-golden-gate-pharmacy-services"
+      },
+      {
+        "amount": 24000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-01f5279accfc",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-california-invasive-plant-control"
+      },
+      {
+        "amount": 29550,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-01f622217c01",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-deignan-monte"
+      },
+      {
+        "amount": 5150,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-01fd20a976ce",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-matrix-point"
+      },
+      {
+        "amount": 3500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-01fe06492709",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-mayen-laura"
+      },
+      {
+        "amount": 46475,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0208e14d1b6b",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-indigenous-vision"
+      },
+      {
+        "amount": 22000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-020f9fc51d87",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-bontempo-suzanne"
+      },
+      {
+        "amount": 47985,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-021a841e9c08",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-reynolds-jinesse"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0228d0fc2828",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-northgate-environmental-management"
+      },
+      {
+        "amount": 7500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0229b9d058cd",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-performing-arts-workshop"
+      },
+      {
+        "amount": 40000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-022a42650dfa",
+        "source_name": null,
+        "target_name": "Homeward Bound of Marin"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-022dfc62a8ae",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-law-offices-of-thomas-m-bruen-apc"
+      },
+      {
+        "amount": 34650,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0235a9907649",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-meeks-coates-eaton-architects"
+      },
+      {
+        "amount": 5800,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02383f3ad172",
+        "source_name": null,
+        "target_name": "MarinLink Inc"
+      },
+      {
+        "amount": 12000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-025bf7cfe714",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-chase-victoria-r"
+      },
+      {
+        "amount": 45850,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-026ad4d83989",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-emerson-elizabeth"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-027ffa33ed3b",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-george-jeffrey-s"
+      },
+      {
+        "amount": 25000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0280502ad0ff",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-law-offices-of-charisse-l-smith"
+      },
+      {
+        "amount": 9946,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0282b019f668",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-balance-hydrologics"
+      },
+      {
+        "amount": 3000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0284215d0662",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-lucchesi-plant-and-soil-consulting"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02899f5e211f",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-john-lessley-quality-innovations"
+      },
+      {
+        "amount": 49000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-028bbf681730",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ballard-and-watkins"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02919aafac45",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-live-life-coaching"
+      },
+      {
+        "amount": 18690,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02bb3cfd624e",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-west-marin-senior-services"
+      },
+      {
+        "amount": 7500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02bc689b13c3",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-great-american-entertainment"
+      },
+      {
+        "amount": 10763,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02c566849ba2",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-desilva-shelana"
+      },
+      {
+        "amount": 2500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02c584154e90",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-bettin-investigations"
+      },
+      {
+        "amount": 35000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02d0bdc9c522",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-family-action"
+      },
+      {
+        "amount": 6000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02dc0a189952",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-lazzarini-investigations"
+      },
+      {
+        "amount": 41000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02dde46c4aab",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-salas-o-brien"
+      },
+      {
+        "amount": 4620,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02df168a7bd1",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-general-hospital"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02df51855dd2",
+        "source_name": null,
+        "target_name": "City of San Rafael"
+      },
+      {
+        "amount": 2496,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02e02f9d49b8",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-netcentric-technologies"
+      },
+      {
+        "amount": 5300,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02e6af06419d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-biddle-consulting-group"
+      },
+      {
+        "amount": 7045,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02e776612de8",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-yeh-and-associates"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02eaad4d9c5f",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-delia-and-associates"
+      },
+      {
+        "amount": 4800,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-02f1017307a7",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-caro-damaris"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-030ec052504e",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-3play-media"
+      },
+      {
+        "amount": 36000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0310999bc923",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-axon-enterprise"
+      },
+      {
+        "amount": 41500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0312a033779c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-george-jeffrey-s"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-03143132c78d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-liebert-cassidy-whitmore"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-031bf01fd9f4",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-turner-jimmie-r"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-031f72e07fe4",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-plan-b-works"
+      },
+      {
+        "amount": 3000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0326024ca4fd",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-walsh-web-development-and-consulting"
+      },
+      {
+        "amount": 47932,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-03303c72de79",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-the-multicultural-center-of-marin"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-033e33b204b8",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-spin-recruitment-advertising"
+      },
+      {
+        "amount": 30000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-034b982efc3b",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-alcohol-justice"
+      },
+      {
+        "amount": 4500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-035acc2e005e",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-csw-stuber-stroeh-engineering-group"
+      },
+      {
+        "amount": 25000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-035bf8c57553",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-history-museum"
+      },
+      {
+        "amount": 16240,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0382334f2b6c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-adept-m3-group"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0388e87416c2",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-jewish-family-and-childrens-services"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-038cc7983d00",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-promise-network"
+      },
+      {
+        "amount": 30444,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-03922dffd864",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-barbier-security-group"
+      },
+      {
+        "amount": 35000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0394f03546b8",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-associated-right-of-way-services"
+      },
+      {
+        "amount": 1500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-039c17572145",
+        "source_name": null,
+        "target_name": "Homeward Bound of Marin"
+      },
+      {
+        "amount": 4000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-03a3371949eb",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-gauna-jennifer"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-03a6ceba3957",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-court-appointed-special-advocates"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-03ad4dd7d7b8",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-wallace-roberts-todd"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-03ada9cf8c8a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-live-life-coaching"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-03ae10198227",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ucsf-regents"
+      },
+      {
+        "amount": 45000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-03b6326c4672",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-pillsbury-winthrop-shaw-pittman"
+      },
+      {
+        "amount": 28000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-03d0b2f5e075",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-executive-recruitments-for-parks-and-open-space"
+      },
+      {
+        "amount": 14600,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-03d8254b3615",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-outfront-media"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-03e3f7f8cb81",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ghd"
+      },
+      {
+        "amount": 30000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0407dd428fd1",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-champlin-william-bradford"
+      },
+      {
+        "amount": 25000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0411b1ce4acf",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-front-porch-communities-foundation"
+      },
+      {
+        "amount": 19200,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-041b558cca5a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-basu-anjuli"
+      },
+      {
+        "amount": 35000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-041cba823189",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-goldfarb-lipman"
+      },
+      {
+        "amount": 7250,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-04216141bf25",
+        "source_name": null,
+        "target_name": "BKF Engineers"
+      },
+      {
+        "amount": 43300,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0433c21d2ff4",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-la-rocca-s-janitorial-service"
+      },
+      {
+        "amount": 5450,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0435ff62d876",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-center-for-volunteer-and-nonprofit-leadership"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-043765471e3f",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-grob-phillip-m"
+      },
+      {
+        "amount": 47230,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-043ad97f973c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-celebrity-competitions"
+      },
+      {
+        "amount": 15985,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-043b4d599a7c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ghilotti-construction"
+      },
+      {
+        "amount": 6600,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-043fe78fb9d5",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-cromb-associates"
+      },
+      {
+        "amount": 23340,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0452d08e1991",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-legal-aid-of-marin"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0456035380f3",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-vuillermet-jennifer-m-w"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-045dd7ffcec9",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-the-multicultural-center-of-marin"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-045e2316280f",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-quincy-engineering"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-045e34db3ca1",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-licensed-marriage-and-family-therapist"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-046007a3c4d4",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-regan-michael"
+      },
+      {
+        "amount": 6000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-046724b5cef6",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-center-for-domestic-peace"
+      },
+      {
+        "amount": 28750,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-047d707ef591",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ralph-andersen-associates"
+      },
+      {
+        "amount": 14265,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-048a46a1b2c3",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-ballet"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0494c3dd31b8",
+        "source_name": null,
+        "target_name": "Community Action Marin"
+      },
+      {
+        "amount": 1200,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0494d8315a5b",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-treetop-quality-systems"
+      },
+      {
+        "amount": 7500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-049b71cd1b63",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-age-friendly-solutions"
+      },
+      {
+        "amount": 5000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-04a33a86be2b",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-tandinco-artoteles"
+      },
+      {
+        "amount": 21700,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-04a80389d6c0",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-kleinfelder"
+      },
+      {
+        "amount": 8800,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-04b736599b7d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-whirlwind-disc-golf"
+      },
+      {
+        "amount": 3053,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-04bd93556f27",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-villages"
+      },
+      {
+        "amount": 40000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-04d81ba43694",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-city-of-larkspur-prevention-community-coalition"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-04df4b658cb6",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-fair-housing-advocates-of-northern-californa"
+      },
+      {
+        "amount": 30000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-04e303522852",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-cassell-david-r"
+      },
+      {
+        "amount": 25000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-04eb1c6e01af",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-crawford-brian-technical-assistance"
+      },
+      {
+        "amount": 7500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-04f455f79ab0",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-spirn-stephen-m"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-04f75c29885a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-locumtenens-holdings"
+      },
+      {
+        "amount": 37500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-04fa6098cca6",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-the-multicultural-center-of-marin"
+      },
+      {
+        "amount": 23700,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05029730de03",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-facilities-by-design"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-050305a7ac30",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-nunez-lupe-m"
+      },
+      {
+        "amount": 16840,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-050c2e2b267d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-gen-faire"
+      },
+      {
+        "amount": 6978,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0516d37b41b0",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-homebase-the-center-for-common-concerns"
+      },
+      {
+        "amount": 49960,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05298ca03606",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-moore-iacofano-goltsman"
+      },
+      {
+        "amount": 35000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-053f0c27c877",
+        "source_name": null,
+        "target_name": "Miller Pacific Engineering Group"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-055cd5c83014",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-bluepath-health"
+      },
+      {
+        "amount": 11172,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0563d343ed2a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-shore-erika-ruth"
+      },
+      {
+        "amount": 12500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05817a3e00f7",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-spirit-garden-productions"
+      },
+      {
+        "amount": 5700,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-058192e0538a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-symphony-association"
+      },
+      {
+        "amount": 26922,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05845d97ed91",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-benson-michele"
+      },
+      {
+        "amount": 5000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-059034f6829b",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-kleinfelder"
+      },
+      {
+        "amount": 1454,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0596f8c5df63",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-stabler-paula-addendum"
+      },
+      {
+        "amount": 9272,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-059a053c8bfa",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-huckleberry-youth-programs"
+      },
+      {
+        "amount": 1500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-059d42df098f",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ethan-red-eagle-lawton"
+      },
+      {
+        "amount": 7688,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05a562936b07",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-center-point"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05a72b42b512",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-bolinas-community-land-trust"
+      },
+      {
+        "amount": 36000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05b03b37966f",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-cole-pro-media"
+      },
+      {
+        "amount": 5000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05b74288900a",
+        "source_name": null,
+        "target_name": "Town of San Anselmo"
+      },
+      {
+        "amount": 7800,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05b7ca21eeba",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-stilt-circus"
+      },
+      {
+        "amount": 6000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05c2d5335350",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-dehner-stephanie"
+      },
+      {
+        "amount": 40000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05cf7055c065",
+        "source_name": null,
+        "target_name": "Terris Barnes Walters Boigon Heath Lester, Inc."
+      },
+      {
+        "amount": 25700,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05cfb6a7567e",
+        "source_name": null,
+        "target_name": "ILS Associates"
+      },
+      {
+        "amount": 7500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05de958968ca",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-to-the-point-polygraph"
+      },
+      {
+        "amount": 1500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05e047787a8a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-workplace-knowledge"
+      },
+      {
+        "amount": 16328,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05e39ecc7966",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ca-state-university-fresno-foundation"
+      },
+      {
+        "amount": 8000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05f369558614",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-vivalon"
+      },
+      {
+        "amount": 30000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-05fcd4e550a0",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-dimon-joshua-s"
+      },
+      {
+        "amount": 3000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-060a7ad8f560",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-breakfast-club-rally"
+      },
+      {
+        "amount": 1018,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-060eb71946b2",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-spahr-center"
+      },
+      {
+        "amount": 20800,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-06162343264d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-barry-janice"
+      },
+      {
+        "amount": 30000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0626dbcb9093",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-unificare"
+      },
+      {
+        "amount": 17800,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-06293f734470",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-summers-stewart-k"
+      },
+      {
+        "amount": 31875,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-062a0f69a2aa",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ross-drulis-cusenbery-arch"
+      },
+      {
+        "amount": 3115,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-062bbb89dbf8",
+        "source_name": null,
+        "target_name": "Marin Symphony"
+      },
+      {
+        "amount": 4500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0637a7de90c3",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-jackie-davis-consultant"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-06497cf89d72",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ellis-buehler-makus"
+      },
+      {
+        "amount": 5858,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-065a3dfd9941",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-moore-shanel"
+      },
+      {
+        "amount": 12050,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-065df812e476",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-starcreek-land-stewards"
+      },
+      {
+        "amount": 21000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-065ebea5b618",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-bayside-stripe-seal"
+      },
+      {
+        "amount": 5000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-065eca358b2e",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-bay-area-community-resources-bacr"
+      },
+      {
+        "amount": 25000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0660c5371874",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-bay-area-community-resources-bacr"
+      },
+      {
+        "amount": 20085,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0673294c7a22",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-patricia-reyes-consulting"
+      },
+      {
+        "amount": 3185,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-067745216705",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-mayflower-choral-society"
+      },
+      {
+        "amount": 11000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-06774effa427",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-point-blue-conservation-science"
+      },
+      {
+        "amount": 30000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0678b60991e9",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-delia-and-associates"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-06824ca2e0a6",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-sftbd"
+      },
+      {
+        "amount": 76900,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-06856ba6bc6a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-to-celebrate-life-breast-cancer-foundation"
+      },
+      {
+        "amount": 9000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-069c82b045c0",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-allen-lipscomb-psyd-lcsw"
+      },
+      {
+        "amount": 49000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-06a2fdde5598",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-maliguine-sallianne"
+      },
+      {
+        "amount": 33000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-06a6a5ab7910",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-west-marin-community-services"
+      },
+      {
+        "amount": 7872,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-06c7f36e4ae7",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-transcendence-theatre-company"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-06ddbb58de81",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-spahr-center"
+      },
+      {
+        "amount": 17000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-06df4ba36a88",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ojeda-claribel"
+      },
+      {
+        "amount": 39680,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-06ea70bb0cda",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-burgess-earl-c"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-06fa6484d562",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-partners-in-public-innovation"
+      },
+      {
+        "amount": 1500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-06ff05e2eb9a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-the-marin-aging-disability-institute"
+      },
+      {
+        "amount": 5193,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0709b3893563",
+        "source_name": null,
+        "target_name": "Canal Alliance"
+      },
+      {
+        "amount": 25900,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0718ceb60365",
+        "source_name": null,
+        "target_name": "Miller Pacific Engineering Group"
+      },
+      {
+        "amount": 13100,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0724b91b948a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-interface-engineering"
+      },
+      {
+        "amount": 7177,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-072d20ee3d10",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-faith-fuller-addendum"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0731fecdc631",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-paul-elizondo-do"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-073b5a52af3c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-jim-schutz-dba-jmsb-strategies"
+      },
+      {
+        "amount": 7000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0769e18f373e",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-waters-irvenia"
+      },
+      {
+        "amount": 37500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0789c267da8c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-biggs-and-cardosa-and-associates"
+      },
+      {
+        "amount": 25000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0799c6a4236c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ucsf-regents"
+      },
+      {
+        "amount": 2000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-07b84d3472df",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-golden-gate-polygraph-services"
+      },
+      {
+        "amount": 3170,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-07d773077066",
+        "source_name": null,
+        "target_name": "City of San Rafael"
+      },
+      {
+        "amount": 47775,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-07db65a0efa4",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-services-for-men-dba-marin-outpatient-and-recovery-services"
+      },
+      {
+        "amount": 30000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-07e07f8fcbe1",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-california-film-institute"
+      },
+      {
+        "amount": 37100,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-07fc62c1e4e2",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-city-community-services-district"
+      },
+      {
+        "amount": 9456,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0808611c3ff1",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-o-rorke-pr-advertising"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-080bf8eee90b",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-schwarz-william-joseph"
+      },
+      {
+        "amount": 22500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0810f5d9cec6",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-aquatic-technology-pool-and-spa"
+      },
+      {
+        "amount": 34809,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0812ebf6af05",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-huckleberry-youth-programs"
+      },
+      {
+        "amount": 17800,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-081d8eb17d9b",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ware-malcomb"
+      },
+      {
+        "amount": 12056,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-082ac3b49f83",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-monte-s-chapel-of-the-hills"
+      },
+      {
+        "amount": 33176,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-083260cc3577",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-huckleberry-youth-programs"
+      },
+      {
+        "amount": 3360,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-083fd46bb72a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-mims-maia"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-085261043c6a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-kathy-barnes"
+      },
+      {
+        "amount": 30000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0858e23364a6",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-brain-injury-network"
+      },
+      {
+        "amount": 48000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0884ace7b7ef",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-mark-j-schiller-md-professional"
+      },
+      {
+        "amount": 4000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-08856e16da9e",
+        "source_name": null,
+        "target_name": "Community Action Marin"
+      },
+      {
+        "amount": 5700,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-088994dc22f5",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-contractor-compliance-monitoring"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-08c7d57b3b15",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-coastal-policy-solutions"
+      },
+      {
+        "amount": 35000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-08df49226768",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-arborscience"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-08dff86d7ca5",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-mccord-christine"
+      },
+      {
+        "amount": 12600,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-08e0bb5a2617",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-fas-services"
+      },
+      {
+        "amount": 40000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-08f7c31fbda6",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-golden-gate-pharmacy-services"
+      },
+      {
+        "amount": 41000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-09049d611332",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-helios-healthcare"
+      },
+      {
+        "amount": 3420,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-091a643766a9",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-deignan-monte"
+      },
+      {
+        "amount": 12500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-091b3548cb9c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-rutherford-chekene"
+      },
+      {
+        "amount": 8975,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-092722f246a5",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-jennifer-berezan"
+      },
+      {
+        "amount": 11000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-092ee53e98c4",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-colin-ellerin-natasha"
+      },
+      {
+        "amount": 11050,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-093394d1c125",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-stewart-k-summers-architect"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0938e406a06d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-san-francisco-estuary-institute"
+      },
+      {
+        "amount": 35000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0942481a5495",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-o-rorke"
+      },
+      {
+        "amount": 1500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-09499a30a66a",
+        "source_name": null,
+        "target_name": "Ritter Center"
+      },
+      {
+        "amount": 25000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-09559ade8806",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-bolinas-commn-land-trust"
+      },
+      {
+        "amount": 20428,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-09574f23e9d3",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-jewish-family-children-s-service"
+      },
+      {
+        "amount": 40000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0960081c66d4",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-c-o-brita-michelle"
+      },
+      {
+        "amount": 40000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-097692a407f7",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-schwarz-william-joseph"
+      },
+      {
+        "amount": 3000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-09824a10f5a9",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-san-rafael-school-district"
+      },
+      {
+        "amount": 6000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0989264775a3",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-regan-michael"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0989c299d418",
+        "source_name": null,
+        "target_name": "BKF Engineers"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-099e6dc0a953",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-sanzuma"
+      },
+      {
+        "amount": 33712,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-099f716ee15e",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ca-mental-health-services-authority"
+      },
+      {
+        "amount": 27840,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-09ad7a62583a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-csw-st2"
+      },
+      {
+        "amount": 21699,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-09bac76786fc",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-kleinfelder"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-09bd5e21dff9",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-seneca-family-of-agencies"
+      },
+      {
+        "amount": 7900,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-09ce4012a987",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-csw-stuber-stroeh-engineering-group"
+      },
+      {
+        "amount": 33127,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-09d315c0973d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-san-geronimo-valley-community-center"
+      },
+      {
+        "amount": 40000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-09d85828b05c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-csw-st2"
+      },
+      {
+        "amount": 8765,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-09e558b0ef95",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-whistlestop"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-09e73a150e56",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-merced-behavioral-center"
+      },
+      {
+        "amount": 39680,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a0713c76965",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-burgess-earl-c"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a207a2796cc",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-planned-parenthood-shasta-diablo"
+      },
+      {
+        "amount": 14384,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a21c97c88f4",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-services-for-men"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a2299185e34",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-anchor-qea"
+      },
+      {
+        "amount": 48000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a2c73ea4fd9",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-prathikanti-sridhar"
+      },
+      {
+        "amount": 8500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a332e45d16d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-county-of-marin-dof"
+      },
+      {
+        "amount": 43200,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a507c9fe643",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-hdl-software"
+      },
+      {
+        "amount": 22500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a58d1afdbf5",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-aquatic-technology-pool-and-spa"
+      },
+      {
+        "amount": 13500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a5d1a5c365e",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-west-marin-senior-services"
+      },
+      {
+        "amount": 35000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a5de268d741",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-family-action"
+      },
+      {
+        "amount": 49750,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a5f681e75c0",
+        "source_name": null,
+        "target_name": "BKF Engineers"
+      },
+      {
+        "amount": 2500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a719772fbc0",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-vivalon"
+      },
+      {
+        "amount": 8646,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a735980f214",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-bright-star-security"
+      },
+      {
+        "amount": 8830,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a7632052863",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-tex-us-guitar-shows"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a7866c1ba53",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-vivalon"
+      },
+      {
+        "amount": 4000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a7cd266f971",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-clyma-thomas"
+      },
+      {
+        "amount": 15500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a875c6d2352",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-episcopal-senior-communities"
+      },
+      {
+        "amount": 36000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a912221f2cb",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-new-media-learning"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a91867aa4f5",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-on-point-land-management"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a9386b44df3",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-sustainable-marin"
+      },
+      {
+        "amount": 5000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0a9783174cef",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-center-for-restorative-practice"
+      },
+      {
+        "amount": 7800,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0aa720c54f40",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-reyes-patricia-brown-mph"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0aab86773bcc",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-acta-environmental"
+      },
+      {
+        "amount": 5000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0abf591a9e71",
+        "source_name": null,
+        "target_name": "Ritter Center"
+      },
+      {
+        "amount": 42500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0ac1e5963fc1",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-gonzalez-jose-g"
+      },
+      {
+        "amount": 35000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0ac95173115e",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-spahr-center"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0ace3bee246c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-michael-pawlyn"
+      },
+      {
+        "amount": 49999,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0ad47a9576e3",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-cotton-shires-associates"
+      },
+      {
+        "amount": 1500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0adb21e67454",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-thakur-aishwarya"
+      },
+      {
+        "amount": 8075,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0aeed33ddea7",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-city-of-novato-finance-dept"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b036f7ed092",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-partners-in-communication"
+      },
+      {
+        "amount": 30000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b03b46dbc62",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-community-corrections-institute"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b064fd1793f",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-medical-solutions-llc-temp-nursing"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b0be01c40f5",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-miller-pamela"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b0da288b842",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-edesignc"
+      },
+      {
+        "amount": 48060,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b2085e37322",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-vivalon"
+      },
+      {
+        "amount": 13000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b20df7a5d0a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ca-mental-health-services-authority"
+      },
+      {
+        "amount": 16000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b2651823cfa",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-medici-kathryn"
+      },
+      {
+        "amount": 2100,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b2da8fe7745",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-tavenner-janis-l"
+      },
+      {
+        "amount": 3709,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b3e936a7d6d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-goring-and-straja-architects"
+      },
+      {
+        "amount": 40000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b48e87ad39d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-whistlestop"
+      },
+      {
+        "amount": 25000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b4d009bc151",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-big-cat-advertising"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b5db2e37eae",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-integrated-community-services"
+      },
+      {
+        "amount": 44300,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b651a00dd39",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ross-drulis-cusenbery-arch"
+      },
+      {
+        "amount": 2575,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b699ffaed90",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-monte-deignan-associates"
+      },
+      {
+        "amount": 8836,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b890c9eda92",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-on-point-land-management"
+      },
+      {
+        "amount": 37557,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b8b265e3f86",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-tlc-child-family-services"
+      },
+      {
+        "amount": 34176,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b8fc79e1e9f",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-mpsf-marin-speaker-series"
+      },
+      {
+        "amount": 3450,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b9861be06fa",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-environmental-technical-service"
+      },
+      {
+        "amount": 33000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0b987ebe8840",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-alcohol-justice"
+      },
+      {
+        "amount": 7102,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0bb6d15c8eac",
+        "source_name": null,
+        "target_name": "Miller Pacific Engineering Group"
+      },
+      {
+        "amount": 25000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0bb73b2a16dd",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-mj-designs-education-and-admin-support"
+      },
+      {
+        "amount": 6500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0bbea721ec3a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-kittelson-associates"
+      },
+      {
+        "amount": 49850,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0bc96005a03e",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-lampkin-javon-deshay"
+      },
+      {
+        "amount": 47428,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0bca518baf84",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-city-community-development"
+      },
+      {
+        "amount": 8350,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0bd2cebe1649",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-reach-strategies"
+      },
+      {
+        "amount": 35000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0bd6a46c6614",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-harris-associates"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0be8d20d1967",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-spahr-center"
+      },
+      {
+        "amount": 8000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0bf5d84d9748",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-indif-technologies"
+      },
+      {
+        "amount": 2805,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c0087a2fdc2",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-monte-deignan-associates"
+      },
+      {
+        "amount": 15500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c0c5160adfd",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ross-valley-school-district"
+      },
+      {
+        "amount": 6000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c14266f91cc",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-barkan-consulting-group"
+      },
+      {
+        "amount": 40000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c1b9c59978e",
+        "source_name": null,
+        "target_name": "Community Action Marin"
+      },
+      {
+        "amount": 33446,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c2ad7278f31",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-the-analytical-moose"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c2b1a9c08e2",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-biddle-consulting-group"
+      },
+      {
+        "amount": 5000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c2c2295ac46",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-kroll-information-assurance"
+      },
+      {
+        "amount": 2810,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c3019f97368",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-commonlook"
+      },
+      {
+        "amount": 4500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c36960fdab6",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-preparative-consulting"
+      },
+      {
+        "amount": 27000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c576b437ed6",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-wilson-events"
+      },
+      {
+        "amount": 5500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c5ef12ffd72",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-wilson-shanti"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c6a85e0fb94",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-turner-jimmie-r"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c6cb62012c4",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-city-community-services-district"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c742425524d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-harris-lee-environmental-sciences"
+      },
+      {
+        "amount": 8928,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c81c9e98d18",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-county-of-solano"
+      },
+      {
+        "amount": 11895,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c832b8052cd",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-catholic-high-school-dba-marin-catholic-parents-assoc"
+      },
+      {
+        "amount": 30000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0c98fb4c13cf",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-smothers-cheryle-l-roberts"
+      },
+      {
+        "amount": 9380,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0cb3848f3acd",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-utility-management-services-marin-energy-watch"
+      },
+      {
+        "amount": 7500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0cc1c067de3f",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-dan-cloak-environmental-consult"
+      },
+      {
+        "amount": 11000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0cc6e8e31aa6",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-gerstandt-joseph-d"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0cddd522ec42",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-lilliput-children-s-services"
+      },
+      {
+        "amount": 30000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0ceca0fc0e69",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-community-corrections-institute"
+      },
+      {
+        "amount": 11695,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0cffc8073f5d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-deborha-mann-productions"
+      },
+      {
+        "amount": 4500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d07e1667ef6",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-kondy-berberich-tamar"
+      },
+      {
+        "amount": 33000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d0b1420968a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-bambini-yoga-project"
+      },
+      {
+        "amount": 6720,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d14f92b32a2",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-city-of-novato-finance-dept"
+      },
+      {
+        "amount": 7200,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d175d8d4c0c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-rj-ricciardi-inc-certified-public-accountants"
+      },
+      {
+        "amount": 40000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d1dcce556fe",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-miramontes-giovanni"
+      },
+      {
+        "amount": 25415,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d1e872edecb",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-gillenwater-consulting"
+      },
+      {
+        "amount": 7440,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d22c677c98f",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-bright-star-security"
+      },
+      {
+        "amount": 6900,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d2989c4c3a5",
+        "source_name": null,
+        "target_name": "ILS Associates"
+      },
+      {
+        "amount": 1200,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d2b243b1324",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-panoramic-software"
+      },
+      {
+        "amount": 17000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d3d805dd1bb",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-technology-4-life"
+      },
+      {
+        "amount": 1565,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d49589aa8b4",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-fern-loiacono-golden-gate-shows"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d593503c884",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-jewish-family-children-s-service"
+      },
+      {
+        "amount": 7000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d5cbfc3df56",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-rj-ricciardi-inc-certified-public-accountants"
+      },
+      {
+        "amount": 16000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d668e82804b",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-conklin-de-decker-associates"
+      },
+      {
+        "amount": 30000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d6a7ce597d5",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-treatment-center"
+      },
+      {
+        "amount": 19500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d6b71d2de70",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-paul-elizondo-do"
+      },
+      {
+        "amount": 17000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d77e6a6ab24",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-technology-4-life"
+      },
+      {
+        "amount": 23744,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d8b51ebff06",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-biomaas"
+      },
+      {
+        "amount": 5000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d8d5e0003c9",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-raker-christopher-william"
+      },
+      {
+        "amount": 25000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0d97c6a7fb3e",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-miller-carol-a"
+      },
+      {
+        "amount": 5000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0db1e5e09423",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-harris-lee-environmental-sciences"
+      },
+      {
+        "amount": 37700,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0dc24e28e6be",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-barbier-security-group"
+      },
+      {
+        "amount": 4000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0dc45f2896d9",
+        "source_name": null,
+        "target_name": "Miller Pacific Engineering Group"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0dc69eea93b1",
+        "source_name": null,
+        "target_name": "Marin Community Clinics"
+      },
+      {
+        "amount": 16647,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0dcc1bf57bb6",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-extrafood-org"
+      },
+      {
+        "amount": 27150,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0dcda15a3d31",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-tamarack-management"
+      },
+      {
+        "amount": 13300,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0dd66e12fc63",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-smith-associates-environmental-health-safety"
+      },
+      {
+        "amount": 27750,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0dd7304c2bc0",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-jewish-family-children-s-service"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0ddfcd609d0e",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-sanzuma"
+      },
+      {
+        "amount": 2200,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0df058f023fe",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-stacey-clarke-graphic-design"
+      },
+      {
+        "amount": 38000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0df4f2828f8e",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-golden-gate-national-parks-conservancy"
+      },
+      {
+        "amount": 25000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e04b1eea910",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-nomad-ecology"
+      },
+      {
+        "amount": 38500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e09e7603c70",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-bmi-imaging-systems"
+      },
+      {
+        "amount": 28750,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e25419f7922",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ralph-anderson-associates"
+      },
+      {
+        "amount": 48900,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e3692696a80",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-sloan-sakai-yeung-wong"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e3abf14737e",
+        "source_name": null,
+        "target_name": "NIELSEN MERKSAMER PARRINELLO GROSS & LEONI LLP"
+      },
+      {
+        "amount": 6000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e4e3f428866",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-amicable"
+      },
+      {
+        "amount": 40000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e4e63aef9f6",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-zimny-teresa"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e513fee45bc",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-holmes-structures"
+      },
+      {
+        "amount": 28000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e614dc324c7",
+        "source_name": null,
+        "target_name": "Community Action Marin"
+      },
+      {
+        "amount": 5000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e61af85c9b8",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-kleinfelder"
+      },
+      {
+        "amount": 30500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e681c0d40df",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-mgt-of-america-consulting"
+      },
+      {
+        "amount": 1500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e6a7d867789",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-vivalon"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e6d596bdd0e",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-molina-carlos-r"
+      },
+      {
+        "amount": 48960,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e725f7071d7",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-wall-edward-k"
+      },
+      {
+        "amount": 5000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e7784a400be",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-miyoko-s-kitchen"
+      },
+      {
+        "amount": 49600,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e79267e13b9",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-zoon-engineering"
+      },
+      {
+        "amount": 8163,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e7fa5e72fba",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-incontext"
+      },
+      {
+        "amount": 3600,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e812a4db453",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-stuart-lirette-photography"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e89003e409c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-miller-pamela"
+      },
+      {
+        "amount": 35000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0e8e343e7b9f",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-bay-area-community-resources-bacr"
+      },
+      {
+        "amount": 49500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0eac576cc956",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-rizzardo-dena"
+      },
+      {
+        "amount": 15000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0eba99b9d07e",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-lagunitas-school-district"
+      },
+      {
+        "amount": 2496,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0ec5cb3a2ee5",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-commonlook"
+      },
+      {
+        "amount": 10915,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0ed12c597e09",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-catholic-hs-dba-marin-catholic-parents-assoc"
+      },
+      {
+        "amount": 18700,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0ed30a1c18f1",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-gore-linda-u"
+      },
+      {
+        "amount": 30000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0ed520387374",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-audubon-california"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0ee31408a445",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ever-well-integrated-health"
+      },
+      {
+        "amount": 10800,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0eeea4328dc7",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-powers-consulting"
+      },
+      {
+        "amount": 9000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0efa44045550",
+        "source_name": null,
+        "target_name": "Town of Tiburon"
+      },
+      {
+        "amount": 23800,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0efedaa79320",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-maria-jose-prieto-de-estebecorena"
+      },
+      {
+        "amount": 49000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0f0172d011ce",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-balance-hydrologics"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0f01e49b34e7",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-gleicher-law-office-pc"
+      },
+      {
+        "amount": 9500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0f02047108b2",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-cliftonlarsonallen"
+      },
+      {
+        "amount": 49495,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0f1699ef2b4d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-rainwater-and-associates"
+      },
+      {
+        "amount": 44500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0f235df1bc36",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-golden-gate-pharmacy-services"
+      },
+      {
+        "amount": 26640,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0f35861efae6",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-baye-peter-robert"
+      },
+      {
+        "amount": 4675,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0f3e535ff68a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-deanna-and-david-llc-dba-just-dance"
+      },
+      {
+        "amount": 25000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0f5102b49dde",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-legal-aid-of-marin"
+      },
+      {
+        "amount": 7499,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0f521b79d134",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-rainwater-and-associates"
+      },
+      {
+        "amount": 34750,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0f621ae078cb",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-davis-research"
+      },
+      {
+        "amount": 49775,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0f9340ef80ab",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-amistad-associates"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0f9c15efd884",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-rise-above-touring"
+      },
+      {
+        "amount": 20000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0faed762821f",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-bolinas-community-center"
+      },
+      {
+        "amount": 30450,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0fb1603ce750",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-csw-stuber-stroeh-engineering-group"
+      },
+      {
+        "amount": 4284,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0fc054c75def",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-incontext"
+      },
+      {
+        "amount": 22528,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0fe5b0d8fe5c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-prima-medical-foundation"
+      },
+      {
+        "amount": 35000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-0ffa7afc61b2",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-state-of-california"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-1011333d6bae",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-shute-mihaly-weinberger"
+      },
+      {
+        "amount": 9310,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-10187528eefd",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-caw-architects"
+      },
+      {
+        "amount": 1200,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-104b8670539a",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-indig-steve"
+      },
+      {
+        "amount": 23000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-105829e8b752",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-fortezza-diversified-services"
+      },
+      {
+        "amount": 9975,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-106994600d05",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-dan-cloak-environmental-consulting"
+      },
+      {
+        "amount": 24090,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-10739b018b50",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-hannah-haylea"
+      },
+      {
+        "amount": 17300,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-10743d1919ab",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-the-marin-aging-disability-institute"
+      },
+      {
+        "amount": 5440,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-1077c752e3f2",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-craig-d-crispin-dds"
+      },
+      {
+        "amount": 13440,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-107da90461ab",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-crispin-craig-douglas"
+      },
+      {
+        "amount": 2843,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-108e6804d633",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-services-for-men"
+      },
+      {
+        "amount": 4500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-10dff14a5528",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-nurse-logistics"
+      },
+      {
+        "amount": 49792,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-10f93b82a7ad",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-west-marin-senior-services"
+      },
+      {
+        "amount": 48240,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-10f963124f58",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-it"
+      },
+      {
+        "amount": 10918,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-10fddbf97a22",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-learning-tree-international"
+      },
+      {
+        "amount": 6855,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-111449ecdbf1",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-symphony-association"
+      },
+      {
+        "amount": 25000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-1140cee09c5d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-csw-stuber-stroeh-engineering-group"
+      },
+      {
+        "amount": 41310,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-11454f3ef196",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-olofson-environmental"
+      },
+      {
+        "amount": 42000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-115c4c155c44",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-mgt-of-america-consulting"
+      },
+      {
+        "amount": 46772,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-116871457067",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-rotacare-bay-area"
+      },
+      {
+        "amount": 17500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-11728f456970",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-roth-lamotte-landscape-architecture"
+      },
+      {
+        "amount": 5700,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-117bf6683aa8",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-symphony-association"
+      },
+      {
+        "amount": 5000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-118ad7628fc9",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-wood-rodgers"
+      },
+      {
+        "amount": 3630,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-11903e9f20b5",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-symphony-association"
+      },
+      {
+        "amount": 49900,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-119617768ee3",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ctek-security"
+      },
+      {
+        "amount": 3500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-11a333069b1d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-dehner-stephanie"
+      },
+      {
+        "amount": 21000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-11a64d57cb06",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-celayix-software"
+      },
+      {
+        "amount": 5550,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-11aae45229bb",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-the-consulting-team"
+      },
+      {
+        "amount": 19635,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-11b414e5e76c",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marinspace"
+      },
+      {
+        "amount": 10400,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-11be3a201a9f",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-evans-and-de-shazo"
+      },
+      {
+        "amount": 2500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-11cf8800ce01",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-contractor-compliance-monitoring"
+      },
+      {
+        "amount": 10000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-11d04cddc9ce",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-colin-hamblin-a-professional-medical"
+      },
+      {
+        "amount": 8000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-11e313ecd6ab",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-markels-alex-s"
+      },
+      {
+        "amount": 11000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-11e42b163ae0",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-villages"
+      },
+      {
+        "amount": 16000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-11eb32680cab",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-medici-kathryn"
+      },
+      {
+        "amount": 45000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-11ed806bf84f",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-marin-family-action"
+      },
+      {
+        "amount": 3000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-11fa22135e97",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-john-lessley-quality-innovations"
+      },
+      {
+        "amount": 50000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-11ff119316fe",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-park-engineering"
+      },
+      {
+        "amount": 48759,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-12039e122d09",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-jumb-technology-services"
+      },
+      {
+        "amount": 40655,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-1203e7adbb88",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-salas-o-brien"
+      },
+      {
+        "amount": 9495,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-1210b500dcf9",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-miller-management-consulting-group"
+      },
+      {
+        "amount": 18184,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-1214bed079ae",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-m-lee-corporation"
+      },
+      {
+        "amount": 35000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-121677888549",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-spahr-center"
+      },
+      {
+        "amount": 25000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-1219e4d5f332",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-jones-lorenzo"
+      },
+      {
+        "amount": 27500,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-121d1f427bc2",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-ralph-andersen-associates"
+      },
+      {
+        "amount": 5000,
+        "flow_date": null,
+        "flow_type": "delegated_contract",
+        "id": "moneyflow-marincontract-12232ba0e32d",
+        "source_name": null,
+        "target_name": "org-marincontract-recipient-kittelson-associates"
+      }
+    ],
+    "slug": "money-flows-by-year"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/data/money-flows-by-year"
+  }
+}

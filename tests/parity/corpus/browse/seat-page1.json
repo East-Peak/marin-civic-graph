@@ -1,0 +1,428 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "title",
+        "label": "Title"
+      },
+      {
+        "key": "institution_name",
+        "label": "Institution"
+      }
+    ],
+    "next_cursor": "seat-san-rafael-mayor-at-large",
+    "rows": [
+      {
+        "id": "seat-belvedere-seat-1",
+        "institution_name": null,
+        "route": "/seat/belvedere-seat-1",
+        "search_label": "Seat 1",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-belvedere-seat-2",
+        "institution_name": null,
+        "route": "/seat/belvedere-seat-2",
+        "search_label": "Seat 2",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-belvedere-seat-3",
+        "institution_name": null,
+        "route": "/seat/belvedere-seat-3",
+        "search_label": "Seat 3",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-belvedere-seat-4",
+        "institution_name": null,
+        "route": "/seat/belvedere-seat-4",
+        "search_label": "Seat 4",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-belvedere-seat-5",
+        "institution_name": null,
+        "route": "/seat/belvedere-seat-5",
+        "search_label": "Seat 5",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-corte-madera-seat-1",
+        "institution_name": null,
+        "route": "/seat/corte-madera-seat-1",
+        "search_label": "Seat 1",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-corte-madera-seat-2",
+        "institution_name": null,
+        "route": "/seat/corte-madera-seat-2",
+        "search_label": "Seat 2",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-corte-madera-seat-3",
+        "institution_name": null,
+        "route": "/seat/corte-madera-seat-3",
+        "search_label": "Seat 3",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-corte-madera-seat-4",
+        "institution_name": null,
+        "route": "/seat/corte-madera-seat-4",
+        "search_label": "Seat 4",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-corte-madera-seat-5",
+        "institution_name": null,
+        "route": "/seat/corte-madera-seat-5",
+        "search_label": "Seat 5",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-fairfax-seat-1",
+        "institution_name": null,
+        "route": "/seat/fairfax-seat-1",
+        "search_label": "Seat 1",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-fairfax-seat-2",
+        "institution_name": null,
+        "route": "/seat/fairfax-seat-2",
+        "search_label": "Seat 2",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-fairfax-seat-3",
+        "institution_name": null,
+        "route": "/seat/fairfax-seat-3",
+        "search_label": "Seat 3",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-fairfax-seat-4",
+        "institution_name": null,
+        "route": "/seat/fairfax-seat-4",
+        "search_label": "Seat 4",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-fairfax-seat-5",
+        "institution_name": null,
+        "route": "/seat/fairfax-seat-5",
+        "search_label": "Seat 5",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-larkspur-seat-1",
+        "institution_name": null,
+        "route": "/seat/larkspur-seat-1",
+        "search_label": "Seat 1",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-larkspur-seat-2",
+        "institution_name": null,
+        "route": "/seat/larkspur-seat-2",
+        "search_label": "Seat 2",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-larkspur-seat-3",
+        "institution_name": null,
+        "route": "/seat/larkspur-seat-3",
+        "search_label": "Seat 3",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-larkspur-seat-4",
+        "institution_name": null,
+        "route": "/seat/larkspur-seat-4",
+        "search_label": "Seat 4",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-larkspur-seat-5",
+        "institution_name": null,
+        "route": "/seat/larkspur-seat-5",
+        "search_label": "Seat 5",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-marin-county-district-1",
+        "institution_name": null,
+        "route": "/seat/marin-county-district-1",
+        "search_label": "District 1",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-marin-county-district-2",
+        "institution_name": null,
+        "route": "/seat/marin-county-district-2",
+        "search_label": "District 2",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-marin-county-district-3",
+        "institution_name": null,
+        "route": "/seat/marin-county-district-3",
+        "search_label": "District 3",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-marin-county-district-4",
+        "institution_name": null,
+        "route": "/seat/marin-county-district-4",
+        "search_label": "District 4",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-marin-county-district-5",
+        "institution_name": null,
+        "route": "/seat/marin-county-district-5",
+        "search_label": "District 5",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-mill-valley-seat-1",
+        "institution_name": null,
+        "route": "/seat/mill-valley-seat-1",
+        "search_label": "Seat 1",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-mill-valley-seat-2",
+        "institution_name": null,
+        "route": "/seat/mill-valley-seat-2",
+        "search_label": "Seat 2",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-mill-valley-seat-3",
+        "institution_name": null,
+        "route": "/seat/mill-valley-seat-3",
+        "search_label": "Seat 3",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-mill-valley-seat-4",
+        "institution_name": null,
+        "route": "/seat/mill-valley-seat-4",
+        "search_label": "Seat 4",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-mill-valley-seat-5",
+        "institution_name": null,
+        "route": "/seat/mill-valley-seat-5",
+        "search_label": "Seat 5",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-novato-district-1",
+        "institution_name": null,
+        "route": "/seat/novato-district-1",
+        "search_label": "District 1",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-novato-district-2",
+        "institution_name": null,
+        "route": "/seat/novato-district-2",
+        "search_label": "District 2",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-novato-district-3",
+        "institution_name": null,
+        "route": "/seat/novato-district-3",
+        "search_label": "District 3",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-novato-district-4",
+        "institution_name": null,
+        "route": "/seat/novato-district-4",
+        "search_label": "District 4",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-novato-district-5",
+        "institution_name": null,
+        "route": "/seat/novato-district-5",
+        "search_label": "District 5",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-ross-seat-1",
+        "institution_name": null,
+        "route": "/seat/ross-seat-1",
+        "search_label": "Seat 1",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-ross-seat-2",
+        "institution_name": null,
+        "route": "/seat/ross-seat-2",
+        "search_label": "Seat 2",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-ross-seat-3",
+        "institution_name": null,
+        "route": "/seat/ross-seat-3",
+        "search_label": "Seat 3",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-ross-seat-4",
+        "institution_name": null,
+        "route": "/seat/ross-seat-4",
+        "search_label": "Seat 4",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-ross-seat-5",
+        "institution_name": null,
+        "route": "/seat/ross-seat-5",
+        "search_label": "Seat 5",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-san-anselmo-seat-1",
+        "institution_name": null,
+        "route": "/seat/san-anselmo-seat-1",
+        "search_label": "Seat 1",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-san-anselmo-seat-2",
+        "institution_name": null,
+        "route": "/seat/san-anselmo-seat-2",
+        "search_label": "Seat 2",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-san-anselmo-seat-3",
+        "institution_name": null,
+        "route": "/seat/san-anselmo-seat-3",
+        "search_label": "Seat 3",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-san-anselmo-seat-4",
+        "institution_name": null,
+        "route": "/seat/san-anselmo-seat-4",
+        "search_label": "Seat 4",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-san-anselmo-seat-5",
+        "institution_name": null,
+        "route": "/seat/san-anselmo-seat-5",
+        "search_label": "Seat 5",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-san-rafael-city-council-district-1",
+        "institution_name": null,
+        "route": "/seat/san-rafael-city-council-district-1",
+        "search_label": "District 1 Councilmember",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-san-rafael-city-council-district-2",
+        "institution_name": null,
+        "route": "/seat/san-rafael-city-council-district-2",
+        "search_label": "District 2 Councilmember",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-san-rafael-city-council-district-3",
+        "institution_name": null,
+        "route": "/seat/san-rafael-city-council-district-3",
+        "search_label": "District 3 Councilmember",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-san-rafael-city-council-district-4",
+        "institution_name": null,
+        "route": "/seat/san-rafael-city-council-district-4",
+        "search_label": "District 4 Councilmember",
+        "title": null,
+        "type": "Seat"
+      },
+      {
+        "id": "seat-san-rafael-mayor-at-large",
+        "institution_name": null,
+        "route": "/seat/san-rafael-mayor-at-large",
+        "search_label": "Mayor",
+        "title": null,
+        "type": "Seat"
+      }
+    ],
+    "type": "Seat"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/seat"
+  }
+}

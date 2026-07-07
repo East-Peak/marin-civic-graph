@@ -1,0 +1,515 @@
+{
+  "http_status": 200,
+  "payload": {
+    "query": "marin county",
+    "results": [
+      {
+        "id": "place-marin-county",
+        "jurisdiction": null,
+        "key_fact": "Marin County",
+        "last_activity": "2026-04-15",
+        "rank": 100,
+        "route": "/place/marin-county",
+        "search_label": "Marin County",
+        "type": "Place"
+      },
+      {
+        "id": "org-marin-county",
+        "jurisdiction": null,
+        "key_fact": "Marin County \u00b7 county_government",
+        "last_activity": "2022-03-16",
+        "rank": 72,
+        "route": "/organization/marin-county",
+        "search_label": "Marin County",
+        "type": "Organization"
+      },
+      {
+        "id": "org-county-of-marin",
+        "jurisdiction": null,
+        "key_fact": "County of Marin",
+        "last_activity": "2024-02-27",
+        "rank": 91,
+        "route": "/organization/county-of-marin",
+        "search_label": "County of Marin",
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-county-elections",
+        "jurisdiction": null,
+        "key_fact": "Marin County Elections",
+        "last_activity": "2022-08-12",
+        "rank": 73,
+        "route": "/organization/marin-county-elections",
+        "search_label": "Marin County Elections",
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-county-firefighters",
+        "jurisdiction": null,
+        "key_fact": "Marin County Firefighters",
+        "last_activity": "2023-02-07",
+        "rank": 70,
+        "route": "/organization/marin-county-firefighters",
+        "search_label": "Marin County Firefighters",
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-county-elections-department",
+        "jurisdiction": null,
+        "key_fact": "Marin County Elections Department",
+        "last_activity": "2024-12-16",
+        "rank": 89,
+        "route": "/organization/marin-county-elections-department",
+        "search_label": "Marin County Elections Department",
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-county-library-foundation",
+        "jurisdiction": null,
+        "key_fact": "Marin County Library Foundation",
+        "last_activity": "2025-06-05",
+        "rank": 89,
+        "route": "/organization/marin-county-library-foundation",
+        "search_label": "Marin County Library Foundation",
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-county-bike-coalition",
+        "jurisdiction": null,
+        "key_fact": "Marin County Bike Coalition",
+        "last_activity": "2024-11-11",
+        "rank": 84,
+        "route": "/organization/marin-county-bike-coalition",
+        "search_label": "Marin County Bike Coalition",
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-county-young-democrats",
+        "jurisdiction": null,
+        "key_fact": "Marin County Young Democrats",
+        "last_activity": "2024-08-09",
+        "rank": 83,
+        "route": "/organization/marin-county-young-democrats",
+        "search_label": "Marin County Young Democrats",
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-county-young-democrarts",
+        "jurisdiction": null,
+        "key_fact": "Marin County Young Democrarts",
+        "last_activity": "2024-08-28",
+        "rank": 82,
+        "route": "/organization/marin-county-young-democrarts",
+        "search_label": "Marin County Young Democrarts",
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-county-election-dept",
+        "jurisdiction": null,
+        "key_fact": "Marin County Election Dept",
+        "last_activity": "2024-07-17",
+        "rank": 81,
+        "route": "/organization/marin-county-election-dept",
+        "search_label": "Marin County Election Dept",
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-county-election-department",
+        "jurisdiction": null,
+        "key_fact": "Marin County Election Department",
+        "last_activity": "2022-03-04",
+        "rank": 71,
+        "route": "/organization/marin-county-election-department",
+        "search_label": "Marin County Election Department",
+        "type": "Organization"
+      },
+      {
+        "id": "org-county-of-marin-elections",
+        "jurisdiction": null,
+        "key_fact": "County of Marin -Elections",
+        "last_activity": "2022-02-28",
+        "rank": 70,
+        "route": "/organization/county-of-marin-elections",
+        "search_label": "County of Marin -Elections",
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-county-firefighters-pac",
+        "jurisdiction": null,
+        "key_fact": "Marin County Firefighters PAC",
+        "last_activity": "2019-09-20",
+        "rank": 70,
+        "route": "/organization/marin-county-firefighters-pac",
+        "search_label": "Marin County Firefighters PAC",
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-county-board-of-supervisors",
+        "jurisdiction": null,
+        "key_fact": "Marin County Board of Supervisors \u00b7 government",
+        "last_activity": "2026-04-07",
+        "rank": 100,
+        "route": "/organization/marin-county-board-of-supervisors",
+        "search_label": "Marin County Board of Supervisors",
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-county-republican-central-committee",
+        "jurisdiction": null,
+        "key_fact": "Marin County Republican Central Committee",
+        "last_activity": "2025-07-31",
+        "rank": 90,
+        "route": "/organization/marin-county-republican-central-committee",
+        "search_label": "Marin County Republican Central Committee",
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-county-registrar-of-voters",
+        "jurisdiction": null,
+        "key_fact": "Marin County Registrar of Voters",
+        "last_activity": "2024-10-30",
+        "rank": 87,
+        "route": "/organization/marin-county-registrar-of-voters",
+        "search_label": "Marin County Registrar of Voters",
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-county-department-of-elections",
+        "jurisdiction": null,
+        "key_fact": "MARIN COUNTY DEPARTMENT OF ELECTIONS",
+        "last_activity": "2024-10-31",
+        "rank": 85,
+        "route": "/organization/marin-county-department-of-elections",
+        "search_label": "MARIN COUNTY DEPARTMENT OF ELECTIONS",
+        "type": "Organization"
+      },
+      {
+        "id": "org-county-of-marin-elections-department",
+        "jurisdiction": null,
+        "key_fact": "County of Marin Elections Department",
+        "last_activity": "2024-08-22",
+        "rank": 83,
+        "route": "/organization/county-of-marin-elections-department",
+        "search_label": "County of Marin Elections Department",
+        "type": "Organization"
+      },
+      {
+        "id": "org-sonoma-county-conservation-action",
+        "jurisdiction": null,
+        "key_fact": "Sonoma County Conservation Action",
+        "last_activity": "2025-12-16",
+        "rank": 95,
+        "route": "/organization/sonoma-county-conservation-action",
+        "search_label": "Sonoma County Conservation Action",
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-county-deputy-sheriffs-association",
+        "jurisdiction": null,
+        "key_fact": "Marin County Deputy Sheriffs Association",
+        "last_activity": "2024-04-30",
+        "rank": 79,
+        "route": "/organization/marin-county-deputy-sheriffs-association",
+        "search_label": "Marin County Deputy Sheriffs Association",
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-county-sheriff-assoc-pac",
+        "jurisdiction": null,
+        "key_fact": "Marin County Sheriff Assoc PAC.",
+        "last_activity": "2021-07-14",
+        "rank": 70,
+        "route": "/organization/marin-county-sheriff-assoc-pac",
+        "search_label": "Marin County Sheriff Assoc PAC.",
+        "type": "Organization"
+      },
+      {
+        "id": "agreement-350-merrydale-county-grant",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale county grant agreement",
+        "last_activity": "2025-11-17",
+        "rank": 86,
+        "route": "/agreement/350-merrydale-county-grant",
+        "search_label": "350 Merrydale county grant agreement",
+        "type": "Agreement"
+      },
+      {
+        "id": "org-marin-county-deputy-sheriffs-association-pac",
+        "jurisdiction": null,
+        "key_fact": "Marin County Deputy Sheriffs' Association PAC",
+        "last_activity": "2022-05-16",
+        "rank": 71,
+        "route": "/organization/marin-county-deputy-sheriffs-association-pac",
+        "search_label": "Marin County Deputy Sheriffs' Association PAC",
+        "type": "Organization"
+      },
+      {
+        "id": "org-sackett-for-marin-county-supervisor-2026-mary",
+        "jurisdiction": null,
+        "key_fact": "Sackett for Marin County Supervisor 2026",
+        "last_activity": "2023-12-20",
+        "rank": 76,
+        "route": "/organization/sackett-for-marin-county-supervisor-2026-mary",
+        "search_label": "Sackett for Marin County Supervisor 2026",
+        "type": "Organization"
+      },
+      {
+        "id": "org-mary-sackett-for-marin-county-supervisor-2026",
+        "jurisdiction": null,
+        "key_fact": "Mary Sackett for Marin County Supervisor 2026",
+        "last_activity": "2025-06-26",
+        "rank": 91,
+        "route": "/organization/mary-sackett-for-marin-county-supervisor-2026",
+        "search_label": "Mary Sackett for Marin County Supervisor 2026",
+        "type": "Organization"
+      },
+      {
+        "id": "org-magali-limeta-for-marin-county-supervisor-2026",
+        "jurisdiction": null,
+        "key_fact": "Magali Limeta for Marin County Supervisor 2026",
+        "last_activity": "2025-07-25",
+        "rank": 89,
+        "route": "/organization/magali-limeta-for-marin-county-supervisor-2026",
+        "search_label": "Magali Limeta for Marin County Supervisor 2026",
+        "type": "Organization"
+      },
+      {
+        "id": "org-sackett-for-marin-county-supervisor-2022-mary",
+        "jurisdiction": null,
+        "key_fact": "Sackett for Marin County Supervisor 2022",
+        "last_activity": "2022-05-18",
+        "rank": 70,
+        "route": "/organization/sackett-for-marin-county-supervisor-2022-mary",
+        "search_label": "Sackett for Marin County Supervisor 2022",
+        "type": "Organization"
+      },
+      {
+        "id": "org-friends-of-the-marin-county-free-library",
+        "jurisdiction": null,
+        "key_fact": "Friends of the Marin County Free Library",
+        "last_activity": "2025-04-10",
+        "rank": 88,
+        "route": "/organization/friends-of-the-marin-county-free-library",
+        "search_label": "Friends of the Marin County Free Library",
+        "type": "Organization"
+      },
+      {
+        "id": "committee-netfile-1356291",
+        "jurisdiction": null,
+        "key_fact": "Yes on B for Marin County Library, committee major funding from Friends of Marin County Free Library and Marin County Library Foundation",
+        "last_activity": "2025-07-01",
+        "rank": 87,
+        "route": "/committee/netfile-1356291",
+        "search_label": "Yes on B for Marin County Library, committee major funding from Friends of Marin County Free Library and Marin County Library Foundation",
+        "type": "Committee"
+      },
+      {
+        "id": "org-eric-lucan-for-marin-county-supervisor-2026",
+        "jurisdiction": null,
+        "key_fact": "Eric Lucan for Marin County Supervisor 2026",
+        "last_activity": "2024-09-21",
+        "rank": 85,
+        "route": "/organization/eric-lucan-for-marin-county-supervisor-2026",
+        "search_label": "Eric Lucan for Marin County Supervisor 2026",
+        "type": "Organization"
+      },
+      {
+        "id": "decision-marin-county-bos-12750-vote-0",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-09-16",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12750-vote-0",
+        "search_label": "decision-marin-county-bos-12750-vote-0",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12750-vote-1",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-09-16",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12750-vote-1",
+        "search_label": "decision-marin-county-bos-12750-vote-1",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12750-vote-2",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-09-16",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12750-vote-2",
+        "search_label": "decision-marin-county-bos-12750-vote-2",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12750-vote-3",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-09-16",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12750-vote-3",
+        "search_label": "decision-marin-county-bos-12750-vote-3",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12765-vote-0",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-09-30",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12765-vote-0",
+        "search_label": "decision-marin-county-bos-12765-vote-0",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12765-vote-1",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-09-30",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12765-vote-1",
+        "search_label": "decision-marin-county-bos-12765-vote-1",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12765-vote-2",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-09-30",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12765-vote-2",
+        "search_label": "decision-marin-county-bos-12765-vote-2",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12765-vote-3",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-09-30",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12765-vote-3",
+        "search_label": "decision-marin-county-bos-12765-vote-3",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12765-vote-4",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-09-30",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12765-vote-4",
+        "search_label": "decision-marin-county-bos-12765-vote-4",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12765-vote-5",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-09-30",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12765-vote-5",
+        "search_label": "decision-marin-county-bos-12765-vote-5",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12765-vote-6",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-09-30",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12765-vote-6",
+        "search_label": "decision-marin-county-bos-12765-vote-6",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12765-vote-7",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-09-30",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12765-vote-7",
+        "search_label": "decision-marin-county-bos-12765-vote-7",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12765-vote-8",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-09-30",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12765-vote-8",
+        "search_label": "decision-marin-county-bos-12765-vote-8",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12765-vote-9",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-09-30",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12765-vote-9",
+        "search_label": "decision-marin-county-bos-12765-vote-9",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12771-vote-0",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-10-14",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12771-vote-0",
+        "search_label": "decision-marin-county-bos-12771-vote-0",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12771-vote-1",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-10-14",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12771-vote-1",
+        "search_label": "decision-marin-county-bos-12771-vote-1",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12771-vote-2",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-10-14",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12771-vote-2",
+        "search_label": "decision-marin-county-bos-12771-vote-2",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12771-vote-3",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-10-14",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12771-vote-3",
+        "search_label": "decision-marin-county-bos-12771-vote-3",
+        "type": "Decision"
+      },
+      {
+        "id": "decision-marin-county-bos-12771-vote-4",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2025-10-14",
+        "rank": 89,
+        "route": "/decision/marin-county-bos-12771-vote-4",
+        "search_label": "decision-marin-county-bos-12771-vote-4",
+        "type": "Decision"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "q": "marin county"
+    },
+    "url_path": "/api/search"
+  }
+}

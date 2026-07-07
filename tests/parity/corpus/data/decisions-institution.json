@@ -1,0 +1,107 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "alignment": "left",
+        "key": "decided_at",
+        "label": "Decided at",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "title",
+        "label": "Title",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "institution_name",
+        "label": "Institution",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "id",
+        "label": "Decision id",
+        "link": "entity-route"
+      }
+    ],
+    "rows": [
+      {
+        "decided_at": "2026-02-17",
+        "id": "decision-2026-06-02-san-rafael-library-special-call",
+        "institution_name": "San Rafael City Council",
+        "title": "Call the June 2, 2026 special election for the library services parcel-tax measure \u00b7 2026-02-17"
+      },
+      {
+        "decided_at": "2025-04-07",
+        "id": "decision-2025-04-07-noll-tam-second-amendment",
+        "institution_name": "San Rafael City Council",
+        "title": "decision-2025-04-07-noll-tam-second-amendment \u00b7 2025-04-07"
+      },
+      {
+        "decided_at": "2025-04-07",
+        "id": "decision-2025-04-07-unger-second-amendment",
+        "institution_name": "San Rafael City Council",
+        "title": "decision-2025-04-07-unger-second-amendment \u00b7 2025-04-07"
+      },
+      {
+        "decided_at": "2024-12-16",
+        "id": "decision-2024-11-05-san-rafael-general-results",
+        "institution_name": "San Rafael City Council",
+        "title": "Declare canvass of returns for the November 5, 2024 general municipal election \u00b7 2024-12-16"
+      },
+      {
+        "decided_at": "2024-09-16",
+        "id": "decision-2024-09-16-unger-award",
+        "institution_name": "San Rafael City Council",
+        "title": "decision-2024-09-16-unger-award \u00b7 2024-09-16"
+      },
+      {
+        "decided_at": "2024-09-16",
+        "id": "decision-2024-09-16-unico-approval",
+        "institution_name": "San Rafael City Council",
+        "title": "decision-2024-09-16-unico-approval \u00b7 2024-09-16"
+      },
+      {
+        "decided_at": "2024-06-03",
+        "id": "decision-2024-11-05-san-rafael-initiative-submission",
+        "institution_name": "San Rafael City Council",
+        "title": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03"
+      },
+      {
+        "decided_at": "2023-09-18",
+        "id": "decision-2023-09-18-noll-tam-first-amendment",
+        "institution_name": "San Rafael City Council",
+        "title": "decision-2023-09-18-noll-tam-first-amendment \u00b7 2023-09-18"
+      },
+      {
+        "decided_at": "2022-12-19",
+        "id": "decision-2022-12-19-downtown-carnegie-grant-acceptance",
+        "institution_name": "San Rafael City Council",
+        "title": "decision-2022-12-19-downtown-carnegie-grant-acceptance \u00b7 2022-12-19"
+      },
+      {
+        "decided_at": "2020-12-07",
+        "id": "decision-2020-11-03-san-rafael-general-results",
+        "institution_name": "San Rafael City Council",
+        "title": "Declare canvass of returns for the November 3, 2020 general municipal election \u00b7 2020-12-07"
+      },
+      {
+        "decided_at": "2020-06-15",
+        "id": "decision-2020-11-03-san-rafael-general-call",
+        "institution_name": "San Rafael City Council",
+        "title": "Call the November 3, 2020 general municipal election \u00b7 2020-06-15"
+      }
+    ],
+    "slug": "san-rafael-decisions-since-2019"
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "institution_id": "org-san-rafael-city-council"
+    },
+    "url_path": "/api/data/san-rafael-decisions-since-2019"
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "http_status": 200,
+  "payload": {
+    "query": "boyd",
+    "results": [
+      {
+        "id": "person-boyd-elizabeth",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2021-10-20",
+        "rank": 72,
+        "route": "/person/boyd-elizabeth",
+        "search_label": "Elizabeth Boyd",
+        "type": "Person"
+      },
+      {
+        "id": "person-boyd-sandy",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2021-05-05",
+        "rank": 72,
+        "route": "/person/boyd-sandy",
+        "search_label": "Sandy Boyd",
+        "type": "Person"
+      },
+      {
+        "id": "person-marion-boyd",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2019-05-23",
+        "rank": 72,
+        "route": "/person/marion-boyd",
+        "search_label": "Marion Boyd",
+        "type": "Person"
+      },
+      {
+        "id": "person-boyd-keith-a",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2021-03-01",
+        "rank": 72,
+        "route": "/person/boyd-keith-a",
+        "search_label": "Keith A. Boyd",
+        "type": "Person"
+      },
+      {
+        "id": "person-shaleeta-boyd-et-al",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2023-08-11",
+        "rank": 77,
+        "route": "/person/shaleeta-boyd-et-al",
+        "search_label": "Shaleeta Boyd, et al.",
+        "type": "Person"
+      },
+      {
+        "id": "org-shaleeta-boyd-et-al",
+        "jurisdiction": null,
+        "key_fact": "Shaleeta Boyd, et al.",
+        "last_activity": "2023-08-11",
+        "rank": 75,
+        "route": "/organization/shaleeta-boyd-et-al",
+        "search_label": "Shaleeta Boyd, et al.",
+        "type": "Organization"
+      },
+      {
+        "id": "person-martin-boyd-mary-jane",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2021-03-01",
+        "rank": 72,
+        "route": "/person/martin-boyd-mary-jane",
+        "search_label": "Mary Jane Martin-Boyd",
+        "type": "Person"
+      },
+      {
+        "id": "case-boyd-v-city-of-san-rafael",
+        "jurisdiction": null,
+        "key_fact": "Boyd v. City of San Rafael \u00b7 2023-08-11",
+        "last_activity": "2024-08-19",
+        "rank": 86,
+        "route": "/case/boyd-v-city-of-san-rafael",
+        "search_label": "Boyd v. City of San Rafael",
+        "type": "Case"
+      },
+      {
+        "id": "decision-2021-05-03-san-rafael-city-council-7b-motion-approval",
+        "jurisdiction": null,
+        "key_fact": "Marin History Museum Lease of Boyd Gate house",
+        "last_activity": "2021-05-03",
+        "rank": 72,
+        "route": "/decision/2021-05-03-san-rafael-city-council-7b-motion-approval",
+        "search_label": "Marin History Museum Lease of Boyd Gate house",
+        "type": "Decision"
+      },
+      {
+        "id": "filing-form700-cmar-2019-05-23-boyd-marion-leaving-office-deputy-director-cultural-and-visitor-services-cultural-and-visitor-services",
+        "jurisdiction": null,
+        "key_fact": "Form 700",
+        "last_activity": "2019-05-23",
+        "rank": 63,
+        "route": "/filing/form700-cmar-2019-05-23-boyd-marion-leaving-office-deputy-director-cultural-and-visitor-services-cultural-and-visitor-services",
+        "search_label": "Form 700",
+        "type": "Filing"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "q": "boyd"
+    },
+    "url_path": "/api/search"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "person_name",
+        "label": "Person"
+      },
+      {
+        "key": "organization_name",
+        "label": "Organization"
+      }
+    ],
+    "next_cursor": null,
+    "rows": [],
+    "type": "Membership"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/membership"
+  }
+}

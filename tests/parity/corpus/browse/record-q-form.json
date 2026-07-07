@@ -1,0 +1,430 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "record_type",
+        "label": "Record type"
+      },
+      {
+        "key": "captured_at",
+        "label": "Captured"
+      }
+    ],
+    "next_cursor": "record-san-rafael-campaign-filing-entry-32273",
+    "rows": [
+      {
+        "captured_at": null,
+        "id": "record-kate-colin-form-803-2025-09-04",
+        "record_type": "form_803",
+        "route": "/record/kate-colin-form-803-2025-09-04",
+        "search_label": "Form 803",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-28439",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-28439",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-28450",
+        "record_type": "form_460",
+        "route": "/record/san-rafael-campaign-filing-entry-28450",
+        "search_label": "Form 460",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-28528",
+        "record_type": "form_501",
+        "route": "/record/san-rafael-campaign-filing-entry-28528",
+        "search_label": "Form 501",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-28553",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-28553",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-28554",
+        "record_type": "form_501",
+        "route": "/record/san-rafael-campaign-filing-entry-28554",
+        "search_label": "Form 501",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-28597",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-28597",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-28598",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-28598",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-28599",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-28599",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-28600",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-28600",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-28601",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-28601",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-29042",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-29042",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-29043",
+        "record_type": "form_501",
+        "route": "/record/san-rafael-campaign-filing-entry-29043",
+        "search_label": "Form 501",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-29290",
+        "record_type": "form_501",
+        "route": "/record/san-rafael-campaign-filing-entry-29290",
+        "search_label": "Form 501",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-30962",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-30962",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31108",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-31108",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31109",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-31109",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31111",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-31111",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31112",
+        "record_type": "form_460",
+        "route": "/record/san-rafael-campaign-filing-entry-31112",
+        "search_label": "Form 460",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31114",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-31114",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31115",
+        "record_type": "form_460",
+        "route": "/record/san-rafael-campaign-filing-entry-31115",
+        "search_label": "Form 460",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31116",
+        "record_type": "form_460",
+        "route": "/record/san-rafael-campaign-filing-entry-31116",
+        "search_label": "Form 460",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31117",
+        "record_type": "form_501",
+        "route": "/record/san-rafael-campaign-filing-entry-31117",
+        "search_label": "Form 501",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31430",
+        "record_type": "form_460",
+        "route": "/record/san-rafael-campaign-filing-entry-31430",
+        "search_label": "Form 460",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31440",
+        "record_type": "form_460",
+        "route": "/record/san-rafael-campaign-filing-entry-31440",
+        "search_label": "Form 460",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31480",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-31480",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31484",
+        "record_type": "form_497",
+        "route": "/record/san-rafael-campaign-filing-entry-31484",
+        "search_label": "Form 497",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31485",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-31485",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31874",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-31874",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31875",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-31875",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31876",
+        "record_type": "form_470",
+        "route": "/record/san-rafael-campaign-filing-entry-31876",
+        "search_label": "Form 470",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31877",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-31877",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31935",
+        "record_type": "form_460",
+        "route": "/record/san-rafael-campaign-filing-entry-31935",
+        "search_label": "Form 460",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31936",
+        "record_type": "form_460",
+        "route": "/record/san-rafael-campaign-filing-entry-31936",
+        "search_label": "Form 460",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31937",
+        "record_type": "form_460",
+        "route": "/record/san-rafael-campaign-filing-entry-31937",
+        "search_label": "Form 460",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31941",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-31941",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-31943",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-31943",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-32103",
+        "record_type": "form_460",
+        "route": "/record/san-rafael-campaign-filing-entry-32103",
+        "search_label": "Form 460",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-32132",
+        "record_type": "form_497",
+        "route": "/record/san-rafael-campaign-filing-entry-32132",
+        "search_label": "Form 497",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-32161",
+        "record_type": "form_410",
+        "route": "/record/san-rafael-campaign-filing-entry-32161",
+        "search_label": "Form 410",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-32163",
+        "record_type": "form_470",
+        "route": "/record/san-rafael-campaign-filing-entry-32163",
+        "search_label": "Form 470",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-32221",
+        "record_type": "form_497",
+        "route": "/record/san-rafael-campaign-filing-entry-32221",
+        "search_label": "Form 497",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-32223",
+        "record_type": "form_497",
+        "route": "/record/san-rafael-campaign-filing-entry-32223",
+        "search_label": "Form 497",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-32224",
+        "record_type": "form_460",
+        "route": "/record/san-rafael-campaign-filing-entry-32224",
+        "search_label": "Form 460",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-32225",
+        "record_type": "form_497",
+        "route": "/record/san-rafael-campaign-filing-entry-32225",
+        "search_label": "Form 497",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-32228",
+        "record_type": "form_460",
+        "route": "/record/san-rafael-campaign-filing-entry-32228",
+        "search_label": "Form 460",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-32254",
+        "record_type": "form_460",
+        "route": "/record/san-rafael-campaign-filing-entry-32254",
+        "search_label": "Form 460",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-32255",
+        "record_type": "form_460",
+        "route": "/record/san-rafael-campaign-filing-entry-32255",
+        "search_label": "Form 460",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-32256",
+        "record_type": "form_497",
+        "route": "/record/san-rafael-campaign-filing-entry-32256",
+        "search_label": "Form 497",
+        "type": "Record"
+      },
+      {
+        "captured_at": null,
+        "id": "record-san-rafael-campaign-filing-entry-32273",
+        "record_type": "form_460",
+        "route": "/record/san-rafael-campaign-filing-entry-32273",
+        "search_label": "Form 460",
+        "type": "Record"
+      }
+    ],
+    "type": "Record"
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "q": "form"
+    },
+    "url_path": "/api/browse/record"
+  }
+}

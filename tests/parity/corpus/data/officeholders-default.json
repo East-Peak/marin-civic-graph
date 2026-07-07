@@ -1,0 +1,80 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "alignment": "left",
+        "key": "person_name",
+        "label": "Person",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "seat_display",
+        "label": "Seat",
+        "sortable": true
+      },
+      {
+        "alignment": "right",
+        "key": "form_700_count",
+        "label": "Form 700",
+        "sortable": true
+      },
+      {
+        "alignment": "right",
+        "key": "form_803_count",
+        "label": "Form 803",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "id",
+        "label": "Person id",
+        "link": "entity-route"
+      }
+    ],
+    "rows": [
+      {
+        "form_700_count": 3,
+        "form_803_count": 0,
+        "id": "person-eli-hill",
+        "person_name": "Eli Hill",
+        "seat_display": "District 2 Councilmember"
+      },
+      {
+        "form_700_count": 5,
+        "form_803_count": 1,
+        "id": "person-kate-colin",
+        "person_name": "Kate Colin",
+        "seat_display": "Mayor"
+      },
+      {
+        "form_700_count": 13,
+        "form_803_count": 0,
+        "id": "person-maika-llorens-gulati",
+        "person_name": "Maika Llorens Gulati",
+        "seat_display": "District 1 Councilmember"
+      },
+      {
+        "form_700_count": 16,
+        "form_803_count": 0,
+        "id": "person-maribeth-bushey",
+        "person_name": "Maribeth Bushey",
+        "seat_display": "District 3 Councilmember"
+      },
+      {
+        "form_700_count": 18,
+        "form_803_count": 0,
+        "id": "person-rachel-kertz",
+        "person_name": "Rachel Kertz",
+        "seat_display": "District 4 Councilmember"
+      }
+    ],
+    "slug": "current-officeholders-form-coverage"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/data/current-officeholders-form-coverage"
+  }
+}

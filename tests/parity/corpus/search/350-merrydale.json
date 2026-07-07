@@ -1,0 +1,145 @@
+{
+  "http_status": 200,
+  "payload": {
+    "query": "350 merrydale",
+    "results": [
+      {
+        "id": "place-350-merrydale-road",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale Road",
+        "last_activity": null,
+        "rank": 56,
+        "route": "/place/350-merrydale-road",
+        "search_label": "350 Merrydale Road",
+        "type": "Place"
+      },
+      {
+        "id": "agreement-350-merrydale-affordable-housing",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale affordable housing agreement",
+        "last_activity": "2025-11-17",
+        "rank": 86,
+        "route": "/agreement/350-merrydale-affordable-housing",
+        "search_label": "350 Merrydale affordable housing agreement",
+        "type": "Agreement"
+      },
+      {
+        "id": "agreement-350-merrydale-county-grant",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale county grant agreement",
+        "last_activity": "2025-11-17",
+        "rank": 86,
+        "route": "/agreement/350-merrydale-county-grant",
+        "search_label": "350 Merrydale county grant agreement",
+        "type": "Agreement"
+      },
+      {
+        "id": "project-san-rafael-350-merrydale-interim-shelter",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale Interim Shelter Project \u00b7 active",
+        "last_activity": "2026-03-16",
+        "rank": 100,
+        "route": "/project/san-rafael-350-merrydale-interim-shelter",
+        "search_label": "350 Merrydale Interim Shelter Project",
+        "type": "Project"
+      },
+      {
+        "id": "agreement-350-merrydale-newmark-brokerage",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale Newmark brokerage services agreement",
+        "last_activity": "2025-11-17",
+        "rank": 86,
+        "route": "/agreement/350-merrydale-newmark-brokerage",
+        "search_label": "350 Merrydale Newmark brokerage services agreement",
+        "type": "Agreement"
+      },
+      {
+        "id": "decision-2026-02-17-350-merrydale-project-services-authorization",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale project services resolution",
+        "last_activity": "2026-02-17",
+        "rank": 98,
+        "route": "/decision/2026-02-17-350-merrydale-project-services-authorization",
+        "search_label": "350 Merrydale project services resolution",
+        "type": "Decision"
+      },
+      {
+        "id": "agreement-350-merrydale-lca-design-services",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale LCA design services agreement",
+        "last_activity": "2026-02-17",
+        "rank": 89,
+        "route": "/agreement/350-merrydale-lca-design-services",
+        "search_label": "350 Merrydale LCA design services agreement",
+        "type": "Agreement"
+      },
+      {
+        "id": "agreement-350-merrydale-purchase-and-sale",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale purchase and sale agreement",
+        "last_activity": "2025-11-17",
+        "rank": 86,
+        "route": "/agreement/350-merrydale-purchase-and-sale",
+        "search_label": "350 Merrydale purchase and sale agreement",
+        "type": "Agreement"
+      },
+      {
+        "id": "amendment-350-merrydale-lca-design-services-2026-02-17",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale LCA design services amendment",
+        "last_activity": "2026-02-17",
+        "rank": 86,
+        "route": "/amendment/350-merrydale-lca-design-services-2026-02-17",
+        "search_label": "350 Merrydale LCA design services amendment",
+        "type": "Amendment"
+      },
+      {
+        "id": "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale purchase and brokerage resolution",
+        "last_activity": "2025-11-17",
+        "rank": 95,
+        "route": "/decision/2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
+        "search_label": "350 Merrydale purchase and brokerage resolution",
+        "type": "Decision"
+      },
+      {
+        "id": "agreement-350-merrydale-swinerton-project-management",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale Swinerton project and construction management agreement",
+        "last_activity": "2026-02-17",
+        "rank": 88,
+        "route": "/agreement/350-merrydale-swinerton-project-management",
+        "search_label": "350 Merrydale Swinerton project and construction management agreement",
+        "type": "Agreement"
+      },
+      {
+        "id": "decision-2025-11-17-350-merrydale-county-grant-approval",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale county grant and affordable housing agreement resolution",
+        "last_activity": "2025-11-17",
+        "rank": 95,
+        "route": "/decision/2025-11-17-350-merrydale-county-grant-approval",
+        "search_label": "350 Merrydale county grant and affordable housing agreement resolution",
+        "type": "Decision"
+      },
+      {
+        "id": "meeting-mill-valley-committees-350",
+        "jurisdiction": null,
+        "key_fact": "Planning Commission Agenda \u00b7 2024-03-26",
+        "last_activity": "2024-03-26",
+        "rank": 72,
+        "route": "/meeting/mill-valley-committees-350",
+        "search_label": "Planning Commission Agenda \u2014 2024-03-26",
+        "type": "Meeting"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "q": "350 merrydale"
+    },
+    "url_path": "/api/search"
+  }
+}

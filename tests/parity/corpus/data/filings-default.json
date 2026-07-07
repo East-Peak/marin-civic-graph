@@ -1,0 +1,44 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "alignment": "left",
+        "key": "signed_at",
+        "label": "Signed at",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "filing_type",
+        "label": "Type",
+        "sortable": true
+      },
+      {
+        "alignment": "left",
+        "key": "filed_by_name",
+        "label": "Filed by"
+      },
+      {
+        "alignment": "left",
+        "key": "id",
+        "label": "Filing id",
+        "link": "entity-route"
+      }
+    ],
+    "rows": [
+      {
+        "filed_by_name": null,
+        "filing_type": "form_803",
+        "id": "filing-2025-09-04-kate-colin-form-803",
+        "signed_at": "2025-09-04"
+      }
+    ],
+    "slug": "filings-by-person-or-committee"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/data/filings-by-person-or-committee"
+  }
+}

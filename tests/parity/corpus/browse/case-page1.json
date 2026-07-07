@@ -1,0 +1,428 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "caption",
+        "label": "Caption"
+      },
+      {
+        "key": "docket_number",
+        "label": "Docket"
+      }
+    ],
+    "next_cursor": "case-cl-17248449",
+    "rows": [
+      {
+        "caption": null,
+        "docket_number": "1:18-cv-01823-CL",
+        "id": "case-blake-v-city-of-grants-pass",
+        "route": "/case/blake-v-city-of-grants-pass",
+        "search_label": "Blake v. City of Grants Pass",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "23-cv-04085-EMC",
+        "id": "case-boyd-v-city-of-san-rafael",
+        "route": "/case/boyd-v-city-of-san-rafael",
+        "search_label": "Boyd v. City of San Rafael",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "23-175",
+        "id": "case-city-of-grants-pass-v-johnson",
+        "route": "/case/city-of-grants-pass-v-johnson",
+        "search_label": "City of Grants Pass v. Johnson",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "19-70339",
+        "id": "case-cl-1017",
+        "route": "/case/cl-1017",
+        "search_label": "case-cl-1017",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:95-cv-03871",
+        "id": "case-cl-10430366",
+        "route": "/case/cl-10430366",
+        "search_label": "case-cl-10430366",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "19-70341",
+        "id": "case-cl-1051",
+        "route": "/case/cl-1051",
+        "search_label": "case-cl-1051",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:95-cv-03318",
+        "id": "case-cl-10640212",
+        "route": "/case/cl-10640212",
+        "search_label": "case-cl-10640212",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:97-cv-04294",
+        "id": "case-cl-10642373",
+        "route": "/case/cl-10642373",
+        "search_label": "case-cl-10642373",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "19-70344",
+        "id": "case-cl-1092",
+        "route": "/case/cl-1092",
+        "search_label": "case-cl-1092",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:00-cv-04675",
+        "id": "case-cl-11254944",
+        "route": "/case/cl-11254944",
+        "search_label": "case-cl-11254944",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "4:00-cv-04805",
+        "id": "case-cl-11649283",
+        "route": "/case/cl-11649283",
+        "search_label": "case-cl-11649283",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:02-cv-05316",
+        "id": "case-cl-11835169",
+        "route": "/case/cl-11835169",
+        "search_label": "case-cl-11835169",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:03-cv-00843",
+        "id": "case-cl-11835444",
+        "route": "/case/cl-11835444",
+        "search_label": "case-cl-11835444",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:03-cv-02542",
+        "id": "case-cl-11835743",
+        "route": "/case/cl-11835743",
+        "search_label": "case-cl-11835743",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:03-cv-03426",
+        "id": "case-cl-11836003",
+        "route": "/case/cl-11836003",
+        "search_label": "case-cl-11836003",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:03-cv-05595",
+        "id": "case-cl-11836804",
+        "route": "/case/cl-11836804",
+        "search_label": "case-cl-11836804",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:02-cv-05828",
+        "id": "case-cl-12019981",
+        "route": "/case/cl-12019981",
+        "search_label": "case-cl-12019981",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "1:08-cv-05477",
+        "id": "case-cl-12400616",
+        "route": "/case/cl-12400616",
+        "search_label": "case-cl-12400616",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "19-70490",
+        "id": "case-cl-12992",
+        "route": "/case/cl-12992",
+        "search_label": "case-cl-12992",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:13-cv-50057",
+        "id": "case-cl-13007382",
+        "route": "/case/cl-13007382",
+        "search_label": "case-cl-13007382",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "1:16-cv-00920",
+        "id": "case-cl-13365508",
+        "route": "/case/cl-13365508",
+        "search_label": "case-cl-13365508",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:18-cv-07386",
+        "id": "case-cl-14599526",
+        "route": "/case/cl-14599526",
+        "search_label": "case-cl-14599526",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:19-cv-00856",
+        "id": "case-cl-14607358",
+        "route": "/case/cl-14607358",
+        "search_label": "case-cl-14607358",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:19-cv-01047",
+        "id": "case-cl-14654860",
+        "route": "/case/cl-14654860",
+        "search_label": "case-cl-14654860",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "19-10641",
+        "id": "case-cl-14851359",
+        "route": "/case/cl-14851359",
+        "search_label": "case-cl-14851359",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "19-14362",
+        "id": "case-cl-14867536",
+        "route": "/case/cl-14867536",
+        "search_label": "case-cl-14867536",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "1:19-cr-10080",
+        "id": "case-cl-14903103",
+        "route": "/case/cl-14903103",
+        "search_label": "case-cl-14903103",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "MDL 2193",
+        "id": "case-cl-149632",
+        "route": "/case/cl-149632",
+        "search_label": "case-cl-149632",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:19-cv-00544",
+        "id": "case-cl-14987501",
+        "route": "/case/cl-14987501",
+        "search_label": "case-cl-14987501",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "1:19-cv-02952",
+        "id": "case-cl-15039345",
+        "route": "/case/cl-15039345",
+        "search_label": "case-cl-15039345",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "1:19-cv-04082",
+        "id": "case-cl-15791488",
+        "route": "/case/cl-15791488",
+        "search_label": "case-cl-15791488",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "19-01697",
+        "id": "case-cl-15864470",
+        "route": "/case/cl-15864470",
+        "search_label": "case-cl-15864470",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "19-01229",
+        "id": "case-cl-15864483",
+        "route": "/case/cl-15864483",
+        "search_label": "case-cl-15864483",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "2:19-cv-06313",
+        "id": "case-cl-15951783",
+        "route": "/case/cl-15951783",
+        "search_label": "case-cl-15951783",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "1:19-cv-05167",
+        "id": "case-cl-15994160",
+        "route": "/case/cl-15994160",
+        "search_label": "case-cl-15994160",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "4:19-cv-04628",
+        "id": "case-cl-16041529",
+        "route": "/case/cl-16041529",
+        "search_label": "case-cl-16041529",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "4:19-cv-05844",
+        "id": "case-cl-16220833",
+        "route": "/case/cl-16220833",
+        "search_label": "case-cl-16220833",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:19-cv-07545",
+        "id": "case-cl-16475739",
+        "route": "/case/cl-16475739",
+        "search_label": "case-cl-16475739",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "4:19-cv-07721",
+        "id": "case-cl-16507716",
+        "route": "/case/cl-16507716",
+        "search_label": "case-cl-16507716",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "20-10133",
+        "id": "case-cl-16896177",
+        "route": "/case/cl-16896177",
+        "search_label": "case-cl-16896177",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "2:20-cv-02291",
+        "id": "case-cl-16950209",
+        "route": "/case/cl-16950209",
+        "search_label": "case-cl-16950209",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:20-cv-08055",
+        "id": "case-cl-16958449",
+        "route": "/case/cl-16958449",
+        "search_label": "case-cl-16958449",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "3:20-cv-02947",
+        "id": "case-cl-17112591",
+        "route": "/case/cl-17112591",
+        "search_label": "case-cl-17112591",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "20-32181",
+        "id": "case-cl-17123915",
+        "route": "/case/cl-17123915",
+        "search_label": "case-cl-17123915",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "20-32185",
+        "id": "case-cl-17123917",
+        "route": "/case/cl-17123917",
+        "search_label": "case-cl-17123917",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "1:20-cv-00613",
+        "id": "case-cl-17131648",
+        "route": "/case/cl-17131648",
+        "search_label": "case-cl-17131648",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "4:20-cv-03456",
+        "id": "case-cl-17188186",
+        "route": "/case/cl-17188186",
+        "search_label": "case-cl-17188186",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "20-11558",
+        "id": "case-cl-17248433",
+        "route": "/case/cl-17248433",
+        "search_label": "case-cl-17248433",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "20-11565",
+        "id": "case-cl-17248448",
+        "route": "/case/cl-17248448",
+        "search_label": "case-cl-17248448",
+        "type": "Case"
+      },
+      {
+        "caption": null,
+        "docket_number": "20-11564",
+        "id": "case-cl-17248449",
+        "route": "/case/cl-17248449",
+        "search_label": "case-cl-17248449",
+        "type": "Case"
+      }
+    ],
+    "type": "Case"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/case"
+  }
+}

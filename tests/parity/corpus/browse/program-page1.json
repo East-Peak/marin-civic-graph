@@ -1,0 +1,60 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "status",
+        "label": "Status"
+      },
+      {
+        "key": "program_type",
+        "label": "Type"
+      }
+    ],
+    "next_cursor": null,
+    "rows": [
+      {
+        "id": "program-csl-building-forward",
+        "program_type": "state_library_facilities_grant_program",
+        "route": "/program/csl-building-forward",
+        "search_label": "California State Library Building Forward Library Facilities Improvement Program",
+        "status": "active",
+        "type": "Program"
+      },
+      {
+        "id": "program-csl-targeted-grants",
+        "program_type": "state_library_targeted_grant_program",
+        "route": "/program/csl-targeted-grants",
+        "search_label": "California State Library Targeted Grants",
+        "status": "active",
+        "type": "Program"
+      },
+      {
+        "id": "program-san-rafael-camping-ordinance-implementation",
+        "program_type": "camping_ordinance_implementation",
+        "route": "/program/san-rafael-camping-ordinance-implementation",
+        "search_label": "San Rafael camping ordinance implementation and enforcement",
+        "status": "active",
+        "type": "Program"
+      },
+      {
+        "id": "program-san-rafael-sanctioned-camping",
+        "program_type": "sanctioned_camping_program",
+        "route": "/program/san-rafael-sanctioned-camping",
+        "search_label": "San Rafael sanctioned camping program",
+        "status": "implemented",
+        "type": "Program"
+      }
+    ],
+    "type": "Program"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/program"
+  }
+}

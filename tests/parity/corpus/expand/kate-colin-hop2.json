@@ -1,0 +1,943 @@
+{
+  "http_status": 200,
+  "payload": {
+    "cap": 80,
+    "edges": [
+      {
+        "source": "candidacy-kate-colin-san-rafael-mayor-2020",
+        "style": "governance",
+        "target": "committee-kate-colin-for-mayor-2020",
+        "type": "CONTROLLED_BY_COMMITTEE"
+      },
+      {
+        "source": "candidacy-kate-colin-san-rafael-mayor-2020",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "CANDIDATE_ACTOR"
+      },
+      {
+        "source": "candidacy-kate-colin-san-rafael-mayor-2020",
+        "style": "governance",
+        "target": "seat-san-rafael-mayor-at-large",
+        "type": "FOR_SEAT"
+      },
+      {
+        "source": "candidacy-kate-colin-san-rafael-mayor-2024",
+        "style": "governance",
+        "target": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "type": "CONTROLLED_BY_COMMITTEE"
+      },
+      {
+        "source": "candidacy-kate-colin-san-rafael-mayor-2024",
+        "style": "governance",
+        "target": "election-2024-11-05-san-rafael-general",
+        "type": "FOR_ELECTION"
+      },
+      {
+        "source": "candidacy-kate-colin-san-rafael-mayor-2024",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "CANDIDATE_ACTOR"
+      },
+      {
+        "source": "candidacy-kate-colin-san-rafael-mayor-2024",
+        "style": "governance",
+        "target": "seat-san-rafael-mayor-at-large",
+        "type": "FOR_SEAT"
+      },
+      {
+        "source": "committee-kate-colin-for-mayor-2020",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "CONTROLLED_BY"
+      },
+      {
+        "source": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "style": "governance",
+        "target": "election-2024-11-05-san-rafael-general",
+        "type": "PRIMARY_FOR_ELECTION"
+      },
+      {
+        "source": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "CONTROLLED_BY"
+      },
+      {
+        "source": "decision-2019-01-22-san-rafael-city-council-4-consent-calendar-approval",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "DECIDED_BY"
+      },
+      {
+        "source": "decision-2019-01-22-san-rafael-city-council-6a-resolution-adoption-14626",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "DECIDED_BY"
+      },
+      {
+        "source": "decision-2019-01-22-san-rafael-city-council-7a-resolution-adoption-14627-14628-14629-14630",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "DECIDED_BY"
+      },
+      {
+        "source": "decision-2019-01-22-san-rafael-city-council-7b-acceptance-accepted-informational-report-on-draft-action-plan",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "DECIDED_BY"
+      },
+      {
+        "source": "decision-2019-02-04-san-rafael-city-council-4-consent-calendar-approval",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "DECIDED_BY"
+      },
+      {
+        "source": "decision-2019-02-04-san-rafael-city-council-6a-resolution-adoption-14633-14634-14635",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "DECIDED_BY"
+      },
+      {
+        "source": "decision-2019-02-04-san-rafael-city-council-7a-report-acceptance-accepted-report-and-provided-direction-to-staff",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "DECIDED_BY"
+      },
+      {
+        "source": "decision-2019-02-19-san-rafael-city-council-4-consent-calendar-approval",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "DECIDED_BY"
+      },
+      {
+        "source": "election-2024-11-05-san-rafael-general",
+        "style": "governance",
+        "target": "election-2024-11-05-san-rafael-mayor-general",
+        "type": "RELATED_TO_ELECTION"
+      },
+      {
+        "source": "election-2024-11-05-san-rafael-mayor-general",
+        "style": "governance",
+        "target": "seat-san-rafael-mayor-at-large",
+        "type": "FOR_SEAT"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28439",
+        "style": "governance",
+        "target": "committee-kate-colin-for-mayor-2020",
+        "type": "FILED_BY_COMMITTEE"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28439",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "FILED_BY"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28450",
+        "style": "governance",
+        "target": "committee-kate-colin-for-mayor-2020",
+        "type": "FILED_BY_COMMITTEE"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28450",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "FILED_BY"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28597",
+        "style": "governance",
+        "target": "committee-kate-colin-for-mayor-2020",
+        "type": "FILED_BY_COMMITTEE"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28597",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "FILED_BY"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28598",
+        "style": "governance",
+        "target": "committee-kate-colin-for-mayor-2020",
+        "type": "FILED_BY_COMMITTEE"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28598",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "FILED_BY"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28599",
+        "style": "governance",
+        "target": "committee-kate-colin-for-mayor-2020",
+        "type": "FILED_BY_COMMITTEE"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28599",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "FILED_BY"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28600",
+        "style": "governance",
+        "target": "committee-kate-colin-for-mayor-2020",
+        "type": "FILED_BY_COMMITTEE"
+      },
+      {
+        "source": "filing-san-rafael-campaign-entry-28600",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "FILED_BY"
+      },
+      {
+        "source": "meeting-2024-08-19-san-rafael-city-council",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "AT_INSTITUTION"
+      },
+      {
+        "source": "meeting-2026-01-20-san-rafael-city-council",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "AT_INSTITUTION"
+      },
+      {
+        "source": "meeting-2026-02-02-san-rafael-city-council",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "AT_INSTITUTION"
+      },
+      {
+        "source": "meeting-2026-02-11-san-rafael-city-council-special-closed-session",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "AT_INSTITUTION"
+      },
+      {
+        "source": "meeting-2026-03-02-san-rafael-city-council",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "AT_INSTITUTION"
+      },
+      {
+        "source": "meeting-2026-03-16-san-rafael-city-council",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "AT_INSTITUTION"
+      },
+      {
+        "source": "person-andrew-mccullough",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-andrew-mccullough",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-6a-resolution-adoption-14626",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-andrew-mccullough",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-7a-resolution-adoption-14627-14628-14629-14630",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-andrew-mccullough",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-7b-acceptance-accepted-informational-report-on-draft-action-plan",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-andrew-mccullough",
+        "style": "governance",
+        "target": "decision-2019-02-04-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-andrew-mccullough",
+        "style": "governance",
+        "target": "decision-2019-02-04-san-rafael-city-council-6a-resolution-adoption-14633-14634-14635",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-andrew-mccullough",
+        "style": "governance",
+        "target": "decision-2019-02-04-san-rafael-city-council-7a-report-acceptance-accepted-report-and-provided-direction-to-staff",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-andrew-mccullough",
+        "style": "governance",
+        "target": "decision-2019-02-19-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-gary-phillips",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-gary-phillips",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-6a-resolution-adoption-14626",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-gary-phillips",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-7a-resolution-adoption-14627-14628-14629-14630",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-gary-phillips",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-7b-acceptance-accepted-informational-report-on-draft-action-plan",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-gary-phillips",
+        "style": "governance",
+        "target": "decision-2019-02-04-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-gary-phillips",
+        "style": "governance",
+        "target": "decision-2019-02-04-san-rafael-city-council-6a-resolution-adoption-14633-14634-14635",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-gary-phillips",
+        "style": "governance",
+        "target": "decision-2019-02-04-san-rafael-city-council-7a-report-acceptance-accepted-report-and-provided-direction-to-staff",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-gary-phillips",
+        "style": "governance",
+        "target": "decision-2019-02-19-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-john-gamblin",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-john-gamblin",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-6a-resolution-adoption-14626",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-john-gamblin",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-7a-resolution-adoption-14627-14628-14629-14630",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-john-gamblin",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-7b-acceptance-accepted-informational-report-on-draft-action-plan",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-john-gamblin",
+        "style": "governance",
+        "target": "decision-2019-02-04-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-john-gamblin",
+        "style": "governance",
+        "target": "decision-2019-02-04-san-rafael-city-council-6a-resolution-adoption-14633-14634-14635",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-john-gamblin",
+        "style": "governance",
+        "target": "decision-2019-02-04-san-rafael-city-council-7a-report-acceptance-accepted-report-and-provided-direction-to-staff",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-john-gamblin",
+        "style": "governance",
+        "target": "decision-2019-02-19-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-kate-colin",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-kate-colin",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-6a-resolution-adoption-14626",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-kate-colin",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-7a-resolution-adoption-14627-14628-14629-14630",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-kate-colin",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-7b-acceptance-accepted-informational-report-on-draft-action-plan",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-kate-colin",
+        "style": "governance",
+        "target": "decision-2019-02-04-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-kate-colin",
+        "style": "governance",
+        "target": "decision-2019-02-04-san-rafael-city-council-6a-resolution-adoption-14633-14634-14635",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-kate-colin",
+        "style": "governance",
+        "target": "decision-2019-02-04-san-rafael-city-council-7a-report-acceptance-accepted-report-and-provided-direction-to-staff",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-kate-colin",
+        "style": "governance",
+        "target": "decision-2019-02-19-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-maribeth-bushey",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-maribeth-bushey",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-6a-resolution-adoption-14626",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-maribeth-bushey",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-7a-resolution-adoption-14627-14628-14629-14630",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-maribeth-bushey",
+        "style": "governance",
+        "target": "decision-2019-01-22-san-rafael-city-council-7b-acceptance-accepted-informational-report-on-draft-action-plan",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-maribeth-bushey",
+        "style": "governance",
+        "target": "decision-2019-02-04-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-maribeth-bushey",
+        "style": "governance",
+        "target": "decision-2019-02-04-san-rafael-city-council-6a-resolution-adoption-14633-14634-14635",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-maribeth-bushey",
+        "style": "governance",
+        "target": "decision-2019-02-04-san-rafael-city-council-7a-report-acceptance-accepted-report-and-provided-direction-to-staff",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "person-maribeth-bushey",
+        "style": "governance",
+        "target": "decision-2019-02-19-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "CAST_VOTE"
+      },
+      {
+        "source": "seat-san-rafael-mayor-at-large",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "AT_INSTITUTION"
+      },
+      {
+        "source": "seatservice-kate-colin-mayor-2020-term",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "AT_INSTITUTION"
+      },
+      {
+        "source": "seatservice-kate-colin-mayor-2020-term",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "HELD_BY"
+      },
+      {
+        "source": "seatservice-kate-colin-mayor-2020-term",
+        "style": "governance",
+        "target": "seat-san-rafael-mayor-at-large",
+        "type": "FOR_SEAT"
+      },
+      {
+        "source": "seatservice-kate-colin-mayor-current",
+        "style": "governance",
+        "target": "election-2024-11-05-san-rafael-mayor-general",
+        "type": "RESULT_OF_ELECTION"
+      },
+      {
+        "source": "seatservice-kate-colin-mayor-current",
+        "style": "governance",
+        "target": "org-san-rafael-city-council",
+        "type": "AT_INSTITUTION"
+      },
+      {
+        "source": "seatservice-kate-colin-mayor-current",
+        "style": "governance",
+        "target": "person-kate-colin",
+        "type": "HELD_BY"
+      },
+      {
+        "source": "seatservice-kate-colin-mayor-current",
+        "style": "governance",
+        "target": "seat-san-rafael-mayor-at-large",
+        "type": "FOR_SEAT"
+      }
+    ],
+    "new_count": 51,
+    "nodes": [
+      {
+        "event_date": null,
+        "id": "agenda-item-2019-11-18-san-rafael-city-council-special-1",
+        "label": "agenda-item-2019-11-18-san-rafael-city-council-special-1",
+        "ring": 2,
+        "route": "/agenda-item/item-2019-11-18-san-rafael-city-council-special-1",
+        "type": "AgendaItem"
+      },
+      {
+        "event_date": null,
+        "id": "agenda-item-2020-03-17-san-rafael-city-council-special-1",
+        "label": "agenda-item-2020-03-17-san-rafael-city-council-special-1",
+        "ring": 2,
+        "route": "/agenda-item/item-2020-03-17-san-rafael-city-council-special-1",
+        "type": "AgendaItem"
+      },
+      {
+        "event_date": null,
+        "id": "agenda-item-2021-07-15-san-rafael-city-council-special-1",
+        "label": "agenda-item-2021-07-15-san-rafael-city-council-special-1",
+        "ring": 2,
+        "route": "/agenda-item/item-2021-07-15-san-rafael-city-council-special-1",
+        "type": "AgendaItem"
+      },
+      {
+        "event_date": null,
+        "id": "agenda-item-2022-04-11-san-rafael-city-council-special-1",
+        "label": "agenda-item-2022-04-11-san-rafael-city-council-special-1",
+        "ring": 2,
+        "route": "/agenda-item/item-2022-04-11-san-rafael-city-council-special-1",
+        "type": "AgendaItem"
+      },
+      {
+        "event_date": null,
+        "id": "candidacy-kate-colin-san-rafael-mayor-2020",
+        "label": "candidacy-kate-colin-san-rafael-mayor-2020",
+        "ring": 1,
+        "route": "/candidacy/kate-colin-san-rafael-mayor-2020",
+        "type": "Candidacy"
+      },
+      {
+        "event_date": null,
+        "id": "candidacy-kate-colin-san-rafael-mayor-2024",
+        "label": "candidacy-kate-colin-san-rafael-mayor-2024",
+        "ring": 1,
+        "route": "/candidacy/kate-colin-san-rafael-mayor-2024",
+        "type": "Candidacy"
+      },
+      {
+        "event_date": null,
+        "id": "committee-kate-colin-for-mayor-2020",
+        "label": "Kate Colin for Mayor 2020",
+        "ring": 1,
+        "route": "/committee/kate-colin-for-mayor-2020",
+        "type": "Committee"
+      },
+      {
+        "event_date": null,
+        "id": "committee-kate-colin-for-san-rafael-mayor-2024",
+        "label": "Kate Colin for San Rafael Mayor 2024",
+        "ring": 1,
+        "route": "/committee/kate-colin-for-san-rafael-mayor-2024",
+        "type": "Committee"
+      },
+      {
+        "event_date": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-4-consent-calendar-approval",
+        "label": "approve Consent Calendar Items:",
+        "ring": 1,
+        "route": "/decision/2019-01-22-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "Decision"
+      },
+      {
+        "event_date": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-6a-resolution-adoption-14626",
+        "label": "\u201c TEFRA\u201d Public Hearing for Tax-Exempt Financing - 55 Fairfax Street",
+        "ring": 1,
+        "route": "/decision/2019-01-22-san-rafael-city-council-6a-resolution-adoption-14626",
+        "type": "Decision"
+      },
+      {
+        "event_date": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-7a-resolution-adoption-14627-14628-14629-14630",
+        "label": "Professional Service Agreements for General Plan 2040 Technical Support",
+        "ring": 1,
+        "route": "/decision/2019-01-22-san-rafael-city-council-7a-resolution-adoption-14627-14628-14629-14630",
+        "type": "Decision"
+      },
+      {
+        "event_date": null,
+        "id": "decision-2019-01-22-san-rafael-city-council-7b-acceptance-accepted-informational-report-on-draft-action-plan",
+        "label": "Accepted informational report on draft Action Plan",
+        "ring": 1,
+        "route": "/decision/2019-01-22-san-rafael-city-council-7b-acceptance-accepted-informational-report-on-draft-action-plan",
+        "type": "Decision"
+      },
+      {
+        "event_date": null,
+        "id": "decision-2019-02-04-san-rafael-city-council-4-consent-calendar-approval",
+        "label": "approve Consent Calendar",
+        "ring": 1,
+        "route": "/decision/2019-02-04-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "Decision"
+      },
+      {
+        "event_date": null,
+        "id": "decision-2019-02-04-san-rafael-city-council-6a-resolution-adoption-14633-14634-14635",
+        "label": "Southern Heights Bridge Replacement Project",
+        "ring": 1,
+        "route": "/decision/2019-02-04-san-rafael-city-council-6a-resolution-adoption-14633-14634-14635",
+        "type": "Decision"
+      },
+      {
+        "event_date": null,
+        "id": "decision-2019-02-04-san-rafael-city-council-7a-report-acceptance-accepted-report-and-provided-direction-to-staff",
+        "label": "Accepted report and provided direction to staff",
+        "ring": 1,
+        "route": "/decision/2019-02-04-san-rafael-city-council-7a-report-acceptance-accepted-report-and-provided-direction-to-staff",
+        "type": "Decision"
+      },
+      {
+        "event_date": null,
+        "id": "decision-2019-02-19-san-rafael-city-council-4-consent-calendar-approval",
+        "label": "approve Consent Calendar",
+        "ring": 1,
+        "route": "/decision/2019-02-19-san-rafael-city-council-4-consent-calendar-approval",
+        "type": "Decision"
+      },
+      {
+        "event_date": "2024-11-05",
+        "id": "election-2024-11-05-san-rafael-general",
+        "label": "general_municipal \u2014 2024-11-05",
+        "ring": 2,
+        "route": "/election/2024-11-05-san-rafael-general",
+        "type": "Election"
+      },
+      {
+        "event_date": "2024-11-05",
+        "id": "election-2024-11-05-san-rafael-mayor-general",
+        "label": "general_municipal \u2014 2024-11-05",
+        "ring": 2,
+        "route": "/election/2024-11-05-san-rafael-mayor-general",
+        "type": "Election"
+      },
+      {
+        "event_date": null,
+        "id": "filing-san-rafael-campaign-entry-28439",
+        "label": "Form 410",
+        "ring": 1,
+        "route": "/filing/san-rafael-campaign-entry-28439",
+        "type": "Filing"
+      },
+      {
+        "event_date": null,
+        "id": "filing-san-rafael-campaign-entry-28450",
+        "label": "Form 460",
+        "ring": 1,
+        "route": "/filing/san-rafael-campaign-entry-28450",
+        "type": "Filing"
+      },
+      {
+        "event_date": null,
+        "id": "filing-san-rafael-campaign-entry-28597",
+        "label": "Form 410",
+        "ring": 1,
+        "route": "/filing/san-rafael-campaign-entry-28597",
+        "type": "Filing"
+      },
+      {
+        "event_date": null,
+        "id": "filing-san-rafael-campaign-entry-28598",
+        "label": "Form 410",
+        "ring": 1,
+        "route": "/filing/san-rafael-campaign-entry-28598",
+        "type": "Filing"
+      },
+      {
+        "event_date": null,
+        "id": "filing-san-rafael-campaign-entry-28599",
+        "label": "Form 410",
+        "ring": 1,
+        "route": "/filing/san-rafael-campaign-entry-28599",
+        "type": "Filing"
+      },
+      {
+        "event_date": null,
+        "id": "filing-san-rafael-campaign-entry-28600",
+        "label": "Form 410",
+        "ring": 1,
+        "route": "/filing/san-rafael-campaign-entry-28600",
+        "type": "Filing"
+      },
+      {
+        "event_date": null,
+        "id": "meeting-2024-08-19-san-rafael-city-council",
+        "label": "Meeting",
+        "ring": 2,
+        "route": "/meeting/2024-08-19-san-rafael-city-council",
+        "type": "Meeting"
+      },
+      {
+        "event_date": "2026-01-20",
+        "id": "meeting-2026-01-20-san-rafael-city-council",
+        "label": "San Rafael City Council meeting \u2014 2026-01-20",
+        "ring": 2,
+        "route": "/meeting/2026-01-20-san-rafael-city-council",
+        "type": "Meeting"
+      },
+      {
+        "event_date": "2026-02-02",
+        "id": "meeting-2026-02-02-san-rafael-city-council",
+        "label": "San Rafael City Council meeting \u2014 2026-02-02",
+        "ring": 2,
+        "route": "/meeting/2026-02-02-san-rafael-city-council",
+        "type": "Meeting"
+      },
+      {
+        "event_date": "2026-02-11",
+        "id": "meeting-2026-02-11-san-rafael-city-council-special-closed-session",
+        "label": "San Rafael City Council meeting \u2014 2026-02-11",
+        "ring": 2,
+        "route": "/meeting/2026-02-11-san-rafael-city-council-special-closed-session",
+        "type": "Meeting"
+      },
+      {
+        "event_date": "2026-03-02",
+        "id": "meeting-2026-03-02-san-rafael-city-council",
+        "label": "San Rafael City Council meeting \u2014 2026-03-02",
+        "ring": 2,
+        "route": "/meeting/2026-03-02-san-rafael-city-council",
+        "type": "Meeting"
+      },
+      {
+        "event_date": "2026-03-16",
+        "id": "meeting-2026-03-16-san-rafael-city-council",
+        "label": "San Rafael City Council meeting \u2014 2026-03-16",
+        "ring": 2,
+        "route": "/meeting/2026-03-16-san-rafael-city-council",
+        "type": "Meeting"
+      },
+      {
+        "event_date": "2025-08-08",
+        "id": "moneyflow-2025-08-08-pge-to-canal-alliance-form-803",
+        "label": "moneyflow-2025-08-08-pge-to-canal-alliance-form-803",
+        "ring": 2,
+        "route": "/money-flow/2025-08-08-pge-to-canal-alliance-form-803",
+        "type": "MoneyFlow"
+      },
+      {
+        "event_date": null,
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-ac-hotel-san-rafael-mtg-1",
+        "label": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-ac-hotel-san-rafael-mtg-1",
+        "ring": 2,
+        "route": "/money-flow/committee-kate-colin-for-san-rafael-mayor-2024-ac-hotel-san-rafael-mtg-1",
+        "type": "MoneyFlow"
+      },
+      {
+        "event_date": null,
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-city-of-san-rafael-fil-11",
+        "label": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-city-of-san-rafael-fil-11",
+        "ring": 2,
+        "route": "/money-flow/committee-kate-colin-for-san-rafael-mayor-2024-city-of-san-rafael-fil-11",
+        "type": "MoneyFlow"
+      },
+      {
+        "event_date": null,
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-cornerstone-printing-pos-12",
+        "label": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-cornerstone-printing-pos-12",
+        "ring": 2,
+        "route": "/money-flow/committee-kate-colin-for-san-rafael-mayor-2024-cornerstone-printing-pos-12",
+        "type": "MoneyFlow"
+      },
+      {
+        "event_date": null,
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-donor-stack-llc-web-14",
+        "label": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-donor-stack-llc-web-14",
+        "ring": 2,
+        "route": "/money-flow/committee-kate-colin-for-san-rafael-mayor-2024-donor-stack-llc-web-14",
+        "type": "MoneyFlow"
+      },
+      {
+        "event_date": null,
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-16",
+        "label": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-16",
+        "ring": 2,
+        "route": "/money-flow/committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-16",
+        "type": "MoneyFlow"
+      },
+      {
+        "event_date": null,
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-19",
+        "label": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-19",
+        "ring": 2,
+        "route": "/money-flow/committee-kate-colin-for-san-rafael-mayor-2024-four-waters-media-inc-cns-19",
+        "type": "MoneyFlow"
+      },
+      {
+        "event_date": null,
+        "id": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-uncoded-23",
+        "label": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-uncoded-23",
+        "ring": 2,
+        "route": "/money-flow/committee-kate-colin-for-san-rafael-mayor-2024-pmcohen-public-affairs-uncoded-23",
+        "type": "MoneyFlow"
+      },
+      {
+        "event_date": null,
+        "id": "org-city-of-san-rafael",
+        "label": "City of San Rafael",
+        "ring": 2,
+        "route": "/organization/city-of-san-rafael",
+        "type": "Organization"
+      },
+      {
+        "event_date": null,
+        "id": "org-san-rafael-city-clerk",
+        "label": "San Rafael City Clerk",
+        "ring": 2,
+        "route": "/organization/san-rafael-city-clerk",
+        "type": "Organization"
+      },
+      {
+        "event_date": null,
+        "id": "org-san-rafael-city-council",
+        "label": "San Rafael City Council",
+        "ring": 2,
+        "route": "/organization/san-rafael-city-council",
+        "type": "Organization"
+      },
+      {
+        "event_date": null,
+        "id": "person-andrew-mccullough",
+        "label": "Andrew McCullough",
+        "ring": 2,
+        "route": "/person/andrew-mccullough",
+        "type": "Person"
+      },
+      {
+        "event_date": null,
+        "id": "person-eli-hill",
+        "label": "Eli Hill",
+        "ring": 2,
+        "route": "/person/eli-hill",
+        "type": "Person"
+      },
+      {
+        "event_date": null,
+        "id": "person-gary-phillips",
+        "label": "Gary Phillips",
+        "ring": 2,
+        "route": "/person/gary-phillips",
+        "type": "Person"
+      },
+      {
+        "event_date": null,
+        "id": "person-john-gamblin",
+        "label": "John Gamblin",
+        "ring": 2,
+        "route": "/person/john-gamblin",
+        "type": "Person"
+      },
+      {
+        "event_date": null,
+        "id": "person-maika-llorens-gulati",
+        "label": "Maika Llorens Gulati",
+        "ring": 2,
+        "route": "/person/maika-llorens-gulati",
+        "type": "Person"
+      },
+      {
+        "event_date": null,
+        "id": "person-maribeth-bushey",
+        "label": "Maribeth Bushey",
+        "ring": 2,
+        "route": "/person/maribeth-bushey",
+        "type": "Person"
+      },
+      {
+        "event_date": null,
+        "id": "project-san-rafael-350-merrydale-interim-shelter",
+        "label": "350 Merrydale Interim Shelter Project",
+        "ring": 2,
+        "route": "/project/san-rafael-350-merrydale-interim-shelter",
+        "type": "Project"
+      },
+      {
+        "event_date": null,
+        "id": "seat-san-rafael-mayor-at-large",
+        "label": "Mayor",
+        "ring": 2,
+        "route": "/seat/san-rafael-mayor-at-large",
+        "type": "Seat"
+      },
+      {
+        "event_date": "2020-12-07",
+        "id": "seatservice-kate-colin-mayor-2020-term",
+        "label": "seatservice-kate-colin-mayor-2020-term",
+        "ring": 1,
+        "route": "/seat-service/kate-colin-mayor-2020-term",
+        "type": "SeatService"
+      },
+      {
+        "event_date": "2024-12-16",
+        "id": "seatservice-kate-colin-mayor-current",
+        "label": "seatservice-kate-colin-mayor-current",
+        "ring": 1,
+        "route": "/seat-service/kate-colin-mayor-current",
+        "type": "SeatService"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "focus": "person-kate-colin",
+      "hop": "2"
+    },
+    "url_path": "/api/expand"
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "person_name",
+        "label": "Candidate"
+      },
+      {
+        "key": "seat_title",
+        "label": "Seat"
+      }
+    ],
+    "next_cursor": null,
+    "rows": [
+      {
+        "id": "candidacy-eli-hill-san-rafael-council-district-2-2022",
+        "person_name": null,
+        "route": "/candidacy/eli-hill-san-rafael-council-district-2-2022",
+        "search_label": "candidacy-eli-hill-san-rafael-council-district-2-2022",
+        "seat_title": null,
+        "type": "Candidacy"
+      },
+      {
+        "id": "candidacy-gerrod-herndon-san-rafael-council-district-2-2022",
+        "person_name": null,
+        "route": "/candidacy/gerrod-herndon-san-rafael-council-district-2-2022",
+        "search_label": "candidacy-gerrod-herndon-san-rafael-council-district-2-2022",
+        "seat_title": null,
+        "type": "Candidacy"
+      },
+      {
+        "id": "candidacy-greg-knell-san-rafael-council-district-4-2020",
+        "person_name": null,
+        "route": "/candidacy/greg-knell-san-rafael-council-district-4-2020",
+        "search_label": "candidacy-greg-knell-san-rafael-council-district-4-2020",
+        "seat_title": null,
+        "type": "Candidacy"
+      },
+      {
+        "id": "candidacy-jonathan-frieman-san-rafael-council-district-3-2022",
+        "person_name": null,
+        "route": "/candidacy/jonathan-frieman-san-rafael-council-district-3-2022",
+        "search_label": "candidacy-jonathan-frieman-san-rafael-council-district-3-2022",
+        "seat_title": null,
+        "type": "Candidacy"
+      },
+      {
+        "id": "candidacy-kate-colin-san-rafael-mayor-2020",
+        "person_name": null,
+        "route": "/candidacy/kate-colin-san-rafael-mayor-2020",
+        "search_label": "candidacy-kate-colin-san-rafael-mayor-2020",
+        "seat_title": null,
+        "type": "Candidacy"
+      },
+      {
+        "id": "candidacy-kate-colin-san-rafael-mayor-2024",
+        "person_name": null,
+        "route": "/candidacy/kate-colin-san-rafael-mayor-2024",
+        "search_label": "candidacy-kate-colin-san-rafael-mayor-2024",
+        "seat_title": null,
+        "type": "Candidacy"
+      },
+      {
+        "id": "candidacy-mahmoud-shirazi-san-rafael-mayor-2020",
+        "person_name": null,
+        "route": "/candidacy/mahmoud-shirazi-san-rafael-mayor-2020",
+        "search_label": "candidacy-mahmoud-shirazi-san-rafael-mayor-2020",
+        "seat_title": null,
+        "type": "Candidacy"
+      },
+      {
+        "id": "candidacy-mahmoud-shirazi-san-rafael-mayor-2024",
+        "person_name": null,
+        "route": "/candidacy/mahmoud-shirazi-san-rafael-mayor-2024",
+        "search_label": "candidacy-mahmoud-shirazi-san-rafael-mayor-2024",
+        "seat_title": null,
+        "type": "Candidacy"
+      },
+      {
+        "id": "candidacy-maika-llorens-gulati-san-rafael-council-district-1-2020",
+        "person_name": null,
+        "route": "/candidacy/maika-llorens-gulati-san-rafael-council-district-1-2020",
+        "search_label": "candidacy-maika-llorens-gulati-san-rafael-council-district-1-2020",
+        "seat_title": null,
+        "type": "Candidacy"
+      },
+      {
+        "id": "candidacy-maika-llorens-gulati-san-rafael-council-district-1-2024",
+        "person_name": null,
+        "route": "/candidacy/maika-llorens-gulati-san-rafael-council-district-1-2024",
+        "search_label": "candidacy-maika-llorens-gulati-san-rafael-council-district-1-2024",
+        "seat_title": null,
+        "type": "Candidacy"
+      },
+      {
+        "id": "candidacy-maribeth-bushey-san-rafael-council-district-3-2022",
+        "person_name": null,
+        "route": "/candidacy/maribeth-bushey-san-rafael-council-district-3-2022",
+        "search_label": "candidacy-maribeth-bushey-san-rafael-council-district-3-2022",
+        "seat_title": null,
+        "type": "Candidacy"
+      },
+      {
+        "id": "candidacy-mark-galperin-san-rafael-council-district-4-2024",
+        "person_name": null,
+        "route": "/candidacy/mark-galperin-san-rafael-council-district-4-2024",
+        "search_label": "candidacy-mark-galperin-san-rafael-council-district-4-2024",
+        "seat_title": null,
+        "type": "Candidacy"
+      },
+      {
+        "id": "candidacy-rachel-kertz-san-rafael-council-district-4-2020",
+        "person_name": null,
+        "route": "/candidacy/rachel-kertz-san-rafael-council-district-4-2020",
+        "search_label": "candidacy-rachel-kertz-san-rafael-council-district-4-2020",
+        "seat_title": null,
+        "type": "Candidacy"
+      },
+      {
+        "id": "candidacy-rachel-kertz-san-rafael-council-district-4-2024",
+        "person_name": null,
+        "route": "/candidacy/rachel-kertz-san-rafael-council-district-4-2024",
+        "search_label": "candidacy-rachel-kertz-san-rafael-council-district-4-2024",
+        "seat_title": null,
+        "type": "Candidacy"
+      }
+    ],
+    "type": "Candidacy"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/browse/candidacy"
+  }
+}

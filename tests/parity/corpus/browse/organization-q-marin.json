@@ -1,0 +1,430 @@
+{
+  "http_status": 200,
+  "payload": {
+    "columns": [
+      {
+        "key": "search_label",
+        "label": "Name"
+      },
+      {
+        "key": "subtype",
+        "label": "Subtype"
+      },
+      {
+        "key": "jurisdiction_name",
+        "label": "Jurisdiction"
+      }
+    ],
+    "next_cursor": "org-marin-builders-association-political-action-committee-bapac",
+    "rows": [
+      {
+        "id": "org-asian-american-alliance-of-marin",
+        "jurisdiction_name": null,
+        "route": "/organization/asian-american-alliance-of-marin",
+        "search_label": "Asian American Alliance of Marin",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-bank-of-marin",
+        "jurisdiction_name": null,
+        "route": "/organization/bank-of-marin",
+        "search_label": "Bank of Marin",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-bank-of-marin-cardmember-services",
+        "jurisdiction_name": null,
+        "route": "/organization/bank-of-marin-cardmember-services",
+        "search_label": "Bank of Marin Cardmember Services",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-bank-of-marinaccount-04780682",
+        "jurisdiction_name": null,
+        "route": "/organization/bank-of-marinaccount-04780682",
+        "search_label": "Bank Of MarinAccount 04780682",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-bay-area-news-group-marin-independent-journal",
+        "jurisdiction_name": null,
+        "route": "/organization/bay-area-news-group-marin-independent-journal",
+        "search_label": "Bay Area News Group/Marin Independent Journal",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-bragman-for-marin-water-board-2022-larry",
+        "jurisdiction_name": null,
+        "route": "/organization/bragman-for-marin-water-board-2022-larry",
+        "search_label": "Bragman for Marin Water Board 2022",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-building-trades-council-of-marin-lets-all-build-responsibly",
+        "jurisdiction_name": null,
+        "route": "/organization/building-trades-council-of-marin-lets-all-build-responsibly",
+        "search_label": "Building Trades Council of Marin Let's All Build Responsibly",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-cathryn-hilliard-for-southern-marin-fire-protecion-district-director-2024",
+        "jurisdiction_name": null,
+        "route": "/organization/cathryn-hilliard-for-southern-marin-fire-protecion-district-director-2024",
+        "search_label": "Cathryn Hilliard for Southern Marin Fire Protecion District Director 2024",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-cathryn-hilliard-for-southern-marin-fire-protection-district-director-2024",
+        "jurisdiction_name": null,
+        "route": "/organization/cathryn-hilliard-for-southern-marin-fire-protection-district-director-2024",
+        "search_label": "Cathryn Hilliard for Southern Marin Fire Protection District Director 2024",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-community-action-marin",
+        "jurisdiction_name": null,
+        "route": "/organization/community-action-marin",
+        "search_label": "Community Action Marin",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-county-of-marin",
+        "jurisdiction_name": null,
+        "route": "/organization/county-of-marin",
+        "search_label": "County of Marin",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-county-of-marin-elections",
+        "jurisdiction_name": null,
+        "route": "/organization/county-of-marin-elections",
+        "search_label": "County of Marin -Elections",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-county-of-marin-elections-department",
+        "jurisdiction_name": null,
+        "route": "/organization/county-of-marin-elections-department",
+        "search_label": "County of Marin Elections Department",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-cristine-soto-deberry-for-so-marin-fire-protection-dist-2026",
+        "jurisdiction_name": null,
+        "route": "/organization/cristine-soto-deberry-for-so-marin-fire-protection-dist-2026",
+        "search_label": "Cristine Soto Deberry for So Marin Fire Protection Dist 2026",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-cristine-soto-deberry-for-southern-marin-fire-protection-district-2022",
+        "jurisdiction_name": null,
+        "route": "/organization/cristine-soto-deberry-for-southern-marin-fire-protection-district-2022",
+        "search_label": "Cristine Soto DeBerry for Southern Marin Fire Protection District 2022",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-cristine-soto-deberry-for-southern-marin-fire-protection-district-2026",
+        "jurisdiction_name": null,
+        "route": "/organization/cristine-soto-deberry-for-southern-marin-fire-protection-district-2026",
+        "search_label": "Cristine Soto DeBerry for Southern Marin Fire Protection District 2026",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-crystal-martinez-for-college-of-marin-board-of-trustees",
+        "jurisdiction_name": null,
+        "route": "/organization/crystal-martinez-for-college-of-marin-board-of-trustees",
+        "search_label": "Crystal Martinez for College of Marin Board of Trustees",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-crystal-martinez-for-college-of-marin-d2-2024",
+        "jurisdiction_name": null,
+        "route": "/organization/crystal-martinez-for-college-of-marin-d2-2024",
+        "search_label": "Crystal Martinez for College of Marin D2 2024",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-crystal-martinez-for-college-of-marin-d2-board-of-trustees-2024",
+        "jurisdiction_name": null,
+        "route": "/organization/crystal-martinez-for-college-of-marin-d2-board-of-trustees-2024",
+        "search_label": "Crystal Martinez for College of Marin D2 Board of Trustees 2024",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-deberry-for-southern-marin-fire-protection-district-2022-cristine-soto",
+        "jurisdiction_name": null,
+        "route": "/organization/deberry-for-southern-marin-fire-protection-district-2022-cristine-soto",
+        "search_label": "DeBerry for Southern Marin Fire Protection District 2022",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-democratic-central-committee-of-marin",
+        "jurisdiction_name": null,
+        "route": "/organization/democratic-central-committee-of-marin",
+        "search_label": "Democratic Central Committee of Marin",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-democratic-central-committee-of-marin-all-purpose-account",
+        "jurisdiction_name": null,
+        "route": "/organization/democratic-central-committee-of-marin-all-purpose-account",
+        "search_label": "Democratic Central Committee of Marin (All Purpose Account)",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-eric-lucan-for-marin-county-supervisor-2026",
+        "jurisdiction_name": null,
+        "route": "/organization/eric-lucan-for-marin-county-supervisor-2026",
+        "search_label": "Eric Lucan for Marin County Supervisor 2026",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-fleming-for-southern-marin-fire-protection-district-2022-peter",
+        "jurisdiction_name": null,
+        "route": "/organization/fleming-for-southern-marin-fire-protection-district-2022-peter",
+        "search_label": "Fleming for Southern Marin Fire Protection District 2022",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-friends-of-heather-mcphail-sridharan-for-marin-county-supervisor-2024",
+        "jurisdiction_name": null,
+        "route": "/organization/friends-of-heather-mcphail-sridharan-for-marin-county-supervisor-2024",
+        "search_label": "Friends of Heather McPhail Sridharan for Marin County Supervisor 2024",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-friends-of-the-marin-city-library",
+        "jurisdiction_name": null,
+        "route": "/organization/friends-of-the-marin-city-library",
+        "search_label": "Friends of the Marin City Library",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-friends-of-the-marin-county-free-library",
+        "jurisdiction_name": null,
+        "route": "/organization/friends-of-the-marin-county-free-library",
+        "search_label": "Friends of the Marin County Free Library",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-homeward-bound-of-marin",
+        "jurisdiction_name": null,
+        "route": "/organization/homeward-bound-of-marin",
+        "search_label": "Homeward Bound of Marin",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-inn-marin",
+        "jurisdiction_name": null,
+        "route": "/organization/inn-marin",
+        "search_label": "Inn Marin",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-keatley-for-marin-municipal-water-district-2024-dave",
+        "jurisdiction_name": null,
+        "route": "/organization/keatley-for-marin-municipal-water-district-2024-dave",
+        "search_label": "Keatley for Marin Municipal Water District 2024",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-ken-eichstaedt-for-north-marin-water-district",
+        "jurisdiction_name": null,
+        "route": "/organization/ken-eichstaedt-for-north-marin-water-district",
+        "search_label": "Ken Eichstaedt for North Marin Water District",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-lori-frugoli-for-da-marin-2018",
+        "jurisdiction_name": null,
+        "route": "/organization/lori-frugoli-for-da-marin-2018",
+        "search_label": "Lori Frugoli for DA Marin 2018",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-magali-limeta-for-marin-county-supervisor-2026",
+        "jurisdiction_name": null,
+        "route": "/organization/magali-limeta-for-marin-county-supervisor-2026",
+        "search_label": "Magali Limeta for Marin County Supervisor 2026",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-agricultural-land-trust",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-agricultural-land-trust",
+        "search_label": "Marin Agricultural Land Trust",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-art-garden-center",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-art-garden-center",
+        "search_label": "Marin Art & Garden Center",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-assoc-of-public-employees",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-assoc-of-public-employees",
+        "search_label": "Marin Assoc of Public Employees",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-associates-of-public-employees",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-associates-of-public-employees",
+        "search_label": "Marin Associates of Public Employees",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-association-of-public-employees",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-association-of-public-employees",
+        "search_label": "Marin Association of Public Employees",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-association-of-public-employees-pac",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-association-of-public-employees-pac",
+        "search_label": "Marin Association of Public Employees PAC",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-association-of-public-employees-political-action-commitee",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-association-of-public-employees-political-action-commitee",
+        "search_label": "Marin Association of Public Employees Political Action Commitee",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-association-of-public-employees-political-action-committee",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-association-of-public-employees-political-action-committee",
+        "search_label": "Marin Association of Public Employees Political Action Committee",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-audubon-society",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-audubon-society",
+        "search_label": "Marin Audubon Society",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-auto-glass",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-auto-glass",
+        "search_label": "Marin Auto Glass",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-builders-assocation-political-action-committee-bapac",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-builders-assocation-political-action-committee-bapac",
+        "search_label": "Marin Builders Assocation Political Action Committee BAPAC",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-builders-association",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-builders-association",
+        "search_label": "Marin Builders Association",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-builders-association-bapac",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-builders-association-bapac",
+        "search_label": "Marin Builders Association BAPAC",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-builders-association-bpac",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-builders-association-bpac",
+        "search_label": "Marin Builders Association BPAC",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-builders-association-pac-bapac",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-builders-association-pac-bapac",
+        "search_label": "Marin Builders Association PAC (BAPAC)",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-builders-association-political-action-committee",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-builders-association-political-action-committee",
+        "search_label": "Marin Builders Association Political Action Committee",
+        "subtype": null,
+        "type": "Organization"
+      },
+      {
+        "id": "org-marin-builders-association-political-action-committee-bapac",
+        "jurisdiction_name": null,
+        "route": "/organization/marin-builders-association-political-action-committee-bapac",
+        "search_label": "Marin Builders Association Political Action Committee (BAPAC)",
+        "subtype": null,
+        "type": "Organization"
+      }
+    ],
+    "type": "Organization"
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "q": "marin"
+    },
+    "url_path": "/api/browse/organization"
+  }
+}

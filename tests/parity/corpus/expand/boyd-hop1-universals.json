@@ -1,0 +1,220 @@
+{
+  "http_status": 200,
+  "payload": {
+    "cap": 20,
+    "edges": [
+      {
+        "source": "case-boyd-v-city-of-san-rafael",
+        "style": "governance",
+        "target": "doc-2024-06-28-grants-pass-statement",
+        "type": "EVIDENCED_BY"
+      },
+      {
+        "source": "case-boyd-v-city-of-san-rafael",
+        "style": "governance",
+        "target": "doc-2024-08-08-boyd-dismissal-release",
+        "type": "EVIDENCED_BY"
+      },
+      {
+        "source": "case-boyd-v-city-of-san-rafael",
+        "style": "governance",
+        "target": "issue-camping-ordinance",
+        "type": "RELATES_TO_ISSUE"
+      },
+      {
+        "source": "case-boyd-v-city-of-san-rafael",
+        "style": "governance",
+        "target": "program-san-rafael-camping-ordinance-implementation",
+        "type": "RELATES_TO_PROGRAM"
+      },
+      {
+        "source": "case-boyd-v-city-of-san-rafael",
+        "style": "governance",
+        "target": "program-san-rafael-sanctioned-camping",
+        "type": "RELATES_TO_PROGRAM"
+      },
+      {
+        "source": "doc-2024-06-28-grants-pass-statement",
+        "style": "governance",
+        "target": "program-san-rafael-camping-ordinance-implementation",
+        "type": "RELATES_TO_PROGRAM"
+      },
+      {
+        "source": "doc-2024-08-08-boyd-dismissal-release",
+        "style": "governance",
+        "target": "program-san-rafael-camping-ordinance-implementation",
+        "type": "RELATES_TO_PROGRAM"
+      },
+      {
+        "source": "org-city-of-san-rafael",
+        "style": "governance",
+        "target": "case-boyd-v-city-of-san-rafael",
+        "type": "PARTY_TO"
+      },
+      {
+        "source": "org-city-of-san-rafael",
+        "style": "governance",
+        "target": "doc-2024-06-28-grants-pass-statement",
+        "type": "EVIDENCED_BY"
+      },
+      {
+        "source": "org-city-of-san-rafael",
+        "style": "governance",
+        "target": "doc-2024-08-08-boyd-dismissal-release",
+        "type": "EVIDENCED_BY"
+      },
+      {
+        "source": "org-shaleeta-boyd-et-al",
+        "style": "governance",
+        "target": "case-boyd-v-city-of-san-rafael",
+        "type": "PARTY_TO"
+      },
+      {
+        "source": "org-shaleeta-boyd-et-al",
+        "style": "governance",
+        "target": "doc-2024-08-08-boyd-dismissal-release",
+        "type": "EVIDENCED_BY"
+      },
+      {
+        "source": "person-shaleeta-boyd-et-al",
+        "style": "governance",
+        "target": "case-boyd-v-city-of-san-rafael",
+        "type": "PARTY_TO"
+      },
+      {
+        "source": "person-shaleeta-boyd-et-al",
+        "style": "governance",
+        "target": "doc-2024-08-08-boyd-dismissal-release",
+        "type": "EVIDENCED_BY"
+      },
+      {
+        "source": "proceeding-boyd-dismissal-order-2024-08-07",
+        "style": "governance",
+        "target": "case-boyd-v-city-of-san-rafael",
+        "type": "PART_OF_CASE"
+      },
+      {
+        "source": "proceeding-boyd-motion-hearing-2024-07-15",
+        "style": "governance",
+        "target": "case-boyd-v-city-of-san-rafael",
+        "type": "PART_OF_CASE"
+      },
+      {
+        "source": "program-san-rafael-camping-ordinance-implementation",
+        "style": "governance",
+        "target": "doc-2024-06-28-grants-pass-statement",
+        "type": "EVIDENCED_BY"
+      },
+      {
+        "source": "program-san-rafael-camping-ordinance-implementation",
+        "style": "governance",
+        "target": "doc-2024-08-08-boyd-dismissal-release",
+        "type": "EVIDENCED_BY"
+      },
+      {
+        "source": "program-san-rafael-camping-ordinance-implementation",
+        "style": "governance",
+        "target": "org-city-of-san-rafael",
+        "type": "OPERATED_BY"
+      },
+      {
+        "source": "program-san-rafael-sanctioned-camping",
+        "style": "governance",
+        "target": "org-city-of-san-rafael",
+        "type": "OPERATED_BY"
+      }
+    ],
+    "new_count": 10,
+    "nodes": [
+      {
+        "event_date": null,
+        "id": "doc-2024-06-28-grants-pass-statement",
+        "label": "Record",
+        "ring": 1,
+        "route": "/record/2024-06-28-grants-pass-statement",
+        "type": "Record"
+      },
+      {
+        "event_date": null,
+        "id": "doc-2024-08-08-boyd-dismissal-release",
+        "label": "Record",
+        "ring": 1,
+        "route": "/record/2024-08-08-boyd-dismissal-release",
+        "type": "Record"
+      },
+      {
+        "event_date": null,
+        "id": "issue-camping-ordinance",
+        "label": "Camping Ordinance",
+        "ring": 1,
+        "route": "/issue/camping-ordinance",
+        "type": "Issue"
+      },
+      {
+        "event_date": null,
+        "id": "org-city-of-san-rafael",
+        "label": "City of San Rafael",
+        "ring": 1,
+        "route": "/organization/city-of-san-rafael",
+        "type": "Organization"
+      },
+      {
+        "event_date": null,
+        "id": "org-shaleeta-boyd-et-al",
+        "label": "Shaleeta Boyd, et al.",
+        "ring": 1,
+        "route": "/organization/shaleeta-boyd-et-al",
+        "type": "Organization"
+      },
+      {
+        "event_date": null,
+        "id": "person-shaleeta-boyd-et-al",
+        "label": "Shaleeta Boyd, et al.",
+        "ring": 1,
+        "route": "/person/shaleeta-boyd-et-al",
+        "type": "Person"
+      },
+      {
+        "event_date": "2024-08-07",
+        "id": "proceeding-boyd-dismissal-order-2024-08-07",
+        "label": "proceeding-boyd-dismissal-order-2024-08-07",
+        "ring": 1,
+        "route": "/proceeding/boyd-dismissal-order-2024-08-07",
+        "type": "Proceeding"
+      },
+      {
+        "event_date": "2024-07-15",
+        "id": "proceeding-boyd-motion-hearing-2024-07-15",
+        "label": "proceeding-boyd-motion-hearing-2024-07-15",
+        "ring": 1,
+        "route": "/proceeding/boyd-motion-hearing-2024-07-15",
+        "type": "Proceeding"
+      },
+      {
+        "event_date": null,
+        "id": "program-san-rafael-camping-ordinance-implementation",
+        "label": "San Rafael camping ordinance implementation and enforcement",
+        "ring": 1,
+        "route": "/program/san-rafael-camping-ordinance-implementation",
+        "type": "Program"
+      },
+      {
+        "event_date": null,
+        "id": "program-san-rafael-sanctioned-camping",
+        "label": "San Rafael sanctioned camping program",
+        "ring": 1,
+        "route": "/program/san-rafael-sanctioned-camping",
+        "type": "Program"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "params": {
+      "focus": "case-boyd-v-city-of-san-rafael",
+      "hop": "1",
+      "include_universals": "true"
+    },
+    "url_path": "/api/expand"
+  }
+}
