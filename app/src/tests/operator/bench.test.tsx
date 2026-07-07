@@ -17,6 +17,7 @@ type CaseOver = Partial<Case> & {
   signals?: string[];
   aiVerdict?: string;
   aiConf?: number;
+  confidence?: Case["confidence"];
 };
 
 function mkCase(over: CaseOver = {}): Case {
@@ -46,6 +47,7 @@ function mkCase(over: CaseOver = {}): Case {
     current_ledger_status: over.current_ledger_status ?? "none",
     bulk_eligible: over.bulk_eligible ?? false,
     review_flags: over.review_flags ?? {},
+    ...(over.confidence ? { confidence: over.confidence } : {}),
   };
 }
 
@@ -265,6 +267,60 @@ describe("Bench", () => {
     await waitFor(() => expect(fetchMock).toHaveBeenCalled());
     expect(lastDecideBody(fetchMock)).toMatchObject({ case_id: "committee-case", action: "approve" });
   });
+
+  it("renders active confidence band chips in the queue and detail pane", () => {
+    render(
+      <Bench
+        initialCases={[mkCase({ case_id: "c1", vendor: "v1", aiConf: 0.97, confidence: { band: "high", status: "active" } })]}
+        context={{ v1: mkCtx() }}
+      />,
+    );
+
+    expect(within(screen.getByTestId("row-c1")).getByTestId("confidence-chip-high")).toHaveTextContent("High");
+    const detail = within(screen.getByTestId("detail"));
+    expect(detail.getByTestId("confidence-chip-high")).toHaveTextContent("High");
+  });
+
+  it("does not render the raw signal-strength float by default, only behind dbg", () => {
+    render(
+      <Bench
+        initialCases={[mkCase({ case_id: "c1", vendor: "v1", aiConf: 0.97, confidence: { band: "high", status: "active" } })]}
+        context={{ v1: mkCtx() }}
+      />,
+    );
+
+    const detail = within(screen.getByTestId("detail"));
+    expect(detail.queryByText("0.97")).not.toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(detail.getByRole("button", { name: "dbg" }));
+    });
+
+    expect(detail.getByText("0.97")).toBeInTheDocument();
+  });
+
+  it("renders selected-vendor rollup dollars without raw floats", () => {
+    render(
+      <Bench
+        initialCases={[mkCase({ case_id: "c1", vendor: "v1", confidence: { band: "high", status: "active" } })]}
+        context={{
+          v1: mkCtx({
+            money_total: 1000,
+            rollup_totals: { verified: 250, high_confidence: 750, unattributed: 0 },
+          }),
+        }}
+      />,
+    );
+
+    const detail = within(screen.getByTestId("detail"));
+    expect(detail.getByText("Verified")).toBeInTheDocument();
+    expect(detail.getByText("$250")).toBeInTheDocument();
+    expect(detail.getByText("High-confidence")).toBeInTheDocument();
+    expect(detail.getByText("$750")).toBeInTheDocument();
+    expect(detail.getByText("Unattributed")).toBeInTheDocument();
+    expect(detail.getByText("$0")).toBeInTheDocument();
+    expect(detail.queryByText(/\d\.\d{2}/)).not.toBeInTheDocument();
+  });
 });
 
 describe("Bench queue controls", () => {
@@ -294,6 +350,32 @@ describe("Bench queue controls", () => {
       fireEvent.click(screen.getByTestId("q-verdict-different"));
     });
     expect(rowIds()).toEqual(["row-b"]);
+  });
+
+  it("filters by confidence band chips", () => {
+    const banded = [
+      mkCase({ case_id: "high", vendor: "v1", confidence: { band: "high", status: "active" } }),
+      mkCase({ case_id: "medium", vendor: "v2", confidence: { band: "medium", status: "active" } }),
+      mkCase({ case_id: "low", vendor: "v3", confidence: { band: "low", status: "active" } }),
+      mkCase({ case_id: "masked", vendor: "v4", confidence: { band: "high", status: "superseded_by_assertion" } }),
+    ];
+    render(
+      <Bench
+        initialCases={banded}
+        context={{
+          v1: mkCtx({ money_total: 400 }),
+          v2: mkCtx({ money_total: 300 }),
+          v3: mkCtx({ money_total: 200 }),
+          v4: mkCtx({ money_total: 100 }),
+        }}
+      />,
+    );
+
+    act(() => {
+      fireEvent.click(screen.getByTestId("q-band-high"));
+    });
+
+    expect(rowIds()).toEqual(["row-high"]);
   });
 
   it("toggles sort direction on the active key", () => {

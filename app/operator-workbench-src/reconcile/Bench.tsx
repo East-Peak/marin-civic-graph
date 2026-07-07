@@ -13,6 +13,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { Case, ContextEntry } from "../_lib/bench-types";
 import {
+  activeConfidenceBand,
   applyControls,
   bucketize,
   DEFAULT_CONTROLS,
@@ -30,6 +31,7 @@ import {
   type QueueControls,
   type SortKey,
 } from "../_lib/bench-logic";
+import { CONFIDENCE_BAND_ORDER, type ConfidenceBand } from "../_lib/reconciliation.generated";
 
 type Props = {
   initialCases: Case[];
@@ -61,6 +63,36 @@ const STATUS_LABEL: Record<string, string> = {
 
 const optimisticStatus = (action: Action, kind?: RejectionKind): string =>
   action === "approve" ? "approved" : action === "unsure" ? "unsure" : `rejected_${kind ?? "current_evidence"}`;
+
+const BAND_TONE: Record<ConfidenceBand, { label: string; bg: string; border: string; color: string }> = {
+  high: { label: "High", bg: "#ecfdf5", border: "#86efac", color: "#166534" },
+  medium: { label: "Medium", bg: "#fffbeb", border: "#fcd34d", color: "#92400e" },
+  low: { label: "Low", bg: "#fff1f2", border: "#fda4af", color: "#9f1239" },
+};
+
+function BandChip({ band, compact = false }: { band: ConfidenceBand; compact?: boolean }) {
+  const tone = BAND_TONE[band];
+  return (
+    <span
+      data-testid={`confidence-chip-${band}`}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        borderRadius: 4,
+        border: `1px solid ${tone.border}`,
+        background: tone.bg,
+        color: tone.color,
+        fontSize: compact ? 10 : 11,
+        fontWeight: 600,
+        lineHeight: 1.2,
+        padding: compact ? "1px 5px" : "2px 7px",
+        textTransform: "uppercase",
+      }}
+    >
+      {tone.label}
+    </span>
+  );
+}
 
 function nextSelection(list: BenchRow[], decidedId: string): string | null {
   const i = list.findIndex((r) => r.case_id === decidedId);
@@ -304,6 +336,7 @@ export function Bench({ initialCases, context, reviewer = "operator", ctxError =
                 const cx = context[vendorId(r)];
                 const isSel = r.case_id === effectiveId;
                 const showCheckbox = tab === "recommended";
+                const band = activeConfidenceBand(r);
                 return (
                   <li
                     key={r.case_id}
@@ -344,6 +377,7 @@ export function Bench({ initialCases, context, reviewer = "operator", ctxError =
                       </div>
                       <div style={{ fontSize: 11, color: "#888" }}>
                         {cx ? usd(cx.money_total) : "—"} · {r.candidate_joins[0].left_ref.source_id}
+                        {band ? <span style={{ marginLeft: 6 }}><BandChip band={band} compact /></span> : null}
                       </div>
                     </div>
                   </li>
@@ -398,7 +432,12 @@ const MONEYS: [number, string][] = [
 const SORTS: [SortKey, string][] = [
   ["money", "$"],
   ["name", "Name"],
-  ["ai", "AI"],
+  ["ai", "Band"],
+];
+
+const BANDS: [QueueControls["confidenceBand"], string][] = [
+  ["all", "All"],
+  ...CONFIDENCE_BAND_ORDER.map((band) => [band, BAND_TONE[band].label] as [ConfidenceBand, string]),
 ];
 
 function Controls({
@@ -435,6 +474,14 @@ function Controls({
           "AI",
           VERDICTS.map(([v, label]) => (
             <button key={v} data-testid={`q-verdict-${v}`} onClick={() => set({ verdict: v })} style={chipStyle(controls.verdict === v)}>
+              {label}
+            </button>
+          )),
+        )}
+        {group(
+          "Band",
+          BANDS.map(([v, label]) => (
+            <button key={v} data-testid={`q-band-${v}`} onClick={() => set({ confidenceBand: v })} style={chipStyle(controls.confidenceBand === v)}>
               {label}
             </button>
           )),
@@ -540,10 +587,12 @@ function CaseDetail({
   ctx: ContextEntry | undefined;
   onDecide: (caseId: string, action: Action, kind?: RejectionKind) => void;
 }) {
+  const [debug, setDebug] = useState(false);
   const j = row.candidate_joins[0];
   const ai = row.ai_reviews[0];
   const pubFields = j.right_ref.public_fields;
   const nonActionable = nonActionableReason(row);
+  const band = activeConfidenceBand(row);
   const card = { border: "1px solid #e5e5e5", borderRadius: 8, padding: 16, flex: 1, minWidth: 0 } as const;
   return (
     <div>
@@ -577,7 +626,27 @@ function CaseDetail({
           <div style={{ fontSize: 11, color: "#999", fontWeight: 600, marginBottom: 6 }}>AI VERDICT (advisory)</div>
           {ai ? (
             <div>
-              <strong>{ai.verdict}</strong> · {ai.signal_strength.toFixed(2)}
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <strong>{ai.verdict}</strong>
+                {band ? <BandChip band={band} /> : null}
+                <button
+                  type="button"
+                  onClick={() => setDebug((v) => !v)}
+                  style={{
+                    marginLeft: "auto",
+                    border: "1px solid #ddd",
+                    borderRadius: 4,
+                    background: debug ? "#f3f4f6" : "#fff",
+                    color: "#777",
+                    cursor: "pointer",
+                    fontSize: 10,
+                    padding: "1px 5px",
+                  }}
+                >
+                  dbg
+                </button>
+              </div>
+              {debug ? <div style={{ color: "#777", marginTop: 4, fontFamily: "monospace" }}>{ai.signal_strength.toFixed(2)}</div> : null}
               {ai.reason ? <div style={{ color: "#666", marginTop: 4 }}>{ai.reason}</div> : null}
             </div>
           ) : (
@@ -595,6 +664,7 @@ function CaseDetail({
               ) : (
                 <div style={{ color: "#16a34a", marginTop: 4 }}>key is free</div>
               )}
+              {ctx.rollup_totals ? <RollupPane totals={ctx.rollup_totals} /> : null}
             </div>
           ) : (
             <span style={{ color: "#999" }}>graph context unavailable</span>
@@ -624,6 +694,22 @@ function CaseDetail({
         <ActionButton color="#dc2626" disabled={Boolean(nonActionable)} onClick={() => onDecide(row.case_id, "reject", "entity_distinct")}>Reject (distinct)</ActionButton>
         <ActionButton color="#6b7280" disabled={Boolean(nonActionable)} onClick={() => onDecide(row.case_id, "unsure")}>Unsure</ActionButton>
       </div>
+    </div>
+  );
+}
+
+function RollupPane({ totals }: { totals: NonNullable<ContextEntry["rollup_totals"]> }) {
+  const item = (label: string, value: number) => (
+    <div style={{ minWidth: 0 }}>
+      <div style={{ fontSize: 11, color: "#999" }}>{label}</div>
+      <div style={{ fontSize: 14, fontWeight: 600 }}>{usd(value)}</div>
+    </div>
+  );
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8, marginTop: 10 }}>
+      {item("Verified", totals.verified)}
+      {item("High-confidence", totals.high_confidence)}
+      {item("Unattributed", totals.unattributed)}
     </div>
   );
 }

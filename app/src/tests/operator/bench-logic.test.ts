@@ -13,6 +13,8 @@ import {
   bucketOf,
   bucketize,
   aiVerdictOf,
+  activeConfidenceBand,
+  confidenceBandRank,
   isNameExact,
   applyControls,
   investigationLinks,
@@ -33,6 +35,7 @@ type CaseOver = Partial<Case> & {
   signals?: string[];
   aiVerdict?: string;
   aiConf?: number;
+  confidence?: Case["confidence"];
 };
 
 function mkCase(over: CaseOver = {}): Case {
@@ -62,6 +65,7 @@ function mkCase(over: CaseOver = {}): Case {
     current_ledger_status: over.current_ledger_status ?? "none",
     bulk_eligible: over.bulk_eligible ?? false,
     review_flags: over.review_flags ?? {},
+    ...(over.confidence ? { confidence: over.confidence } : {}),
   };
 }
 
@@ -242,6 +246,20 @@ describe("aiVerdictOf / isNameExact", () => {
   });
 });
 
+describe("confidence band helpers", () => {
+  it("returns only active confidence bands", () => {
+    expect(activeConfidenceBand(mkCase({ confidence: { band: "high", status: "active" } }))).toBe("high");
+    expect(activeConfidenceBand(mkCase({ confidence: { band: "medium", status: "superseded_by_assertion" } }))).toBeNull();
+    expect(activeConfidenceBand(mkCase())).toBeNull();
+  });
+
+  it("uses registry band order for sort ranking", () => {
+    expect(confidenceBandRank("high")).toBeGreaterThan(confidenceBandRank("medium"));
+    expect(confidenceBandRank("medium")).toBeGreaterThan(confidenceBandRank("low"));
+    expect(confidenceBandRank(null)).toBe(0);
+  });
+});
+
 describe("applyControls", () => {
   const ctx: Record<string, ContextEntry> = {
     v1: mkCtx({ money_total: 900, display_label: "Alpha Foundation" }),
@@ -249,28 +267,34 @@ describe("applyControls", () => {
     v3: mkCtx({ money_total: 5000, display_label: "Gamma Trust" }),
   };
   const rows = [
-    row(mkCase({ case_id: "a", vendor: "v1", aiVerdict: "same", aiConf: 0.95, signals: ["normalized_name_exact"], regName: "Alpha" })),
-    row(mkCase({ case_id: "b", vendor: "v2", aiVerdict: "different", aiConf: 0.4, signals: ["token_overlap"], regName: "Beta" })),
-    row(mkCase({ case_id: "c", vendor: "v3", aiVerdict: "unsure", aiConf: 0.6, signals: ["token_overlap"], regName: "Gamma" })),
+    row(mkCase({ case_id: "a", vendor: "v1", aiVerdict: "same", aiConf: 0.95, signals: ["normalized_name_exact"], regName: "Alpha", confidence: { band: "medium", status: "active" } })),
+    row(mkCase({ case_id: "b", vendor: "v2", aiVerdict: "different", aiConf: 0.4, signals: ["token_overlap"], regName: "Beta", confidence: { band: "low", status: "active" } })),
+    row(mkCase({ case_id: "c", vendor: "v3", aiVerdict: "unsure", aiConf: 0.6, signals: ["token_overlap"], regName: "Gamma", confidence: { band: "high", status: "active" } })),
+    row(mkCase({ case_id: "d", vendor: "v4", aiVerdict: "same", aiConf: 0.99, signals: ["token_overlap"], regName: "Delta", confidence: { band: "high", status: "superseded_by_assertion" } })),
   ];
   const ctrl = (over: Partial<QueueControls>): QueueControls => ({ ...DEFAULT_CONTROLS, ...over });
 
   it("defaults to money descending (matches the queue default)", () => {
-    expect(applyControls(rows, ctx, DEFAULT_CONTROLS).map((r) => r.case_id)).toEqual(["c", "a", "b"]); // 5000, 900, 100
+    expect(applyControls(rows, ctx, DEFAULT_CONTROLS).map((r) => r.case_id)).toEqual(["c", "a", "b", "d"]); // 5000, 900, 100, no context
   });
   it("sorts money ascending when direction flips", () => {
-    expect(applyControls(rows, ctx, ctrl({ sortKey: "money", sortDir: "asc" })).map((r) => r.case_id)).toEqual(["b", "a", "c"]);
+    expect(applyControls(rows, ctx, ctrl({ sortKey: "money", sortDir: "asc" })).map((r) => r.case_id)).toEqual(["d", "b", "a", "c"]);
   });
-  it("sorts by AI confidence", () => {
-    expect(applyControls(rows, ctx, ctrl({ sortKey: "ai", sortDir: "desc" })).map((r) => r.case_id)).toEqual(["a", "c", "b"]); // .95,.6,.4
+  it("sorts the AI control by confidence band, not raw float", () => {
+    expect(applyControls(rows, ctx, ctrl({ sortKey: "ai", sortDir: "desc" })).map((r) => r.case_id)).toEqual(["c", "a", "b", "d"]);
+  });
+  it("filters by active confidence band", () => {
+    expect(applyControls(rows, ctx, ctrl({ confidenceBand: "high" })).map((r) => r.case_id)).toEqual(["c"]);
+    expect(applyControls(rows, ctx, ctrl({ confidenceBand: "medium" })).map((r) => r.case_id)).toEqual(["a"]);
+    expect(applyControls(rows, ctx, ctrl({ confidenceBand: "low" })).map((r) => r.case_id)).toEqual(["b"]);
   });
   it("filters by AI verdict", () => {
-    expect(applyControls(rows, ctx, ctrl({ verdict: "same" })).map((r) => r.case_id)).toEqual(["a"]);
+    expect(applyControls(rows, ctx, ctrl({ verdict: "same" })).map((r) => r.case_id)).toEqual(["a", "d"]);
     expect(applyControls(rows, ctx, ctrl({ verdict: "different" })).map((r) => r.case_id)).toEqual(["b"]);
   });
   it("filters by name-match exactness", () => {
     expect(applyControls(rows, ctx, ctrl({ nameMatch: "exact" })).map((r) => r.case_id)).toEqual(["a"]);
-    expect(new Set(applyControls(rows, ctx, ctrl({ nameMatch: "fuzzy" })).map((r) => r.case_id))).toEqual(new Set(["b", "c"]));
+    expect(new Set(applyControls(rows, ctx, ctrl({ nameMatch: "fuzzy" })).map((r) => r.case_id))).toEqual(new Set(["b", "c", "d"]));
   });
   it("filters by a money floor", () => {
     expect(applyControls(rows, ctx, ctrl({ minMoney: 500 })).map((r) => r.case_id)).toEqual(["c", "a"]); // 5000, 900
@@ -280,7 +304,7 @@ describe("applyControls", () => {
     expect(applyControls(rows, ctx, ctrl({ search: "BETA" })).map((r) => r.case_id)).toEqual(["b"]);
   });
   it("ignores a too-short search (< 2 chars) rather than false-matching everything", () => {
-    expect(applyControls(rows, ctx, ctrl({ search: "a" })).map((r) => r.case_id).length).toBe(3);
+    expect(applyControls(rows, ctx, ctrl({ search: "a" })).map((r) => r.case_id).length).toBe(4);
   });
 });
 

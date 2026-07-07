@@ -5,8 +5,8 @@
 // POSTs to (/api/reconcile/decide) is itself build-excluded + runtime-gated.
 import { notFound } from "next/navigation";
 import { operatorEnabled } from "@/lib/operator-gate";
-import { fetchContext, type ContextEntry } from "../_lib/operator-context";
-import { DATA, runPython } from "../_lib/operator-python";
+import { attachRollupTotals, fetchContext, type ContextEntry } from "../_lib/operator-context";
+import { DATA, confidenceArgs, runPython } from "../_lib/operator-python";
 import type { Case } from "../_lib/bench-types";
 import { Bench } from "./Bench";
 
@@ -17,6 +17,7 @@ export default async function ReconcilePage() {
   const cases = runPython<Case[]>("reconciliation_overlay.py", [
     "--read-model", DATA.readModel(),
     "--ledger", DATA.attachLedger(),
+    ...confidenceArgs(),
   ]);
 
   // Best-effort consequence enrichment — the bench degrades to ids + "graph unavailable"
@@ -30,6 +31,7 @@ export default async function ReconcilePage() {
         anchor_id: c.candidate_joins[0].right_ref.local_id,
       })),
     );
+    context = attachRollupTotals(context, cases);
   } catch {
     ctxError = true;
   }

@@ -8,6 +8,8 @@ import {
   BENCH_DONE_STATUSES,
   BENCH_KNOWN_STATUSES,
   BENCH_REJECTED_STATUSES,
+  CONFIDENCE_BAND_ORDER,
+  type ConfidenceBand,
 } from "./reconciliation.generated";
 export { KEY_FIELD };
 
@@ -97,6 +99,19 @@ export function aiConfidenceOf(c: Case): number {
   return c.ai_reviews[0]?.signal_strength ?? -1;
 }
 
+/** Active confidence band; masked/stale/retired records stay hidden from bench controls. */
+export function activeConfidenceBand(c: Case): ConfidenceBand | null {
+  return c.confidence?.status === "active" ? c.confidence.band : null;
+}
+
+const BAND_RANK = new Map<ConfidenceBand, number>(
+  CONFIDENCE_BAND_ORDER.map((band, i) => [band, CONFIDENCE_BAND_ORDER.length - i]),
+);
+
+export function confidenceBandRank(band: ConfidenceBand | null): number {
+  return band ? (BAND_RANK.get(band) ?? 0) : 0;
+}
+
 /** Whether the candidate matched on a normalized-exact name (the strong name signal). */
 export function isNameExact(c: Case): boolean {
   return (c.candidate_joins[0].signals ?? []).includes("normalized_name_exact");
@@ -108,11 +123,13 @@ export type SortKey = "money" | "name" | "ai";
 export type SortDir = "asc" | "desc";
 export type VerdictFilter = "all" | "same" | "different" | "unsure";
 export type NameFilter = "all" | "exact" | "fuzzy";
+export type BandFilter = "all" | ConfidenceBand;
 
 export type QueueControls = {
   search: string;
   verdict: VerdictFilter;
   nameMatch: NameFilter;
+  confidenceBand: BandFilter;
   minMoney: number;
   sortKey: SortKey;
   sortDir: SortDir;
@@ -122,6 +139,7 @@ export const DEFAULT_CONTROLS: QueueControls = {
   search: "",
   verdict: "all",
   nameMatch: "all",
+  confidenceBand: "all",
   minMoney: 0,
   sortKey: "money",
   sortDir: "desc",
@@ -150,6 +168,7 @@ export function applyControls(
   if (q.length >= 2) out = out.filter((r) => haystack(r, ctx[vendorId(r)]).includes(q)); // min length avoids "a"/"10" matching everything
   if (controls.verdict !== "all") out = out.filter((r) => aiVerdictOf(r) === controls.verdict);
   if (controls.nameMatch !== "all") out = out.filter((r) => isNameExact(r) === (controls.nameMatch === "exact"));
+  if (controls.confidenceBand !== "all") out = out.filter((r) => activeConfidenceBand(r) === controls.confidenceBand);
   if (controls.minMoney > 0) out = out.filter((r) => moneyOf(r, ctx) >= controls.minMoney);
 
   const sign = controls.sortDir === "asc" ? 1 : -1;
@@ -158,7 +177,7 @@ export function applyControls(
   return [...out].sort((a, b) => {
     let d = 0;
     if (controls.sortKey === "name") d = displayName(a, ctx[vendorId(a)]).localeCompare(displayName(b, ctx[vendorId(b)]));
-    else if (controls.sortKey === "ai") d = aiConfidenceOf(a) - aiConfidenceOf(b);
+    else if (controls.sortKey === "ai") d = confidenceBandRank(activeConfidenceBand(a)) - confidenceBandRank(activeConfidenceBand(b));
     else d = moneyOf(a, ctx) - moneyOf(b, ctx);
     return sign * d || byId(a, b);
   });

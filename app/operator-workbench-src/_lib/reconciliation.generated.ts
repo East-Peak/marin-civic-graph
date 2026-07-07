@@ -43,6 +43,8 @@ export const CONFIDENCE_BAND_ORDER = [
   "low",
 ] as const;
 
+export type ConfidenceBand = (typeof CONFIDENCE_BAND_ORDER)[number];
+
 export const CONFIDENCE_BAND_THRESHOLDS = {
   "high_min_confidence": 0.8,
   "medium_min_confidence": 0.65,

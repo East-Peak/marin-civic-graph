@@ -11,9 +11,22 @@ export type ContextEntry = {
   departments: string[];
   key_collision: boolean;
   collides_with: string[];
+  rollup_totals?: RollupTotals;
+};
+
+export type RollupTotals = {
+  verified: number;
+  high_confidence: number;
+  unattributed: number;
 };
 
 export type ContextItem = { vendor_id: string; anchor_id?: string };
+
+type ConfidenceCase = {
+  current_ledger_status?: string;
+  candidate_joins: { left_ref: { local_id: string } }[];
+  confidence?: { band: string; status: string };
+};
 
 const num = (v: unknown): number =>
   v != null && typeof v === "object" && "toNumber" in (v as object)
@@ -72,4 +85,42 @@ export async function fetchContext(items: ContextItem[]): Promise<Record<string,
     }
   }
   return results;
+}
+
+const PUBLISHING_STATUSES = new Set(["approved", "deterministic"]);
+
+function vendorRollupBucket(cases: ConfidenceCase[]): keyof RollupTotals {
+  if (
+    cases.some(
+      (c) =>
+        c.confidence?.status === "superseded_by_assertion" ||
+        PUBLISHING_STATUSES.has(c.current_ledger_status ?? ""),
+    )
+  ) {
+    return "verified";
+  }
+  if (cases.some((c) => c.confidence?.status === "active" && c.confidence.band === "high")) {
+    return "high_confidence";
+  }
+  return "unattributed";
+}
+
+export function attachRollupTotals(
+  context: Record<string, ContextEntry>,
+  cases: ConfidenceCase[],
+): Record<string, ContextEntry> {
+  const casesByVendor = new Map<string, ConfidenceCase[]>();
+  for (const c of cases) {
+    const vendor = c.candidate_joins[0]?.left_ref?.local_id;
+    if (!vendor) continue;
+    casesByVendor.set(vendor, [...(casesByVendor.get(vendor) ?? []), c]);
+  }
+
+  const out: Record<string, ContextEntry> = {};
+  for (const [vendor, entry] of Object.entries(context)) {
+    const totals: RollupTotals = { verified: 0, high_confidence: 0, unattributed: 0 };
+    totals[vendorRollupBucket(casesByVendor.get(vendor) ?? [])] = entry.money_total;
+    out[vendor] = { ...entry, rollup_totals: totals };
+  }
+  return out;
 }

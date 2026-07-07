@@ -93,6 +93,8 @@ export const CONFIDENCE_BAND_ORDER = [
 ${confidenceBandTuple}
 ] as const;
 
+export type ConfidenceBand = (typeof CONFIDENCE_BAND_ORDER)[number];
+
 export const CONFIDENCE_BAND_THRESHOLDS = {
 ${confidenceThresholdEntries}
 } as const;

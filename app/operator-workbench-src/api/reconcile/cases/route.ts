@@ -3,7 +3,7 @@
 // build-excluded; gated at runtime as defense-in-depth.
 import { NextResponse } from "next/server";
 import { operatorEnabled } from "@/lib/operator-gate";
-import { DATA, runPython } from "../../../_lib/operator-python";
+import { DATA, confidenceArgs, runPython } from "../../../_lib/operator-python";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +14,7 @@ export async function GET() {
   const cases = runPython<unknown[]>("reconciliation_overlay.py", [
     "--read-model", DATA.readModel(),
     "--ledger", DATA.attachLedger(),
+    ...confidenceArgs(),
   ]);
   return NextResponse.json({ cases, count: cases.length });
 }

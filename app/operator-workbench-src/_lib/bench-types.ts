@@ -7,6 +7,7 @@
 // the Neo4j driver, which is server-only — a type re-export is erased and stays safe in
 // the browser bundle and in vitest).
 export type { ContextEntry } from "./operator-context";
+import type { ConfidenceBand } from "./reconciliation.generated";
 
 export type Ref = {
   source_id: string;
@@ -28,6 +29,13 @@ export type AiReview = {
   signal_strength: number;
 };
 
+export type ConfidenceStatus = "active" | "superseded_by_assertion" | "retired_contradicted" | "stale";
+
+export type CaseConfidence = {
+  band: ConfidenceBand;
+  status: ConfidenceStatus;
+};
+
 export type Case = {
   case_id: string;
   candidate_joins: Join[];
@@ -35,4 +43,5 @@ export type Case = {
   current_ledger_status: string;
   bulk_eligible: boolean;
   review_flags: Record<string, boolean>;
+  confidence?: CaseConfidence;
 };

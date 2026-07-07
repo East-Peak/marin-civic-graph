@@ -7,6 +7,7 @@
 // root) and panic at build. Reading them from env keeps the build clean. All values are
 // server-fixed (never request-derived).
 import { execFileSync } from "node:child_process";
+import { existsSync } from "node:fs";
 import path from "node:path";
 
 function repoRoot(): string {
@@ -32,8 +33,14 @@ export const DATA = {
   einCandidates: () => repoPath("data", "review", "phaseB-ein-review", "vendor-ein-candidates.jsonl"),
   sosCandidates: () => repoPath("data", "review", "phaseC-sos-review", "vendor-sos-candidates.jsonl"),
   committeeCandidates: () => repoPath("data", "review", "fppc-committee-review", "committee-candidates.jsonl"),
+  confidencePath: () => repoPath("data", "identity", "confidence.jsonl"),
   attachDir: () => repoPath("data", "review", "attach"),
 };
+
+export function confidenceArgs(): string[] {
+  const confidence = DATA.confidencePath();
+  return existsSync(confidence) ? ["--confidence", confidence] : [];
+}
 
 export function runPython<T = unknown>(script: string, args: string[]): T {
   const stdout = execFileSync(pythonBin(), [repoPath("scripts", script), ...args], {

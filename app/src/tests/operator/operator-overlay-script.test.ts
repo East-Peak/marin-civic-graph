@@ -19,6 +19,14 @@ describe("operator workbench reconciliation overlay script", () => {
     expect(page).not.toContain('"reconcile_cases.py"');
   });
 
+  it("passes the optional identity confidence projection through the cases route and page", () => {
+    const route = src("api", "reconcile", "cases", "route.ts");
+    const page = src("reconcile", "page.tsx");
+
+    expect(route).toContain("confidenceArgs()");
+    expect(page).toContain("confidenceArgs()");
+  });
+
   it("passes the committee candidate file through the decide route", () => {
     const route = src("api", "reconcile", "decide", "route.ts");
     expect(route).toContain('"--committee-candidates"');
