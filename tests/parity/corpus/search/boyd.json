@@ -84,6 +84,116 @@
         "type": "Case"
       },
       {
+        "id": "agenda-item-2020-11-16-san-rafael-city-council-special-1",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2020-11-16-san-rafael-city-council-special-1",
+        "search_label": "Discussion Boyd House Interested Parties (PW)",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2024-03-18-san-rafael-city-council-5a",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2024-03-18-san-rafael-city-council-5a",
+        "search_label": "Presentation of Proclamation Recognizing Louise Boyd (CM)",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "proceeding-boyd-complaint-filed-2023-08-11",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/proceeding/boyd-complaint-filed-2023-08-11",
+        "search_label": "proceeding-boyd-complaint-filed-2023-08-11",
+        "type": "Proceeding"
+      },
+      {
+        "id": "proceeding-boyd-dismissal-order-2024-08-07",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/proceeding/boyd-dismissal-order-2024-08-07",
+        "search_label": "proceeding-boyd-dismissal-order-2024-08-07",
+        "type": "Proceeding"
+      },
+      {
+        "id": "proceeding-boyd-motion-hearing-2024-07-15",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/proceeding/boyd-motion-hearing-2024-07-15",
+        "search_label": "proceeding-boyd-motion-hearing-2024-07-15",
+        "type": "Proceeding"
+      },
+      {
+        "id": "proceeding-boyd-preliminary-injunction-2023-10-19",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/proceeding/boyd-preliminary-injunction-2023-10-19",
+        "search_label": "proceeding-boyd-preliminary-injunction-2023-10-19",
+        "type": "Proceeding"
+      },
+      {
+        "id": "proceeding-boyd-tro-granted-2023-08-15",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/proceeding/boyd-tro-granted-2023-08-15",
+        "search_label": "proceeding-boyd-tro-granted-2023-08-15",
+        "type": "Proceeding"
+      },
+      {
+        "id": "agenda-item-2021-05-03-san-rafael-city-council-7b",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2021-05-03-san-rafael-city-council-7b",
+        "search_label": "Marin History Museum Lease of Boyd Gate house",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2021-05-17-san-rafael-city-council-5h",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2021-05-17-san-rafael-city-council-5h",
+        "search_label": "Marin History Museum Lease of Boyd Gate House",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2025-09-02-san-rafael-city-council-4c",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2025-09-02-san-rafael-city-council-4c",
+        "search_label": "Marin History Museum Boyd Gate House Use Agreement",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "proceeding-boyd-motion-to-dismiss-filed-2024-05-10",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/proceeding/boyd-motion-to-dismiss-filed-2024-05-10",
+        "search_label": "proceeding-boyd-motion-to-dismiss-filed-2024-05-10",
+        "type": "Proceeding"
+      },
+      {
         "id": "decision-2021-05-03-san-rafael-city-council-7b-motion-approval",
         "jurisdiction": null,
         "key_fact": "Marin History Museum Lease of Boyd Gate house",

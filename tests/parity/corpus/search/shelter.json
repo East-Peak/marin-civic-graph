@@ -14,6 +14,16 @@
         "type": "Project"
       },
       {
+        "id": "agenda-item-2022-05-02-san-rafael-city-council-5i",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2022-05-02-san-rafael-city-council-5i",
+        "search_label": "Advertising Transit Shelter Agreement",
+        "type": "AgendaItem"
+      },
+      {
         "id": "decision-2022-05-02-san-rafael-city-council-5i-resolution-adoption-15063",
         "jurisdiction": null,
         "key_fact": "Advertising Transit Shelter Agreement",
@@ -22,6 +32,56 @@
         "route": "/decision/2022-05-02-san-rafael-city-council-5i-resolution-adoption-15063",
         "search_label": "Advertising Transit Shelter Agreement",
         "type": "Decision"
+      },
+      {
+        "id": "agenda-item-2020-04-20-san-rafael-city-council-4b",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2020-04-20-san-rafael-city-council-4b",
+        "search_label": "190 Mill Street - Homeward Bound of Marin Emergency Shelter & Supportive",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2020-04-06-san-rafael-city-council-5a",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2020-04-06-san-rafael-city-council-5a",
+        "search_label": "190 Mill Street - Homeward Bound of Marin Emergency Shelter and Supportive Housing",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2025-11-17-san-rafael-city-council-6i",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2025-11-17-san-rafael-city-council-6i",
+        "search_label": "Resolution Declaring a Shelter Crisis Pursuant to Government Code Section 8698, Et.",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2026-03-16-san-rafael-city-council-4a",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2026-03-16-san-rafael-city-council-4a",
+        "search_label": "Encampment Resolution Fund Round 3 Grant and 350 Merrydale Interim Shelter Project",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2025-11-17-san-rafael-city-council-6a",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2025-11-17-san-rafael-city-council-6a",
+        "search_label": "Declaration of Shelter Crisis and Approval of Related Actions and Acquisition of the",
+        "type": "AgendaItem"
       }
     ]
   },

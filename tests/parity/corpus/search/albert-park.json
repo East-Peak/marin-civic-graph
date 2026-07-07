@@ -14,6 +14,46 @@
         "type": "Place"
       },
       {
+        "id": "agenda-item-2023-03-06-san-rafael-city-council-6b",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2023-03-06-san-rafael-city-council-6b",
+        "search_label": "Camping at Albert Park",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2022-01-18-san-rafael-city-council-5j",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2022-01-18-san-rafael-city-council-5j",
+        "search_label": "Albert Park Fencing and Netting",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2019-06-03-san-rafael-city-council-4j",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2019-06-03-san-rafael-city-council-4j",
+        "search_label": "Albert Park Play Area Project Completion",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2023-11-06-san-rafael-city-council-4g",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2023-11-06-san-rafael-city-council-4g",
+        "search_label": "Albert Park Netting and Fencing Project",
+        "type": "AgendaItem"
+      },
+      {
         "id": "decision-2023-03-06-san-rafael-city-council-6b-resolution-adoption-15194",
         "jurisdiction": null,
         "key_fact": "Camping at Albert Park",
@@ -54,6 +94,26 @@
         "type": "Person"
       },
       {
+        "id": "agenda-item-2025-10-06-san-rafael-city-council-special-7a",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2025-10-06-san-rafael-city-council-special-7a",
+        "search_label": "Capital Project Management Services Contract for Albert Park Library & Community",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2022-02-07-san-rafael-city-council-5f",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2022-02-07-san-rafael-city-council-5f",
+        "search_label": "Americans with Disabilities Act (ADA) Improvements at Albert Park Ball Field",
+        "type": "AgendaItem"
+      },
+      {
         "id": "person-boro-albert-and-patricia",
         "jurisdiction": null,
         "key_fact": null,
@@ -62,6 +122,56 @@
         "route": "/person/boro-albert-and-patricia",
         "search_label": "Albert and Patricia Boro",
         "type": "Person"
+      },
+      {
+        "id": "decision-2022-02-07-san-rafael-city-council-5f-resolution-adoption-15027",
+        "jurisdiction": null,
+        "key_fact": "Americans with Disabilities Act (ADA) Improvements at Albert Park Ball Field",
+        "last_activity": "2022-02-07",
+        "rank": 70,
+        "route": "/decision/2022-02-07-san-rafael-city-council-5f-resolution-adoption-15027",
+        "search_label": "Americans with Disabilities Act (ADA) Improvements at Albert Park Ball Field",
+        "type": "Decision"
+      },
+      {
+        "id": "org-marincontract-recipient-goldberg-albert",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/organization/marincontract-recipient-goldberg-albert",
+        "search_label": "GOLDBERG, ALBERT",
+        "type": "Organization"
+      },
+      {
+        "id": "decision-2023-11-06-san-rafael-city-council-4g-decision-rejected-the-bid-for-the-albert-park-netting-and-fencing-project-and-directed-st",
+        "jurisdiction": null,
+        "key_fact": "Rejected the Bid for the Albert Park Netting and Fencing Project and Directed Staff to Develop",
+        "last_activity": "2023-11-06",
+        "rank": 75,
+        "route": "/decision/2023-11-06-san-rafael-city-council-4g-decision-rejected-the-bid-for-the-albert-park-netting-and-fencing-project-and-directed-st",
+        "search_label": "Rejected the Bid for the Albert Park Netting and Fencing Project and Directed Staff to Develop",
+        "type": "Decision"
+      },
+      {
+        "id": "org-marincontract-recipient-ricci-james-albert",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/organization/marincontract-recipient-ricci-james-albert",
+        "search_label": "RICCI, JAMES ALBERT",
+        "type": "Organization"
+      },
+      {
+        "id": "decision-2024-11-05-san-rafael-initiative-submission",
+        "jurisdiction": null,
+        "key_fact": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "last_activity": "2024-11-05",
+        "rank": 85,
+        "route": "/decision/2024-11-05-san-rafael-initiative-submission",
+        "search_label": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
+        "type": "Decision"
       },
       {
         "id": "person-tracy-park",
@@ -114,26 +224,6 @@
         "type": "Organization"
       },
       {
-        "id": "decision-2022-02-07-san-rafael-city-council-5f-resolution-adoption-15027",
-        "jurisdiction": null,
-        "key_fact": "Americans with Disabilities Act (ADA) Improvements at Albert Park Ball Field",
-        "last_activity": "2022-02-07",
-        "rank": 70,
-        "route": "/decision/2022-02-07-san-rafael-city-council-5f-resolution-adoption-15027",
-        "search_label": "Americans with Disabilities Act (ADA) Improvements at Albert Park Ball Field",
-        "type": "Decision"
-      },
-      {
-        "id": "decision-2023-11-06-san-rafael-city-council-4g-decision-rejected-the-bid-for-the-albert-park-netting-and-fencing-project-and-directed-st",
-        "jurisdiction": null,
-        "key_fact": "Rejected the Bid for the Albert Park Netting and Fencing Project and Directed Staff to Develop",
-        "last_activity": "2023-11-06",
-        "rank": 75,
-        "route": "/decision/2023-11-06-san-rafael-city-council-4g-decision-rejected-the-bid-for-the-albert-park-netting-and-fencing-project-and-directed-st",
-        "search_label": "Rejected the Bid for the Albert Park Netting and Fencing Project and Directed Staff to Develop",
-        "type": "Decision"
-      },
-      {
         "id": "org-park-parent-teacher-association",
         "jurisdiction": null,
         "key_fact": "Park Parent Teacher Association",
@@ -144,14 +234,14 @@
         "type": "Organization"
       },
       {
-        "id": "decision-2024-11-05-san-rafael-initiative-submission",
+        "id": "agenda-item-2021-08-16-san-rafael-city-council-5e",
         "jurisdiction": null,
-        "key_fact": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
-        "last_activity": "2024-11-05",
-        "rank": 85,
-        "route": "/decision/2024-11-05-san-rafael-initiative-submission",
-        "search_label": "Order submission of the Albert Park library initiative to the November 5, 2024 ballot \u00b7 2024-06-03",
-        "type": "Decision"
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2021-08-16-san-rafael-city-council-5e",
+        "search_label": "Albert J. Boro Community Center Community Use Policy",
+        "type": "AgendaItem"
       },
       {
         "id": "org-committee-to-restore-memorial-park",
@@ -174,14 +264,14 @@
         "type": "Organization"
       },
       {
-        "id": "decision-2022-11-07-san-rafael-city-council-4e-resolution-adoption-15154",
+        "id": "agenda-item-corte-madera-town-council-1575-5b",
         "jurisdiction": null,
-        "key_fact": "Pickleweed Park Enhancement Project",
-        "last_activity": "2022-11-07",
-        "rank": 70,
-        "route": "/decision/2022-11-07-san-rafael-city-council-4e-resolution-adoption-15154",
-        "search_label": "Pickleweed Park Enhancement Project",
-        "type": "Decision"
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-corte-madera-town-council-1575-5b",
+        "search_label": "Town Park",
+        "type": "AgendaItem"
       },
       {
         "id": "decision-2021-08-16-san-rafael-city-council-5e-resolution-adoption-14963",
@@ -194,314 +284,224 @@
         "type": "Decision"
       },
       {
-        "id": "decision-2024-11-04-san-rafael-city-council-special-1b-motion-approval",
+        "id": "agenda-item-corte-madera-town-council-1516-pu6",
         "jurisdiction": null,
-        "key_fact": "Park and Recreation Commission Interviews",
-        "last_activity": "2024-11-04",
-        "rank": 85,
-        "route": "/decision/2024-11-04-san-rafael-city-council-special-1b-motion-approval",
-        "search_label": "Park and Recreation Commission Interviews",
-        "type": "Decision"
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-corte-madera-town-council-1516-pu6",
+        "search_label": "Park Rental Regulations",
+        "type": "AgendaItem"
       },
       {
-        "id": "decision-2022-05-16-san-rafael-city-council-5l-resolution-adoption-15070",
+        "id": "org-marincontract-recipient-park-engineering",
         "jurisdiction": null,
-        "key_fact": "Sun Valley Park Deed Restriction",
-        "last_activity": "2022-05-16",
-        "rank": 70,
-        "route": "/decision/2022-05-16-san-rafael-city-council-5l-resolution-adoption-15070",
-        "search_label": "Sun Valley Park Deed Restriction",
-        "type": "Decision"
-      },
-      {
-        "id": "decision-2022-11-07-san-rafael-city-council-4d-resolution-adoption-15153",
-        "jurisdiction": null,
-        "key_fact": "Sun Valley Park Playground Project",
-        "last_activity": "2022-11-07",
-        "rank": 70,
-        "route": "/decision/2022-11-07-san-rafael-city-council-4d-resolution-adoption-15153",
-        "search_label": "Sun Valley Park Playground Project",
-        "type": "Decision"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-2157",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2024-07-31",
-        "last_activity": "2024-07-31",
-        "rank": 76,
-        "route": "/meeting/san-anselmo-town-council-2157",
-        "search_label": "Dog Park Steering Committee \u2014 2024-07-31",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-2158",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2023-11-29",
-        "last_activity": "2023-11-29",
-        "rank": 71,
-        "route": "/meeting/san-anselmo-town-council-2158",
-        "search_label": "Dog Park Steering Committee \u2014 2023-11-29",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-993",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2023-09-27",
-        "last_activity": "2023-09-27",
-        "rank": 69,
-        "route": "/meeting/san-anselmo-town-council-993",
-        "search_label": "Dog Park Steering Committee \u2014 2023-09-27",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-1007",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2023-07-26",
-        "last_activity": "2023-07-26",
-        "rank": 67,
-        "route": "/meeting/san-anselmo-town-council-1007",
-        "search_label": "Dog Park Steering Committee \u2014 2023-07-26",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-942",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2023-05-31",
-        "last_activity": "2023-05-31",
-        "rank": 66,
-        "route": "/meeting/san-anselmo-town-council-942",
-        "search_label": "Dog Park Steering Committee \u2014 2023-05-31",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-2162",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2022-11-30",
-        "last_activity": "2022-11-30",
-        "rank": 64,
-        "route": "/meeting/san-anselmo-town-council-2162",
-        "search_label": "Dog Park Steering Committee \u2014 2022-11-30",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-2163",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2022-10-05",
-        "last_activity": "2022-10-05",
-        "rank": 64,
-        "route": "/meeting/san-anselmo-town-council-2163",
-        "search_label": "Dog Park Steering Committee \u2014 2022-10-05",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-2164",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2022-07-27",
-        "last_activity": "2022-07-27",
-        "rank": 64,
-        "route": "/meeting/san-anselmo-town-council-2164",
-        "search_label": "Dog Park Steering Committee \u2014 2022-07-27",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-2165",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2022-05-25",
-        "last_activity": "2022-05-25",
-        "rank": 64,
-        "route": "/meeting/san-anselmo-town-council-2165",
-        "search_label": "Dog Park Steering Committee \u2014 2022-05-25",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-2166",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2022-03-30",
-        "last_activity": "2022-03-30",
-        "rank": 64,
-        "route": "/meeting/san-anselmo-town-council-2166",
-        "search_label": "Dog Park Steering Committee \u2014 2022-03-30",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-2167",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2022-01-26",
-        "last_activity": "2022-01-26",
-        "rank": 64,
-        "route": "/meeting/san-anselmo-town-council-2167",
-        "search_label": "Dog Park Steering Committee \u2014 2022-01-26",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-2168",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2021-12-15",
-        "last_activity": "2021-12-15",
-        "rank": 64,
-        "route": "/meeting/san-anselmo-town-council-2168",
-        "search_label": "Dog Park Steering Committee \u2014 2021-12-15",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-2169",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2021-11-17",
-        "last_activity": "2021-11-17",
-        "rank": 64,
-        "route": "/meeting/san-anselmo-town-council-2169",
-        "search_label": "Dog Park Steering Committee \u2014 2021-11-17",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-2170",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2021-09-29",
-        "last_activity": "2021-09-29",
-        "rank": 64,
-        "route": "/meeting/san-anselmo-town-council-2170",
-        "search_label": "Dog Park Steering Committee \u2014 2021-09-29",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-2171",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2021-07-28",
-        "last_activity": "2021-07-28",
-        "rank": 64,
-        "route": "/meeting/san-anselmo-town-council-2171",
-        "search_label": "Dog Park Steering Committee \u2014 2021-07-28",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-2172",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2021-05-27",
-        "last_activity": "2021-05-27",
-        "rank": 64,
-        "route": "/meeting/san-anselmo-town-council-2172",
-        "search_label": "Dog Park Steering Committee \u2014 2021-05-27",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-2173",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2021-03-29",
-        "last_activity": "2021-03-29",
-        "rank": 64,
-        "route": "/meeting/san-anselmo-town-council-2173",
-        "search_label": "Dog Park Steering Committee \u2014 2021-03-29",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-2174",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2021-01-25",
-        "last_activity": "2021-01-25",
-        "rank": 64,
-        "route": "/meeting/san-anselmo-town-council-2174",
-        "search_label": "Dog Park Steering Committee \u2014 2021-01-25",
-        "type": "Meeting"
-      },
-      {
-        "id": "meeting-san-anselmo-town-council-2175",
-        "jurisdiction": null,
-        "key_fact": "Dog Park Steering Committee \u00b7 2020-11-30",
-        "last_activity": "2020-11-30",
-        "rank": 64,
-        "route": "/meeting/san-anselmo-town-council-2175",
-        "search_label": "Dog Park Steering Committee \u2014 2020-11-30",
-        "type": "Meeting"
-      },
-      {
-        "id": "decision-2022-10-17-san-rafael-city-council-4g-resolution-adoption-8923-15140",
-        "jurisdiction": null,
-        "key_fact": "Sponsorship of Minor Park Amenities Policy",
-        "last_activity": "2022-10-17",
-        "rank": 71,
-        "route": "/decision/2022-10-17-san-rafael-city-council-4g-resolution-adoption-8923-15140",
-        "search_label": "Sponsorship of Minor Park Amenities Policy",
-        "type": "Decision"
-      },
-      {
-        "id": "org-committee-to-elect-jackie-elward-to-rohnert-park-city-council-2020",
-        "jurisdiction": null,
-        "key_fact": "Committee to Elect Jackie Elward to Rohnert Park City Council 2020",
-        "last_activity": "2021-08-11",
-        "rank": 70,
-        "route": "/organization/committee-to-elect-jackie-elward-to-rohnert-park-city-council-2020",
-        "search_label": "Committee to Elect Jackie Elward to Rohnert Park City Council 2020",
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/organization/marincontract-recipient-park-engineering",
+        "search_label": "PARK ENGINEERING INC",
         "type": "Organization"
       },
       {
-        "id": "meeting-san-anselmo-town-council-2736",
+        "id": "agenda-item-2022-11-07-san-rafael-city-council-4e",
         "jurisdiction": null,
-        "key_fact": "Red Hill Dog Park Steering Committee \u00b7 2026-02-25",
-        "last_activity": "2026-02-25",
-        "rank": 89,
-        "route": "/meeting/san-anselmo-town-council-2736",
-        "search_label": "Red Hill Dog Park Steering Committee \u2014 2026-02-25",
-        "type": "Meeting"
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2022-11-07-san-rafael-city-council-4e",
+        "search_label": "Pickleweed Park Enhancement Project",
+        "type": "AgendaItem"
       },
       {
-        "id": "meeting-san-anselmo-town-council-2749",
+        "id": "agenda-item-2023-10-16-san-rafael-city-council-special-1b",
         "jurisdiction": null,
-        "key_fact": "Red Hill Dog Park Steering Committee \u00b7 2026-03-25",
-        "last_activity": "2026-03-25",
-        "rank": 89,
-        "route": "/meeting/san-anselmo-town-council-2749",
-        "search_label": "Red Hill Dog Park Steering Committee \u2014 2026-03-25",
-        "type": "Meeting"
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2023-10-16-san-rafael-city-council-special-1b",
+        "search_label": "Park & Recreation Commission Interviews",
+        "type": "AgendaItem"
       },
       {
-        "id": "meeting-san-anselmo-town-council-2731",
+        "id": "agenda-item-2024-02-20-san-rafael-city-council-4g",
         "jurisdiction": null,
-        "key_fact": "Red Hill Dog Park Steering Committee \u00b7 2025-12-17",
-        "last_activity": "2025-12-17",
-        "rank": 88,
-        "route": "/meeting/san-anselmo-town-council-2731",
-        "search_label": "Red Hill Dog Park Steering Committee \u2014 2025-12-17",
-        "type": "Meeting"
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2024-02-20-san-rafael-city-council-4g",
+        "search_label": "Pickleweed Park Enhancement Project",
+        "type": "AgendaItem"
       },
       {
-        "id": "meeting-san-anselmo-town-council-2668",
+        "id": "agenda-item-2024-03-18-san-rafael-city-council-4c",
         "jurisdiction": null,
-        "key_fact": "Red Hill Dog Park Steering Committee \u00b7 2025-08-27",
-        "last_activity": "2025-08-27",
-        "rank": 85,
-        "route": "/meeting/san-anselmo-town-council-2668",
-        "search_label": "Red Hill Dog Park Steering Committee \u2014 2025-08-27",
-        "type": "Meeting"
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2024-03-18-san-rafael-city-council-4c",
+        "search_label": "Pickleweed Park Enhancement Project",
+        "type": "AgendaItem"
       },
       {
-        "id": "meeting-san-anselmo-town-council-2559",
+        "id": "agenda-item-2024-07-15-san-rafael-city-council-4k",
         "jurisdiction": null,
-        "key_fact": "Red Hill Dog Park Steering Committee \u00b7 2025-05-28",
-        "last_activity": "2025-05-28",
-        "rank": 83,
-        "route": "/meeting/san-anselmo-town-council-2559",
-        "search_label": "Red Hill Dog Park Steering Committee \u2014 2025-05-28",
-        "type": "Meeting"
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2024-07-15-san-rafael-city-council-4k",
+        "search_label": "Pickleweed Park Enhancement Project",
+        "type": "AgendaItem"
       },
       {
-        "id": "meeting-san-anselmo-town-council-2524",
+        "id": "agenda-item-sausalito-city-council-1763-1b",
         "jurisdiction": null,
-        "key_fact": "Red Hill Dog Park Steering Committee \u00b7 2025-03-26",
-        "last_activity": "2025-03-26",
-        "rank": 82,
-        "route": "/meeting/san-anselmo-town-council-2524",
-        "search_label": "Red Hill Dog Park Steering Committee \u2014 2025-03-26",
-        "type": "Meeting"
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-sausalito-city-council-1763-1b",
+        "search_label": "National Park Service Presentation",
+        "type": "AgendaItem"
       },
       {
-        "id": "meeting-san-anselmo-town-council-2512",
+        "id": "agenda-item-2025-09-02-san-rafael-city-council-6a",
         "jurisdiction": null,
-        "key_fact": "Red Hill Dog Park Steering Committee \u00b7 2025-01-29",
-        "last_activity": "2025-01-29",
-        "rank": 80,
-        "route": "/meeting/san-anselmo-town-council-2512",
-        "search_label": "Red Hill Dog Park Steering Committee \u2014 2025-01-29",
-        "type": "Meeting"
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2025-09-02-san-rafael-city-council-6a",
+        "search_label": "Park Impact Fee and Park Dedication and In-Lieu Fee Programs (REMOVED)",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2024-04-15-san-rafael-city-council-4h",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2024-04-15-san-rafael-city-council-4h",
+        "search_label": "Public Art Project Proposal for Mural at Albert J. Boro Community Center",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-corte-madera-town-council-1428-pu2",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-corte-madera-town-council-1428-pu2",
+        "search_label": "Draft locations for new outdoor recreation facilities signage in Town Park, Cove Park,",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2019-08-05-san-rafael-city-council-4b",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2019-08-05-san-rafael-city-council-4b",
+        "search_label": "Park and Recreation Commission Vacancies",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2020-11-30-san-rafael-city-council-special-1",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2020-11-30-san-rafael-city-council-special-1",
+        "search_label": "Park and Recreation Commission Interviews",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2022-05-16-san-rafael-city-council-5l",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2022-05-16-san-rafael-city-council-5l",
+        "search_label": "Sun Valley Park Deed Restriction",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2022-08-08-san-rafael-city-council-special-2",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2022-08-08-san-rafael-city-council-special-2",
+        "search_label": "Park and Recreation Commission Interviews",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2022-11-07-san-rafael-city-council-4d",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2022-11-07-san-rafael-city-council-4d",
+        "search_label": "Sun Valley Park Playground Project",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2024-06-17-san-rafael-city-council-4g",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2024-06-17-san-rafael-city-council-4g",
+        "search_label": "Park and Recreation Month Proclamation",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2024-11-04-san-rafael-city-council-special-1b",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2024-11-04-san-rafael-city-council-special-1b",
+        "search_label": "Park and Recreation Commission Interviews",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-belvedere-city-council-city-council-meeting-november-14-2022-pu8",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-belvedere-city-council-city-council-meeting-november-14-2022-pu8",
+        "search_label": "Lower Hawthorn Stairs/Centennial Park",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-corte-madera-town-council-1353-pu2",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-corte-madera-town-council-1353-pu2",
+        "search_label": "Public Notice of Park Project",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-corte-madera-town-council-1482-pu2",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-corte-madera-town-council-1482-pu2",
+        "search_label": "Current Town Park Playground Features",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-mill-valley-committees-561-pu3",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-mill-valley-committees-561-pu3",
+        "search_label": "Old Mill Park Amphitheater Renovation",
+        "type": "AgendaItem"
       }
     ]
   },

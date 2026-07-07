@@ -22,6 +22,26 @@
         "route": "/committee/gerrod-herndon-for-san-rafael-city-council-2022",
         "search_label": "Gerrod Herndon for San Rafael City Council 2022",
         "type": "Committee"
+      },
+      {
+        "id": "candidacy-gerrod-herndon-san-rafael-council-district-2-2022",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/candidacy/gerrod-herndon-san-rafael-council-district-2-2022",
+        "search_label": "candidacy-gerrod-herndon-san-rafael-council-district-2-2022",
+        "type": "Candidacy"
+      },
+      {
+        "id": "agenda-item-mill-valley-committees-476-ge1",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-mill-valley-committees-476-ge1",
+        "search_label": "Diversity, Equity, and Inclusion Initiatives Review, presented by Tammy Herndon, DEI Management",
+        "type": "AgendaItem"
       }
     ]
   },

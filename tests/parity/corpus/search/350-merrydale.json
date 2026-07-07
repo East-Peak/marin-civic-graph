@@ -54,16 +54,6 @@
         "type": "Agreement"
       },
       {
-        "id": "decision-2026-02-17-350-merrydale-project-services-authorization",
-        "jurisdiction": null,
-        "key_fact": "350 Merrydale project services resolution",
-        "last_activity": "2026-02-17",
-        "rank": 98,
-        "route": "/decision/2026-02-17-350-merrydale-project-services-authorization",
-        "search_label": "350 Merrydale project services resolution",
-        "type": "Decision"
-      },
-      {
         "id": "agreement-350-merrydale-lca-design-services",
         "jurisdiction": null,
         "key_fact": "350 Merrydale LCA design services agreement",
@@ -84,6 +74,16 @@
         "type": "Agreement"
       },
       {
+        "id": "decision-2026-02-17-350-merrydale-project-services-authorization",
+        "jurisdiction": null,
+        "key_fact": "350 Merrydale project services resolution",
+        "last_activity": "2026-02-17",
+        "rank": 98,
+        "route": "/decision/2026-02-17-350-merrydale-project-services-authorization",
+        "search_label": "350 Merrydale project services resolution",
+        "type": "Decision"
+      },
+      {
         "id": "amendment-350-merrydale-lca-design-services-2026-02-17",
         "jurisdiction": null,
         "key_fact": "350 Merrydale LCA design services amendment",
@@ -92,6 +92,16 @@
         "route": "/amendment/350-merrydale-lca-design-services-2026-02-17",
         "search_label": "350 Merrydale LCA design services amendment",
         "type": "Amendment"
+      },
+      {
+        "id": "agenda-item-2025-12-01-san-rafael-city-council-4b",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2025-12-01-san-rafael-city-council-4b",
+        "search_label": "350 Merrydale Ordinance Adoption",
+        "type": "AgendaItem"
       },
       {
         "id": "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
@@ -124,14 +134,374 @@
         "type": "Decision"
       },
       {
-        "id": "meeting-mill-valley-committees-350",
+        "id": "moneyflow-2025-11-17-350-merrydale-brokerage-services",
         "jurisdiction": null,
-        "key_fact": "Planning Commission Agenda \u00b7 2024-03-26",
-        "last_activity": "2024-03-26",
-        "rank": 72,
-        "route": "/meeting/mill-valley-committees-350",
-        "search_label": "Planning Commission Agenda \u2014 2024-03-26",
-        "type": "Meeting"
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/2025-11-17-350-merrydale-brokerage-services",
+        "search_label": "moneyflow-2025-11-17-350-merrydale-brokerage-services",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-2025-11-17-350-merrydale-county-grant",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/2025-11-17-350-merrydale-county-grant",
+        "search_label": "moneyflow-2025-11-17-350-merrydale-county-grant",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-2025-11-17-350-merrydale-property-acquisition",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/2025-11-17-350-merrydale-property-acquisition",
+        "search_label": "moneyflow-2025-11-17-350-merrydale-property-acquisition",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-2026-02-17-350-merrydale-swinerton-services",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/2026-02-17-350-merrydale-swinerton-services",
+        "search_label": "moneyflow-2026-02-17-350-merrydale-swinerton-services",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-2026-02-17-350-merrydale-lca-design-amendment",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/2026-02-17-350-merrydale-lca-design-amendment",
+        "search_label": "moneyflow-2026-02-17-350-merrydale-lca-design-amendment",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "agenda-item-2020-02-03-san-rafael-city-council-7a",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2020-02-03-san-rafael-city-council-7a",
+        "search_label": "New 45-Unit Townhome Development - 350 Merrydale Road/3833 Redwood Hwy",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2020-02-18-san-rafael-city-council-5c",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2020-02-18-san-rafael-city-council-5c",
+        "search_label": "New 45-Unit Townhome Development - 350 Merrydale Road/3833 Redwood Hwy",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "agenda-item-2026-03-16-san-rafael-city-council-4a",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/item-2026-03-16-san-rafael-city-council-4a",
+        "search_label": "Encampment Resolution Fund Round 3 Grant and 350 Merrydale Interim Shelter Project",
+        "type": "AgendaItem"
+      },
+      {
+        "id": "moneyflow-1343255-Z7BdyDGu1sQL",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1343255-Z7BdyDGu1sQL",
+        "search_label": "expenditure $350.22",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1347886-EXP30",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1347886-EXP30",
+        "search_label": "expenditure $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1401931-INC346",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1401931-INC346",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1420696-INC199",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1420696-INC199",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1435627-INC110",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1435627-INC110",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1435627-INC195",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1435627-INC195",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1435627-INC208",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1435627-INC208",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1435627-INC28",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1435627-INC28",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1435627-INC284",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1435627-INC284",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1435627-INC336",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1435627-INC336",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1435627-INC6",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1435627-INC6",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1435627-INC85",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1435627-INC85",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1435887-INC253",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1435887-INC253",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1435887-INC6",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1435887-INC6",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1436315-INC264",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1436315-INC264",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1436315-INC366",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1436315-INC366",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1436315-INC419",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1436315-INC419",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1436315-INC67",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1436315-INC67",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1436437-9gnoAtL58hAf",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1436437-9gnoAtL58hAf",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1436437-T3uIvPaTKQIL",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1436437-T3uIvPaTKQIL",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1437870-kjIkgJ5Gcbkl",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1437870-kjIkgJ5Gcbkl",
+        "search_label": "expenditure $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1437870-prd1bS9yJhWN",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1437870-prd1bS9yJhWN",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1437870-sCJkmDk51Qjc",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1437870-sCJkmDk51Qjc",
+        "search_label": "expenditure $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1437870-uAOI4Lme4Sof",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1437870-uAOI4Lme4Sof",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1437870-upv5r9ehlxZQ",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1437870-upv5r9ehlxZQ",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1438401-EXP24",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1438401-EXP24",
+        "search_label": "expenditure $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1438401-EXP9",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1438401-EXP9",
+        "search_label": "expenditure $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1441638-INC334",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1441638-INC334",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
+      },
+      {
+        "id": "moneyflow-1445246-IDT33",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/money-flow/1445246-IDT33",
+        "search_label": "contribution $350.00",
+        "type": "MoneyFlow"
       }
     ]
   },
