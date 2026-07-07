@@ -13,9 +13,10 @@ import os
 import sqlite3
 import sys
 import tempfile
-from collections import Counter, OrderedDict
+from collections import Counter, OrderedDict, defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Iterable
 
@@ -227,6 +228,10 @@ class BakedEdge:
     rel: str
     target: str
     props: dict = field(default_factory=dict)
+
+
+IdentityLinkRow = tuple[str, str, str, str | None, str | None, str | None]
+MoneyRollupRow = tuple[str, int, float, int, float, str]
 
 
 def _read_jsonl(path: Path) -> list[dict]:
@@ -611,6 +616,191 @@ def _gate_counts(nodes: dict[str, BakedNode], edges: dict[tuple[str, str, str], 
     return counts
 
 
+def _optional_text_prop(props: dict, key: str) -> str | None:
+    value = props.get(key)
+    if value is None or value == "":
+        return None
+    return str(value)
+
+
+def _identity_link_rows(
+    edges: dict[tuple[str, str, str], BakedEdge],
+) -> list[IdentityLinkRow]:
+    rows: list[IdentityLinkRow] = []
+    for edge in edges.values():
+        if edge.rel != "SAME_AS":
+            continue
+        assertion_id = _optional_text_prop(edge.props, "assertion_id")
+        if assertion_id is None:
+            continue
+        rows.append(
+            (
+                edge.source,
+                edge.target,
+                assertion_id,
+                _optional_text_prop(edge.props, "basis"),
+                _optional_text_prop(edge.props, "decided_at"),
+                _optional_text_prop(edge.props, "reviewer"),
+            )
+        )
+    return sorted(rows, key=lambda row: (row[0], row[1], row[2]))
+
+
+def _identity_sets_by_org(
+    org_ids: set[str],
+    identity_links: list[IdentityLinkRow],
+) -> dict[str, set[str]]:
+    parent = {org_id: org_id for org_id in org_ids}
+
+    def find(org_id: str) -> str:
+        root = org_id
+        while parent[root] != root:
+            root = parent[root]
+        while parent[org_id] != org_id:
+            next_id = parent[org_id]
+            parent[org_id] = root
+            org_id = next_id
+        return root
+
+    def union(left: str, right: str) -> None:
+        left_root = find(left)
+        right_root = find(right)
+        if left_root != right_root:
+            parent[right_root] = left_root
+
+    for source, target, *_ in identity_links:
+        if source in org_ids and target in org_ids:
+            union(source, target)
+
+    groups: dict[str, set[str]] = defaultdict(set)
+    for org_id in org_ids:
+        groups[find(org_id)].add(org_id)
+    return {org_id: set(groups[find(org_id)]) for org_id in org_ids}
+
+
+def _money_amount(node: BakedNode) -> Decimal:
+    value = node.props.get("amount")
+    if value is None or value == "":
+        return Decimal("0")
+    if isinstance(value, bool):
+        raise ValueError(f"Invalid boolean MoneyFlow amount for {node.id}")
+    if isinstance(value, int | float | Decimal):
+        return Decimal(str(value))
+    if isinstance(value, str):
+        cleaned = value.strip().replace("$", "").replace(",", "")
+        negative = cleaned.startswith("(") and cleaned.endswith(")")
+        if negative:
+            cleaned = cleaned[1:-1]
+        if cleaned == "":
+            return Decimal("0")
+        try:
+            amount = Decimal(cleaned)
+        except InvalidOperation as exc:
+            raise ValueError(
+                f"Invalid MoneyFlow amount for {node.id}: {value!r}"
+            ) from exc
+        return -amount if negative else amount
+    try:
+        return Decimal(str(value))
+    except InvalidOperation as exc:
+        raise ValueError(f"Invalid MoneyFlow amount for {node.id}: {value!r}") from exc
+
+
+def _decimal_as_float(value: Decimal) -> float:
+    return float(value)
+
+
+def _node_label(nodes: dict[str, BakedNode], node_id: str) -> str:
+    node = nodes.get(node_id)
+    return node.search_label if node is not None else node_id
+
+
+def _money_rollup_rows(
+    nodes: dict[str, BakedNode],
+    edges: dict[tuple[str, str, str], BakedEdge],
+    identity_links: list[IdentityLinkRow],
+) -> list[MoneyRollupRow]:
+    org_ids = {node.id for node in nodes.values() if node.type == "Organization"}
+    money_nodes = {
+        node.id: node for node in nodes.values() if node.type == "MoneyFlow"
+    }
+    identity_sets = _identity_sets_by_org(org_ids, identity_links)
+
+    from_sources_by_flow: dict[str, set[str]] = defaultdict(set)
+    to_targets_by_flow: dict[str, set[str]] = defaultdict(set)
+    for edge in edges.values():
+        if edge.source not in money_nodes:
+            continue
+        if edge.rel == "FROM_SOURCE":
+            from_sources_by_flow[edge.source].add(edge.target)
+        elif edge.rel == "TO_TARGET":
+            to_targets_by_flow[edge.source].add(edge.target)
+
+    amounts = {
+        flow_id: _money_amount(node) for flow_id, node in money_nodes.items()
+    }
+    rows: list[MoneyRollupRow] = []
+    for org_id in sorted(org_ids):
+        identity_set = identity_sets[org_id]
+        in_flow_ids = {
+            flow_id
+            for flow_id, targets in to_targets_by_flow.items()
+            if targets & identity_set
+        }
+        out_flow_ids = {
+            flow_id
+            for flow_id, sources in from_sources_by_flow.items()
+            if sources & identity_set
+        }
+        if not in_flow_ids and not out_flow_ids:
+            continue
+
+        money_in_total = sum(
+            (amounts[flow_id] for flow_id in sorted(in_flow_ids)),
+            Decimal("0"),
+        )
+        money_out_total = sum(
+            (amounts[flow_id] for flow_id in sorted(out_flow_ids)),
+            Decimal("0"),
+        )
+        counterparty_totals: dict[str, Decimal] = defaultdict(lambda: Decimal("0"))
+        for flow_id in sorted(in_flow_ids):
+            amount = abs(amounts[flow_id])
+            for counterparty_id in sorted(
+                from_sources_by_flow.get(flow_id, set()) - identity_set
+            ):
+                counterparty_totals[counterparty_id] += amount
+        for flow_id in sorted(out_flow_ids):
+            amount = abs(amounts[flow_id])
+            for counterparty_id in sorted(
+                to_targets_by_flow.get(flow_id, set()) - identity_set
+            ):
+                counterparty_totals[counterparty_id] += amount
+
+        top_counterparties = [
+            {
+                "id": counterparty_id,
+                "label": _node_label(nodes, counterparty_id),
+                "total": _decimal_as_float(total),
+            }
+            for counterparty_id, total in sorted(
+                counterparty_totals.items(),
+                key=lambda item: (-abs(item[1]), item[0]),
+            )[:5]
+        ]
+        rows.append(
+            (
+                org_id,
+                len(in_flow_ids),
+                _decimal_as_float(money_in_total),
+                len(out_flow_ids),
+                _decimal_as_float(money_out_total),
+                _json_dumps_stable(top_counterparties),
+            )
+        )
+    return rows
+
+
 def _source_as_of_date(paths: Iterable[Path]) -> str:
     latest_mtime = max(path.stat().st_mtime for path in paths)
     return datetime.fromtimestamp(latest_mtime, timezone.utc).date().isoformat()
@@ -653,6 +843,8 @@ def _write_sqlite(
     sqlite_path: Path,
     nodes: dict[str, BakedNode],
     edges: dict[tuple[str, str, str], BakedEdge],
+    identity_links: list[IdentityLinkRow],
+    money_rollups: list[MoneyRollupRow],
     as_of_date: str,
 ) -> None:
     sqlite_path.parent.mkdir(parents=True, exist_ok=True)
@@ -681,6 +873,24 @@ def _write_sqlite(
                     rel TEXT NOT NULL,
                     target TEXT NOT NULL
                 );
+                CREATE TABLE identity_links (
+                    source TEXT NOT NULL,
+                    target TEXT NOT NULL,
+                    assertion_id TEXT NOT NULL,
+                    basis TEXT,
+                    decided_at TEXT,
+                    reviewer TEXT,
+                    PRIMARY KEY (source, target, assertion_id)
+                );
+                CREATE TABLE money_rollups (
+                    org_id TEXT PRIMARY KEY,
+                    flows_in_count INTEGER NOT NULL,
+                    money_in_total REAL NOT NULL,
+                    flows_out_count INTEGER NOT NULL,
+                    money_out_total REAL NOT NULL,
+                    top_counterparties TEXT NOT NULL
+                        CHECK (json_valid(top_counterparties))
+                );
                 CREATE TABLE browse_rows (
                     id TEXT PRIMARY KEY,
                     type TEXT NOT NULL,
@@ -706,6 +916,10 @@ def _write_sqlite(
                     ON edges(source, rel, target);
                 CREATE INDEX idx_edges_target_rel_source
                     ON edges(target, rel, source);
+                CREATE INDEX idx_identity_links_source
+                    ON identity_links(source);
+                CREATE INDEX idx_identity_links_target
+                    ON identity_links(target);
                 -- Deliberately NO rel-first edge index and NO nodes(type,
                 -- search_label) index: every serving path enters edges by
                 -- source/target (graph engine, edges-among-selected), browse
@@ -814,6 +1028,34 @@ def _write_sqlite(
                 ],
             )
             conn.executemany(
+                """
+                INSERT INTO identity_links(
+                    source,
+                    target,
+                    assertion_id,
+                    basis,
+                    decided_at,
+                    reviewer
+                )
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                identity_links,
+            )
+            conn.executemany(
+                """
+                INSERT INTO money_rollups(
+                    org_id,
+                    flows_in_count,
+                    money_in_total,
+                    flows_out_count,
+                    money_out_total,
+                    top_counterparties
+                )
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                money_rollups,
+            )
+            conn.executemany(
                 "INSERT INTO meta(key, value) VALUES (?, ?)",
                 [
                     ("as_of_date", as_of_date),
@@ -909,10 +1151,12 @@ def bake_substrate(
     _validate_node_types(node_rows, known_types)
     nodes, node_validation = _compose_nodes(node_rows)
     edges, edge_validation = _compose_edges(edge_rows)
+    identity_links = _identity_link_rows(edges)
+    money_rollups = _money_rollup_rows(nodes, edges, identity_links)
     as_of_date = _source_as_of_date([*node_paths, *edge_paths])
     status_manifest = _status_manifest(nodes, edges, as_of_date)
 
-    _write_sqlite(sqlite_out, nodes, edges, as_of_date)
+    _write_sqlite(sqlite_out, nodes, edges, identity_links, money_rollups, as_of_date)
     _write_report(sqlite_out.parent / "status_manifest.json", status_manifest)
     _write_report(
         sqlite_out.parent / "catalog.json",
@@ -943,6 +1187,10 @@ def bake_substrate(
         "totals": {
             "nodes": len(nodes),
             "edges": len(edges),
+        },
+        "side_table_counts": {
+            "identity_links": len(identity_links),
+            "money_rollups": len(money_rollups),
         },
         "metadata": {
             "as_of_date": as_of_date,
@@ -975,6 +1223,10 @@ def _print_summary(report: dict, sqlite_path: Path, report_path: Path) -> None:
     print("Public substrate bake complete")
     print(f"nodes: {report['totals']['nodes']:,}")
     print(f"edges: {report['totals']['edges']:,}")
+    if "side_table_counts" in report:
+        print("side tables:")
+        for key, value in report["side_table_counts"].items():
+            print(f"  {key}: {value:,}")
     print("gate counts:")
     for key, value in report["gate_counts"].items():
         print(f"  {key}: {value:,}")
