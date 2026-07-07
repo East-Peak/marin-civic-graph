@@ -7,6 +7,7 @@ import path from "node:path";
 import { runQuery } from "@/lib/neo4j";
 import type { NodeType } from "@/lib/type-display";
 import { JURISDICTION_PLACE_TYPES } from "@/lib/server/jurisdiction-types";
+import { servingBackend, substrateDbPath } from "@/lib/server/substrate";
 
 export type StatusPayload = {
   connected: boolean;
@@ -28,6 +29,10 @@ function toNumber(v: unknown): number {
     : Number(v);
 }
 
+function numberFromManifest(v: unknown): number {
+  return Number.isFinite(Number(v)) ? Number(v) : 0;
+}
+
 async function readManifestBuiltAt(): Promise<string | null> {
   try {
     const manifestPath = path.join(process.cwd(), "public", "subgraphs", "manifest.json");
@@ -40,6 +45,36 @@ async function readManifestBuiltAt(): Promise<string | null> {
 
 export async function loadStatus(): Promise<StatusPayload> {
   const subgraphsBuiltAt = await readManifestBuiltAt();
+  if (servingBackend() === "substrate") {
+    try {
+      const manifestPath = path.join(path.dirname(substrateDbPath()), "status_manifest.json");
+      const content = await readFile(manifestPath, "utf-8");
+      const manifest = JSON.parse(content) as {
+        as_of_date?: unknown;
+        node_count?: unknown;
+        edge_count?: unknown;
+        jurisdiction_count?: unknown;
+      };
+      return {
+        connected: true,
+        node_count: numberFromManifest(manifest.node_count),
+        edge_count: numberFromManifest(manifest.edge_count),
+        jurisdiction_count: numberFromManifest(manifest.jurisdiction_count),
+        ingest_at: typeof manifest.as_of_date === "string" ? manifest.as_of_date : null,
+        subgraphs_built_at: subgraphsBuiltAt,
+      };
+    } catch {
+      return {
+        connected: false,
+        node_count: 0,
+        edge_count: 0,
+        jurisdiction_count: 0,
+        ingest_at: null,
+        subgraphs_built_at: subgraphsBuiltAt,
+      };
+    }
+  }
+
   try {
     const records = await runQuery(
       `
