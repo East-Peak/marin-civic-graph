@@ -261,6 +261,211 @@ def _search_fixture(tmp_path: Path) -> tuple[list[Path], list[Path], Path, Path,
     return [nodes_path], [edges_path], registry, sqlite_path, report_path
 
 
+def _identity_money_fixture(
+    tmp_path: Path,
+) -> tuple[list[Path], list[Path], Path, Path, Path]:
+    def org(org_id: str, name: str) -> dict:
+        return {
+            "id": org_id,
+            "node_type": "Organization",
+            "labels": ["Organization"],
+            "properties": {"name": name},
+        }
+
+    def flow(flow_id: str, amount: object) -> dict:
+        return {
+            "id": flow_id,
+            "node_type": "MoneyFlow",
+            "labels": ["MoneyFlow"],
+            "properties": {"amount": amount},
+        }
+
+    nodes_path = _write_jsonl(
+        tmp_path / "graph-v2/nodes.jsonl",
+        [
+            org("org-direct", "Direct Vendor"),
+            org("org-vendor", "Verified Vendor"),
+            org("org-anchor", "Verified Vendor Anchor"),
+            org("org-legacy-anchor", "Legacy Anchor"),
+            org("org-minimal-a", "Minimal A"),
+            org("org-minimal-b", "Minimal B"),
+            org("org-county", "County of Marin"),
+            org("org-recipient", "Recipient Org"),
+            org("org-null-source", "Null Source"),
+            org("org-big", "Big Counterparty"),
+            org("org-med", "Medium Counterparty"),
+            org("org-out2", "Outbound Two"),
+            org("org-small", "Small Counterparty"),
+            org("org-tiny", "Tiny Counterparty"),
+            flow("flow-direct-in", 100),
+            flow("flow-direct-null", None),
+            flow("flow-direct-out", 25),
+            flow("flow-anchor-in", 300),
+            flow("flow-anchor-in-2", "250.50"),
+            flow("flow-vendor-in", 120),
+            flow("flow-vendor-out", 70),
+            flow("flow-vendor-out-2", 80),
+            flow("flow-vendor-in-small", 10),
+            flow("flow-vendor-out-tiny", 5),
+        ],
+    )
+    edges_path = _write_jsonl(
+        tmp_path / "graph-v2/edges.jsonl",
+        [
+            {
+                "source_id": "org-anchor",
+                "relationship_type": "SAME_AS",
+                "target_id": "org-vendor",
+                "properties": {
+                    "assertion_id": "assertion-verified-vendor",
+                    "basis": "operator_approved_sos",
+                    "decided_at": "2026-07-03T12:34:56Z",
+                    "reviewer": "research-fleet-v1",
+                },
+            },
+            {
+                "source_id": "org-legacy-anchor",
+                "relationship_type": "SAME_AS",
+                "target_id": "org-vendor",
+                "properties": {
+                    "basis": "legacy-pre-assertion",
+                    "decided_at": "2026-01-01T00:00:00Z",
+                },
+            },
+            {
+                "source_id": "org-minimal-a",
+                "relationship_type": "SAME_AS",
+                "target_id": "org-minimal-b",
+                "properties": {"assertion_id": "assertion-minimal"},
+            },
+            {
+                "source_id": "flow-direct-in",
+                "relationship_type": "FROM_SOURCE",
+                "target_id": "org-county",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-direct-in",
+                "relationship_type": "TO_TARGET",
+                "target_id": "org-direct",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-direct-null",
+                "relationship_type": "FROM_SOURCE",
+                "target_id": "org-null-source",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-direct-null",
+                "relationship_type": "TO_TARGET",
+                "target_id": "org-direct",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-direct-out",
+                "relationship_type": "FROM_SOURCE",
+                "target_id": "org-direct",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-direct-out",
+                "relationship_type": "TO_TARGET",
+                "target_id": "org-recipient",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-anchor-in",
+                "relationship_type": "FROM_SOURCE",
+                "target_id": "org-county",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-anchor-in",
+                "relationship_type": "TO_TARGET",
+                "target_id": "org-anchor",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-anchor-in-2",
+                "relationship_type": "FROM_SOURCE",
+                "target_id": "org-big",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-anchor-in-2",
+                "relationship_type": "TO_TARGET",
+                "target_id": "org-anchor",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-vendor-in",
+                "relationship_type": "FROM_SOURCE",
+                "target_id": "org-med",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-vendor-in",
+                "relationship_type": "TO_TARGET",
+                "target_id": "org-vendor",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-vendor-out",
+                "relationship_type": "FROM_SOURCE",
+                "target_id": "org-vendor",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-vendor-out",
+                "relationship_type": "TO_TARGET",
+                "target_id": "org-recipient",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-vendor-out-2",
+                "relationship_type": "FROM_SOURCE",
+                "target_id": "org-vendor",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-vendor-out-2",
+                "relationship_type": "TO_TARGET",
+                "target_id": "org-out2",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-vendor-in-small",
+                "relationship_type": "FROM_SOURCE",
+                "target_id": "org-small",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-vendor-in-small",
+                "relationship_type": "TO_TARGET",
+                "target_id": "org-vendor",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-vendor-out-tiny",
+                "relationship_type": "FROM_SOURCE",
+                "target_id": "org-vendor",
+                "properties": {},
+            },
+            {
+                "source_id": "flow-vendor-out-tiny",
+                "relationship_type": "TO_TARGET",
+                "target_id": "org-tiny",
+                "properties": {},
+            },
+        ],
+    )
+    registry = _write_registry(tmp_path / "registry/node-types.json")
+    sqlite_path = tmp_path / "public-substrate.sqlite"
+    report_path = tmp_path / "substrate-bake-report.json"
+    return [nodes_path], [edges_path], registry, sqlite_path, report_path
+
+
 def _live_export_fixture(tmp_path: Path) -> tuple[Path, Path, Path, Path, Path]:
     live_dir = tmp_path / "live-graph-export"
     attach_dir = tmp_path / "attach"
@@ -515,6 +720,133 @@ def test_live_export_bake_is_byte_deterministic(tmp_path: Path) -> None:
 
     assert sqlite_path.read_bytes() == first_sqlite
     assert report_path.read_bytes() == first_report
+
+
+def test_identity_links_membership_fields_and_indexes(tmp_path: Path) -> None:
+    node_sources, edge_sources, registry, sqlite_path, report_path = (
+        _identity_money_fixture(tmp_path)
+    )
+
+    report = bake_substrate(
+        node_sources, edge_sources, registry, sqlite_path, report_path
+    )
+
+    with sqlite3.connect(sqlite_path) as conn:
+        identity_links = conn.execute(
+            """
+            SELECT source, target, assertion_id, basis, decided_at, reviewer
+            FROM identity_links
+            ORDER BY assertion_id
+            """
+        ).fetchall()
+        ddl = conn.execute(
+            "SELECT sql FROM sqlite_master WHERE name = 'identity_links'"
+        ).fetchone()[0]
+        indexes = {
+            name: sql
+            for name, sql in conn.execute(
+                """
+                SELECT name, sql
+                FROM sqlite_master
+                WHERE type = 'index'
+                  AND tbl_name = 'identity_links'
+                """
+            )
+        }
+
+    assert identity_links == [
+        (
+            "org-minimal-a",
+            "org-minimal-b",
+            "assertion-minimal",
+            None,
+            None,
+            None,
+        ),
+        (
+            "org-anchor",
+            "org-vendor",
+            "assertion-verified-vendor",
+            "operator_approved_sos",
+            "2026-07-03T12:34:56Z",
+            "research-fleet-v1",
+        ),
+    ]
+    assert "assertion_id TEXT NOT NULL" in ddl
+    assert "idx_identity_links_source" in indexes
+    assert "ON identity_links(source)" in indexes["idx_identity_links_source"]
+    assert "idx_identity_links_target" in indexes
+    assert "ON identity_links(target)" in indexes["idx_identity_links_target"]
+    assert report["side_table_counts"]["identity_links"] == 2
+
+
+def test_money_rollups_include_direct_flows_and_null_amounts(tmp_path: Path) -> None:
+    node_sources, edge_sources, registry, sqlite_path, report_path = (
+        _identity_money_fixture(tmp_path)
+    )
+
+    report = bake_substrate(
+        node_sources, edge_sources, registry, sqlite_path, report_path
+    )
+
+    with sqlite3.connect(sqlite_path) as conn:
+        row = conn.execute(
+            """
+            SELECT
+                org_id,
+                flows_in_count,
+                money_in_total,
+                flows_out_count,
+                money_out_total,
+                top_counterparties
+            FROM money_rollups
+            WHERE org_id = 'org-direct'
+            """
+        ).fetchone()
+        money_rollup_count = conn.execute(
+            "SELECT COUNT(*) FROM money_rollups"
+        ).fetchone()[0]
+
+    assert row[:5] == ("org-direct", 2, 100.0, 1, 25.0)
+    assert json.loads(row[5]) == [
+        {"id": "org-county", "label": "County of Marin", "total": 100.0},
+        {"id": "org-recipient", "label": "Recipient Org", "total": 25.0},
+        {"id": "org-null-source", "label": "Null Source", "total": 0.0},
+    ]
+    assert report["side_table_counts"]["money_rollups"] == money_rollup_count
+
+
+def test_money_rollups_expand_across_verified_identity_links_and_order_counterparties(
+    tmp_path: Path,
+) -> None:
+    node_sources, edge_sources, registry, sqlite_path, report_path = (
+        _identity_money_fixture(tmp_path)
+    )
+
+    bake_substrate(node_sources, edge_sources, registry, sqlite_path, report_path)
+
+    with sqlite3.connect(sqlite_path) as conn:
+        row = conn.execute(
+            """
+            SELECT
+                flows_in_count,
+                money_in_total,
+                flows_out_count,
+                money_out_total,
+                top_counterparties
+            FROM money_rollups
+            WHERE org_id = 'org-vendor'
+            """
+        ).fetchone()
+
+    assert row[:4] == (4, 680.5, 3, 155.0)
+    assert json.loads(row[4]) == [
+        {"id": "org-county", "label": "County of Marin", "total": 300.0},
+        {"id": "org-big", "label": "Big Counterparty", "total": 250.5},
+        {"id": "org-med", "label": "Medium Counterparty", "total": 120.0},
+        {"id": "org-out2", "label": "Outbound Two", "total": 80.0},
+        {"id": "org-recipient", "label": "Recipient Org", "total": 70.0},
+    ]
 
 
 def test_embedding_umap_pending_and_payload_json_properties_are_stripped(
