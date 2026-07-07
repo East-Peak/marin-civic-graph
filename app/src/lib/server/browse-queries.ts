@@ -17,6 +17,7 @@ import neo4j from "neo4j-driver";
 import { ALL_TYPES, type NodeType } from "@/lib/type-display";
 import { factsForEntity } from "@/lib/server/entity-facts";
 import { runQuery } from "@/lib/neo4j";
+import { servingBackend } from "@/lib/server/substrate";
 import { urlSegmentForType } from "@/lib/type-display";
 
 export const DEFAULT_LIMIT = 50;
@@ -302,6 +303,11 @@ function toJsValue(v: unknown): unknown {
 }
 
 export async function runBrowseQuery(opts: BrowseQueryOptions): Promise<BrowseResult> {
+  if (servingBackend() === "substrate") {
+    const { runBrowseQuerySubstrate } = await import("@/lib/server/browse-queries-sql");
+    return runBrowseQuerySubstrate(opts);
+  }
+
   const { type } = opts;
   const { cypher, params, columns } = buildBrowseQuery(opts);
   const records = await runQuery(cypher, params);
