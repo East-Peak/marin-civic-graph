@@ -89,7 +89,11 @@ describe("GET /api/data/[query] in substrate mode", () => {
     delete process.env.SUBSTRATE_DB_PATH;
   });
 
-  it("uses the SQL backend and adds as_of_date for current-officeholders coverage", async () => {
+  it("uses the SQL backend WITHOUT as_of_date for current-officeholders coverage", async () => {
+    // S1b-3 parity fix: live's `svc.ended_at >= date()` clause compares
+    // string to date (null in Cypher) so it never matches — the port mimics
+    // the wart exactly and therefore consults no date at all. as_of_date
+    // must be absent or the response envelope diverges from the corpus.
     const { GET } = await import("@/app/api/data/[query]/route");
 
     const res = await GET(
@@ -102,7 +106,7 @@ describe("GET /api/data/[query] in substrate mode", () => {
 
     expect(res.status).toBe(200);
     expect(body.slug).toBe("current-officeholders-form-coverage");
-    expect(body.as_of_date).toBe("2026-07-07");
+    expect(body.as_of_date).toBeUndefined();
     expect(body.columns.map((column: { key: string }) => column.key)).toEqual([
       "person_name",
       "seat_display",

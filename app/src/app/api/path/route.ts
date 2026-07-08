@@ -1,10 +1,12 @@
 // GET /api/path?from={id}&to={id}&loose=true|false
 //
-// Thin wrapper around `findPath()` (lib/server/path-finder.ts). Validates
-// required params + length caps, returns the `PathResult` shape directly.
+// Thin wrapper around the active backend path finder. Validates required params
+// + length caps, returns the `PathResult` shape directly.
 // Errors surface as {error: "<msg>"} with an HTTP status.
 
 import { findPath } from "@/lib/server/path-finder";
+import { findPathSubstrate } from "@/lib/server/path-finder-substrate";
+import { servingBackend } from "@/lib/server/substrate";
 import { jsonError } from "@/lib/api-errors";
 
 const MAX_ID_LENGTH = 500;
@@ -21,7 +23,10 @@ export async function GET(req: Request) {
   }
 
   try {
-    const result = await findPath(from, to, { loose });
+    const result =
+      servingBackend() === "substrate"
+        ? await findPathSubstrate(from, to, { loose })
+        : await findPath(from, to, { loose });
     return Response.json(result);
   } catch (err) {
     console.error("/api/path failed:", err);
