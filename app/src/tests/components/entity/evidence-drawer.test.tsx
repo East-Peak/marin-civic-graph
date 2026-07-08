@@ -61,4 +61,34 @@ describe("EvidenceDrawer", () => {
     expect(idEl.className).toContain("select-all");
     expect(idEl.textContent).toBe("record-sr-minutes-2024-08-19");
   });
+
+  it("renders record lineage as depth-indented internal links", () => {
+    render(
+      <EvidenceDrawer
+        records={[]}
+        recordLineage={[
+          { id: "record-normalized", label: "Normalized record", depth: 1 },
+          { id: "record-ocr", label: "OCR extract", depth: 2 },
+        ]}
+      />,
+    );
+
+    const lineage = screen.getByTestId("record-lineage");
+    expect(lineage.textContent).toContain("RECORD LINEAGE");
+    expect(lineage.textContent).toContain("depth 1");
+    expect(lineage.textContent).toContain("depth 2");
+    const normalized = screen.getByRole("link", { name: /Normalized record/i });
+    const ocr = screen.getByRole("link", { name: /OCR extract/i });
+    expect(normalized.getAttribute("href")).toBe("/record/normalized");
+    expect(ocr.getAttribute("href")).toBe("/record/ocr");
+    expect(ocr.getAttribute("style")).toContain("padding-left: 24px");
+  });
+
+  it("does not render record lineage when the field is absent or empty", () => {
+    const { rerender } = render(<EvidenceDrawer records={[]} />);
+    expect(screen.queryByTestId("record-lineage")).toBeNull();
+
+    rerender(<EvidenceDrawer records={[]} recordLineage={[]} />);
+    expect(screen.queryByTestId("record-lineage")).toBeNull();
+  });
 });

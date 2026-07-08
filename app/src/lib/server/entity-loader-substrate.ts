@@ -9,12 +9,16 @@ import {
 import { resolveIdAlias } from "@/lib/id-aliases";
 import { effectiveEventDate } from "@/lib/server/entity-temporal";
 import { loadGraph } from "@/lib/server/graph-engine";
+import { getSubstrateDb } from "@/lib/server/substrate";
 import { urlSegmentForType, type NodeType } from "@/lib/type-display";
 import type {
   EdgeStyle,
   EntityEdge,
   EntityPayload,
+  IdentityLink,
+  MoneyRollup,
   Neighbor,
+  RecordLineageItem,
 } from "@/lib/server/entity-loader";
 
 const TIER1_TYPES: ReadonlySet<NodeType> = new Set<NodeType>([
@@ -188,6 +192,140 @@ function toEntityEdge(
   };
 }
 
+type IdentityLinkRow = {
+  source: string;
+  target: string;
+  assertion_id: string;
+  basis: string | null;
+  decided_at: string | null;
+};
+
+type MoneyRollupRow = {
+  flows_in_count: number;
+  money_in_total: number;
+  flows_out_count: number;
+  money_out_total: number;
+  top_counterparties: string;
+};
+
+function peerLabel(peerId: string): string {
+  return loadGraph().nodeMeta.get(peerId)?.label ?? peerId;
+}
+
+function loadIdentityLinks(focusId: string): IdentityLink[] {
+  const db = getSubstrateDb();
+  const rows = db
+    .prepare(
+      `
+      SELECT source, target, assertion_id, basis, decided_at
+      FROM identity_links
+      WHERE source = ? OR target = ?
+      `,
+    )
+    .all(focusId, focusId) as IdentityLinkRow[];
+
+  return rows
+    .map((row): IdentityLink => {
+      const focusIsSource = row.source === focusId;
+      const peerId = focusIsSource ? row.target : row.source;
+      return {
+        peer_id: peerId,
+        peer_label: peerLabel(peerId),
+        direction: focusIsSource ? "verifies" : "verified_by",
+        assertion_id: row.assertion_id,
+        basis: row.basis,
+        decided_at: row.decided_at,
+      };
+    })
+    .sort((a, b) => {
+      if (a.direction !== b.direction) return a.direction === "verifies" ? -1 : 1;
+      return a.peer_id.localeCompare(b.peer_id);
+    });
+}
+
+function parseCounterparties(value: string): MoneyRollup["top_counterparties"] {
+  const parsed = JSON.parse(value) as unknown;
+  if (!Array.isArray(parsed)) return [];
+  return parsed.flatMap((item) => {
+    if (typeof item !== "object" || item === null) return [];
+    const row = item as Record<string, unknown>;
+    if (typeof row.id !== "string" || typeof row.label !== "string") return [];
+    const total = Number(row.total);
+    if (!Number.isFinite(total)) return [];
+    return [{ id: row.id, label: row.label, total }];
+  });
+}
+
+function loadMoneyRollup(focusId: string): MoneyRollup | null {
+  const db = getSubstrateDb();
+  const row = db
+    .prepare(
+      `
+      SELECT
+        flows_in_count,
+        money_in_total,
+        flows_out_count,
+        money_out_total,
+        top_counterparties
+      FROM money_rollups
+      WHERE org_id = ?
+      `,
+    )
+    .get(focusId) as MoneyRollupRow | undefined;
+  if (!row) return null;
+  return {
+    flows_in_count: Number(row.flows_in_count),
+    money_in_total: Number(row.money_in_total),
+    flows_out_count: Number(row.flows_out_count),
+    money_out_total: Number(row.money_out_total),
+    top_counterparties: parseCounterparties(row.top_counterparties),
+  };
+}
+
+function loadRecordLineage(focusId: string): RecordLineageItem[] {
+  const graph = loadGraph();
+  const seen = new Set<string>([focusId]);
+  const queue: Array<{ id: string; depth: number }> = [{ id: focusId, depth: 0 }];
+  const lineage: RecordLineageItem[] = [];
+
+  while (queue.length > 0 && lineage.length < 10) {
+    const current = queue.shift()!;
+    if (current.depth >= 3) continue;
+
+    const edges = [...(graph.adjacency.get(current.id) ?? [])]
+      .filter((edge) => edge.rel === "DERIVED_FROM_RECORD")
+      .sort((a, b) => a.peer.localeCompare(b.peer));
+
+    for (const edge of edges) {
+      if (lineage.length >= 10) break;
+      if (seen.has(edge.peer)) continue;
+      const meta = graph.nodeMeta.get(edge.peer);
+      if (!meta || meta.type !== "Record") continue;
+      seen.add(edge.peer);
+      const depth = current.depth + 1;
+      lineage.push({ id: edge.peer, label: meta.label, depth });
+      queue.push({ id: edge.peer, depth });
+    }
+  }
+
+  return lineage;
+}
+
+function substrateDividends(id: string, type: NodeType): Partial<EntityPayload> {
+  if (type === "Organization") {
+    return {
+      identity_links: loadIdentityLinks(id),
+      money_rollup: loadMoneyRollup(id),
+    };
+  }
+  if (type === "Record") {
+    return {
+      record_lineage: loadRecordLineage(id),
+    };
+  }
+  return {};
+}
+
 export async function loadEntitySubstrate(
   typeSegment: string,
   slug: string,
@@ -241,6 +379,7 @@ export async function loadEntitySubstrate(
       edges,
       neighbor_total: neighborTotalOrFallback(id, type, neighbors),
       focus_event_date: focusEventDate,
+      ...substrateDividends(id, type),
     };
   }
 
@@ -259,5 +398,6 @@ export async function loadEntitySubstrate(
     edges,
     neighbor_total: neighborTotalOrFallback(id, type, neighbors),
     focus_event_date: focusEventDate,
+    ...substrateDividends(id, type),
   };
 }

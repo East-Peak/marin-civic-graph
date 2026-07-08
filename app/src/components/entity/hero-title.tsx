@@ -4,6 +4,7 @@
 
 import type { EntityPayload } from "@/lib/server/entity-loader";
 import type { NodeType } from "@/lib/type-display";
+import { IdentityChipRow } from "@/components/entity/identity-chip-row";
 
 function s(v: unknown): string | null {
   return typeof v === "string" && v.length > 0 ? v : null;
@@ -102,6 +103,7 @@ export function HeroTitle({ entity }: { entity: EntityPayload }) {
           ))}
         </div>
       )}
+      <IdentityChipRow links={entity.identity_links} />
     </div>
   );
 }

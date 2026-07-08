@@ -63,6 +63,33 @@ export type EntityEdge = {
   style: EdgeStyle;
 };
 
+export type IdentityLink = {
+  peer_id: string;
+  peer_label: string;
+  direction: "verifies" | "verified_by";
+  assertion_id: string;
+  basis: string | null;
+  decided_at: string | null;
+};
+
+export type MoneyRollup = {
+  flows_in_count: number;
+  money_in_total: number;
+  flows_out_count: number;
+  money_out_total: number;
+  top_counterparties: Array<{
+    id: string;
+    label: string;
+    total: number;
+  }>;
+};
+
+export type RecordLineageItem = {
+  id: string;
+  label: string;
+  depth: number;
+};
+
 export type EntityPayload = {
   id: string;
   type: NodeType;
@@ -78,6 +105,20 @@ export type EntityPayload = {
    * Decision, Filing, …). Null for durable types (Person, Project, …).
    */
   focus_event_date: string | null;
+  /**
+   * Substrate-only identity dividend. The live backend omits this until the
+   * public substrate and live graph payloads are intentionally reconciled.
+   */
+  identity_links?: IdentityLink[];
+  /**
+   * Substrate-only verified money dividend for Organization focus pages. Null
+   * means the side table exists but has no rollup for this organization.
+   */
+  money_rollup?: MoneyRollup | null;
+  /**
+   * Substrate-only Record lineage over DERIVED_FROM_RECORD chains.
+   */
+  record_lineage?: RecordLineageItem[];
 };
 
 // ---------------------------------------------------------------------------

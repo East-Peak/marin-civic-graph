@@ -5,19 +5,63 @@
 // (preferred_public_url / preferred_display_artifact / has_public_source).
 
 import { useState } from "react";
+import Link from "next/link";
 import type { EvidenceRecord } from "@/lib/server/entity-evidence";
+import type { RecordLineageItem } from "@/lib/server/entity-loader";
 
 function formatDate(iso: string | null): string {
   if (!iso) return "—";
   return iso.slice(0, 10);
 }
 
-export function EvidenceDrawer({ records }: { records: EvidenceRecord[] }) {
+function recordRoute(id: string): string {
+  const slug = id.startsWith("record-") ? id.slice("record-".length) : id;
+  return `/record/${slug}`;
+}
+
+function RecordLineage({ lineage }: { lineage?: RecordLineageItem[] }) {
+  if (!lineage || lineage.length === 0) return null;
+
+  return (
+    <div className="border-b border-border-hairline" data-testid="record-lineage">
+      <div
+        className="px-4 pt-3 font-mono uppercase text-dim"
+        style={{ fontSize: "10px", letterSpacing: "0.14em" }}
+      >
+        RECORD LINEAGE
+      </div>
+      <ul className="px-4 py-2 font-mono">
+        {lineage.map((item) => (
+          <li key={item.id}>
+            <Link
+              href={recordRoute(item.id)}
+              className="grid grid-cols-[64px_1fr_auto] gap-3 border-t border-border-hairline py-2 text-dim hover:text-body"
+              style={{ fontSize: "11px", paddingLeft: `${item.depth * 12}px` }}
+            >
+              <span className="text-hairline">depth {item.depth}</span>
+              <span>{item.label}</span>
+              <span className="select-all text-hairline">{item.id}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export function EvidenceDrawer({
+  records,
+  recordLineage,
+}: {
+  records: EvidenceRecord[];
+  recordLineage?: RecordLineageItem[];
+}) {
   const [open, setOpen] = useState(false);
   const count = records.length;
 
   return (
     <section className="mx-[18px] my-6 border border-border-hairline bg-panel" data-testid="evidence-drawer">
+      <RecordLineage lineage={recordLineage} />
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}

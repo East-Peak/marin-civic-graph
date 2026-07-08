@@ -23,6 +23,15 @@ type EdgeFixture = {
   target: string;
 };
 
+type IdentityLinkFixture = {
+  source: string;
+  target: string;
+  assertion_id: string;
+  basis?: string | null;
+  decided_at?: string | null;
+  reviewer?: string | null;
+};
+
 function insertNode(db: Database.Database, node: NodeFixture) {
   db.prepare("INSERT INTO nodes(id, type, search_label, props) VALUES (?, ?, ?, ?)").run(
     node.id,
@@ -45,6 +54,20 @@ function insertEdge(db: Database.Database, edge: EdgeFixture) {
   );
 }
 
+function insertIdentityLink(db: Database.Database, link: IdentityLinkFixture) {
+  db.prepare(
+    `INSERT INTO identity_links(source, target, assertion_id, basis, decided_at, reviewer)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+  ).run(
+    link.source,
+    link.target,
+    link.assertion_id,
+    link.basis ?? null,
+    link.decided_at ?? null,
+    link.reviewer ?? null,
+  );
+}
+
 function makeFixtureDb(): string {
   const dir = mkdtempSync(path.join(tmpdir(), "open-marin-entity-loader-substrate-"));
   const dbPath = path.join(dir, "public-substrate.sqlite");
@@ -60,6 +83,23 @@ function makeFixtureDb(): string {
       source TEXT NOT NULL,
       rel TEXT NOT NULL,
       target TEXT NOT NULL
+    );
+    CREATE TABLE identity_links (
+      source TEXT NOT NULL,
+      target TEXT NOT NULL,
+      assertion_id TEXT NOT NULL,
+      basis TEXT,
+      decided_at TEXT,
+      reviewer TEXT,
+      PRIMARY KEY (source, target, assertion_id)
+    );
+    CREATE TABLE money_rollups (
+      org_id TEXT PRIMARY KEY,
+      flows_in_count INTEGER NOT NULL,
+      money_in_total REAL NOT NULL,
+      flows_out_count INTEGER NOT NULL,
+      money_out_total REAL NOT NULL,
+      top_counterparties TEXT NOT NULL CHECK (json_valid(top_counterparties))
     );
   `);
 
@@ -109,8 +149,15 @@ function makeFixtureDb(): string {
       props: { decided_at: "2024-05-06" },
     },
     { id: "org-sunrise", type: "Organization", label: "Sunrise Org" },
+    { id: "org-target", type: "Organization", label: "Target Vendor" },
+    { id: "org-bmf-ein-123456789", type: "Organization", label: "Target Vendor EIN" },
+    { id: "org-casos-7654321", type: "Organization", label: "Target Vendor CA SOS" },
+    { id: "org-county", type: "Organization", label: "County of Marin" },
+    { id: "org-consultant", type: "Organization", label: "Consultant LLC" },
     { id: "person-kate-colin", type: "Person", label: "Kate Colin" },
     { id: "person-cap", type: "Person", label: "Cap Person" },
+    { id: "record-normalized", type: "Record", label: "Normalized record" },
+    { id: "record-ocr", type: "Record", label: "OCR extract" },
   ];
 
   for (let i = 1; i <= 39; i += 1) {
@@ -138,6 +185,8 @@ function makeFixtureDb(): string {
     { source: "moneyflow-small", rel: "FROM_SOURCE", target: "person-alice" },
     { source: "person-alice", rel: "CAST_VOTE", target: "decision-phase" },
     { source: "decision-recorded", rel: "EVIDENCED_BY", target: "record-source" },
+    { source: "record-normalized", rel: "DERIVED_FROM_RECORD", target: "record-source" },
+    { source: "record-ocr", rel: "DERIVED_FROM_RECORD", target: "record-normalized" },
   ];
   for (let i = 1; i <= 39; i += 1) {
     edges.push({
@@ -154,6 +203,42 @@ function makeFixtureDb(): string {
     });
   }
   for (const edge of edges) insertEdge(db, edge);
+  insertIdentityLink(db, {
+    source: "org-bmf-ein-123456789",
+    target: "org-target",
+    assertion_id: "assertion-ein",
+    basis: "BMF hard-key match",
+    decided_at: "2026-07-01",
+    reviewer: "research-fleet-v1",
+  });
+  insertIdentityLink(db, {
+    source: "org-target",
+    target: "org-casos-7654321",
+    assertion_id: "assertion-sos",
+    basis: "CA SOS hard-key match",
+    decided_at: "2026-07-02",
+    reviewer: "research-fleet-v1",
+  });
+  db.prepare(
+    `INSERT INTO money_rollups(
+       org_id,
+       flows_in_count,
+       money_in_total,
+       flows_out_count,
+       money_out_total,
+       top_counterparties
+     ) VALUES (?, ?, ?, ?, ?, ?)`,
+  ).run(
+    "org-target",
+    3,
+    12500,
+    1,
+    2750,
+    JSON.stringify([
+      { id: "org-county", label: "County of Marin", total: 10000 },
+      { id: "org-consultant", label: "Consultant LLC", total: 2750 },
+    ]),
+  );
 
   db.close();
   return dbPath;
@@ -297,6 +382,55 @@ describe("loadEntitySubstrate", () => {
       type: "Person",
       label: "Kate Colin",
     });
+  });
+
+  it("populates verified identity links and money rollups for Organization focus pages", async () => {
+    const { loadEntitySubstrate } = await import("@/lib/server/entity-loader-substrate");
+
+    const result = await loadEntitySubstrate("organization", "target");
+
+    expect(result?.identity_links).toEqual([
+      {
+        peer_id: "org-casos-7654321",
+        peer_label: "Target Vendor CA SOS",
+        direction: "verifies",
+        assertion_id: "assertion-sos",
+        basis: "CA SOS hard-key match",
+        decided_at: "2026-07-02",
+      },
+      {
+        peer_id: "org-bmf-ein-123456789",
+        peer_label: "Target Vendor EIN",
+        direction: "verified_by",
+        assertion_id: "assertion-ein",
+        basis: "BMF hard-key match",
+        decided_at: "2026-07-01",
+      },
+    ]);
+    expect(result?.money_rollup).toEqual({
+      flows_in_count: 3,
+      money_in_total: 12500,
+      flows_out_count: 1,
+      money_out_total: 2750,
+      top_counterparties: [
+        { id: "org-county", label: "County of Marin", total: 10000 },
+        { id: "org-consultant", label: "Consultant LLC", total: 2750 },
+      ],
+    });
+    expect(result?.record_lineage).toBeUndefined();
+  });
+
+  it("populates a depth-capped DERIVED_FROM_RECORD lineage for Record focus pages", async () => {
+    const { loadEntitySubstrate } = await import("@/lib/server/entity-loader-substrate");
+
+    const result = await loadEntitySubstrate("record", "source");
+
+    expect(result?.record_lineage).toEqual([
+      { id: "record-normalized", label: "Normalized record", depth: 1 },
+      { id: "record-ocr", label: "OCR extract", depth: 2 },
+    ]);
+    expect(result?.identity_links).toBeUndefined();
+    expect(result?.money_rollup).toBeUndefined();
   });
 
   it("returns null for a missing entity", async () => {
