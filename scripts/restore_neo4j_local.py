@@ -94,13 +94,22 @@ def _build_node_query(labels: tuple[str, ...]) -> str:
     )
 
 
-def _build_relationship_query(relationship_type: str) -> str:
+def _build_relationship_query(
+    start_label: str, relationship_type: str, end_label: str
+) -> str:
+    # Label-qualified endpoint matches so the per-label id uniqueness
+    # constraints back every lookup. Unlabeled `MATCH (s {id: ...})` cannot
+    # use any index in Neo4j and full-scans the node store per row — the
+    # first restore of the 169K-edge export wedged for 30+ minutes on
+    # exactly that (2026-07-08).
     rel_type = _quote_cypher_identifier(relationship_type)
+    s_label = _quote_cypher_identifier(start_label)
+    e_label = _quote_cypher_identifier(end_label)
     return "\n".join(
         [
             "UNWIND $batch AS row",
-            "MATCH (s {id: row.start_id})",
-            "MATCH (t {id: row.end_id})",
+            f"MATCH (s:{s_label} {{id: row.start_id}})",
+            f"MATCH (t:{e_label} {{id: row.end_id}})",
             f"MERGE (s)-[r:{rel_type}]->(t)",
             "SET r += row.properties",
         ]
@@ -134,13 +143,33 @@ def _group_nodes_by_labels(nodes: Iterable[Mapping[str, Any]]) -> dict[tuple[str
     return dict(groups)
 
 
-def _group_edges_by_type(edges: Iterable[Mapping[str, Any]]) -> dict[str, list[dict[str, Any]]]:
-    groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
+def _primary_label_by_id(nodes: Iterable[Mapping[str, Any]]) -> dict[str, str]:
+    return {
+        str(node["id"]): _stable_label_key(node.get("labels", ()))[0]
+        for node in nodes
+        if node.get("labels")
+    }
+
+
+def _group_edges_by_signature(
+    edges: Iterable[Mapping[str, Any]], label_by_id: Mapping[str, str]
+) -> tuple[dict[tuple[str, str, str], list[dict[str, Any]]], int]:
+    """Group edges by (start_label, rel_type, end_label); returns (groups,
+    dangling_count) where dangling edges reference ids absent from the node
+    export and are skipped loudly rather than half-matched."""
+    groups: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    dangling = 0
     for edge in edges:
         if "type" not in edge:
             raise ValueError("edge row missing type")
-        groups[str(edge["type"])].append(_edge_batch_row(edge))
-    return dict(groups)
+        row = _edge_batch_row(edge)
+        s_label = label_by_id.get(row["start_id"])
+        e_label = label_by_id.get(row["end_id"])
+        if s_label is None or e_label is None:
+            dangling += 1
+            continue
+        groups[(s_label, str(edge["type"]), e_label)].append(row)
+    return dict(groups), dangling
 
 
 def _scalar(session: Any, query: str, key: str) -> int:
@@ -183,7 +212,10 @@ def restore_neo4j_local(
     progress_line = _progress_fn(progress)
     nodes, edges = _load_export(export_dir)
     node_groups = _group_nodes_by_labels(nodes)
-    edge_groups = _group_edges_by_type(edges)
+    label_by_id = _primary_label_by_id(nodes)
+    edge_groups, dangling_edges = _group_edges_by_signature(edges, label_by_id)
+    if dangling_edges:
+        progress_line(f"WARNING: skipped {dangling_edges} dangling edges (endpoint ids not in node export)")
 
     with driver.session(database=database) as session:
         wiped_nodes = _wipe_database(session, batch_size=batch_size, progress=progress_line) if wipe else 0
@@ -203,14 +235,18 @@ def restore_neo4j_local(
                 )
 
         restored_relationships = 0
-        for relationship_type in sorted(edge_groups):
-            group = edge_groups[relationship_type]
+        for signature in sorted(edge_groups):
+            start_label, relationship_type, end_label = signature
+            group = edge_groups[signature]
             for batch_no, batch in enumerate(_chunks(group, batch_size), start=1):
-                session.run(_build_relationship_query(relationship_type), batch=batch)
+                session.run(
+                    _build_relationship_query(start_label, relationship_type, end_label),
+                    batch=batch,
+                )
                 restored_relationships += len(batch)
                 progress_line(
-                    f"relationships type={relationship_type} batch={batch_no} "
-                    f"wrote={len(batch)} total={restored_relationships}"
+                    f"relationships {start_label}-{relationship_type}->{end_label} "
+                    f"batch={batch_no} wrote={len(batch)} total={restored_relationships}"
                 )
 
         database_counts = {
