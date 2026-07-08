@@ -16,6 +16,8 @@ import {
   UNIVERSAL_EXPAND_EDGES,
 } from "@/lib/server/explorer-queries";
 import { buildEdgesAmongSelectedQuery } from "@/lib/server/entity-queries";
+import { expandSubstrate } from "@/lib/server/explorer-engine";
+import { servingBackend } from "@/lib/server/substrate";
 import {
   MONEY_EDGES_LIVE,
   LEGAL_EDGES_LIVE,
@@ -105,6 +107,24 @@ export async function GET(req: Request) {
   const includeUniversals = searchParams.get("include_universals") === "true";
 
   try {
+    if (servingBackend() === "substrate") {
+      const result = expandSubstrate({
+        focusId: focus,
+        hopLimit: hop as 1 | 2 | 3 | 4,
+        excludedNodeTypes,
+        excludedEdgeTypes,
+        alreadyLoadedIds,
+        includeUniversals,
+      });
+
+      return Response.json({
+        nodes: result.nodes,
+        edges: result.edges,
+        new_count: result.nodes.length,
+        cap: result.cap,
+      });
+    }
+
     const { cypher, params, cap } = buildExpandQuery({
       focusId: focus,
       hopLimit: hop as 1 | 2 | 3 | 4,
