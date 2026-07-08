@@ -1208,3 +1208,41 @@ def test_node_bench_script_reports_load_metrics(tmp_path: Path) -> None:
     assert metrics["wall_ms"] >= 0
     assert metrics["memory_usage"]["rss"] > 0
     assert metrics["backend"] in {"better-sqlite3", "sqlite3-cli"}
+
+
+def test_money_rollup_handles_county_edge_orientation(tmp_path: Path) -> None:
+    """County-contract loads point (dept)-[FROM_SOURCE]->(flow), the reverse
+    of campaign data. The vendor's rollup must still see the department as
+    its counterparty, and the department must see money OUT."""
+    nodes = [
+        {"id": "org-dept-hhs", "node_type": "Organization", "labels": ["Organization"],
+         "properties": {"name": "Dept HHS"}},
+        {"id": "org-vendor", "node_type": "Organization", "labels": ["Organization"],
+         "properties": {"name": "Vendor"}},
+        {"id": "moneyflow-c1", "node_type": "MoneyFlow", "labels": ["MoneyFlow"],
+         "properties": {"amount": 1000}},
+    ]
+    edges = [
+        {"source_id": "org-dept-hhs", "relationship_type": "FROM_SOURCE",
+         "target_id": "moneyflow-c1", "properties": {}},
+        {"source_id": "moneyflow-c1", "relationship_type": "TO_TARGET",
+         "target_id": "org-vendor", "properties": {}},
+    ]
+    nodes_path = _write_jsonl(tmp_path / "graph-v2/nodes.jsonl", nodes)
+    edges_path = _write_jsonl(tmp_path / "graph-v2/edges.jsonl", edges)
+    _set_mtime_date([nodes_path, edges_path], "2026-07-06")
+    registry = _write_registry(tmp_path / "registry/node-types.json")
+    sqlite_path = tmp_path / "public-substrate.sqlite"
+    bake_substrate([nodes_path], [edges_path], registry, sqlite_path,
+                   tmp_path / "report.json")
+    conn = sqlite3.connect(sqlite_path)
+    vendor = conn.execute(
+        "SELECT flows_in_count, money_in_total, top_counterparties "
+        "FROM money_rollups WHERE org_id='org-vendor'").fetchone()
+    dept = conn.execute(
+        "SELECT flows_out_count, money_out_total, top_counterparties "
+        "FROM money_rollups WHERE org_id='org-dept-hhs'").fetchone()
+    assert vendor[0] == 1 and vendor[1] == 1000
+    assert json.loads(vendor[2])[0]["id"] == "org-dept-hhs"
+    assert dept[0] == 1 and dept[1] == 1000
+    assert json.loads(dept[2])[0]["id"] == "org-vendor"

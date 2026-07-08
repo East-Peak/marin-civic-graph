@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { HeroTitle } from "@/components/entity/hero-title";
 import type { EntityPayload } from "@/lib/server/entity-loader";
 
@@ -72,5 +72,50 @@ describe("HeroTitle", () => {
       />,
     );
     expect(screen.queryByTestId("hero-meta")).toBeNull();
+  });
+
+  it("renders verified identity chips with key kind, digits, and toggle details", () => {
+    render(
+      <HeroTitle
+        entity={makeEntity({
+          id: "org-target",
+          type: "Organization",
+          label: "Target Vendor",
+          properties: { id: "org-target" },
+          identity_links: [
+            {
+              peer_id: "org-bmf-ein-123456789",
+              peer_label: "Target Vendor EIN",
+              direction: "verified_by",
+              assertion_id: "assertion-ein",
+              basis: "BMF hard-key match",
+              decided_at: "2026-07-01",
+            },
+            {
+              peer_id: "org-casos-7654321",
+              peer_label: "Target Vendor CA SOS",
+              direction: "verifies",
+              assertion_id: "assertion-sos",
+              basis: "CA SOS hard-key match",
+              decided_at: "2026-07-02",
+            },
+          ],
+        })}
+      />,
+    );
+
+    expect(screen.getByTestId("verified-identity-row")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /EIN 123456789/i })).toBeInTheDocument();
+    const sos = screen.getByRole("button", { name: /CA SOS 7654321/i });
+    fireEvent.click(sos);
+    const details = screen.getByTestId("verified-identity-popover");
+    expect(details.textContent).toContain("CA SOS hard-key match");
+    expect(details.textContent).toContain("2026-07-02");
+    expect(details.textContent).toContain("assertion-sos");
+  });
+
+  it("does not render verified identity chips when identity links are absent", () => {
+    render(<HeroTitle entity={makeEntity({ type: "Organization", label: "Target Vendor" })} />);
+    expect(screen.queryByTestId("verified-identity-row")).toBeNull();
   });
 });

@@ -728,13 +728,23 @@ def _money_rollup_rows(
 
     from_sources_by_flow: dict[str, set[str]] = defaultdict(set)
     to_targets_by_flow: dict[str, set[str]] = defaultdict(set)
+    # Money edges are direction-inconsistent across sources: campaign data
+    # points (flow)-[FROM_SOURCE]->(org) while county-contract data points
+    # (dept)-[FROM_SOURCE]->(flow). Resolve by which endpoint IS the flow —
+    # the other endpoint is the org, whichever way the edge was loaded.
     for edge in edges.values():
-        if edge.source not in money_nodes:
+        if edge.rel not in ("FROM_SOURCE", "TO_TARGET"):
+            continue
+        if edge.source in money_nodes:
+            flow_id, other = edge.source, edge.target
+        elif edge.target in money_nodes:
+            flow_id, other = edge.target, edge.source
+        else:
             continue
         if edge.rel == "FROM_SOURCE":
-            from_sources_by_flow[edge.source].add(edge.target)
-        elif edge.rel == "TO_TARGET":
-            to_targets_by_flow[edge.source].add(edge.target)
+            from_sources_by_flow[flow_id].add(other)
+        else:
+            to_targets_by_flow[flow_id].add(other)
 
     amounts = {
         flow_id: _money_amount(node) for flow_id, node in money_nodes.items()

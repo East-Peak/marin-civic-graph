@@ -144,7 +144,7 @@ export async function EntityPage({ entity }: { entity: EntityPayload }) {
 
       <EditorialCallout entity={entity} />
 
-      <EvidenceDrawer records={records} />
+      <EvidenceDrawer records={records} recordLineage={entity.record_lineage} />
 
       <RecentEntityTracker
         entity={{ id: entity.id, type: entity.type, search_label: entity.label }}

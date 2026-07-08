@@ -11,7 +11,21 @@
     ],
     "focus_event_date": null,
     "id": "org-250-entrada-drive-llc",
+    "identity_links": [],
     "label": "250 Entrada Drive LLC",
+    "money_rollup": {
+      "flows_in_count": 1,
+      "flows_out_count": 0,
+      "money_in_total": 250,
+      "money_out_total": 0,
+      "top_counterparties": [
+        {
+          "id": "committee-netfile-1277176",
+          "label": "Judy Arnold for Supervisor 2018",
+          "total": 250
+        }
+      ]
+    },
     "neighbor_total": 2,
     "neighbors": [
       {

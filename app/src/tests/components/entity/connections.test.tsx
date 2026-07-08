@@ -144,6 +144,49 @@ describe("Connections", () => {
     expect(container.firstChild).toBeNull();
   });
 
+  it("renders compact verified money rollups with formatted totals and linked counterparties", () => {
+    render(
+      <Connections
+        entity={makeEntity({
+          type: "Organization",
+          id: "org-target",
+          label: "Target Vendor",
+          money_rollup: {
+            flows_in_count: 3,
+            money_in_total: 12500,
+            flows_out_count: 1,
+            money_out_total: 2750,
+            top_counterparties: [
+              { id: "org-county", label: "County of Marin", total: 10000 },
+              { id: "org-consultant", label: "Consultant LLC", total: 2750 },
+            ],
+          },
+        })}
+      />,
+    );
+
+    const block = screen.getByTestId("verified-money");
+    expect(block.textContent).toContain("VERIFIED MONEY");
+    expect(block.textContent).toContain("$12,500");
+    expect(block.textContent).toContain("3 in");
+    expect(block.textContent).toContain("$2,750");
+    expect(block.textContent).toContain("1 out");
+    expect(screen.getByRole("link", { name: /County of Marin/i }).getAttribute("href")).toBe(
+      "/organization/county",
+    );
+    expect(screen.getByRole("link", { name: /Consultant LLC/i }).getAttribute("href")).toBe(
+      "/organization/consultant",
+    );
+  });
+
+  it("does not render verified money when the rollup field is absent or null", () => {
+    const { rerender } = render(<Connections entity={makeEntity()} />);
+    expect(screen.queryByTestId("verified-money")).toBeNull();
+
+    rerender(<Connections entity={makeEntity({ money_rollup: null })} />);
+    expect(screen.queryByTestId("verified-money")).toBeNull();
+  });
+
   it("renders groups + cards in deterministic order regardless of edge input order (round 3 fix)", () => {
     // Shuffled neighbor + edge input should still render: groups sorted alpha
     // by rel type (RELATED last), cards sorted by neighbor.id within each group.
