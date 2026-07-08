@@ -31,7 +31,7 @@ export default async function DataHomePage() {
           </h1>
           <p className="mb-1 text-body">Pick a query from the left rail.</p>
           <p className="text-dim">
-            Each template runs a parameterized Cypher against AuraDB. Filters
+            Each template runs a parameterized query against the graph. Filters
             apply on the URL; the table sorts in-browser; CSV export is a
             single click.
           </p>

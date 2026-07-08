@@ -38,6 +38,29 @@ def fetch_case(base_url: str, request: dict[str, Any]) -> tuple[int, dict[str, A
         return exc.code, _decode_json_body(exc.read())
 
 
+def fetch_page_case(
+    base_url: str, request: dict[str, Any], expected_payload: dict[str, Any]
+) -> tuple[int, dict[str, Any]]:
+    # Pages surface: recompute the marker booleans stored at capture time from
+    # the live HTML — never diff raw markup.
+    url = f"{base_url.rstrip('/')}{request['url_path']}"
+    req = urllib.request.Request(url, headers={"accept": "text/html"})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            html, status = resp.read().decode("utf-8", errors="replace"), resp.status
+    except urllib.error.HTTPError as exc:
+        html, status = exc.read().decode("utf-8", errors="replace"), exc.code
+    lowered = html.lower()
+    markers = {m: (m.lower() in lowered) for m in expected_payload.get("markers", {})}
+    payload = {
+        "markers": markers,
+        "error_markers": (
+            "application error" in lowered or "internal server error" in lowered
+        ),
+    }
+    return status, payload
+
+
 def run_parity(
     *,
     base_url: str,
@@ -55,7 +78,12 @@ def run_parity(
         if surfaces is not None and surface not in surfaces:
             continue
 
-        status, payload = fetcher(base_url, expected_case["request"])
+        if surface == "pages":
+            status, payload = fetch_page_case(
+                base_url, expected_case["request"], expected_case["payload"]
+            )
+        else:
+            status, payload = fetcher(base_url, expected_case["request"])
         mismatches = diff_case(expected_case, payload, status)
         errors, warnings = apply_deltas(surface, case_name, mismatches, deltas)
 

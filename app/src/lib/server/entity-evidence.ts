@@ -8,6 +8,7 @@
 
 import "server-only";
 import { runQuery } from "@/lib/neo4j";
+import { getSubstrateDb, servingBackend } from "@/lib/server/substrate";
 
 export type EvidenceRecord = {
   id: string;
@@ -20,7 +21,53 @@ export type EvidenceRecord = {
 
 type Neo4jRecordLike = { get(key: string): unknown };
 
+type EvidenceSqlRow = {
+  id: string;
+  record_type: string | null;
+  captured_at: string | null;
+  preferred_public_url: string | null;
+  preferred_display_artifact: string | null;
+  has_public_source: unknown;
+};
+
+function boolFromSql(value: unknown): boolean {
+  return value === true || value === 1 || value === "1" || value === "true";
+}
+
 export async function loadEvidence(entityId: string): Promise<EvidenceRecord[]> {
+  if (servingBackend() === "substrate") {
+    const rows = getSubstrateDb()
+      .prepare(
+        `
+        SELECT
+          r.id AS id,
+          json_extract(r.props, '$.record_type') AS record_type,
+          json_extract(r.props, '$.captured_at') AS captured_at,
+          json_extract(r.props, '$.preferred_public_url') AS preferred_public_url,
+          json_extract(r.props, '$.preferred_display_artifact') AS preferred_display_artifact,
+          json_extract(r.props, '$.has_public_source') AS has_public_source
+        FROM edges evidence
+        JOIN nodes r
+          ON r.id = evidence.target
+         AND r.type = 'Record'
+        WHERE evidence.source = @entityId
+          AND evidence.rel = 'EVIDENCED_BY'
+        ORDER BY (captured_at IS NULL) DESC, captured_at DESC, r.id ASC
+        LIMIT 50
+        `,
+      )
+      .all({ entityId }) as EvidenceSqlRow[];
+
+    return rows.map((row) => ({
+      id: row.id,
+      record_type: String(row.record_type ?? "record"),
+      captured_at: row.captured_at ?? null,
+      preferred_public_url: row.preferred_public_url ?? null,
+      preferred_display_artifact: row.preferred_display_artifact ?? null,
+      has_public_source: boolFromSql(row.has_public_source),
+    }));
+  }
+
   const records = (await runQuery(
     `
     MATCH (n {id: $entityId})-[:EVIDENCED_BY]->(r:Record)

@@ -11,28 +11,12 @@
 // Neo4j Integer values are coerced to JS number via toNumber() so the JSON
 // output is plain numeric (same pattern as homepage-data.ts / entity-loader.ts).
 
-import { runQuery } from "@/lib/neo4j";
 import { jsonError } from "@/lib/api-errors";
 import { findDataQuery, applyFilterDefaults } from "@/lib/server/data-queries";
-import { runDataQuerySql } from "@/lib/server/data-queries-sql";
-import { servingBackend } from "@/lib/server/substrate";
+import { executeDataQuery } from "@/lib/server/data-queries-dispatch";
 
 const MAX_SLUG_LENGTH = 100;
 const MAX_FILTER_VALUE_LENGTH = 500;
-
-// Mirror toNumber() in entity-loader.ts — Neo4j's `Integer` type has a
-// `.toNumber()` method; bare numbers pass through via Number().
-function toJsValue(v: unknown): unknown {
-  if (v == null) return null;
-  if (typeof v === "object" && v !== null && "toNumber" in v) {
-    try {
-      return (v as { toNumber(): number }).toNumber();
-    } catch {
-      return Number(v);
-    }
-  }
-  return v;
-}
 
 export async function GET(
   req: Request,
@@ -82,31 +66,13 @@ export async function GET(
   }
 
   try {
-    if (servingBackend() === "substrate") {
-      const result = runDataQuerySql(def, filters);
-      return Response.json({
-        slug,
-        built_at: new Date().toISOString(),
-        columns: def.columns,
-        rows: result.rows,
-        ...(result.as_of_date ? { as_of_date: result.as_of_date } : {}),
-      });
-    }
-
-    const { query, params: cypherParams } = def.cypher(filters);
-    const records = await runQuery(query, cypherParams);
-    const rows = records.map((r) => {
-      const row: Record<string, unknown> = {};
-      for (const col of def.columns) {
-        row[col.key] = toJsValue(r.get(col.key));
-      }
-      return row;
-    });
+    const result = await executeDataQuery(def, filters);
     return Response.json({
       slug,
       built_at: new Date().toISOString(),
       columns: def.columns,
-      rows,
+      rows: result.rows,
+      ...(result.as_of_date ? { as_of_date: result.as_of_date } : {}),
     });
   } catch (err) {
     console.error(`/api/data/${slug} failed:`, err);

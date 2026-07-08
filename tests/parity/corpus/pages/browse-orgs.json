@@ -1,0 +1,14 @@
+{
+  "http_status": 200,
+  "payload": {
+    "error_markers": false,
+    "markers": {
+      "Name": true
+    }
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/browse/organization"
+  }
+}

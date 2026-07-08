@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { runQuery } from "@/lib/neo4j";
 import { signBlobUrl } from "@/lib/blob";
+import { servingBackend } from "@/lib/server/substrate";
 
 const SIGNED_URL_TTL_SECONDS = 5 * 60;
 
@@ -26,6 +27,17 @@ function isAllowed(req: Request): boolean {
 export async function GET(req: Request): Promise<NextResponse> {
   if (!isAllowed(req)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+  if (servingBackend() === "substrate") {
+    // The constellation transport is still the v2.0 prototype (dev-stub
+    // signer + IP gate): no public user has ever received a payload, and
+    // _SyncState is pipeline metadata that deliberately isn't baked. Serve
+    // the client's handled "rebuilding" shape until the feature ships for
+    // real as a baked manifest + static asset (post-cutover tranche).
+    return NextResponse.json(
+      { error: "constellation not yet built", current_version: null },
+      { status: 503 },
+    );
   }
   const rows = await runQuery(
     "MATCH (s:_SyncState {kind: 'constellation'}) " +

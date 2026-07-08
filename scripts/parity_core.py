@@ -8,7 +8,7 @@ from typing import Any, Iterable
 
 DRIFT_KEYS = {"built_at", "expires_at", "signed_url"}
 STATUS_DRIFT_KEYS = {"ingest_at"}
-SURFACES = {"search", "browse", "data", "entity", "expand", "path", "status"}
+SURFACES = {"search", "browse", "data", "entity", "expand", "path", "status", "pages"}
 MAX_MISMATCHES = 20
 
 
