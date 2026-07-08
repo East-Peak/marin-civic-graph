@@ -25,6 +25,17 @@ def normalize_payload(surface: str, payload: dict[str, Any]) -> dict[str, Any]:
     normalized = _strip_keys(payload, strip_keys)
 
     if surface == "entity":
+        # Props hygiene (substrate contract v2): live leaks pipeline-internal
+        # ML artifacts (1024-float embedding, umap coords, cluster ids) and
+        # unconverted Neo4j Integer objects ({high, low}) into the focus
+        # properties; the substrate strips/coerces them at bake. Normalize
+        # both sides so comparisons see only product-meaningful props.
+        props = normalized.get("properties")
+        if isinstance(props, dict):
+            for key in list(props):
+                if key == "cluster_id" or key.startswith(("embedding", "umap_")):
+                    del props[key]
+        normalized = _coerce_neo4j_ints(normalized)
         _sort_list_key(normalized, "neighbors", ("id",))
         _sort_list_key(normalized, "edges", ("source", "target", "type"))
     elif surface == "expand":
@@ -147,6 +158,18 @@ def apply_deltas(
         for mismatch in mismatch_list
     ]
     return [], warnings
+
+
+def _coerce_neo4j_ints(value: Any) -> Any:
+    if isinstance(value, dict):
+        if set(value.keys()) == {"high", "low"} and all(
+            isinstance(value[k], int) for k in ("high", "low")
+        ):
+            return value["high"] * 2**32 + value["low"]
+        return {k: _coerce_neo4j_ints(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_coerce_neo4j_ints(v) for v in value]
+    return value
 
 
 def _strip_keys(value: Any, strip_keys: set[str]) -> Any:

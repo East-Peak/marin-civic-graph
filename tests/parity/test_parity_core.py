@@ -275,4 +275,29 @@ def test_committed_approved_deltas_pin_known_replay_drift():
                 "SAME_AS edges + anchor nodes live lags"
             ),
         },
+        {
+            "surface": "data",
+            "case": "money-default",
+            "reason": (
+                "live carries duplicate-id vendor stub nodes (59 pairs, ingestion bug "
+                "per spec 4.2); the bake MERGEs them, so target_name resolves to the "
+                "enriched node while live binds the bare stub"
+            ),
+        },
+        {
+            "surface": "data",
+            "case": "proceedings-default",
+            "reason": (
+                "link order within a proceeding group is underdetermined on live (no "
+                "ORDER BY on link in the Cypher); row COUNTS and all values match"
+            ),
+        },
+        {
+            "surface": "data",
+            "case": "proceedings-boyd",
+            "reason": (
+                "link order within a proceeding group is underdetermined on live (no "
+                "ORDER BY on link in the Cypher); row COUNTS and all values match"
+            ),
+        },
     ]
