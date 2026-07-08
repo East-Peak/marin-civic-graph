@@ -1,16 +1,16 @@
 // app/src/app/data/[query]/page.tsx
 //
 // Per-query view. Reads slug from params, filter values from searchParams,
-// calls runQuery directly (no HTTP self-fetch — same pattern as the homepage),
-// and renders the left-rail nav + filter chips + sortable table + CSV export.
+// dispatches through the shared server query helper, and renders the left-rail
+// nav + filter chips + sortable table + CSV export.
 
 import { notFound } from "next/navigation";
-import { runQuery } from "@/lib/neo4j";
 import {
   DATA_QUERIES,
   applyFilterDefaults,
   findDataQuery,
 } from "@/lib/server/data-queries";
+import { executeDataQuery } from "@/lib/server/data-queries-dispatch";
 import { loadStatus } from "@/lib/server/homepage-data";
 import { StatusBar } from "@/components/layout/status-bar";
 import { NavHeader } from "@/components/layout/nav-header";
@@ -22,20 +22,6 @@ export const dynamic = "force-dynamic";
 
 export async function generateStaticParams() {
   return DATA_QUERIES.map((q) => ({ query: q.slug }));
-}
-
-// Coerce Neo4j Integer (has toNumber()) into a plain JS number; pass
-// everything else through unchanged. Mirror of the helper in /api/data.
-function toJsValue(v: unknown): unknown {
-  if (v == null) return null;
-  if (typeof v === "object" && v !== null && "toNumber" in v) {
-    try {
-      return (v as { toNumber(): number }).toNumber();
-    } catch {
-      return Number(v);
-    }
-  }
-  return v;
 }
 
 export default async function DataQueryPage({
@@ -70,14 +56,9 @@ export default async function DataQueryPage({
   let rows: Record<string, unknown>[] = [];
   let queryError: string | null = null;
   if (missingRequired.length === 0) {
-    const { query, params: cypherParams } = def.cypher(filters);
     try {
-      const records = await runQuery(query, cypherParams);
-      rows = records.map((r) => {
-        const row: Record<string, unknown> = {};
-        for (const col of def.columns) row[col.key] = toJsValue(r.get(col.key));
-        return row;
-      });
+      const result = await executeDataQuery(def, filters);
+      rows = result.rows;
     } catch (err) {
       console.error(`/data/${slug} failed:`, err);
       queryError = "Query failed. Check the filter values.";

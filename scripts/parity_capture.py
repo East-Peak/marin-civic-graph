@@ -120,6 +120,19 @@ EXPAND_CASES: list[tuple[str, dict[str, str]]] = [
     ("org-entrada-hop1", {"focus": "org-250-entrada-drive-llc", "hop": "1"}),
 ]
 
+# Page-smoke cases: SSR routes whose loaders are NOT covered by the JSON API
+# corpus (the S5 lint found /data pages + the evidence drawer silently running
+# live Cypher behind 200 responses). Stored payload = {markers: {str: bool}},
+# never raw HTML — status + stable content markers only.
+PAGE_CASES: list[tuple[str, str, list[str]]] = [
+    ("home", "/", ["Open Marin"]),
+    ("about", "/about", ["jurisdiction"]),
+    ("data-money", "/data/money-flows-by-year", ["Money flows over threshold"]),
+    ("browse-orgs", "/browse/organization", ["Name"]),
+    ("entity-marin-link", "/organization/marin-link", ["Marin Link", "EVIDENCE"]),
+    ("search-page", "/search?q=kate+colin", ["Kate Colin"]),
+]
+
 PATH_CASES: list[tuple[str, dict[str, str]]] = [
     ("colin-to-merrydale", {"from": "person-kate-colin",
                             "to": "project-san-rafael-350-merrydale-interim-shelter"}),
@@ -131,6 +144,22 @@ PATH_CASES: list[tuple[str, dict[str, str]]] = [
 ]
 
 # ---------------------------------------------------------------------------
+
+
+def fetch_page_markers(base_url: str, path: str, markers: list[str]) -> tuple[int, dict]:
+    req = urllib.request.Request(f"{base_url}{path}", headers={"accept": "text/html"})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            html = resp.read().decode("utf-8", errors="replace")
+            status = resp.status
+    except urllib.error.HTTPError as e:
+        html, status = e.read().decode("utf-8", errors="replace"), e.code
+    lowered = html.lower()
+    payload = {
+        "markers": {m: (m.lower() in lowered) for m in markers},
+        "error_markers": ("application error" in lowered or "internal server error" in lowered),
+    }
+    return status, payload
 
 
 def fetch(base_url: str, path: str, params: dict[str, str]) -> tuple[int, dict]:
@@ -203,6 +232,18 @@ def main() -> int:
     for name, params in PATH_CASES:
         cases.append(("path", name, "/api/path", params))
     cases.append(("status", "status", "/api/status", {}))
+
+    unstable_pages: list[str] = []
+    for name, path, markers in PAGE_CASES:
+        status, payload = fetch_page_markers(args.base_url, path, markers)
+        save_case(args.corpus_dir, "pages", name, {
+            "request": {"method": "GET", "url_path": path, "params": {}},
+            "http_status": status,
+            "payload": payload,
+            "stable": True,
+        })
+        flags = [m for m, ok in payload["markers"].items() if not ok]
+        print(f"  pages/{name}: captured" + (f"  [MISSING: {flags}]" if flags else ""))
 
     unstable: list[str] = []
     for surface, name, path, params in cases:

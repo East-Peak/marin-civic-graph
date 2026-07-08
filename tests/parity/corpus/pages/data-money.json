@@ -1,0 +1,14 @@
+{
+  "http_status": 200,
+  "payload": {
+    "error_markers": false,
+    "markers": {
+      "Money flows over threshold": true
+    }
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/data/money-flows-by-year"
+  }
+}

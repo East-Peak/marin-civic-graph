@@ -1,0 +1,15 @@
+{
+  "http_status": 200,
+  "payload": {
+    "error_markers": false,
+    "markers": {
+      "EVIDENCE": true,
+      "Marin Link": true
+    }
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/organization/marin-link"
+  }
+}

@@ -15,7 +15,7 @@ const SECTION_HEADING: React.CSSProperties = {
 const STACK: { label: string; detail: string }[] = [
   { label: "Next.js 16", detail: "App Router, React Server Components." },
   { label: "React 19", detail: "Client interactivity for palette, explorer, chat." },
-  { label: "Neo4j AuraDB", detail: "Graph store for nodes, edges, and properties." },
+  { label: "Baked graph substrate", detail: "The public graph ships with the site as a versioned, reproducible artifact." },
   { label: "Cytoscape.js", detail: "Radial and force-directed graph rendering." },
   { label: "IBM Plex + VT323", detail: "Typography: Plex Sans/Mono/Serif plus VT323 terminal." },
   { label: "TypeScript", detail: "End-to-end types from loader to UI." },

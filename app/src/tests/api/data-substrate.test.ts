@@ -124,4 +124,32 @@ describe("GET /api/data/[query] in substrate mode", () => {
       },
     ]);
   });
+
+  it("executeDataQuery matches the route's substrate officeholder rows without as_of_date", async () => {
+    const { GET } = await import("@/app/api/data/[query]/route");
+    const { executeDataQuery } = await import("@/lib/server/data-queries-dispatch");
+    const { findDataQuery, applyFilterDefaults } = await import(
+      "@/lib/server/data-queries"
+    );
+    const def = findDataQuery("current-officeholders-form-coverage");
+    expect(def).not.toBeNull();
+    if (!def) throw new Error("missing query def");
+
+    const req = new Request(
+      "http://localhost/api/data/current-officeholders-form-coverage?jurisdiction_id=place-san-rafael",
+    );
+    const routeRes = await GET(req, {
+      params: Promise.resolve({ query: "current-officeholders-form-coverage" }),
+    });
+    const routeBody = await routeRes.json();
+    const helperResult = await executeDataQuery(
+      def,
+      applyFilterDefaults(def, { jurisdiction_id: "place-san-rafael" }),
+    );
+
+    expect(routeRes.status).toBe(200);
+    expect(helperResult.as_of_date).toBeUndefined();
+    expect(routeBody.as_of_date).toBeUndefined();
+    expect(helperResult.rows).toEqual(routeBody.rows);
+  });
 });

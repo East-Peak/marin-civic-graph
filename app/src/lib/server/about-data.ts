@@ -11,6 +11,7 @@
 import "server-only";
 import { runQuery } from "@/lib/neo4j";
 import { JURISDICTION_PLACE_TYPES } from "@/lib/server/jurisdiction-types";
+import { getSubstrateDb, servingBackend } from "@/lib/server/substrate";
 
 export type Jurisdiction = {
   name: string;
@@ -29,6 +30,35 @@ export type JurisdictionLoadResult =
 
 export async function loadJurisdictions(): Promise<JurisdictionLoadResult> {
   try {
+    if (servingBackend() === "substrate") {
+      const params = Object.fromEntries(
+        JURISDICTION_PLACE_TYPES.map((placeType, i) => [`place_type_${i}`, placeType]),
+      );
+      const placeholders = JURISDICTION_PLACE_TYPES.map(
+        (_, i) => `@place_type_${i}`,
+      ).join(", ");
+      const rows = getSubstrateDb()
+        .prepare(
+          `
+          SELECT
+            coalesce(nullif(json_extract(props, '$.name'), ''), search_label, id) AS name,
+            coalesce(json_extract(props, '$.place_type'), '') AS type
+          FROM nodes
+          WHERE type = 'Place'
+            AND json_extract(props, '$.place_type') IN (${placeholders})
+          ORDER BY name ASC
+          `,
+        )
+        .all(params) as Array<{ name: string | null; type: string | null }>;
+      return {
+        ok: true,
+        jurisdictions: rows.map((row) => ({
+          name: String(row.name ?? ""),
+          type: String(row.type ?? ""),
+        })),
+      };
+    }
+
     const records = await runQuery(
       `
       MATCH (p:Place)
