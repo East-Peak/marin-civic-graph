@@ -1,7 +1,10 @@
 # Public product + serving substrate — integrated design
 
 **Date:** 2026-07-07 · **Author:** Claude (Fable 5), full public-app read (~6k lines serving layer +
-explorer + components) · **Status:** DRAFT — pending Codex adversarial review + Stuart go/no-go.
+explorer + components) · **Status:** COMPLETE (2026-07-08) — all seven surfaces substrate-served;
+no-credentials production replay 92 cases exit 0; operator stack on local Neo4j (~/neo4j-openmarin);
+**Aura instance deleted by Stuart 2026-07-08**. First public deploy (Fluid-vs-Turso) is a separate
+launch decision; constellation ships post-launch as baked static assets.
 **Prior art:** substrate debate (2026-07-07, 8-vector Codex review, scratchpad `substrate-debate.md`)
 whose five hard gates this spec discharges.
 
