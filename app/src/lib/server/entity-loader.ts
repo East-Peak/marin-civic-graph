@@ -28,6 +28,8 @@ import {
   buildTier2NeighborhoodQuery,
 } from "@/lib/server/entity-queries";
 import { effectiveEventDate } from "@/lib/server/entity-temporal";
+import { loadEntitySubstrate } from "@/lib/server/entity-loader-substrate";
+import { servingBackend } from "@/lib/server/substrate";
 import { urlSegmentForType, type NodeType } from "@/lib/type-display";
 
 // ---------------------------------------------------------------------------
@@ -561,6 +563,10 @@ export async function loadEntity(
   typeSegment: string,
   slug: string,
 ): Promise<EntityPayload | null> {
+  if (servingBackend() === "substrate") {
+    return loadEntitySubstrate(typeSegment, slug);
+  }
+
   const focus = await resolveFocus(typeSegment, slug);
   if (!focus) return null;
 
