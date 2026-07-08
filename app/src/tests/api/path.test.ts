@@ -3,15 +3,22 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 vi.mock("@/lib/server/path-finder", () => ({
   findPath: vi.fn(),
 }));
+vi.mock("@/lib/server/path-finder-substrate", () => ({
+  findPathSubstrate: vi.fn(),
+}));
 
 import { findPath } from "@/lib/server/path-finder";
+import { findPathSubstrate } from "@/lib/server/path-finder-substrate";
 import { GET } from "@/app/api/path/route";
 
 const findPathMock = findPath as unknown as ReturnType<typeof vi.fn>;
+const findPathSubstrateMock = findPathSubstrate as unknown as ReturnType<typeof vi.fn>;
 
 describe("GET /api/path", () => {
   beforeEach(() => {
     findPathMock.mockReset();
+    findPathSubstrateMock.mockReset();
+    delete process.env.SERVING_BACKEND;
   });
 
   it("400 when from is missing", async () => {
@@ -62,6 +69,18 @@ describe("GET /api/path", () => {
     const res = await GET(req);
     expect(res.status).toBe(200);
     expect(findPathMock).toHaveBeenCalledWith("a", "b", { loose: true });
+  });
+
+  it("dispatches to the substrate path finder when SERVING_BACKEND=substrate", async () => {
+    process.env.SERVING_BACKEND = "substrate";
+    findPathSubstrateMock.mockResolvedValueOnce({ found: false });
+
+    const req = new Request("http://localhost/api/path?from=a&to=b&loose=true");
+    const res = await GET(req);
+
+    expect(res.status).toBe(200);
+    expect(findPathSubstrateMock).toHaveBeenCalledWith("a", "b", { loose: true });
+    expect(findPathMock).not.toHaveBeenCalled();
   });
 
   it("surfaces found: false when findPath returns no path", async () => {
