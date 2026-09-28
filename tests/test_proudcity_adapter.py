@@ -238,3 +238,23 @@ class TestProudCityAdapterCapture:
         result = adapter.capture()
         assert len(result["errors"]) == 1
         assert result["meetings"][0]["artifacts"]["agenda"]["available"] is False
+
+
+def test_a_failed_archive_page_is_recorded_not_skipped(tmp_path):
+    list_html = '<table><tr><td><a href="/meetings/m1/">Meeting: March 1, 2025</a></td></tr></table>'
+    detail = '<div id="tab-agenda"><a href="https://storage.googleapis.com/proudcity/x/a.pdf">PDF</a></div>'
+
+    def fetch(url):
+        if "archive" in url:
+            raise ConnectionError("429 Too Many Requests")
+        return detail if url.endswith("/m1/") else list_html
+
+    config = {"id": "test", "adapter": "proudcity", "url": "https://example.gov/meetings/",
+              "jurisdiction_id": "place-test", "institution_id": "org-test",
+              "archive_pages": ["https://example.gov/2024-archive/"]}
+    adapter = ProudCityAdapter(config, tmp_path)
+    adapter._request_delay = 0
+    adapter._fetch_page = fetch
+    result = adapter.capture()
+    assert result["meeting_count"] == 1
+    assert len(result["errors"]) == 1 and "2024-archive" in result["errors"][0]

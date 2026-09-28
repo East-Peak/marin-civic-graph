@@ -312,8 +312,9 @@ class CivicPlusAdapter(BaseAdapter):
     def _fetch_year(self, base_url: str, category_id: str, year: int, cookies: object) -> str:
         """POST to the UpdateCategoryList endpoint for *category_id* / *year*.
 
-        Returns the HTML fragment (may be empty if the endpoint is
-        unavailable or the test stub overrides this method).
+        Returns the HTML fragment. A failed request raises; capture() records
+        it in the envelope's ``errors`` so a lost year fails the floors
+        instead of vanishing inside the row ratio.
         """
         parsed = urllib.parse.urlparse(base_url)
         endpoint = urllib.parse.urlunparse(
@@ -335,12 +336,9 @@ class CivicPlusAdapter(BaseAdapter):
                 "X-Requested-With": "XMLHttpRequest",
             },
         )
-        try:
-            with opener.open(req, timeout=15) as resp:
-                charset = resp.headers.get_content_charset("utf-8")
-                return resp.read().decode(charset, errors="replace")
-        except Exception:  # noqa: BLE001
-            return ""
+        with opener.open(req, timeout=15) as resp:
+            charset = resp.headers.get_content_charset("utf-8")
+            return resp.read().decode(charset, errors="replace")
 
     def capture(self) -> dict:
         """Fetch, parse, and return a capture envelope for this source."""
@@ -374,6 +372,7 @@ class CivicPlusAdapter(BaseAdapter):
         # --- Fetch historical years via AJAX for each category ---
         backfill_year = int(self.backfill_from[:4])
         seen_ids: set[str] = {_dedupe_key(m) for m in meetings}
+        errors: list[str] = []
 
         for cat in categories:
             cat_id = cat["id"]
@@ -388,7 +387,11 @@ class CivicPlusAdapter(BaseAdapter):
                 if year < backfill_year:
                     continue
 
-                year_html = self._fetch_year(self.url, cat_id, year, None)
+                try:
+                    year_html = self._fetch_year(self.url, cat_id, year, None)
+                except Exception as exc:  # noqa: BLE001 - recorded, judged by the floors
+                    errors.append(f"{cat_name} {year}: {exc}")
+                    year_html = ""
                 if self._request_delay:
                     time.sleep(self._request_delay)
                 if not year_html:
@@ -442,5 +445,5 @@ class CivicPlusAdapter(BaseAdapter):
             "categories": category_names,
             "meetings": meetings,
             "record_refs": record_refs,
-            "errors": [],
+            "errors": errors,
         }

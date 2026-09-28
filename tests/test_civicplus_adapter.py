@@ -418,3 +418,31 @@ class TestCivicPlusYearFetching:
         result = adapter.capture()
         meeting_ids = [m.get("meeting_id") for m in result["meetings"]]
         assert len(meeting_ids) == len(set(meeting_ids))  # No duplicates
+
+
+class TestCivicPlusYearFetchErrors:
+    def test_a_failed_year_fetch_is_recorded_not_swallowed(self, tmp_path, monkeypatch):
+        """A timed-out year AJAX call must land in errors[] so the floors see a partial pull."""
+        import urllib.request
+
+        class TimingOut:
+            def open(self, req, timeout=None):
+                raise TimeoutError("timed out")
+
+        config = {
+            "id": "corte-madera-town-council",
+            "adapter": "civicplus",
+            "url": "https://example.gov/AgendaCenter",
+            "jurisdiction_id": "place-corte-madera",
+            "institution_id": "org-corte-madera-town-council",
+            "backfill_from": "2019-01-01",
+            "categories": ["Town Council"],
+        }
+        adapter = CivicPlusAdapter(config, tmp_path)
+        adapter._request_delay = 0
+        adapter._fetch_page = lambda url: (FIXTURES / "civicplus-corte-madera.html").read_text(errors="ignore")
+        monkeypatch.setattr(urllib.request, "build_opener", lambda *handlers: TimingOut())
+        result = adapter.capture()
+        assert result["errors"], "a swallowed year would pass the 0.9 row floor silently"
+        assert all("Town Council" in e and "timed out" in e for e in result["errors"])
+        assert any("2023" in e for e in result["errors"])

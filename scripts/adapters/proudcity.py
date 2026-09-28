@@ -219,6 +219,9 @@ class ProudCityAdapter(BaseAdapter):
         (raw_dir / "source.html").write_text(list_html, encoding="utf-8")
 
         all_meetings = extract_meeting_urls(list_html, base_url)
+        # Every failed fetch is recorded: a throttled page keeps the row count
+        # up while losing meetings or artifacts, and the floors judge errors[].
+        errors: list[str] = []
 
         # Fetch additional archive pages if configured
         for archive_url in self.config.get("archive_pages", []):
@@ -226,7 +229,8 @@ class ProudCityAdapter(BaseAdapter):
                 time.sleep(self._request_delay)
             try:
                 archive_html = self._fetch_page(archive_url)
-            except Exception:
+            except Exception as exc:  # noqa: BLE001 - recorded, judged by the floors
+                errors.append(f"Failed to fetch archive page {archive_url}: {exc}")
                 continue
             seen = {m["url"] for m in all_meetings}
             for entry in extract_meeting_urls(archive_html, base_url):
@@ -245,7 +249,6 @@ class ProudCityAdapter(BaseAdapter):
         # Phase 2: Visit each meeting detail page for artifact URLs
         # ------------------------------------------------------------------ #
         meetings: list[dict] = []
-        errors: list[str] = []
 
         for i, entry in enumerate(all_meetings):
             if self._request_delay and i > 0:
