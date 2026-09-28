@@ -126,3 +126,23 @@ def test_adapter_errors_reject_an_otherwise_full_capture(tmp_path):
     assert not verdict.ok
     assert not (tmp_path / "out.json").exists()
     assert ledger.last_good("src") is None
+
+
+def test_a_slow_weekly_decline_cannot_ratchet_the_baseline_down(tmp_path):
+    verdicts = [_run(tmp_path, [{"date": "2026-09-22"}] * n)[3].ok for n in (100, 91, 83)]
+    assert verdicts == [True, True, False]  # 83 < 90% of max(100, 91)
+
+
+def test_ledger_rows_and_the_capture_header_agree_on_the_pre_merge_count(tmp_path):
+    out, ledger, _, verdict = _run(tmp_path, [{"meeting_id": "m1", "date": "2026-09-22"}] * 3)
+    assert verdict.ok
+    capture = json.loads(out.read_text())
+    assert capture["meeting_count"] == 1  # merged
+    assert capture["pulled_rows"] == ledger.last_good("src")["rows"] == 3
+
+
+def test_rejection_names_the_windowed_baseline(tmp_path):
+    for n in (100, 91):
+        _run(tmp_path, [{"date": "2026-09-22"}] * n)
+    _, _, _, verdict = _run(tmp_path, [{"date": "2026-09-22"}] * 83)
+    assert verdict.reasons == ["pull returned 83 rows, below 90% of the max of the last 4 good runs (100)"]

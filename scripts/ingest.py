@@ -15,7 +15,7 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from adapters import get_adapter_class
-from ingest_guard import Floors, RunLedger, Verdict, evaluate, newest_past_date, write_if_ok
+from ingest_guard import BASELINE_WINDOW, Floors, RunLedger, Verdict, evaluate, newest_past_date, write_if_ok
 from meeting_identity import MeetingIdentityMap, merge_duplicate_meetings
 from ingest_baseline import seed_ledger
 
@@ -81,15 +81,18 @@ def run_source(
     source_id = source_config["id"]
     rows = _row_count(result)
     newest = newest_past_date(result.get("meetings") or [], today)
-    last_good = ledger.last_good(source_id)
     verdict = evaluate(
         rows=rows,
         newest=newest,
-        last_good_rows=last_good["rows"] if last_good else None,
+        last_good_rows=ledger.baseline_rows(source_id),
+        baseline=f"the max of the last {BASELINE_WINDOW} good runs",
         today=today,
         floors=Floors.from_config(source_config),
         errors=len(result.get("errors") or []),
     )
+    # The ledger and the capture header both carry the pre-merge count, so a
+    # baseline seeded from a capture matches one recorded by a run.
+    result["pulled_rows"] = rows
     if verdict.ok and result.get("meetings"):
         if identity is not None:
             identity.canonicalize(source_id, result["meetings"])

@@ -100,3 +100,45 @@ def test_max_errors_is_a_per_source_floor():
     assert tolerant.max_errors == 2 and Floors().max_errors == 0
     assert evaluate(rows=10, newest=TODAY, last_good_rows=None, today=TODAY, floors=tolerant, errors=2).ok
     assert not evaluate(rows=10, newest=TODAY, last_good_rows=None, today=TODAY, floors=tolerant, errors=3).ok
+
+
+def _good(ledger, source_id, *row_counts):
+    for i, rows in enumerate(row_counts):
+        verdict = evaluate(rows=rows, newest=TODAY, last_good_rows=None, today=TODAY, floors=Floors())
+        ledger.append(source_id, f"2026-09-{i + 1:02d}T06:00:00Z", rows, TODAY, verdict)
+
+
+def test_baseline_is_the_max_of_the_last_four_good_runs(tmp_path):
+    # Judging against only the last run lets a 9%-a-week decline compound forever.
+    ledger = RunLedger(tmp_path / "ledger.jsonl")
+    assert ledger.baseline_rows("src") is None
+    _good(ledger, "src", 100, 92, 85, 80)
+    ledger.append("src", "2026-09-05T06:00:00Z", 3, TODAY,
+                  evaluate(rows=3, newest=TODAY, last_good_rows=100, today=TODAY, floors=Floors()))
+    assert ledger.baseline_rows("src") == 100  # rejected runs don't count
+    _good(ledger, "src", 76)
+    assert ledger.baseline_rows("src") == 92  # 100 has left the 4-run window
+
+
+def test_operator_reset_replaces_the_baseline_with_an_audited_entry(tmp_path):
+    ledger = RunLedger(tmp_path / "ledger.jsonl")
+    _good(ledger, "corte-madera-town-council", 903)
+    entry = ledger.reset("corte-madera-town-council", rows=252, reason="source narrowed to Town Council",
+                         run_at="2026-09-29T17:00:00Z")
+    assert entry["reset"] == "source narrowed to Town Council" and entry["ok"] is True
+    assert ledger.baseline_rows("corte-madera-town-council") == 252
+    last = json.loads(ledger.path.read_text().splitlines()[-1])
+    assert last == entry
+    _good(ledger, "corte-madera-town-council", 255, 256, 257)
+    assert ledger.baseline_rows("corte-madera-town-council") == 257  # 903 never returns
+
+
+def test_reset_requires_a_reason_and_a_row_count(tmp_path):
+    import pytest
+
+    ledger = RunLedger(tmp_path / "ledger.jsonl")
+    with pytest.raises(ValueError):
+        ledger.reset("src", rows=10, reason="  ", run_at="2026-09-29T17:00:00Z")
+    with pytest.raises(ValueError):
+        ledger.reset("src", rows=0, reason="why", run_at="2026-09-29T17:00:00Z")
+    assert not ledger.path.exists()

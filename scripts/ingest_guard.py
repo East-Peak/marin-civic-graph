@@ -6,7 +6,8 @@ exists for is real: after NetFile replatformed, the campaign-finance and Form
 overwritten good data with empty files.
 
 Every pull is judged against per-source floors before anything is written:
-  * rows must be > 0 and at least ``min_ratio`` x the last GOOD run's rows;
+  * rows must be > 0 and at least ``min_ratio`` x the baseline: the max rows
+    over the last ``BASELINE_WINDOW`` GOOD runs (see RunLedger);
   * the newest past record must be no older than ``max_newest_age_days``;
   * the adapter may report at most ``max_errors`` errors (a swallowed year or
     a failed detail page keeps the row count up while losing data).
@@ -54,6 +55,7 @@ def evaluate(
     today: date,
     floors: Floors,
     errors: int = 0,
+    baseline: str = "the last good run",
 ) -> Verdict:
     reasons: list[str] = []
     if errors > floors.max_errors:
@@ -64,7 +66,7 @@ def evaluate(
         reasons.append("pull returned 0 rows")
     elif last_good_rows and rows < floors.min_ratio * last_good_rows:
         reasons.append(
-            f"pull returned {rows} rows, below {floors.min_ratio:.0%} of the last good run ({last_good_rows})"
+            f"pull returned {rows} rows, below {floors.min_ratio:.0%} of {baseline} ({last_good_rows})"
         )
     if floors.max_newest_age_days is not None and rows > 0:
         if newest is None:
@@ -108,31 +110,73 @@ def write_if_ok(path: Path, text: str, verdict: Verdict) -> bool:
     return True
 
 
+# The row floor compares against the MAX over this many good runs, not the
+# last one: against the last run alone, a 9%-a-week decline passes every week
+# and compounds without limit.
+BASELINE_WINDOW = 4
+
+
 class RunLedger:
-    """Append-only JSONL of every pull and its verdict; the source of "last good"."""
+    """Append-only JSONL of every pull and its verdict; the source of the baseline.
+
+    ``rows`` is always the adapter's pre-merge row count (what ``run_source``
+    judges), so baselines compare like with like; captures carry the same
+    number as ``pulled_rows``.
+
+    An operator reset (``ingest_baseline.py --reset``) is an ordinary ok entry
+    with a ``reset`` reason. It starts a new baseline window: nothing before it
+    counts, so a source whose scope legitimately shrank can pass again.
+    """
 
     def __init__(self, path: Path):
         self.path = Path(path)
 
-    def append(self, source_id: str, run_at: str, rows: int, newest: date | None, verdict: Verdict) -> None:
+    def _write(self, entry: dict[str, Any]) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        entry = {
+        with self.path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(entry, sort_keys=True) + "\n")
+
+    def _entries(self, source_id: str) -> list[dict[str, Any]]:
+        if not self.path.exists():
+            return []
+        entries = (json.loads(line) for line in self.path.read_text(encoding="utf-8").splitlines())
+        return [e for e in entries if e["source_id"] == source_id]
+
+    def append(self, source_id: str, run_at: str, rows: int, newest: date | None, verdict: Verdict) -> None:
+        self._write({
             "source_id": source_id,
             "run_at": run_at,
             "rows": rows,
             "newest": newest.isoformat() if newest else None,
             "ok": verdict.ok,
             "reasons": verdict.reasons,
-        }
-        with self.path.open("a", encoding="utf-8") as fh:
-            fh.write(json.dumps(entry, sort_keys=True) + "\n")
+        })
+
+    def reset(self, source_id: str, *, rows: int, reason: str, run_at: str) -> dict[str, Any]:
+        """Append an audited operator reset that becomes the new baseline."""
+        if not reason.strip():
+            raise ValueError("a baseline reset needs a --reason")
+        if rows <= 0:
+            raise ValueError(f"a baseline reset needs a positive row count, not {rows}")
+        entry = {"source_id": source_id, "run_at": run_at, "rows": rows, "newest": None,
+                 "ok": True, "reasons": [], "reset": reason.strip()}
+        self._write(entry)
+        return entry
 
     def last_good(self, source_id: str) -> dict[str, Any] | None:
-        if not self.path.exists():
-            return None
-        last = None
-        for line in self.path.read_text(encoding="utf-8").splitlines():
-            entry = json.loads(line)
-            if entry["source_id"] == source_id and entry["ok"]:
-                last = entry
-        return last
+        good = [e for e in self._entries(source_id) if e["ok"]]
+        return good[-1] if good else None
+
+    def latest(self, source_id: str) -> dict[str, Any] | None:
+        entries = self._entries(source_id)
+        return entries[-1] if entries else None
+
+    def baseline_rows(self, source_id: str, window: int = BASELINE_WINDOW) -> int | None:
+        """Max rows over the last ``window`` good runs since the latest reset."""
+        rows: list[int] = []
+        for entry in self._entries(source_id):
+            if entry.get("reset"):
+                rows = [entry["rows"]]
+            elif entry["ok"]:
+                rows.append(entry["rows"])
+        return max(rows[-window:]) if rows else None
