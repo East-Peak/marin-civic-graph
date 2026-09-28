@@ -4,6 +4,7 @@
     refresh_weekly.py stage              # the weekly LaunchAgent runs only this
     refresh_weekly.py load <run_id>      # operator gate: load the approved bytes into the graph
     refresh_weekly.py publish <run_id>   # operator gate: swap the new artifact into data/exports/
+    refresh_weekly.py rollback <run_id>  # restore what was live before that run's publish
     refresh_weekly.py status [<run_id>]  # latest (or named) run's state and digest
 
 See docs/specs/2026-09-28-persistent-ingestion-design.md, "I5b". The rule is
@@ -71,6 +72,7 @@ TRANSITIONS = {
     "load_failed": ("loaded", "load_failed", "failed"),
     "loaded": ("awaiting_publish_approval", "failed"),
     "awaiting_publish_approval": ("published", "failed"),
+    "published": ("rolled_back",),
 }
 
 
@@ -396,27 +398,92 @@ def load(ctx: Context, run_id: str) -> dict:
 # --- publish (operator gate) -------------------------------------------------
 
 
+def _swap_in(exports: Path, sources: Mapping[str, Path | None], expected: Mapping[str, str | None]) -> list[str]:
+    """Make each exports/<name> hold exactly the bytes `expected[name]` (None: absent), or change nothing.
+
+    Each source is first copied to a temp file inside data/exports/ and the COPY is hashed, so what
+    is renamed into place is the verified bytes, whatever happens to the source afterwards. Returns
+    the names that did not match; if any did, nothing was changed.
+    """
+    temps: dict[str, Path] = {}
+    try:
+        bad = []
+        for name, src in sources.items():
+            if src is None:
+                continue
+            if not src.is_file():
+                bad.append(name)
+                continue
+            fd, tmp = tempfile.mkstemp(dir=exports, prefix=f".{name}.", suffix=".tmp")
+            os.close(fd)
+            temps[name] = Path(tmp)
+            shutil.copyfile(src, tmp)
+            if _sha256(temps[name]) != expected[name]:
+                bad.append(name)
+        if bad:
+            return bad
+        for name in sources:  # each rename is atomic; the set is restored by the caller on failure
+            if name in temps:
+                os.replace(temps[name], exports / name)
+                del temps[name]
+            else:
+                (exports / name).unlink(missing_ok=True)
+        return []
+    finally:
+        for tmp in temps.values():
+            tmp.unlink(missing_ok=True)
+
+
+def _kept(previous: Path, before: Mapping[str, str | None]) -> dict[str, Path | None]:
+    return {name: previous / name if sha else None for name, sha in before.items()}
+
+
 def publish(ctx: Context, run_id: str) -> dict:
     state = read_state(ctx.root, run_id)
     _require(state, "publish", "awaiting_publish_approval")
     staging, exports = ctx.root / STAGING, ctx.root / EXPORTS
     approved = state["bake"]["sha256"]
-    bad = [n for n in PUBLISHED_ARTIFACTS if not (staging / n).is_file() or _sha256(staging / n) != approved[n]]
-    if bad:
-        return _fail(ctx, state, f"{', '.join(bad)} missing or changed since the approved bake; nothing published")
 
     previous = run_dir(ctx.root, run_id) / "previous"
-    for name in PUBLISHED_ARTIFACTS:  # keep what was live, for rollback
+    previous.mkdir(exist_ok=True)
+    before: dict[str, str | None] = {}
+    for name in PUBLISHED_ARTIFACTS:  # keep what was live, and note what was absent, for rollback
+        before[name] = None
         if (exports / name).is_file():
-            previous.mkdir(exist_ok=True)
             shutil.copy2(exports / name, previous / name)
-    # All four were verified above; each swap is an atomic rename within data/exports/.
+            before[name] = _sha256(previous / name)
+    try:
+        bad = _swap_in(exports, {n: staging / n for n in PUBLISHED_ARTIFACTS}, approved)
+    except OSError as exc:
+        _swap_in(exports, _kept(previous, before), before)
+        return _fail(ctx, state, f"publish broke mid-swap ({exc}); the previously live artifacts were restored")
+    if bad:
+        return _fail(ctx, state, f"{', '.join(bad)} missing or changed since the approved bake; nothing published")
     for name in PUBLISHED_ARTIFACTS:
-        os.replace(staging / name, exports / name)
+        (staging / name).unlink(missing_ok=True)
     return _set_status(ctx, state, "published", published={
-        "sqlite_sha256": _sha256(exports / PUBLISHED_ARTIFACTS[0]),
-        "previous": previous.relative_to(ctx.root).as_posix() if previous.is_dir() else None,
+        "sqlite_sha256": approved[PUBLISHED_ARTIFACTS[0]], "sha256": dict(approved),
+        "previous": previous.relative_to(ctx.root).as_posix(), "previous_sha256": before,
     })
+
+
+def rollback(ctx: Context, run_id: str) -> dict:
+    """Restore the artifacts that were live before this run's publish (absent ones are removed)."""
+    state = read_state(ctx.root, run_id)
+    _require(state, "rollback", "published")
+    exports, published = ctx.root / EXPORTS, state["published"]
+    if "previous_sha256" not in published:
+        raise Refused(f"run {run_id} was published before rollback existed; restore {published['previous']} by hand")
+    before = published["previous_sha256"]
+    for name, prior in before.items():  # a partly-finished rollback may be retried
+        live = _sha256(exports / name) if (exports / name).is_file() else None
+        if live not in (published["sha256"][name], prior):
+            raise Refused(f"live {name} is neither run {run_id}'s publish nor what it replaced "
+                          "(a later publish?); refusing to roll back over it")
+    bad = _swap_in(exports, _kept(ctx.root / published["previous"], before), before)
+    if bad:
+        raise Refused(f"kept {', '.join(bad)} changed since the publish; nothing was rolled back")
+    return _set_status(ctx, state, "rolled_back")
 
 
 # --- digest and status -------------------------------------------------------
@@ -429,7 +496,9 @@ NEXT_STEP = {
                    "retry: `python scripts/refresh_weekly.py load {run_id}`.",
     "awaiting_publish_approval": "Publish: `python scripts/refresh_weekly.py publish {run_id}` swaps the staged "
                                  "artifact into data/exports/. It does not deploy; deploying is a separate decision.",
-    "published": "Published. Deploying is a separate launch decision.",
+    "published": "Published. Deploying is a separate launch decision. "
+                 "To undo: `python scripts/refresh_weekly.py rollback {run_id}`.",
+    "rolled_back": "Rolled back: the artifacts that were live before this run's publish are restored.",
     "failed": "Nothing further to approve in this run.",
 }
 
@@ -506,7 +575,7 @@ def main(argv: list[str] | None = None, ctx: Context | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("stage", help="fetch, stage, floor and digest every weekly source (automated)")
-    for gate in ("load", "publish"):
+    for gate in ("load", "publish", "rollback"):
         sub.add_parser(gate, help=f"operator gate: {gate} an approved run").add_argument("run_id")
     sub.add_parser("status", help="print a run's state and digest path (default: latest)").add_argument(
         "run_id", nargs="?")
@@ -521,7 +590,7 @@ def main(argv: list[str] | None = None, ctx: Context | None = None) -> int:
                 state = stage(ctx)
                 _report(ctx, state)
                 return 0 if state["status"] != "failed" and all(s["ok"] for s in state["sources"].values()) else 1
-            state = (load if args.command == "load" else publish)(ctx, args.run_id)
+            state = {"load": load, "publish": publish, "rollback": rollback}[args.command](ctx, args.run_id)
         _report(ctx, state)
         return 1 if state["status"] in ("failed", "load_failed") else 0
     except (Refused, RunLockHeld) as exc:

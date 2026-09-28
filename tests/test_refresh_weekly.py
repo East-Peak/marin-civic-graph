@@ -139,6 +139,7 @@ def test_status_machine_allows_the_documented_path_only():
         rw.check_transition("awaiting_load_approval", "published")
     with pytest.raises(rw.Refused):
         rw.check_transition("failed", "staged")
+    rw.check_transition("published", "rolled_back")
     with pytest.raises(rw.Refused):
         rw.check_transition("published", "failed")
 
@@ -488,6 +489,115 @@ def test_publish_refuses_bytes_other_than_the_approved_bake(ctx, root, tamper):
     assert not (root / "data/exports/public-substrate.sqlite").exists()
 
 
+def _live(root: Path) -> dict[str, bytes | None]:
+    exports = root / "data/exports"
+    return {n: (exports / n).read_bytes() if (exports / n).is_file() else None for n in rw.PUBLISHED_ARTIFACTS}
+
+
+def _no_temps_left(root: Path) -> bool:
+    return not list((root / "data/exports").glob(".*.tmp"))
+
+
+def test_staging_that_changes_after_the_hash_check_is_never_published(ctx, root, monkeypatch):
+    _loaded(ctx)  # review R3: another run bakes into staging while the live artifacts are backed up
+    (root / "data/exports/public-substrate.sqlite").write_bytes(b"old live")
+    real_copy2 = rw.shutil.copy2
+
+    def backup_then_race(src, dst, *a, **k):
+        real_copy2(src, dst, *a, **k)
+        (root / "data/exports/staging/public-substrate.sqlite").write_bytes(b"UNREVIEWED bake from another run")
+    monkeypatch.setattr(rw.shutil, "copy2", backup_then_race)
+
+    assert rw.main(["publish", RUN], ctx) == 1
+
+    assert _state(root)["status"] == "failed"
+    assert _live(root)["public-substrate.sqlite"] == b"old live"
+
+
+def test_publish_renames_the_verified_copy_whatever_staging_does_next(ctx, root, monkeypatch):
+    _loaded(ctx)
+    approved = _state(root)["bake"]["sha256"]
+    real_replace, raced = rw.os.replace, []
+
+    def race_then_replace(src, dst):
+        if Path(dst).parent == root / "data/exports" and not raced:
+            raced.append(dst)
+            (root / "data/exports/staging/public-substrate.sqlite").write_bytes(b"UNREVIEWED")
+        return real_replace(src, dst)
+    monkeypatch.setattr(rw.os, "replace", race_then_replace)
+
+    assert rw.main(["publish", RUN], ctx) == 0
+
+    assert _sha(root / "data/exports/public-substrate.sqlite") == approved["public-substrate.sqlite"]
+    assert _state(root)["published"]["sha256"] == approved and _no_temps_left(root)
+
+
+def test_a_copy_that_does_not_match_the_approved_hash_is_never_published(ctx, root, monkeypatch):
+    _loaded(ctx)
+    (root / "data/exports/public-substrate.sqlite").write_bytes(b"old live")
+    real_copyfile = rw.shutil.copyfile
+
+    def corrupting(src, dst, *a, **k):  # staging changed between the approval and the copy
+        real_copyfile(src, dst, *a, **k)
+        if Path(src).name == "public-substrate.sqlite":
+            Path(dst).write_bytes(b"UNREVIEWED")
+        return dst
+    monkeypatch.setattr(rw.shutil, "copyfile", corrupting)
+
+    assert rw.main(["publish", RUN], ctx) == 1
+
+    state = _state(root)
+    assert state["status"] == "failed" and "public-substrate.sqlite" in state["error"]
+    assert _live(root)["public-substrate.sqlite"] == b"old live" and _no_temps_left(root)
+
+
+def test_a_swap_that_breaks_partway_restores_what_was_live(ctx, root, monkeypatch):
+    _loaded(ctx)
+    (root / "data/exports/public-substrate.sqlite").write_bytes(b"old live")
+    before = _live(root)
+    real_replace, raised = rw.os.replace, []
+
+    def flaky(src, dst):
+        if Path(dst).name == "catalog.json" and not raised:
+            raised.append(dst)
+            raise OSError("disk hiccup")
+        return real_replace(src, dst)
+    monkeypatch.setattr(rw.os, "replace", flaky)
+
+    assert rw.main(["publish", RUN], ctx) == 1
+
+    assert _state(root)["status"] == "failed" and "restored" in _state(root)["error"]
+    assert _live(root) == before and _no_temps_left(root)
+
+
+def test_rollback_restores_exactly_what_was_live_before_the_publish(ctx, root):
+    _loaded(ctx)
+    exports = root / "data/exports"
+    for name in rw.PUBLISHED_ARTIFACTS[:3]:  # substrate-bake-report.json was never live
+        (exports / name).write_text(f"old {name}")
+    before = _live(root)
+    assert rw.main(["publish", RUN], ctx) == 0
+    assert f"refresh_weekly.py rollback {RUN}" in _digest(root)
+
+    assert rw.main(["rollback", RUN], ctx) == 0
+
+    assert _live(root) == before
+    assert _state(root)["status"] == "rolled_back" and "Rolled back" in _digest(root)
+    assert rw.main(["rollback", RUN], ctx) == 2  # only a published run rolls back
+
+
+def test_rollback_refuses_to_overwrite_artifacts_this_run_did_not_publish(ctx, root):
+    _loaded(ctx)
+    assert rw.main(["rollback", RUN], ctx) == 2  # not published yet
+    assert rw.main(["publish", RUN], ctx) == 0
+    (root / "data/exports/catalog.json").write_text("a later publish")
+
+    assert rw.main(["rollback", RUN], ctx) == 2
+
+    assert _state(root)["status"] == "published"
+    assert (root / "data/exports/catalog.json").read_text() == "a later publish"
+
+
 def test_subprocess_runner_captures_exit_code_and_output(tmp_path):
     result = rw.subprocess_runner([sys.executable, "-c", "import sys; print('out'); sys.exit(3)"],
                                   tmp_path, {"PATH": ""})
@@ -581,7 +691,7 @@ def test_launchagent_template_runs_only_stage_on_monday_at_five_with_no_secrets(
 # --- the run lock (review P2-9) ----------------------------------------------
 
 
-@pytest.mark.parametrize("argv", [["stage"], ["load", RUN], ["publish", RUN]])
+@pytest.mark.parametrize("argv", [["stage"], ["load", RUN], ["publish", RUN], ["rollback", RUN]])
 def test_every_writing_subcommand_is_refused_while_another_run_holds_the_lock(ctx, world, root, argv, capsys):
     import run_lock
 
