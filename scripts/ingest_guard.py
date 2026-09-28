@@ -159,7 +159,8 @@ class RunLedger:
         if rows <= 0:
             raise ValueError(f"a baseline reset needs a positive row count, not {rows}")
         entry = {"source_id": source_id, "run_at": run_at, "rows": rows, "newest": None,
-                 "ok": True, "reasons": [], "reset": reason.strip()}
+                 "ok": True, "reasons": [], "reset": reason.strip(),
+                 "previous_baseline": self.baseline_rows(source_id)}
         self._write(entry)
         return entry
 

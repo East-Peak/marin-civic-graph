@@ -43,6 +43,24 @@ A read-only audit on 2026-09-28 found most sources healthy, but also:
 | I4 | Form 700 on the new NetFile API | `POST netfile.com/api/public/sites/api/searchfilings` (JSON, no captcha) replaces the dead ASP.NET scrape, keeping the output schema. Never overwrites on empty |
 | I5 | Weekly runner | `scripts/refresh_weekly.py`: preflight → probe → fetch/stage → floors → normalize/diff → **gate: load** → reconciliation refresh → export → rebake → parity smoke → **gate: publish**. A LaunchAgent runs it weekly on the operator Mac. Email digest to stuart@eastpeak.cc is the end state |
 
+## I1 floors: baselines, errors and resets (2026-09-28 review fixes)
+
+- **Baseline.** The row floor compares a pull with the **max** row count over the last 4 good runs in
+  `data/ingest-runs/ledger.jsonl`, not the last run alone, so a slow weekly decline cannot compound.
+- **One row count.** The ledger, the seed and the capture header all use the adapter's **pre-merge** row
+  count (`pulled_rows` in the capture); `meeting_count` is post-merge. Pre-merge is what the adapter
+  actually pulled, so it is the number that shows a broken pull.
+- **Errors.** A pull with more adapter `errors` than the source's `floors.max_errors` (default 0) fails,
+  however many rows it kept. A source with a known benign error raises `max_errors` in its registry entry
+  with a comment naming the error.
+- **Seeding** skips capture files whose name is not a date and captures holding categories the source's
+  current `categories` config excludes.
+- **Reset.** A rejected run never becomes a baseline, so a source whose scope legitimately shrank fails
+  forever. After checking the smaller pull by hand, run
+  `python scripts/ingest_baseline.py --reset <source_id> --reason "..." [--rows N]`. It appends an audited
+  `reset` entry (reason, time, previous baseline; rows default to the latest pull) that starts a new
+  baseline window.
+
 ## Manual and paid sources (by decision)
 
 - **CA SOS bulk:** quarterly, $100, ordered by hand. The watchdog emails a reminder at 90 days.
