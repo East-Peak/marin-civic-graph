@@ -5,7 +5,14 @@ sources:
     jurisdiction_id: place-marin-county
     institution_id: org-marin-county-campaign-finance
     backfill_from: "2019-01-01"
-    schedule: quarterly
+    schedule: manual
+    schedule_note: >-
+      NetFile replatformed (2026); the yearly export now sits behind a Cloudflare
+      Turnstile captcha. An operator downloads the 'Export Amended' ZIP into
+      data/raw/<src>/<date>/ (weekly Sep-Nov of election years). Planned: a JSON
+      adapter on api/SearchCampaignTransactions (needs a MoneyFlow id mapping).
+    floors:
+      max_newest_age_days: null  # yearly export bundles, not dated meetings
     export_target: "ctl00$phBody$GetExcelAmend"
 
   - id: novato-campaign-finance
@@ -14,5 +21,12 @@ sources:
     jurisdiction_id: place-novato
     institution_id: org-novato-campaign-finance
     backfill_from: "2019-01-01"
-    schedule: quarterly
+    schedule: manual
+    schedule_note: >-
+      NetFile replatformed (2026); the yearly export now sits behind a Cloudflare
+      Turnstile captcha. An operator downloads the 'Export Amended' ZIP into
+      data/raw/<src>/<date>/ (weekly Sep-Nov of election years). Planned: a JSON
+      adapter on api/SearchCampaignTransactions (needs a MoneyFlow id mapping).
+    floors:
+      max_newest_age_days: null  # yearly export bundles, not dated meetings
     export_target: "ctl00$phBody$GetExcelAmend"

@@ -7,6 +7,7 @@ import argparse
 import json
 import sys
 import time
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 import yaml
@@ -14,8 +15,10 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from adapters import get_adapter_class
+from ingest_guard import Floors, RunLedger, Verdict, evaluate, newest_past_date, write_if_ok
 
 ROOT = Path(__file__).resolve().parent.parent
+LEDGER_PATH = Path("data") / "ingest-runs" / "ledger.jsonl"
 
 
 def load_sources(registry_path: Path) -> list[dict]:
@@ -46,19 +49,48 @@ def resolve_sources(
     raise ValueError("Specify --source <id> or --all")
 
 
-def run_source(source_config: dict, root: Path) -> dict:
-    adapter_cls = get_adapter_class(source_config["adapter"])
+def _row_count(result: dict) -> int:
+    # Meeting adapters return meetings[]; bundle adapters (NetFile) artifacts[].
+    for key in ("meetings", "artifacts"):
+        if isinstance(result.get(key), list):
+            return len(result[key])
+    return 0
+
+
+def run_source(
+    source_config: dict,
+    root: Path,
+    *,
+    ledger: RunLedger,
+    today: date,
+    adapter_cls=None,
+) -> tuple[dict, Verdict]:
+    """Capture one source and write it ONLY if it passes its floors.
+
+    A failed pull writes nothing, so the previous good capture stays the
+    authoritative one, and the verdict is recorded in the run ledger.
+    """
+    adapter_cls = adapter_cls or get_adapter_class(source_config["adapter"])
     adapter = adapter_cls(source_config, root)
     result = adapter.capture()
 
-    out_path = adapter.extracted_path()
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(result, indent=2) + "\n")
+    source_id = source_config["id"]
+    rows = _row_count(result)
+    newest = newest_past_date(result.get("meetings") or [], today)
+    last_good = ledger.last_good(source_id)
+    verdict = evaluate(
+        rows=rows,
+        newest=newest,
+        last_good_rows=last_good["rows"] if last_good else None,
+        today=today,
+        floors=Floors.from_config(source_config),
+    )
+    write_if_ok(adapter.extracted_path(), json.dumps(result, indent=2) + "\n", verdict)
+    ledger.append(source_id, datetime.now(timezone.utc).isoformat(timespec="seconds"), rows, newest, verdict)
+    return result, verdict
 
-    return result
 
-
-def main() -> None:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run ingestion adapters")
     parser.add_argument("--source", help="Source ID to capture")
     parser.add_argument("--all", dest="all_sources", action="store_true", help="Capture all sources")
@@ -67,7 +99,7 @@ def main() -> None:
         default="registry/granicus-sources.yaml",
         help="Path to source registry",
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     registry_path = ROOT / args.registry
     sources = load_sources(registry_path)
@@ -76,8 +108,11 @@ def main() -> None:
         targets = resolve_sources(sources, source=args.source, all_sources=args.all_sources)
     except ValueError as e:
         print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
+        return 1
 
+    ledger = RunLedger(ROOT / LEDGER_PATH)
+    today = date.today()
+    failed: list[str] = []
     for i, source_config in enumerate(targets):
         if i > 0:
             print("  (waiting 2s between sources)")
@@ -89,18 +124,29 @@ def main() -> None:
         print(f"  URL: {source_config['url']}")
 
         try:
-            result = run_source(source_config, ROOT)
+            result, verdict = run_source(source_config, ROOT, ledger=ledger, today=today)
             print(f"  Variant: {result.get('variant', 'unknown')}")
-            print(f"  Meetings: {result['meeting_count']}")
+            print(f"  Meetings: {result.get('meeting_count', 'n/a')}")
             for art, count in sorted(result.get("artifact_counts", {}).items()):
                 print(f"    {art}: {count}")
             if result.get("errors"):
                 print(f"  Errors: {len(result['errors'])}")
                 for err in result["errors"]:
                     print(f"    - {err}")
+            if not verdict.ok:
+                failed.append(source_id)
+                print("  REJECTED (previous good capture kept):", file=sys.stderr)
+                for reason in verdict.reasons:
+                    print(f"    - {reason}", file=sys.stderr)
         except Exception as e:
+            failed.append(source_id)
             print(f"  FAILED: {e}", file=sys.stderr)
+
+    if failed:
+        print(f"\n{len(failed)} source(s) failed: {', '.join(failed)}", file=sys.stderr)
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

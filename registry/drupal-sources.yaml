@@ -8,3 +8,5 @@ sources:
     # Weekly, not monthly: the site shows only a rolling ~6-month window with no
     # history, so a missed pass can lose meetings permanently.
     schedule: weekly
+    floors:
+      min_ratio: 0.5  # rolling window: the listed count legitimately swings

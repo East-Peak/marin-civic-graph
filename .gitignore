@@ -35,3 +35,6 @@ data/exports/
 
 # Identity-assertion ledger — operator-local, never committed (Identity Control A)
 data/identity/
+
+# ingestion run ledger (operator-local, like data/raw)
+data/ingest-runs/
