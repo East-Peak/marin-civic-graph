@@ -464,3 +464,29 @@ def test_launchagent_template_runs_only_stage_on_monday_at_five_with_no_secrets(
     assert set(plist["EnvironmentVariables"]) == {"NEO4J_URI"}  # stage needs only the guard, never credentials
     assert "bolt://" not in plist["EnvironmentVariables"]["NEO4J_URI"]  # a hint by name; the operator fills it in
     assert "PASSWORD" not in path.read_text()
+
+
+# --- the run lock (review P2-9) ----------------------------------------------
+
+
+@pytest.mark.parametrize("argv", [["stage"], ["load", RUN], ["publish", RUN]])
+def test_every_writing_subcommand_is_refused_while_another_run_holds_the_lock(ctx, world, root, argv, capsys):
+    import run_lock
+
+    with run_lock.run_lock(root):
+        assert rw.main(argv, ctx) == 2
+
+    assert "another ingestion run" in capsys.readouterr().err
+    assert world.calls == [] and not (root / f"data/ingest-runs/{RUN}").exists()
+
+
+def test_steps_tell_their_children_that_this_process_holds_the_lock(ctx, world, root):
+    import os
+
+    import run_lock
+
+    seen = []
+    ctx.runner = lambda cmd, cwd, env: (seen.append(env.get(run_lock.OWNER_ENV)), world(cmd, cwd, env))[1]
+    _staged(ctx)
+
+    assert seen and set(seen) == {str(os.getpid())}

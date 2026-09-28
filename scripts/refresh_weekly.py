@@ -34,6 +34,7 @@ from ingest import load_sources, resolve_sources  # noqa: E402
 from ingest_guard import Floors, evaluate  # noqa: E402
 from load_from import STAGED_FILES  # noqa: E402
 from neo4j_target import UnsafeNeo4jTarget, check_target  # noqa: E402
+from run_lock import OWNER_ENV, RunLockHeld, run_lock  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 RUNS_DIR = Path("data/ingest-runs")
@@ -175,7 +176,8 @@ def _require(state: dict, status: str, action: str) -> None:
 
 def _step(ctx: Context, run_id: str, name: str, cmd: list[str]) -> Result:
     """Run one external command through the injected runner and keep its log."""
-    result = ctx.runner(cmd, ctx.root, {**ctx.env, "PYTHON": ctx.python})
+    # Children that take the run lock themselves (ingest.py) run under ours.
+    result = ctx.runner(cmd, ctx.root, {**ctx.env, "PYTHON": ctx.python, OWNER_ENV: str(os.getpid())})
     _write_atomic(run_dir(ctx.root, run_id) / "logs" / f"{name}.log",
                   f"$ {' '.join(cmd)}\n{result.output}\n[exit {result.returncode}]\n")
     return result
@@ -469,14 +471,15 @@ def main(argv: list[str] | None = None, ctx: Context | None = None) -> int:
     try:
         if args.command == "status":
             return status(ctx, args.run_id)
-        if args.command == "stage":
-            state = stage(ctx)
-            _report(ctx, state)
-            return 0 if state["status"] != "failed" and all(s["ok"] for s in state["sources"].values()) else 1
-        state = (load if args.command == "load" else publish)(ctx, args.run_id)
+        with run_lock(ctx.root):  # every other subcommand writes
+            if args.command == "stage":
+                state = stage(ctx)
+                _report(ctx, state)
+                return 0 if state["status"] != "failed" and all(s["ok"] for s in state["sources"].values()) else 1
+            state = (load if args.command == "load" else publish)(ctx, args.run_id)
         _report(ctx, state)
         return 1 if state["status"] == "failed" else 0
-    except Refused as exc:
+    except (Refused, RunLockHeld) as exc:
         print(f"REFUSED: {exc}", file=sys.stderr)
         return 2
 

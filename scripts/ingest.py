@@ -18,6 +18,7 @@ from adapters import get_adapter_class
 from ingest_guard import BASELINE_WINDOW, Floors, RunLedger, Verdict, evaluate, newest_past_date, write_if_ok
 from meeting_identity import MeetingIdentityMap, merge_duplicate_meetings
 from ingest_baseline import seed_ledger
+from run_lock import RunLockHeld, run_lock
 
 ROOT = Path(__file__).resolve().parent.parent
 LEDGER_PATH = Path("data") / "ingest-runs" / "ledger.jsonl"
@@ -124,6 +125,15 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Error: {e}", file=sys.stderr)
         return 1
 
+    try:
+        with run_lock(ROOT):  # the ledger and identity map are read-modify-write
+            return _capture(targets)
+    except RunLockHeld as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 2
+
+
+def _capture(targets: list[dict]) -> int:
     ledger = RunLedger(ROOT / LEDGER_PATH)
     identity = MeetingIdentityMap(ROOT / IDENTITY_PATH)
     # First scheduled run: judge against the last manual captures, not "any > 0".
