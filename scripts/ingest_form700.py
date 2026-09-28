@@ -28,6 +28,9 @@ Usage:
 
   # Limit for testing
   python scripts/ingest_form700.py --agency cmar --limit 50
+
+  # Load previously staged output without fetching (weekly runner, I5b)
+  python scripts/ingest_form700.py --load-from data/ingest-runs/<run>/staged/form700
 """
 
 from __future__ import annotations
@@ -44,6 +47,9 @@ from datetime import date, datetime
 from html import unescape
 from pathlib import Path
 from typing import Any
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from load_from import add_load_from_argument, load_staged, reject_fetch_flags  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -500,6 +506,7 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="Fetch from all known Marin-area agencies.",
     )
+    add_load_from_argument(source)
 
     parser.add_argument(
         "--load",
@@ -514,12 +521,12 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument(
         "--floor-date",
-        default=DEFAULT_FLOOR_DATE.isoformat(),
+        default=None,
         help=f"Earliest filing date to include (default: {DEFAULT_FLOOR_DATE})",
     )
     parser.add_argument(
         "--output-dir",
-        default=str(OUTPUT_DIR),
+        default=None,
         help=f"Directory to write nodes.jsonl / edges.jsonl (default: {OUTPUT_DIR})",
     )
     parser.add_argument("--uri", default=os.getenv("NEO4J_URI"))
@@ -527,7 +534,9 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--password", default=os.getenv("NEO4J_PASSWORD"))
     parser.add_argument("--database", default=os.getenv("NEO4J_DATABASE", "neo4j"))
     parser.add_argument("--batch-size", type=int, default=500)
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+    reject_fetch_flags(parser, args, ("--load", "--limit", "--floor-date", "--output-dir"))
+    return args
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -538,7 +547,9 @@ def main(argv: list[str] | None = None) -> int:
     loaded, and the exit code is 1.
     """
     args = _parse_args(argv)
-    floor_date = date.fromisoformat(args.floor_date)
+    if args.load_from is not None:
+        return load_staged(args, _load_into_neo4j)
+    floor_date = date.fromisoformat(args.floor_date) if args.floor_date else DEFAULT_FLOOR_DATE
     if args.load and not args.password:
         print(
             "ERROR: NEO4J_PASSWORD is required (--password or NEO4J_PASSWORD env var).",
@@ -585,7 +596,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 1
 
-    output_dir = Path(args.output_dir)
+    output_dir = Path(args.output_dir or OUTPUT_DIR)
     nodes_path = output_dir / "nodes.jsonl"
     edges_path = output_dir / "edges.jsonl"
     print(f"\nWriting nodes to: {nodes_path}")

@@ -14,6 +14,9 @@ Usage:
 
   # Limit records (for testing)
   python scripts/ingest_socrata_permits.py --limit 100 --load
+
+  # Load previously staged output without fetching (weekly runner, I5b)
+  python scripts/ingest_socrata_permits.py --load-from data/ingest-runs/<run>/staged/permits
 """
 
 from __future__ import annotations
@@ -26,6 +29,9 @@ from pathlib import Path
 from typing import Iterator
 
 import requests
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from load_from import add_load_from_argument, load_staged, reject_fetch_flags  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -356,7 +362,7 @@ def _load_into_neo4j(
 # ---------------------------------------------------------------------------
 
 
-def main() -> None:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Fetch Marin County building permits from Socrata and load into Neo4j."
     )
@@ -373,7 +379,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--output-dir",
-        default=str(OUTPUT_DIR),
+        default=None,
         help=f"Directory to write nodes.jsonl and edges.jsonl (default: {OUTPUT_DIR})",
     )
     parser.add_argument(
@@ -402,11 +408,15 @@ def main() -> None:
         default=500,
         help="Batch size for Neo4j UNWIND writes (default: 500)",
     )
-    args = parser.parse_args()
+    add_load_from_argument(parser)
+    args = parser.parse_args(argv)
+    reject_fetch_flags(parser, args, ("--load", "--limit", "--output-dir"))
+    if args.load_from is not None:
+        return load_staged(args, _load_into_neo4j)
 
     nodes, edges = run_pipeline(limit=args.limit)
 
-    output_dir = Path(args.output_dir)
+    output_dir = Path(args.output_dir or OUTPUT_DIR)
     nodes_path = output_dir / "nodes.jsonl"
     edges_path = output_dir / "edges.jsonl"
 
@@ -419,7 +429,7 @@ def main() -> None:
     if args.load:
         if not args.password:
             print("ERROR: NEO4J_PASSWORD is required (--password or NEO4J_PASSWORD env var).", file=sys.stderr)
-            sys.exit(1)
+            return 1
         _load_into_neo4j(
             nodes=nodes,
             edges=edges,
@@ -429,7 +439,8 @@ def main() -> None:
             database=args.database,
             batch_size=args.batch_size,
         )
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
