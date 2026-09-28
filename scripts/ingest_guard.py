@@ -7,7 +7,9 @@ overwritten good data with empty files.
 
 Every pull is judged against per-source floors before anything is written:
   * rows must be > 0 and at least ``min_ratio`` x the last GOOD run's rows;
-  * the newest past record must be no older than ``max_newest_age_days``.
+  * the newest past record must be no older than ``max_newest_age_days``;
+  * the adapter may report at most ``max_errors`` errors (a swallowed year or
+    a failed detail page keeps the row count up while losing data).
 A pull that fails its floors writes nothing (the previous good output stays
 authoritative) and is recorded in the run ledger with its reasons.
 """
@@ -29,6 +31,9 @@ class Floors:
     min_ratio: float = 0.9
     # 45 days rather than ~21 so a council's summer recess isn't an alert.
     max_newest_age_days: int | None = 45
+    # 0: any adapter error is a partial pull. Raise it per source, with a
+    # registry comment naming the known benign error.
+    max_errors: int = 0
 
     @classmethod
     def from_config(cls, source_config: dict[str, Any]) -> "Floors":
@@ -48,8 +53,13 @@ def evaluate(
     last_good_rows: int | None,
     today: date,
     floors: Floors,
+    errors: int = 0,
 ) -> Verdict:
     reasons: list[str] = []
+    if errors > floors.max_errors:
+        reasons.append(
+            f"{errors} adapter error{'s' if errors != 1 else ''} (max {floors.max_errors}): a partial pull"
+        )
     if rows == 0:
         reasons.append("pull returned 0 rows")
     elif last_good_rows and rows < floors.min_ratio * last_good_rows:

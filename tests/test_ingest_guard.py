@@ -84,3 +84,19 @@ def test_ledger_remembers_only_good_runs(tmp_path):
     lines = [json.loads(l) for l in (tmp_path / "ledger.jsonl").read_text().splitlines()]
     assert [l["ok"] for l in lines] == [True, False]
     assert lines[1]["reasons"]
+
+
+def test_adapter_errors_fail_the_verdict_even_when_rows_hold_up():
+    # A timed-out CivicPlus year or a throttled ProudCity detail page keeps the
+    # row count inside the 0.9 floor; the adapter's own errors must not.
+    v = evaluate(rows=400, newest=TODAY, last_good_rows=409, today=TODAY, floors=Floors(), errors=1)
+    assert not v.ok
+    assert any("1 adapter error" in r for r in v.reasons)
+    assert evaluate(rows=400, newest=TODAY, last_good_rows=409, today=TODAY, floors=Floors()).ok
+
+
+def test_max_errors_is_a_per_source_floor():
+    tolerant = Floors.from_config({"floors": {"max_errors": 2}})
+    assert tolerant.max_errors == 2 and Floors().max_errors == 0
+    assert evaluate(rows=10, newest=TODAY, last_good_rows=None, today=TODAY, floors=tolerant, errors=2).ok
+    assert not evaluate(rows=10, newest=TODAY, last_good_rows=None, today=TODAY, floors=tolerant, errors=3).ok

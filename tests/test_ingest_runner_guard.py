@@ -105,3 +105,24 @@ def test_rejected_capture_does_not_touch_the_identity_map(tmp_path):
     ingest.run_source({"id": "src", "adapter": "f"}, tmp_path, ledger=RunLedger(tmp_path / "l.jsonl"),
                       today=TODAY, adapter_cls=_fake_adapter([], out), identity=idmap)
     assert not (tmp_path / "ids.json").exists()
+
+
+def test_adapter_errors_reject_an_otherwise_full_capture(tmp_path):
+    class Partial:
+        def __init__(self, source_config, root):
+            pass
+
+        def capture(self):
+            meetings = [{"date": "2026-09-22"}] * 10
+            return {"meeting_count": 10, "meetings": meetings,
+                    "errors": ["Failed to fetch https://example.gov/meetings/m1/: timeout"]}
+
+        def extracted_path(self):
+            return tmp_path / "out.json"
+
+    ledger = RunLedger(tmp_path / "ledger.jsonl")
+    _, verdict = ingest.run_source({"id": "src", "adapter": "f"}, tmp_path, ledger=ledger,
+                                   today=TODAY, adapter_cls=Partial)
+    assert not verdict.ok
+    assert not (tmp_path / "out.json").exists()
+    assert ledger.last_good("src") is None

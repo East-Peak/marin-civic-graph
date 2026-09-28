@@ -88,6 +88,7 @@ def run_source(
         last_good_rows=last_good["rows"] if last_good else None,
         today=today,
         floors=Floors.from_config(source_config),
+        errors=len(result.get("errors") or []),
     )
     if verdict.ok and result.get("meetings"):
         if identity is not None:
