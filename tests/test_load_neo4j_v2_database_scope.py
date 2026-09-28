@@ -24,7 +24,7 @@ class _FakeSession:
         return False
 
     def run(self, *a, **k):
-        return None
+        return []  # an empty result, like a real session on an empty graph
 
 
 def _driver_recording_db():

@@ -185,7 +185,14 @@ from build_county_vendor_orgs import write_envelope, load_envelope  # noqa: E402
 class _FakeSession:
     def __enter__(self): return self
     def __exit__(self, *a): return False
-    def run(self, *a, **k): return None
+    def run(self, query, **kw):
+        # load_edges resolves endpoint labels first (SHOW CONSTRAINTS, then
+        # labeled id lookups); answer like a graph where every id exists.
+        if query.startswith("SHOW CONSTRAINTS"):
+            return [{"labelsOrTypes": ["Organization"], "properties": ["id"]}]
+        if "RETURN n.id AS id" in query:
+            return [{"id": i} for i in kw.get("ids", [])]
+        return []
 
 
 def _recording_driver():

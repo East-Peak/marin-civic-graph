@@ -145,6 +145,13 @@ class _FakeSession:
 
     def run(self, query, **kw):
         self.calls.append((query, kw))
+        # load_edges resolves endpoint labels first (SHOW CONSTRAINTS, then
+        # labeled id lookups); answer like a graph where every id exists.
+        if query.startswith("SHOW CONSTRAINTS"):
+            return [{"labelsOrTypes": ["Organization"], "properties": ["id"]}]
+        if "RETURN n.id AS id" in query:
+            return [{"id": i} for i in kw.get("ids", [])]
+        return []
 
 
 class _FakeDriver:
