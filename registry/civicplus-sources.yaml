@@ -8,6 +8,13 @@ sources:
     backfill_from: "2019-01-01"
     schedule: weekly
     categories: ["Town Council"]
+    floors:
+      note: >-
+        The ledger seed came from the April capture, which held every CivicPlus
+        category (903 rows); this source is Town Council only (~252), so its row
+        floor rejects it until the operator checks one pull by hand and runs
+        `python scripts/ingest_baseline.py --reset corte-madera-town-council
+        --reason "..."`. Seeding now skips such wider-scoped captures.
 
   - id: corte-madera-planning-commission
     adapter: civicplus
@@ -15,7 +22,14 @@ sources:
     jurisdiction_id: place-corte-madera
     institution_id: org-corte-madera-planning-commission
     backfill_from: "2019-01-01"
-    schedule: weekly
+    schedule: manual
+    schedule_note: >-
+      Held off the weekly schedule until reconciled with the April capture, which
+      ran as one combined source (corte-madera-town-council /
+      org-corte-madera-town-council) covering every category: 182 of this
+      source's 193 meetings are already there under corte-madera-town-council
+      ids, so scheduling it now would ingest them a second time under a
+      different institution.
     categories: ["Planning Commission"]
 
   # Tiburon — only has 2012-2016 data on CivicPlus (recent meetings elsewhere)

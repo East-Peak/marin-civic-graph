@@ -89,3 +89,25 @@ def test_dead_civicplus_tiburon_is_retired_not_scheduled():
 def test_mill_valley_uses_current_domain():
     for sid in ("mill-valley-planning-commission", "mill-valley-parks-recreation"):
         assert _all_sources()[sid]["url"].startswith("https://www.cityofmillvalley.gov/")
+
+
+def test_corte_madera_planning_commission_is_held_until_reconciled():
+    # 182 of its 193 meetings already sit in the April corte-madera-town-council
+    # capture under that source's ids; scheduling it would load them twice.
+    pc = _all_sources()["corte-madera-planning-commission"]
+    assert pc["schedule"] == "manual"
+    assert "corte-madera-town-council" in pc["schedule_note"]
+
+
+def test_corte_madera_town_council_says_its_first_run_needs_a_baseline_reset():
+    note = _all_sources()["corte-madera-town-council"]["floors"]["note"]
+    assert "ingest_baseline.py --reset corte-madera-town-council" in note
+
+
+@pytest.mark.parametrize("path", MEETING_REGISTRIES + [ROOT / "registry" / "netfile-sources.yaml"],
+                         ids=lambda p: p.name)
+def test_every_floors_block_parses(path):
+    from ingest_guard import Floors
+
+    for s in _sources(path):
+        Floors.from_config(s)

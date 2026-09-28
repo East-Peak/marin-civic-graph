@@ -142,3 +142,7 @@ def test_reset_requires_a_reason_and_a_row_count(tmp_path):
     with pytest.raises(ValueError):
         ledger.reset("src", rows=0, reason="why", run_at="2026-09-29T17:00:00Z")
     assert not ledger.path.exists()
+
+
+def test_a_floors_note_is_documentation_not_a_floor():
+    assert Floors.from_config({"floors": {"note": "reset first", "min_ratio": 0.5}}) == Floors(min_ratio=0.5)

@@ -38,7 +38,9 @@ class Floors:
 
     @classmethod
     def from_config(cls, source_config: dict[str, Any]) -> "Floors":
-        return cls(**(source_config.get("floors") or {}))
+        # ``note`` is operator documentation (e.g. "the first run needs a reset").
+        floors = {k: v for k, v in (source_config.get("floors") or {}).items() if k != "note"}
+        return cls(**floors)
 
 
 @dataclass(frozen=True)
