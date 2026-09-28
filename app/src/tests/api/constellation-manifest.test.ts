@@ -12,6 +12,14 @@ vi.mock("@/lib/blob", () => ({
 import { runQuery } from "@/lib/neo4j";
 import { GET } from "@/app/api/constellation-manifest/route";
 
+
+// These tests exercise the legacy live-Cypher branch (mocked runQuery), which
+// must be opted into explicitly now that the substrate is the default. They
+// go away with the live branches in tranche T2.
+beforeEach(() => {
+  process.env.SERVING_BACKEND = "live";
+});
+
 describe("GET /api/constellation-manifest", () => {
   beforeEach(() => {
     (runQuery as ReturnType<typeof vi.fn>).mockReset();

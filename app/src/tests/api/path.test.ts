@@ -11,6 +11,7 @@ import { findPath } from "@/lib/server/path-finder";
 import { findPathSubstrate } from "@/lib/server/path-finder-substrate";
 import { GET } from "@/app/api/path/route";
 
+
 const findPathMock = findPath as unknown as ReturnType<typeof vi.fn>;
 const findPathSubstrateMock = findPathSubstrate as unknown as ReturnType<typeof vi.fn>;
 
@@ -18,7 +19,9 @@ describe("GET /api/path", () => {
   beforeEach(() => {
     findPathMock.mockReset();
     findPathSubstrateMock.mockReset();
-    delete process.env.SERVING_BACKEND;
+    // Legacy live path is opt-in now that the substrate is the default
+    // (removed with the live branches in tranche T2).
+    process.env.SERVING_BACKEND = "live";
   });
 
   it("400 when from is missing", async () => {

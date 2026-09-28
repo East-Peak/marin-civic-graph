@@ -1,0 +1,42 @@
+# CI for Open Marin. Deliberately touches no Neo4j and no baked substrate:
+# the repo is public and data/ is gitignored, so both jobs run on fixtures.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      # operator_data tests assert against gitignored real data; they run locally.
+      - run: python -m pytest tests/ -q -m "not operator_data"
+
+  app:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci
+      # typecheck + lint (incl. the Neo4j import boundary) + knip + vitest.
+      # TODO(T5): add `npm run check:operator-exclusion` once a clean checkout
+      # can build (prebuild still copies from gitignored data/).
+      - run: npm run verify

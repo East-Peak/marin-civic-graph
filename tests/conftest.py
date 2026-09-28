@@ -194,3 +194,14 @@ def sample_validation_check():
             "payload_json": '{"absolute_delta_value_number": 0.0, "check_type": "reconciliation_check", "confidence": "high", "delta_direction": "equal", "delta_value_number": 0.0, "derived_from_record_id": "record-san-rafael-campaign-form460-schedule-extract-entry-28450", "evidence_record_ids": ["record-san-rafael-campaign-filing-entry-28450", "record-san-rafael-campaign-ocr-entry-28450", "record-san-rafael-campaign-pdf-entry-28450", "record-san-rafael-campaign-form460-schedule-extract-entry-28450"], "id": "validationcheck-filing-san-rafael-campaign-entry-28450-schedule-e-itemized-payments-reconciliation-check", "measured_value_label": "extracted_itemized_payments_total", "measured_value_number": 1.0, "metric_name": "schedule_e_itemized_payments", "notes": [], "reference_value_label": "reported_itemized_payments", "reference_value_number": 1.0, "severity": "info", "status": "reconciled", "subject_node_id": "filing-san-rafael-campaign-entry-28450", "subject_node_type": "Filing"}'
         }
     }
+
+
+def pytest_configure(config):
+    # CI runs `-m "not operator_data"`: these tests assert against real,
+    # gitignored operator data (the identity ledger, enriched exports, source
+    # bundles). They are correct and required locally, but a clean checkout
+    # has no data/ to read.
+    config.addinivalue_line(
+        "markers",
+        "operator_data: needs gitignored local data under data/ (skipped in CI)",
+    )

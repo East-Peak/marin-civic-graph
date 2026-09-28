@@ -260,6 +260,7 @@ def test_merge_same_id_different_payload_fails_loud(tmp_path):
         merge_approved_assertions([_assertion("assertion-aaa", status="rejected_entity_distinct")], ledger)
 
 
+@pytest.mark.operator_data
 def test_merge_seeds_live_ledger_and_all_survive(tmp_path):
     # Codex r1 blocker / Completion 5: the live attach rows survive byte-for-byte
     assert _LIVE_LEDGER.is_file(), "BLOCKED: live ledger missing"
@@ -313,6 +314,7 @@ def test_build_committee_attach_records_auto_policy_hashes():
 # Unit 8 — ROI preflight + real e2e (executed, not skipped)
 # --------------------------------------------------------------------------
 
+@pytest.mark.operator_data
 def test_e2e_real_filer_spine_coverage_and_resolve_to_dedup_merge():
     assert _CAMPAIGN_BUNDLE.is_file(), "BLOCKED: campaign bundle missing"
     spine = load_filer_spine(_CAMPAIGN_BUNDLE)

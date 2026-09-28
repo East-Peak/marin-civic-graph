@@ -2,7 +2,7 @@
 //
 // Real search results page (Plan 3 Phase D). Server component — reads the
 // query from searchParams and hands off to <SearchResults />, which calls
-// runSearch() directly against AuraDB.
+// runSearch() directly against the SQLite substrate.
 
 import { StatusBar } from "@/components/layout/status-bar";
 import { NavHeader } from "@/components/layout/nav-header";

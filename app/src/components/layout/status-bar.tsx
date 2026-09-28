@@ -42,10 +42,9 @@ export function StatusBar({
       <span className="flex items-center">
         <span className={`mr-1.5 inline-block h-1.5 w-1.5 rounded-full ${dotColor} ${dotGlow}`} />
         <span style={{ fontFamily: "var(--font-vt323)", fontSize: "14px" }}>
-          {connected ? "CONNECTED" : "DISCONNECTED"}
+          {connected ? "DATA OK" : "DATA UNAVAILABLE"}
         </span>
       </span>
-      <span>AURADB</span>
       <span>
         NODES{" "}
         <span style={{ fontFamily: "var(--font-vt323)", fontSize: "14px" }} className="text-body">

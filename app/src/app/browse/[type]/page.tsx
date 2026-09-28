@@ -35,7 +35,7 @@ export default async function BrowseTypePage({
   } catch (err) {
     console.error(`/browse/${urlSeg} initial load failed:`, err);
     initial = { rows: [], next_cursor: null, columns: [] };
-    loadError = "Failed to load rows. Check AuraDB connectivity.";
+    loadError = "Failed to load rows from the graph snapshot.";
   }
 
   const displayName = displayNameForType(canonicalType);

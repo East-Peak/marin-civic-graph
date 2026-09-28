@@ -47,7 +47,7 @@ function groupNeighborsByRel(entity: EntityPayload): Grouped[] {
 
   // Sort groups by relation name and cards within each group by id, so the
   // same entity renders the same Connections layout every time regardless of
-  // AuraDB's traversal plan. RELATED goes last as a catch-all.
+  // the backend's traversal order. RELATED goes last as a catch-all.
   const entries = Array.from(groups.entries())
     .map(([relType, neighbors]): Grouped => ({
       relType,

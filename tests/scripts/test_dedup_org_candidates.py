@@ -431,6 +431,7 @@ def _assert_round_trip_reversible(graph, component):
     assert canonical_graph(graph) == before
 
 
+@pytest.mark.operator_data
 def test_e2e_real_export_dedup_invariants_are_data_independent():
     assert _REAL_EXPORT.is_file(), (
         "BLOCKED: real enriched org export missing — "
@@ -549,6 +550,7 @@ def test_dedup_uses_static_committee_id_normalizer():
     assert "committee_id" in org_resolution.KEY_NORMALIZERS
 
 
+@pytest.mark.operator_data
 def test_e2e_real_ledger_yields_zero_anchor_merges():
     # Completion 1b: over the CURRENT live attach ledger (operator_approved_*
     # rows linking org-bmf-ein-*/org-casos-* anchors to real orgs) PLUS the dedup

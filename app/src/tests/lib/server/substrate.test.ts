@@ -27,15 +27,19 @@ describe("substrate server module", () => {
     delete process.env.SUBSTRATE_DB_PATH;
   });
 
-  it("defaults to the live backend unless SERVING_BACKEND=substrate", async () => {
+  it("defaults to the substrate; live only on an explicit SERVING_BACKEND=live", async () => {
+    // Aura was deleted 2026-07-08. A deploy that forgets the env var must
+    // serve the baked artifact, never fail over to a database that's gone.
     const mod = await import("@/lib/server/substrate");
-    expect(mod.servingBackend()).toBe("live");
-
-    process.env.SERVING_BACKEND = "substrate";
     expect(mod.servingBackend()).toBe("substrate");
 
-    process.env.SERVING_BACKEND = "SUBSTRATE";
+    process.env.SERVING_BACKEND = "live";
     expect(mod.servingBackend()).toBe("live");
+
+    for (const other of ["substrate", "LIVE", "", "neo4j"]) {
+      process.env.SERVING_BACKEND = other;
+      expect(mod.servingBackend()).toBe("substrate");
+    }
   });
 
   it("opens SUBSTRATE_DB_PATH as a read-only singleton", async () => {

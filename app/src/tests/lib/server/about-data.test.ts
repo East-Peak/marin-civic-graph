@@ -3,7 +3,7 @@ import Database from "better-sqlite3";
 import { mkdtempSync } from "node:fs";
 import path from "node:path";
 import { tmpdir } from "node:os";
-import { afterEach, describe, it, expect, vi } from "vitest";
+import { afterEach, describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("@/lib/neo4j", () => ({
   runQuery: vi.fn(),
@@ -11,6 +11,14 @@ vi.mock("@/lib/neo4j", () => ({
 
 import { runQuery } from "@/lib/neo4j";
 import { loadJurisdictions } from "@/lib/server/about-data";
+
+
+// These tests exercise the legacy live-Cypher branch (mocked runQuery), which
+// must be opted into explicitly now that the substrate is the default. They
+// go away with the live branches in tranche T2.
+beforeEach(() => {
+  process.env.SERVING_BACKEND = "live";
+});
 
 const mockRunQuery = runQuery as unknown as ReturnType<typeof vi.fn>;
 

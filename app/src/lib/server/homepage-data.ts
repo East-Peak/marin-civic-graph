@@ -19,7 +19,7 @@ export type StatusPayload = {
 };
 
 export type CatalogPayload = {
-  built_at: string;
+  built_at: string | null;
   counts: Partial<Record<NodeType, number>>;
 };
 
@@ -112,12 +112,23 @@ export async function loadStatus(): Promise<StatusPayload> {
   }
 }
 
+// Per-type counts for /about. In substrate mode they come from the catalog the
+// bake writes next to the SQLite file, so /about and the status bar describe
+// the same snapshot. A missing catalog reads as unavailable (built_at null),
+// never as a fabricated "built just now".
 export async function loadCatalog(): Promise<CatalogPayload> {
+  const catalogPath =
+    servingBackend() === "substrate"
+      ? path.join(path.dirname(substrateDbPath()), "catalog.json")
+      : path.join(process.cwd(), "public", "catalog.json");
   try {
-    const catalogPath = path.join(process.cwd(), "public", "catalog.json");
     const content = await readFile(catalogPath, "utf-8");
-    return JSON.parse(content) as CatalogPayload;
+    const parsed = JSON.parse(content) as { built_at?: unknown; counts?: CatalogPayload["counts"] };
+    return {
+      built_at: typeof parsed.built_at === "string" ? parsed.built_at : null,
+      counts: parsed.counts ?? {},
+    };
   } catch {
-    return { built_at: new Date().toISOString(), counts: {} };
+    return { built_at: null, counts: {} };
   }
 }

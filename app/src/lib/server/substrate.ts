@@ -7,8 +7,11 @@ let substrateDb: Database.Database | null = null;
 
 export type ServingBackend = "substrate" | "live";
 
+// Substrate by default: Aura was deleted 2026-07-08, so a deploy that forgets
+// this env var must serve the baked artifact rather than reach for a database
+// that no longer exists. "live" (local Neo4j) is an explicit opt-in.
 export function servingBackend(): ServingBackend {
-  return process.env.SERVING_BACKEND === "substrate" ? "substrate" : "live";
+  return process.env.SERVING_BACKEND === "live" ? "live" : "substrate";
 }
 
 export function substrateDbPath(): string {

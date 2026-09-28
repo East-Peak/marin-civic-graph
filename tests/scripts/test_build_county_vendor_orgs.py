@@ -8,6 +8,8 @@ a resolver candidate, not an attributed state).
 """
 from __future__ import annotations
 
+import pytest
+
 import sys
 from pathlib import Path
 
@@ -237,6 +239,7 @@ _CSV = _ROOT / "data" / "raw" / "marin-county-delegated-contracts" / "2026-06-10
 _APPROVED = _ROOT / "data" / "review" / "county" / "approved-resolutions.jsonl"
 
 
+@pytest.mark.operator_data
 def test_e2e_real_county_csv_attribution():
     assert _CSV.is_file() and _APPROVED.is_file(), "BLOCKED: staged County inputs missing"
     rows = parse_contract_rows(_CSV)

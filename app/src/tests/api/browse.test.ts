@@ -8,6 +8,14 @@ vi.mock("@/lib/neo4j", () => ({
 import { runQuery } from "@/lib/neo4j";
 import { GET } from "@/app/api/browse/[type]/route";
 
+
+// These tests exercise the legacy live-Cypher branch (mocked runQuery), which
+// must be opted into explicitly now that the substrate is the default. They
+// go away with the live branches in tranche T2.
+beforeEach(() => {
+  process.env.SERVING_BACKEND = "live";
+});
+
 const mockRunQuery = runQuery as unknown as ReturnType<typeof vi.fn>;
 
 function fakeRecord(data: Record<string, unknown>) {

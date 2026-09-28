@@ -532,6 +532,7 @@ class TestZeroNetwork:
         run(interiors_dirs=[INTERIORS_DIR], out_dir=tmp_path / "o",
             review_dir=tmp_path / "r", existing_orgs=EXISTING)
 
+    @pytest.mark.operator_data
     def test_extractor_never_imports_neo4j(self, tmp_path):
         # In a CLEAN interpreter (the full pytest session pollutes global
         # sys.modules via other ingestors' tests), importing + running the

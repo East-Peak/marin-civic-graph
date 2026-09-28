@@ -14,9 +14,24 @@ describe("StatusBar", () => {
         subgraphsBuiltAt="2026-04-18T03:11:44Z"
       />,
     );
-    expect(screen.getByText("CONNECTED")).toBeInTheDocument();
+    expect(screen.getByText("DATA OK")).toBeInTheDocument();
     expect(screen.getByText("112,431")).toBeInTheDocument();
     expect(screen.getByText("141,207")).toBeInTheDocument();
+  });
+
+  it("describes the baked data, never a live database connection", () => {
+    render(
+      <StatusBar
+        connected={false}
+        nodeCount={0}
+        edgeCount={0}
+        jurisdictionCount={0}
+        ingestAt={null}
+        subgraphsBuiltAt={null}
+      />,
+    );
+    expect(screen.getByText("DATA UNAVAILABLE")).toBeInTheDocument();
+    expect(screen.queryByText(/AURADB|CONNECTED/)).not.toBeInTheDocument();
   });
 
   it("shows STALE tag when ingest is older than 14 days", () => {

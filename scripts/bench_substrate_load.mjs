@@ -17,7 +17,7 @@ function loadBetterSqlite3() {
     try {
       return load();
     } catch (error) {
-      if (error?.code !== "MODULE_NOT_FOUND") {
+      if (error?.code !== "MODULE_NOT_FOUND" && error?.code !== "ERR_DLOPEN_FAILED") {
         throw error;
       }
     }
@@ -80,18 +80,33 @@ if (!existsSync(sqlitePath)) {
 }
 
 const start = performance.now();
-const Database = loadBetterSqlite3();
-const backend = Database ? "better-sqlite3" : "sqlite3-cli";
-const rows = Database ? readEdgesWithBetterSqlite3(Database) : readEdgesWithSqliteCli();
+// A native module compiled for a different Node ABI fails with
+// ERR_DLOPEN_FAILED, and newer better-sqlite3 only loads its addon when a
+// database is opened, so the fallback has to wrap the read, not the require.
+function readEdges() {
+  const Database = loadBetterSqlite3();
+  if (Database) {
+    try {
+      return { backend: "better-sqlite3", rows: readEdgesWithBetterSqlite3(Database) };
+    } catch (error) {
+      if (error?.code !== "ERR_DLOPEN_FAILED") throw error;
+      console.error(`better-sqlite3 unusable (${error.code}); falling back to sqlite3 CLI`);
+    }
+  }
+  return { backend: "sqlite3-cli", rows: readEdgesWithSqliteCli() };
+}
+
+const { backend, rows } = readEdges();
 const adjacency = buildAdjacency(rows);
 const wallMs = performance.now() - start;
 
 const metrics = {
   sqlite_path: sqlitePath,
   backend,
-  dependency_note: Database
-    ? null
-    : `better-sqlite3 not found under app/node_modules; install with: ${installHint}`,
+  dependency_note:
+    backend === "better-sqlite3"
+      ? null
+      : `better-sqlite3 missing or built for another Node ABI; fix with: ${installHint} (or npm --prefix app rebuild better-sqlite3)`,
   edge_count: rows.length,
   adjacency_sources: adjacency.size,
   adjacency_entries: rows.length,

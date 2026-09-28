@@ -1,6 +1,6 @@
 # Open Marin
 
-A civic-intelligence graph platform built on public Marin County records — a portfolio project demonstrating data engineering, graph ML, and full-stack work. The current implementation runs against a live Neo4j AuraDB at production scale: ~114K nodes / ~148K edges across 11 jurisdictions and 21 canonical entity types.
+A civic-intelligence graph platform built on public Marin County records — a portfolio project demonstrating data engineering, graph ML, and full-stack work. The public app serves a baked, versioned SQLite snapshot of the graph (~130K nodes / ~169K edges across 11 jurisdictions): no runtime database. The operator pipeline builds that snapshot from a local Neo4j instance.
 
 What's in the repo:
 
@@ -21,19 +21,19 @@ A handful of the most representative pieces:
 
 ## Status
 
-- **v1 graph in production** at AuraDB (~114K nodes / ~148K edges, 11 Marin jurisdictions, 21 canonical node types).
-- **Plan v2.0 (benchmarks + foundation) shipped 2026-04-29.** The full v2 pipeline ran end-to-end against the live AuraDB; the Constellation is live in the database. Production rehearsal report at [`docs/benchmarks/2026-04-29-v2-rehearsal.md`](./docs/benchmarks/2026-04-29-v2-rehearsal.md). Of 9 pass criteria: 4 measured PASS (UMAP fit time, HDBSCAN compute, outbound-leak audit, manifest round-trip), 1 N/A (drift alignment — first run, no prior frame to align against), 1 FAIL (payload size — calibration miss, fixable by spec amendment), 3 DEFERRED to manual browser test (first-paint, FPS, sprite throughput). Verdict: **PROVISIONAL GO**.
+- **Serving substrate (2026-07-08).** All public surfaces (data queries, browse, search, entity pages, graph expand, pathfinding) read a baked SQLite artifact, verified against a 92-case parity corpus captured from the previous live-database app. The managed Neo4j (AuraDB) instance was retired; the operator graph runs on local Neo4j. Design: [`docs/specs/2026-07-07-public-product-substrate-design.md`](./docs/specs/2026-07-07-public-product-substrate-design.md).
+- **Plan v2.0 (benchmarks + foundation) shipped 2026-04-29.** The full v2 pipeline ran end-to-end against the then-live AuraDB; the Constellation is live in the database. Production rehearsal report at [`docs/benchmarks/2026-04-29-v2-rehearsal.md`](./docs/benchmarks/2026-04-29-v2-rehearsal.md). Of 9 pass criteria: 4 measured PASS (UMAP fit time, HDBSCAN compute, outbound-leak audit, manifest round-trip), 1 N/A (drift alignment — first run, no prior frame to align against), 1 FAIL (payload size — calibration miss, fixable by spec amendment), 3 DEFERRED to manual browser test (first-paint, FPS, sprite throughput). Verdict: **PROVISIONAL GO**.
 - **v2.1 (Constellation MVP) is next** — full Cosmograph integration, sprite atlas tiering, region-label rendering, full pipeline cutover.
 
 ## Tech stack
 
-Python 3.14, Neo4j AuraDB 5.x with vector indexes, `umap-learn`, `hdbscan`, `scipy`, Voyage AI (`voyage-4` embeddings), Anthropic Claude (Haiku 4.5 for cluster naming, Opus 4.7 1M-context for engineering work), Next.js 16 App Router, React 19, TypeScript 5, Tailwind 4, `@cosmograph/cosmos` (MIT WebGL renderer), `vitest`, `pytest`.
+Python 3.12, SQLite (FTS5) serving substrate, Neo4j 2026.x (local operator graph), `umap-learn`, `hdbscan`, `scipy`, Voyage AI (`voyage-4` embeddings), Anthropic Claude (Haiku 4.5 for cluster naming, Opus 4.7 1M-context for engineering work), Next.js 16 App Router, React 19, TypeScript 5, Tailwind 4, `@cosmograph/cosmos` (MIT WebGL renderer), `vitest`, `pytest`.
 
 ## What this is, and isn't
 
 This repo is a **portfolio piece**, not an open-source product:
 
-- **It's runnable.** The pipelines, frontend, and tests all run; the v1 graph is live in AuraDB. You're welcome to read, learn from, and reference the architecture decisions.
+- **It's runnable.** The pipelines, frontend, and tests all run; the public app runs from the baked SQLite snapshot. You're welcome to read, learn from, and reference the architecture decisions.
 - **It's not maintained for community use.** Bug reports and feature requests aren't being triaged. There's no CONTRIBUTING.md and no roadmap commitment outside what's in [`docs/specs/`](./docs/specs/).
 - **It's licensed for noncommercial use only.** Provided under [PolyForm Noncommercial 1.0](./LICENSE) — you may read, study, fork, redistribute, and build derivative works for noncommercial purposes. Commercial use of any kind requires a separate license. Public-record data artifacts are not relicensed.
 - **The data is not a product.** All entity data is reconstructed from public sources cited in [`docs/specs/2026-04-14-marin-civic-graph-v1-design.md`](./docs/specs/2026-04-14-marin-civic-graph-v1-design.md). Anyone in the data who wants their public-record information removed from this projection should reach out via the commit trailer email.

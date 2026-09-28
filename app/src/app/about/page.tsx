@@ -100,7 +100,7 @@ export default async function AboutPage() {
               data-testid="catalog-snapshot"
               className="mt-2 font-mono text-[11px] text-dim"
             >
-              snapshot from {catalog.built_at.slice(0, 10)} — live count may differ
+              graph snapshot as of {catalog.built_at.slice(0, 10)}
             </div>
           )}
         </section>
