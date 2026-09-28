@@ -6,6 +6,11 @@ import { afterAll, describe, expect, it } from "vitest";
 const APP = process.cwd();
 const SCRIPT = path.join(APP, "scripts", "copy-subgraphs.mjs");
 const PUBLIC = path.join(APP, "public");
+// copy-subgraphs.mjs reads gitignored data/projected output, which only exists
+// on the operator machine; a clean checkout (CI) skips this suite, like the
+// pytest operator_data marker. TODO(T5): the clean-checkout build fix removes
+// the data dependency and this skip.
+const SUBGRAPH_SOURCE = path.join(APP, "..", "data", "projected", "graph-v1", "signature-subgraphs");
 
 function runCopySubgraphs() {
   execSync(`node ${JSON.stringify(SCRIPT)}`, { cwd: APP, stdio: "pipe" });
@@ -20,7 +25,7 @@ function publicJsonFiles(dir: string): string[] {
   });
 }
 
-describe("public build confidence exclusion", () => {
+describe.skipIf(!existsSync(SUBGRAPH_SOURCE))("public build confidence exclusion", () => {
   afterAll(() => {
     rmSync(path.join(PUBLIC, "confidence.jsonl"), { force: true });
     rmSync(path.join(PUBLIC, "reconciliation-overlay.json"), { force: true });
