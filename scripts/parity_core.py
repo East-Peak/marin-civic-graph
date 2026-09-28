@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -10,6 +11,7 @@ DRIFT_KEYS = {"built_at", "expires_at", "signed_url"}
 STATUS_DRIFT_KEYS = {"ingest_at"}
 SURFACES = {"search", "browse", "data", "entity", "expand", "path", "status", "pages"}
 MAX_MISMATCHES = 20
+DELTA_KEYS = frozenset({"surface", "case", "paths", "reason"})
 
 
 def normalize_payload(surface: str, payload: dict[str, Any]) -> dict[str, Any]:
@@ -91,7 +93,13 @@ def diff_case(
     expected_case: dict[str, Any],
     actual_payload: dict[str, Any],
     actual_status: int,
+    limit: int | None = MAX_MISMATCHES,
 ) -> list[str]:
+    """Mismatch lines "<json path>: <what>"; limit=None returns all of them.
+
+    Delta application needs the full list, or an unrelated regression could
+    sit past the cap behind approved noise.
+    """
     surface = expected_case.get("_surface") or expected_case.get("surface")
     if not surface:
         raise KeyError("expected_case must include _surface or surface")
@@ -105,14 +113,16 @@ def diff_case(
     normalized_actual = normalize_payload(surface, actual_payload)
     _diff_value("$", expected_payload, normalized_actual, mismatches)
 
-    if len(mismatches) <= MAX_MISMATCHES:
+    return truncate_mismatches(mismatches, limit)
+
+
+def truncate_mismatches(mismatches: list[str], limit: int | None = MAX_MISMATCHES) -> list[str]:
+    if limit is None or len(mismatches) <= limit:
         return mismatches
-    return mismatches[: MAX_MISMATCHES - 1] + [
-        f"... truncated after {MAX_MISMATCHES} mismatches"
-    ]
+    return mismatches[: limit - 1] + [f"... truncated after {limit} mismatches"]
 
 
-def load_deltas(path: str | Path) -> list[dict[str, str]]:
+def load_deltas(path: str | Path) -> list[dict[str, Any]]:
     delta_path = Path(path)
     if not delta_path.exists():
         return []
@@ -135,29 +145,50 @@ def apply_deltas(
     surface: str,
     case_name: str,
     mismatches: Iterable[str],
-    deltas: Iterable[dict[str, str]],
+    deltas: Iterable[dict[str, Any]],
 ) -> tuple[list[str], list[str]]:
-    mismatch_list = list(mismatches)
-    if not mismatch_list:
-        return [], []
+    """Split mismatches into (errors, warnings).
 
-    matching_delta = next(
-        (
-            delta
-            for delta in deltas
-            if delta["surface"] == surface and delta["case"] == case_name
-        ),
-        None,
-    )
-    if matching_delta is None:
-        return mismatch_list, []
-
-    reason = matching_delta["reason"]
-    warnings = [
-        f"approved delta for {surface}/{case_name} ({reason}): {mismatch}"
-        for mismatch in mismatch_list
+    A mismatch is excused only when an approved delta for this surface/case
+    names its JSON path (or an ancestor of it). Everything else, including
+    HTTP status mismatches, stays an error.
+    """
+    case_deltas = [
+        (delta, [_compile_delta_path(path) for path in delta["paths"]])
+        for delta in deltas
+        if delta["surface"] == surface and delta["case"] == case_name
     ]
-    return [], warnings
+    errors: list[str] = []
+    warnings: list[str] = []
+    for mismatch in mismatches:
+        path = _mismatch_path(mismatch)
+        delta = next(
+            (
+                delta
+                for delta, patterns in case_deltas
+                if path is not None and any(p.fullmatch(path) for p in patterns)
+            ),
+            None,
+        )
+        if delta is None:
+            errors.append(mismatch)
+        else:
+            warnings.append(
+                f"approved delta for {surface}/{case_name} ({delta['reason']}): {mismatch}"
+            )
+    return errors, warnings
+
+
+def _mismatch_path(mismatch: str) -> str | None:
+    if not mismatch.startswith("$"):
+        return None
+    return mismatch.split(": ", 1)[0]
+
+
+def _compile_delta_path(pattern: str) -> re.Pattern[str]:
+    """`[*]` matches any index, `.*` any single key; a path covers its subtree."""
+    regex = re.escape(pattern).replace(r"\[\*\]", r"\[\d+\]").replace(r"\.\*", r"\.[^.\[]+")
+    return re.compile(regex + r"(?:[.\[].*)?")
 
 
 def _coerce_neo4j_ints(value: Any) -> Any:
@@ -241,37 +272,45 @@ def _format_json(value: Any) -> str:
     return json.dumps(value, sort_keys=True)
 
 
-def _validate_deltas(parsed: Any) -> list[dict[str, str]]:
+def _validate_deltas(parsed: Any) -> list[dict[str, Any]]:
     if parsed is None:
         return []
     if not isinstance(parsed, list):
         raise ValueError("approved deltas must be a YAML list")
 
-    deltas: list[dict[str, str]] = []
-    required_keys = {"surface", "case", "reason"}
+    deltas: list[dict[str, Any]] = []
     for index, item in enumerate(parsed):
         if not isinstance(item, dict):
             raise ValueError(f"delta {index} must be a mapping")
-        if set(item) != required_keys:
+        if set(item) != DELTA_KEYS:
             raise ValueError(
-                f"delta {index} must contain exactly surface, case, and reason"
+                f"delta {index} must contain exactly surface, case, paths, and reason"
             )
-        delta = {key: item[key] for key in sorted(required_keys)}
-        if not all(isinstance(value, str) for value in delta.values()):
-            raise ValueError(f"delta {index} values must be strings")
+        if not all(isinstance(item[key], str) for key in ("surface", "case", "reason")):
+            raise ValueError(f"delta {index} surface/case/reason must be strings")
+        paths = item["paths"]
+        if not isinstance(paths, list) or not paths:
+            raise ValueError(f"delta {index} paths must be a non-empty list")
+        for path in paths:
+            if not isinstance(path, str) or not path.startswith("$") or path == "$":
+                raise ValueError(
+                    f"delta {index} path {path!r} must be a JSON path below $ "
+                    "(whole-case exemptions are not allowed)"
+                )
         deltas.append(
             {
-                "surface": delta["surface"],
-                "case": delta["case"],
-                "reason": delta["reason"],
+                "surface": item["surface"],
+                "case": item["case"],
+                "paths": list(paths),
+                "reason": item["reason"],
             }
         )
     return deltas
 
 
-def _parse_tiny_delta_yaml(text: str) -> list[dict[str, str]]:
-    entries: list[dict[str, str]] = []
-    current: dict[str, str] | None = None
+def _parse_tiny_delta_yaml(text: str) -> list[dict[str, Any]]:
+    entries: list[dict[str, Any]] = []
+    current: dict[str, Any] | None = None
 
     for line_number, raw_line in enumerate(text.splitlines(), start=1):
         if not raw_line.strip() or raw_line.lstrip().startswith("#"):
@@ -284,6 +323,11 @@ def _parse_tiny_delta_yaml(text: str) -> list[dict[str, str]]:
                 key, value = _parse_delta_key_value(remainder, line_number)
                 current[key] = value
             continue
+        if raw_line.startswith("    - ") and current is not None:
+            if not isinstance(current.get("paths"), list):
+                raise ValueError(f"list item outside paths at line {line_number}")
+            current["paths"].append(_parse_tiny_scalar(raw_line[6:].strip()))
+            continue
         if raw_line.startswith("  ") and current is not None:
             key, value = _parse_delta_key_value(raw_line.strip(), line_number)
             current[key] = value
@@ -293,14 +337,20 @@ def _parse_tiny_delta_yaml(text: str) -> list[dict[str, str]]:
     return entries
 
 
-def _parse_delta_key_value(line: str, line_number: int) -> tuple[str, str]:
+def _parse_delta_key_value(line: str, line_number: int) -> tuple[str, Any]:
     if ":" not in line:
         raise ValueError(f"expected key/value at line {line_number}")
     key, raw_value = line.split(":", 1)
     key = key.strip()
-    if key not in {"surface", "case", "reason"}:
+    if key not in DELTA_KEYS:
         raise ValueError(f"unsupported approved-deltas key {key!r} at line {line_number}")
     value = raw_value.strip()
+    if key == "paths":
+        if value == "[]":
+            return key, []
+        if value:
+            raise ValueError(f"paths must be a block list at line {line_number}")
+        return key, []
     if not value:
         raise ValueError(f"missing approved-deltas value at line {line_number}")
     return key, _parse_tiny_scalar(value)

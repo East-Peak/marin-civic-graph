@@ -13,7 +13,13 @@ from typing import Any, Callable, TextIO
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from scripts.parity_core import apply_deltas, diff_case, iter_corpus, load_deltas  # noqa: E402
+from scripts.parity_core import (  # noqa: E402
+    apply_deltas,
+    diff_case,
+    iter_corpus,
+    load_deltas,
+    truncate_mismatches,
+)
 
 Fetcher = Callable[[str, dict[str, Any]], tuple[int, dict[str, Any]]]
 
@@ -84,8 +90,9 @@ def run_parity(
             )
         else:
             status, payload = fetcher(base_url, expected_case["request"])
-        mismatches = diff_case(expected_case, payload, status)
+        mismatches = diff_case(expected_case, payload, status, limit=None)
         errors, warnings = apply_deltas(surface, case_name, mismatches, deltas)
+        errors, warnings = truncate_mismatches(errors), truncate_mismatches(warnings)
 
         if errors:
             hard_failures += 1

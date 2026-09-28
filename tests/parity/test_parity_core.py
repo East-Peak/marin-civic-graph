@@ -206,45 +206,87 @@ def test_diff_case_normalizes_actual_payload_for_expected_surface():
     assert mismatches == []
 
 
-def test_load_deltas_and_apply_deltas_downgrades_matching_mismatches_to_warnings(tmp_path):
-    delta_path = tmp_path / "approved-deltas.yml"
-    delta_path.write_text(
-        "- surface: entity\n"
-        "  case: unstable-neighbor-order\n"
-        "  reason: Known source-side ordering drift while endpoint is refactored\n"
-    )
+DELTA_YAML = (
+    "- surface: data\n"
+    "  case: campaign-money-30d\n"
+    "  paths:\n"
+    "    - $.rows[*].decision_title\n"
+    "    - $.meta.*.built\n"
+    "  reason: tie order across decisions\n"
+)
 
-    deltas = load_deltas(delta_path)
 
-    assert deltas == [
+@pytest.mark.parametrize("use_yaml", [True, False])
+def test_load_deltas_reads_field_level_paths(tmp_path, monkeypatch, use_yaml):
+    if not use_yaml:
+        monkeypatch.setitem(sys.modules, "yaml", None)  # force the tiny parser
+    delta_path = tmp_path / "approved-deltas.yaml"
+    delta_path.write_text(DELTA_YAML)
+
+    assert load_deltas(delta_path) == [
         {
-            "surface": "entity",
-            "case": "unstable-neighbor-order",
-            "reason": "Known source-side ordering drift while endpoint is refactored",
+            "surface": "data",
+            "case": "campaign-money-30d",
+            "paths": ["$.rows[*].decision_title", "$.meta.*.built"],
+            "reason": "tie order across decisions",
         }
     ]
 
-    errors, warnings = apply_deltas(
-        "entity",
-        "unstable-neighbor-order",
-        ["$.neighbors[0].id: expected \"a\", got \"b\""],
-        deltas,
-    )
-    assert errors == []
-    assert warnings == [
-        "approved delta for entity/unstable-neighbor-order "
-        "(Known source-side ordering drift while endpoint is refactored): "
-        '$.neighbors[0].id: expected "a", got "b"'
+
+@pytest.mark.parametrize(
+    "entry",
+    [
+        "- surface: data\n  case: c\n  reason: whole-case exemptions are gone\n",
+        "- surface: data\n  case: c\n  paths: []\n  reason: empty\n",
+        "- surface: data\n  case: c\n  paths:\n    - $\n  reason: root is a whole case\n",
+        "- surface: data\n  case: c\n  paths:\n    - rows[0]\n  reason: not a path\n",
+    ],
+)
+def test_load_deltas_rejects_case_wide_or_malformed_paths(tmp_path, entry):
+    delta_path = tmp_path / "approved-deltas.yaml"
+    delta_path.write_text(entry)
+    with pytest.raises(ValueError):
+        load_deltas(delta_path)
+
+
+def test_apply_deltas_excuses_only_named_paths(tmp_path):
+    delta_path = tmp_path / "approved-deltas.yaml"
+    delta_path.write_text(DELTA_YAML)
+    deltas = load_deltas(delta_path)
+    excused = [
+        '$.rows[0].decision_title: expected "a", got "b"',
+        '$.rows[17].decision_title: expected "b", got "a"',
+        "$.meta.corpus.built: missing key",
+    ]
+    unrelated = [
+        '$.rows[0].money_amount: expected 1, got 2',
+        '$.rows[0].decision_title_extra: expected "a", got "b"',
+        "$.rows: length mismatch: expected 2, got 3",
+        "$.meta.corpus.nested.built: missing key",
+        "status mismatch: expected 200, got 500",
     ]
 
+    errors, warnings = apply_deltas("data", "campaign-money-30d", excused + unrelated, deltas)
+
+    assert errors == unrelated
+    assert warnings == [
+        "approved delta for data/campaign-money-30d (tie order across decisions): " + m
+        for m in excused
+    ]
+    # Another case (or surface) with the same paths gets no exemption.
+    assert apply_deltas("data", "money-default", excused, deltas) == (excused, [])
+    assert apply_deltas("search", "campaign-money-30d", excused, deltas) == (excused, [])
+
+
+def test_apply_deltas_path_covers_its_subtree():
+    deltas = [{"surface": "status", "case": "status", "paths": ["$.counts"], "reason": "r"}]
     errors, warnings = apply_deltas(
-        "search",
-        "unstable-neighbor-order",
-        ["$.results[0].id: expected \"a\", got \"b\""],
+        "status", "status",
+        ["$.counts.edges: expected 1, got 2", '$.counts["Org X"]: extra key', "$.countsx: missing key"],
         deltas,
     )
-    assert errors == ['$.results[0].id: expected "a", got "b"']
-    assert warnings == []
+    assert errors == ["$.countsx: missing key"]
+    assert len(warnings) == 2
 
 
 def test_committed_approved_deltas_pin_known_replay_drift():
@@ -254,6 +296,7 @@ def test_committed_approved_deltas_pin_known_replay_drift():
         {
             "surface": "data",
             "case": "campaign-money-30d",
+            "paths": ["$.rows[*].decision_title"],
             "reason": (
                 "live tie order underdetermined for pairs sharing abs delta + decided_at "
                 "\u2014 same flow id ties across decisions"
@@ -262,6 +305,7 @@ def test_committed_approved_deltas_pin_known_replay_drift():
         {
             "surface": "data",
             "case": "campaign-money-90d",
+            "paths": ["$.rows[*].decision_title"],
             "reason": (
                 "live tie order underdetermined for pairs sharing abs delta + decided_at "
                 "\u2014 same flow id ties across decisions"
@@ -270,6 +314,7 @@ def test_committed_approved_deltas_pin_known_replay_drift():
         {
             "surface": "status",
             "case": "status",
+            "paths": ["$.edge_count", "$.node_count"],
             "reason": (
                 "composed artifact is overlay-authoritative \u2014 carries 21 stamped "
                 "SAME_AS edges + anchor nodes live lags"
@@ -278,6 +323,7 @@ def test_committed_approved_deltas_pin_known_replay_drift():
         {
             "surface": "data",
             "case": "money-default",
+            "paths": ["$.rows[*].target_name"],
             "reason": (
                 "live carries duplicate-id vendor stub nodes (59 pairs, ingestion bug "
                 "per spec 4.2); the bake MERGEs them, so target_name resolves to the "
@@ -287,6 +333,7 @@ def test_committed_approved_deltas_pin_known_replay_drift():
         {
             "surface": "data",
             "case": "proceedings-default",
+            "paths": ["$.rows[*].affected_program"],
             "reason": (
                 "link order within a proceeding group is underdetermined on live (no "
                 "ORDER BY on link in the Cypher); row COUNTS and all values match"
@@ -295,6 +342,7 @@ def test_committed_approved_deltas_pin_known_replay_drift():
         {
             "surface": "data",
             "case": "proceedings-boyd",
+            "paths": ["$.rows[*].affected_program"],
             "reason": (
                 "link order within a proceeding group is underdetermined on live (no "
                 "ORDER BY on link in the Cypher); row COUNTS and all values match"

@@ -30,6 +30,8 @@ def test_run_parity_reports_pass_fail_and_delta_warning(tmp_path, capsys):
     delta_path.write_text(
         "- surface: data\n"
         "  case: approved\n"
+        "  paths:\n"
+        "    - $.value\n"
         "  reason: fixture-approved drift\n"
     )
     actual_by_path = {
@@ -72,6 +74,8 @@ def test_run_parity_returns_zero_when_only_approved_deltas_remain(tmp_path, caps
     delta_path.write_text(
         "- surface: status\n"
         "  case: status\n"
+        "  paths:\n"
+        "    - $.counts.edges\n"
         "  reason: fixture-approved status drift\n"
     )
 
@@ -89,3 +93,34 @@ def test_run_parity_returns_zero_when_only_approved_deltas_remain(tmp_path, caps
 
     assert exit_code == 0
     assert "WARN(delta) status/status" in capsys.readouterr().out
+
+
+def test_unrelated_mismatch_in_a_case_with_a_delta_still_fails(tmp_path, capsys):
+    corpus_dir = tmp_path / "corpus"
+    rows = [{"id": f"r{i}", "title": "t", "amount": 1} for i in range(30)]
+    _write_case(corpus_dir, "data", "ties", "/api/data/ties", {"rows": rows})
+    delta_path = tmp_path / "approved-deltas.yaml"
+    delta_path.write_text(
+        "- surface: data\n"
+        "  case: ties\n"
+        "  paths:\n"
+        "    - $.rows[*].title\n"
+        "  reason: tie order\n"
+    )
+    # 30 excused title diffs first, one unrelated amount diff last: the
+    # regression must not hide behind the approved noise or the report cap.
+    actual = [{**row, "title": "swapped"} for row in rows]
+    actual[-1]["amount"] = 999
+
+    exit_code = run_parity(
+        base_url="http://app.test",
+        corpus_dir=corpus_dir,
+        surfaces={"data"},
+        allow_delta=delta_path,
+        fetcher=lambda _base, _request: (200, {"rows": actual}),
+    )
+
+    output = capsys.readouterr().out
+    assert exit_code == 1
+    assert "FAIL data/ties" in output
+    assert "$.rows[29].amount: expected 1, got 999" in output
