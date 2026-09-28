@@ -15,6 +15,8 @@ type NodeFixture = {
   type: string;
   label: string;
   props?: Record<string, unknown>;
+  /** Store props exactly as given, like a deduplicated bake (no id/search_label/name). */
+  rawProps?: boolean;
 };
 
 type EdgeFixture = {
@@ -37,12 +39,11 @@ function insertNode(db: Database.Database, node: NodeFixture) {
     node.id,
     node.type,
     node.label,
-    JSON.stringify({
-      id: node.id,
-      search_label: node.label,
-      name: node.label,
-      ...(node.props ?? {}),
-    }),
+    JSON.stringify(
+      node.rawProps
+        ? (node.props ?? {})
+        : { id: node.id, search_label: node.label, name: node.label, ...(node.props ?? {}) },
+    ),
   );
 }
 
@@ -158,6 +159,13 @@ function makeFixtureDb(): string {
     { id: "person-cap", type: "Person", label: "Cap Person" },
     { id: "record-normalized", type: "Record", label: "Normalized record" },
     { id: "record-ocr", type: "Record", label: "OCR extract" },
+    {
+      id: "person-deduped",
+      type: "Person",
+      label: "Deduped Column Label",
+      props: { current_seat_display: "Mayor" },
+      rawProps: true,
+    },
   ];
 
   for (let i = 1; i <= 39; i += 1) {
@@ -260,6 +268,15 @@ describe("loadEntitySubstrate", () => {
     mod.closeSubstrateDb();
     delete process.env.SUBSTRATE_DB_PATH;
     delete process.env.SERVING_BACKEND;
+  });
+
+  it("labels a deduplicated node from the search_label column and restores its id", async () => {
+    const { loadEntitySubstrate } = await import("@/lib/server/entity-loader-substrate");
+
+    const result = await loadEntitySubstrate("person", "deduped");
+
+    expect(result?.label).toBe("Deduped Column Label");
+    expect(result?.properties).toEqual({ id: "person-deduped", current_seat_display: "Mayor" });
   });
 
   it("assembles a Tier 1 Person payload with must-show, phase-2, selected edges, rings, and event dates", async () => {

@@ -1025,11 +1025,12 @@ def test_search_fts_is_contentless_and_joins_back_to_nodes_by_rowid(
 
     assert "content=''" in ddl
     assert "tokenize='unicode61'" in ddl
+    # search_terms is FTS input only: deduplicated out of serialized props.
     assert rows == {
-        "org-terms-only": ("org-terms-only", "transit oversight climate"),
+        "org-terms-only": ("org-terms-only", None),
         "decision-title-only": ("Title-only browse label", None),
         "person-kate-colin": ("Kate Colin", None),
-        "record-colin-staff-report": ("Colin staff report", "agenda packet"),
+        "record-colin-staff-report": ("Colin staff report", None),
     }
     assert {row[0] for row in raw_fts_rows} == {1, 2, 3, 4}
     assert all(search_label is None for _, search_label, _ in raw_fts_rows)

@@ -22,8 +22,7 @@ PATH_EVENT_DATE_KEYS = (
     "started_at", "start_date", "parent_meeting_date", "published_at", "captured_at",
 )
 COMMON_PUBLIC_PROPS = frozenset({
-    "id", "name", "search_label", "search_terms",
-    "search_key_fact", "search_last_activity", "search_rank", "jurisdiction_name",
+    "name", "search_key_fact", "search_last_activity", "search_rank", "jurisdiction_name",
     "editorial_note", "editorial_blurb", "editorial",
     *PATH_EVENT_DATE_KEYS,
 })
@@ -87,13 +86,17 @@ PUBLIC_PROPS: dict[str, frozenset[str]] = {
 }
 
 # Support nodes (registry support_labels) have no UI NodeType. They keep graph
-# topology (edges) and identity only; their measurement payload stays operator-side.
+# topology (edges) and their id/label columns; the measurement payload stays
+# operator-side.
 SUPPORT_PUBLIC_PROPS: dict[str, frozenset[str]] = {
-    "ValidationCheck": frozenset({"id"}),
+    "ValidationCheck": frozenset(),
 }
 
 # Read by the bake to derive public surfaces, deliberately never serialized.
+# id and search_label are the nodes columns (the entity loader restores id and
+# falls back to the column label); search_terms lives only in the FTS index.
 BAKE_ONLY_PROPS = frozenset({
+    "id", "search_label", "search_terms",
     "display_label", "record_title", "label",  # _search_label fallbacks
 })
 

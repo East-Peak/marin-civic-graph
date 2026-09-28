@@ -54,9 +54,16 @@ function shortCandidateIdFromSegment(
   return shortPrefix ? `${shortPrefix}${slug}` : null;
 }
 
-function labelFromProps(id: string, props: Record<string, unknown>): string {
+// The bake no longer serializes search_label into props (it is the nodes
+// column); prefer a props copy if an older artifact still carries one.
+function entityLabel(
+  id: string,
+  props: Record<string, unknown>,
+  columnLabel: string | undefined,
+): string {
   return (
     (props.search_label as string | undefined) ??
+    (columnLabel || undefined) ??
     (props.name as string | undefined) ??
     id
   );
@@ -340,7 +347,7 @@ export async function loadEntitySubstrate(
   if (!type) return null;
 
   const properties = { ...graph.getNodeProps(id), id };
-  const label = labelFromProps(id, properties);
+  const label = entityLabel(id, properties, meta.label);
   const focusEventDate = effectiveEventDate(type, properties);
 
   if (TIER1_TYPES.has(type)) {

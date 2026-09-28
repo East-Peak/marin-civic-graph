@@ -1105,6 +1105,9 @@ def _write_sqlite(
                 ],
             )
             conn.execute("PRAGMA optimize")
+            conn.commit()
+            # Compact last: fresh inserts + index builds leave slack in pages.
+            conn.execute("VACUUM")
         os.replace(temp_path, sqlite_path)
     except Exception:
         temp_path.unlink(missing_ok=True)

@@ -117,8 +117,8 @@ def test_sql_prop_reads_in_the_app_are_allowlisted_somewhere() -> None:
 def test_support_nodes_have_an_explicit_policy_and_unknown_types_fail_closed() -> None:
     check = {"id": "validationcheck-x", "measured_value_number": 1.0,
              "subject_node_id": "filing-x", "display_label": "validationcheck-x"}
-    assert SUPPORT_PUBLIC_PROPS == {"ValidationCheck": frozenset({"id"})}
-    assert public_props("ValidationCheck", check) == {"id": "validationcheck-x"}
+    assert SUPPORT_PUBLIC_PROPS == {"ValidationCheck": frozenset()}
+    assert public_props("ValidationCheck", check) == {}
     with pytest.raises(ValueError, match="no public property policy"):
         public_props("Spaceship", {"id": "x"})
 
@@ -133,7 +133,7 @@ def test_public_props_drops_pipeline_internals_and_keeps_facts() -> None:
         "search_rank": 66, "editorial_note": "hi",
     }
     assert public_props("Project", props) == {
-        "id": "permit-marin-IN_B1_1", "name": None, "address": "WOODLAND RD, KENTFIELD",
+        "name": None, "address": "WOODLAND RD, KENTFIELD",
         "search_rank": 66, "editorial_note": "hi",
     }
     assert "display_label" in BAKE_ONLY_PROPS
@@ -200,3 +200,48 @@ def test_bake_serializes_allowlist_but_derives_from_bake_only_inputs(tmp_path: P
     assert json.loads(rollup) == [{"id": "org-a", "label": "Display Only Org", "total": 10.0}]
     # Edges are not node-allowlisted: identity assertion props survive.
     assert identity == [("as-1", "ein", "2026-07-01", "stuart")]
+
+
+def test_dedup_happens_after_derivation(tmp_path: Path) -> None:
+    """id/search_label/search_terms feed browse + FTS, then are not serialized."""
+    nodes = _write_jsonl(tmp_path / "nodes.jsonl", [
+        {"id": "filing-a", "node_type": "Filing", "labels": ["Filing"],
+         "properties": {"id": "filing-a", "search_label": "Alice Form 700",
+                        "search_terms": "filing-a zebra", "filing_type": "form_700"}},
+    ])
+    edges = _write_jsonl(tmp_path / "edges.jsonl", [])
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({"graph_node_types": {"Filing": {}}}))
+    sqlite_path = tmp_path / "public-substrate.sqlite"
+    bake_substrate([nodes], [edges], registry, sqlite_path, tmp_path / "report.json")
+
+    with sqlite3.connect(sqlite_path) as conn:
+        props = json.loads(conn.execute("SELECT props FROM nodes").fetchone()[0])
+        column = conn.execute("SELECT search_label FROM nodes").fetchone()[0]
+        browse = conn.execute("SELECT search_label, label_lower FROM browse_rows").fetchone()
+        terms = conn.execute("SELECT count(*) FROM search_fts WHERE search_fts MATCH 'zebra'")
+
+        assert props == {"filing_type": "form_700"}
+        assert column == "Alice Form 700"
+        assert browse == ("Alice Form 700", "alice form 700")
+        assert terms.fetchone()[0] == 1
+
+
+def test_bake_output_is_compacted(tmp_path: Path) -> None:
+    rows = [
+        {"id": f"org-{i:04d}", "node_type": "Organization", "labels": ["Organization"],
+         "properties": {"name": f"Org {i} " + "x" * (i * 37 % 400),
+                        "search_terms": " ".join(f"t{(i * k) % 9973}" for k in range(20))}}
+        for i in range(3000)
+    ]
+    nodes = _write_jsonl(tmp_path / "nodes.jsonl", rows)
+    edges = _write_jsonl(tmp_path / "edges.jsonl", [])
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({"graph_node_types": {"Organization": {}}}))
+    sqlite_path = tmp_path / "public-substrate.sqlite"
+    bake_substrate([nodes], [edges], registry, sqlite_path, tmp_path / "report.json")
+
+    vacuumed = tmp_path / "vacuumed.sqlite"
+    with sqlite3.connect(sqlite_path) as conn:
+        conn.execute("VACUUM INTO ?", (str(vacuumed),))
+    assert sqlite_path.stat().st_size == vacuumed.stat().st_size
