@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  TEMPLATE, not installed. Weekly Open Marin ingestion: runs `refresh_weekly.py stage` only.
+  Loading into the graph and publishing stay manual operator gates (see README.md here).
+  Replace every __REPO__ with the absolute repo path before installing.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>cc.eastpeak.openmarin-refresh-weekly</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>__REPO__/.venv/bin/python</string>
+        <string>scripts/refresh_weekly.py</string>
+        <string>stage</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>__REPO__</string>
+
+    <!-- Monday 05:00 local time. -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Weekday</key>
+        <integer>1</integer>
+        <key>Hour</key>
+        <integer>5</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <!--
+      stage needs NEO4J_URI only for its preflight guard (scripts/neo4j_target.py); it never
+      connects. Set it to Open Marin's operator graph (port 7688, never 7687). Credentials
+      are not needed for stage and must not go in this file.
+    -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>NEO4J_URI</key>
+        <string>__SET_NEO4J_URI__</string>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>__REPO__/data/ingest-runs/launchd.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>__REPO__/data/ingest-runs/launchd.err.log</string>
+</dict>
+</plist>

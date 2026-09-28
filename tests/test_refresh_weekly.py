@@ -447,3 +447,20 @@ def test_status_with_no_runs_or_an_unknown_run(ctx, capsys):
     assert rw.main(["status"], ctx) == 1
     assert "no runs yet" in capsys.readouterr().out
     assert rw.main(["status", "nope"], ctx) == 2
+
+
+# --- LaunchAgent template ----------------------------------------------------
+
+
+def test_launchagent_template_runs_only_stage_on_monday_at_five_with_no_secrets():
+    import plistlib
+
+    path = Path(__file__).resolve().parent.parent / "ops/launchd/cc.eastpeak.openmarin-refresh-weekly.plist"
+    plist = plistlib.loads(path.read_bytes())
+
+    assert plist["Label"] == "cc.eastpeak.openmarin-refresh-weekly"
+    assert plist["ProgramArguments"][1:] == ["scripts/refresh_weekly.py", "stage"]
+    assert plist["StartCalendarInterval"] == {"Weekday": 1, "Hour": 5, "Minute": 0}
+    assert set(plist["EnvironmentVariables"]) == {"NEO4J_URI"}  # stage needs only the guard, never credentials
+    assert "bolt://" not in plist["EnvironmentVariables"]["NEO4J_URI"]  # a hint by name; the operator fills it in
+    assert "PASSWORD" not in path.read_text()
