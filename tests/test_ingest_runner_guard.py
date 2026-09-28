@@ -78,3 +78,30 @@ def test_main_exits_nonzero_when_any_source_fails(tmp_path, monkeypatch):
                                  ingest.Verdict(ok=False, reasons=["pull returned 0 rows"])),
     )
     assert ingest.main(["--all", "--registry", str(registry)]) == 1
+
+
+def test_accepted_capture_is_written_with_canonical_meeting_ids(tmp_path):
+    from meeting_identity import MeetingIdentityMap
+
+    idmap = MeetingIdentityMap(tmp_path / "ids.json")
+    out = tmp_path / "extracted" / "src" / "w1.json"
+    ledger = RunLedger(tmp_path / "ledger.jsonl")
+    week1 = [{"meeting_id": "m-hash", "date": "2026-09-22", "title": "Council"}] * 3
+    ingest.run_source({"id": "src", "adapter": "f"}, tmp_path, ledger=ledger, today=TODAY,
+                      adapter_cls=_fake_adapter(week1, out), identity=idmap)
+    week2 = [{"meeting_id": "m-clip-99", "date": "2026-09-22", "title": "Council"}] * 3
+    _, verdict = ingest.run_source({"id": "src", "adapter": "f"}, tmp_path, ledger=ledger, today=TODAY,
+                                   adapter_cls=_fake_adapter(week2, out), identity=idmap)
+    assert verdict.ok
+    assert {m["meeting_id"] for m in json.loads(out.read_text())["meetings"]} == {"m-hash"}
+    assert (tmp_path / "ids.json").exists()
+
+
+def test_rejected_capture_does_not_touch_the_identity_map(tmp_path):
+    from meeting_identity import MeetingIdentityMap
+
+    idmap = MeetingIdentityMap(tmp_path / "ids.json")
+    out = tmp_path / "extracted" / "src" / "w1.json"
+    ingest.run_source({"id": "src", "adapter": "f"}, tmp_path, ledger=RunLedger(tmp_path / "l.jsonl"),
+                      today=TODAY, adapter_cls=_fake_adapter([], out), identity=idmap)
+    assert not (tmp_path / "ids.json").exists()

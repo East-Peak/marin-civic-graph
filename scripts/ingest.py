@@ -16,9 +16,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from adapters import get_adapter_class
 from ingest_guard import Floors, RunLedger, Verdict, evaluate, newest_past_date, write_if_ok
+from meeting_identity import MeetingIdentityMap
+from ingest_baseline import seed_ledger
 
 ROOT = Path(__file__).resolve().parent.parent
 LEDGER_PATH = Path("data") / "ingest-runs" / "ledger.jsonl"
+IDENTITY_PATH = Path("data") / "ingest-runs" / "meeting-identity.json"
 
 
 def load_sources(registry_path: Path) -> list[dict]:
@@ -64,6 +67,7 @@ def run_source(
     ledger: RunLedger,
     today: date,
     adapter_cls=None,
+    identity=None,
 ) -> tuple[dict, Verdict]:
     """Capture one source and write it ONLY if it passes its floors.
 
@@ -85,7 +89,10 @@ def run_source(
         today=today,
         floors=Floors.from_config(source_config),
     )
-    write_if_ok(adapter.extracted_path(), json.dumps(result, indent=2) + "\n", verdict)
+    if verdict.ok and identity is not None and result.get("meetings"):
+        identity.canonicalize(source_id, result["meetings"])
+    if write_if_ok(adapter.extracted_path(), json.dumps(result, indent=2) + "\n", verdict) and identity:
+        identity.save()
     ledger.append(source_id, datetime.now(timezone.utc).isoformat(timespec="seconds"), rows, newest, verdict)
     return result, verdict
 
@@ -111,6 +118,10 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     ledger = RunLedger(ROOT / LEDGER_PATH)
+    identity = MeetingIdentityMap(ROOT / IDENTITY_PATH)
+    # First scheduled run: judge against the last manual captures, not "any > 0".
+    for sid in seed_ledger(ledger, targets, ROOT / "data" / "extracted"):
+        print(f"  baseline seeded from last manual capture: {sid}")
     today = date.today()
     failed: list[str] = []
     for i, source_config in enumerate(targets):
@@ -124,7 +135,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  URL: {source_config['url']}")
 
         try:
-            result, verdict = run_source(source_config, ROOT, ledger=ledger, today=today)
+            result, verdict = run_source(source_config, ROOT, ledger=ledger, today=today, identity=identity)
             print(f"  Variant: {result.get('variant', 'unknown')}")
             print(f"  Meetings: {result.get('meeting_count', 'n/a')}")
             for art, count in sorted(result.get("artifact_counts", {}).items()):
