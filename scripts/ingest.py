@@ -24,13 +24,19 @@ def load_sources(registry_path: Path) -> list[dict]:
     return data.get("sources", [])
 
 
+# weekly: runs on the schedule (`--all`). manual: kept for one-off `--source`
+# runs (e.g. needs reconciliation first). retired: source is dead; kept only
+# so its historical captures stay attributable.
+SCHEDULES = ("weekly", "manual", "retired")
+
+
 def resolve_sources(
     sources: list[dict],
     source: str | None = None,
     all_sources: bool = False,
 ) -> list[dict]:
     if all_sources:
-        return list(sources)
+        return [s for s in sources if s.get("schedule") == "weekly"]
     if source:
         matches = [s for s in sources if s["id"] == source]
         if not matches:

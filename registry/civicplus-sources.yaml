@@ -25,24 +25,37 @@ sources:
     jurisdiction_id: place-tiburon
     institution_id: org-tiburon-town-council
     backfill_from: "2012-01-01"
-    schedule: weekly
+    schedule: retired
+    schedule_note: >-
+      CivicPlus offers only 2013-2016 and returned 0 meetings (audit 2026-09-28).
+      Current Tiburon meetings come from the Granicus source.
     categories: ["Town Council"]
 
   # Mill Valley — City Council not on CivicPlus; capture Planning Commission
   - id: mill-valley-planning-commission
     adapter: civicplus
-    url: https://cityofmillvalley.org/AgendaCenter
+    url: https://www.cityofmillvalley.gov/AgendaCenter
     jurisdiction_id: place-mill-valley
     institution_id: org-mill-valley-planning-commission
     backfill_from: "2019-01-01"
-    schedule: weekly
+    schedule: manual
+    schedule_note: >-
+      Held off the weekly schedule until reconciled with the April capture, which
+      ran as one combined source (mill-valley-committees / org-mill-valley-committees)
+      covering these same bodies; scheduling per-body sources now would ingest the
+      same meetings a second time under different institutions.
     categories: ["Planning Commission"]
 
   - id: mill-valley-parks-recreation
     adapter: civicplus
-    url: https://cityofmillvalley.org/AgendaCenter
+    url: https://www.cityofmillvalley.gov/AgendaCenter
     jurisdiction_id: place-mill-valley
     institution_id: org-mill-valley-parks-recreation-commission
     backfill_from: "2019-01-01"
-    schedule: weekly
+    schedule: manual
+    schedule_note: >-
+      Held off the weekly schedule until reconciled with the April capture, which
+      ran as one combined source (mill-valley-committees / org-mill-valley-committees)
+      covering these same bodies; scheduling per-body sources now would ingest the
+      same meetings a second time under different institutions.
     categories: ["Parks & Recreation Commission"]

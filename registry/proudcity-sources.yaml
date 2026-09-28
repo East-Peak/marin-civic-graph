@@ -7,6 +7,10 @@ sources:
     backfill_from: "2019-01-01"
     schedule: weekly
     archive_pages:
+      # 2025 onward: the per-year archive pages stopped at 2024 (the 2025 one
+      # 404s) and /meetings/ now lists only undated upcoming events. This page
+      # carries dated 2025-26 meetings (audit 2026-09-28: 44 meetings).
+      - https://townoffairfaxca.gov/agendas-town-council/
       - https://townoffairfaxca.gov/2024-meeting-archive/
       - https://townoffairfaxca.gov/2023-meeting-archive/
       - https://townoffairfaxca.gov/2022-meeting-archive/
@@ -23,3 +27,18 @@ sources:
     schedule: weekly
     archive_pages:
       - https://www.cityofbelvedere.org/city-council-meeting-archive/
+
+  # San Rafael, the case-study city. Captured so far only by the wave-01
+  # one-off scripts (scripts/capture_san_rafael_city_council_*.py).
+  - id: san-rafael-city-council
+    adapter: proudcity
+    url: https://www.cityofsanrafael.org/city-council-meetings/
+    jurisdiction_id: place-san-rafael
+    institution_id: org-san-rafael-city-council
+    backfill_from: "2019-01-01"
+    schedule: manual
+    schedule_note: >-
+      Held off the weekly schedule until meeting ids are reconciled: the graph's
+      wave-01 ids are hand-built (meeting-{date}-san-rafael-city-council[-suffix])
+      while this adapter emits meeting-{source_id}-{slug}, so a scheduled load
+      would duplicate every San Rafael meeting.

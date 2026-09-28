@@ -24,7 +24,7 @@ def sample_registry(tmp_path):
     jurisdiction_id: place-test2
     institution_id: org-test2
     backfill_from: "2020-01-01"
-    schedule: monthly
+    schedule: manual
 """
     path = tmp_path / "sources.yaml"
     path.write_text(yaml_content)
@@ -55,9 +55,10 @@ class TestResolveSources:
         assert resolved[0]["id"] == "test-source-1"
 
     def test_resolve_all(self, sample_registry):
+        # --all is the weekly schedule: manual/retired sources are excluded.
         sources = load_sources(sample_registry)
         resolved = resolve_sources(sources, all_sources=True)
-        assert len(resolved) == 2
+        assert [s["id"] for s in resolved] == ["test-source-1"]
 
     def test_resolve_unknown_raises(self, sample_registry):
         sources = load_sources(sample_registry)
