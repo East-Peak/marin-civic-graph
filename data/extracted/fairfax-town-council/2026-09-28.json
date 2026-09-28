@@ -2,12 +2,12 @@
   "capture_id": "fairfax-town-council__2026-09-28",
   "source_id": "fairfax-town-council",
   "adapter": "proudcity",
-  "captured_at": "2026-09-28T19:35:55Z",
+  "captured_at": "2026-09-28T20:38:31Z",
   "url": "https://townoffairfaxca.gov/meetings/",
   "jurisdiction_id": "place-fairfax",
   "institution_id": "org-fairfax-town-council",
   "raw_artifact": "data/raw/fairfax-town-council/2026-09-28/source.html",
-  "meeting_count": 217,
+  "meeting_count": 218,
   "artifact_counts": {
     "agenda": 209,
     "packet": 142,
@@ -3039,6 +3039,33 @@
       "source_row_number": 112
     },
     {
+      "meeting_id": "meeting-fairfax-town-council-town-council-meeting-june-1-2022",
+      "date": "2022-06-01",
+      "title": "Town Council Meeting: June 1, 2022",
+      "meeting_type": "regular",
+      "institution_id": "org-fairfax-town-council",
+      "artifacts": {
+        "agenda": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/05/06-01-22-TC-Agenda.pdf"
+        },
+        "packet": {
+          "available": true,
+          "url": "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2022/05/Item-1-AB-361.pdf"
+        },
+        "minutes": {
+          "available": false,
+          "url": null
+        },
+        "video": {
+          "available": false,
+          "url": null
+        }
+      },
+      "source_url": "https://townoffairfaxca.gov/meetings/town-council-meeting-june-1-2022/",
+      "source_row_number": 113
+    },
+    {
       "meeting_id": "meeting-fairfax-town-council-town-council-special-meeting-in-closed-session-june-14-2022",
       "date": "2022-06-14",
       "title": "Town Council Special Meeting \u2013 in Closed Session: June 14, 2022",
@@ -5880,8 +5907,9 @@
       "record_type": "meeting_list_page",
       "source_id": "fairfax-town-council",
       "artifact_path": "data/raw/fairfax-town-council/2026-09-28/source.html",
-      "captured_at": "2026-09-28T19:35:55Z"
+      "captured_at": "2026-09-28T20:38:31Z"
     }
   ],
-  "errors": []
+  "errors": [],
+  "pulled_rows": 218
 }

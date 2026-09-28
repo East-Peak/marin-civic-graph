@@ -3,7 +3,7 @@
   "source_id": "novato-city-council",
   "adapter": "granicus",
   "variant": "modern",
-  "captured_at": "2026-09-28T19:25:00Z",
+  "captured_at": "2026-09-28T20:37:48Z",
   "url": "https://novato.granicus.com/ViewPublisher.php?view_id=7",
   "jurisdiction_id": "place-novato",
   "institution_id": "org-novato-city-council",
@@ -12464,8 +12464,9 @@
       "record_type": "meeting_archive_page",
       "source_id": "novato-city-council",
       "artifact_path": "data/raw/novato-city-council/2026-09-28/source.html",
-      "captured_at": "2026-09-28T19:25:00Z"
+      "captured_at": "2026-09-28T20:37:48Z"
     }
   ],
-  "errors": []
+  "errors": [],
+  "pulled_rows": 429
 }

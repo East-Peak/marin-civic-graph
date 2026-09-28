@@ -2,7 +2,7 @@
   "capture_id": "ross-town-council__2026-09-28",
   "source_id": "ross-town-council",
   "adapter": "drupal_ross",
-  "captured_at": "2026-09-28T19:42:44Z",
+  "captured_at": "2026-09-28T20:38:30Z",
   "url": "https://townofrossca.gov/meetings",
   "jurisdiction_id": "place-ross",
   "institution_id": "org-ross-town-council",
@@ -549,8 +549,9 @@
       "record_type": "meeting_list_page",
       "source_id": "ross-town-council",
       "artifact_path": "data/raw/ross-town-council/2026-09-28/source.html",
-      "captured_at": "2026-09-28T19:42:44Z"
+      "captured_at": "2026-09-28T20:38:30Z"
     }
   ],
-  "errors": []
+  "errors": [],
+  "pulled_rows": 24
 }
