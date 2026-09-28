@@ -362,16 +362,18 @@ def test_artifact_wide_scan_finds_no_residential_house_number_street(
             for needle in _needles(props["address"])
             for (node_id,) in conn.execute(
                 "SELECT n.id FROM search_fts JOIN nodes n ON n.rowid = search_fts.rowid "
-                "WHERE search_fts MATCH ? AND json_extract(n.props, '$.type_permit') = 'RESIDENTIAL'",
+                "WHERE search_fts MATCH ?",
                 ('"' + needle.replace('"', "") + '"',),
             )
+            if node_id in RESIDENTIAL_SAMPLES
         )
         residential_geo_keys = conn.execute(
-            """
+            f"""
             SELECT count(*) FROM nodes, json_each(nodes.props)
-            WHERE json_extract(nodes.props, '$.type_permit') = 'RESIDENTIAL'
+            WHERE nodes.id IN ({",".join("?" * len(RESIDENTIAL_SAMPLES))})
               AND json_each.key IN ('parcel_number', 'latitude', 'longitude')
-            """
+            """,
+            list(RESIDENTIAL_SAMPLES),
         ).fetchone()[0]
         hazelmere = conn.execute(
             "SELECT count(*) FROM search_fts WHERE search_fts MATCH '\"444 HAZELMERE\"'"

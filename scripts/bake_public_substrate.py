@@ -26,6 +26,7 @@ from public_exposure import (
     sanitize_node_props,
     street_vocabulary,
 )
+from public_props import public_props
 
 DEFAULT_NODE_SOURCES = (
     Path("data/projected/graph-v2/nodes.jsonl"),
@@ -1012,7 +1013,7 @@ def _write_sqlite(
                         node.id,
                         node.type,
                         node.search_label,
-                        _json_dumps_stable(node.props),
+                        _json_dumps_stable(public_props(node.type, node.props)),
                     )
                     for node in node_items
                 ],

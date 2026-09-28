@@ -686,7 +686,7 @@ def test_live_export_mode_infers_types_and_strips_live_properties(
 
     assert node_type == "Organization"
     assert props["name"] == "Target Org"
-    assert props["display_label"] == "Target Org"
+    assert "display_label" not in props  # bake-only label input, not serialized
     assert "embedding" not in props
     assert "umap_x" not in props
     assert "search_pending" not in props
@@ -863,7 +863,7 @@ def test_embedding_umap_pending_and_payload_json_properties_are_stripped(
     props = json.loads(props_json)
 
     assert props["name"] == "Target Org"
-    assert props["display_label"] == "Target Org"
+    assert "display_label" not in props  # bake-only label input, not serialized
     assert "embedding" not in props
     assert "umap_x" not in props
     assert "search_pending" not in props
