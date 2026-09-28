@@ -64,22 +64,34 @@ def build_node_batch_query(node_type: str, labels: list[str]) -> tuple[str, dict
     return query, {}
 
 
-def build_edge_batch_query(relationship_type: str) -> str:
+def _q(identifier: str) -> str:
+    return "`" + identifier.replace("`", "``") + "`"
+
+
+def build_edge_batch_query(
+    relationship_type: str,
+    source_label: str | None = None,
+    target_label: str | None = None,
+) -> str:
     """Build a MERGE+SET Cypher query for batched edge creation.
 
-    Query uses $batch parameter with UNWIND.
+    Pass endpoint labels whenever known: a labeled MATCH is backed by that
+    label's id uniqueness constraint, while an unlabeled `MATCH (s {id: ...})`
+    scans every node per row (load_edges always passes them).
 
-    Example for CAST_VOTE:
+    Example for CAST_VOTE with labels:
         UNWIND $batch AS row
-        MATCH (s {id: row.source_id})
-        MATCH (t {id: row.target_id})
+        MATCH (s:`Person` {id: row.source_id})
+        MATCH (t:`Decision` {id: row.target_id})
         MERGE (s)-[r:CAST_VOTE]->(t)
         SET r += row.props
     """
+    s_label = f":{_q(source_label)}" if source_label else ""
+    t_label = f":{_q(target_label)}" if target_label else ""
     return "\n".join([
         "UNWIND $batch AS row",
-        "MATCH (s {id: row.source_id})",
-        "MATCH (t {id: row.target_id})",
+        f"MATCH (s{s_label} {{id: row.source_id}})",
+        f"MATCH (t{t_label} {{id: row.target_id}})",
         f"MERGE (s)-[r:{relationship_type}]->(t)",
         "SET r += row.props",
     ])
@@ -222,26 +234,60 @@ def load_nodes(driver, nodes: list[dict], batch_size: int = 500, database=None) 
     return counts
 
 
-def load_edges(driver, edges: list[dict], batch_size: int = 500, database=None) -> Counter:
-    """Group edges by relationship_type, load in batches using UNWIND.
+_LOOKUP_CHUNK = 5000
 
-    Each batch row carries:
-        source_id, target_id, props (edge properties)
+
+def _constrained_labels(session) -> list[str]:
+    """Labels with a single-property uniqueness constraint on ``id``."""
+    labels = []
+    for row in session.run("SHOW CONSTRAINTS YIELD labelsOrTypes, properties"):
+        if list(row["properties"] or []) == ["id"] and row["labelsOrTypes"]:
+            labels.extend(row["labelsOrTypes"])
+    return sorted(set(labels))
+
+
+def resolve_endpoint_labels(session, ids: set[str]) -> dict[str, str]:
+    """Map each id to one of its constrained labels, using only indexed lookups."""
+    remaining = set(ids)
+    found: dict[str, str] = {}
+    for label in _constrained_labels(session):
+        if not remaining:
+            break
+        pending = sorted(remaining)
+        for chunk in chunk_list(pending, _LOOKUP_CHUNK):
+            query = f"UNWIND $ids AS id MATCH (n:{_q(label)} {{id: id}}) RETURN n.id AS id"
+            for row in session.run(query, ids=chunk):
+                found[row["id"]] = label
+        remaining -= found.keys()
+    return found
+
+
+def load_edges(driver, edges: list[dict], batch_size: int = 500, database=None) -> Counter:
+    """Load edges in batches, every endpoint MATCH constraint-backed.
+
+    Endpoint labels are resolved first with indexed per-label lookups, then
+    edges load grouped by (source label, relationship, target label). An edge
+    whose endpoint exists under no constrained label is skipped and counted as
+    ``unresolved_endpoint`` (the old unlabeled MATCH silently wrote nothing).
 
     Returns a Counter of written edges keyed by relationship_type. Writes to
     `database` (scoped — never a bare session, which would hit the default/live DB).
     """
-    by_rel: dict[str, list[dict]] = {}
-    for edge in edges:
-        rel = edge["relationship_type"]
-        by_rel.setdefault(rel, []).append(edge)
-
     counts: Counter = Counter()
-
     with driver.session(database=database) as session:
-        for rel_type, group in by_rel.items():
-            query = build_edge_batch_query(rel_type)
+        ids = {e["source_id"] for e in edges} | {e["target_id"] for e in edges}
+        label_of = resolve_endpoint_labels(session, ids)
 
+        groups: dict[tuple[str, str, str], list[dict]] = {}
+        for edge in edges:
+            s_label, t_label = label_of.get(edge["source_id"]), label_of.get(edge["target_id"])
+            if s_label is None or t_label is None:
+                counts["unresolved_endpoint"] += 1
+                continue
+            groups.setdefault((s_label, edge["relationship_type"], t_label), []).append(edge)
+
+        for (s_label, rel_type, t_label), group in groups.items():
+            query = build_edge_batch_query(rel_type, s_label, t_label)
             for chunk in chunk_list(group, batch_size):
                 batch = [
                     {
