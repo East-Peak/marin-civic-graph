@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from public_exposure import (  # noqa: E402
     ADDRESS_EXPOSURE,
+    shared_address_levels,
     classify_project,
     parse_address,
     public_address,
@@ -215,6 +216,82 @@ def test_commercial_permit_and_civic_projects_keep_their_policy() -> None:
     assert sanitize_node_props("Person", person) is person
 
 
+def test_an_address_shared_with_a_residential_permit_gets_the_stricter_level() -> None:
+    residential = _residential()
+    shared = _residential(
+        id="permit-marin-IN_C1_1", type_permit="COMMERCIAL",
+        address="444 Hazelmere Rd, Suite 2, Kentfield, CA 94904",
+        display_label="TI at 444 Hazelmere Rd, Suite 2, Kentfield, CA 94904",
+    )
+    lone = _residential(
+        id="permit-marin-IN_C2_2", type_permit="COMMERCIAL",
+        address="1600 KESTREL HOLLOW DR, SAN RAFAEL, CA 94903",
+    )
+    building = _residential(
+        id="permit-marin-IN_C3_3", type_permit="COMMERCIAL",
+        address="120 Wrenwick St - Bldg #4, Sausalito, CA 94965",
+    )
+    ranged = _residential(address="51 -55 Corvid Blvd, Mill Valley, CA 94941")
+    levels = shared_address_levels(
+        [residential, shared, lone, MERRYDALE, building, ranged,
+         _residential(address="120 WRENWICK ST, SAUSALITO, CA 94965")]
+    )
+    assert levels == {
+        "444 HAZELMERE": "street_city", "2 HAZELMERE": "full", "1600 KESTREL": "full",
+        "120 WRENWICK": "street_city", "4 WRENWICK": "full",
+        "51 CORVID": "street_city", "55 CORVID": "street_city",
+    }
+    assert "120" not in sanitize_node_props("Project", building, shared_levels=levels)["address"]
+
+    out = sanitize_node_props("Project", shared, shared_levels=levels)
+    assert out["address"] == "Hazelmere Rd, Kentfield"
+    assert "444" not in out["display_label"]
+    assert sanitize_node_props("Project", lone, shared_levels=levels) == lone
+
+    all_full = {key: "full" for key in ADDRESS_EXPOSURE}
+    relaxed = shared_address_levels([residential, shared], policy=all_full)
+    assert sanitize_node_props("Project", shared, all_full, shared_levels=relaxed) == shared
+
+
+@pytest.mark.parametrize(
+    ("residential_address", "commercial_address"),
+    [
+        ("22 22-26  BRIARMOSS DR, SAN RAFAEL, CA 94903", "26 BRIARMOSS DR, SAN RAFAEL, CA 94903"),
+        ("18863 STATE ROUTE 1, MARSHALL, CA 94940",
+         "18865 STATE ROUTE 1 A K A 18863, MARSHALL, CA 94940"),
+        ("168 Farthingale Blvd (168,170,172,174), San Rafael, CA 94903",
+         "172 FARTHINGALE BLVD, SAN RAFAEL, CA 94903"),
+    ],
+)
+def test_every_house_number_on_either_permit_links_the_address(
+    residential_address: str, commercial_address: str
+) -> None:
+    commercial = _residential(type_permit="COMMERCIAL", address=commercial_address)
+    levels = shared_address_levels([_residential(address=residential_address), commercial])
+    out = sanitize_node_props("Project", commercial, shared_levels=levels)
+    assert out["address"] != commercial_address
+    assert not any(ch.isdigit() for ch in out["address"].replace("ROUTE 1", ""))
+
+
+def test_full_policy_permit_text_drops_house_numbers_of_residential_addresses() -> None:
+    levels = shared_address_levels([_residential(address="197 THISTLEDOWN AVE, SAN RAFAEL, CA 94903")])
+    commercial = _residential(
+        type_permit="COMMERCIAL",
+        address="121 THISTLEDOWN AVE, SAN RAFAEL, CA 94903",
+        description="Trench to 197 Thistledown Ave for new service",
+        display_label="Trench to 197 Thistledown Ave for new service at 121 THISTLEDOWN AVE, SAN RAFAEL, CA 94903",
+    )
+    out = sanitize_node_props("Project", commercial, shared_levels=levels)
+    assert out["address"] == "121 THISTLEDOWN AVE, SAN RAFAEL, CA 94903"
+    assert out["description"] == "Trench to Thistledown Ave for new service"
+    assert out["display_label"] == (
+        "Trench to Thistledown Ave for new service at 121 THISTLEDOWN AVE, SAN RAFAEL, CA 94903"
+    )
+    # Civic Projects are public records; their names are never rewritten.
+    civic = {**MERRYDALE, "name": "197 Thistledown Ave Shelter"}
+    assert sanitize_node_props("Project", civic, shared_levels=levels) == civic
+
+
 def test_policy_knob_dials_exposure_without_code_changes() -> None:
     props = _residential()
     city_only = sanitize_node_props(
@@ -292,6 +369,10 @@ def _leak_fixture(tmp_path: Path) -> tuple[Path, Path]:
         _permit_row(node_id, "RESIDENTIAL", props)
         for node_id, props in RESIDENTIAL_SAMPLES.items()
     ]
+    nodes.append(_permit_row("permit-marin-IN_COMM_SHARED", "COMMERCIAL", {
+        "address": "444 HAZELMERE RD, KENTFIELD, CA 94904",
+        "display_label": "Home office at 444 HAZELMERE RD, KENTFIELD, CA 94904",
+    }))
     nodes.append(_permit_row("permit-marin-IN_COMM_1", "COMMERCIAL", {
         "address": COMMERCIAL_ADDRESS,
         "display_label": f"TI at {COMMERCIAL_ADDRESS}",

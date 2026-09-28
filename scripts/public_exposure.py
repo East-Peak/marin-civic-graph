@@ -39,6 +39,7 @@ _HOUSE_NUMBER = re.compile(
 _STREET = re.compile(r"^(?:\d+(?:ST|ND|RD|TH)\b|[A-Z])[A-Z0-9 .'/-]*$", re.I)
 _BARE_NUMBER = re.compile(r"^\d+(?:/\d+)?[A-Z]?$", re.I)
 _NUMBERED_ROAD_WORDS = frozenset({"ROUTE", "RTE", "HWY", "HIGHWAY", "SR", "GATE"})
+_FIRST_WORD = re.compile(r"\b([A-Z][A-Z']*)", re.I)
 _LEADING_STREET_WORD = re.compile(r"^\d+[A-Z]?(?:\s*[-&]\s*\d+[A-Z]?)*\s+([A-Z][A-Z']*)", re.I)
 _CITY = re.compile(r"^[A-Z][A-Z .'()-]*$", re.I)
 _PARENTHETICAL = re.compile(r"\s*\([^)]*\)")
@@ -53,6 +54,7 @@ _FREE_TEXT_HOUSE_NUMBER = re.compile(
 )
 _FREE_TEXT_PARCEL = re.compile(r"\b(?:APN\s*#?\s*)?\d{3}-\d{3}-\d{2,3}\b", re.I)
 _FREE_TEXT_UNIT = re.compile(r"#\s*\d+[A-Z]?\b", re.I)
+_NUMBER_THEN_WORD = re.compile(r"\b(\d+)[A-Z]?\s+([A-Z][\w']*)", re.I)
 _FREE_TEXT_NUMBER_WORD = re.compile(
     r"\b\d+[A-Z]?(?:\s+\d+/\d+)?(?:\s*(?:[-&/,+]|\bAND\b)\s*\d+[A-Z]?)*\s+([A-Z][\w']*)", re.I
 )
@@ -171,21 +173,63 @@ def _search_terms(props: Mapping) -> str:
     return " ".join(str(token).lower() for token in tokens if token)
 
 
+def _address_keys(address: str | None) -> list[str]:
+    """Every number in the street area + the first street word.
+
+    "22-26 WOODOAKS DR" -> 22/26 WOODOAKS; "18865 STATE ROUTE 1 A K A 18863"
+    -> 18865/1/18863 STATE. Deliberately coarse: unit, alias and suffix
+    spellings vary between permits for one residence, and over-matching only
+    fails closed.
+    """
+    parts = [part.strip() for part in (address or "").split(",") if part.strip()]
+    while len(parts) > 1 and _STATE_ZIP.match(parts[-1]):
+        parts.pop()
+    street_area = " ".join(parts[:-1] if len(parts) > 1 else parts)
+    word = _FIRST_WORD.search(street_area)
+    if not word:
+        return []
+    upper = word.group(1).upper()
+    return list(dict.fromkeys(f"{n} {upper}" for n in re.findall(r"\d+", street_area)))
+
+
+def shared_address_levels(
+    projects: Iterable[Mapping], policy: Mapping[str, str] = ADDRESS_EXPOSURE
+) -> dict[str, str]:
+    """Most restrictive level per street address across all Project classes.
+
+    Permit classification is noisy (homes and apartment buildings carry
+    "COMMERCIAL" permits), so an address any residential permit names is
+    treated as a residence on every permit that names it.
+    """
+    levels: dict[str, str] = {}
+    for props in projects:
+        level = policy[classify_project(props)]
+        for key in _address_keys(props.get("address")):
+            levels[key] = max(levels.get(key, "full"), level, key=LEVELS.index)
+    return levels
+
+
 def sanitize_node_props(
     node_type: str,
     props: dict,
     policy: Mapping[str, str] = ADDRESS_EXPOSURE,
     node_id: str | None = None,
     street_words: frozenset[str] = frozenset(),
+    shared_levels: Mapping[str, str] | None = None,
 ) -> dict:
     """Return props safe for the public artifact (the input object if unchanged)."""
     if node_type != "Project":
         return props
-    level = policy[classify_project(props)]
-    if level == "full":
-        return props
-
+    project_class = classify_project(props)
+    level = policy[project_class]
+    for key in _address_keys(props.get("address")):
+        level = max(level, (shared_levels or {}).get(key, level), key=LEVELS.index)
     node_id = str(node_id or props.get("id"))
+    if level == "full":
+        if project_class == "civic_project" or not shared_levels:
+            return props
+        return _drop_private_mentions(node_id, props, shared_levels)
+
     out = {key: value for key, value in props.items() if key not in GEO_FIELDS}
     address = public_address(props.get("address"), props.get("city_town"), level)
     if address is None:
@@ -201,4 +245,24 @@ def sanitize_node_props(
         out["search_label"] = str(out.get("name") or node_id)
     if "search_terms" in out:
         out["search_terms"] = _search_terms({**out, "id": node_id})
+    return out
+
+
+def _drop_private_mentions(node_id: str, props: dict, shared_levels: Mapping[str, str]) -> dict:
+    """A full-exposure permit's free text must not name a residence's house number."""
+
+    def drop(match: re.Match[str]) -> str:
+        key = f"{match.group(1)} {match.group(2).upper()}"
+        return match.group(2) if shared_levels.get(key, "full") != "full" else match.group(0)
+
+    changed = {
+        key: _NUMBER_THEN_WORD.sub(drop, props[key])
+        for key in FREE_TEXT_FIELDS
+        if isinstance(props.get(key), str)
+    }
+    changed = {key: text for key, text in changed.items() if text != props[key]}
+    if not changed:
+        return props
+    out = {**props, **changed}
+    out["display_label"] = _permit_display_label(node_id, out.get("description"), out.get("address"))
     return out

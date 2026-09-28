@@ -24,6 +24,7 @@ from public_exposure import (
     ADDRESS_EXPOSURE,
     classify_project,
     sanitize_node_props,
+    shared_address_levels,
     street_vocabulary,
 )
 from public_props import public_props
@@ -522,21 +523,30 @@ def _apply_exposure_policy(nodes: dict[str, BakedNode]) -> dict:
     Labels are recomputed from sanitized props only (never the raw row), so
     browse rows, FTS, rollups and path labels inherit the sanitized form.
     """
-    counts: Counter[str] = Counter()
+    classes: Counter[str] = Counter()
+    sanitized: Counter[str] = Counter()
     projects = [node for node in nodes.values() if node.type == "Project"]
     street_words = street_vocabulary(node.props.get("address") for node in projects)
-    for node in nodes.values():
-        if node.type == "Project":
-            counts[classify_project(node.props)] += 1
+    shared_levels = shared_address_levels(node.props for node in projects)
+    for node in projects:
+        project_class = classify_project(node.props)
+        classes[project_class] += 1
         clean = sanitize_node_props(
-            node.type, node.props, node_id=node.id, street_words=street_words
+            node.type,
+            node.props,
+            node_id=node.id,
+            street_words=street_words,
+            shared_levels=shared_levels,
         )
         if clean is not node.props:
+            sanitized[project_class] += 1
             node.props = clean
             node.search_label = _search_label({"id": node.id}, clean)
     return {
         "address_exposure": dict(ADDRESS_EXPOSURE),
-        "project_classes": dict(sorted(counts.items())),
+        "project_classes": dict(sorted(classes.items())),
+        # A class set to "full" shows up here only via a shared residential address.
+        "sanitized_by_class": dict(sorted(sanitized.items())),
     }
 
 
