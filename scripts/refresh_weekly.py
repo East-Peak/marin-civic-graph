@@ -20,6 +20,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -113,6 +114,17 @@ class Context:
 
 # --- files and state ---------------------------------------------------------
 
+_USERINFO = re.compile(r"\b([a-z][a-z0-9+.-]*://)[^\s/@'\"]+@", re.IGNORECASE)
+
+
+def redact(text: str) -> str:
+    """Drop any URI's `user:pass@` before text is written or printed (a NEO4J_URI may embed credentials)."""
+    return _USERINFO.sub(r"\1***@", text)
+
+
+def _print_crash() -> None:
+    print(redact(traceback.format_exc()), file=sys.stderr)
+
 
 def run_dir(root: Path, run_id: str) -> Path:
     return root / RUNS_DIR / run_id
@@ -161,7 +173,7 @@ def read_state(root: Path, run_id: str) -> dict:
 
 
 def write_state(root: Path, run_id: str, state: dict) -> None:
-    _write_atomic(run_dir(root, run_id) / "state.json", json.dumps(state, indent=2, sort_keys=True) + "\n")
+    _write_atomic(run_dir(root, run_id) / "state.json", redact(json.dumps(state, indent=2, sort_keys=True) + "\n"))
 
 
 def _set_status(ctx: Context, state: dict, status: str, **fields) -> dict:
@@ -169,7 +181,7 @@ def _set_status(ctx: Context, state: dict, status: str, **fields) -> dict:
     state.update(fields, status=status)
     state["history"].append({"status": status, "at": ctx.now().isoformat(timespec="seconds")})
     write_state(ctx.root, state["run_id"], state)
-    _write_atomic(run_dir(ctx.root, state["run_id"]) / "digest.md", render_digest(state))
+    _write_atomic(run_dir(ctx.root, state["run_id"]) / "digest.md", redact(render_digest(state)))
     return state
 
 
@@ -185,9 +197,10 @@ def _require(state: dict, action: str, *statuses: str) -> None:
 def _step(ctx: Context, run_id: str, name: str, cmd: list[str]) -> Result:
     """Run one external command through the injected runner and keep its log."""
     # Children that take the run lock themselves (ingest.py) run under ours.
-    result = ctx.runner(cmd, ctx.root, {**ctx.env, "PYTHON": ctx.python, OWNER_ENV: str(os.getpid())})
+    raw = ctx.runner(cmd, ctx.root, {**ctx.env, "PYTHON": ctx.python, OWNER_ENV: str(os.getpid())})
+    result = Result(raw.returncode, redact(raw.output))
     _write_atomic(run_dir(ctx.root, run_id) / "logs" / f"{name}.log",
-                  f"$ {' '.join(cmd)}\n{result.output}\n[exit {result.returncode}]\n")
+                  redact(f"$ {' '.join(cmd)}\n{result.output}\n[exit {result.returncode}]\n"))
     return result
 
 
@@ -286,7 +299,7 @@ def stage(ctx: Context) -> dict:
     try:
         return _stage(ctx, state)
     except Exception as exc:  # a crash must end in a visible, failed run, never a bare run dir
-        traceback.print_exc()
+        _print_crash()
         return _fail(ctx, state, f"stage crashed: {type(exc).__name__}: {exc}")
 
 
@@ -368,7 +381,7 @@ def load(ctx: Context, run_id: str) -> dict:
             for f in STAGED_FILES:
                 _copy_atomic(staged_root / sid / f, ctx.root / "data" / "normalized" / STAGED_SOURCES[sid].normalized / f)
     except Exception as exc:
-        traceback.print_exc()
+        _print_crash()
         return _set_status(ctx, state, "load_failed", error=f"load crashed: {type(exc).__name__}: {exc}")
     _set_status(ctx, state, "loaded", loaded=list(accepted), error=None)
 
@@ -555,7 +568,7 @@ def status(ctx: Context, run_id: str | None) -> int:
 
 
 def _report(ctx: Context, state: dict) -> None:
-    print(_summary(state))
+    print(redact(_summary(state)))
     print(f"digest: {run_dir(ctx.root, state['run_id']) / 'digest.md'}")
 
 
@@ -594,7 +607,7 @@ def main(argv: list[str] | None = None, ctx: Context | None = None) -> int:
         _report(ctx, state)
         return 1 if state["status"] in ("failed", "load_failed") else 0
     except (Refused, RunLockHeld) as exc:
-        print(f"REFUSED: {exc}", file=sys.stderr)
+        print(redact(f"REFUSED: {exc}"), file=sys.stderr)
         return 2
 
 

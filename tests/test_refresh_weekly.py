@@ -671,6 +671,33 @@ def test_status_with_no_runs_or_an_unknown_run(ctx, capsys):
     assert rw.main(["status", "nope"], ctx) == 2
 
 
+def test_credentials_in_a_neo4j_uri_never_reach_state_digest_logs_or_output(ctx, world, root, capsys):
+    secret_uri = "bolt://neo4j:s3cret@localhost:7688"
+
+    def leaky(cmd, cwd, env):  # children echo the URI they connect to
+        world(cmd, cwd, {**env, "NEO4J_URI": ENV["NEO4J_URI"]})
+        return rw.Result(1 if "ingest_form700.py" in cmd[1] else 0, f"Connecting to Neo4j: {env['NEO4J_URI']}\n")
+    ctx.runner, ctx.env["NEO4J_URI"] = leaky, secret_uri
+    assert rw.main(["stage"], ctx) == 1  # form700 fails with the URI as its last line
+    ctx.env["NEO4J_URI"] = "bolt://neo4j:s3cret@localhost:7687"  # refused by the target guard, which quotes it
+    assert rw.main(["load", RUN], ctx) == 2
+    assert rw.main(["stage"], _at(ctx, NEXT_WEEK)) == 1  # the same refusal, recorded by stage preflight
+
+    written = "".join(f.read_text() for f in (root / "data/ingest-runs").rglob("*") if f.is_file())
+    out = capsys.readouterr()
+    assert "s3cret" not in written + out.out + out.err
+    assert "bolt://***@localhost:7688" in written and "bolt://***@localhost:7687" in written + out.err
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("neo4j+s://u:p%40ss@db.example:7688/x", "neo4j+s://***@db.example:7688/x"),
+    ("bolt://localhost:7688 and https://example.com/a@b", "bolt://localhost:7688 and https://example.com/a@b"),
+    ("mail stuart@eastpeak.cc", "mail stuart@eastpeak.cc"),
+])
+def test_redact_drops_only_uri_userinfo(text, expected):
+    assert rw.redact(text) == expected
+
+
 # --- LaunchAgent template ----------------------------------------------------
 
 
