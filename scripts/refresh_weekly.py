@@ -233,7 +233,9 @@ def _read_ledger(root: Path) -> list[dict]:
 
 
 def _latest_capture(root: Path, source_id: str) -> Path | None:
-    captures = sorted((root / "data" / "extracted" / source_id).glob("*.json"))
+    """Newest dated capture (<YYYY-MM-DD>.json); stray non-date files never win."""
+    captures = [p for p in sorted((root / "data" / "extracted" / source_id).glob("*.json"))
+                if re.fullmatch(r"\d{4}-\d{2}-\d{2}", p.stem)]
     return captures[-1] if captures else None
 
 
@@ -359,12 +361,12 @@ def load(ctx: Context, run_id: str) -> dict:
     if changed:
         return _fail(ctx, state, f"{', '.join(changed)} changed since approval; refusing to load unreviewed bytes")
 
-    # Load from exactly the approved bytes: refetchers from their hashed staged dir. normalize_meetings
-    # can only read the latest capture, so the run lock keeps it the approved one and each meeting
-    # load is re-verified after it runs.
+    # Load from exactly the approved bytes: refetchers from their hashed staged dir, meetings from
+    # the exact approved capture path (normalize_meetings --capture); each is re-verified after.
     staged_root = run_dir(ctx.root, run_id) / "staged"
     refetchers = [sid for sid in STAGED_SOURCES if sid in accepted]
-    steps = [(sid, [ctx.python, "scripts/normalize_meetings.py", "--source", sid, "--load"])
+    steps = [(sid, [ctx.python, "scripts/normalize_meetings.py", "--source", sid,
+                    "--capture", str(ctx.root / source["capture"]["path"]), "--load"])
              for sid, source in accepted.items() if source["kind"] == "meetings"]
     steps += [(sid, [ctx.python, f"scripts/{STAGED_SOURCES[sid].script}", "--load-from", str(staged_root / sid)])
               for sid in refetchers]

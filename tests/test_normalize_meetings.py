@@ -195,3 +195,39 @@ class TestNormalizeSource:
         assert "node_count" in report
         assert "edge_count" in report
         assert report["node_count"] == len(nodes)
+
+
+# --- Pin a meeting load to exactly the approved capture (review P2-9b) ---
+
+def test_find_latest_capture_ignores_non_date_files(tmp_path, monkeypatch):
+    import normalize_meetings as nm
+
+    src = tmp_path / "data" / "extracted" / "novato-city-council"
+    src.mkdir(parents=True)
+    (src / "2026-04-14.json").write_text("{}")
+    (src / "2026-09-28.json").write_text("{}")
+    (src / "zz-notes.json").write_text("{}")  # sorts last lexicographically
+    monkeypatch.setattr(nm, "ROOT", tmp_path)
+    assert nm.find_latest_capture("novato-city-council").name == "2026-09-28.json"
+
+
+def test_resolve_capture_uses_an_explicit_path_over_latest(tmp_path, monkeypatch):
+    import normalize_meetings as nm
+
+    src = tmp_path / "data" / "extracted" / "novato-city-council"
+    src.mkdir(parents=True)
+    approved = src / "2026-09-21.json"
+    approved.write_text("{}")
+    (src / "2026-09-28.json").write_text("{}")  # newer, NOT approved
+    monkeypatch.setattr(nm, "ROOT", tmp_path)
+    assert nm.resolve_capture("novato-city-council", str(approved)) == approved
+    assert nm.resolve_capture("novato-city-council", None).name == "2026-09-28.json"
+
+
+def test_capture_flag_requires_a_single_source():
+    import subprocess
+
+    out = subprocess.run(
+        [sys.executable, str(Path(__file__).resolve().parent.parent / "scripts" / "normalize_meetings.py"),
+         "--all", "--capture", "x.json"], capture_output=True, text=True)
+    assert out.returncode != 0 and "--capture" in out.stderr

@@ -301,8 +301,10 @@ def test_load_loads_only_accepted_sources_from_the_approved_bytes(ctx, world, ro
     assert rw.main(["load", RUN], ctx) == 0
 
     staging = root / "data/exports/staging"
+    approved_a = json.loads((run_dir / "state.json").read_text())["sources"]["a"]["capture"]["path"]
     assert world.calls == [
-        ["py", "scripts/normalize_meetings.py", "--source", "a", "--load"],
+        # Meetings load from exactly the approved capture, never "the latest".
+        ["py", "scripts/normalize_meetings.py", "--source", "a", "--capture", str(root / approved_a), "--load"],
         ["py", "scripts/ingest_form700.py", "--load-from", str(run_dir / "staged/form700")],
         ["py", "scripts/ingest_courtlistener_cases.py", "--load-from", str(run_dir / "staged/courtlistener")],
         ["bash", "scripts/refresh_reconciliation.sh"],

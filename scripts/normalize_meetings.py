@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import glob
 import os
 import sys
@@ -260,9 +261,19 @@ def normalize_source(capture: dict, output_dir: Path) -> tuple[list[dict], list[
 
 
 def find_latest_capture(source_id: str) -> Path | None:
+    """Newest dated capture (<YYYY-MM-DD>.json); stray non-date files never win."""
     pattern = str(ROOT / "data" / "extracted" / source_id / "*.json")
-    files = sorted(glob.glob(pattern))
+    files = [f for f in sorted(glob.glob(pattern)) if re.fullmatch(r"\d{4}-\d{2}-\d{2}", Path(f).stem)]
     return Path(files[-1]) if files else None
+
+
+def resolve_capture(source_id: str, capture: str | None) -> Path | None:
+    """The capture to normalize: an explicit (approved) path, else the newest dated one.
+
+    The weekly runner passes the exact capture a human approved, so a newer
+    capture written in the meantime can never be the one that gets loaded.
+    """
+    return Path(capture) if capture else find_latest_capture(source_id)
 
 
 def main() -> None:
@@ -270,7 +281,13 @@ def main() -> None:
     parser.add_argument("--source", help="Source ID to normalize")
     parser.add_argument("--all", dest="all_sources", action="store_true", help="Normalize all available sources")
     parser.add_argument("--load", action="store_true", help="Load into Neo4j after normalization")
+    parser.add_argument(
+        "--capture",
+        help="Normalize exactly this capture file instead of the newest (requires --source)",
+    )
     args = parser.parse_args()
+    if args.capture and not args.source:
+        parser.error("--capture requires --source (it names one source's capture)")
 
     import yaml
     sources = []
@@ -292,7 +309,7 @@ def main() -> None:
 
     for source_config in targets:
         source_id = source_config["id"]
-        capture_path = find_latest_capture(source_id)
+        capture_path = resolve_capture(source_id, args.capture)
         if not capture_path:
             print(f"  No captures found for {source_id}, skipping")
             continue
