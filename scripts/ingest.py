@@ -16,7 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from adapters import get_adapter_class
 from ingest_guard import Floors, RunLedger, Verdict, evaluate, newest_past_date, write_if_ok
-from meeting_identity import MeetingIdentityMap
+from meeting_identity import MeetingIdentityMap, merge_duplicate_meetings
 from ingest_baseline import seed_ledger
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -89,8 +89,11 @@ def run_source(
         today=today,
         floors=Floors.from_config(source_config),
     )
-    if verdict.ok and identity is not None and result.get("meetings"):
-        identity.canonicalize(source_id, result["meetings"])
+    if verdict.ok and result.get("meetings"):
+        if identity is not None:
+            identity.canonicalize(source_id, result["meetings"])
+        result["meetings"] = merge_duplicate_meetings(result["meetings"])
+        result["meeting_count"] = len(result["meetings"])
     if write_if_ok(adapter.extracted_path(), json.dumps(result, indent=2) + "\n", verdict) and identity:
         identity.save()
     ledger.append(source_id, datetime.now(timezone.utc).isoformat(timespec="seconds"), rows, newest, verdict)

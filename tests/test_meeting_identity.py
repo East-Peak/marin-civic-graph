@@ -72,3 +72,18 @@ def test_undated_rows_are_left_alone(tmp_path):
     rows = [{"meeting_id": "meeting-z", "date": None, "title": "Something"}]
     idmap.canonicalize(SRC, rows)
     assert rows[0]["meeting_id"] == "meeting-z"
+
+
+def test_duplicate_listings_merge_into_one_meeting_keeping_every_artifact():
+    from meeting_identity import merge_duplicate_meetings
+
+    listed_twice = [
+        {"meeting_id": "m-jun1", "date": "2022-06-01", "title": "Council",
+         "artifacts": {"agenda": {"available": True, "url": "a"}, "minutes": {"available": False, "url": None}}},
+        {"meeting_id": "m-jun1", "date": "2022-06-01", "title": "Council",
+         "artifacts": {"agenda": {"available": True, "url": "a"}, "minutes": {"available": True, "url": "m"}}},
+        {"meeting_id": "m-other", "date": "2022-06-02", "title": "Other", "artifacts": {}},
+    ]
+    merged = merge_duplicate_meetings(listed_twice)
+    assert [m["meeting_id"] for m in merged] == ["m-jun1", "m-other"]
+    assert merged[0]["artifacts"]["minutes"] == {"available": True, "url": "m"}

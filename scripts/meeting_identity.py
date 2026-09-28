@@ -56,3 +56,30 @@ class MeetingIdentityMap:
         with os.fdopen(fd, "w", encoding="utf-8") as fh:
             json.dump({"by_id": self._by_id, "by_key": self._by_key}, fh, indent=1, sort_keys=True)
         os.replace(tmp, self.path)
+
+
+def merge_duplicate_meetings(meetings: list[dict]) -> list[dict]:
+    """Collapse rows sharing a meeting_id into one, keeping every available artifact.
+
+    Sites list the same meeting more than once (Fairfax's archive lists
+    2022-06-01 twice, only one copy with minutes; Ross repeats upcoming
+    subcommittee rows). First-seen order and fields win; artifacts union,
+    preferring an available artifact over an unavailable one.
+    """
+    merged: dict[str, dict] = {}
+    order: list[str] = []
+    passthrough: list[dict] = []
+    for meeting in meetings:
+        mid = meeting.get("meeting_id")
+        if not mid:
+            passthrough.append(meeting)
+            continue
+        if mid not in merged:
+            merged[mid] = {**meeting, "artifacts": dict(meeting.get("artifacts") or {})}
+            order.append(mid)
+            continue
+        artifacts = merged[mid]["artifacts"]
+        for name, art in (meeting.get("artifacts") or {}).items():
+            if not (artifacts.get(name) or {}).get("available") and (art or {}).get("available"):
+                artifacts[name] = art
+    return [merged[mid] for mid in order] + passthrough
