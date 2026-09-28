@@ -160,6 +160,7 @@ def _set_status(ctx: Context, state: dict, status: str, **fields) -> dict:
     state.update(fields, status=status)
     state["history"].append({"status": status, "at": ctx.now().isoformat(timespec="seconds")})
     write_state(ctx.root, state["run_id"], state)
+    _write_atomic(run_dir(ctx.root, state["run_id"]) / "digest.md", render_digest(state))
     return state
 
 
@@ -374,6 +375,74 @@ def publish(ctx: Context, run_id: str) -> dict:
     })
 
 
+# --- digest and status -------------------------------------------------------
+
+NEXT_STEP = {
+    "awaiting_load_approval": "Approve the passing sources: `python scripts/refresh_weekly.py load {run_id}`. "
+                              "Failed sources are skipped; their previous good data stays authoritative.",
+    "awaiting_publish_approval": "Publish: `python scripts/refresh_weekly.py publish {run_id}` swaps the staged "
+                                 "artifact into data/exports/. It does not deploy; deploying is a separate decision.",
+    "published": "Published. Deploying is a separate launch decision.",
+    "failed": "Nothing further to approve in this run.",
+}
+
+
+def _num(value: int | None) -> str:
+    return "–" if value is None else str(value)
+
+
+def render_digest(state: dict) -> str:
+    sources = sorted(state["sources"].items(), key=lambda item: (item[1]["kind"], item[0]))
+    passed = sum(s["ok"] for _, s in sources)
+    lines = [f"# Open Marin weekly refresh — {state['run_id']}", "",
+             f"**Status:** {state['status']} · {passed} of {len(sources)} sources passed", ""]
+    if state.get("error"):
+        lines += [f"**Error:** {state['error']}", ""]
+    if not state.get("preflight", {}).get("ok", True):
+        lines += ["## Preflight", "", *(f"- {reason}" for reason in state["preflight"]["reasons"]), ""]
+    if sources:
+        lines += ["## Sources", "", "| Source | Kind | Verdict | Rows | Last good | Δ |", "|---|---|---|---:|---:|---:|"]
+        for sid, s in sources:
+            kind = f"meetings ({s['registry']})" if s["kind"] == "meetings" else s["kind"]
+            delta = "–" if None in (s["rows"], s["last_good_rows"]) else f"{s['rows'] - s['last_good_rows']:+d}"
+            lines.append(f"| {sid} | {kind} | {'ok' if s['ok'] else 'FAILED'} | {_num(s['rows'])} "
+                         f"| {_num(s['last_good_rows'])} | {delta} |")
+        lines.append("")
+    failures = [(sid, s) for sid, s in sources if not s["ok"]]
+    if failures:
+        lines += ["## Failures", "", *(f"- **{sid}**: {'; '.join(s['reasons'])}" for sid, s in failures), ""]
+    if state.get("bake"):
+        totals, sqlite = state["bake"].get("totals") or {}, state["bake"]["sqlite"]
+        lines += ["## Bake (data/exports/staging/)", "",
+                  f"- {_num(totals.get('nodes'))} nodes · {_num(totals.get('edges'))} edges · "
+                  f"sqlite {sqlite['size_bytes']:,} bytes (budget {sqlite['budget_bytes']:,}: "
+                  f"{'within budget' if sqlite['within_budget'] else 'OVER BUDGET'})", ""]
+    if state.get("published"):
+        lines += ["## Published", "", f"- public-substrate.sqlite sha256 `{state['published']['sqlite_sha256']}`",
+                  f"- previous artifacts kept in `{state['published']['previous']}`", ""]
+    lines += ["## Next", "", NEXT_STEP.get(state["status"], "").format(run_id=state["run_id"]), ""]
+    return "\n".join(lines)
+
+
+def latest_run_id(root: Path) -> str | None:
+    runs = sorted(path.parent.name for path in (root / RUNS_DIR).glob("*/state.json"))
+    return runs[-1] if runs else None
+
+
+def status(ctx: Context, run_id: str | None) -> int:
+    run_id = run_id or latest_run_id(ctx.root)
+    if run_id is None:
+        print(f"no runs yet under {ctx.root / RUNS_DIR}")
+        return 1
+    _report(ctx, read_state(ctx.root, run_id))
+    return 0
+
+
+def _report(ctx: Context, state: dict) -> None:
+    print(_summary(state))
+    print(f"digest: {run_dir(ctx.root, state['run_id']) / 'digest.md'}")
+
+
 # --- CLI ---------------------------------------------------------------------
 
 
@@ -392,16 +461,20 @@ def main(argv: list[str] | None = None, ctx: Context | None = None) -> int:
     sub.add_parser("stage", help="fetch, stage, floor and digest every weekly source (automated)")
     for gate in ("load", "publish"):
         sub.add_parser(gate, help=f"operator gate: {gate} an approved run").add_argument("run_id")
+    sub.add_parser("status", help="print a run's state and digest path (default: latest)").add_argument(
+        "run_id", nargs="?")
     args = parser.parse_args(argv)
     ctx = ctx or Context()
 
     try:
+        if args.command == "status":
+            return status(ctx, args.run_id)
         if args.command == "stage":
             state = stage(ctx)
-            print(_summary(state))
+            _report(ctx, state)
             return 0 if state["status"] != "failed" and all(s["ok"] for s in state["sources"].values()) else 1
         state = (load if args.command == "load" else publish)(ctx, args.run_id)
-        print(_summary(state))
+        _report(ctx, state)
         return 1 if state["status"] == "failed" else 0
     except Refused as exc:
         print(f"REFUSED: {exc}", file=sys.stderr)

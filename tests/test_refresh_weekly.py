@@ -380,3 +380,70 @@ def test_subprocess_runner_captures_exit_code_and_output(tmp_path):
     result = rw.subprocess_runner([sys.executable, "-c", "import sys; print('out'); sys.exit(3)"],
                                   tmp_path, {"PATH": ""})
     assert result == rw.Result(3, "out\n")
+
+
+# --- digest and status -------------------------------------------------------
+
+
+def _digest(root: Path, run_id: str = RUN) -> str:
+    return (root / f"data/ingest-runs/{run_id}/digest.md").read_text()
+
+
+def test_stage_digest_shows_verdicts_rows_versus_last_good_and_failure_reasons(ctx, world, root):
+    world.exit_codes["ingest_socrata_permits.py"] = 1
+    world.staged_rows["ingest_form700.py"] = 5
+
+    assert rw.main(["stage"], ctx) == 1
+
+    digest = _digest(root)
+    assert f"# Open Marin weekly refresh — {RUN}" in digest
+    assert "awaiting_load_approval" in digest and "3 of 5 sources passed" in digest
+    assert "| a | meetings (granicus) | ok | 30 | 28 | +2 |" in digest
+    assert "| form700 | staged | FAILED | 5 | 10 | -5 |" in digest
+    assert "| permits | staged | FAILED | – | 10 | – |" in digest
+    assert "- **permits**: exited 1: last line of trouble (logs/stage-permits.log)" in digest
+    assert "- **form700**: pull returned 5 rows, below 90% of the last good run (10)" in digest
+    assert f"refresh_weekly.py load {RUN}" in digest
+
+
+def test_digest_follows_the_run_through_load_and_publish(ctx, root):
+    _loaded(ctx)
+    digest = _digest(root)
+    assert "awaiting_publish_approval" in digest
+    assert "2 nodes · 1 edges · sqlite 26 bytes (budget 100: within budget)" in digest
+    assert f"refresh_weekly.py publish {RUN}" in digest and "does not deploy" in digest
+
+    assert rw.main(["publish", RUN], ctx) == 0
+    assert _state(root)["published"]["sqlite_sha256"] in _digest(root)
+
+
+def test_a_failed_runs_digest_says_why(ctx, root):
+    ctx.env["NEO4J_URI"] = "bolt://localhost:7687"
+
+    assert rw.main(["stage"], ctx) == 1
+
+    digest = _digest(root)
+    assert "preflight failed; nothing was fetched" in digest
+    assert "family-tree" in digest
+
+
+def test_status_prints_the_latest_runs_state_and_digest_path(ctx, root, capsys):
+    older = root / "data/ingest-runs/2026-09-21T050000Z"
+    older.mkdir(parents=True)
+    rw.write_state(root, older.name, {"run_id": older.name, "status": "published", "history": [], "sources": {}})
+    _staged(ctx)
+    capsys.readouterr()
+
+    assert rw.main(["status"], ctx) == 0
+    out = capsys.readouterr().out
+    assert f"run {RUN}: awaiting_load_approval" in out
+    assert f"digest: {root / 'data/ingest-runs' / RUN / 'digest.md'}" in out
+
+    assert rw.main(["status", older.name], ctx) == 0
+    assert "run 2026-09-21T050000Z: published" in capsys.readouterr().out
+
+
+def test_status_with_no_runs_or_an_unknown_run(ctx, capsys):
+    assert rw.main(["status"], ctx) == 1
+    assert "no runs yet" in capsys.readouterr().out
+    assert rw.main(["status", "nope"], ctx) == 2
