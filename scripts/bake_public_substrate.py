@@ -20,6 +20,13 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Iterable
 
+from public_exposure import (
+    ADDRESS_EXPOSURE,
+    classify_project,
+    sanitize_node_props,
+    street_vocabulary,
+)
+
 DEFAULT_NODE_SOURCES = (
     Path("data/projected/graph-v2/nodes.jsonl"),
     Path("data/review/attach/nodes.jsonl"),
@@ -505,6 +512,30 @@ def _compose_edges(rows: list[dict]) -> tuple[dict[tuple[str, str, str], BakedEd
     return final, {
         "input_duplicate_edge_triples": len(duplicate_edges),
         "input_duplicate_edge_rows": sum(duplicate_edges.values()) - len(duplicate_edges),
+    }
+
+
+def _apply_exposure_policy(nodes: dict[str, BakedNode]) -> dict:
+    """Sanitize address-bearing props before ANY public derivation.
+
+    Labels are recomputed from sanitized props only (never the raw row), so
+    browse rows, FTS, rollups and path labels inherit the sanitized form.
+    """
+    counts: Counter[str] = Counter()
+    projects = [node for node in nodes.values() if node.type == "Project"]
+    street_words = street_vocabulary(node.props.get("address") for node in projects)
+    for node in nodes.values():
+        if node.type == "Project":
+            counts[classify_project(node.props)] += 1
+        clean = sanitize_node_props(
+            node.type, node.props, node_id=node.id, street_words=street_words
+        )
+        if clean is not node.props:
+            node.props = clean
+            node.search_label = _search_label({"id": node.id}, clean)
+    return {
+        "address_exposure": dict(ADDRESS_EXPOSURE),
+        "project_classes": dict(sorted(counts.items())),
     }
 
 
@@ -1160,6 +1191,7 @@ def bake_substrate(
 
     _validate_node_types(node_rows, known_types)
     nodes, node_validation = _compose_nodes(node_rows)
+    exposure = _apply_exposure_policy(nodes)
     edges, edge_validation = _compose_edges(edge_rows)
     identity_links = _identity_link_rows(edges)
     money_rollups = _money_rollup_rows(nodes, edges, identity_links)
@@ -1214,6 +1246,7 @@ def bake_substrate(
         "node_counts_by_type": dict(sorted(node_counts.items())),
         "edge_counts_by_rel": dict(sorted(edge_counts.items())),
         "gate_counts": _gate_counts(nodes, edges),
+        "exposure": exposure,
         "sqlite": {
             "size_bytes": sqlite_size,
             "size_mib": round(sqlite_size / (1024 * 1024), 6),
