@@ -16,9 +16,10 @@ import re
 import urllib.request
 from html import unescape
 from pathlib import Path
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 from .base import BaseAdapter
+from .meeting_ids import assign_meeting_ids
 
 USER_AGENT = "Mozilla/5.0 (compatible; MarinCivicGraph/1.0)"
 
@@ -130,6 +131,12 @@ def _parse_table_rows(table_html: str, base_url: str, col_count: int) -> list[di
                 href = staff_links[0]
                 staff_url = href if href.startswith("http") else urljoin(base_url, href)
 
+        # Detail page: linked from the title (upcoming) or the Details cell (past)
+        detail_href = _first_href(cells[1])
+        if detail_href is None and col_count == 8 and len(cells) > 7:
+            detail_href = _first_href(cells[7])
+        detail_url = urljoin(base_url, detail_href) if detail_href else None
+
         artifacts: dict[str, dict] = {
             "agenda": {
                 "available": bool(agenda_urls),
@@ -149,16 +156,37 @@ def _parse_table_rows(table_html: str, base_url: str, col_count: int) -> list[di
             "date": date_val,
             "title": title,
             "artifacts": artifacts,
+            "detail_url": detail_url,
         })
 
     return meetings
+
+
+def _first_href(cell_html: str) -> str | None:
+    match = re.search(r'href="([^"]+)"', cell_html)
+    return match.group(1) if match else None
+
+
+def native_meeting_key(meeting: dict) -> str | None:
+    """Ross native key (see :mod:`.meeting_ids`): the meeting's detail-page path.
+
+    Every row links its Drupal node page (title link while upcoming, "View
+    Details" once past), so the path is the one key present across the
+    meeting's life. Attachment folders carry the node id too, but only once
+    documents are posted. ``/towncouncil/page/ross-town-council-meeting-0``
+    becomes ``towncouncil-page-ross-town-council-meeting-0``.
+    """
+    url = meeting.get("detail_url")
+    if not url:
+        return None
+    return re.sub(r"[^a-z0-9]+", "-", urlparse(url).path.lower()).strip("-") or None
 
 
 def extract_ross_meetings(html: str, base_url: str) -> list[dict]:
     """Extract all meetings from the Ross meetings page HTML.
 
     Parses both the upcoming (5-col) and past (8-col) tables.
-    Returns a list of meeting dicts with keys: date, title, artifacts.
+    Returns a list of meeting dicts with keys: date, title, artifacts, detail_url.
     """
     meetings: list[dict] = []
 
@@ -220,17 +248,17 @@ class DrupalRossAdapter(BaseAdapter):
 
         meetings: list[dict] = []
         for i, m in enumerate(raw_meetings):
-            date_slug = m["date"] or "unknown"
             meetings.append({
-                "meeting_id": f"meeting-{self.source_id}-{date_slug}-row-{i + 1}",
                 "date": m["date"],
                 "title": m["title"],
                 "meeting_type": "regular",
                 "institution_id": self.institution_id,
                 "artifacts": m["artifacts"],
                 "source_url": self.url,
+                "detail_url": m["detail_url"],
                 "source_row_number": i + 1,
             })
+        assign_meeting_ids(meetings, self.source_id, native_meeting_key)
 
         artifact_counts: dict[str, int] = {}
         for m in meetings:

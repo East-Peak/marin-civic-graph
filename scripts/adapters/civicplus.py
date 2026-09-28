@@ -10,6 +10,7 @@ import urllib.request
 from pathlib import Path
 
 from .base import BaseAdapter
+from .meeting_ids import assign_meeting_ids, normalize_title
 
 _USER_AGENT = "Mozilla/5.0 (compatible; MarinCivicGraph/1.0)"
 
@@ -262,6 +263,26 @@ def parse_meeting_rows(
 # Adapter
 # ---------------------------------------------------------------------------
 
+def native_meeting_key(meeting: dict) -> str | None:
+    """CivicPlus native key (see :mod:`.meeting_ids`): the AgendaCenter ``agenda_id``."""
+    return meeting.get("agenda_id") or None
+
+
+def meeting_name(meeting: dict) -> str:
+    """Text hashed for the fallback id: category plus title.
+
+    The title comes from the agenda link, so a row without one has an empty
+    title; the category still tells same-day meetings of different bodies apart.
+    """
+    return f"{meeting.get('category') or ''} {meeting.get('title') or ''}"
+
+
+def _dedupe_key(meeting: dict) -> str:
+    return native_meeting_key(meeting) or (
+        f"{meeting.get('date')}|{normalize_title(meeting_name(meeting))}"
+    )
+
+
 class CivicPlusAdapter(BaseAdapter):
     """CivicPlus AgendaCenter adapter.
 
@@ -352,10 +373,7 @@ class CivicPlusAdapter(BaseAdapter):
 
         # --- Fetch historical years via AJAX for each category ---
         backfill_year = int(self.backfill_from[:4])
-        seen_ids: set[str] = {
-            m.get("meeting_id") or m.get("agenda_id") or ""
-            for m in meetings
-        }
+        seen_ids: set[str] = {_dedupe_key(m) for m in meetings}
 
         for cat in categories:
             cat_id = cat["id"]
@@ -380,28 +398,17 @@ class CivicPlusAdapter(BaseAdapter):
                     year_html, base_url=base_url, backfill_from=self.backfill_from
                 )
                 for m in year_meetings:
-                    m_id = (
-                        m.get("meeting_id")
-                        or m.get("agenda_id")
-                        or f"{m.get('date')}-{m.get('source_row_number')}"
-                    )
+                    if not m.get("category"):
+                        m["category"] = cat_name
+                    m_id = _dedupe_key(m)
                     if m_id not in seen_ids:
-                        if not m.get("category"):
-                            m["category"] = cat_name
                         meetings.append(m)
                         seen_ids.add(m_id)
 
         # --- Stamp institution_id and meeting_id onto each meeting ---
-        slug = self.source_id
         for m in meetings:
             m["institution_id"] = self.institution_id
-            if m.get("agenda_id"):
-                m["meeting_id"] = f"meeting-{slug}-{m['agenda_id']}"
-            elif m.get("date"):
-                row = m["source_row_number"]
-                m["meeting_id"] = f"meeting-{slug}-{m['date']}-row-{row}"
-            else:
-                m["meeting_id"] = f"meeting-{slug}-row-{m['source_row_number']}"
+        assign_meeting_ids(meetings, self.source_id, native_meeting_key, name=meeting_name)
 
         # --- Compute artifact counts ---
         artifact_counts: dict[str, int] = {}

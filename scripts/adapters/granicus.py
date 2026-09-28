@@ -8,6 +8,7 @@ from html import unescape
 from pathlib import Path
 
 from .base import BaseAdapter
+from .meeting_ids import assign_meeting_ids
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -434,6 +435,22 @@ def parse_modern(html: str, backfill_from: str) -> list[dict]:
 # Adapter
 # ---------------------------------------------------------------------------
 
+def native_meeting_key(meeting: dict) -> str | None:
+    """Granicus native key (see :mod:`.meeting_ids`).
+
+    ``clip_id`` (archived rows) is the historical id and stays verbatim so
+    existing graph ids remain valid. Upcoming rows have no clip yet; their
+    agenda URL carries an ``event_id``, keyed as ``event-{id}`` so the two
+    numeric spaces cannot collide. Rows with neither fall back to date +
+    title hash.
+    """
+    if meeting.get("clip_id"):
+        return str(meeting["clip_id"])
+    if meeting.get("event_id"):
+        return f"event-{meeting['event_id']}"
+    return None
+
+
 class GranicusAdapter(BaseAdapter):
     """Granicus Publisher View adapter.
     Auto-detects legacy vs modern template and dispatches to the appropriate parser.
@@ -460,17 +477,9 @@ class GranicusAdapter(BaseAdapter):
         else:
             meetings = parse_modern(html, backfill_from=self.backfill_from)
 
-        # Stamp each meeting with institution_id and meeting_id
         for m in meetings:
             m["institution_id"] = self.institution_id
-            slug = self.source_id
-            if m.get("clip_id"):
-                m["meeting_id"] = f"meeting-{slug}-{m['clip_id']}"
-            elif m.get("date"):
-                row = m["source_row_number"]
-                m["meeting_id"] = f"meeting-{slug}-{m['date']}-row-{row}"
-            else:
-                m["meeting_id"] = f"meeting-{slug}-row-{m['source_row_number']}"
+        assign_meeting_ids(meetings, self.source_id, native_meeting_key)
 
         # Compute artifact counts
         artifact_counts: dict[str, int] = {}
