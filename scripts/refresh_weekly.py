@@ -378,8 +378,9 @@ def load(ctx: Context, run_id: str) -> dict:
                 return _fail(ctx, state, f"{sid} changed while loading; the graph may hold unreviewed bytes. "
                                          "Stage a fresh run.")
         for sid in refetchers:  # promote only once every load succeeded
+            normalized = ctx.root / "data" / "normalized" / STAGED_SOURCES[sid].normalized
             for f in STAGED_FILES:
-                _copy_atomic(staged_root / sid / f, ctx.root / "data" / "normalized" / STAGED_SOURCES[sid].normalized / f)
+                _copy_atomic(staged_root / sid / f, normalized / f)
     except Exception as exc:
         _print_crash()
         return _set_status(ctx, state, "load_failed", error=f"load crashed: {type(exc).__name__}: {exc}")
