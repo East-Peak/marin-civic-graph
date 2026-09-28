@@ -49,3 +49,38 @@ A read-only audit on 2026-09-28 found most sources healthy, but also:
 - **NetFile campaign-finance export:** Cloudflare Turnstile blocks automated export. For now, a human downloads the yearly
   "Export Amended" ZIP into `data/raw/<src>/<date>/`. Planned: a new adapter on `api/SearchCampaignTransactions`,
   which needs a MoneyFlow id mapping because the JSON has no `Tran_ID`/`Filer_ID`.
+
+## I5b — the weekly runner (design, 2026-09-28)
+
+**Finding.** The live graph was never built through one pipeline. `build_graph_v2` projects only a small
+slice (~6K of ~130K nodes). Most data enters through per-ingester `--load` paths: permits, Form 700 and
+CourtListener each refetch-and-load in one call, while meetings load via `normalize_meetings --load`
+from the staged capture. A gate that approves staged data and then loads a *fresh refetch* would load
+something nobody reviewed.
+
+**Rule: approved bytes == loaded bytes.** Each refetching ingester gains a load-only mode
+(`--load-from <dir>`) that loads previously staged `nodes.jsonl`/`edges.jsonl` without fetching.
+
+**Runner.** `scripts/refresh_weekly.py`, with three subcommands and state under `data/ingest-runs/<run_id>/`:
+
+1. `stage` (automated, runs from a LaunchAgent). Steps:
+   - Preflight (env, disk, the neo4j_target guard).
+   - `ingest.py --all` for each meeting registry (I1 floors apply).
+   - Stage permits, Form 700 and CourtListener into `<run>/staged/<name>/` via `--output-dir`. Floors
+     compare staged row counts with the current `data/normalized` counts.
+   - Write `<run>/digest.md`, covering per-source verdicts, row deltas, new-meeting counts and failures,
+     plus `state.json` with status `awaiting_load_approval`.
+   - Exit non-zero if any source failed; the passing ones remain approvable.
+2. `load <run_id>` (the operator gate):
+   - Refuses unless the state is `awaiting_load_approval`.
+   - Promotes passing staged dirs into `data/normalized`.
+   - Runs `normalize_meetings --source X --load` for accepted meeting sources and `--load-from` for the rest.
+   - Runs `refresh_reconciliation.sh`, `export_live_graph.py`, and `bake_public_substrate.py` into
+     `data/exports/staging/`.
+   - Records the bake report and size budget, and sets status `awaiting_publish_approval`.
+3. `publish <run_id>` (the operator gate): atomically swaps the staged sqlite and manifests into
+   `data/exports/` and records the published artifact hash. It never deploys; deploying is the separate
+   launch decision.
+
+Every external step is an injectable command, so tests never touch the network or Neo4j. The weekly
+LaunchAgent runs `stage` only.
