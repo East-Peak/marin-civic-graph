@@ -1,0 +1,412 @@
+#!/usr/bin/env python3
+"""Weekly ingestion runner (I5b): stage automatically; load and publish only on approval.
+
+    refresh_weekly.py stage              # the weekly LaunchAgent runs only this
+    refresh_weekly.py load <run_id>      # operator gate: load the approved bytes into the graph
+    refresh_weekly.py publish <run_id>   # operator gate: swap the new artifact into data/exports/
+    refresh_weekly.py status [<run_id>]  # latest (or named) run's state and digest
+
+See docs/specs/2026-09-28-persistent-ingestion-design.md, "I5b". The rule is
+approved bytes == loaded bytes: `stage` fingerprints every capture and staged
+file it asks a human to approve, and `load`/`publish` refuse bytes that changed
+since. Each run lives in data/ingest-runs/<run_id>/ (state.json, digest.md,
+logs/, staged/). Every external step goes through ONE injectable runner, so
+tests never touch the network, Neo4j or the real data/. Nothing here deploys.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Callable, Mapping, NamedTuple
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from ingest import load_sources, resolve_sources  # noqa: E402
+from ingest_guard import Floors, evaluate  # noqa: E402
+from load_from import STAGED_FILES  # noqa: E402
+from neo4j_target import UnsafeNeo4jTarget, check_target  # noqa: E402
+
+ROOT = Path(__file__).resolve().parent.parent
+RUNS_DIR = Path("data/ingest-runs")
+LEDGER = RUNS_DIR / "ledger.jsonl"  # ingest.py's run ledger (I1)
+EXPORTS = Path("data/exports")
+STAGING = EXPORTS / "staging"
+PUBLISHED_ARTIFACTS = ("public-substrate.sqlite", "status_manifest.json", "catalog.json", "substrate-bake-report.json")
+MEETING_REGISTRIES = ("granicus", "civicplus", "drupal", "proudcity")  # registry/<name>-sources.yaml
+MIN_FREE_BYTES = 5 * 1024**3  # live export + staged bake + a backup of the published one
+
+
+class StagedSource(NamedTuple):
+    script: str
+    args: tuple[str, ...]
+    normalized: str  # its current good output: data/normalized/<normalized>/
+
+
+STAGED_SOURCES = {
+    "permits": StagedSource("ingest_socrata_permits.py", (), "marin-county-permits"),
+    "form700": StagedSource("ingest_form700.py", ("--all",), "form700"),
+    "courtlistener": StagedSource("ingest_courtlistener_cases.py", (), "courtlistener-cases"),
+}
+
+# staged → awaiting_load_approval → loaded → awaiting_publish_approval → published; any live state → failed.
+TRANSITIONS = {
+    None: "staged",
+    "staged": "awaiting_load_approval",
+    "awaiting_load_approval": "loaded",
+    "loaded": "awaiting_publish_approval",
+    "awaiting_publish_approval": "published",
+}
+
+
+class Refused(Exception):
+    """The request doesn't apply to this run as it stands; nothing was changed."""
+
+
+def check_transition(current: str | None, new: str) -> None:
+    if current in TRANSITIONS and new in (TRANSITIONS[current], "failed"):
+        return
+    raise Refused(f"illegal status transition {current} -> {new}")
+
+
+@dataclass(frozen=True)
+class Result:
+    returncode: int
+    output: str
+
+
+Runner = Callable[[list[str], Path, Mapping[str, str]], Result]
+
+
+def subprocess_runner(cmd: list[str], cwd: Path, env: Mapping[str, str]) -> Result:
+    proc = subprocess.run(cmd, cwd=cwd, env=dict(env), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    return Result(proc.returncode, proc.stdout)
+
+
+@dataclass
+class Context:
+    root: Path = ROOT
+    runner: Runner = subprocess_runner
+    env: dict[str, str] = field(default_factory=lambda: dict(os.environ))
+    python: str = sys.executable
+    now: Callable[[], datetime] = lambda: datetime.now(timezone.utc)
+    free_bytes: Callable[[Path], int] = lambda path: shutil.disk_usage(path).free
+    meeting_registries: tuple[str, ...] = MEETING_REGISTRIES
+
+
+# --- files and state ---------------------------------------------------------
+
+
+def run_dir(root: Path, run_id: str) -> Path:
+    return root / RUNS_DIR / run_id
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _write_atomic(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            fh.write(text)
+        os.replace(tmp, path)
+    except BaseException:
+        Path(tmp).unlink(missing_ok=True)
+        raise
+
+
+def _copy_atomic(src: Path, dest: Path) -> None:
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(dir=dest.parent, prefix=f".{dest.name}.", suffix=".tmp")
+    os.close(fd)
+    shutil.copyfile(src, tmp)
+    os.replace(tmp, dest)
+
+
+def _count_rows(path: Path) -> int | None:
+    if not path.is_file():
+        return None
+    with path.open(encoding="utf-8") as fh:
+        return sum(1 for line in fh if line.strip())
+
+
+def read_state(root: Path, run_id: str) -> dict:
+    path = run_dir(root, run_id) / "state.json"
+    if not path.is_file():
+        raise Refused(f"no run {run_id!r} under {RUNS_DIR}")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def write_state(root: Path, run_id: str, state: dict) -> None:
+    _write_atomic(run_dir(root, run_id) / "state.json", json.dumps(state, indent=2, sort_keys=True) + "\n")
+
+
+def _set_status(ctx: Context, state: dict, status: str, **fields) -> dict:
+    check_transition(state["status"], status)
+    state.update(fields, status=status)
+    state["history"].append({"status": status, "at": ctx.now().isoformat(timespec="seconds")})
+    write_state(ctx.root, state["run_id"], state)
+    return state
+
+
+def _fail(ctx: Context, state: dict, error: str) -> dict:
+    return _set_status(ctx, state, "failed", error=error)
+
+
+def _require(state: dict, status: str, action: str) -> None:
+    if state["status"] != status:
+        raise Refused(f"run {state['run_id']} is {state['status']}; {action} needs {status}")
+
+
+def _step(ctx: Context, run_id: str, name: str, cmd: list[str]) -> Result:
+    """Run one external command through the injected runner and keep its log."""
+    result = ctx.runner(cmd, ctx.root, {**ctx.env, "PYTHON": ctx.python})
+    _write_atomic(run_dir(ctx.root, run_id) / "logs" / f"{name}.log",
+                  f"$ {' '.join(cmd)}\n{result.output}\n[exit {result.returncode}]\n")
+    return result
+
+
+def _failure(name: str, result: Result) -> str:
+    tail = next((line.strip() for line in reversed(result.output.splitlines()) if line.strip()), "")
+    return f"exited {result.returncode}: {tail} (logs/{name}.log)"
+
+
+# --- stage -------------------------------------------------------------------
+
+
+def preflight(ctx: Context, *, credentials: bool) -> list[str]:
+    reasons = []
+    try:
+        check_target(ctx.env.get("NEO4J_URI"), ctx.env)
+    except UnsafeNeo4jTarget as exc:
+        reasons.append(str(exc))
+    missing = [var for var in ("NEO4J_USER", "NEO4J_PASSWORD") if credentials and not ctx.env.get(var)]
+    if missing:
+        reasons.append(f"missing {', '.join(missing)}")
+    free = ctx.free_bytes(ctx.root)
+    if free < MIN_FREE_BYTES:
+        reasons.append(f"only {free / 1024**3:.1f} GiB free disk; need {MIN_FREE_BYTES / 1024**3:.0f} GiB")
+    return reasons
+
+
+def _read_ledger(root: Path) -> list[dict]:
+    path = root / LEDGER
+    return [json.loads(line) for line in path.read_text().splitlines() if line.strip()] if path.exists() else []
+
+
+def _latest_capture(root: Path, source_id: str) -> Path | None:
+    captures = sorted((root / "data" / "extracted" / source_id).glob("*.json"))
+    return captures[-1] if captures else None
+
+
+def _stage_meetings(ctx: Context, run_id: str, registry: str) -> dict[str, dict]:
+    """`ingest.py --all` for one registry; verdicts come from the ledger lines this run appended."""
+    registry_path = f"registry/{registry}-sources.yaml"
+    expected = [s["id"] for s in resolve_sources(load_sources(ctx.root / registry_path), all_sources=True)]
+    if not expected:
+        return {}
+    before = _read_ledger(ctx.root)
+    name = f"ingest-{registry}"
+    _step(ctx, run_id, name, [ctx.python, "scripts/ingest.py", "--all", "--registry", registry_path])
+    appended = _read_ledger(ctx.root)[len(before):]
+    # First-run baseline seeds (I5a) are history, not this run's verdicts.
+    history = before + [e for e in appended if e["run_at"].startswith("seed:")]
+    verdicts = {e["source_id"]: e for e in appended if not e["run_at"].startswith("seed:")}
+
+    sources = {}
+    for sid in expected:
+        last_good = next((e["rows"] for e in reversed(history) if e["source_id"] == sid and e["ok"]), None)
+        entry = verdicts.get(sid, {"ok": False, "rows": None,
+                                   "reasons": [f"no verdict recorded; the adapter errored (logs/{name}.log)"]})
+        source = {"kind": "meetings", "registry": registry, "ok": entry["ok"], "rows": entry["rows"],
+                  "last_good_rows": last_good, "reasons": entry["reasons"]}
+        capture = _latest_capture(ctx.root, sid) if source["ok"] else None
+        if capture is not None:
+            source["capture"] = {"path": capture.relative_to(ctx.root).as_posix(), "sha256": _sha256(capture)}
+        elif source["ok"]:
+            source.update(ok=False, reasons=["passed its floors but no capture file was written"])
+        sources[sid] = source
+    return sources
+
+
+def _stage_refetcher(ctx: Context, run_id: str, name: str, src: StagedSource) -> dict:
+    """Stage one refetching ingester into <run>/staged/<name>/ and floor it against data/normalized."""
+    out_dir = run_dir(ctx.root, run_id) / "staged" / name
+    step = f"stage-{name}"
+    result = _step(ctx, run_id, step, [ctx.python, f"scripts/{src.script}", *src.args, "--output-dir", str(out_dir)])
+    last_good = _count_rows(ctx.root / "data" / "normalized" / src.normalized / "nodes.jsonl")
+    source = {"kind": "staged", "ok": False, "rows": None, "last_good_rows": last_good}
+    if result.returncode != 0:
+        return {**source, "reasons": [_failure(step, result)]}
+    if not all((out_dir / f).is_file() for f in STAGED_FILES):
+        return {**source, "reasons": [f"exited 0 but staged no {' / '.join(STAGED_FILES)}"]}
+    rows = _count_rows(out_dir / "nodes.jsonl")
+    # Refetchers carry no uniform record date, so only the row-ratio floor applies.
+    verdict = evaluate(rows=rows, newest=None, last_good_rows=last_good, today=ctx.now().date(),
+                       floors=Floors(max_newest_age_days=None))
+    source.update(ok=verdict.ok, rows=rows, reasons=verdict.reasons)
+    if verdict.ok:
+        source["files"] = {f: _sha256(out_dir / f) for f in STAGED_FILES}
+    return source
+
+
+def stage(ctx: Context) -> dict:
+    run_id = ctx.now().strftime("%Y-%m-%dT%H%M%SZ")
+    try:
+        run_dir(ctx.root, run_id).mkdir(parents=True)
+    except FileExistsError:
+        raise Refused(f"run {run_id} already exists") from None
+    state = {"run_id": run_id, "status": None, "history": [], "sources": {}}
+    reasons = preflight(ctx, credentials=False)
+    state["preflight"] = {"ok": not reasons, "reasons": reasons}
+    if reasons:
+        return _fail(ctx, state, "preflight failed; nothing was fetched")
+
+    for registry in ctx.meeting_registries:
+        state["sources"].update(_stage_meetings(ctx, run_id, registry))
+    for name, src in STAGED_SOURCES.items():
+        state["sources"][name] = _stage_refetcher(ctx, run_id, name, src)
+
+    if not any(s["ok"] for s in state["sources"].values()):
+        return _fail(ctx, state, "every source failed its pull or floors; nothing to approve")
+    _set_status(ctx, state, "staged")
+    return _set_status(ctx, state, "awaiting_load_approval")
+
+
+# --- load (operator gate) ----------------------------------------------------
+
+
+def _unchanged(ctx: Context, run_id: str, sid: str, source: dict) -> bool:
+    if source["kind"] == "meetings":
+        latest = _latest_capture(ctx.root, sid)
+        return (latest is not None and latest.relative_to(ctx.root).as_posix() == source["capture"]["path"]
+                and _sha256(latest) == source["capture"]["sha256"])
+    staged = run_dir(ctx.root, run_id) / "staged" / sid
+    return all((staged / f).is_file() and _sha256(staged / f) == h for f, h in source["files"].items())
+
+
+def load(ctx: Context, run_id: str) -> dict:
+    state = read_state(ctx.root, run_id)
+    _require(state, "awaiting_load_approval", "load")
+    reasons = preflight(ctx, credentials=True)
+    if reasons:
+        raise Refused("preflight failed: " + "; ".join(reasons))
+
+    accepted = {sid: s for sid, s in state["sources"].items() if s["ok"]}
+    changed = [sid for sid, s in accepted.items() if not _unchanged(ctx, run_id, sid, s)]
+    if changed:
+        return _fail(ctx, state, f"{', '.join(changed)} changed since approval; refusing to load unreviewed bytes")
+
+    staged_root = run_dir(ctx.root, run_id) / "staged"
+    steps = [(f"load-{sid}", [ctx.python, "scripts/normalize_meetings.py", "--source", sid, "--load"])
+             for sid, source in accepted.items() if source["kind"] == "meetings"]
+    for sid in (sid for sid in STAGED_SOURCES if sid in accepted):
+        src = STAGED_SOURCES[sid]
+        for f in STAGED_FILES:  # promote: the approved output becomes the current good output
+            _copy_atomic(staged_root / sid / f, ctx.root / "data" / "normalized" / src.normalized / f)
+        steps.append((f"load-{sid}", [ctx.python, f"scripts/{src.script}", "--load-from", str(staged_root / sid)]))
+    for name, cmd in steps:
+        result = _step(ctx, run_id, name, cmd)
+        if result.returncode != 0:
+            return _fail(ctx, state, f"{name} {_failure(name, result)}")
+    _set_status(ctx, state, "loaded", loaded=list(accepted))
+
+    staging = ctx.root / STAGING
+    for name, cmd in (
+        ("reconciliation", ["bash", "scripts/refresh_reconciliation.sh"]),
+        ("export", [ctx.python, "scripts/export_live_graph.py"]),
+        ("bake", [ctx.python, "scripts/bake_public_substrate.py", "--source", "live-export",
+                  "--sqlite", str(staging / PUBLISHED_ARTIFACTS[0]), "--report", str(staging / PUBLISHED_ARTIFACTS[3])]),
+    ):
+        result = _step(ctx, run_id, name, cmd)
+        if result.returncode != 0:
+            return _fail(ctx, state, f"{name} {_failure(name, result)}")
+
+    missing = [n for n in PUBLISHED_ARTIFACTS if not (staging / n).is_file()]
+    if missing:
+        return _fail(ctx, state, f"bake exited 0 but wrote no {', '.join(missing)}")
+    report = json.loads((staging / PUBLISHED_ARTIFACTS[3]).read_text(encoding="utf-8"))
+    state["bake"] = {"totals": report.get("totals"), "sqlite": report["sqlite"],
+                     "sha256": {n: _sha256(staging / n) for n in PUBLISHED_ARTIFACTS}}
+    if not report["sqlite"]["within_budget"]:
+        return _fail(ctx, state, f"baked sqlite is {report['sqlite']['size_bytes']:,} bytes, over its "
+                                 f"{report['sqlite']['budget_bytes']:,}-byte budget")
+    return _set_status(ctx, state, "awaiting_publish_approval")
+
+
+# --- publish (operator gate) -------------------------------------------------
+
+
+def publish(ctx: Context, run_id: str) -> dict:
+    state = read_state(ctx.root, run_id)
+    _require(state, "awaiting_publish_approval", "publish")
+    staging, exports = ctx.root / STAGING, ctx.root / EXPORTS
+    approved = state["bake"]["sha256"]
+    bad = [n for n in PUBLISHED_ARTIFACTS if not (staging / n).is_file() or _sha256(staging / n) != approved[n]]
+    if bad:
+        return _fail(ctx, state, f"{', '.join(bad)} missing or changed since the approved bake; nothing published")
+
+    previous = run_dir(ctx.root, run_id) / "previous"
+    for name in PUBLISHED_ARTIFACTS:  # keep what was live, for rollback
+        if (exports / name).is_file():
+            previous.mkdir(exist_ok=True)
+            shutil.copy2(exports / name, previous / name)
+    # All four were verified above; each swap is an atomic rename within data/exports/.
+    for name in PUBLISHED_ARTIFACTS:
+        os.replace(staging / name, exports / name)
+    return _set_status(ctx, state, "published", published={
+        "sqlite_sha256": _sha256(exports / PUBLISHED_ARTIFACTS[0]),
+        "previous": previous.relative_to(ctx.root).as_posix() if previous.is_dir() else None,
+    })
+
+
+# --- CLI ---------------------------------------------------------------------
+
+
+def _summary(state: dict) -> str:
+    lines = [f"run {state['run_id']}: {state['status']}"]
+    lines += [f"  {sid}: {'ok' if s['ok'] else 'FAILED — ' + '; '.join(s['reasons'])}"
+              for sid, s in state["sources"].items()]
+    if state.get("error"):
+        lines.append(f"  error: {state['error']}")
+    return "\n".join(lines)
+
+
+def main(argv: list[str] | None = None, ctx: Context | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("stage", help="fetch, stage, floor and digest every weekly source (automated)")
+    for gate in ("load", "publish"):
+        sub.add_parser(gate, help=f"operator gate: {gate} an approved run").add_argument("run_id")
+    args = parser.parse_args(argv)
+    ctx = ctx or Context()
+
+    try:
+        if args.command == "stage":
+            state = stage(ctx)
+            print(_summary(state))
+            return 0 if state["status"] != "failed" and all(s["ok"] for s in state["sources"].values()) else 1
+        state = (load if args.command == "load" else publish)(ctx, args.run_id)
+        print(_summary(state))
+        return 1 if state["status"] == "failed" else 0
+    except Refused as exc:
+        print(f"REFUSED: {exc}", file=sys.stderr)
+        return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
