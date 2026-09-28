@@ -87,3 +87,59 @@ def test_duplicate_listings_merge_into_one_meeting_keeping_every_artifact():
     merged = merge_duplicate_meetings(listed_twice)
     assert [m["meeting_id"] for m in merged] == ["m-jun1", "m-other"]
     assert merged[0]["artifacts"]["minutes"] == {"available": True, "url": "m"}
+
+
+# --- Review P0 (2026-09-28): distinct meetings sharing date + title must never merge.
+# Reproduced on real data: Marin BOS clips on the same date with identical titles
+# collapsed onto one id, and merge_duplicate_meetings then dropped the second
+# clip's minutes/video.
+
+def test_two_native_meetings_same_date_and_title_in_one_pull_stay_distinct(tmp_path):
+    idmap = MeetingIdentityMap(tmp_path / "ids.json")
+    rows = [_m("meeting-bos-12726"), _m("meeting-bos-12727")]
+    idmap.canonicalize("marin-county-bos", rows)
+    assert [r["meeting_id"] for r in rows] == ["meeting-bos-12726", "meeting-bos-12727"]
+
+
+def test_an_ambiguous_key_never_links_later(tmp_path):
+    idmap = MeetingIdentityMap(tmp_path / "ids.json")
+    idmap.canonicalize(SRC, [_m("meeting-hash-a"), _m("meeting-hash-b")])  # ambiguous day
+    week2 = [_m("meeting-clip-1")]
+    idmap.canonicalize(SRC, week2)
+    assert week2[0]["meeting_id"] == "meeting-clip-1"
+
+
+def test_a_known_native_id_is_never_relinked_to_another_meeting(tmp_path):
+    idmap = MeetingIdentityMap(tmp_path / "ids.json")
+    idmap.canonicalize(SRC, [_m("meeting-clip-1")])
+    rows = [_m("meeting-clip-2")]  # a DIFFERENT clip, same date+title, next week
+    idmap.canonicalize(SRC, [_m("meeting-clip-1"), *rows])
+    assert rows[0]["meeting_id"] == "meeting-clip-2"
+
+
+def test_upgrade_still_links_when_unambiguous(tmp_path):
+    idmap = MeetingIdentityMap(tmp_path / "ids.json")
+    idmap.canonicalize(SRC, [_m("meeting-hash")])
+    rows = [_m("meeting-clip")]
+    idmap.canonicalize(SRC, rows)
+    assert rows[0]["meeting_id"] == "meeting-hash"
+
+
+def test_category_separates_bodies_meeting_the_same_day(tmp_path):
+    idmap = MeetingIdentityMap(tmp_path / "ids.json")
+    tc = {**_m("meeting-cm-tc", title=""), "category": "Town Council"}
+    pc = {**_m("meeting-cm-pc", title=""), "category": "Planning Commission"}
+    idmap.canonicalize("corte-madera", [tc, pc])
+    assert (tc["meeting_id"], pc["meeting_id"]) == ("meeting-cm-tc", "meeting-cm-pc")
+
+
+def test_no_merge_ever_drops_a_distinct_meetings_artifacts(tmp_path):
+    from meeting_identity import merge_duplicate_meetings
+
+    idmap = MeetingIdentityMap(tmp_path / "ids.json")
+    a = {**_m("meeting-bos-12726"), "artifacts": {"minutes": {"available": True, "url": "m1"}}}
+    b = {**_m("meeting-bos-12727"), "artifacts": {"minutes": {"available": True, "url": "m2"}}}
+    rows = [a, b]
+    idmap.canonicalize("marin-county-bos", rows)
+    merged = merge_duplicate_meetings(rows)
+    assert sorted(m["artifacts"]["minutes"]["url"] for m in merged) == ["m1", "m2"]
