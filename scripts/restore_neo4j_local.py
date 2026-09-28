@@ -321,17 +321,17 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
 
-    from neo4j import GraphDatabase
+    from neo4j_target import open_driver
 
     usage = (
-        "usage: NEO4J_URI=bolt://localhost:7687 NEO4J_USER=neo4j "
+        "usage: NEO4J_URI=bolt://localhost:7688 NEO4J_USER=neo4j "
         "NEO4J_PASSWORD=... NEO4J_DATABASE=neo4j "
         "python scripts/restore_neo4j_local.py [--export-dir "
         f"{args.export_dir}] [--wipe]"
     )
     print(usage)
 
-    driver = GraphDatabase.driver(
+    driver = open_driver(
         env["NEO4J_URI"],
         auth=(env["NEO4J_USER"], env["NEO4J_PASSWORD"]),
     )

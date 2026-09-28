@@ -7,7 +7,7 @@ import datetime as dt
 import os
 import sys
 
-from neo4j import GraphDatabase
+from neo4j_target import open_driver
 
 
 def main() -> int:
@@ -17,7 +17,7 @@ def main() -> int:
     database = os.environ.get("NEO4J_DATABASE", "neo4j")
     now = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
 
-    with GraphDatabase.driver(uri, auth=(user, password)) as driver:
+    with open_driver(uri, auth=(user, password)) as driver:
         with driver.session(database=database) as session:
             session.run(
                 "MERGE (s:_SyncState {kind: 'ingest'}) SET s.updated_at = $updated_at",

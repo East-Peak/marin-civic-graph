@@ -39,7 +39,7 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Apply the generated Cypher with cypher-shell after writing it.",
     )
-    parser.add_argument("--uri", default=os.getenv("NEO4J_URI", "bolt://localhost:7687"))
+    parser.add_argument("--uri", default=os.getenv("NEO4J_URI"))
     parser.add_argument("--user", default=os.getenv("NEO4J_USER", "neo4j"))
     parser.add_argument("--password", default=os.getenv("NEO4J_PASSWORD"))
     parser.add_argument("--database", default=os.getenv("NEO4J_DATABASE", "neo4j"))

@@ -671,7 +671,7 @@ def main() -> None:
                 validate_and_filter_edges,
             )
 
-            from neo4j import GraphDatabase
+            from neo4j_target import open_driver
 
             uri = os.getenv("NEO4J_URI")
             user = os.getenv("NEO4J_USER")
@@ -690,7 +690,7 @@ def main() -> None:
                     file=sys.stderr,
                 )
 
-            driver = GraphDatabase.driver(uri, auth=(user, password))
+            driver = open_driver(uri, auth=(user, password))
             try:
                 print("  Loading into Neo4j...")
                 neo4j_load_nodes(driver, nodes)

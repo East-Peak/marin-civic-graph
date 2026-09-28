@@ -479,7 +479,7 @@ def _load_into_neo4j(
     from load_neo4j_v2 import load_edges, load_nodes
 
     try:
-        from neo4j import GraphDatabase
+        from neo4j_target import open_driver
     except ImportError:
         print(
             "ERROR: neo4j Python driver not installed. Run: pip install neo4j",
@@ -488,7 +488,7 @@ def _load_into_neo4j(
         sys.exit(1)
 
     print(f"Connecting to Neo4j: {uri} (database={database})")
-    driver = GraphDatabase.driver(uri, auth=(user, password))
+    driver = open_driver(uri, auth=(user, password))
     try:
         driver.verify_connectivity()
         print("  Connection verified.")
@@ -559,7 +559,7 @@ def _parse_args() -> argparse.Namespace:
         default=str(OUTPUT_DIR),
         help=f"Directory to write nodes.jsonl / edges.jsonl (default: {OUTPUT_DIR})",
     )
-    parser.add_argument("--uri", default=os.getenv("NEO4J_URI", "bolt://localhost:7687"))
+    parser.add_argument("--uri", default=os.getenv("NEO4J_URI"))
     parser.add_argument("--user", default=os.getenv("NEO4J_USER", "neo4j"))
     parser.add_argument("--password", default=os.getenv("NEO4J_PASSWORD"))
     parser.add_argument("--database", default=os.getenv("NEO4J_DATABASE", "neo4j"))

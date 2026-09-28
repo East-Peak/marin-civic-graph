@@ -178,7 +178,7 @@ def load_env_file(path) -> dict:
 
 
 def main(argv=None) -> int:
-    from neo4j import GraphDatabase
+    from neo4j_target import open_driver
 
     repo_root = Path(__file__).resolve().parent.parent
     env = load_env_file(repo_root / "app" / ".env.local")
@@ -192,7 +192,7 @@ def main(argv=None) -> int:
     out_dir = repo_root / "data" / "baseline"
 
     print(f"Connecting read-only to {host} (database={database})")
-    driver = GraphDatabase.driver(uri, auth=(user, password))
+    driver = open_driver(uri, auth=(user, password))
     try:
         result = export_baseline(driver, database=database, out_dir=out_dir,
                                  host=host, timestamp=timestamp)

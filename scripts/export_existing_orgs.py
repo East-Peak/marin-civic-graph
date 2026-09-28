@@ -260,7 +260,7 @@ def export_enriched_orgs(out_path: Path, assertions_path: Path | None = None) ->
     query against the live DB, and write the surfaced keys. NEVER run by the goal
     loop (it needs NEO4J_* creds + a live graph); tested offline via
     `write_enriched_orgs` against a fake session."""
-    from neo4j import GraphDatabase  # lazy: no DB dependency at import time
+    from neo4j_target import open_driver  # lazy: no DB dependency at import time
     from identity_ledger import read_assertions
 
     _load_env_local(Path(__file__).resolve().parent.parent / "app" / ".env.local")
@@ -269,7 +269,7 @@ def export_enriched_orgs(out_path: Path, assertions_path: Path | None = None) ->
     database = os.environ.get("NEO4J_DATABASE", "neo4j")
     assertions = read_assertions(_resolve_canonical_assertions_path(assertions_path))
 
-    driver = GraphDatabase.driver(uri, auth=auth)
+    driver = open_driver(uri, auth=auth)
     try:
         with driver.session(database=database) as session:
             return write_enriched_orgs(out_path, session, assertions)
@@ -299,14 +299,14 @@ def org_ref_from_record(record: dict[str, Any]) -> dict[str, Any]:
 
 
 def export_orgs(out_path: Path) -> int:
-    from neo4j import GraphDatabase  # lazy: no DB dependency at import time
+    from neo4j_target import open_driver  # lazy: no DB dependency at import time
 
     _load_env_local(Path(__file__).resolve().parent.parent / "app" / ".env.local")
     uri = os.environ["NEO4J_URI"]
     auth = (os.environ["NEO4J_USER"], os.environ["NEO4J_PASSWORD"])
     database = os.environ.get("NEO4J_DATABASE", "neo4j")
 
-    driver = GraphDatabase.driver(uri, auth=auth)
+    driver = open_driver(uri, auth=auth)
     try:
         with driver.session(database=database) as session:
             refs = [org_ref_from_record(dict(r)) for r in session.run(ORGS_QUERY)]

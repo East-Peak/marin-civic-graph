@@ -148,7 +148,7 @@ SET s.version_id = $new_version_id,
 
 
 def main() -> int:
-    from neo4j import GraphDatabase
+    from neo4j_target import open_driver
 
     # Allow import of canonical_type from scripts/ dir.
     sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -175,7 +175,7 @@ def main() -> int:
     password = os.environ["NEO4J_PASSWORD"]
     database = os.environ.get("NEO4J_DATABASE", "neo4j")
 
-    driver = GraphDatabase.driver(uri, auth=(user, password))
+    driver = open_driver(uri, auth=(user, password))
     with driver.session(database=database) as session:
         # 1. Pull all *_pending nodes.
         node_rows = list(session.run(

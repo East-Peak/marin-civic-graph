@@ -316,7 +316,7 @@ def main() -> None:
 
         if args.load:
             from load_neo4j_v2 import load_nodes as neo4j_load_nodes, load_edges as neo4j_load_edges, apply_schema
-            from neo4j import GraphDatabase
+            from neo4j_target import open_driver
 
             uri = os.getenv("NEO4J_URI")
             user = os.getenv("NEO4J_USER")
@@ -325,7 +325,7 @@ def main() -> None:
                 print("  NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD required for --load", file=sys.stderr)
                 continue
 
-            driver = GraphDatabase.driver(uri, auth=(user, password))
+            driver = open_driver(uri, auth=(user, password))
             try:
                 print(f"  Loading into Neo4j...")
                 neo4j_load_nodes(driver, nodes)

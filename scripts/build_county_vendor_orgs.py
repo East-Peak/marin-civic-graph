@@ -246,8 +246,8 @@ def main(argv: list[str] | None = None) -> int:
         if not args.database:
             p.error("--load requires --database (never the implicit default/live DB)")
         print("OPERATOR LOAD: snapshot the DB first; confirm --database is the intended target.")
-        from neo4j import GraphDatabase  # lazy — no top-level neo4j import
-        driver = GraphDatabase.driver(args.uri, auth=(args.user, args.password))
+        from neo4j_target import open_driver  # lazy — no top-level neo4j import
+        driver = open_driver(args.uri, auth=(args.user, args.password))
         try:
             print(json.dumps(load_envelope(driver, args.out_dir, database=args.database), indent=2))
         finally:

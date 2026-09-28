@@ -71,7 +71,7 @@ def main() -> int:
         print("error: VOYAGE_API_KEY required (use --dry-run to skip)", file=sys.stderr)
         return 2
 
-    from neo4j import GraphDatabase
+    from neo4j_target import open_driver
     from canonical_type import canonical_type
 
     uri = os.environ["NEO4J_URI"]
@@ -79,7 +79,7 @@ def main() -> int:
     password = os.environ["NEO4J_PASSWORD"]
     database = os.environ.get("NEO4J_DATABASE", "neo4j")
 
-    driver = GraphDatabase.driver(uri, auth=(user, password))
+    driver = open_driver(uri, auth=(user, password))
     with driver.session(database=database) as session:
         # 1. Pull every node.
         all_rows = list(session.run(

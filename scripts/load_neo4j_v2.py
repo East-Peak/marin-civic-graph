@@ -6,7 +6,7 @@ the neo4j Python driver with batched UNWIND writes for efficiency.
 Usage:
   python scripts/load_neo4j_v2.py
   python scripts/load_neo4j_v2.py --input-dir data/projected/graph-v2 \\
-                                   --uri bolt://localhost:7687 \\
+                                   --uri bolt://localhost:7688 \\
                                    --user neo4j \\
                                    --password secret
 """
@@ -300,7 +300,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--uri",
-        default=os.getenv("NEO4J_URI", "bolt://localhost:7687"),
+        default=os.getenv("NEO4J_URI"),
         help="Neo4j connection URI",
     )
     parser.add_argument(
@@ -331,7 +331,7 @@ def main() -> None:
 
     # Lazy import so tests don't require neo4j installed in minimal envs
     try:
-        from neo4j import GraphDatabase
+        from neo4j_target import open_driver
     except ImportError:
         print("ERROR: neo4j Python driver is not installed. Run: pip install neo4j", file=sys.stderr)
         sys.exit(1)
@@ -352,7 +352,7 @@ def main() -> None:
         sys.exit(1)
 
     print(f"Connecting to Neo4j: {args.uri} (database={args.database})")
-    driver = GraphDatabase.driver(args.uri, auth=(args.user, args.password))
+    driver = open_driver(args.uri, auth=(args.user, args.password))
 
     try:
         driver.verify_connectivity()

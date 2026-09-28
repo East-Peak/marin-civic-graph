@@ -11,7 +11,8 @@ import os
 import sys
 from pathlib import Path
 
-from neo4j import GraphDatabase, Session
+from neo4j import Session
+from neo4j_target import open_driver
 
 INDEXED_TYPES = [
     "Person", "Organization", "Committee", "Decision", "Project", "Program",
@@ -315,7 +316,7 @@ def main() -> int:
     database = os.environ.get("NEO4J_DATABASE", "neo4j")
 
     total = 0
-    with GraphDatabase.driver(uri, auth=(user, password)) as driver:
+    with open_driver(uri, auth=(user, password)) as driver:
         with driver.session(database=database) as session:
             for type_name in ALL_SEARCHABLE_TYPES:
                 count = update_type(session, type_name)

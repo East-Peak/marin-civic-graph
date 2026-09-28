@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Optional
 
 import requests
-from neo4j import GraphDatabase
+from neo4j_target import open_driver
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -504,7 +504,7 @@ def extract_text(pdf_path: Path) -> Optional[str]:
 # ---------------------------------------------------------------------------
 
 def get_driver(uri: str, user: str, password: str):
-    return GraphDatabase.driver(uri, auth=(user, password))
+    return open_driver(uri, auth=(user, password))
 
 
 def fetch_meetings_needing_items(

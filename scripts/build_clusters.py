@@ -53,7 +53,7 @@ def compute_clusters(coords: np.ndarray) -> tuple[np.ndarray, dict, np.ndarray]:
 
 
 def main() -> int:
-    from neo4j import GraphDatabase
+    from neo4j_target import open_driver
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", action="store_true")
@@ -64,7 +64,7 @@ def main() -> int:
     password = os.environ["NEO4J_PASSWORD"]
     database = os.environ.get("NEO4J_DATABASE", "neo4j")
 
-    driver = GraphDatabase.driver(uri, auth=(user, password))
+    driver = open_driver(uri, auth=(user, password))
     with driver.session(database=database) as session:
         rows = list(session.run(
             "MATCH (n) WHERE n.umap_x_pending IS NOT NULL "

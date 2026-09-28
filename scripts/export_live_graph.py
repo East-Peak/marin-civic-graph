@@ -257,9 +257,9 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
 
-    from neo4j import GraphDatabase
+    from neo4j_target import open_driver
 
-    driver = GraphDatabase.driver(
+    driver = open_driver(
         env["NEO4J_URI"],
         auth=(env["NEO4J_USER"], env["NEO4J_PASSWORD"]),
     )

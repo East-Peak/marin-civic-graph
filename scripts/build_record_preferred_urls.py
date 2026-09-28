@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from neo4j import GraphDatabase
+from neo4j_target import open_driver
 
 
 # Adapter source registries keyed by adapter name; their entries use the `id` field.
@@ -204,7 +204,7 @@ def main() -> int:
     jurisdiction_index = _build_jurisdiction_index(registry)
 
     total = 0
-    with GraphDatabase.driver(uri, auth=(user, password)) as driver:
+    with open_driver(uri, auth=(user, password)) as driver:
         with driver.session(database=database) as session:
             cursor = session.run(
                 """

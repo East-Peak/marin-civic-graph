@@ -11,7 +11,7 @@ import os
 import sys
 from pathlib import Path
 
-from neo4j import GraphDatabase
+from neo4j_target import open_driver
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SCHEMA_FILE = REPO_ROOT / "registry" / "neo4j-schema.cypher"
@@ -33,7 +33,7 @@ def main() -> int:
     statements = read_statements()
     print(f"Applying {len(statements)} schema statements to {uri}")
 
-    with GraphDatabase.driver(uri, auth=(user, password)) as driver:
+    with open_driver(uri, auth=(user, password)) as driver:
         with driver.session(database=database) as session:
             for stmt in statements:
                 first_line = stmt.splitlines()[0][:80]

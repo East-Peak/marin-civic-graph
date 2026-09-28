@@ -97,7 +97,7 @@ def apply_override(*, cluster_id: int, deterministic: str,
 
 def main() -> int:
     import hashlib
-    from neo4j import GraphDatabase
+    from neo4j_target import open_driver
 
     sys.path.insert(0, str(REPO / "scripts"))
     from canonical_type import canonical_type
@@ -121,7 +121,7 @@ def main() -> int:
     password = os.environ["NEO4J_PASSWORD"]
     database = os.environ.get("NEO4J_DATABASE", "neo4j")
 
-    driver = GraphDatabase.driver(uri, auth=(user, password))
+    driver = open_driver(uri, auth=(user, password))
 
     # Name each cluster that needs renaming.
     name_rows: list[dict] = []

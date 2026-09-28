@@ -223,7 +223,7 @@ def run_verification(driver) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Verify Neo4j graph-v2 load")
-    parser.add_argument("--uri", default=os.getenv("NEO4J_URI", "bolt://localhost:7687"))
+    parser.add_argument("--uri", default=os.getenv("NEO4J_URI"))
     parser.add_argument("--user", default=os.getenv("NEO4J_USER", "neo4j"))
     parser.add_argument("--password", default=os.getenv("NEO4J_PASSWORD"))
     parser.add_argument("--database", default=os.getenv("NEO4J_DATABASE", "neo4j"))
@@ -234,12 +234,12 @@ def main() -> None:
         sys.exit(1)
 
     try:
-        from neo4j import GraphDatabase  # noqa: PLC0415
+        from neo4j_target import open_driver  # noqa: PLC0415
     except ImportError:
         print("ERROR: neo4j driver not installed. Run: pip install neo4j", file=sys.stderr)
         sys.exit(1)
 
-    driver = GraphDatabase.driver(args.uri, auth=(args.user, args.password))
+    driver = open_driver(args.uri, auth=(args.user, args.password))
     try:
         driver.verify_connectivity()
     except Exception as exc:  # noqa: BLE001

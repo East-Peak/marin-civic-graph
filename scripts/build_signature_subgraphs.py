@@ -20,7 +20,8 @@ import sys
 from pathlib import Path
 
 import yaml
-from neo4j import GraphDatabase, Session
+from neo4j import Session
+from neo4j_target import open_driver
 
 # Single source of truth for spec §3 → live AuraDB edge mapping.
 # See docs/reference/2026-04-19-live-edge-catalog.md for the catalog.
@@ -241,7 +242,7 @@ def main() -> int:
     # that should be fixed but don't block downstream steps.
     fatal_failures: list[str] = []
     warnings: list[str] = []
-    with GraphDatabase.driver(uri, auth=(user, password)) as driver:
+    with open_driver(uri, auth=(user, password)) as driver:
         with driver.session(database=database) as session:
             for entry in entries:
                 try:

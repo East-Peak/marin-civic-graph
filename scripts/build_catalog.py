@@ -9,7 +9,7 @@ import os
 import sys
 from pathlib import Path
 
-from neo4j import GraphDatabase
+from neo4j_target import open_driver
 
 ALL_TYPES = [
     "Person", "Organization", "Committee", "Seat", "SeatService", "Election",
@@ -28,7 +28,7 @@ def main() -> int:
     database = os.environ.get("NEO4J_DATABASE", "neo4j")
 
     counts: dict[str, int] = {}
-    with GraphDatabase.driver(uri, auth=(user, password)) as driver:
+    with open_driver(uri, auth=(user, password)) as driver:
         with driver.session(database=database) as session:
             for label in ALL_TYPES:
                 result = session.run(f"MATCH (n:{label}) RETURN count(n) AS c")

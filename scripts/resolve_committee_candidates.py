@@ -197,10 +197,10 @@ def find_person_match(candidate_name: str, person_lookup: dict[str, str]) -> str
 def _neo4j_driver(uri: str, user: str, password: str):
     """Return an authenticated Neo4j driver."""
     try:
-        from neo4j import GraphDatabase
+        from neo4j_target import open_driver
     except ImportError:
         sys.exit("neo4j Python driver not installed — run: pip install neo4j")
-    return GraphDatabase.driver(uri, auth=(user, password))
+    return open_driver(uri, auth=(user, password))
 
 
 def _fetch_persons(session) -> dict[str, str]:
