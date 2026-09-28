@@ -18,16 +18,17 @@ loaded and the process exits non-zero, leaving the previous output in place.
 
 Usage:
   # Fetch from Marin County (broadest — 80+ agencies)
-  python scripts/ingest_form700.py --agency cmar --load
+  python scripts/ingest_form700.py --agency cmar --output-dir /tmp/form700-cmar --load
 
   # Fetch from San Rafael
-  python scripts/ingest_form700.py --agency raf --load
+  python scripts/ingest_form700.py --agency raf --output-dir /tmp/form700-raf --load
 
   # All known agencies
   python scripts/ingest_form700.py --all --load
 
-  # Limit for testing
-  python scripts/ingest_form700.py --agency cmar --limit 50
+  # One agency or a --limit is a partial run: it must name a scratch
+  # --output-dir, never the combined data/normalized/form700
+  python scripts/ingest_form700.py --agency cmar --limit 50 --output-dir /tmp/form700-cmar
 
   # Load previously staged output without fetching (weekly runner, I5b)
   python scripts/ingest_form700.py --load-from data/ingest-runs/<run>/staged/form700
@@ -300,8 +301,10 @@ def fetch_filings_for_agency(
 
     Pages are 1-based and followed until ``hasNextPage`` is false. The pull is
     rejected (RuntimeError) if a page is empty while more are promised, the
-    page count runs away, or the items collected fall short of ``totalCount`` —
-    a partial index must never pass for a complete one.
+    page count runs away, the items collected fall short of ``totalCount``, or
+    either field is missing or mistyped: schema drift must fail the pull, never
+    switch a completeness check off. Filings with no parseable date are
+    dropped and their count is printed.
     """
     aid = agency_id.lower()
     if aid not in KNOWN_AGENCIES:
@@ -320,24 +323,40 @@ def fetch_filings_for_agency(
         payload = _post(API_URL, body)
         page_rows = parse_filings_page(payload)
         rows.extend(page_rows)
-        if total_count is None:
+        if page == 1:
             total_count = payload.get("totalCount")
-        if not payload.get("hasNextPage"):
+            if type(total_count) is not int:
+                raise RuntimeError(f"{aid}: totalCount is {total_count!r}, not an int; the API changed")
+        has_next = payload.get("hasNextPage")
+        if not isinstance(has_next, bool):
+            raise RuntimeError(f"{aid}: page {page} hasNextPage is {has_next!r}, not a bool; the API changed")
+        if not has_next:
             break
         if not page_rows:
             raise RuntimeError(f"{aid}: page {page} is empty but hasNextPage is set")
     else:
         raise RuntimeError(f"{aid}: still paging after {MAX_PAGES} pages")
 
-    if isinstance(total_count, int) and len(rows) != total_count:
+    if len(rows) != total_count:
         raise RuntimeError(
             f"{aid}: collected {len(rows)} filings but the API reports totalCount={total_count}"
         )
 
+    dated = [r for r in rows if _is_iso_date(r["filed_at"])]
+    if len(dated) < len(rows):
+        print(f"  WARNING: {aid}: dropped {len(rows) - len(dated)} undated filings")
     # Filter by floor_date in case the API ignores the date window
-    rows = [r for r in rows if r["filed_at"] >= _floor.isoformat()]
+    rows = [r for r in dated if r["filed_at"] >= _floor.isoformat()]
     print(f"  {len(rows)} filings found for {aid}")
     return rows
+
+
+def _is_iso_date(value: str) -> bool:
+    try:
+        date.fromisoformat(value)
+    except ValueError:
+        return False
+    return True
 
 
 # ---------------------------------------------------------------------------
@@ -527,7 +546,10 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--output-dir",
         default=None,
-        help=f"Directory to write nodes.jsonl / edges.jsonl (default: {OUTPUT_DIR})",
+        help=(
+            f"Directory to write nodes.jsonl / edges.jsonl (default: {OUTPUT_DIR}, "
+            "which only a full --all run without --limit may write)"
+        ),
     )
     parser.add_argument("--uri", default=os.getenv("NEO4J_URI"))
     parser.add_argument("--user", default=os.getenv("NEO4J_USER", "neo4j"))
@@ -556,6 +578,18 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
         return 1
+
+    output_dir = Path(args.output_dir) if args.output_dir else OUTPUT_DIR
+    partial = not args.all or args.limit is not None
+    if partial and output_dir.resolve() == OUTPUT_DIR.resolve():
+        # The combined index holds every agency; a one-agency or --limit run
+        # written there would silently drop the rest (and the weekly floor
+        # baseline counts it).
+        print(
+            f"ERROR: --agency/--limit is a partial run; pass an --output-dir other than {OUTPUT_DIR}.",
+            file=sys.stderr,
+        )
+        return 2
 
     agency_ids = (
         list(KNOWN_AGENCIES.keys()) if args.all else [args.agency.lower()]
@@ -596,7 +630,6 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 1
 
-    output_dir = Path(args.output_dir or OUTPUT_DIR)
     nodes_path = output_dir / "nodes.jsonl"
     edges_path = output_dir / "edges.jsonl"
     print(f"\nWriting nodes to: {nodes_path}")

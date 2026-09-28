@@ -572,3 +572,77 @@ class TestPersonIdFromName:
         """Form 700 person IDs must not collide with campaign finance person IDs."""
         pid = self.fn("Smith, John")
         assert "f700" in pid, f"Form 700 person ID must be namespaced: {pid}"
+
+
+# ---------------------------------------------------------------------------
+# Schema drift must fail loudly, never switch a completeness check off
+# ---------------------------------------------------------------------------
+
+
+def _drifted(**overrides):
+    base = paged_server(RECORDED_ITEMS, 100)
+
+    def post_json(url, body):
+        payload = base(url, body)
+        for key, value in overrides.items():
+            if value is _DROP:
+                payload.pop(key)
+            else:
+                payload[key] = value
+        return payload
+
+    return post_json
+
+
+_DROP = object()
+
+
+class TestSchemaDriftFailsLoudly:
+    @pytest.mark.parametrize("value", [_DROP, "4", None, True], ids=["missing", "string", "null", "bool"])
+    def test_total_count_must_be_an_int(self, value):
+        with pytest.raises(RuntimeError, match="totalCount"):
+            fetch_filings_for_agency("ross", post_json=_drifted(totalCount=value))
+
+    @pytest.mark.parametrize("value", [_DROP, "false", None, 0], ids=["missing", "string", "null", "int"])
+    def test_has_next_page_must_be_a_bool(self, value):
+        with pytest.raises(RuntimeError, match="hasNextPage"):
+            fetch_filings_for_agency("ross", post_json=_drifted(hasNextPage=value))
+
+    def test_undated_filings_are_counted_and_reported(self, capsys):
+        undated = [dict(RECORDED_ITEMS[0], filingDate=None), dict(RECORDED_ITEMS[1], filingDate="")]
+        rows = fetch_filings_for_agency("ross", post_json=paged_server(RECORDED_ITEMS + undated, 100))
+        assert len(rows) == len(RECORDED_ITEMS)
+        assert "dropped 2 undated filings" in capsys.readouterr().out
+
+
+# ---------------------------------------------------------------------------
+# A partial run never overwrites the combined output
+# ---------------------------------------------------------------------------
+
+
+class TestPartialRunsNeedAnExplicitOutputDir:
+    @pytest.fixture
+    def combined(self, monkeypatch, prior_output, no_load):
+        out, snapshot = prior_output
+        monkeypatch.setattr(ingest_form700, "OUTPUT_DIR", out)
+        calls: list = []
+        monkeypatch.setattr(ingest_form700, "_post_json",
+                            lambda url, body: calls.append(body) or paged_server(RECORDED_ITEMS, 100)(url, body))
+        return out, snapshot, calls
+
+    @pytest.mark.parametrize("argv", [["--agency", "ross"], ["--all", "--limit", "5"]], ids=["agency", "limit"])
+    def test_partial_run_refuses_the_default_combined_dir(self, combined, argv):
+        out, snapshot, calls = combined
+        assert main(argv) != 0
+        assert calls == []  # refused before fetching anything
+        assert {p.name: p.read_bytes() for p in out.iterdir()} == snapshot
+
+    def test_partial_run_refuses_the_combined_dir_named_explicitly(self, combined):
+        out, snapshot, calls = combined
+        assert main(["--agency", "ross", "--output-dir", str(out)]) != 0
+        assert calls == [] and {p.name: p.read_bytes() for p in out.iterdir()} == snapshot
+
+    def test_full_run_still_writes_the_combined_dir(self, combined):
+        out, snapshot, _ = combined
+        assert main(["--all"]) == 0
+        assert {p.name: p.read_bytes() for p in out.iterdir()} != snapshot
