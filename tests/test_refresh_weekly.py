@@ -127,10 +127,10 @@ def _loaded(ctx: rw.Context) -> None:
 
 
 def test_status_machine_allows_the_documented_path_only():
-    path = [None, "staged", "awaiting_load_approval", "loaded", "awaiting_publish_approval", "published"]
+    path = [None, "staging", "staged", "awaiting_load_approval", "loaded", "awaiting_publish_approval", "published"]
     for current, nxt in zip(path, path[1:]):
         rw.check_transition(current, nxt)
-    for current in path[:-1]:
+    for current in path[1:-1]:
         rw.check_transition(current, "failed")
     with pytest.raises(rw.Refused):
         rw.check_transition("awaiting_load_approval", "published")
@@ -148,7 +148,7 @@ def test_stage_captures_meetings_and_stages_refetchers_then_awaits_load_approval
 
     state = _state(root)
     assert state["status"] == "awaiting_load_approval"
-    assert [h["status"] for h in state["history"]] == ["staged", "awaiting_load_approval"]
+    assert [h["status"] for h in state["history"]] == ["staging", "staged", "awaiting_load_approval"]
     assert world.calls[0] == ["py", "scripts/ingest.py", "--all", "--registry", "registry/granicus-sources.yaml"]
     run_dir = root / f"data/ingest-runs/{RUN}"
     for name, script in STAGED_SCRIPTS.items():
@@ -222,6 +222,33 @@ def test_preflight_failure_fails_the_run_before_any_step(ctx, world, root, env_p
     assert state["status"] == "failed"
     assert reason in " ".join(state["preflight"]["reasons"])
     assert world.calls == []
+
+
+def test_stage_records_the_run_as_staging_before_its_first_step(ctx, world, root):
+    seen = []
+    ctx.runner = lambda cmd, cwd, env: (seen.append(_state(root)["status"]), world(cmd, cwd, env))[1]
+
+    _staged(ctx)
+
+    assert seen[0] == "staging"
+
+
+def test_a_crash_inside_stage_fails_the_run_visibly_and_status_says_why(ctx, root, capsys):
+    def crash(cmd, cwd, env):
+        raise OSError("network stack gone")
+    ctx.runner = crash
+
+    assert rw.main(["stage"], ctx) == 1
+
+    state = _state(root)
+    assert state["status"] == "failed"
+    assert [h["status"] for h in state["history"]] == ["staging", "failed"]
+    assert "stage crashed: OSError: network stack gone" in state["error"]
+    assert "stage crashed" in _digest(root)
+    capsys.readouterr()
+    assert rw.main(["status"], ctx) == 0
+    out = capsys.readouterr().out
+    assert f"run {RUN}: failed" in out and "error: stage crashed: OSError: network stack gone" in out
 
 
 def test_a_run_where_every_source_failed_is_failed(ctx, world, root):

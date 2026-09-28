@@ -23,6 +23,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import traceback
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -58,13 +59,15 @@ STAGED_SOURCES = {
     "courtlistener": StagedSource("ingest_courtlistener_cases.py", (), "courtlistener-cases"),
 }
 
-# staged → awaiting_load_approval → loaded → awaiting_publish_approval → published; any live state → failed.
+# staging → staged → awaiting_load_approval → loaded → awaiting_publish_approval → published.
+# `staging` is written before the first step, so a run that dies is never invisible.
 TRANSITIONS = {
-    None: "staged",
-    "staged": "awaiting_load_approval",
-    "awaiting_load_approval": "loaded",
-    "loaded": "awaiting_publish_approval",
-    "awaiting_publish_approval": "published",
+    None: ("staging",),
+    "staging": ("staged", "failed"),
+    "staged": ("awaiting_load_approval", "failed"),
+    "awaiting_load_approval": ("loaded", "failed"),
+    "loaded": ("awaiting_publish_approval", "failed"),
+    "awaiting_publish_approval": ("published", "failed"),
 }
 
 
@@ -73,7 +76,7 @@ class Refused(Exception):
 
 
 def check_transition(current: str | None, new: str) -> None:
-    if current in TRANSITIONS and new in (TRANSITIONS[current], "failed"):
+    if new in TRANSITIONS.get(current, ()):
         return
     raise Refused(f"illegal status transition {current} -> {new}")
 
@@ -274,6 +277,16 @@ def stage(ctx: Context) -> dict:
     except FileExistsError:
         raise Refused(f"run {run_id} already exists") from None
     state = {"run_id": run_id, "status": None, "history": [], "sources": {}}
+    _set_status(ctx, state, "staging")
+    try:
+        return _stage(ctx, state)
+    except Exception as exc:  # a crash must end in a visible, failed run, never a bare run dir
+        traceback.print_exc()
+        return _fail(ctx, state, f"stage crashed: {type(exc).__name__}: {exc}")
+
+
+def _stage(ctx: Context, state: dict) -> dict:
+    run_id = state["run_id"]
     reasons = preflight(ctx, credentials=False)
     state["preflight"] = {"ok": not reasons, "reasons": reasons}
     if reasons:
@@ -380,6 +393,7 @@ def publish(ctx: Context, run_id: str) -> dict:
 # --- digest and status -------------------------------------------------------
 
 NEXT_STEP = {
+    "staging": "Staging is in progress. If no run holds data/ingest-runs/.lock, it died mid-stage.",
     "awaiting_load_approval": "Approve the passing sources: `python scripts/refresh_weekly.py load {run_id}`. "
                               "Failed sources are skipped; their previous good data stays authoritative.",
     "awaiting_publish_approval": "Publish: `python scripts/refresh_weekly.py publish {run_id}` swaps the staged "
