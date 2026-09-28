@@ -61,11 +61,14 @@ STAGED_SOURCES = {
 
 # staging → staged → awaiting_load_approval → loaded → awaiting_publish_approval → published.
 # `staging` is written before the first step, so a run that dies is never invisible.
+# `load_failed`: a load step stopped partway. Nothing was promoted into data/normalized,
+# and `load` may be retried (loads are MERGE-idempotent).
 TRANSITIONS = {
     None: ("staging",),
     "staging": ("staged", "failed"),
     "staged": ("awaiting_load_approval", "failed"),
-    "awaiting_load_approval": ("loaded", "failed"),
+    "awaiting_load_approval": ("loaded", "load_failed", "failed"),
+    "load_failed": ("loaded", "load_failed", "failed"),
     "loaded": ("awaiting_publish_approval", "failed"),
     "awaiting_publish_approval": ("published", "failed"),
 }
@@ -172,9 +175,9 @@ def _fail(ctx: Context, state: dict, error: str) -> dict:
     return _set_status(ctx, state, "failed", error=error)
 
 
-def _require(state: dict, status: str, action: str) -> None:
-    if state["status"] != status:
-        raise Refused(f"run {state['run_id']} is {state['status']}; {action} needs {status}")
+def _require(state: dict, action: str, *statuses: str) -> None:
+    if state["status"] not in statuses:
+        raise Refused(f"run {state['run_id']} is {state['status']}; {action} needs {' or '.join(statuses)}")
 
 
 def _step(ctx: Context, run_id: str, name: str, cmd: list[str]) -> Result:
@@ -315,9 +318,23 @@ def _unchanged(ctx: Context, run_id: str, sid: str, source: dict) -> bool:
     return all((staged / f).is_file() and _sha256(staged / f) == h for f, h in source["files"].items())
 
 
+def _newer_loaded_run(root: Path, run_id: str) -> str | None:
+    """The newest run after `run_id` whose data reached the graph, if any (run ids sort by time)."""
+    for path in sorted((root / RUNS_DIR).glob("*/state.json"), reverse=True):
+        if path.parent.name <= run_id:
+            return None
+        if {h["status"] for h in json.loads(path.read_text(encoding="utf-8"))["history"]} & {"loaded", "load_failed"}:
+            return path.parent.name
+    return None
+
+
 def load(ctx: Context, run_id: str) -> dict:
     state = read_state(ctx.root, run_id)
-    _require(state, "awaiting_load_approval", "load")
+    _require(state, "load", "awaiting_load_approval", "load_failed")
+    newer = _newer_loaded_run(ctx.root, run_id)
+    if newer:
+        raise Refused(f"run {run_id} is older than {newer}, which was already loaded; loading it would roll "
+                      "data/normalized and the graph back. Stage a fresh run instead.")
     reasons = preflight(ctx, credentials=True)
     if reasons:
         raise Refused("preflight failed: " + "; ".join(reasons))
@@ -327,19 +344,31 @@ def load(ctx: Context, run_id: str) -> dict:
     if changed:
         return _fail(ctx, state, f"{', '.join(changed)} changed since approval; refusing to load unreviewed bytes")
 
+    # Load from exactly the approved bytes: refetchers from their hashed staged dir. normalize_meetings
+    # can only read the latest capture, so the run lock keeps it the approved one and each meeting
+    # load is re-verified after it runs.
     staged_root = run_dir(ctx.root, run_id) / "staged"
-    steps = [(f"load-{sid}", [ctx.python, "scripts/normalize_meetings.py", "--source", sid, "--load"])
+    refetchers = [sid for sid in STAGED_SOURCES if sid in accepted]
+    steps = [(sid, [ctx.python, "scripts/normalize_meetings.py", "--source", sid, "--load"])
              for sid, source in accepted.items() if source["kind"] == "meetings"]
-    for sid in (sid for sid in STAGED_SOURCES if sid in accepted):
-        src = STAGED_SOURCES[sid]
-        for f in STAGED_FILES:  # promote: the approved output becomes the current good output
-            _copy_atomic(staged_root / sid / f, ctx.root / "data" / "normalized" / src.normalized / f)
-        steps.append((f"load-{sid}", [ctx.python, f"scripts/{src.script}", "--load-from", str(staged_root / sid)]))
-    for name, cmd in steps:
-        result = _step(ctx, run_id, name, cmd)
-        if result.returncode != 0:
-            return _fail(ctx, state, f"{name} {_failure(name, result)}")
-    _set_status(ctx, state, "loaded", loaded=list(accepted))
+    steps += [(sid, [ctx.python, f"scripts/{STAGED_SOURCES[sid].script}", "--load-from", str(staged_root / sid)])
+              for sid in refetchers]
+    try:
+        for sid, cmd in steps:
+            result = _step(ctx, run_id, f"load-{sid}", cmd)
+            if result.returncode != 0:
+                return _set_status(ctx, state, "load_failed", error=f"load-{sid} {_failure(f'load-{sid}', result)}; "
+                                   "nothing was promoted into data/normalized")
+            if not _unchanged(ctx, run_id, sid, accepted[sid]):
+                return _fail(ctx, state, f"{sid} changed while loading; the graph may hold unreviewed bytes. "
+                                         "Stage a fresh run.")
+        for sid in refetchers:  # promote only once every load succeeded
+            for f in STAGED_FILES:
+                _copy_atomic(staged_root / sid / f, ctx.root / "data" / "normalized" / STAGED_SOURCES[sid].normalized / f)
+    except Exception as exc:
+        traceback.print_exc()
+        return _set_status(ctx, state, "load_failed", error=f"load crashed: {type(exc).__name__}: {exc}")
+    _set_status(ctx, state, "loaded", loaded=list(accepted), error=None)
 
     staging = ctx.root / STAGING
     for name, cmd in (
@@ -369,7 +398,7 @@ def load(ctx: Context, run_id: str) -> dict:
 
 def publish(ctx: Context, run_id: str) -> dict:
     state = read_state(ctx.root, run_id)
-    _require(state, "awaiting_publish_approval", "publish")
+    _require(state, "publish", "awaiting_publish_approval")
     staging, exports = ctx.root / STAGING, ctx.root / EXPORTS
     approved = state["bake"]["sha256"]
     bad = [n for n in PUBLISHED_ARTIFACTS if not (staging / n).is_file() or _sha256(staging / n) != approved[n]]
@@ -396,6 +425,8 @@ NEXT_STEP = {
     "staging": "Staging is in progress. If no run holds data/ingest-runs/.lock, it died mid-stage.",
     "awaiting_load_approval": "Approve the passing sources: `python scripts/refresh_weekly.py load {run_id}`. "
                               "Failed sources are skipped; their previous good data stays authoritative.",
+    "load_failed": "The load stopped partway and promoted nothing into data/normalized. Fix the cause, then "
+                   "retry: `python scripts/refresh_weekly.py load {run_id}`.",
     "awaiting_publish_approval": "Publish: `python scripts/refresh_weekly.py publish {run_id}` swaps the staged "
                                  "artifact into data/exports/. It does not deploy; deploying is a separate decision.",
     "published": "Published. Deploying is a separate launch decision.",
@@ -492,7 +523,7 @@ def main(argv: list[str] | None = None, ctx: Context | None = None) -> int:
                 return 0 if state["status"] != "failed" and all(s["ok"] for s in state["sources"].values()) else 1
             state = (load if args.command == "load" else publish)(ctx, args.run_id)
         _report(ctx, state)
-        return 1 if state["status"] == "failed" else 0
+        return 1 if state["status"] in ("failed", "load_failed") else 0
     except (Refused, RunLockHeld) as exc:
         print(f"REFUSED: {exc}", file=sys.stderr)
         return 2

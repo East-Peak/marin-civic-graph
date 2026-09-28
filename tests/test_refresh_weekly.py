@@ -130,6 +130,9 @@ def test_status_machine_allows_the_documented_path_only():
     path = [None, "staging", "staged", "awaiting_load_approval", "loaded", "awaiting_publish_approval", "published"]
     for current, nxt in zip(path, path[1:]):
         rw.check_transition(current, nxt)
+    for current, nxt in (("awaiting_load_approval", "load_failed"), ("load_failed", "load_failed"),
+                         ("load_failed", "loaded"), ("load_failed", "failed")):
+        rw.check_transition(current, nxt)  # a load that stops partway stays retryable
     for current in path[1:-1]:
         rw.check_transition(current, "failed")
     with pytest.raises(rw.Refused):
@@ -262,7 +265,7 @@ def test_a_run_where_every_source_failed_is_failed(ctx, world, root):
 # --- load --------------------------------------------------------------------
 
 
-@pytest.mark.parametrize("status", ["staged", "loaded", "awaiting_publish_approval", "published", "failed"])
+@pytest.mark.parametrize("status", ["staging", "staged", "loaded", "awaiting_publish_approval", "published", "failed"])
 def test_load_refuses_a_run_in_the_wrong_state(ctx, world, root, status):
     _staged(ctx)
     state = _state(root)
@@ -332,6 +335,88 @@ def test_load_fails_the_run_if_approved_bytes_changed(ctx, world, root, tamper):
     assert state["status"] == "failed"
     assert "changed since approval" in state["error"]
     assert world.calls == []
+
+
+def _at(ctx: rw.Context, when: datetime) -> rw.Context:
+    return rw.Context(root=ctx.root, runner=ctx.runner, env=ctx.env, python=ctx.python, now=lambda: when,
+                      free_bytes=ctx.free_bytes, meeting_registries=ctx.meeting_registries)
+
+
+def _permit_rows(root: Path) -> int:
+    return (root / "data/normalized/marin-county-permits/nodes.jsonl").read_text().count("\n")
+
+
+NEXT_WEEK = datetime(2026, 10, 5, 5, 0, 0, tzinfo=timezone.utc)
+NEXT_RUN = "2026-10-05T050000Z"
+
+
+def test_loading_a_run_older_than_one_already_loaded_is_refused(ctx, world, root):
+    world.staged_rows = dict.fromkeys(world.staged_rows, 11)
+    _staged(ctx)
+    world.meetings = {sid: (rows, ["pull returned 0 rows"]) for sid, (rows, _) in world.meetings.items()}
+    world.staged_rows = dict.fromkeys(world.staged_rows, 14)
+    assert rw.main(["stage"], _at(ctx, NEXT_WEEK)) == 1  # meetings failed, so this run's captures stay latest
+    assert rw.main(["load", NEXT_RUN], ctx) == 0
+    world.calls.clear()
+
+    assert rw.main(["load", RUN], ctx) == 2
+
+    assert _permit_rows(root) == 14 and world.calls == []
+    assert _state(root)["status"] == "awaiting_load_approval"
+
+
+def test_a_newer_run_that_is_only_staged_does_not_block_an_older_load(ctx, root):
+    _staged(ctx)
+    assert rw.main(["stage"], _at(ctx, NEXT_WEEK)) == 0
+
+    assert rw.main(["load", RUN], ctx) == 0
+
+
+@pytest.mark.parametrize("how", ["exit", "crash"])
+def test_a_load_that_stops_partway_promotes_nothing_and_can_be_retried(ctx, world, root, how):
+    world.staged_rows = dict.fromkeys(world.staged_rows, 12)
+    _staged(ctx)
+    if how == "exit":
+        world.exit_codes["ingest_form700.py"] = 1  # after the meetings loaded, before courtlistener
+    else:
+        ctx.runner = lambda cmd, cwd, env: (_ for _ in ()).throw(OSError("bolt reset")) \
+            if "ingest_form700.py" in cmd[1] else world(cmd, cwd, env)
+
+    assert rw.main(["load", RUN], ctx) == 1
+
+    state = _state(root)
+    assert state["status"] == "load_failed"
+    assert ("load-form700 exited 1" if how == "exit" else "load crashed: OSError: bolt reset") in state["error"]
+    assert _permit_rows(root) == 10  # nothing was promoted into data/normalized
+    assert f"refresh_weekly.py load {RUN}" in _digest(root)
+
+    world.exit_codes.clear()
+    ctx.runner = world
+    assert rw.main(["load", RUN], ctx) == 0
+
+    state = _state(root)
+    assert state["status"] == "awaiting_publish_approval" and not state.get("error")
+    assert _permit_rows(root) == 12
+    assert [h["status"] for h in state["history"]][-3:] == ["load_failed", "loaded", "awaiting_publish_approval"]
+
+
+def test_a_capture_that_changes_while_it_loads_fails_the_run(ctx, world, root):
+    _staged(ctx)
+    world.calls.clear()
+    capture = root / "data/extracted/a/2026-09-28.json"
+
+    def racing(cmd, cwd, env):
+        if cmd[1] == "scripts/normalize_meetings.py":
+            capture.write_text('{"meeting_count": 99}')  # a writer that ignored the run lock
+        return world(cmd, cwd, env)
+    ctx.runner = racing
+
+    assert rw.main(["load", RUN], ctx) == 1
+
+    state = _state(root)
+    assert state["status"] == "failed" and "a changed while loading" in state["error"]
+    assert _permit_rows(root) == 10
+    assert world.scripts() == ["normalize_meetings.py"]  # stopped at once
 
 
 def test_a_failed_load_step_fails_the_run_and_stops(ctx, world, root):
