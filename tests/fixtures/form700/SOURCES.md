@@ -72,3 +72,13 @@ Kept deliberately — parsers must handle them, not normalize them away:
 - Spouse interests appear with explicit markers (216307037: A-2 position
   "Managing Director (spouse)", Schedule C "Spouse's or registered domestic
   partner's income" box).
+
+## `searchfilings/` — Form 700 index API responses
+
+Two verbatim responses from `POST https://netfile.com/api/public/sites/api/searchfilings`
+(curl-style User-Agent; the WAF 403s urllib's default), captured once on 2026-09-28
+for `tests/test_ingest_form700.py`. Body: `{"aid": "ROSS", "searchFilerName": "",
+"searchStatementType": null, "afterFilingDate": "2019-01-01", "beforeFilingDate":
+"2026-09-28", "currentPage": N, "pageSize": 3}` with N = 1 (`ross-page-1.json`) and
+N = 60, the last page (`ross-page-60.json`). Items carry filer names and
+positions of Town of Ross officials (public record) and no addresses.

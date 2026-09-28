@@ -1,21 +1,29 @@
 #!/usr/bin/env python3
-"""ingest_form700.py — NetFile /pub/ Form 700 ingestion for Marin Civic Graph.
+"""ingest_form700.py — NetFile Form 700 index ingestion for Marin Civic Graph.
 
-Fetches the Form 700 filing index from any NetFile /pub/ portal (identified by
-AID parameter) and produces Filing nodes with FILED_BY edges to Person nodes
-and IN_JURISDICTION edges to Place nodes.
+Pages the Form 700 (Statement of Economic Interests) filing index for a NetFile
+agency out of NetFile's public JSON API and produces Filing nodes with FILED_BY
+edges to Person nodes and IN_JURISDICTION edges to Place nodes.
 
-All nine Marin-area portals use the same ASP.NET form-post pattern with only
-the AID differing.
+NetFile replatformed its public portal into a Vue SPA (~2026): the old
+``public.netfile.com/pub/?aid=…`` ASP.NET pages now 301 to
+``netfile.com/public/<AID>/sei`` and a scrape of them parses zero rows. The SPA
+reads ``POST https://netfile.com/api/public/sites/api/searchfilings`` (JSON, no
+captcha), which is what this module calls. The WAF answers 403 to urllib's
+default User-Agent, so requests carry a curl-style one.
+
+A run never makes data worse: if any agency's pull fails, comes back empty, or
+returns fewer items than the API's own ``totalCount``, nothing is written or
+loaded and the process exits non-zero, leaving the previous output in place.
 
 Usage:
-  # Fetch from Marin County portal (broadest — 80+ agencies)
+  # Fetch from Marin County (broadest — 80+ agencies)
   python scripts/ingest_form700.py --agency cmar --load
 
   # Fetch from San Rafael
   python scripts/ingest_form700.py --agency raf --load
 
-  # All known portals
+  # All known agencies
   python scripts/ingest_form700.py --all --load
 
   # Limit for testing
@@ -29,8 +37,9 @@ import json
 import os
 import re
 import sys
-import urllib.parse
+import tempfile
 import urllib.request
+from collections.abc import Callable
 from datetime import date, datetime
 from html import unescape
 from pathlib import Path
@@ -42,80 +51,60 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = ROOT / "data" / "normalized" / "form700"
-USER_AGENT = "Mozilla/5.0"
+API_URL = "https://netfile.com/api/public/sites/api/searchfilings"
+USER_AGENT = "curl/8.7.1"  # the WAF 403s urllib's default UA
+PAGE_SIZE = 100
+MAX_PAGES = 1_000  # runaway guard: cmar, the largest agency, is ~70 pages
 DEFAULT_FLOOR_DATE = date(2019, 1, 1)
 
-# All known Marin-area NetFile /pub/ portals; key = AID (case-insensitive)
+# All known Marin-area NetFile agencies; key = AID (case-insensitive)
 KNOWN_AGENCIES: dict[str, dict[str, str]] = {
     "cmar": {
         "label": "Marin County",
         "place_id": "place-marin-county",
-        "url": "https://public.netfile.com/pub/?aid=cmar",
+        "url": "https://netfile.com/public/CMAR/sei",
     },
     "raf": {
         "label": "City of San Rafael",
         "place_id": "place-san-rafael",
-        "url": "https://public.netfile.com/pub/?AID=raf",
+        "url": "https://netfile.com/public/RAF/sei",
     },
     "nvo": {
         "label": "City of Novato",
         "place_id": "place-novato",
-        "url": "https://public.netfile.com/pub/?AID=NVO",
+        "url": "https://netfile.com/public/NVO/sei",
     },
     "sau": {
         "label": "City of Sausalito",
         "place_id": "place-sausalito",
-        "url": "https://public.netfile.com/pub/?AID=SAU",
+        "url": "https://netfile.com/public/SAU/sei",
     },
     "tib": {
         "label": "Town of Tiburon",
         "place_id": "place-tiburon",
-        "url": "https://public.netfile.com/pub/?AID=tib",
+        "url": "https://netfile.com/public/TIB/sei",
     },
     "ctm": {
         "label": "Town of Corte Madera",
         "place_id": "place-corte-madera",
-        "url": "https://public.netfile.com/pub/?aid=ctm",
+        "url": "https://netfile.com/public/CTM/sei",
     },
     "lark": {
         "label": "City of Larkspur",
         "place_id": "place-larkspur",
-        "url": "https://public.netfile.com/pub/?aid=LARK",
+        "url": "https://netfile.com/public/LARK/sei",
     },
     "smo": {
         "label": "Town of San Anselmo",
         "place_id": "place-san-anselmo",
-        "url": "https://public.netfile.com/pub/?aid=SMO",
+        "url": "https://netfile.com/public/SMO/sei",
     },
     "ross": {
         "label": "Town of Ross",
         "place_id": "place-ross",
-        "url": "https://public.netfile.com/pub/?AID=ROSS",
+        "url": "https://netfile.com/public/ROSS/sei",
     },
 }
-
-# ---------------------------------------------------------------------------
-# Regex patterns (compiled once)
-# ---------------------------------------------------------------------------
-
-INPUT_PATTERN = re.compile(
-    r'<input[^>]*name="(?P<name>[^"]+)"[^>]*?(?:value="(?P<value>[^"]*)")?[^>]*>',
-    re.I,
-)
-
-# Match <tr> rows where all five leading cells are <td> (not <th>), followed
-# by optional extra cells.  The date cell must be MM/DD/YYYY.
-ROW_PATTERN = re.compile(
-    r"<tr>\s*"
-    r"<td>(?P<filer_name>[^<]+)</td>\s*"
-    r"<td>(?P<filed_at>\d{1,2}/\d{1,2}/\d{4})</td>\s*"
-    r"<td>(?P<statement_type>[^<]*)</td>\s*"
-    r"<td>(?P<job_title>[^<]*)</td>\s*"
-    r"<td>(?P<department>[^<]*)</td>"
-    r"(?P<tail>.*?)"
-    r"</tr>",
-    re.I | re.S,
-)
 
 # ---------------------------------------------------------------------------
 # Pure helper functions (tested directly)
@@ -151,35 +140,32 @@ def person_id_from_name(raw_name: str) -> str:
     return f"person-f700-{slugify(normalized)}"
 
 
-def parse_filing_rows(html: str) -> list[dict[str, Any]]:
-    """Parse HTML table rows from a NetFile /pub/ Form 700 export.
+def _text(value: Any) -> str:
+    return "" if value is None else str(value).strip()
 
-    Each matching <tr> with five leading <td> cells (name, date, type, title,
-    dept) becomes one row dict.  Header rows using <th> are skipped by the
-    regex.  HTML entities in cell text are decoded.
 
-    Returns a list of row dicts with keys:
-        filer_name, filed_at (ISO YYYY-MM-DD), statement_type,
-        job_title, department
+def parse_filings_page(payload: Any) -> list[dict[str, Any]]:
+    """Map one ``searchfilings`` response page to row dicts.
+
+    Rows have the shape build_filing_node() consumes — filer_name, filed_at
+    (ISO YYYY-MM-DD), statement_type, job_title, department — the same shape
+    the retired HTML export parser produced, so Filing ids are unchanged.
+    ``filingDate`` is agency-local with no zone, so its date part is taken
+    as printed. A payload without an ``items`` list raises ValueError.
     """
-    rows: list[dict[str, Any]] = []
-    for m in ROW_PATTERN.finditer(html):
-        filer_name = unescape(m.group("filer_name").strip())
-        raw_date = m.group("filed_at").strip()
-        filed_dt = datetime.strptime(raw_date, "%m/%d/%Y").date()
-        statement_type = unescape(m.group("statement_type").strip())
-        job_title = unescape(m.group("job_title").strip())
-        department = unescape(m.group("department").strip())
-        rows.append(
-            {
-                "filer_name": filer_name,
-                "filed_at": filed_dt.isoformat(),
-                "statement_type": statement_type,
-                "job_title": job_title,
-                "department": department,
-            }
-        )
-    return rows
+    items = payload.get("items") if isinstance(payload, dict) else None
+    if not isinstance(items, list):
+        raise ValueError("searchfilings response has no 'items' list")
+    return [
+        {
+            "filer_name": _text(item.get("filerName")),
+            "filed_at": _text(item.get("filingDate"))[:10],
+            "statement_type": _text(item.get("statementType")),
+            "job_title": _text(item.get("positionName")),
+            "department": _text(item.get("departmentName")),
+        }
+        for item in items
+    ]
 
 
 def build_filing_node(
@@ -260,119 +246,89 @@ def build_in_jurisdiction_edge(filing_id: str, place_id: str) -> dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
-# HTTP helpers (network-dependent; monkey-patchable for tests)
+# NetFile JSON API (network-dependent; injectable for tests)
 # ---------------------------------------------------------------------------
 
-
-def _fetch_html(url: str, data: dict[str, str] | None = None) -> str:
-    """GET or POST a URL and return the response body as a string."""
-    headers: dict[str, str] = {"User-Agent": USER_AGENT}
-    encoded = urllib.parse.urlencode(data).encode() if data is not None else None
-    if encoded is not None:
-        headers["Content-Type"] = "application/x-www-form-urlencoded"
-    req = urllib.request.Request(url, data=encoded, headers=headers)
-    with urllib.request.urlopen(req, timeout=120) as resp:
-        return resp.read().decode("utf-8", "ignore")
+PostJson = Callable[[str, dict[str, Any]], Any]
 
 
-def _extract_inputs(html: str) -> dict[str, str]:
-    """Extract all <input> field name/value pairs from an HTML page."""
-    inputs: dict[str, str] = {}
-    for m in INPUT_PATTERN.finditer(html):
-        inputs[m.group("name")] = unescape(m.group("value") or "")
-    return inputs
-
-
-def _build_export_form(
-    initial_html: str,
-    floor_date: date,
-    ceiling_date: date,
-) -> dict[str, str]:
-    """Build the ASP.NET form-post payload for the Form 700 export.
-
-    Starts from all hidden/state inputs on the portal page, then overrides
-    with the Form 700 search parameters.
-    """
-    inputs = _extract_inputs(initial_html)
-    # Keep ASP.NET state fields and any known search/grid fields
-    form: dict[str, str] = {
-        key: value
-        for key, value in inputs.items()
-        if key.startswith("__")
-        or "ClientState" in key
-        or "calendar_" in key
-        or "DropDown" in key
-        or "searchSD" in key
-        or "searchED" in key
-        or "tbFilerName" in key
-        or "searchJob" in key
-        or "SEIDocumentListGrid" in key
-        or "listExcelFormat" in key
-    }
-    form.update(
-        {
-            "ctl00$phBody$filingSearch$tbFilerName": "",
-            "ctl00$phBody$filingSearch$searchJob": "",
-            "ctl00$phBody$filingSearch$StatementTypeDropDown": "All",
-            "ctl00$phBody$filingSearch$StatementTypeDropDown_Input": "All",
-            "ctl00$phBody$filingSearch$FilerTypeDropDown": "700",
-            "ctl00$phBody$filingSearch$FilerTypeDropDown_Input": "700 Filers Only",
-            "ctl00$phBody$filingSearch$searchSD": floor_date.isoformat(),
-            "ctl00$phBody$filingSearch$searchSD$dateInput": (
-                f"{floor_date.month}/{floor_date.day}/{floor_date.year}"
-            ),
-            "ctl00$phBody$filingSearch$searchED": ceiling_date.isoformat(),
-            "ctl00$phBody$filingSearch$searchED$dateInput": (
-                f"{ceiling_date.month}/{ceiling_date.day}/{ceiling_date.year}"
-            ),
-            "ctl00$phBody$filingSearch$listExcelFormat": "2007",
-            "ctl00$phBody$filingSearch$btnExportExcel2": "Export",
-        }
+def _post_json(url: str, body: dict[str, Any]) -> Any:
+    """POST a JSON body and return the decoded JSON response."""
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(body).encode(),
+        method="POST",
+        headers={
+            "User-Agent": USER_AGENT,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
     )
-    return form
+    with urllib.request.urlopen(req, timeout=120) as resp:
+        return json.loads(resp.read().decode("utf-8"))
 
 
-# ---------------------------------------------------------------------------
-# Per-agency fetch pipeline
-# ---------------------------------------------------------------------------
+def build_search_body(
+    agency_id: str, floor_date: date, ceiling_date: date, *, page: int, page_size: int
+) -> dict[str, Any]:
+    """The searchfilings request body: every statement type, one date window, one page."""
+    return {
+        "aid": agency_id.upper(),
+        "searchFilerName": "",
+        "searchStatementType": None,
+        "afterFilingDate": floor_date.isoformat(),
+        "beforeFilingDate": ceiling_date.isoformat(),
+        "currentPage": page,
+        "pageSize": page_size,
+    }
 
 
 def fetch_filings_for_agency(
     agency_id: str,
     floor_date: date | None = None,
     *,
-    fetch_html: Any = None,  # injectable for tests
+    post_json: PostJson | None = None,
+    page_size: int = PAGE_SIZE,
 ) -> list[dict[str, Any]]:
-    """Fetch all Form 700 filing rows for a single agency portal.
+    """Fetch every Form 700 index row for one agency, following all pages.
 
-    Args:
-        agency_id:  Lower-cased AID key in KNOWN_AGENCIES.
-        floor_date: Earliest date to include (defaults to DEFAULT_FLOOR_DATE).
-        fetch_html: Override HTTP fetcher (for tests).
-
-    Returns:
-        List of parsed row dicts.
+    Pages are 1-based and followed until ``hasNextPage`` is false. The pull is
+    rejected (RuntimeError) if a page is empty while more are promised, the
+    page count runs away, or the items collected fall short of ``totalCount`` —
+    a partial index must never pass for a complete one.
     """
     aid = agency_id.lower()
     if aid not in KNOWN_AGENCIES:
         raise ValueError(
             f"Unknown agency '{agency_id}'. Known: {sorted(KNOWN_AGENCIES)}"
         )
-    info = KNOWN_AGENCIES[aid]
-    url = info["url"]
     _floor = floor_date or DEFAULT_FLOOR_DATE
     _ceiling = datetime.now().date()
-    _do_fetch = fetch_html or _fetch_html
+    _post = post_json or _post_json
 
-    print(f"  GET {url}")
-    portal_html = _do_fetch(url)
+    print(f"  POST {API_URL} (aid={aid.upper()}, floor={_floor})")
+    rows: list[dict[str, Any]] = []
+    total_count: Any = None
+    for page in range(1, MAX_PAGES + 1):
+        body = build_search_body(aid, _floor, _ceiling, page=page, page_size=page_size)
+        payload = _post(API_URL, body)
+        page_rows = parse_filings_page(payload)
+        rows.extend(page_rows)
+        if total_count is None:
+            total_count = payload.get("totalCount")
+        if not payload.get("hasNextPage"):
+            break
+        if not page_rows:
+            raise RuntimeError(f"{aid}: page {page} is empty but hasNextPage is set")
+    else:
+        raise RuntimeError(f"{aid}: still paging after {MAX_PAGES} pages")
 
-    form = _build_export_form(portal_html, _floor, _ceiling)
-    print(f"  POST {url} (Form 700 export, floor={_floor})")
-    export_html = _do_fetch(url, form)
+    if isinstance(total_count, int) and len(rows) != total_count:
+        raise RuntimeError(
+            f"{aid}: collected {len(rows)} filings but the API reports totalCount={total_count}"
+        )
 
-    rows = parse_filing_rows(export_html)
-    # Filter by floor_date in case the portal ignores date params
+    # Filter by floor_date in case the API ignores the date window
     rows = [r for r in rows if r["filed_at"] >= _floor.isoformat()]
     print(f"  {len(rows)} filings found for {aid}")
     return rows
@@ -455,10 +411,17 @@ def build_nodes_and_edges(
 
 
 def _write_jsonl(path: Path, records: list[dict]) -> None:
+    """Write JSONL atomically: a crash mid-write never truncates the old file."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as fh:
-        for record in records:
-            fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+    fd, tmp = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            for record in records:
+                fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+        os.replace(tmp, path)
+    except BaseException:
+        Path(tmp).unlink(missing_ok=True)
+        raise
 
 
 # ---------------------------------------------------------------------------
@@ -515,10 +478,10 @@ def _load_into_neo4j(
 # ---------------------------------------------------------------------------
 
 
-def _parse_args() -> argparse.Namespace:
+def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Fetch Form 700 filing index from NetFile /pub/ portals "
+            "Fetch the Form 700 filing index from the NetFile public API "
             "and ingest into the Marin Civic Graph."
         )
     )
@@ -535,7 +498,7 @@ def _parse_args() -> argparse.Namespace:
     source.add_argument(
         "--all",
         action="store_true",
-        help="Fetch from all known Marin-area portals.",
+        help="Fetch from all known Marin-area agencies.",
     )
 
     parser.add_argument(
@@ -564,12 +527,24 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--password", default=os.getenv("NEO4J_PASSWORD"))
     parser.add_argument("--database", default=os.getenv("NEO4J_DATABASE", "neo4j"))
     parser.add_argument("--batch-size", type=int, default=500)
-    return parser.parse_args()
+    return parser.parse_args(argv)
 
 
-def main() -> None:
-    args = _parse_args()
+def main(argv: list[str] | None = None) -> int:
+    """Fetch → build → write → (optionally) load. Returns the process exit code.
+
+    Every agency must come back complete and non-empty before anything is
+    written; otherwise the previous output stays byte-identical, nothing is
+    loaded, and the exit code is 1.
+    """
+    args = _parse_args(argv)
     floor_date = date.fromisoformat(args.floor_date)
+    if args.load and not args.password:
+        print(
+            "ERROR: NEO4J_PASSWORD is required (--password or NEO4J_PASSWORD env var).",
+            file=sys.stderr,
+        )
+        return 1
 
     agency_ids = (
         list(KNOWN_AGENCIES.keys()) if args.all else [args.agency.lower()]
@@ -577,6 +552,7 @@ def main() -> None:
 
     all_nodes: list[dict] = []
     all_edges: list[dict] = []
+    failed: list[str] = []
 
     for aid in agency_ids:
         print(f"\nFetching {aid} ...")
@@ -584,6 +560,11 @@ def main() -> None:
             rows = fetch_filings_for_agency(aid, floor_date=floor_date)
         except Exception as exc:  # noqa: BLE001
             print(f"  ERROR: {exc}", file=sys.stderr)
+            failed.append(aid)
+            continue
+        if not rows:
+            print(f"  ERROR: {aid} returned zero filings", file=sys.stderr)
+            failed.append(aid)
             continue
 
         nodes, edges = build_nodes_and_edges(rows, aid, limit=args.limit)
@@ -596,6 +577,14 @@ def main() -> None:
         all_nodes.extend(nodes)
         all_edges.extend(edges)
 
+    if failed:
+        print(
+            f"\nABORTED: failed or empty pull for {', '.join(failed)}. "
+            "Nothing written or loaded; previous output left untouched.",
+            file=sys.stderr,
+        )
+        return 1
+
     output_dir = Path(args.output_dir)
     nodes_path = output_dir / "nodes.jsonl"
     edges_path = output_dir / "edges.jsonl"
@@ -605,12 +594,6 @@ def main() -> None:
     _write_jsonl(edges_path, all_edges)
 
     if args.load:
-        if not args.password:
-            print(
-                "ERROR: NEO4J_PASSWORD is required (--password or NEO4J_PASSWORD env var).",
-                file=sys.stderr,
-            )
-            sys.exit(1)
         _load_into_neo4j(
             nodes=all_nodes,
             edges=all_edges,
@@ -620,7 +603,8 @@ def main() -> None:
             database=args.database,
             batch_size=args.batch_size,
         )
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

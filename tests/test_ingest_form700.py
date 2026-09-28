@@ -1,126 +1,358 @@
-"""Tests for ingest_form700.py — NetFile /pub/ Form 700 ingestion.
+"""Tests for ingest_form700.py — Form 700 index ingestion via the NetFile JSON API.
 
-Pure unit tests — no live HTTP required.
+No live HTTP: every API response comes from a recorded fixture under
+tests/fixtures/form700/searchfilings/ (see SOURCES.md there).
 """
 
 from __future__ import annotations
 
+import copy
+import json
 import sys
+import urllib.error
+from datetime import date
 from pathlib import Path
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from ingest_form700 import (
+import ingest_form700  # noqa: E402
+from ingest_form700 import (  # noqa: E402
+    KNOWN_AGENCIES,
     build_filing_node,
     build_filed_by_edge,
     build_in_jurisdiction_edge,
+    build_nodes_and_edges,
+    build_search_body,
+    fetch_filings_for_agency,
+    main,
     normalize_name,
-    parse_filing_rows,
+    parse_filings_page,
     slugify,
 )
 
+FIXTURES = Path(__file__).resolve().parent / "fixtures" / "form700" / "searchfilings"
+PAGE_FIRST = json.loads((FIXTURES / "ross-page-1.json").read_text(encoding="utf-8"))
+PAGE_LAST = json.loads((FIXTURES / "ross-page-60.json").read_text(encoding="utf-8"))
+RECORDED_ITEMS = PAGE_FIRST["items"] + PAGE_LAST["items"]
+
+# The April 2026 output of the (then-working) HTML scraper for the same filing,
+# copied verbatim from data/normalized/form700/nodes.jsonl. The JSON path must
+# reproduce it byte-for-byte so graph ids and extract_form700_interiors agree.
+APRIL_AHRENS_FILING = {
+    "id": "filing-form700-ross-2022-06-02-ahrens-thomas-leaving-office-building-official-building",
+    "node_type": "Filing",
+    "labels": ["Filing"],
+    "display_label": "Form 700 — Thomas Ahrens (Leaving Office) — 2022-06-02",
+    "properties": {
+        "filing_type": "form_700",
+        "filer_name": "Ahrens, Thomas",
+        "filed_at": "2022-06-02",
+        "statement_type": "Leaving Office",
+        "job_title": "Building Official",
+        "department": "Building",
+        "agency_id": "ross",
+        "agency": "Town of Ross",
+    },
+}
+APRIL_WOLTERING_FILING_ID = (
+    "filing-form700-ross-2022-02-28-woltering-david-annual-planning-and-building-director-planning"
+)
+
+
+def paged_server(items: list[dict], page_size: int, calls: list[dict] | None = None):
+    """A fake post_json serving `items` in consistent recorded-shape envelopes."""
+    pages = [items[i : i + page_size] for i in range(0, len(items), page_size)] or [[]]
+
+    def post_json(url: str, body: dict) -> dict:
+        if calls is not None:
+            calls.append(copy.deepcopy(body))
+        n = body["currentPage"]
+        return {
+            "aid": body["aid"],
+            "items": copy.deepcopy(pages[n - 1]),
+            "pageSize": page_size,
+            "currentPage": n,
+            "pageCount": len(pages),
+            "totalCount": len(items),
+            "hasNextPage": n < len(pages),
+            "hasPreviousPage": n > 1,
+        }
+
+    return post_json
+
+
 # ---------------------------------------------------------------------------
-# Sample HTML table (mimics the NetFile /pub/ export response)
-# ---------------------------------------------------------------------------
-
-SAMPLE_HTML_TABLE = """
-<table>
-<tr><td>Colin, Kate</td><td>03/15/2025</td><td>Annual</td><td>Mayor</td><td>City Council</td></tr>
-<tr><td>Hill, Eli</td><td>03/20/2025</td><td>Annual</td><td>Council Member</td><td>City Council</td></tr>
-<tr><td>Bushey, Maribeth</td><td>04/01/2025</td><td>Assuming Office</td><td>Council Member</td><td>City Council</td></tr>
-</table>
-"""
-
-SAMPLE_HTML_TABLE_WITH_EXTRA_COLS = """
-<table>
-<tr><th>Name</th><th>Date</th><th>Type</th><th>Title</th><th>Dept</th></tr>
-<tr><td>Smith, Jane</td><td>01/10/2025</td><td>Leaving Office</td><td>City Clerk</td><td>Administration</td></tr>
-</table>
-"""
-
-SAMPLE_HTML_TABLE_WITH_ENTITIES = """
-<table>
-<tr><td>O&#39;Brien, Sean</td><td>02/14/2025</td><td>Annual</td><td>Council Member</td><td>City &amp; County</td></tr>
-</table>
-"""
-
-SAMPLE_HTML_TABLE_WITH_LINKS = """
-<table>
-<tr><td>Doe, John</td><td>05/01/2025</td><td>Annual</td><td>Director</td><td>Planning</td><td><a href="/view/doc/123">View</a></td></tr>
-</table>
-"""
-
-# ---------------------------------------------------------------------------
-# TestParseFilingRows
+# Agencies
 # ---------------------------------------------------------------------------
 
 
-class TestParseFilingRows:
-    def test_extracts_rows(self):
-        rows = parse_filing_rows(SAMPLE_HTML_TABLE)
-        assert len(rows) == 3
+class TestKnownAgencies:
+    def test_nine_netfile_agency_ids_preserved(self):
+        assert set(KNOWN_AGENCIES) == {
+            "cmar", "raf", "nvo", "sau", "tib", "ctm", "lark", "smo", "ross",
+        }
 
-    def test_first_row_filer_name(self):
-        rows = parse_filing_rows(SAMPLE_HTML_TABLE)
-        assert rows[0]["filer_name"] == "Colin, Kate"
+    def test_place_ids_preserved(self):
+        assert KNOWN_AGENCIES["cmar"]["place_id"] == "place-marin-county"
+        assert KNOWN_AGENCIES["raf"]["place_id"] == "place-san-rafael"
+        assert KNOWN_AGENCIES["ross"]["place_id"] == "place-ross"
 
-    def test_first_row_filed_at(self):
-        rows = parse_filing_rows(SAMPLE_HTML_TABLE)
-        assert rows[0]["filed_at"] == "2025-03-15"
+    def test_portal_urls_point_at_new_sei_spa(self):
+        for aid, info in KNOWN_AGENCIES.items():
+            assert info["url"] == f"https://netfile.com/public/{aid.upper()}/sei"
 
-    def test_first_row_statement_type(self):
-        rows = parse_filing_rows(SAMPLE_HTML_TABLE)
-        assert rows[0]["statement_type"] == "Annual"
 
-    def test_first_row_job_title(self):
-        rows = parse_filing_rows(SAMPLE_HTML_TABLE)
-        assert rows[0]["job_title"] == "Mayor"
+# ---------------------------------------------------------------------------
+# Request contract
+# ---------------------------------------------------------------------------
 
-    def test_first_row_department(self):
-        rows = parse_filing_rows(SAMPLE_HTML_TABLE)
-        assert rows[0]["department"] == "City Council"
 
-    def test_second_row(self):
-        rows = parse_filing_rows(SAMPLE_HTML_TABLE)
-        assert rows[1]["filer_name"] == "Hill, Eli"
-        assert rows[1]["filed_at"] == "2025-03-20"
+class TestBuildSearchBody:
+    def test_body_shape(self):
+        body = build_search_body("ross", date(2019, 1, 1), date(2026, 9, 28), page=2, page_size=100)
+        assert body == {
+            "aid": "ROSS",
+            "searchFilerName": "",
+            "searchStatementType": None,
+            "afterFilingDate": "2019-01-01",
+            "beforeFilingDate": "2026-09-28",
+            "currentPage": 2,
+            "pageSize": 100,
+        }
 
-    def test_third_row_assuming_office(self):
-        rows = parse_filing_rows(SAMPLE_HTML_TABLE)
-        assert rows[2]["statement_type"] == "Assuming Office"
 
-    def test_empty_table_returns_empty_list(self):
-        assert parse_filing_rows("<table></table>") == []
+class TestPostJson:
+    def test_sends_json_post_with_curl_style_user_agent(self, monkeypatch):
+        seen = {}
 
-    def test_empty_string_returns_empty_list(self):
-        assert parse_filing_rows("") == []
+        class FakeResp:
+            def __enter__(self):
+                return self
 
-    def test_html_entity_decoding(self):
-        rows = parse_filing_rows(SAMPLE_HTML_TABLE_WITH_ENTITIES)
-        assert rows[0]["filer_name"] == "O'Brien, Sean"
-        assert rows[0]["department"] == "City & County"
+            def __exit__(self, *a):
+                return False
 
-    def test_skips_header_rows(self):
-        # Header rows with <th> elements should not match
-        rows = parse_filing_rows(SAMPLE_HTML_TABLE_WITH_EXTRA_COLS)
-        assert len(rows) == 1
-        assert rows[0]["filer_name"] == "Smith, Jane"
+            def read(self):
+                return json.dumps(PAGE_LAST).encode()
 
-    def test_rows_with_extra_td_cells_are_parsed(self):
-        rows = parse_filing_rows(SAMPLE_HTML_TABLE_WITH_LINKS)
-        assert len(rows) == 1
-        assert rows[0]["filer_name"] == "Doe, John"
+        def fake_urlopen(req, timeout):
+            seen["req"] = req
+            return FakeResp()
 
-    def test_date_format_is_iso(self):
-        rows = parse_filing_rows(SAMPLE_HTML_TABLE)
-        for row in rows:
-            parts = row["filed_at"].split("-")
-            assert len(parts) == 3
-            assert len(parts[0]) == 4  # YYYY
-            assert len(parts[1]) == 2  # MM
-            assert len(parts[2]) == 2  # DD
+        monkeypatch.setattr(ingest_form700.urllib.request, "urlopen", fake_urlopen)
+        out = ingest_form700._post_json(ingest_form700.API_URL, {"aid": "ROSS"})
+        req = seen["req"]
+        assert out == PAGE_LAST
+        assert req.full_url == "https://netfile.com/api/public/sites/api/searchfilings"
+        assert req.get_method() == "POST"
+        assert json.loads(req.data) == {"aid": "ROSS"}
+        assert req.get_header("Content-type") == "application/json"
+        # The WAF 403s urllib's default UA; a curl-style UA is required.
+        assert req.get_header("User-agent").startswith("curl/")
+
+
+# ---------------------------------------------------------------------------
+# Parser: JSON page → row dicts (same shape the HTML parser produced)
+# ---------------------------------------------------------------------------
+
+
+class TestParseFilingsPage:
+    def test_maps_recorded_items_to_row_schema(self):
+        rows = parse_filings_page(PAGE_FIRST)
+        assert rows[1] == {
+            "filer_name": "Ahrens, Thomas",
+            "filed_at": "2022-06-02",
+            "statement_type": "Leaving Office",
+            "job_title": "Building Official",
+            "department": "Building",
+        }
+
+    def test_one_row_per_item(self):
+        assert len(parse_filings_page(PAGE_FIRST)) == len(PAGE_FIRST["items"])
+
+    def test_filed_at_is_agency_local_calendar_date(self):
+        # "2026-05-13T08:26:01.48" is agency-local (no Z): take the date as printed.
+        assert parse_filings_page(PAGE_FIRST)[0]["filed_at"] == "2026-05-13"
+
+    def test_strips_and_tolerates_null_fields(self):
+        item = dict(PAGE_LAST["items"][0], positionName=None, departmentName="  Planning ")
+        row = parse_filings_page({"items": [item]})[0]
+        assert row["job_title"] == ""
+        assert row["department"] == "Planning"
+
+    def test_empty_items_returns_empty_list(self):
+        assert parse_filings_page({"items": []}) == []
+
+    @pytest.mark.parametrize("payload", [{}, {"items": None}, [], "<html></html>"])
+    def test_malformed_payload_raises(self, payload):
+        with pytest.raises(ValueError):
+            parse_filings_page(payload)
+
+
+class TestOutputSchemaUnchanged:
+    def test_filing_node_matches_april_output_byte_for_byte(self):
+        nodes, _ = build_nodes_and_edges(parse_filings_page(PAGE_FIRST), "ross")
+        ahrens = next(n for n in nodes if n["id"] == APRIL_AHRENS_FILING["id"])
+        assert json.dumps(ahrens, ensure_ascii=False) == json.dumps(
+            APRIL_AHRENS_FILING, ensure_ascii=False
+        )
+
+    def test_last_page_filing_id_matches_april_output(self):
+        nodes, _ = build_nodes_and_edges(parse_filings_page(PAGE_LAST), "ross")
+        assert nodes[0]["id"] == APRIL_WOLTERING_FILING_ID
+
+    def test_edges_and_person_nodes(self):
+        nodes, edges = build_nodes_and_edges(parse_filings_page(PAGE_FIRST), "ross")
+        people = [n for n in nodes if n["node_type"] == "Person"]
+        assert {p["id"] for p in people} == {
+            "person-f700-raul-aguilar", "person-f700-thomas-ahrens",
+        }
+        assert {e["relationship_type"] for e in edges} == {"FILED_BY", "IN_JURISDICTION"}
+        assert len(edges) == 2 * len(PAGE_FIRST["items"])
+
+
+# ---------------------------------------------------------------------------
+# Paging
+# ---------------------------------------------------------------------------
+
+
+class TestFetchPaging:
+    def test_collects_every_page(self):
+        calls: list[dict] = []
+        rows = fetch_filings_for_agency(
+            "ross",
+            date(2019, 1, 1),
+            post_json=paged_server(RECORDED_ITEMS, page_size=2, calls=calls),
+            page_size=2,
+        )
+        assert [c["currentPage"] for c in calls] == [1, 2]
+        assert [r["filer_name"] for r in rows] == [
+            "Aguilar, Raul", "Ahrens, Thomas", "Ahrens, Thomas", "Woltering, David",
+        ]
+
+    def test_requests_use_agency_aid_and_floor(self):
+        calls: list[dict] = []
+        fetch_filings_for_agency(
+            "cmar", date(2020, 1, 1), post_json=paged_server(RECORDED_ITEMS, 3, calls), page_size=3
+        )
+        assert {c["aid"] for c in calls} == {"CMAR"}
+        assert {c["afterFilingDate"] for c in calls} == {"2020-01-01"}
+        assert {c["pageSize"] for c in calls} == {3}
+
+    def test_floor_date_filters_client_side(self):
+        rows = fetch_filings_for_agency(
+            "ross", date(2022, 6, 1), post_json=paged_server(RECORDED_ITEMS, 4)
+        )
+        assert [r["filed_at"] for r in rows] == ["2026-05-13", "2022-06-02"]
+
+    def test_short_read_against_total_count_raises(self):
+        # The recorded last page claims totalCount=178 but holds one item.
+        with pytest.raises(RuntimeError, match="178"):
+            fetch_filings_for_agency("ross", post_json=lambda url, body: PAGE_LAST)
+
+    def test_empty_page_with_has_next_raises(self):
+        def post_json(url, body):
+            return dict(PAGE_FIRST, items=[], currentPage=body["currentPage"])
+
+        with pytest.raises(RuntimeError):
+            fetch_filings_for_agency("ross", post_json=post_json)
+
+    def test_failure_mid_paging_propagates(self):
+        def post_json(url, body):
+            if body["currentPage"] == 1:
+                return PAGE_FIRST
+            raise urllib.error.URLError("boom")
+
+        with pytest.raises(urllib.error.URLError):
+            fetch_filings_for_agency("ross", post_json=post_json)
+
+    def test_unknown_agency_raises(self):
+        with pytest.raises(ValueError):
+            fetch_filings_for_agency("zzz", post_json=paged_server(RECORDED_ITEMS, 4))
+
+
+# ---------------------------------------------------------------------------
+# CLI: never overwrite on empty / failed pulls
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def prior_output(tmp_path):
+    out = tmp_path / "form700"
+    out.mkdir()
+    (out / "nodes.jsonl").write_bytes(b'{"id": "filing-form700-prior"}\n')
+    (out / "edges.jsonl").write_bytes(b'{"source_id": "filing-form700-prior"}\n')
+    snapshot = {p.name: p.read_bytes() for p in out.iterdir()}
+    return out, snapshot
+
+
+@pytest.fixture
+def no_load(monkeypatch):
+    calls: list = []
+    monkeypatch.setattr(ingest_form700, "_load_into_neo4j", lambda **kw: calls.append(kw))
+    return calls
+
+
+def _server_by_aid(by_aid: dict):
+    def post_json(url, body):
+        handler = by_aid[body["aid"]]
+        return handler(url, body)
+
+    return post_json
+
+
+class TestMainNeverOverwritesOnFailure:
+    def _run(self, monkeypatch, out, post_json, *extra):
+        monkeypatch.setattr(ingest_form700, "_post_json", post_json)
+        return main(["--output-dir", str(out), "--password", "x", "--load", *extra])
+
+    def test_zero_rows_exits_nonzero_and_leaves_files_byte_identical(
+        self, monkeypatch, prior_output, no_load
+    ):
+        out, snapshot = prior_output
+        rc = self._run(monkeypatch, out, paged_server([], 100), "--agency", "ross")
+        assert rc != 0
+        assert {p.name: p.read_bytes() for p in out.iterdir()} == snapshot
+        assert no_load == []
+
+    def test_fetch_error_exits_nonzero_and_leaves_files_byte_identical(
+        self, monkeypatch, prior_output, no_load
+    ):
+        out, snapshot = prior_output
+
+        def boom(url, body):
+            raise urllib.error.HTTPError(url, 403, "Forbidden", {}, None)
+
+        rc = self._run(monkeypatch, out, boom, "--agency", "ross")
+        assert rc != 0
+        assert {p.name: p.read_bytes() for p in out.iterdir()} == snapshot
+        assert no_load == []
+
+    def test_one_failed_agency_in_all_blocks_the_whole_write(
+        self, monkeypatch, prior_output, no_load
+    ):
+        out, snapshot = prior_output
+        good = paged_server(RECORDED_ITEMS, 100)
+        handlers = {aid.upper(): good for aid in KNOWN_AGENCIES}
+        handlers["TIB"] = paged_server([], 100)
+        rc = self._run(monkeypatch, out, _server_by_aid(handlers), "--all")
+        assert rc != 0
+        assert {p.name: p.read_bytes() for p in out.iterdir()} == snapshot
+        assert no_load == []
+
+    def test_success_writes_outputs_then_loads(self, monkeypatch, prior_output, no_load):
+        out, _ = prior_output
+        rc = self._run(monkeypatch, out, paged_server(RECORDED_ITEMS, 2), "--agency", "ross")
+        assert rc == 0
+        nodes = [json.loads(line) for line in (out / "nodes.jsonl").read_text().splitlines()]
+        edges = [json.loads(line) for line in (out / "edges.jsonl").read_text().splitlines()]
+        assert APRIL_AHRENS_FILING in nodes
+        assert sum(n["node_type"] == "Filing" for n in nodes) == len(RECORDED_ITEMS)
+        assert len(edges) == 2 * len(RECORDED_ITEMS)
+        assert sorted(p.name for p in out.iterdir()) == ["edges.jsonl", "nodes.jsonl"]
+        assert len(no_load) == 1 and no_load[0]["nodes"] == nodes
 
 
 # ---------------------------------------------------------------------------

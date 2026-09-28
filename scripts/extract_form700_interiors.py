@@ -18,7 +18,8 @@ byte-identical to the NetFile-index path.
 Operator runbook (capture is an operator step — the loop never fetches):
 
     NetFile replatformed the public portal into a Vue SPA (~2026); the old
-    /pub/ WebForms export referenced by ingest_form700.py is dead. Current
+    /pub/ WebForms export is dead (ingest_form700.py now pages the Index
+    endpoint below). Current
     endpoints (verified 2026-06-10; send a curl-style User-Agent — the default
     urllib UA gets a 403 from the WAF):
       - Portal SPA:  https://netfile.com/public/<aid>/sei
@@ -30,8 +31,9 @@ Operator runbook (capture is an operator step — the loop never fetches):
                      pageSize). `searchSchedules` does NOT filter filings here.
                      Items carry filerName, filingDate (agency-LOCAL, no Z),
                      departmentName, positionName, filingId (GUID), periodStart/
-                     periodEnd, amendments[]. Statement type is obtained per
-                     filing by re-querying with the filter set.
+                     periodEnd, amendments[], statementType (present in items
+                     as of 2026-09-28; pages are 1-based, envelope carries
+                     totalCount/hasNextPage).
       - Schedules:   POST api/searchtransactions (same body; searchSchedules ∈
                      ["A1","A2","B","C","D","E","Comment"] DOES filter here) —
                      structured per-line JSON, legacy NUMERIC image id in
