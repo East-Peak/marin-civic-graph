@@ -1,6 +1,9 @@
 # Persistent ingestion — design
 
-**Date:** 2026-09-28 · **Status:** IN PROGRESS · **Input:** scraper health audit 2026-09-28
+**Date:** 2026-09-28 · **Status:** I1–I5b SHIPPED; first weekly cycle staged → loaded → rebaked → published
+2026-09-28 (sha 07a51c2a…). Adversarial review (1 P0 / 4 P1 / 9 P2) fixed. Weekly LaunchAgent + healthchecks.io
+heartbeat built, **pending install** (operator step, ops/launchd/README.md). Monitoring design: workspace
+decisions/2026-09-29-open-marin-ingestion-monitoring.md · **Input:** scraper health audit 2026-09-28
 (operator scratchpad), restart-plan decisions (workspace `decisions/2026-09-28-open-marin-restart-plan.md`).
 
 ## Problem
