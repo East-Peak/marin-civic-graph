@@ -151,3 +151,104 @@ def test_logs_over_the_size_limit_rotate_keeping_three_generations(wrapper_env):
     assert "current" not in (logs / "weekly-stage.log").read_text()
     assert (logs / "launchd.err.log.1").read_text().startswith("stderr")
     assert (logs / "launchd.out.log").read_text() == "small" and not (logs / "launchd.out.log.1").exists()
+
+
+# --- the installer (the operator runs it; tests use fakes) -------------------------
+
+
+@pytest.fixture
+def checkout(tmp_path: Path) -> Path:
+    """A throwaway checkout whose plist points at itself, with fake launchctl and plutil."""
+    repo = tmp_path / "repo"
+    (repo / "ops/launchd").mkdir(parents=True)
+    (repo / "data/ingest-runs").mkdir(parents=True)
+    for name in ("install.sh", "run-weekly-stage.sh"):
+        shutil.copy2(OPS / name, repo / "ops/launchd" / name)
+    plist = (OPS / f"{LABEL}.plist").read_text().replace(MACHINE_REPO, str(repo))
+    (repo / f"ops/launchd/{LABEL}.plist").write_text(plist)
+    (repo / ".venv/bin").mkdir(parents=True)
+    _executable(repo / ".venv/bin/python", "#!/bin/bash\n")
+    env_file = repo / "ops/launchd/weekly.env"
+    env_file.write_text(f"OPEN_MARIN_HEARTBEAT_URL={SECRET}\n")
+    env_file.chmod(0o600)
+    calls = tmp_path / "calls"
+    for tool in ("launchctl", "plutil"):
+        _executable(tmp_path / tool, f'#!/bin/bash\necho "{tool} $*" >> {calls}\n'
+                                     f'[ "$1" = print ] && exit "${{FAKE_LOADED:-1}}"\nexit 0\n')
+    return repo
+
+
+def _install(checkout: Path, *args: str, **extra: str) -> subprocess.CompletedProcess:
+    tmp = checkout.parent
+    env = {"PATH": MINIMAL_PATH, "HOME": str(tmp), "LAUNCHCTL": str(tmp / "launchctl"),
+           "PLUTIL": str(tmp / "plutil"), "OPEN_MARIN_LAUNCH_AGENTS_DIR": str(tmp / "LaunchAgents"), **extra}
+    return subprocess.run(["/bin/bash", str(checkout / "ops/launchd/install.sh"), *args],
+                          env=env, capture_output=True, text=True)
+
+
+def _calls(checkout: Path) -> str:
+    path = checkout.parent / "calls"
+    return path.read_text() if path.exists() else ""
+
+
+def test_install_lints_copies_and_bootstraps_after_precreating_the_log_dir(checkout):
+    proc = _install(checkout)
+
+    assert proc.returncode == 0, proc.stderr
+    installed = checkout.parent / f"LaunchAgents/{LABEL}.plist"
+    assert installed.read_text() == (checkout / f"ops/launchd/{LABEL}.plist").read_text()
+    assert (checkout / "data/ingest-runs/launchd").is_dir()
+    calls = _calls(checkout)
+    assert "plutil -lint" in calls
+    assert f"launchctl bootstrap gui/{os.getuid()} {installed}" in calls
+    assert "launchctl kickstart" in proc.stdout  # tells the operator how to run it once, by hand
+    assert SECRET not in proc.stdout + proc.stderr
+
+
+@pytest.mark.parametrize("problem,expected", [
+    ("missing", "weekly.env"), ("mode", "chmod 600"), ("empty-url", "OPEN_MARIN_HEARTBEAT_URL"),
+])
+def test_install_refuses_without_a_private_env_file_holding_the_heartbeat_url(checkout, problem, expected):
+    env_file = checkout / "ops/launchd/weekly.env"
+    if problem == "missing":
+        env_file.unlink()
+    elif problem == "mode":
+        env_file.chmod(0o644)
+    else:
+        env_file.write_text("OPEN_MARIN_HEARTBEAT_URL=\n")
+
+    proc = _install(checkout)
+
+    assert proc.returncode != 0 and expected in proc.stderr
+    assert "bootstrap" not in _calls(checkout)
+    assert not (checkout.parent / f"LaunchAgents/{LABEL}.plist").exists()
+
+
+def test_install_refuses_a_plist_that_targets_another_checkout(checkout):
+    plist = checkout / f"ops/launchd/{LABEL}.plist"
+    plist.write_text(plist.read_text().replace(str(checkout), "/elsewhere"))
+
+    proc = _install(checkout)
+
+    assert proc.returncode != 0 and "/elsewhere" not in _calls(checkout)
+    assert "bootstrap" not in _calls(checkout)
+
+
+def test_reinstalling_boots_out_the_loaded_job_first(checkout):
+    proc = _install(checkout, FAKE_LOADED="0")
+
+    calls = _calls(checkout).splitlines()
+    assert proc.returncode == 0
+    assert calls.index(f"launchctl bootout gui/{os.getuid()}/{LABEL}") < \
+        next(i for i, c in enumerate(calls) if c.startswith("launchctl bootstrap"))
+
+
+def test_uninstall_boots_out_and_removes_only_the_installed_plist(checkout):
+    assert _install(checkout).returncode == 0
+
+    proc = _install(checkout, "--uninstall", FAKE_LOADED="0")
+
+    assert proc.returncode == 0
+    assert f"launchctl bootout gui/{os.getuid()}/{LABEL}" in _calls(checkout)
+    assert not (checkout.parent / f"LaunchAgents/{LABEL}.plist").exists()
+    assert (checkout / "ops/launchd/weekly.env").exists()  # the operator's secrets stay
