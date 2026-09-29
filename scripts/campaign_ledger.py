@@ -298,6 +298,7 @@ def _physical_rows(rel: str, path: Path):
 
 def _schedule_row(ref: dict, filing_id: str, schedule: Schedule, values: dict) -> dict:
     row = {"row_ref": ref, "filing_id": filing_id, "schedule": schedule.letter, "disposition": "retained",
+           "filer_name": _text(values.get("Filer_NamL")), "committee_type": _text(values.get("Committee_Type")),
            "tran_id": _text(values.get("Tran_ID")), "tran_type": _text(values.get("Tran_Type")),
            "entity_cd": _text(values.get("Entity_Cd")), "tran_date": _iso(values.get(schedule.date)),
            "memo_code": _text(values.get("Memo_Code")), "memo_ref": _text(values.get("Memo_RefNo")),

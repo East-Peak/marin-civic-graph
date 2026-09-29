@@ -73,12 +73,12 @@ class TestBuildCommitteeNode:
 
 
 class TestBuildContributorNode:
-    def test_individual_creates_person_with_cf_prefix(self):
+    def test_individual_creates_person_with_the_live_id(self):
         node = build_contributor_node(
             name_last="Cullen", name_first="Carleen",
             entity_cd="IND", capture_id="test",
         )
-        assert node["id"] == "person-cf-cullen-carleen"
+        assert node["id"] == "person-cullen-carleen"
         assert node["node_type"] == "Person"
         assert node["labels"] == ["Person"]
 
@@ -91,15 +91,14 @@ class TestBuildContributorNode:
         assert node["node_type"] == "Organization"
         assert "Organization" in node["labels"]
 
-    def test_person_id_cannot_collide_with_form700(self):
-        """Campaign finance person IDs must be namespaced to prevent cross-pipeline collision."""
+    def test_person_ids_are_the_live_graphs(self):
+        """The live graph holds every campaign Person as person-{slug} (the person-cf- namespace was never
+        loaded). Keeping it preserves actor ids; the name-slug merge is a known defect owned by goals 3-4."""
         node = build_contributor_node(
             name_last="Colin", name_first="Kate",
             entity_cd="IND", capture_id="test",
         )
-        assert node["id"].startswith("person-cf-"), (
-            f"Campaign finance person ID must use 'cf' namespace: {node['id']}"
-        )
+        assert node["id"] == "person-colin-kate"
 
     def test_com_entity_creates_org(self):
         node = build_contributor_node(
@@ -120,9 +119,9 @@ class TestMoneyFlows:
                                       "flow_date": "2024-01-13"}
         assert flow["display_label"] == "contribution $150.00"
         rels = {(e["source_id"], e["relationship_type"], e["target_id"]) for e in edges}
-        assert ("person-cf-smith-john", "FROM_SOURCE", "moneyflow-1400001-TXN001") in rels
+        assert ("person-smith-john", "FROM_SOURCE", "moneyflow-1400001-TXN001") in rels
         assert ("moneyflow-1400001-TXN001", "TO_TARGET", "committee-netfile-1400001") in rels
-        assert ("moneyflow-1400001-TXN001", "EVIDENCED_BY", "record-test-source-export-2024") in rels
+        assert len(rels) == 3  # plus the committee's IN_JURISDICTION; provenance stays in the private ledger
 
     def test_an_expenditure_flows_from_the_committee_to_the_payee(self, tmp_path):
         _, nodes, edges, _ = _emit(tmp_path, {"2024": {
@@ -133,16 +132,21 @@ class TestMoneyFlows:
         assert ("moneyflow-1400001-E1", "TO_TARGET", "org-example-print-co") in rels
         assert _flows(nodes)["moneyflow-1400001-E1"]["properties"]["flow_type"] == "expenditure"
 
-    def test_a_duplicate_report_is_one_flow_evidenced_by_both_exports(self, tmp_path):
+    def test_a_duplicate_report_is_one_flow(self, tmp_path):
         pre = filing(rpt="2020-02-21", start="2020-01-19", thru="2020-02-15")
         cumulative = filing(report_num="001", rpt="2022-01-26", start="2019-12-01", thru="2021-11-18")
-        _, nodes, edges, _ = _emit(tmp_path, {
+        ledger, nodes, _, _ = _emit(tmp_path, {
             "2020": {"A-Contributions": [contribution(pre, "UdUX", 7500)], "Summary": [summary(pre, "A", "1", 7500)]},
             "2021": {"A-Contributions": [contribution(cumulative, "UdUX", 7500)],
                      "Summary": [summary(cumulative, "A", "1", 7500)]}})
         assert list(_flows(nodes)) == ["moneyflow-1400001-UdUX"]
-        evidence = {e["target_id"] for e in edges if e["relationship_type"] == "EVIDENCED_BY"}
-        assert evidence == {"record-test-source-export-2020", "record-test-source-export-2021"}
+        assert {r["moneyflow_id"] for r in ledger.rows if r["schedule"]} == {"moneyflow-1400001-UdUX"}
+
+    def test_nothing_new_is_published_no_record_nodes_or_evidence_edges(self, tmp_path):
+        _, nodes, edges, _ = _emit(tmp_path, {"2024": {
+            "A-Contributions": [contribution(F1, "a1", 10)], "Summary": [summary(F1, "A", "1", 10)]}})
+        assert {n["node_type"] for n in nodes} == {"Place", "Committee", "Person", "MoneyFlow"}
+        assert {e["relationship_type"] for e in edges} == {"FROM_SOURCE", "TO_TARGET", "IN_JURISDICTION"}
 
     def test_withheld_transactions_emit_no_flow_but_keep_their_actors(self, tmp_path):
         ledger, nodes, _, report = _emit(tmp_path, {"2024": {
@@ -152,7 +156,7 @@ class TestMoneyFlows:
             "Summary": [summary(F1, "E", "1", 300)]}})
         assert list(_flows(nodes)) == ["moneyflow-1400001-e1"]
         ids = {n["id"] for n in nodes}
-        assert "person-cf-roe-sam" in ids  # missing-oracle filing: flow withheld, actor kept (legacy actor set)
+        assert "person-roe-sam" in ids  # missing-oracle filing: flow withheld, actor kept (legacy actor set)
         assert "org-zero-payee" not in ids  # zero rows never made actors
         assert report["withheld"] == {"filing_not_validated": 1, "non_additive": 1, "zero_amount": 1}
 
@@ -163,7 +167,7 @@ class TestMoneyFlows:
             "497": [{**F1, "Rec_Type": "RCPT", "Form_Type": "F497P1", "Tran_ID": "n1", "Amount": 1500,
                      "Enty_NamL": "Notice Donor"}],
             "Summary": [summary(F1, "A", "1", 0)]}})
-        assert {n["node_type"] for n in nodes} == {"Place", "Record"}
+        assert {n["node_type"] for n in nodes} == {"Place"}
 
     def test_reported_details_never_reach_the_graph(self, tmp_path):
         _, nodes, edges, _ = _emit(tmp_path, {"2024": {
@@ -183,6 +187,15 @@ class TestMoneyFlows:
         committee = next(n for n in nodes if n["node_type"] == "Committee")
         assert committee["properties"]["name"] == "Friends of Example for Council 2024"
         assert committee["properties"]["committee_type"] == "CTL"
+
+
+    def test_committee_is_first_seen_from_a_schedule_row_not_other_sheets(self, tmp_path):
+        _, nodes, _, _ = _emit(tmp_path, {"2024": {
+            "A-Contributions": [contribution({**F1, "Committee_Type": "RCP"}, "a1", 10)],
+            "D-Expenditure": [other({**F1, "Committee_Type": "CTL"}, "D-Expenditure", "d1", 5)],
+            "Summary": [summary({**F1, "Committee_Type": "RCP"}, "A", "1", 10)]}})
+        committee = next(n for n in nodes if n["node_type"] == "Committee")
+        assert committee["properties"]["committee_type"] == "RCP"
 
 
 class TestOutputs:

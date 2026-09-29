@@ -4,7 +4,8 @@
 Writes, per source, under an explicit --output-root (never data/normalized, the private data repo,
 data/exports, data/ingest-runs, or anywhere inside a git checkout):
   - manifest.json   every input's path, size and sha256; pinned HTML pages as unavailable coverage
-  - nodes.jsonl / edges.jsonl   (Committee, MoneyFlow, Person, Organization, Place, Record)
+  - ledger.jsonl, filings.jsonl, reconciliation.json   the private ledger (see campaign_ledger.py)
+  - nodes.jsonl / edges.jsonl   (Committee, MoneyFlow, Person, Organization, Place)
   - normalization-report.json
 and a run-manifest.json (the only file carrying timestamps) at the root. Nothing is loaded into Neo4j:
 a load goes through a reviewed migration plan, because an additive MERGE cannot retire flows.
@@ -175,9 +176,9 @@ def build_contributor_node(
             status="stub_from_netfile_export",
         )
     else:
-        # IND (individual) and anything else → Person
-        # Namespaced to prevent cross-pipeline collision with Form 700, officeholder seeds, etc.
-        node_id = f"person-cf-{slug}"
+        # IND (individual) and anything else → Person, under the live graph's id. Name-slug ids merge
+        # namesakes (and can meet other pipelines' person-{slug}); that known defect belongs to identity work.
+        node_id = f"person-{slug}"
         parts = [p for p in [name_first, name_last] if p and p.strip()]
         display = " ".join(parts) if parts else slug
         return _node(
@@ -200,15 +201,12 @@ FLOW_TYPES = {"A": "contribution", "E": "expenditure"}
 DEFAULT_ENTITY = {"A": "IND", "E": "OTH"}  # legacy defaults when Entity_Cd is blank
 
 
-def _record_id(source_id: str, file: str) -> str:
-    return f"record-{source_id}-export-{Path(file).stem}"
-
-
 def normalize_campaign_source(capture: dict, ledger, output_dir: Path) -> tuple[list[dict], list[dict], dict]:
     """Emit the graph bundle for one source from its ledger (after build_transactions).
 
     Actors (committees, contributors, payees) are exactly the legacy set: built first-seen from every nonzero
-    retained A/E row, in export order. MoneyFlows exist only for counted transactions.
+    retained A/E row, in export order. MoneyFlows exist only for counted transactions. Filing provenance and
+    reported contributor details stay in the private ledger: the bundle publishes nothing the live graph lacks.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
     capture_id, jurisdiction_id, source_id = capture["capture_id"], capture["jurisdiction_id"], capture["source_id"]
@@ -217,25 +215,16 @@ def normalize_campaign_source(capture: dict, ledger, output_dir: Path) -> tuple[
         id=jurisdiction_id, node_type="Place", labels=["Place"], display_label=place_name,
         properties={"name": place_name}, capture_id=capture_id, section="place_stubs",
         status="stub_from_source_config")}
-    for file in sorted({r["row_ref"]["file"] for r in ledger.rows}):
-        year = Path(file).stem
-        record_id = _record_id(source_id, file)
-        nodes[record_id] = _node(
-            id=record_id, node_type="Record", labels=["Record"], display_label=f"{source_id} export {year}",
-            properties={"name": f"{source_id} export {year}", "record_type": "campaign_finance_export",
-                        "year": year, "source_file": Path(file).name},
-            capture_id=capture_id, section="export_records", status="from_netfile_zip")
 
     committees: dict[str, dict] = {}
     counterparties: dict[str, dict] = {}
     for row in ledger.rows:  # sorted by file, then A-Contributions before E-Expenditure, then row: export order
         if not row["schedule"] or row["disposition"] != "retained" or Decimal(row["amount"]) == 0:
             continue
-        filing = ledger.filings[row["filing_id"]]
-        if filing["filer_id"] not in committees:
-            committees[filing["filer_id"]] = build_committee_node(
-                filer_id=filing["filer_id"], filer_name=filing["names"][0],
-                committee_type=(filing["committee_types"] or [""])[0] or "",
+        filer_id = ledger.filings[row["filing_id"]]["filer_id"]
+        if filer_id not in committees:
+            committees[filer_id] = build_committee_node(
+                filer_id=filer_id, filer_name=row["filer_name"], committee_type=row["committee_type"] or "",
                 jurisdiction_id=jurisdiction_id, capture_id=capture_id)
         slug = slugify_name(row["name"]["last"], row["name"]["first"])
         if slug and slug not in counterparties:
@@ -271,9 +260,6 @@ def normalize_campaign_source(capture: dict, ledger, output_dir: Path) -> tuple[
             edges.append(_edge(committee["id"], "Committee", mf_id, "MoneyFlow", "FROM_SOURCE", capture_id))
             if actor:
                 edges.append(_edge(mf_id, "MoneyFlow", actor["id"], actor["node_type"], "TO_TARGET", capture_id))
-        for file in sorted({ref["file"] for ref in tx["rows"]}):
-            edges.append(_edge(mf_id, "MoneyFlow", _record_id(source_id, file), "Record", "EVIDENCED_BY",
-                               capture_id))
 
     node_list = [nodes[i] for i in sorted(nodes)]
     edges.sort(key=lambda e: (e["relationship_type"], e["source_id"], e["target_id"]))
