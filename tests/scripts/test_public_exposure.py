@@ -180,7 +180,7 @@ def test_free_text_drops_numbers_before_known_street_names() -> None:
         vocab,
     )
     assert text == (
-        "Water service at both Merrow; meter near terrace. "
+        "Water service at both Merrow; meter near alderglen. "
         "Install 2 water heaters, 100 amp panel."
     )
 
