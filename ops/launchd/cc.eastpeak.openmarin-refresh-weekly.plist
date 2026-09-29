@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!--
-  TEMPLATE, not installed. Weekly Open Marin ingestion: runs `refresh_weekly.py stage` only.
-  Loading into the graph and publishing stay manual operator gates (see README.md here).
-  Replace every __REPO__ with the absolute repo path before installing.
+  Weekly Open Marin ingestion for this machine: runs `refresh_weekly.py stage` only, through
+  run-weekly-stage.sh, which sources the operator-local weekly.env (the heartbeat URL is a
+  secret; this repo is public) and rotates the logs. Loading into the graph and publishing
+  stay manual operator gates. Install with ops/launchd/install.sh (see README.md here).
+  No KeepAlive and no RunAtLoad: it runs on the calendar, or when the operator kickstarts it.
 -->
 <plist version="1.0">
 <dict>
@@ -12,14 +14,13 @@
 
     <key>ProgramArguments</key>
     <array>
-        <string>__REPO__/.venv/bin/python</string>
-        <string>scripts/refresh_weekly.py</string>
-        <string>stage</string>
+        <string>/bin/bash</string>
+        <string>/Users/tammypais/projects/marin-civic-graph/ops/launchd/run-weekly-stage.sh</string>
     </array>
     <key>WorkingDirectory</key>
-    <string>__REPO__</string>
+    <string>/Users/tammypais/projects/marin-civic-graph</string>
 
-    <!-- Monday 05:00 local time. -->
+    <!-- Monday 05:00 local time. The heartbeat check expects it by 11:00 (six-hour grace). -->
     <key>StartCalendarInterval</key>
     <dict>
         <key>Weekday</key>
@@ -32,18 +33,19 @@
 
     <!--
       stage needs NEO4J_URI only for its preflight guard (scripts/neo4j_target.py); it never
-      connects. Set it to Open Marin's operator graph (port 7688, never 7687). Credentials
-      are not needed for stage and must not go in this file.
+      connects. 7688 is Open Marin's operator graph; 7687 is the family-tree store. No
+      credentials: stage doesn't need them.
     -->
     <key>EnvironmentVariables</key>
     <dict>
         <key>NEO4J_URI</key>
-        <string>__SET_NEO4J_URI__</string>
+        <string>bolt://localhost:7688</string>
     </dict>
 
+    <!-- The wrapper sends everything to weekly-stage.log; these catch only a wrapper that can't start. -->
     <key>StandardOutPath</key>
-    <string>__REPO__/data/ingest-runs/launchd.out.log</string>
+    <string>/Users/tammypais/projects/marin-civic-graph/data/ingest-runs/launchd/launchd.out.log</string>
     <key>StandardErrorPath</key>
-    <string>__REPO__/data/ingest-runs/launchd.err.log</string>
+    <string>/Users/tammypais/projects/marin-civic-graph/data/ingest-runs/launchd/launchd.err.log</string>
 </dict>
 </plist>

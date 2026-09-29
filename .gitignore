@@ -38,3 +38,6 @@ data/identity/
 
 # ingestion run ledger (operator-local, like data/raw)
 data/ingest-runs/
+
+# Weekly LaunchAgent's operator-local env (holds the heartbeat URL, a secret)
+ops/launchd/weekly.env

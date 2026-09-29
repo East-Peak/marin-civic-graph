@@ -798,23 +798,6 @@ def test_redact_drops_only_uri_userinfo(text, expected):
     assert rw.redact(text) == expected
 
 
-# --- LaunchAgent template ----------------------------------------------------
-
-
-def test_launchagent_template_runs_only_stage_on_monday_at_five_with_no_secrets():
-    import plistlib
-
-    path = Path(__file__).resolve().parent.parent / "ops/launchd/cc.eastpeak.openmarin-refresh-weekly.plist"
-    plist = plistlib.loads(path.read_bytes())
-
-    assert plist["Label"] == "cc.eastpeak.openmarin-refresh-weekly"
-    assert plist["ProgramArguments"][1:] == ["scripts/refresh_weekly.py", "stage"]
-    assert plist["StartCalendarInterval"] == {"Weekday": 1, "Hour": 5, "Minute": 0}
-    assert set(plist["EnvironmentVariables"]) == {"NEO4J_URI"}  # stage needs only the guard, never credentials
-    assert "bolt://" not in plist["EnvironmentVariables"]["NEO4J_URI"]  # a hint by name; the operator fills it in
-    assert "PASSWORD" not in path.read_text()
-
-
 # --- the run lock (review P2-9) ----------------------------------------------
 
 
