@@ -243,9 +243,22 @@ class TestPrivateFields:
             "Summary": [summary(F1, "A", "1", 10)],
         }})
         row = _a_e_rows(ledger)[0]
-        assert row["reported"] == {"city": "Novato", "state": "CA", "zip5": "94945", "employer": "Example Co",
+        assert row["reported"] == {"city": "Novato", "state": "CA", "zip": "94945-1234", "employer": "Example Co",
                                    "occupation": "Engineer"}
         assert "SECRET-STREET" not in repr(row)
+
+    def test_reported_values_are_the_unmodified_source_cells(self, tmp_path):
+        ledger = _ledger(tmp_path, {"2024": {
+            "A-Contributions": [contribution(F1, "a1", 10, Tran_City="  San  Anselmo ", Tran_Zip4="94901garbage",
+                                             Tran_Emp=None, Tran_Occ="   ", Tran_State=" ca")],
+            "E-Expenditure": [expenditure(F1, "e1", 5, Payee_Zip4=" 94903-0001 ")],
+            "Summary": [summary(F1, "A", "1", 10), summary(F1, "E", "1", 5)],
+        }})
+        a, e = _a_e_rows(ledger)
+        # Nothing stripped, truncated or guessed: the ZIP a filer typed is the ZIP the ledger keeps.
+        assert a["reported"] == {"city": "  San  Anselmo ", "state": " ca", "zip": "94901garbage",
+                                 "employer": None, "occupation": "   "}
+        assert e["reported"]["zip"] == " 94903-0001 "
 
 
 class TestSupersession:

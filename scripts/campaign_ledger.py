@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
 import zipfile
 from collections import defaultdict
 from dataclasses import dataclass, field
@@ -181,15 +180,15 @@ class Schedule:
     amount: str
     date: str
     name: str  # column prefix of the counterparty name: Tran_NamL / Payee_NamL
-    reported: tuple[tuple[str, str], ...]  # (ledger key, column) of privately kept reported details
+    reported: tuple[tuple[str, str], ...]  # (ledger key, column) of privately kept reported details, kept raw
 
 
 SCHEDULES = {
     "A-Contributions": Schedule("A", "Tran_Amt1", "Tran_Date", "Tran", (
-        ("city", "Tran_City"), ("state", "Tran_State"), ("zip5", "Tran_Zip4"),
+        ("city", "Tran_City"), ("state", "Tran_State"), ("zip", "Tran_Zip4"),
         ("employer", "Tran_Emp"), ("occupation", "Tran_Occ"))),
     "E-Expenditure": Schedule("E", "Amount", "Expn_Date", "Payee", (
-        ("city", "Payee_City"), ("state", "Payee_State"), ("zip5", "Payee_Zip4"),
+        ("city", "Payee_City"), ("state", "Payee_State"), ("zip", "Payee_Zip4"),
         ("expn_code", "Expn_Code"), ("expn_dscr", "Expn_Dscr"))),
 }
 ORACLE_LINE = "1"  # Summary Form_Type A/E Line_Item 1 Amount_A: the filer's itemized total for the period
@@ -222,9 +221,13 @@ def _cents(value) -> Decimal:
     return amount.quantize(CENT)
 
 
-def _zip5(value) -> str | None:
-    match = re.match(r"\s*(\d{5})", str(value or ""))
-    return match.group(1) if match else None
+def cell(value):
+    """A source cell kept losslessly as JSON: native values as they are, anything else tagged with its type."""
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, (datetime, date)):
+        return {"cell_type": type(value).__name__, "value": value.isoformat()}
+    return {"cell_type": type(value).__name__, "value": str(value)}
 
 
 def filer_key(filer_id: str, filer_name: str | None) -> str:
@@ -304,8 +307,8 @@ def _schedule_row(ref: dict, filing_id: str, schedule: Schedule, values: dict) -
            "memo_code": _text(values.get("Memo_Code")), "memo_ref": _text(values.get("Memo_RefNo")),
            "name": {part: _text(values.get(f"{schedule.name}_Nam{suffix}"))
                     for part, suffix in (("last", "L"), ("first", "F"), ("title", "T"), ("suffix", "S"))},
-           "reported": {key: (_zip5(values.get(col)) if key == "zip5" else _text(values.get(col)))
-                        for key, col in schedule.reported}}
+           # The unmodified source cells: display and ZIP5 are derived later (contributor_detail.py).
+           "reported": {key: cell(values.get(col)) for key, col in schedule.reported}}
     # CAL format: a Memo_Code marks an informational entry outside the schedule's totals. A Memo_RefNo alone
     # only cross-references another entry and the row still counts.
     row["additive"] = row["memo_code"] is None
