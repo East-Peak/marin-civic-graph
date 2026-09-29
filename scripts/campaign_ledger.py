@@ -341,10 +341,12 @@ def build_ledger(source_id: str, workbooks: list[tuple[str, Path]], version_evid
             filing = ledger.filings.setdefault(fid, {
                 "filing_id": fid, "source_id": source_id, "filer_id": filer_id, "filer_key": key[1],
                 "from_date": key[2], "thru_date": key[3], "rpt_date": key[4], "report_num": key[5],
-                "files": set(), "names": set(), "sheets": set()})
+                "files": set(), "names": set(), "sheets": set(), "committee_types": set()})
             filing["files"].add(rel)
             filing["names"].add(_text(values.get("Filer_NamL")))
             filing["sheets"].add(sheet)
+            if _text(values.get("Committee_Type")):
+                filing["committee_types"].add(_text(values.get("Committee_Type")))
             if sheet in SCHEDULES:
                 ledger.rows.append(_schedule_row(ref, fid, SCHEDULES[sheet], values))
                 continue
@@ -364,7 +366,7 @@ def build_ledger(source_id: str, workbooks: list[tuple[str, Path]], version_evid
     _apply_versions(ledger, version_evidence)
     _reconcile(ledger, oracles, exceptions)
     for filing in ledger.filings.values():
-        for key in ("files", "names", "sheets"):
+        for key in ("files", "names", "sheets", "committee_types"):
             filing[key] = sorted(filing[key], key=lambda v: (v is None, v or ""))
     return ledger
 

@@ -20,17 +20,15 @@ import json
 import re
 import subprocess
 import sys
-import zipfile
-import hashlib
 from datetime import datetime, timezone
+from decimal import Decimal
 from pathlib import Path
-
-import openpyxl
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from campaign_ledger import (  # noqa: E402
-    InputError, LedgerError, UnsafeOutputError, build_ledger, inventory_inputs, resolve_output_root, write_ledger,
+    InputError, LedgerError, UnsafeOutputError, build_ledger, build_transactions, inventory_inputs,
+    resolve_output_root, write_ledger,
 )
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -56,17 +54,6 @@ def slugify_name(last: str | None, first: str | None = None) -> str:
     slug = re.sub(r"-{2,}", "-", slug)
     slug = slug.strip("-")
     return slug
-
-
-def _date_str(val) -> str | None:
-    """Convert openpyxl date cell value (datetime or string) to ISO YYYY-MM-DD, or None."""
-    if val is None:
-        return None
-    if isinstance(val, datetime):
-        return val.strftime("%Y-%m-%d")
-    if isinstance(val, str) and val.strip():
-        return val.strip()
-    return None
 
 
 def _node(
@@ -148,40 +135,14 @@ def build_committee_node(
     )
 
 
-def _row_fingerprint(amount, flow_date, name_last=None, name_first=None, entity_cd=None) -> str:
-    """Deterministic 8-char hash for MoneyFlow dedup.
-
-    Includes amount, date, contributor/payee name, and entity_cd (which affects
-    person-vs-org routing) so that rows with the same transaction key but
-    different data get unique IDs.
-    """
-    parts = [str(amount), str(flow_date or ""), str(name_last or ""), str(name_first or ""),
-             str(entity_cd or "")]
-    return hashlib.md5("|".join(parts).encode()).hexdigest()[:8]
-
-
-def build_moneyflow_node(
-    filer_id: int | str,
-    tran_id: str,
-    amount: float,
-    flow_date: str | None,
-    flow_type: str,
-    source_schedule: str,
-    capture_id: str,
-    year: str = "",
-) -> dict:
-    node_id = f"moneyflow-{filer_id}-{year}-{source_schedule.lower()}-{tran_id}"
-    props: dict = {
-        "amount": amount,
-        "flow_type": flow_type,
-        "source_schedule": source_schedule,
-        "source_tran_id": tran_id,
-        "source_year": year,
-    }
+def build_moneyflow_node(moneyflow_id: str, amount: float, flow_date: str | None, flow_type: str,
+                         source_schedule: str, capture_id: str) -> dict:
+    """A MoneyFlow with exactly the live graph's properties; its provenance lives in the private ledger."""
+    props: dict = {"amount": amount, "flow_type": flow_type, "source_schedule": source_schedule}
     if flow_date:
         props["flow_date"] = flow_date
     return _node(
-        id=node_id,
+        id=moneyflow_id,
         node_type="MoneyFlow",
         labels=["MoneyFlow"],
         display_label=f"{flow_type} ${amount:.2f}",
@@ -232,359 +193,114 @@ def build_contributor_node(
 
 
 # ---------------------------------------------------------------------------
-# Excel parsers
+# Graph emission from the ledger
 # ---------------------------------------------------------------------------
 
-def _sheet_headers(ws) -> dict[str, int]:
-    """Return column-name → 0-based index mapping from row 1."""
-    first_row = next(ws.iter_rows(min_row=1, max_row=1, values_only=True))
-    return {str(v): i for i, v in enumerate(first_row) if v is not None}
+FLOW_TYPES = {"A": "contribution", "E": "expenditure"}
+DEFAULT_ENTITY = {"A": "IND", "E": "OTH"}  # legacy defaults when Entity_Cd is blank
 
 
-def _cell(row: tuple, headers: dict[str, int], col: str):
-    idx = headers.get(col)
-    if idx is None:
-        return None
-    return row[idx] if idx < len(row) else None
+def _record_id(source_id: str, file: str) -> str:
+    return f"record-{source_id}-export-{Path(file).stem}"
 
 
-def parse_contributions(zip_path: Path) -> list[dict]:
-    """Parse A-Contributions sheet from a NetFile ZIP export."""
-    rows = []
-    with zipfile.ZipFile(zip_path) as zf:
-        xlsx_name = next(n for n in zf.namelist() if n.endswith(".xlsx"))
-        with zf.open(xlsx_name) as f:
-            wb = openpyxl.load_workbook(f, read_only=True, data_only=True)
-            ws = wb["A-Contributions"]
-            headers = _sheet_headers(ws)
-            for raw in ws.iter_rows(min_row=2, values_only=True):
-                amount = _cell(raw, headers, "Tran_Amt1")
-                if not amount:
-                    continue
-                try:
-                    amount = float(amount)
-                except (TypeError, ValueError):
-                    continue
-                if amount == 0:
-                    continue
-                rows.append({
-                    "filer_id": _cell(raw, headers, "Filer_ID"),
-                    "filer_name": _cell(raw, headers, "Filer_NamL"),
-                    "committee_type": _cell(raw, headers, "Committee_Type"),
-                    "tran_id": _cell(raw, headers, "Tran_ID"),
-                    "entity_cd": _cell(raw, headers, "Entity_Cd"),
-                    "contributor_last": _cell(raw, headers, "Tran_NamL"),
-                    "contributor_first": _cell(raw, headers, "Tran_NamF"),
-                    "amount": amount,
-                    "flow_date": _date_str(_cell(raw, headers, "Tran_Date")),
-                    "employer": _cell(raw, headers, "Tran_Emp"),
-                    "occupation": _cell(raw, headers, "Tran_Occ"),
-                    "city": _cell(raw, headers, "Tran_City"),
-                    "state": _cell(raw, headers, "Tran_State"),
-                    "zip": _cell(raw, headers, "Tran_Zip4"),
-                    "elect_date": _date_str(_cell(raw, headers, "Elect_Date")),
-                })
-    return rows
+def normalize_campaign_source(capture: dict, ledger, output_dir: Path) -> tuple[list[dict], list[dict], dict]:
+    """Emit the graph bundle for one source from its ledger (after build_transactions).
 
-
-def parse_expenditures(zip_path: Path) -> list[dict]:
-    """Parse E-Expenditure sheet from a NetFile ZIP export."""
-    rows = []
-    with zipfile.ZipFile(zip_path) as zf:
-        xlsx_name = next(n for n in zf.namelist() if n.endswith(".xlsx"))
-        with zf.open(xlsx_name) as f:
-            wb = openpyxl.load_workbook(f, read_only=True, data_only=True)
-            ws = wb["E-Expenditure"]
-            headers = _sheet_headers(ws)
-            for raw in ws.iter_rows(min_row=2, values_only=True):
-                amount = _cell(raw, headers, "Amount")
-                if not amount:
-                    continue
-                try:
-                    amount = float(amount)
-                except (TypeError, ValueError):
-                    continue
-                if amount == 0:
-                    continue
-                rows.append({
-                    "filer_id": _cell(raw, headers, "Filer_ID"),
-                    "filer_name": _cell(raw, headers, "Filer_NamL"),
-                    "committee_type": _cell(raw, headers, "Committee_Type"),
-                    "tran_id": _cell(raw, headers, "Tran_ID"),
-                    "entity_cd": _cell(raw, headers, "Entity_Cd"),
-                    "payee_last": _cell(raw, headers, "Payee_NamL"),
-                    "payee_first": _cell(raw, headers, "Payee_NamF"),
-                    "amount": amount,
-                    "flow_date": _date_str(_cell(raw, headers, "Expn_Date")),
-                    "city": _cell(raw, headers, "Payee_City"),
-                    "state": _cell(raw, headers, "Payee_State"),
-                    "zip": _cell(raw, headers, "Payee_Zip4"),
-                    "elect_date": _date_str(_cell(raw, headers, "Elect_Date")),
-                    "expn_code": _cell(raw, headers, "Expn_Code"),
-                    "expn_dscr": _cell(raw, headers, "Expn_Dscr"),
-                })
-    return rows
-
-
-# ---------------------------------------------------------------------------
-# Source normalizer
-# ---------------------------------------------------------------------------
-
-def normalize_campaign_source(
-    capture: dict,
-    zip_paths: list[Path],
-    output_dir: Path,
-) -> tuple[list[dict], list[dict], dict]:
-    """Parse ZIP exports and write settled-format JSONL + report."""
+    Actors (committees, contributors, payees) are exactly the legacy set: built first-seen from every nonzero
+    retained A/E row, in export order. MoneyFlows exist only for counted transactions.
+    """
     output_dir.mkdir(parents=True, exist_ok=True)
+    capture_id, jurisdiction_id, source_id = capture["capture_id"], capture["jurisdiction_id"], capture["source_id"]
+    place_name = jurisdiction_id.replace("place-", "").replace("-", " ").title()
+    nodes: dict[str, dict] = {jurisdiction_id: _node(
+        id=jurisdiction_id, node_type="Place", labels=["Place"], display_label=place_name,
+        properties={"name": place_name}, capture_id=capture_id, section="place_stubs",
+        status="stub_from_source_config")}
+    for file in sorted({r["row_ref"]["file"] for r in ledger.rows}):
+        year = Path(file).stem
+        record_id = _record_id(source_id, file)
+        nodes[record_id] = _node(
+            id=record_id, node_type="Record", labels=["Record"], display_label=f"{source_id} export {year}",
+            properties={"name": f"{source_id} export {year}", "record_type": "campaign_finance_export",
+                        "year": year, "source_file": Path(file).name},
+            capture_id=capture_id, section="export_records", status="from_netfile_zip")
 
-    capture_id = capture["capture_id"]
-    jurisdiction_id = capture["jurisdiction_id"]
-    source_id = capture["source_id"]
+    committees: dict[str, dict] = {}
+    counterparties: dict[str, dict] = {}
+    for row in ledger.rows:  # sorted by file, then A-Contributions before E-Expenditure, then row: export order
+        if not row["schedule"] or row["disposition"] != "retained" or Decimal(row["amount"]) == 0:
+            continue
+        filing = ledger.filings[row["filing_id"]]
+        if filing["filer_id"] not in committees:
+            committees[filing["filer_id"]] = build_committee_node(
+                filer_id=filing["filer_id"], filer_name=filing["names"][0],
+                committee_type=(filing["committee_types"] or [""])[0] or "",
+                jurisdiction_id=jurisdiction_id, capture_id=capture_id)
+        slug = slugify_name(row["name"]["last"], row["name"]["first"])
+        if slug and slug not in counterparties:
+            counterparties[slug] = build_contributor_node(
+                row["name"]["last"], row["name"]["first"], row["entity_cd"] or DEFAULT_ENTITY[row["schedule"]],
+                capture_id)
 
-    nodes: list[dict] = []
     edges: list[dict] = []
+    for committee in committees.values():
+        nodes[committee["id"]] = committee
+        edges.append(_edge(committee["id"], "Committee", jurisdiction_id, "Place", "IN_JURISDICTION", capture_id))
+    for actor in counterparties.values():
+        nodes[actor["id"]] = actor
 
-    # Dedup registries keyed by slug / filer_id
-    committees: dict[str, dict] = {}      # filer_id str → node
-    contributors: dict[str, dict] = {}    # slug → node
+    withheld: dict[str, int] = {}
+    emitted = {"A": Decimal("0.00"), "E": Decimal("0.00")}
+    for tx in ledger.transactions:
+        if not tx["counts"]:
+            withheld[tx["reason"]] = withheld.get(tx["reason"], 0) + 1
+            continue
+        amount = Decimal(tx["amount"])
+        emitted[tx["schedule"]] += amount
+        mf_id = tx["moneyflow_id"]
+        nodes[mf_id] = build_moneyflow_node(mf_id, float(amount), tx["tran_date"], FLOW_TYPES[tx["schedule"]],
+                                            tx["schedule"], capture_id)
+        committee = committees[tx["filer_id"]]
+        actor = counterparties.get(slugify_name(tx["name"]["last"], tx["name"]["first"]))
+        if tx["schedule"] == "A":
+            if actor:
+                edges.append(_edge(actor["id"], actor["node_type"], mf_id, "MoneyFlow", "FROM_SOURCE", capture_id))
+            edges.append(_edge(mf_id, "MoneyFlow", committee["id"], "Committee", "TO_TARGET", capture_id))
+        else:
+            edges.append(_edge(committee["id"], "Committee", mf_id, "MoneyFlow", "FROM_SOURCE", capture_id))
+            if actor:
+                edges.append(_edge(mf_id, "MoneyFlow", actor["id"], actor["node_type"], "TO_TARGET", capture_id))
+        for file in sorted({ref["file"] for ref in tx["rows"]}):
+            edges.append(_edge(mf_id, "MoneyFlow", _record_id(source_id, file), "Record", "EVIDENCED_BY",
+                               capture_id))
 
-    # Place stub
-    place_node = _node(
-        id=jurisdiction_id,
-        node_type="Place",
-        labels=["Place"],
-        display_label=jurisdiction_id.replace("place-", "").replace("-", " ").title(),
-        properties={"name": jurisdiction_id.replace("place-", "").replace("-", " ").title()},
-        capture_id=capture_id,
-        section="place_stubs",
-        status="stub_from_source_config",
-    )
-    nodes.append(place_node)
-
-    moneyflow_count = 0
-    moneyflow_seen: set[str] = set()  # seen MoneyFlow IDs for dedup
-    errors: list[str] = []
-
-    for zip_path in zip_paths:
-        year = zip_path.stem  # e.g. "2024"
-        record_id = f"record-{source_id}-export-{year}"
-
-        # Record node for this yearly export (evidence chain target)
-        record_node = _node(
-            id=record_id,
-            node_type="Record",
-            labels=["Record"],
-            display_label=f"{source_id} export {year}",
-            properties={
-                "name": f"{source_id} export {year}",
-                "record_type": "campaign_finance_export",
-                "year": year,
-                "source_file": zip_path.name,
-            },
-            capture_id=capture_id,
-            section="export_records",
-            status="from_netfile_zip",
-        )
-        nodes.append(record_node)
-
-        # --- Contributions ---
-        try:
-            contrib_rows = parse_contributions(zip_path)
-        except Exception as e:
-            errors.append(f"Failed to parse contributions from {zip_path.name}: {e}")
-            contrib_rows = []
-        for row in contrib_rows:
-            filer_id = str(row["filer_id"])
-
-            # Committee node (dedup)
-            if filer_id not in committees:
-                committee_node = build_committee_node(
-                    filer_id=filer_id,
-                    filer_name=row["filer_name"],
-                    committee_type=row["committee_type"] or "",
-                    jurisdiction_id=jurisdiction_id,
-                    capture_id=capture_id,
-                )
-                committees[filer_id] = committee_node
-
-            # Contributor node (dedup by slug)
-            entity_cd = row["entity_cd"] or "IND"
-            contributor_slug = slugify_name(row["contributor_last"], row["contributor_first"])
-            if contributor_slug and contributor_slug not in contributors:
-                contributor_node = build_contributor_node(
-                    name_last=row["contributor_last"],
-                    name_first=row["contributor_first"],
-                    entity_cd=entity_cd,
-                    capture_id=capture_id,
-                )
-                contributors[contributor_slug] = contributor_node
-
-            # MoneyFlow node — fingerprint hash makes ID deterministic and order-independent
-            fp = _row_fingerprint(row["amount"], row["flow_date"],
-                                  row.get("contributor_last"), row.get("contributor_first"),
-                                  entity_cd)
-            moneyflow_node = build_moneyflow_node(
-                filer_id=filer_id,
-                tran_id=row["tran_id"],
-                amount=row["amount"],
-                flow_date=row["flow_date"],
-                flow_type="contribution",
-                source_schedule="A",
-                capture_id=capture_id,
-                year=year,
-            )
-            mf_id = f"{moneyflow_node['id']}-{fp}"
-            moneyflow_node["id"] = mf_id
-
-            # Dedup: same fingerprint → same ID → true duplicate, skip
-            if mf_id in moneyflow_seen:
-                continue
-            moneyflow_seen.add(mf_id)
-
-            nodes.append(moneyflow_node)
-            moneyflow_count += 1
-            committee_id = f"committee-netfile-{filer_id}"
-
-            # Edges
-            if contributor_slug:
-                contributor_id = contributors[contributor_slug]["id"]
-                contributor_type = contributors[contributor_slug]["node_type"]
-                # contributor → moneyflow → committee
-                edges.append(_edge(contributor_id, contributor_type, mf_id, "MoneyFlow",
-                                   "FROM_SOURCE", capture_id))
-            edges.append(_edge(mf_id, "MoneyFlow", committee_id, "Committee",
-                               "TO_TARGET", capture_id))
-            edges.append(_edge(mf_id, "MoneyFlow", record_id, "Record",
-                               "EVIDENCED_BY", capture_id))
-
-        # --- Expenditures ---
-        try:
-            expend_rows = parse_expenditures(zip_path)
-        except Exception as e:
-            errors.append(f"Failed to parse expenditures from {zip_path.name}: {e}")
-            expend_rows = []
-        for row in expend_rows:
-            filer_id = str(row["filer_id"])
-
-            # Committee node (dedup)
-            if filer_id not in committees:
-                committee_node = build_committee_node(
-                    filer_id=filer_id,
-                    filer_name=row["filer_name"],
-                    committee_type=row["committee_type"] or "",
-                    jurisdiction_id=jurisdiction_id,
-                    capture_id=capture_id,
-                )
-                committees[filer_id] = committee_node
-
-            # Payee node (dedup by slug)
-            entity_cd = row["entity_cd"] or "OTH"
-            payee_slug = slugify_name(row["payee_last"], row["payee_first"])
-            if payee_slug and payee_slug not in contributors:
-                payee_node = build_contributor_node(
-                    name_last=row["payee_last"],
-                    name_first=row["payee_first"],
-                    entity_cd=entity_cd,
-                    capture_id=capture_id,
-                )
-                contributors[payee_slug] = payee_node
-
-            # MoneyFlow node — fingerprint hash makes ID deterministic and order-independent
-            fp = _row_fingerprint(row["amount"], row["flow_date"],
-                                  row.get("payee_last"), row.get("payee_first"),
-                                  entity_cd)
-            moneyflow_node = build_moneyflow_node(
-                filer_id=filer_id,
-                tran_id=row["tran_id"],
-                amount=row["amount"],
-                flow_date=row["flow_date"],
-                flow_type="expenditure",
-                source_schedule="E",
-                capture_id=capture_id,
-                year=year,
-            )
-            mf_id = f"{moneyflow_node['id']}-{fp}"
-            moneyflow_node["id"] = mf_id
-
-            # Dedup: same fingerprint → same ID → true duplicate, skip
-            if mf_id in moneyflow_seen:
-                continue
-            moneyflow_seen.add(mf_id)
-
-            nodes.append(moneyflow_node)
-            moneyflow_count += 1
-            committee_id = f"committee-netfile-{filer_id}"
-
-            # Edges: committee → moneyflow → payee
-            edges.append(_edge(committee_id, "Committee", mf_id, "MoneyFlow",
-                               "FROM_SOURCE", capture_id))
-            if payee_slug:
-                payee_id = contributors[payee_slug]["id"]
-                payee_type = contributors[payee_slug]["node_type"]
-                edges.append(_edge(mf_id, "MoneyFlow", payee_id, payee_type,
-                                   "TO_TARGET", capture_id))
-            edges.append(_edge(mf_id, "MoneyFlow", record_id, "Record",
-                               "EVIDENCED_BY", capture_id))
-
-    # Add deduped committees and contributors to node list
-    for committee_node in committees.values():
-        nodes.append(committee_node)
-        # Committee → Place edge
-        edges.append(_edge(committee_node["id"], "Committee", jurisdiction_id, "Place",
-                           "IN_JURISDICTION", capture_id))
-
-    for contributor_node in contributors.values():
-        nodes.append(contributor_node)
-
-    # Validate referential integrity before writing
-    node_ids = {n["id"] for n in nodes}
-    broken_edges = [
-        e for e in edges
-        if e["source_id"] not in node_ids or e["target_id"] not in node_ids
-    ]
-    if broken_edges:
-        by_rel: dict[str, int] = {}
-        for e in broken_edges:
-            by_rel[e["relationship_type"]] = by_rel.get(e["relationship_type"], 0) + 1
-        print(f"  WARNING: {len(broken_edges)} edges reference missing nodes:", file=sys.stderr)
-        for rel, count in by_rel.items():
-            print(f"    {rel}: {count} broken", file=sys.stderr)
-
-    # Check for duplicate node IDs
-    seen_ids: dict[str, int] = {}
-    for n in nodes:
-        seen_ids[n["id"]] = seen_ids.get(n["id"], 0) + 1
-    duplicate_ids = {nid: count for nid, count in seen_ids.items() if count > 1}
-    if duplicate_ids:
-        print(f"  WARNING: {len(duplicate_ids)} duplicate node IDs:", file=sys.stderr)
-        for nid, count in list(duplicate_ids.items())[:10]:
-            print(f"    {nid}: {count}x", file=sys.stderr)
-
-    # Write JSONL
+    node_list = [nodes[i] for i in sorted(nodes)]
+    edges.sort(key=lambda e: (e["relationship_type"], e["source_id"], e["target_id"]))
+    triples = [(e["source_id"], e["relationship_type"], e["target_id"]) for e in edges]
+    broken = [e for e in edges if e["source_id"] not in nodes or e["target_id"] not in nodes]
+    report = {
+        "source_id": source_id,
+        "capture_id": capture_id,
+        "node_count": len(node_list),
+        "edge_count": len(edges),
+        "committee_count": len(committees),
+        "contributor_count": len(counterparties),
+        "moneyflow_count": sum(1 for n in node_list if n["node_type"] == "MoneyFlow"),
+        "emitted_amount": {k: str(v) for k, v in emitted.items()},
+        "withheld": dict(sorted(withheld.items())),
+        "broken_edge_count": len(broken),
+        "duplicate_id_count": 0,
+        "duplicate_edge_count": len(triples) - len(set(triples)),
+    }
     with open(output_dir / "nodes.jsonl", "w") as f:
-        for node in nodes:
+        for node in node_list:
             f.write(json.dumps(node, sort_keys=True) + "\n")
     with open(output_dir / "edges.jsonl", "w") as f:
         for edge in edges:
             f.write(json.dumps(edge, sort_keys=True) + "\n")
-
-    report = {
-        "source_id": source_id,
-        "capture_id": capture_id,
-        "node_count": len(nodes),
-        "edge_count": len(edges),
-        "committee_count": len(committees),
-        "contributor_count": len(contributors),
-        "moneyflow_count": moneyflow_count,
-        "broken_edge_count": len(broken_edges),
-        "duplicate_id_count": len(duplicate_ids),
-    }
-    with open(output_dir / "normalization-report.json", "w") as f:
-        json.dump(report, indent=2, fp=f)
-        f.write("\n")
-
-    return nodes, edges, report
+    (output_dir / "normalization-report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+    return node_list, edges, report
 
 
 # ---------------------------------------------------------------------------
@@ -678,6 +394,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR: exception/evidence entries for source(s) not in this run: {', '.join(strays)}",
               file=sys.stderr)
         return 1
+    flow_ids: set[str] = set()
     for source_config, capture_date, inputs in inventories:
         source_id = source_config["id"]
         capture = {
@@ -690,10 +407,13 @@ def main(argv: list[str] | None = None) -> int:
         output_dir = out_root / source_id
         _write_json(output_dir / "manifest.json", {"capture_id": capture["capture_id"], "inputs": inputs})
         workbooks = [(i["path"], args.input_root / i["path"]) for i in inputs if i["coverage"] == "workbook"]
+        print(f"\nNormalizing: {source_id}")
         try:
             ledger = build_ledger(source_id, workbooks,
                                   version_evidence=[v for v in versions if v.get("source_id") == source_id],
                                   exceptions=[e for e in exceptions if e.get("source_id") == source_id])
+            if not ledger.errors:
+                build_transactions(ledger)
         except LedgerError as exc:
             print(f"ERROR: {exc}", file=sys.stderr)
             return 1
@@ -703,15 +423,18 @@ def main(argv: list[str] | None = None) -> int:
             for error in ledger.errors:
                 print(f"  ERROR: {error}", file=sys.stderr)
             return 1
-        zip_paths = [path for _, path in workbooks]
-        print(f"\nNormalizing: {source_id}")
-        _, _, report = normalize_campaign_source(capture, zip_paths, output_dir)
-        print(f"  MoneyFlows:   {report['moneyflow_count']}")
+        nodes, _, report = normalize_campaign_source(capture, ledger, output_dir)
+        print(f"  MoneyFlows:   {report['moneyflow_count']}  withheld: {report['withheld']}")
         print(f"  Output:       {output_dir}")
-        if report["duplicate_id_count"] > 0 or report["broken_edge_count"] > 0:
-            print(f"  ERROR: {report['duplicate_id_count']} duplicate IDs, "
-                  f"{report['broken_edge_count']} broken edges", file=sys.stderr)
+        if report["broken_edge_count"] or report["duplicate_edge_count"]:
+            print(f"  ERROR: {report['broken_edge_count']} broken edges, "
+                  f"{report['duplicate_edge_count']} duplicate edges", file=sys.stderr)
             return 1
+        clashes = sorted(flow_ids & {n["id"] for n in nodes if n["node_type"] == "MoneyFlow"})
+        if clashes:
+            print(f"  ERROR: MoneyFlow ids also emitted by another source: {clashes[:5]}", file=sys.stderr)
+            return 1
+        flow_ids |= {n["id"] for n in nodes if n["node_type"] == "MoneyFlow"}
 
     _write_json(out_root / "run-manifest.json", {
         "started_at": started_at,
