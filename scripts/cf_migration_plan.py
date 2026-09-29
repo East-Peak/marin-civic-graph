@@ -177,6 +177,75 @@ def verify_candidate(nodes, edges, bundle_nodes, bundle_edges) -> list[str]:
 
 
 # ---------------------------------------------------------------------------
+# The ops as Cypher for ONE explicit transaction (rendered into the plan; nothing here runs it)
+# ---------------------------------------------------------------------------
+
+class MigrationError(Exception):
+    """An op cannot be expressed safely, or a statement touched a different number of rows than planned."""
+
+
+IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
+
+
+def _ident(name: str) -> str:
+    if not IDENTIFIER.fullmatch(name):
+        raise MigrationError(f"not a safe Cypher identifier: {name!r}")
+    return name
+
+
+def migration_statements(ops: dict) -> list[dict]:
+    """Every op as a parameterized statement returning the rows it touched, in dependency order."""
+    stmts = []
+
+    def add(step, query, rows):
+        if rows:
+            stmts.append({"step": step, "query": query + " RETURN count(*) AS n", "params": {"rows": rows}})
+
+    add("retire_edges", "UNWIND $rows AS e MATCH (s {id: e.start_id})-[r]->(t {id: e.end_id}) "
+        "WHERE type(r) = e.type DELETE r", ops["retire_edges"])
+    add("retire_nodes", "UNWIND $rows AS id MATCH (n:MoneyFlow {id: id}) DETACH DELETE n", ops["retire_nodes"])
+    by_labels: dict[tuple, list[dict]] = {}
+    for node in ops["add_nodes"]:
+        by_labels.setdefault(tuple(_ident(label) for label in node["labels"]), []).append({
+            "id": node["id"], "props": {k: v for k, v in node["properties"].items() if k != "payload_json"},
+            "display_label": node.get("display_label", ""), "promotion_state": node.get("promotion_state", "")})
+    for labels, rows in sorted(by_labels.items()):
+        add(f"add_nodes:{':'.join(labels)}",
+            f"UNWIND $rows AS row MERGE (n:{labels[0]} {{id: row.id}}) SET n:{':'.join(labels)} "
+            "SET n += row.props, n.display_label = row.display_label, n.promotion_state = row.promotion_state", rows)
+    add("set_props", "UNWIND $rows AS row MATCH (n:MoneyFlow {id: row.id}) SET n += row.set",
+        [{"id": i, "set": c["set"]} for i, c in sorted(ops["set_props"].items()) if c["set"]])
+    removals: dict[str, list[str]] = {}
+    for nid, change in sorted(ops["set_props"].items()):
+        for key in change["remove"]:
+            removals.setdefault(_ident(key), []).append(nid)
+    for key, ids in sorted(removals.items()):
+        add(f"remove_prop:{key}", f"UNWIND $rows AS id MATCH (n:MoneyFlow {{id: id}}) REMOVE n.{key}", ids)
+    by_type: dict[str, list[dict]] = {}
+    for e in ops["add_edges"]:
+        by_type.setdefault(_ident(e["type"]), []).append({"start_id": e["start_id"], "end_id": e["end_id"]})
+    for rel, rows in sorted(by_type.items()):
+        add(f"add_edges:{rel}", f"UNWIND $rows AS e MATCH (s {{id: e.start_id}}) MATCH (t {{id: e.end_id}}) "
+            f"MERGE (s)-[r:{rel}]->(t)", rows)
+    return stmts
+
+
+def apply_in_transaction(tx, ops: dict) -> dict:
+    """Run every statement on the caller's single transaction; any count short of plan raises before the next.
+
+    The caller owns the transaction: `with session.begin_transaction() as tx: apply_in_transaction(tx, ops);
+    tx.commit()` — an exception leaves it uncommitted, so Neo4j rolls every statement back.
+    """
+    counts = {}
+    for stmt in migration_statements(ops):
+        touched = tx.run(stmt["query"], **stmt["params"]).single()["n"]
+        if touched != len(stmt["params"]["rows"]):
+            raise MigrationError(f"{stmt['step']}: touched {touched} of {len(stmt['params']['rows'])} planned rows")
+        counts[stmt["step"]] = touched
+    return counts
+
+
+# ---------------------------------------------------------------------------
 # Files, report and CLI
 # ---------------------------------------------------------------------------
 
@@ -279,10 +348,11 @@ def _render_plan(report: dict, ops: dict) -> str:
         f"- Other pipelines' edges on retired flows: {len(s['external_edges_on_retired'])}", "",
         "| flow type | baseline | candidate | delta |", "|---|---|---|---|",
         *[f"| {ft} | {a['baseline']} | {a['candidate']} | {a['delta']} |" for ft, a in report["amounts"].items()],
-        "", "### Retired MoneyFlows", "", *[f"- `{i}`" for i in ops["retire_nodes"]],
+        "", "### Retired MoneyFlows", "", *([f"- `{i}`" for i in ops["retire_nodes"]] or ["- none"]),
         "", "### Added MoneyFlows", "",
-        *[f"- `{n['id']}` {n['properties'].get('amount')}" for n in ops["add_nodes"] if n["node_type"] == "MoneyFlow"],
-        "", "### Changed MoneyFlows", "", *[f"- `{i}`: {c}" for i, c in ops["set_props"].items()],
+        *([f"- `{n['id']}` {n['properties'].get('amount')}" for n in ops["add_nodes"] if n["node_type"] == "MoneyFlow"]
+          or ["- none"]),
+        "", "### Changed MoneyFlows", "", *([f"- `{i}`: {c}" for i, c in ops["set_props"].items()] or ["- none"]),
         "", "## Procedure (every step waits for approval of this concrete plan)", "",
         "1. **Preconditions.** No weekly refresh running (`data/ingest-runs/.lock` holder not alive; do it outside "
         "Monday 05:00). Take a fresh read-only export (`scripts/export_live_graph.py --backup --out-dir <new dir>`); "
@@ -290,13 +360,12 @@ def _render_plan(report: dict, ops: dict) -> str:
         "2. **Backup.** Keep that fresh export as the JSONL backup. Also stop the openmarin instance "
         "(`launchctl bootout` of cc.eastpeak.neo4j-openmarin) and take `neo4j-admin database dump neo4j` "
         "with the openmarin NEO4J_HOME/NEO4J_CONF, then restart it.",
-        "3. **Apply `ops.json` in one write transaction** (bolt://localhost:7688 only):",
-        "   - retire edges: `UNWIND $retire_edges AS e MATCH (s {id: e.start_id})-[r]->(t {id: e.end_id}) "
-        "WHERE type(r) = e.type DELETE r`",
-        "   - retire nodes: `UNWIND $retire_nodes AS id MATCH (n {id: id}) DETACH DELETE n`",
-        "   - add nodes: `load_neo4j_v2.load_nodes(add_nodes)` (MERGE + SET, bundle shape)",
-        "   - set/remove props: `MATCH (n {id: $id}) SET n += $set` then `REMOVE n.<key>` per listed key",
-        "   - add edges: `load_neo4j_v2.load_edges(add_edges)` (MERGE)",
+        "3. **Apply `ops.json` in ONE explicit write transaction** (bolt://localhost:7688 only): "
+        "`with session.begin_transaction() as tx: cf_migration_plan.apply_in_transaction(tx, ops); tx.commit()`. "
+        "Each statement must touch exactly its planned row count or the transaction is abandoned uncommitted "
+        "(rolled back). The statements, in order:",
+        *[f"   - `{st['step']}` ({len(st['params']['rows'])} rows): `{st['query']}`"
+          for st in migration_statements(ops)],
         "4. **Post-load reconciliation.** Re-export the live graph; its sha256 must equal the candidate sha256 above, "
         "and `scripts/cf_migration_plan.py --check-live <export> --bundle <bundle>` must report nothing: every "
         "counted transaction's flow carries its ledger amount and every filing's emitted total is in the graph.",

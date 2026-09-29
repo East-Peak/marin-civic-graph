@@ -212,3 +212,55 @@ class TestCli:
         baseline, bundle = _dirs(tmp_path)
         assert main(["--baseline", str(baseline), "--bundle", str(bundle), "--out", str(ROOT / "data" / "x")]) == 1
         assert "refusing" in capsys.readouterr().err
+
+
+class FakeTx:
+    """Records statements and answers each with the row count it was asked to touch."""
+
+    def __init__(self, short_on=None):
+        self.ran, self.short_on = [], short_on
+
+    def run(self, query, **params):
+        self.ran.append((query, params))
+        expected = len(params.get("rows", []))
+        count = expected - 1 if self.short_on and self.short_on in query else expected
+
+        class Result:
+            def single(self_inner):
+                return {"n": count}
+        return Result()
+
+
+class TestTransactionStatements:
+    def test_statements_consume_the_ops_format_in_dependency_order(self):
+        from cf_migration_plan import migration_statements
+        stmts = migration_statements(_plan())
+        kinds = [s["step"] for s in stmts]
+        assert kinds == ["retire_edges", "retire_nodes", "add_nodes:MoneyFlow", "add_nodes:Person",
+                         "add_nodes:Record", "set_props", "add_edges:EVIDENCED_BY", "add_edges:FROM_SOURCE",
+                         "add_edges:TO_TARGET"]
+        edge_rows = next(s for s in stmts if s["step"] == "add_edges:FROM_SOURCE")["params"]["rows"]
+        assert edge_rows == [{"start_id": "person-cf-roe-sam", "end_id": "moneyflow-1-new"}]
+        assert "MERGE (n:MoneyFlow {id: row.id})" in stmts[2]["query"]
+
+    def test_apply_runs_every_statement_on_the_one_transaction_it_is_given(self):
+        from cf_migration_plan import apply_in_transaction
+        tx = FakeTx()
+        counts = apply_in_transaction(tx, _plan())
+        assert len(tx.ran) == 9 and counts["retire_nodes"] == 1
+
+    def test_a_short_count_stops_before_anything_else_runs(self):
+        import pytest
+        from cf_migration_plan import MigrationError, apply_in_transaction
+        tx = FakeTx(short_on="DETACH DELETE")
+        with pytest.raises(MigrationError, match="retire_nodes"):
+            apply_in_transaction(tx, _plan())
+        assert len(tx.ran) == 2  # the caller's transaction is then rolled back, never committed
+
+    def test_a_property_key_that_is_not_an_identifier_is_refused(self):
+        import pytest
+        from cf_migration_plan import MigrationError, migration_statements
+        ops = _plan()
+        ops["set_props"]["moneyflow-1-changed"]["remove"] = ["x` DETACH DELETE n //"]
+        with pytest.raises(MigrationError):
+            migration_statements(ops)
