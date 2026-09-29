@@ -1,4 +1,7 @@
-"""Export the full live graph to JSONL for public-substrate baking.
+"""Export the full live graph to JSONL for public-substrate baking, or as a backup.
+
+`--backup` keeps every property the public export strips and fails unless the files hold
+the whole graph (refresh_weekly.py takes one before every load).
 
 This is read-only against Neo4j. Tests use mocked driver/session objects; the
 CLI is the only place that imports the real Neo4j driver and requires network.
@@ -74,11 +77,15 @@ def _is_stripped_property(key: str) -> bool:
     )
 
 
-def _clean_props(props: Mapping[str, Any] | None) -> dict[str, Any]:
+class IncompleteBackup(Exception):
+    """The backup files do not hold every node and relationship in the graph."""
+
+
+def _clean_props(props: Mapping[str, Any] | None, *, keep_all: bool = False) -> dict[str, Any]:
     clean: dict[str, Any] = {}
     for key, value in (props or {}).items():
         key = str(key)
-        if _is_stripped_property(key):
+        if _is_stripped_property(key) and not keep_all:
             continue
         clean[key] = _jsonify(value)
     return clean
@@ -119,7 +126,7 @@ def _write_rows_atomically(
     return count
 
 
-def _iter_node_page_rows(session: Any, *, batch_size: int, progress: Callable[[str], None]):
+def _iter_node_page_rows(session: Any, *, batch_size: int, progress: Callable[[str], None], keep_all: bool):
     total = 0
     skip = 0
     while True:
@@ -130,14 +137,14 @@ def _iter_node_page_rows(session: Any, *, batch_size: int, progress: Callable[[s
             yield {
                 "id": str(_row_get(row, "id")),
                 "labels": sorted(str(label) for label in _row_get(row, "labels")),
-                "properties": _clean_props(_row_get(row, "properties")),
+                "properties": _clean_props(_row_get(row, "properties"), keep_all=keep_all),
             }
         total += len(page)
         progress(f"nodes batch skip={skip} wrote={len(page)} total={total}")
         skip += batch_size
 
 
-def _iter_edge_page_rows(session: Any, *, batch_size: int, progress: Callable[[str], None]):
+def _iter_edge_page_rows(session: Any, *, batch_size: int, progress: Callable[[str], None], keep_all: bool):
     total = 0
     skip = 0
     while True:
@@ -149,7 +156,7 @@ def _iter_edge_page_rows(session: Any, *, batch_size: int, progress: Callable[[s
                 "start_id": str(_row_get(row, "start_id")),
                 "end_id": str(_row_get(row, "end_id")),
                 "type": str(_row_get(row, "type")),
-                "properties": _clean_props(_row_get(row, "properties")),
+                "properties": _clean_props(_row_get(row, "properties"), keep_all=keep_all),
             }
         total += len(page)
         progress(f"edges batch skip={skip} wrote={len(page)} total={total}")
@@ -163,6 +170,7 @@ def export_live_graph(
     out_dir: Path | str = DEFAULT_OUT_DIR,
     batch_size: int = 10_000,
     progress: Callable[[str], None] | None = print,
+    backup: bool = False,
 ) -> dict[str, Any]:
     if batch_size <= 0:
         raise ValueError("batch_size must be positive")
@@ -174,12 +182,19 @@ def export_live_graph(
     with driver.session(database=database) as session:
         node_count = _write_rows_atomically(
             nodes_path,
-            _iter_node_page_rows(session, batch_size=batch_size, progress=progress_fn),
+            _iter_node_page_rows(session, batch_size=batch_size, progress=progress_fn, keep_all=backup),
         )
         edge_count = _write_rows_atomically(
             edges_path,
-            _iter_edge_page_rows(session, batch_size=batch_size, progress=progress_fn),
+            _iter_edge_page_rows(session, batch_size=batch_size, progress=progress_fn, keep_all=backup),
         )
+        if backup:  # nodes without an id, and relationships touching one, never reach the pages
+            graph = (_scalar_count(session, COUNT_NODES_Q), _scalar_count(session, COUNT_RELS_Q))
+            if (node_count, edge_count) != graph:
+                raise IncompleteBackup(
+                    f"incomplete backup: wrote {node_count} nodes and {edge_count} relationships, "
+                    f"but the graph holds {graph[0]} nodes and {graph[1]} relationships"
+                )
 
     return {
         "database": database,
@@ -242,6 +257,11 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
         help="Rows per Neo4j page (default: 10000)",
     )
     parser.add_argument(
+        "--backup",
+        action="store_true",
+        help="Keep every property and fail unless the files hold the whole graph.",
+    )
+    parser.add_argument(
         "--counts-only",
         action="store_true",
         help="Print S0/G1 source-of-truth gate counts without writing JSONL.",
@@ -273,6 +293,7 @@ def main(argv: list[str] | None = None) -> int:
                 database=env["NEO4J_DATABASE"],
                 out_dir=args.out_dir,
                 batch_size=args.batch_size,
+                backup=args.backup,
             )
             print("live graph export complete")
             print(f"nodes: {report['totals']['nodes']:,}")

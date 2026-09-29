@@ -4,11 +4,14 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from export_live_graph import (  # noqa: E402
     EDGES_PAGE_Q,
     NODES_PAGE_Q,
+    IncompleteBackup,
     collect_gate_counts,
     export_live_graph,
     main,
@@ -254,3 +257,63 @@ def test_cli_fails_clearly_when_neo4j_env_is_absent(monkeypatch, capsys) -> None
         "Missing required environment variables: NEO4J_URI, NEO4J_USER, "
         "NEO4J_PASSWORD, NEO4J_DATABASE"
     ) in capsys.readouterr().err
+
+
+# --- backup mode: the pre-load graph backup refresh_weekly.py takes --------------------
+
+_EVERY_PROPERTY = {"name": "A", "embedding": [0.1], "umap_x": 1.2, "review_pending": True, "payload_json": "{}"}
+
+
+def _graph(node_count: int, edge_count: int) -> _FakeSession:
+    nodes = [{"id": f"node-{i}", "labels": ["Organization"], "properties": dict(_EVERY_PROPERTY)}
+             for i in range(node_count)]
+    edges = [{"start_id": "node-0", "end_id": f"node-{i}", "type": "MEMBER", "properties": dict(_EVERY_PROPERTY)}
+             for i in range(edge_count)]
+    return _FakeSession(nodes=nodes, edges=edges)  # the graph itself holds 4 nodes and 3 relationships
+
+
+def test_a_backup_keeps_every_property_the_public_export_strips(tmp_path: Path) -> None:
+    session = _graph(4, 3)
+
+    report = export_live_graph(_FakeDriver(session), database="neo4j", out_dir=tmp_path, backup=True)
+
+    assert _read_jsonl(tmp_path / "nodes.jsonl") == session.nodes
+    assert _read_jsonl(tmp_path / "edges.jsonl") == session.edges
+    assert report["totals"] == {"nodes": 4, "edges": 3}
+
+
+@pytest.mark.parametrize("nodes,edges", [(3, 3), (4, 2)])
+def test_a_backup_that_does_not_hold_the_whole_graph_fails(tmp_path: Path, nodes, edges) -> None:
+    # a node without an id, or a relationship touching one, is invisible to the paged export
+    with pytest.raises(IncompleteBackup, match="the graph holds 4 nodes and 3 relationships"):
+        export_live_graph(_FakeDriver(_graph(nodes, edges)), database="neo4j", out_dir=tmp_path, backup=True)
+
+
+def test_the_cli_takes_a_backup_with_the_backup_flag(monkeypatch, tmp_path: Path) -> None:
+    import neo4j_target
+
+    session = _graph(4, 3)
+    for key, value in {"NEO4J_URI": "bolt://localhost:7688", "NEO4J_USER": "u", "NEO4J_PASSWORD": "p",
+                       "NEO4J_DATABASE": "neo4j"}.items():
+        monkeypatch.setenv(key, value)
+    monkeypatch.setattr(neo4j_target, "open_driver", lambda uri, auth: _Closing(session))
+
+    assert main(["--backup", "--out-dir", str(tmp_path)]) == 0
+    assert _read_jsonl(tmp_path / "nodes.jsonl")[0]["properties"] == _EVERY_PROPERTY
+
+
+def test_the_cli_fails_an_incomplete_backup(monkeypatch, tmp_path: Path, capsys) -> None:
+    import neo4j_target
+
+    for key, value in {"NEO4J_URI": "bolt://localhost:7688", "NEO4J_USER": "u", "NEO4J_PASSWORD": "p",
+                       "NEO4J_DATABASE": "neo4j"}.items():
+        monkeypatch.setenv(key, value)
+    monkeypatch.setattr(neo4j_target, "open_driver", lambda uri, auth: _Closing(_graph(3, 3)))
+
+    assert main(["--backup", "--out-dir", str(tmp_path)]) == 1
+    assert "incomplete backup" in capsys.readouterr().err
+
+
+class _Closing(_FakeDriver):
+    def close(self) -> None:
+        pass

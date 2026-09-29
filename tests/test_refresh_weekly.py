@@ -21,7 +21,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 import refresh_weekly as rw  # noqa: E402
 
 RUN = "2026-09-28T050000Z"
-ENV = {"NEO4J_URI": "bolt://localhost:7688", "NEO4J_USER": "neo4j", "NEO4J_PASSWORD": "pw"}
+ENV = {"NEO4J_URI": "bolt://localhost:7688", "NEO4J_USER": "neo4j", "NEO4J_PASSWORD": "pw",
+       "NEO4J_DATABASE": "neo4j"}
 STAGED_SCRIPTS = {"permits": "ingest_socrata_permits.py", "form700": "ingest_form700.py",
                   "courtlistener": "ingest_courtlistener_cases.py"}
 NORMALIZED = {"permits": "marin-county-permits", "form700": "form700", "courtlistener": "courtlistener-cases"}
@@ -48,12 +49,24 @@ class FakeWorld:
         self.hangs: set[str] = set()  # scripts that outlive their timeout and are killed
         self.timeouts: list[float] = []
         self.within_budget = True
+        self.backup_exit = 0
+        # the private data repo: its branch, whether its index was already dirty, whether the run changed it
+        self.git = {"branch": "main", "prestaged": False, "changes": True, "push": 0, "added": False}
 
     def __call__(self, cmd, cwd, env, timeout):
         assert cwd == self.root and env["NEO4J_URI"] == ENV["NEO4J_URI"]
         self.calls.append(list(cmd))
         self.timeouts.append(timeout)
+        if cmd[0] == "git":
+            return self._git(cmd[3:])
         script = Path(cmd[1]).name
+        if script == "export_live_graph.py" and "--backup" in cmd:
+            if self.backup_exit:
+                return rw.Result(self.backup_exit, "ERROR: incomplete backup: wrote 3 nodes\n")
+            out = Path(cmd[cmd.index("--out-dir") + 1])
+            _jsonl(out / "nodes.jsonl", 3)
+            _jsonl(out / "edges.jsonl", 2)
+            return rw.Result(0, "live graph export complete\n")
         if script in self.hangs:
             return rw.Result(-9, f"{script}: fetching page 12\n", timed_out_after=timeout)
         if self.exit_codes.get(script):
@@ -83,8 +96,28 @@ class FakeWorld:
                 "sqlite": {"size_bytes": 26, "budget_bytes": 100, "within_budget": self.within_budget}}))
         return rw.Result(0, "ok\n")
 
+    def _git(self, args: list[str]) -> rw.Result:
+        git = self.git
+        if args == ["rev-parse", "--abbrev-ref", "HEAD"]:
+            return rw.Result(0, git["branch"] + "\n")
+        if args == ["diff", "--cached", "--quiet"]:
+            return rw.Result(int(git["prestaged"] or (git["added"] and git["changes"])), "")
+        if args[0] == "add":
+            git["added"] = True
+            return rw.Result(0, "")
+        if args[0] == "commit":
+            return rw.Result(0, "[main 1a2b3c4] data: snapshot\n")
+        if args[0] == "push":
+            return rw.Result(git["push"], "" if not git["push"] else "fatal: could not read from remote\n")
+        if args == ["rev-parse", "--short", "HEAD"]:
+            return rw.Result(0, "1a2b3c4\n")
+        raise AssertionError(f"unexpected git {args}")
+
     def scripts(self) -> list[str]:
-        return [Path(cmd[1]).name for cmd in self.calls]
+        return [Path(cmd[1]).name if cmd[0] != "git" else f"git {cmd[3]}" for cmd in self.calls]
+
+    def backed_up(self) -> bool:
+        return any("--backup" in cmd for cmd in self.calls)
 
 
 @pytest.fixture
@@ -96,6 +129,13 @@ def root(tmp_path: Path) -> Path:
         "  - {id: b, adapter: granicus, url: u, schedule: weekly}\n"
         "  - {id: c, adapter: granicus, url: u, schedule: manual}\n"
     )
+    # as on the operator's machine: data/normalized and data/extracted live in a private git repo
+    private = tmp_path / "private-data"
+    (private / ".git").mkdir(parents=True)
+    (tmp_path / "data").mkdir()
+    for layer in ("normalized", "extracted"):
+        (private / layer).mkdir()
+        (tmp_path / "data" / layer).symlink_to(private / layer)
     for name in NORMALIZED.values():
         _jsonl(tmp_path / f"data/normalized/{name}/nodes.jsonl", 10)
     ledger = tmp_path / "data/ingest-runs/ledger.jsonl"
@@ -111,7 +151,7 @@ def world(root: Path) -> FakeWorld:
 
 
 @pytest.fixture
-def pings() -> list[str]:
+def pings() -> list[tuple[str, str]]:
     return []
 
 
@@ -120,7 +160,7 @@ def ctx(root: Path, world: FakeWorld, pings: list[str]) -> rw.Context:
     return rw.Context(root=root, runner=world, env=dict(ENV), python="py",
                       now=lambda: datetime(2026, 9, 28, 5, 0, 0, tzinfo=timezone.utc),
                       free_bytes=lambda path: 50 * 1024**3, meeting_registries=("granicus",),
-                      ping=pings.append)  # never the network
+                      ping=lambda url, body: pings.append((url, body)))  # never the network
 
 
 def _state(root: Path) -> dict:
@@ -316,6 +356,8 @@ def test_load_loads_only_accepted_sources_from_the_approved_bytes(ctx, world, ro
     staging = root / "data/exports/staging"
     approved_a = json.loads((run_dir / "state.json").read_text())["sources"]["a"]["capture"]["path"]
     assert world.calls == [
+        ["py", "scripts/export_live_graph.py", "--backup", "--out-dir",
+         str(root / f"data/exports/backups/pre-load-{RUN}")],
         # Meetings load from exactly the approved capture, never "the latest".
         ["py", "scripts/normalize_meetings.py", "--source", "a", "--capture", str(root / approved_a), "--load"],
         ["py", "scripts/ingest_form700.py", "--load-from", str(run_dir / "staged/form700")],
@@ -431,7 +473,7 @@ def test_a_capture_that_changes_while_it_loads_fails_the_run(ctx, world, root):
     state = _state(root)
     assert state["status"] == "failed" and "a changed while loading" in state["error"]
     assert _permit_rows(root) == 10
-    assert world.scripts() == ["normalize_meetings.py"]  # stopped at once
+    assert world.scripts() == ["export_live_graph.py", "normalize_meetings.py"]  # backup, then stopped at once
 
 
 def test_a_failed_load_step_fails_the_run_and_stops(ctx, world, root):
@@ -453,6 +495,87 @@ def test_an_over_budget_bake_fails_the_run(ctx, world, root):
 
     assert rw.main(["load", RUN], ctx) == 1
     assert "budget" in _state(root)["error"]
+
+
+def test_load_backs_up_the_whole_graph_before_touching_it(ctx, world, root):
+    _staged(ctx)
+    world.calls.clear()
+
+    assert rw.main(["load", RUN], ctx) == 0
+
+    assert world.calls[0] == ["py", "scripts/export_live_graph.py", "--backup", "--out-dir",
+                              str(root / f"data/exports/backups/pre-load-{RUN}")]
+    assert _state(root)["backup"] == f"data/exports/backups/pre-load-{RUN}"
+    assert f"data/exports/backups/pre-load-{RUN}" in _digest(root)
+
+
+def test_a_failed_backup_fails_the_run_before_anything_is_loaded(ctx, world, root):
+    _staged(ctx)
+    world.calls.clear()
+    world.backup_exit = 1
+
+    assert rw.main(["load", RUN], ctx) == 1
+
+    state = _state(root)
+    assert state["status"] == "failed" and "backup exited 1" in state["error"]
+    assert "nothing was loaded" in state["error"] and "backup" not in state
+    assert world.scripts() == ["export_live_graph.py"]
+
+
+def test_a_retried_load_keeps_the_first_backup_of_the_untouched_graph(ctx, world, root):
+    _staged(ctx)
+    world.exit_codes["ingest_form700.py"] = 1
+    assert rw.main(["load", RUN], ctx) == 1
+    world.exit_codes.clear()
+
+    assert rw.main(["load", RUN], ctx) == 0
+
+    assert sum("--backup" in cmd for cmd in world.calls) == 1
+
+
+@pytest.mark.parametrize("database,says", [(None, "missing NEO4J_DATABASE"), ("other", "NEO4J_DATABASE=other")])
+def test_load_refuses_a_database_the_loaders_do_not_write_to(ctx, world, root, capsys, database, says):
+    _staged(ctx)
+    world.calls.clear()
+    if database is None:
+        del ctx.env["NEO4J_DATABASE"]
+    else:
+        ctx.env["NEO4J_DATABASE"] = database
+
+    assert rw.main(["load", RUN], ctx) == 2
+
+    assert says in capsys.readouterr().err
+    assert _state(root)["status"] == "awaiting_load_approval" and world.calls == []
+
+
+def test_a_crash_after_loading_fails_the_run_visibly_and_rebake_recovers_it(ctx, world, root):
+    _staged(ctx)
+
+    def export_crashes(cmd, cwd, env, timeout):
+        if Path(cmd[1]).name == "export_live_graph.py" and "--backup" not in cmd:
+            raise OSError("bolt reset")
+        return world(cmd, cwd, env, timeout)
+    ctx.runner = export_crashes
+
+    assert rw.main(["load", RUN], ctx) == 1
+    state = _state(root)
+    assert state["status"] == "failed" and "crashed: OSError: bolt reset" in state["error"]
+
+    ctx.runner = world
+    assert rw.main(["rebake", RUN], ctx) == 0
+    assert _state(root)["status"] == "awaiting_publish_approval"
+
+
+def test_rebake_reruns_a_reconciliation_that_failed(ctx, world, root):
+    _staged(ctx)
+    world.exit_codes["refresh_reconciliation.sh"] = 1
+    assert rw.main(["load", RUN], ctx) == 1
+    world.exit_codes.clear()
+    world.calls.clear()
+
+    assert rw.main(["rebake", RUN], ctx) == 0
+
+    assert world.scripts() == ["refresh_reconciliation.sh", "export_live_graph.py", "bake_public_substrate.py"]
 
 
 # --- publish -----------------------------------------------------------------
@@ -873,49 +996,82 @@ def test_rebake_refuses_a_run_that_failed_before_it_ever_loaded(ctx, root):
     assert rw.main(["rebake", RUN], ctx) == 2
 
 
-# --- the heartbeat: "Open Marin weekly review ready" ---------------------------
-# Pinged only by the stage run that just persisted awaiting_load_approval and its
-# digest. Partial success still pings (a green check means "review available",
-# never "every source healthy"). A ping failure never changes the run.
+# --- weekly: the unattended pipeline and its heartbeat ------------------------
+# `weekly` (what the LaunchAgent runs) stages, loads, publishes and snapshots the
+# private data repo with no human gate; the checks are the gate. It pings the
+# Healthchecks.io check once at the end: the plain URL only when the run was clean,
+# `<URL>/fail` otherwise, so any failure emails the operator at once. The ping's
+# body says what happened; it never carries a secret.
 
 HEARTBEAT = "https://hc-ping.com/0f3c9e2a-5b7d-4e61-9a0c-7d2b1e4f8a63"
 SECRET = "0f3c9e2a-5b7d-4e61-9a0c-7d2b1e4f8a63"
+FAIL = HEARTBEAT + "/fail"
+LIVE_SQLITE = "data/exports/public-substrate.sqlite"
 
 
 def _everything_written(root: Path) -> str:
     return "".join(f.read_text() for f in (root / "data/ingest-runs").rglob("*") if f.is_file())
 
 
-def test_a_completed_stage_pings_once_after_its_state_and_digest_are_persisted(ctx, root, capsys):
+def _weekly(ctx: rw.Context) -> int:
+    ctx.env[rw.HEARTBEAT_ENV] = HEARTBEAT
+    return rw.main(["weekly"], ctx)
+
+
+def test_weekly_stages_loads_publishes_and_snapshots_then_pings_success_once(ctx, world, root, pings):
     seen = []
 
-    def ping(url):
-        seen.append((url, _state(root)["status"], "awaiting_load_approval" in _digest(root)))
-    ctx.env[rw.HEARTBEAT_ENV], ctx.ping = HEARTBEAT, ping
+    def ping(url, body):
+        state = _state(root)
+        seen.append((url, state["status"], state["snapshot"]["ok"], "published" in _digest(root)))
+        pings.append((url, body))
+    ctx.ping = ping
 
-    assert rw.main(["stage"], ctx) == 0
+    assert _weekly(ctx) == 0
 
-    assert seen == [(HEARTBEAT, "awaiting_load_approval", True)]
-    assert _state(root)["heartbeat"] == {"ok": True, "at": "2026-09-28T05:00:00+00:00"}
-    out = capsys.readouterr()
-    assert SECRET not in out.out + out.err + _everything_written(root)
+    assert seen == [(HEARTBEAT, "published", True, True)]
+    state = _state(root)
+    assert state["snapshot"] == {"ok": True, "commit": "1a2b3c4", "changed": True}
+    assert state["heartbeat"] == {"ok": True, "at": "2026-09-28T05:00:00+00:00", "signal": "success"}
+    assert (root / LIVE_SQLITE).is_file()
+    assert f"weekly refresh {RUN}: published" in pings[0][1]
+    scripts = world.scripts()
+    assert scripts.index("export_live_graph.py") < scripts.index("normalize_meetings.py")  # backup first
+    repo = str((root / "data/normalized").resolve().parent)
+    assert [c[3:] for c in world.calls if c[0] == "git"] == [
+        ["rev-parse", "--abbrev-ref", "HEAD"], ["diff", "--cached", "--quiet"],
+        ["add", "--", "normalized", "extracted"], ["diff", "--cached", "--quiet"],
+        ["commit", "-m", f"data: snapshot at publish {RUN}"], ["push", "origin", "main"],
+        ["rev-parse", "--short", "HEAD"],
+    ]
+    assert all(c[1:3] == ["-C", repo] for c in world.calls if c[0] == "git")
 
 
-def test_partial_success_still_pings(ctx, world, root, pings):
-    ctx.env[rw.HEARTBEAT_ENV] = HEARTBEAT
-    world.hangs.add("ingest_courtlistener_cases.py")
+def test_a_held_source_publishes_the_rest_but_pings_fail(ctx, world, root, pings):
+    world.exit_codes["ingest_form700.py"] = 1
 
-    assert rw.main(["stage"], ctx) == 1  # exit 1 flags the failed source; the review is still ready
-    assert pings == [HEARTBEAT]
+    assert _weekly(ctx) == 1
+
+    state = _state(root)
+    assert state["status"] == "published" and not state["sources"]["form700"]["ok"]
+    assert [url for url, _ in pings] == [FAIL]
+    assert "held sources (not refreshed): form700" in pings[0][1]
+    assert state["heartbeat"]["signal"] == "fail"
 
 
 def _crash(cmd, cwd, env, timeout):
     raise OSError("network stack gone")
 
 
-@pytest.mark.parametrize("breakage", ["preflight", "every-source-failed", "crash", "unfinished-digest"])
-def test_a_stage_that_did_not_reach_review_never_pings(ctx, world, root, pings, monkeypatch, breakage):
-    ctx.env[rw.HEARTBEAT_ENV] = HEARTBEAT
+@pytest.mark.parametrize("breakage,status,says", [
+    ("preflight", "failed", "preflight failed"),
+    ("every-source-failed", "failed", "every source failed"),
+    ("crash", "failed", "stage crashed"),
+    ("backup", "failed", "backup"),
+    ("load", "load_failed", "load-a"),
+    ("over-budget", "failed", "budget"),
+])
+def test_a_run_that_breaks_publishes_nothing_and_pings_fail(ctx, world, root, pings, breakage, status, says):
     if breakage == "preflight":
         ctx.env["NEO4J_URI"] = "bolt://localhost:7687"
     elif breakage == "every-source-failed":
@@ -923,27 +1079,97 @@ def test_a_stage_that_did_not_reach_review_never_pings(ctx, world, root, pings, 
         world.exit_codes.update({script: 2 for script in STAGED_SCRIPTS.values()})
     elif breakage == "crash":
         ctx.runner = _crash
-    else:  # state.json says awaiting_load_approval, but its digest was never written
-        render = rw.render_digest
+    elif breakage == "backup":
+        world.backup_exit = 1
+    elif breakage == "load":
+        world.exit_codes["normalize_meetings.py"] = 1
+    else:
+        world.within_budget = False
 
-        def render_digest(state):
-            if state["status"] == "awaiting_load_approval":
-                raise OSError("disk full")
-            return render(state)
-        monkeypatch.setattr(rw, "render_digest", render_digest)
+    assert _weekly(ctx) == 1
 
-    assert rw.main(["stage"], ctx) == 1
-
-    assert _state(root)["status"] == "failed" and pings == []
+    assert _state(root)["status"] == status
+    assert not (root / LIVE_SQLITE).exists()
+    assert [url for url, _ in pings] == [FAIL]
+    assert says in pings[0][1]
 
 
-def test_a_stage_refused_by_the_lock_never_pings(ctx, root, pings):
+def test_a_weekly_run_refused_by_the_lock_pings_fail(ctx, root, pings):
     import run_lock
 
-    ctx.env[rw.HEARTBEAT_ENV] = HEARTBEAT
     with run_lock.run_lock(root):
-        assert rw.main(["stage"], ctx) == 2
-    assert pings == []
+        assert _weekly(ctx) == 2
+
+    assert [url for url, _ in pings] == [FAIL]
+    assert "lock" in pings[0][1]
+
+
+@pytest.mark.parametrize("how", ["load_failed", "killed"])
+def test_weekly_runs_nothing_while_an_earlier_load_is_unresolved(ctx, world, root, pings, how):
+    if how == "load_failed":
+        world.exit_codes["normalize_meetings.py"] = 1
+        assert _weekly(ctx) == 1
+    else:  # the process died mid-load: backed up, never recorded an outcome
+        _staged(ctx)
+        rw.write_state(root, RUN, {**_state(root), "backup": f"data/exports/backups/pre-load-{RUN}"})
+    world.exit_codes.clear()
+    pings.clear()
+    world.calls.clear()
+
+    assert _weekly(_at(ctx, NEXT_WEEK)) == 1
+
+    # nothing fetched either: a new capture would make the earlier run's retry refuse its bytes
+    assert world.calls == [] and not (root / f"data/ingest-runs/{NEXT_RUN}").exists()
+    assert [url for url, _ in pings] == [FAIL]
+    assert f"run {RUN} stopped partway through its load" in pings[0][1]
+
+
+def test_a_weekly_run_that_cannot_take_the_lock_at_all_pings_fail(ctx, root, pings, monkeypatch):
+    def broken_lock(root):
+        raise OSError("No space left on device")
+    monkeypatch.setattr(rw, "run_lock", broken_lock)
+
+    assert _weekly(ctx) == 1
+
+    assert [url for url, _ in pings] == [FAIL]
+    assert "No space left on device" in pings[0][1]
+
+
+@pytest.mark.parametrize("trouble,says", [
+    ("branch", "on feature, not main"),
+    ("prestaged", "already had staged changes"),
+    ("push", "snapshot-push exited 1"),
+    ("not-a-repo", "not a git repo"),
+])
+def test_a_failed_snapshot_keeps_the_publish_but_pings_fail(ctx, world, root, pings, trouble, says):
+    if trouble == "branch":
+        world.git["branch"] = "feature"
+    elif trouble == "prestaged":
+        world.git["prestaged"] = True
+    elif trouble == "push":
+        world.git["push"] = 1
+    else:
+        (root / "data/normalized").resolve().parent.joinpath(".git").rmdir()
+
+    assert _weekly(ctx) == 1
+
+    state = _state(root)
+    assert state["status"] == "published" and state["snapshot"]["ok"] is False
+    assert says in state["snapshot"]["error"]
+    assert [url for url, _ in pings] == [FAIL]
+    assert "private data snapshot failed" in pings[0][1]
+    if trouble in ("branch", "prestaged"):
+        assert not any(c[3] in ("add", "commit") for c in world.calls if c[0] == "git")
+
+
+def test_a_snapshot_with_nothing_new_commits_nothing_and_is_clean(ctx, world, root, pings):
+    world.git["changes"] = False
+
+    assert _weekly(ctx) == 0
+
+    assert _state(root)["snapshot"] == {"ok": True, "commit": "1a2b3c4", "changed": False}
+    assert not any(c[3] == "commit" for c in world.calls if c[0] == "git")
+    assert [url for url, _ in pings] == [HEARTBEAT]
 
 
 @pytest.mark.parametrize("value", [None, "", "  "])
@@ -951,7 +1177,7 @@ def test_no_heartbeat_url_means_no_ping_and_no_error(ctx, root, pings, capsys, v
     if value is not None:
         ctx.env[rw.HEARTBEAT_ENV] = value
 
-    assert rw.main(["stage"], ctx) == 0
+    assert rw.main(["weekly"], ctx) == 0
 
     assert pings == [] and "heartbeat" not in _state(root)
     assert "heartbeat" not in capsys.readouterr().err
@@ -962,16 +1188,16 @@ def test_a_failed_ping_is_recorded_but_never_changes_the_runs_status_or_exit(ctx
                                                                             sources_fail, exit_code):
     import urllib.error
 
-    def ping(url):
+    def ping(url, body):
         raise urllib.error.URLError(f"cannot reach {url}")
-    ctx.env[rw.HEARTBEAT_ENV], ctx.ping = HEARTBEAT, ping
+    ctx.ping = ping
     if sources_fail:
         world.exit_codes["ingest_form700.py"] = 1
 
-    assert rw.main(["stage"], ctx) == exit_code
+    assert _weekly(ctx) == exit_code
 
     state = _state(root)
-    assert state["status"] == "awaiting_load_approval"
+    assert state["status"] == "published"
     assert state["heartbeat"]["ok"] is False and "URLError" in state["heartbeat"]["error"]
     assert "Heartbeat" in _digest(root) and "FAILED" in _digest(root)
     out = capsys.readouterr()
@@ -979,37 +1205,91 @@ def test_a_failed_ping_is_recorded_but_never_changes_the_runs_status_or_exit(ctx
     assert SECRET not in out.out + out.err + _everything_written(root)
 
 
-def test_only_the_run_that_just_completed_pings_never_an_old_one(ctx, world, root, pings):
+def test_the_manual_commands_never_ping(ctx, world, root, pings):
     ctx.env[rw.HEARTBEAT_ENV] = HEARTBEAT
-    _staged(ctx)
-    assert pings == [HEARTBEAT]
 
+    _staged(ctx)
     rw.main(["status"], ctx)
     rw.main(["load", RUN], ctx)
     rw.main(["publish", RUN], ctx)
-    next_week = _at(ctx, NEXT_WEEK)
-    next_week.env["NEO4J_URI"] = "bolt://localhost:7687"  # next week's stage fails preflight
-    assert rw.main(["stage"], next_week) == 1
+    rw.main(["rollback", RUN], ctx)
 
-    assert pings == [HEARTBEAT]
+    assert pings == []
 
 
 def test_steps_never_see_the_heartbeat_url(ctx, world, root):
     seen = []
-    ctx.env[rw.HEARTBEAT_ENV] = HEARTBEAT
     ctx.runner = lambda cmd, cwd, env, t: (seen.append(dict(env)), world(cmd, cwd, env, t))[1]
 
-    _staged(ctx)
+    assert _weekly(ctx) == 0
 
     assert seen and not any(rw.HEARTBEAT_ENV in env or HEARTBEAT in env.values() for env in seen)
 
 
+def test_no_secret_reaches_state_digest_logs_output_or_the_ping(ctx, world, root, pings, capsys):
+    password, token = "s3cret-neo4j-pw", "cl-token-abcdef123456"
+    ctx.env.update(NEO4J_PASSWORD=password, COURTLISTENER_API_TOKEN=token)
+
+    def leaky(cmd, cwd, env, timeout):
+        if Path(cmd[1]).name == "ingest_form700.py":
+            return rw.Result(1, f"auth failed for neo4j/{password} with token {token} at {HEARTBEAT}\n")
+        return world(cmd, cwd, env, timeout)
+    ctx.runner = leaky
+
+    assert _weekly(ctx) == 1
+
+    out = capsys.readouterr()
+    everything = out.out + out.err + _everything_written(root) + "".join(body for _, body in pings)
+    assert "[redacted]" in _everything_written(root)
+    for secret in (password, token, SECRET):
+        assert secret not in everything
+
+
+def test_secrets_in_a_crash_short_secrets_and_long_errors_never_leak(ctx, world, root, pings, capsys):
+    short, token = "pw9", "cl-token-abcdef123456"
+    ctx.env.update(NEO4J_PASSWORD=short, COURTLISTENER_API_TOKEN=token)
+    padding = "x" * (rw.PING_ERROR_CHARS - 10)
+
+    def crashing(cmd, cwd, env, timeout):
+        raise OSError(f"{padding} auth {token} {short}")  # the token straddles the ping's cut
+    ctx.runner = crashing
+
+    assert _weekly(ctx) == 1
+
+    out = capsys.readouterr()
+    everything = out.out + out.err + _everything_written(root) + "".join(body for _, body in pings)
+    assert "[redacted]" in _everything_written(root)
+    for leaked in (short, token, token[:8]):
+        assert leaked not in everything
+
+
+@pytest.mark.parametrize("damage", ["digest-missing", "digest-stale", "state-not-published", "no-snapshot"])
+def test_success_is_judged_from_what_is_on_disk_not_what_is_in_memory(ctx, root, pings, damage):
+    assert rw.main(["weekly"], ctx) == 0  # no URL yet: nothing pinged
+    state = _state(root)
+    digest = root / f"data/ingest-runs/{RUN}/digest.md"
+    if damage == "digest-missing":
+        digest.unlink()
+    elif damage == "digest-stale":
+        digest.write_text(digest.read_text().replace("published", "staging"))
+    elif damage == "state-not-published":
+        rw.write_state(root, RUN, {**state, "status": "awaiting_publish_approval"})
+    else:
+        rw.write_state(root, RUN, {k: v for k, v in state.items() if k != "snapshot"})
+    ctx.env[rw.HEARTBEAT_ENV] = HEARTBEAT
+
+    assert rw.heartbeat(ctx, state, problem=None) is False
+
+    assert [url for url, _ in pings] == [FAIL]
+
+
 class _Transport:
     def __init__(self, *failures):
-        self.failures, self.calls = list(failures), []
+        self.failures, self.calls, self.requests = list(failures), [], []
 
     def __call__(self, req, timeout=None):
         self.calls.append((req.full_url, timeout))
+        self.requests.append(req)
         if self.failures:
             raise self.failures.pop(0)
         return io.BytesIO(b"OK")
@@ -1044,19 +1324,12 @@ def test_http_ping_does_not_retry_a_rejected_url(monkeypatch):
     assert len(transport.calls) == 1
 
 
-@pytest.mark.parametrize("damage", ["digest-missing", "digest-stale", "state-not-awaiting"])
-def test_the_heartbeat_checks_what_is_on_disk_not_what_is_in_memory(ctx, root, pings, damage):
-    _staged(ctx)
-    state = _state(root)
-    digest = root / f"data/ingest-runs/{RUN}/digest.md"
-    if damage == "digest-missing":
-        digest.unlink()
-    elif damage == "digest-stale":
-        digest.write_text(digest.read_text().replace("awaiting_load_approval", "staging"))
-    else:
-        rw.write_state(root, RUN, {**state, "status": "staged"})
-    ctx.env[rw.HEARTBEAT_ENV] = HEARTBEAT
+def test_http_ping_posts_the_body(monkeypatch):
+    import urllib.request
 
-    rw.heartbeat(ctx, state)
+    transport = _Transport()
+    monkeypatch.setattr(urllib.request, "urlopen", transport)
 
-    assert pings == []
+    rw.http_ping(FAIL, "run failed")
+
+    assert transport.requests[0].data == b"run failed" and transport.requests[0].get_method() == "POST"

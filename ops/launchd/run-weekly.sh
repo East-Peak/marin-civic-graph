@@ -1,11 +1,13 @@
 #!/bin/bash
 # What the weekly LaunchAgent runs: rotate the logs, source the operator-local env file,
-# then `refresh_weekly.py stage` from the repo, passing its exit code back to launchd.
+# then `refresh_weekly.py weekly` (stage, load, publish, snapshot, heartbeat) from the repo,
+# passing its exit code back to launchd.
 #
-# weekly.env (gitignored; see weekly.env.example) holds OPEN_MARIN_HEARTBEAT_URL, a secret.
-# It is sourced only when no one but its owner can read or write it (chmod 600), and its
-# contents are never echoed. A missing or exposed env file is reported, and stage still
-# runs without a heartbeat, so the external monitor's missed-heartbeat email points here.
+# weekly.env (gitignored; see weekly.env.example) holds secrets: the heartbeat URL and the
+# graph's credentials. It is sourced only when no one but its owner can read or write it
+# (chmod 600), and its contents are never echoed. A missing or exposed env file is reported,
+# and the run still starts, without a heartbeat or credentials, so it stops at its load and
+# the external monitor's missed-heartbeat email points here.
 #
 # Test seams (defaults in brackets): OPEN_MARIN_ENV_FILE [ops/launchd/weekly.env],
 # OPEN_MARIN_LOG_DIR [data/ingest-runs/launchd], OPEN_MARIN_PYTHON [.venv/bin/python],
@@ -31,8 +33,8 @@ rotate() {  # <log>: once it reaches max_bytes, shift log -> log.1 -> ... -> log
 
 mkdir -p "$log_dir"
 for log in "$log_dir"/*.log; do rotate "$log"; done
-exec >>"$log_dir/weekly-stage.log" 2>&1
-echo "=== $(date -u +%Y-%m-%dT%H:%M:%SZ) weekly stage starting"
+exec >>"$log_dir/weekly.log" 2>&1
+echo "=== $(date -u +%Y-%m-%dT%H:%M:%SZ) weekly run starting"
 
 private() {  # no permission bits for group or other: -rw------- or stricter
   local mode
@@ -52,7 +54,7 @@ else
 fi
 
 cd "$repo" || exit 1
-"$python" scripts/refresh_weekly.py stage
+"$python" scripts/refresh_weekly.py weekly
 status=$?
-echo "=== $(date -u +%Y-%m-%dT%H:%M:%SZ) weekly stage exited $status"
+echo "=== $(date -u +%Y-%m-%dT%H:%M:%SZ) weekly run exited $status"
 exit "$status"

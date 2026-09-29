@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!--
-  Weekly Open Marin ingestion for this machine: runs `refresh_weekly.py stage` only, through
-  run-weekly-stage.sh, which sources the operator-local weekly.env (the heartbeat URL is a
-  secret; this repo is public) and rotates the logs. Loading into the graph and publishing
-  stay manual operator gates. Install with ops/launchd/install.sh (see README.md here).
+  Weekly Open Marin refresh for this machine: runs `refresh_weekly.py weekly` (stage, load,
+  publish, snapshot the private data repo, heartbeat) through run-weekly.sh, which sources the
+  operator-local weekly.env (the heartbeat URL and graph credentials are secrets; this repo is
+  public) and rotates the logs. Install with ops/launchd/install.sh (see README.md here).
   No KeepAlive and no RunAtLoad: it runs on the calendar, or when the operator kickstarts it.
 -->
 <plist version="1.0">
@@ -15,7 +15,7 @@
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>/Users/tammypais/projects/marin-civic-graph/ops/launchd/run-weekly-stage.sh</string>
+        <string>/Users/tammypais/projects/marin-civic-graph/ops/launchd/run-weekly.sh</string>
     </array>
     <key>WorkingDirectory</key>
     <string>/Users/tammypais/projects/marin-civic-graph</string>
@@ -32,9 +32,9 @@
     </dict>
 
     <!--
-      stage needs NEO4J_URI only for its preflight guard (scripts/neo4j_target.py); it never
-      connects. 7688 is Open Marin's operator graph; 7687 is the family-tree store. No
-      credentials: stage doesn't need them.
+      The graph target, checked by the preflight guard (scripts/neo4j_target.py): 7688 is Open
+      Marin's operator graph; 7687 is the family-tree store. Its credentials are secrets, so
+      they live in weekly.env, never here.
     -->
     <key>EnvironmentVariables</key>
     <dict>
@@ -42,7 +42,7 @@
         <string>bolt://localhost:7688</string>
     </dict>
 
-    <!-- The wrapper sends everything to weekly-stage.log; these catch only a wrapper that can't start. -->
+    <!-- The wrapper sends everything to weekly.log; these catch only a wrapper that can't start. -->
     <key>StandardOutPath</key>
     <string>/Users/tammypais/projects/marin-civic-graph/data/ingest-runs/launchd/launchd.out.log</string>
     <key>StandardErrorPath</key>

@@ -19,6 +19,7 @@ LABEL = "cc.eastpeak.openmarin-refresh-weekly"
 MACHINE_REPO = "/Users/tammypais/projects/marin-civic-graph"
 SECRET = "https://hc-ping.com/0f3c9e2a-5b7d-4e61-9a0c-7d2b1e4f8a63"
 MINIMAL_PATH = "/usr/bin:/bin:/usr/sbin:/sbin"  # what launchd gives a job
+NEO4J_LINES = "NEO4J_USER=neo4j\nNEO4J_PASSWORD=example-pw\nNEO4J_DATABASE=neo4j\n"  # load needs them
 
 
 # --- the plist -------------------------------------------------------------------
@@ -32,7 +33,7 @@ def test_the_plist_runs_the_wrapper_for_this_machine_on_monday_at_five():
     plist = _plist()
 
     assert plist["Label"] == LABEL
-    assert plist["ProgramArguments"] == ["/bin/bash", f"{MACHINE_REPO}/ops/launchd/run-weekly-stage.sh"]
+    assert plist["ProgramArguments"] == ["/bin/bash", f"{MACHINE_REPO}/ops/launchd/run-weekly.sh"]
     assert plist["WorkingDirectory"] == MACHINE_REPO
     assert plist["StartCalendarInterval"] == {"Weekday": 1, "Hour": 5, "Minute": 0}
     assert plist["EnvironmentVariables"] == {"NEO4J_URI": "bolt://localhost:7688"}  # the guard only; never 7687
@@ -58,6 +59,8 @@ def test_the_env_file_is_gitignored_and_only_its_example_is_committed():
     assert ignored.returncode == 0
     example = (OPS / "weekly.env.example").read_text()
     assert "OPEN_MARIN_HEARTBEAT_URL=\n" in example and "hc-ping.com/" not in example
+    for var in ("NEO4J_USER", "NEO4J_PASSWORD", "NEO4J_DATABASE"):
+        assert f"{var}=\n" in example
 
 
 # --- the wrapper -----------------------------------------------------------------
@@ -87,33 +90,33 @@ def wrapper_env(tmp_path: Path) -> dict[str, str]:
 
 
 def _wrap(env: dict[str, str]) -> tuple[int, str]:
-    proc = subprocess.run(["/bin/bash", str(OPS / "run-weekly-stage.sh")], env=env, capture_output=True, text=True)
-    log = Path(env["OPEN_MARIN_LOG_DIR"]) / "weekly-stage.log"
+    proc = subprocess.run(["/bin/bash", str(OPS / "run-weekly.sh")], env=env, capture_output=True, text=True)
+    log = Path(env["OPEN_MARIN_LOG_DIR"]) / "weekly.log"
     return proc.returncode, proc.stdout + proc.stderr + (log.read_text() if log.exists() else "")
 
 
-def test_the_wrapper_sources_the_env_file_and_runs_stage_from_the_repo(wrapper_env):
+def test_the_wrapper_sources_the_env_file_and_runs_the_weekly_pipeline_from_the_repo(wrapper_env):
     code, log = _wrap(wrapper_env)
 
     assert code == 0
-    assert f"cwd={REPO} args=scripts/refresh_weekly.py stage" in log
+    assert f"cwd={REPO} args=scripts/refresh_weekly.py weekly" in log
     assert "neo4j=bolt://localhost:7688 heartbeat=set" in log
     assert SECRET not in log
 
 
-def test_the_wrapper_passes_stages_exit_code_through(wrapper_env):
+def test_the_wrapper_passes_the_runs_exit_code_through(wrapper_env):
     code, log = _wrap({**wrapper_env, "FAKE_EXIT": "1"})
 
     assert code == 1 and "exited 1" in log
 
 
-def test_a_missing_env_file_is_reported_and_stage_still_runs_without_a_heartbeat(wrapper_env):
+def test_a_missing_env_file_is_reported_and_the_run_still_starts_without_a_heartbeat(wrapper_env):
     Path(wrapper_env["OPEN_MARIN_ENV_FILE"]).unlink()
 
     code, log = _wrap(wrapper_env)
 
     assert code == 0 and "WARNING" in log and "weekly.env" in log
-    assert "args=scripts/refresh_weekly.py stage" in log and "heartbeat=set" not in log
+    assert "args=scripts/refresh_weekly.py weekly" in log and "heartbeat=set" not in log
 
 
 @pytest.mark.parametrize("mode", [0o644, 0o660, 0o606])
@@ -130,25 +133,25 @@ def test_the_wrapper_creates_its_log_dir_and_appends_run_after_run(wrapper_env):
     _wrap(wrapper_env)
     _wrap(wrapper_env)
 
-    log = (Path(wrapper_env["OPEN_MARIN_LOG_DIR"]) / "weekly-stage.log").read_text()
-    assert log.count("args=scripts/refresh_weekly.py stage") == 2
+    log = (Path(wrapper_env["OPEN_MARIN_LOG_DIR"]) / "weekly.log").read_text()
+    assert log.count("args=scripts/refresh_weekly.py weekly") == 2
 
 
 def test_logs_over_the_size_limit_rotate_keeping_three_generations(wrapper_env):
     logs = Path(wrapper_env["OPEN_MARIN_LOG_DIR"])
     logs.mkdir()
-    for name, text in {"weekly-stage.log": "current " * 50, "weekly-stage.log.1": "gen1",
-                       "weekly-stage.log.2": "gen2", "weekly-stage.log.3": "gen3",
+    for name, text in {"weekly.log": "current " * 50, "weekly.log.1": "gen1",
+                       "weekly.log.2": "gen2", "weekly.log.3": "gen3",
                        "launchd.err.log": "stderr " * 50, "launchd.out.log": "small"}.items():
         (logs / name).write_text(text)
 
     _wrap({**wrapper_env, "OPEN_MARIN_LOG_MAX_BYTES": "100"})
 
-    assert (logs / "weekly-stage.log.1").read_text().startswith("current")
-    assert (logs / "weekly-stage.log.2").read_text() == "gen1"
-    assert (logs / "weekly-stage.log.3").read_text() == "gen2"  # gen3 was the oldest and is gone
-    assert not (logs / "weekly-stage.log.4").exists()
-    assert "current" not in (logs / "weekly-stage.log").read_text()
+    assert (logs / "weekly.log.1").read_text().startswith("current")
+    assert (logs / "weekly.log.2").read_text() == "gen1"
+    assert (logs / "weekly.log.3").read_text() == "gen2"  # gen3 was the oldest and is gone
+    assert not (logs / "weekly.log.4").exists()
+    assert "current" not in (logs / "weekly.log").read_text()
     assert (logs / "launchd.err.log.1").read_text().startswith("stderr")
     assert (logs / "launchd.out.log").read_text() == "small" and not (logs / "launchd.out.log.1").exists()
 
@@ -162,14 +165,14 @@ def checkout(tmp_path: Path) -> Path:
     repo = tmp_path / "repo"
     (repo / "ops/launchd").mkdir(parents=True)
     (repo / "data/ingest-runs").mkdir(parents=True)
-    for name in ("install.sh", "run-weekly-stage.sh"):
+    for name in ("install.sh", "run-weekly.sh"):
         shutil.copy2(OPS / name, repo / "ops/launchd" / name)
     plist = (OPS / f"{LABEL}.plist").read_text().replace(MACHINE_REPO, str(repo))
     (repo / f"ops/launchd/{LABEL}.plist").write_text(plist)
     (repo / ".venv/bin").mkdir(parents=True)
     _executable(repo / ".venv/bin/python", "#!/bin/bash\n")
     env_file = repo / "ops/launchd/weekly.env"
-    env_file.write_text(f"OPEN_MARIN_HEARTBEAT_URL={SECRET}\n")
+    env_file.write_text(f"OPEN_MARIN_HEARTBEAT_URL={SECRET}\n{NEO4J_LINES}")
     env_file.chmod(0o600)
     calls = tmp_path / "calls"
     for tool in ("launchctl", "plutil"):
@@ -207,15 +210,19 @@ def test_install_lints_copies_and_bootstraps_after_precreating_the_log_dir(check
 
 @pytest.mark.parametrize("problem,expected", [
     ("missing", "weekly.env"), ("mode", "chmod 600"), ("empty-url", "OPEN_MARIN_HEARTBEAT_URL"),
+    ("NEO4J_USER", "NEO4J_USER"), ("NEO4J_PASSWORD", "NEO4J_PASSWORD"), ("NEO4J_DATABASE", "NEO4J_DATABASE"),
 ])
-def test_install_refuses_without_a_private_env_file_holding_the_heartbeat_url(checkout, problem, expected):
+def test_install_refuses_without_a_private_env_file_holding_the_url_and_graph_credentials(checkout, problem,
+                                                                                         expected):
     env_file = checkout / "ops/launchd/weekly.env"
     if problem == "missing":
         env_file.unlink()
     elif problem == "mode":
         env_file.chmod(0o644)
-    else:
-        env_file.write_text("OPEN_MARIN_HEARTBEAT_URL=\n")
+    elif problem == "empty-url":
+        env_file.write_text(f"OPEN_MARIN_HEARTBEAT_URL=\n{NEO4J_LINES}")
+    else:  # the unattended load needs the graph's credentials
+        env_file.write_text(env_file.read_text().replace(f"{problem}=", f"# {problem}="))
 
     proc = _install(checkout)
 

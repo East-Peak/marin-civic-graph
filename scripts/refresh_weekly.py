@@ -1,20 +1,23 @@
 #!/usr/bin/env python3
-"""Weekly ingestion runner (I5b): stage automatically; load and publish only on approval.
+"""Weekly ingestion runner: stage, load, publish and snapshot, unattended; the checks are the gate.
 
-    refresh_weekly.py stage              # the weekly LaunchAgent runs only this
-    refresh_weekly.py load <run_id>      # operator gate: load the approved bytes into the graph
-    refresh_weekly.py publish <run_id>   # operator gate: swap the new artifact into data/exports/
+    refresh_weekly.py weekly             # the weekly LaunchAgent runs this: all of the below, then heartbeat
+    refresh_weekly.py stage              # fetch, floor and fingerprint every source
+    refresh_weekly.py load <run_id>      # back up the graph, then load the staged bytes; export + bake
+    refresh_weekly.py publish <run_id>   # swap the new artifact into data/exports/
     refresh_weekly.py rollback <run_id>  # restore what was live before that run's publish
+    refresh_weekly.py rebake <run_id>    # redo export + bake for a run that failed after loading
     refresh_weekly.py status [<run_id>]  # latest (or named) run's state and digest
 
-See docs/specs/2026-09-28-persistent-ingestion-design.md, "I5b". The rule is
-approved bytes == loaded bytes: `stage` fingerprints every capture and staged
-file it asks a human to approve, and `load`/`publish` refuse bytes that changed
-since. Each run lives in data/ingest-runs/<run_id>/ (state.json, digest.md,
-logs/, staged/). Every external step goes through ONE injectable runner, under
-a bounded timeout, so tests never touch the network, Neo4j or the real data/.
-Nothing here deploys. A stage that reaches review pings OPEN_MARIN_HEARTBEAT_URL,
-if set (see heartbeat()).
+See docs/specs/2026-09-28-persistent-ingestion-design.md ("I5b") and
+docs/specs/2026-09-29-automatic-weekly-refresh.md ("I5c"). The rule is staged
+bytes == loaded bytes: `stage` fingerprints every capture and staged file, and
+`load`/`publish` refuse bytes that changed since. The manual subcommands remain
+for recovery. Each run lives in data/ingest-runs/<run_id>/ (state.json,
+digest.md, logs/, staged/). Every external step goes through ONE injectable
+runner, under a bounded timeout, so tests never touch the network, Neo4j, git
+or the real data/. Nothing here deploys. Only `weekly` pings
+OPEN_MARIN_HEARTBEAT_URL, if set (see heartbeat()).
 """
 from __future__ import annotations
 
@@ -51,6 +54,10 @@ RUNS_DIR = Path("data/ingest-runs")
 LEDGER = RUNS_DIR / "ledger.jsonl"  # ingest.py's run ledger (I1)
 EXPORTS = Path("data/exports")
 STAGING = EXPORTS / "staging"
+BACKUPS = EXPORTS / "backups"  # pre-load-<run_id>/: the whole graph before that run's load
+DATA_LAYERS = ("normalized", "extracted")  # data/<layer> symlinks into the private data repo
+DATA_BRANCH = "main"
+LOAD_DATABASE = "neo4j"  # the loaders write to the server's default database
 PUBLISHED_ARTIFACTS = ("public-substrate.sqlite", "status_manifest.json", "catalog.json", "substrate-bake-report.json")
 MEETING_REGISTRIES = ("granicus", "civicplus", "drupal", "proudcity")  # registry/<name>-sources.yaml
 MIN_FREE_BYTES = 5 * 1024**3  # live export + staged bake + a backup of the published one
@@ -66,15 +73,22 @@ STEP_TIMEOUTS = {
     "ingest-granicus": 20 * 60, "ingest-civicplus": 20 * 60, "ingest-drupal": 10 * 60,
     "ingest-proudcity": 45 * 60, "ingest": 30 * 60,
     "stage-permits": 20 * 60, "stage-form700": 30 * 60, "stage-courtlistener": 30 * 60, "stage": 30 * 60,
-    "load": 60 * 60, "reconciliation": 3 * 3600, "export": 3 * 3600, "bake": 2 * 3600,
+    "backup": 60 * 60, "load": 60 * 60, "reconciliation": 3 * 3600, "export": 3 * 3600, "bake": 2 * 3600,
+    "snapshot": 10 * 60,
 }
 DEFAULT_STEP_TIMEOUT = 60 * 60
 TIMEOUT_ENV = "OPEN_MARIN_TIMEOUT_"
 
-# The external dead-man's switch (Healthchecks.io check "Open Marin weekly review ready").
-# Its URL embeds the check's secret; it never reaches a log, state.json, a digest, or a step.
+# The external dead-man's switch (Healthchecks.io check "Open Marin weekly refresh"). Its URL
+# embeds the check's secret; it never reaches a log, state.json, a digest, a ping body, or a step.
 HEARTBEAT_ENV = "OPEN_MARIN_HEARTBEAT_URL"
 HEARTBEAT_TIMEOUT_SECS = 10
+PING_ERROR_CHARS = 300  # of each error quoted in a ping body
+PING_BODY_CHARS = 2000
+
+# Environment variables whose values are secrets: scrubbed from everything this runner writes,
+# prints or pings (step output, state.json, digests, crash tracebacks, ping bodies).
+_SECRET_VAR = re.compile(r"PASSWORD|TOKEN|SECRET|API_KEY", re.IGNORECASE)
 
 
 class StagedSource(NamedTuple):
@@ -195,7 +209,7 @@ class Context:
     now: Callable[[], datetime] = lambda: datetime.now(timezone.utc)
     free_bytes: Callable[[Path], int] = lambda path: shutil.disk_usage(path).free
     meeting_registries: tuple[str, ...] = MEETING_REGISTRIES
-    ping: Callable[[str], None] = lambda url: http_ping(url)
+    ping: Callable[[str, str], None] = lambda url, body: http_ping(url, body)
 
 
 # --- files and state ---------------------------------------------------------
@@ -208,8 +222,24 @@ def redact(text: str) -> str:
     return _USERINFO.sub(r"\1***@", text)
 
 
-def _print_crash() -> None:
-    print(redact(traceback.format_exc()), file=sys.stderr)
+def _heartbeat_secrets(url: str) -> set[str]:
+    """The heartbeat URL, and any part of it long enough to be its secret."""
+    parts = urllib.parse.urlsplit(url)
+    return {s for s in (url, parts.query, *(seg for seg in parts.path.split("/") if len(seg) >= 8)) if s}
+
+
+def scrub(text: str, env: Mapping[str, str]) -> str:
+    """redact(), and remove every secret value in `env` (credentials, tokens, the heartbeat URL)."""
+    secrets = {v for k, v in env.items() if _SECRET_VAR.search(k) and v.strip()}
+    if env.get(HEARTBEAT_ENV, "").strip():
+        secrets |= _heartbeat_secrets(env[HEARTBEAT_ENV].strip())
+    for secret in sorted(secrets, key=len, reverse=True):
+        text = text.replace(secret, "[redacted]")
+    return redact(text)
+
+
+def _print_crash(ctx: Context) -> None:
+    print(scrub(traceback.format_exc(), ctx.env), file=sys.stderr)
 
 
 def run_dir(root: Path, run_id: str) -> Path:
@@ -258,8 +288,8 @@ def read_state(root: Path, run_id: str) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def write_state(root: Path, run_id: str, state: dict) -> None:
-    _write_atomic(run_dir(root, run_id) / "state.json", redact(json.dumps(state, indent=2, sort_keys=True) + "\n"))
+def write_state(root: Path, run_id: str, state: dict, env: Mapping[str, str] = {}) -> None:
+    _write_atomic(run_dir(root, run_id) / "state.json", scrub(json.dumps(state, indent=2, sort_keys=True) + "\n", env))
 
 
 def _set_status(ctx: Context, state: dict, status: str, **fields) -> dict:
@@ -270,8 +300,8 @@ def _set_status(ctx: Context, state: dict, status: str, **fields) -> dict:
 
 
 def _persist(ctx: Context, state: dict) -> dict:
-    write_state(ctx.root, state["run_id"], state)
-    _write_atomic(run_dir(ctx.root, state["run_id"]) / "digest.md", redact(render_digest(state)))
+    write_state(ctx.root, state["run_id"], state, ctx.env)
+    _write_atomic(run_dir(ctx.root, state["run_id"]) / "digest.md", scrub(render_digest(state), ctx.env))
     return state
 
 
@@ -290,11 +320,11 @@ def _step(ctx: Context, run_id: str, name: str, cmd: list[str]) -> Result:
     env = {var: value for var, value in ctx.env.items() if var != HEARTBEAT_ENV}
     raw = ctx.runner(cmd, ctx.root, {**env, "PYTHON": ctx.python, OWNER_ENV: str(os.getpid())},
                      step_timeout(ctx.env, name))
-    result = Result(raw.returncode, redact(raw.output), raw.timed_out_after)
+    result = Result(raw.returncode, scrub(raw.output, ctx.env), raw.timed_out_after)
     end = (f"[timed out after {result.timed_out_after:g}s; killed]" if result.timed_out_after is not None
            else f"[exit {result.returncode}]")
     _write_atomic(run_dir(ctx.root, run_id) / "logs" / f"{name}.log",
-                  redact(f"$ {' '.join(cmd)}\n{result.output}\n{end}\n"))
+                  scrub(f"$ {' '.join(cmd)}\n{result.output}\n{end}\n", ctx.env))
     return result
 
 
@@ -314,9 +344,14 @@ def preflight(ctx: Context, *, credentials: bool) -> list[str]:
         check_target(ctx.env.get("NEO4J_URI"), ctx.env)
     except UnsafeNeo4jTarget as exc:
         reasons.append(str(exc))
-    missing = [var for var in ("NEO4J_USER", "NEO4J_PASSWORD") if credentials and not ctx.env.get(var)]
+    missing = [var for var in ("NEO4J_USER", "NEO4J_PASSWORD", "NEO4J_DATABASE")
+               if credentials and not ctx.env.get(var)]
     if missing:
         reasons.append(f"missing {', '.join(missing)}")
+    database = ctx.env.get("NEO4J_DATABASE")
+    if credentials and database and database != LOAD_DATABASE:
+        reasons.append(f"NEO4J_DATABASE={database}: the loaders write to the default database ({LOAD_DATABASE}), "
+                       "so a backup or export of another would not be the graph they changed")
     for var, raw in ctx.env.items():  # a typo'd override fails here, before anything is fetched
         if var.startswith(TIMEOUT_ENV):
             try:
@@ -404,7 +439,7 @@ def stage(ctx: Context) -> dict:
     try:
         return _stage(ctx, state)
     except Exception as exc:  # a crash must end in a visible, failed run, never a bare run dir
-        _print_crash()
+        _print_crash(ctx)
         return _fail(ctx, state, f"stage crashed: {type(exc).__name__}: {exc}")
 
 
@@ -430,53 +465,76 @@ def _stage(ctx: Context, state: dict) -> dict:
 
 
 @retry_transient(backoff=1.0)
-def http_ping(url: str) -> None:
-    with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "open-marin-refresh"}),
+def http_ping(url: str, body: str | None = None) -> None:
+    data = None if body is None else body.encode("utf-8")  # with a body, a POST: Healthchecks keeps it
+    with urllib.request.urlopen(urllib.request.Request(url, data=data, headers={"User-Agent": "open-marin-refresh"}),
                                 timeout=HEARTBEAT_TIMEOUT_SECS) as resp:
         resp.read()
 
 
-def _scrub(text: str, url: str) -> str:
-    """Remove the heartbeat URL, and any path segment long enough to be its secret, from `text`."""
-    parts = urllib.parse.urlsplit(url)
-    for secret in sorted({url, parts.query, *(seg for seg in parts.path.split("/") if len(seg) >= 8)},
-                         key=len, reverse=True):
-        if secret:
-            text = text.replace(secret, "[heartbeat url]")
-    return text
-
-
-def _review_ready(ctx: Context, run_id: str) -> bool:
-    """On disk, not just in memory: this run's state awaits load approval and its digest is complete."""
+def _clean_on_disk(ctx: Context, run_id: str) -> bool:
+    """On disk, not just in memory: published, every source passed, snapshot pushed, digest complete."""
     try:
         persisted = read_state(ctx.root, run_id)
         digest = (run_dir(ctx.root, run_id) / "digest.md").read_text(encoding="utf-8")
     except (Refused, OSError, ValueError):
         return False
-    return persisted["status"] == "awaiting_load_approval" and digest == redact(render_digest(persisted))
+    return (persisted["status"] == "published" and all(s["ok"] for s in persisted["sources"].values())
+            and persisted.get("snapshot", {}).get("ok") is True and digest == scrub(render_digest(persisted), ctx.env))
 
 
-def heartbeat(ctx: Context, state: dict) -> None:
-    """Tell the external monitor that the run `stage` just finished is ready for review.
+def _outcome_body(ctx: Context, state: dict | None, problem: str | None) -> str:
+    """What the ping tells the operator: ids and reasons, never a log tail or a secret."""
+    def quote(text: str) -> str:  # scrub whole, then cut: a secret split by the cut would survive
+        return scrub(text, ctx.env)[:PING_ERROR_CHARS]
 
-    Only the run that just completed calls this, once; nothing re-sends an old run. It means
-    "review available", never "every source passed": a partial success pings. A failed ping
-    is recorded in the run and reported, but never changes its status or exit code.
+    lines = []
+    if state is not None:
+        lines.append(f"Open Marin weekly refresh {state['run_id']}: {state['status']}")
+        held = sorted(sid for sid, s in state["sources"].items() if not s["ok"])
+        if held:
+            lines.append("held sources (not refreshed): " + ", ".join(held))
+        if state.get("error"):
+            lines.append("error: " + quote(state["error"]))
+        if state.get("snapshot", {}).get("ok") is False:
+            lines.append("private data snapshot failed: " + quote(state["snapshot"]["error"]))
+        lines.append(f"digest: {(RUNS_DIR / state['run_id'] / 'digest.md').as_posix()}")
+    if problem:
+        lines.append(quote(problem))
+    return scrub("\n".join(lines), ctx.env)[:PING_BODY_CHARS]
+
+
+def heartbeat(ctx: Context, state: dict | None, problem: str | None) -> bool:
+    """Report the weekly run to the external monitor, once; return whether it was clean.
+
+    Clean pings the URL (no email). Anything else pings `<URL>/fail`, which emails the operator
+    at once; a run that never reports is caught by the check's grace deadline. `state` is re-read
+    from disk, so the verdict and the body describe what was persisted. A failed ping is recorded
+    in the run and reported, but never changes its status.
     """
+    if state is not None:
+        try:
+            state = read_state(ctx.root, state["run_id"])
+        except (Refused, OSError, ValueError):
+            pass
+    clean = problem is None and state is not None and _clean_on_disk(ctx, state["run_id"])
     url = ctx.env.get(HEARTBEAT_ENV, "").strip()
-    if not url or not _review_ready(ctx, state["run_id"]):
-        return
+    if not url:
+        return clean
     try:
-        ctx.ping(url)
+        ctx.ping(url if clean else url.rstrip("/") + "/fail", _outcome_body(ctx, state, problem))
         outcome = {"ok": True}
     except Exception as exc:
-        outcome = {"ok": False, "error": _scrub(f"{type(exc).__name__}: {exc}", url)}
+        outcome = {"ok": False, "error": scrub(f"{type(exc).__name__}: {exc}", ctx.env)}
         print(f"heartbeat: ping failed ({outcome['error']}); the run itself is unaffected", file=sys.stderr)
-    state["heartbeat"] = {**outcome, "at": ctx.now().isoformat(timespec="seconds")}
-    try:
-        _persist(ctx, state)
-    except Exception as exc:
-        print(f"heartbeat: could not record the outcome: {type(exc).__name__}: {exc}", file=sys.stderr)
+    if state is not None:
+        state["heartbeat"] = {**outcome, "at": ctx.now().isoformat(timespec="seconds"),
+                              "signal": "success" if clean else "fail"}
+        try:
+            _persist(ctx, state)
+        except Exception as exc:
+            print(f"heartbeat: could not record the outcome: {type(exc).__name__}: {exc}", file=sys.stderr)
+    return clean
 
 
 # --- load (operator gate) ----------------------------------------------------
@@ -521,6 +579,14 @@ def load(ctx: Context, run_id: str) -> dict:
     # the exact approved capture path (normalize_meetings --capture); each is re-verified after.
     staged_root = run_dir(ctx.root, run_id) / "staged"
     refetchers = [sid for sid in STAGED_SOURCES if sid in accepted]
+    if "backup" not in state:  # a retry keeps the first backup: the graph before this run touched it
+        backup = BACKUPS / f"pre-load-{run_id}"
+        result = _step(ctx, run_id, "backup", [ctx.python, "scripts/export_live_graph.py", "--backup",
+                                               "--out-dir", str(ctx.root / backup)])
+        if result.returncode != 0:
+            return _fail(ctx, state, f"backup {_failure('backup', result)}; nothing was loaded")
+        state["backup"] = backup.as_posix()
+        _persist(ctx, state)
     steps = [(sid, [ctx.python, "scripts/normalize_meetings.py", "--source", sid,
                     "--capture", str(ctx.root / source["capture"]["path"]), "--load"])
              for sid, source in accepted.items() if source["kind"] == "meetings"]
@@ -540,7 +606,7 @@ def load(ctx: Context, run_id: str) -> dict:
             for f in STAGED_FILES:
                 _copy_atomic(staged_root / sid / f, normalized / f)
     except Exception as exc:
-        _print_crash()
+        _print_crash(ctx)
         return _set_status(ctx, state, "load_failed", error=f"load crashed: {type(exc).__name__}: {exc}")
     _set_status(ctx, state, "loaded", loaded=list(accepted), error=None)
     return _export_and_bake(ctx, state, run_id, reconcile=True)
@@ -548,6 +614,14 @@ def load(ctx: Context, run_id: str) -> dict:
 
 def _export_and_bake(ctx: Context, state: dict, run_id: str, *, reconcile: bool) -> dict:
     """From `loaded`: (reconciliation,) export, bake into staging, then budget + hashes."""
+    try:
+        return _export_and_bake_steps(ctx, state, run_id, reconcile=reconcile)
+    except Exception as exc:  # the data is in the graph: fail visibly, so `rebake` can recover it
+        _print_crash(ctx)
+        return _fail(ctx, state, f"export/bake crashed: {type(exc).__name__}: {exc}")
+
+
+def _export_and_bake_steps(ctx: Context, state: dict, run_id: str, *, reconcile: bool) -> dict:
     staging = ctx.root / STAGING
     steps = [("reconciliation", ["bash", "scripts/refresh_reconciliation.sh"])] if reconcile else []
     steps += [
@@ -559,6 +633,9 @@ def _export_and_bake(ctx: Context, state: dict, run_id: str, *, reconcile: bool)
         result = _step(ctx, run_id, name, cmd)
         if result.returncode != 0:
             return _fail(ctx, state, f"{name} {_failure(name, result)}")
+        if name == "reconciliation":
+            state["reconciled"] = True
+            _persist(ctx, state)
 
     missing = [n for n in PUBLISHED_ARTIFACTS if not (staging / n).is_file()]
     if missing:
@@ -582,7 +659,7 @@ def rebake(ctx: Context, run_id: str) -> dict:
     if newer:
         raise Refused(f"run {newer} is newer and already reached the graph; rebaking {run_id} would publish stale data")
     _set_status(ctx, state, "loaded", error=None)
-    return _export_and_bake(ctx, state, run_id, reconcile=False)
+    return _export_and_bake(ctx, state, run_id, reconcile=not state.get("reconciled"))
 
 
 # --- publish (operator gate) -------------------------------------------------
@@ -676,6 +753,123 @@ def rollback(ctx: Context, run_id: str) -> dict:
     return _set_status(ctx, state, "rolled_back")
 
 
+# --- snapshot: commit + push the private data repo ------------------------------
+
+
+class SnapshotFailed(Exception):
+    """The private data repo was not snapshotted; the publish stands."""
+
+
+def _data_repo(root: Path) -> Path:
+    layers = [(root / "data" / layer).resolve() for layer in DATA_LAYERS]
+    repo = layers[0].parent
+    if any(layer.parent != repo for layer in layers) or not (repo / ".git").exists():
+        raise SnapshotFailed(f"{repo} is not a git repo holding data/{' and data/'.join(DATA_LAYERS)}")
+    return repo
+
+
+def _commit_snapshot(ctx: Context, run_id: str) -> dict:
+    repo = _data_repo(ctx.root)
+
+    def git(name: str, *args: str, ok: tuple[int, ...] = (0,)) -> Result:
+        step = f"snapshot-{name}"
+        result = _step(ctx, run_id, step, ["git", "-C", str(repo), *args])
+        if result.returncode not in ok:
+            raise SnapshotFailed(f"{step} {_failure(step, result)}")
+        return result
+
+    branch = git("branch", "rev-parse", "--abbrev-ref", "HEAD").output.strip()
+    if branch != DATA_BRANCH:
+        raise SnapshotFailed(f"the private data repo is on {branch}, not {DATA_BRANCH}; nothing committed")
+    if git("index", "diff", "--cached", "--quiet", ok=(0, 1)).returncode:
+        raise SnapshotFailed("the private data repo already had staged changes; not committing someone else's work")
+    git("add", "add", "--", *DATA_LAYERS)
+    changed = git("staged", "diff", "--cached", "--quiet", ok=(0, 1)).returncode == 1
+    if changed:
+        git("commit", "commit", "-m", f"data: snapshot at publish {run_id}")
+    git("push", "push", "origin", DATA_BRANCH)
+    return {"commit": git("head", "rev-parse", "--short", "HEAD").output.strip(), "changed": changed}
+
+
+def snapshot(ctx: Context, state: dict) -> dict:
+    """After a publish: commit data/normalized + data/extracted to the private repo and push.
+
+    A failure is recorded as `snapshot: {ok: false, error}`; it never changes the run's status.
+    """
+    try:
+        outcome = {"ok": True, **_commit_snapshot(ctx, state["run_id"])}
+    except SnapshotFailed as exc:
+        outcome = {"ok": False, "error": str(exc)}
+    except Exception as exc:
+        _print_crash(ctx)
+        outcome = {"ok": False, "error": f"snapshot crashed: {type(exc).__name__}: {exc}"}
+    state["snapshot"] = outcome
+    return _persist(ctx, state)
+
+
+# --- weekly: the unattended run ------------------------------------------------
+
+
+def _unresolved_load(root: Path) -> str | None:
+    """A run whose load stopped partway, so the graph may hold part of it: `load_failed`, or killed
+    mid-load (its backup, taken just before the first load step, recorded; no outcome after)."""
+    for path in sorted((root / RUNS_DIR).glob("*/state.json")):
+        state = json.loads(path.read_text(encoding="utf-8"))
+        if state["status"] == "load_failed" or (state["status"] == "awaiting_load_approval" and "backup" in state):
+            return path.parent.name
+    return None
+
+
+def _weekly_run(ctx: Context) -> tuple[dict | None, str | None]:
+    """stage -> load -> publish -> snapshot, as far as the run gets; returns (state, problem)."""
+    state = None
+    try:
+        # Checked before fetching: a new capture would make that run's retry refuse its bytes.
+        blocker = _unresolved_load(ctx.root)
+        if blocker:
+            return None, (f"not run: run {blocker} stopped partway through its load, so the graph may hold "
+                          f"part of it. Retry `refresh_weekly.py load {blocker}`, or restore "
+                          f"{(BACKUPS / f'pre-load-{blocker}').as_posix()}; weekly runs resume once it is resolved")
+        state = stage(ctx)
+        run_id = state["run_id"]
+        if state["status"] == "awaiting_load_approval":
+            state = load(ctx, run_id)
+        if state["status"] == "awaiting_publish_approval":
+            state = publish(ctx, run_id)
+        if state["status"] == "published":
+            state = snapshot(ctx, state)
+        return state, None
+    except Refused as exc:
+        return state, f"refused: {exc}"
+    except Exception as exc:
+        _print_crash(ctx)
+        return state, f"crashed: {type(exc).__name__}: {exc}"
+
+
+def weekly(ctx: Context) -> int:
+    """The scheduled run: 0 only when it was clean; any other outcome has pinged /fail."""
+    reported = False
+    try:
+        with run_lock(ctx.root):
+            state, problem = _weekly_run(ctx)
+            clean = heartbeat(ctx, state, problem)
+            reported = True
+    except RunLockHeld as exc:
+        heartbeat(ctx, None, f"not run: the run lock is held ({exc})")
+        print(scrub(f"REFUSED: {exc}", ctx.env), file=sys.stderr)
+        return 2
+    except Exception as exc:  # the lock could not be taken (or released): still tell the monitor
+        _print_crash(ctx)
+        if not reported:
+            heartbeat(ctx, None, f"crashed outside the run: {type(exc).__name__}: {exc}")
+        return 1
+    if state is not None:
+        _report(ctx, read_state(ctx.root, state["run_id"]))
+    if problem:
+        print(scrub(problem, ctx.env), file=sys.stderr)
+    return 0 if clean else 1
+
+
 # --- digest and status -------------------------------------------------------
 
 NEXT_STEP = {
@@ -726,9 +920,16 @@ def render_digest(state: dict) -> str:
                   f"- {_num(totals.get('nodes'))} nodes · {_num(totals.get('edges'))} edges · "
                   f"sqlite {sqlite['size_bytes']:,} bytes (budget {sqlite['budget_bytes']:,}: "
                   f"{'within budget' if sqlite['within_budget'] else 'OVER BUDGET'})", ""]
+    if state.get("backup"):
+        lines += [f"**Graph backup (before load):** `{state['backup']}`", ""]
     if state.get("published"):
         lines += ["## Published", "", f"- public-substrate.sqlite sha256 `{state['published']['sqlite_sha256']}`",
                   f"- previous artifacts kept in `{state['published']['previous']}`", ""]
+    snap = state.get("snapshot")
+    if snap:
+        lines += ["## Private data snapshot", "",
+                  (f"- pushed `{snap['commit']}`{'' if snap['changed'] else ' (no new data)'}" if snap["ok"]
+                   else f"- FAILED: {snap['error']}"), ""]
     lines += ["## Next", "", NEXT_STEP.get(state["status"], "").format(run_id=state["run_id"]), ""]
     return "\n".join(lines)
 
@@ -748,7 +949,7 @@ def status(ctx: Context, run_id: str | None) -> int:
 
 
 def _report(ctx: Context, state: dict) -> None:
-    print(redact(_summary(state)))
+    print(scrub(_summary(state), ctx.env))
     print(f"digest: {run_dir(ctx.root, state['run_id']) / 'digest.md'}")
 
 
@@ -761,15 +962,18 @@ def _summary(state: dict) -> str:
               for sid, s in state["sources"].items()]
     if state.get("error"):
         lines.append(f"  error: {state['error']}")
+    if state.get("snapshot", {}).get("ok") is False:
+        lines.append(f"  private data snapshot FAILED: {state['snapshot']['error']}")
     return "\n".join(lines)
 
 
 def main(argv: list[str] | None = None, ctx: Context | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="command", required=True)
-    sub.add_parser("stage", help="fetch, stage, floor and digest every weekly source (automated)")
+    sub.add_parser("weekly", help="the scheduled run: stage, load, publish, snapshot, heartbeat")
+    sub.add_parser("stage", help="fetch, stage, floor and digest every weekly source")
     for gate in ("load", "publish", "rollback"):
-        sub.add_parser(gate, help=f"operator gate: {gate} an approved run").add_argument("run_id")
+        sub.add_parser(gate, help=f"{gate} a run by hand (recovery)").add_argument("run_id")
     sub.add_parser("rebake", help="redo export + bake for a run that failed after loading").add_argument("run_id")
     sub.add_parser("status", help="print a run's state and digest path (default: latest)").add_argument(
         "run_id", nargs="?")
@@ -779,10 +983,11 @@ def main(argv: list[str] | None = None, ctx: Context | None = None) -> int:
     try:
         if args.command == "status":
             return status(ctx, args.run_id)
+        if args.command == "weekly":
+            return weekly(ctx)
         with run_lock(ctx.root):  # every other subcommand writes
             if args.command == "stage":
                 state = stage(ctx)
-                heartbeat(ctx, state)
                 _report(ctx, state)
                 return 0 if state["status"] != "failed" and all(s["ok"] for s in state["sources"].values()) else 1
             state = {"load": load, "publish": publish, "rollback": rollback,
@@ -790,7 +995,7 @@ def main(argv: list[str] | None = None, ctx: Context | None = None) -> int:
         _report(ctx, state)
         return 1 if state["status"] in ("failed", "load_failed") else 0
     except (Refused, RunLockHeld) as exc:
-        print(redact(f"REFUSED: {exc}"), file=sys.stderr)
+        print(scrub(f"REFUSED: {exc}", ctx.env), file=sys.stderr)
         return 2
 
 
