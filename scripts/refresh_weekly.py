@@ -11,8 +11,10 @@ See docs/specs/2026-09-28-persistent-ingestion-design.md, "I5b". The rule is
 approved bytes == loaded bytes: `stage` fingerprints every capture and staged
 file it asks a human to approve, and `load`/`publish` refuse bytes that changed
 since. Each run lives in data/ingest-runs/<run_id>/ (state.json, digest.md,
-logs/, staged/). Every external step goes through ONE injectable runner, so
-tests never touch the network, Neo4j or the real data/. Nothing here deploys.
+logs/, staged/). Every external step goes through ONE injectable runner, under
+a bounded timeout, so tests never touch the network, Neo4j or the real data/.
+Nothing here deploys. A stage that reaches review pings OPEN_MARIN_HEARTBEAT_URL,
+if set (see heartbeat()).
 """
 from __future__ import annotations
 
@@ -28,6 +30,8 @@ import subprocess
 import sys
 import tempfile
 import traceback
+import urllib.parse
+import urllib.request
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -39,6 +43,7 @@ from ingest import load_sources, resolve_sources  # noqa: E402
 from ingest_guard import Floors, evaluate  # noqa: E402
 from load_from import STAGED_FILES  # noqa: E402
 from neo4j_target import UnsafeNeo4jTarget, check_target  # noqa: E402
+from net_retry import retry_transient  # noqa: E402
 from run_lock import OWNER_ENV, RunLockHeld, run_lock  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -65,6 +70,11 @@ STEP_TIMEOUTS = {
 }
 DEFAULT_STEP_TIMEOUT = 60 * 60
 TIMEOUT_ENV = "OPEN_MARIN_TIMEOUT_"
+
+# The external dead-man's switch (Healthchecks.io check "Open Marin weekly review ready").
+# Its URL embeds the check's secret; it never reaches a log, state.json, a digest, or a step.
+HEARTBEAT_ENV = "OPEN_MARIN_HEARTBEAT_URL"
+HEARTBEAT_TIMEOUT_SECS = 10
 
 
 class StagedSource(NamedTuple):
@@ -182,6 +192,7 @@ class Context:
     now: Callable[[], datetime] = lambda: datetime.now(timezone.utc)
     free_bytes: Callable[[Path], int] = lambda path: shutil.disk_usage(path).free
     meeting_registries: tuple[str, ...] = MEETING_REGISTRIES
+    ping: Callable[[str], None] = lambda url: http_ping(url)
 
 
 # --- files and state ---------------------------------------------------------
@@ -252,6 +263,10 @@ def _set_status(ctx: Context, state: dict, status: str, **fields) -> dict:
     check_transition(state["status"], status)
     state.update(fields, status=status)
     state["history"].append({"status": status, "at": ctx.now().isoformat(timespec="seconds")})
+    return _persist(ctx, state)
+
+
+def _persist(ctx: Context, state: dict) -> dict:
     write_state(ctx.root, state["run_id"], state)
     _write_atomic(run_dir(ctx.root, state["run_id"]) / "digest.md", redact(render_digest(state)))
     return state
@@ -269,7 +284,8 @@ def _require(state: dict, action: str, *statuses: str) -> None:
 def _step(ctx: Context, run_id: str, name: str, cmd: list[str]) -> Result:
     """Run one external command through the injected runner and keep its log."""
     # Children that take the run lock themselves (ingest.py) run under ours.
-    raw = ctx.runner(cmd, ctx.root, {**ctx.env, "PYTHON": ctx.python, OWNER_ENV: str(os.getpid())},
+    env = {var: value for var, value in ctx.env.items() if var != HEARTBEAT_ENV}
+    raw = ctx.runner(cmd, ctx.root, {**env, "PYTHON": ctx.python, OWNER_ENV: str(os.getpid())},
                      step_timeout(ctx.env, name))
     result = Result(raw.returncode, redact(raw.output), raw.timed_out_after)
     end = (f"[timed out after {result.timed_out_after:g}s; killed]" if result.timed_out_after is not None
@@ -405,6 +421,59 @@ def _stage(ctx: Context, state: dict) -> dict:
         return _fail(ctx, state, "every source failed its pull or floors; nothing to approve")
     _set_status(ctx, state, "staged")
     return _set_status(ctx, state, "awaiting_load_approval")
+
+
+# --- heartbeat -----------------------------------------------------------------
+
+
+@retry_transient(backoff=1.0)
+def http_ping(url: str) -> None:
+    with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "open-marin-refresh"}),
+                                timeout=HEARTBEAT_TIMEOUT_SECS) as resp:
+        resp.read()
+
+
+def _scrub(text: str, url: str) -> str:
+    """Remove the heartbeat URL, and any path segment long enough to be its secret, from `text`."""
+    parts = urllib.parse.urlsplit(url)
+    for secret in sorted({url, parts.query, *(seg for seg in parts.path.split("/") if len(seg) >= 8)},
+                         key=len, reverse=True):
+        if secret:
+            text = text.replace(secret, "[heartbeat url]")
+    return text
+
+
+def _review_ready(ctx: Context, run_id: str) -> bool:
+    """On disk, not just in memory: this run's state awaits load approval and its digest is complete."""
+    try:
+        persisted = read_state(ctx.root, run_id)
+        digest = (run_dir(ctx.root, run_id) / "digest.md").read_text(encoding="utf-8")
+    except (Refused, OSError, ValueError):
+        return False
+    return persisted["status"] == "awaiting_load_approval" and digest == redact(render_digest(persisted))
+
+
+def heartbeat(ctx: Context, state: dict) -> None:
+    """Tell the external monitor that the run `stage` just finished is ready for review.
+
+    Only the run that just completed calls this, once; nothing re-sends an old run. It means
+    "review available", never "every source passed": a partial success pings. A failed ping
+    is recorded in the run and reported, but never changes its status or exit code.
+    """
+    url = ctx.env.get(HEARTBEAT_ENV, "").strip()
+    if not url or not _review_ready(ctx, state["run_id"]):
+        return
+    try:
+        ctx.ping(url)
+        outcome = {"ok": True}
+    except Exception as exc:
+        outcome = {"ok": False, "error": _scrub(f"{type(exc).__name__}: {exc}", url)}
+        print(f"heartbeat: ping failed ({outcome['error']}); the run itself is unaffected", file=sys.stderr)
+    state["heartbeat"] = {**outcome, "at": ctx.now().isoformat(timespec="seconds")}
+    try:
+        _persist(ctx, state)
+    except Exception as exc:
+        print(f"heartbeat: could not record the outcome: {type(exc).__name__}: {exc}", file=sys.stderr)
 
 
 # --- load (operator gate) ----------------------------------------------------
@@ -632,6 +701,9 @@ def render_digest(state: dict) -> str:
              f"**Status:** {state['status']} · {passed} of {len(sources)} sources passed", ""]
     if state.get("error"):
         lines += [f"**Error:** {state['error']}", ""]
+    if state.get("heartbeat", {}).get("ok") is False:
+        lines += [f"**Heartbeat:** FAILED ({state['heartbeat']['error']}). The external monitor will report "
+                  "this run as missing; the staged data is unaffected.", ""]
     if not state.get("preflight", {}).get("ok", True):
         lines += ["## Preflight", "", *(f"- {reason}" for reason in state["preflight"]["reasons"]), ""]
     if sources:
@@ -707,6 +779,7 @@ def main(argv: list[str] | None = None, ctx: Context | None = None) -> int:
         with run_lock(ctx.root):  # every other subcommand writes
             if args.command == "stage":
                 state = stage(ctx)
+                heartbeat(ctx, state)
                 _report(ctx, state)
                 return 0 if state["status"] != "failed" and all(s["ok"] for s in state["sources"].values()) else 1
             state = {"load": load, "publish": publish, "rollback": rollback,

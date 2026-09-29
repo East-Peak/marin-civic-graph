@@ -6,7 +6,9 @@ Nothing here touches the network, Neo4j, or the real data/ tree.
 """
 from __future__ import annotations
 
+import dataclasses
 import hashlib
+import io
 import json
 import sys
 from datetime import datetime, timezone
@@ -109,10 +111,16 @@ def world(root: Path) -> FakeWorld:
 
 
 @pytest.fixture
-def ctx(root: Path, world: FakeWorld) -> rw.Context:
+def pings() -> list[str]:
+    return []
+
+
+@pytest.fixture
+def ctx(root: Path, world: FakeWorld, pings: list[str]) -> rw.Context:
     return rw.Context(root=root, runner=world, env=dict(ENV), python="py",
                       now=lambda: datetime(2026, 9, 28, 5, 0, 0, tzinfo=timezone.utc),
-                      free_bytes=lambda path: 50 * 1024**3, meeting_registries=("granicus",))
+                      free_bytes=lambda path: 50 * 1024**3, meeting_registries=("granicus",),
+                      ping=pings.append)  # never the network
 
 
 def _state(root: Path) -> dict:
@@ -346,8 +354,7 @@ def test_load_fails_the_run_if_approved_bytes_changed(ctx, world, root, tamper):
 
 
 def _at(ctx: rw.Context, when: datetime) -> rw.Context:
-    return rw.Context(root=ctx.root, runner=ctx.runner, env=ctx.env, python=ctx.python, now=lambda: when,
-                      free_bytes=ctx.free_bytes, meeting_registries=ctx.meeting_registries)
+    return dataclasses.replace(ctx, now=lambda: when)
 
 
 def _permit_rows(root: Path) -> int:
@@ -881,3 +888,192 @@ def test_rebake_refuses_a_run_that_failed_before_it_ever_loaded(ctx, root):
     state["status"] = "failed"
     rw.write_state(root, RUN, state)
     assert rw.main(["rebake", RUN], ctx) == 2
+
+
+# --- the heartbeat: "Open Marin weekly review ready" ---------------------------
+# Pinged only by the stage run that just persisted awaiting_load_approval and its
+# digest. Partial success still pings (a green check means "review available",
+# never "every source healthy"). A ping failure never changes the run.
+
+HEARTBEAT = "https://hc-ping.com/0f3c9e2a-5b7d-4e61-9a0c-7d2b1e4f8a63"
+SECRET = "0f3c9e2a-5b7d-4e61-9a0c-7d2b1e4f8a63"
+
+
+def _everything_written(root: Path) -> str:
+    return "".join(f.read_text() for f in (root / "data/ingest-runs").rglob("*") if f.is_file())
+
+
+def test_a_completed_stage_pings_once_after_its_state_and_digest_are_persisted(ctx, root, capsys):
+    seen = []
+
+    def ping(url):
+        seen.append((url, _state(root)["status"], "awaiting_load_approval" in _digest(root)))
+    ctx.env[rw.HEARTBEAT_ENV], ctx.ping = HEARTBEAT, ping
+
+    assert rw.main(["stage"], ctx) == 0
+
+    assert seen == [(HEARTBEAT, "awaiting_load_approval", True)]
+    assert _state(root)["heartbeat"] == {"ok": True, "at": "2026-09-28T05:00:00+00:00"}
+    out = capsys.readouterr()
+    assert SECRET not in out.out + out.err + _everything_written(root)
+
+
+def test_partial_success_still_pings(ctx, world, root, pings):
+    ctx.env[rw.HEARTBEAT_ENV] = HEARTBEAT
+    world.hangs.add("ingest_courtlistener_cases.py")
+
+    assert rw.main(["stage"], ctx) == 1  # exit 1 flags the failed source; the review is still ready
+    assert pings == [HEARTBEAT]
+
+
+def _crash(cmd, cwd, env, timeout):
+    raise OSError("network stack gone")
+
+
+@pytest.mark.parametrize("breakage", ["preflight", "every-source-failed", "crash", "unfinished-digest"])
+def test_a_stage_that_did_not_reach_review_never_pings(ctx, world, root, pings, monkeypatch, breakage):
+    ctx.env[rw.HEARTBEAT_ENV] = HEARTBEAT
+    if breakage == "preflight":
+        ctx.env["NEO4J_URI"] = "bolt://localhost:7687"
+    elif breakage == "every-source-failed":
+        world.meetings = {}
+        world.exit_codes.update({script: 2 for script in STAGED_SCRIPTS.values()})
+    elif breakage == "crash":
+        ctx.runner = _crash
+    else:  # state.json says awaiting_load_approval, but its digest was never written
+        render = rw.render_digest
+
+        def render_digest(state):
+            if state["status"] == "awaiting_load_approval":
+                raise OSError("disk full")
+            return render(state)
+        monkeypatch.setattr(rw, "render_digest", render_digest)
+
+    assert rw.main(["stage"], ctx) == 1
+
+    assert _state(root)["status"] == "failed" and pings == []
+
+
+def test_a_stage_refused_by_the_lock_never_pings(ctx, root, pings):
+    import run_lock
+
+    ctx.env[rw.HEARTBEAT_ENV] = HEARTBEAT
+    with run_lock.run_lock(root):
+        assert rw.main(["stage"], ctx) == 2
+    assert pings == []
+
+
+@pytest.mark.parametrize("value", [None, "", "  "])
+def test_no_heartbeat_url_means_no_ping_and_no_error(ctx, root, pings, capsys, value):
+    if value is not None:
+        ctx.env[rw.HEARTBEAT_ENV] = value
+
+    assert rw.main(["stage"], ctx) == 0
+
+    assert pings == [] and "heartbeat" not in _state(root)
+    assert "heartbeat" not in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("sources_fail,exit_code", [(False, 0), (True, 1)])
+def test_a_failed_ping_is_recorded_but_never_changes_the_runs_status_or_exit(ctx, world, root, capsys,
+                                                                            sources_fail, exit_code):
+    import urllib.error
+
+    def ping(url):
+        raise urllib.error.URLError(f"cannot reach {url}")
+    ctx.env[rw.HEARTBEAT_ENV], ctx.ping = HEARTBEAT, ping
+    if sources_fail:
+        world.exit_codes["ingest_form700.py"] = 1
+
+    assert rw.main(["stage"], ctx) == exit_code
+
+    state = _state(root)
+    assert state["status"] == "awaiting_load_approval"
+    assert state["heartbeat"]["ok"] is False and "URLError" in state["heartbeat"]["error"]
+    assert "Heartbeat" in _digest(root) and "FAILED" in _digest(root)
+    out = capsys.readouterr()
+    assert "heartbeat" in out.err
+    assert SECRET not in out.out + out.err + _everything_written(root)
+
+
+def test_only_the_run_that_just_completed_pings_never_an_old_one(ctx, world, root, pings):
+    ctx.env[rw.HEARTBEAT_ENV] = HEARTBEAT
+    _staged(ctx)
+    assert pings == [HEARTBEAT]
+
+    rw.main(["status"], ctx)
+    rw.main(["load", RUN], ctx)
+    rw.main(["publish", RUN], ctx)
+    next_week = _at(ctx, NEXT_WEEK)
+    next_week.env["NEO4J_URI"] = "bolt://localhost:7687"  # next week's stage fails preflight
+    assert rw.main(["stage"], next_week) == 1
+
+    assert pings == [HEARTBEAT]
+
+
+def test_steps_never_see_the_heartbeat_url(ctx, world, root):
+    seen = []
+    ctx.env[rw.HEARTBEAT_ENV] = HEARTBEAT
+    ctx.runner = lambda cmd, cwd, env, t: (seen.append(dict(env)), world(cmd, cwd, env, t))[1]
+
+    _staged(ctx)
+
+    assert seen and not any(rw.HEARTBEAT_ENV in env or HEARTBEAT in env.values() for env in seen)
+
+
+class _Transport:
+    def __init__(self, *failures):
+        self.failures, self.calls = list(failures), []
+
+    def __call__(self, req, timeout=None):
+        self.calls.append((req.full_url, timeout))
+        if self.failures:
+            raise self.failures.pop(0)
+        return io.BytesIO(b"OK")
+
+
+def test_http_ping_waits_briefly_and_retries_a_transient_failure(monkeypatch, capsys):
+    import urllib.error
+    import urllib.request
+
+    import net_retry
+
+    transport = _Transport(urllib.error.URLError(TimeoutError(f"timed out: {HEARTBEAT}")))
+    monkeypatch.setattr(urllib.request, "urlopen", transport)
+    monkeypatch.setattr(net_retry, "sleep", lambda s: None)
+
+    rw.http_ping(HEARTBEAT)
+
+    assert [url for url, _ in transport.calls] == [HEARTBEAT, HEARTBEAT]
+    assert all(0 < timeout <= 15 for _, timeout in transport.calls)
+    assert SECRET not in capsys.readouterr().err
+
+
+def test_http_ping_does_not_retry_a_rejected_url(monkeypatch):
+    import urllib.error
+    import urllib.request
+
+    transport = _Transport(urllib.error.HTTPError(HEARTBEAT, 404, "Not Found", {}, io.BytesIO()))
+    monkeypatch.setattr(urllib.request, "urlopen", transport)
+
+    with pytest.raises(urllib.error.HTTPError):
+        rw.http_ping(HEARTBEAT)
+    assert len(transport.calls) == 1
+
+
+@pytest.mark.parametrize("damage", ["digest-missing", "digest-stale", "state-not-awaiting"])
+def test_the_heartbeat_checks_what_is_on_disk_not_what_is_in_memory(ctx, root, pings, damage):
+    _staged(ctx)
+    state = _state(root)
+    digest = root / f"data/ingest-runs/{RUN}/digest.md"
+    if damage == "digest-missing":
+        digest.unlink()
+    elif damage == "digest-stale":
+        digest.write_text(digest.read_text().replace("awaiting_load_approval", "staging"))
+    else:
+        rw.write_state(root, RUN, {**state, "status": "staged"})
+    ctx.env[rw.HEARTBEAT_ENV] = HEARTBEAT
+
+    rw.heartbeat(ctx, state)
+
+    assert pings == []
