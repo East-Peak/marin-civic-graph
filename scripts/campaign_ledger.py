@@ -242,7 +242,7 @@ def _filing_id(key: tuple) -> str:
 
 
 def _require(entry: dict, fields: tuple[str, ...], what: str) -> None:
-    missing = [f for f in fields if not _text(entry.get(f))]
+    missing = [f for f in fields if not (isinstance(entry.get(f), str) and entry[f].strip())]
     if missing:
         raise LedgerError(f"{what} needs {', '.join(missing)}: {entry!r}")
 
@@ -254,6 +254,7 @@ class Ledger:
     filings: dict[str, dict] = field(default_factory=dict)
     reconciliation: list[dict] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
+    transactions: list[dict] = field(default_factory=list)
 
     def filing_id_for(self, source_id: str, Filer_ID, Filer_NamL=None, Report_Num=None, Rpt_Date=None,
                       From_Date=None, Thru_Date=None, **_ignored) -> str:
@@ -269,8 +270,17 @@ class Ledger:
         return out
 
 
+def _readable_columns(sheet: str) -> frozenset[str]:
+    """The only columns the ledger ever takes from a sheet; street addresses are never among them."""
+    cols = set(SHEET_HEADERS.get(sheet, FILING_HEADERS)) | {"Committee_Type"}
+    schedule = SCHEDULES.get(sheet)
+    if schedule:
+        cols |= {"Tran_Type", f"{schedule.name}_NamT", f"{schedule.name}_NamS", *(c for _, c in schedule.reported)}
+    return frozenset(cols)
+
+
 def _physical_rows(rel: str, path: Path):
-    """Yield (sheet, excel_row_number, {header: value}) for every data row of every sheet."""
+    """Yield (sheet, excel_row_number, {header: value}) for every data row, holding only readable columns."""
     with zipfile.ZipFile(path) as zf:
         inner = next(n for n in zf.namelist() if n.endswith(".xlsx"))
         with zf.open(inner) as f:
@@ -278,9 +288,10 @@ def _physical_rows(rel: str, path: Path):
             try:
                 for sheet in wb.sheetnames:
                     rows = wb[sheet].iter_rows(values_only=True)
-                    header = next(rows, ())
+                    readable = _readable_columns(sheet)
+                    keep = [(i, h) for i, h in enumerate(next(rows, ())) if h in readable]
                     for number, values in enumerate(rows, start=2):
-                        yield sheet, number, {h: v for h, v in zip(header, values) if h is not None}
+                        yield sheet, number, {h: values[i] if i < len(values) else None for i, h in keep}
             finally:
                 wb.close()
 
@@ -318,8 +329,11 @@ def build_ledger(source_id: str, workbooks: list[tuple[str, Path]], version_evid
             ref = {"file": rel, "sheet": sheet, "row": number}
             filer_id = _text(values.get("Filer_ID"))
             if filer_id is None:
-                ledger.rows.append({"row_ref": ref, "filing_id": None, "schedule": None,
+                schedule = SCHEDULES[sheet].letter if sheet in SCHEDULES else None
+                ledger.rows.append({"row_ref": ref, "filing_id": None, "schedule": schedule,
                                     "disposition": "rejected", "reason": "no_filer_id"})
+                if schedule:
+                    ledger.errors.append(f"{rel}!{sheet}!{number}: no_filer_id, the row belongs to no filing")
                 continue
             key = _filing_key(source_id, filer_id, _text(values.get("Filer_NamL")), values.get("Report_Num"),
                               values.get("Rpt_Date"), values.get("From_Date"), values.get("Thru_Date"))
@@ -366,6 +380,12 @@ def _mark_ambiguity(ledger: Ledger, oracles: dict) -> None:
         filing["ambiguous"] = reasons
 
 
+def _chain_end(fid: str, superseded_by: dict[str, str]) -> str:
+    while fid in superseded_by:
+        fid = superseded_by[fid]
+    return fid
+
+
 def _apply_versions(ledger: Ledger, version_evidence) -> None:
     """Supersede only on explicit, located source evidence; otherwise competing versions stay unresolved."""
     families: dict[tuple, list[str]] = defaultdict(list)
@@ -379,16 +399,28 @@ def _apply_versions(ledger: Ledger, version_evidence) -> None:
         original, amended = ledger.filings.get(entry["original"]), ledger.filings.get(entry["amended"])
         if not original or not amended:
             raise LedgerError(f"version evidence names an unknown filing: {entry!r}")
+        if entry["original"] == entry["amended"]:
+            raise LedgerError(f"version evidence links a filing to itself: {entry!r}")
         if (original["filer_key"], original["from_date"], original["thru_date"]) != \
                 (amended["filer_key"], amended["from_date"], amended["thru_date"]):
             raise LedgerError(f"version evidence spans two filing families: {entry!r}")
+        if superseded_by.get(entry["original"], entry["amended"]) != entry["amended"]:
+            raise LedgerError(f"version evidence gives one filing two successors: {entry!r}")
         superseded_by[entry["original"]] = entry["amended"]
+    for fid in superseded_by:  # every chain must end, without a cycle
+        seen = {fid}
+        while fid in superseded_by:
+            fid = superseded_by[fid]
+            if fid in seen:
+                raise LedgerError(f"version evidence forms a cycle through {fid}")
+            seen.add(fid)
     for members in families.values():
         if len(members) < 2:
             continue
         current = [fid for fid in members if fid not in superseded_by]
+        resolved = len(current) == 1 and all(_chain_end(fid, superseded_by) == current[0] for fid in members)
         for fid in members:
-            if len(current) != 1:
+            if not resolved:
                 ledger.filings[fid]["version_status"] = "unresolved_versions"
             elif fid in superseded_by:
                 ledger.filings[fid].update(version_status="superseded", superseded_by=superseded_by[fid])
@@ -407,7 +439,7 @@ def _reconcile(ledger: Ledger, oracles: dict, exceptions) -> None:
         excepted[(entry["filing_id"], entry["schedule"])] = entry
     groups: dict[tuple[str, str], list[dict]] = defaultdict(list)
     for row in ledger.rows:
-        if row["schedule"]:
+        if row["schedule"] and row["filing_id"]:
             groups[(row["filing_id"], row["schedule"])].append(row)
     for fid, schedule in sorted(set(groups) | set(oracles)):
         rows, filing = groups.get((fid, schedule), []), ledger.filings[fid]
@@ -466,3 +498,127 @@ def write_ledger(ledger: Ledger, out_dir: Path) -> dict:
     }
     (out_dir / "reconciliation.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     return report
+
+
+# ---------------------------------------------------------------------------
+# Transactions: one per real-world payment, however many filings report it
+# ---------------------------------------------------------------------------
+
+def _overlap(a: dict, b: dict) -> bool:
+    """Two filings' periods overlap; a filing without a period may overlap anything."""
+    if not (a["from_date"] and a["thru_date"] and b["from_date"] and b["thru_date"]):
+        return True
+    return a["from_date"] <= b["thru_date"] and b["from_date"] <= a["thru_date"]
+
+
+def _content(row: dict) -> tuple:
+    return (row["amount"], row["tran_date"], tuple(row["name"].values()), row["entity_cd"])
+
+
+def _split_repeats(rows: list[dict], filings: dict) -> list[tuple[str, list[dict]]]:
+    """Split one (filer, schedule, Tran_ID) group into transactions, each tagged with its kind."""
+    per_filing = defaultdict(list)
+    for row in rows:
+        per_filing[row["filing_id"]].append(row)
+    if len(per_filing) == 1:
+        kind = "single" if len(rows) == 1 else "repeated_within_filing"  # the filer's own total counts each
+        return [(kind, [row]) for row in rows]
+    contents = {_content(r) for r in rows}
+    if max(len(v) for v in per_filing.values()) == 1 and len(contents) == 1:
+        return [("duplicate_report", rows)]
+    ids = sorted(per_filing)
+    disjoint = all(not _overlap(filings[a], filings[b]) for i, a in enumerate(ids) for b in ids[i + 1:])
+    if disjoint and max(len(v) for v in per_filing.values()) == 1:
+        return [("reused_tran_id", [row]) for row in rows]
+    return [("competing_versions", rows)]
+
+
+def build_transactions(ledger: Ledger) -> list[dict]:
+    """Group retained A/E rows into transactions, decide which count, and bridge every row to its flow.
+
+    A transaction counts (and becomes a public MoneyFlow) only when every reporting row is additive and
+    nonzero, every reporting filing's schedule is validated, and no competing version of it exists.
+    """
+    validated = {(g["filing_id"], g["schedule"]): g["validated"] for g in ledger.reconciliation}
+    order = {fid: (f["rpt_date"] or "", f["report_num"] or "", fid) for fid, f in ledger.filings.items()}
+    groups = defaultdict(list)
+    for row in ledger.rows:
+        if row["schedule"] and row["disposition"] == "retained":
+            filing = ledger.filings[row["filing_id"]]
+            groups[(filing["filer_key"], row["schedule"], row["tran_id"])].append(row)
+    txs = []
+    for (_, schedule, tran_id), rows in sorted(groups.items()):
+        rows.sort(key=lambda r: (order[r["filing_id"]], r["row_ref"]["file"], r["row_ref"]["row"]))
+        for kind, members in _split_repeats(rows, ledger.filings):
+            primary = members[0]
+            if not all(validated.get((r["filing_id"], schedule)) for r in members):
+                reason = "filing_not_validated"
+            elif kind == "competing_versions":
+                reason = "competing_versions"
+            elif not all(r["additive"] for r in members):
+                reason = "non_additive"
+            elif Decimal(primary["amount"]) == 0:
+                reason = "zero_amount"
+            else:
+                reason = None
+            filer_id = ledger.filings[primary["filing_id"]]["filer_id"]
+            txs.append({
+                "kind": kind, "schedule": schedule, "filer_id": filer_id, "tran_id": tran_id,
+                "amount": primary["amount"], "tran_date": primary["tran_date"], "name": primary["name"],
+                "entity_cd": primary["entity_cd"], "filing_ids": sorted({r["filing_id"] for r in members}),
+                "rows": [r["row_ref"] for r in members], "counts": reason is None, "reason": reason,
+                "base_id": f"moneyflow-{filer_id}-{tran_id}",
+                "_members": members})
+    _assign_ids(txs)
+    for tx in txs:
+        for i, row in enumerate(tx.pop("_members")):
+            row.update(moneyflow_id=tx["moneyflow_id"], counted=tx["counts"], withheld_reason=tx["reason"],
+                       transaction_kind=tx["kind"], primary=i == 0)
+    _bridge(ledger)
+    ledger.transactions = txs
+    return txs
+
+
+def _assign_ids(txs: list[dict]) -> None:
+    """Keep the live `moneyflow-{Filer_ID}-{Tran_ID}` id unless it would name more than one transaction."""
+    per_base = defaultdict(int)
+    for tx in txs:
+        per_base[tx["base_id"]] += 1
+    for tx in txs:
+        if per_base[tx["base_id"]] == 1:
+            tx["moneyflow_id"] = tx["base_id"]
+        else:
+            key = [tx["filing_ids"][0], tx["amount"], tx["tran_date"], list(tx["name"].values()), tx["entity_cd"]]
+            digest = hashlib.sha256(json.dumps(key).encode()).hexdigest()[:8]
+            tx["moneyflow_id"] = f"{tx['base_id']}-{tx['schedule'].lower()}-{digest}"
+    ids = [tx["moneyflow_id"] for tx in txs]
+    if len(ids) != len(set(ids)):
+        raise LedgerError("two transactions share a MoneyFlow id")
+
+
+def _bridge(ledger: Ledger) -> None:
+    """Explain each filing's itemized total as emitted + counted elsewhere + superseded + withheld."""
+    buckets = defaultdict(lambda: {"emitted": Decimal(0), "counted_in_other_filing": Decimal(0),
+                                   "superseded": Decimal(0), "non_additive": Decimal(0), "withheld": {}})
+    for row in ledger.rows:
+        if not row["schedule"] or not row["filing_id"] or row["disposition"] == "rejected":
+            continue
+        b = buckets[(row["filing_id"], row["schedule"])]
+        amount = Decimal(row["amount"])
+        if row["disposition"] == "superseded":
+            b["superseded"] += amount
+        elif not row["additive"]:
+            b["non_additive"] += amount
+        elif row["counted"]:
+            b["emitted" if row["primary"] else "counted_in_other_filing"] += amount
+        else:
+            reason = row["withheld_reason"]
+            b["withheld"][reason] = b["withheld"].get(reason, Decimal(0)) + amount
+    for group in ledger.reconciliation:
+        b = buckets[(group["filing_id"], group["schedule"])]
+        explained = b["emitted"] + b["counted_in_other_filing"] + b["superseded"] + sum(b["withheld"].values())
+        if explained != Decimal(group["itemized"]):
+            raise LedgerError(f"bridge does not explain {group['filing_id']} {group['schedule']}")
+        group["bridge"] = {k: (str(v.quantize(CENT)) if isinstance(v, Decimal)
+                               else {r: str(a.quantize(CENT)) for r, a in sorted(v.items())})
+                           for k, v in b.items()}

@@ -315,3 +315,158 @@ class TestWriteLedger:
             write_ledger(_ledger(tmp_path / run, self._sheets()), tmp_path / f"out-{run}")
         for name in ("filings.jsonl", "ledger.jsonl", "reconciliation.json"):
             assert (tmp_path / "out-r1" / name).read_bytes() == (tmp_path / "out-r2" / name).read_bytes()
+
+
+# Cross-filing repeats seen in the 2026-04-14 county capture, reduced to their shape:
+PRE_ELECTION = filing(rpt="2020-02-21", start="2020-01-19", thru="2020-02-15")
+CUMULATIVE = filing(report_num="001", rpt="2022-01-26", start="2019-12-01", thru="2021-11-18")  # overlaps
+FIRST_HALF = filing(rpt="2022-07-29", start="2022-01-01", thru="2022-06-30")
+LATER_HALF = filing(rpt="2025-07-25", start="2025-01-01", thru="2025-06-30")  # disjoint
+
+
+def _transactions(tmp_path, sheets_by_year):
+    from campaign_ledger import build_transactions
+    ledger = _ledger(tmp_path, sheets_by_year)
+    return ledger, build_transactions(ledger)
+
+
+def _row(ledger, file_year, tran_id):
+    return next(r for r in ledger.rows if r.get("tran_id") == tran_id and file_year in r["row_ref"]["file"])
+
+
+class TestTransactions:
+    def test_a_transaction_carries_the_live_moneyflow_id(self, tmp_path):
+        ledger, txs = _transactions(tmp_path, {"2024": {
+            "A-Contributions": [contribution(F1, "UdUX", 7500)], "Summary": [summary(F1, "A", "1", 7500)]}})
+        assert [t["moneyflow_id"] for t in txs] == ["moneyflow-1400001-UdUX"]
+        assert txs[0]["counts"] is True and txs[0]["amount"] == "7500.00"
+        assert ledger.rows[0]["moneyflow_id"] == "moneyflow-1400001-UdUX" and ledger.rows[0]["counted"] is True
+
+    def test_one_transaction_reported_in_two_filings_counts_once(self, tmp_path):
+        ledger, txs = _transactions(tmp_path, {
+            "2020": {"A-Contributions": [contribution(PRE_ELECTION, "UdUX", 7500, date="2020-02-01")],
+                     "Summary": [summary(PRE_ELECTION, "A", "1", 7500)]},
+            "2021": {"A-Contributions": [contribution(CUMULATIVE, "UdUX", 7500, date="2020-02-01")],
+                     "Summary": [summary(CUMULATIVE, "A", "1", 7500)]}})
+        assert len(txs) == 1
+        assert txs[0]["kind"] == "duplicate_report" and txs[0]["counts"] is True
+        assert len(txs[0]["rows"]) == 2
+        bridge = {g["filing_id"]: g["bridge"] for g in ledger.reconciliation}
+        pre, cum = (ledger.filing_id_for(source_id="src", **f) for f in (PRE_ELECTION, CUMULATIVE))
+        assert bridge[pre]["emitted"] == "7500.00" and bridge[cum]["counted_in_other_filing"] == "7500.00"
+
+    def test_competing_versions_across_overlapping_filings_are_withheld(self, tmp_path):
+        ledger, txs = _transactions(tmp_path, {
+            "2020": {"A-Contributions": [contribution(PRE_ELECTION, "BEFh", 250, date="2020-02-05")],
+                     "Summary": [summary(PRE_ELECTION, "A", "1", 250)]},
+            "2021": {"A-Contributions": [contribution(CUMULATIVE, "BEFh", 242.45, date="2020-02-05")],
+                     "Summary": [summary(CUMULATIVE, "A", "1", 242.45)]}})
+        assert [(t["kind"], t["counts"], t["reason"]) for t in txs] == [
+            ("competing_versions", False, "competing_versions")]
+        cum = ledger.filing_id_for(source_id="src", **CUMULATIVE)
+        group = next(g for g in ledger.reconciliation if g["filing_id"] == cum)
+        assert group["status"] == "matched"  # the filing itself still reconciles
+        assert group["bridge"]["withheld"] == {"competing_versions": "242.45"}
+
+    def test_a_reused_tran_id_in_disjoint_periods_is_two_transactions(self, tmp_path):
+        ledger, txs = _transactions(tmp_path, {
+            "2022": {"E-Expenditure": [expenditure(FIRST_HALF, "EDg2", 192, date="2022-04-12")],
+                     "Summary": [summary(FIRST_HALF, "E", "1", 192)]},
+            "2025": {"E-Expenditure": [expenditure(LATER_HALF, "EDg2", 396, date="2025-03-29")],
+                     "Summary": [summary(LATER_HALF, "E", "1", 396)]}})
+        assert [t["kind"] for t in txs] == ["reused_tran_id", "reused_tran_id"]
+        ids = [t["moneyflow_id"] for t in txs]
+        assert len(set(ids)) == 2 and all(i.startswith("moneyflow-1400001-EDg2-e-") for i in ids)
+        assert all(t["counts"] for t in txs)
+
+    def test_rows_of_an_unvalidated_filing_are_withheld(self, tmp_path):
+        ledger, txs = _transactions(tmp_path, {"2019": {
+            "A-Contributions": [contribution(F1, "a1", 100), contribution(F1, "a2", -100, Tran_Type="R")],
+            "Summary": [summary(F1, "E", "1", 0)]}})
+        assert {(t["counts"], t["reason"]) for t in txs} == {(False, "filing_not_validated")}
+
+    def test_memo_coded_and_zero_rows_are_withheld(self, tmp_path):
+        ledger, txs = _transactions(tmp_path, {"2024": {
+            "E-Expenditure": [expenditure(F1, "e1", 300), expenditure(F1, "e2", 300, Memo_Code="X"),
+                              expenditure(F1, "e3", 0)],
+            "Summary": [summary(F1, "E", "1", 300)]}})
+        assert {t["tran_id"]: t["reason"] for t in txs} == {"e1": None, "e2": "non_additive", "e3": "zero_amount"}
+        group = ledger.reconciliation[0]
+        assert group["bridge"]["non_additive"] == "300.00"
+
+    def test_two_pending_committees_sharing_a_tran_id_get_distinct_ids(self, tmp_path):
+        one = filing(filer_id="Pending", name="Doe for School Board 2024")
+        two = filing(filer_id="Pending", name="Roe for School Board 2024")
+        _, txs = _transactions(tmp_path, {"2024": {
+            "A-Contributions": [contribution(one, "IDT1", 10), contribution(two, "IDT1", 20)],
+            "Summary": [summary(one, "A", "1", 10), summary(two, "A", "1", 20)]}})
+        assert len({t["moneyflow_id"] for t in txs}) == 2
+        assert all(t["moneyflow_id"].startswith("moneyflow-Pending-IDT1-a-") for t in txs)
+
+    def test_superseded_rows_are_not_transactions(self, tmp_path):
+        from campaign_ledger import build_transactions
+        original, amended = filing(report_num="000", rpt="2024-02-01"), filing(report_num="001", rpt="2024-03-15")
+        probe = build_ledger("src", [])
+        ids = [probe.filing_id_for(source_id="src", **f) for f in (original, amended)]
+        ledger = _ledger(tmp_path, {"2024": {
+            "A-Contributions": [contribution(original, "a1", 100), contribution(amended, "a1", 120)],
+            "Summary": [summary(original, "A", "1", 100), summary(amended, "A", "1", 120)]}},
+            version_evidence=[{"original": ids[0], "amended": ids[1], "locator": "cover", "evidence": "amendment"}])
+        txs = build_transactions(ledger)
+        assert [(t["amount"], t["counts"]) for t in txs] == [("120.00", True)]
+        old = next(g for g in ledger.reconciliation if g["filing_id"] == ids[0])
+        assert old["bridge"]["superseded"] == "100.00" and old["bridge"]["emitted"] == "0.00"
+
+
+class TestCodexRoundTwo:
+    def test_the_reader_never_hands_street_columns_to_the_ledger(self, tmp_path):
+        from campaign_ledger import _physical_rows
+        path = write_export(tmp_path / "2024.zip", {
+            "A-Contributions": [contribution(F1, "a1", 10, Tran_Adr1="SECRET-A", Tran_Adr2="SECRET-B")],
+            "E-Expenditure": [expenditure(F1, "e1", 5, Payee_Adr1="SECRET-C")]})
+        seen = [values for _, _, values in _physical_rows("x", path)]
+        assert not [k for values in seen for k in values if "Adr" in k]
+        assert "SECRET" not in repr(seen)
+
+    @pytest.mark.parametrize("links", [[("B", "A"), ("A", "B")], [("A", "A")]])
+    def test_cyclic_or_self_version_evidence_is_refused(self, tmp_path, links):
+        versions = {"A": filing(report_num="000", rpt="2024-02-01"), "B": filing(report_num="001", rpt="2024-03-01"),
+                    "C": filing(report_num="002", rpt="2024-04-01")}
+        probe = build_ledger("src", [])
+        ids = {k: probe.filing_id_for(source_id="src", **f) for k, f in versions.items()}
+        evidence = [{"original": ids[a], "amended": ids[b], "locator": "cover", "evidence": "amendment"}
+                    for a, b in links]
+        with pytest.raises(LedgerError):
+            _ledger(tmp_path, {"2024": {"Summary": [summary(f, "A", "1", 0) for f in versions.values()]}},
+                    version_evidence=evidence)
+
+    def test_evidence_must_chain_every_version_to_the_current_one(self, tmp_path):
+        versions = {"A": filing(report_num="000", rpt="2024-02-01"), "B": filing(report_num="001", rpt="2024-03-01"),
+                    "C": filing(report_num="002", rpt="2024-04-01")}
+        probe = build_ledger("src", [])
+        ids = {k: probe.filing_id_for(source_id="src", **f) for k, f in versions.items()}
+        ledger = _ledger(tmp_path, {"2024": {"Summary": [summary(f, "A", "1", 0) for f in versions.values()]}},
+                         version_evidence=[{"original": ids["A"], "amended": ids["B"], "locator": "c", "evidence": "e"}])
+        assert {ledger.filings[i]["version_status"] for i in ids.values()} == {"unresolved_versions"}
+        chained = _ledger(tmp_path / "2", {"2024": {"Summary": [summary(f, "A", "1", 0) for f in versions.values()]}},
+                          version_evidence=[{"original": ids["A"], "amended": ids["B"], "locator": "c", "evidence": "e"},
+                                            {"original": ids["B"], "amended": ids["C"], "locator": "c", "evidence": "e"}])
+        assert chained.filings[ids["C"]]["version_status"] == "current"
+        assert chained.filings[ids["A"]]["version_status"] == "superseded"
+
+    def test_an_a_e_row_without_a_filer_fails_validation(self, tmp_path):
+        ledger = _ledger(tmp_path, {"2024": {
+            "A-Contributions": [contribution(F1, "a1", 10), {**contribution(F1, "a2", 50), "Filer_ID": None}],
+            "Summary": [summary(F1, "A", "1", 10)]}})
+        orphan = next(r for r in ledger.rows if r["disposition"] == "rejected")
+        assert orphan["schedule"] == "A" and orphan["reason"] == "no_filer_id"
+        assert any("no_filer_id" in e for e in ledger.errors)
+
+    @pytest.mark.parametrize("bad", [{"locator": {}, "evidence": "e"}, {"locator": "l", "evidence": []},
+                                     {"locator": "l", "evidence": "   "}])
+    def test_exception_fields_must_be_non_blank_strings(self, tmp_path, bad):
+        fid = build_ledger("src", []).filing_id_for(source_id="src", **F1)
+        with pytest.raises(LedgerError):
+            _ledger(tmp_path, {"2024": {"A-Contributions": [contribution(F1, "a1", 10)],
+                                        "Summary": [summary(F1, "A", "1", 99)]}},
+                    exceptions=[{"filing_id": fid, "schedule": "A", **bad}])
