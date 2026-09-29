@@ -558,11 +558,71 @@ class TestZeroNetwork:
         assert "NO_NEO4J_OK" in result.stdout
 
 
+def _added_text(diff: str) -> str:
+    """What a diff ADDS: the '+' lines inside its hunks, and every destination path (a new,
+    renamed, copied or binary file). A removed line or path was already in history before
+    the base and is not reaching it now: untracking a file that held an address must not
+    trip the scan. Hunks are parsed, not prefix-matched, so an added line that itself
+    starts with '++' is kept."""
+    out: list[str] = []
+    in_hunk = False
+    header_path = None
+    for line in diff.splitlines():
+        if line.startswith("diff --git "):
+            in_hunk = False
+            header_path = line.rsplit(" b/", 1)[-1] if " b/" in line else None
+        elif line.startswith("@@"):
+            in_hunk = True
+        elif in_hunk:
+            if line.startswith("+"):
+                out.append(line[1:])
+        elif line.startswith("+++ b/"):
+            out.append(line[len("+++ b/"):])
+        elif line.startswith(("rename to ", "copy to ")):
+            out.append(line.split(" to ", 1)[1])
+        elif line.startswith("new file mode") and header_path:
+            out.append(header_path)
+        elif line.startswith("Binary files ") and " and b/" in line:
+            out.append(line.rsplit(" and b/", 1)[1].removesuffix(" differ"))
+    return "\n".join(out)
+
+
+class TestAddedText:
+    def test_keeps_added_lines_and_drops_removed_ones(self):
+        diff = ("diff --git a/x b/x\n--- a/x\n+++ b/x\n@@ -1,2 +1,2 @@\n"
+                "-12 Removed Street\n+34 Added Street\n context\n")
+        text = _added_text(diff)
+        assert "34 Added Street" in text
+        assert "12 Removed Street" not in text and "context" not in text
+
+    def test_an_added_address_still_trips_the_shape_check(self):
+        assert _ADDRESS_RE.search(_added_text("+++ b/x\n@@ -0,0 +1 @@\n+4321 Example Road\n"))
+
+    def test_an_added_line_that_itself_starts_with_plus_plus_is_kept(self):
+        # Codex 2026-09-29: content "++ 4321 Example Road" is "+++ 4321..." in the diff
+        diff = "diff --git a/x b/x\n--- a/x\n+++ b/x\n@@ -0,0 +1 @@\n+++ 4321 Example Road\n"
+        assert _ADDRESS_RE.search(_added_text(diff))
+
+    def test_destination_paths_are_scanned(self):
+        # Codex 2026-09-29: a rename or a new binary file adds only diff metadata
+        rename = ("diff --git a/x.txt b/4321 Example Road.txt\nsimilarity index 100%\n"
+                  "rename from x.txt\nrename to 4321 Example Road.txt\n")
+        binary = ("diff --git a/y b/4321 Example Road.pdf\nnew file mode 100644\n"
+                  "Binary files /dev/null and b/4321 Example Road.pdf differ\n")
+        for diff in (rename, binary):
+            assert _ADDRESS_RE.search(_added_text(diff)), diff
+
+    def test_a_removed_path_is_not_scanned(self):
+        diff = ("diff --git a/12 Removed Street.txt b/12 Removed Street.txt\ndeleted file mode 100644\n"
+                "--- a/12 Removed Street.txt\n+++ /dev/null\n@@ -1 +0,0 @@\n-gone\n")
+        assert not _ADDRESS_RE.search(_added_text(diff))
+
+
 class TestCommittedTextScan:
     """COMPLETION 3 — no forbidden address/APN string (or shape) reaches the
     PUBLIC repo history or the workspace evidence file. Mask the allowlisted
     entity names first (they legitimately appear in committed golden tests),
-    then scan the full text of `git diff 2c24ebc..HEAD` (PDFs excluded) AND the
+    then scan the text `git diff 2c24ebc..HEAD` ADDS (PDFs excluded) AND the
     workspace evidence file. Skipif the local-only strings file is absent."""
 
     @pytest.mark.skipif(not STRIPPED.is_file(), reason="local-only strings file absent")
@@ -573,7 +633,7 @@ class TestCommittedTextScan:
             ["git", "diff", "2c24ebc..HEAD"],
             cwd=str(REPO_ROOT), capture_output=True, text=True, check=True,
         ).stdout
-        text = diff
+        text = _added_text(diff)
         evidence = Path.home() / ".openclaw" / "workspace" / "goals" / "evidence" \
             / "2026-06-10-m4-evidence.md"
         if evidence.is_file():
