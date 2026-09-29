@@ -53,7 +53,8 @@ RATE_LIMIT_SECS = 13.0
 # re-found, which is how a pull proves it worked (see main). Known gap: a case indexed
 # more than this late, or a changed termination date, needs a full refresh, and a full
 # pull no longer fits the hourly quota; the planned route is CourtListener's quarterly
-# bulk data.
+# bulk data. Likewise a backlog too big for one hour's quota (after a long outage) fails
+# the run on a 429, visibly, rather than half-updating; recover by hand or from bulk data.
 INCREMENTAL_OVERLAP = timedelta(days=60)
 _last_request_at: float | None = None
 sleep, monotonic = time.sleep, time.monotonic  # module-level so tests can stub the pacing
@@ -379,6 +380,18 @@ def _filed(record: dict) -> date | None:
     return _parse_date(record.get("dateFiled"))
 
 
+def _require_newest_first(query: str, results: list[dict]) -> None:
+    """Raise unless ``results`` run newest-first, undated records last."""
+    previous: date | None = date.max
+    for record in results:
+        filed = _filed(record)
+        if filed is not None and (previous is None or filed > previous):
+            raise ValueError(f"{query}: results are not newest-first (dateFiled {filed.isoformat()} after "
+                             f"{previous.isoformat() if previous else 'an undated record'}); stopping early "
+                             f"at the cutoff could miss a case")
+        previous = filed
+
+
 def fetch_cases_for_query(
     query: str,
     limit: int | None = None,
@@ -389,7 +402,10 @@ def fetch_cases_for_query(
     Every request is paced (RATE_LIMIT_SECS apart, across queries). With ``since``,
     results come newest-first and the walk stops at the first record filed before
     ``since`` (an undated record counts as older), so a weekly pull costs about one
-    request per query. Without it, every page is read in relevance order.
+    request per query. Because stopping early is only safe if the order really is
+    newest-first, a page out of that order raises, as does a first page with no results
+    at all (every query phrase has matched dockets before). Without ``since``, every page
+    is read in relevance order.
 
     Args:
         query:  The search query string.
@@ -407,6 +423,10 @@ def fetch_cases_for_query(
         data = fetch_page(query, cursor=cursor, order_by=order_by)
 
         results = data.get("results", [])
+        if since is not None:
+            if cursor is None and not results:
+                raise ValueError(f"{query}: no results at all (a broken response, not a quiet week)")
+            _require_newest_first(query, results)
         if not results:
             break
 
@@ -699,7 +719,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  (incremental: filed on or after {since.isoformat()}, merged onto "
               f"{len(prev_nodes):,} nodes)")
 
-    nodes, edges = run_pipeline(limit=args.limit, since=since)
+    try:
+        nodes, edges = run_pipeline(limit=args.limit, since=since)
+    except ValueError as exc:  # an incremental pull that can't prove it's complete
+        print(f"ERROR: {exc}; nothing written", file=sys.stderr)
+        return 1
     if prev_nodes is not None:
         # A merge never shrinks, so the weekly floors can't see a broken pull (an empty 200,
         # an ignored order_by, a renamed dateFiled). The overlap guarantees the newest known

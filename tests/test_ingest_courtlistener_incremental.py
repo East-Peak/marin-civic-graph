@@ -78,6 +78,32 @@ def test_an_undated_record_counts_as_older_than_any_cutoff(monkeypatch):
     assert len(fake.calls) == 1
 
 
+def test_an_out_of_order_page_fails_rather_than_stopping_early_and_missing_a_case(monkeypatch):
+    # Codex 2026-09-29: [known recent, old, unseen recent] would stop at "old" and never see
+    # the unseen case; the pull still re-finds a known case, so nothing else would notice.
+    fake = FakePages([[_raw(1, "2026-09-01"), _raw(2, "2026-01-01"), _raw(3, "2026-09-10")]])
+    monkeypatch.setattr(cl, "fetch_page", fake)
+
+    with pytest.raises(ValueError, match="not newest-first"):
+        list(cl.fetch_cases_for_query("q", since=date(2026, 8, 1)))
+
+
+def test_a_dated_record_after_an_undated_one_is_out_of_order(monkeypatch):
+    monkeypatch.setattr(cl, "fetch_page", FakePages([[_raw(1, "2026-09-01"), _raw(2, None), _raw(3, "2026-08-20")]]))
+
+    with pytest.raises(ValueError, match="not newest-first"):
+        list(cl.fetch_cases_for_query("q", since=date(2026, 8, 1)))
+
+
+def test_an_incremental_query_with_no_results_at_all_fails(monkeypatch):
+    # Every query phrase has matched dockets before; an empty first page is a broken
+    # response, and one healthy query must not mask it.
+    monkeypatch.setattr(cl, "fetch_page", FakePages([[]]))
+
+    with pytest.raises(ValueError, match="no results at all"):
+        list(cl.fetch_cases_for_query("q", since=date(2026, 8, 1)))
+
+
 def test_a_full_query_keeps_relevance_order_and_every_page(monkeypatch):
     fake = FakePages([[_raw(1, "2020-01-01")], [_raw(2, "2019-01-01")]])
     monkeypatch.setattr(cl, "fetch_page", fake)
@@ -249,7 +275,6 @@ def test_incremental_from_writes_the_previous_set_plus_what_was_filed_since(monk
 
 
 @pytest.mark.parametrize("pages", [
-    [[]],                                               # HTTP 200, no results
     [[_raw(8, "2026-01-01")]],                          # order_by ignored: relevance order, old first
     [[{**_raw(1, None), "date_filed_renamed": "2026-08-06"}]],  # dateFiled renamed
     [[_raw(9, "2026-09-20")]],                          # new cases, but not one known case re-found
@@ -265,6 +290,20 @@ def test_a_pull_that_re_finds_no_known_case_fails_instead_of_passing_as_an_uncha
     assert cl.main(["--incremental-from", str(prev), "--output-dir", str(out)]) != 0
     assert not (out / "nodes.jsonl").exists()
     assert "re-found none" in capsys.readouterr().err
+
+
+def test_one_healthy_query_cannot_mask_another_that_returned_nothing(monkeypatch, tmp_path, capsys):
+    prev = tmp_path / "prev"
+    _write(prev, [_case_node("case-cl-1", "2026-08-06")], [])
+    healthy = FakePages([[_raw(1, "2026-08-06")]])
+    monkeypatch.setattr(cl, "fetch_page", lambda q, cursor=None, order_by="score desc":
+                        healthy(q, cursor, order_by) if q == "a" else {"results": [], "next": None})
+    monkeypatch.setattr(cl, "QUERIES", ["a", "b"])
+    out = tmp_path / "out"
+
+    assert cl.main(["--incremental-from", str(prev), "--output-dir", str(out)]) != 0
+    assert not (out / "nodes.jsonl").exists()
+    assert "no results at all" in capsys.readouterr().err
 
 
 def test_incremental_from_an_empty_or_missing_set_refuses_rather_than_silently_refetching_everything(
