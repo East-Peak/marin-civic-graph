@@ -30,3 +30,10 @@ sources:
     floors:
       max_newest_age_days: null  # yearly export bundles, not dated meetings
     export_target: "ctl00$phBody$GetExcelAmend"
+    # These 'exports' are the NetFile HTML page, not a workbook: unavailable coverage, never empty years.
+    unavailable_inputs:
+      - {capture: "2026-04-14", file: "2019.zip", sha256: "971a97f0840175a011d74a1e0e810ad78288da84c1589cdfbb5cf8949fc9e911"}
+      - {capture: "2026-04-14", file: "2020.zip", sha256: "61707dee608ada2d638e77bf5f54ac996d9f2ca1834abf844823b5829a28066f"}
+      - {capture: "2026-04-14", file: "2021.zip", sha256: "d20406a99a39b8887464462b18f9bdf3bf26214fa700edd5e3363f4740881cb9"}
+      - {capture: "2026-04-14", file: "2025.zip", sha256: "b0f6b361e75f83b93cf7e9f7807d1f5c28afbbf89d1880e567d2d8c456e63605"}
+      - {capture: "2026-04-14", file: "2026.zip", sha256: "7bc1755d8be12408b2352a5871511f5ba3c4c0b9b23c32666497fb555bb39a47"}

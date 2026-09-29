@@ -1,23 +1,24 @@
 #!/usr/bin/env python3
-"""Normalize NetFile campaign finance ZIP exports into settled-ontology JSONL for Neo4j loading.
+"""Normalize NetFile campaign finance ZIP exports into an operator-private staging bundle.
 
-Reads NetFile Excel workbooks (ZIP → .xlsx) and produces:
-  - nodes.jsonl  (Committee, MoneyFlow, Person, Organization, Place nodes)
-  - edges.jsonl  (FROM_SOURCE, TO_TARGET, EVIDENCED_BY, IN_JURISDICTION)
+Writes, per source, under an explicit --output-root (never data/normalized, the private data repo,
+data/exports, data/ingest-runs, or anywhere inside a git checkout):
+  - manifest.json   every input's path, size and sha256; pinned HTML pages as unavailable coverage
+  - nodes.jsonl / edges.jsonl   (Committee, MoneyFlow, Person, Organization, Place, Record)
   - normalization-report.json
+and a run-manifest.json (the only file carrying timestamps) at the root. Nothing is loaded into Neo4j:
+a load goes through a reviewed migration plan, because an additive MERGE cannot retire flows.
 
 Usage:
-  python scripts/normalize_campaign_finance.py --source marin-county-campaign-finance
-  python scripts/normalize_campaign_finance.py --all
-  python scripts/normalize_campaign_finance.py --source marin-county-campaign-finance --load
+  python scripts/normalize_campaign_finance.py --all --output-root ~/open-marin-staging/cf-ledger/run-1
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
+import subprocess
 import sys
 import zipfile
 import hashlib
@@ -27,6 +28,8 @@ from pathlib import Path
 import openpyxl
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from campaign_ledger import InputError, UnsafeOutputError, inventory_inputs, resolve_output_root  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -567,7 +570,6 @@ def normalize_campaign_source(
     report = {
         "source_id": source_id,
         "capture_id": capture_id,
-        "normalized_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "node_count": len(nodes),
         "edge_count": len(edges),
         "committee_count": len(committees),
@@ -587,118 +589,104 @@ def normalize_campaign_source(
 # CLI
 # ---------------------------------------------------------------------------
 
-def _find_zip_paths(source_id: str) -> list[Path]:
-    """Discover all yearly ZIP exports under data/raw/{source_id}/*/"""
-    pattern = ROOT / "data" / "raw" / source_id / "*" / "*.zip"
-    return sorted(pattern.parent.parent.glob("*/*.zip"))
+def _git_checkouts() -> list[Path]:
+    """This checkout plus the main checkout it may be a worktree of: both are protected destinations."""
+    roots = [ROOT]
+    try:
+        common = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--path-format=absolute",
+                                 "--git-common-dir"], capture_output=True, text=True, check=True).stdout.strip()
+        roots.append(Path(common).parent)
+    except (OSError, subprocess.CalledProcessError):
+        pass
+    return roots
 
 
-def main() -> None:
+def _capture_date(input_root: Path, source_id: str) -> str:
+    return sorted(p.name for p in (input_root / source_id).iterdir() if p.is_dir())[-1]
+
+
+def _years(backfill_from: str, capture_date: str) -> list[str]:
+    return [str(y) for y in range(int(backfill_from[:4]), int(capture_date[:4]) + 1)]
+
+
+def _write_json(path: Path, payload) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Normalize NetFile campaign finance exports to settled-ontology JSONL"
+        description="Normalize NetFile campaign finance exports into an operator-private staging bundle"
     )
-    parser.add_argument("--source", help="Source ID to normalize")
-    parser.add_argument("--all", dest="all_sources", action="store_true",
-                        help="Normalize all NetFile sources")
-    parser.add_argument("--load", action="store_true",
-                        help="Load into Neo4j after normalization")
-    args = parser.parse_args()
+    target = parser.add_mutually_exclusive_group(required=True)
+    target.add_argument("--source", help="Source ID to normalize")
+    target.add_argument("--all", dest="all_sources", action="store_true", help="Normalize all NetFile sources")
+    parser.add_argument("--input-root", type=Path, default=ROOT / "data" / "raw",
+                        help="Root holding <source>/<capture date>/<year>.zip (default: data/raw)")
+    parser.add_argument("--output-root", type=Path, required=True,
+                        help="Empty staging dir outside every git checkout and protected data dir")
+    parser.add_argument("--registry", type=Path, default=ROOT / "registry" / "netfile-sources.yaml")
+    args = parser.parse_args(argv)
 
     import yaml
 
-    sources = []
-    registry_path = ROOT / "registry" / "netfile-sources.yaml"
-    if registry_path.exists():
-        with open(registry_path) as f:
-            data = yaml.safe_load(f)
-        sources.extend(data.get("sources", []))
+    try:
+        out_root = resolve_output_root(args.output_root, *_git_checkouts())
+    except UnsafeOutputError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
 
-    if args.source:
-        targets = [s for s in sources if s["id"] == args.source]
-        if not targets:
-            print(f"Unknown source: {args.source}", file=sys.stderr)
-            sys.exit(1)
-    elif args.all_sources:
-        targets = sources
-    else:
-        print("Specify --source <id> or --all", file=sys.stderr)
-        sys.exit(1)
+    sources = yaml.safe_load(args.registry.read_text()).get("sources", [])
+    targets = sources if args.all_sources else [s for s in sources if s["id"] == args.source]
+    if not targets:
+        print(f"Unknown source: {args.source}", file=sys.stderr)
+        return 1
 
-    for source_config in targets:
+    started_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    inventories = []
+    try:
+        for source_config in targets:
+            source_id = source_config["id"]
+            capture_date = _capture_date(args.input_root, source_id)
+            pins = [p for p in source_config.get("unavailable_inputs", []) if p["capture"] == capture_date]
+            inputs = inventory_inputs(args.input_root, source_id, capture_date,
+                                      years=_years(source_config["backfill_from"], capture_date),
+                                      unavailable=pins)
+            inventories.append((source_config, capture_date, inputs))
+    except InputError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
+
+    for source_config, capture_date, inputs in inventories:
         source_id = source_config["id"]
-        zip_paths = _find_zip_paths(source_id)
-        if not zip_paths:
-            print(f"  No ZIP exports found for {source_id}, skipping")
-            continue
-
-        # Use the capture date from the most recent capture dir
-        capture_date = sorted((ROOT / "data" / "raw" / source_id).iterdir())[-1].name
-        capture_id = f"{source_id}__{capture_date}"
         capture = {
             "source_id": source_id,
-            "capture_id": capture_id,
+            "capture_id": f"{source_id}__{capture_date}",
             "jurisdiction_id": source_config["jurisdiction_id"],
             "institution_id": source_config["institution_id"],
             "captured_at": f"{capture_date}T00:00:00Z",
         }
-
+        output_dir = out_root / source_id
+        _write_json(output_dir / "manifest.json", {"capture_id": capture["capture_id"], "inputs": inputs})
+        zip_paths = [args.input_root / i["path"] for i in inputs if i["coverage"] == "workbook"]
         print(f"\nNormalizing: {source_id}")
-        print(f"  ZIPs: {[p.name for p in zip_paths]}")
-
-        output_dir = ROOT / "data" / "normalized" / f"{source_id}-campaign-finance"
-        nodes, edges, report = normalize_campaign_source(capture, zip_paths, output_dir)
-
-        print(f"  Committees:   {report['committee_count']}")
-        print(f"  Contributors: {report['contributor_count']}")
+        _, _, report = normalize_campaign_source(capture, zip_paths, output_dir)
         print(f"  MoneyFlows:   {report['moneyflow_count']}")
-        print(f"  Nodes total:  {report['node_count']}")
-        print(f"  Edges total:  {report['edge_count']}")
         print(f"  Output:       {output_dir}")
-
-        # Fail hard on integrity issues
         if report["duplicate_id_count"] > 0 or report["broken_edge_count"] > 0:
-            print(
-                f"  ERROR: {report['duplicate_id_count']} duplicate IDs, "
-                f"{report['broken_edge_count']} broken edges — output is not loadable",
-                file=sys.stderr,
-            )
-            sys.exit(1)
+            print(f"  ERROR: {report['duplicate_id_count']} duplicate IDs, "
+                  f"{report['broken_edge_count']} broken edges", file=sys.stderr)
+            return 1
 
-        if args.load:
-            from load_neo4j_v2 import (
-                load_nodes as neo4j_load_nodes,
-                load_edges as neo4j_load_edges,
-                validate_and_filter_edges,
-            )
-
-            from neo4j_target import open_driver
-
-            uri = os.getenv("NEO4J_URI")
-            user = os.getenv("NEO4J_USER")
-            password = os.getenv("NEO4J_PASSWORD")
-            if not all([uri, user, password]):
-                print("  NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD required for --load",
-                      file=sys.stderr)
-                continue
-
-            # Validate edges before loading
-            node_ids = {n["id"] for n in nodes}
-            clean_edges, edge_report = validate_and_filter_edges(node_ids, edges)
-            if edge_report["total_broken"] > 0:
-                print(
-                    f"  WARNING: filtered {edge_report['total_broken']} broken edges before load",
-                    file=sys.stderr,
-                )
-
-            driver = open_driver(uri, auth=(user, password))
-            try:
-                print("  Loading into Neo4j...")
-                neo4j_load_nodes(driver, nodes)
-                neo4j_load_edges(driver, clean_edges)
-                print("  Loaded.")
-            finally:
-                driver.close()
+    _write_json(out_root / "run-manifest.json", {
+        "started_at": started_at,
+        "finished_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "argv": sys.argv[1:] if argv is None else argv,
+        "input_root": str(Path(args.input_root).resolve()),
+        "sources": [s["id"] for s, _, _ in inventories],
+    })
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
