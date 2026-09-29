@@ -289,63 +289,14 @@ def test_apply_deltas_path_covers_its_subtree():
     assert len(warnings) == 2
 
 
-def test_committed_approved_deltas_pin_known_replay_drift():
-    deltas = load_deltas(Path(__file__).parent / "approved-deltas.yaml")
+def test_committed_approved_deltas_are_empty_since_the_substrate_rebaseline():
+    # 2026-09-29: the corpus is captured from the substrate app itself, so the six
+    # live-vs-substrate deltas no longer apply; any new one needs a reason here.
+    assert load_deltas(Path(__file__).parent / "approved-deltas.yaml") == []
 
-    assert deltas == [
-        {
-            "surface": "data",
-            "case": "campaign-money-30d",
-            "paths": ["$.rows[*].decision_title"],
-            "reason": (
-                "live tie order underdetermined for pairs sharing abs delta + decided_at "
-                "\u2014 same flow id ties across decisions"
-            ),
-        },
-        {
-            "surface": "data",
-            "case": "campaign-money-90d",
-            "paths": ["$.rows[*].decision_title"],
-            "reason": (
-                "live tie order underdetermined for pairs sharing abs delta + decided_at "
-                "\u2014 same flow id ties across decisions"
-            ),
-        },
-        {
-            "surface": "status",
-            "case": "status",
-            "paths": ["$.edge_count", "$.node_count"],
-            "reason": (
-                "composed artifact is overlay-authoritative \u2014 carries 21 stamped "
-                "SAME_AS edges + anchor nodes live lags"
-            ),
-        },
-        {
-            "surface": "data",
-            "case": "money-default",
-            "paths": ["$.rows[*].target_name"],
-            "reason": (
-                "live carries duplicate-id vendor stub nodes (59 pairs, ingestion bug "
-                "per spec 4.2); the bake MERGEs them, so target_name resolves to the "
-                "enriched node while live binds the bare stub"
-            ),
-        },
-        {
-            "surface": "data",
-            "case": "proceedings-default",
-            "paths": ["$.rows[*].affected_program"],
-            "reason": (
-                "link order within a proceeding group is underdetermined on live (no "
-                "ORDER BY on link in the Cypher); row COUNTS and all values match"
-            ),
-        },
-        {
-            "surface": "data",
-            "case": "proceedings-boyd",
-            "paths": ["$.rows[*].affected_program"],
-            "reason": (
-                "link order within a proceeding group is underdetermined on live (no "
-                "ORDER BY on link in the Cypher); row COUNTS and all values match"
-            ),
-        },
-    ]
+
+def test_the_fallback_parser_reads_an_explicit_empty_list():
+    from scripts.parity_core import _parse_tiny_delta_yaml
+
+    assert _parse_tiny_delta_yaml("# no deltas\n[]\n") == []
+

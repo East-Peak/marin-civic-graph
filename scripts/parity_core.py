@@ -315,6 +315,8 @@ def _parse_tiny_delta_yaml(text: str) -> list[dict[str, Any]]:
     for line_number, raw_line in enumerate(text.splitlines(), start=1):
         if not raw_line.strip() or raw_line.lstrip().startswith("#"):
             continue
+        if raw_line.strip() == "[]" and not entries:
+            continue  # an explicit empty list, as YAML itself reads it
         if raw_line.startswith("- "):
             current = {}
             entries.append(current)
