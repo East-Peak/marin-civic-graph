@@ -37,7 +37,7 @@
         "id": "place-\\mill-valley",
         "parent_name": null,
         "place_type": "city",
-        "route": "/place/\\mill-valley",
+        "route": "/place/%5Cmill-valley",
         "search_label": "place-\\mill-valley",
         "type": "Place"
       },
@@ -165,7 +165,7 @@
         "id": "place-greenbrae,-ca",
         "parent_name": null,
         "place_type": "city",
-        "route": "/place/greenbrae,-ca",
+        "route": "/place/greenbrae%2C-ca",
         "search_label": "place-greenbrae,-ca",
         "type": "Place"
       },
@@ -181,7 +181,7 @@
         "id": "place-inverness,-ca",
         "parent_name": null,
         "place_type": "city",
-        "route": "/place/inverness,-ca",
+        "route": "/place/inverness%2C-ca",
         "search_label": "place-inverness,-ca",
         "type": "Place"
       },
@@ -236,7 +236,7 @@
       {
         "id": "place-marin-county",
         "parent_name": null,
-        "place_type": "city",
+        "place_type": "county",
         "route": "/place/marin-county",
         "search_label": "Marin County",
         "type": "Place"
@@ -325,7 +325,7 @@
         "id": "place-petaluma,-ca",
         "parent_name": null,
         "place_type": "city",
-        "route": "/place/petaluma,-ca",
+        "route": "/place/petaluma%2C-ca",
         "search_label": "place-petaluma,-ca",
         "type": "Place"
       },
@@ -405,7 +405,7 @@
         "id": "place-san-anselmo,-ca",
         "parent_name": null,
         "place_type": "city",
-        "route": "/place/san-anselmo,-ca",
+        "route": "/place/san-anselmo%2C-ca",
         "search_label": "place-san-anselmo,-ca",
         "type": "Place"
       },

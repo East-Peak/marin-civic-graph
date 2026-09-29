@@ -131,7 +131,7 @@
         "id": "doc-2024-06-28-grants-pass-statement",
         "label": "Record",
         "ring": 1,
-        "route": "/record/2024-06-28-grants-pass-statement",
+        "route": "/record/doc-2024-06-28-grants-pass-statement",
         "type": "Record"
       },
       {
@@ -139,7 +139,7 @@
         "id": "doc-2024-08-08-boyd-dismissal-release",
         "label": "Record",
         "ring": 1,
-        "route": "/record/2024-08-08-boyd-dismissal-release",
+        "route": "/record/doc-2024-08-08-boyd-dismissal-release",
         "type": "Record"
       },
       {

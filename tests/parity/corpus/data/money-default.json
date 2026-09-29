@@ -260,7 +260,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-00003c05a55c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-burgess-earl-c"
+        "target_name": "BURGESS, EARL C"
       },
       {
         "amount": 7500,
@@ -268,7 +268,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0001c75a00db",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-jackson-lewis-pc"
+        "target_name": "JACKSON LEWIS PC"
       },
       {
         "amount": 4000,
@@ -276,7 +276,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-001050d593d1",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-brown-miller-communications"
+        "target_name": "BROWN MILLER COMMUNICATIONS INC"
       },
       {
         "amount": 32444,
@@ -284,7 +284,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0021ca55cf15",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-bethany-dominik-consulting"
+        "target_name": "BETHANY DOMINIK CONSULTING LLC"
       },
       {
         "amount": 30000,
@@ -292,7 +292,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-002807b5981d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-maxim-healthcare-services-holdings"
+        "target_name": "MAXIM HEALTHCARE SERVICES HOLDINGS INC"
       },
       {
         "amount": 3500,
@@ -300,7 +300,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-002b1a157ba3",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ballard-watkins-construction-serv"
+        "target_name": "BALLARD & WATKINS CONSTRUCTION SERV"
       },
       {
         "amount": 49500,
@@ -308,7 +308,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-002cb886a17d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-emerson-elizabeth"
+        "target_name": "EMERSON, ELIZABETH"
       },
       {
         "amount": 25000,
@@ -316,7 +316,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-002f7081ea9e",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-horizon-water-and-environment"
+        "target_name": "HORIZON WATER AND ENVIRONMENT LLC"
       },
       {
         "amount": 20000,
@@ -324,7 +324,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-00335782e9ac",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-parisi-transportation-consulting"
+        "target_name": "PARISI TRANSPORTATION CONSULTING INC"
       },
       {
         "amount": 49725,
@@ -332,7 +332,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0034122122a7",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-sicular-environmental-consulting"
+        "target_name": "SICULAR ENVIRONMENTAL CONSULTING"
       },
       {
         "amount": 2600,
@@ -340,7 +340,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-004132fe2047",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-pushing-education"
+        "target_name": "PUSHING EDUCATION LLC"
       },
       {
         "amount": 10000,
@@ -356,7 +356,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-004db4cd5420",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-meeks-coates-eaton-architects"
+        "target_name": "MEEKS, COATES + EATON ARCHITECTS INC"
       },
       {
         "amount": 15750,
@@ -364,7 +364,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-005597f0fc66",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-florez-veda"
+        "target_name": "FLOREZ, VEDA"
       },
       {
         "amount": 21950,
@@ -372,7 +372,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0058e6672170",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-lps-hearing-officers"
+        "target_name": "LPS  HEARING OFFICERS LLC"
       },
       {
         "amount": 15000,
@@ -380,7 +380,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-005d0ee2b286",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-cinquini-passarino"
+        "target_name": "CINQUINI & PASSARINO INC"
       },
       {
         "amount": 35000,
@@ -388,7 +388,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0063299142be",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-spahr-center"
+        "target_name": "SPAHR CENTER"
       },
       {
         "amount": 8332,
@@ -404,7 +404,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0078c9f27c27",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-facilities-by-design"
+        "target_name": "FACILITIES BY DESIGN"
       },
       {
         "amount": 10000,
@@ -412,7 +412,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0089bf3af66a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-best-best-krieger"
+        "target_name": "BEST BEST & KRIEGER LLP"
       },
       {
         "amount": 10000,
@@ -420,7 +420,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-00956f5f5205",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-morrow-gloria"
+        "target_name": "MORROW, GLORIA"
       },
       {
         "amount": 24615,
@@ -428,7 +428,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-009b802bb02e",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-psychwest-clinical-psychology"
+        "target_name": "PSYCHWEST, CLINICAL & PSYCHOLOGY, INC."
       },
       {
         "amount": 3800,
@@ -436,7 +436,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-00a0f1d47b0c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-salas-obrien-engineers-inc-addendum"
+        "target_name": "SALAS OBRIEN ENGINEERS INC-ADDENDUM"
       },
       {
         "amount": 2500,
@@ -452,7 +452,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-00b173bd22a6",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-garrett-law"
+        "target_name": "GARRETT LAW LLP"
       },
       {
         "amount": 3000,
@@ -468,7 +468,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-00bf5f226ccb",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-treatment-center"
+        "target_name": "MARIN TREATMENT CENTER"
       },
       {
         "amount": 1260,
@@ -476,7 +476,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-00c09afe4d1b",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-enriching-lives-through-music"
+        "target_name": "Enriching Lives Through Music"
       },
       {
         "amount": 14785,
@@ -484,7 +484,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-00c5980cd8eb",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-ballet"
+        "target_name": "MARIN BALLET"
       },
       {
         "amount": 20000,
@@ -492,7 +492,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-00c954cb39c9",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-george-jeffrey-s"
+        "target_name": "GEORGE, JEFFREY S"
       },
       {
         "amount": 33925,
@@ -500,7 +500,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-00d200effbdb",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-hamilton-roth-jay"
+        "target_name": "HAMILTON ROTH, JAY"
       },
       {
         "amount": 11562,
@@ -508,7 +508,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-00d9eb74da91",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-west-marin-senior-services"
+        "target_name": "WEST MARIN SENIOR SERVICES"
       },
       {
         "amount": 49500,
@@ -516,7 +516,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-00e2065fa8e0",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-juan-lopez-dba-amistad-associates"
+        "target_name": "JUAN LOPEZ DBA AMISTAD ASSOCIATES"
       },
       {
         "amount": 12056,
@@ -524,7 +524,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-00ecef6ad5d6",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-monte-s-chapel-of-the-hills"
+        "target_name": "MONTE'S CHAPEL OF THE HILLS"
       },
       {
         "amount": 11690,
@@ -532,7 +532,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-00f419fecfc3",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-fire-safe-marin"
+        "target_name": "FIRE SAFE MARIN"
       },
       {
         "amount": 3285,
@@ -540,7 +540,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-010b7e9cb390",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-deanna-david-llc-dba-just-dance-academy"
+        "target_name": "Deanna & David LLC, dba Just Dance Academy"
       },
       {
         "amount": 3650,
@@ -548,7 +548,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0116e77c36b5",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-questa-engineering"
+        "target_name": "QUESTA ENGINEERING CORP"
       },
       {
         "amount": 12000,
@@ -556,7 +556,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-013178b5e85d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-global-mobile"
+        "target_name": "GLOBAL MOBILE"
       },
       {
         "amount": 20618,
@@ -572,7 +572,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-015c641a4f47",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-o-rorke"
+        "target_name": "O'RORKE INC"
       },
       {
         "amount": 10240,
@@ -580,7 +580,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-015f267df804",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-kimley-horn-and-associates"
+        "target_name": "KIMLEY-HORN AND ASSOCIATES INC"
       },
       {
         "amount": 20200,
@@ -588,7 +588,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0163185d5bf8",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-california-cpa-education-foundation"
+        "target_name": "CALIFORNIA CPA EDUCATION FOUNDATION"
       },
       {
         "amount": 6000,
@@ -596,7 +596,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-017686170b39",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-on-point-land-management"
+        "target_name": "ON POINT LAND MANAGEMENT INC"
       },
       {
         "amount": 28050,
@@ -604,7 +604,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-017a8d4dd91c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-csw-stuber-stroeh-engineering-group"
+        "target_name": "CSW/STUBER-STROEH ENGINEERING GROUP INC"
       },
       {
         "amount": 50000,
@@ -612,7 +612,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-018822b27582",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-balance-hydrologics"
+        "target_name": "BALANCE HYDROLOGICS, INC."
       },
       {
         "amount": 13750,
@@ -620,7 +620,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-018aa64b759c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-kawahara-julie-a"
+        "target_name": "KAWAHARA, JULIE A"
       },
       {
         "amount": 16485,
@@ -628,7 +628,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-018f61e3fa05",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-bio-defense-network"
+        "target_name": "BIO-DEFENSE NETWORK LLC"
       },
       {
         "amount": 10000,
@@ -636,7 +636,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-01a65c8e2cfd",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-goodwill-industries-of-san-francisco"
+        "target_name": "GOODWILL INDUSTRIES OF SAN FRANCISCO"
       },
       {
         "amount": 25559,
@@ -644,7 +644,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-01acaa09c923",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-clementi-mark-a"
+        "target_name": "CLEMENTI, MARK A"
       },
       {
         "amount": 15000,
@@ -652,7 +652,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-01cccc81e281",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-boster-kobayashi-assoc"
+        "target_name": "BOSTER KOBAYASHI & ASSOC INC"
       },
       {
         "amount": 7000,
@@ -660,7 +660,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-01d55623f6a9",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-sustainable-marin"
+        "target_name": "SUSTAINABLE MARIN"
       },
       {
         "amount": 10763,
@@ -668,7 +668,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-01deea7bd3a4",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-desilva-shelana"
+        "target_name": "DESILVA, SHELANA"
       },
       {
         "amount": 20000,
@@ -676,7 +676,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-01e5e1dca756",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-tonks-ian"
+        "target_name": "TONKS, IAN"
       },
       {
         "amount": 20000,
@@ -684,7 +684,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-01e6a899dcbb",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-specialty-surgery-center"
+        "target_name": "MARIN SPECIALTY SURGERY CENTER"
       },
       {
         "amount": 9214,
@@ -692,7 +692,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-01e7b1db665f",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-finnegan-investigative-services"
+        "target_name": "FINNEGAN INVESTIGATIVE SERVICES"
       },
       {
         "amount": 20000,
@@ -700,7 +700,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-01e84cca9a6a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-golden-gate-pharmacy-services"
+        "target_name": "GOLDEN GATE PHARMACY SERVICES"
       },
       {
         "amount": 24000,
@@ -708,7 +708,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-01f5279accfc",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-california-invasive-plant-control"
+        "target_name": "CALIFORNIA INVASIVE PLANT CONTROL"
       },
       {
         "amount": 29550,
@@ -716,7 +716,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-01f622217c01",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-deignan-monte"
+        "target_name": "DEIGNAN, MONTE"
       },
       {
         "amount": 5150,
@@ -724,7 +724,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-01fd20a976ce",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-matrix-point"
+        "target_name": "MATRIX POINT INC"
       },
       {
         "amount": 3500,
@@ -732,7 +732,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-01fe06492709",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-mayen-laura"
+        "target_name": "MAYEN, LAURA"
       },
       {
         "amount": 46475,
@@ -740,7 +740,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0208e14d1b6b",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-indigenous-vision"
+        "target_name": "INDIGENOUS VISION"
       },
       {
         "amount": 22000,
@@ -748,7 +748,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-020f9fc51d87",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-bontempo-suzanne"
+        "target_name": "BONTEMPO, SUZANNE"
       },
       {
         "amount": 47985,
@@ -756,7 +756,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-021a841e9c08",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-reynolds-jinesse"
+        "target_name": "REYNOLDS, JINESSE"
       },
       {
         "amount": 50000,
@@ -764,7 +764,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0228d0fc2828",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-northgate-environmental-management"
+        "target_name": "NORTHGATE ENVIRONMENTAL MANAGEMENT INC"
       },
       {
         "amount": 7500,
@@ -772,7 +772,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0229b9d058cd",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-performing-arts-workshop"
+        "target_name": "PERFORMING ARTS WORKSHOP INC"
       },
       {
         "amount": 40000,
@@ -788,7 +788,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-022dfc62a8ae",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-law-offices-of-thomas-m-bruen-apc"
+        "target_name": "LAW OFFICES OF THOMAS M BRUEN APC"
       },
       {
         "amount": 34650,
@@ -796,7 +796,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0235a9907649",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-meeks-coates-eaton-architects"
+        "target_name": "MEEKS, COATES + EATON ARCHITECTS INC"
       },
       {
         "amount": 5800,
@@ -812,7 +812,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-025bf7cfe714",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-chase-victoria-r"
+        "target_name": "CHASE, VICTORIA R"
       },
       {
         "amount": 45850,
@@ -820,7 +820,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-026ad4d83989",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-emerson-elizabeth"
+        "target_name": "EMERSON, ELIZABETH"
       },
       {
         "amount": 20000,
@@ -828,7 +828,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-027ffa33ed3b",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-george-jeffrey-s"
+        "target_name": "GEORGE, JEFFREY S"
       },
       {
         "amount": 25000,
@@ -836,7 +836,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0280502ad0ff",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-law-offices-of-charisse-l-smith"
+        "target_name": "LAW OFFICES OF CHARISSE L SMITH"
       },
       {
         "amount": 9946,
@@ -844,7 +844,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0282b019f668",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-balance-hydrologics"
+        "target_name": "BALANCE HYDROLOGICS, INC."
       },
       {
         "amount": 3000,
@@ -852,7 +852,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0284215d0662",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-lucchesi-plant-and-soil-consulting"
+        "target_name": "LUCCHESI PLANT AND SOIL CONSULTING LLC"
       },
       {
         "amount": 20000,
@@ -860,7 +860,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-02899f5e211f",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-john-lessley-quality-innovations"
+        "target_name": "JOHN LESSLEY QUALITY INNOVATIONS"
       },
       {
         "amount": 49000,
@@ -868,7 +868,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-028bbf681730",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ballard-and-watkins"
+        "target_name": "BALLARD AND WATKINS"
       },
       {
         "amount": 10000,
@@ -876,7 +876,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-02919aafac45",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-live-life-coaching"
+        "target_name": "LIVE - LIFE COACHING"
       },
       {
         "amount": 18690,
@@ -884,7 +884,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-02bb3cfd624e",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-west-marin-senior-services"
+        "target_name": "WEST MARIN SENIOR SERVICES"
       },
       {
         "amount": 7500,
@@ -892,7 +892,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-02bc689b13c3",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-great-american-entertainment"
+        "target_name": "GREAT AMERICAN ENTERTAINMENT  CO. LLC"
       },
       {
         "amount": 10763,
@@ -900,7 +900,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-02c566849ba2",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-desilva-shelana"
+        "target_name": "DESILVA, SHELANA"
       },
       {
         "amount": 2500,
@@ -908,7 +908,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-02c584154e90",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-bettin-investigations"
+        "target_name": "BETTIN INVESTIGATIONS"
       },
       {
         "amount": 35000,
@@ -916,7 +916,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-02d0bdc9c522",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-family-action"
+        "target_name": "MARIN FAMILY ACTION"
       },
       {
         "amount": 6000,
@@ -924,7 +924,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-02dc0a189952",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-lazzarini-investigations"
+        "target_name": "LAZZARINI INVESTIGATIONS LLC"
       },
       {
         "amount": 41000,
@@ -932,7 +932,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-02dde46c4aab",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-salas-o-brien"
+        "target_name": "SALAS O'BRIEN"
       },
       {
         "amount": 4620,
@@ -940,7 +940,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-02df168a7bd1",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-general-hospital"
+        "target_name": "MARIN GENERAL HOSPITAL"
       },
       {
         "amount": 10000,
@@ -956,7 +956,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-02e02f9d49b8",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-netcentric-technologies"
+        "target_name": "NETCENTRIC TECHNOLOGIES INC"
       },
       {
         "amount": 5300,
@@ -964,7 +964,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-02e6af06419d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-biddle-consulting-group"
+        "target_name": "BIDDLE CONSULTING GROUP INC"
       },
       {
         "amount": 7045,
@@ -972,7 +972,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-02e776612de8",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-yeh-and-associates"
+        "target_name": "YEH AND ASSOCIATES INC"
       },
       {
         "amount": 10000,
@@ -980,7 +980,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-02eaad4d9c5f",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-delia-and-associates"
+        "target_name": "DELIA AND ASSOCIATES"
       },
       {
         "amount": 4800,
@@ -988,7 +988,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-02f1017307a7",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-caro-damaris"
+        "target_name": "CARO, DAMARIS"
       },
       {
         "amount": 15000,
@@ -996,7 +996,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-030ec052504e",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-3play-media"
+        "target_name": "3PLAY MEDIA INC"
       },
       {
         "amount": 36000,
@@ -1004,7 +1004,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0310999bc923",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-axon-enterprise"
+        "target_name": "AXON ENTERPRISE INC"
       },
       {
         "amount": 41500,
@@ -1012,7 +1012,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0312a033779c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-george-jeffrey-s"
+        "target_name": "GEORGE, JEFFREY S"
       },
       {
         "amount": 50000,
@@ -1020,7 +1020,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-03143132c78d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-liebert-cassidy-whitmore"
+        "target_name": "LIEBERT CASSIDY WHITMORE"
       },
       {
         "amount": 15000,
@@ -1028,7 +1028,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-031bf01fd9f4",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-turner-jimmie-r"
+        "target_name": "TURNER, JIMMIE R"
       },
       {
         "amount": 50000,
@@ -1036,7 +1036,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-031f72e07fe4",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-plan-b-works"
+        "target_name": "PLAN B WORKS"
       },
       {
         "amount": 3000,
@@ -1044,7 +1044,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0326024ca4fd",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-walsh-web-development-and-consulting"
+        "target_name": "WALSH WEB DEVELOPMENT AND CONSULTING LLC"
       },
       {
         "amount": 47932,
@@ -1052,7 +1052,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-03303c72de79",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-the-multicultural-center-of-marin"
+        "target_name": "THE MULTICULTURAL CENTER OF MARIN INC"
       },
       {
         "amount": 50000,
@@ -1060,7 +1060,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-033e33b204b8",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-spin-recruitment-advertising"
+        "target_name": "SPIN RECRUITMENT ADVERTISING"
       },
       {
         "amount": 30000,
@@ -1068,7 +1068,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-034b982efc3b",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-alcohol-justice"
+        "target_name": "ALCOHOL JUSTICE"
       },
       {
         "amount": 4500,
@@ -1076,7 +1076,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-035acc2e005e",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-csw-stuber-stroeh-engineering-group"
+        "target_name": "CSW/STUBER-STROEH ENGINEERING GROUP INC"
       },
       {
         "amount": 25000,
@@ -1084,7 +1084,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-035bf8c57553",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-history-museum"
+        "target_name": "MARIN HISTORY MUSEUM"
       },
       {
         "amount": 16240,
@@ -1092,7 +1092,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0382334f2b6c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-adept-m3-group"
+        "target_name": "ADEPT M3 GROUP LLC"
       },
       {
         "amount": 15000,
@@ -1100,7 +1100,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0388e87416c2",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-jewish-family-and-childrens-services"
+        "target_name": "JEWISH FAMILY AND CHILDRENS SERVICES"
       },
       {
         "amount": 50000,
@@ -1108,7 +1108,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-038cc7983d00",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-promise-network"
+        "target_name": "PROMISE NETWORK INC"
       },
       {
         "amount": 30444,
@@ -1116,7 +1116,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-03922dffd864",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-barbier-security-group"
+        "target_name": "BARBIER SECURITY GROUP"
       },
       {
         "amount": 35000,
@@ -1124,7 +1124,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0394f03546b8",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-associated-right-of-way-services"
+        "target_name": "ASSOCIATED RIGHT OF WAY SERVICES INC"
       },
       {
         "amount": 1500,
@@ -1140,7 +1140,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-03a3371949eb",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-gauna-jennifer"
+        "target_name": "GAUNA, JENNIFER"
       },
       {
         "amount": 20000,
@@ -1148,7 +1148,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-03a6ceba3957",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-court-appointed-special-advocates"
+        "target_name": "MARIN COURT APPOINTED SPECIAL ADVOCATES"
       },
       {
         "amount": 50000,
@@ -1156,7 +1156,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-03ad4dd7d7b8",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-wallace-roberts-todd"
+        "target_name": "WALLACE ROBERTS & TODD INC"
       },
       {
         "amount": 10000,
@@ -1164,7 +1164,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-03ada9cf8c8a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-live-life-coaching"
+        "target_name": "LIVE - LIFE COACHING"
       },
       {
         "amount": 15000,
@@ -1172,7 +1172,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-03ae10198227",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ucsf-regents"
+        "target_name": "UCSF REGENTS"
       },
       {
         "amount": 45000,
@@ -1180,7 +1180,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-03b6326c4672",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-pillsbury-winthrop-shaw-pittman"
+        "target_name": "PILLSBURY WINTHROP SHAW PITTMAN LLP"
       },
       {
         "amount": 28000,
@@ -1188,7 +1188,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-03d0b2f5e075",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-executive-recruitments-for-parks-and-open-space"
+        "target_name": "EXECUTIVE RECRUITMENTS FOR PARKS AND OPEN SPACE"
       },
       {
         "amount": 14600,
@@ -1196,7 +1196,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-03d8254b3615",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-outfront-media"
+        "target_name": "OUTFRONT MEDIA LLC"
       },
       {
         "amount": 50000,
@@ -1204,7 +1204,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-03e3f7f8cb81",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ghd"
+        "target_name": "GHD INC."
       },
       {
         "amount": 30000,
@@ -1212,7 +1212,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0407dd428fd1",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-champlin-william-bradford"
+        "target_name": "CHAMPLIN, WILLIAM BRADFORD"
       },
       {
         "amount": 25000,
@@ -1220,7 +1220,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0411b1ce4acf",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-front-porch-communities-foundation"
+        "target_name": "FRONT PORCH COMMUNITIES FOUNDATION"
       },
       {
         "amount": 19200,
@@ -1228,7 +1228,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-041b558cca5a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-basu-anjuli"
+        "target_name": "BASU, ANJULI"
       },
       {
         "amount": 35000,
@@ -1236,7 +1236,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-041cba823189",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-goldfarb-lipman"
+        "target_name": "GOLDFARB & LIPMAN LLP"
       },
       {
         "amount": 7250,
@@ -1252,7 +1252,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0433c21d2ff4",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-la-rocca-s-janitorial-service"
+        "target_name": "LA ROCCA'S JANITORIAL SERVICE"
       },
       {
         "amount": 5450,
@@ -1260,7 +1260,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0435ff62d876",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-center-for-volunteer-and-nonprofit-leadership"
+        "target_name": "CENTER FOR VOLUNTEER AND NONPROFIT LEADERSHIP"
       },
       {
         "amount": 10000,
@@ -1268,7 +1268,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-043765471e3f",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-grob-phillip-m"
+        "target_name": "GROB, PHILLIP M"
       },
       {
         "amount": 47230,
@@ -1276,7 +1276,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-043ad97f973c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-celebrity-competitions"
+        "target_name": "CELEBRITY COMPETITIONS LLC"
       },
       {
         "amount": 15985,
@@ -1284,7 +1284,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-043b4d599a7c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ghilotti-construction"
+        "target_name": "GHILOTTI CONSTRUCTION CO"
       },
       {
         "amount": 6600,
@@ -1292,7 +1292,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-043fe78fb9d5",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-cromb-associates"
+        "target_name": "CROMB ASSOCIATES"
       },
       {
         "amount": 23340,
@@ -1300,7 +1300,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0452d08e1991",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-legal-aid-of-marin"
+        "target_name": "LEGAL AID OF MARIN"
       },
       {
         "amount": 15000,
@@ -1308,7 +1308,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0456035380f3",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-vuillermet-jennifer-m-w"
+        "target_name": "VUILLERMET, JENNIFER M W"
       },
       {
         "amount": 50000,
@@ -1316,7 +1316,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-045dd7ffcec9",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-the-multicultural-center-of-marin"
+        "target_name": "THE MULTICULTURAL CENTER OF MARIN INC"
       },
       {
         "amount": 50000,
@@ -1324,7 +1324,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-045e2316280f",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-quincy-engineering"
+        "target_name": "QUINCY ENGINEERING INC"
       },
       {
         "amount": 20000,
@@ -1332,7 +1332,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-045e34db3ca1",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-licensed-marriage-and-family-therapist"
+        "target_name": "LICENSED MARRIAGE AND FAMILY THERAPIST"
       },
       {
         "amount": 15000,
@@ -1340,7 +1340,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-046007a3c4d4",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-regan-michael"
+        "target_name": "REGAN, MICHAEL"
       },
       {
         "amount": 6000,
@@ -1348,7 +1348,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-046724b5cef6",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-center-for-domestic-peace"
+        "target_name": "CENTER FOR DOMESTIC PEACE"
       },
       {
         "amount": 28750,
@@ -1356,7 +1356,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-047d707ef591",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ralph-andersen-associates"
+        "target_name": "RALPH ANDERSEN & ASSOCIATES"
       },
       {
         "amount": 14265,
@@ -1364,7 +1364,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-048a46a1b2c3",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-ballet"
+        "target_name": "MARIN BALLET"
       },
       {
         "amount": 10000,
@@ -1380,7 +1380,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0494d8315a5b",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-treetop-quality-systems"
+        "target_name": "TREETOP QUALITY SYSTEMS"
       },
       {
         "amount": 7500,
@@ -1388,7 +1388,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-049b71cd1b63",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-age-friendly-solutions"
+        "target_name": "AGE-FRIENDLY SOLUTIONS"
       },
       {
         "amount": 5000,
@@ -1396,7 +1396,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-04a33a86be2b",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-tandinco-artoteles"
+        "target_name": "TANDINCO, ARTOTELES"
       },
       {
         "amount": 21700,
@@ -1404,7 +1404,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-04a80389d6c0",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-kleinfelder"
+        "target_name": "KLEINFELDER INC"
       },
       {
         "amount": 8800,
@@ -1412,7 +1412,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-04b736599b7d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-whirlwind-disc-golf"
+        "target_name": "WHIRLWIND DISC GOLF"
       },
       {
         "amount": 3053,
@@ -1420,7 +1420,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-04bd93556f27",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-villages"
+        "target_name": "MARIN VILLAGES"
       },
       {
         "amount": 40000,
@@ -1428,7 +1428,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-04d81ba43694",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-city-of-larkspur-prevention-community-coalition"
+        "target_name": "CITY OF LARKSPUR-PREVENTION COMMUNITY COALITION"
       },
       {
         "amount": 20000,
@@ -1436,7 +1436,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-04df4b658cb6",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-fair-housing-advocates-of-northern-californa"
+        "target_name": "FAIR HOUSING ADVOCATES OF NORTHERN CALIFORNA"
       },
       {
         "amount": 30000,
@@ -1444,7 +1444,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-04e303522852",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-cassell-david-r"
+        "target_name": "CASSELL, DAVID R"
       },
       {
         "amount": 25000,
@@ -1452,7 +1452,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-04eb1c6e01af",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-crawford-brian-technical-assistance"
+        "target_name": "CRAWFORD, BRIAN - TECHNICAL ASSISTANCE"
       },
       {
         "amount": 7500,
@@ -1460,7 +1460,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-04f455f79ab0",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-spirn-stephen-m"
+        "target_name": "SPIRN, STEPHEN M"
       },
       {
         "amount": 50000,
@@ -1468,7 +1468,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-04f75c29885a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-locumtenens-holdings"
+        "target_name": "LOCUMTENENS HOLDINGS LLC"
       },
       {
         "amount": 37500,
@@ -1476,7 +1476,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-04fa6098cca6",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-the-multicultural-center-of-marin"
+        "target_name": "THE MULTICULTURAL CENTER OF MARIN INC"
       },
       {
         "amount": 23700,
@@ -1484,7 +1484,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-05029730de03",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-facilities-by-design"
+        "target_name": "FACILITIES BY DESIGN"
       },
       {
         "amount": 15000,
@@ -1492,7 +1492,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-050305a7ac30",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-nunez-lupe-m"
+        "target_name": "NUNEZ, LUPE M"
       },
       {
         "amount": 16840,
@@ -1500,7 +1500,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-050c2e2b267d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-gen-faire"
+        "target_name": "GEN FAIRE, INC."
       },
       {
         "amount": 6978,
@@ -1508,7 +1508,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0516d37b41b0",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-homebase-the-center-for-common-concerns"
+        "target_name": "HOMEBASE THE CENTER FOR COMMON CONCERNS"
       },
       {
         "amount": 49960,
@@ -1516,7 +1516,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-05298ca03606",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-moore-iacofano-goltsman"
+        "target_name": "MOORE IACOFANO GOLTSMAN INC"
       },
       {
         "amount": 35000,
@@ -1532,7 +1532,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-055cd5c83014",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-bluepath-health"
+        "target_name": "BLUEPATH HEALTH INC"
       },
       {
         "amount": 11172,
@@ -1540,7 +1540,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0563d343ed2a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-shore-erika-ruth"
+        "target_name": "SHORE, ERIKA RUTH"
       },
       {
         "amount": 12500,
@@ -1548,7 +1548,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-05817a3e00f7",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-spirit-garden-productions"
+        "target_name": "SPIRIT GARDEN PRODUCTIONS"
       },
       {
         "amount": 5700,
@@ -1556,7 +1556,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-058192e0538a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-symphony-association"
+        "target_name": "MARIN SYMPHONY ASSOCIATION"
       },
       {
         "amount": 26922,
@@ -1564,7 +1564,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-05845d97ed91",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-benson-michele"
+        "target_name": "BENSON, MICHELE"
       },
       {
         "amount": 5000,
@@ -1572,7 +1572,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-059034f6829b",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-kleinfelder"
+        "target_name": "KLEINFELDER INC"
       },
       {
         "amount": 1454,
@@ -1580,7 +1580,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0596f8c5df63",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-stabler-paula-addendum"
+        "target_name": "STABLER, PAULA - ADDENDUM"
       },
       {
         "amount": 9272,
@@ -1588,7 +1588,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-059a053c8bfa",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-huckleberry-youth-programs"
+        "target_name": "HUCKLEBERRY YOUTH PROGRAMS"
       },
       {
         "amount": 1500,
@@ -1596,7 +1596,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-059d42df098f",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ethan-red-eagle-lawton"
+        "target_name": "ETHAN RED EAGLE LAWTON"
       },
       {
         "amount": 7688,
@@ -1604,7 +1604,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-05a562936b07",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-center-point"
+        "target_name": "CENTER POINT INC"
       },
       {
         "amount": 15000,
@@ -1612,7 +1612,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-05a72b42b512",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-bolinas-community-land-trust"
+        "target_name": "BOLINAS COMMUNITY LAND TRUST"
       },
       {
         "amount": 36000,
@@ -1620,7 +1620,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-05b03b37966f",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-cole-pro-media"
+        "target_name": "COLE PRO MEDIA CORP"
       },
       {
         "amount": 5000,
@@ -1636,7 +1636,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-05b7ca21eeba",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-stilt-circus"
+        "target_name": "STILT CIRCUS INC"
       },
       {
         "amount": 6000,
@@ -1644,7 +1644,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-05c2d5335350",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-dehner-stephanie"
+        "target_name": "DEHNER, STEPHANIE"
       },
       {
         "amount": 40000,
@@ -1668,7 +1668,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-05de958968ca",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-to-the-point-polygraph"
+        "target_name": "TO THE POINT POLYGRAPH INC"
       },
       {
         "amount": 1500,
@@ -1676,7 +1676,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-05e047787a8a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-workplace-knowledge"
+        "target_name": "WORKPLACE KNOWLEDGE LLC"
       },
       {
         "amount": 16328,
@@ -1684,7 +1684,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-05e39ecc7966",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ca-state-university-fresno-foundation"
+        "target_name": "CA STATE UNIVERSITY FRESNO FOUNDATION"
       },
       {
         "amount": 8000,
@@ -1692,7 +1692,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-05f369558614",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-vivalon"
+        "target_name": "VIVALON"
       },
       {
         "amount": 30000,
@@ -1700,7 +1700,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-05fcd4e550a0",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-dimon-joshua-s"
+        "target_name": "DIMON, JOSHUA S"
       },
       {
         "amount": 3000,
@@ -1708,7 +1708,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-060a7ad8f560",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-breakfast-club-rally"
+        "target_name": "Breakfast Club Rally LLC"
       },
       {
         "amount": 1018,
@@ -1716,7 +1716,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-060eb71946b2",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-spahr-center"
+        "target_name": "SPAHR CENTER"
       },
       {
         "amount": 20800,
@@ -1724,7 +1724,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-06162343264d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-barry-janice"
+        "target_name": "BARRY, JANICE"
       },
       {
         "amount": 30000,
@@ -1732,7 +1732,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0626dbcb9093",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-unificare"
+        "target_name": "UNIFICARE LTD"
       },
       {
         "amount": 17800,
@@ -1740,7 +1740,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-06293f734470",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-summers-stewart-k"
+        "target_name": "SUMMERS, STEWART K"
       },
       {
         "amount": 31875,
@@ -1748,7 +1748,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-062a0f69a2aa",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ross-drulis-cusenbery-arch"
+        "target_name": "ROSS DRULIS CUSENBERY ARCH INC"
       },
       {
         "amount": 3115,
@@ -1764,7 +1764,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0637a7de90c3",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-jackie-davis-consultant"
+        "target_name": "JACKIE DAVIS - CONSULTANT"
       },
       {
         "amount": 50000,
@@ -1772,7 +1772,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-06497cf89d72",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ellis-buehler-makus"
+        "target_name": "ELLIS BUEHLER MAKUS LLP"
       },
       {
         "amount": 5858,
@@ -1780,7 +1780,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-065a3dfd9941",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-moore-shanel"
+        "target_name": "MOORE, SHANEL"
       },
       {
         "amount": 12050,
@@ -1788,7 +1788,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-065df812e476",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-starcreek-land-stewards"
+        "target_name": "STARCREEK LAND STEWARDS INC"
       },
       {
         "amount": 21000,
@@ -1796,7 +1796,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-065ebea5b618",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-bayside-stripe-seal"
+        "target_name": "BAYSIDE STRIPE & SEAL INC"
       },
       {
         "amount": 5000,
@@ -1804,7 +1804,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-065eca358b2e",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-bay-area-community-resources-bacr"
+        "target_name": "BAY AREA COMMUNITY RESOURCES (BACR)"
       },
       {
         "amount": 25000,
@@ -1812,7 +1812,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0660c5371874",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-bay-area-community-resources-bacr"
+        "target_name": "BAY AREA COMMUNITY RESOURCES (BACR)"
       },
       {
         "amount": 20085,
@@ -1820,7 +1820,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0673294c7a22",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-patricia-reyes-consulting"
+        "target_name": "PATRICIA REYES CONSULTING"
       },
       {
         "amount": 3185,
@@ -1828,7 +1828,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-067745216705",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-mayflower-choral-society"
+        "target_name": "Mayflower Choral Society"
       },
       {
         "amount": 11000,
@@ -1836,7 +1836,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-06774effa427",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-point-blue-conservation-science"
+        "target_name": "POINT BLUE CONSERVATION SCIENCE"
       },
       {
         "amount": 30000,
@@ -1844,7 +1844,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0678b60991e9",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-delia-and-associates"
+        "target_name": "DELIA AND ASSOCIATES"
       },
       {
         "amount": 10000,
@@ -1852,7 +1852,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-06824ca2e0a6",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-sftbd"
+        "target_name": "SFTBD INC"
       },
       {
         "amount": 76900,
@@ -1860,7 +1860,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-06856ba6bc6a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-to-celebrate-life-breast-cancer-foundation"
+        "target_name": "TO CELEBRATE LIFE BREAST CANCER FOUNDATION"
       },
       {
         "amount": 9000,
@@ -1868,7 +1868,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-069c82b045c0",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-allen-lipscomb-psyd-lcsw"
+        "target_name": "ALLEN LIPSCOMB PSYD LCSW INC"
       },
       {
         "amount": 49000,
@@ -1876,7 +1876,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-06a2fdde5598",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-maliguine-sallianne"
+        "target_name": "MALIGUINE, SALLIANNE"
       },
       {
         "amount": 33000,
@@ -1884,7 +1884,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-06a6a5ab7910",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-west-marin-community-services"
+        "target_name": "WEST MARIN COMMUNITY SERVICES"
       },
       {
         "amount": 7872,
@@ -1892,7 +1892,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-06c7f36e4ae7",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-transcendence-theatre-company"
+        "target_name": "TRANSCENDENCE THEATRE COMPANY"
       },
       {
         "amount": 15000,
@@ -1900,7 +1900,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-06ddbb58de81",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-spahr-center"
+        "target_name": "SPAHR CENTER"
       },
       {
         "amount": 17000,
@@ -1908,7 +1908,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-06df4ba36a88",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ojeda-claribel"
+        "target_name": "OJEDA, CLARIBEL"
       },
       {
         "amount": 39680,
@@ -1916,7 +1916,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-06ea70bb0cda",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-burgess-earl-c"
+        "target_name": "BURGESS, EARL C"
       },
       {
         "amount": 15000,
@@ -1924,7 +1924,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-06fa6484d562",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-partners-in-public-innovation"
+        "target_name": "PARTNERS IN PUBLIC INNOVATION"
       },
       {
         "amount": 1500,
@@ -1932,7 +1932,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-06ff05e2eb9a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-the-marin-aging-disability-institute"
+        "target_name": "THE MARIN AGING & DISABILITY INSTITUTE LLC"
       },
       {
         "amount": 5193,
@@ -1956,7 +1956,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0724b91b948a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-interface-engineering"
+        "target_name": "INTERFACE ENGINEERING INC"
       },
       {
         "amount": 7177,
@@ -1964,7 +1964,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-072d20ee3d10",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-faith-fuller-addendum"
+        "target_name": "FAITH FULLER, ADDENDUM"
       },
       {
         "amount": 10000,
@@ -1972,7 +1972,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0731fecdc631",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-paul-elizondo-do"
+        "target_name": "PAUL ELIZONDO DO INC"
       },
       {
         "amount": 50000,
@@ -1980,7 +1980,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-073b5a52af3c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-jim-schutz-dba-jmsb-strategies"
+        "target_name": "JIM SCHUTZ DBA JMSB STRATEGIES LLC"
       },
       {
         "amount": 7000,
@@ -1988,7 +1988,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0769e18f373e",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-waters-irvenia"
+        "target_name": "WATERS, IRVENIA"
       },
       {
         "amount": 37500,
@@ -1996,7 +1996,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0789c267da8c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-biggs-and-cardosa-and-associates"
+        "target_name": "BIGGS AND CARDOSA AND ASSOCIATES"
       },
       {
         "amount": 25000,
@@ -2004,7 +2004,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0799c6a4236c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ucsf-regents"
+        "target_name": "UCSF REGENTS"
       },
       {
         "amount": 2000,
@@ -2012,7 +2012,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-07b84d3472df",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-golden-gate-polygraph-services"
+        "target_name": "GOLDEN GATE POLYGRAPH SERVICES INC"
       },
       {
         "amount": 3170,
@@ -2028,7 +2028,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-07db65a0efa4",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-services-for-men-dba-marin-outpatient-and-recovery-services"
+        "target_name": "MARIN SERVICES FOR MEN DBA MARIN OUTPATIENT AND RECOVERY SERVICES"
       },
       {
         "amount": 30000,
@@ -2036,7 +2036,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-07e07f8fcbe1",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-california-film-institute"
+        "target_name": "CALIFORNIA FILM INSTITUTE"
       },
       {
         "amount": 37100,
@@ -2044,7 +2044,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-07fc62c1e4e2",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-city-community-services-district"
+        "target_name": "MARIN CITY COMMUNITY SERVICES DISTRICT"
       },
       {
         "amount": 9456,
@@ -2052,7 +2052,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0808611c3ff1",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-o-rorke-pr-advertising"
+        "target_name": "O'RORKE PR&ADVERTISING"
       },
       {
         "amount": 20000,
@@ -2060,7 +2060,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-080bf8eee90b",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-schwarz-william-joseph"
+        "target_name": "SCHWARZ, WILLIAM JOSEPH"
       },
       {
         "amount": 22500,
@@ -2068,7 +2068,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0810f5d9cec6",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-aquatic-technology-pool-and-spa"
+        "target_name": "AQUATIC TECHNOLOGY POOL AND SPA"
       },
       {
         "amount": 34809,
@@ -2076,7 +2076,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0812ebf6af05",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-huckleberry-youth-programs"
+        "target_name": "HUCKLEBERRY YOUTH PROGRAMS"
       },
       {
         "amount": 17800,
@@ -2084,7 +2084,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-081d8eb17d9b",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ware-malcomb"
+        "target_name": "WARE MALCOMB"
       },
       {
         "amount": 12056,
@@ -2092,7 +2092,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-082ac3b49f83",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-monte-s-chapel-of-the-hills"
+        "target_name": "MONTE'S CHAPEL OF THE HILLS"
       },
       {
         "amount": 33176,
@@ -2100,7 +2100,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-083260cc3577",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-huckleberry-youth-programs"
+        "target_name": "HUCKLEBERRY YOUTH PROGRAMS"
       },
       {
         "amount": 3360,
@@ -2108,7 +2108,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-083fd46bb72a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-mims-maia"
+        "target_name": "MIMS, MAIA"
       },
       {
         "amount": 50000,
@@ -2116,7 +2116,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-085261043c6a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-kathy-barnes"
+        "target_name": "KATHY BARNES"
       },
       {
         "amount": 30000,
@@ -2124,7 +2124,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0858e23364a6",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-brain-injury-network"
+        "target_name": "MARIN BRAIN INJURY NETWORK"
       },
       {
         "amount": 48000,
@@ -2132,7 +2132,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0884ace7b7ef",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-mark-j-schiller-md-professional"
+        "target_name": "MARK J SCHILLER  MD PROFESSIONAL CORP"
       },
       {
         "amount": 4000,
@@ -2148,7 +2148,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-088994dc22f5",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-contractor-compliance-monitoring"
+        "target_name": "CONTRACTOR COMPLIANCE & MONITORING INC"
       },
       {
         "amount": 15000,
@@ -2156,7 +2156,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-08c7d57b3b15",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-coastal-policy-solutions"
+        "target_name": "COASTAL POLICY SOLUTIONS"
       },
       {
         "amount": 35000,
@@ -2164,7 +2164,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-08df49226768",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-arborscience"
+        "target_name": "ARBORSCIENCE LLC"
       },
       {
         "amount": 50000,
@@ -2172,7 +2172,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-08dff86d7ca5",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-mccord-christine"
+        "target_name": "MCCORD, CHRISTINE"
       },
       {
         "amount": 12600,
@@ -2180,7 +2180,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-08e0bb5a2617",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-fas-services"
+        "target_name": "FAS SERVICES"
       },
       {
         "amount": 40000,
@@ -2188,7 +2188,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-08f7c31fbda6",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-golden-gate-pharmacy-services"
+        "target_name": "GOLDEN GATE PHARMACY SERVICES"
       },
       {
         "amount": 41000,
@@ -2196,7 +2196,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-09049d611332",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-helios-healthcare"
+        "target_name": "HELIOS HEALTHCARE LLC"
       },
       {
         "amount": 3420,
@@ -2204,7 +2204,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-091a643766a9",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-deignan-monte"
+        "target_name": "DEIGNAN, MONTE"
       },
       {
         "amount": 12500,
@@ -2212,7 +2212,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-091b3548cb9c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-rutherford-chekene"
+        "target_name": "RUTHERFORD & CHEKENE"
       },
       {
         "amount": 8975,
@@ -2220,7 +2220,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-092722f246a5",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-jennifer-berezan"
+        "target_name": "JENNIFER BEREZAN"
       },
       {
         "amount": 11000,
@@ -2228,7 +2228,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-092ee53e98c4",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-colin-ellerin-natasha"
+        "target_name": "COLIN ELLERIN, NATASHA"
       },
       {
         "amount": 11050,
@@ -2236,7 +2236,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-093394d1c125",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-stewart-k-summers-architect"
+        "target_name": "STEWART K SUMMERS, ARCHITECT"
       },
       {
         "amount": 10000,
@@ -2244,7 +2244,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0938e406a06d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-san-francisco-estuary-institute"
+        "target_name": "SAN FRANCISCO ESTUARY INSTITUTE"
       },
       {
         "amount": 35000,
@@ -2252,7 +2252,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0942481a5495",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-o-rorke"
+        "target_name": "O'RORKE INC"
       },
       {
         "amount": 1500,
@@ -2268,7 +2268,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-09559ade8806",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-bolinas-commn-land-trust"
+        "target_name": "BOLINAS COMMN LAND TRUST INC"
       },
       {
         "amount": 20428,
@@ -2276,7 +2276,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-09574f23e9d3",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-jewish-family-children-s-service"
+        "target_name": "JEWISH FAMILY & CHILDREN'S SERVICE"
       },
       {
         "amount": 40000,
@@ -2284,7 +2284,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0960081c66d4",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-c-o-brita-michelle"
+        "target_name": "C\\O BRITA MICHELLE LLC"
       },
       {
         "amount": 40000,
@@ -2292,7 +2292,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-097692a407f7",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-schwarz-william-joseph"
+        "target_name": "SCHWARZ, WILLIAM JOSEPH"
       },
       {
         "amount": 3000,
@@ -2300,7 +2300,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-09824a10f5a9",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-san-rafael-school-district"
+        "target_name": "SAN RAFAEL SCHOOL DISTRICT"
       },
       {
         "amount": 6000,
@@ -2308,7 +2308,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0989264775a3",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-regan-michael"
+        "target_name": "REGAN, MICHAEL"
       },
       {
         "amount": 10000,
@@ -2324,7 +2324,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-099e6dc0a953",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-sanzuma"
+        "target_name": "SANZUMA"
       },
       {
         "amount": 33712,
@@ -2332,7 +2332,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-099f716ee15e",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ca-mental-health-services-authority"
+        "target_name": "CA MENTAL HEALTH SERVICES AUTHORITY"
       },
       {
         "amount": 27840,
@@ -2340,7 +2340,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-09ad7a62583a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-csw-st2"
+        "target_name": "CSW ST2"
       },
       {
         "amount": 21699,
@@ -2348,7 +2348,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-09bac76786fc",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-kleinfelder"
+        "target_name": "KLEINFELDER INC"
       },
       {
         "amount": 50000,
@@ -2356,7 +2356,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-09bd5e21dff9",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-seneca-family-of-agencies"
+        "target_name": "SENECA FAMILY OF AGENCIES"
       },
       {
         "amount": 7900,
@@ -2364,7 +2364,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-09ce4012a987",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-csw-stuber-stroeh-engineering-group"
+        "target_name": "CSW/STUBER-STROEH ENGINEERING GROUP INC"
       },
       {
         "amount": 33127,
@@ -2372,7 +2372,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-09d315c0973d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-san-geronimo-valley-community-center"
+        "target_name": "SAN GERONIMO VALLEY COMMUNITY CENTER"
       },
       {
         "amount": 40000,
@@ -2380,7 +2380,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-09d85828b05c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-csw-st2"
+        "target_name": "CSW ST2"
       },
       {
         "amount": 8765,
@@ -2388,7 +2388,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-09e558b0ef95",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-whistlestop"
+        "target_name": "WHISTLESTOP"
       },
       {
         "amount": 50000,
@@ -2396,7 +2396,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-09e73a150e56",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-merced-behavioral-center"
+        "target_name": "MERCED BEHAVIORAL CENTER"
       },
       {
         "amount": 39680,
@@ -2404,7 +2404,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a0713c76965",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-burgess-earl-c"
+        "target_name": "BURGESS, EARL C"
       },
       {
         "amount": 10000,
@@ -2412,7 +2412,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a207a2796cc",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-planned-parenthood-shasta-diablo"
+        "target_name": "PLANNED PARENTHOOD:SHASTA-DIABLO INC"
       },
       {
         "amount": 14384,
@@ -2420,7 +2420,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a21c97c88f4",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-services-for-men"
+        "target_name": "MARIN SERVICES FOR MEN"
       },
       {
         "amount": 20000,
@@ -2428,7 +2428,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a2299185e34",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-anchor-qea"
+        "target_name": "ANCHOR QEA LLC"
       },
       {
         "amount": 48000,
@@ -2436,7 +2436,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a2c73ea4fd9",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-prathikanti-sridhar"
+        "target_name": "PRATHIKANTI, SRIDHAR"
       },
       {
         "amount": 8500,
@@ -2444,7 +2444,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a332e45d16d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-county-of-marin-dof"
+        "target_name": "COUNTY OF MARIN - DOF"
       },
       {
         "amount": 43200,
@@ -2452,7 +2452,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a507c9fe643",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-hdl-software"
+        "target_name": "HDL SOFTWARE LLC"
       },
       {
         "amount": 22500,
@@ -2460,7 +2460,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a58d1afdbf5",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-aquatic-technology-pool-and-spa"
+        "target_name": "AQUATIC TECHNOLOGY POOL AND SPA"
       },
       {
         "amount": 13500,
@@ -2468,7 +2468,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a5d1a5c365e",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-west-marin-senior-services"
+        "target_name": "WEST MARIN SENIOR SERVICES"
       },
       {
         "amount": 35000,
@@ -2476,7 +2476,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a5de268d741",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-family-action"
+        "target_name": "MARIN FAMILY ACTION"
       },
       {
         "amount": 49750,
@@ -2492,7 +2492,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a719772fbc0",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-vivalon"
+        "target_name": "VIVALON"
       },
       {
         "amount": 8646,
@@ -2500,7 +2500,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a735980f214",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-bright-star-security"
+        "target_name": "BRIGHT STAR SECURITY, INC"
       },
       {
         "amount": 8830,
@@ -2508,7 +2508,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a7632052863",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-tex-us-guitar-shows"
+        "target_name": "TEX US GUITAR SHOWS INC"
       },
       {
         "amount": 20000,
@@ -2516,7 +2516,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a7866c1ba53",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-vivalon"
+        "target_name": "VIVALON"
       },
       {
         "amount": 4000,
@@ -2524,7 +2524,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a7cd266f971",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-clyma-thomas"
+        "target_name": "CLYMA, THOMAS"
       },
       {
         "amount": 15500,
@@ -2532,7 +2532,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a875c6d2352",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-episcopal-senior-communities"
+        "target_name": "EPISCOPAL SENIOR COMMUNITIES"
       },
       {
         "amount": 36000,
@@ -2540,7 +2540,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a912221f2cb",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-new-media-learning"
+        "target_name": "NEW MEDIA LEARNING"
       },
       {
         "amount": 10000,
@@ -2548,7 +2548,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a91867aa4f5",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-on-point-land-management"
+        "target_name": "ON POINT LAND MANAGEMENT INC"
       },
       {
         "amount": 10000,
@@ -2556,7 +2556,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a9386b44df3",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-sustainable-marin"
+        "target_name": "SUSTAINABLE MARIN"
       },
       {
         "amount": 5000,
@@ -2564,7 +2564,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0a9783174cef",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-center-for-restorative-practice"
+        "target_name": "CENTER FOR RESTORATIVE PRACTICE"
       },
       {
         "amount": 7800,
@@ -2572,7 +2572,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0aa720c54f40",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-reyes-patricia-brown-mph"
+        "target_name": "REYES, PATRICIA BROWN MPH"
       },
       {
         "amount": 50000,
@@ -2580,7 +2580,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0aab86773bcc",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-acta-environmental"
+        "target_name": "ACTA ENVIRONMENTAL INC"
       },
       {
         "amount": 5000,
@@ -2596,7 +2596,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0ac1e5963fc1",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-gonzalez-jose-g"
+        "target_name": "GONZALEZ, JOSE G"
       },
       {
         "amount": 35000,
@@ -2604,7 +2604,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0ac95173115e",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-spahr-center"
+        "target_name": "SPAHR CENTER"
       },
       {
         "amount": 10000,
@@ -2612,7 +2612,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0ace3bee246c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-michael-pawlyn"
+        "target_name": "MICHAEL PAWLYN"
       },
       {
         "amount": 49999,
@@ -2620,7 +2620,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0ad47a9576e3",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-cotton-shires-associates"
+        "target_name": "COTTON SHIRES ASSOCIATES INC"
       },
       {
         "amount": 1500,
@@ -2628,7 +2628,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0adb21e67454",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-thakur-aishwarya"
+        "target_name": "THAKUR, AISHWARYA"
       },
       {
         "amount": 8075,
@@ -2636,7 +2636,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0aeed33ddea7",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-city-of-novato-finance-dept"
+        "target_name": "CITY OF NOVATO-FINANCE DEPT."
       },
       {
         "amount": 15000,
@@ -2644,7 +2644,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b036f7ed092",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-partners-in-communication"
+        "target_name": "PARTNERS IN COMMUNICATION LLC"
       },
       {
         "amount": 30000,
@@ -2652,7 +2652,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b03b46dbc62",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-community-corrections-institute"
+        "target_name": "COMMUNITY CORRECTIONS INSTITUTE LLC"
       },
       {
         "amount": 50000,
@@ -2660,7 +2660,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b064fd1793f",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-medical-solutions-llc-temp-nursing"
+        "target_name": "MEDICAL SOLUTIONS LLC-TEMP NURSING"
       },
       {
         "amount": 20000,
@@ -2668,7 +2668,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b0be01c40f5",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-miller-pamela"
+        "target_name": "MILLER, PAMELA"
       },
       {
         "amount": 20000,
@@ -2676,7 +2676,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b0da288b842",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-edesignc"
+        "target_name": "EDESIGNC  INC"
       },
       {
         "amount": 48060,
@@ -2684,7 +2684,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b2085e37322",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-vivalon"
+        "target_name": "VIVALON"
       },
       {
         "amount": 13000,
@@ -2692,7 +2692,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b20df7a5d0a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ca-mental-health-services-authority"
+        "target_name": "CA MENTAL HEALTH SERVICES AUTHORITY"
       },
       {
         "amount": 16000,
@@ -2700,7 +2700,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b2651823cfa",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-medici-kathryn"
+        "target_name": "MEDICI, KATHRYN"
       },
       {
         "amount": 2100,
@@ -2708,7 +2708,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b2da8fe7745",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-tavenner-janis-l"
+        "target_name": "TAVENNER, JANIS L"
       },
       {
         "amount": 3709,
@@ -2716,7 +2716,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b3e936a7d6d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-goring-and-straja-architects"
+        "target_name": "GORING AND STRAJA ARCHITECTS"
       },
       {
         "amount": 40000,
@@ -2724,7 +2724,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b48e87ad39d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-whistlestop"
+        "target_name": "WHISTLESTOP"
       },
       {
         "amount": 25000,
@@ -2732,7 +2732,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b4d009bc151",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-big-cat-advertising"
+        "target_name": "BIG CAT ADVERTISING"
       },
       {
         "amount": 10000,
@@ -2740,7 +2740,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b5db2e37eae",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-integrated-community-services"
+        "target_name": "INTEGRATED COMMUNITY SERVICES"
       },
       {
         "amount": 44300,
@@ -2748,7 +2748,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b651a00dd39",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ross-drulis-cusenbery-arch"
+        "target_name": "ROSS DRULIS CUSENBERY ARCH INC"
       },
       {
         "amount": 2575,
@@ -2756,7 +2756,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b699ffaed90",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-monte-deignan-associates"
+        "target_name": "MONTE DEIGNAN & ASSOCIATES"
       },
       {
         "amount": 8836,
@@ -2764,7 +2764,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b890c9eda92",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-on-point-land-management"
+        "target_name": "ON POINT LAND MANAGEMENT INC"
       },
       {
         "amount": 37557,
@@ -2772,7 +2772,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b8b265e3f86",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-tlc-child-family-services"
+        "target_name": "TLC CHILD & FAMILY SERVICES"
       },
       {
         "amount": 34176,
@@ -2780,7 +2780,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b8fc79e1e9f",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-mpsf-marin-speaker-series"
+        "target_name": "MPSF MARIN SPEAKER SERIES"
       },
       {
         "amount": 3450,
@@ -2788,7 +2788,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b9861be06fa",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-environmental-technical-service"
+        "target_name": "ENVIRONMENTAL TECHNICAL SERVICE"
       },
       {
         "amount": 33000,
@@ -2796,7 +2796,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0b987ebe8840",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-alcohol-justice"
+        "target_name": "ALCOHOL JUSTICE"
       },
       {
         "amount": 7102,
@@ -2812,7 +2812,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0bb73b2a16dd",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-mj-designs-education-and-admin-support"
+        "target_name": "MJ DESIGNS EDUCATION AND ADMIN SUPPORT"
       },
       {
         "amount": 6500,
@@ -2820,7 +2820,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0bbea721ec3a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-kittelson-associates"
+        "target_name": "KITTELSON & ASSOCIATES INC"
       },
       {
         "amount": 49850,
@@ -2828,7 +2828,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0bc96005a03e",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-lampkin-javon-deshay"
+        "target_name": "LAMPKIN, JAVON DESHAY"
       },
       {
         "amount": 47428,
@@ -2836,7 +2836,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0bca518baf84",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-city-community-development"
+        "target_name": "MARIN CITY COMMUNITY DEVELOPMENT CO"
       },
       {
         "amount": 8350,
@@ -2844,7 +2844,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0bd2cebe1649",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-reach-strategies"
+        "target_name": "REACH STRATEGIES"
       },
       {
         "amount": 35000,
@@ -2852,7 +2852,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0bd6a46c6614",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-harris-associates"
+        "target_name": "HARRIS & ASSOCIATES INC"
       },
       {
         "amount": 50000,
@@ -2860,7 +2860,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0be8d20d1967",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-spahr-center"
+        "target_name": "SPAHR CENTER"
       },
       {
         "amount": 8000,
@@ -2868,7 +2868,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0bf5d84d9748",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-indif-technologies"
+        "target_name": "INDIF TECHNOLOGIES INC"
       },
       {
         "amount": 2805,
@@ -2876,7 +2876,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0c0087a2fdc2",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-monte-deignan-associates"
+        "target_name": "MONTE DEIGNAN & ASSOCIATES"
       },
       {
         "amount": 15500,
@@ -2884,7 +2884,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0c0c5160adfd",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ross-valley-school-district"
+        "target_name": "ROSS VALLEY SCHOOL DISTRICT"
       },
       {
         "amount": 6000,
@@ -2892,7 +2892,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0c14266f91cc",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-barkan-consulting-group"
+        "target_name": "BARKAN CONSULTING GROUP"
       },
       {
         "amount": 40000,
@@ -2908,7 +2908,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0c2ad7278f31",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-the-analytical-moose"
+        "target_name": "THE ANALYTICAL MOOSE LLC"
       },
       {
         "amount": 10000,
@@ -2916,7 +2916,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0c2b1a9c08e2",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-biddle-consulting-group"
+        "target_name": "BIDDLE CONSULTING GROUP INC"
       },
       {
         "amount": 5000,
@@ -2924,7 +2924,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0c2c2295ac46",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-kroll-information-assurance"
+        "target_name": "KROLL INFORMATION ASSURANCE LLC"
       },
       {
         "amount": 2810,
@@ -2932,7 +2932,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0c3019f97368",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-commonlook"
+        "target_name": "COMMONLOOK"
       },
       {
         "amount": 4500,
@@ -2940,7 +2940,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0c36960fdab6",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-preparative-consulting"
+        "target_name": "PREPARATIVE CONSULTING"
       },
       {
         "amount": 27000,
@@ -2948,7 +2948,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0c576b437ed6",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-wilson-events"
+        "target_name": "WILSON EVENTS INC"
       },
       {
         "amount": 5500,
@@ -2956,7 +2956,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0c5ef12ffd72",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-wilson-shanti"
+        "target_name": "WILSON, SHANTI"
       },
       {
         "amount": 15000,
@@ -2964,7 +2964,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0c6a85e0fb94",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-turner-jimmie-r"
+        "target_name": "TURNER, JIMMIE R"
       },
       {
         "amount": 10000,
@@ -2972,7 +2972,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0c6cb62012c4",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-city-community-services-district"
+        "target_name": "MARIN CITY COMMUNITY SERVICES DISTRICT"
       },
       {
         "amount": 15000,
@@ -2980,7 +2980,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0c742425524d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-harris-lee-environmental-sciences"
+        "target_name": "HARRIS & LEE ENVIRONMENTAL SCIENCES LLC"
       },
       {
         "amount": 8928,
@@ -2988,7 +2988,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0c81c9e98d18",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-county-of-solano"
+        "target_name": "COUNTY OF SOLANO"
       },
       {
         "amount": 11895,
@@ -2996,7 +2996,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0c832b8052cd",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-catholic-high-school-dba-marin-catholic-parents-assoc"
+        "target_name": "MARIN CATHOLIC HIGH SCHOOL DBA MARIN CATHOLIC PARENTS ASSOC"
       },
       {
         "amount": 30000,
@@ -3004,7 +3004,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0c98fb4c13cf",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-smothers-cheryle-l-roberts"
+        "target_name": "SMOTHERS, CHERYLE L ROBERTS"
       },
       {
         "amount": 9380,
@@ -3012,7 +3012,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0cb3848f3acd",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-utility-management-services-marin-energy-watch"
+        "target_name": "UTILITY MANAGEMENT SERVICES-MARIN ENERGY WATCH"
       },
       {
         "amount": 7500,
@@ -3020,7 +3020,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0cc1c067de3f",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-dan-cloak-environmental-consult"
+        "target_name": "DAN CLOAK ENVIRONMENTAL CONSULT"
       },
       {
         "amount": 11000,
@@ -3028,7 +3028,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0cc6e8e31aa6",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-gerstandt-joseph-d"
+        "target_name": "GERSTANDT, JOSEPH D"
       },
       {
         "amount": 20000,
@@ -3036,7 +3036,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0cddd522ec42",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-lilliput-children-s-services"
+        "target_name": "LILLIPUT CHILDREN'S SERVICES"
       },
       {
         "amount": 30000,
@@ -3044,7 +3044,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0ceca0fc0e69",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-community-corrections-institute"
+        "target_name": "COMMUNITY CORRECTIONS INSTITUTE LLC"
       },
       {
         "amount": 11695,
@@ -3052,7 +3052,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0cffc8073f5d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-deborha-mann-productions"
+        "target_name": "DEBORHA MANN PRODUCTIONS"
       },
       {
         "amount": 4500,
@@ -3060,7 +3060,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d07e1667ef6",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-kondy-berberich-tamar"
+        "target_name": "KONDY BERBERICH, TAMAR"
       },
       {
         "amount": 33000,
@@ -3068,7 +3068,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d0b1420968a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-bambini-yoga-project"
+        "target_name": "BAMBINI YOGA PROJECT"
       },
       {
         "amount": 6720,
@@ -3076,7 +3076,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d14f92b32a2",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-city-of-novato-finance-dept"
+        "target_name": "CITY OF NOVATO-FINANCE DEPT."
       },
       {
         "amount": 7200,
@@ -3084,7 +3084,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d175d8d4c0c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-rj-ricciardi-inc-certified-public-accountants"
+        "target_name": "RJ RICCIARDI INC CERTIFIED PUBLIC ACCOUNTANTS"
       },
       {
         "amount": 40000,
@@ -3092,7 +3092,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d1dcce556fe",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-miramontes-giovanni"
+        "target_name": "MIRAMONTES, GIOVANNI"
       },
       {
         "amount": 25415,
@@ -3100,7 +3100,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d1e872edecb",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-gillenwater-consulting"
+        "target_name": "GILLENWATER CONSULTING LLC"
       },
       {
         "amount": 7440,
@@ -3108,7 +3108,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d22c677c98f",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-bright-star-security"
+        "target_name": "BRIGHT STAR SECURITY, INC"
       },
       {
         "amount": 6900,
@@ -3124,7 +3124,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d2b243b1324",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-panoramic-software"
+        "target_name": "PANORAMIC SOFTWARE INC"
       },
       {
         "amount": 17000,
@@ -3132,7 +3132,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d3d805dd1bb",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-technology-4-life"
+        "target_name": "TECHNOLOGY 4 LIFE"
       },
       {
         "amount": 1565,
@@ -3140,7 +3140,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d49589aa8b4",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-fern-loiacono-golden-gate-shows"
+        "target_name": "Fern Loiacono / Golden Gate Shows"
       },
       {
         "amount": 50000,
@@ -3148,7 +3148,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d593503c884",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-jewish-family-children-s-service"
+        "target_name": "JEWISH FAMILY & CHILDREN'S SERVICE"
       },
       {
         "amount": 7000,
@@ -3156,7 +3156,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d5cbfc3df56",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-rj-ricciardi-inc-certified-public-accountants"
+        "target_name": "RJ RICCIARDI INC CERTIFIED PUBLIC ACCOUNTANTS"
       },
       {
         "amount": 16000,
@@ -3164,7 +3164,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d668e82804b",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-conklin-de-decker-associates"
+        "target_name": "CONKLIN & DE DECKER ASSOCIATES INC"
       },
       {
         "amount": 30000,
@@ -3172,7 +3172,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d6a7ce597d5",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-treatment-center"
+        "target_name": "MARIN TREATMENT CENTER"
       },
       {
         "amount": 19500,
@@ -3180,7 +3180,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d6b71d2de70",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-paul-elizondo-do"
+        "target_name": "PAUL ELIZONDO DO INC"
       },
       {
         "amount": 17000,
@@ -3188,7 +3188,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d77e6a6ab24",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-technology-4-life"
+        "target_name": "TECHNOLOGY 4 LIFE"
       },
       {
         "amount": 23744,
@@ -3196,7 +3196,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d8b51ebff06",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-biomaas"
+        "target_name": "BIOMAAS INC"
       },
       {
         "amount": 5000,
@@ -3204,7 +3204,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d8d5e0003c9",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-raker-christopher-william"
+        "target_name": "RAKER, CHRISTOPHER WILLIAM"
       },
       {
         "amount": 25000,
@@ -3212,7 +3212,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0d97c6a7fb3e",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-miller-carol-a"
+        "target_name": "MILLER, CAROL A"
       },
       {
         "amount": 5000,
@@ -3220,7 +3220,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0db1e5e09423",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-harris-lee-environmental-sciences"
+        "target_name": "HARRIS & LEE ENVIRONMENTAL SCIENCES LLC"
       },
       {
         "amount": 37700,
@@ -3228,7 +3228,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0dc24e28e6be",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-barbier-security-group"
+        "target_name": "BARBIER SECURITY GROUP"
       },
       {
         "amount": 4000,
@@ -3252,7 +3252,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0dcc1bf57bb6",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-extrafood-org"
+        "target_name": "EXTRAFOOD.ORG"
       },
       {
         "amount": 27150,
@@ -3260,7 +3260,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0dcda15a3d31",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-tamarack-management"
+        "target_name": "TAMARACK MANAGEMENT LLC"
       },
       {
         "amount": 13300,
@@ -3268,7 +3268,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0dd66e12fc63",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-smith-associates-environmental-health-safety"
+        "target_name": "SMITH & ASSOCIATES ENVIRONMENTAL HEALTH & SAFETY"
       },
       {
         "amount": 27750,
@@ -3276,7 +3276,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0dd7304c2bc0",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-jewish-family-children-s-service"
+        "target_name": "JEWISH FAMILY & CHILDREN'S SERVICE"
       },
       {
         "amount": 15000,
@@ -3284,7 +3284,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0ddfcd609d0e",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-sanzuma"
+        "target_name": "SANZUMA"
       },
       {
         "amount": 2200,
@@ -3292,7 +3292,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0df058f023fe",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-stacey-clarke-graphic-design"
+        "target_name": "STACEY CLARKE GRAPHIC DESIGN"
       },
       {
         "amount": 38000,
@@ -3300,7 +3300,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0df4f2828f8e",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-golden-gate-national-parks-conservancy"
+        "target_name": "GOLDEN GATE NATIONAL PARKS CONSERVANCY"
       },
       {
         "amount": 25000,
@@ -3308,7 +3308,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e04b1eea910",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-nomad-ecology"
+        "target_name": "NOMAD ECOLOGY LLC"
       },
       {
         "amount": 38500,
@@ -3316,7 +3316,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e09e7603c70",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-bmi-imaging-systems"
+        "target_name": "BMI IMAGING SYSTEMS INC"
       },
       {
         "amount": 28750,
@@ -3324,7 +3324,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e25419f7922",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ralph-anderson-associates"
+        "target_name": "RALPH ANDERSON & ASSOCIATES"
       },
       {
         "amount": 48900,
@@ -3332,7 +3332,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e3692696a80",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-sloan-sakai-yeung-wong"
+        "target_name": "SLOAN SAKAI YEUNG &  WONG  LLP"
       },
       {
         "amount": 50000,
@@ -3348,7 +3348,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e4e3f428866",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-amicable"
+        "target_name": "AMICABLE LLC"
       },
       {
         "amount": 40000,
@@ -3356,7 +3356,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e4e63aef9f6",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-zimny-teresa"
+        "target_name": "ZIMNY, TERESA"
       },
       {
         "amount": 20000,
@@ -3364,7 +3364,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e513fee45bc",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-holmes-structures"
+        "target_name": "HOLMES STRUCTURES"
       },
       {
         "amount": 28000,
@@ -3380,7 +3380,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e61af85c9b8",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-kleinfelder"
+        "target_name": "KLEINFELDER INC"
       },
       {
         "amount": 30500,
@@ -3388,7 +3388,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e681c0d40df",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-mgt-of-america-consulting"
+        "target_name": "MGT OF AMERICA CONSULTING LLC"
       },
       {
         "amount": 1500,
@@ -3396,7 +3396,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e6a7d867789",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-vivalon"
+        "target_name": "VIVALON"
       },
       {
         "amount": 10000,
@@ -3404,7 +3404,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e6d596bdd0e",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-molina-carlos-r"
+        "target_name": "MOLINA, CARLOS R"
       },
       {
         "amount": 48960,
@@ -3412,7 +3412,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e725f7071d7",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-wall-edward-k"
+        "target_name": "WALL, EDWARD K"
       },
       {
         "amount": 5000,
@@ -3420,7 +3420,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e7784a400be",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-miyoko-s-kitchen"
+        "target_name": "MIYOKO'S KITCHEN"
       },
       {
         "amount": 49600,
@@ -3428,7 +3428,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e79267e13b9",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-zoon-engineering"
+        "target_name": "ZOON ENGINEERING INC"
       },
       {
         "amount": 8163,
@@ -3436,7 +3436,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e7fa5e72fba",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-incontext"
+        "target_name": "INCONTEXT"
       },
       {
         "amount": 3600,
@@ -3444,7 +3444,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e812a4db453",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-stuart-lirette-photography"
+        "target_name": "STUART LIRETTE PHOTOGRAPHY"
       },
       {
         "amount": 20000,
@@ -3452,7 +3452,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e89003e409c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-miller-pamela"
+        "target_name": "MILLER, PAMELA"
       },
       {
         "amount": 35000,
@@ -3460,7 +3460,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0e8e343e7b9f",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-bay-area-community-resources-bacr"
+        "target_name": "BAY AREA COMMUNITY RESOURCES (BACR)"
       },
       {
         "amount": 49500,
@@ -3468,7 +3468,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0eac576cc956",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-rizzardo-dena"
+        "target_name": "RIZZARDO, DENA"
       },
       {
         "amount": 15000,
@@ -3476,7 +3476,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0eba99b9d07e",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-lagunitas-school-district"
+        "target_name": "LAGUNITAS SCHOOL DISTRICT"
       },
       {
         "amount": 2496,
@@ -3484,7 +3484,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0ec5cb3a2ee5",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-commonlook"
+        "target_name": "COMMONLOOK"
       },
       {
         "amount": 10915,
@@ -3492,7 +3492,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0ed12c597e09",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-catholic-hs-dba-marin-catholic-parents-assoc"
+        "target_name": "MARIN CATHOLIC HS DBA MARIN CATHOLIC PARENTS ASSOC"
       },
       {
         "amount": 18700,
@@ -3500,7 +3500,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0ed30a1c18f1",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-gore-linda-u"
+        "target_name": "GORE, LINDA U"
       },
       {
         "amount": 30000,
@@ -3508,7 +3508,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0ed520387374",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-audubon-california"
+        "target_name": "AUDUBON CALIFORNIA"
       },
       {
         "amount": 50000,
@@ -3516,7 +3516,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0ee31408a445",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ever-well-integrated-health"
+        "target_name": "EVER WELL INTEGRATED HEALTH"
       },
       {
         "amount": 10800,
@@ -3524,7 +3524,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0eeea4328dc7",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-powers-consulting"
+        "target_name": "POWERS CONSULTING"
       },
       {
         "amount": 9000,
@@ -3540,7 +3540,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0efedaa79320",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-maria-jose-prieto-de-estebecorena"
+        "target_name": "MARIA JOSE PRIETO DE ESTEBECORENA"
       },
       {
         "amount": 49000,
@@ -3548,7 +3548,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0f0172d011ce",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-balance-hydrologics"
+        "target_name": "BALANCE HYDROLOGICS, INC."
       },
       {
         "amount": 10000,
@@ -3556,7 +3556,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0f01e49b34e7",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-gleicher-law-office-pc"
+        "target_name": "GLEICHER LAW OFFICE PC"
       },
       {
         "amount": 9500,
@@ -3564,7 +3564,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0f02047108b2",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-cliftonlarsonallen"
+        "target_name": "CLIFTONLARSONALLEN LLP"
       },
       {
         "amount": 49495,
@@ -3572,7 +3572,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0f1699ef2b4d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-rainwater-and-associates"
+        "target_name": "RAINWATER AND ASSOCIATES LLC"
       },
       {
         "amount": 44500,
@@ -3580,7 +3580,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0f235df1bc36",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-golden-gate-pharmacy-services"
+        "target_name": "GOLDEN GATE PHARMACY SERVICES"
       },
       {
         "amount": 26640,
@@ -3588,7 +3588,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0f35861efae6",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-baye-peter-robert"
+        "target_name": "BAYE, PETER ROBERT"
       },
       {
         "amount": 4675,
@@ -3596,7 +3596,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0f3e535ff68a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-deanna-and-david-llc-dba-just-dance"
+        "target_name": "Deanna and David LLC dba Just Dance"
       },
       {
         "amount": 25000,
@@ -3604,7 +3604,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0f5102b49dde",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-legal-aid-of-marin"
+        "target_name": "LEGAL AID OF MARIN"
       },
       {
         "amount": 7499,
@@ -3612,7 +3612,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0f521b79d134",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-rainwater-and-associates"
+        "target_name": "RAINWATER AND ASSOCIATES LLC"
       },
       {
         "amount": 34750,
@@ -3620,7 +3620,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0f621ae078cb",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-davis-research"
+        "target_name": "DAVIS RESEARCH LLC"
       },
       {
         "amount": 49775,
@@ -3628,7 +3628,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0f9340ef80ab",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-amistad-associates"
+        "target_name": "AMISTAD ASSOCIATES"
       },
       {
         "amount": 10000,
@@ -3636,7 +3636,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0f9c15efd884",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-rise-above-touring"
+        "target_name": "RISE ABOVE TOURING INC"
       },
       {
         "amount": 20000,
@@ -3644,7 +3644,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0faed762821f",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-bolinas-community-center"
+        "target_name": "BOLINAS COMMUNITY CENTER INC"
       },
       {
         "amount": 30450,
@@ -3652,7 +3652,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0fb1603ce750",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-csw-stuber-stroeh-engineering-group"
+        "target_name": "CSW/STUBER-STROEH ENGINEERING GROUP INC"
       },
       {
         "amount": 4284,
@@ -3660,7 +3660,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0fc054c75def",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-incontext"
+        "target_name": "INCONTEXT"
       },
       {
         "amount": 22528,
@@ -3668,7 +3668,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0fe5b0d8fe5c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-prima-medical-foundation"
+        "target_name": "PRIMA MEDICAL FOUNDATION"
       },
       {
         "amount": 35000,
@@ -3676,7 +3676,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-0ffa7afc61b2",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-state-of-california"
+        "target_name": "STATE OF CALIFORNIA"
       },
       {
         "amount": 50000,
@@ -3684,7 +3684,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-1011333d6bae",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-shute-mihaly-weinberger"
+        "target_name": "SHUTE MIHALY & WEINBERGER LLP"
       },
       {
         "amount": 9310,
@@ -3692,7 +3692,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-10187528eefd",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-caw-architects"
+        "target_name": "CAW ARCHITECTS INC"
       },
       {
         "amount": 1200,
@@ -3700,7 +3700,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-104b8670539a",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-indig-steve"
+        "target_name": "INDIG , STEVE"
       },
       {
         "amount": 23000,
@@ -3708,7 +3708,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-105829e8b752",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-fortezza-diversified-services"
+        "target_name": "FORTEZZA DIVERSIFIED SERVICES LLC"
       },
       {
         "amount": 9975,
@@ -3716,7 +3716,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-106994600d05",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-dan-cloak-environmental-consulting"
+        "target_name": "DAN CLOAK ENVIRONMENTAL CONSULTING"
       },
       {
         "amount": 24090,
@@ -3724,7 +3724,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-10739b018b50",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-hannah-haylea"
+        "target_name": "HANNAH, HAYLEA"
       },
       {
         "amount": 17300,
@@ -3732,7 +3732,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-10743d1919ab",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-the-marin-aging-disability-institute"
+        "target_name": "THE MARIN AGING & DISABILITY INSTITUTE LLC"
       },
       {
         "amount": 5440,
@@ -3740,7 +3740,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-1077c752e3f2",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-craig-d-crispin-dds"
+        "target_name": "CRAIG D. CRISPIN DDS INC"
       },
       {
         "amount": 13440,
@@ -3748,7 +3748,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-107da90461ab",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-crispin-craig-douglas"
+        "target_name": "CRISPIN, CRAIG DOUGLAS"
       },
       {
         "amount": 2843,
@@ -3756,7 +3756,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-108e6804d633",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-services-for-men"
+        "target_name": "MARIN SERVICES FOR MEN"
       },
       {
         "amount": 4500,
@@ -3764,7 +3764,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-10dff14a5528",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-nurse-logistics"
+        "target_name": "NURSE LOGISTICS INC"
       },
       {
         "amount": 49792,
@@ -3772,7 +3772,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-10f93b82a7ad",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-west-marin-senior-services"
+        "target_name": "WEST MARIN SENIOR SERVICES"
       },
       {
         "amount": 48240,
@@ -3780,7 +3780,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-10f963124f58",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-it"
+        "target_name": "MARIN IT INC"
       },
       {
         "amount": 10918,
@@ -3788,7 +3788,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-10fddbf97a22",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-learning-tree-international"
+        "target_name": "LEARNING TREE INTERNATIONAL"
       },
       {
         "amount": 6855,
@@ -3796,7 +3796,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-111449ecdbf1",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-symphony-association"
+        "target_name": "MARIN SYMPHONY ASSOCIATION"
       },
       {
         "amount": 25000,
@@ -3804,7 +3804,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-1140cee09c5d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-csw-stuber-stroeh-engineering-group"
+        "target_name": "CSW/STUBER-STROEH ENGINEERING GROUP INC"
       },
       {
         "amount": 41310,
@@ -3812,7 +3812,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-11454f3ef196",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-olofson-environmental"
+        "target_name": "OLOFSON ENVIRONMENTAL INC"
       },
       {
         "amount": 42000,
@@ -3820,7 +3820,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-115c4c155c44",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-mgt-of-america-consulting"
+        "target_name": "MGT OF AMERICA CONSULTING LLC"
       },
       {
         "amount": 46772,
@@ -3828,7 +3828,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-116871457067",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-rotacare-bay-area"
+        "target_name": "ROTACARE BAY AREA INC"
       },
       {
         "amount": 17500,
@@ -3836,7 +3836,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-11728f456970",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-roth-lamotte-landscape-architecture"
+        "target_name": "ROTH LAMOTTE LANDSCAPE ARCHITECTURE"
       },
       {
         "amount": 5700,
@@ -3844,7 +3844,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-117bf6683aa8",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-symphony-association"
+        "target_name": "MARIN SYMPHONY ASSOCIATION"
       },
       {
         "amount": 5000,
@@ -3852,7 +3852,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-118ad7628fc9",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-wood-rodgers"
+        "target_name": "WOOD RODGERS INC"
       },
       {
         "amount": 3630,
@@ -3860,7 +3860,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-11903e9f20b5",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-symphony-association"
+        "target_name": "MARIN SYMPHONY ASSOCIATION"
       },
       {
         "amount": 49900,
@@ -3868,7 +3868,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-119617768ee3",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ctek-security"
+        "target_name": "CTEK SECURITY INC"
       },
       {
         "amount": 3500,
@@ -3876,7 +3876,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-11a333069b1d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-dehner-stephanie"
+        "target_name": "DEHNER, STEPHANIE"
       },
       {
         "amount": 21000,
@@ -3884,7 +3884,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-11a64d57cb06",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-celayix-software"
+        "target_name": "CELAYIX SOFTWARE LLC"
       },
       {
         "amount": 5550,
@@ -3892,7 +3892,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-11aae45229bb",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-the-consulting-team"
+        "target_name": "THE CONSULTING TEAM"
       },
       {
         "amount": 19635,
@@ -3900,7 +3900,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-11b414e5e76c",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marinspace"
+        "target_name": "MARINSPACE  INC"
       },
       {
         "amount": 10400,
@@ -3908,7 +3908,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-11be3a201a9f",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-evans-and-de-shazo"
+        "target_name": "EVANS AND DE SHAZO INC"
       },
       {
         "amount": 2500,
@@ -3916,7 +3916,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-11cf8800ce01",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-contractor-compliance-monitoring"
+        "target_name": "CONTRACTOR COMPLIANCE & MONITORING INC"
       },
       {
         "amount": 10000,
@@ -3924,7 +3924,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-11d04cddc9ce",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-colin-hamblin-a-professional-medical"
+        "target_name": "COLIN HAMBLIN A PROFESSIONAL MEDICAL CORP"
       },
       {
         "amount": 8000,
@@ -3932,7 +3932,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-11e313ecd6ab",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-markels-alex-s"
+        "target_name": "MARKELS, ALEX S"
       },
       {
         "amount": 11000,
@@ -3940,7 +3940,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-11e42b163ae0",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-villages"
+        "target_name": "MARIN VILLAGES"
       },
       {
         "amount": 16000,
@@ -3948,7 +3948,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-11eb32680cab",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-medici-kathryn"
+        "target_name": "MEDICI, KATHRYN"
       },
       {
         "amount": 45000,
@@ -3956,7 +3956,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-11ed806bf84f",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-marin-family-action"
+        "target_name": "MARIN FAMILY ACTION"
       },
       {
         "amount": 3000,
@@ -3964,7 +3964,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-11fa22135e97",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-john-lessley-quality-innovations"
+        "target_name": "JOHN LESSLEY QUALITY INNOVATIONS"
       },
       {
         "amount": 50000,
@@ -3972,7 +3972,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-11ff119316fe",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-park-engineering"
+        "target_name": "PARK ENGINEERING INC"
       },
       {
         "amount": 48759,
@@ -3980,7 +3980,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-12039e122d09",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-jumb-technology-services"
+        "target_name": "JUMB TECHNOLOGY SERVICES LLC"
       },
       {
         "amount": 40655,
@@ -3988,7 +3988,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-1203e7adbb88",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-salas-o-brien"
+        "target_name": "SALAS O'BRIEN"
       },
       {
         "amount": 9495,
@@ -3996,7 +3996,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-1210b500dcf9",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-miller-management-consulting-group"
+        "target_name": "MILLER MANAGEMENT & CONSULTING GROUP"
       },
       {
         "amount": 18184,
@@ -4004,7 +4004,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-1214bed079ae",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-m-lee-corporation"
+        "target_name": "M LEE CORPORATION"
       },
       {
         "amount": 35000,
@@ -4012,7 +4012,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-121677888549",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-spahr-center"
+        "target_name": "SPAHR CENTER"
       },
       {
         "amount": 25000,
@@ -4020,7 +4020,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-1219e4d5f332",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-jones-lorenzo"
+        "target_name": "JONES, LORENZO"
       },
       {
         "amount": 27500,
@@ -4028,7 +4028,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-121d1f427bc2",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-ralph-andersen-associates"
+        "target_name": "RALPH ANDERSEN & ASSOCIATES"
       },
       {
         "amount": 5000,
@@ -4036,7 +4036,7 @@
         "flow_type": "delegated_contract",
         "id": "moneyflow-marincontract-12232ba0e32d",
         "source_name": null,
-        "target_name": "org-marincontract-recipient-kittelson-associates"
+        "target_name": "KITTELSON & ASSOCIATES INC"
       }
     ],
     "slug": "money-flows-by-year"

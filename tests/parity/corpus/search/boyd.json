@@ -74,6 +74,16 @@
         "type": "Person"
       },
       {
+        "id": "person-f700-marion-boyd",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/person/f700-marion-boyd",
+        "search_label": "Marion Boyd",
+        "type": "Person"
+      },
+      {
         "id": "case-boyd-v-city-of-san-rafael",
         "jurisdiction": null,
         "key_fact": "Boyd v. City of San Rafael \u00b7 2023-08-11",
@@ -89,7 +99,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2020-11-16-san-rafael-city-council-special-1",
+        "route": "/agenda-item/2020-11-16-san-rafael-city-council-special-1",
         "search_label": "Discussion Boyd House Interested Parties (PW)",
         "type": "AgendaItem"
       },
@@ -99,7 +109,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2024-03-18-san-rafael-city-council-5a",
+        "route": "/agenda-item/2024-03-18-san-rafael-city-council-5a",
         "search_label": "Presentation of Proclamation Recognizing Louise Boyd (CM)",
         "type": "AgendaItem"
       },
@@ -159,7 +169,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2021-05-03-san-rafael-city-council-7b",
+        "route": "/agenda-item/2021-05-03-san-rafael-city-council-7b",
         "search_label": "Marin History Museum Lease of Boyd Gate house",
         "type": "AgendaItem"
       },
@@ -169,7 +179,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2021-05-17-san-rafael-city-council-5h",
+        "route": "/agenda-item/2021-05-17-san-rafael-city-council-5h",
         "search_label": "Marin History Museum Lease of Boyd Gate House",
         "type": "AgendaItem"
       },
@@ -179,7 +189,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2025-09-02-san-rafael-city-council-4c",
+        "route": "/agenda-item/2025-09-02-san-rafael-city-council-4c",
         "search_label": "Marin History Museum Boyd Gate House Use Agreement",
         "type": "AgendaItem"
       },

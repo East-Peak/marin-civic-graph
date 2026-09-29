@@ -256,27 +256,12 @@
       }
     ],
     "properties": {
-      "cluster_centroid_distance": 0.005998583626483184,
-      "cluster_label": "Meeting \u00b7 san",
       "decided_at": "2010-02-16",
-      "decision_type": "call_special_election",
-      "display_label": "Call the June 8, 2010 special election for the library parcel-tax measure",
-      "election_id": "election-2010-06-08-san-rafael-library-special",
-      "embedded_at": "2026-04-28T13:45:05.888000000+00:00",
-      "evidence_summary": "Promoted from 1 page-linked election records captured from the public San Rafael election pages.",
-      "had_canonical_before": false,
       "id": "decision-2010-06-08-san-rafael-library-special-call",
       "institution_id": "org-san-rafael-city-council",
-      "meeting_id": "meeting-2010-02-16-san-rafael-city-council",
-      "promotion_state": "promoted",
-      "record_ids": [
-        "record-san-rafael-election-entry-15680"
-      ],
       "search_key_fact": "Call the June 8, 2010 special election for the library parcel-tax measure \u00b7 2010-02-16",
-      "search_label": "Call the June 8, 2010 special election for the library parcel-tax measure \u00b7 2010-02-16",
       "search_last_activity": "2010-06-08",
       "search_rank": 71,
-      "search_terms": "decision-2010-06-08-san-rafael-library-special-call call the june 8, 2010 special election for the library parcel-tax measure 2010-02-16",
       "status": "adopted",
       "title": "Call the June 8, 2010 special election for the library parcel-tax measure"
     },

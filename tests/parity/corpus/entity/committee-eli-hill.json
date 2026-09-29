@@ -748,27 +748,11 @@
       }
     ],
     "properties": {
-      "cluster_centroid_distance": 0.06316232538405363,
-      "cluster_label": "Record \u00b7 san",
-      "committee_type": "candidate_linked_committee",
-      "controlling_actor_id": "person-eli-hill",
-      "display_label": "Eli Hill for San Rafael City Council 2022",
-      "embedded_at": "2026-04-28T13:44:57.434000000+00:00",
-      "evidence_record_ids": [
-        "record-san-rafael-november-8-2022-election-eli-hill-campaign-folder"
-      ],
-      "had_canonical_before": false,
       "id": "committee-eli-hill-for-san-rafael-city-council-2022",
-      "jurisdiction_place_id": "place-san-rafael",
       "name": "Eli Hill for San Rafael City Council 2022",
-      "primary_election_id": "election-2022-11-08-san-rafael-general",
-      "promotion_state": "promoted",
       "search_key_fact": "Eli Hill for San Rafael City Council 2022",
-      "search_label": "Eli Hill for San Rafael City Council 2022",
       "search_last_activity": "2022-11-08",
-      "search_rank": 71,
-      "search_terms": "committee-eli-hill-for-san-rafael-city-council-2022 eli hill for san rafael city council 2022",
-      "source_system_ref": "laserfiche-folder:33055"
+      "search_rank": 71
     },
     "type": "Committee"
   },

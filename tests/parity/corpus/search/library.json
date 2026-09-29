@@ -79,7 +79,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-mill-valley-committees-440-ne2",
+        "route": "/agenda-item/mill-valley-committees-440-ne2",
         "search_label": "Library Advocacy",
         "type": "AgendaItem"
       },
@@ -89,7 +89,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-mill-valley-committees-478-ol1",
+        "route": "/agenda-item/mill-valley-committees-478-ol1",
         "search_label": "Library Advocacy",
         "type": "AgendaItem"
       },
@@ -239,7 +239,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2023-04-17-san-rafael-city-council-4e",
+        "route": "/agenda-item/2023-04-17-san-rafael-city-council-4e",
         "search_label": "National Library Week",
         "type": "AgendaItem"
       },
@@ -274,6 +274,16 @@
         "type": "Program"
       },
       {
+        "id": "agenda-item-2024-07-15-san-rafael-city-council-4h",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": null,
+        "rank": 0,
+        "route": "/agenda-item/2024-07-15-san-rafael-city-council-4h",
+        "search_label": "San Rafael Public Library Foundation Donation for Constructing a New Library",
+        "type": "AgendaItem"
+      },
+      {
         "id": "decision-2024-07-15-san-rafael-city-council-4h-resolution-adoption-15320",
         "jurisdiction": null,
         "key_fact": "San Rafael Public Library Foundation Donation for Constructing a New Library",
@@ -282,16 +292,6 @@
         "route": "/decision/2024-07-15-san-rafael-city-council-4h-resolution-adoption-15320",
         "search_label": "San Rafael Public Library Foundation Donation for Constructing a New Library",
         "type": "Decision"
-      },
-      {
-        "id": "agenda-item-2024-07-15-san-rafael-city-council-4h",
-        "jurisdiction": null,
-        "key_fact": null,
-        "last_activity": null,
-        "rank": 0,
-        "route": "/agenda-item/item-2024-07-15-san-rafael-city-council-4h",
-        "search_label": "San Rafael Public Library Foundation Donation for Constructing a New Library",
-        "type": "AgendaItem"
       },
       {
         "id": "filing-form700-lark-2026-03-25-hill-damon-annual-library-director-library",
@@ -309,7 +309,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2024-09-16-san-rafael-city-council-4e",
+        "route": "/agenda-item/2024-09-16-san-rafael-city-council-4e",
         "search_label": "Downtown Library Renovation Project",
         "type": "AgendaItem"
       },
@@ -319,7 +319,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2025-03-03-san-rafael-city-council-4g",
+        "route": "/agenda-item/2025-03-03-san-rafael-city-council-4g",
         "search_label": "Downtown Library Furniture Purchase",
         "type": "AgendaItem"
       },
@@ -329,7 +329,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2025-04-07-san-rafael-city-council-special-4j",
+        "route": "/agenda-item/2025-04-07-san-rafael-city-council-special-4j",
         "search_label": "Downtown Library Renovation Project",
         "type": "AgendaItem"
       },
@@ -339,7 +339,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2025-09-02-san-rafael-city-council-4e",
+        "route": "/agenda-item/2025-09-02-san-rafael-city-council-4e",
         "search_label": "Pickleweed Library Renovation Project",
         "type": "AgendaItem"
       },
@@ -349,7 +349,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2026-03-02-san-rafael-city-council-2f",
+        "route": "/agenda-item/2026-03-02-san-rafael-city-council-2f",
         "search_label": "Pickleweed Library Furniture Purchase",
         "type": "AgendaItem"
       },
@@ -359,7 +359,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-belvedere-city-council-city-council-meeting-january-24-2022-special-pu1",
+        "route": "/agenda-item/belvedere-city-council-city-council-meeting-january-24-2022-special-pu1",
         "search_label": "Parks, Recreation & Library Services",
         "type": "AgendaItem"
       },
@@ -369,7 +369,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-belvedere-city-council-city-council-meeting-january-27-2022-special-pu1",
+        "route": "/agenda-item/belvedere-city-council-city-council-meeting-january-27-2022-special-pu1",
         "search_label": "Parks, Recreation & Library Services",
         "type": "AgendaItem"
       },
@@ -469,7 +469,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2019-02-04-san-rafael-city-council-4a",
+        "route": "/agenda-item/2019-02-04-san-rafael-city-council-4a",
         "search_label": "Board of Library Trustees Vacancies",
         "type": "AgendaItem"
       },
@@ -479,7 +479,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2019-09-16-san-rafael-city-council-5c",
+        "route": "/agenda-item/2019-09-16-san-rafael-city-council-5c",
         "search_label": "Library and Recreation Personnel Changes",
         "type": "AgendaItem"
       },
@@ -489,7 +489,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2019-10-07-san-rafael-city-council-5b",
+        "route": "/agenda-item/2019-10-07-san-rafael-city-council-5b",
         "search_label": "New Library Facilities Planning Study",
         "type": "AgendaItem"
       },
@@ -499,7 +499,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2020-02-03-san-rafael-city-council-5b",
+        "route": "/agenda-item/2020-02-03-san-rafael-city-council-5b",
         "search_label": "Board of Library Trustees Vacancy",
         "type": "AgendaItem"
       }

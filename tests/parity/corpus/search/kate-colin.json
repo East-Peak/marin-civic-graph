@@ -129,7 +129,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2019-10-29-san-rafael-city-council-1a",
+        "route": "/agenda-item/2019-10-29-san-rafael-city-council-1a",
         "search_label": "City Councilmember Kate Colin teleconferencing from 7951 Fleur Du Lac Drive,",
         "type": "AgendaItem"
       },
@@ -334,6 +334,26 @@
         "type": "Filing"
       },
       {
+        "id": "person-kate-stanford",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2026-04-01",
+        "rank": 100,
+        "route": "/person/kate-stanford",
+        "search_label": "Kate Stanford",
+        "type": "Person"
+      },
+      {
+        "id": "person-kate-anderson",
+        "jurisdiction": null,
+        "key_fact": null,
+        "last_activity": "2026-02-10",
+        "rank": 98,
+        "route": "/person/kate-anderson",
+        "search_label": "Kate Anderson",
+        "type": "Person"
+      },
+      {
         "id": "moneyflow-2020-12-18-jim-milligan-committee-kate-colin-for-mayor-2020-1",
         "jurisdiction": null,
         "key_fact": null,
@@ -362,26 +382,6 @@
         "route": "/money-flow/committee-kate-colin-for-san-rafael-mayor-2024-cornerstone-printing-pos-12",
         "search_label": "moneyflow-committee-kate-colin-for-san-rafael-mayor-2024-cornerstone-printing-pos-12",
         "type": "MoneyFlow"
-      },
-      {
-        "id": "person-kate-stanford",
-        "jurisdiction": null,
-        "key_fact": null,
-        "last_activity": "2026-04-01",
-        "rank": 100,
-        "route": "/person/kate-stanford",
-        "search_label": "Kate Stanford",
-        "type": "Person"
-      },
-      {
-        "id": "person-kate-anderson",
-        "jurisdiction": null,
-        "key_fact": null,
-        "last_activity": "2026-02-10",
-        "rank": 98,
-        "route": "/person/kate-anderson",
-        "search_label": "Kate Anderson",
-        "type": "Person"
       },
       {
         "id": "person-miller-kate",

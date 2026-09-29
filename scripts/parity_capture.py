@@ -107,6 +107,8 @@ ENTITY_CASES: list[tuple[str, str, str]] = [
     ("record-doc-prefixed", "record", "2023-12-14-implementation-plan"),
     ("place-merrydale-road", "place", "350-merrydale-road"),
     ("seatservice-fredericks", "seat-service", "alice-fredericks-tiburon-2022"),
+    # Pins residential-permit exposure (street + city only): tests/parity/test_corpus_privacy.py
+    ("project-residential-permit", "project", "permit-marin-IN_B10577_10577"),
 ]
 
 EXPAND_CASES: list[tuple[str, dict[str, str]]] = [

@@ -17,7 +17,7 @@
     ],
     "focus_event_date": "2022-11-01",
     "id": "seatservice-alice-fredericks-tiburon-2022",
-    "label": "seatservice-alice-fredericks-tiburon-2022",
+    "label": "Alice Fredericks \u2014 Seat 4 (2022-2026)",
     "neighbor_total": 19,
     "neighbors": [
       {
@@ -40,16 +40,8 @@
       }
     ],
     "properties": {
-      "cluster_centroid_distance": 0.0007125884640699328,
-      "cluster_label": "SeatService \u00b7 seatservice",
-      "display_label": "Alice Fredericks \u2014 Seat 4 (2022-2026)",
-      "embedded_at": "2026-04-28T14:28:02.303000000+00:00",
       "ended_at": "2026-11-30",
-      "had_canonical_before": false,
       "id": "seatservice-alice-fredericks-tiburon-2022",
-      "node_type": "SeatService",
-      "promotion_state": "promoted",
-      "service_type": "elected",
       "started_at": "2022-11-01"
     },
     "type": "SeatService"

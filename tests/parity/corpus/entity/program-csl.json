@@ -148,28 +148,13 @@
       }
     ],
     "properties": {
-      "cluster_centroid_distance": 0.003697101344380782,
-      "cluster_label": "Record \u00b7 library",
-      "display_label": "California State Library Building Forward Library Facilities Improvement Program",
-      "embedded_at": "2026-04-28T13:48:05.781000000+00:00",
-      "had_canonical_before": false,
       "id": "program-csl-building-forward",
-      "institution_id": "org-california-state-library",
       "jurisdiction_place_id": "place-california",
       "name": "California State Library Building Forward Library Facilities Improvement Program",
       "program_type": "state_library_facilities_grant_program",
-      "promotion_state": "promoted",
-      "record_ids": [
-        "record-csl-building-forward-report-2021-2022"
-      ],
-      "related_decision_ids": [
-        "decision-2022-12-19-downtown-carnegie-grant-acceptance"
-      ],
       "search_key_fact": "California State Library Building Forward Library Facilities Improvement Program \u00b7 active",
-      "search_label": "California State Library Building Forward Library Facilities Improvement Program",
       "search_last_activity": "2022-12-19",
       "search_rank": 70,
-      "search_terms": "program-csl-building-forward california state library building forward library facilities improvement program",
       "status": "active"
     },
     "type": "Program"

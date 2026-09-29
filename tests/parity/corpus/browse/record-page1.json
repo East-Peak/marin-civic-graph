@@ -21,7 +21,7 @@
         "captured_at": null,
         "id": "doc-2023-12-14-implementation-plan",
         "record_type": null,
-        "route": "/record/2023-12-14-implementation-plan",
+        "route": "/record/doc-2023-12-14-implementation-plan",
         "search_label": "Record",
         "type": "Record"
       },
@@ -29,7 +29,7 @@
         "captured_at": null,
         "id": "doc-2024-06-14-homelessness-update",
         "record_type": null,
-        "route": "/record/2024-06-14-homelessness-update",
+        "route": "/record/doc-2024-06-14-homelessness-update",
         "search_label": "Record",
         "type": "Record"
       },
@@ -37,7 +37,7 @@
         "captured_at": null,
         "id": "doc-2024-06-28-grants-pass-statement",
         "record_type": null,
-        "route": "/record/2024-06-28-grants-pass-statement",
+        "route": "/record/doc-2024-06-28-grants-pass-statement",
         "search_label": "Record",
         "type": "Record"
       },
@@ -45,7 +45,7 @@
         "captured_at": null,
         "id": "doc-2024-08-08-boyd-dismissal-release",
         "record_type": null,
-        "route": "/record/2024-08-08-boyd-dismissal-release",
+        "route": "/record/doc-2024-08-08-boyd-dismissal-release",
         "search_label": "Record",
         "type": "Record"
       },
@@ -53,7 +53,7 @@
         "captured_at": null,
         "id": "doc-2024-08-19-item-5a-report",
         "record_type": null,
-        "route": "/record/2024-08-19-item-5a-report",
+        "route": "/record/doc-2024-08-19-item-5a-report",
         "search_label": "Record",
         "type": "Record"
       },
@@ -61,7 +61,7 @@
         "captured_at": null,
         "id": "doc-2024-08-19-minutes",
         "record_type": null,
-        "route": "/record/2024-08-19-minutes",
+        "route": "/record/doc-2024-08-19-minutes",
         "search_label": "Record",
         "type": "Record"
       },
@@ -69,7 +69,7 @@
         "captured_at": null,
         "id": "doc-2024-08-19-staff-report",
         "record_type": null,
-        "route": "/record/2024-08-19-staff-report",
+        "route": "/record/doc-2024-08-19-staff-report",
         "search_label": "Record",
         "type": "Record"
       },
@@ -77,7 +77,7 @@
         "captured_at": null,
         "id": "doc-2025-01-24-homelessness-update",
         "record_type": null,
-        "route": "/record/2025-01-24-homelessness-update",
+        "route": "/record/doc-2025-01-24-homelessness-update",
         "search_label": "Record",
         "type": "Record"
       },

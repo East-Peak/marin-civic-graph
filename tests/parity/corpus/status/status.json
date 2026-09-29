@@ -2,9 +2,9 @@
   "http_status": 200,
   "payload": {
     "connected": true,
-    "edge_count": 168615,
+    "edge_count": 182292,
     "jurisdiction_count": 50,
-    "node_count": 130480,
+    "node_count": 136169,
     "subgraphs_built_at": "2026-04-19T22:26:24+00:00"
   },
   "request": {

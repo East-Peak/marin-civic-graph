@@ -1,0 +1,22 @@
+{
+  "http_status": 200,
+  "payload": {
+    "edges": [],
+    "focus_event_date": null,
+    "id": "permit-marin-IN_B10577_10577",
+    "label": "permit-marin-IN_B10577_10577",
+    "neighbor_total": 0,
+    "neighbors": [],
+    "properties": {
+      "address": "GENEVA WAY, SAN RAFAEL",
+      "id": "permit-marin-IN_B10577_10577",
+      "search_rank": 66
+    },
+    "type": "Project"
+  },
+  "request": {
+    "method": "GET",
+    "params": {},
+    "url_path": "/api/parity-entity/project/permit-marin-IN_B10577_10577"
+  }
+}

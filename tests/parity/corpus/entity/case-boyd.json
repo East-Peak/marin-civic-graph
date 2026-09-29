@@ -454,57 +454,19 @@
       }
     ],
     "properties": {
-      "case_type": "civil_rights_camping_ordinance_challenge",
       "closed_at": "2024-08-07",
-      "cluster_centroid_distance": 0.010412797061805118,
-      "cluster_label": "Proceeding \u00b7 boyd",
-      "court_institution_id": "org-us-district-court-ndca",
       "court_name": "U.S. District Court, Northern District of California",
-      "display_label": "Boyd v. City of San Rafael",
       "docket_number": "23-cv-04085-EMC",
-      "embedded_at": "2026-04-28T13:44:57.434000000+00:00",
       "filed_at": "2023-08-11",
-      "had_canonical_before": false,
       "id": "case-boyd-v-city-of-san-rafael",
-      "issue_ids": [
-        "issue-homelessness",
-        "issue-encampments",
-        "issue-camping-ordinance"
-      ],
       "name": "Boyd v. City of San Rafael",
-      "notes": [
-        "The first legal bundle now includes public filed-order copies for the TRO, preliminary injunction, and dismissal stages, plus the city's own official summaries of the amendment and implementation chain.",
-        "City records consistently say the operative Boyd injunction was grounded in ADA and Fourteenth Amendment state-created-danger theories, not the Eighth Amendment or Grants Pass directly."
-      ],
       "place_ids": [
         "place-san-rafael",
         "place-mahon-creek-path"
       ],
-      "promotion_state": "promoted",
-      "record_ids": [
-        "record-san-rafael-boyd-tro-order-2023-08-16",
-        "record-san-rafael-boyd-preliminary-injunction-order-2023-10-19",
-        "record-san-rafael-boyd-dismissal-order-2024-08-07",
-        "doc-2024-08-08-boyd-dismissal-release",
-        "doc-2024-08-19-item-5a-report",
-        "doc-2024-08-19-staff-report",
-        "doc-2024-06-28-grants-pass-statement",
-        "record-san-rafael-grants-pass-explainer-2024-09-02",
-        "record-san-rafael-sanctioned-camping-area-page"
-      ],
-      "related_decision_ids": [
-        "decision-2024-08-19-ordinance-2040-introduction",
-        "decision-2024-08-19-resolution-15336"
-      ],
-      "related_program_ids": [
-        "program-san-rafael-sanctioned-camping",
-        "program-san-rafael-camping-ordinance-implementation"
-      ],
       "search_key_fact": "Boyd v. City of San Rafael \u00b7 2023-08-11",
-      "search_label": "Boyd v. City of San Rafael",
       "search_last_activity": "2024-08-19",
       "search_rank": 86,
-      "search_terms": "case-boyd-v-city-of-san-rafael boyd v. city of san rafael",
       "status": "dismissed"
     },
     "type": "Case"

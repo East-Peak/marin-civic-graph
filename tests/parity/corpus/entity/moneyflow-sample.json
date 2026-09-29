@@ -17,7 +17,7 @@
     ],
     "focus_event_date": "2024-04-30",
     "id": "moneyflow-1242561-Ckk8lh1b9YWc",
-    "label": "moneyflow-1242561-Ckk8lh1b9YWc",
+    "label": "expenditure $1000.00",
     "neighbor_total": 7,
     "neighbors": [
       {
@@ -41,15 +41,9 @@
     ],
     "properties": {
       "amount": 1000,
-      "cluster_centroid_distance": 0.03254166252274798,
-      "cluster_label": "MoneyFlow \u00b7 moneyflow",
-      "display_label": "expenditure $1000.00",
-      "embedded_at": "2026-04-28T14:18:07.424000000+00:00",
       "flow_date": "2024-04-30",
       "flow_type": "expenditure",
-      "had_canonical_before": false,
       "id": "moneyflow-1242561-Ckk8lh1b9YWc",
-      "promotion_state": "promoted",
       "source_schedule": "E"
     },
     "type": "MoneyFlow"

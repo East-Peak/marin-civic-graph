@@ -478,32 +478,11 @@
       }
     ],
     "properties": {
-      "cluster_centroid_distance": 4.344716425549925,
-      "cluster_label": "Filing \u00b7 county",
-      "display_label": "filing-2025-09-04-kate-colin-form-803",
-      "embedded_at": "2026-04-28T13:47:02.369000000+00:00",
-      "evidence_record_ids": [
-        "record-san-rafael-public-records-form-803-search",
-        "record-kate-colin-form-803-2025-09-04"
-      ],
-      "filing_institution_id": "org-city-of-san-rafael",
-      "filing_officer_institution_id": "org-san-rafael-city-clerk",
       "filing_type": "form_803",
-      "had_canonical_before": false,
       "id": "filing-2025-09-04-kate-colin-form-803",
-      "last_modified_at": "2025-09-18T19:52:23-07:00",
-      "official_actor_id": "person-kate-colin",
-      "official_seat_id": "seat-san-rafael-mayor-at-large",
-      "official_seat_service_id": "seatservice-kate-colin-mayor-current",
-      "page_count": 1,
-      "posted_at": "2025-09-17T20:21:03-07:00",
-      "promotion_state": "promoted",
-      "record_locator": "entry_id:41053",
       "search_key_fact": "Form 803 \u00b7 2025-09-04",
-      "search_label": "Form 803 \u00b7 2025-09-04",
       "search_last_activity": "2025-08-08",
       "search_rank": 86,
-      "search_terms": "filing-2025-09-04-kate-colin-form-803 form_803",
       "signed_at": "2025-09-04"
     },
     "type": "Filing"

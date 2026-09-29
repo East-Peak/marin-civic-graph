@@ -25,19 +25,11 @@
       }
     ],
     "properties": {
-      "cluster_centroid_distance": 0.21298618992383916,
-      "cluster_label": "MoneyFlow \u00b7 merrydale",
-      "display_label": "350 Merrydale Road",
-      "embedded_at": "2026-04-28T13:48:05.781000000+00:00",
-      "had_canonical_before": false,
       "id": "place-350-merrydale-road",
       "name": "350 Merrydale Road",
       "place_type": "address",
-      "promotion_state": "promoted",
       "search_key_fact": "350 Merrydale Road",
-      "search_label": "350 Merrydale Road",
-      "search_rank": 56,
-      "search_terms": "place-350-merrydale-road 350 merrydale road"
+      "search_rank": 56
     },
     "type": "Place"
   },

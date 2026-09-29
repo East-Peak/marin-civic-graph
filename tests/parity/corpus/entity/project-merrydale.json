@@ -380,7 +380,7 @@
         "label": "Encampment Resolution Fund Round 3 (ERF-3) and State of California/State Senator",
         "ring": 2,
         "role": "phase-2",
-        "route": "/agenda-item/item-2024-11-04-san-rafael-city-council-special-7a",
+        "route": "/agenda-item/2024-11-04-san-rafael-city-council-special-7a",
         "type": "AgendaItem"
       },
       {
@@ -389,7 +389,7 @@
         "label": "350 Merrydale Ordinance Adoption",
         "ring": 2,
         "role": "phase-2",
-        "route": "/agenda-item/item-2025-12-01-san-rafael-city-council-4b",
+        "route": "/agenda-item/2025-12-01-san-rafael-city-council-4b",
         "type": "AgendaItem"
       },
       {
@@ -398,7 +398,7 @@
         "label": "Encampment Resolution Fund Round 3 Grant and 350 Merrydale Interim Shelter Project",
         "ring": 2,
         "role": "phase-2",
-        "route": "/agenda-item/item-2026-03-16-san-rafael-city-council-4a",
+        "route": "/agenda-item/2026-03-16-san-rafael-city-council-4a",
         "type": "AgendaItem"
       },
       {
@@ -691,56 +691,13 @@
       }
     ],
     "properties": {
-      "cluster_centroid_distance": 0.1679581866573418,
-      "cluster_label": "MoneyFlow \u00b7 merrydale",
-      "display_label": "350 Merrydale Interim Shelter Project",
-      "embedded_at": "2026-04-28T13:48:05.781000000+00:00",
-      "evidence_summary": "This bounded project slice is anchored in official San Rafael meeting pages, official minutes, and direct city PDF staff reports and agenda packets covering ERF-3/County collaboration, November 2025 site acquisition actions, February 2026 design and construction-management authorizations, and the March 2026 operational-framework update.",
-      "had_canonical_before": false,
       "id": "project-san-rafael-350-merrydale-interim-shelter",
       "jurisdiction_place_id": "place-san-rafael",
       "name": "350 Merrydale Interim Shelter Project",
       "primary_place_id": "place-350-merrydale-road",
-      "project_type": "interim_shelter_project",
-      "promotion_state": "promoted",
-      "record_ids": [
-        "record-2024-11-04-san-rafael-city-council-special-page",
-        "record-2024-11-04-san-rafael-city-council-special-minutes",
-        "record-2025-11-17-san-rafael-city-council-page",
-        "record-2025-11-17-san-rafael-city-council-minutes",
-        "record-2025-11-17-350-merrydale-staff-report",
-        "record-2025-11-17-san-rafael-city-council-agenda-packet",
-        "record-2025-11-17-350-merrydale-resolution-county-grant-and-affordable-housing",
-        "record-2025-11-17-350-merrydale-resolution-purchase-and-brokerage",
-        "record-2025-12-01-san-rafael-city-council-page",
-        "record-2025-12-01-san-rafael-city-council-minutes",
-        "record-2026-02-17-san-rafael-city-council-page",
-        "record-2026-02-17-san-rafael-city-council-minutes",
-        "record-2026-02-17-350-merrydale-staff-report",
-        "record-2026-02-17-san-rafael-city-council-agenda-packet",
-        "record-2026-02-17-350-merrydale-resolution-project-services",
-        "record-2026-02-17-350-merrydale-swinerton-psa",
-        "record-2026-02-17-350-merrydale-lca-amendment",
-        "record-2026-03-16-san-rafael-city-council-page",
-        "record-2026-03-16-san-rafael-city-council-minutes",
-        "record-san-rafael-sanctioned-camping-area-page"
-      ],
-      "related_decision_ids": [
-        "decision-2024-11-04-san-rafael-city-council-special-7a-motion-approval",
-        "decision-2025-11-17-350-merrydale-county-grant-approval",
-        "decision-2025-11-17-350-merrydale-acquisition-and-brokerage-approval",
-        "decision-2025-12-01-san-rafael-city-council-4b-approval-approved-final-adoption-of-ordinance-2057",
-        "decision-2026-02-17-350-merrydale-project-services-authorization",
-        "decision-2026-03-16-san-rafael-city-council-4a-direction-or-receipt-received-the-project-update-and-provided-direction-regarding-the-operational-fra"
-      ],
-      "related_program_ids": [
-        "program-san-rafael-sanctioned-camping"
-      ],
       "search_key_fact": "350 Merrydale Interim Shelter Project \u00b7 active",
-      "search_label": "350 Merrydale Interim Shelter Project",
       "search_last_activity": "2026-03-16",
       "search_rank": 100,
-      "search_terms": "project-san-rafael-350-merrydale-interim-shelter 350 merrydale interim shelter project",
       "status": "active"
     },
     "type": "Project"

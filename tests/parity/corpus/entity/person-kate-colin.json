@@ -814,32 +814,10 @@
         "Kate Colin (she/her/hers)",
         "Colin, Catherine"
       ],
-      "cluster_centroid_distance": 0.025705822741377206,
-      "cluster_label": "Record \u00b7 filing",
-      "display_label": "Kate Colin",
-      "embedded_at": "2026-04-28T13:39:27.695000000+00:00",
-      "evidence_record_ids": [
-        "record-san-rafael-city-council-2024-08-19-item-5a-report",
-        "record-san-rafael-boyd-dismissal-release-2024-08-08",
-        "record-san-rafael-downtown-library-reopening-2025-04-07",
-        "record-kate-colin-form-803-2025-09-04",
-        "record-san-rafael-form700-export-2026-04-12",
-        "record-san-rafael-elected-officials-2026-04-11",
-        "record-san-rafael-city-council-page-2026-04-11",
-        "record-san-rafael-november-5-2024-election-page"
-      ],
-      "had_canonical_before": false,
       "id": "person-kate-colin",
       "name": "Kate Colin",
-      "promotion_state": "canonical",
-      "resolves_raw_actor_seed_ids": [
-        "actor-mayor-kate"
-      ],
-      "search_label": "Kate Colin",
       "search_last_activity": "2026-03-16",
-      "search_rank": 100,
-      "search_terms": "person-kate-colin kate colin kate colin mayor kate colin kate colin (she/her/hers) colin, catherine",
-      "seed_status": "canonical_seed"
+      "search_rank": 100
     },
     "type": "Person"
   },

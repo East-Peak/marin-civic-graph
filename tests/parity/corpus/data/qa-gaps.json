@@ -33,12 +33,12 @@
       },
       {
         "category": "filings.missing_signed_at",
-        "count": 10046,
+        "count": 10407,
         "description": "Filings with no signed_at date"
       },
       {
         "category": "records.orphan_no_target",
-        "count": 42,
+        "count": 60,
         "description": "Records not attached to any target"
       },
       {

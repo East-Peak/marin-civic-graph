@@ -1,34 +1,13 @@
 # Field-level approved deltas: each entry excuses ONLY the JSON paths it names
 # (and their subtrees) in one surface/case. `[*]` = any index, `.*` = any one
 # key. Any other mismatch in the same case still fails the replay.
-- surface: data
-  case: campaign-money-30d
-  paths:
-    - $.rows[*].decision_title
-  reason: live tie order underdetermined for pairs sharing abs delta + decided_at — same flow id ties across decisions
-- surface: data
-  case: campaign-money-90d
-  paths:
-    - $.rows[*].decision_title
-  reason: live tie order underdetermined for pairs sharing abs delta + decided_at — same flow id ties across decisions
-- surface: status
-  case: status
-  paths:
-    - $.edge_count
-    - $.node_count
-  reason: composed artifact is overlay-authoritative — carries 21 stamped SAME_AS edges + anchor nodes live lags
-- surface: data
-  case: money-default
-  paths:
-    - $.rows[*].target_name
-  reason: live carries duplicate-id vendor stub nodes (59 pairs, ingestion bug per spec 4.2); the bake MERGEs them, so target_name resolves to the enriched node while live binds the bare stub
-- surface: data
-  case: proceedings-default
-  paths:
-    - $.rows[*].affected_program
-  reason: link order within a proceeding group is underdetermined on live (no ORDER BY on link in the Cypher); row COUNTS and all values match
-- surface: data
-  case: proceedings-boyd
-  paths:
-    - $.rows[*].affected_program
-  reason: link order within a proceeding group is underdetermined on live (no ORDER BY on link in the Cypher); row COUNTS and all values match
+#
+# Empty since the 2026-09-29 re-baseline: the corpus is captured from the
+# substrate app itself, so the six live-vs-substrate deltas no longer apply.
+# Entry shape:
+# - surface: data
+#   case: example-case
+#   paths:
+#     - $.rows[*].field
+#   reason: why this difference is correct
+[]

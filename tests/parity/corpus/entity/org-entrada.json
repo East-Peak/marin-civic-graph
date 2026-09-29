@@ -39,20 +39,11 @@
       }
     ],
     "properties": {
-      "cluster_centroid_distance": 0.046848630103452915,
-      "cluster_label": "Organization \u00b7 org",
-      "display_label": "250 Entrada Drive LLC",
-      "embedded_at": "2026-04-28T14:20:44.942000000+00:00",
-      "entity_cd": "OTH",
-      "had_canonical_before": false,
       "id": "org-250-entrada-drive-llc",
       "name": "250 Entrada Drive LLC",
-      "promotion_state": "promoted",
       "search_key_fact": "250 Entrada Drive LLC",
-      "search_label": "250 Entrada Drive LLC",
       "search_last_activity": "2019-06-17",
-      "search_rank": 70,
-      "search_terms": "org-250-entrada-drive-llc 250 entrada drive llc"
+      "search_rank": 70
     },
     "type": "Organization"
   },

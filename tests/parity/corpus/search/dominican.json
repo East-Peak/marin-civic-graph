@@ -39,7 +39,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2024-10-21-san-rafael-city-council-special-7b",
+        "route": "/agenda-item/2024-10-21-san-rafael-city-council-special-7b",
         "search_label": "Dominican Valley (REMOVED FROM AGENDA)",
         "type": "AgendaItem"
       },
@@ -49,7 +49,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2019-12-02-san-rafael-city-council-4c",
+        "route": "/agenda-item/2019-12-02-san-rafael-city-council-4c",
         "search_label": "Dominican Sisters Lourdes Convent - Transitional Housing Use",
         "type": "AgendaItem"
       },
@@ -59,7 +59,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2019-12-16-san-rafael-city-council-5b",
+        "route": "/agenda-item/2019-12-16-san-rafael-city-council-5b",
         "search_label": "Dominican Sisters Lourdes Convent - Transitional Housing Use",
         "type": "AgendaItem"
       },
@@ -69,7 +69,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-2025-10-06-san-rafael-city-council-special-5b",
+        "route": "/agenda-item/2025-10-06-san-rafael-city-council-special-5b",
         "search_label": "Agreement for Environmental Consulting Services for the Dominican Residential Development",
         "type": "AgendaItem"
       },
@@ -79,7 +79,7 @@
         "key_fact": null,
         "last_activity": null,
         "rank": 0,
-        "route": "/agenda-item/item-marin-county-bos-10654-ge3",
+        "route": "/agenda-item/marin-county-bos-10654-ge3",
         "search_label": "Request from Supervisor Connolly for Dominican University to present honorary degrees to",
         "type": "AgendaItem"
       }
