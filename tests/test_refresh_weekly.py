@@ -741,3 +741,52 @@ def test_steps_tell_their_children_that_this_process_holds_the_lock(ctx, world, 
     _staged(ctx)
 
     assert seen and set(seen) == {str(os.getpid())}
+
+
+# --- rebake: redo export + bake on a run whose LOAD succeeded -----------------
+# The first real weekly run loaded fine, then its bake came out over budget and
+# the run failed. The graph already holds the approved data, so the fix is a
+# fresh export + bake, not a reload. rebake is only for runs that got past
+# `loaded`; everything else must go back through stage/load.
+
+
+def test_rebake_recovers_a_run_that_failed_after_loading(ctx, world, root):
+    _staged(ctx)
+    world.within_budget = False
+    assert rw.main(["load", RUN], ctx) == 1
+    world.calls.clear()
+    world.within_budget = True
+
+    assert rw.main(["rebake", RUN], ctx) == 0
+
+    state = _state(root)
+    assert state["status"] == "awaiting_publish_approval"
+    assert state["bake"]["sqlite"]["within_budget"] is True
+    scripts = [c[1] for c in world.calls if len(c) > 1]
+    assert scripts == ["scripts/export_live_graph.py", "scripts/bake_public_substrate.py"]  # no reload
+
+
+def test_rebake_over_budget_fails_again(ctx, world, root):
+    _staged(ctx)
+    world.within_budget = False
+    rw.main(["load", RUN], ctx)
+    assert rw.main(["rebake", RUN], ctx) == 1
+    assert _state(root)["status"] == "failed"
+
+
+@pytest.mark.parametrize("status", ["awaiting_load_approval", "load_failed", "awaiting_publish_approval", "published"])
+def test_rebake_refuses_runs_that_are_not_failed_after_loading(ctx, root, status):
+    _staged(ctx)
+    state = _state(root)
+    state["status"] = status
+    rw.write_state(root, RUN, state)
+    assert rw.main(["rebake", RUN], ctx) == 2
+    assert _state(root)["status"] == status
+
+
+def test_rebake_refuses_a_run_that_failed_before_it_ever_loaded(ctx, root):
+    _staged(ctx)
+    state = _state(root)
+    state["status"] = "failed"
+    rw.write_state(root, RUN, state)
+    assert rw.main(["rebake", RUN], ctx) == 2

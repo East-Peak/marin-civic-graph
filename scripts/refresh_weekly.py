@@ -65,6 +65,8 @@ STAGED_SOURCES = {
 # `staging` is written before the first step, so a run that dies is never invisible.
 # `load_failed`: a load step stopped partway. Nothing was promoted into data/normalized,
 # and `load` may be retried (loads are MERGE-idempotent).
+# `rebake`: a run that `failed` AFTER reaching `loaded` (export/bake/budget) re-enters
+# `loaded` and redoes only export + bake; the approved data is already in the graph.
 TRANSITIONS = {
     None: ("staging",),
     "staging": ("staged", "failed"),
@@ -74,6 +76,9 @@ TRANSITIONS = {
     "loaded": ("awaiting_publish_approval", "failed"),
     "awaiting_publish_approval": ("published", "failed"),
     "published": ("rolled_back",),
+    # Only `rebake` takes this edge, and only for a run whose history shows it
+    # reached `loaded` (its data is already in the graph; export+bake failed).
+    "failed": ("loaded",),
 }
 
 
@@ -387,14 +392,19 @@ def load(ctx: Context, run_id: str) -> dict:
         _print_crash()
         return _set_status(ctx, state, "load_failed", error=f"load crashed: {type(exc).__name__}: {exc}")
     _set_status(ctx, state, "loaded", loaded=list(accepted), error=None)
+    return _export_and_bake(ctx, state, run_id, reconcile=True)
 
+
+def _export_and_bake(ctx: Context, state: dict, run_id: str, *, reconcile: bool) -> dict:
+    """From `loaded`: (reconciliation,) export, bake into staging, then budget + hashes."""
     staging = ctx.root / STAGING
-    for name, cmd in (
-        ("reconciliation", ["bash", "scripts/refresh_reconciliation.sh"]),
+    steps = [("reconciliation", ["bash", "scripts/refresh_reconciliation.sh"])] if reconcile else []
+    steps += [
         ("export", [ctx.python, "scripts/export_live_graph.py"]),
         ("bake", [ctx.python, "scripts/bake_public_substrate.py", "--source", "live-export",
                   "--sqlite", str(staging / PUBLISHED_ARTIFACTS[0]), "--report", str(staging / PUBLISHED_ARTIFACTS[3])]),
-    ):
+    ]
+    for name, cmd in steps:
         result = _step(ctx, run_id, name, cmd)
         if result.returncode != 0:
             return _fail(ctx, state, f"{name} {_failure(name, result)}")
@@ -409,6 +419,19 @@ def load(ctx: Context, run_id: str) -> dict:
         return _fail(ctx, state, f"baked sqlite is {report['sqlite']['size_bytes']:,} bytes, over its "
                                  f"{report['sqlite']['budget_bytes']:,}-byte budget")
     return _set_status(ctx, state, "awaiting_publish_approval")
+
+
+def rebake(ctx: Context, run_id: str) -> dict:
+    """Redo export + bake for a run that failed after its approved data was loaded."""
+    state = read_state(ctx.root, run_id)
+    _require(state, "rebake", "failed")
+    if "loaded" not in {h["status"] for h in state["history"]}:
+        raise Refused(f"run {run_id} failed before loading; rebake only recovers export/bake failures")
+    newer = _newer_loaded_run(ctx.root, run_id)
+    if newer:
+        raise Refused(f"run {newer} is newer and already reached the graph; rebaking {run_id} would publish stale data")
+    _set_status(ctx, state, "loaded", error=None)
+    return _export_and_bake(ctx, state, run_id, reconcile=False)
 
 
 # --- publish (operator gate) -------------------------------------------------
@@ -593,6 +616,7 @@ def main(argv: list[str] | None = None, ctx: Context | None = None) -> int:
     sub.add_parser("stage", help="fetch, stage, floor and digest every weekly source (automated)")
     for gate in ("load", "publish", "rollback"):
         sub.add_parser(gate, help=f"operator gate: {gate} an approved run").add_argument("run_id")
+    sub.add_parser("rebake", help="redo export + bake for a run that failed after loading").add_argument("run_id")
     sub.add_parser("status", help="print a run's state and digest path (default: latest)").add_argument(
         "run_id", nargs="?")
     args = parser.parse_args(argv)
@@ -606,7 +630,8 @@ def main(argv: list[str] | None = None, ctx: Context | None = None) -> int:
                 state = stage(ctx)
                 _report(ctx, state)
                 return 0 if state["status"] != "failed" and all(s["ok"] for s in state["sources"].values()) else 1
-            state = {"load": load, "publish": publish, "rollback": rollback}[args.command](ctx, args.run_id)
+            state = {"load": load, "publish": publish, "rollback": rollback,
+                     "rebake": rebake}[args.command](ctx, args.run_id)
         _report(ctx, state)
         return 1 if state["status"] in ("failed", "load_failed") else 0
     except (Refused, RunLockHeld) as exc:
