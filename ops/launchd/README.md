@@ -52,7 +52,8 @@ A log that reaches 5 MiB rotates to `.1` through `.3`. Each step's own log is in
    - grace time **6 hours**
 
    The DOWN email then goes out at Monday 11:00 Pacific if no run reached review.
-2. Use email notifications only. Set it to send one email on DOWN and one on recovery, and turn repeated reminders off.
+2. Use email notifications only: one email on DOWN and one on recovery. Account → Settings → Email Reports →
+   "Ongoing reminders" is set to **daily**, so a DOWN email deleted unread comes back the next day until the job recovers.
 3. Copy the check's ping URL into `ops/launchd/weekly.env` as `OPEN_MARIN_HEARTBEAT_URL=...`, then `chmod 600 ops/launchd/weekly.env`.
 
 ## Installing (operator only)
