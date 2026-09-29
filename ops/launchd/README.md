@@ -81,10 +81,13 @@ the plist's paths first.
 
    `launchd.err.log` should be empty.
 4. **Heartbeat receipt.** The Healthchecks.io check shows a ping at the time of the run and is **up**.
-5. **Missed-heartbeat email.** Temporarily switch the check to a Simple schedule with a 1-minute period and
-   1-minute grace. Wait for the check to go **down**, then confirm that exactly one DOWN email arrived.
-6. **Recovery.** Kickstart the job again (step 1). When it reaches review, the check goes **up**. Confirm that
-   exactly one recovery email arrived.
+5. **Recovery email.** Switch the check to a Simple schedule with a 1-minute period and 1-minute grace, then
+   kickstart the job again (step 1). When it reaches review, the ping brings the check **up**; confirm one
+   recovery email arrived. (Switching the schedule on a check that is already late marks it down *without*
+   an alert, so that is not a test of the DOWN email. Proved 2026-09-29.)
+6. **Missed-heartbeat email.** About 2 minutes after that ping, with no further ping, the check goes **down**
+   on its own; confirm exactly one DOWN email arrived. The integration's "Last Notification" on the
+   Integrations page shows each delivery.
 
    Then restore the cron schedule (`0 5 * * 1`, `America/Los_Angeles`, 6-hour grace).
 
