@@ -43,12 +43,17 @@ class FakeWorld:
         self.meetings = {"a": (30, []), "b": (25, [])}  # sid -> (rows, floor reasons); missing = adapter crash
         self.staged_rows = {script: 10 for script in STAGED_SCRIPTS.values()}
         self.exit_codes: dict[str, int] = {}
+        self.hangs: set[str] = set()  # scripts that outlive their timeout and are killed
+        self.timeouts: list[float] = []
         self.within_budget = True
 
-    def __call__(self, cmd, cwd, env):
+    def __call__(self, cmd, cwd, env, timeout):
         assert cwd == self.root and env["NEO4J_URI"] == ENV["NEO4J_URI"]
         self.calls.append(list(cmd))
+        self.timeouts.append(timeout)
         script = Path(cmd[1]).name
+        if script in self.hangs:
+            return rw.Result(-9, f"{script}: fetching page 12\n", timed_out_after=timeout)
         if self.exit_codes.get(script):
             return rw.Result(self.exit_codes[script], f"{script}: boom\nlast line of trouble\n")
         if script == "ingest.py":
@@ -230,7 +235,7 @@ def test_preflight_failure_fails_the_run_before_any_step(ctx, world, root, env_p
 
 def test_stage_records_the_run_as_staging_before_its_first_step(ctx, world, root):
     seen = []
-    ctx.runner = lambda cmd, cwd, env: (seen.append(_state(root)["status"]), world(cmd, cwd, env))[1]
+    ctx.runner = lambda cmd, cwd, env, t: (seen.append(_state(root)["status"]), world(cmd, cwd, env, t))[1]
 
     _staged(ctx)
 
@@ -238,7 +243,7 @@ def test_stage_records_the_run_as_staging_before_its_first_step(ctx, world, root
 
 
 def test_a_crash_inside_stage_fails_the_run_visibly_and_status_says_why(ctx, root, capsys):
-    def crash(cmd, cwd, env):
+    def crash(cmd, cwd, env, timeout):
         raise OSError("network stack gone")
     ctx.runner = crash
 
@@ -382,8 +387,8 @@ def test_a_load_that_stops_partway_promotes_nothing_and_can_be_retried(ctx, worl
     if how == "exit":
         world.exit_codes["ingest_form700.py"] = 1  # after the meetings loaded, before courtlistener
     else:
-        ctx.runner = lambda cmd, cwd, env: (_ for _ in ()).throw(OSError("bolt reset")) \
-            if "ingest_form700.py" in cmd[1] else world(cmd, cwd, env)
+        ctx.runner = lambda cmd, cwd, env, t: (_ for _ in ()).throw(OSError("bolt reset")) \
+            if "ingest_form700.py" in cmd[1] else world(cmd, cwd, env, t)
 
     assert rw.main(["load", RUN], ctx) == 1
 
@@ -408,10 +413,10 @@ def test_a_capture_that_changes_while_it_loads_fails_the_run(ctx, world, root):
     world.calls.clear()
     capture = root / "data/extracted/a/2026-09-28.json"
 
-    def racing(cmd, cwd, env):
+    def racing(cmd, cwd, env, timeout):
         if cmd[1] == "scripts/normalize_meetings.py":
             capture.write_text('{"meeting_count": 99}')  # a writer that ignored the run lock
-        return world(cmd, cwd, env)
+        return world(cmd, cwd, env, timeout)
     ctx.runner = racing
 
     assert rw.main(["load", RUN], ctx) == 1
@@ -606,6 +611,92 @@ def test_subprocess_runner_captures_exit_code_and_output(tmp_path):
     assert result == rw.Result(3, "out\n")
 
 
+# --- bounded steps: a hung source is a failed source, never a hung run --------
+
+
+def test_every_step_runs_under_a_bounded_timeout(ctx, world):
+    _loaded(ctx)
+
+    assert len(world.timeouts) == len(world.calls)
+    assert all(isinstance(t, (int, float)) and 0 < t <= 4 * 3600 for t in world.timeouts)
+
+
+def test_the_default_stage_fits_well_inside_the_six_hour_heartbeat_grace():
+    steps = [f"ingest-{r}" for r in rw.MEETING_REGISTRIES] + [f"stage-{name}" for name in rw.STAGED_SOURCES]
+    assert sum(rw.step_timeout({}, step) for step in steps) <= 3 * 3600
+
+
+def test_a_step_that_outlives_its_timeout_fails_its_source_with_a_clear_reason(ctx, world, root):
+    world.hangs.add("ingest_courtlistener_cases.py")
+
+    assert rw.main(["stage"], ctx) == 1
+
+    state = _state(root)
+    assert state["status"] == "awaiting_load_approval"  # the other sources are still approvable
+    timeout = rw.step_timeout({}, "stage-courtlistener")
+    reason = state["sources"]["courtlistener"]["reasons"][0]
+    assert f"timed out after {timeout:g}s and was killed" in reason and "logs/stage-courtlistener.log" in reason
+    assert state["sources"]["form700"]["ok"] is True
+    log = (root / f"data/ingest-runs/{RUN}/logs/stage-courtlistener.log").read_text()
+    assert "fetching page 12" in log and f"[timed out after {timeout:g}s; killed]" in log
+
+
+def test_a_timed_out_meetings_registry_fails_its_unfinished_sources_with_the_timeout(ctx, world, root):
+    world.hangs.add("ingest.py")
+
+    assert rw.main(["stage"], ctx) == 1
+
+    sources = _state(root)["sources"]
+    assert not sources["a"]["ok"] and not sources["b"]["ok"]
+    assert "ingest-granicus timed out after" in sources["a"]["reasons"][0]
+
+
+def test_step_timeouts_can_be_overridden_per_step_or_per_family_from_the_environment(ctx, world):
+    ctx.env.update(OPEN_MARIN_TIMEOUT_STAGE_PERMITS="42", OPEN_MARIN_TIMEOUT_LOAD="7.5")
+    _loaded(ctx)
+
+    by_step = {Path(cmd[1]).name + ("-load" if "--load" in cmd or "--load-from" in cmd else ""): t
+               for cmd, t in zip(world.calls, world.timeouts)}
+    assert by_step["ingest_socrata_permits.py"] == 42
+    assert by_step["ingest_socrata_permits.py-load"] == 7.5 and by_step["normalize_meetings.py-load"] == 7.5
+    assert by_step["ingest_form700.py"] == rw.step_timeout({}, "stage-form700")
+
+
+@pytest.mark.parametrize("value", ["soon", "0", "-5", "inf"])
+def test_a_malformed_timeout_override_fails_preflight_before_anything_is_fetched(ctx, world, root, value):
+    ctx.env["OPEN_MARIN_TIMEOUT_INGEST_GRANICUS"] = value
+
+    assert rw.main(["stage"], ctx) == 1
+
+    state = _state(root)
+    assert state["status"] == "failed" and world.calls == []
+    assert "OPEN_MARIN_TIMEOUT_INGEST_GRANICUS" in " ".join(state["preflight"]["reasons"])
+
+
+def test_subprocess_runner_kills_a_step_that_outlives_its_timeout_and_its_children(tmp_path):
+    import os
+    import subprocess
+    import time
+
+    pidfile = tmp_path / "grandchild.pid"
+    script = f"sleep 60 & echo $! > {pidfile}; echo started; wait"
+    began = time.monotonic()
+    result = rw.subprocess_runner(["bash", "-c", script], tmp_path, {"PATH": os.environ["PATH"]}, 1)
+
+    assert time.monotonic() - began < 15
+    assert result.timed_out_after == 1 and result.returncode != 0
+    assert "started" in result.output
+    grandchild = pidfile.read_text().strip()
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline:  # gone, or a zombie nobody has reaped yet (dead either way)
+        ps = subprocess.run(["ps", "-o", "stat=", "-p", grandchild], capture_output=True, text=True)
+        if not ps.stdout.strip() or ps.stdout.strip().startswith("Z"):
+            break
+        time.sleep(0.05)
+    else:
+        pytest.fail("the step's own child outlived the timeout")
+
+
 # --- digest and status -------------------------------------------------------
 
 
@@ -676,8 +767,8 @@ def test_status_with_no_runs_or_an_unknown_run(ctx, capsys):
 def test_credentials_in_a_neo4j_uri_never_reach_state_digest_logs_or_output(ctx, world, root, capsys):
     secret_uri = "bolt://neo4j:s3cret@localhost:7688"
 
-    def leaky(cmd, cwd, env):  # children echo the URI they connect to
-        world(cmd, cwd, {**env, "NEO4J_URI": ENV["NEO4J_URI"]})
+    def leaky(cmd, cwd, env, timeout):  # children echo the URI they connect to
+        world(cmd, cwd, {**env, "NEO4J_URI": ENV["NEO4J_URI"]}, timeout)
         return rw.Result(1 if "ingest_form700.py" in cmd[1] else 0, f"Connecting to Neo4j: {env['NEO4J_URI']}\n")
     ctx.runner, ctx.env["NEO4J_URI"] = leaky, secret_uri
     assert rw.main(["stage"], ctx) == 1  # form700 fails with the URI as its last line
@@ -737,7 +828,7 @@ def test_steps_tell_their_children_that_this_process_holds_the_lock(ctx, world, 
     import run_lock
 
     seen = []
-    ctx.runner = lambda cmd, cwd, env: (seen.append(env.get(run_lock.OWNER_ENV)), world(cmd, cwd, env))[1]
+    ctx.runner = lambda cmd, cwd, env, t: (seen.append(env.get(run_lock.OWNER_ENV)), world(cmd, cwd, env, t))[1]
     _staged(ctx)
 
     assert seen and set(seen) == {str(os.getpid())}

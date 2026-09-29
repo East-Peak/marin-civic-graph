@@ -19,9 +19,11 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -47,6 +49,22 @@ STAGING = EXPORTS / "staging"
 PUBLISHED_ARTIFACTS = ("public-substrate.sqlite", "status_manifest.json", "catalog.json", "substrate-bake-report.json")
 MEETING_REGISTRIES = ("granicus", "civicplus", "drupal", "proudcity")  # registry/<name>-sources.yaml
 MIN_FREE_BYTES = 5 * 1024**3  # live export + staged bake + a backup of the published one
+
+# Wall-clock ceiling, in seconds, for each external step; one that outlives it is killed and
+# fails with that reason. The 2026-09-28 stage took ~15 minutes end to end (proudcity ~10),
+# so these leave ample headroom while the whole default stage (every ingest-* and stage-*
+# step, in sequence) stays under 3 hours, well inside the heartbeat's 6-hour grace. A step
+# with no entry of its own takes its family's (`load-<sid>` -> `load`). Override one with
+# OPEN_MARIN_TIMEOUT_<STEP> in the environment, e.g. OPEN_MARIN_TIMEOUT_STAGE_COURTLISTENER=900
+# or OPEN_MARIN_TIMEOUT_LOAD=7200.
+STEP_TIMEOUTS = {
+    "ingest-granicus": 20 * 60, "ingest-civicplus": 20 * 60, "ingest-drupal": 10 * 60,
+    "ingest-proudcity": 45 * 60, "ingest": 30 * 60,
+    "stage-permits": 20 * 60, "stage-form700": 30 * 60, "stage-courtlistener": 30 * 60, "stage": 30 * 60,
+    "load": 60 * 60, "reconciliation": 3 * 3600, "export": 3 * 3600, "bake": 2 * 3600,
+}
+DEFAULT_STEP_TIMEOUT = 60 * 60
+TIMEOUT_ENV = "OPEN_MARIN_TIMEOUT_"
 
 
 class StagedSource(NamedTuple):
@@ -96,14 +114,63 @@ def check_transition(current: str | None, new: str) -> None:
 class Result:
     returncode: int
     output: str
+    timed_out_after: float | None = None  # seconds, when the step was killed for outliving its timeout
 
 
-Runner = Callable[[list[str], Path, Mapping[str, str]], Result]
+Runner = Callable[[list[str], Path, Mapping[str, str], float], Result]
 
 
-def subprocess_runner(cmd: list[str], cwd: Path, env: Mapping[str, str]) -> Result:
-    proc = subprocess.run(cmd, cwd=cwd, env=dict(env), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
-    return Result(proc.returncode, proc.stdout)
+def subprocess_runner(cmd: list[str], cwd: Path, env: Mapping[str, str], timeout: float | None = None) -> Result:
+    """Run `cmd` in its own process group; past `timeout` seconds, kill the whole group.
+
+    Killing the group, not just the child, takes its children with it (refresh_reconciliation.sh
+    runs several), so nothing it started keeps writing, or keeps the output pipe open, after
+    the step has failed. Whatever the step printed before the kill is kept for its log.
+    """
+    proc = subprocess.Popen(cmd, cwd=cwd, env=dict(env), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                            text=True, process_group=0)
+    try:
+        output, _ = proc.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        _kill_group(proc)
+        try:
+            output, _ = proc.communicate(timeout=30)
+        except subprocess.TimeoutExpired:  # a descendant left the group and holds the pipe open
+            proc.stdout.close()
+            output = ""
+        proc.wait()
+        return Result(proc.returncode, output, timed_out_after=timeout)
+    except BaseException:  # Ctrl-C: our group no longer receives the terminal's signals, so pass it on
+        _kill_group(proc)
+        raise
+    return Result(proc.returncode, output)
+
+
+def _kill_group(proc: subprocess.Popen) -> None:
+    try:
+        os.killpg(proc.pid, signal.SIGKILL)
+    except ProcessLookupError:
+        pass
+
+
+def _timeout_seconds(var: str, raw: str) -> float:
+    try:
+        seconds = float(raw)
+    except ValueError:
+        seconds = math.nan
+    if not (math.isfinite(seconds) and seconds > 0):
+        raise ValueError(f"{var}={raw!r} is not a positive number of seconds")
+    return seconds
+
+
+def step_timeout(env: Mapping[str, str], name: str) -> float:
+    """Seconds step `name` may run: an environment override, else its default (own, then family's)."""
+    keys = (name, name.split("-", 1)[0])
+    for key in keys:
+        var = TIMEOUT_ENV + re.sub(r"[^A-Za-z0-9]", "_", key).upper()
+        if env.get(var) is not None:
+            return _timeout_seconds(var, env[var])
+    return next((STEP_TIMEOUTS[key] for key in keys if key in STEP_TIMEOUTS), DEFAULT_STEP_TIMEOUT)
 
 
 @dataclass
@@ -202,16 +269,21 @@ def _require(state: dict, action: str, *statuses: str) -> None:
 def _step(ctx: Context, run_id: str, name: str, cmd: list[str]) -> Result:
     """Run one external command through the injected runner and keep its log."""
     # Children that take the run lock themselves (ingest.py) run under ours.
-    raw = ctx.runner(cmd, ctx.root, {**ctx.env, "PYTHON": ctx.python, OWNER_ENV: str(os.getpid())})
-    result = Result(raw.returncode, redact(raw.output))
+    raw = ctx.runner(cmd, ctx.root, {**ctx.env, "PYTHON": ctx.python, OWNER_ENV: str(os.getpid())},
+                     step_timeout(ctx.env, name))
+    result = Result(raw.returncode, redact(raw.output), raw.timed_out_after)
+    end = (f"[timed out after {result.timed_out_after:g}s; killed]" if result.timed_out_after is not None
+           else f"[exit {result.returncode}]")
     _write_atomic(run_dir(ctx.root, run_id) / "logs" / f"{name}.log",
-                  redact(f"$ {' '.join(cmd)}\n{result.output}\n[exit {result.returncode}]\n"))
+                  redact(f"$ {' '.join(cmd)}\n{result.output}\n{end}\n"))
     return result
 
 
 def _failure(name: str, result: Result) -> str:
     tail = next((line.strip() for line in reversed(result.output.splitlines()) if line.strip()), "")
-    return f"exited {result.returncode}: {tail} (logs/{name}.log)"
+    how = (f"timed out after {result.timed_out_after:g}s and was killed" if result.timed_out_after is not None
+           else f"exited {result.returncode}")
+    return f"{how}: {tail} (logs/{name}.log)"
 
 
 # --- stage -------------------------------------------------------------------
@@ -226,6 +298,12 @@ def preflight(ctx: Context, *, credentials: bool) -> list[str]:
     missing = [var for var in ("NEO4J_USER", "NEO4J_PASSWORD") if credentials and not ctx.env.get(var)]
     if missing:
         reasons.append(f"missing {', '.join(missing)}")
+    for var, raw in ctx.env.items():  # a typo'd override fails here, before anything is fetched
+        if var.startswith(TIMEOUT_ENV):
+            try:
+                _timeout_seconds(var, raw)
+            except ValueError as exc:
+                reasons.append(str(exc))
     free = ctx.free_bytes(ctx.root)
     if free < MIN_FREE_BYTES:
         reasons.append(f"only {free / 1024**3:.1f} GiB free disk; need {MIN_FREE_BYTES / 1024**3:.0f} GiB")
@@ -252,7 +330,9 @@ def _stage_meetings(ctx: Context, run_id: str, registry: str) -> dict[str, dict]
         return {}
     before = _read_ledger(ctx.root)
     name = f"ingest-{registry}"
-    _step(ctx, run_id, name, [ctx.python, "scripts/ingest.py", "--all", "--registry", registry_path])
+    result = _step(ctx, run_id, name, [ctx.python, "scripts/ingest.py", "--all", "--registry", registry_path])
+    unfinished = (f"no verdict recorded; {name} {_failure(name, result)}" if result.timed_out_after is not None
+                  else f"no verdict recorded; the adapter errored (logs/{name}.log)")
     appended = _read_ledger(ctx.root)[len(before):]
     # First-run baseline seeds (I5a) are history, not this run's verdicts.
     history = before + [e for e in appended if e["run_at"].startswith("seed:")]
@@ -261,8 +341,7 @@ def _stage_meetings(ctx: Context, run_id: str, registry: str) -> dict[str, dict]
     sources = {}
     for sid in expected:
         last_good = next((e["rows"] for e in reversed(history) if e["source_id"] == sid and e["ok"]), None)
-        entry = verdicts.get(sid, {"ok": False, "rows": None,
-                                   "reasons": [f"no verdict recorded; the adapter errored (logs/{name}.log)"]})
+        entry = verdicts.get(sid, {"ok": False, "rows": None, "reasons": [unfinished]})
         source = {"kind": "meetings", "registry": registry, "ok": entry["ok"], "rows": entry["rows"],
                   "last_good_rows": last_good, "reasons": entry["reasons"]}
         capture = _latest_capture(ctx.root, sid) if source["ok"] else None
