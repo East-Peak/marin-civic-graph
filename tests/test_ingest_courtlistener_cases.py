@@ -11,6 +11,8 @@ Covers pure transformation functions — no live API or Neo4j connection require
 """
 
 import sys
+
+import pytest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
@@ -330,3 +332,57 @@ class TestBuildCourtOrgNode:
     def test_none_court_name_uses_id(self):
         node = build_court_org_node("ca9", None)
         assert node["id"] == "org-court-ca9"
+
+
+# --- authentication: an anonymous caller is throttled out of a weekly run ------
+
+import ingest_courtlistener_cases  # noqa: E402
+import requests  # noqa: E402
+
+
+class _RecordingGet:
+    def __init__(self):
+        self.headers: list[dict | None] = []
+
+    def __call__(self, url, params=None, timeout=None, headers=None):
+        self.headers.append(headers)
+        response = requests.Response()
+        response.status_code, response._content = 200, b'{"results": []}'
+        return response
+
+
+def test_fetch_page_sends_the_api_token_from_the_environment(monkeypatch):
+    get = _RecordingGet()
+    monkeypatch.setattr(ingest_courtlistener_cases.requests, "get", get)
+    monkeypatch.setenv("COURTLISTENER_API_TOKEN", "  abc123  ")
+
+    ingest_courtlistener_cases.fetch_page("q")
+
+    assert get.headers == [{"Authorization": "Token abc123"}]
+
+
+def test_fetch_page_without_a_token_sends_no_authorization_header(monkeypatch):
+    get = _RecordingGet()
+    monkeypatch.setattr(ingest_courtlistener_cases.requests, "get", get)
+    monkeypatch.delenv("COURTLISTENER_API_TOKEN", raising=False)
+
+    ingest_courtlistener_cases.fetch_page("q")
+
+    assert get.headers == [{}]
+
+
+@pytest.mark.parametrize("bad", ["abc\ndef", "abc def", "tok\r\nX-Evil: 1", "abc\u00e9"])
+def test_a_malformed_token_fails_without_the_token_anywhere_in_the_error(bad, monkeypatch):
+    # requests' InvalidHeader quotes the whole header value; it must never be reached.
+    get = _RecordingGet()
+    monkeypatch.setattr(ingest_courtlistener_cases.requests, "get", get)
+    monkeypatch.setenv("COURTLISTENER_API_TOKEN", bad)
+
+    with pytest.raises(ValueError) as info:
+        ingest_courtlistener_cases.fetch_page("q")
+
+    assert get.headers == []
+    assert "COURTLISTENER_API_TOKEN" in str(info.value)
+    chain = [info.value, info.value.__cause__, info.value.__context__]
+    assert not any(bad.strip() in str(e) or "abc" in str(e) for e in chain if e is not None)
+    assert info.value.__suppress_context__ or info.value.__context__ is None

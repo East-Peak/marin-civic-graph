@@ -20,7 +20,7 @@ loads into Neo4j and never publishes. Those two steps stay manual gates:
 |---|---|
 | `cc.eastpeak.openmarin-refresh-weekly.plist` | The job. No `KeepAlive`, no `RunAtLoad`, no secrets. |
 | `run-weekly-stage.sh` | What launchd runs: rotates logs, sources `weekly.env`, runs `stage`, returns its exit code. |
-| `weekly.env` | Operator-local and gitignored. It holds `OPEN_MARIN_HEARTBEAT_URL`. Copy it from `weekly.env.example`, then `chmod 600`. |
+| `weekly.env` | Operator-local and gitignored. It holds `OPEN_MARIN_HEARTBEAT_URL` and `COURTLISTENER_API_TOKEN`. Copy it from `weekly.env.example`, then `chmod 600`. |
 | `install.sh` | Verifies, lints, copies to `~/Library/LaunchAgents/`, bootstraps. `--uninstall` reverses it. |
 
 **Heartbeat.** When `stage` has persisted `awaiting_load_approval` and its complete digest, it pings

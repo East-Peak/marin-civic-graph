@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 import time
 from pathlib import Path
@@ -43,6 +44,21 @@ CL_SEARCH_URL = "https://www.courtlistener.com/api/rest/v4/search/"
 CL_BASE_URL = "https://www.courtlistener.com"
 PAGE_SIZE = 20  # CourtListener default
 RATE_LIMIT_SECS = 2.0  # respectful usage
+# A free account's API token. Anonymous search is throttled hard enough that one
+# weekly run's pagination hits 429; the token lifts it. Operator-local (weekly.env).
+TOKEN_ENV = "COURTLISTENER_API_TOKEN"
+
+
+def _auth_headers() -> dict[str, str]:
+    """The Authorization header, if a token is set. A malformed token is refused here, by
+    name only: requests' own InvalidHeader would quote the whole value into the step log."""
+    token = os.environ.get(TOKEN_ENV, "").strip()
+    if not token:
+        return {}
+    if not re.fullmatch(r"[A-Za-z0-9]+", token):
+        raise ValueError(f"{TOKEN_ENV} is malformed (expected letters and digits only); "
+                         f"re-copy it from your CourtListener profile")
+    return {"Authorization": f"Token {token}"}
 SOURCE_ID = "courtlistener"
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -318,7 +334,7 @@ def fetch_page(query: str, cursor: str | None = None) -> dict:
     if cursor:
         params["cursor"] = cursor
 
-    resp = requests.get(CL_SEARCH_URL, params=params, timeout=30)
+    resp = requests.get(CL_SEARCH_URL, params=params, timeout=30, headers=_auth_headers())
     resp.raise_for_status()
     return resp.json()
 

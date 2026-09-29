@@ -38,13 +38,14 @@ def no_sleep(monkeypatch):
     return slept
 
 
-def _http_error(code: int) -> urllib.error.HTTPError:
-    return urllib.error.HTTPError("https://example.test", code, "status", {}, io.BytesIO())
+def _http_error(code: int, headers: dict | None = None) -> urllib.error.HTTPError:
+    return urllib.error.HTTPError("https://example.test", code, "status", headers or {}, io.BytesIO())
 
 
-def _requests_error(code: int) -> requests.HTTPError:
+def _requests_error(code: int, headers: dict | None = None) -> requests.HTTPError:
     response = requests.Response()
     response.status_code = code
+    response.headers.update(headers or {})
     return requests.HTTPError(f"{code}", response=response)
 
 
@@ -117,6 +118,59 @@ def test_a_client_error_or_a_bug_is_never_retried(exc, no_sleep):
     assert len(calls) == 1 and no_sleep == []
 
 
+# --- 429: the server says how long to wait -------------------------------------
+# The 2026-09-29 weekly run lost CourtListener to a 429 mid-pagination. A throttle
+# that names a short wait is honoured once the wait is over; one with no wait, or a
+# wait past the cap, is a quota problem a retry can't fix, so it fails as before.
+
+
+@pytest.mark.parametrize("exc", [_requests_error(429, {"Retry-After": "30"}),
+                                 _http_error(429, {"Retry-After": "30"})])
+def test_a_429_naming_a_short_wait_is_transient(exc):
+    assert net_retry.is_transient(exc)
+    assert net_retry.retry_after_secs(exc) == 30
+
+
+@pytest.mark.parametrize("headers", [{}, {"Retry-After": str(net_retry.RETRY_AFTER_CAP_SECS + 1)},
+                                     {"Retry-After": "Wed, 21 Oct 2026 07:28:00 GMT"},
+                                     {"Retry-After": "-5"}, {"Retry-After": "\u00b2"},
+                                     {"Retry-After": "9" * 5000}, {"Retry-After": "1.5"}])
+def test_a_429_with_no_usable_short_wait_is_not_retried(headers, no_sleep):
+    fetch, calls = _flaky(_requests_error(429, headers))
+
+    with pytest.raises(requests.HTTPError):
+        fetch()
+    assert len(calls) == 1 and no_sleep == []
+
+
+def test_a_retried_429_waits_exactly_as_long_as_the_server_asked(no_sleep):
+    fetch, calls = _flaky(_requests_error(429, {"Retry-After": "45"}))
+
+    assert fetch() == "ok"
+    assert len(calls) == 2 and no_sleep == [45]
+
+
+@pytest.mark.parametrize("raw, secs", [("0", 0), ("120", 120), (" 7 ", 7)])
+def test_the_retry_after_bounds_are_inclusive(raw, secs):
+    assert net_retry.retry_after_secs(_requests_error(429, {"Retry-After": raw})) == secs
+
+
+def test_repeated_429s_exhaust_the_attempts_and_the_last_one_propagates(no_sleep):
+    fetch, calls = _flaky(*[_requests_error(429, {"Retry-After": "10"})] * 3)
+
+    with pytest.raises(requests.HTTPError):
+        fetch()
+    assert len(calls) == 3 and no_sleep == [10, 10]
+
+
+def test_a_retry_after_on_any_other_4xx_is_ignored(no_sleep):
+    fetch, calls = _flaky(_requests_error(403, {"Retry-After": "5"}))
+
+    with pytest.raises(requests.HTTPError):
+        fetch()
+    assert len(calls) == 1
+
+
 def test_the_retry_log_never_quotes_the_exception_text(capsys):
     fetch, _ = _flaky(urllib.error.URLError(TimeoutError("https://hc-ping.com/secret-uuid")))
 
@@ -162,7 +216,7 @@ class FlakyTransport:
 
 
 class FlakyRequests(FlakyTransport):
-    def __call__(self, url, params=None, timeout=None):
+    def __call__(self, url, params=None, timeout=None, headers=None):
         if len(self.timeouts) == 0:
             self.timeouts.append(timeout)
             raise self.first
@@ -237,7 +291,7 @@ def test_each_requests_fetch_helper_retries_the_read_timeout_that_cost_a_weekly_
 def test_a_requests_fetch_helper_never_retries_a_4xx(monkeypatch):
     calls = []
 
-    def get(url, params=None, timeout=None):
+    def get(url, params=None, timeout=None, headers=None):
         calls.append(timeout)
         response = requests.Response()
         response.status_code, response._content, response.url = 404, b"{}", url
