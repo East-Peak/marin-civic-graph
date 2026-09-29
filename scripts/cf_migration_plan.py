@@ -24,12 +24,17 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from campaign_ledger import UnsafeOutputError, resolve_output_root  # noqa: E402
+from contributor_detail import (  # noqa: E402
+    ENTITY_PROP, PROPS, REVIEWED_PATH, flow_props, load_reviewed, transaction_details,
+)
 
 CAMPAIGN_FLOW_TYPES = ("contribution", "expenditure")
 NETFILE_FLOW_ID = re.compile(r"moneyflow-(\d+|Pending)-")
 CF_EDGE_TYPES = ("FROM_SOURCE", "TO_TARGET", "EVIDENCED_BY")
+CONTRIBUTOR_PROPS = (*PROPS.values(), ENTITY_PROP)
 # What the normalizer writes on a MoneyFlow; anything else on a live flow (embeddings, clusters) is kept.
-OWNED_FLOW_PROPS = ("amount", "flow_type", "source_schedule", "flow_date", "display_label", "promotion_state")
+OWNED_FLOW_PROPS = ("amount", "flow_type", "source_schedule", "flow_date", "display_label", "promotion_state",
+                    *CONTRIBUTOR_PROPS)
 
 
 def _is_campaign_flow(node: dict) -> bool:
@@ -324,10 +329,87 @@ def _ledger_problems(nodes: list[dict], sources: list[Path]) -> list[str]:
     return problems
 
 
+LEDGER_FORMATS = (1, 2)  # 1: CF1 bundles (no ledger_format key; no contributor details); 2: raw reported cells
+
+
+def _ledger_format(source: Path) -> int | None:
+    """The source's declared ledger format, or None when there is no manifest or the format is not a known one."""
+    manifest = source / "manifest.json"
+    if not manifest.is_file():
+        return None
+    fmt = json.loads(manifest.read_text()).get("ledger_format", 1)
+    return fmt if type(fmt) is int and fmt in LEDGER_FORMATS else None
+
+
+def ledger_checks(nodes: list[dict], sources: list[Path]) -> list[str]:
+    """Contributor details in the graph must be exactly what the bundle's ledgers yield; fail closed on format."""
+    formats = {source.name: _ledger_format(source) for source in sources}
+    unknown = sorted(name for name, fmt in formats.items() if fmt is None)
+    if unknown:
+        return [f"{name}: no manifest or an unknown ledger format" for name in unknown]
+    if set(formats.values()) == {2}:
+        return contributor_problems(nodes, sources)
+    if set(formats.values()) == {1}:
+        return [f"{n['id']}: {k} present, but a format-1 ledger yields no contributor details"
+                for n in nodes if "MoneyFlow" in n["labels"] for k in CONTRIBUTOR_PROPS if k in n["properties"]]
+    return [f"bundle mixes ledger formats {sorted(set(formats.values()))}"]
+
+
+def contributor_problems(nodes: list[dict], sources: list[Path], reviewed_path: Path = REVIEWED_PATH) -> list[str]:
+    """Every campaign flow's contributor props equal what the ledger's raw cells yield today; fail closed.
+
+    Expected values are recomputed from each source's ledger.jsonl through contributor_detail.py, never read from
+    the bundle's nodes, so a bundle that drifted from its own ledger fails too. Missing, wrong and stale fail.
+    """
+    problems, expected = [], {}
+    reviewed_sha = hashlib.sha256(Path(reviewed_path).read_bytes()).hexdigest()
+    reviewed = load_reviewed(reviewed_path)
+    for source in sources:
+        manifest = json.loads((source / "manifest.json").read_text())
+        if manifest.get("contributor_review") != reviewed_sha:
+            problems.append(f"{source.name}: the bundle was built under other review decisions than {reviewed_path}")
+        if not (source / "ledger.jsonl").is_file():
+            problems.append(f"{source.name}: no ledger.jsonl to derive contributor details from")
+            continue
+        members: dict[str, list[dict]] = {}
+        for row in _read_jsonl(source / "ledger.jsonl"):
+            if row.get("counted") and row.get("schedule") == "A":
+                members.setdefault(row["moneyflow_id"], []).append(row)
+        for flow_id, rows in members.items():
+            expected[flow_id] = flow_props(transaction_details("A", rows, reviewed)[1])
+    for node in nodes:
+        if "MoneyFlow" not in node["labels"]:
+            continue
+        want = expected.get(node["id"], {}) if _is_campaign_flow(node) else {}
+        have = {k: node["properties"][k] for k in CONTRIBUTOR_PROPS if k in node["properties"]}
+        for key in sorted(set(want) | set(have)):
+            if key not in have:
+                problems.append(f"{node['id']}: {key} missing (ledger: {want[key]!r})")
+            elif key not in want:
+                problems.append(f"{node['id']}: {key} is stale (the ledger yields none)")
+            elif have[key] != want[key]:
+                problems.append(f"{node['id']}: {key} is {have[key]!r}, the ledger yields {want[key]!r}")
+    return problems
+
+
+def _contributor_scope_problems(ops: dict) -> list[str]:
+    """A contributor-detail migration only sets or removes contributor props on flows that already exist."""
+    problems = [f"structural change refused: {len(ops[k])} {k}" for k in
+                ("retire_nodes", "add_nodes", "retire_edges", "add_edges") if ops[k]]
+    for nid, change in ops["set_props"].items():
+        other = sorted((set(change["set"]) | set(change["remove"])) - set(CONTRIBUTOR_PROPS))
+        if other:
+            problems.append(f"structural change refused: {nid} would change {other}")
+    return problems
+
+
 def check_live(export_dir: Path, bundle_dir: Path) -> list[str]:
+    """Post-load check. A format-1 (CF1) bundle is checked as it always was; format 2 adds the ledger-derived
+    contributor details."""
     nodes, edges = _read_jsonl(export_dir / "nodes.jsonl"), _read_jsonl(export_dir / "edges.jsonl")
     bundle_nodes, bundle_edges, sources = _read_bundle(bundle_dir)
-    return verify_candidate(nodes, edges, bundle_nodes, bundle_edges) + _ledger_problems(nodes, sources)
+    return (verify_candidate(nodes, edges, bundle_nodes, bundle_edges) + _ledger_problems(nodes, sources)
+            + ledger_checks(nodes, sources))
 
 
 def _render_plan(report: dict, ops: dict) -> str:
@@ -384,6 +466,8 @@ def main(argv: list[str] | None = None) -> int:
     mode.add_argument("--baseline", type=Path, help="read-only export_live_graph.py --backup directory")
     mode.add_argument("--check-live", type=Path, help="post-load: verify an export against the bundle and ledger")
     parser.add_argument("--out", type=Path, help="empty staging dir for the plan (with --baseline)")
+    parser.add_argument("--contributor-detail", action="store_true",
+                        help="a props-only plan: refuse any structural change; verify details against the ledger")
     args = parser.parse_args(argv)
 
     if args.check_live:
@@ -404,10 +488,15 @@ def main(argv: list[str] | None = None) -> int:
     baseline_nodes = _read_jsonl(args.baseline / "nodes.jsonl")
     baseline_edges = _read_jsonl(args.baseline / "edges.jsonl")
     bundle_nodes, bundle_edges, sources = _read_bundle(args.bundle)
+    if args.contributor_detail and {_ledger_format(source) for source in sources} != {2}:
+        print("ERROR: a contributor-detail plan needs ledger format 2 in every source", file=sys.stderr)
+        return 1
     ops = plan_ops(baseline_nodes, baseline_edges, bundle_nodes, bundle_edges)
     cand_nodes, cand_edges = apply_ops(baseline_nodes, baseline_edges, ops)
     problems = verify_candidate(cand_nodes, cand_edges, bundle_nodes, bundle_edges)
-    problems += _ledger_problems(cand_nodes, sources)
+    problems += _ledger_problems(cand_nodes, sources) + ledger_checks(cand_nodes, sources)
+    if args.contributor_detail:
+        problems += _contributor_scope_problems(ops)
     candidate_sha = write_export(out / "candidate", cand_nodes, cand_edges)
     before, after = _amounts(baseline_nodes), _amounts(cand_nodes)
     report = {
@@ -419,6 +508,12 @@ def main(argv: list[str] | None = None) -> int:
                          "delta": _cents(after.get(ft, 0) - before.get(ft, 0))} for ft in CAMPAIGN_FLOW_TYPES},
         "verification": problems,
     }
+    if args.contributor_detail:
+        report["contributor_detail"] = {
+            "flows_changed": len(ops["set_props"]),
+            "props_set": dict(sorted(Counter(k for c in ops["set_props"].values() for k in c["set"]).items())),
+            "props_removed": dict(sorted(Counter(k for c in ops["set_props"].values() for k in c["remove"]).items())),
+        }
     (out / "ops.json").write_text(json.dumps(ops, indent=1, sort_keys=True) + "\n")
     (out / "migration-report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     (out / "migration-plan.md").write_text(_render_plan(report, ops))

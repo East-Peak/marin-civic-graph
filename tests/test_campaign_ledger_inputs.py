@@ -192,6 +192,23 @@ class TestCli:
         assert [i["coverage"] for i in manifest["inputs"]] == ["unavailable"] + ["workbook"] * 5
         assert "normalized_at" not in (out / "src" / "manifest.json").read_text()
         assert "started_at" in json.loads((out / "run-manifest.json").read_text())
+        # The ledger format and the review decisions the details were derived under are pinned.
+        assert manifest["ledger_format"] == 2
+        assert manifest["contributor_review"] == _sha(Path(__file__).resolve().parent.parent / "registry" / "contributor-detail-reviewed.json")
+        assert (out / "src" / "contributor-detail.json").is_file()
+
+    def test_bad_review_decisions_fail_before_writing(self, tmp_path, capsys):
+        from normalize_campaign_finance import main
+        capture = _capture(tmp_path / "raw", years=("2022", "2023", "2024", "2025", "2026"))
+        (capture / "2021.zip").write_bytes(HTML_PAGE)
+        reg = self._registry(tmp_path, pins=[{"file": "2021.zip", "sha256": _sha(capture / "2021.zip")}])
+        reviewed = tmp_path / "reviewed.json"
+        reviewed.write_text('{"reviewed": [{"field": "employer", "value": "Example Co", "decision": "publish"}]}')
+        out = tmp_path / "staging"
+        assert main(["--all", "--registry", str(reg), "--input-root", str(tmp_path / "raw"),
+                     "--output-root", str(out), "--reviewed", str(reviewed)]) == 1
+        assert "review decisions" in capsys.readouterr().err
+        assert not (out / "src").exists()
 
     def test_unreadable_input_fails_without_writing(self, tmp_path, capsys):
         from normalize_campaign_finance import main

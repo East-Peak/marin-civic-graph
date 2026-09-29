@@ -172,6 +172,7 @@ def _dirs(tmp_path):
     _write_jsonl(baseline / "edges.jsonl", sorted(BASELINE_EDGES, key=lambda e: (e["start_id"], e["type"], e["end_id"])))
     _write_jsonl(bundle / "src" / "nodes.jsonl", BUNDLE_NODES)
     _write_jsonl(bundle / "src" / "edges.jsonl", BUNDLE_EDGES)
+    (bundle / "src" / "manifest.json").write_text('{"capture_id": "src__2026-04-14", "inputs": []}')  # CF1 format
     return baseline, bundle
 
 
@@ -264,3 +265,207 @@ class TestTransactionStatements:
         ops["set_props"]["moneyflow-1-changed"]["remove"] = ["x` DETACH DELETE n //"]
         with pytest.raises(MigrationError):
             migration_statements(ops)
+
+
+# ---------------------------------------------------------------------------
+# CF2: contributor details are a props-only migration, verified against the ledger itself
+# ---------------------------------------------------------------------------
+
+def _cf2_bundle(tmp_path):
+    """A real normalizer bundle (ledger format 2) and a live graph that is the same minus contributor details."""
+    import json
+    from campaign_ledger import build_ledger, build_transactions
+    from normalize_campaign_finance import normalize_campaign_source
+    from cf_migration_plan import _bundle_props
+    from tests.netfile_workbooks import contribution, filing, summary, write_export
+
+    f1 = filing()
+    detail = {"Tran_Emp": "Example Co", "Tran_Occ": "Engineer", "Tran_City": "Sampleton", "Tran_State": "CA",
+              "Tran_Zip4": "94999-0001"}
+    sheets = {"A-Contributions": [contribution(f1, "a1", 10, **detail),
+                                  contribution(f1, "a2", 20, entity="COM", last="Example PAC", **detail),
+                                  contribution(f1, "a3", 30, **{**detail, "Tran_Emp": "RETIRED"})],
+              "Summary": [summary(f1, "A", "1", 60)]}
+    ledger = build_ledger("src", [("src/2026-04-14/2024.zip", write_export(tmp_path / "raw" / "2024.zip", sheets))])
+    build_transactions(ledger)
+    bundle = tmp_path / "bundle"
+    from campaign_ledger import write_ledger
+    write_ledger(ledger, bundle / "src")
+    nodes, edges, _ = normalize_campaign_source(
+        {"source_id": "src", "capture_id": "src__2026-04-14", "jurisdiction_id": "place-test",
+         "institution_id": "org-test", "captured_at": "2026-04-14T00:00:00Z"}, ledger, bundle / "src")
+    review = (Path(__file__).resolve().parent.parent / "registry" / "contributor-detail-reviewed.json").read_bytes()
+    import hashlib
+    (bundle / "src" / "manifest.json").write_text(json.dumps(
+        {"capture_id": "src__2026-04-14", "inputs": [], "ledger_format": 2,
+         "contributor_review": hashlib.sha256(review).hexdigest()}))
+    live_nodes = []
+    for node in nodes:
+        props = {k: v for k, v in _bundle_props(node).items() if not k.startswith("reported_")}
+        live_nodes.append({"id": node["id"], "labels": node["labels"], "properties": props})
+    live_edges = [{"start_id": e["source_id"], "end_id": e["target_id"], "type": e["relationship_type"],
+                   "properties": {}} for e in edges]
+    baseline = tmp_path / "baseline"
+    _write_jsonl(baseline / "nodes.jsonl", sorted(live_nodes, key=lambda n: n["id"]))
+    _write_jsonl(baseline / "edges.jsonl", sorted(live_edges, key=lambda e: (e["start_id"], e["type"], e["end_id"])))
+    return baseline, bundle
+
+
+def _read(path):
+    import json
+    return [json.loads(line) for line in path.open()]
+
+
+class TestContributorDetailMigration:
+    def test_the_plan_only_sets_contributor_props_on_eligible_flows(self, tmp_path):
+        import json
+        from cf_migration_plan import main
+        baseline, bundle = _cf2_bundle(tmp_path)
+        out = tmp_path / "plan"
+        assert main(["--baseline", str(baseline), "--bundle", str(bundle), "--out", str(out),
+                     "--contributor-detail"]) == 0
+        ops = json.loads((out / "ops.json").read_text())
+        assert ops["retire_nodes"] == ops["add_nodes"] == ops["retire_edges"] == ops["add_edges"] == []
+        assert sorted(ops["set_props"]) == ["moneyflow-1400001-a1", "moneyflow-1400001-a3"]
+        assert ops["set_props"]["moneyflow-1400001-a3"] == {"remove": [], "set": {
+            "reported_city": "Sampleton", "reported_employer": "RETIRED", "reported_entity_cd": "IND",
+            "reported_occupation": "Engineer", "reported_state": "CA", "reported_zip5": "94999"}}
+        report = json.loads((out / "migration-report.json").read_text())
+        assert report["verification"] == []
+        assert report["amounts"]["contribution"]["delta"] == "0.00"
+        assert report["contributor_detail"]["flows_changed"] == 2
+        assert report["contributor_detail"]["props_set"]["reported_entity_cd"] == 2
+        assert report["contributor_detail"]["props_removed"] == {}
+        assert main(["--check-live", str(out / "candidate"), "--bundle", str(bundle)]) == 0
+
+    def test_the_unmigrated_graph_fails_the_post_load_check(self, tmp_path, capsys):
+        from cf_migration_plan import main
+        baseline, bundle = _cf2_bundle(tmp_path)
+        assert main(["--check-live", str(baseline), "--bundle", str(bundle)]) == 1
+        assert "moneyflow-1400001-a1" in capsys.readouterr().err
+
+    def _check_mutated(self, tmp_path, mutate):
+        from cf_migration_plan import check_live, main
+        baseline, bundle = _cf2_bundle(tmp_path)
+        out = tmp_path / "plan"
+        main(["--baseline", str(baseline), "--bundle", str(bundle), "--out", str(out), "--contributor-detail"])
+        nodes = _read(out / "candidate" / "nodes.jsonl")
+        for node in nodes:
+            mutate(node)
+        _write_jsonl(out / "candidate" / "nodes.jsonl", nodes)
+        return check_live(out / "candidate", bundle)
+
+    def test_a_missing_field_fails(self, tmp_path):
+        def drop(node):
+            if node["id"] == "moneyflow-1400001-a1":
+                node["properties"].pop("reported_employer")
+        assert any("reported_employer" in p and "missing" in p for p in self._check_mutated(tmp_path, drop))
+
+    def test_a_wrong_field_fails(self, tmp_path):
+        def wrong(node):
+            if node["id"] == "moneyflow-1400001-a1":
+                node["properties"]["reported_zip5"] = "94998"
+        assert any("reported_zip5" in p for p in self._check_mutated(tmp_path, wrong))
+
+    def test_a_stale_field_on_an_ineligible_flow_fails(self, tmp_path):
+        def stale(node):
+            if node["id"] == "moneyflow-1400001-a2":
+                node["properties"]["reported_employer"] = "Example Co"
+        assert any("moneyflow-1400001-a2" in p and "reported_employer" in p
+                   for p in self._check_mutated(tmp_path, stale))
+
+    def test_the_expected_values_come_from_the_ledger_not_the_bundle_nodes(self, tmp_path):
+        from cf_migration_plan import check_live, main
+        baseline, bundle = _cf2_bundle(tmp_path)
+        out = tmp_path / "plan"
+        main(["--baseline", str(baseline), "--bundle", str(bundle), "--out", str(out), "--contributor-detail"])
+        # Bundle nodes and the loaded graph agree with each other, but both drifted from the ledger.
+        for path in (bundle / "src" / "nodes.jsonl", out / "candidate" / "nodes.jsonl"):
+            nodes = _read(path)
+            for node in nodes:
+                if node["id"] == "moneyflow-1400001-a1":
+                    node["properties"]["reported_employer"] = "Drifted Co"
+            _write_jsonl(path, nodes)
+        problems = check_live(out / "candidate", bundle)
+        assert problems and all("reported_employer" in p for p in problems)
+
+    def test_structural_changes_are_refused_in_a_contributor_detail_plan(self, tmp_path, capsys):
+        from cf_migration_plan import main
+        baseline, bundle = _cf2_bundle(tmp_path)
+        nodes = _read(baseline / "nodes.jsonl")
+        nodes = [n for n in nodes if n["id"] != "moneyflow-1400001-a3"]  # the live graph lacks a flow
+        _write_jsonl(baseline / "nodes.jsonl", nodes)
+        assert main(["--baseline", str(baseline), "--bundle", str(bundle), "--out", str(tmp_path / "plan"),
+                     "--contributor-detail"]) == 1
+        assert "structural" in capsys.readouterr().err
+
+    def test_missing_ledger_or_changed_review_decisions_fail_closed(self, tmp_path):
+        import json
+        from cf_migration_plan import check_live
+        baseline, bundle = _cf2_bundle(tmp_path)
+        manifest = json.loads((bundle / "src" / "manifest.json").read_text())
+        (bundle / "src" / "manifest.json").write_text(json.dumps({**manifest, "contributor_review": "0" * 64}))
+        assert any("review decisions" in p for p in check_live(baseline, bundle))
+        (bundle / "src" / "manifest.json").write_text(json.dumps(manifest))
+        (bundle / "src" / "ledger.jsonl").unlink()
+        assert any("ledger" in p for p in check_live(baseline, bundle))
+
+    def test_a_cf1_bundle_is_checked_as_before(self, tmp_path):
+        """The immutable CF1 bundle (ledger format 1) keeps its check: no contributor details either side."""
+        from cf_migration_plan import check_live
+        baseline, bundle = _dirs(tmp_path)
+        assert check_live(baseline, bundle) != []  # unmigrated, as in CF1's own test
+        assert not any("contributor" in p or "reported_" in p for p in check_live(baseline, bundle))
+
+    def test_a_contributor_detail_plan_needs_format_2_ledgers(self, tmp_path, capsys):
+        from cf_migration_plan import main
+        baseline, bundle = _dirs(tmp_path)
+        assert main(["--baseline", str(baseline), "--bundle", str(bundle), "--out", str(tmp_path / "plan"),
+                     "--contributor-detail"]) == 1
+        assert "ledger format" in capsys.readouterr().err
+
+    def test_a_format_2_plan_is_verified_against_the_ledger_even_without_the_flag(self, tmp_path, capsys):
+        from cf_migration_plan import main
+        baseline, bundle = _cf2_bundle(tmp_path)
+        nodes = _read(bundle / "src" / "nodes.jsonl")
+        for node in nodes:
+            if node["id"] == "moneyflow-1400001-a1":
+                node["properties"]["reported_employer"] = "Drifted Co"
+        _write_jsonl(bundle / "src" / "nodes.jsonl", nodes)
+        assert main(["--baseline", str(baseline), "--bundle", str(bundle), "--out", str(tmp_path / "plan")]) == 1
+        assert "reported_employer" in capsys.readouterr().err
+
+    def _with_extra_flow(self, tmp_path, node):
+        from cf_migration_plan import check_live
+        baseline, bundle = _cf2_bundle(tmp_path)
+        _write_jsonl(baseline / "nodes.jsonl", _read(baseline / "nodes.jsonl") + [node])
+        return check_live(baseline, bundle)
+
+    def test_contributor_props_on_a_delegated_contract_are_refused(self, tmp_path):
+        contract = _live("moneyflow-marincontract-9", ["MoneyFlow"], amount=5.0, flow_type="delegated_contract",
+                         reported_employer="Example Co")
+        assert any("moneyflow-marincontract-9" in p and "stale" in p for p in self._with_extra_flow(tmp_path, contract))
+
+    def test_contributor_props_on_an_ocr_flow_are_refused(self, tmp_path):
+        ocr = _live("moneyflow-committee-example-1", ["MoneyFlow"], amount=5.0, flow_type="campaign_contribution",
+                    source_schedule="schedule_a", reported_city="Sampleton")
+        assert any("moneyflow-committee-example-1" in p for p in self._with_extra_flow(tmp_path, ocr))
+
+    def test_unknown_or_missing_ledger_formats_fail_closed(self, tmp_path):
+        import json
+        from cf_migration_plan import check_live
+        baseline, bundle = _cf2_bundle(tmp_path)
+        manifest = json.loads((bundle / "src" / "manifest.json").read_text())
+        for bad in (3, "2", True):
+            (bundle / "src" / "manifest.json").write_text(json.dumps({**manifest, "ledger_format": bad}))
+            assert any("ledger format" in p for p in check_live(baseline, bundle)), bad
+        (bundle / "src" / "manifest.json").unlink()
+        assert any("manifest" in p for p in check_live(baseline, bundle))
+
+    def test_a_format_1_bundle_refuses_contributor_props_in_the_graph(self, tmp_path):
+        from cf_migration_plan import check_live
+        baseline, bundle = _dirs(tmp_path)
+        nodes = [{**n, "properties": {**n["properties"], "reported_city": "Sampleton"}}
+                 if n["id"] == "moneyflow-1-kept" else n for n in BASELINE_NODES]
+        _write_jsonl(baseline / "nodes.jsonl", sorted(nodes, key=lambda n: n["id"]))
+        assert any("moneyflow-1-kept" in p and "reported_city" in p for p in check_live(baseline, bundle))

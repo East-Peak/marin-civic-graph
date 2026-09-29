@@ -17,6 +17,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import subprocess
@@ -30,6 +31,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from campaign_ledger import (  # noqa: E402
     InputError, LedgerError, UnsafeOutputError, build_ledger, build_transactions, inventory_inputs,
     resolve_output_root, write_ledger,
+)
+from contributor_detail import (  # noqa: E402
+    FIELDS, LEDGER_KEYS, REVIEWED_PATH, SUSPECT_DETECTORS, display, flow_props, load_reviewed, review_key,
+    transaction_details,
 )
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -201,12 +206,17 @@ FLOW_TYPES = {"A": "contribution", "E": "expenditure"}
 DEFAULT_ENTITY = {"A": "IND", "E": "OTH"}  # legacy defaults when Entity_Cd is blank
 
 
-def normalize_campaign_source(capture: dict, ledger, output_dir: Path) -> tuple[list[dict], list[dict], dict]:
+LEDGER_FORMAT = 2  # 2: `reported` holds the unmodified source cells (CF1 bundles, format 1, held stripped text)
+
+
+def normalize_campaign_source(capture: dict, ledger, output_dir: Path, reviewed: frozenset = frozenset()
+                              ) -> tuple[list[dict], list[dict], dict]:
     """Emit the graph bundle for one source from its ledger (after build_transactions).
 
     Actors (committees, contributors, payees) are exactly the legacy set: built first-seen from every nonzero
-    retained A/E row, in export order. MoneyFlows exist only for counted transactions. Filing provenance and
-    reported contributor details stay in the private ledger: the bundle publishes nothing the live graph lacks.
+    retained A/E row, in export order. MoneyFlows exist only for counted transactions. An individual's counted
+    Schedule A flow also carries the contributor details its reports agree on, as contributor_detail.py allows;
+    filing provenance and the raw cells stay in the private ledger, and nothing else differs from the live graph.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
     capture_id, jurisdiction_id, source_id = capture["capture_id"], capture["jurisdiction_id"], capture["source_id"]
@@ -241,6 +251,8 @@ def normalize_campaign_source(capture: dict, ledger, output_dir: Path) -> tuple[
 
     withheld: dict[str, int] = {}
     emitted = {"A": Decimal("0.00"), "E": Decimal("0.00")}
+    coverage = _Coverage()
+    rows_by_ref = {json.dumps(r["row_ref"], sort_keys=True): r for r in ledger.rows}
     for tx in ledger.transactions:
         if not tx["counts"]:
             withheld[tx["reason"]] = withheld.get(tx["reason"], 0) + 1
@@ -250,6 +262,11 @@ def normalize_campaign_source(capture: dict, ledger, output_dir: Path) -> tuple[
         mf_id = tx["moneyflow_id"]
         nodes[mf_id] = build_moneyflow_node(mf_id, float(amount), tx["tran_date"], FLOW_TYPES[tx["schedule"]],
                                             tx["schedule"], capture_id)
+        if tx["schedule"] == "A":
+            members = [rows_by_ref[json.dumps(ref, sort_keys=True)] for ref in tx["rows"]]
+            reason, details = transaction_details("A", members, reviewed)
+            coverage.add(mf_id, members, reason, details)
+            nodes[mf_id]["properties"].update(flow_props(details))
         committee = committees[tx["filer_id"]]
         actor = counterparties.get(slugify_name(tx["name"]["last"], tx["name"]["first"]))
         if tx["schedule"] == "A":
@@ -286,7 +303,65 @@ def normalize_campaign_source(capture: dict, ledger, output_dir: Path) -> tuple[
         for edge in edges:
             f.write(json.dumps(edge, sort_keys=True) + "\n")
     (output_dir / "normalization-report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+    coverage.write(output_dir)
     return node_list, edges, report
+
+
+class _Coverage:
+    """Where every eligible field went: published + source_missing + withheld by rule == eligible, per field,
+    for counted MoneyFlows and (separately) for the physical rows that report them."""
+
+    def __init__(self):
+        self.counted = 0
+        self.ineligible: dict[str, int] = {}
+        self.scopes = {scope: {"eligible": 0, "fields": {f: {"eligible": 0, "published": 0, "source_missing": 0,
+                                                             "withheld": {}} for f in FIELDS}}
+                       for scope in ("flows", "rows")}
+        self.conflicts: list[dict] = []
+        self.review: dict[tuple[str, str], dict] = {}
+
+    def add(self, flow_id: str, members: list[dict], reason: str | None, details: dict) -> None:
+        self.counted += 1
+        if reason:
+            self.ineligible[reason] = self.ineligible.get(reason, 0) + 1
+            return
+        for scope, weight in (("flows", 1), ("rows", len(members))):
+            self.scopes[scope]["eligible"] += weight
+            for field, outcome in details.items():
+                c = self.scopes[scope]["fields"][field]
+                c["eligible"] += weight
+                if outcome.value is not None:
+                    c["published"] += weight
+                elif outcome.rule == "source_missing":
+                    c["source_missing"] += weight
+                else:
+                    c["withheld"][outcome.rule] = c["withheld"].get(outcome.rule, 0) + weight
+        for field, outcome in details.items():
+            if outcome.rule == "conflicting_reports":
+                self.conflicts.append({"moneyflow_id": flow_id, "field": field,
+                                       "rows": [r["row_ref"] for r in members]})
+            elif outcome.rule == "suspected_pii_unreviewed":
+                value = display(members[0]["reported"][LEDGER_KEYS[field]])
+                entry = self.review.setdefault(review_key(field, value), {
+                    "field": field, "value": value, "sha256": review_key(field, value)[1],
+                    "detectors": [name for name, pattern in SUSPECT_DETECTORS if pattern.search(value)],
+                    "rows": []})
+                entry["rows"] += [r["row_ref"] for r in members]
+
+    def write(self, output_dir: Path) -> None:
+        for scope in self.scopes.values():
+            for field, c in scope["fields"].items():
+                c["withheld"] = dict(sorted(c["withheld"].items()))
+                if c["published"] + c["source_missing"] + sum(c["withheld"].values()) != c["eligible"]:
+                    raise LedgerError(f"contributor coverage does not reconcile for {field}")
+        payload = {"counted_schedule_a": self.counted, "eligible": self.scopes["flows"]["eligible"],
+                   "ineligible": dict(sorted(self.ineligible.items())), "fields": self.scopes["flows"]["fields"]}
+        (output_dir / "contributor-detail.json").write_text(json.dumps({
+            "flows": payload, "rows": self.scopes["rows"], "conflicts": self.conflicts,
+        }, indent=2, sort_keys=True) + "\n")
+        with open(output_dir / "contributor-detail-review.jsonl", "w") as f:
+            for key in sorted(self.review):
+                f.write(json.dumps(self.review[key], sort_keys=True, ensure_ascii=False) + "\n")
 
 
 # ---------------------------------------------------------------------------
@@ -337,6 +412,8 @@ def main(argv: list[str] | None = None) -> int:
                         help="JSON list of reconciliation exceptions {source_id, filing_id, schedule, locator, evidence}")
     parser.add_argument("--version-evidence", type=Path,
                         help="JSON list of amendment evidence {source_id, original, amended, locator, evidence}")
+    parser.add_argument("--reviewed", type=Path, default=REVIEWED_PATH,
+                        help="Stuart's hashed publish decisions for flagged contributor values")
     args = parser.parse_args(argv)
 
     import yaml
@@ -372,6 +449,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
 
+    try:
+        reviewed = load_reviewed(args.reviewed)
+    except (OSError, ValueError, KeyError) as exc:
+        print(f"ERROR: review decisions {args.reviewed}: {exc}", file=sys.stderr)
+        return 1
+    reviewed_pin = {"path": str(args.reviewed), "sha256": hashlib.sha256(args.reviewed.read_bytes()).hexdigest()}
     exceptions = json.loads(args.exceptions.read_text()) if args.exceptions else []
     versions = json.loads(args.version_evidence.read_text()) if args.version_evidence else []
     run_ids = {s["id"] for s, _, _ in inventories}
@@ -391,7 +474,9 @@ def main(argv: list[str] | None = None) -> int:
             "captured_at": f"{capture_date}T00:00:00Z",
         }
         output_dir = out_root / source_id
-        _write_json(output_dir / "manifest.json", {"capture_id": capture["capture_id"], "inputs": inputs})
+        _write_json(output_dir / "manifest.json", {"capture_id": capture["capture_id"], "inputs": inputs,
+                                                   "ledger_format": LEDGER_FORMAT,
+                                                   "contributor_review": reviewed_pin["sha256"]})
         workbooks = [(i["path"], args.input_root / i["path"]) for i in inputs if i["coverage"] == "workbook"]
         print(f"\nNormalizing: {source_id}")
         try:
@@ -409,7 +494,11 @@ def main(argv: list[str] | None = None) -> int:
             for error in ledger.errors:
                 print(f"  ERROR: {error}", file=sys.stderr)
             return 1
-        nodes, _, report = normalize_campaign_source(capture, ledger, output_dir)
+        try:
+            nodes, _, report = normalize_campaign_source(capture, ledger, output_dir, reviewed)
+        except LedgerError as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return 1
         print(f"  MoneyFlows:   {report['moneyflow_count']}  withheld: {report['withheld']}")
         print(f"  Output:       {output_dir}")
         if report["broken_edge_count"] or report["duplicate_edge_count"]:
@@ -428,6 +517,7 @@ def main(argv: list[str] | None = None) -> int:
         "argv": sys.argv[1:] if argv is None else argv,
         "input_root": str(Path(args.input_root).resolve()),
         "sources": [s["id"] for s, _, _ in inventories],
+        "contributor_review": reviewed_pin,
     })
     return 0
 
