@@ -470,3 +470,42 @@ class TestCodexRoundTwo:
             _ledger(tmp_path, {"2024": {"A-Contributions": [contribution(F1, "a1", 10)],
                                         "Summary": [summary(F1, "A", "1", 99)]}},
                     exceptions=[{"filing_id": fid, "schedule": "A", **bad}])
+
+
+class TestCodexRoundThree:
+    def test_identical_rows_within_one_filing_are_distinct_transactions(self, tmp_path):
+        _, txs = _transactions(tmp_path, {"2024": {
+            "A-Contributions": [contribution(F1, "dup", 10), contribution(F1, "dup", 10)],
+            "Summary": [summary(F1, "A", "1", 20)]}})
+        assert [t["kind"] for t in txs] == ["repeated_within_filing"] * 2
+        assert len({t["moneyflow_id"] for t in txs}) == 2 and all(t["counts"] for t in txs)
+
+    def test_an_additive_row_and_its_identical_memo_twin_get_distinct_ids(self, tmp_path):
+        _, txs = _transactions(tmp_path, {"2024": {
+            "E-Expenditure": [expenditure(F1, "e1", 10), expenditure(F1, "e1", 10, Memo_Code="X")],
+            "Summary": [summary(F1, "E", "1", 10)]}})
+        assert len({t["moneyflow_id"] for t in txs}) == 2
+        assert sorted((t["counts"], t["reason"]) for t in txs) == [(False, "non_additive"), (True, None)]
+
+    def test_a_disjoint_later_filing_does_not_make_earlier_repeats_compete(self, tmp_path):
+        _, txs = _transactions(tmp_path, {
+            "2022": {"E-Expenditure": [expenditure(FIRST_HALF, "x", 10, date="2022-02-01"),
+                                       expenditure(FIRST_HALF, "x", 20, date="2022-03-01")],
+                     "Summary": [summary(FIRST_HALF, "E", "1", 30)]},
+            "2025": {"E-Expenditure": [expenditure(LATER_HALF, "x", 30, date="2025-02-01")],
+                     "Summary": [summary(LATER_HALF, "E", "1", 30)]}})
+        assert len(txs) == 3 and all(t["counts"] for t in txs)
+
+    def test_a_superseded_memo_row_stays_outside_the_bridge_total(self, tmp_path):
+        original, amended = filing(report_num="000", rpt="2024-02-01"), filing(report_num="001", rpt="2024-03-15")
+        probe = build_ledger("src", [])
+        ids = [probe.filing_id_for(source_id="src", **f) for f in (original, amended)]
+        from campaign_ledger import build_transactions
+        ledger = _ledger(tmp_path, {"2024": {
+            "A-Contributions": [contribution(original, "a1", 10), contribution(original, "a2", 5, Memo_Code="X"),
+                                contribution(amended, "a1", 12)],
+            "Summary": [summary(original, "A", "1", 10), summary(amended, "A", "1", 12)]}},
+            version_evidence=[{"original": ids[0], "amended": ids[1], "locator": "cover", "evidence": "amendment"}])
+        build_transactions(ledger)
+        old = next(g for g in ledger.reconciliation if g["filing_id"] == ids[0])
+        assert old["bridge"]["superseded"] == "10.00" and old["bridge"]["non_additive"] == "5.00"

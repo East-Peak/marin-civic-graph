@@ -529,8 +529,7 @@ def _split_repeats(rows: list[dict], filings: dict) -> list[tuple[str, list[dict
     if max(len(v) for v in per_filing.values()) == 1 and len(contents) == 1:
         return [("duplicate_report", rows)]
     ids = sorted(per_filing)
-    disjoint = all(not _overlap(filings[a], filings[b]) for i, a in enumerate(ids) for b in ids[i + 1:])
-    if disjoint and max(len(v) for v in per_filing.values()) == 1:
+    if all(not _overlap(filings[a], filings[b]) for i, a in enumerate(ids) for b in ids[i + 1:]):
         return [("reused_tran_id", [row]) for row in rows]
     return [("competing_versions", rows)]
 
@@ -586,13 +585,17 @@ def _assign_ids(txs: list[dict]) -> None:
     per_base = defaultdict(int)
     for tx in txs:
         per_base[tx["base_id"]] += 1
+    occurrences: dict[str, int] = defaultdict(int)
     for tx in txs:
         if per_base[tx["base_id"]] == 1:
             tx["moneyflow_id"] = tx["base_id"]
-        else:
-            key = [tx["filing_ids"][0], tx["amount"], tx["tran_date"], list(tx["name"].values()), tx["entity_cd"]]
-            digest = hashlib.sha256(json.dumps(key).encode()).hexdigest()[:8]
-            tx["moneyflow_id"] = f"{tx['base_id']}-{tx['schedule'].lower()}-{digest}"
+            continue
+        key = [tx["filing_ids"][0], tx["amount"], tx["tran_date"], list(tx["name"].values()), tx["entity_cd"]]
+        digest = hashlib.sha256(json.dumps(key).encode()).hexdigest()[:8]
+        tx["moneyflow_id"] = f"{tx['base_id']}-{tx['schedule'].lower()}-{digest}"
+        occurrences[tx["moneyflow_id"]] += 1
+        if occurrences[tx["moneyflow_id"]] > 1:  # identical twins in one filing: number them in export order
+            tx["moneyflow_id"] += f"-{occurrences[tx['moneyflow_id']]}"
     ids = [tx["moneyflow_id"] for tx in txs]
     if len(ids) != len(set(ids)):
         raise LedgerError("two transactions share a MoneyFlow id")
@@ -607,10 +610,10 @@ def _bridge(ledger: Ledger) -> None:
             continue
         b = buckets[(row["filing_id"], row["schedule"])]
         amount = Decimal(row["amount"])
-        if row["disposition"] == "superseded":
-            b["superseded"] += amount
-        elif not row["additive"]:
+        if not row["additive"]:
             b["non_additive"] += amount
+        elif row["disposition"] == "superseded":
+            b["superseded"] += amount
         elif row["counted"]:
             b["emitted" if row["primary"] else "counted_in_other_filing"] += amount
         else:

@@ -284,3 +284,20 @@ class TestCliLedger:
                                     "locator": "l", "evidence": "e"}]))
         code, _ = self._run(tmp_path, {"Summary": [summary(filing(), "A", "1", 0)]}, extra=["--exceptions", str(exc)])
         assert code == 1 and "other" in capsys.readouterr().err
+
+    def test_a_moneyflow_id_emitted_by_two_sources_fails_the_run(self, tmp_path, capsys):
+        import yaml
+        from normalize_campaign_finance import main
+        from tests.netfile_workbooks import contribution, expenditure, filing, summary, write_export
+        f = filing()
+        write_export(tmp_path / "raw" / "one" / "2026-04-14" / "2026.zip",
+                     {"A-Contributions": [contribution(f, "x", 10)], "Summary": [summary(f, "A", "1", 10)]})
+        write_export(tmp_path / "raw" / "two" / "2026-04-14" / "2026.zip",
+                     {"E-Expenditure": [expenditure(f, "x", 20)], "Summary": [summary(f, "E", "1", 20)]})
+        reg = tmp_path / "reg.yaml"
+        reg.write_text(yaml.safe_dump({"sources": [
+            {"id": sid, "jurisdiction_id": "place-test", "institution_id": "org-test", "backfill_from": "2026-01-01"}
+            for sid in ("one", "two")]}))
+        assert main(["--all", "--registry", str(reg), "--input-root", str(tmp_path / "raw"),
+                     "--output-root", str(tmp_path / "out")]) == 1
+        assert "moneyflow-1400001-x" in capsys.readouterr().err
