@@ -12,7 +12,21 @@ from pathlib import Path
 
 import openpyxl
 
-REQUIRED_SHEETS = ("A-Contributions", "E-Expenditure", "Summary")
+FILING_HEADERS = ("Filer_ID", "Filer_NamL", "Report_Num", "Rpt_Date", "From_Date", "Thru_Date", "Form_Type")
+_MEMO_HEADERS = ("Memo_Code", "Memo_RefNo")
+# Every sheet of the NetFile export, with the columns the ledger reads from it. A workbook with a sheet not
+# listed here fails: every sheet must be inventoried.
+SHEET_HEADERS: dict[str, tuple[str, ...]] = {
+    "A-Contributions": (*FILING_HEADERS, "Tran_ID", "Entity_Cd", "Tran_NamL", "Tran_NamF", "Tran_Date",
+                        "Tran_Amt1", *_MEMO_HEADERS),
+    "E-Expenditure": (*FILING_HEADERS, "Tran_ID", "Entity_Cd", "Payee_NamL", "Payee_NamF", "Expn_Date",
+                      "Amount", *_MEMO_HEADERS),
+    "Summary": (*FILING_HEADERS, "Line_Item", "Amount_A"),
+    **{sheet: FILING_HEADERS for sheet in (
+        "C-Contributions", "I-Contributions", "F496P3-Contributions", "F465P3-Expenditure",
+        "F461P5-Expenditure", "D-Expenditure", "G-Expenditure", "F-Expenses", "B1-Loans", "B2-Loans",
+        "H-Loans", "497", "496")},
+}
 
 
 class InputError(Exception):
@@ -32,19 +46,38 @@ def _sha256(path: Path) -> str:
 
 
 def _check_workbook(path: Path) -> None:
+    """Open the export and read every row of every sheet, so a corrupt sheet fails here, not later."""
     try:
         with zipfile.ZipFile(path) as zf:
             names = [n for n in zf.namelist() if n.endswith(".xlsx")]
             if len(names) != 1:
                 raise InputError(f"{path.name}: expected one .xlsx inside, found {len(names)}")
             with zf.open(names[0]) as f:
-                wb = openpyxl.load_workbook(f, read_only=True)
-                missing = [s for s in REQUIRED_SHEETS if s not in wb.sheetnames]
-                wb.close()
-    except (zipfile.BadZipFile, OSError, KeyError, ValueError) as exc:
-        raise InputError(f"{path.name}: not a readable workbook export ({exc})") from exc
-    if missing:
-        raise InputError(f"{path.name}: missing sheet(s) {', '.join(missing)}")
+                wb = openpyxl.load_workbook(f, read_only=True, data_only=True)
+                try:
+                    _check_sheets(path.name, wb)
+                finally:
+                    wb.close()
+    except InputError:
+        raise
+    except Exception as exc:  # zipfile, openpyxl and XML parse errors all mean "not a readable export"
+        raise InputError(f"{path.name}: not a readable workbook export ({type(exc).__name__}: {exc})") from exc
+
+
+def _check_sheets(name: str, wb) -> None:
+    unknown = sorted(set(wb.sheetnames) - set(SHEET_HEADERS))
+    missing = [s for s in SHEET_HEADERS if s not in wb.sheetnames]
+    if unknown or missing:
+        raise InputError(f"{name}: unknown sheet(s) {unknown}, missing sheet(s) {missing}")
+    for sheet, required in SHEET_HEADERS.items():
+        rows = wb[sheet].iter_rows(values_only=True)
+        header = [h for h in next(rows, ()) if h is not None]
+        absent = [h for h in required if h not in header]
+        doubled = sorted({h for h in header if header.count(h) > 1})
+        if absent or doubled:
+            raise InputError(f"{name}!{sheet}: missing column(s) {absent}, duplicate column(s) {doubled}")
+        for _ in rows:
+            pass
 
 
 def inventory_inputs(

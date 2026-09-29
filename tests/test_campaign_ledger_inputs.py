@@ -14,18 +14,9 @@ from campaign_ledger import InputError, UnsafeOutputError, inventory_inputs, res
 HTML_PAGE = b"\r\n\r\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\">\n<html></html>\n"
 
 
-def _workbook_zip(path: Path, sheets=("A-Contributions", "E-Expenditure", "Summary")) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    wb = openpyxl.Workbook()
-    wb.active.title = sheets[0]
-    for name in sheets[1:]:
-        wb.create_sheet(name)
-    xlsx = path.with_suffix(".xlsx")
-    wb.save(xlsx)
-    with zipfile.ZipFile(path, "w") as zf:
-        zf.write(xlsx, "efile_newest_TEST.xlsx")
-    xlsx.unlink()
-    return path
+def _workbook_zip(path: Path, drop_sheet: str | None = None) -> Path:
+    from tests.netfile_workbooks import HEADERS, write_export
+    return write_export(path, {}, sheets=[s for s in HEADERS if s != drop_sheet])
 
 
 def _sha(path: Path) -> str:
@@ -80,8 +71,44 @@ class TestInventoryInputs:
 
     def test_workbook_missing_a_required_sheet_fails(self, tmp_path):
         capture = _capture(tmp_path, years=("2022",))
-        _workbook_zip(capture / "2023.zip", sheets=("A-Contributions", "Summary"))
+        _workbook_zip(capture / "2023.zip", drop_sheet="E-Expenditure")
         with pytest.raises(InputError, match="E-Expenditure"):
+            inventory_inputs(tmp_path, "src", "2026-04-14", years=["2022", "2023"], unavailable=[])
+
+    def test_workbook_missing_a_required_header_fails(self, tmp_path):
+        from tests.netfile_workbooks import HEADERS, write_export
+        capture = _capture(tmp_path, years=("2022",))
+        headers = {**HEADERS, "A-Contributions": [h for h in HEADERS["A-Contributions"] if h != "Tran_Amt1"]}
+        write_export(capture / "2023.zip", {}, headers=headers)
+        with pytest.raises(InputError, match="Tran_Amt1"):
+            inventory_inputs(tmp_path, "src", "2026-04-14", years=["2022", "2023"], unavailable=[])
+
+    def test_workbook_with_an_unknown_sheet_fails(self, tmp_path):
+        from tests.netfile_workbooks import HEADERS, write_export
+        capture = _capture(tmp_path, years=("2022",))
+        write_export(capture / "2023.zip", {}, headers={**HEADERS, "Z-New": ["Filer_ID"]})
+        with pytest.raises(InputError, match="Z-New"):
+            inventory_inputs(tmp_path, "src", "2026-04-14", years=["2022", "2023"], unavailable=[])
+
+    def test_corrupt_worksheet_xml_fails(self, tmp_path):
+        import shutil
+        capture = _capture(tmp_path, years=("2022",))
+        good = capture / "2022.zip"
+        bad = capture / "2023.zip"
+        with zipfile.ZipFile(good) as zin:
+            inner = zin.namelist()[0]
+            xlsx = tmp_path / "inner.xlsx"
+            xlsx.write_bytes(zin.read(inner))
+        with zipfile.ZipFile(xlsx) as zin, zipfile.ZipFile(tmp_path / "broken.xlsx", "w") as zout:
+            for item in zin.namelist():
+                data = zin.read(item)
+                if item.endswith("sheet1.xml"):
+                    data = data[: len(data) // 2]
+                zout.writestr(item, data)
+        with zipfile.ZipFile(bad, "w") as zf:
+            zf.write(tmp_path / "broken.xlsx", inner)
+        shutil.rmtree(tmp_path / "unused", ignore_errors=True)
+        with pytest.raises(InputError, match="2023.zip"):
             inventory_inputs(tmp_path, "src", "2026-04-14", years=["2022", "2023"], unavailable=[])
 
     def test_missing_year_fails(self, tmp_path):
@@ -185,6 +212,18 @@ class TestCli:
         from normalize_campaign_finance import ROOT, main
         assert main(["--all", "--output-root", str(ROOT / "data" / "normalized" / "x")]) == 1
         assert "refusing" in capsys.readouterr().err
+
+    @pytest.mark.parametrize("bad_id", ["/tmp/escape", "../escape", "a/b", ""])
+    def test_refuses_a_source_id_that_is_not_one_safe_path_component(self, tmp_path, bad_id, capsys):
+        import yaml
+        from normalize_campaign_finance import main
+        reg = tmp_path / "reg.yaml"
+        reg.write_text(yaml.safe_dump({"sources": [{"id": bad_id, "jurisdiction_id": "p", "institution_id": "o",
+                                                    "backfill_from": "2022-01-01"}]}))
+        assert main(["--all", "--registry", str(reg), "--input-root", str(tmp_path),
+                     "--output-root", str(tmp_path / "out")]) == 1
+        assert "source id" in capsys.readouterr().err
+        assert not (tmp_path / "out").exists() or not any((tmp_path / "out").iterdir())
 
     def test_there_is_no_load_flag(self, tmp_path):
         from normalize_campaign_finance import main

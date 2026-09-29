@@ -589,6 +589,9 @@ def normalize_campaign_source(
 # CLI
 # ---------------------------------------------------------------------------
 
+SAFE_SOURCE_ID = re.compile(r"[a-z0-9][a-z0-9-]*")
+
+
 def _git_checkouts() -> list[Path]:
     """This checkout plus the main checkout it may be a worktree of: both are protected destinations."""
     roots = [ROOT]
@@ -637,6 +640,10 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     sources = yaml.safe_load(args.registry.read_text()).get("sources", [])
+    unsafe = [repr(s.get("id")) for s in sources if not SAFE_SOURCE_ID.fullmatch(str(s.get("id") or ""))]
+    if unsafe:
+        print(f"ERROR: source id must be one safe path component: {', '.join(unsafe)}", file=sys.stderr)
+        return 1
     targets = sources if args.all_sources else [s for s in sources if s["id"] == args.source]
     if not targets:
         print(f"Unknown source: {args.source}", file=sys.stderr)

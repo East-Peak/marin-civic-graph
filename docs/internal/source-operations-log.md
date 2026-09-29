@@ -35,7 +35,7 @@ Run via `python scripts/ingest.py --source {source_id} --registry registry/netfi
 | Script | What it does | Last run | Cron cadence | Command |
 |---|---|---|---|---|
 | `normalize_meetings.py` | Adapter JSON → Meeting/Record/Org/Place nodes → Neo4j | 2026-04-15 | After each capture run | `python scripts/normalize_meetings.py --all --load` |
-| `normalize_campaign_finance.py` | NetFile ZIPs → Committee/MoneyFlow/Person nodes → Neo4j | 2026-04-15 | After each NetFile capture | `python scripts/normalize_campaign_finance.py --all --load` |
+| `normalize_campaign_finance.py` | NetFile ZIPs → hashed manifest + reconciled ledger + Committee/MoneyFlow/Person staging bundle (no load; loads go through a reviewed migration plan) | 2026-09-29 | After each NetFile capture | `python scripts/normalize_campaign_finance.py --all --output-root ~/open-marin-staging/cf-ledger/<run>` |
 | `ingest_socrata_permits.py` | Socrata SODA API → 49K Project+Place nodes + IN_JURISDICTION edges → Neo4j | 2026-04-14 | Quarterly | `python scripts/ingest_socrata_permits.py --load` |
 
 ## Post-Normalization Pipelines
@@ -83,7 +83,7 @@ Run via `python scripts/ingest.py --source {source_id} --registry registry/netfi
 
 # Quarterly: Campaign finance
 0 2 1 1,4,7,10 *  python scripts/ingest.py --all --registry registry/netfile-sources.yaml
-0 3 1 1,4,7,10 *  python scripts/normalize_campaign_finance.py --all --load
+# normalize_campaign_finance.py is not scheduled: it stages a bundle for a reviewed migration (2026-09-29).
 0 4 1 1,4,7,10 *  python scripts/resolve_committee_candidates.py
 
 # Monthly: Verification
