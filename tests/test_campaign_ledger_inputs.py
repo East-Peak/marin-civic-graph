@@ -229,3 +229,58 @@ class TestCli:
         from normalize_campaign_finance import main
         with pytest.raises(SystemExit):
             main(["--all", "--output-root", str(tmp_path / "o"), "--load"])
+
+
+class TestCliLedger:
+    def _run(self, tmp_path, rows, extra=()):
+        import yaml
+        from normalize_campaign_finance import main
+        from tests.netfile_workbooks import write_export
+        capture = tmp_path / "raw" / "src" / "2026-04-14"
+        write_export(capture / "2026.zip", rows)
+        reg = tmp_path / "reg.yaml"
+        reg.write_text(yaml.safe_dump({"sources": [{"id": "src", "jurisdiction_id": "place-test",
+                                                    "institution_id": "org-test", "backfill_from": "2026-01-01"}]}))
+        out = tmp_path / "staging"
+        code = main(["--all", "--registry", str(reg), "--input-root", str(tmp_path / "raw"),
+                     "--output-root", str(out), *extra])
+        return code, out
+
+    def test_writes_the_ledger_next_to_the_manifest(self, tmp_path):
+        from tests.netfile_workbooks import contribution, filing, summary
+        f = filing()
+        code, out = self._run(tmp_path, {"A-Contributions": [contribution(f, "a1", 10)],
+                                         "Summary": [summary(f, "A", "1", 10)]})
+        assert code == 0
+        assert (out / "src" / "ledger.jsonl").exists() and (out / "src" / "reconciliation.json").exists()
+
+    def test_an_unexplained_mismatch_fails_the_run(self, tmp_path, capsys):
+        from tests.netfile_workbooks import contribution, filing, summary
+        f = filing()
+        code, out = self._run(tmp_path, {"A-Contributions": [contribution(f, "a1", 10)],
+                                         "Summary": [summary(f, "A", "1", 99)]})
+        assert code == 1
+        assert "mismatched" in capsys.readouterr().err
+        assert (out / "src" / "reconciliation.json").exists()  # the report explaining the failure is kept
+
+    def test_exceptions_file_is_applied(self, tmp_path):
+        import json
+        from campaign_ledger import build_ledger
+        from tests.netfile_workbooks import contribution, filing, summary
+        f = filing()
+        fid = build_ledger("src", []).filing_id_for(source_id="src", **f)
+        exc = tmp_path / "exceptions.json"
+        exc.write_text(json.dumps([{"source_id": "src", "filing_id": fid, "schedule": "A", "locator": "Summary row 2",
+                                    "evidence": "filer arithmetic on the cover page"}]))
+        code, _ = self._run(tmp_path, {"A-Contributions": [contribution(f, "a1", 10)],
+                                       "Summary": [summary(f, "A", "1", 99)]}, extra=["--exceptions", str(exc)])
+        assert code == 0
+
+    def test_an_exception_for_an_unknown_source_fails(self, tmp_path, capsys):
+        import json
+        from tests.netfile_workbooks import filing, summary
+        exc = tmp_path / "exceptions.json"
+        exc.write_text(json.dumps([{"source_id": "other", "filing_id": "filing-x", "schedule": "A",
+                                    "locator": "l", "evidence": "e"}]))
+        code, _ = self._run(tmp_path, {"Summary": [summary(filing(), "A", "1", 0)]}, extra=["--exceptions", str(exc)])
+        assert code == 1 and "other" in capsys.readouterr().err

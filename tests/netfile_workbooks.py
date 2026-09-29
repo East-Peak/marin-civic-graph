@@ -4,12 +4,14 @@ No row carries a street address: address columns exist in the headers (as in the
 """
 from __future__ import annotations
 
+import re
 import zipfile
 from datetime import datetime
 from pathlib import Path
 
 import openpyxl
 
+ISO_DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
 FILING_COLS = ["Filer_ID", "Filer_NamL", "Report_Num", "Committee_Type", "Rpt_Date", "From_Date", "Thru_Date",
                "Elect_Date", "tblCover_Office_Cd", "tblCover_Offic_Dscr", "Rec_Type", "Form_Type"]
 _MEMO = ["Memo_Code", "Memo_RefNo", "BakRef_TID", "XRef_SchNm", "XRef_Match"]
@@ -49,7 +51,7 @@ HEADERS = {
 
 
 def _date(value):
-    return datetime.strptime(value, "%Y-%m-%d") if isinstance(value, str) and len(value) == 10 else value
+    return datetime.strptime(value, "%Y-%m-%d") if isinstance(value, str) and ISO_DATE.fullmatch(value) else value
 
 
 def filing(filer_id="1400001", name="Friends of Example for Council 2024", report_num="000",

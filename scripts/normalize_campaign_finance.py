@@ -29,7 +29,9 @@ import openpyxl
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from campaign_ledger import InputError, UnsafeOutputError, inventory_inputs, resolve_output_root  # noqa: E402
+from campaign_ledger import (  # noqa: E402
+    InputError, LedgerError, UnsafeOutputError, build_ledger, inventory_inputs, resolve_output_root, write_ledger,
+)
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -629,6 +631,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output-root", type=Path, required=True,
                         help="Empty staging dir outside every git checkout and protected data dir")
     parser.add_argument("--registry", type=Path, default=ROOT / "registry" / "netfile-sources.yaml")
+    parser.add_argument("--exceptions", type=Path,
+                        help="JSON list of reconciliation exceptions {source_id, filing_id, schedule, locator, evidence}")
+    parser.add_argument("--version-evidence", type=Path,
+                        help="JSON list of amendment evidence {source_id, original, amended, locator, evidence}")
     args = parser.parse_args(argv)
 
     import yaml
@@ -664,6 +670,14 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
 
+    exceptions = json.loads(args.exceptions.read_text()) if args.exceptions else []
+    versions = json.loads(args.version_evidence.read_text()) if args.version_evidence else []
+    run_ids = {s["id"] for s, _, _ in inventories}
+    strays = sorted({str(e.get("source_id")) for e in exceptions + versions} - run_ids)
+    if strays:
+        print(f"ERROR: exception/evidence entries for source(s) not in this run: {', '.join(strays)}",
+              file=sys.stderr)
+        return 1
     for source_config, capture_date, inputs in inventories:
         source_id = source_config["id"]
         capture = {
@@ -675,7 +689,21 @@ def main(argv: list[str] | None = None) -> int:
         }
         output_dir = out_root / source_id
         _write_json(output_dir / "manifest.json", {"capture_id": capture["capture_id"], "inputs": inputs})
-        zip_paths = [args.input_root / i["path"] for i in inputs if i["coverage"] == "workbook"]
+        workbooks = [(i["path"], args.input_root / i["path"]) for i in inputs if i["coverage"] == "workbook"]
+        try:
+            ledger = build_ledger(source_id, workbooks,
+                                  version_evidence=[v for v in versions if v.get("source_id") == source_id],
+                                  exceptions=[e for e in exceptions if e.get("source_id") == source_id])
+        except LedgerError as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return 1
+        write_ledger(ledger, output_dir)
+        print(f"  Reconciliation: {json.dumps(ledger.counts(), sort_keys=True)}")
+        if ledger.errors:
+            for error in ledger.errors:
+                print(f"  ERROR: {error}", file=sys.stderr)
+            return 1
+        zip_paths = [path for _, path in workbooks]
         print(f"\nNormalizing: {source_id}")
         _, _, report = normalize_campaign_source(capture, zip_paths, output_dir)
         print(f"  MoneyFlows:   {report['moneyflow_count']}")
