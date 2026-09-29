@@ -257,8 +257,8 @@ def test_an_address_shared_with_a_residential_permit_gets_the_stricter_level() -
     ("residential_address", "commercial_address"),
     [
         ("22 22-26  BRIARMOSS DR, SAN RAFAEL, CA 94903", "26 BRIARMOSS DR, SAN RAFAEL, CA 94903"),
-        ("18863 STATE ROUTE 1, MARSHALL, CA 94940",
-         "18865 STATE ROUTE 1 A K A 18863, MARSHALL, CA 94940"),
+        ("99003 STATE ROUTE 1, MARSHALL, CA 94940",
+         "99001 STATE ROUTE 1 A K A 99003, MARSHALL, CA 94940"),
         ("168 Farthingale Blvd (168,170,172,174), San Rafael, CA 94903",
          "172 FARTHINGALE BLVD, SAN RAFAEL, CA 94903"),
     ],

@@ -131,7 +131,7 @@ def public_address(address: str | None, city_fallback: str | None, level: str) -
 
 
 def street_vocabulary(addresses: Iterable[str | None]) -> frozenset[str]:
-    """Upper-cased first street words ("WOODLAND RD" -> WOODLAND)."""
+    """Upper-cased first street words ("12 EXAMPLE RD" -> EXAMPLE)."""
     words = set()
     for address in addresses:
         match = _LEADING_STREET_WORD.match((address or "").split(",")[0].strip())
@@ -176,8 +176,8 @@ def _search_terms(props: Mapping) -> str:
 def _address_keys(address: str | None) -> list[str]:
     """Every number in the street area + the first street word.
 
-    "22-26 WOODOAKS DR" -> 22/26 WOODOAKS; "18865 STATE ROUTE 1 A K A 18863"
-    -> 18865/1/18863 STATE. Deliberately coarse: unit, alias and suffix
+    "8 8-10 SAMPLE CT" -> 8/10 SAMPLE; "99001 STATE ROUTE 1 A K A 99003"
+    -> 99001/1/99003 STATE. Deliberately coarse: unit, alias and suffix
     spellings vary between permits for one residence, and over-matching only
     fails closed.
     """

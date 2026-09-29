@@ -472,6 +472,8 @@ _ADDRESS_RE = re.compile(
     r"(?:Street|St|Avenue|Ave|Road|Rd|Drive|Dr|Lane|Ln|Way|Court|Ct|"
     r"Boulevard|Blvd|Place|Pl|Circle|Cir|Terrace)\b"
 )
+# The committed-text scan ignores case: permit data is ALL CAPS ("12 EXAMPLE RD").
+_ADDRESS_ANY_CASE_RE = re.compile(_ADDRESS_RE.pattern, re.IGNORECASE)
 _APN_RE = re.compile(r"\b\d{3}-\d{3}-\d{2,3}\b")
 
 
@@ -612,6 +614,11 @@ class TestAddedText:
         for diff in (rename, binary):
             assert _ADDRESS_RE.search(_added_text(diff)), diff
 
+    def test_an_all_caps_address_trips_the_committed_scan(self):
+        # 2026-09-29: the July parity corpus committed full residential permit
+        # addresses in ALL CAPS, which the case-sensitive shape never matched.
+        assert _ADDRESS_ANY_CASE_RE.search(_added_text("+++ b/x\n@@ -0,0 +1 @@\n+12 EXAMPLE RD, SOMEWHERE\n"))
+
     def test_a_removed_path_is_not_scanned(self):
         diff = ("diff --git a/12 Removed Street.txt b/12 Removed Street.txt\ndeleted file mode 100644\n"
                 "--- a/12 Removed Street.txt\n+++ /dev/null\n@@ -1 +0,0 @@\n-gone\n")
@@ -647,5 +654,5 @@ class TestCommittedTextScan:
         forbidden = [s for group in allow["forbidden"].values() for s in group]
         for bad in forbidden:
             assert bad not in text, "forbidden stripped string in committed diff/evidence"
-        assert not _ADDRESS_RE.search(text), "street-address shape in committed diff/evidence"
+        assert not _ADDRESS_ANY_CASE_RE.search(text), "street-address shape in committed diff/evidence"
         assert not _APN_RE.search(text), "APN shape in committed diff/evidence"
