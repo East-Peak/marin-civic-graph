@@ -24,8 +24,10 @@ data/cluster_renames_needed.json
 data/raw/*
 !data/raw/README.md
 
-# data layers — source of truth lives in East-Peak/marin-civic-graph-data (private)
+# data layers — source of truth lives in East-Peak/marin-civic-graph-data (private);
+# normalized and extracted are symlinks into that checkout
 data/normalized
+data/extracted
 data/projected/
 data/baseline/
 data/review/
