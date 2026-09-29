@@ -15,6 +15,9 @@ def _no_real_retry_backoff(monkeypatch):
     net_retry = sys.modules.get("net_retry")
     if net_retry is not None:
         monkeypatch.setattr(net_retry, "sleep", lambda seconds: None)
+    courtlistener = sys.modules.get("ingest_courtlistener_cases")
+    if courtlistener is not None:  # its request pacing (RATE_LIMIT_SECS between searches)
+        monkeypatch.setattr(courtlistener, "sleep", lambda seconds: None)
 
 
 @pytest.fixture

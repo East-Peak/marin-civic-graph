@@ -86,7 +86,10 @@ class StagedSource(NamedTuple):
 STAGED_SOURCES = {
     "permits": StagedSource("ingest_socrata_permits.py", (), "marin-county-permits"),
     "form700": StagedSource("ingest_form700.py", ("--all",), "form700"),
-    "courtlistener": StagedSource("ingest_courtlistener_cases.py", (), "courtlistener-cases"),
+    # Incremental: a full refetch no longer fits CourtListener's hourly limit (May 2026).
+    "courtlistener": StagedSource("ingest_courtlistener_cases.py",
+                                  ("--incremental-from", "data/normalized/courtlistener-cases"),
+                                  "courtlistener-cases"),
 }
 
 # staging → staged → awaiting_load_approval → loaded → awaiting_publish_approval → published.

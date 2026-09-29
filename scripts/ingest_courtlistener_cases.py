@@ -27,13 +27,14 @@ import os
 import re
 import sys
 import time
+from datetime import date, timedelta
 from pathlib import Path
 from typing import Iterator
 
 import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from load_from import add_load_from_argument, load_staged, reject_fetch_flags  # noqa: E402
+from load_from import add_load_from_argument, load_staged, read_staged, reject_fetch_flags  # noqa: E402
 from net_retry import retry_transient  # noqa: E402
 
 # ---------------------------------------------------------------------------
@@ -43,7 +44,19 @@ from net_retry import retry_transient  # noqa: E402
 CL_SEARCH_URL = "https://www.courtlistener.com/api/rest/v4/search/"
 CL_BASE_URL = "https://www.courtlistener.com"
 PAGE_SIZE = 20  # CourtListener default
-RATE_LIMIT_SECS = 2.0  # respectful usage
+# Seconds between ANY two search requests, across queries: an account gets ~5/minute
+# since CourtListener's May 2026 limits (and 50-100/hour, which only an incremental
+# pull fits: see incremental_since).
+RATE_LIMIT_SECS = 13.0
+# A weekly pull re-reads this far behind the newest filing it already holds. That catches
+# a case CourtListener indexes a little late, and it guarantees the newest known case is
+# re-found, which is how a pull proves it worked (see main). Known gap: a case indexed
+# more than this late, or a changed termination date, needs a full refresh, and a full
+# pull no longer fits the hourly quota; the planned route is CourtListener's quarterly
+# bulk data.
+INCREMENTAL_OVERLAP = timedelta(days=60)
+_last_request_at: float | None = None
+sleep, monotonic = time.sleep, time.monotonic  # module-level so tests can stub the pacing
 # A free account's API token. Anonymous search is throttled hard enough that one
 # weekly run's pagination hits 429; the token lifts it. Operator-local (weekly.env).
 TOKEN_ENV = "COURTLISTENER_API_TOKEN"
@@ -314,22 +327,34 @@ def build_place_node(place_id: str, name: str) -> dict:
 # ---------------------------------------------------------------------------
 
 
+def _pace() -> None:
+    """Sleep so consecutive search requests are at least RATE_LIMIT_SECS apart."""
+    global _last_request_at
+    if _last_request_at is not None:
+        wait = RATE_LIMIT_SECS - (monotonic() - _last_request_at)
+        if wait > 0:
+            sleep(wait)
+    _last_request_at = monotonic()
+
+
 @retry_transient
-def fetch_page(query: str, cursor: str | None = None) -> dict:
+def fetch_page(query: str, cursor: str | None = None, order_by: str = "score desc") -> dict:
     """Fetch a single page of CourtListener search results.
 
     Args:
         query:  The search query string.
         cursor: Pagination cursor from a prior response's `next` URL, or None
                 to start from page 1.
+        order_by: "score desc" (relevance) or "dateFiled desc" (newest first).
 
     Returns:
         Raw API response dict with `results`, `count`, and optionally `next`.
     """
+    _pace()  # inside the retry, so a retried attempt is spaced like any other request
     params: dict = {
         "q": query,
         "type": "r",
-        "order_by": "score desc",
+        "order_by": order_by,
     }
     if cursor:
         params["cursor"] = cursor
@@ -350,38 +375,46 @@ def _extract_cursor(next_url: str | None) -> str | None:
     return cursors[0] if cursors else None
 
 
+def _filed(record: dict) -> date | None:
+    return _parse_date(record.get("dateFiled"))
+
+
 def fetch_cases_for_query(
     query: str,
     limit: int | None = None,
+    since: date | None = None,
 ) -> Iterator[dict]:
     """Yield raw case result dicts from CourtListener for a given query.
 
-    Paginates through all results, respecting the RATE_LIMIT_SECS delay
-    between requests.
+    Every request is paced (RATE_LIMIT_SECS apart, across queries). With ``since``,
+    results come newest-first and the walk stops at the first record filed before
+    ``since`` (an undated record counts as older), so a weekly pull costs about one
+    request per query. Without it, every page is read in relevance order.
 
     Args:
         query:  The search query string.
         limit:  Optional cap on total records to fetch per query.
+        since:  Only records filed on or after this date (incremental pull).
     """
+    order_by = "dateFiled desc" if since else "score desc"
     cursor = None
     total_fetched = 0
-    first_page = True
 
     while True:
         if limit is not None and total_fetched >= limit:
             break
 
-        if not first_page:
-            time.sleep(RATE_LIMIT_SECS)
-
-        data = fetch_page(query, cursor=cursor)
-        first_page = False
+        data = fetch_page(query, cursor=cursor, order_by=order_by)
 
         results = data.get("results", [])
         if not results:
             break
 
         for record in results:
+            if since is not None:
+                filed = _filed(record)
+                if filed is None or filed < since:
+                    return
             yield record
             total_fetched += 1
             if limit is not None and total_fetched >= limit:
@@ -402,6 +435,7 @@ def fetch_cases_for_query(
 
 def run_pipeline(
     limit: int | None = None,
+    since: date | None = None,
 ) -> tuple[list[dict], list[dict]]:
     """Search all Marin jurisdiction queries and produce nodes + edges lists.
 
@@ -425,7 +459,7 @@ def run_pipeline(
         print(f"  Searching: {query}")
         query_count = 0
 
-        for raw in fetch_cases_for_query(query, limit=limit):
+        for raw in fetch_cases_for_query(query, limit=limit, since=since):
             docket_number = raw.get("docketNumber") or ""
             dedup_key = docket_number or raw.get("docket_id") or raw.get("caseName", "")
 
@@ -479,6 +513,46 @@ def run_pipeline(
         f"{len(nodes)} nodes, {len(edges)} edges."
     )
     return nodes, edges
+
+
+# ---------------------------------------------------------------------------
+# Incremental pulls
+# ---------------------------------------------------------------------------
+
+
+def _parse_date(raw) -> date | None:
+    try:
+        return date.fromisoformat(raw[:10]) if isinstance(raw, str) else None
+    except ValueError:
+        return None
+
+
+def incremental_since(nodes: list[dict], today: date | None = None) -> date:
+    """The cutoff for a weekly pull: the newest known filing, minus INCREMENTAL_OVERLAP.
+
+    A malformed or future date_filed is ignored: one bad record must neither break every
+    weekly run nor push the cutoff past everything."""
+    today = today or date.today()
+    filed = [d for n in nodes if n.get("node_type") == "Case"
+             if (d := _parse_date((n.get("properties") or {}).get("date_filed"))) and d <= today]
+    if not filed:
+        raise ValueError("no dated Case in the previous set: run a full pull (without --incremental-from)")
+    return max(filed) - INCREMENTAL_OVERLAP
+
+
+def merge_graph(prev_nodes: list[dict], prev_edges: list[dict],
+                new_nodes: list[dict], new_edges: list[dict]) -> tuple[list[dict], list[dict]]:
+    """Every previous record, plus the new ones. A refetched node replaces its old copy, and
+    its old outgoing edges are dropped (a changed party or court must not leave a stale edge)."""
+    nodes = {n["id"]: n for n in prev_nodes}
+    nodes.update((n["id"], n) for n in new_nodes)
+    refetched = {n["id"] for n in new_nodes}
+
+    def key(e: dict) -> tuple[str, str, str]:
+        return e["source_id"], e["relationship_type"], e["target_id"]
+    edges = {key(e): e for e in prev_edges if e["source_id"] not in refetched}
+    edges.update((key(e), e) for e in new_edges)
+    return list(nodes.values()), list(edges.values())
 
 
 # ---------------------------------------------------------------------------
@@ -596,9 +670,16 @@ def main(argv: list[str] | None = None) -> int:
         default=500,
         help="Batch size for Neo4j UNWIND writes (default: 500)",
     )
+    parser.add_argument(
+        "--incremental-from",
+        type=Path,
+        default=None,
+        help="A previous good output dir (nodes.jsonl/edges.jsonl): fetch only what was filed "
+             "since its newest case (minus an overlap) and write it merged onto that set.",
+    )
     add_load_from_argument(parser)
     args = parser.parse_args(argv)
-    reject_fetch_flags(parser, args, ("--load", "--limit", "--output-dir"))
+    reject_fetch_flags(parser, args, ("--load", "--limit", "--output-dir", "--incremental-from"))
     if args.load_from is not None:
         return load_staged(args, _load_into_neo4j)
 
@@ -606,7 +687,32 @@ def main(argv: list[str] | None = None) -> int:
     if args.limit:
         print(f"  (limited to {args.limit} cases per query)")
 
-    nodes, edges = run_pipeline(limit=args.limit)
+    since = prev_nodes = prev_edges = None
+    if args.incremental_from is not None:
+        try:
+            prev_nodes, prev_edges = read_staged(args.incremental_from)
+            since = incremental_since(prev_nodes)
+        except (OSError, ValueError) as exc:
+            print(f"ERROR: --incremental-from {args.incremental_from}: {exc} "
+                  f"(a first pull must be a full one)", file=sys.stderr)
+            return 1
+        print(f"  (incremental: filed on or after {since.isoformat()}, merged onto "
+              f"{len(prev_nodes):,} nodes)")
+
+    nodes, edges = run_pipeline(limit=args.limit, since=since)
+    if prev_nodes is not None:
+        # A merge never shrinks, so the weekly floors can't see a broken pull (an empty 200,
+        # an ignored order_by, a renamed dateFiled). The overlap guarantees the newest known
+        # case is in the window: a pull that re-finds no known case is broken.
+        known = {n["id"] for n in prev_nodes if n.get("node_type") == "Case"}
+        refound = known & {n["id"] for n in nodes if n.get("node_type") == "Case"}
+        if not refound:
+            print(f"ERROR: incremental pull re-found none of the {len(known):,} known cases filed on or "
+                  f"after {since.isoformat()} ({len(nodes):,} nodes pulled): treating it as a broken pull; "
+                  f"nothing written", file=sys.stderr)
+            return 1
+        print(f"  re-found {len(refound):,} known case(s) in the overlap window")
+        nodes, edges = merge_graph(prev_nodes, prev_edges, nodes, edges)
 
     output_dir = Path(args.output_dir or OUTPUT_DIR)
     nodes_path = output_dir / "nodes.jsonl"
