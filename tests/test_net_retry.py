@@ -72,6 +72,8 @@ def test_timeouts_dropped_connections_and_5xx_are_transient(exc):
     _http_error(404), _http_error(403), _http_error(429),
     _requests_error(400), _requests_error(404),
     urllib.error.URLError("unknown url type: htp"),
+    # A body dropped mid-read carries no status, and it may have been a 403 or a spent 429.
+    requests.exceptions.ChunkedEncodingError("Connection broken: IncompleteRead"),
     ValueError("bad json"), KeyError("results"),
 ])
 def test_4xx_and_everything_else_is_not(exc):

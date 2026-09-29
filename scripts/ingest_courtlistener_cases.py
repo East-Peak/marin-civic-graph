@@ -48,6 +48,13 @@ PAGE_SIZE = 20  # CourtListener default
 # since CourtListener's May 2026 limits (and 50-100/hour, which only an incremental
 # pull fits: see incremental_since).
 RATE_LIMIT_SECS = 13.0
+# How long a search may go silent (requests' read timeout, not a deadline for the whole
+# response). A slow search is still working, not dead: abandoning it re-sends the same query
+# moments later, and every try spends an hourly request. At 30s, all three tries of one query
+# timed out (2026-09-29); a live pull that day took under 20s for most searches, 31-34s for
+# three, and over 90s for one, which its retry then fetched. refresh_weekly's step timeout
+# still bounds the whole source.
+TIMEOUT_SECS = 90
 # A weekly pull re-reads this far behind the newest filing it already holds. That catches
 # a case CourtListener indexes a little late, and it guarantees the newest known case is
 # re-found, which is how a pull proves it worked (see main). Known gap: a case indexed
@@ -360,7 +367,7 @@ def fetch_page(query: str, cursor: str | None = None, order_by: str = "score des
     if cursor:
         params["cursor"] = cursor
 
-    resp = requests.get(CL_SEARCH_URL, params=params, timeout=30, headers=_auth_headers())
+    resp = requests.get(CL_SEARCH_URL, params=params, timeout=TIMEOUT_SECS, headers=_auth_headers())
     resp.raise_for_status()
     return resp.json()
 

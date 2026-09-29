@@ -182,6 +182,25 @@ def test_a_retried_request_is_paced_too(monkeypatch, no_sleep):
     assert len(calls) == 2 and no_sleep == [cl.RATE_LIMIT_SECS]
 
 
+def test_a_slow_search_is_waited_for_not_abandoned(monkeypatch, no_sleep):
+    # 2026-09-29: "City of Novato" read-timed-out at 30s on all three tries. The server
+    # was answering slowly, not down (a read timeout, never a connect timeout), and each
+    # abandoned try still spends one of the hourly requests.
+    Clock(monkeypatch, no_sleep)
+    timeouts = []
+    ok = _ok_get([])
+
+    def slow(url, params=None, timeout=None, headers=None):
+        timeouts.append(timeout)
+        if timeout < 45:  # this search takes 45s to answer
+            raise cl.requests.ReadTimeout(f"Read timed out. (read timeout={timeout})")
+        return ok(url, params=params, timeout=timeout, headers=headers)
+    monkeypatch.setattr(cl.requests, "get", slow)
+
+    assert cl.fetch_page("City of Novato", order_by="dateFiled desc") == {"results": []}
+    assert len(timeouts) == 1
+
+
 def test_the_rate_limit_fits_five_requests_a_minute():
     assert cl.RATE_LIMIT_SECS >= 12
 
