@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sqlite3
 import sys
 import tempfile
@@ -20,14 +21,16 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Iterable
 
+from contributor_detail import PROPS as CONTRIBUTOR_FIELD_PROPS, display, load_reviewed
 from public_exposure import (
     ADDRESS_EXPOSURE,
     classify_project,
+    contributor_eligible,
     sanitize_node_props,
     shared_address_levels,
     street_vocabulary,
 )
-from public_props import public_props
+from public_props import BAKE_ONLY_PROPS, public_props
 
 DEFAULT_NODE_SOURCES = (
     Path("data/projected/graph-v2/nodes.jsonl"),
@@ -542,6 +545,7 @@ def _apply_exposure_policy(nodes: dict[str, BakedNode]) -> dict:
     """
     classes: Counter[str] = Counter()
     sanitized: Counter[str] = Counter()
+    contributor = _apply_contributor_policy(nodes)
     projects = [node for node in nodes.values() if node.type == "Project"]
     street_words = street_vocabulary(node.props.get("address") for node in projects)
     shared_levels = shared_address_levels(node.props for node in projects)
@@ -564,6 +568,54 @@ def _apply_exposure_policy(nodes: dict[str, BakedNode]) -> dict:
         "project_classes": dict(sorted(classes.items())),
         # A class set to "full" shows up here only via a shared residential address.
         "sanitized_by_class": dict(sorted(sanitized.items())),
+        "campaign_contributor": contributor,
+    }
+
+
+def _refuse_repeated_withheld_values(node: BakedNode, clean: dict) -> None:
+    """A contributor value the policy held back must not survive in the node's other text (labels, name, terms)."""
+    withheld = {display(node.props[key]) for key in CONTRIBUTOR_FIELD_PROPS.values()
+                if display(node.props.get(key)) and clean.get(key) != display(node.props[key])}
+    public = {**public_props(node.type, clean), **{k: clean[k] for k in BAKE_ONLY_PROPS if k in clean}}
+    texts = {key: " ".join(value.split()) for key, value in public.items() if isinstance(value, str)}
+    texts["search_label"] = " ".join(node.search_label.split())
+    for value in withheld:
+        whole = re.compile(rf"(?<!\w){re.escape(value)}(?!\w)", re.I)
+        for key, text in texts.items():
+            if whole.search(text):
+                raise ValueError(f"withheld contributor value of {node.id} also appears in its {key}")
+
+
+def _apply_contributor_policy(nodes: dict[str, BakedNode]) -> dict:
+    """Every MoneyFlow passes the campaign_contributor policy; counts say what published and what the bake held."""
+    reviewed = load_reviewed()
+    eligible = stripped = 0
+    published: Counter[str] = Counter()
+    withheld: Counter[str] = Counter()
+    for node in nodes.values():
+        if node.type != "MoneyFlow":
+            continue
+        clean = sanitize_node_props(node.type, node.props, node_id=node.id, reviewed=reviewed)
+        if clean is node.props:
+            continue
+        _refuse_repeated_withheld_values(node, clean)
+        if contributor_eligible(node.id, node.props):
+            eligible += 1
+            for key in CONTRIBUTOR_FIELD_PROPS.values():
+                if key in clean:
+                    published[key] += 1
+                elif node.props.get(key) is not None:
+                    withheld[key] += 1
+        else:
+            stripped += 1
+        node.props = clean
+    return {
+        "level": ADDRESS_EXPOSURE["campaign_contributor"],
+        "reviewed_decisions": len(reviewed),
+        "eligible_flows": eligible,
+        "stripped_ineligible_flows": stripped,
+        "published": dict(sorted(published.items())),
+        "withheld_at_bake": dict(sorted(withheld.items())),
     }
 
 

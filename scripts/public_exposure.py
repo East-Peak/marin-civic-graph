@@ -9,6 +9,13 @@ Dial exposure per Project class by editing ADDRESS_EXPOSURE:
   full        -- source address and geo fields as-is
   street_city -- street name + city; no house number/range, unit, parcel, lat/long
   city        -- city only
+
+and campaign contributors' locality by its campaign_contributor entry (the street is never published):
+  city_zip    -- occupation, employer, city, state and ZIP5, as reported
+  city        -- occupation, employer, city and state
+  none        -- occupation and employer only
+Contributor values also pass contributor_detail.py's rules here, whatever the graph holds, and only an
+individual's Schedule A NetFile contribution is eligible (decisions/2026-09-29-open-marin-donor-exposure.md).
 """
 from __future__ import annotations
 
@@ -16,12 +23,22 @@ import re
 from dataclasses import dataclass
 from typing import Iterable, Mapping
 
+from contributor_detail import ENTITY_PROP, FIELDS, PROPS, classify
+
 ADDRESS_EXPOSURE: dict[str, str] = {
     "residential_permit": "street_city",
     "commercial_permit": "full",
     "civic_project": "full",
+    "campaign_contributor": "city_zip",
 }
 LEVELS = ("full", "street_city", "city")
+CONTRIBUTOR_LEVELS: dict[str, frozenset[str]] = {
+    "city_zip": frozenset(FIELDS),
+    "city": frozenset({"occupation", "employer", "city", "state"}),
+    "none": frozenset({"occupation", "employer"}),
+}
+CONTRIBUTOR_KEYS = frozenset({*PROPS.values(), ENTITY_PROP})
+_NETFILE_FLOW_ID = re.compile(r"moneyflow-(\d+|Pending)-")
 
 PERMIT_SOURCE = "marin-county-socrata-permits"
 GEO_FIELDS = ("parcel_number", "latitude", "longitude")
@@ -209,6 +226,27 @@ def shared_address_levels(
     return levels
 
 
+def contributor_eligible(node_id: str, props: Mapping) -> bool:
+    """An individual's Schedule A contribution from a NetFile export; never inferred from Person type or defaults."""
+    return (props.get("flow_type") == "contribution" and props.get("source_schedule") == "A"
+            and props.get(ENTITY_PROP) == "IND" and bool(_NETFILE_FLOW_ID.match(node_id)))
+
+
+def campaign_contributor_props(node_id: str, props: dict, level: str, reviewed: frozenset = frozenset()) -> dict:
+    """An eligible flow keeps each reported value the rules and the level allow; any other flow keeps none."""
+    if level not in CONTRIBUTOR_LEVELS:
+        raise ValueError(f"unknown campaign_contributor level {level!r}")
+    if not CONTRIBUTOR_KEYS & props.keys():
+        return props
+    out = {key: value for key, value in props.items() if key not in CONTRIBUTOR_KEYS}
+    if contributor_eligible(node_id, props):
+        for field in CONTRIBUTOR_LEVELS[level]:
+            value = classify(field, props.get(PROPS[field]), reviewed).value
+            if value is not None:
+                out[PROPS[field]] = value
+    return out
+
+
 def sanitize_node_props(
     node_type: str,
     props: dict,
@@ -216,8 +254,12 @@ def sanitize_node_props(
     node_id: str | None = None,
     street_words: frozenset[str] = frozenset(),
     shared_levels: Mapping[str, str] | None = None,
+    reviewed: frozenset = frozenset(),
 ) -> dict:
     """Return props safe for the public artifact (the input object if unchanged)."""
+    if node_type == "MoneyFlow":
+        return campaign_contributor_props(str(node_id or props.get("id")), props, policy["campaign_contributor"],
+                                          reviewed)
     if node_type != "Project":
         return props
     project_class = classify_project(props)

@@ -59,7 +59,12 @@ PUBLIC_PROPS: dict[str, frozenset[str]] = {
         "fppc_id", "treasurer", "candidate_name", "elections_count", "total_money_in",
     }),
     "Organization": frozenset({"subtype", "labels", "website"}),
-    "MoneyFlow": frozenset({"amount", "flow_type", "source_schedule"}),
+    # reported_* hold what the filing reported about an individual contributor; public_exposure.py decides
+    # which flows and values carry them (campaign_contributor). reported_entity_cd stays operator-side.
+    "MoneyFlow": frozenset({
+        "amount", "flow_type", "source_schedule", "reported_occupation", "reported_employer", "reported_city",
+        "reported_state", "reported_zip5",
+    }),
     "Seat": frozenset({"title", "institution_name", "jurisdiction_id"}),
     "SeatService": frozenset({
         "seat_title", "person_name", "end_date", "ended_at", "jurisdiction_id", "seat_id",

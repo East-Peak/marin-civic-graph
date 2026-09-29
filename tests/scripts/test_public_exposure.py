@@ -62,6 +62,7 @@ def test_policy_is_one_declarative_knob_per_project_class() -> None:
         "residential_permit": "street_city",
         "commercial_permit": "full",
         "civic_project": "full",
+        "campaign_contributor": "city_zip",
     }
 
 
