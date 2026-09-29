@@ -4,7 +4,17 @@ Provides sample graph nodes matching the exact JSONL format from
 data/projected/graph-v1/nodes.jsonl for use in migration and loading tests.
 """
 
+import sys
+
 import pytest
+
+
+@pytest.fixture(autouse=True)
+def _no_real_retry_backoff(monkeypatch):
+    """A fetch helper retrying a faked transient failure must never really sleep (scripts/net_retry.py)."""
+    net_retry = sys.modules.get("net_retry")
+    if net_retry is not None:
+        monkeypatch.setattr(net_retry, "sleep", lambda seconds: None)
 
 
 @pytest.fixture

@@ -9,6 +9,8 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+from net_retry import retry_transient
+
 from .base import BaseAdapter
 from .meeting_ids import assign_meeting_ids, normalize_title
 
@@ -295,6 +297,7 @@ class CivicPlusAdapter(BaseAdapter):
     # Tests can set this to 0 to avoid sleeping.
     _request_delay: float = 1.0
 
+    @retry_transient
     def _fetch_page(self, url: str) -> str:
         """GET *url* with a cookie jar, return response HTML.
 
@@ -304,11 +307,12 @@ class CivicPlusAdapter(BaseAdapter):
         jar = http.cookiejar.CookieJar()
         opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
         req = urllib.request.Request(url, headers={"User-Agent": _USER_AGENT})
-        with opener.open(req) as resp:
+        with opener.open(req, timeout=30) as resp:
             charset = resp.headers.get_content_charset("utf-8")
             self._cookie_jar = jar
             return resp.read().decode(charset, errors="replace")
 
+    @retry_transient
     def _fetch_year(self, base_url: str, category_id: str, year: int, cookies: object) -> str:
         """POST to the UpdateCategoryList endpoint for *category_id* / *year*.
 

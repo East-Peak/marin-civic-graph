@@ -18,6 +18,8 @@ from html import unescape
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
+from net_retry import retry_transient
+
 from .base import BaseAdapter
 from .meeting_ids import assign_meeting_ids
 
@@ -223,6 +225,7 @@ class DrupalRossAdapter(BaseAdapter):
     No pagination — the page shows ~19 meetings total.
     """
 
+    @retry_transient
     def _fetch_page(self, url: str) -> str:
         req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
         with urllib.request.urlopen(req, timeout=30) as resp:

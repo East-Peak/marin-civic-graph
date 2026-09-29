@@ -51,6 +51,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from load_from import add_load_from_argument, load_staged, reject_fetch_flags  # noqa: E402
+from net_retry import retry_transient  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -259,8 +260,9 @@ def build_in_jurisdiction_edge(filing_id: str, place_id: str) -> dict[str, Any]:
 PostJson = Callable[[str, dict[str, Any]], Any]
 
 
+@retry_transient
 def _post_json(url: str, body: dict[str, Any]) -> Any:
-    """POST a JSON body and return the decoded JSON response."""
+    """POST a JSON search body (read-only, so safe to retry) and return the decoded JSON response."""
     req = urllib.request.Request(
         url,
         data=json.dumps(body).encode(),

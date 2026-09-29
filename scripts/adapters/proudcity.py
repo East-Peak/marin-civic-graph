@@ -18,6 +18,8 @@ from html import unescape
 from pathlib import Path
 from urllib.parse import urljoin
 
+from net_retry import retry_transient
+
 from .base import BaseAdapter
 
 USER_AGENT = "Mozilla/5.0 (compatible; MarinCivicGraph/1.0)"
@@ -194,6 +196,7 @@ class ProudCityAdapter(BaseAdapter):
 
     _request_delay: float = 1.0
 
+    @retry_transient
     def _fetch_page(self, url: str) -> str:
         """Fetch a URL and return HTML. Extracted as method for test monkey-patching."""
         req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})

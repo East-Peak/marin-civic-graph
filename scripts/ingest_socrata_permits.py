@@ -32,6 +32,7 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from load_from import add_load_from_argument, load_staged, reject_fetch_flags  # noqa: E402
+from net_retry import retry_transient  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -187,6 +188,7 @@ def build_permit_edges(node: dict) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 
+@retry_transient
 def fetch_page(offset: int, limit: int = PAGE_SIZE) -> list[dict]:
     """Fetch a single page of permits from the SODA API.
 

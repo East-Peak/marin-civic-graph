@@ -13,6 +13,8 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
+from net_retry import retry_transient
+
 from .base import BaseAdapter
 
 # ---------------------------------------------------------------------------
@@ -100,6 +102,7 @@ class NetFileAdapter(BaseAdapter):
     POSTs a form request for each year to download a ZIP export.
     """
 
+    @retry_transient
     def _fetch_page(self, url: str) -> str:
         """GET *url* and return the decoded HTML body. Overridable in tests."""
         req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
@@ -107,6 +110,7 @@ class NetFileAdapter(BaseAdapter):
             charset = resp.headers.get_content_charset("utf-8")
             return resp.read().decode(charset, errors="replace")
 
+    @retry_transient
     def _post_export(self, url: str, form_data: dict) -> bytes:
         """POST URL-encoded *form_data* to *url* and return the raw bytes.
 

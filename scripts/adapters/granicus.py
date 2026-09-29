@@ -7,6 +7,8 @@ import urllib.request
 from html import unescape
 from pathlib import Path
 
+from net_retry import retry_transient
+
 from .base import BaseAdapter
 from .meeting_ids import assign_meeting_ids
 
@@ -121,10 +123,15 @@ def detect_variant(html: str) -> str:
     return "modern"
 
 
+@retry_transient
 def fetch_html(url: str) -> str:
-    """Fetch *url* and return the decoded response body."""
+    """Fetch *url* and return the decoded response body.
+
+    The timeout bounds each socket wait, not the whole transfer, so a multi-MB
+    Publisher page streams well inside it.
+    """
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(req) as resp:
+    with urllib.request.urlopen(req, timeout=60) as resp:
         return resp.read().decode(resp.headers.get_content_charset("utf-8"), errors="replace")
 
 
