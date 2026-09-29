@@ -28,9 +28,10 @@ import {
   buildTier2NeighborhoodQuery,
 } from "@/lib/server/entity-queries";
 import { effectiveEventDate } from "@/lib/server/entity-temporal";
-import { loadEntitySubstrate } from "@/lib/server/entity-loader-substrate";
+import { loadEntitySubstrate, loadEntitySubstrateById } from "@/lib/server/entity-loader-substrate";
 import { servingBackend } from "@/lib/server/substrate";
-import { urlSegmentForType, type NodeType } from "@/lib/type-display";
+import { type NodeType } from "@/lib/type-display";
+import { entityRoute } from "@/lib/entity-route";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -194,10 +195,6 @@ function labelFromProps(id: string, props: Record<string, unknown>): string {
   );
 }
 
-function routeFor(id: string, type: NodeType): string {
-  const slug = id.includes("-") ? id.slice(id.indexOf("-") + 1) : id;
-  return `/${urlSegmentForType(type)}/${slug}`;
-}
 
 function toNumber(v: unknown): number {
   if (v == null) return 0;
@@ -303,7 +300,7 @@ function rowToNeighbor(row: NeighborRowRaw): Neighbor | null {
     id: row.id,
     type,
     label: row.label ?? row.id,
-    route: routeFor(row.id, type),
+    route: entityRoute(row.id, type),
     ring,
     role: row.role,
     // Date is populated in a second pass (fetchNeighborEventDates); leave
@@ -578,7 +575,7 @@ async function loadTier2Neighborhood(
       id,
       type,
       label,
-      route: routeFor(id, type),
+      route: entityRoute(id, type),
       ring: 1,
       role: "must-show",
       event_date: null, // populated by fetchNeighborEventDates in loadEntity
@@ -599,6 +596,13 @@ async function loadTier2Neighborhood(
 // ---------------------------------------------------------------------------
 // Public loader
 // ---------------------------------------------------------------------------
+
+/** Load by full id (the explorer's ?focus=). The live path keeps its old split. */
+export async function loadEntityById(id: string): Promise<EntityPayload | null> {
+  if (servingBackend() === "substrate") return loadEntitySubstrateById(id);
+  const dashIdx = id.indexOf("-");
+  return dashIdx < 0 ? null : loadEntity(id.slice(0, dashIdx), id.slice(dashIdx + 1));
+}
 
 export async function loadEntity(
   typeSegment: string,

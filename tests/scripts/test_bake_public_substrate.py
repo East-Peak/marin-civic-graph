@@ -14,6 +14,8 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from bake_public_substrate import bake_substrate  # noqa: E402
@@ -1247,3 +1249,53 @@ def test_money_rollup_handles_county_edge_orientation(tmp_path: Path) -> None:
     assert json.loads(vendor[2])[0]["id"] == "org-dept-hhs"
     assert dept[0] == 1 and dept[1] == 1000
     assert json.loads(dept[2])[0]["id"] == "org-vendor"
+
+
+# --- entity routes: no two nodes may share a URL ------------------------------------
+# app/src/lib/entity-route.ts strips an id prefix registered for the node's type (else
+# keeps the whole id). project-permit-x and permit-x would both be /project/permit-x,
+# and the app would silently serve one of them for both (Codex 2026-09-29). The bake
+# refuses to write such an artifact.
+
+REAL_PREFIXES = json.loads(Path("registry/node-types.json").read_text())["id_prefixes"]
+
+
+def _baked(node_id: str, node_type: str):
+    from bake_public_substrate import BakedNode
+    return BakedNode(id=node_id, type=node_type, search_label=node_id, props={})
+
+
+def _nodes(*pairs):
+    return {node_id: _baked(node_id, node_type) for node_id, node_type in pairs}
+
+
+@pytest.mark.parametrize("pairs", [
+    [("project-permit-x", "Project"), ("permit-x", "Project")],  # stripped slug = another's whole id
+    [("org-x", "Organization"), ("inst-x", "Organization")],   # two prefixes of one type
+])
+def test_two_nodes_of_one_type_that_would_share_a_url_are_a_collision(pairs):
+    from bake_public_substrate import route_collisions
+    assert route_collisions(_nodes(*pairs), REAL_PREFIXES) == [sorted(i for i, _ in pairs)]
+
+
+def test_the_same_slug_under_different_types_is_not_a_collision():
+    from bake_public_substrate import route_collisions
+    nodes = _nodes(("person-x", "Person"), ("project-x", "Project"), ("permit-x", "Record"))
+    assert route_collisions(nodes, REAL_PREFIXES) == []
+
+
+def test_the_bake_refuses_an_artifact_with_colliding_routes(tmp_path: Path) -> None:
+    node_sources, edge_sources, registry, sqlite_path, report_path = _fixture(tmp_path)
+    reg = json.loads(registry.read_text())
+    reg.setdefault("id_prefixes", {}).update(REAL_PREFIXES)
+    reg["graph_node_types"]["Project"] = {"searchable": True, "outbound_eligible": True}
+    registry.write_text(json.dumps(reg))
+    _write_jsonl(node_sources[0].parent / "extra-nodes.jsonl", [
+        {"id": "project-permit-x", "node_type": "Project", "labels": ["Project"], "properties": {}},
+        {"id": "permit-x", "node_type": "Project", "labels": ["Project"], "properties": {}},
+    ])
+
+    with pytest.raises(ValueError, match="share a URL"):
+        bake_substrate([*node_sources, node_sources[0].parent / "extra-nodes.jsonl"],
+                       edge_sources, registry, sqlite_path, report_path)
+    assert not sqlite_path.exists()

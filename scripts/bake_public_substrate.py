@@ -280,6 +280,23 @@ def _load_type_registry(registry_path: Path) -> dict:
     }
 
 
+def _route_key(node_id: str, node_type: str, id_prefixes: dict[str, str]) -> tuple[str, str]:
+    """(type, slug) of the node's public URL; mirrors entityRoute in
+    app/src/lib/entity-route.ts: strip the longest id prefix registered for the
+    node's own type, else keep the whole id."""
+    own = sorted((p for p, t in id_prefixes.items() if t == node_type), key=len, reverse=True)
+    prefix = next((p for p in own if node_id.startswith(p)), "")
+    return node_type, node_id[len(prefix):]
+
+
+def route_collisions(nodes: dict[str, "BakedNode"], id_prefixes: dict[str, str]) -> list[list[str]]:
+    """Groups of node ids that would share one URL (the app would serve one for all)."""
+    groups: dict[tuple[str, str], list[str]] = defaultdict(list)
+    for node in nodes.values():
+        groups[_route_key(node.id, node.type, id_prefixes)].append(node.id)
+    return sorted(sorted(ids) for ids in groups.values() if len(ids) > 1)
+
+
 def _is_stripped_property(key: str) -> bool:
     return (
         key == "payload_json"
@@ -1205,6 +1222,10 @@ def bake_substrate(
 
     _validate_node_types(node_rows, known_types)
     nodes, node_validation = _compose_nodes(node_rows)
+    collisions = route_collisions(nodes, _load_type_registry(registry)["id_prefixes"])
+    if collisions:
+        raise ValueError(f"{len(collisions)} group(s) of nodes would share a URL, e.g. {collisions[:3]}: "
+                         f"the app would serve one of them for all; fix the ids before baking")
     exposure = _apply_exposure_policy(nodes)
     edges, edge_validation = _compose_edges(edge_rows)
     identity_links = _identity_link_rows(edges)

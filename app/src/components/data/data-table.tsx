@@ -15,8 +15,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ColumnDef } from "@/lib/server/data-queries";
-import { urlSegmentForType } from "@/lib/type-display";
-import { resolveTypeFromId } from "@/lib/node-types.generated";
+import { entityRouteForId } from "@/lib/entity-route";
 
 export type DataTableProps = {
   rows: Record<string, unknown>[];
@@ -30,15 +29,6 @@ type SortState = {
   dir: "asc" | "desc";
 } | null;
 
-function routeForId(id: string): string | null {
-  // Resolve the NodeType from the id prefix via the single registry-derived
-  // resolver (handles the multi-hyphen `agenda-item-` prefix that the old
-  // first-hyphen split mis-handled). No known prefix → no link.
-  const type = resolveTypeFromId(id);
-  if (!type) return null;
-  const slug = id.includes("-") ? id.slice(id.indexOf("-") + 1) : id;
-  return `/${urlSegmentForType(type)}/${slug}`;
-}
 
 function formatAmount(v: unknown): string {
   if (v == null || v === "") return "—";
@@ -171,7 +161,7 @@ export function DataTable({ rows, columns, slug }: DataTableProps) {
                   const align =
                     col.alignment === "right" ? "text-right" : "text-left";
                   if (col.link === "entity-route" && typeof rawValue === "string") {
-                    const route = routeForId(rawValue);
+                    const route = entityRouteForId(rawValue); // no known prefix → no link
                     if (route) {
                       return (
                         <td

@@ -248,6 +248,14 @@ function makeFixtureDb(): string {
     ]),
   );
 
+  // Ids whose prefix is not the URL segment's (2026-09-29: 66K such pages 404'd).
+  insertNode(db, { id: "permit-marin-IN_B1_1", type: "Project", label: "Geneva Way permit",
+    props: { address: "GENEVA WAY, SAN RAFAEL" } });
+  insertNode(db, { id: "agenda-item-2019-01-22-sr-1", type: "AgendaItem", label: "Item 1" });
+  insertNode(db, { id: "doc-2023-12-14-plan", type: "Record", label: "Implementation plan" });
+  // Decoy for the double-decode test: "%41" decoded a second time would find it.
+  insertNode(db, { id: "project-A", type: "Project", label: "Decoy" });
+
   db.close();
   return dbPath;
 }
@@ -257,6 +265,55 @@ function edgeKey(edge: { source: string; target: string; type: string }) {
 }
 
 describe("loadEntitySubstrate", () => {
+  describe("an id whose prefix is not its URL segment", () => {
+    beforeEach(() => {
+      vi.resetModules();
+      process.env.SUBSTRATE_DB_PATH = makeFixtureDb();
+    });
+
+    it.each([
+      ["project", "permit-marin-IN_B1_1", "permit-marin-IN_B1_1"],
+      ["agenda-item", "2019-01-22-sr-1", "agenda-item-2019-01-22-sr-1"],
+      ["record", "doc-2023-12-14-plan", "doc-2023-12-14-plan"],
+    ])("/%s/%s resolves to %s", async (segment, slug, id) => {
+      const { loadEntitySubstrate } = await import("@/lib/server/entity-loader-substrate");
+      expect((await loadEntitySubstrate(segment, slug))?.id).toBe(id);
+    });
+
+    it("links every neighbor by a route that resolves back to it", async () => {
+      const { loadEntitySubstrate } = await import("@/lib/server/entity-loader-substrate");
+      const alice = await loadEntitySubstrate("person", "alice");
+      expect(alice?.neighbors.length).toBeGreaterThan(0);
+      for (const neighbor of alice!.neighbors) {
+        const [, segment, slug] = neighbor.route.split("/");
+        expect((await loadEntitySubstrate(segment, decodeURIComponent(slug)))?.id, neighbor.route).toBe(neighbor.id);
+      }
+    });
+
+    it.each(["permit-marin-IN_B1_1", "agenda-item-2019-01-22-sr-1", "doc-2023-12-14-plan", "person-alice"])(
+      "loads %s by its full id (the explorer's ?focus=)", async (id) => {
+        const { loadEntitySubstrateById } = await import("@/lib/server/entity-loader-substrate");
+        expect((await loadEntitySubstrateById(id))?.id).toBe(id);
+      },
+    );
+
+    it("loads nothing for an unknown full id", async () => {
+      const { loadEntitySubstrateById } = await import("@/lib/server/entity-loader-substrate");
+      expect(await loadEntitySubstrateById("permit-nope")).toBeNull();
+    });
+
+    it("takes the slug as Next hands it over, already decoded (no second decode)", async () => {
+      const { loadEntitySubstrate } = await import("@/lib/server/entity-loader-substrate");
+      // "%41" must stay literal: decoding it again would look up "project-A".
+      expect(await loadEntitySubstrate("project", "%41")).toBeNull();
+    });
+
+    it("never serves a node under another type's segment", async () => {
+      const { loadEntitySubstrate } = await import("@/lib/server/entity-loader-substrate");
+      expect(await loadEntitySubstrate("person", "permit-marin-IN_B1_1")).toBeNull();
+    });
+  });
+
   beforeEach(() => {
     vi.resetModules();
     process.env.SUBSTRATE_DB_PATH = makeFixtureDb();

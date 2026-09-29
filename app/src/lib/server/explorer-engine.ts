@@ -8,7 +8,8 @@ import {
 import { aggregateCapFor, quotaFor, type HopLimit } from "@/lib/explorer/expand-quotas";
 import { loadGraph } from "@/lib/server/graph-engine";
 import { SUB_SPECS, UNIVERSAL_EXPAND_EDGES } from "@/lib/server/explorer-queries";
-import { urlSegmentForType, type NodeType } from "@/lib/type-display";
+import { type NodeType } from "@/lib/type-display";
+import { entityRoute } from "@/lib/entity-route";
 
 type EdgeStyle = "governance" | "money" | "legal-constrains";
 
@@ -73,10 +74,6 @@ function classifyEdgeStyle(relType: string): EdgeStyle {
   return "governance";
 }
 
-function routeFor(id: string, type: NodeType): string {
-  const slug = id.includes("-") ? id.slice(id.indexOf("-") + 1) : id;
-  return `/${urlSegmentForType(type)}/${slug}`;
-}
 
 function unique(values: string[]): string[] {
   return Array.from(new Set(values));
@@ -313,7 +310,7 @@ export function expandSubstrate(params: ExpandSubstrateParams): ExpandSubstrateR
     id: candidate.id,
     type: candidate.type,
     label: candidate.label,
-    route: routeFor(candidate.id, candidate.type),
+    route: entityRoute(candidate.id, candidate.type),
     ring: candidate.ring,
     event_date: candidate.eventDate,
   }));

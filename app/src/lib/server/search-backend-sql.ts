@@ -2,8 +2,8 @@ import "server-only";
 
 import { canonicalType } from "@/lib/canonical-type";
 import { getSubstrateDb } from "@/lib/server/substrate";
-import { urlSegmentForType } from "@/lib/type-display";
 import type { SearchResponse, SearchResult } from "@/lib/server/search-backend";
+import { entityRoute } from "@/lib/entity-route";
 
 const SEARCH_LIMIT = 50;
 const SEARCH_PREFILTER_LIMIT = 200;
@@ -24,9 +24,6 @@ export function buildFtsQuery(q: string): string | null {
   return terms.map((term) => `"${term.replaceAll('"', '""')}"`).join(" OR ");
 }
 
-function slugForId(id: string): string {
-  return id.includes("-") ? id.slice(id.indexOf("-") + 1) : id;
-}
 
 function nullableString(value: unknown): string | null {
   return value == null ? null : String(value);
@@ -44,7 +41,7 @@ function rowToResult(row: StoredSearchNode): SearchResult {
     id: row.id,
     type,
     search_label: searchLabel,
-    route: `/${urlSegmentForType(type)}/${slugForId(row.id)}`,
+    route: entityRoute(row.id, type),
     key_fact: nullableString(props.search_key_fact),
     last_activity: nullableString(props.search_last_activity),
     jurisdiction: nullableString(props.jurisdiction_name),

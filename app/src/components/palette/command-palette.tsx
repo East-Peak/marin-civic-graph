@@ -18,7 +18,8 @@ import {
   PaletteResults,
   type PaletteResultItem,
 } from "@/components/palette/palette-results";
-import { urlSegmentForType } from "@/lib/type-display";
+import { entityRoute } from "@/lib/entity-route";
+import { ALL_TYPES, type NodeType } from "@/lib/type-display";
 
 const SEARCH_DEBOUNCE_MS = 150;
 const RECENT_KEY = "openmarin_recent_entities";
@@ -97,23 +98,18 @@ const QUICK_JUMPS: PaletteResultItem[] = [
 
 function recentsAsItems(rs: RecentEntity[]): PaletteResultItem[] {
   return rs.map((r) => {
-    // Best-effort: type-display handles all known node types; if we get a
-    // stray string we fall back to the type itself so the route is still
-    // clickable and visible.
-    let segment: string;
-    try {
-      segment = urlSegmentForType(r.type as Parameters<typeof urlSegmentForType>[0]);
-    } catch {
-      segment = r.type.toLowerCase();
-    }
-    const slug = r.id.includes("-") ? r.id.slice(r.id.indexOf("-") + 1) : r.id;
+    // Recents come from localStorage: a known type gets the canonical route;
+    // a stray type string falls back to itself so the item stays clickable.
+    const route = (ALL_TYPES as readonly string[]).includes(r.type)
+      ? entityRoute(r.id, r.type as NodeType)
+      : `/${r.type.toLowerCase()}/${encodeURIComponent(r.id)}`;
     return {
       kind: "recent" as const,
       id: r.id,
       type: r.type,
       label: r.label,
       key_fact: null,
-      route: `/${segment}/${slug}`,
+      route,
     };
   });
 }

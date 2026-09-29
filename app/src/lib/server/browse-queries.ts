@@ -19,6 +19,7 @@ import { factsForEntity } from "@/lib/server/entity-facts";
 import { runQuery } from "@/lib/neo4j";
 import { servingBackend } from "@/lib/server/substrate";
 import { urlSegmentForType } from "@/lib/type-display";
+import { entityRoute } from "@/lib/entity-route";
 
 export const DEFAULT_LIMIT = 50;
 export const MAX_LIMIT = 200;
@@ -312,16 +313,14 @@ export async function runBrowseQuery(opts: BrowseQueryOptions): Promise<BrowseRe
   const { cypher, params, columns } = buildBrowseQuery(opts);
   const records = await runQuery(cypher, params);
   const limit = clampLimit(opts.limit);
-  const urlType = urlSegmentForType(type);
 
   const rows: BrowseRow[] = records.map((r) => {
     const id = String(r.get("id"));
-    const slug = id.includes("-") ? id.slice(id.indexOf("-") + 1) : id;
     const row: BrowseRow = {
       id,
       type,
       search_label: String(r.get("search_label") ?? id),
-      route: `/${urlType}/${slug}`,
+      route: entityRoute(id, type),
     };
     for (const col of columns) {
       if (col.key === "search_label") continue;

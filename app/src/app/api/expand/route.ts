@@ -25,7 +25,8 @@ import {
 } from "@/lib/edge-vocabulary";
 import { jsonError } from "@/lib/api-errors";
 import { canonicalType } from "@/lib/canonical-type";
-import { urlSegmentForType, ALL_TYPES, type NodeType } from "@/lib/type-display";
+import { ALL_TYPES, type NodeType } from "@/lib/type-display";
+import { entityRoute } from "@/lib/entity-route";
 
 // ---------------------------------------------------------------------------
 // Shared edge-style classifier — mirrors entity-loader.ts. Kept local so the
@@ -44,10 +45,6 @@ function classifyEdgeStyle(relType: string): EdgeStyle {
   return "governance";
 }
 
-function routeFor(id: string, type: NodeType): string {
-  const slug = id.includes("-") ? id.slice(id.indexOf("-") + 1) : id;
-  return `/${urlSegmentForType(type)}/${slug}`;
-}
 
 // ---------------------------------------------------------------------------
 // Validation helpers
@@ -159,7 +156,7 @@ export async function GET(req: Request) {
         id,
         type,
         label: String(r.get("label") ?? id),
-        route: routeFor(id, type),
+        route: entityRoute(id, type),
         ring: Number(r.get("ring") ?? 1),
         event_date: eventDate,
       });

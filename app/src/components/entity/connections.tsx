@@ -4,8 +4,8 @@
 
 import Link from "next/link";
 import type { EntityPayload, Neighbor } from "@/lib/server/entity-loader";
-import { canonicalType } from "@/lib/canonical-type";
-import { displayNameForType, urlSegmentForType } from "@/lib/type-display";
+import { displayNameForType } from "@/lib/type-display";
+import { entityRouteForId } from "@/lib/entity-route";
 
 type Grouped = {
   relType: string;
@@ -76,12 +76,6 @@ function formatMoney(value: number): string {
   }).format(value);
 }
 
-function routeForId(id: string): string | null {
-  const type = canonicalType([], id);
-  if (!type) return null;
-  const slug = id.includes("-") ? id.slice(id.indexOf("-") + 1) : id;
-  return `/${urlSegmentForType(type)}/${slug}`;
-}
 
 function VerifiedMoneyBlock({ entity }: { entity: EntityPayload }) {
   const rollup = entity.money_rollup;
@@ -117,7 +111,7 @@ function VerifiedMoneyBlock({ entity }: { entity: EntityPayload }) {
         {rollup.top_counterparties.length > 0 && (
           <ul className="grid gap-1">
             {rollup.top_counterparties.map((counterparty) => {
-              const route = routeForId(counterparty.id);
+              const route = entityRouteForId(counterparty.id);
               const inner = (
                 <>
                   <span className="text-body">{counterparty.label}</span>

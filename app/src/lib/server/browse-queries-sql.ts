@@ -1,6 +1,5 @@
 import "server-only";
 
-import { urlSegmentForType } from "@/lib/type-display";
 import {
   clampLimit,
   columnsForType,
@@ -9,6 +8,7 @@ import {
   type BrowseRow,
 } from "@/lib/server/browse-queries";
 import { getSubstrateDb } from "@/lib/server/substrate";
+import { entityRoute } from "@/lib/entity-route";
 
 type StoredBrowseRow = {
   id: string;
@@ -29,9 +29,6 @@ function storedValue(raw: string | null): unknown {
   return raw == null ? null : JSON.parse(raw);
 }
 
-function slugForId(id: string): string {
-  return id.includes("-") ? id.slice(id.indexOf("-") + 1) : id;
-}
 
 export function runBrowseQuerySubstrate(opts: BrowseQueryOptions): BrowseResult {
   const type = opts.type;
@@ -54,7 +51,6 @@ export function runBrowseQuerySubstrate(opts: BrowseQueryOptions): BrowseResult 
     )
     .all(type, cursor, cursor, search, search, limit) as StoredBrowseRow[];
 
-  const urlType = urlSegmentForType(type);
   const rows: BrowseRow[] = storedRows.map((stored) => {
     const values = new Map<string, unknown>();
     if (stored.col1_key != null) values.set(stored.col1_key, storedValue(stored.col1_value));
@@ -64,7 +60,7 @@ export function runBrowseQuerySubstrate(opts: BrowseQueryOptions): BrowseResult 
       id: stored.id,
       type,
       search_label: stored.search_label,
-      route: `/${urlType}/${slugForId(stored.id)}`,
+      route: entityRoute(stored.id, type),
     };
     for (const col of columns) {
       if (col.key === "search_label") continue;

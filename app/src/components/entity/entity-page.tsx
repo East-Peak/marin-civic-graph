@@ -29,7 +29,7 @@ import { EvidenceDrawer } from "@/components/entity/evidence-drawer";
 import { RecentEntityTracker } from "@/components/shortcuts/recent-entity-tracker";
 import { loadStatus } from "@/lib/server/homepage-data";
 import { loadEvidence } from "@/lib/server/entity-evidence";
-import { urlSegmentForType } from "@/lib/type-display";
+import { entityRoute } from "@/lib/entity-route";
 
 /**
  * Tier 1 focus types — mirrors entity-loader.ts. Exported so Batch F
@@ -50,10 +50,6 @@ export function isTier1(type: NodeType): boolean {
   return TIER_1_FOCUS_TYPES.has(type);
 }
 
-function routeFor(entity: EntityPayload): string {
-  const slug = entity.id.includes("-") ? entity.id.slice(entity.id.indexOf("-") + 1) : entity.id;
-  return `/${urlSegmentForType(entity.type)}/${slug}`;
-}
 
 /**
  * Record-focus source link (Codex round 1 fix 7). A Record page goes
@@ -101,7 +97,7 @@ export async function EntityPage({ entity }: { entity: EntityPayload }) {
   ]);
 
   const tier1 = isTier1(entity.type);
-  const currentPath = routeFor(entity);
+  const currentPath = entityRoute(entity.id, entity.type);
 
   return (
     <div className="min-h-screen bg-bg">

@@ -6,11 +6,10 @@ import {
   MONEY_EDGES_LIVE,
   PHASE2_WHITELIST_LIVE,
 } from "@/lib/edge-vocabulary";
-import { resolveIdAlias } from "@/lib/id-aliases";
 import { effectiveEventDate } from "@/lib/server/entity-temporal";
 import { loadGraph } from "@/lib/server/graph-engine";
 import { getSubstrateDb } from "@/lib/server/substrate";
-import { urlSegmentForType, type NodeType } from "@/lib/type-display";
+import { type NodeType } from "@/lib/type-display";
 import type {
   EdgeStyle,
   EntityEdge,
@@ -20,6 +19,7 @@ import type {
   Neighbor,
   RecordLineageItem,
 } from "@/lib/server/entity-loader";
+import { entityRoute, resolveEntityId } from "@/lib/entity-route";
 
 const TIER1_TYPES: ReadonlySet<NodeType> = new Set<NodeType>([
   "Person",
@@ -37,23 +37,6 @@ const NODE_CAP = 40;
 const MONEY_EDGES = new Set(MONEY_EDGES_LIVE);
 const LEGAL_EDGES = new Set(LEGAL_EDGES_LIVE);
 
-const SHORT_ID_PREFIX: Record<string, string> = {
-  organization: "org-",
-};
-
-function candidateIdFromSegment(typeSegment: string, slug: string): string {
-  const prefix = typeSegment.replace(/-/g, "") + "-";
-  return `${prefix}${slug}`;
-}
-
-function shortCandidateIdFromSegment(
-  typeSegment: string,
-  slug: string,
-): string | null {
-  const shortPrefix = SHORT_ID_PREFIX[typeSegment];
-  return shortPrefix ? `${shortPrefix}${slug}` : null;
-}
-
 // The bake no longer serializes search_label into props (it is the nodes
 // column); prefer a props copy if an older artifact still carries one.
 function entityLabel(
@@ -69,10 +52,6 @@ function entityLabel(
   );
 }
 
-function routeFor(id: string, type: NodeType): string {
-  const slug = id.includes("-") ? id.slice(id.indexOf("-") + 1) : id;
-  return `/${urlSegmentForType(type)}/${slug}`;
-}
 
 function classifyEdgeStyle(relType: string): EdgeStyle {
   if (MONEY_EDGES.has(relType)) return "money";
@@ -101,7 +80,7 @@ function rowToNeighbor(row: {
     id: row.id,
     type,
     label: row.label ?? row.id,
-    route: routeFor(row.id, type),
+    route: entityRoute(row.id, type),
     ring,
     role: row.role,
     event_date: null,
@@ -110,22 +89,11 @@ function rowToNeighbor(row: {
 
 function resolveFocusId(typeSegment: string, slug: string): string | null {
   const graph = loadGraph();
-  const candidateId = candidateIdFromSegment(typeSegment, slug);
-
-  // Substrate nodes are baked through a primary-key/MERGE path, so the live
-  // duplicate-id guard cannot occur here. Keep the same candidate order, but
-  // each lookup is a simple id hit against the baked nodes table.
-  if (graph.nodeMeta.has(candidateId)) return candidateId;
-
-  const shortId = shortCandidateIdFromSegment(typeSegment, slug);
-  if (shortId && graph.nodeMeta.has(shortId)) return shortId;
-
-  const alias = resolveIdAlias(candidateId);
-  if (alias && alias.id !== candidateId && graph.nodeMeta.has(alias.id)) {
-    return alias.id;
-  }
-
-  return null;
+  // Next hands the slug over already decoded; decoding again would corrupt a '%'.
+  return resolveEntityId(typeSegment, slug, (id) => {
+    const meta = graph.nodeMeta.get(id);
+    return meta ? canonicalTypeFromStored(meta.type, id) : null;
+  });
 }
 
 function datedNeighborProps(
@@ -337,10 +305,13 @@ export async function loadEntitySubstrate(
   typeSegment: string,
   slug: string,
 ): Promise<EntityPayload | null> {
-  const graph = loadGraph();
   const id = resolveFocusId(typeSegment, slug);
-  if (!id) return null;
+  return id ? loadEntitySubstrateById(id) : null;
+}
 
+/** Load by full id (the explorer's ?focus=): no route parsing at all. */
+export async function loadEntitySubstrateById(id: string): Promise<EntityPayload | null> {
+  const graph = loadGraph();
   const meta = graph.nodeMeta.get(id);
   if (!meta) return null;
   const type = canonicalTypeFromStored(meta.type, id);

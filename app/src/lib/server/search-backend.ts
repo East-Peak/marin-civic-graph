@@ -12,8 +12,9 @@ import "server-only";
 import { runQuery } from "@/lib/neo4j";
 import { runSearchSubstrate } from "@/lib/server/search-backend-sql";
 import { servingBackend } from "@/lib/server/substrate";
-import { urlSegmentForType, type NodeType } from "@/lib/type-display";
+import { type NodeType } from "@/lib/type-display";
 import { canonicalType } from "@/lib/canonical-type";
+import { entityRoute } from "@/lib/entity-route";
 
 export const MAX_Q_LENGTH = 500;
 
@@ -52,13 +53,11 @@ function nodeToResult(node: Neo4jNode): SearchResult {
   const props = node.properties;
   const id = String(props.id);
   const type = canonicalType(node.labels, id) ?? "Person";
-  const slug = id.includes("-") ? id.slice(id.indexOf("-") + 1) : id;
-  const urlType = urlSegmentForType(type);
   return {
     id,
     type,
     search_label: String(props.search_label ?? id),
-    route: `/${urlType}/${slug}`,
+    route: entityRoute(id, type),
     key_fact: (props.search_key_fact as string) ?? null,
     last_activity: (props.search_last_activity as string) ?? null,
     jurisdiction: (props.jurisdiction_name as string) ?? null,
