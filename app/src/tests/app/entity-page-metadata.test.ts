@@ -24,10 +24,10 @@ describe("entity page metadata", () => {
     ["person", "many-small", "MANY SMALL", "people"],
     ["person", "evidenced", "EVIDENCED GIVER", "people"],
     ["person", "ocr-only", "OCR ONLY", "people"],
-    ["organization", "same-as-giver", "SAME AS GIVER INC", "organizations"],
+    ["organization", "same-as-giver", "LINKED GIVER INC", "organizations"],
     // Legacy segments render the same profile, so they carry the same metadata.
     ["actor", "many-small", "MANY SMALL", "people"],
-    ["inst", "same-as-giver", "SAME AS GIVER INC", "organizations"],
+    ["inst", "same-as-giver", "LINKED GIVER INC", "organizations"],
   ])("keeps the contributor-only page /%s/%s out of search indexes", async (type, slug, name, kind) => {
     const metadata = await page.generateMetadata(params(type, slug));
     expect(metadata.title).toBe(`Contributions reported under ${name}`);

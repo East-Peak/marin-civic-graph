@@ -26,6 +26,7 @@ import { Connections } from "@/components/entity/connections";
 import { TimelineRibbon } from "@/components/entity/timeline-ribbon";
 import { EditorialCallout } from "@/components/entity/editorial-callout";
 import { EvidenceDrawer } from "@/components/entity/evidence-drawer";
+import { CommitteeTopContributors } from "@/components/contributions/committee-top-contributors";
 import { RecentEntityTracker } from "@/components/shortcuts/recent-entity-tracker";
 import { loadStatus } from "@/lib/server/homepage-data";
 import { loadEvidence } from "@/lib/server/entity-evidence";
@@ -87,7 +88,14 @@ export function RecordSourceLink({ entity }: { entity: EntityPayload }) {
   );
 }
 
-export async function EntityPage({ entity }: { entity: EntityPayload }) {
+export async function EntityPage({
+  entity,
+  contributorsAfter = null,
+}: {
+  entity: EntityPayload;
+  /** A committee page's ranking cursor (`?contributors_after=`). */
+  contributorsAfter?: string | null;
+}) {
   const [status, records] = await Promise.all([
     loadStatus(),
     loadEvidence(entity.id).catch((err) => {
@@ -133,6 +141,10 @@ export async function EntityPage({ entity }: { entity: EntityPayload }) {
           <FactsPanel entity={entity} />
         </div>
       </div>
+
+      {entity.type === "Committee" && (
+        <CommitteeTopContributors committeeId={entity.id} committeePath={currentPath} after={contributorsAfter} />
+      )}
 
       <Connections entity={entity} />
 
