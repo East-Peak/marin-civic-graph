@@ -28,6 +28,25 @@ function period(start: unknown, end: unknown): string | null {
 }
 
 /**
+ * An individual contributor's details, as reported on the filing (the bake
+ * publishes them only on eligible contributions). Absent fields are omitted,
+ * not dashed; Location reads "City, ST 94901" from whatever parts exist.
+ */
+function contributorRows(props: Record<string, unknown>): FactRow[] {
+  const cityState = [s(props.reported_city), s(props.reported_state)]
+    .filter(Boolean)
+    .join(", ");
+  const location = [cityState, s(props.reported_zip5)].filter(Boolean).join(" ");
+  const rows = [
+    { key: "Occupation", value: s(props.reported_occupation) },
+    { key: "Employer", value: s(props.reported_employer) },
+    { key: "Location", value: location || null },
+  ].filter((row) => row.value !== null);
+  if (rows.length === 0) return [];
+  return [{ key: "Contributor", value: "As reported on the filing" }, ...rows];
+}
+
+/**
  * Return the ordered list of scalar fact rows to display in the right-rail
  * facts panel for the given entity. The final row is always the canonical
  * entity id so Stuart can copy it for citation.
@@ -108,6 +127,7 @@ export function factsForEntity(
           { key: "Date", value: s(props.flow_date) },
           { key: "Type", value: s(props.flow_type) },
           { key: "Schedule", value: s(props.source_schedule) },
+          ...contributorRows(props),
         ];
       case "Seat":
         return [

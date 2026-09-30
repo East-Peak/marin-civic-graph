@@ -66,4 +66,46 @@ describe("factsForEntity", () => {
       expect(rows[rows.length - 1].key).toBe("ID");
     }
   });
+  it("shows an individual contributor's details as reported on the filing", () => {
+    const rows = factsForEntity("MoneyFlow", {
+      id: "moneyflow-1400001-a1",
+      amount: 250,
+      flow_date: "2024-01-05",
+      flow_type: "contribution",
+      source_schedule: "A",
+      reported_occupation: "Engineer",
+      reported_employer: "Example Co",
+      reported_city: "Sampleton",
+      reported_state: "CA",
+      reported_zip5: "94999",
+    });
+    expect(rows.map((r) => r.key)).toEqual([
+      "Amount", "Date", "Type", "Schedule", "Contributor", "Occupation", "Employer", "Location", "ID",
+    ]);
+    const map = Object.fromEntries(rows.map((r) => [r.key, r.value]));
+    expect(map["Contributor"]).toBe("As reported on the filing");
+    expect(map["Occupation"]).toBe("Engineer");
+    expect(map["Employer"]).toBe("Example Co");
+    expect(map["Location"]).toBe("Sampleton, CA 94999");
+  });
+
+  it("omits contributor fields the flow does not carry", () => {
+    const partial = factsForEntity("MoneyFlow", {
+      id: "moneyflow-1400001-a2",
+      reported_employer: "SELF-EMPLOYED",
+      reported_state: "CA",
+      reported_zip5: "94999",
+    });
+    expect(partial.map((r) => r.key)).toEqual([
+      "Amount", "Date", "Type", "Schedule", "Contributor", "Employer", "Location", "ID",
+    ]);
+    expect(Object.fromEntries(partial.map((r) => [r.key, r.value]))["Location"]).toBe("CA 94999");
+    const cityOnly = factsForEntity("MoneyFlow", { id: "m", reported_city: "Sampleton" });
+    expect(Object.fromEntries(cityOnly.map((r) => [r.key, r.value]))["Location"]).toBe("Sampleton");
+  });
+
+  it("adds no contributor rows to a flow without details", () => {
+    const rows = factsForEntity("MoneyFlow", { id: "moneyflow-1400001-e1", flow_type: "expenditure" });
+    expect(rows.map((r) => r.key)).toEqual(["Amount", "Date", "Type", "Schedule", "ID"]);
+  });
 });
