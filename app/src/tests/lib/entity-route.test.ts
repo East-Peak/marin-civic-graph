@@ -5,7 +5,13 @@
 // round-trips when the id prefix equals the URL segment, so every `permit-` Project
 // (51K), every `agenda-item-` AgendaItem (15K) and the `doc-` Records 404'd (2026-09-29).
 import { describe, it, expect } from "vitest";
-import { entityRoute, resolveEntityId, typeForSegment } from "@/lib/entity-route";
+import {
+  contributionNameRoute,
+  entityRoute,
+  resolveContributorId,
+  resolveEntityId,
+  typeForSegment,
+} from "@/lib/entity-route";
 import { TYPE_BY_ID_PREFIX, type NodeType } from "@/lib/node-types.generated";
 import { urlSegmentForType } from "@/lib/type-display";
 
@@ -88,5 +94,24 @@ describe("typeForSegment", () => {
     for (const type of new Set(Object.values(TYPE_BY_ID_PREFIX))) {
       expect(typeForSegment(urlSegmentForType(type))).toBe(type);
     }
+  });
+});
+
+describe("contributionNameRoute", () => {
+  it("keys a contributor's name view by the entity route of its node", () => {
+    expect(contributionNameRoute("person-sample-giver", "Person")).toBe(
+      "/contributions/by-name/person/sample-giver",
+    );
+    expect(contributionNameRoute("org-sample-fund", "Organization")).toBe(
+      "/contributions/by-name/organization/sample-fund",
+    );
+  });
+
+  it("resolves back through resolveEntityId, and only for Person or Organization", () => {
+    const nodes = lookupIn({ "person-sample-giver": "Person", "org-sample-giver": "Organization" });
+    expect(resolveContributorId("person", "sample-giver", nodes)).toBe("person-sample-giver");
+    expect(resolveContributorId("organization", "sample-giver", nodes)).toBe("org-sample-giver");
+    expect(resolveContributorId("committee", "sample-giver", lookupIn({ "committee-sample-giver": "Committee" }))).toBeNull();
+    expect(resolveContributorId("person", "nobody", nodes)).toBeNull();
   });
 });

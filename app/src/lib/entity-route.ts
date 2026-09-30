@@ -59,3 +59,25 @@ export function resolveEntityId(
   if (alias && isOfType(alias.id)) return alias.id;
   return null;
 }
+
+/** The node types whose contributions a name view lists: a recorded classification, not an identity. */
+export type ContributorType = Extract<NodeType, "Person" | "Organization">;
+
+export function isContributorType(type: NodeType | null): type is ContributorType {
+  return type === "Person" || type === "Organization";
+}
+
+/** `/contributions/by-name/<segment>/<slug>`: the contributor node's own entity route, re-rooted. */
+export function contributionNameRoute(id: string, type: ContributorType): string {
+  return `/contributions/by-name${entityRoute(id, type)}`;
+}
+
+/** The contributor node a name-view route names, or null for any other type. */
+export function resolveContributorId(
+  segment: string,
+  slug: string,
+  lookupType: (id: string) => NodeType | null,
+): string | null {
+  if (!isContributorType(typeForSegment(segment))) return null;
+  return resolveEntityId(segment, slug, lookupType);
+}
