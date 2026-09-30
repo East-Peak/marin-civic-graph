@@ -10,12 +10,13 @@ export const COMMITTEE_CAPTION =
 
 /** Pages a name group must never lead to: identities and government business. */
 const FORBIDDEN_ROUTE = /^\/(person|organization|agreement|amendment|contract|decision|agenda-item|meeting|vote|seat|seat-service|filing|project)\//;
-const ALLOWED_ROUTE = /^\/(committee\/|money-flow\/|contributions(\/|\?|$))/;
+const ALLOWED_ROUTE = /^\/(committee\/|money-flow\/|contributions(\/|\?|#|$))|^\/(graph|data|about)?$/;
 
 export function hrefsIn(container: HTMLElement): string[] {
   return [...container.querySelectorAll("a[href]")].map((a) => a.getAttribute("href")!);
 }
 
+/** Every link on the rendered surface, site navigation included. */
 export function assertOnlyContributionLinks(container: HTMLElement) {
   const hrefs = hrefsIn(container);
   for (const href of hrefs) {

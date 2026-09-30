@@ -20,8 +20,6 @@ vi.mock("@/lib/server/homepage-data", () => ({
     subgraphs_built_at: null,
   })),
 }));
-vi.mock("@/components/layout/status-bar", () => ({ StatusBar: () => <div data-testid="status-bar" /> }));
-vi.mock("@/components/layout/nav-header", () => ({ NavHeader: () => <div data-testid="nav-header" /> }));
 vi.mock("next/navigation", () => ({
   notFound: () => {
     throw new Error("NEXT_NOT_FOUND");

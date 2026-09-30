@@ -128,12 +128,12 @@ describe("loadCommitteeTopContributors", () => {
     const page = mod.loadCommitteeTopContributors("committee-alpha", { limit: 10 });
     expect(page.summary).toEqual({ names: 4, count: 35, total_cents: 286_510 });
     expect(
-      page.rows.map((r) => [r.contributor.id, r.count, r.total_cents]),
+      page.rows.map((r) => [r.rank, r.contributor.id, r.count, r.total_cents]),
     ).toEqual([
-      ["person-many-small", 30, 150_000],
-      ["org-one-large", 1, 100_000],
-      ["person-able-sample", 3, 32_510],
-      ["person-dup-path", 1, 4_000],
+      [1, "person-many-small", 30, 150_000],
+      [2, "org-one-large", 1, 100_000],
+      [3, "person-able-sample", 3, 32_510],
+      [4, "person-dup-path", 1, 4_000],
     ]);
     expect(page.rows[1].contributor).toEqual({
       id: "org-one-large",
@@ -220,15 +220,18 @@ describe("loadCommitteeTopContributors", () => {
     for (const committee of ["committee-alpha", "committee-beta"]) {
       const full = mod.loadCommitteeTopContributors(committee, { limit: 100 }).rows.map((r) => r.contributor.id);
       const seen: string[] = [];
+      const ranks: number[] = [];
       let after: string | null = null;
       do {
         const page = mod.loadCommitteeTopContributors(committee, { limit, after });
         expect(page.rows.length).toBeLessThanOrEqual(limit);
         seen.push(...page.rows.map((r) => r.contributor.id));
+        ranks.push(...page.rows.map((r) => r.rank));
         after = page.next_cursor;
       } while (after);
       expect(seen).toEqual(full);
       expect(new Set(seen).size).toBe(seen.length);
+      expect(ranks).toEqual(seen.map((_, i) => i + 1));
     }
   });
 
@@ -304,6 +307,9 @@ describe("isContributorOnly", () => {
   it.each([
     ["person-many-small", true],
     ["person-evidenced", true], // an EVIDENCED_BY edge is provenance, not a role
+    ["org-same-as-giver", true], // identity-linked to a peer with no role of its own
+    ["org-same-as-peer", false], // gives nothing itself
+    ["person-alias-giver", false], // identity-linked to an official
     ["person-ocr-only", true],
     ["person-able-sample", false], // also a payee
     ["person-candidate", false], // controls a committee

@@ -7,9 +7,10 @@
 //   committee-beta    8 rows   74,765  tie-a 30,000 = tie-b 30,000 (id order) > pat-example 7,500
 //                                      > able-sample 6,000 (who also gives to alpha)
 //                                      > float-noise 10 + 20 + 1,235 = 1,265 > zero 0
-//   committee-gamma   2 rows   52,000  candidate 50,000 (the committee is CONTROLLED_BY them)
+//   committee-gamma   4 rows   52,200  candidate 50,000 (the committee is CONTROLLED_BY them)
 //                                      > evidenced 2,000 (its only other edge is EVIDENCED_BY)
-//   all              45 rows  413,275
+//                                      > alias-giver 100 = same-as-giver 100 (SAME_AS-linked)
+//   all              47 rows  413,475
 //
 // Flows that are not reconciled contributions touch the same nodes and must never count:
 // an expenditure paying able-sample, a San Rafael OCR campaign_contribution from able-sample,
@@ -78,8 +79,8 @@ function flow(
   };
 }
 
-export const CONTRIBUTION_COUNT = 45;
-export const CONTRIBUTION_TOTAL_CENTS = 413_275;
+export const CONTRIBUTION_COUNT = 47;
+export const CONTRIBUTION_TOTAL_CENTS = 413_475;
 
 export function buildContributionFixture(): { nodes: NodeRow[]; edges: EdgeRow[] } {
   const nodes: NodeRow[] = [
@@ -112,6 +113,9 @@ export function buildContributionFixture(): { nodes: NodeRow[]; edges: EdgeRow[]
     { id: "person-ocr-only", type: "Person", label: "OCR ONLY" },
     { id: "person-evidenced", type: "Person", label: "EVIDENCED GIVER" },
     { id: "record-sample", type: "Record", label: "Sample filing record" },
+    { id: "org-same-as-giver", type: "Organization", label: "SAME AS GIVER INC" },
+    { id: "org-same-as-peer", type: "Organization", label: "Same As Giver" },
+    { id: "person-alias-giver", type: "Person", label: "ALIAS GIVER" },
     { id: "decision-vote", type: "Decision", label: "Approve the sample contract" },
     { id: "agreement-sample", type: "Agreement", label: "Sample services agreement" },
     { id: "agendaitem-sample", type: "AgendaItem", label: "Sample agenda item" },
@@ -134,6 +138,8 @@ export function buildContributionFixture(): { nodes: NodeRow[]; edges: EdgeRow[]
     flow("moneyflow-zero", 0, "2023-12-04"),
     flow("moneyflow-candidate", 500, "2024-07-01"),
     flow("moneyflow-evidenced", 20, "2024-07-02"),
+    flow("moneyflow-same-as", 1, "2024-07-03"),
+    flow("moneyflow-alias", 1, "2024-07-04"),
 
     flow("moneyflow-expenditure", 900, "2024-08-01", {}, "expenditure"),
     flow("moneyflow-ocr", 5000, "2024-08-02", {}, "campaign_contribution"),
@@ -169,6 +175,12 @@ export function buildContributionFixture(): { nodes: NodeRow[]; edges: EdgeRow[]
     ["committee-gamma", "CONTROLLED_BY", "person-candidate"],
     ...give("person-evidenced", "moneyflow-evidenced", "committee-gamma"),
     ["person-evidenced", "EVIDENCED_BY", "record-sample"],
+    // Identity links are not roles: a contributor linked to a peer with no role of its own stays
+    // contributor-only; one linked to an official does not.
+    ...give("org-same-as-giver", "moneyflow-same-as", "committee-gamma"),
+    ["org-same-as-peer", "SAME_AS", "org-same-as-giver"],
+    ...give("person-alias-giver", "moneyflow-alias", "committee-gamma"),
+    ["person-official-only", "SAME_AS", "person-alias-giver"],
 
     // Not reconciled contributions.
     ["committee-alpha", "FROM_SOURCE", "moneyflow-expenditure"],
@@ -232,6 +244,9 @@ export function makeContributionFixtureDb(): string {
   db.prepare(
     "INSERT INTO identity_links(source, target, assertion_id, basis) VALUES (?, ?, ?, ?)",
   ).run("org-one-large", "org-one-large-canonical", "assert-sample", "verified sample basis");
+  db.prepare(
+    "INSERT INTO identity_links(source, target, assertion_id, basis) VALUES (?, ?, ?, ?)",
+  ).run("org-same-as-peer", "org-same-as-giver", "assert-peer", "sample basis");
   db.prepare(
     `INSERT INTO money_rollups VALUES ('org-one-large', 2, 251000, 1, 1000, ?)`,
   ).run(JSON.stringify([{ id: "org-county", label: "Sample County", total: 250000 }]));

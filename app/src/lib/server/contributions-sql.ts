@@ -17,6 +17,7 @@ import {
   entityRoute,
   isContributorType,
   resolveContributorId,
+  resolveEntityId,
   type ContributorType,
 } from "@/lib/entity-route";
 import { getSubstrateDb } from "@/lib/server/substrate";
@@ -50,6 +51,8 @@ export type ContributionsByName = {
 };
 
 export type CommitteeContributor = {
+  /** 1-based position in this committee's ranking by total, then id. */
+  rank: number;
   contributor: ContributorRef;
   count: number;
   total_cents: number;
@@ -164,19 +167,28 @@ const cursorFor = (cents: number, id: string) => `${cents}:${id}`;
 
 export type ContributorNode = { id: string; type: ContributorType; label: string };
 
-/** The Person/Organization node a `/contributions/by-name/<segment>/<slug>` route names. */
-export function resolveContributorNode(segment: string, slug: string): ContributorNode | null {
-  const db = getSubstrateDb();
-  const lookup = db.prepare("SELECT type, search_label FROM nodes WHERE id = ?");
+type RouteResolver = typeof resolveEntityId;
+
+function resolveNode(resolve: RouteResolver, segment: string, slug: string): ContributorNode | null {
+  const lookup = getSubstrateDb().prepare("SELECT type, search_label FROM nodes WHERE id = ?");
   const stored = (id: string) => lookup.get(id) as { type: string; search_label: string } | undefined;
-  const id = resolveContributorId(segment, slug, (candidate) => {
+  const id = resolve(segment, slug, (candidate) => {
     const row = stored(candidate);
     return row ? canonicalType([row.type], candidate) : null;
   });
-  if (!id) return null;
-  const row = stored(id)!;
-  const type = canonicalType([row.type], id);
-  return isContributorType(type) ? { id, type, label: row.search_label } : null;
+  const row = id ? stored(id) : undefined;
+  const type = id && row ? canonicalType([row.type], id) : null;
+  return id && row && isContributorType(type) ? { id, type, label: row.search_label } : null;
+}
+
+/** The Person/Organization node a `/contributions/by-name/<segment>/<slug>` route names. */
+export function resolveContributorNode(segment: string, slug: string): ContributorNode | null {
+  return resolveNode(resolveContributorId, segment, slug);
+}
+
+/** The Person/Organization node an entity route (legacy /actor/, /inst/ included) renders. */
+export function resolveEntityContributorNode(segment: string, slug: string): ContributorNode | null {
+  return resolveNode(resolveEntityId, segment, slug);
 }
 
 type TripleSql = FlowSql & {
@@ -237,6 +249,7 @@ export function loadContributionsByName(nodeId: string): ContributionsByName | n
 // ---------------------------------------------------------------------------
 
 type NameTotalSql = {
+  rank: number;
   contributor_id: string;
   contributor_type: string;
   contributor_label: string;
@@ -253,7 +266,8 @@ export function loadCommitteeTopContributors(
   const pageSize = clampLimit(limit);
   const committeeRows = `SELECT * FROM (${CONTRIBUTION_TRIPLES}) WHERE recipient_id = @committeeId`;
   const nameTotals = `
-    SELECT contributor_id, contributor_type, contributor_label,
+    SELECT ROW_NUMBER() OVER (ORDER BY SUM(amount_cents) DESC, contributor_id ASC) AS rank,
+           contributor_id, contributor_type, contributor_label,
            COUNT(*) AS count, SUM(amount_cents) AS total_cents
     FROM (SELECT DISTINCT flow_id, amount_cents, contributor_id, contributor_type, contributor_label
           FROM (${committeeRows}))
@@ -297,6 +311,7 @@ export function loadCommitteeTopContributors(
     const flows = rowsFor.all({ committeeId, contributorId: name.contributor_id }) as FlowSql[];
     return [
       {
+        rank: Number(name.rank),
         contributor,
         count: Number(name.count),
         total_cents: Number(name.total_cents),
@@ -391,27 +406,36 @@ export function loadLargestContributions({ limit, after }: PageOptions): Largest
 // ---------------------------------------------------------------------------
 
 /**
- * True when a Person/Organization's only public role is contributing: it gives to at
- * least one contribution-type MoneyFlow (reconciled or San Rafael OCR), has no other edge
- * except EVIDENCED_BY (provenance, not a role), and no identity link.
+ * True when a Person/Organization's only public role is contributing: it gives to at least
+ * one contribution-type MoneyFlow (reconciled or San Rafael OCR), and neither it nor any node
+ * it is identity-linked to (SAME_AS edge or identity_links row) has an edge other than such
+ * gifts, EVIDENCED_BY (provenance) or SAME_AS. Identity links are not roles; a linked peer's
+ * roles are, because its page and this one describe the same linked identity.
  */
 export function isContributorOnly(nodeId: string): boolean {
   const row = getSubstrateDb()
     .prepare(
-      `WITH node AS (SELECT id FROM nodes WHERE id = @id AND type IN ('Person', 'Organization')),
+      `WITH linked(id) AS (
+         SELECT @id
+         UNION SELECT CASE WHEN source = @id THEN target ELSE source END
+           FROM edges WHERE rel = 'SAME_AS' AND (source = @id OR target = @id)
+         UNION SELECT CASE WHEN source = @id THEN target ELSE source END
+           FROM identity_links WHERE source = @id OR target = @id
+       ),
        touching AS (
-         SELECT e.rel, e.source, e.target,
-                COALESCE(e.rel = 'FROM_SOURCE' AND e.source = @id AND m.type = 'MoneyFlow'
+         SELECT l.id AS node, e.rel, e.source,
+                COALESCE(e.rel = 'FROM_SOURCE' AND e.source = l.id AND m.type = 'MoneyFlow'
                   AND json_extract(m.props, '$.flow_type') IN ('contribution', 'campaign_contribution'), 0) AS gives
-         FROM edges e LEFT JOIN nodes m ON m.id = e.target
-         WHERE e.source = @id OR e.target = @id
+         FROM linked l
+         JOIN edges e ON e.source = l.id OR e.target = l.id
+         LEFT JOIN nodes m ON m.id = e.target
        )
        SELECT
-         (SELECT COUNT(*) FROM node) AS present,
-         (SELECT COUNT(*) FROM touching WHERE gives) AS gifts,
-         (SELECT COUNT(*) FROM touching WHERE NOT gives AND NOT (rel = 'EVIDENCED_BY' AND source = @id)) AS other_roles,
-         (SELECT COUNT(*) FROM identity_links WHERE source = @id OR target = @id) AS links`,
+         (SELECT COUNT(*) FROM nodes WHERE id = @id AND type IN ('Person', 'Organization')) AS present,
+         (SELECT COUNT(*) FROM touching WHERE node = @id AND gives) AS gifts,
+         (SELECT COUNT(*) FROM touching
+           WHERE NOT gives AND rel <> 'SAME_AS' AND NOT (rel = 'EVIDENCED_BY' AND source = node)) AS other_roles`,
     )
-    .get({ id: nodeId }) as { present: number; gifts: number; other_roles: number; links: number };
-  return row.present > 0 && row.gifts > 0 && row.other_roles === 0 && row.links === 0;
+    .get({ id: nodeId }) as { present: number; gifts: number; other_roles: number };
+  return row.present > 0 && row.gifts > 0 && row.other_roles === 0;
 }

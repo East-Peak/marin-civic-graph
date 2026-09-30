@@ -6,7 +6,11 @@ import "server-only";
 
 import type { Metadata } from "next";
 import type { ContributorType } from "@/lib/entity-route";
-import { isContributorOnly, resolveContributorNode, type ContributorNode } from "@/lib/server/contributions-sql";
+import {
+  isContributorOnly,
+  resolveEntityContributorNode,
+  type ContributorNode,
+} from "@/lib/server/contributions-sql";
 
 export const NOINDEX: Metadata["robots"] = { index: false, follow: true };
 
@@ -29,7 +33,7 @@ export function contributionNameMetadata(contributor: ContributorNode | null): M
 export function entityPageMetadata(segment: string, slug: string): Metadata {
   let contributor: ContributorNode | null;
   try {
-    contributor = resolveContributorNode(segment, slug);
+    contributor = resolveEntityContributorNode(segment, slug);
   } catch (err) {
     console.warn(`[entity-metadata] substrate lookup failed for /${segment}/${slug}:`, err);
     return {};
