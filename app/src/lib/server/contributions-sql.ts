@@ -11,7 +11,14 @@
 // Public-artifact surfaces: this reads the substrate in either serving mode.
 import "server-only";
 
-import { contributionNameRoute, entityRoute, isContributorType, type ContributorType } from "@/lib/entity-route";
+import { canonicalType } from "@/lib/canonical-type";
+import {
+  contributionNameRoute,
+  entityRoute,
+  isContributorType,
+  resolveContributorId,
+  type ContributorType,
+} from "@/lib/entity-route";
 import { getSubstrateDb } from "@/lib/server/substrate";
 
 export type ReportedDetails = {
@@ -154,6 +161,23 @@ const cursorFor = (cents: number, id: string) => `${cents}:${id}`;
 // ---------------------------------------------------------------------------
 // Name view
 // ---------------------------------------------------------------------------
+
+export type ContributorNode = { id: string; type: ContributorType; label: string };
+
+/** The Person/Organization node a `/contributions/by-name/<segment>/<slug>` route names. */
+export function resolveContributorNode(segment: string, slug: string): ContributorNode | null {
+  const db = getSubstrateDb();
+  const lookup = db.prepare("SELECT type, search_label FROM nodes WHERE id = ?");
+  const stored = (id: string) => lookup.get(id) as { type: string; search_label: string } | undefined;
+  const id = resolveContributorId(segment, slug, (candidate) => {
+    const row = stored(candidate);
+    return row ? canonicalType([row.type], candidate) : null;
+  });
+  if (!id) return null;
+  const row = stored(id)!;
+  const type = canonicalType([row.type], id);
+  return isContributorType(type) ? { id, type, label: row.search_label } : null;
+}
 
 type TripleSql = FlowSql & {
   contributor_id: string;

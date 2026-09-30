@@ -24,6 +24,16 @@ const nextConfig: NextConfig = {
   // which roots tracing outside the project and drops every App Router route (build emits
   // only a pages /404). Anchored to the config file's dir so it's correct from any cwd.
   turbopack: { root: HERE },
+  // A name view groups contributions filed under one name; it is never a profile to index.
+  // The page's robots meta may stream into <body>, so the header says it up front too.
+  async headers() {
+    return [
+      {
+        source: "/contributions/by-name/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex" }],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
