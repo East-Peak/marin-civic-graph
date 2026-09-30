@@ -4,11 +4,12 @@
 //   committee-alpha  35 rows  286,510  many-small 30×5,000 = 150,000 > one-large 100,000
 //                                      > able-sample 25,000 + 10,010 − 2,500 = 32,510
 //                                      > dup-path 4,000 (its edges are stored twice)
-//   committee-beta    7 rows   68,765  tie-a 30,000 = tie-b 30,000 (id order) > pat-example 7,500
+//   committee-beta    8 rows   74,765  tie-a 30,000 = tie-b 30,000 (id order) > pat-example 7,500
+//                                      > able-sample 6,000 (who also gives to alpha)
 //                                      > float-noise 10 + 20 + 1,235 = 1,265 > zero 0
 //   committee-gamma   2 rows   52,000  candidate 50,000 (the committee is CONTROLLED_BY them)
 //                                      > evidenced 2,000 (its only other edge is EVIDENCED_BY)
-//   all              44 rows  407,275
+//   all              45 rows  413,275
 //
 // Flows that are not reconciled contributions touch the same nodes and must never count:
 // an expenditure paying able-sample, a San Rafael OCR campaign_contribution from able-sample,
@@ -37,6 +38,14 @@ export const DETAIL_ABLE_SAMPLETON = {
   reported_city: "Sampleton",
   reported_state: "CA",
   reported_zip5: "94999",
+};
+
+export const DETAIL_ABLE_DEMOTOWN = {
+  reported_occupation: "Principal",
+  reported_employer: "Demotown Academy",
+  reported_city: "Demotown",
+  reported_state: "CA",
+  reported_zip5: "94997",
 };
 
 export const DETAIL_ABLE_EXAMPLEVILLE = {
@@ -69,8 +78,8 @@ function flow(
   };
 }
 
-export const CONTRIBUTION_COUNT = 44;
-export const CONTRIBUTION_TOTAL_CENTS = 407_275;
+export const CONTRIBUTION_COUNT = 45;
+export const CONTRIBUTION_TOTAL_CENTS = 413_275;
 
 export function buildContributionFixture(): { nodes: NodeRow[]; edges: EdgeRow[] } {
   const nodes: NodeRow[] = [
@@ -110,6 +119,7 @@ export function buildContributionFixture(): { nodes: NodeRow[]; edges: EdgeRow[]
     flow("moneyflow-able-1", 250, "2024-03-01", { ...DETAIL_ABLE_SAMPLETON, ...WITHHELD_PROPS }),
     flow("moneyflow-able-2", 100.1, "2024-04-01", DETAIL_ABLE_EXAMPLEVILLE),
     flow("moneyflow-able-refund", -25, "2024-05-01"),
+    flow("moneyflow-able-beta", 60, "2023-09-09", DETAIL_ABLE_DEMOTOWN),
     ...Array.from({ length: 30 }, (_, i) =>
       flow(`moneyflow-small-${String(i).padStart(2, "0")}`, 50, `2024-02-${String((i % 28) + 1).padStart(2, "0")}`),
     ),
@@ -140,6 +150,7 @@ export function buildContributionFixture(): { nodes: NodeRow[]; edges: EdgeRow[]
     ...give("person-able-sample", "moneyflow-able-1", "committee-alpha"),
     ...give("person-able-sample", "moneyflow-able-2", "committee-alpha"),
     ...give("person-able-sample", "moneyflow-able-refund", "committee-alpha"),
+    ...give("person-able-sample", "moneyflow-able-beta", "committee-beta"),
     ...Array.from({ length: 30 }, (_, i) =>
       give("person-many-small", `moneyflow-small-${String(i).padStart(2, "0")}`, "committee-alpha"),
     ).flat(),

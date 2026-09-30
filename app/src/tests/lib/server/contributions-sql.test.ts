@@ -45,8 +45,11 @@ describe("loadContributionsByName", () => {
       "moneyflow-able-refund",
       "moneyflow-able-2",
       "moneyflow-able-1",
+      "moneyflow-able-beta",
     ]);
-    expect(view.rows.map((r) => r.amount_cents)).toEqual([-2_500, 10_010, 25_000]);
+    expect(view.rows.map((r) => r.amount_cents)).toEqual([-2_500, 10_010, 25_000, 6_000]);
+    expect(view.rows[3].recipient.id).toBe("committee-beta");
+    expect(view.rows[3].details.city).toBe("Demotown");
     expect(view.rows[2]).toEqual({
       flow_id: "moneyflow-able-1",
       flow_route: "/money-flow/able-1",
@@ -73,12 +76,17 @@ describe("loadContributionsByName", () => {
       expect(Object.keys(row).sort()).toEqual(ALLOWED_ROW_KEYS);
       expect(Object.keys(row.details).sort()).toEqual(ALLOWED_DETAIL_KEYS);
     }
-    expect(view.totals).toEqual({ count: 3, total_cents: 32_510 });
+    expect(view.totals).toEqual({ count: 4, total_cents: 38_510 });
     expect(view.by_committee).toEqual([
       {
         recipient: { id: "committee-alpha", label: "Committee for Measure Alpha", route: "/committee/alpha" },
         count: 3,
         total_cents: 32_510,
+      },
+      {
+        recipient: { id: "committee-beta", label: "Friends of Beta", route: "/committee/beta" },
+        count: 1,
+        total_cents: 6_000,
       },
     ]);
     assertNoLeaks(view);
@@ -178,8 +186,13 @@ describe("loadCommitteeTopContributors", () => {
       expect(entry.rows).toHaveLength(entry.count);
       expect(entry.rows.reduce((sum, r) => sum + r.amount_cents, 0)).toBe(entry.total_cents);
     }
-    // The same people give to beta; none of those rows may enter alpha's ranking.
+    // able-sample also gives to beta: each committee sees only its own rows, totals and details.
     const beta = mod.loadCommitteeTopContributors("committee-beta", { limit: 10 });
+    const ableAtBeta = beta.rows.find((r) => r.contributor.id === "person-able-sample")!;
+    expect([ableAtBeta.count, ableAtBeta.total_cents]).toEqual([1, 6_000]);
+    expect(ableAtBeta.rows.map((r) => [r.flow_id, r.details.city])).toEqual([["moneyflow-able-beta", "Demotown"]]);
+    expect(JSON.stringify(page)).not.toContain("Demotown");
+    expect(JSON.stringify(beta)).not.toMatch(/Sampleton|Exampleville/);
     const alphaFlows = new Set(page.rows.flatMap((e) => e.rows.map((r) => r.flow_id)));
     for (const entry of beta.rows) for (const r of entry.rows) expect(alphaFlows.has(r.flow_id)).toBe(false);
     assertNoLeaks(page);
@@ -191,10 +204,11 @@ describe("loadCommitteeTopContributors", () => {
       ["person-tie-a", 30_000],
       ["person-tie-b", 30_000],
       ["person-pat-example-2", 7_500],
+      ["person-able-sample", 6_000],
       ["person-float-noise", 1_265],
       ["person-zero", 0],
     ]);
-    expect(page.summary).toEqual({ names: 5, count: 7, total_cents: 68_765 });
+    expect(page.summary).toEqual({ names: 6, count: 8, total_cents: 74_765 });
   });
 
   it("returns an empty page for a committee without contributions", () => {
@@ -218,10 +232,19 @@ describe("loadCommitteeTopContributors", () => {
     }
   });
 
-  it("rejects a malformed cursor instead of guessing", () => {
-    expect(() => mod.loadCommitteeTopContributors("committee-alpha", { limit: 2, after: "junk" })).toThrow(
-      mod.InvalidCursorError,
-    );
+  it.each(["junk", ":person-zero", "1.5:person-zero", "9".repeat(400) + ":person-zero", "12:"])(
+    "rejects the malformed cursor %s instead of guessing",
+    (after) => {
+      expect(() => mod.loadCommitteeTopContributors("committee-alpha", { limit: 2, after })).toThrow(
+        mod.InvalidCursorError,
+      );
+      expect(() => mod.loadLargestContributions({ limit: 2, after })).toThrow(mod.InvalidCursorError);
+    },
+  );
+
+  it("reads everything after the first colon as the id, so an id may contain colons", () => {
+    const page = mod.loadLargestContributions({ limit: 50, after: "100000:moneyflow-large:x" });
+    expect(page.rows[0].flow_id).toBe("moneyflow-candidate");
   });
 });
 

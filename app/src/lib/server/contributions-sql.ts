@@ -144,8 +144,9 @@ function clampLimit(limit: number): number {
 function parseCursor(after: string | null | undefined): { cents: number; id: string } | null {
   if (after == null || after === "") return null;
   const match = /^(-?\d+):(.+)$/.exec(after);
-  if (!match) throw new InvalidCursorError(`malformed cursor: ${after}`);
-  return { cents: Number(match[1]), id: match[2] };
+  const cents = match ? Number(match[1]) : NaN;
+  if (!match || !Number.isSafeInteger(cents)) throw new InvalidCursorError(`malformed cursor: ${after}`);
+  return { cents, id: match[2] };
 }
 
 const cursorFor = (cents: number, id: string) => `${cents}:${id}`;
