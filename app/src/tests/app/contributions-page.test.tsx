@@ -22,15 +22,12 @@ vi.mock("@/lib/server/homepage-data", () => ({
 }));
 
 type PageModule = typeof import("@/app/contributions/page");
-type TableModule = typeof import("@/components/contributions/largest-contributions");
 let page: PageModule;
-let table: TableModule;
 
 beforeEach(async () => {
   vi.resetModules();
   process.env.SUBSTRATE_DB_PATH = makeContributionFixtureDb();
   page = await import("@/app/contributions/page");
-  table = await import("@/components/contributions/largest-contributions");
 });
 
 afterEach(async () => {
@@ -55,7 +52,7 @@ describe("/contributions", () => {
     expect(container.textContent).toContain(DETAILS_DISCLAIMER);
 
     const rows = [...container.querySelectorAll("tr[data-testid='contribution-row']")];
-    expect(rows).toHaveLength(CONTRIBUTION_COUNT);
+    expect(rows).toHaveLength(50);
     const first = rows[0];
     expect(first.querySelector("a[href='/contributions/by-name/organization/one-large']")!.textContent).toBe(
       "ONE LARGE HOLDINGS LLC",
@@ -70,9 +67,9 @@ describe("/contributions", () => {
     const able = rows.find((tr) => tr.querySelector("a[href='/money-flow/able-2']"))!;
     expect(able.textContent).toContain("Exampleville, CA 94998");
     expect(able.textContent).not.toContain("Sampleton");
-    expect(rows.at(-1)!.textContent).toContain("−$25.00");
 
     for (const row of rows) {
+      if (row.querySelector("a[href^='/money-flow/orphan']")) continue; // missing a party: covered below
       expect(row.querySelector("a[href^='/contributions/by-name/']")).not.toBeNull();
       expect(row.querySelector("a[href^='/committee/']")).not.toBeNull();
       expect(row.querySelector("a[href^='/money-flow/']")).not.toBeNull();
@@ -84,27 +81,52 @@ describe("/contributions", () => {
     assertNoWithheldOrNodeValues(container);
   });
 
-  it("pages by amount then id through every contribution exactly once", async () => {
+  it("pages through the route by amount then id, every contribution exactly once", async () => {
+    const expected: string[] = [];
+    let cursor: string | null = null;
+    do {
+      const next = (await import("@/lib/server/contributions-sql")).loadLargestContributions({ limit: 7, after: cursor });
+      expected.push(...next.rows.map((r) => `/money-flow/${r.flow_id.slice("moneyflow-".length)}`));
+      cursor = next.next_cursor;
+    } while (cursor);
+
     const seen: string[] = [];
     let cents = 0;
     let after: string | null = null;
     let pages = 0;
     do {
-      const { container, unmount }: RenderResult = render(table.LargestContributions({ after, pageSize: 10 }));
+      const { container, unmount }: RenderResult = render(await page.default(search(after ? { after } : {})));
       pages += 1;
       for (const row of container.querySelectorAll("tr[data-testid='contribution-row']")) {
         seen.push(row.querySelector("a[href^='/money-flow/']")!.getAttribute("href")!);
         cents += dollars(row.querySelector("[data-testid='row-amount']")!.textContent!);
       }
+      const first = container.querySelector("a[data-testid='first-contributions']");
+      expect(first?.getAttribute("href") ?? null).toBe(pages > 1 ? "/contributions" : null);
+      assertOnlyContributionLinks(container);
+      assertNoWithheldOrNodeValues(container);
+      expect(container.textContent).not.toMatch(FORBIDDEN_WORDING);
       const next: Element | null = container.querySelector("a[data-testid='next-contributions']");
       after = next ? new URL(next.getAttribute("href")!, "http://x").searchParams.get("after") : null;
-      if (pages > 1) expect(container.querySelector("a[data-testid='first-contributions']")).not.toBeNull();
       unmount();
     } while (after);
-    expect(pages).toBe(5);
-    expect(seen).toHaveLength(CONTRIBUTION_COUNT);
+    expect(pages).toBe(2);
+    expect(seen).toEqual(expected);
     expect(new Set(seen).size).toBe(CONTRIBUTION_COUNT);
     expect(cents).toBe(CONTRIBUTION_TOTAL_CENTS);
+  });
+
+  it("shows a contribution missing a party once, with its record and a safe fallback", async () => {
+    const after = "1400:moneyflow-zzz"; // just above the orphans' amounts
+    const { container } = render(await page.default(search({ after })));
+    for (const slug of ["orphan-giver", "orphan-none", "orphan-no-giver"]) {
+      const links = container.querySelectorAll(`a[href='/money-flow/${slug}']`);
+      expect(links, slug).toHaveLength(1);
+      expect(links[0].closest("tr")!.textContent).toContain("Not available in this dataset");
+    }
+    const noGiver = container.querySelector("a[href='/money-flow/orphan-no-giver']")!.closest("tr")!;
+    expect(noGiver.querySelector("a[href='/committee/gamma']")).not.toBeNull();
+    expect(noGiver.querySelector("a[href^='/contributions/by-name/']")).toBeNull();
   });
 
   it("starts from the top when the cursor is malformed", async () => {

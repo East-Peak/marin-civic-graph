@@ -10,7 +10,10 @@
 //   committee-gamma   4 rows   52,200  candidate 50,000 (the committee is CONTROLLED_BY them)
 //                                      > evidenced 2,000 (its only other edge is EVIDENCED_BY)
 //                                      > alias-giver 100 = same-as-giver 100 (SAME_AS-linked)
-//   all              47 rows  413,475
+//   committee-gamma  +8 rows      800  bulk-giver 8×100
+//   no committee      2 rows    2,500  orphan-giver 1,200 (no TO_TARGET), orphan-none 1,300 (no edges at all)
+//   no contributor    1 row     1,100  orphan-no-giver → gamma (no FROM_SOURCE)
+//   all              58 rows  417,875
 //
 // Flows that are not reconciled contributions touch the same nodes and must never count:
 // an expenditure paying able-sample, a San Rafael OCR campaign_contribution from able-sample,
@@ -79,8 +82,8 @@ function flow(
   };
 }
 
-export const CONTRIBUTION_COUNT = 47;
-export const CONTRIBUTION_TOTAL_CENTS = 413_475;
+export const CONTRIBUTION_COUNT = 58;
+export const CONTRIBUTION_TOTAL_CENTS = 417_875;
 
 export function buildContributionFixture(): { nodes: NodeRow[]; edges: EdgeRow[] } {
   const nodes: NodeRow[] = [
@@ -116,6 +119,8 @@ export function buildContributionFixture(): { nodes: NodeRow[]; edges: EdgeRow[]
     { id: "org-same-as-giver", type: "Organization", label: "LINKED GIVER INC" },
     { id: "org-same-as-peer", type: "Organization", label: "Linked Giver" },
     { id: "person-alias-giver", type: "Person", label: "ALIAS GIVER" },
+    { id: "person-bulk-giver", type: "Person", label: "BULK GIVER" },
+    { id: "person-orphan-giver", type: "Person", label: "ORPHAN GIVER" },
     { id: "decision-vote", type: "Decision", label: "Approve the sample contract" },
     { id: "agreement-sample", type: "Agreement", label: "Sample services agreement" },
     { id: "agendaitem-sample", type: "AgendaItem", label: "Sample agenda item" },
@@ -140,6 +145,10 @@ export function buildContributionFixture(): { nodes: NodeRow[]; edges: EdgeRow[]
     flow("moneyflow-evidenced", 20, "2024-07-02"),
     flow("moneyflow-same-as", 1, "2024-07-03"),
     flow("moneyflow-alias", 1, "2024-07-04"),
+    ...Array.from({ length: 8 }, (_, i) => flow(`moneyflow-bulk-${i}`, 1, `2024-07-1${i}`)),
+    flow("moneyflow-orphan-giver", 12, "2024-07-20"),
+    flow("moneyflow-orphan-none", 13, "2024-07-21"),
+    flow("moneyflow-orphan-no-giver", 11, "2024-07-22"),
 
     flow("moneyflow-expenditure", 900, "2024-08-01", {}, "expenditure"),
     flow("moneyflow-ocr", 5000, "2024-08-02", {}, "campaign_contribution"),
@@ -181,6 +190,10 @@ export function buildContributionFixture(): { nodes: NodeRow[]; edges: EdgeRow[]
     ["org-same-as-peer", "SAME_AS", "org-same-as-giver"],
     ...give("person-alias-giver", "moneyflow-alias", "committee-gamma"),
     ["person-official-only", "SAME_AS", "person-alias-giver"],
+    ...Array.from({ length: 8 }, (_, i) => give("person-bulk-giver", `moneyflow-bulk-${i}`, "committee-gamma")).flat(),
+    // Contributions missing a party still count, once each.
+    ["person-orphan-giver", "FROM_SOURCE", "moneyflow-orphan-giver"],
+    ["moneyflow-orphan-no-giver", "TO_TARGET", "committee-gamma"],
 
     // Not reconciled contributions.
     ["committee-alpha", "FROM_SOURCE", "moneyflow-expenditure"],

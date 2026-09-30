@@ -41,7 +41,7 @@ export type ContributionRow = {
   details: ReportedDetails;
 };
 
-export type NameViewRow = ContributionRow & { recipient: RecipientRef };
+export type NameViewRow = ContributionRow & { recipient: RecipientRef | null };
 
 export type ContributionsByName = {
   contributor: { id: string; type: ContributorType; label: string };
@@ -93,9 +93,13 @@ const IS_CONTRIBUTION = `m.type = 'MoneyFlow' AND json_extract(m.props, '$.flow_
 
 /**
  * Distinct (flow, contributor, recipient) triples: a duplicated edge row joins twice
- * but DISTINCT collapses it. Contributors are Person/Organization, recipients Committees.
+ * but DISTINCT collapses it. Contributors are Person/Organization; recipients Committees.
+ * `recipient: "optional"` keeps a flow that reaches no committee (recipient null), for a
+ * name's own list; a committee's ranking joins it as required so its filter uses the index.
  */
-const CONTRIBUTION_TRIPLES = `
+function contributionTriples(recipient: "required" | "optional"): string {
+  const join = recipient === "required" ? "JOIN" : "LEFT JOIN";
+  return `
   SELECT DISTINCT
     ${FLOW_COLUMNS},
     c.id AS contributor_id,
@@ -106,9 +110,14 @@ const CONTRIBUTION_TRIPLES = `
   FROM nodes m
   JOIN edges fe ON fe.target = m.id AND fe.rel = 'FROM_SOURCE'
   JOIN nodes c ON c.id = fe.source AND c.type IN ('Person', 'Organization')
-  JOIN edges te ON te.source = m.id AND te.rel = 'TO_TARGET'
-  JOIN nodes r ON r.id = te.target AND r.type = 'Committee'
+  ${join} edges te ON te.source = m.id AND te.rel = 'TO_TARGET'
+    AND EXISTS (SELECT 1 FROM nodes rc WHERE rc.id = te.target AND rc.type = 'Committee')
+  ${join} nodes r ON r.id = te.target
   WHERE ${IS_CONTRIBUTION}`;
+}
+
+const NAME_TRIPLES = contributionTriples("optional");
+const COMMITTEE_TRIPLES = contributionTriples("required");
 
 type FlowSql = {
   flow_id: string;
@@ -195,15 +204,15 @@ type TripleSql = FlowSql & {
   contributor_id: string;
   contributor_type: string;
   contributor_label: string;
-  recipient_id: string;
-  recipient_label: string;
+  recipient_id: string | null;
+  recipient_label: string | null;
 };
 
 export function loadContributionsByName(nodeId: string): ContributionsByName | null {
   const db = getSubstrateDb();
   const rows = db
     .prepare(
-      `SELECT * FROM (${CONTRIBUTION_TRIPLES}) WHERE contributor_id = ?
+      `SELECT * FROM (${NAME_TRIPLES}) WHERE contributor_id = ?
        ORDER BY date IS NULL, date DESC, flow_id ASC, recipient_id ASC`,
     )
     .all(nodeId) as TripleSql[];
@@ -215,12 +224,13 @@ export function loadContributionsByName(nodeId: string): ContributionsByName | n
   const totals = db
     .prepare(
       `SELECT COUNT(*) AS count, COALESCE(SUM(amount_cents), 0) AS total_cents
-       FROM (SELECT DISTINCT flow_id, amount_cents FROM (${CONTRIBUTION_TRIPLES}) WHERE contributor_id = ?)`,
+       FROM (SELECT DISTINCT flow_id, amount_cents FROM (${NAME_TRIPLES}) WHERE contributor_id = ?)`,
     )
     .get(nodeId) as { count: number; total_cents: number };
 
   const byCommittee = new Map<string, { recipient: RecipientRef; count: number; total_cents: number }>();
   for (const row of rows) {
+    if (row.recipient_id === null || row.recipient_label === null) continue;
     const entry = byCommittee.get(row.recipient_id) ?? {
       recipient: recipientRef(row.recipient_id, row.recipient_label),
       count: 0,
@@ -235,7 +245,10 @@ export function loadContributionsByName(nodeId: string): ContributionsByName | n
     contributor: { id: first.contributor_id, type, label: first.contributor_label },
     rows: rows.map((row) => ({
       ...toContributionRow(row),
-      recipient: recipientRef(row.recipient_id, row.recipient_label),
+      recipient:
+        row.recipient_id !== null && row.recipient_label !== null
+          ? recipientRef(row.recipient_id, row.recipient_label)
+          : null,
     })),
     totals: { count: Number(totals.count), total_cents: Number(totals.total_cents) },
     by_committee: [...byCommittee.values()].sort(
@@ -264,7 +277,7 @@ export function loadCommitteeTopContributors(
   const db = getSubstrateDb();
   const cursor = parseCursor(after);
   const pageSize = clampLimit(limit);
-  const committeeRows = `SELECT * FROM (${CONTRIBUTION_TRIPLES}) WHERE recipient_id = @committeeId`;
+  const committeeRows = `SELECT * FROM (${COMMITTEE_TRIPLES}) WHERE recipient_id = @committeeId`;
   const nameTotals = `
     SELECT ROW_NUMBER() OVER (ORDER BY SUM(amount_cents) DESC, contributor_id ASC) AS rank,
            contributor_id, contributor_type, contributor_label,

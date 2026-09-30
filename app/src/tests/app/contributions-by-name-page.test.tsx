@@ -127,6 +127,13 @@ describe("/contributions/by-name/[type]/[slug]", () => {
     assertOnlyContributionLinks(container);
   });
 
+  it("keeps a contribution with no recipient committee, saying so", async () => {
+    const { container } = await renderView("person", "orphan-giver");
+    const row = rowFor(container, "orphan-giver");
+    expect(row.querySelectorAll("td")[2].textContent).toBe("Not available in this dataset");
+    expect(container.querySelectorAll("[data-testid='contribution-total']")).toHaveLength(1);
+  });
+
   it("describes the node type as a recorded classification, not an identity", async () => {
     const person = await renderView("person", "many-small");
     expect(person.container.textContent).toContain("Recorded on the filings as an individual");

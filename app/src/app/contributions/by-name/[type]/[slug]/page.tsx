@@ -13,6 +13,7 @@ import {
   COVERAGE_NOTE,
   ContributionTotal,
   DETAILS_DISCLAIMER,
+  NOT_AVAILABLE,
   Note,
   ReportedDetailsCell,
   SectionLabel,
@@ -132,13 +133,20 @@ export default async function ContributionsByNamePage({ params }: Props) {
               </thead>
               <tbody data-testid="contribution-rows">
                 {view.rows.map((row) => (
-                  <tr key={`${row.flow_id}:${row.recipient.id}`} className="border-b border-border-hairline last:border-b-0">
+                  <tr
+                    key={`${row.flow_id}:${row.recipient?.id ?? ""}`}
+                    className="border-b border-border-hairline last:border-b-0"
+                  >
                     <td className={`${cellClass} whitespace-nowrap`}>{row.date ?? "—"}</td>
                     <td className={amountClass}>{formatCents(row.amount_cents)}</td>
                     <td className={cellClass}>
-                      <Link href={row.recipient.route} className={linkClass}>
-                        {row.recipient.label}
-                      </Link>
+                      {row.recipient ? (
+                        <Link href={row.recipient.route} className={linkClass}>
+                          {row.recipient.label}
+                        </Link>
+                      ) : (
+                        <span className="text-hairline">{NOT_AVAILABLE}</span>
+                      )}
                     </td>
                     <td className={`${cellClass} min-w-[220px]`}>
                       <ReportedDetailsCell details={row.details} />

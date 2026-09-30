@@ -99,7 +99,7 @@ export function CommitteeTopContributors({ committeeId, committeePath, after, pa
                 <td className={`${cellClass} min-w-[300px]`}>
                   <ul className="space-y-2">
                     {entry.rows.map((row) => (
-                      <li key={row.flow_id} data-testid="ranked-row" className="grid grid-cols-[88px_76px_1fr] gap-x-2">
+                      <li key={row.flow_id} data-testid="ranked-row" className="grid grid-cols-[88px_96px_1fr] gap-x-2">
                         <Link href={row.flow_route} className={`${linkClass} whitespace-nowrap`}>
                           {row.date ?? "—"}
                         </Link>

@@ -48,7 +48,7 @@ describe("loadContributionsByName", () => {
       "moneyflow-able-beta",
     ]);
     expect(view.rows.map((r) => r.amount_cents)).toEqual([-2_500, 10_010, 25_000, 6_000]);
-    expect(view.rows[3].recipient.id).toBe("committee-beta");
+    expect(view.rows[3].recipient!.id).toBe("committee-beta");
     expect(view.rows[3].details.city).toBe("Demotown");
     expect(view.rows[2]).toEqual({
       flow_id: "moneyflow-able-1",
@@ -104,6 +104,13 @@ describe("loadContributionsByName", () => {
       total_cents: 1_265,
     });
     expect(mod.loadContributionsByName("person-zero")!.totals).toEqual({ count: 1, total_cents: 0 });
+  });
+
+  it("keeps a contribution with no recipient committee on its name view, outside every subtotal", () => {
+    const view = mod.loadContributionsByName("person-orphan-giver")!;
+    expect(view.rows.map((r) => [r.flow_id, r.recipient])).toEqual([["moneyflow-orphan-giver", null]]);
+    expect(view.totals).toEqual({ count: 1, total_cents: 1_200 });
+    expect(view.by_committee).toEqual([]);
   });
 
   it("returns null for nodes with no reconciled contribution and for non-contributor types", () => {
@@ -296,6 +303,17 @@ describe("loadLargestContributions", () => {
     expect(new Set(seen).size).toBe(CONTRIBUTION_COUNT);
     expect(cents).toBe(CONTRIBUTION_TOTAL_CENTS);
     expect(seen.at(-1)).toBe("moneyflow-able-refund");
+  });
+
+  it("keeps contributions missing a contributor, a recipient or both, once each", () => {
+    const rows = mod.loadLargestContributions({ limit: 100 }).rows;
+    const byId = new Map(rows.map((r) => [r.flow_id, r]));
+    expect(rows.filter((r) => r.flow_id.startsWith("moneyflow-orphan"))).toHaveLength(3);
+    expect(byId.get("moneyflow-orphan-giver")!.contributor!.id).toBe("person-orphan-giver");
+    expect(byId.get("moneyflow-orphan-giver")!.recipient).toBeNull();
+    expect(byId.get("moneyflow-orphan-no-giver")!.contributor).toBeNull();
+    expect(byId.get("moneyflow-orphan-no-giver")!.recipient!.id).toBe("committee-gamma");
+    expect(byId.get("moneyflow-orphan-none")).toMatchObject({ contributor: null, recipient: null, amount_cents: 1_300 });
   });
 
   it("never exposes withheld values or node props", () => {
