@@ -93,12 +93,12 @@ class TestContactAndAddressShapes:
         ("employer", "pat@example.com", "email"),
         ("employer", "https://example.org/about", "url"),
         ("employer", "www.example.org", "url"),
-        ("employer", "12 Sample Ln, apt 4Sampleton, CA 94999", "street"),
-        ("employer", "Example University 500 Example St   Sampleton, CA 94999", "street"),
+        ("employer", "12 Sample Loop, apt 4Sampleton, CA 94999", "street"),
+        ("employer", "Example University 500 Example Plaza   Sampleton, CA 94999", "street"),
         ("employer", "7 Example CircleSampleton, CA 94999", "street"),
         ("employer", "PO Box 12", "street"),
         ("occupation", "Consultant, Suite 200", "street"),
-        ("occupation", "Homemaker at 40 Sample Road", "street"),
+        ("occupation", "Homemaker at 40 Sample Parkway", "street"),
     ])
     def test_contact_or_address_shaped_values_are_withheld(self, field, raw, rule):
         assert classify(field, raw) == Outcome(None, rule)

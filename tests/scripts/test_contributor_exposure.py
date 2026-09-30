@@ -41,7 +41,7 @@ class TestPolicy:
     @pytest.mark.parametrize("override, gone", [
         ({"reported_employer": "415-555-0199"}, "reported_employer"),
         ({"reported_employer": "Exampleco.com"}, "reported_employer"),
-        ({"reported_occupation": "Homemaker at 40 Sample Road"}, "reported_occupation"),
+        ({"reported_occupation": "Homemaker at 40 Sample Parkway"}, "reported_occupation"),
         ({"reported_zip5": "9499"}, "reported_zip5"),
         ({"reported_city": "Sampleton, CA 94999"}, "reported_city"),
         ({"reported_state": "Calif"}, "reported_state"),
@@ -67,7 +67,7 @@ class TestPolicy:
         _flow(flow_type="delegated_contract", source_schedule=None, node_id="moneyflow-marincontract-1"),
         _flow(node_id="moneyflow-marincontract-1"),
         _flow(node_id="moneyflow-committee-example-1", flow_type="campaign_contribution",
-              source_schedule="schedule_a", address_raw="1 SAMPLE ST"),
+              source_schedule="schedule_a", address_raw="1 SAMPLE PIER"),
     ])
     def test_ineligible_flows_get_nothing(self, props):
         clean = sanitize_node_props("MoneyFlow", props, node_id=props["id"])
@@ -96,8 +96,8 @@ class TestPolicy:
 # --- the bake ----------------------------------------------------------------
 
 PERMIT = {"id": "permit-marin-IN_B1_1", "labels": ["Project"], "properties": {
-    "id": "permit-marin-IN_B1_1", "address": "12 SAMPLE RD, SAMPLETON, CA 94999", "city_town": "SAMPLETON",
-    "display_label": "Permit at 12 SAMPLE RD, SAMPLETON, CA 94999", "project_type": "building_permit",
+    "id": "permit-marin-IN_B1_1", "address": "12 SAMPLE TRAIL, SAMPLETON, CA 94999", "city_town": "SAMPLETON",
+    "display_label": "Permit at 12 SAMPLE TRAIL, SAMPLETON, CA 94999", "project_type": "building_permit",
     "source": "marin-county-socrata-permits", "type_permit": "RESIDENTIAL", "latitude": 37.9, "longitude": -122.5}}
 
 
@@ -111,7 +111,7 @@ FLOWS = [
     _flow("moneyflow-1400001-a3", reported_entity_cd="COM"),
     _flow("moneyflow-marincontract-9", flow_type="delegated_contract", source_schedule=None),
     _flow("moneyflow-committee-example-1", flow_type="campaign_contribution", source_schedule="schedule_a",
-          address_raw="1 SAMPLE ST, SAMPLETON", occupation_employer_raw="Engineer / Example Co"),
+          address_raw="1 SAMPLE PIER, SAMPLETON", occupation_employer_raw="Engineer / Example Co"),
 ]
 
 
@@ -179,7 +179,7 @@ class TestBake:
     def test_an_ocr_flow_leaks_nothing_anywhere(self, tmp_path):
         ocr = {"id": "moneyflow-committee-example-2", "amount": 50.0, "flow_type": "campaign_contribution",
                "source_schedule": "schedule_a", "display_label": "campaign_contribution $50.00",
-               "address_raw": "77 SAMPLEWOOD LN, SAMPLETON CA 94999-0077",
+               "address_raw": "77 SAMPLEWOOD LOOP, SAMPLETON CA 94999-0077",
                "occupation_employer_raw": "Welder / Example Forge", "from_actor_label": "Pat Example"}
         sqlite_path, _ = _bake(tmp_path, [ocr], "ocr")
         text = self._texts(sqlite_path)

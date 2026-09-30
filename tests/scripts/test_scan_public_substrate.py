@@ -28,17 +28,17 @@ BASE = {"Tran_Occ": "Engineer", "Tran_City": "Sampleton", "Tran_State": "CA", "T
 ROWS = [
     contribution(F1, "a1", 10, **{**BASE, "Tran_Emp": "Example Co", "Tran_Zip4": "94999-0001"}),
     contribution(F1, "a2", 10, last="Roe", **{**BASE, "Tran_Emp": "415-555-0199"}),
-    contribution(F1, "a3", 10, last="Poe", **{**BASE, "Tran_Emp": "12 Sample Lane, Sampleton, CA 94999"}),
+    contribution(F1, "a3", 10, last="Poe", **{**BASE, "Tran_Emp": "12 Sample Loop, Sampleton, CA 94999"}),
     contribution(F1, "a4", 10, last="Loe", **{**BASE, "Tran_Emp": "Exampleco.com"}),
     contribution(F1, "a5", 10, entity="COM", last="Example PAC", **{**BASE, "Tran_Emp": "Example Co"}),
 ]
 OCR = {"id": "moneyflow-committee-example-1", "labels": ["MoneyFlow"], "properties": {
     "id": "moneyflow-committee-example-1", "amount": 50.0, "flow_type": "campaign_contribution",
     "source_schedule": "schedule_a", "display_label": "campaign_contribution $50.00",
-    "address_raw": "77 SAMPLEWOOD LN, SAMPLETON CA 94999"}}
+    "address_raw": "77 SAMPLEWOOD LOOP, SAMPLETON CA 94999"}}
 COMMERCIAL = {"id": "permit-marin-IN_C1_1", "labels": ["Project"], "properties": {
-    "id": "permit-marin-IN_C1_1", "address": "1600 EXAMPLE HOLLOW DR, SAMPLETON, CA 94999",
-    "display_label": "TI at 1600 EXAMPLE HOLLOW DR, SAMPLETON, CA 94999", "project_type": "building_permit",
+    "id": "permit-marin-IN_C1_1", "address": "1600 EXAMPLE HOLLOW PKWY, SAMPLETON, CA 94999",
+    "display_label": "TI at 1600 EXAMPLE HOLLOW PKWY, SAMPLETON, CA 94999", "project_type": "building_permit",
     "source": "marin-county-socrata-permits", "type_permit": "COMMERCIAL"}}
 REGISTRY = {"graph_node_types": {t: {} for t in ("Project", "MoneyFlow", "Person", "Organization", "Committee",
                                                   "Place")},
@@ -118,9 +118,9 @@ def test_the_published_details_are_really_in_the_artifact(world):
 
 @pytest.mark.parametrize("where, value, kind", [
     ("name", "call 415-555-0199", "withheld_phone"),
-    ("display_label", "Office at 12 Sample Lane, Sampleton, CA 94999", "withheld_street"),
+    ("display_label", "Office at 12 Sample Loop, Sampleton, CA 94999", "withheld_street"),
     ("name", "mail to 94999-0001", "raw_zip4"),
-    ("name", "Near 77 SAMPLEWOOD LN", "ocr_address_raw"),
+    ("name", "Near 77 SAMPLEWOOD LOOP", "ocr_address_raw"),
 ])
 def test_a_prohibited_value_anywhere_is_caught(world, where, value, kind):
     leaked = [{**COMMERCIAL, "properties": {**COMMERCIAL["properties"], where: value}}]
@@ -177,10 +177,10 @@ def test_an_ocr_address_is_a_needle_only_for_its_street(tmp_path):
     from scan_public_substrate import ocr_needles
     rows = [{**OCR, "id": f"moneyflow-committee-example-{i}",
              "properties": {**OCR["properties"], "address_raw": address}}
-            for i, address in enumerate(["77 SAMPLEWOOD LN, SAMPLETON CA 94999", "Sampleton, CA 94999",
+            for i, address in enumerate(["77 SAMPLEWOOD LOOP, SAMPLETON CA 94999", "Sampleton, CA 94999",
                                          "PO BOX 5, SAMPLETON", "12B Example Court", "Sampleton, CA 94999-0077"])]
     _jsonl(tmp_path / "nodes.jsonl", rows)
-    assert ocr_needles(tmp_path) == {"77 samplewood ln": "ocr_address_raw", "77 samplewood": "ocr_address_raw",
+    assert ocr_needles(tmp_path) == {"77 samplewood loop": "ocr_address_raw", "77 samplewood": "ocr_address_raw",
                                      "12b example court": "ocr_address_raw", "12b example": "ocr_address_raw",
                                      "po box 5": "ocr_address_raw", "94999-0077": "raw_zip4"}
 
@@ -189,13 +189,13 @@ def test_a_city_withheld_for_its_state_and_zip_tail_is_not_a_global_needle(tmp_p
     from scan_public_substrate import ledger_expectations
     ledger = build_ledger("src", [("src/2026-04-14/2024.zip", write_export(tmp_path / "raw" / "2024.zip", {
         "A-Contributions": [contribution(F1, "a1", 10, **{**BASE, "Tran_City": "Sampleton, CA 94999",
-                                                          "Tran_Emp": "Clerk, 12 Sample Lane, Sampleton"})],
+                                                          "Tran_Emp": "Clerk, 12 Sample Loop, Sampleton"})],
         "Summary": [summary(F1, "A", "1", 10)]}))])
     build_transactions(ledger)
     write_ledger(ledger, tmp_path / "bundle" / "src")
     expectations = ledger_expectations(tmp_path / "bundle", frozenset(), "city_zip")
-    assert expectations["global"] == {"clerk, 12 sample lane, sampleton": "withheld_street",
-                                      "12 sample lane": "shaped_employer"}
+    assert expectations["global"] == {"clerk, 12 sample loop, sampleton": "withheld_street",
+                                      "12 sample loop": "shaped_employer"}
     assert "sampleton, ca 94999" in expectations["per_flow"]["moneyflow-1400001-a1"]
 
 
@@ -250,9 +250,9 @@ def test_an_ocr_street_without_commas_is_still_a_needle_by_its_start(tmp_path):
 def test_a_baseline_value_is_exempt_only_while_its_text_is_unchanged(world):
     from scan_public_substrate import scan
     base_nodes = [*world["live"], OCR, {**COMMERCIAL, "properties": {**COMMERCIAL["properties"],
-                                                                      "name": "Office at 77 SAMPLEWOOD LN"}}]
+                                                                      "name": "Office at 77 SAMPLEWOOD LOOP"}}]
     doubled = [*world["live"], OCR, {**COMMERCIAL, "properties": {**COMMERCIAL["properties"],
-                                                                   "name": "Office at 77 SAMPLEWOOD LN, 77 SAMPLEWOOD LN"}}]
+                                                                   "name": "Office at 77 SAMPLEWOOD LOOP, 77 SAMPLEWOOD LOOP"}}]
     baseline = _bake(world["tmp"] / "b2", base_nodes, world["edges"])
     same = _bake(world["tmp"] / "c2", base_nodes, world["edges"])
     changed = _bake(world["tmp"] / "c3", doubled, world["edges"])

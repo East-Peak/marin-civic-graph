@@ -335,12 +335,12 @@ def scan(sqlite_path: Path, baseline_path: Path, bundle: Path, export_dir: Path,
 # Controls: a fixed matrix of synthetic leaks (fictional values), independent of the real data
 # ---------------------------------------------------------------------------
 
-CONTROL_NEEDLE = "8 controlwood ln"
+CONTROL_NEEDLE = "8 controlwood loop"
 CONTROL_FLOW = "moneyflow-9999999-control"
 REQUIRED_CONTROLS = 17
 CONTROL_FLOW_VALUE = "controlco widgets"
 CONTROL_DETECTORS = {"phone": "415-555-0142", "email": "control@example.org", "url": "https://control.example.org/x",
-                     "street": "9 controlwood ct", "zip4": "94999-0142"}
+                     "street": "9 controlwood trail", "zip4": "94999-0142"}
 
 
 def inject_controls(sqlite_path: Path) -> list[dict]:
@@ -353,18 +353,18 @@ def inject_controls(sqlite_path: Path) -> list[dict]:
         browse = conn.execute("SELECT id FROM browse_rows ORDER BY id LIMIT 1").fetchone()[0]
         # Gate A: the global needle on every surface kind, once transformed (case, spacing, embedded).
         conn.execute("UPDATE nodes SET props = json_set(props, '$.control_value', ?) WHERE id = ?",
-                     ("near   8  CONTROLWOOD Ln  today", project))
+                     ("near   8  CONTROLWOOD Loop  today", project))
         c.append({"gate": "a", "surface": "nodes", "path": "props.control_value", "row": project})
-        conn.execute("UPDATE nodes SET props = json_set(props, '$.\"8 Controlwood Ln\"', 1) WHERE id = ?", (project,))
+        conn.execute("UPDATE nodes SET props = json_set(props, '$.\"8 Controlwood Loop\"', 1) WHERE id = ?", (project,))
         c.append({"gate": "a", "surface": "nodes", "path": "props.{key}", "row": project})
-        conn.execute("UPDATE browse_rows SET col1_value = ? WHERE id = ?", (json.dumps("8 Controlwood Ln"), browse))
+        conn.execute("UPDATE browse_rows SET col1_value = ? WHERE id = ?", (json.dumps("8 Controlwood Loop"), browse))
         c.append({"gate": "a", "surface": "browse_rows", "path": "col1_value", "row": browse})
-        conn.execute("UPDATE nodes SET search_label = ? WHERE id = ?", ("at 8 Controlwood Ln", project))
+        conn.execute("UPDATE nodes SET search_label = ? WHERE id = ?", ("at 8 Controlwood Loop", project))
         c.append({"gate": "a", "surface": "nodes", "path": "search_label", "row": project})
-        conn.execute("INSERT OR REPLACE INTO meta(key, value) VALUES ('control_a', '8 Controlwood Ln')")
+        conn.execute("INSERT OR REPLACE INTO meta(key, value) VALUES ('control_a', '8 Controlwood Loop')")
         c.append({"gate": "a", "surface": "meta", "path": "value", "row": "control_a"})
         conn.execute("INSERT INTO search_fts(rowid, search_label, search_terms) VALUES (30000001, ?, '')",
-                     ("8 Controlwood Ln",))
+                     ("8 Controlwood Loop",))
         c.append({"gate": "a", "surface": "search_fts", "path": "*", "row": "rowid:30000001"})
         # Gate A per flow: the flow's own withheld value is caught on it and nowhere else (negative control).
         conn.execute("UPDATE nodes SET search_label = ? WHERE id = ?", ("from Controlco Widgets", flow))

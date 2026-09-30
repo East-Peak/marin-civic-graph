@@ -200,7 +200,7 @@ def _props(nodes, flow_id):
 class TestContributorDetail:
     def test_an_individuals_flow_carries_its_details_as_reported(self, tmp_path):
         _, nodes, edges, _ = _emit(tmp_path, {"2024": {
-            "A-Contributions": [contribution(F1, "a1", 10, Tran_Adr1="1 EXAMPLE ST", **DETAIL)],
+            "A-Contributions": [contribution(F1, "a1", 10, Tran_Adr1="1 EXAMPLE PIER", **DETAIL)],
             "Summary": [summary(F1, "A", "1", 10)]}})
         assert _props(nodes, "moneyflow-1400001-a1") == {
             "amount": 10.0, "flow_type": "contribution", "source_schedule": "A", "flow_date": "2024-01-05",
