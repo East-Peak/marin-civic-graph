@@ -10,6 +10,7 @@ import {
   ContributionTotal,
   DETAILS_DISCLAIMER,
   Note,
+  RecordedType,
   ReportedDetailsCell,
   SectionLabel,
   amountClass,
@@ -47,7 +48,7 @@ function loadPage(committeeId: string, after: string | null, limit: number): { r
   }
 }
 
-export async function CommitteeTopContributors({ committeeId, committeePath, after, pageSize = 25 }: Props) {
+export function CommitteeTopContributors({ committeeId, committeePath, after, pageSize = 25 }: Props) {
   const { ranking, paged } = loadPage(committeeId, after, pageSize);
   if (ranking.summary.count === 0) return null;
   const { summary } = ranking;
@@ -89,9 +90,7 @@ export async function CommitteeTopContributors({ committeeId, committeePath, aft
                   <Link href={entry.contributor.name_route} className={linkClass}>
                     {entry.contributor.label}
                   </Link>
-                  <div className="text-[10px] text-dim">
-                    {entry.contributor.type === "Organization" ? "Organization" : "Individual"}
-                  </div>
+                  <RecordedType type={entry.contributor.type} />
                 </td>
                 <td className={`${cellClass} text-right`}>{entry.count.toLocaleString("en-US")}</td>
                 <td className={`${cellClass} text-right`}>

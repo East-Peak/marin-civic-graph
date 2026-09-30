@@ -58,10 +58,10 @@ describe("CommitteeTopContributors", () => {
     expect(totals[1].textContent).toBe("$1,000.00May represent multiple organizations");
 
     const org = entryFor(container, "/contributions/by-name/organization/one-large");
-    expect(org.textContent).toContain("Organization");
+    expect(org.textContent).toContain("Recorded as an organization");
     expect(org.textContent).toContain("Not available in this dataset");
     const many = entryFor(container, "/contributions/by-name/person/many-small");
-    expect(many.textContent).toContain("Individual");
+    expect(many.textContent).toContain("Recorded as an individual");
     expect(many.textContent).toContain("30");
   });
 
@@ -86,7 +86,23 @@ describe("CommitteeTopContributors", () => {
 
   it("links only to name views and filing records, never to profiles or government business", async () => {
     for (const committee of ["committee-alpha", "committee-beta", "committee-gamma"]) {
-      const { container, unmount } = await renderSection(committee);
+      const { container, unmount } = await renderSection(committee, null, 2);
+      for (const tr of container.querySelectorAll("tr[data-testid='ranked-name']")) {
+        const hrefs = [...tr.querySelectorAll("a")].map((a) => a.getAttribute("href")!);
+        expect(hrefs[0]).toMatch(/^\/contributions\/by-name\/(person|organization)\/[^/]+$/);
+        for (const href of hrefs.slice(1)) expect(href).toMatch(/^\/money-flow\/[^/]+$/);
+      }
+      // Outside the ranked rows: only this committee's own pagination.
+      const outside = [...container.querySelectorAll("a")].filter((a) => !a.closest("tr[data-testid='ranked-name']"));
+      for (const a of outside) expect(a.getAttribute("href")).toMatch(/^\/committee\/x(\?contributors_after=[^#]+)?#top-contributors$/);
+      // Each row shows only its date, signed amount and the three reported-detail fields.
+      for (const li of container.querySelectorAll("li[data-testid='ranked-row']")) {
+        expect(li.children).toHaveLength(3);
+        expect(li.children[0].textContent).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+        expect(li.children[1].textContent).toMatch(/^−?\$[\d,]+\.\d{2}$/);
+        const keys = [...li.querySelectorAll("dt")].map((dt) => dt.textContent);
+        expect(keys.length === 0 || keys.join() === "Occupation,Employer,Location").toBe(true);
+      }
       assertOnlyContributionLinks(container);
       assertNoWithheldOrNodeValues(container);
       expect(container.textContent).not.toMatch(FORBIDDEN_WORDING);

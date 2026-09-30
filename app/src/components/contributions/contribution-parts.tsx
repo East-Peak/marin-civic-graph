@@ -45,6 +45,11 @@ export function Note({ children }: { children: React.ReactNode }) {
   return <p className="font-mono text-[11px] leading-relaxed text-dim">{children}</p>;
 }
 
+/** The filings' classification of a name, never a claim about who is behind it. */
+export function RecordedType({ type }: { type: ContributorType }) {
+  return <div className="text-[10px] text-dim">Recorded as {recordedAs(type)}</div>;
+}
+
 export function ContributionTotal({ cents, type }: { cents: number; type: ContributorType }) {
   return (
     <span data-testid="contribution-total" className="inline-flex flex-col">
