@@ -38,19 +38,22 @@ function makeFixtureDb(nodes: NodeFixture[], edges: EdgeFixture[]): string {
   const insertNode = db.prepare(
     "INSERT INTO nodes(id, type, search_label, props) VALUES (?, ?, ?, ?)",
   );
-  for (const node of nodes) {
-    insertNode.run(
-      node.id,
-      node.type,
-      node.label ?? node.id,
-      JSON.stringify(node.props ?? {}),
-    );
-  }
-
   const insertEdge = db.prepare("INSERT INTO edges(source, rel, target) VALUES (?, ?, ?)");
-  for (const edge of edges) {
-    insertEdge.run(edge.source, edge.rel, edge.target);
-  }
+  // One transaction: row-by-row autocommit syncs to disk per row, and the safety-cap fixture's
+  // ~1,700 rows took ~9s on CI's disk, past the 5s test timeout.
+  db.transaction(() => {
+    for (const node of nodes) {
+      insertNode.run(
+        node.id,
+        node.type,
+        node.label ?? node.id,
+        JSON.stringify(node.props ?? {}),
+      );
+    }
+    for (const edge of edges) {
+      insertEdge.run(edge.source, edge.rel, edge.target);
+    }
+  })();
 
   db.close();
   return dbPath;

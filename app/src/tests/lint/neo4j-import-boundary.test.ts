@@ -11,7 +11,8 @@ async function restrictedImportErrors(filePath: string, code: string) {
   return result.messages.filter((m) => m.ruleId === "no-restricted-imports");
 }
 
-describe("neo4j import boundary", () => {
+// The first lint pays ESLint's cold start (~1s idle, past 5s under a loaded parallel run).
+describe("neo4j import boundary", { timeout: 20_000 }, () => {
   it.each([
     ['import { runQuery } from "@/lib/neo4j";'],
     ['import neo4j from "neo4j-driver";'],
