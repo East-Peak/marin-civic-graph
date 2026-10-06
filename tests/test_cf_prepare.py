@@ -476,7 +476,9 @@ def test_a_misconfigured_source_stops_preparation_instead_of_retiring_its_flows(
 
 
 def test_retiring_flows_in_years_no_export_covers_holds_the_plan(ctx, cf, root, alarm_pings):
-    _both_years(root)  # 2025 and 2026 only
+    cf.graph = frozenset(_both_years(root))  # 2025 and 2026 only
+    _week(ctx, cf, 21)  # bootstrap: applied
+    _land(root, "county-cf", "2026-09-27", "2026", amount=8)
     cf.flows = {"moneyflow-1400001-OLD1": "2024-03-01", "moneyflow-1400001-NEW1": "2026-02-01"}
     cf.retire = {"moneyflow-1400001-OLD1"}  # 2024: no export in this bundle explains its retirement
 
@@ -488,13 +490,30 @@ def test_retiring_flows_in_years_no_export_covers_holds_the_plan(ctx, cf, root, 
 
 
 def test_retiring_a_flow_in_a_covered_year_is_an_ordinary_amendment(ctx, cf, root):
-    _both_years(root)
+    cf.graph = frozenset(_both_years(root))
+    _week(ctx, cf, 21)  # bootstrap: applied
+    _land(root, "county-cf", "2026-09-27", "2026", amount=8)
     cf.flows = {"moneyflow-1400001-AMEND": "2026-02-01"}
     cf.retire = {"moneyflow-1400001-AMEND"}
 
     _week(ctx, cf, 28)
 
     assert _cf_state(root)["prepared"]["outcome"] == "prepared"
+
+
+def test_without_an_applied_preparation_a_plan_that_retires_flows_holds_for_review(ctx, cf, root, alarm_pings):
+    """The live graph was changed outside the preparations (say, a hand-built bundle applied) and data/raw lacks
+    those exports: a plan from what data/raw offers would roll it back."""
+    _both_years(root)
+    cf.graph = frozenset({("county-cf", "2026", "f" * 64)})  # holds something data/raw does not offer
+    cf.flows = {"moneyflow-1400001-NEWER": "2026-08-01"}
+    cf.retire = {"moneyflow-1400001-NEWER"}
+
+    _week(ctx, cf, 28)
+
+    prepared = _cf_state(root)["prepared"]
+    assert prepared["outcome"] == "held" and prepared["gate"] == "baseline"
+    assert "land in data/raw the exports the live graph was built from" in _alarm_body(alarm_pings)
 
 
 @pytest.mark.parametrize("where", ["root", "data/raw", "data"])
@@ -539,7 +558,9 @@ def test_a_crash_is_transient_never_a_data_hold(ctx, cf, root, pings, script, re
 
 
 def test_retiring_a_flow_whose_filer_no_bundle_filing_names_holds_the_plan(ctx, cf, root):
-    _both_years(root)
+    cf.graph = frozenset(_both_years(root))
+    _week(ctx, cf, 21)
+    _land(root, "county-cf", "2026-09-27", "2026", amount=8)
     cf.flows = {"moneyflow-1499999-GONE": "2026-02-01"}  # a covered year, but no export names this filer
     cf.retire = {"moneyflow-1499999-GONE"}
 

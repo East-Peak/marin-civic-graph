@@ -44,6 +44,9 @@ RECOVERY = {
                  "evidence, never an automatic one",
     "plan": "the migration plan failed its candidate verification (see {detail}); tell Claude",
     "coverage": "land the exports those years came from in data/raw, or tell Claude if those flows should go",
+    "baseline": "the live graph matches no earlier preparation, so this plan could roll back changes made outside "
+                "them: land in data/raw the exports the live graph was built from, or tell Claude to review "
+                "the plan ({detail})",
     "freshness": "the candidate bake could not verify its own bundle (see {log}); tell Claude",
     "scan": "the privacy scan did not pass (see {detail}); tell Claude (no exception is ever generated "
             "automatically)",
@@ -371,6 +374,10 @@ def attempt(prep: Prep, export: Path, dir_: Path, manifest: dict, applied: dict 
     _run(prep, f"plan-{label}", [py, "scripts/cf_migration_plan.py", "--baseline", str(export), "--bundle",
                                  str(bundle), "--out", str(plan)],
          data_gate="plan", detail=str(plan / "migration-report.json"), evidence=plan / "migration-report.json")
+    retiring = json.loads((plan / "ops.json").read_text()).get("retire_nodes", [])
+    if retiring and applied is None:
+        raise Held("baseline", f"the plan retires {len(retiring)} campaign flow(s) and no applied preparation "
+                               "explains the live graph", detail=str(plan / "migration-plan.md"))
     uncovered = uncovered_retirements(export, plan, bundle, manifest)
     if uncovered:
         raise Held("coverage", f"the plan retires {len(uncovered)} campaign flow(s) dated in years no export in "

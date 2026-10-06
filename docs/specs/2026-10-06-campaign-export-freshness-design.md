@@ -138,6 +138,10 @@ Each run:
    - if `--check-live` of the export against the new bundle passes, the bundle is already **applied**: stop here;
    - **plan** `cf_migration_plan.py --baseline <export> --bundle <bundle> --out <prep>/plan`, exit 0 (its
      candidate verification is the plan-verification gate);
+   - **baseline**: with no verified applied preparation, a plan that retires any campaign flow holds for review
+     (the graph may hold changes made outside the preparations, e.g. a hand-built bundle);
+   - **coverage**: no retired flow may fall in a year no export of its source in the bundle covers (undated
+     flows and filers no bundle filing names count as uncovered);
    - **bake** baseline (from the export) and candidate (from `plan/candidate`) with one frozen configuration
      copied into `<prep>/config/` first (node-type registry, attach overlay);
    - **scan** `scan_public_substrate.py` gates A/B/C and controls PASS. Unexplained findings hold; no
