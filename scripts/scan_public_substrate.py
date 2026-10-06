@@ -12,6 +12,10 @@ Three independent gates, each of which must hold:
   B. new findings: detector findings (phone, email, url, street, zip4) whose count the baseline bake of the
      unmigrated graph does not already have for the same surface, row and span, plus any changed FTS token
      stream, unless --explain names the exact finding with a reason. Baseline findings are reported separately.
+     Streams are compared by node id, not FTS rowid (the bake numbers rows in id order, so one inserted record
+     renumbers every later row): records added or removed between the bakes are listed apart, an FTS row with no
+     node behind it is a finding. Detectors never read a row's own record ids (a flow id's "1479035-7437" is
+     not a phone number).
   C. reconciliation: every eligible flow's reported_* props equal what the ledger yields under the exposure
      level, no other node carries any, and per source and field published + source_missing + withheld = eligible.
 
@@ -126,9 +130,17 @@ def _span(text: str, match: re.Match) -> str:
     return _norm(text[start:end])
 
 
+def _without_own_ids(text: str, identity: str) -> str:
+    """The text with the row's own record ids (its identity's parts) blanked out, case-insensitively."""
+    for part in sorted({p for p in identity.split("|") if len(p) >= MIN_GLOBAL_NEEDLE}, key=len, reverse=True):
+        text = re.sub(re.escape(part), " ", text, flags=re.I)
+    return text
+
+
 def detector_findings(conn: sqlite3.Connection) -> Counter:
     findings: Counter = Counter()
     for table, path, identity, _, text in text_surfaces(conn):
+        text = _without_own_ids(text, identity)
         for name, pattern in (FTS_DETECTORS if table == "search_fts" else DETECTORS):
             for match in pattern.finditer(text):
                 findings[(table, path, identity, name, _span(text, match))] += 1
@@ -218,6 +230,23 @@ def _fts_phrase(needle: str) -> str | None:
     return '"' + " ".join(tokens) + '"' if tokens else None
 
 
+def streams_by_record(conn: sqlite3.Connection) -> tuple[dict[tuple[str, str], str], set[str]]:
+    """FTS streams keyed by (node id, column) — or ("rowid:N", column) for a row with no node — and the node ids."""
+    rowid_to_id = dict(conn.execute("SELECT rowid, id FROM nodes"))
+    streams = {(rowid_to_id.get(doc, f"rowid:{doc}"), col): text for (doc, col), text in fts_streams(conn).items()}
+    return streams, set(rowid_to_id.values())
+
+
+def stream_changes(baseline: tuple[dict, set], candidate: tuple[dict, set]) -> tuple[list, list[str], list[str]]:
+    """(changed (record, column) keys, added record ids, removed record ids) between two bakes' FTS indexes."""
+    (base, base_ids), (cand, cand_ids) = baseline, candidate
+    added = sorted(cand_ids - base_ids)
+    removed = sorted(base_ids - cand_ids)
+    changed = [key for key in sorted(set(base) | set(cand))
+               if base.get(key) != cand.get(key) and key[0] not in added and key[0] not in removed]
+    return changed, added, removed
+
+
 def _sha(text: str) -> str:
     return hashlib.sha256(text.encode()).hexdigest()[:16]
 
@@ -298,18 +327,18 @@ def scan(sqlite_path: Path, baseline_path: Path, bundle: Path, export_dir: Path,
     explained = _explained(explain)
     with sqlite3.connect(baseline_path) as conn:
         baseline = detector_findings(conn)
-        baseline_streams = fts_streams(conn)
+        baseline_streams = streams_by_record(conn)
         baseline_hits = {tuple(h[k] for k in HIT_FIELDS) for h in prohibited_hits(conn, needles, {})}
     with sqlite3.connect(sqlite_path) as conn:
         candidate = detector_findings(conn)
-        streams = fts_streams(conn)
+        streams = streams_by_record(conn)
         hits = prohibited_hits(conn, needles, per_flow)
         recon = reconciliation_problems(conn, expectations["expected"])
     new = [dict(zip(FINDING_FIELDS, key), count=n - baseline.get(key, 0))
            for key, n in sorted(candidate.items(), key=str) if n > baseline.get(key, 0)]
-    new += [{"surface": "search_fts", "path": col, "row": f"rowid:{doc}", "detector": "fts_stream_changed",
-             "span": _sha(text), "count": 1}
-            for (doc, col), text in sorted(streams.items()) if baseline_streams.get((doc, col)) != text]
+    changed, added, removed = stream_changes(baseline_streams, streams)
+    new += [{"surface": "search_fts", "path": col, "row": record, "detector": "fts_stream_changed",
+             "span": _sha(streams[0].get((record, col), "")), "count": 1} for record, col in changed]
     for finding in new:
         finding["reason"] = explained.get(tuple(finding[k] for k in FINDING_FIELDS))
     preexisting = [h for h in hits if h["node_type"] != "MoneyFlow" and h["kind"] != "withheld_on_its_flow"
@@ -323,6 +352,8 @@ def scan(sqlite_path: Path, baseline_path: Path, bundle: Path, export_dir: Path,
         "gate_a_preexisting_public_text": preexisting,
         "gate_b_new_findings": new,
         "gate_b_unexplained": sum(1 for f in new if f["reason"] is None),
+        "gate_b_added_records": added,
+        "gate_b_removed_records": removed,
         "gate_c_reconciliation_problems": recon,
         "coverage": expectations["coverage"],
         "baseline_findings": dict(sorted(Counter(f"{k[0]}:{k[3]}" for k in baseline.elements()).items())),

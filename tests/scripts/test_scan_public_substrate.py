@@ -268,3 +268,65 @@ def test_the_control_matrix_is_complete_without_any_real_contributor_flow(world,
                             world["tmp"] / "candidate" / "export", tmp_path / "scratch.sqlite")
     assert len(controls) == REQUIRED_CONTROLS == 17
     assert all(c["caught"] for c in controls), [c for c in controls if not c["caught"]]
+
+
+# --- the 2026-10-01 refresh, in miniature (fictional values) ------------------------------------------------
+# A refresh inserts records: the bake numbers FTS rows in node-id order, so a new early id renumbered every later
+# row, and gate B reported each as a changed stream (197,742 false findings; 0 changed keyed by node id). And a new
+# flow's id, "moneyflow-<filer id>-<random suffix>", read as a phone number wherever the id is the text.
+
+PHONE_SHAPED_ID = "moneyflow-1455501-2345abCDefGH"  # "1455501-2345" is phone-shaped
+EARLY = {"id": "committee-aaa-example", "labels": ["Committee"], "properties": {
+    "id": "committee-aaa-example", "name": "Aardvark Example Committee", "display_label": "Aardvark Example Committee"}}
+NEW_FLOW = {"id": PHONE_SHAPED_ID, "labels": ["MoneyFlow"], "properties": {
+    "id": PHONE_SHAPED_ID, "amount": 25.0, "flow_type": "expenditure", "source_schedule": "E",
+    "display_label": "expenditure $25.00"}}
+NEW_EDGE = {"start_id": "committee-aaa-example", "end_id": PHONE_SHAPED_ID, "type": "FROM_SOURCE", "properties": {}}
+
+
+def _refresh(world, *, drop: str | None = None, rename: str | None = None):
+    live = [n for n in world["live"] if n["id"] != drop]
+    if rename:
+        renamed = {"name": "Renamed Example Co", "display_label": "Renamed Example Co"}
+        live = [{**n, "properties": {**n["properties"], **renamed}} if n["id"] == rename else n for n in live]
+    edges = [e for e in world["edges"] if drop not in (e["start_id"], e["end_id"])]
+    return _bake(world["tmp"] / f"refresh-{drop}-{rename}", [EARLY, NEW_FLOW, *live, OCR, COMMERCIAL],
+                 [NEW_EDGE, *edges])
+
+
+def test_inserted_records_are_reported_as_added_not_as_renumbered_streams(world):
+    with sqlite3.connect(world["baseline"]) as conn:
+        assert conn.execute("SELECT count(*) FROM search_fts").fetchone()[0] > 3  # streams exist to renumber
+
+    report = _scan(world, _refresh(world))
+
+    assert [f for f in report["gate_b_new_findings"] if f["detector"] == "fts_stream_changed"] == []
+    assert set(report["gate_b_added_records"]) >= {"committee-aaa-example", PHONE_SHAPED_ID}
+    assert report["gate_b_removed_records"] == []
+    assert report["passed"], report["gate_b_new_findings"]
+
+
+def test_a_removed_record_is_reported_separately(world):
+    report = _scan(world, _refresh(world, drop="moneyflow-1400001-a5"))
+    assert "moneyflow-1400001-a5" in report["gate_b_removed_records"]
+    assert [f for f in report["gate_b_new_findings"] if f["detector"] == "fts_stream_changed"] == []
+
+
+def test_a_changed_stream_on_a_shared_record_is_still_a_finding_keyed_by_its_node(world):
+    target = next(n["id"] for n in world["live"] if n["id"].startswith(("person-", "org-")))
+    report = _scan(world, _refresh(world, rename=target))
+    changed = [f for f in report["gate_b_new_findings"] if f["detector"] == "fts_stream_changed"]
+    assert changed and {f["row"] for f in changed} == {target} and not report["passed"]
+
+
+def test_record_ids_are_never_contact_findings(world):
+    report = _scan(world, _refresh(world))
+    assert [f for f in report["gate_b_new_findings"] if f["detector"] == "phone"] == []
+
+
+def test_a_phone_in_a_records_own_text_is_still_found_beside_its_id(world):
+    noisy = {**NEW_FLOW, "properties": {**NEW_FLOW["properties"], "name": "refund, call 415-555-0123"}}
+    sqlite_path = _bake(world["tmp"] / "noisy-id", [EARLY, noisy, *world["live"], OCR, COMMERCIAL],
+                        [NEW_EDGE, *world["edges"]])
+    phones = [f for f in _scan(world, sqlite_path)["gate_b_new_findings"] if f["detector"] == "phone"]
+    assert phones and {f["span"] for f in phones} == {"415-555-0123"}
