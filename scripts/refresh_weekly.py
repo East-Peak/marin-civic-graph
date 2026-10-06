@@ -8,6 +8,7 @@
     refresh_weekly.py rollback <run_id>  # restore what was live before that run's publish
     refresh_weekly.py rebake <run_id>    # redo export + bake for a run that failed after loading
     refresh_weekly.py status [<run_id>]  # latest (or named) run's state and digest
+    refresh_weekly.py export-due [--dry-run]  # judge which campaign exports are due (dry run: print only)
 
 See docs/specs/2026-09-28-persistent-ingestion-design.md ("I5b") and
 docs/specs/2026-09-29-automatic-weekly-refresh.md ("I5c"). The rule is staged
@@ -17,7 +18,8 @@ for recovery. Each run lives in data/ingest-runs/<run_id>/ (state.json,
 digest.md, logs/, staged/). Every external step goes through ONE injectable
 runner, under a bounded timeout, so tests never touch the network, Neo4j, git
 or the real data/. Nothing here deploys. Only `weekly` pings
-OPEN_MARIN_HEARTBEAT_URL, if set (see heartbeat()).
+OPEN_MARIN_HEARTBEAT_URL, if set (see heartbeat()); `weekly` and `export-due` ping
+OPEN_MARIN_EXPORT_DUE_URL (see run_export_due() and docs/specs/2026-10-06-campaign-export-freshness-design.md).
 """
 from __future__ import annotations
 
@@ -32,6 +34,7 @@ import signal
 import subprocess
 import sys
 import tempfile
+import time
 import traceback
 import urllib.parse
 import urllib.request
@@ -40,8 +43,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable, Mapping, NamedTuple
 
+import yaml
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import cf_export_due  # noqa: E402
 from ingest import load_sources, resolve_sources  # noqa: E402
 from ingest_guard import Floors, evaluate  # noqa: E402
 from load_from import STAGED_FILES  # noqa: E402
@@ -82,6 +88,9 @@ TIMEOUT_ENV = "OPEN_MARIN_TIMEOUT_"
 # The external dead-man's switch (Healthchecks.io check "Open Marin weekly refresh"). Its URL
 # embeds the check's secret; it never reaches a log, state.json, a digest, a ping body, or a step.
 HEARTBEAT_ENV = "OPEN_MARIN_HEARTBEAT_URL"
+# The second check, "Open Marin campaign export due": the same rules for its URL.
+EXPORT_DUE_ENV = "OPEN_MARIN_EXPORT_DUE_URL"
+MONITOR_ENVS = (HEARTBEAT_ENV, EXPORT_DUE_ENV)
 HEARTBEAT_TIMEOUT_SECS = 10
 PING_ERROR_CHARS = 300  # of each error quoted in a ping body
 PING_BODY_CHARS = 2000
@@ -125,6 +134,9 @@ TRANSITIONS = {
     # reached `loaded` (its data is already in the graph; export+bake failed).
     "failed": ("loaded",),
 }
+
+CF_REGISTRY = Path("registry/netfile-sources.yaml")
+CF_STATE = RUNS_DIR / "campaign-finance.json"  # validation cache and campaign-export hashes (not a run)
 
 
 class Refused(Exception):
@@ -210,6 +222,9 @@ class Context:
     free_bytes: Callable[[Path], int] = lambda path: shutil.disk_usage(path).free
     meeting_registries: tuple[str, ...] = MEETING_REGISTRIES
     ping: Callable[[str, str], None] = lambda url, body: http_ping(url, body)
+    netfile_fetch: Callable[[str], dict] = lambda url: cf_export_due.fetch_json(url)
+    sleep: Callable[[float], None] = lambda seconds: time.sleep(seconds)
+    monotonic: Callable[[], float] = lambda: time.monotonic()
 
 
 # --- files and state ---------------------------------------------------------
@@ -222,17 +237,48 @@ def redact(text: str) -> str:
     return _USERINFO.sub(r"\1***@", text)
 
 
-def _heartbeat_secrets(url: str) -> set[str]:
-    """The heartbeat URL, and any part of it long enough to be its secret."""
-    parts = urllib.parse.urlsplit(url)
-    return {s for s in (url, parts.query, *(seg for seg in parts.path.split("/") if len(seg) >= 8)) if s}
+def _monitor_secrets(url: str) -> set[str]:
+    """A check's ping URL, and every part of it that could be its secret: the query, and each query value and path
+    segment of 8+ characters, raw and percent-decoded (shorter ones would redact ordinary digits and words).
+    Never raises: an unparseable URL is split by hand."""
+    try:
+        parts = urllib.parse.urlsplit(url)
+        path, query = parts.path, parts.query
+    except ValueError:
+        path, _, query = url.partition("?")
+        path = re.sub(r"^[a-z]+://", "", path, flags=re.I).replace("[", "/").replace("]", "/")
+    pieces = {url, query, *(seg for seg in path.split("/") if len(seg) >= 8)}
+    pieces |= {value for value in (pair.partition("=")[2] for pair in query.split("&")) if len(value) >= 8}
+    pieces |= {urllib.parse.unquote_plus(piece) for piece in pieces}
+    return {piece for piece in pieces if piece.strip() and (len(piece) >= 8 or piece in (url, query))}
+
+
+def _fail_url(url: str) -> str:
+    """The check's /fail endpoint: on the path, before any query."""
+    try:
+        parts = urllib.parse.urlsplit(url)
+    except ValueError:
+        return url.rstrip("/") + "/fail"
+    return urllib.parse.urlunsplit(parts._replace(path=parts.path.rstrip("/") + "/fail"))
+
+
+def _scrub_tree(value, env: Mapping[str, str]):
+    """scrub() every string in a JSON-able value, before encoding can escape a secret past it."""
+    if isinstance(value, str):
+        return scrub(value, env)
+    if isinstance(value, dict):
+        return {scrub(str(k), env): _scrub_tree(v, env) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_scrub_tree(v, env) for v in value]
+    return value
 
 
 def scrub(text: str, env: Mapping[str, str]) -> str:
-    """redact(), and remove every secret value in `env` (credentials, tokens, the heartbeat URL)."""
+    """redact(), and remove every secret value in `env` (credentials, tokens, both check URLs)."""
     secrets = {v for k, v in env.items() if _SECRET_VAR.search(k) and v.strip()}
-    if env.get(HEARTBEAT_ENV, "").strip():
-        secrets |= _heartbeat_secrets(env[HEARTBEAT_ENV].strip())
+    for var in MONITOR_ENVS:
+        if env.get(var, "").strip():
+            secrets |= _monitor_secrets(env[var].strip())
     for secret in sorted(secrets, key=len, reverse=True):
         text = text.replace(secret, "[redacted]")
     return redact(text)
@@ -289,7 +335,10 @@ def read_state(root: Path, run_id: str) -> dict:
 
 
 def write_state(root: Path, run_id: str, state: dict, env: Mapping[str, str] = {}) -> None:
-    _write_atomic(run_dir(root, run_id) / "state.json", scrub(json.dumps(state, indent=2, sort_keys=True) + "\n", env))
+    # Scrubbed value by value, before encoding: scrubbing the encoded text could miss an escaped secret and
+    # could break the JSON.
+    _write_atomic(run_dir(root, run_id) / "state.json",
+                  json.dumps(_scrub_tree(state, env), indent=2, sort_keys=True) + "\n")
 
 
 def _set_status(ctx: Context, state: dict, status: str, **fields) -> dict:
@@ -317,7 +366,7 @@ def _require(state: dict, action: str, *statuses: str) -> None:
 def _step(ctx: Context, run_id: str, name: str, cmd: list[str]) -> Result:
     """Run one external command through the injected runner and keep its log."""
     # Children that take the run lock themselves (ingest.py) run under ours.
-    env = {var: value for var, value in ctx.env.items() if var != HEARTBEAT_ENV}
+    env = {var: value for var, value in ctx.env.items() if var not in MONITOR_ENVS}
     raw = ctx.runner(cmd, ctx.root, {**env, "PYTHON": ctx.python, OWNER_ENV: str(os.getpid())},
                      step_timeout(ctx.env, name))
     result = Result(raw.returncode, scrub(raw.output, ctx.env), raw.timed_out_after)
@@ -499,8 +548,11 @@ def _outcome_body(ctx: Context, state: dict | None, problem: str | None) -> str:
         if state.get("snapshot", {}).get("ok") is False:
             lines.append("private data snapshot failed: " + quote(state["snapshot"]["error"]))
         lines.append(f"digest: {(RUNS_DIR / state['run_id'] / 'digest.md').as_posix()}")
+    if state is not None and state.get("export_due"):
+        record = state["export_due"]["record"]
+        lines.append(f"campaign exports due: {len(record['due']) + len(record['landed'])} (its own email)")
     if problem:
-        lines.append(quote(problem))
+        lines += [quote(line) for line in problem.splitlines() if line.strip()]
     return scrub("\n".join(lines), ctx.env)[:PING_BODY_CHARS]
 
 
@@ -522,7 +574,7 @@ def heartbeat(ctx: Context, state: dict | None, problem: str | None) -> bool:
     if not url:
         return clean
     try:
-        ctx.ping(url if clean else url.rstrip("/") + "/fail", _outcome_body(ctx, state, problem))
+        ctx.ping(url if clean else _fail_url(url), _outcome_body(ctx, state, problem))
         outcome = {"ok": True}
     except Exception as exc:
         outcome = {"ok": False, "error": scrub(f"{type(exc).__name__}: {exc}", ctx.env)}
@@ -535,6 +587,115 @@ def heartbeat(ctx: Context, state: dict | None, problem: str | None) -> bool:
         except Exception as exc:
             print(f"heartbeat: could not record the outcome: {type(exc).__name__}: {exc}", file=sys.stderr)
     return clean
+
+
+# --- export-due alarm --------------------------------------------------------------
+
+
+def read_cf_state(root: Path) -> dict:
+    path = root / CF_STATE
+    return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+
+
+def write_cf_state(ctx: Context, state: dict) -> None:
+    _write_atomic(ctx.root / CF_STATE, json.dumps(_scrub_tree(state, ctx.env), indent=2, sort_keys=True) + "\n")
+
+
+def _campaign_sources(root: Path) -> list[dict]:
+    try:
+        doc = yaml.safe_load((root / CF_REGISTRY).read_text(encoding="utf-8"))
+        sources = doc["sources"]
+        if not isinstance(sources, list) or not all(isinstance(s, dict) for s in sources):
+            raise TypeError("sources is not a list of mappings")
+    except (OSError, yaml.YAMLError, KeyError, TypeError) as exc:
+        raise cf_export_due.ConfigError(f"{CF_REGISTRY.as_posix()} is unreadable ({type(exc).__name__}: {exc})")
+    return sources
+
+
+def _alarm_url(ctx: Context) -> tuple[str | None, str | None]:
+    url = ctx.env.get(EXPORT_DUE_ENV, "").strip()
+    if not url:
+        return None, f"{EXPORT_DUE_ENV} is not set; the export-due check is never pinged"
+    try:
+        parts = urllib.parse.urlsplit(url)
+    except ValueError:
+        parts = None
+    if parts is None or parts.scheme not in ("http", "https") or not parts.netloc:
+        return None, f"{EXPORT_DUE_ENV} is not an http(s) URL"
+    return url, None
+
+
+def judge_export_due(ctx: Context, cache: dict) -> cf_export_due.Verdict:
+    """Today's verdict for every campaign source; raises ConfigError when the registry is unreadable."""
+    api = cf_export_due.NetFileApi(ctx.netfile_fetch, sleep=ctx.sleep, monotonic=ctx.monotonic)
+    return cf_export_due.evaluate(ctx.root / "data" / "raw", _campaign_sources(ctx.root), ctx.now(), cache, api)
+
+
+def run_export_due(ctx: Context, state: dict | None, *, persist: bool) -> list[str]:
+    """Evaluate and ping the export-due check; return the monitoring problems for the main heartbeat. Never raises.
+
+    `persist`: record the verdict in the run (when there is one) and keep the validation cache; without it,
+    nothing is written (the lock may be someone else's).
+    """
+    try:
+        problems: list[str] = []
+        url, url_problem = _alarm_url(ctx)
+        if url_problem:
+            problems.append(url_problem)
+        cf_state = read_cf_state(ctx.root)
+        cache = dict(cf_state.get("validated", {}))
+        try:
+            verdict = judge_export_due(ctx, cache)
+            problems += verdict.problems
+            body, failing = verdict.body(lambda text: scrub(text, ctx.env)), verdict.is_due
+        except cf_export_due.ConfigError as exc:
+            verdict, body, failing = None, f"Open Marin: the export-due alarm cannot judge: {exc}\n", True
+            problems.append(str(exc))
+        ping = None
+        if url:
+            try:
+                ctx.ping(_fail_url(url) if failing else url, scrub(body, ctx.env))
+                ping = {"ok": True}
+            except Exception as exc:
+                ping = {"ok": False, "error": scrub(f"{type(exc).__name__}: {exc}", ctx.env)}
+                problems.append(f"export-due alarm ping failed ({ping['error']})")
+        if persist:
+            write_cf_state(ctx, {**cf_state, "validated": cache})
+            if state is not None:
+                state["export_due"] = {"at": ctx.now().isoformat(timespec="seconds"),
+                                       "signal": "fail" if failing else "success", "ping": ping,
+                                       "record": verdict.record() if verdict else {"due": [], "landed": [],
+                                                                                   "problems": problems}}
+                _persist(ctx, state)
+        return [p if p.startswith("export-due alarm") else f"export-due alarm: {p}" for p in problems]
+    except Exception as exc:
+        _print_crash(ctx)
+        return [scrub(f"export-due alarm crashed: {type(exc).__name__}: {exc}", ctx.env)]
+
+
+def export_due(ctx: Context, *, dry_run: bool) -> int:
+    """`export-due`: today's verdict against the live API. --dry-run pings and writes nothing."""
+    if not dry_run:
+        problems = run_export_due(ctx, None, persist=False)
+        print(scrub("\n".join(problems) or "export-due: pinged", ctx.env))
+        return 1 if problems else 0
+    try:
+        verdict = judge_export_due(ctx, dict(read_cf_state(ctx.root).get("validated", {})))
+    except cf_export_due.ConfigError as exc:
+        print(scrub(f"export-due: cannot judge: {exc}", ctx.env))
+        return 1
+    _, url_problem = _alarm_url(ctx)
+    print(verdict.body(lambda text: scrub(text, ctx.env)))
+    print(f"would ping: {'fail' if verdict.is_due else 'success'} (dry run: nothing pinged or written)")
+    problems = verdict.problems + ([url_problem] if url_problem else [])
+    for problem in problems:
+        print(scrub(f"monitoring problem: {problem}", ctx.env))
+    return 1 if problems else 0
+
+
+def _join(problem: str | None, more: list[str]) -> str | None:
+    lines = ([problem] if problem else []) + more
+    return "\n".join(lines) or None
 
 
 # --- load (operator gate) ----------------------------------------------------
@@ -852,16 +1013,18 @@ def weekly(ctx: Context) -> int:
     try:
         with run_lock(ctx.root):
             state, problem = _weekly_run(ctx)
+            problem = _join(problem, run_export_due(ctx, state, persist=True))  # whatever the run's outcome
             clean = heartbeat(ctx, state, problem)
             reported = True
-    except RunLockHeld as exc:
-        heartbeat(ctx, None, f"not run: the run lock is held ({exc})")
+    except RunLockHeld as exc:  # someone else's lock: judge the alarm, but write nothing
+        heartbeat(ctx, None, _join(f"not run: the run lock is held ({exc})", run_export_due(ctx, None, persist=False)))
         print(scrub(f"REFUSED: {exc}", ctx.env), file=sys.stderr)
         return 2
     except Exception as exc:  # the lock could not be taken (or released): still tell the monitor
         _print_crash(ctx)
         if not reported:
-            heartbeat(ctx, None, f"crashed outside the run: {type(exc).__name__}: {exc}")
+            alarm = run_export_due(ctx, None, persist=False)
+            heartbeat(ctx, None, _join(f"crashed outside the run: {type(exc).__name__}: {exc}", alarm))
         return 1
     if state is not None:
         _report(ctx, read_state(ctx.root, state["run_id"]))
@@ -925,6 +1088,15 @@ def render_digest(state: dict) -> str:
     if state.get("published"):
         lines += ["## Published", "", f"- public-substrate.sqlite sha256 `{state['published']['sqlite_sha256']}`",
                   f"- previous artifacts kept in `{state['published']['previous']}`", ""]
+    alarm = state.get("export_due")
+    if alarm:
+        record = alarm["record"]
+        lines += ["## Campaign export-due alarm", "",
+                  f"- {alarm['signal']}: {len(record['due'])} export(s) due, {len(record['landed'])} landed file(s) "
+                  f"to fix, {len(record.get('problems', []))} monitoring problem(s)"]
+        if alarm["ping"] and not alarm["ping"]["ok"]:
+            lines.append(f"- ping FAILED: {alarm['ping']['error']}")
+        lines.append("")
     snap = state.get("snapshot")
     if snap:
         lines += ["## Private data snapshot", "",
@@ -977,12 +1149,16 @@ def main(argv: list[str] | None = None, ctx: Context | None = None) -> int:
     sub.add_parser("rebake", help="redo export + bake for a run that failed after loading").add_argument("run_id")
     sub.add_parser("status", help="print a run's state and digest path (default: latest)").add_argument(
         "run_id", nargs="?")
+    sub.add_parser("export-due", help="judge which campaign exports are due, and ping the export-due check").add_argument(
+        "--dry-run", action="store_true", help="print the verdict against the live API; ping and write nothing")
     args = parser.parse_args(argv)
     ctx = ctx or Context()
 
     try:
         if args.command == "status":
             return status(ctx, args.run_id)
+        if args.command == "export-due":
+            return export_due(ctx, dry_run=args.dry_run)
         if args.command == "weekly":
             return weekly(ctx)
         with run_lock(ctx.root):  # every other subcommand writes

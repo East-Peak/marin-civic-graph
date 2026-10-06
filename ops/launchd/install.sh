@@ -44,6 +44,8 @@ grep -qF "<string>$repo</string>" "$plist" \
   || die "$env_file must be private to you: chmod 600 $env_file"
 grep -Eq '^OPEN_MARIN_HEARTBEAT_URL=.+' "$env_file" \
   || die "OPEN_MARIN_HEARTBEAT_URL is empty in $env_file; set it to the Healthchecks.io ping URL"
+grep -Eq '^OPEN_MARIN_EXPORT_DUE_URL=.+' "$env_file" \
+  || die "OPEN_MARIN_EXPORT_DUE_URL is empty in $env_file; set it to the ping URL of the check 'Open Marin campaign export due'"
 for var in NEO4J_USER NEO4J_PASSWORD NEO4J_DATABASE; do  # the unattended load needs the graph's credentials
   grep -Eq "^$var=.+" "$env_file" || die "$var is empty in $env_file; copy it from app/.env.local"
 done

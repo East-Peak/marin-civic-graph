@@ -18,6 +18,7 @@ OPS = REPO / "ops/launchd"
 LABEL = "cc.eastpeak.openmarin-refresh-weekly"
 MACHINE_REPO = "/Users/tammypais/projects/marin-civic-graph"
 SECRET = "https://hc-ping.com/0f3c9e2a-5b7d-4e61-9a0c-7d2b1e4f8a63"
+DUE_SECRET = "https://hc-ping.com/7c1d2e3f-4a5b-4c6d-8e9f-0a1b2c3d4e5f"
 MINIMAL_PATH = "/usr/bin:/bin:/usr/sbin:/sbin"  # what launchd gives a job
 NEO4J_LINES = "NEO4J_USER=neo4j\nNEO4J_PASSWORD=example-pw\nNEO4J_DATABASE=neo4j\n"  # load needs them
 
@@ -45,7 +46,7 @@ def test_the_plist_never_holds_a_secret_or_keeps_the_job_alive():
     plist, text = _plist(), (OPS / f"{LABEL}.plist").read_text()
 
     assert not plist.get("KeepAlive") and not plist.get("RunAtLoad")
-    for secret in ("OPEN_MARIN_HEARTBEAT_URL", "hc-ping", "PASSWORD", "NEO4J_USER"):
+    for secret in ("OPEN_MARIN_HEARTBEAT_URL", "OPEN_MARIN_EXPORT_DUE_URL", "hc-ping", "PASSWORD", "NEO4J_USER"):
         assert secret not in text
 
 
@@ -59,6 +60,7 @@ def test_the_env_file_is_gitignored_and_only_its_example_is_committed():
     assert ignored.returncode == 0
     example = (OPS / "weekly.env.example").read_text()
     assert "OPEN_MARIN_HEARTBEAT_URL=\n" in example and "hc-ping.com/" not in example
+    assert "OPEN_MARIN_EXPORT_DUE_URL=\n" in example
     for var in ("NEO4J_USER", "NEO4J_PASSWORD", "NEO4J_DATABASE"):
         assert f"{var}=\n" in example
 
@@ -172,7 +174,7 @@ def checkout(tmp_path: Path) -> Path:
     (repo / ".venv/bin").mkdir(parents=True)
     _executable(repo / ".venv/bin/python", "#!/bin/bash\n")
     env_file = repo / "ops/launchd/weekly.env"
-    env_file.write_text(f"OPEN_MARIN_HEARTBEAT_URL={SECRET}\n{NEO4J_LINES}")
+    env_file.write_text(f"OPEN_MARIN_HEARTBEAT_URL={SECRET}\nOPEN_MARIN_EXPORT_DUE_URL={DUE_SECRET}\n{NEO4J_LINES}")
     env_file.chmod(0o600)
     calls = tmp_path / "calls"
     for tool in ("launchctl", "plutil"):
@@ -205,11 +207,12 @@ def test_install_lints_copies_and_bootstraps_after_precreating_the_log_dir(check
     assert "plutil -lint" in calls
     assert f"launchctl bootstrap gui/{os.getuid()} {installed}" in calls
     assert "launchctl kickstart" in proc.stdout  # tells the operator how to run it once, by hand
-    assert SECRET not in proc.stdout + proc.stderr
+    assert SECRET not in proc.stdout + proc.stderr and DUE_SECRET not in proc.stdout + proc.stderr
 
 
 @pytest.mark.parametrize("problem,expected", [
     ("missing", "weekly.env"), ("mode", "chmod 600"), ("empty-url", "OPEN_MARIN_HEARTBEAT_URL"),
+    ("empty-due-url", "OPEN_MARIN_EXPORT_DUE_URL"),
     ("NEO4J_USER", "NEO4J_USER"), ("NEO4J_PASSWORD", "NEO4J_PASSWORD"), ("NEO4J_DATABASE", "NEO4J_DATABASE"),
 ])
 def test_install_refuses_without_a_private_env_file_holding_the_url_and_graph_credentials(checkout, problem,
@@ -220,7 +223,9 @@ def test_install_refuses_without_a_private_env_file_holding_the_url_and_graph_cr
     elif problem == "mode":
         env_file.chmod(0o644)
     elif problem == "empty-url":
-        env_file.write_text(f"OPEN_MARIN_HEARTBEAT_URL=\n{NEO4J_LINES}")
+        env_file.write_text(f"OPEN_MARIN_HEARTBEAT_URL=\nOPEN_MARIN_EXPORT_DUE_URL={DUE_SECRET}\n{NEO4J_LINES}")
+    elif problem == "empty-due-url":
+        env_file.write_text(f"OPEN_MARIN_HEARTBEAT_URL={SECRET}\nOPEN_MARIN_EXPORT_DUE_URL=\n{NEO4J_LINES}")
     else:  # the unattended load needs the graph's credentials
         env_file.write_text(env_file.read_text().replace(f"{problem}=", f"# {problem}="))
 

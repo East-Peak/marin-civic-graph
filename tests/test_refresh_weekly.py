@@ -21,8 +21,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 import refresh_weekly as rw  # noqa: E402
 
 RUN = "2026-09-28T050000Z"
+# The second Healthchecks.io check, "Open Marin campaign export due": its key, slug and query value are secrets.
+DUE = "https://hc-ping.example/9b8c7d6e5f4a3b2c1d0e/open-marin-export-due?rid=qv-secret-4242&k=alpha%2Fbeta-77"
+DUE_FAIL = "https://hc-ping.example/9b8c7d6e5f4a3b2c1d0e/open-marin-export-due/fail?rid=qv-secret-4242&k=alpha%2Fbeta-77"
+DUE_HOST = "https://hc-ping.example/"
+DUE_SECRETS = ("9b8c7d6e5f4a3b2c1d0e", "qv-secret-4242", "alpha%2Fbeta-77", "alpha/beta-77")
 ENV = {"NEO4J_URI": "bolt://localhost:7688", "NEO4J_USER": "neo4j", "NEO4J_PASSWORD": "pw",
-       "NEO4J_DATABASE": "neo4j"}
+       "NEO4J_DATABASE": "neo4j", "OPEN_MARIN_EXPORT_DUE_URL": DUE}
 STAGED_SCRIPTS = {"permits": "ingest_socrata_permits.py", "form700": "ingest_form700.py",
                   "courtlistener": "ingest_courtlistener_cases.py"}
 NORMALIZED = {"permits": "marin-county-permits", "form700": "form700", "courtlistener": "courtlistener-cases"}
@@ -129,6 +134,13 @@ def root(tmp_path: Path) -> Path:
         "  - {id: b, adapter: granicus, url: u, schedule: weekly}\n"
         "  - {id: c, adapter: granicus, url: u, schedule: manual}\n"
     )
+    # One campaign source whose only year is confirmed unavailable: the export-due alarm has nothing to judge
+    # (and nothing to fetch) unless a test lands exports (tests/test_refresh_weekly_export_due.py).
+    (tmp_path / "registry/netfile-sources.yaml").write_text(
+        "sources:\n"
+        "  - {id: example-cf, name: Example County, agency_code: EXC, backfill_from: '2026-01-01',\n"
+        "     portal_url: 'https://netfile.example/public/EXC/campaign',\n"
+        "     confirmed_unavailable: [{year: '2026', confirmed: '2026-09-01', reason: test fixture}]}\n")
     # as on the operator's machine: data/normalized and data/extracted live in a private git repo
     private = tmp_path / "private-data"
     (private / ".git").mkdir(parents=True)
@@ -156,11 +168,22 @@ def pings() -> list[tuple[str, str]]:
 
 
 @pytest.fixture
-def ctx(root: Path, world: FakeWorld, pings: list[str]) -> rw.Context:
+def alarm_pings() -> list[tuple[str, str]]:
+    return []
+
+
+def _no_network(url: str) -> dict:
+    raise AssertionError(f"a test reached for the network: {url}")
+
+
+@pytest.fixture
+def ctx(root: Path, world: FakeWorld, pings: list[str], alarm_pings: list[str]) -> rw.Context:
+    def ping(url: str, body: str) -> None:  # never the network; the export-due check's pings kept apart
+        (alarm_pings if url.startswith(DUE_HOST) else pings).append((url, body))
     return rw.Context(root=root, runner=world, env=dict(ENV), python="py",
                       now=lambda: datetime(2026, 9, 28, 5, 0, 0, tzinfo=timezone.utc),
                       free_bytes=lambda path: 50 * 1024**3, meeting_registries=("granicus",),
-                      ping=lambda url, body: pings.append((url, body)))  # never the network
+                      ping=ping, netfile_fetch=_no_network, sleep=lambda s: None)
 
 
 def _state(root: Path) -> dict:
@@ -1022,6 +1045,8 @@ def test_weekly_stages_loads_publishes_and_snapshots_then_pings_success_once(ctx
     seen = []
 
     def ping(url, body):
+        if url.startswith(DUE_HOST):  # the export-due check: tests/test_refresh_weekly_export_due.py
+            return
         state = _state(root)
         seen.append((url, state["status"], state["snapshot"]["ok"], "published" in _digest(root)))
         pings.append((url, body))
@@ -1189,7 +1214,8 @@ def test_a_failed_ping_is_recorded_but_never_changes_the_runs_status_or_exit(ctx
     import urllib.error
 
     def ping(url, body):
-        raise urllib.error.URLError(f"cannot reach {url}")
+        if not url.startswith(DUE_HOST):  # a failed export-due ping does fail the run: see its own tests
+            raise urllib.error.URLError(f"cannot reach {url}")
     ctx.ping = ping
     if sources_fail:
         world.exit_codes["ingest_form700.py"] = 1

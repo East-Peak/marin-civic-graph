@@ -1,6 +1,9 @@
 sources:
   - id: marin-county-campaign-finance
+    name: Marin County
     adapter: netfile
+    agency_code: CMAR
+    portal_url: https://netfile.com/public/CMAR/campaign  # the export-due email sends the operator here
     url: https://public.netfile.com/pub2/?aid=CMAR
     jurisdiction_id: place-marin-county
     institution_id: org-marin-county-campaign-finance
@@ -16,7 +19,10 @@ sources:
     export_target: "ctl00$phBody$GetExcelAmend"
 
   - id: novato-campaign-finance
+    name: Novato
     adapter: netfile
+    agency_code: NVO
+    portal_url: https://netfile.com/public/NVO/campaign
     url: https://public.netfile.com/pub2/?AID=NVO
     jurisdiction_id: place-novato
     institution_id: org-novato-campaign-finance
@@ -30,6 +36,9 @@ sources:
     floors:
       max_newest_age_days: null  # yearly export bundles, not dated meetings
     export_target: "ctl00$phBody$GetExcelAmend"
+    # Years the operator confirmed NetFile has no export for (the export-due alarm then warns instead of demanding,
+    # and reminds once a quarter): - {year: "2019", confirmed: "YYYY-MM-DD", reason: "..."}
+    confirmed_unavailable: []
     # These 'exports' are the NetFile HTML page, not a workbook: unavailable coverage, never empty years.
     unavailable_inputs:
       - {capture: "2026-04-14", file: "2019.zip", sha256: "971a97f0840175a011d74a1e0e810ad78288da84c1589cdfbb5cf8949fc9e911"}
