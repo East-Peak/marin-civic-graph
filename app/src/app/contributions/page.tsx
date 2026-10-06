@@ -6,7 +6,9 @@ import type { Metadata } from "next";
 import { StatusBar } from "@/components/layout/status-bar";
 import { NavHeader } from "@/components/layout/nav-header";
 import { COVERAGE_NOTE, DETAILS_DISCLAIMER, Note, SectionLabel } from "@/components/contributions/contribution-parts";
+import { CampaignFreshness } from "@/components/contributions/campaign-freshness";
 import { LargestContributions } from "@/components/contributions/largest-contributions";
+import { loadCampaignFreshness } from "@/lib/server/campaign-freshness";
 import { loadStatus } from "@/lib/server/homepage-data";
 import { countContributions } from "@/lib/server/contributions-sql";
 
@@ -50,6 +52,7 @@ export default async function ContributionsPage({ searchParams }: Props) {
             contribution filed under it and may represent multiple people or organizations.
           </Note>
           <Note>{COVERAGE_NOTE}</Note>
+          <CampaignFreshness freshness={loadCampaignFreshness()} />
           <Note>{DETAILS_DISCLAIMER}</Note>
         </div>
         <LargestContributions after={typeof after === "string" ? after : null} />

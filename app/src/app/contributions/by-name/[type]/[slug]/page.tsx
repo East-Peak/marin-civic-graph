@@ -28,6 +28,8 @@ import {
 import { loadStatus } from "@/lib/server/homepage-data";
 import { contributionNameMetadata } from "@/lib/server/contribution-metadata";
 import { loadContributionsByName, resolveContributorNode } from "@/lib/server/contributions-sql";
+import { CampaignFreshness } from "@/components/contributions/campaign-freshness";
+import { loadCampaignFreshness } from "@/lib/server/campaign-freshness";
 
 export const dynamic = "force-dynamic";
 
@@ -72,6 +74,7 @@ export default async function ContributionsByNamePage({ params }: Props) {
             not a verified identity.
           </Note>
           <Note>{COVERAGE_NOTE}</Note>
+          <CampaignFreshness freshness={loadCampaignFreshness()} />
         </div>
 
         <div className="mb-6 flex flex-wrap items-start gap-6 rounded border border-border-hairline bg-panel px-4 py-3 font-mono text-xs">

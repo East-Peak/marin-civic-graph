@@ -53,6 +53,7 @@ describe("EntityPage top contributors", () => {
       committeeId: "committee-alpha",
       committeePath: "/committee/alpha",
       after: "5:person-x",
+      showFreshness: false, // the page's facts show the committee's campaign freshness once
     });
   });
 

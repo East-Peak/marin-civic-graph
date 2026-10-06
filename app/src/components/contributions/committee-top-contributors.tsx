@@ -20,6 +20,8 @@ import {
   linkClass,
   tableClass,
 } from "@/components/contributions/contribution-parts";
+import { CampaignFreshness } from "@/components/contributions/campaign-freshness";
+import { campaignJurisdictions, loadCampaignFreshness } from "@/lib/server/campaign-freshness";
 import {
   InvalidCursorError,
   loadCommitteeTopContributors,
@@ -37,6 +39,8 @@ type Props = {
   committeePath: string;
   after: string | null;
   pageSize?: number;
+  /** Off where the page already shows this committee's campaign freshness (its facts). */
+  showFreshness?: boolean;
 };
 
 function loadPage(committeeId: string, after: string | null, limit: number): { ranking: Ranking; paged: boolean } {
@@ -48,7 +52,13 @@ function loadPage(committeeId: string, after: string | null, limit: number): { r
   }
 }
 
-export function CommitteeTopContributors({ committeeId, committeePath, after, pageSize = 25 }: Props) {
+export function CommitteeTopContributors({
+  committeeId,
+  committeePath,
+  after,
+  pageSize = 25,
+  showFreshness = true,
+}: Props) {
   const { ranking, paged } = loadPage(committeeId, after, pageSize);
   if (ranking.summary.count === 0) return null;
   const { summary } = ranking;
@@ -58,6 +68,9 @@ export function CommitteeTopContributors({ committeeId, committeePath, after, pa
       <SectionLabel>Top contributors to this committee</SectionLabel>
       <div className="mb-2 max-w-3xl space-y-1">
         <Note>{COVERAGE_NOTE}</Note>
+        {showFreshness && (
+          <CampaignFreshness freshness={loadCampaignFreshness()} jurisdictions={campaignJurisdictions(committeeId)} />
+        )}
         <Note>{DETAILS_DISCLAIMER}</Note>
         <Note>
           {summary.names.toLocaleString("en-US")} names · {summary.count.toLocaleString("en-US")} contributions ·{" "}

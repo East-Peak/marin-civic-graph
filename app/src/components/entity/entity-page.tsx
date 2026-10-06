@@ -27,6 +27,8 @@ import { TimelineRibbon } from "@/components/entity/timeline-ribbon";
 import { EditorialCallout } from "@/components/entity/editorial-callout";
 import { EvidenceDrawer } from "@/components/entity/evidence-drawer";
 import { CommitteeTopContributors } from "@/components/contributions/committee-top-contributors";
+import { CampaignFreshness } from "@/components/contributions/campaign-freshness";
+import { campaignFreshnessFor } from "@/lib/server/campaign-freshness";
 import { RecentEntityTracker } from "@/components/shortcuts/recent-entity-tracker";
 import { loadStatus } from "@/lib/server/homepage-data";
 import { loadEvidence } from "@/lib/server/entity-evidence";
@@ -106,6 +108,8 @@ export async function EntityPage({
 
   const tier1 = isTier1(entity.type);
   const currentPath = entityRoute(entity.id, entity.type);
+  const campaign =
+    entity.type === "Committee" || entity.type === "MoneyFlow" ? campaignFreshnessFor(entity.id) : null;
 
   return (
     <div className="min-h-screen bg-bg">
@@ -139,11 +143,21 @@ export async function EntityPage({
         )}
         <div>
           <FactsPanel entity={entity} />
+          {campaign && (
+            <div className="mt-3">
+              <CampaignFreshness freshness={campaign.freshness} jurisdictions={campaign.jurisdictions} />
+            </div>
+          )}
         </div>
       </div>
 
       {entity.type === "Committee" && (
-        <CommitteeTopContributors committeeId={entity.id} committeePath={currentPath} after={contributorsAfter} />
+        <CommitteeTopContributors
+          committeeId={entity.id}
+          committeePath={currentPath}
+          after={contributorsAfter}
+          showFreshness={false}
+        />
       )}
 
       <Connections entity={entity} />

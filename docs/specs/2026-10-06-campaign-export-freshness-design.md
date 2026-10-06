@@ -190,3 +190,9 @@ through". An artifact without the key (the currently published one) renders the 
 
 Out of scope: captcha automation, ingesting search-API transactions, automatic application, identity work,
 corrections route, San Rafael, UI redesign.
+
+## 6. Operator
+
+`ops/launchd/README.md`: the second check's settings ("Second check: Open Marin campaign export due"), what to
+do when its email arrives (the exact clicks, the folder, what happens next, how to mark a year confirmed
+unavailable), and its acceptance (DOWN email, daily reminder, recovery, missed run).

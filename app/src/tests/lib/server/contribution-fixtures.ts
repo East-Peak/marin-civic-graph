@@ -208,13 +208,48 @@ export function buildContributionFixture(): { nodes: NodeRow[]; edges: EdgeRow[]
     ["person-pat-example", "CAST_VOTE", "decision-vote"],
     ["person-official-only", "CAST_VOTE", "decision-vote"],
     ["decision-vote", "ON_AGENDA_ITEM", "agendaitem-sample"],
+
+    // NetFile committees sit in a jurisdiction (the freshness of its source applies); gamma is in none.
+    ["committee-alpha", "IN_JURISDICTION", "place-marin-county"],
+    ["committee-beta", "IN_JURISDICTION", "place-novato"],
   ];
 
   nodes.push({ id: "org-county", type: "Organization", label: "Sample County" });
+  nodes.push({ id: "place-marin-county", type: "Place", label: "Marin County" });
+  nodes.push({ id: "place-novato", type: "Place", label: "Novato" });
   return { nodes, edges };
 }
 
-export function makeContributionFixtureDb(): string {
+/** What the bake publishes as meta campaign_freshness (scripts/cf_freshness.py), for a sample bundle. */
+export const CAMPAIGN_FRESHNESS = {
+  bundle_id: "0".repeat(64),
+  sources: [
+    {
+      source_id: "marin-county-campaign-finance",
+      name: "Marin County",
+      jurisdiction_id: "place-marin-county",
+      latest_report_date: "2026-09-30",
+      exports: [
+        ...["2019", "2020", "2021", "2022", "2023", "2024"].map((year) => ({ year, export_date: "2026-04-14" })),
+        { year: "2025", export_date: "2026-10-01" },
+        { year: "2026", export_date: "2026-10-01" },
+      ],
+      unavailable_years: [],
+      held_years: [],
+    },
+    {
+      source_id: "novato-campaign-finance",
+      name: "Novato",
+      jurisdiction_id: "place-novato",
+      latest_report_date: "2024-12-16",
+      exports: ["2022", "2023", "2024"].map((year) => ({ year, export_date: "2026-04-14" })),
+      unavailable_years: ["2019", "2020", "2021", "2025", "2026"],
+      held_years: ["2024"],
+    },
+  ],
+};
+
+export function makeContributionFixtureDb({ freshness }: { freshness?: unknown } = {}): string {
   const dir = mkdtempSync(path.join(tmpdir(), "open-marin-contributions-"));
   const dbPath = path.join(dir, "public-substrate.sqlite");
   const db = new Database(dbPath);
@@ -264,6 +299,11 @@ export function makeContributionFixtureDb(): string {
     `INSERT INTO money_rollups VALUES ('org-one-large', 2, 251000, 1, 1000, ?)`,
   ).run(JSON.stringify([{ id: "org-county", label: "Sample County", total: 250000 }]));
   db.prepare("INSERT INTO meta(key, value) VALUES ('as_of_date', '2024-09-01')").run();
+  if (freshness !== undefined) {
+    db.prepare("INSERT INTO meta(key, value) VALUES ('campaign_freshness', ?)").run(
+      typeof freshness === "string" ? freshness : JSON.stringify(freshness),
+    );
+  }
   db.close();
   return dbPath;
 }
