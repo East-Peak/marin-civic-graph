@@ -967,6 +967,7 @@ def _write_sqlite(
     identity_links: list[IdentityLinkRow],
     money_rollups: list[MoneyRollupRow],
     as_of_date: str,
+    campaign_freshness: dict | None = None,
 ) -> None:
     sqlite_path.parent.mkdir(parents=True, exist_ok=True)
     fd, temp_name = tempfile.mkstemp(
@@ -1181,6 +1182,7 @@ def _write_sqlite(
                 [
                     ("as_of_date", as_of_date),
                     ("bake_version", BAKE_VERSION),
+                    *([("campaign_freshness", _json_dumps_stable(campaign_freshness))] if campaign_freshness else []),
                 ],
             )
             conn.execute("PRAGMA optimize")
@@ -1225,8 +1227,14 @@ def bake_substrate(
     source: str = "projection",
     live_export_dir: Path | str = DEFAULT_LIVE_EXPORT_DIR,
     attach_overlay_dir: Path | str = DEFAULT_ATTACH_OVERLAY_DIR,
+    campaign_bundles: Iterable[Path | str] = (),
 ) -> dict:
+    """Bake the public SQLite. `campaign_bundles` (live-export only): preparation bundles, in preference order;
+    the first one the export holds exactly supplies the campaign freshness fields (meta `campaign_freshness`)."""
     registry = Path(registry_path)
+    campaign_bundles = [Path(b) for b in campaign_bundles]
+    if campaign_bundles and source != "live-export":
+        raise ValueError("--campaign-bundle needs --source live-export: freshness is verified against the export")
     sqlite_out = Path(sqlite_path)
     report_out = Path(report_path)
 
@@ -1284,8 +1292,12 @@ def bake_substrate(
     money_rollups = _money_rollup_rows(nodes, edges, identity_links)
     as_of_date = _source_as_of_date([*node_paths, *edge_paths])
     status_manifest = _status_manifest(nodes, edges, as_of_date)
+    campaign_freshness, freshness_report = None, None
+    if campaign_bundles:
+        from cf_freshness import verified
+        campaign_freshness, freshness_report = verified(Path(live_export_dir), campaign_bundles)
 
-    _write_sqlite(sqlite_out, nodes, edges, identity_links, money_rollups, as_of_date)
+    _write_sqlite(sqlite_out, nodes, edges, identity_links, money_rollups, as_of_date, campaign_freshness)
     _write_report(sqlite_out.parent / "status_manifest.json", status_manifest)
     _write_report(
         sqlite_out.parent / "catalog.json",
@@ -1330,6 +1342,7 @@ def bake_substrate(
             ).as_posix(),
             "catalog": (sqlite_out.parent / "catalog.json").as_posix(),
         },
+        **({"campaign_freshness": freshness_report} if freshness_report is not None else {}),
         "node_counts_by_type": dict(sorted(node_counts.items())),
         "edge_counts_by_rel": dict(sorted(edge_counts.items())),
         "gate_counts": _gate_counts(nodes, edges),
@@ -1418,6 +1431,14 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
         help=f"Attach overlay dir for --source live-export (default: {DEFAULT_ATTACH_OVERLAY_DIR})",
     )
     parser.add_argument(
+        "--campaign-bundle",
+        action="append",
+        type=Path,
+        dest="campaign_bundles",
+        default=[],
+        help="Campaign preparation bundle whose freshness to publish if the export holds it (repeatable; first wins).",
+    )
+    parser.add_argument(
         "--registry",
         type=Path,
         default=DEFAULT_REGISTRY_PATH,
@@ -1452,6 +1473,7 @@ def main(argv: list[str] | None = None) -> int:
             source=args.source,
             live_export_dir=args.live_export_dir,
             attach_overlay_dir=args.attach_overlay_dir,
+            campaign_bundles=args.campaign_bundles,
         )
     except Exception as exc:
         print(f"ERROR: {exc}", file=sys.stderr)

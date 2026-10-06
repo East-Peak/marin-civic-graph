@@ -220,6 +220,36 @@ class TestCli:
         assert "2021.zip" in capsys.readouterr().err
         assert not (out / "src").exists()
 
+    def test_an_explicit_year_list_bounds_the_inputs(self, tmp_path):
+        """A preparation bundle (cf_prepare.py) lists its years: a year never exported is absent, not missing."""
+        import json
+
+        import yaml
+        from normalize_campaign_finance import main
+        _capture(tmp_path / "raw", years=("2022", "2024"))
+        reg = tmp_path / "netfile-sources.yaml"
+        reg.write_text(yaml.safe_dump({"sources": [{
+            "id": "src", "jurisdiction_id": "place-test", "institution_id": "org-test",
+            "backfill_from": "2021-01-01", "years": ["2022", "2024"]}]}))
+        out = tmp_path / "staging"
+        assert main(["--all", "--registry", str(reg), "--input-root", str(tmp_path / "raw"),
+                     "--output-root", str(out)]) == 0
+        manifest = json.loads((out / "src" / "manifest.json").read_text())
+        assert [i["year"] for i in manifest["inputs"]] == ["2022", "2024"]
+
+    @pytest.mark.parametrize("years", [["2020"], ["2027"], [], "2022"])
+    def test_a_year_list_outside_the_backfill_range_fails(self, tmp_path, capsys, years):
+        import yaml
+        from normalize_campaign_finance import main
+        _capture(tmp_path / "raw", years=("2022",))
+        reg = tmp_path / "netfile-sources.yaml"
+        reg.write_text(yaml.safe_dump({"sources": [{
+            "id": "src", "jurisdiction_id": "place-test", "institution_id": "org-test",
+            "backfill_from": "2021-01-01", "years": years}]}))
+        assert main(["--all", "--registry", str(reg), "--input-root", str(tmp_path / "raw"),
+                     "--output-root", str(tmp_path / "staging")]) == 1
+        assert "years" in capsys.readouterr().err
+
     def test_output_root_is_required(self, tmp_path):
         from normalize_campaign_finance import main
         with pytest.raises(SystemExit):

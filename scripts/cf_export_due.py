@@ -286,7 +286,7 @@ def evaluate(raw_root: Path, sources: list[dict], now: datetime, cache: dict, ap
         verdict.requests = api.requests
     for item in extra:
         _item(items, item.source_id, item.year).why.extend(item.why)
-    verdict.items = sorted(items.values(), key=lambda i: (i.source_id, -int(i.year) if i.year.isdigit() else 0))
+    verdict.items = sorted(items.values(), key=lambda i: (i.source_id, -int(i.year) if i.year.isdigit() else 1))
     return verdict
 
 
@@ -299,10 +299,16 @@ def render_body(v: Verdict) -> str:
         lines = [f"Open Marin: campaign export due ({count} item{'s' if count != 1 else ''}, {v.today.isoformat()})"]
     else:
         lines = [f"Open Marin: no campaign export due ({v.today.isoformat()})"]
-    for sid in sorted({i.source_id for i in v.items}):
+    prepared = [i for i in v.items if i.source_id == "*"]
+    if prepared:
+        lines += ["", "Landed exports, prepared automatically:"]
+        for item in prepared:
+            lines += [f"  - {item.year}: {why}" for why in item.why]
+    for sid in sorted({i.source_id for i in v.items} - {"*"}):
         source = v.sources.get(sid, {"name": sid, "agency_code": "?", "portal_url": "?"})
-        lines += ["", f"{source['name']} ({source['agency_code']}): {source['portal_url']}",
-                  '  For each year: choose the year, click "Export Amended", save the ZIP exactly as shown.']
+        lines += ["", f"{source['name']} ({source['agency_code']}): {source['portal_url']}"]
+        if any(i.year.isdigit() for i in v.items if i.source_id == sid):
+            lines.append('  For each year: choose the year, click "Export Amended", save the ZIP exactly as shown.')
         for item in (i for i in v.items if i.source_id == sid):
             if item.year.isdigit():
                 lines.append(f"  - {item.year} -> save as data/raw/{sid}/{v.today.isoformat()}/{item.year}.zip")

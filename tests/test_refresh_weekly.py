@@ -180,7 +180,9 @@ def _no_network(url: str) -> dict:
 def ctx(root: Path, world: FakeWorld, pings: list[str], alarm_pings: list[str]) -> rw.Context:
     def ping(url: str, body: str) -> None:  # never the network; the export-due check's pings kept apart
         (alarm_pings if url.startswith(DUE_HOST) else pings).append((url, body))
-    return rw.Context(root=root, runner=world, env=dict(ENV), python="py",
+    # Beside the fake repo, never inside it, and never the operator's ~/open-marin-staging.
+    env = {**ENV, rw.CF_STAGING_ENV: str(root.parent / f"{root.name}-cf-staging")}
+    return rw.Context(root=root, runner=world, env=env, python="py",
                       now=lambda: datetime(2026, 9, 28, 5, 0, 0, tzinfo=timezone.utc),
                       free_bytes=lambda path: 50 * 1024**3, meeting_registries=("granicus",),
                       ping=ping, netfile_fetch=_no_network, sleep=lambda s: None)

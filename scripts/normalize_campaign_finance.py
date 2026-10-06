@@ -387,8 +387,15 @@ def _capture_date(input_root: Path, source_id: str) -> str:
     return sorted(p.name for p in (input_root / source_id).iterdir() if p.is_dir())[-1]
 
 
-def _years(backfill_from: str, capture_date: str) -> list[str]:
-    return [str(y) for y in range(int(backfill_from[:4]), int(capture_date[:4]) + 1)]
+def _years(backfill_from: str, capture_date: str, listed=None) -> list[str]:
+    """Every year from backfill_from through the capture's year, or exactly the source's listed `years:` (a
+    preparation bundle's, cf_prepare.py: a year never exported is absent there, not missing)."""
+    span = [str(y) for y in range(int(backfill_from[:4]), int(capture_date[:4]) + 1)]
+    if listed is None:
+        return span
+    if not isinstance(listed, list) or not listed or any(str(y) not in span for y in listed):
+        raise InputError(f"years {listed!r} must be a non-empty list within {span[0]}-{span[-1]}")
+    return sorted({str(y) for y in listed})
 
 
 def _write_json(path: Path, payload) -> None:
@@ -442,7 +449,8 @@ def main(argv: list[str] | None = None) -> int:
             capture_date = _capture_date(args.input_root, source_id)
             pins = [p for p in source_config.get("unavailable_inputs", []) if p["capture"] == capture_date]
             inputs = inventory_inputs(args.input_root, source_id, capture_date,
-                                      years=_years(source_config["backfill_from"], capture_date),
+                                      years=_years(source_config["backfill_from"], capture_date,
+                                                   source_config.get("years")),
                                       unavailable=pins)
             inventories.append((source_config, capture_date, inputs))
     except InputError as exc:

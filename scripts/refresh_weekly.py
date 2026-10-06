@@ -48,6 +48,8 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import cf_export_due  # noqa: E402
+import cf_prepare  # noqa: E402
+from cf_inventory import inventory as cf_inventory  # noqa: E402
 from ingest import load_sources, resolve_sources  # noqa: E402
 from ingest_guard import Floors, evaluate  # noqa: E402
 from load_from import STAGED_FILES  # noqa: E402
@@ -81,6 +83,7 @@ STEP_TIMEOUTS = {
     "stage-permits": 20 * 60, "stage-form700": 30 * 60, "stage-courtlistener": 30 * 60, "stage": 30 * 60,
     "backup": 60 * 60, "load": 60 * 60, "reconciliation": 3 * 3600, "export": 3 * 3600, "bake": 2 * 3600,
     "snapshot": 10 * 60,
+    "cf": 2 * 3600,  # each campaign-preparation step (export, normalize, plan, a bake, the scan)
 }
 DEFAULT_STEP_TIMEOUT = 60 * 60
 TIMEOUT_ENV = "OPEN_MARIN_TIMEOUT_"
@@ -137,6 +140,7 @@ TRANSITIONS = {
 
 CF_REGISTRY = Path("registry/netfile-sources.yaml")
 CF_STATE = RUNS_DIR / "campaign-finance.json"  # validation cache and campaign-export hashes (not a run)
+CF_STAGING_ENV = "OPEN_MARIN_CF_STAGING"  # where preparations go; default ~/open-marin-staging/cf-refresh
 
 
 class Refused(Exception):
@@ -225,6 +229,7 @@ class Context:
     netfile_fetch: Callable[[str], dict] = lambda url: cf_export_due.fetch_json(url)
     sleep: Callable[[float], None] = lambda seconds: time.sleep(seconds)
     monotonic: Callable[[], float] = lambda: time.monotonic()
+    prepare_campaign_exports: bool = True  # tests of the alarm alone switch preparation off (it has its own)
 
 
 # --- files and state ---------------------------------------------------------
@@ -625,13 +630,65 @@ def _alarm_url(ctx: Context) -> tuple[str | None, str | None]:
     return url, None
 
 
-def judge_export_due(ctx: Context, cache: dict) -> cf_export_due.Verdict:
+def judge_export_due(ctx: Context, cache: dict, extra: list | None = None) -> cf_export_due.Verdict:
     """Today's verdict for every campaign source; raises ConfigError when the registry is unreadable."""
     api = cf_export_due.NetFileApi(ctx.netfile_fetch, sleep=ctx.sleep, monotonic=ctx.monotonic)
-    return cf_export_due.evaluate(ctx.root / "data" / "raw", _campaign_sources(ctx.root), ctx.now(), cache, api)
+    return cf_export_due.evaluate(ctx.root / "data" / "raw", _campaign_sources(ctx.root), ctx.now(), cache, api,
+                                  extra or [])
 
 
-def run_export_due(ctx: Context, state: dict | None, *, persist: bool) -> list[str]:
+def _cf_step(ctx: Context, run_id: str, name: str, cmd: list[str]) -> cf_prepare.StepResult:
+    result = _step(ctx, run_id, f"cf-{name}", cmd)
+    return cf_prepare.StepResult(result.returncode, result.output, result.timed_out_after is not None)
+
+
+def run_campaign_preparation(ctx: Context, state: dict | None) -> cf_prepare.Outcome | None:
+    """Prepare landed campaign exports, after the week's loads, under the lock. Never raises; None when the
+    graph is not settled (a load stopped partway) or the registry is unreadable (the alarm reports that)."""
+    if not ctx.prepare_campaign_exports or state is None or state["status"] == "load_failed" \
+            or _unresolved_load(ctx.root):
+        return None
+    try:
+        sources = _campaign_sources(ctx.root)
+        today = cf_export_due.pacific_today(ctx.now())
+        usable = [s for s in sources if not cf_export_due.check_sources([s], today)]
+        if len(usable) != len(sources) or not usable:
+            return None  # a source the alarm cannot judge is never left out of a bundle (its flows would retire)
+        cf_state = read_cf_state(ctx.root)
+        try:
+            inventories = cf_inventory(ctx.root / "data" / "raw", usable, today, cf_state.setdefault("validated", {}))
+        except cf_export_due.ConfigError:
+            return None
+        if ctx.free_bytes(ctx.root) < MIN_FREE_BYTES:
+            outcome = cf_prepare.Outcome("transient", "not enough free disk for a preparation",
+                                         problems=["campaign preparation: not enough free disk"])
+        else:
+            staging = Path(ctx.env.get(CF_STAGING_ENV) or Path.home() / "open-marin-staging" / "cf-refresh")
+            outcome = cf_prepare.prepare(cf_prepare.Prep(
+                root=ctx.root, step=lambda name, cmd: _cf_step(ctx, state["run_id"], name, cmd), python=ctx.python,
+                run_id=state["run_id"], today=today, at=ctx.now().isoformat(timespec="seconds"), staging=staging,
+                sources=usable, inventories=inventories, state=cf_state))
+        cf_state["last_preparation"] = {"run_id": state["run_id"], "status": outcome.status,
+                                        "message": outcome.message}
+        write_cf_state(ctx, cf_state)
+    except cf_export_due.ConfigError:
+        return None
+    except Exception as exc:
+        _print_crash(ctx)
+        outcome = cf_prepare.Outcome("transient", f"crashed: {type(exc).__name__}: {exc}",
+                                     problems=[scrub(f"campaign preparation crashed: {type(exc).__name__}: {exc}",
+                                                     ctx.env)])
+    state["campaign_preparation"] = {"status": outcome.status, "message": outcome.message}
+    _persist(ctx, state)
+    return outcome
+
+
+def _due_items(items: list[tuple[str, str, str]]) -> list[cf_export_due.DueItem]:
+    return [cf_export_due.DueItem(sid, label, [why]) for sid, label, why in items]
+
+
+def run_export_due(ctx: Context, state: dict | None, *, persist: bool,
+                   prepared: cf_prepare.Outcome | None = None) -> list[str]:
     """Evaluate and ping the export-due check; return the monitoring problems for the main heartbeat. Never raises.
 
     `persist`: record the verdict in the run (when there is one) and keep the validation cache; without it,
@@ -644,8 +701,9 @@ def run_export_due(ctx: Context, state: dict | None, *, persist: bool) -> list[s
             problems.append(url_problem)
         cf_state = read_cf_state(ctx.root)
         cache = dict(cf_state.get("validated", {}))
+        extra = _due_items(prepared.items if prepared else cf_prepare.standing_items(cf_state))
         try:
-            verdict = judge_export_due(ctx, cache)
+            verdict = judge_export_due(ctx, cache, extra)
             problems += verdict.problems
             body, failing = verdict.body(lambda text: scrub(text, ctx.env)), verdict.is_due
         except cf_export_due.ConfigError as exc:
@@ -680,7 +738,9 @@ def export_due(ctx: Context, *, dry_run: bool) -> int:
         print(scrub("\n".join(problems) or "export-due: pinged", ctx.env))
         return 1 if problems else 0
     try:
-        verdict = judge_export_due(ctx, dict(read_cf_state(ctx.root).get("validated", {})))
+        cf_state = read_cf_state(ctx.root)
+        verdict = judge_export_due(ctx, dict(cf_state.get("validated", {})),
+                                   _due_items(cf_prepare.standing_items(cf_state)))
     except cf_export_due.ConfigError as exc:
         print(scrub(f"export-due: cannot judge: {exc}", ctx.env))
         return 1
@@ -785,9 +845,11 @@ def _export_and_bake(ctx: Context, state: dict, run_id: str, *, reconcile: bool)
 def _export_and_bake_steps(ctx: Context, state: dict, run_id: str, *, reconcile: bool) -> dict:
     staging = ctx.root / STAGING
     steps = [("reconciliation", ["bash", "scripts/refresh_reconciliation.sh"])] if reconcile else []
+    # The bake publishes campaign freshness from the first prepared/applied bundle it verifies against its export.
+    campaign = [arg for bundle in cf_prepare.bake_bundles(read_cf_state(ctx.root)) for arg in ("--campaign-bundle", bundle)]
     steps += [
         ("export", [ctx.python, "scripts/export_live_graph.py"]),
-        ("bake", [ctx.python, "scripts/bake_public_substrate.py", "--source", "live-export",
+        ("bake", [ctx.python, "scripts/bake_public_substrate.py", "--source", "live-export", *campaign,
                   "--sqlite", str(staging / PUBLISHED_ARTIFACTS[0]), "--report", str(staging / PUBLISHED_ARTIFACTS[3])]),
     ]
     for name, cmd in steps:
@@ -1013,7 +1075,9 @@ def weekly(ctx: Context) -> int:
     try:
         with run_lock(ctx.root):
             state, problem = _weekly_run(ctx)
-            problem = _join(problem, run_export_due(ctx, state, persist=True))  # whatever the run's outcome
+            prepared = run_campaign_preparation(ctx, state)  # read-only against the graph
+            alarm = run_export_due(ctx, state, persist=True, prepared=prepared)  # whatever the run's outcome
+            problem = _join(problem, [*(prepared.problems if prepared else []), *alarm])
             clean = heartbeat(ctx, state, problem)
             reported = True
     except RunLockHeld as exc:  # someone else's lock: judge the alarm, but write nothing

@@ -143,7 +143,8 @@ Each run:
    - **scan** `scan_public_substrate.py` gates A/B/C and controls PASS. Unexplained findings hold; no
      explanation file is ever generated.
    When more than one source changed and a data gate fails, each changed source is retried alone (others at
-   their applied selection) so the passing one still prepares; a combination that only fails together holds all.
+   their applied selection): failures are named per source, the first that passes alone is prepared, and another
+   that also passes alone is prepared on a later run, on top of it (the alarm says so).
    Export/bake timeouts and crashes are transient: retried next run and reported on the main heartbeat.
 9. `<prep>/summary.md`: flows added / retired / changed, new actors by type, amount deltas per flow type, scan
    verdict, the recovery or apply instruction.

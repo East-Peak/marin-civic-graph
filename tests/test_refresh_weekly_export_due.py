@@ -28,6 +28,7 @@ SOURCE = {"id": "example-cf", "name": "Example County", "agency_code": "EXC", "a
 def api(ctx) -> FakeApi:
     fake = FakeApi()
     ctx.netfile_fetch = fake
+    ctx.prepare_campaign_exports = False  # the alarm alone: preparation is tests/test_cf_prepare.py's
     return fake
 
 
