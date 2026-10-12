@@ -18,7 +18,7 @@ def build_report(q: Queue, evidence: Evidence) -> dict:
             "label": p.label, "target": p.target, "buckets": sorted({r.bucket for r in member}),
             "rows": len(member), "flows": len({r.moneyflow_id for r in member}),
             "committees": len({r.filer_id for r in member}), "total_cents": total_cents(member),
-            "transactions": sorted({(r.source_id, r.filer_id, r.tran_id) for r in member})})
+            "row_ids": [r.row_id for r in member]})
     buckets = []
     for b in q.buckets.values():
         clustered = {rid for c in b.clusters for rid in c.rows}

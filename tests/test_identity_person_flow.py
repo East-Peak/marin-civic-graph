@@ -26,9 +26,9 @@ AS_OF = "2026-10-12"
 class Session:
     """One private dir and key; worlds (re-downloads) come and go; the decision file is the first world's."""
 
-    def __init__(self, tmp: Path, capsys, monkeypatch):
+    def __init__(self, tmp: Path, capsys, monkeypatch, rows=None):
         self.tmp, self.capsys, self.said = tmp, capsys, []
-        self.world = build_world(tmp / "base")
+        self.world = build_world(tmp / "base", rows=rows)
         self.decisions = self.world.decisions
         monkeypatch.setenv(ik.ENV, str(self.world.private))
         assert self.run("init-key") == 0
@@ -81,8 +81,9 @@ def _state(build: Path) -> dict:
 def _decide_everything(s: Session) -> tuple[Path, dict[str, list[str]]]:
     b1 = s.build("b1")
     assert {i["class"] for i in _queue(b1)} == {"B", "A", "C"}
+    larkspur = s.options(b1, _item(b1, "person-larkspur-robin"))
     chosen = {
-        "larkspur": s.options(b1, _item(b1, "person-larkspur-robin"))["All 2 rows are person-robin-q-larkspur"],
+        "larkspur": next(v for k, v in larkspur.items() if k.startswith("All ") and k.endswith("q-larkspur")),
         "osprey": s.options(b1, _item(b1, "person-osprey-sam"))["None of these rows is person-sam-osprey"],
         "thornbury": s.options(b1, _item(b1, "person-thornbury-casey"))["Each address cluster is a different person"],
         "quill": s.options(b1, _item(b1, "person-quill-avery"))["Cannot decide from these inputs"],
@@ -153,14 +154,29 @@ def test_an_address_only_change_makes_the_decision_stale_saying_only_address_cha
 
 
 def test_an_amendment_that_removes_a_row_stales_its_decisions(s):
-    _decide_everything(s)
+    from tests.identity_person_fixtures import COUNCIL
+
+    _, chosen = _decide_everything(s)
     rows = base_rows()
-    rows["A-Contributions"] = [r for r in rows["A-Contributions"] if r["Tran_ID"] != "M-2"]
-    amended = build_world(s.tmp / "amended", rows=rows, private=s.world.private)
-    b = s.build("amended", amended)
-    diffs = [i["detail"]["diff"] for i in _queue(b) if i["class"] == "stale"]
-    assert diffs and all(["row gone"] in d.values() for d in diffs)
+    amended = dict(COUNCIL, Report_Num="001", Rpt_Date="2024-03-15")
+    rows["A-Contributions"] += [dict(r, **amended) for r in rows["A-Contributions"]
+                                if r["Filer_ID"] == "1400001" and r["From_Date"] == COUNCIL["From_Date"]
+                                and r["Tran_ID"] != "A-3"]  # the amendment drops Larkspur's council row
+    world = build_world(s.tmp / "amended", rows=rows, private=s.world.private, amendments=[(COUNCIL, amended)])
+    ledger = [json.loads(t) for t in (world.ledger_dir / SOURCE / "ledger.jsonl").read_text().splitlines()]
+    assert {r["disposition"] for r in ledger if r.get("tran_id") == "A-3"} == {"superseded"}
+    b = s.build("amended", world)
+    state = _state(b)
+    # the amendment re-keys every row of the council filing (Report_Num is part of the row key), so every decision
+    # over one of them goes stale, Larkspur's same and is among them
+    stale = {d["digest"] for d in state["decisions"] if d["status"] == "stale"}
+    same, is_line = (dec.parse_line(t, 1).digest for t in chosen["larkspur"])
+    assert {same, is_line} <= stale
+    for digest in stale:
+        assert ["row gone"] in state["stale"][digest].values()
     assert "row gone (amended away or no longer counted)" in (b / "review" / "batch-001.md").read_text()
+    assert not [p for p in json.loads((b / "report.json").read_text())["persons"]
+                if p["target"] == "person-robin-q-larkspur"]
 
 
 def test_a_flow_split_across_two_people_is_one_conflict_and_counts_for_nobody(s):
@@ -188,27 +204,74 @@ def test_revoking_a_same_suspends_its_dependent_is(s):
     assert _item(b, "person-larkspur-robin")  # and the question is back in the queue
 
 
-def test_report_totals_equal_an_independent_recomputation_over_distinct_flows(s):
-    b1 = s.build("b1")
-    _, chosen = _decide_everything(s)
+@pytest.fixture
+def cents(tmp_path, capsys, monkeypatch):
+    """A world with fractional and negative amounts: a refund and odd cents on Larkspur's rows."""
+    from tests.identity_person_fixtures import MEASURE, _c
+
+    rows = base_rows()
+    for row in rows["A-Contributions"]:
+        if row["Tran_ID"] == "M-2":
+            row["Tran_Amt1"] = row["Tran_Amt2"] = 300.37
+    rows["A-Contributions"].append(_c(MEASURE, "M-9", -25.10, "Larkspur", "Robin", "77 Fictional Way",
+                                      date="2024-01-28"))
+    return Session(tmp_path.resolve(), capsys, monkeypatch, rows=rows)
+
+
+def _independent_rows(world) -> dict[str, dict]:
+    """{row id: ledger row} rebuilt from the ledger files alone, with the row-key recipe the spec pins."""
+    import hashlib
+
+    folder = world.ledger_dir / SOURCE
+    filings = {json.loads(t)["filing_id"]: json.loads(t) for t in (folder / "filings.jsonl").read_text().splitlines()}
+    out = {}
+    for row in (json.loads(t) for t in (folder / "ledger.jsonl").read_text().splitlines()):
+        if row.get("schedule") == "A" and row.get("counted"):
+            f = filings[row["filing_id"]]
+            key = [f["source_id"], f["filer_key"], f["from_date"], f["thru_date"], f["rpt_date"], f["report_num"],
+                   "A", row["tran_id"]]
+            rid = "r-" + hashlib.sha256(b"open-marin/identity/row/v1\0" + json.dumps(
+                key, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()[:20]
+            out[rid] = row
+    return out
+
+
+def test_report_totals_equal_an_independent_recomputation_over_distinct_flows(cents):
+    s = cents
+    b1, chosen = _decide_everything(s)
     vale = _rows_of(s, b1, "person-vale-morgan")
-    assert s.ingest(b1, [dec.decision_line("same", [list(vale)], vale, "stuart", AS_OF)], name="vale.jsonl") == 0
+    vale_line = dec.decision_line("same", [list(vale)], vale, "stuart", AS_OF)
+    assert s.ingest(b1, [vale_line], name="vale.jsonl") == 0
     report = json.loads((s.build("totals") / "report.json").read_text())
 
-    # independently, from the ledger file: each person's transactions, each counted MoneyFlow once
-    ledger = [json.loads(t) for t in (s.world.ledger_dir / SOURCE / "ledger.jsonl").read_text().splitlines()]
-    flow_of, amount_of = {}, {}
-    for row in ledger:
-        if row.get("schedule") == "A" and row.get("counted"):
-            flow_of[(SOURCE, row["moneyflow_id"].split("-")[1], row["tran_id"])] = row["moneyflow_id"]
-            amount_of[row["moneyflow_id"]] = Decimal(row["amount"])
-    assert len(report["persons"]) == 4  # Larkspur, Vale, and the two Thornbury clusters
-    for person in report["persons"]:
-        flows = {flow_of[tuple(t)] for t in person["transactions"]}
-        assert person["total_cents"] == int(sum(amount_of[f] for f in flows) * 100), person["label"]
-        assert person["flows"] == len(flows)
-    by_bucket = {p["buckets"][0]: p["total_cents"] for p in report["persons"] if len(p["buckets"]) == 1}
-    assert by_bucket["person-larkspur-robin"] == 130000 and by_bucket["person-vale-morgan"] == 60000
+    # expected people: union-find over the `same` lines alone (the lines themselves, not the report)
+    parent: dict[str, str] = {}
+
+    def find(x):
+        parent.setdefault(x, x)
+        while parent[x] != x:
+            x = parent[x]
+        return x
+    for text in s.decisions.read_text().splitlines():
+        line = json.loads(text)
+        if line["kind"] == "same":
+            first = line["groups"][0][0]
+            for r in line["groups"][0]:
+                parent[find(r)] = find(first)
+    people: dict[str, set] = {}
+    for r in list(parent):
+        people.setdefault(find(r), set()).add(r)
+    ledger = _independent_rows(s.world)
+    expected = {}
+    for rows in people.values():
+        flows = {ledger[r]["moneyflow_id"]: Decimal(ledger[r]["amount"]) for r in rows}
+        expected[frozenset(rows)] = int(sum(flows.values()) * 100)
+    got = {frozenset(p["row_ids"]): p["total_cents"] for p in report["persons"]}
+    assert got == expected
+    assert 127527 in got.values()  # 1,000.00 + 300.37 - 25.10: cents and a refund, exactly
+    flows = [ledger[r]["moneyflow_id"] for p in report["persons"] for r in p["row_ids"]]
+    per_person = [{ledger[r]["moneyflow_id"] for r in p["row_ids"]} for p in report["persons"]]
+    assert sum(len(f) for f in per_person) == len(set().union(*per_person)) <= len(set(flows))  # disjoint
 
 
 def test_the_decision_file_holds_only_grammar_and_keyed_digests(s):

@@ -2,6 +2,7 @@
 queue, stale and conflict counts. Private directory only; never a street or hash."""
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -60,3 +61,22 @@ def test_counts_and_markdown_hold_no_street_or_hash(tmp_path):
     assert "Queue" in text and "person-thornbury-casey" in text
     assert_no_street(text)
     assert not any(r.address_hash and r.address_hash in text for r in e.rows)
+
+
+def test_the_report_names_rows_by_opaque_id_never_by_transaction_text(tmp_path):
+    from tests.identity_person_fixtures import base_rows
+    rows = base_rows()
+    for row in rows["A-Contributions"]:
+        if row["Tran_NamL"] == "Quill":
+            row["Tran_ID"] = row["Tran_ID"] + " 12 Sample Ridge"
+    w = build_world(tmp_path / "odd", rows=rows)
+    e = ev.collect(ev.Inputs(w.ledger_dir, w.raw_root, w.export_dir, w.decisions), KEY)
+    rows_q = [r for r in e.rows if r.bucket == "person-quill-avery"]
+    line = dec.decision_line("same", [[r.row_id for r in rows_q]], {r.row_id: r.fp for r in rows_q}, "stuart",
+                             "2026-10-12")
+    d = [dec.parse_line(line, 1)]
+    state = dec.effective_state(d, {r.row_id: r.fp for r in e.rows}, {r.row_id: r.moneyflow_id for r in e.rows},
+                                iq.target_fingerprints(KEY, e.graph, d))
+    report = rep.build_report(iq.build_queue(e, state, KEY, "2026-10-12"), e)
+    text = json.dumps(report) + rep.render_report(report)
+    assert "Sample Ridge" not in text

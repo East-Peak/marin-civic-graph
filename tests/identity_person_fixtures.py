@@ -133,8 +133,8 @@ def _sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def build_world(tmp: Path, rows: dict | None = None, ledger_rows: dict | None = None, private: Path | None = None
-                ) -> World:
+def build_world(tmp: Path, rows: dict | None = None, ledger_rows: dict | None = None, private: Path | None = None,
+                amendments: list[tuple[dict, dict]] = ()) -> World:
     """Write raw workbooks from `rows`, and the ledger bundle + export from `ledger_rows` (default: the same).
 
     Separate `ledger_rows` let a test change the raw workbook (a re-download) without rebuilding the ledger, or
@@ -149,7 +149,12 @@ def build_world(tmp: Path, rows: dict | None = None, ledger_rows: dict | None = 
     ledger_workbook = workbook
     if source_rows is not None:
         ledger_workbook = write_export(tmp / "ledger-input" / rel, source_rows, headers=LAYOUT)
-    ledger = build_ledger(SOURCE, [(rel, ledger_workbook)])
+    from campaign_ledger import Ledger
+
+    ids = Ledger(SOURCE)
+    evidence = [{"original": ids.filing_id_for(SOURCE, **old), "amended": ids.filing_id_for(SOURCE, **new),
+                 "locator": "fixture", "evidence": "fixture amendment"} for old, new in amendments]
+    ledger = build_ledger(SOURCE, [(rel, ledger_workbook)], version_evidence=evidence)
     assert not ledger.errors, ledger.errors
     build_transactions(ledger)
     out = ledger_dir / SOURCE
