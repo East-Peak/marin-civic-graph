@@ -1074,6 +1074,18 @@ def test_weekly_stages_loads_publishes_and_snapshots_then_pings_success_once(ctx
     assert all(c[1:3] == ["-C", repo] for c in world.calls if c[0] == "git")
 
 
+def test_the_snapshot_also_stages_the_person_identity_decisions_when_present(ctx, world, root, pings):
+    repo = (root / "data/normalized").resolve().parent
+    (repo / "identity" / "person").mkdir(parents=True)
+    (repo / "identity" / "person" / "decisions.jsonl").write_text("")
+
+    assert _weekly(ctx) == 0
+
+    adds = [c[3:] for c in world.calls if c[0] == "git" and c[3] == "add"]
+    assert adds == [["add", "--", "normalized", "extracted", "identity/person"]]
+    assert _state(root)["snapshot"]["ok"] is True
+
+
 def test_a_held_source_publishes_the_rest_but_pings_fail(ctx, world, root, pings):
     world.exit_codes["ingest_form700.py"] = 1
 

@@ -64,6 +64,7 @@ EXPORTS = Path("data/exports")
 STAGING = EXPORTS / "staging"
 BACKUPS = EXPORTS / "backups"  # pre-load-<run_id>/: the whole graph before that run's load
 DATA_LAYERS = ("normalized", "extracted")  # data/<layer> symlinks into the private data repo
+IDENTITY_DECISIONS = "identity/person"  # Stuart's person-identity decisions, in the private data repo itself
 DATA_BRANCH = "main"
 LOAD_DATABASE = "neo4j"  # the loaders write to the server's default database
 PUBLISHED_ARTIFACTS = ("public-substrate.sqlite", "status_manifest.json", "catalog.json", "substrate-bake-report.json")
@@ -1006,7 +1007,7 @@ def _commit_snapshot(ctx: Context, run_id: str) -> dict:
         raise SnapshotFailed(f"the private data repo is on {branch}, not {DATA_BRANCH}; nothing committed")
     if git("index", "diff", "--cached", "--quiet", ok=(0, 1)).returncode:
         raise SnapshotFailed("the private data repo already had staged changes; not committing someone else's work")
-    git("add", "add", "--", *DATA_LAYERS)
+    git("add", "add", "--", *DATA_LAYERS, *([IDENTITY_DECISIONS] if (repo / IDENTITY_DECISIONS).is_dir() else []))
     changed = git("staged", "diff", "--cached", "--quiet", ok=(0, 1)).returncode == 1
     if changed:
         git("commit", "commit", "-m", f"data: snapshot at publish {run_id}")
@@ -1015,7 +1016,7 @@ def _commit_snapshot(ctx: Context, run_id: str) -> dict:
 
 
 def snapshot(ctx: Context, state: dict) -> dict:
-    """After a publish: commit data/normalized + data/extracted to the private repo and push.
+    """After a publish: commit data/normalized + data/extracted (+ identity/person) to the private repo and push.
 
     A failure is recorded as `snapshot: {ok: false, error}`; it never changes the run's status.
     """
