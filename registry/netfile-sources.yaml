@@ -38,7 +38,11 @@ sources:
     export_target: "ctl00$phBody$GetExcelAmend"
     # Years the operator confirmed NetFile has no export for (the export-due alarm then warns instead of demanding,
     # and reminds once a quarter): - {year: "2019", confirmed: "YYYY-MM-DD", reason: "..."}
-    confirmed_unavailable: []
+    confirmed_unavailable:
+      - {year: "2019", confirmed: "2026-10-01", reason: "Export Amended returned an error page: no e-filed data for this year"}
+      - {year: "2020", confirmed: "2026-10-01", reason: "Export Amended returned an error page: no e-filed data for this year"}
+      - {year: "2021", confirmed: "2026-10-01", reason: "Export Amended returned an error page: no e-filed data for this year"}
+      - {year: "2025", confirmed: "2026-10-01", reason: "Export Amended returned an error page: no e-filed data for this year"}
     # These 'exports' are the NetFile HTML page, not a workbook: unavailable coverage, never empty years.
     unavailable_inputs:
       - {capture: "2026-04-14", file: "2019.zip", sha256: "971a97f0840175a011d74a1e0e810ad78288da84c1589cdfbb5cf8949fc9e911"}
