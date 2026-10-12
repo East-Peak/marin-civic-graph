@@ -297,6 +297,7 @@ def test_government_facts_render_allowlisted_provenance_only(tmp_path):
     ({"resolved_by": "12b-sample-ridge"}, "resolved_by: withheld (not a code identifier)"),
     ({"vote": "aye"}, "vote: aye"),
     ({"vote": "Sample Ridge"}, "vote: withheld (not a vote)"),
+    ({"vote": ["aye"]}, "vote: withheld (not a vote)"),
     ({"source_bundle_ids": [12, "Sample Ridge"]}, "source bundles: 2"),
     ({"candidate_name": "Twelve Sample Ridge", "mailing": "12 Sample Ridge"}, "no provenance recorded"),
 ])

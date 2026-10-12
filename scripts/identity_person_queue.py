@@ -498,7 +498,8 @@ def _provenance(props: dict) -> str:
             value = props[key]
             shown.append(f"{key}: {value if isinstance(value, str) and _CODE.fullmatch(value) else 'withheld (not a code identifier)'}")
     if props.get("vote") is not None:
-        shown.append(f"vote: {props['vote'] if props['vote'] in VOTES else 'withheld (not a vote)'}")
+        vote = props["vote"]
+        shown.append(f"vote: {vote if isinstance(vote, str) and vote in VOTES else 'withheld (not a vote)'}")
     bundles = props.get("source_bundle_ids")
     if bundles:
         shown.append(f"source bundles: {len(bundles) if isinstance(bundles, list) else 1}")
