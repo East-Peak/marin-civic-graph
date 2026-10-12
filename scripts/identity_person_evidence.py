@@ -334,7 +334,8 @@ def _read_cells(path: Path, rel: str, wanted: set[int]) -> tuple[dict[int, tuple
                         wb.close()
         except Exception as exc:  # zip, XML, sheet or header problems: name the file, never a cell
             raise InputError(f"{rel}: not a readable workbook ({type(exc).__name__})") from None
-    return out, bool(caught)
+    # a ResourceWarning is the garbage collector closing some unrelated file, not the parser converting a cell
+    return out, any(not issubclass(w.category, ResourceWarning) for w in caught)
 
 
 def _reported(cell):

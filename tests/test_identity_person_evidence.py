@@ -301,6 +301,20 @@ def test_a_workbook_the_parser_cannot_read_losslessly_puts_all_its_rows_out_of_s
     assert evidence.rows == []
 
 
+def test_a_garbage_collector_resource_warning_is_not_a_parsing_warning(world, monkeypatch):
+    # An unrelated unclosed file can be collected while the workbook is read; it says nothing about the cells.
+    import warnings
+
+    real = ev.openpyxl.load_workbook
+
+    def load(*args, **kwargs):
+        warnings.warn("unclosed file <some other file>", ResourceWarning)
+        return real(*args, **kwargs)
+    monkeypatch.setattr(ev.openpyxl, "load_workbook", load)
+    evidence = _collect(world)
+    assert len(evidence.rows) == 14 and "lossy_workbook_rows" not in evidence.counts
+
+
 def test_a_warning_after_a_missing_row_still_makes_the_workbook_lossy(world):
     # openpyxl parses row 4 before it yields the filler for missing row 3: per-row attribution would miss this.
     _date_styled(world, "Tran_Adr1", 98765432123, row=4, blank=3)
