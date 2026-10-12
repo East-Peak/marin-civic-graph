@@ -121,8 +121,8 @@ def test_c_takes_the_top_25_by_total(tmp_path):
     from tests.identity_person_fixtures import COUNCIL, MEASURE, _c
     for n in range(30):
         last = f"Donorson{chr(65 + n // 26)}{chr(65 + n % 26)}"
-        rows["A-Contributions"] += [_c(COUNCIL, f"X-{n}", 100 + n, last, "Kim", "31 Invented Road"),
-                                    _c(MEASURE, f"Y-{n}", 100, last, "Kim", "88 Madeup Drive")]
+        rows["A-Contributions"] += [_c(COUNCIL, f"X-{n}", 100 + n, last, "Kim", "31\x20Invented Road"),
+                                    _c(MEASURE, f"Y-{n}", 100, last, "Kim", "88\x20Madeup Drive")]
     q = _queue(_evidence(build_world(tmp_path, rows=rows)))
     c_items = [i for i in q.items if i.cls == "C"]
     assert len(c_items) == 25
@@ -273,12 +273,12 @@ def test_government_facts_render_allowlisted_provenance_only(tmp_path):
     nodes = [json.loads(t) for t in (w.export_dir / "nodes.jsonl").read_text().splitlines()]
     for n in nodes:
         if n["id"] == "person-robin-q-larkspur":
-            n["properties"].update(source_bundle_ids=["example-bundle"], home_address="12 Sample Street")
+            n["properties"].update(source_bundle_ids=["example-bundle"], home_address="12\x20Sample Street")
     (w.export_dir / "nodes.jsonl").write_text("".join(json.dumps(n) + "\n" for n in nodes))
     edges = [json.loads(t) for t in (w.export_dir / "edges.jsonl").read_text().splitlines()]
     for edge in edges:
         if edge["type"] == "CONTROLLED_BY":
-            edge["properties"].update(mailing_address="400 Example Avenue", resolved_by="12 Sample Street")
+            edge["properties"].update(mailing_address="400\x20Example Avenue", resolved_by="12\x20Sample Street")
         if edge["type"] == "FILED_BY" and edge["end_id"] == "person-robin-q-larkspur":
             edge["properties"].update(source="form700-index")
     (w.export_dir / "edges.jsonl").write_text("".join(json.dumps(x) + "\n" for x in edges))

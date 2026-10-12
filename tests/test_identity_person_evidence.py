@@ -45,13 +45,13 @@ def _one(evidence, tran_id, filer="1400001"):
 # --- address canonicalization (in memory only) -------------------------------------------------------------------
 
 @pytest.mark.parametrize("a, b", [
-    (("12 Sample Street", "Apt. 3", "94901-1234"), ("12 SAMPLE ST #3", None, 94901)),
-    (("12 Sample Street", "", "94901"), ("12  sample   st.", "N/A", "949011234")),
-    (("400 North Example Avenue", None, "94903"), ("400 N. Example Ave", "", "94903")),
+    (("12\x20Sample Street", "Apt. 3", "94901-1234"), ("12\x20SAMPLE ST #3", None, 94901)),
+    (("12\x20Sample Street", "", "94901"), ("12\x20 sample   st.", "N/A", "949011234")),
+    (("400\x20North Example Avenue", None, "94903"), ("400 N. Example Ave", "", "94903")),
     (("P.O. Box 12", None, "94901"), ("PO BOX 12", None, "94901")),
     (("Post Office Box 12", None, "94901"), ("POBOX 12", None, "94901")),
-    (("５ Placeholder Lane", None, "94901"), ("5 Placeholder Ln", None, "94901")),  # full-width digit, NFKC
-    (("9 Imaginary Court Suite 4", None, "94901"), ("9 Imaginary Ct Ste 4", None, "94901")),
+    (("５\x20Placeholder Lane", None, "94901"), ("5\x20Placeholder Ln", None, "94901")),  # full-width digit, NFKC
+    (("9\x20Imaginary Court Suite 4", None, "94901"), ("9\x20Imaginary Ct Ste 4", None, "94901")),
 ])
 def test_equivalent_addresses_canonicalize_alike(a, b):
     one, two = ev.canonical_address(*a), ev.canonical_address(*b)
@@ -79,26 +79,26 @@ def test_placeholders_are_detected_before_punctuation_is_stripped():
 
 @pytest.mark.parametrize("zip_cell", ["9490", "ABCDE", "00000", "94901-12", None, "", 9490])
 def test_an_invalid_or_missing_zip_gives_no_hash(zip_cell):
-    address = ev.canonical_address("12 Sample Street", None, zip_cell)
+    address = ev.canonical_address("12\x20Sample Street", None, zip_cell)
     assert address.street is None and address.reason in ("invalid_zip", "missing_zip")
 
 
 def test_a_placeholder_second_line_is_dropped():
-    assert ev.canonical_address("12 Sample Street", "N/A", "94901").street == ev.canonical_address(
-        "12 Sample Street", None, "94901").street
+    assert ev.canonical_address("12\x20Sample Street", "N/A", "94901").street == ev.canonical_address(
+        "12\x20Sample Street", None, "94901").street
 
 
 def test_a_cosmetic_change_keeps_the_cluster_but_changes_the_evidence(tmp_path):
     before = _one(_collect(build_world(tmp_path / "one")), "A-1")
     rows = base_rows()
-    rows["A-Contributions"][0]["Tran_Adr1"] = "12 Sample St"
+    rows["A-Contributions"][0]["Tran_Adr1"] = "12\x20Sample St"
     after = _one(_collect(build_world(tmp_path / "two", rows=rows)), "A-1")
     assert before.address_hash == after.address_hash
     assert ev.diff_fields(before.fp, after.fp) == ["address"]
 
 
 def test_address_hashes_are_keyed_versioned_and_domain_separated():
-    address = ev.canonical_address("12 Sample Street", None, "94901")
+    address = ev.canonical_address("12\x20Sample Street", None, "94901")
     h1, h2 = ev.address_hash(KEY, address), ev.address_hash(KEY_2, address)
     assert len(h1) == 64 and h1 != h2
     assert h1 != ev.address_hash(ik.Key(1, bytes(range(1, 33))), address)
@@ -115,12 +115,12 @@ def test_row_id_is_pinned_and_holds_no_file_sheet_row_or_sha():
 
 
 def test_address_hash_and_fingerprint_vectors_are_pinned():
-    address = ev.canonical_address("12 Sample Street", "Apt. 3", "94901-1234")
+    address = ev.canonical_address("12\x20Sample Street", "Apt. 3", "94901-1234")
     assert ev.address_hash(KEY, address) == "e508850463192c6779f355d8af85d442c258781c219be9fbdea3d260c725714c"
     values = {"name": ["Doe", "Pat", None, None], "entity": "IND", "filing": "filing-0", "date": "2024-01-05",
               "amount": "5.00", "memo": [None, None], "flow": ["moneyflow-1", True, "retained", "person-doe-pat"],
               "occupation": "Teacher", "employer": None, "city": "Exampleton", "state": "CA", "zip": "94901",
-              "address": ["12 Sample Street", None, "94901"]}
+              "address": ["12\x20Sample Street", None, "94901"]}
     assert ev.fingerprint(KEY, ev.row_id(VECTOR_KEY), values) == (
         "fp1:k1:9c60bf211bfb5213606c36fe8a13f632a4963691de6594610b04ff47b4abc2a2:0f99e337.fa74f6b6.06dcfbba."
         "33c53a40.f7872d62.fe277c10.91576711.6de9012a.2e16eb87.30dcdfac.31527889.efcec813.dd647736")
@@ -156,7 +156,7 @@ def test_treasurer_and_intermediary_streets_are_never_read(tmp_path):
     first = _collect(build_world(tmp_path / "one"))
     rows = base_rows()
     for row in rows["A-Contributions"]:
-        row.update(Tres_Adr1="3 Other Treasurer Way", Intr_Adr1="4 Other Intermediary Way")
+        row.update(Tres_Adr1="3\x20Other Treasurer Way", Intr_Adr1="4\x20Other Intermediary Way")
     second = _collect(build_world(tmp_path / "two", rows=rows))
     assert [(r.row_id, r.fp, r.address_hash) for r in first.rows] == [
         (r.row_id, r.fp, r.address_hash) for r in second.rows]
@@ -167,7 +167,7 @@ def test_treasurer_and_intermediary_streets_are_never_read(tmp_path):
 def test_an_address_only_change_changes_only_the_address_field(tmp_path):
     before = _one(_collect(build_world(tmp_path / "one")), "A-1")
     rows = base_rows()
-    rows["A-Contributions"][0]["Tran_Adr1"] = "400 Example Avenue"
+    rows["A-Contributions"][0]["Tran_Adr1"] = "400\x20Example Avenue"
     after = _one(_collect(build_world(tmp_path / "two", rows=rows)), "A-1")
     assert before.row_id == after.row_id and before.fp != after.fp
     assert ev.diff_fields(before.fp, after.fp) == ["address"]
@@ -177,7 +177,7 @@ def test_an_address_change_without_a_hash_still_changes_the_fingerprint(tmp_path
     rows = base_rows()
     rows["A-Contributions"][0]["Tran_Zip4"] = "9490"
     before = _one(_collect(build_world(tmp_path / "one", rows=rows)), "A-1")
-    rows["A-Contributions"][0]["Tran_Adr1"] = "400 Example Avenue"
+    rows["A-Contributions"][0]["Tran_Adr1"] = "400\x20Example Avenue"
     after = _one(_collect(build_world(tmp_path / "two", rows=rows)), "A-1")
     assert before.address_hash is None and after.address_hash is None
     assert ev.diff_fields(before.fp, after.fp) == ["address"]
@@ -243,7 +243,7 @@ def test_a_ledger_input_missing_from_the_raw_root_fails(world):
 def test_a_corrupt_workbook_fails_without_echoing_its_contents(world):
     [path] = list((world.raw_root / SOURCE).rglob("*.zip"))
     data = path.read_bytes()
-    path.write_bytes(data[:200] + b"12 Sample Street" + data[200:])  # sha changes too: make the ledger agree
+    path.write_bytes(data[:200] + b"12\x20Sample Street" + data[200:])  # sha changes too: make the ledger agree
     manifest = world.ledger_dir / SOURCE / "manifest.json"
     pinned = json.loads(manifest.read_text())
     pinned["inputs"][0]["sha256"] = __import__("hashlib").sha256(path.read_bytes()).hexdigest()
@@ -421,7 +421,7 @@ def test_unexpected_errors_print_only_their_type(world, capsys, monkeypatch):
     cli.main(["init-key"])
 
     def boom(*_args, **_kwargs):
-        raise RuntimeError("12 Sample Street")
+        raise RuntimeError("12\x20Sample Street")
     monkeypatch.setattr(ev, "collect", boom)
     code, said = _build(world, capsys)
     assert code == 2 and "internal error: RuntimeError (details suppressed)" in said

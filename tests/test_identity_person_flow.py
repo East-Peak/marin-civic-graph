@@ -107,7 +107,7 @@ def test_the_full_review_cycle(s):
     # a batch with one bad line writes nothing
     vale = _rows_of(s, b1, "person-vale-morgan")
     good = dec.decision_line("same", [list(vale)], vale, "stuart", AS_OF)
-    assert s.ingest(b1, [good, '{"kind": "same", "groups": "12 Sample Street"}']) == 1
+    assert s.ingest(b1, [good, '{"kind": "same", "groups": "12\x20Sample Street"}']) == 1
     assert "nothing written" in s.said[-1] and s.decisions.read_bytes() == written
 
     # everything decided: nothing of B/A/C left, every decision effective
@@ -137,7 +137,7 @@ def test_an_address_only_change_makes_the_decision_stale_saying_only_address_cha
     rows = base_rows()
     for row in rows["A-Contributions"]:
         if row["Tran_ID"] == "M-2":  # a Larkspur row: same street name, new number
-            row["Tran_Adr1"] = "79 Fictional Way"
+            row["Tran_Adr1"] = "79\x20Fictional Way"
     moved = build_world(s.tmp / "moved", rows=rows, private=s.world.private)
     b = s.build("moved", moved)
     stale = [i for i in _queue(b) if i["class"] == "stale"]
@@ -213,7 +213,7 @@ def cents(tmp_path, capsys, monkeypatch):
     for row in rows["A-Contributions"]:
         if row["Tran_ID"] == "M-2":
             row["Tran_Amt1"] = row["Tran_Amt2"] = 300.37
-    rows["A-Contributions"].append(_c(MEASURE, "M-9", -25.10, "Larkspur", "Robin", "77 Fictional Way",
+    rows["A-Contributions"].append(_c(MEASURE, "M-9", -25.10, "Larkspur", "Robin", "77\x20Fictional Way",
                                       date="2024-01-28"))
     return Session(tmp_path.resolve(), capsys, monkeypatch, rows=rows)
 

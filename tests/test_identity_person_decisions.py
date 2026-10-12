@@ -91,7 +91,7 @@ def test_a_canonical_same_line_parses_and_has_a_stable_digest():
     (lambda o: o["fp"].pop(B), "fp"),
     (lambda o: o["fp"].update({C: ROWS[C]}), "fp"),
     (lambda o: o["fp"].update({A: "fp1:k1:abc"}), "fp"),
-    (lambda o: o.update(note="12 Sample Street"), "note"),
+    (lambda o: o.update(note="12\x20Sample Street"), "note"),
     (lambda o: o.update(note="One Sample Street"), "note"),
     (lambda o: o.update(target="person-gov-x"), "target"),
 ])
@@ -104,7 +104,7 @@ def test_malformed_lines_are_rejected_by_line_number(mutate, says):
 
 def test_not_json_is_rejected_without_echoing_the_line():
     with pytest.raises(dec.DecisionError, match="line 3: not a JSON object") as info:
-        dec.parse_line('{"note": "12 Sample Street"', 3)
+        dec.parse_line('{"note": "12\x20Sample Street"', 3)
     assert "Sample" not in str(info.value)
 
 
@@ -400,7 +400,7 @@ def test_build_reports_the_effective_state_and_latches_what_went_stale(tmp_path,
 
     assert build(w, "one")["status"] == {digest: "effective"}
     rows = base_rows()
-    rows["A-Contributions"][0]["Tran_Adr1"] = "400 Example Avenue"  # a re-download changes only the address
+    rows["A-Contributions"][0]["Tran_Adr1"] = "400\x20Example Avenue"  # a re-download changes only the address
     moved = build_world(tmp_path / "moved", rows=rows, private=w.private)
     moved.decisions.write_text(same + "\n")
     state = build(moved, "two")

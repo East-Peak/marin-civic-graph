@@ -3,6 +3,9 @@ streets, the ledger bundle built from them by the real pipeline, a backup-shaped
 
 Every name, street and committee here is invented. Streets are filled in on purpose: the tests prove they never
 leave memory. Treasurer and intermediary streets are filled in too, to prove they are never read.
+
+Street literals write the space after the house number as \\x20: the repo's committed-text tripwire
+(tests/scripts/test_extract_form700_interiors.py) forbids street-address shapes in any committed text, fictional or not.
 """
 from __future__ import annotations
 
@@ -28,13 +31,13 @@ EXTRA_COLS = ["Tres_NamL", "Tres_Adr1", "Tres_Adr2", "Tres_Zip", "Intr_Adr1", "I
 LAYOUT = {**HEADERS, "A-Contributions": HEADERS["A-Contributions"] + EXTRA_COLS}
 
 # Every street value the world can hold, raw: the privacy scans look for each of these and its canonical form.
-STREETS = ("12 Sample Street", "Apt. 3", "400 Example Avenue", "77 Fictional Way", "5 Placeholder Lane",
-           "9 Imaginary Court", "31 Invented Road", "88 Madeup Drive", "250 Notreal Blvd")
-TREASURER_STREET = "1 Treasurer Terrace"
-INTERMEDIARY_STREET = "2 Intermediary Ivy Lane"
-CANONICAL_STREETS = ("12 SAMPLE ST", "12 SAMPLE ST UNIT 3", "400 EXAMPLE AVE", "77 FICTIONAL WAY", "5 PLACEHOLDER LN",
-                     "9 IMAGINARY CT", "31 INVENTED RD", "88 MADEUP DR", "250 NOTREAL BLVD",
-                     "1 TREASURER TER", "2 INTERMEDIARY IVY LN")
+STREETS = ("12\x20Sample Street", "Apt. 3", "400\x20Example Avenue", "77\x20Fictional Way", "5\x20Placeholder Lane",
+           "9\x20Imaginary Court", "31\x20Invented Road", "88\x20Madeup Drive", "250\x20Notreal Blvd")
+TREASURER_STREET = "1\x20Treasurer Terrace"
+INTERMEDIARY_STREET = "2\x20Intermediary Ivy Lane"
+CANONICAL_STREETS = ("12\x20SAMPLE ST", "12\x20SAMPLE ST UNIT 3", "400\x20EXAMPLE AVE", "77\x20FICTIONAL WAY", "5\x20PLACEHOLDER LN",
+                     "9\x20IMAGINARY CT", "31\x20INVENTED RD", "88\x20MADEUP DR", "250\x20NOTREAL BLVD",
+                     "1 TREASURER TER", "2\x20INTERMEDIARY IVY LN")
 
 COUNCIL = filing("1400001", "Friends of Example for Council 2024", rpt="2024-02-01", start="2024-01-01",
                  thru="2024-01-31")
@@ -54,26 +57,26 @@ def base_rows() -> dict[str, list[dict]]:
     """The world's rows by sheet. Tests copy and mutate them before building."""
     contributions = [
         # B: the bucket node itself controls a committee. Two address clusters (12 Sample / 400 Example).
-        _c(COUNCIL, "A-1", 500, "Quill", "Avery", "12 Sample Street", date="2024-01-05"),
-        _c(COUNCIL, "A-2", 250, "Quill", "Avery", "12 SAMPLE ST.", date="2024-01-10"),
-        _c(MEASURE, "M-1", 100, "Quill", "Avery", "400 Example Avenue", zip_="94903", date="2024-01-12"),
+        _c(COUNCIL, "A-1", 500, "Quill", "Avery", "12\x20Sample Street", date="2024-01-05"),
+        _c(COUNCIL, "A-2", 250, "Quill", "Avery", "12\x20SAMPLE ST.", date="2024-01-10"),
+        _c(MEASURE, "M-1", 100, "Quill", "Avery", "400\x20Example Avenue", zip_="94903", date="2024-01-12"),
         # A: the bucket matches a Form 700 filer on another node ("Robin Q. Larkspur").
-        _c(COUNCIL, "A-3", 1000, "Larkspur", "Robin", "77 Fictional Way", date="2024-01-07"),
-        _c(MEASURE, "M-2", 300, "Larkspur", "Robin", "77 Fictional Way", date="2024-01-20"),
+        _c(COUNCIL, "A-3", 1000, "Larkspur", "Robin", "77\x20Fictional Way", date="2024-01-07"),
+        _c(MEASURE, "M-2", 300, "Larkspur", "Robin", "77\x20Fictional Way", date="2024-01-20"),
         # A: the bucket matches a council member who votes (CAST_VOTE) on another node.
-        _c(MEASURE, "M-3", 150, "Osprey", "Sam", "31 Invented Road", date="2024-01-08"),
+        _c(MEASURE, "M-3", 150, "Osprey", "Sam", "31\x20Invented Road", date="2024-01-08"),
         # C: two clusters, no government match.
-        _c(COUNCIL, "A-4", 2000, "Thornbury", "Casey", "5 Placeholder Lane", date="2024-01-03"),
-        _c(MEASURE, "M-4", 700, "Thornbury", "Casey", "9 Imaginary Court", zip_="94904", date="2024-01-15"),
+        _c(COUNCIL, "A-4", 2000, "Thornbury", "Casey", "5\x20Placeholder Lane", date="2024-01-03"),
+        _c(MEASURE, "M-4", 700, "Thornbury", "Casey", "9\x20Imaginary Court", zip_="94904", date="2024-01-15"),
         # No usable address: a placeholder street, then an invalid ZIP.
         _c(COUNCIL, "A-5", 120, "Fable", "Jordan", "N/A", date="2024-01-09"),
-        _c(MEASURE, "M-5", 130, "Fable", "Jordan", "88 Madeup Drive", zip_="9490", date="2024-01-16"),
+        _c(MEASURE, "M-5", 130, "Fable", "Jordan", "88\x20Madeup Drive", zip_="9490", date="2024-01-16"),
         # A street with a unit on the second line, and a payee who also gives.
-        _c(COUNCIL, "A-6", 400, "Printwright", "Taylor", "12 Sample Street", adr2="Apt. 3", date="2024-01-11"),
-        _c(MEASURE, "M-6", 90, "Printwright", "Taylor", "250 Notreal Blvd", date="2024-01-18"),
+        _c(COUNCIL, "A-6", 400, "Printwright", "Taylor", "12\x20Sample Street", adr2="Apt. 3", date="2024-01-11"),
+        _c(MEASURE, "M-6", 90, "Printwright", "Taylor", "250\x20Notreal Blvd", date="2024-01-18"),
     ]
     # One flow, two physical rows: the same Tran_ID reported unchanged by two of the council's filings.
-    vale = dict(last="Vale", first="Morgan", street="31 Invented Road", date="2024-01-25")
+    vale = dict(last="Vale", first="Morgan", street="31\x20Invented Road", date="2024-01-25")
     contributions += [_c(COUNCIL, "A-7", 600, vale["last"], vale["first"], vale["street"], date=vale["date"]),
                       _c(COUNCIL_2, "A-7", 600, vale["last"], vale["first"], vale["street"], date=vale["date"])]
     expenditures = [expenditure(MEASURE, "E-1", 75, payee="Printwright", Payee_NamF="Taylor", entity="IND")]

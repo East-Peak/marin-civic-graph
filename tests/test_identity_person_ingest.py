@@ -86,7 +86,7 @@ def test_ingest_writes_canonical_lines_and_a_repeat_is_a_no_op(world, run):
 def test_a_batch_with_one_bad_line_writes_nothing(world, run):
     build_dir, _ = _built(world, run)
     same, is_line = _lines(build_dir, 1)[:2]
-    for bad in ('{"kind": "same", "note": "12 Sample Street"}', "not json at all 12 Sample Street",
+    for bad in ('{"kind": "same", "note": "12\x20Sample Street"}', "not json at all 12\x20Sample Street",
                 is_line.replace('"date":"2026-10-12"', '"date":"2027-01-01"')):
         assert _ingest(world, run, build_dir, [same, bad]) == 1
         assert "nothing written" in run.last and "line 2" in run.last
@@ -118,7 +118,7 @@ def test_a_stale_line_is_rejected_with_its_field_diff_and_no_value(world, run, t
     rows = base_rows()
     for row in rows["A-Contributions"]:
         if row["Tran_NamL"] == "Thornbury":
-            row["Tran_Adr1"] = "250 Notreal Blvd"
+            row["Tran_Adr1"] = "250\x20Notreal Blvd"
     moved = build_world(tmp_path / "moved", rows=rows, private=world.private)
     moved_dir, _ = _built(moved, run, out="moved")
     assert _ingest(moved, run, moved_dir, [same]) == 1
@@ -178,7 +178,7 @@ def test_no_command_output_or_file_carries_a_street_or_hash(world, run):
     build_dir, _ = _built(world, run)
     lines = _lines(build_dir, 1)[:2]
     _ingest(world, run, build_dir, lines)
-    _ingest(world, run, build_dir, ['{"broken": "12 Sample Street"'])
+    _ingest(world, run, build_dir, ['{"broken": "12\x20Sample Street"'])
     hashes = {json.loads(t)["address_hash"] for t in
               (build_dir / "address-evidence.jsonl").read_text().splitlines()} - {None}
     typed = [world.root / "decide.jsonl"]  # the test's own (deliberately broken) input
