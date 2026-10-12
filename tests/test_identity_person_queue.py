@@ -286,8 +286,22 @@ def test_government_facts_render_allowlisted_provenance_only(tmp_path):
     text = iq.render_batch(_queue(e), e)
     from tests.identity_person_fixtures import assert_no_street
     assert_no_street(text)
-    assert "example-bundle" in text and "form700-index" in text
-    assert "resolved_by: withheld (address-like)" in text
+    assert "source bundles: 1" in text and "form700-index" not in text
+    assert "resolved_by: withheld (not a code identifier)" in text
+
+
+@pytest.mark.parametrize("props, shown", [
+    ({"resolved_by": "resolve_committee_candidates"}, "resolved_by: resolve_committee_candidates"),
+    ({"resolved_by": "Twelve Sample Ridge"}, "resolved_by: withheld (not a code identifier)"),
+    ({"resolved_by": "twelve_b_sample"}, "resolved_by: twelve_b_sample"),  # an identifier is shown as code
+    ({"resolved_by": "12b-sample-ridge"}, "resolved_by: withheld (not a code identifier)"),
+    ({"vote": "aye"}, "vote: aye"),
+    ({"vote": "Sample Ridge"}, "vote: withheld (not a vote)"),
+    ({"source_bundle_ids": [12, "Sample Ridge"]}, "source bundles: 2"),
+    ({"candidate_name": "Twelve Sample Ridge", "mailing": "12 Sample Ridge"}, "no provenance recorded"),
+])
+def test_provenance_renders_only_closed_form_fields(props, shown):
+    assert iq._provenance(props) == shown
 
 
 def test_every_government_fact_is_listed(tmp_path):
@@ -319,13 +333,13 @@ def test_c_resolution_checks_distinct_against_whole_components(world):
                                    "#4", "PO Box 12", " 12 Sample Ridge", "address: 12 Sample Ridge", 4155550100,
                                    "Sample Ridge 12", "address: 12B Sample Ridge", "Sample Ridge Apt 12B",
                                    "12½ Sample Ridge"])
-def test_address_like_or_structured_provenance_is_withheld(value):
+def test_address_like_or_structured_names_are_withheld(value):
     assert iq._safe(value).startswith("withheld")
 
 
-@pytest.mark.parametrize("value", ["resolve_committee_candidates", "Avery Quill", "aye",
-                                   ["example-cf__2026-10-01", "form700-index"], 3, True])
-def test_plain_provenance_is_shown(value):
+@pytest.mark.parametrize("value", ["Avery Quill", "Larkspur, Robin Q", ["Samuel Osprey", "Sam Osprey"],
+                                   "Friends of Example for Council"])
+def test_plain_names_are_shown(value):
     assert not iq._safe(value).startswith("withheld")
 
 

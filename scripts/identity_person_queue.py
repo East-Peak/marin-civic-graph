@@ -458,31 +458,27 @@ def _name(r: Row) -> str:
     return ", ".join(parts) + (f" {r.name['suffix']}" if r.name.get("suffix") else "")
 
 
-PROVENANCE_KEYS = ("resolved_by", "candidate_name", "vote", "source", "source_bundle_ids", "source_sections",
-                   "source_fields", "source_status", "promotion_state", "assertion_id", "method", "confidence")
 _FACTS_INLINE = 5
+_CODE = re.compile(r"[a-z][a-z_]{0,60}")  # a pipeline or state name: lowercase letters and underscores only
+VOTES = {"aye", "yes", "no", "nay", "absent", "abstain", "abstained", "recused", "excused", "present", "not_voting"}
 
 
 def _safe(value) -> str:
-    """A provenance value as text, withheld whole unless it is a plain scalar (or a list of them) that matches no
-    contact, address, house-number or unit pattern. Conservative: a withheld fact still says it was withheld."""
-    if isinstance(value, bool):
-        return str(value)
-    if isinstance(value, (int, float)):
-        return "withheld (address-like)" if re.search(r"\d{7}", str(value)) else str(value)
+    """A name (person, alias, committee, filer) as text. Names come from the public graph (already published);
+    a value that is not a plain string, or that looks like an address or contact detail, is withheld whole."""
     if isinstance(value, list):
-        parts = [_safe(v) for v in value]
-        return "withheld (address-like)" if any(p.startswith("withheld") for p in parts) else ", ".join(parts)
-    if not isinstance(value, str):
+        text = ", ".join(str(v) for v in value) if all(isinstance(v, str) for v in value) else None
+    else:
+        text = value if isinstance(value, str) else None
+    if text is None:
         return "withheld (not a plain value)"
-    text = " ".join(value.split())
+    text = " ".join(text.split())
     if detect(text, CONTACT_DETECTORS) or detect(text, SUSPECT_DETECTORS) or _NUMBERED.search(text) or "#" in text:
         return "withheld (address-like)"
     return text
 
 
-# Provenance tokens (resolver names, bundle ids, votes, candidate names) never mix a digit with whitespace;
-# addresses, units and phone numbers almost always do: such a value is withheld whole.
+# Provenance tokens never mix a digit with whitespace; addresses, units and phone numbers almost always do.
 _NUMBERED = re.compile(r"(?=.*\d)(?=.*\s)|\d{7}", re.S)
 _ISO = re.compile(r"\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?)?")
 
@@ -494,7 +490,18 @@ def _date(value) -> str:
 
 
 def _provenance(props: dict) -> str:
-    shown = [f"{k}: {_safe(props[k])}" for k in PROVENANCE_KEYS if props.get(k) not in (None, "", [])]
+    """Closed-form provenance only: the resolving pipeline as a code identifier, the vote from a fixed vocabulary,
+    state names as identifiers, source bundles as a count. Free text is never rendered."""
+    shown = []
+    for key in ("resolved_by", "promotion_state", "source_status", "method"):
+        if props.get(key) is not None:
+            value = props[key]
+            shown.append(f"{key}: {value if isinstance(value, str) and _CODE.fullmatch(value) else 'withheld (not a code identifier)'}")
+    if props.get("vote") is not None:
+        shown.append(f"vote: {props['vote'] if props['vote'] in VOTES else 'withheld (not a vote)'}")
+    bundles = props.get("source_bundle_ids")
+    if bundles:
+        shown.append(f"source bundles: {len(bundles) if isinstance(bundles, list) else 1}")
     return "; ".join(shown) if shown else "no provenance recorded"
 
 
