@@ -364,6 +364,14 @@ def _counts(buckets: dict[str, Bucket], items: list[Item], state: dec.State, gra
     }
 
 
+_REL, _LABEL, _FLOW = re.compile(r"[A-Z][A-Z_]{1,40}"), re.compile(r"[A-Z][A-Za-z]{1,40}"), re.compile(r"[a-z_]{1,40}")
+
+
+def _token(value, pattern: re.Pattern) -> str:
+    """A graph vocabulary word as a count key, or `other`: keys can never carry free text."""
+    return value if isinstance(value, str) and pattern.fullmatch(value) else "other"
+
+
 def overlap_audit(graph: Graph, buckets: dict[str, Bucket]) -> dict:
     """Donor buckets (Persons with a FROM_SOURCE contribution) that also have any other edge: by edge kind and by
     the class each was assigned (or why none)."""
@@ -381,8 +389,9 @@ def overlap_audit(graph: Graph, buckets: dict[str, Bucket]) -> dict:
             flow_type = graph.props.get(other, {}).get("flow_type")
             if d == "out" and rel == "FROM_SOURCE" and flow_type == "contribution":
                 continue
-            label = sorted(graph.labels.get(other, ())) or ["?"]
-            kinds.add(f"{d}:{rel}:{label[0]}" + (f":{flow_type}" if flow_type else ""))
+            label = (sorted(graph.labels.get(other, ())) or ["?"])[0]
+            kinds.add(f"{d}:{_token(rel, _REL)}:{_token(label, _LABEL)}" +
+                      (f":{_token(flow_type, _FLOW)}" if flow_type else ""))
         if not kinds:
             continue
         total += 1
@@ -402,8 +411,10 @@ ROW_FIELDS = ("committee", "date", "amount", "occupation", "employer", "city", "
 
 
 def _row_fields(q: Queue, r: Row) -> dict[str, str]:
-    """Each required field's value, or `missing: <reason>`."""
-    out = {"committee": r.committee or "missing: source_missing", "date": r.tran_date or "missing: source_missing",
+    """Each required field's value, or `missing: <reason>`. Name, committee, occupation, employer and city are the
+    filer's reported fields, shown as reported: allowed in these operator-private files (spec Design 5e)."""
+    out = {"committee": r.committee or "missing: source_missing",
+           "date": _date(r.tran_date) if r.tran_date else "missing: source_missing",
            "amount": f"${Decimal(r.amount):,.2f}"}
     for field_name, key in (("occupation", "occupation"), ("employer", "employer"), ("city", "city")):
         value = display(r.reported.get(key)) if isinstance(r.reported.get(key), (str, type(None))) else None
@@ -455,23 +466,29 @@ _FACTS_INLINE = 5
 def _safe(value) -> str:
     """A provenance value as text, withheld whole unless it is a plain scalar (or a list of them) that matches no
     contact, address, house-number or unit pattern. Conservative: a withheld fact still says it was withheld."""
-    if isinstance(value, (bool, int, float)):
+    if isinstance(value, bool):
         return str(value)
+    if isinstance(value, (int, float)):
+        return "withheld (address-like)" if re.search(r"\d{7}", str(value)) else str(value)
     if isinstance(value, list):
         parts = [_safe(v) for v in value]
         return "withheld (address-like)" if any(p.startswith("withheld") for p in parts) else ", ".join(parts)
     if not isinstance(value, str):
         return "withheld (not a plain value)"
-    if detect(value, CONTACT_DETECTORS) or detect(value, SUSPECT_DETECTORS) or "#" in value:
+    text = " ".join(value.split())
+    if detect(text, CONTACT_DETECTORS) or detect(text, SUSPECT_DETECTORS) or _NUMBERED.search(text) or "#" in text:
         return "withheld (address-like)"
-    return value
+    return text
+
+
+_NUMBERED = re.compile(r"\d\s+[A-Za-z]|[A-Za-z]\s+\d|\d{7}")  # a number beside a word: house numbers, units, phones
+_ISO = re.compile(r"\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?)?")
 
 
 def _date(value) -> str:
     if value is None:
         return "missing: not recorded"
-    return value if isinstance(value, str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}(?:[T ][0-9:.+Z-]*)?", value) \
-        else "withheld (not a date)"
+    return value if isinstance(value, str) and _ISO.fullmatch(value) else "withheld (not a date)"
 
 
 def _provenance(props: dict) -> str:

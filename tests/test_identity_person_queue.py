@@ -316,7 +316,8 @@ def test_c_resolution_checks_distinct_against_whole_components(world):
 
 
 @pytest.mark.parametrize("value", ["12 Sample Ridge", "Unit 3", {"street": "Example"}, ["ok", "12 Sample Ridge"],
-                                   "#4", "PO Box 12"])
+                                   "#4", "PO Box 12", " 12 Sample Ridge", "address: 12 Sample Ridge", 4155550100,
+                                   "Sample Ridge 12"])
 def test_address_like_or_structured_provenance_is_withheld(value):
     assert iq._safe(value).startswith("withheld")
 
@@ -325,6 +326,25 @@ def test_address_like_or_structured_provenance_is_withheld(value):
                                    ["example-cf__2026-10-01", "form700-index"], 3, True])
 def test_plain_provenance_is_shown(value):
     assert not iq._safe(value).startswith("withheld")
+
+
+@pytest.mark.parametrize("value, shown", [("2026-10-12", True), ("2026-10-12T09:30:00Z", True),
+                                          ("2026-10-12 2025550100", False), ("12 Sample Ridge", False), (20261012, False)])
+def test_dates_are_parsed_strictly(value, shown):
+    assert (iq._date(value) == value) is shown
+
+
+def test_overlap_audit_keys_come_from_a_fixed_vocabulary(tmp_path):
+    w = build_world(tmp_path)
+    with open(w.export_dir / "nodes.jsonl", "a") as f:
+        f.write(json.dumps({"id": "moneyflow-odd", "labels": ["MoneyFlow"],
+                            "properties": {"flow_type": "12 Sample Ridge"}}) + "\n")
+    with open(w.export_dir / "edges.jsonl", "a") as f:
+        f.write(json.dumps({"start_id": "moneyflow-odd", "end_id": "person-larkspur-robin", "type": "WEIRD 12 Sample",
+                            "properties": {}}) + "\n")
+    e = _evidence(w)
+    keys = json.dumps(_queue(e).counts["overlap"])
+    assert "Sample" not in keys and "in:other:MoneyFlow:other" in keys
 
 
 def test_a_filed_at_that_is_not_a_date_is_withheld(tmp_path):
