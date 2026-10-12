@@ -300,6 +300,7 @@ def test_government_facts_render_allowlisted_provenance_only(tmp_path):
     ({"vote": ["aye"]}, "vote: withheld (not a vote)"),
     ({"source_bundle_ids": [12, "Sample Ridge"]}, "source bundles: 2"),
     ({"candidate_name": "Twelve Sample Ridge", "mailing": "12 Sample Ridge"}, "no provenance recorded"),
+    ({"promotion_state": ""}, "no provenance recorded"),  # an empty value is no value
 ])
 def test_provenance_renders_only_closed_form_fields(props, shown):
     assert iq._provenance(props) == shown
@@ -373,3 +374,9 @@ def test_a_filed_at_that_is_not_a_date_is_withheld(tmp_path):
     e = _evidence(w)
     text = iq.render_batch(_queue(e), e)
     assert "Sample Ridge" not in text and "filed_at withheld (not a date)" in text
+
+
+def test_a_controlled_committee_is_named_even_with_an_election_year(world):
+    e = _evidence(world)
+    text = iq.render_batch(_queue(e), e)
+    assert "committee-netfile-1400001 (Friends of Example for Council 2024)" in text

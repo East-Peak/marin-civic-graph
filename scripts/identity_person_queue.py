@@ -478,6 +478,15 @@ def _safe(value) -> str:
     return text
 
 
+def _committee_name(value) -> str:
+    """A committee's public name (the row table shows the same filer names): election years are expected, so
+    only contact and street-with-suffix shapes are withheld."""
+    if not isinstance(value, str):
+        return "withheld (not a plain value)"
+    text = " ".join(value.split())
+    return "withheld (address-like)" if detect(text, CONTACT_DETECTORS) else text
+
+
 # Provenance tokens never mix a digit with whitespace; addresses, units and phone numbers almost always do.
 _NUMBERED = re.compile(r"(?=.*\d)(?=.*\s)|\d{7}", re.S)
 _ISO = re.compile(r"\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?)?")
@@ -494,7 +503,7 @@ def _provenance(props: dict) -> str:
     state names as identifiers, source bundles as a count. Free text is never rendered."""
     shown = []
     for key in ("resolved_by", "promotion_state", "source_status", "method"):
-        if props.get(key) is not None:
+        if props.get(key) not in (None, ""):
             value = props[key]
             shown.append(f"{key}: {value if isinstance(value, str) and _CODE.fullmatch(value) else 'withheld (not a code identifier)'}")
     if props.get("vote") is not None:
@@ -519,7 +528,7 @@ def _facts(graph: Graph, pid: str) -> list[str]:
         rendered = []
         for f in facts:
             if kind == "controller":
-                name = _safe(graph.props.get(f["committee"], {}).get("name"))
+                name = _committee_name(graph.props.get(f["committee"], {}).get("name"))
                 rendered.append(f"controller: {f['committee']} ({name}) — CONTROLLED_BY: {_provenance(f['edge'])}")
             elif kind == "form700_filer":
                 rendered.append(f"form700_filer: {f['filing']} — filer_name {_safe(f['filer_name'])!r}, filed_at "
