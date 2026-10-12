@@ -199,13 +199,14 @@ def cmd_build(args) -> int:
 # ingest: all or nothing, under a lock, compare-and-swap on the decision file
 # ---------------------------------------------------------------------------
 
+def _check_unchanged(path: Path, before: str) -> None:
+    if (path.read_text(encoding="utf-8") if path.exists() else "") != before:
+        raise ev.IdentityError("the decision file changed during ingest; nothing written: run ingest again")
+
+
 def _replace_decisions(path: Path, before: str, text: str) -> None:
     """Write `text` over the decision file unless it no longer holds `before` (temp file, fsync, os.replace)."""
-    def current() -> str:
-        return path.read_text(encoding="utf-8") if path.exists() else ""
-
-    if current() != before:
-        raise ev.IdentityError("the decision file changed during ingest; nothing written: run ingest again")
+    _check_unchanged(path, before)
     mode = stat.S_IMODE(path.stat().st_mode) if path.exists() else 0o644
     fd, tmp = tempfile.mkstemp(prefix=".decisions-", dir=path.parent)
     try:
@@ -214,8 +215,7 @@ def _replace_decisions(path: Path, before: str, text: str) -> None:
             f.flush()
             os.fsync(f.fileno())
         os.chmod(tmp, mode)
-        if current() != before:
-            raise ev.IdentityError("the decision file changed during ingest; nothing written: run ingest again")
+        _check_unchanged(path, before)
         os.replace(tmp, path)
     except BaseException:
         Path(tmp).unlink(missing_ok=True)
@@ -269,6 +269,10 @@ def cmd_ingest(args) -> int:
         latch = dec.load_latch(private)
         added = [d for d in offered if d.digest not in known]
         revalidated = {d.digest for d in offered if d.digest in latch}  # re-ingested after review
+        try:
+            dec.check_dates(existing + added, manifest["as_of"])
+        except dec.DecisionError as exc:
+            raise ev.IdentityError(f"batch rejected, nothing written: decision file {exc}") from None
         state = current_state(evidence, key, existing + added, latch - revalidated)
         bad = [f"line {d.number}: {_why(state, d)}" for d in offered if state.status[d.digest] != "effective"]
         if bad:
@@ -280,6 +284,8 @@ def cmd_ingest(args) -> int:
             text = before + ("\n" if before and not before.endswith("\n") else "")
             _replace_decisions(decisions_path, before, text + "".join(d.line + "\n" for d in added))
         if revalidated:
+            if not added:
+                _check_unchanged(decisions_path, before)
             dec.write_latch(private, latch - revalidated)
     print(f"ingested {len(added)} decision(s); revalidated {len(revalidated)}; "
           f"{sum(1 for d in offered if d.digest in known and d.digest not in revalidated)} already present")

@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 from decimal import Decimal
 
 import identity_person_decisions as dec
-from contributor_detail import classify, display
+from contributor_detail import CONTACT_DETECTORS, classify, detect, display
 from identity_person_evidence import Evidence, Graph, Row, canonical_json, government_roles
 from identity_person_key import Key
 
@@ -73,7 +73,7 @@ def donor_name(name: dict) -> Name | None:
         first = first[1:]
     first, s1 = _split_suffix(first)
     last, s2 = _split_suffix(_tokens(name.get("last")))
-    suffix = " ".join(t for t in _tokens(name.get("suffix")) if t in SUFFIXES) or s1 or s2
+    suffix = " ".join(_tokens(name.get("suffix"))) or s1 or s2  # an explicit suffix is kept as reported
     return Name(tuple(first), tuple(last), suffix) if first and last else None
 
 
@@ -241,20 +241,22 @@ def _resolved(item_bucket: Bucket, target: str | None, state: dec.State) -> bool
         return rows <= covered
     if any(d.kind == "defer" and rows <= d.rows for d in effective):
         return True
-    # components of effective `same` decisions; rows no `same` covers are singletons
-    component = {}
+    # components of every effective `same` (chains may pass through rows of other buckets); rows that no `same`
+    # covers are singletons
+    uf = dec._UnionFind()
+    covered = set()
     for d in effective:
-        if d.kind == "same" and d.rows & rows:
-            label = min(d.rows)
+        if d.kind == "same":
+            first = min(d.rows)
+            covered |= d.rows
             for r in d.rows:
-                component.setdefault(r, label)
-    comps = sorted({component.get(r, r) for r in rows})
-    if len(comps) == 1:
-        return any(d.kind == "same" and rows <= d.rows for d in effective) or \
-            all(r in component for r in rows)
+                uf.union(first, r)
     members = defaultdict(set)
     for r in rows:
-        members[component.get(r, r)].add(r)
+        members[uf.find(r)].add(r)
+    comps = sorted(members)
+    if len(comps) == 1:
+        return rows <= covered
     for i, a in enumerate(comps):
         for b in comps[i + 1:]:
             if not any(d.kind == "distinct" and _separates(d, members[a], members[b]) for d in effective):
@@ -445,23 +447,47 @@ def _name(r: Row) -> str:
     return ", ".join(parts) + (f" {r.name['suffix']}" if r.name.get("suffix") else "")
 
 
+PROVENANCE_KEYS = ("resolved_by", "candidate_name", "vote", "source", "source_bundle_ids", "source_sections",
+                   "source_fields", "source_status", "promotion_state", "assertion_id", "method", "confidence")
+_FACTS_INLINE = 5
+
+
+def _safe(value) -> str:
+    """A provenance value as text, withheld whole when it looks like an address or contact detail."""
+    text = ", ".join(map(str, value)) if isinstance(value, list) else str(value)
+    return "withheld (address-like)" if detect(text, CONTACT_DETECTORS) else text
+
+
+def _provenance(props: dict) -> str:
+    shown = [f"{k}: {_safe(props[k])}" for k in PROVENANCE_KEYS if props.get(k) not in (None, "", [])]
+    return "; ".join(shown) if shown else "no provenance recorded"
+
+
 def _facts(graph: Graph, pid: str) -> list[str]:
+    """Every government fact about `pid`, each with its allowlisted provenance (never a whole property map)."""
     props = graph.props.get(pid, {})
-    lines = [f"- **{pid}** — name {props.get('name')!r}" +
-             (f", aliases {props.get('aliases')!r}" if props.get("aliases") else "")]
-    for kind, facts in government_roles(graph, pid).items():
-        shown = facts[:5]
-        for f in shown:
+    lines = [f"- **{pid}** — name {_safe(props.get('name'))!r}" +
+             (f", aliases {_safe(props.get('aliases'))}" if props.get("aliases") else "") +
+             f" — node provenance: {_provenance(props)}"]
+    roles = government_roles(graph, pid)
+    if not roles:
+        lines.append("  - missing: no government role on this node")
+    for kind, facts in roles.items():
+        rendered = []
+        for f in facts:
             if kind == "controller":
-                name = graph.props.get(f["committee"], {}).get("name")
-                lines.append(f"  - controller: {f['committee']} ({name}) — CONTROLLED_BY edge {f['edge']}")
+                name = _safe(graph.props.get(f["committee"], {}).get("name"))
+                rendered.append(f"controller: {f['committee']} ({name}) — CONTROLLED_BY: {_provenance(f['edge'])}")
             elif kind == "form700_filer":
-                lines.append(f"  - form700_filer: {f['filing']} — filer_name {f['filer_name']!r}, filed_at "
-                             f"{f['filed_at']} (FILED_BY edge)")
+                rendered.append(f"form700_filer: {f['filing']} — filer_name {_safe(f['filer_name'])!r}, filed_at "
+                                f"{f['filed_at'] or 'missing: not recorded'} — FILED_BY: {_provenance(f['edge'])}")
             else:
-                lines.append(f"  - cast_vote: {f['decision']} — CAST_VOTE edge {f['edge']}")
-        if len(facts) > len(shown):
-            lines.append(f"  - … {len(facts) - len(shown)} more {kind} fact(s)")
+                rendered.append(f"cast_vote: {f['decision']} — CAST_VOTE: {_provenance(f['edge'])}")
+        if len(rendered) <= _FACTS_INLINE:
+            lines += [f"  - {r}" for r in rendered]
+        else:
+            lines += [f"  - {kind}: {len(rendered)} facts", "", "<details><summary>all of them</summary>", "",
+                      *[f"  - {r}" for r in rendered], "", "</details>", ""]
     return lines
 
 
@@ -491,7 +517,8 @@ def template_options(q: Queue, evidence: Evidence, item: Item) -> list[tuple[str
             for c in b.clusters:
                 rest = [r for r in everyone if r not in c.rows]
                 options.append((f"Only cluster {c.label} ({len(c.rows)} rows) is {t}; the other rows are not",
-                                same_is(c.rows) + ([line("reject", [rest], target=t, target_fp=tfp)] if rest else [])))
+                                same_is(c.rows) + [line("distinct", [c.rows, rest]),
+                                                   line("reject", [rest], target=t, target_fp=tfp)]))
         options += [(f"None of these rows is {t}", [line("reject", [everyone], target=t, target_fp=tfp)]),
                     ("Cannot decide from these inputs", [line("defer", [everyone], target=t, target_fp=tfp)])]
     else:
@@ -501,8 +528,7 @@ def template_options(q: Queue, evidence: Evidence, item: Item) -> list[tuple[str
         if len(clustered) > 1:
             label = "Each address cluster is a different person" + (
                 f" ({unclustered} row(s) without a cluster stay open)" if unclustered else "")
-            options.append((label, [line("same", [g]) for g in clustered if len(g) > 1] +
-                            [line("distinct", clustered)]))
+            options.append((label, [line("same", [g]) for g in clustered] + [line("distinct", clustered)]))
         options.append(("Cannot decide from these inputs", [line("defer", [everyone])]))
     return options
 
@@ -552,6 +578,9 @@ def render_batch(q: Queue, evidence: Evidence) -> str:
             out += ["- Every decision listed is suspended (not effective). Edit or delete the line(s) in the decision "
                     "file, or re-ingest a line after review to revalidate it.", ""]
             out += _row_table(q, rows, [r for r in item.rows if r in rows])
+            targets = sorted({d.target for d in q.state.decisions if d.digest in item.decisions and d.target})
+            for t in targets:
+                out += ["Government Person (facts with provenance):", *_facts(evidence.graph, t), ""]
         else:
             b = q.buckets[item.bucket]
             out.append(f"{len(b.rows)} row(s), {len(b.clusters)} address cluster(s), total "

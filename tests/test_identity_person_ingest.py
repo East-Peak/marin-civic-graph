@@ -238,3 +238,24 @@ def test_a_latched_line_removed_and_added_back_needs_revalidation_and_gets_it(wo
     world.decisions.write_text("")
     assert _ingest(world, run, build_dir, [same]) == 0 and "revalidated 1" in run.last
     assert world.decisions.read_text() == same + "\n" and dec.load_latch(world.private) == frozenset()
+
+
+def test_a_revalidation_only_ingest_still_refuses_a_concurrent_edit(world, run, monkeypatch):
+    build_dir, _ = _built(world, run)
+    same = _lines(build_dir, 3)[0]
+    assert _ingest(world, run, build_dir, [same]) == 0
+    dec.write_latch(world.private, frozenset({dec.parse_line(same, 1).digest}))
+    # the line is deleted by hand while ingest runs (after it read the file)
+    monkeypatch.setattr(cli.dec, "load_latch", lambda private, _real=dec.load_latch: (
+        world.decisions.write_text(""), _real(private))[1])
+    assert _ingest(world, run, build_dir, [same]) == 1
+    assert "changed during ingest" in run.last
+    assert dec.load_latch(world.private) == frozenset({dec.parse_line(same, 1).digest})
+
+
+def test_ingest_checks_the_dates_of_the_lines_already_in_the_file(world, run):
+    build_dir, _ = _built(world, run)
+    lines = _lines(build_dir, 1)
+    same, is_line = lines[0], lines[1]
+    world.decisions.write_text(same.replace('"date":"2026-10-12"', '"date":"2027-01-01"') + "\n")
+    assert _ingest(world, run, build_dir, [is_line]) == 1 and "dated after" in run.last

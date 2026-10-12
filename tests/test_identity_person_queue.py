@@ -58,6 +58,7 @@ def _queue(evidence, *lines, latch=frozenset()):
     (("Larkspur", "Robin", None), "Larkspur Robin", False),  # no reordering without a comma
     (("Éclair", "José", None), "Jose Eclair", True),  # diacritics fold
     (("Larkspur", "Dr. Robin", None), "Robin Larkspur", True),  # titles drop
+    (("Larkspur", "Robin", "VI"), "Robin Larkspur Jr.", False),  # an explicit suffix is kept, whatever it is
 ])
 def test_name_matching(donor, government, matches):
     last, first, suffix = donor
@@ -234,3 +235,70 @@ def test_the_review_never_shows_a_street_or_hash(world):
     text = iq.render_batch(q, e) + json.dumps(iq.queue_json(q))
     assert_no_street(text)
     assert not any(r.address_hash and r.address_hash in text for r in e.rows)
+
+
+def test_c_resolution_follows_same_chains_through_rows_outside_the_bucket(world):
+    e = _evidence(world)
+    rows = _rows(e, "person-thornbury-casey")
+    other = _rows(e, "person-fable-jordan")[0]
+    fps = {r.row_id: r.fp for r in [*rows, other]}
+    chain = [dec.decision_line("same", [[rows[0].row_id, other.row_id]], fps, "stuart", "2026-10-12"),
+             dec.decision_line("same", [[other.row_id, rows[1].row_id]], fps, "stuart", "2026-10-12")]
+    assert not [i for i in _queue(e, *chain).items if i.cls == "C"]
+
+
+def test_the_each_cluster_option_makes_every_cluster_a_person(world):
+    e = _evidence(world)
+    q = _queue(e)
+    item = next(i for i in q.items if i.cls == "C")
+    lines = dict(iq.template_options(q, e, item))["Each address cluster is a different person"]
+    kinds = [json.loads(t)["kind"] for t in lines]
+    assert kinds == ["same", "same", "distinct"]  # two singleton clusters: each still gets its same
+    q2 = _queue(e, *lines)
+    assert len(q2.state.persons) == 2
+
+
+def test_the_only_cluster_option_records_the_partition_too(world):
+    e = _evidence(world)
+    q = _queue(e)
+    item = q.items[0]  # Quill (B), clusters A and B
+    lines = dict(iq.template_options(q, e, item))[
+        "Only cluster A (2 rows) is person-quill-avery; the other rows are not"]
+    assert [json.loads(t)["kind"] for t in lines] == ["same", "is", "distinct", "reject"]
+    assert not [i for i in _queue(e, *lines).items if i.bucket == "person-quill-avery"]
+
+
+def test_government_facts_render_allowlisted_provenance_only(tmp_path):
+    w = build_world(tmp_path)
+    nodes = [json.loads(t) for t in (w.export_dir / "nodes.jsonl").read_text().splitlines()]
+    for n in nodes:
+        if n["id"] == "person-robin-q-larkspur":
+            n["properties"].update(source_bundle_ids=["example-bundle"], home_address="12 Sample Street")
+    (w.export_dir / "nodes.jsonl").write_text("".join(json.dumps(n) + "\n" for n in nodes))
+    edges = [json.loads(t) for t in (w.export_dir / "edges.jsonl").read_text().splitlines()]
+    for edge in edges:
+        if edge["type"] == "CONTROLLED_BY":
+            edge["properties"].update(mailing_address="400 Example Avenue", resolved_by="12 Sample Street")
+        if edge["type"] == "FILED_BY" and edge["end_id"] == "person-robin-q-larkspur":
+            edge["properties"].update(source="form700-index")
+    (w.export_dir / "edges.jsonl").write_text("".join(json.dumps(x) + "\n" for x in edges))
+    e = _evidence(w)
+    text = iq.render_batch(_queue(e), e)
+    from tests.identity_person_fixtures import assert_no_street
+    assert_no_street(text)
+    assert "example-bundle" in text and "form700-index" in text
+    assert "resolved_by: withheld (address-like)" in text
+
+
+def test_every_government_fact_is_listed(tmp_path):
+    w = build_world(tmp_path)
+    with open(w.export_dir / "nodes.jsonl", "a") as f:
+        for n in range(8):
+            f.write(json.dumps({"id": f"decision-extra-{n}", "labels": ["Decision"], "properties": {}}) + "\n")
+    with open(w.export_dir / "edges.jsonl", "a") as f:
+        for n in range(8):
+            f.write(json.dumps({"start_id": "person-sam-osprey", "end_id": f"decision-extra-{n}",
+                                "type": "CAST_VOTE", "properties": {"vote": "aye"}}) + "\n")
+    e = _evidence(w)
+    text = iq.render_batch(_queue(e), e)
+    assert all(f"decision-extra-{n}" in text for n in range(8))

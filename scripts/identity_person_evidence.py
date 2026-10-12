@@ -452,7 +452,8 @@ def government_roles(graph: Graph, person_id: str) -> dict[str, list[dict]]:
         elif direction == "in" and rel == "FILED_BY" and graph.props.get(other, {}).get("filing_type") == "form_700":
             filing = graph.props[other]
             roles.setdefault("form700_filer", []).append(
-                {"filing": other, "filer_name": filing.get("filer_name"), "filed_at": filing.get("filed_at")})
+                {"filing": other, "filer_name": filing.get("filer_name"), "filed_at": filing.get("filed_at"),
+                 "edge": props})
         elif direction == "in" and rel == "CONTROLLED_BY" and graph.has(other, "Committee"):
             roles.setdefault("controller", []).append({"committee": other, "edge": props})
     return {kind: sorted(facts, key=canonical_json) for kind, facts in sorted(roles.items())}
