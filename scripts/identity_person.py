@@ -11,6 +11,7 @@ docs/person-identity-runbook.md. Errors print one line naming rows, lines or pat
 from __future__ import annotations
 
 import argparse
+import contextlib
 import fcntl
 import hashlib
 import json
@@ -158,6 +159,17 @@ def build_files(evidence: ev.Evidence, key: ik.Key, as_of: str, state: dec.State
             "review/batch-001.md": iq.render_batch(queue, evidence).encode()}
 
 
+@contextlib.contextmanager
+def _locked(private: Path):
+    """One identity command at a time (build and ingest both read and write the latch)."""
+    with open(private / "decisions.lock", "a") as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise ev.IdentityError("another identity command is running; nothing written") from None
+        yield
+
+
 def cmd_build(args) -> int:
     private = ik.private_dir()
     key = ik.load_key(private)
@@ -169,13 +181,16 @@ def cmd_build(args) -> int:
     out = args.out if args.out is not None else args.as_of
     _destination(private, out)
     evidence = ev.collect(inputs, key)
-    decisions = dec.load_decisions(args.decisions)
-    latch = dec.load_latch(private)
-    state = current_state(evidence, key, decisions, latch)
     recorded = {name: str(Path(getattr(args, name)).resolve()) for name in ("ledger", "raw_root", "export", "decisions")}
-    dest = write_build(private, out, build_files(evidence, key, args.as_of, state, recorded))
-    if state.latch != latch:
-        dec.write_latch(private, state.latch)
+    with _locked(private):
+        decisions = dec.load_decisions(args.decisions)
+        dec.check_dates(decisions, args.as_of)
+        latch = dec.load_latch(private)
+        state = current_state(evidence, key, decisions, latch)
+        files = build_files(evidence, key, args.as_of, state, recorded)
+        if state.latch != latch:  # persisted before the build is published
+            dec.write_latch(private, state.latch)
+        dest = write_build(private, out, files)
     print(f"built {dest}: {evidence.counts['in_scope']} rows in {evidence.counts['buckets']} buckets")
     return 0
 
@@ -247,18 +262,13 @@ def cmd_ingest(args) -> int:
     late = [d.number for d in offered if d.date > manifest["as_of"]]
     if late:
         raise ev.IdentityError(f"batch rejected, nothing written: line {late[0]}: dated after the build's as-of")
-    lock = open(private / "decisions.lock", "a")
-    try:
-        try:
-            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            raise ev.IdentityError("another ingest is running; nothing written") from None
+    with _locked(private):
         before = decisions_path.read_text(encoding="utf-8") if decisions_path.exists() else ""
         existing = dec.parse_lines(before)
         known = {d.digest for d in existing}
         latch = dec.load_latch(private)
         added = [d for d in offered if d.digest not in known]
-        revalidated = {d.digest for d in offered if d.digest in known and d.digest in latch}
+        revalidated = {d.digest for d in offered if d.digest in latch}  # re-ingested after review
         state = current_state(evidence, key, existing + added, latch - revalidated)
         bad = [f"line {d.number}: {_why(state, d)}" for d in offered if state.status[d.digest] != "effective"]
         if bad:
@@ -271,10 +281,8 @@ def cmd_ingest(args) -> int:
             _replace_decisions(decisions_path, before, text + "".join(d.line + "\n" for d in added))
         if revalidated:
             dec.write_latch(private, latch - revalidated)
-    finally:
-        lock.close()
     print(f"ingested {len(added)} decision(s); revalidated {len(revalidated)}; "
-          f"{len(offered) - len(added) - len(revalidated)} already present")
+          f"{sum(1 for d in offered if d.digest in known and d.digest not in revalidated)} already present")
     return 0
 
 

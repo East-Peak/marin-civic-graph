@@ -34,7 +34,7 @@ _ROW = re.compile(r"r-[0-9a-f]{20}")
 _TARGET = re.compile(r"person-[a-z0-9][a-z0-9-]{0,199}")
 _TF = re.compile(r"tf1:k[1-9][0-9]{0,5}:[0-9a-f]{64}")
 _DIGEST = re.compile(r"d-[0-9a-f]{16}")
-_REVIEWER = re.compile(r"[a-z][a-z0-9._-]{0,31}")
+REVIEWERS = ("stuart",)  # one operator: a reviewer is never free text
 
 
 class DecisionError(IdentityError):
@@ -84,13 +84,16 @@ def parse_line(text: str, number: int) -> Decision:
     for name in ("v", "kind", "groups", "fp", "reviewer", "date"):
         if name not in obj:
             fail(f"missing {name}")
-    if obj["v"] != 1:
-        fail("v must be 1")
+    nulls = sorted(k for k, v in obj.items() if v is None)
+    if nulls:
+        fail(f"{', '.join(nulls)} must not be null (leave the key out)")
+    if type(obj["v"]) is not int or obj["v"] != 1:
+        fail("v must be the integer 1")
     kind = obj["kind"]
     if kind not in KINDS:
         fail(f"kind must be one of {', '.join(KINDS)}")
-    if not isinstance(obj["reviewer"], str) or not _REVIEWER.fullmatch(obj["reviewer"]):
-        fail("reviewer must be a short lowercase handle")
+    if obj["reviewer"] not in REVIEWERS:
+        fail(f"reviewer must be one of {', '.join(REVIEWERS)}")
     try:
         ok = isinstance(obj["date"], str) and date.fromisoformat(obj["date"]).isoformat() == obj["date"]
     except ValueError:
@@ -157,6 +160,13 @@ def parse_lines(text: str) -> list[Decision]:
     return out
 
 
+def check_dates(decisions: list[Decision], as_of: str) -> None:
+    """A decision dated after the frozen clock is refused (the file holds no future decisions)."""
+    for d in decisions:
+        if d.date > as_of:
+            raise DecisionError(f"line {d.number}: dated after the as-of date {as_of}")
+
+
 def load_decisions(path: Path) -> list[Decision]:
     path = Path(path)
     if not path.exists():
@@ -211,7 +221,7 @@ class State:
     conflicts: list[Conflict]
     persons: list[Person]
     person_of: dict[str, str]  # row id -> person label
-    latch: frozenset[str]  # the stale lines still in the file: what the private latch should now hold
+    latch: frozenset[str]  # what the private latch should now hold: every earlier entry plus what went stale
     flows: dict[str, str]  # row id -> MoneyFlow id
 
     def flows_of(self, person: Person) -> list[str]:
@@ -321,17 +331,16 @@ def effective_state(decisions: list[Decision], rows: dict[str, str], flows: dict
     stale: dict[str, dict] = {}
     for d in ordered:
         diff: dict[str, list[str]] = {}
-        if d.digest in latch:
+        for r in sorted(d.rows):
+            current = rows.get(r)
+            if current is None:
+                diff[r] = ["row gone"]
+            elif current != d.fp[r]:
+                diff[r] = diff_fields(d.fp[r], current)
+        if d.target is not None and targets.get(d.target) != d.target_fp:
+            diff["target"] = ["target changed" if d.target in targets else "target gone or holds no role"]
+        if not diff and d.digest in latch:  # the evidence came back, but it changed once since review
             diff["latched"] = ["evidence changed since review"]
-        else:
-            for r in sorted(d.rows):
-                current = rows.get(r)
-                if current is None:
-                    diff[r] = ["row gone"]
-                elif current != d.fp[r]:
-                    diff[r] = diff_fields(d.fp[r], current)
-            if d.target is not None and targets.get(d.target) != d.target_fp:
-                diff["target"] = ["target changed" if d.target in targets else "target gone or holds no role"]
         if diff:
             stale[d.digest] = diff
     suspended: dict[str, str] = {}
@@ -367,7 +376,8 @@ def effective_state(decisions: list[Decision], rows: dict[str, str], flows: dict
         raise AssertionError("a flow is counted for two people")
     status = {d.digest: "stale" if d.digest in stale else "suspended" if d.digest in suspended else "effective"
               for d in ordered}
-    return State(ordered, status, stale, suspended, conflicts, persons, person_of, frozenset(stale), dict(flows))
+    return State(ordered, status, stale, suspended, conflicts, persons, person_of, frozenset(latch) | set(stale),
+                 dict(flows))
 
 
 def decision_line(kind: str, groups, fp: dict, reviewer: str, on: str, target: str | None = None,

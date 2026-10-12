@@ -454,14 +454,12 @@ def _facts(graph: Graph, pid: str) -> list[str]:
         for f in shown:
             if kind == "controller":
                 name = graph.props.get(f["committee"], {}).get("name")
-                extra = {k: v for k, v in f.items() if k != "committee"}
-                lines.append(f"  - controller: {f['committee']} ({name}) — CONTROLLED_BY edge {extra}")
+                lines.append(f"  - controller: {f['committee']} ({name}) — CONTROLLED_BY edge {f['edge']}")
             elif kind == "form700_filer":
                 lines.append(f"  - form700_filer: {f['filing']} — filer_name {f['filer_name']!r}, filed_at "
                              f"{f['filed_at']} (FILED_BY edge)")
             else:
-                lines.append(f"  - cast_vote: {f['decision']} — CAST_VOTE edge "
-                             f"{ {k: v for k, v in f.items() if k != 'decision'} }")
+                lines.append(f"  - cast_vote: {f['decision']} — CAST_VOTE edge {f['edge']}")
         if len(facts) > len(shown):
             lines.append(f"  - … {len(facts) - len(shown)} more {kind} fact(s)")
     return lines
@@ -513,6 +511,27 @@ def template_lines(q: Queue, evidence: Evidence, item: Item) -> list[str]:
     return [text for _, lines in template_options(q, evidence, item) for text in lines]
 
 
+def diff_text(diff: dict) -> list[str]:
+    """What changed, in words: field names only ("address changed"), never a value."""
+    out = []
+    for where, what in sorted(diff.items()):
+        words = ["row gone (amended away or no longer counted)" if w == "row gone" else
+                 w if where in ("target", "latched", "basis") else f"{w} changed" for w in what]
+        out.append(f"{where}: {', '.join(words)}")
+    return out
+
+
+def _row_table(q: Queue, rows: dict, ids: list[str]) -> list[str]:
+    if not ids:
+        return []
+    out = ["| row | reported name | " + " | ".join(ROW_FIELDS) + " |", "|" + "---|" * (len(ROW_FIELDS) + 2)]
+    for rid in ids:
+        r = rows[rid]
+        fields = _row_fields(q, r)
+        out.append(f"| {rid} | {_name(r)} | " + " | ".join(fields[f] for f in ROW_FIELDS) + " |")
+    return out + [""]
+
+
 def render_batch(q: Queue, evidence: Evidence) -> str:
     rows = {r.row_id: r for r in evidence.rows}
     out = [f"# Identity review — first batch ({len(q.batch)} of {len(q.items)} items), as of {q.as_of}", "",
@@ -524,21 +543,22 @@ def render_batch(q: Queue, evidence: Evidence) -> str:
         out += [f"## {n}. {item.id} · {item.cls}" + (f" · {item.bucket}" if item.bucket else "") +
                 (f" → {item.target}" if item.target else ""), ""]
         if item.cls in ("conflict", "stale"):
-            out += [f"- decisions: {', '.join(item.decisions)}", f"- detail: {item.detail}",
-                    "- Fix the line(s) in the decision file (edit, delete, or re-ingest after review).", ""]
+            out += [f"- decision(s): {', '.join(item.decisions)}" +
+                    (f" (line {item.detail['line']}, {item.detail['kind']})" if "line" in item.detail else "")]
+            if item.cls == "conflict":
+                out.append(f"- why: {'; '.join(item.detail['reasons'])}")
+            else:
+                out += [f"- {line}" for line in diff_text(item.detail["diff"])]
+            out += ["- Every decision listed is suspended (not effective). Edit or delete the line(s) in the decision "
+                    "file, or re-ingest a line after review to revalidate it.", ""]
+            out += _row_table(q, rows, [r for r in item.rows if r in rows])
         else:
             b = q.buckets[item.bucket]
             out.append(f"{len(b.rows)} row(s), {len(b.clusters)} address cluster(s), total "
                        f"${Decimal(b.total_cents) / 100:,.2f} over distinct flows.")
             if item.cls == "B" and b.matches:
                 out.append(f"Also name-matches: {', '.join(b.matches)}")
-            out += ["", "| row | reported name | " + " | ".join(ROW_FIELDS) + " |",
-                    "|" + "---|" * (len(ROW_FIELDS) + 2)]
-            for rid in item.rows:
-                r = rows[rid]
-                fields = _row_fields(q, r)
-                out.append(f"| {rid} | {_name(r)} | " + " | ".join(fields[f] for f in ROW_FIELDS) + " |")
-            out.append("")
+            out += [""] + _row_table(q, rows, item.rows)
             if item.target:
                 out += ["Government Person (facts with provenance):", *_facts(evidence.graph, item.target), ""]
         for n_option, (label, lines) in enumerate(template_options(q, evidence, item), start=1):

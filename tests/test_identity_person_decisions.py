@@ -78,6 +78,10 @@ def test_a_canonical_same_line_parses_and_has_a_stable_digest():
     (lambda o: o.update(extra=1), "unknown"),
     (lambda o: o.pop("reviewer"), "reviewer"),
     (lambda o: o.update(reviewer="Stuart Example"), "reviewer"),
+    (lambda o: o.update(reviewer="one-sample-street"), "reviewer"),
+    (lambda o: o.update(v=1.0), "v"),
+    (lambda o: o.update(v=True), "v"),
+    (lambda o: o.update(note=None), "null"),
     (lambda o: o.update(date="12/10/2026"), "date"),
     (lambda o: o.update(groups=[[B, A]]), "sorted"),
     (lambda o: o.update(groups=[[A], [A]]), "twice"),
@@ -123,6 +127,20 @@ def test_kind_arity(kind, groups, target, basis, ok):
     else:
         with pytest.raises(dec.DecisionError):
             dec.parse_line(text, 1)
+
+
+def test_an_explicit_null_target_is_not_a_second_spelling_of_no_target():
+    obj = json.loads(line("defer", [[A], [B]]))
+    obj.update(target=None, target_fp=None)
+    with pytest.raises(dec.DecisionError, match="null"):
+        dec.parse_line(json.dumps(obj), 1)
+
+
+def test_decisions_dated_after_the_as_of_date_are_refused():
+    late = dec.parse_line(line("same", [[A, B]]).replace('"2026-10-12"', '"2027-01-01"'), 4)
+    with pytest.raises(dec.DecisionError, match="line 4: dated after"):
+        dec.check_dates([late], "2026-10-12")
+    dec.check_dates([dec.parse_line(line("same", [[A, B]]), 1)], "2026-10-12")
 
 
 def test_note_codes_are_enumerated():
@@ -180,11 +198,21 @@ def test_a_latched_decision_stays_stale_even_when_the_evidence_returns():
     assert s.status[digest] == "stale" and s.stale[digest] == {"latched": ["evidence changed since review"]}
 
 
-def test_the_new_latch_holds_every_stale_line_still_in_the_file_and_nothing_else():
+def test_the_new_latch_keeps_every_old_entry_and_adds_what_went_stale():
+    # A line removed from the file and later restored must not come back effective: nothing is ever pruned.
     keep, gone = line("same", [[A, B]]), line("same", [[C, D]])
     current = {**ROWS, C: fp(3, "changed")}
     s = state(keep, gone, rows=current, latch=frozenset({"d-" + "1" * 16}))
-    assert s.latch == frozenset({dec.parse_line(gone, 1).digest})
+    assert s.latch == frozenset({dec.parse_line(gone, 1).digest, "d-" + "1" * 16})
+
+
+def test_a_latched_decision_still_reports_what_changed_until_the_evidence_returns():
+    text = line("same", [[A, B]])
+    digest = dec.parse_line(text, 1).digest
+    moved = state(text, rows={**ROWS, B: changed(ROWS[B], "address")}, latch=frozenset({digest}))
+    assert moved.stale[digest] == {B: ["address"]}  # the same diff as the first build that saw it
+    back = state(text, latch=frozenset({digest}))
+    assert back.stale[digest] == {"latched": ["evidence changed since review"]}
 
 
 # --- `is` and its basis -------------------------------------------------------------------------------------------
@@ -311,6 +339,20 @@ def test_target_fingerprints_cover_name_and_role_facts_but_not_new_filings(tmp_p
     assert dec.target_fingerprint(key, graph, "person-robin-q-larkspur") != before
     assert dec.target_fingerprint(key, graph, "person-printwright-taylor") is None  # a donor with no role
     assert dec.target_fingerprint(key, graph, "person-nobody") is None
+
+
+def test_edge_properties_cannot_mask_the_committee_a_controller_controls(tmp_path):
+    w = build_world(tmp_path)
+    graph = ev.load_graph(w.export_dir)
+    key = ik.Key(1, bytes(32))
+    edges = graph.person_edges["person-quill-avery"]
+    i = next(n for n, e in enumerate(edges) if e[1] == "CONTROLLED_BY")
+    before = dec.target_fingerprint(key, graph, "person-quill-avery")
+    direction, rel, _, props = edges[i]
+    edges[i] = (direction, rel, "committee-netfile-1400002", {**props, "committee": "committee-netfile-1400001"})
+    assert ev.government_roles(graph, "person-quill-avery")["controller"][0]["committee"] == \
+        "committee-netfile-1400002"
+    assert dec.target_fingerprint(key, graph, "person-quill-avery") != before
 
 
 # --- the line builder, the latch file and the build ---------------------------------------------------------------

@@ -171,7 +171,7 @@ def test_a_second_ingest_waits_for_nobody_it_refuses(world, run):
     with open(world.private / "decisions.lock", "a") as held:
         fcntl.flock(held, fcntl.LOCK_EX)
         assert _ingest(world, run, build_dir, [same]) == 1
-    assert "another ingest" in run.last
+    assert "another identity command" in run.last
 
 
 def test_no_command_output_or_file_carries_a_street_or_hash(world, run):
@@ -188,3 +188,53 @@ def test_no_command_output_or_file_carries_a_street_or_hash(world, run):
     assert not any(h in inside_reports for h in hashes)
     assert_no_street(every_text([world.root], skip=[*world.inputs, *typed]) + "\n".join(run.said))
     assert oct(os.stat(build_dir / "review" / "batch-001.md").st_mode & 0o777) == "0o600"
+
+
+def test_a_build_refuses_while_another_identity_command_holds_the_lock(world, run):
+    import fcntl
+
+    with open(world.private / "decisions.lock", "a") as held:
+        fcntl.flock(held, fcntl.LOCK_EX)
+        assert run(*world.build_args()) == 1
+    assert "another identity command" in run.last
+    assert not (world.private / "builds" / "test").exists()
+
+
+def test_a_failed_latch_write_publishes_no_build(world, run, monkeypatch):
+    build_dir, _ = _built(world, run)
+    same = _lines(build_dir, 3)[0]
+    assert _ingest(world, run, build_dir, [same]) == 0
+    rows = base_rows()
+    for row in rows["A-Contributions"]:
+        if row["Tran_NamL"] == "Thornbury":
+            row["Tran_Emp"] = "Example Water District"
+
+    def broken(*_args):
+        raise OSError("disk full")
+    monkeypatch.setattr(dec, "write_latch", broken)
+    moved = build_world(world.root / "moved", rows=rows, private=world.private)
+    moved.decisions.write_text(world.decisions.read_text())
+    assert run(*moved.build_args(out="moved")) == 2
+    assert not (world.private / "builds" / "moved").exists()
+
+
+def test_a_decision_dated_after_the_as_of_date_fails_the_build(world, run):
+    build_dir, _ = _built(world, run)
+    same = _lines(build_dir, 3)[0]
+    world.decisions.write_text(same.replace('"date":"2026-10-12"', '"date":"2027-01-01"') + "\n")
+    assert run(*world.build_args(out="late")) == 1 and "dated after" in run.last
+
+
+def test_a_latched_line_removed_and_added_back_needs_revalidation_and_gets_it(world, run):
+    build_dir, _ = _built(world, run)
+    same = _lines(build_dir, 3)[0]
+    assert _ingest(world, run, build_dir, [same]) == 0
+    dec.write_latch(world.private, frozenset({dec.parse_line(same, 1).digest}))
+    world.decisions.write_text("")
+    _, queue = _built(world, run, out="removed")
+    world.decisions.write_text(same + "\n")  # a hand edit restores it: still latched, so still stale
+    _, queue = _built(world, run, out="restored")
+    assert queue["items"][0]["class"] == "stale"
+    world.decisions.write_text("")
+    assert _ingest(world, run, build_dir, [same]) == 0 and "revalidated 1" in run.last
+    assert world.decisions.read_text() == same + "\n" and dec.load_latch(world.private) == frozenset()
