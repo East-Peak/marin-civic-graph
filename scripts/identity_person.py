@@ -3,6 +3,7 @@
 
   init-key [--version N]          create the HMAC key in the private directory (never replaces one)
   build --export DIR --as-of DATE  evidence, queue, review files and report into <private>/builds/<as-of>/
+  ingest --build NAME LINES        validate decision lines against that build's evidence; write all or nothing
 
 The private directory is $OPEN_MARIN_IDENTITY_DIR (default ~/.open-marin-private/identity). See
 docs/person-identity-runbook.md. Errors print one line naming rows, lines or paths; never a cell value.
@@ -10,11 +11,13 @@ docs/person-identity-runbook.md. Errors print one line naming rows, lines or pat
 from __future__ import annotations
 
 import argparse
+import fcntl
 import hashlib
 import json
 import os
 import re
 import shutil
+import stat
 import sys
 import tempfile
 import warnings
@@ -26,6 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import identity_person_decisions as dec  # noqa: E402
 import identity_person_evidence as ev  # noqa: E402
 import identity_person_key as ik  # noqa: E402
+import identity_person_queue as iq  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -138,19 +142,20 @@ def cmd_init_key(args) -> int:
 
 
 def current_state(evidence: ev.Evidence, key: ik.Key, decisions: list, latch: frozenset) -> dec.State:
-    targets = {t: fp for t in sorted({d.target for d in decisions if d.target})
-               if (fp := dec.target_fingerprint(key, evidence.graph, t))}
     return dec.effective_state(decisions, {r.row_id: r.fp for r in evidence.rows},
-                               {r.row_id: r.moneyflow_id for r in evidence.rows}, targets, latch)
+                               {r.row_id: r.moneyflow_id for r in evidence.rows},
+                               iq.target_fingerprints(key, evidence.graph, decisions), latch)
 
 
-def build_files(evidence: ev.Evidence, key: ik.Key, as_of: str, state: dec.State) -> dict[str, bytes]:
-    manifest = {"as_of": as_of, "key_version": key.version, "inputs": evidence.inputs, "counts": evidence.counts,
-                "latch_sha256": hashlib.sha256(dec.latch_bytes(state.latch)).hexdigest()}
+def build_files(evidence: ev.Evidence, key: ik.Key, as_of: str, state: dec.State, args: dict) -> dict[str, bytes]:
+    queue = iq.build_queue(evidence, state, key, as_of)
+    manifest = {"as_of": as_of, "key_version": key.version, "args": args, "inputs": evidence.inputs,
+                "counts": evidence.counts, "latch_sha256": hashlib.sha256(dec.latch_bytes(state.latch)).hexdigest()}
     address = [{"row_id": r.row_id, "bucket": r.bucket, "address_hash": r.address_hash,
                 "reason": r.address_reason, "key_version": key.version} for r in evidence.rows]
     return {"manifest.json": _dump(manifest), "address-evidence.jsonl": _jsonl(address),
-            "decisions-state.json": _dump(dec.state_json(state))}
+            "decisions-state.json": _dump(dec.state_json(state)), "queue.json": _dump(iq.queue_json(queue)),
+            "review/batch-001.md": iq.render_batch(queue, evidence).encode()}
 
 
 def cmd_build(args) -> int:
@@ -167,10 +172,109 @@ def cmd_build(args) -> int:
     decisions = dec.load_decisions(args.decisions)
     latch = dec.load_latch(private)
     state = current_state(evidence, key, decisions, latch)
-    dest = write_build(private, out, build_files(evidence, key, args.as_of, state))
+    recorded = {name: str(Path(getattr(args, name)).resolve()) for name in ("ledger", "raw_root", "export", "decisions")}
+    dest = write_build(private, out, build_files(evidence, key, args.as_of, state, recorded))
     if state.latch != latch:
         dec.write_latch(private, state.latch)
     print(f"built {dest}: {evidence.counts['in_scope']} rows in {evidence.counts['buckets']} buckets")
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# ingest: all or nothing, under a lock, compare-and-swap on the decision file
+# ---------------------------------------------------------------------------
+
+def _replace_decisions(path: Path, before: str, text: str) -> None:
+    """Write `text` over the decision file unless it no longer holds `before` (temp file, fsync, os.replace)."""
+    def current() -> str:
+        return path.read_text(encoding="utf-8") if path.exists() else ""
+
+    if current() != before:
+        raise ev.IdentityError("the decision file changed during ingest; nothing written: run ingest again")
+    mode = stat.S_IMODE(path.stat().st_mode) if path.exists() else 0o644
+    fd, tmp = tempfile.mkstemp(prefix=".decisions-", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(text)
+            f.flush()
+            os.fsync(f.fileno())
+        os.chmod(tmp, mode)
+        if current() != before:
+            raise ev.IdentityError("the decision file changed during ingest; nothing written: run ingest again")
+        os.replace(tmp, path)
+    except BaseException:
+        Path(tmp).unlink(missing_ok=True)
+        raise
+
+
+def _why(state: dec.State, d) -> str:
+    status = state.status[d.digest]
+    if status == "stale":
+        changes = "; ".join(f"{where}: {', '.join(what)}" for where, what in state.stale[d.digest].items())
+        return f"stale ({changes})"
+    reason = state.suspended[d.digest]
+    if reason.startswith("c-"):
+        c = next(c for c in state.conflicts if c.id == reason)
+        return f"conflict {reason} ({'; '.join(c.reasons)})"
+    return f"suspended ({reason})"
+
+
+def cmd_ingest(args) -> int:
+    private = ik.private_dir()
+    key = ik.load_key(private)
+    build = _destination(private, args.build)
+    try:
+        manifest = json.loads((build / "manifest.json").read_text())
+        recorded = manifest["args"]
+    except (OSError, ValueError, KeyError):
+        raise ev.IdentityError(f"build {args.build} has no readable manifest; run build first") from None
+    if manifest["key_version"] != key.version:
+        raise ev.IdentityError(f"build {args.build} used key version {manifest['key_version']}; rebuild")
+    decisions_path = Path(recorded["decisions"])
+    evidence = ev.collect(ev.Inputs(Path(recorded["ledger"]), Path(recorded["raw_root"]), Path(recorded["export"]),
+                                    decisions_path), key)
+
+    def pinned(inputs):
+        return sorted((i["role"], i["path"], i["sha256"]) for i in inputs if i["role"] != "decisions")
+    if pinned(evidence.inputs) != pinned(manifest["inputs"]):
+        raise ev.IdentityError(f"the evidence inputs changed since build {args.build}; rebuild and review again")
+    try:
+        offered = dec.parse_lines(Path(args.lines).read_text(encoding="utf-8"))
+    except dec.DecisionError as exc:
+        raise ev.IdentityError(f"batch rejected, nothing written: {exc}") from None
+    except (OSError, UnicodeDecodeError) as exc:
+        raise ev.IdentityError(f"{args.lines}: unreadable ({type(exc).__name__})") from None
+    late = [d.number for d in offered if d.date > manifest["as_of"]]
+    if late:
+        raise ev.IdentityError(f"batch rejected, nothing written: line {late[0]}: dated after the build's as-of")
+    lock = open(private / "decisions.lock", "a")
+    try:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise ev.IdentityError("another ingest is running; nothing written") from None
+        before = decisions_path.read_text(encoding="utf-8") if decisions_path.exists() else ""
+        existing = dec.parse_lines(before)
+        known = {d.digest for d in existing}
+        latch = dec.load_latch(private)
+        added = [d for d in offered if d.digest not in known]
+        revalidated = {d.digest for d in offered if d.digest in known and d.digest in latch}
+        state = current_state(evidence, key, existing + added, latch - revalidated)
+        bad = [f"line {d.number}: {_why(state, d)}" for d in offered if state.status[d.digest] != "effective"]
+        if bad:
+            raise ev.IdentityError("batch rejected, nothing written: " + " | ".join(bad))
+        if not added and not revalidated:
+            print("no change: every line is already in the decision file and effective")
+            return 0
+        if added:
+            text = before + ("\n" if before and not before.endswith("\n") else "")
+            _replace_decisions(decisions_path, before, text + "".join(d.line + "\n" for d in added))
+        if revalidated:
+            dec.write_latch(private, latch - revalidated)
+    finally:
+        lock.close()
+    print(f"ingested {len(added)} decision(s); revalidated {len(revalidated)}; "
+          f"{len(offered) - len(added) - len(revalidated)} already present")
     return 0
 
 
@@ -189,6 +293,10 @@ def _parser() -> argparse.ArgumentParser:
     build.add_argument("--as-of", type=_as_of, required=True, help="the frozen clock (YYYY-MM-DD)")
     build.add_argument("--out", help="build name: <private>/builds/<name> (default: the --as-of date)")
     build.set_defaults(func=cmd_build)
+    ingest = sub.add_parser("ingest", help="validate decision lines against a build and write them, or nothing")
+    ingest.add_argument("--build", required=True, help="the build the lines were copied from (its name)")
+    ingest.add_argument("lines", type=Path, help="a file of decision lines, one per line")
+    ingest.set_defaults(func=cmd_ingest)
     return parser
 
 

@@ -253,9 +253,9 @@ def test_a_corrupt_workbook_fails_without_echoing_its_contents(world):
     assert_no_street(str(info.value))
 
 
-def _date_styled(world, column: str, value) -> None:
-    """Rewrite the raw workbook so the first A row's `column` holds `value` styled as a date (openpyxl warns when
-    such a number cannot become a date, quoting the value)."""
+def _date_styled(world, column: str, value, row: int = 2, blank: int | None = None) -> None:
+    """Rewrite the raw workbook so A row `row`'s `column` holds `value` styled as a date (openpyxl warns when
+    such a number cannot become a date, quoting the value); `blank` empties a row so the sheet XML skips it."""
     import hashlib
     import zipfile
 
@@ -267,8 +267,11 @@ def _date_styled(world, column: str, value) -> None:
         wb = openpyxl.load_workbook(zf.open(inner))
     ws = wb["A-Contributions"]
     header = [c.value for c in ws[1]]
-    cell = ws.cell(row=2, column=header.index(column) + 1, value=value)
+    cell = ws.cell(row=row, column=header.index(column) + 1, value=value)
     cell.number_format = "yyyy-mm-dd"
+    if blank:
+        for c in ws[blank]:
+            c.value = None
     xlsx = path.with_suffix(".xlsx")
     wb.save(xlsx)
     with zipfile.ZipFile(path, "w") as zf:
@@ -296,6 +299,13 @@ def test_a_workbook_the_parser_cannot_read_losslessly_puts_all_its_rows_out_of_s
     evidence = _collect(world)
     assert evidence.counts["lossy_workbook_rows"] == 14
     assert evidence.rows == []
+
+
+def test_a_warning_after_a_missing_row_still_makes_the_workbook_lossy(world):
+    # openpyxl parses row 4 before it yields the filler for missing row 3: per-row attribution would miss this.
+    _date_styled(world, "Tran_Adr1", 98765432123, row=4, blank=3)
+    evidence = _collect(world)
+    assert evidence.counts["lossy_workbook_rows"] == 14 and evidence.rows == []
 
 
 def test_a_non_text_street_cell_is_a_reason_not_a_crash(tmp_path):
@@ -343,9 +353,11 @@ def test_two_builds_over_the_same_inputs_are_byte_identical(world, capsys):
     _build(world, capsys, out="one")
     _build(world, capsys, out="two")
     one, two = world.private / "builds" / "one", world.private / "builds" / "two"
-    assert sorted(p.name for p in one.iterdir()) == sorted(p.name for p in two.iterdir())
-    for p in one.iterdir():
-        assert p.read_bytes() == (two / p.name).read_bytes(), p.name
+    files = sorted(p.relative_to(one) for p in one.rglob("*") if p.is_file())
+    assert files == sorted(p.relative_to(two) for p in two.rglob("*") if p.is_file())
+    assert len(files) >= 5
+    for rel in files:
+        assert (one / rel).read_bytes() == (two / rel).read_bytes(), rel
 
 
 def test_a_rebuild_replaces_the_previous_output(world, capsys):
