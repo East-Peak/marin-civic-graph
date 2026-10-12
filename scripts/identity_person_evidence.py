@@ -436,3 +436,22 @@ def collect(inputs: Inputs, key: Key) -> Evidence:
 
 
 
+
+ROLE_KINDS = ("cast_vote", "form700_filer", "controller")
+
+
+def government_roles(graph: Graph, person_id: str) -> dict[str, list[dict]]:
+    """A Person's government roles in the frozen export, each fact with the edge or node it comes from:
+    cast_vote (out CAST_VOTE), form700_filer (in FILED_BY from a form_700 Filing), controller (in CONTROLLED_BY
+    from a Committee). Empty when the node holds none."""
+    roles: dict[str, list[dict]] = {}
+    for direction, rel, other, props in graph.person_edges.get(person_id, ()):
+        if direction == "out" and rel == "CAST_VOTE":
+            roles.setdefault("cast_vote", []).append({"decision": other, **props})
+        elif direction == "in" and rel == "FILED_BY" and graph.props.get(other, {}).get("filing_type") == "form_700":
+            filing = graph.props[other]
+            roles.setdefault("form700_filer", []).append(
+                {"filing": other, "filer_name": filing.get("filer_name"), "filed_at": filing.get("filed_at")})
+        elif direction == "in" and rel == "CONTROLLED_BY" and graph.has(other, "Committee"):
+            roles.setdefault("controller", []).append({"committee": other, **props})
+    return {kind: sorted(facts, key=canonical_json) for kind, facts in sorted(roles.items())}

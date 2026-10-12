@@ -10,6 +10,7 @@ docs/person-identity-runbook.md. Errors print one line naming rows, lines or pat
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -22,6 +23,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import identity_person_decisions as dec  # noqa: E402
 import identity_person_evidence as ev  # noqa: E402
 import identity_person_key as ik  # noqa: E402
 
@@ -135,11 +137,20 @@ def cmd_init_key(args) -> int:
     return 0
 
 
-def build_files(evidence: ev.Evidence, key: ik.Key, as_of: str) -> dict[str, bytes]:
-    manifest = {"as_of": as_of, "key_version": key.version, "inputs": evidence.inputs, "counts": evidence.counts}
+def current_state(evidence: ev.Evidence, key: ik.Key, decisions: list, latch: frozenset) -> dec.State:
+    targets = {t: fp for t in sorted({d.target for d in decisions if d.target})
+               if (fp := dec.target_fingerprint(key, evidence.graph, t))}
+    return dec.effective_state(decisions, {r.row_id: r.fp for r in evidence.rows},
+                               {r.row_id: r.moneyflow_id for r in evidence.rows}, targets, latch)
+
+
+def build_files(evidence: ev.Evidence, key: ik.Key, as_of: str, state: dec.State) -> dict[str, bytes]:
+    manifest = {"as_of": as_of, "key_version": key.version, "inputs": evidence.inputs, "counts": evidence.counts,
+                "latch_sha256": hashlib.sha256(dec.latch_bytes(state.latch)).hexdigest()}
     address = [{"row_id": r.row_id, "bucket": r.bucket, "address_hash": r.address_hash,
                 "reason": r.address_reason, "key_version": key.version} for r in evidence.rows]
-    return {"manifest.json": _dump(manifest), "address-evidence.jsonl": _jsonl(address)}
+    return {"manifest.json": _dump(manifest), "address-evidence.jsonl": _jsonl(address),
+            "decisions-state.json": _dump(dec.state_json(state))}
 
 
 def cmd_build(args) -> int:
@@ -153,7 +164,12 @@ def cmd_build(args) -> int:
     out = args.out if args.out is not None else args.as_of
     _destination(private, out)
     evidence = ev.collect(inputs, key)
-    dest = write_build(private, out, build_files(evidence, key, args.as_of))
+    decisions = dec.load_decisions(args.decisions)
+    latch = dec.load_latch(private)
+    state = current_state(evidence, key, decisions, latch)
+    dest = write_build(private, out, build_files(evidence, key, args.as_of, state))
+    if state.latch != latch:
+        dec.write_latch(private, state.latch)
     print(f"built {dest}: {evidence.counts['in_scope']} rows in {evidence.counts['buckets']} buckets")
     return 0
 
