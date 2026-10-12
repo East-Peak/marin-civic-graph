@@ -31,6 +31,7 @@ import identity_person_decisions as dec  # noqa: E402
 import identity_person_evidence as ev  # noqa: E402
 import identity_person_key as ik  # noqa: E402
 import identity_person_queue as iq  # noqa: E402
+import identity_person_report as rep  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -150,13 +151,15 @@ def current_state(evidence: ev.Evidence, key: ik.Key, decisions: list, latch: fr
 
 def build_files(evidence: ev.Evidence, key: ik.Key, as_of: str, state: dec.State, args: dict) -> dict[str, bytes]:
     queue = iq.build_queue(evidence, state, key, as_of)
+    report = rep.build_report(queue, evidence)
     manifest = {"as_of": as_of, "key_version": key.version, "args": args, "inputs": evidence.inputs,
                 "counts": evidence.counts, "latch_sha256": hashlib.sha256(dec.latch_bytes(state.latch)).hexdigest()}
     address = [{"row_id": r.row_id, "bucket": r.bucket, "address_hash": r.address_hash,
                 "reason": r.address_reason, "key_version": key.version} for r in evidence.rows]
     return {"manifest.json": _dump(manifest), "address-evidence.jsonl": _jsonl(address),
             "decisions-state.json": _dump(dec.state_json(state)), "queue.json": _dump(iq.queue_json(queue)),
-            "review/batch-001.md": iq.render_batch(queue, evidence).encode()}
+            "review/batch-001.md": iq.render_batch(queue, evidence).encode(),
+            "report.json": _dump(report), "report.md": rep.render_report(report).encode()}
 
 
 @contextlib.contextmanager
