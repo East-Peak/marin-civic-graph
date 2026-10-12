@@ -311,35 +311,35 @@ def _raw_workbook(raw_root: Path, rel: str, sha: str) -> Path:
     raise InputError(f"ledger input {rel}: no raw workbook under {raw_root} has its sha256")
 
 
-def _read_cells(path: Path, rel: str, wanted: set[int]) -> tuple[dict[int, tuple], int]:
-    """({excel row number: (Filer_ID, Report_Num, Tran_ID, Tran_Adr1, Tran_Adr2, Tran_Zip4)}, warnings count).
+def _read_cells(path: Path, rel: str, wanted: set[int]) -> tuple[dict[int, tuple], set[int]]:
+    """({excel row number: (Filer_ID, Report_Num, Tran_ID, Tran_Adr1, Tran_Adr2, Tran_Zip4)}, lossy row numbers).
 
-    Parser warnings can quote a cell (a street styled as a date): they are recorded and counted, never shown."""
+    A parser warning can quote a cell (a street styled as a date) and means the value was not read losslessly:
+    warnings are recorded, never shown, and the row they arose on is returned as lossy (out of scope)."""
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
-        cells = _read_sheet(path, rel, wanted)
-    return cells, len(caught)
-
-
-def _read_sheet(path: Path, rel: str, wanted: set[int]) -> dict[int, tuple]:
-    try:
-        with zipfile.ZipFile(path) as zf:
-            [inner] = [n for n in zf.namelist() if n.endswith(".xlsx")]
-            with zf.open(inner) as f:
-                wb = openpyxl.load_workbook(f, read_only=True, data_only=True)
-                try:
-                    rows = wb["A-Contributions"].iter_rows(values_only=True)
-                    header = list(next(rows, ()))
-                    index = [header.index(col) for col in _READ]
-                    out = {}
-                    for number, values in enumerate(rows, start=2):
-                        if number in wanted:
-                            out[number] = tuple(values[i] if i < len(values) else None for i in index)
-                    return out
-                finally:
-                    wb.close()
-    except Exception as exc:  # zip, XML, sheet or header problems: name the file, never a cell
-        raise InputError(f"{rel}: not a readable workbook ({type(exc).__name__})") from None
+        try:
+            with zipfile.ZipFile(path) as zf:
+                [inner] = [n for n in zf.namelist() if n.endswith(".xlsx")]
+                with zf.open(inner) as f:
+                    wb = openpyxl.load_workbook(f, read_only=True, data_only=True)
+                    try:
+                        rows = wb["A-Contributions"].iter_rows(values_only=True)
+                        header = list(next(rows, ()))
+                        index = [header.index(col) for col in _READ]
+                        out, lossy = {}, set()
+                        number, seen = 1, len(caught)
+                        for number, values in enumerate(rows, start=2):
+                            if len(caught) > seen:
+                                seen = len(caught)
+                                lossy.add(number)
+                            if number in wanted:
+                                out[number] = tuple(values[i] if i < len(values) else None for i in index)
+                        return out, lossy & wanted
+                    finally:
+                        wb.close()
+        except Exception as exc:  # zip, XML, sheet or header problems: name the file, never a cell
+            raise InputError(f"{rel}: not a readable workbook ({type(exc).__name__})") from None
 
 
 def _reported(cell):
@@ -398,10 +398,12 @@ def collect(inputs: Inputs, key: Key) -> Evidence:
             raise InputError(f"ledger row file {rel} is not in its source manifest")
         path = _raw_workbook(inputs.raw_root, rel, pinned[rel])
         manifest_inputs.append(_input("raw_workbook", path))
-        cells, warned = _read_cells(path, rel, {c[1]["row_ref"]["row"] for c in group})
-        counts["workbook_warnings"] += warned
+        cells, lossy = _read_cells(path, rel, {c[1]["row_ref"]["row"] for c in group})
         for row_key, row, filing, bucket, _ in group:
             rid = row_id(list(row_key))
+            if row["row_ref"]["row"] in lossy:
+                counts["lossy_cell"] += 1
+                continue
             found = cells.get(row["row_ref"]["row"])
             if found is None or row["row_ref"]["sheet"] != "A-Contributions" or \
                     (_text(found[0]), _text(found[1]), _text(found[2])) != \

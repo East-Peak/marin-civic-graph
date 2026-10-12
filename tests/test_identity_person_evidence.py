@@ -286,9 +286,15 @@ def test_parser_warnings_that_quote_a_street_cell_never_surface(world, capsys, r
     code, said = _build(world, capsys)
     assert code == 0, said
     assert "98765432123" not in said and not [w for w in recwarn if "98765432123" in str(w.message)]
-    manifest = json.loads((world.private / "builds" / "test" / "manifest.json").read_text())
-    assert manifest["counts"].get("workbook_warnings", 0) >= 0
     assert "98765432123" not in every_text([world.root], skip=world.inputs)
+
+
+def test_a_row_the_parser_cannot_read_losslessly_is_out_of_scope(world):
+    _date_styled(world, "Tran_Adr1", 98765432123)
+    evidence = _collect(world)
+    assert evidence.counts["lossy_cell"] == 1
+    assert not [r for r in evidence.rows if r.tran_id == "A-1" and r.filer_id == "1400001"]
+    assert len(evidence.rows) == 13
 
 
 def test_a_non_text_street_cell_is_a_reason_not_a_crash(tmp_path):

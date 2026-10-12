@@ -105,12 +105,7 @@ class World:
     export_dir: Path
     decisions: Path
     private: Path
-
-    @property
-    def inputs(self) -> list[Path]:
-        """The fixture's raw input workbooks: the only files allowed to hold a street."""
-        return sorted(p for root in (self.raw_root, self.root / "ledger-input") if root.exists()
-                      for p in root.rglob("*.zip"))
+    inputs: tuple[Path, ...]  # the input workbooks, fixed when the world is built: the only files with streets
 
     def build_args(self, as_of="2026-10-12", out="test") -> list[str]:
         return ["build", "--ledger", str(self.ledger_dir), "--raw-root", str(self.raw_root), "--export",
@@ -178,7 +173,8 @@ def build_world(tmp: Path, rows: dict | None = None, ledger_rows: dict | None = 
     decisions = tmp / "data-repo" / "identity" / "person" / "decisions.jsonl"
     decisions.parent.mkdir(parents=True, exist_ok=True)
     decisions.touch()
-    return World(tmp, raw_root, ledger_dir, export_dir, decisions, private or tmp / "private" / "identity")
+    inputs = tuple(sorted({workbook, ledger_workbook}))
+    return World(tmp, raw_root, ledger_dir, export_dir, decisions, private or tmp / "private" / "identity", inputs)
 
 
 def every_text(paths: list[Path], skip: list[Path] = (), exclude: list[Path] = ()) -> str:
