@@ -23,7 +23,7 @@ It is never written anywhere: not to a file, log, report, error message or git h
 HMAC per row (private directory only) and, in the decision file, keyed fingerprints of the rows a decision covers.
 Review files show address clusters as letters (A, B, …), never streets or hashes.
 
-**As of 2026-10-12 the NetFile public exports carry no contributor street at all.** `Tran_Adr1`/`Tran_Adr2` (and
+**As of 2026-10-12, NetFile's public exports carry no contributor street at all.** `Tran_Adr1`/`Tran_Adr2` (and
 the treasurer and intermediary street columns) are empty in every row of every captured year. So every row reports
 `missing_street`, no bucket has address clusters, class C is empty, and B/A items rank by total alone. The
 machinery is in place for a source that does carry the street (the filed Form 460 itself, for example). Until one
