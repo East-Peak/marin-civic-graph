@@ -317,7 +317,8 @@ def test_c_resolution_checks_distinct_against_whole_components(world):
 
 @pytest.mark.parametrize("value", ["12 Sample Ridge", "Unit 3", {"street": "Example"}, ["ok", "12 Sample Ridge"],
                                    "#4", "PO Box 12", " 12 Sample Ridge", "address: 12 Sample Ridge", 4155550100,
-                                   "Sample Ridge 12"])
+                                   "Sample Ridge 12", "address: 12B Sample Ridge", "Sample Ridge Apt 12B",
+                                   "12½ Sample Ridge"])
 def test_address_like_or_structured_provenance_is_withheld(value):
     assert iq._safe(value).startswith("withheld")
 

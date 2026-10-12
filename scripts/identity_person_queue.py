@@ -481,7 +481,9 @@ def _safe(value) -> str:
     return text
 
 
-_NUMBERED = re.compile(r"\d\s+[A-Za-z]|[A-Za-z]\s+\d|\d{7}")  # a number beside a word: house numbers, units, phones
+# Provenance tokens (resolver names, bundle ids, votes, candidate names) never mix a digit with whitespace;
+# addresses, units and phone numbers almost always do: such a value is withheld whole.
+_NUMBERED = re.compile(r"(?=.*\d)(?=.*\s)|\d{7}", re.S)
 _ISO = re.compile(r"\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?)?")
 
 
