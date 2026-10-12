@@ -13,6 +13,7 @@ Review text never shows a street or an address hash: clusters are letters.
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 import unicodedata
 from collections import defaultdict
@@ -612,11 +613,15 @@ def _row_table(q: Queue, rows: dict, ids: list[str]) -> list[str]:
 
 def render_batch(q: Queue, evidence: Evidence) -> str:
     rows = {r.row_id: r for r in evidence.rows}
+    batch = options_json(q, evidence)["batch"]
     out = [f"# Identity review — first batch ({len(q.batch)} of {len(q.items)} items), as of {q.as_of}", "",
            "Read before deciding:", *[f"- {c}" for c in CAUTIONS], "",
-           "To decide: pick one option per item, copy all of its lines into a file (one per line), and run "
-           "`identity_person.py ingest --build <this build> <that file>` (docs/person-identity-runbook.md). "
-           "Skipping an item is fine: it stays in the queue.", ""]
+           "To decide: write one answer per line in a text file — the item number, then the option number "
+           "(e.g. `1 2`; `#` starts a comment), after a first line that names this batch: "
+           f"`batch {batch}` — and run `identity_person.py ingest --build <this build> "
+           "--answers <that file>` (docs/person-identity-runbook.md). Each answer expands to the option's decision "
+           "lines, kept beside this file in batch-001.options.json. Skipping an item is fine: it stays in the "
+           "queue.", ""]
     for n, item in enumerate(q.batch, start=1):
         out += [f"## {n}. {item.id} · {item.cls}" + (f" · {item.bucket}" if item.bucket else "") +
                 (f" → {item.target}" if item.target else ""), ""]
@@ -642,10 +647,22 @@ def render_batch(q: Queue, evidence: Evidence) -> str:
             out += [""] + _row_table(q, rows, item.rows)
             if item.target:
                 out += ["Government Person (facts with provenance):", *_facts(evidence.graph, item.target), ""]
-        for n_option, (label, lines) in enumerate(template_options(q, evidence, item), start=1):
-            out += [f"**Option {n_option} — {label}** ({len(lines)} line{'s' if len(lines) > 1 else ''}):", "",
-                    "```", *lines, "```", ""]
+        options = template_options(q, evidence, item)
+        out += [f"- **Option {n_option}** — {label} · answer `{n} {n_option}`"
+                for n_option, (label, _) in enumerate(options, start=1)] + ([""] if options else [])
     return "\n".join(out) + "\n"
+
+
+def options_json(q: Queue, evidence: Evidence) -> dict:
+    """The first batch's options, numbered as the review file numbers them, with the decision lines each expands
+    to: what `ingest --answers` reads. `batch` names exactly this numbering (a digest of the items), so answers
+    written for one batch can never select items of another. Every line is still validated at ingest."""
+    items = [{"n": n, "id": item.id, "options": [{"n": n_option, "label": label, "lines": lines}
+                                                 for n_option, (label, lines)
+                                                 in enumerate(template_options(q, evidence, item), start=1)]}
+             for n, item in enumerate(q.batch, start=1)]
+    digest = hashlib.sha256(json.dumps(items, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    return {"as_of": q.as_of, "batch": f"b-{digest[:12]}", "items": items}
 
 
 def queue_json(q: Queue) -> dict:

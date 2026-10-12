@@ -48,20 +48,37 @@ if you want decisions to survive a lost disk (see *Key loss*).
 
    `--as-of` is the frozen clock: nothing else in the output carries a date, so two builds over the same inputs
    are byte-identical. Output goes to `<private>/builds/<as-of>/` (or `--out <name>`):
-   - `review/batch-001.md`: the first batch (up to 60 items), with the evidence and the decision options;
+   - `review/batch-001.md`: the first batch (up to 60 items), with the evidence and numbered options;
+   - `review/batch-001.options.json`: the decision lines each option expands to, and the batch id (its digest is
+     recorded in the manifest, so ingest refuses an options file the build did not write);
    - `queue.json`: every item; `report.md` / `report.json`: the operator report;
    - `manifest.json`: every input's sha256, the key version and the latch digest;
    - `decisions-state.json`: each decision's status; `address-evidence.jsonl`: the per-row hashes (private).
-3. **Review.** Read the cautions at the top of the batch. For each item, pick at most one option and copy all of
-   its lines into a text file, one per line. Skipping an item is fine: it stays in the queue.
+3. **Review.** Read the cautions at the top of the batch. Write a text file of answers: the first line is the
+   batch line printed at the top of the review (`batch b-…`), then one line per item you decide — the item number
+   (or its `q-…` id), a space, the option number. `#` starts a comment; blank lines are ignored; skipping an item
+   is fine (it stays in the queue). Example:
+
+        batch b-0123456789ab
+        1 1     # all rows are this person
+        2 3     # cannot decide
+        q-B-50a1de09f0 2
+
+   Item numbers belong to one build's batch. The batch line ties your answers to it: answers written for another
+   batch (including a rebuild whose items changed) are refused, never silently applied to different items.
 4. **Ingest.**
 
-        python scripts/identity_person.py ingest --build <as-of or name> <your file>
+        python scripts/identity_person.py ingest --build <as-of or name> --answers <your file>
 
-   Ingest re-reads the build's inputs and refuses if any changed since the build. It checks each line's grammar
-   and its fingerprints against the current evidence. If any line is malformed, stale, unsupported or
-   contradictory, the whole batch is rejected and nothing is written. Otherwise the new lines are appended to the
-   decision file atomically. Lines already in the file are no-ops.
+   Each answer expands to its option's decision lines (an `is` always comes with the `same` it rests on; two
+   answers that share a line write it once). Ingest re-reads the build's inputs and refuses if any changed since
+   the build. It checks each line's grammar and its fingerprints against the current evidence. If any answer or
+   line is malformed, stale, unsupported or contradictory, the whole file is rejected and nothing is written; errors
+   name your answer line, never echo what you typed. Otherwise the new lines are appended to the decision file
+   atomically. Lines already in the file are no-ops.
+
+   Raw decision lines (one JSON decision per line, e.g. edited by hand) still ingest without `--answers`:
+   `ingest --build <name> <file>`.
 5. **Commit.** The weekly snapshot commits `identity/person/` with the rest of the private data repo. You can also
    commit it by hand. Git is the history.
 

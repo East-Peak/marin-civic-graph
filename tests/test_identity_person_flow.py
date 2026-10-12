@@ -47,13 +47,9 @@ class Session:
         return self.world.private / "builds" / name
 
     def options(self, build: Path, item_id: str) -> dict[str, list[str]]:
-        text = (build / "review" / "batch-001.md").read_text()
-        section = next(s for s in text.split("\n## ")[1:] if item_id in s.splitlines()[0])
-        out = {}
-        for chunk in section.split("**Option ")[1:]:
-            label = chunk.split(" — ", 1)[1].split("** (", 1)[0]
-            out[label] = chunk.split("```\n", 1)[1].split("\n```", 1)[0].splitlines()
-        return out
+        items = json.loads((build / "review" / "batch-001.options.json").read_text())["items"]
+        item = next(i for i in items if i["id"] == item_id)
+        return {o["label"]: o["lines"] for o in item["options"]}
 
     def ingest(self, build: Path, lines: list[str], name="decide.jsonl") -> int:
         path = self.tmp / name

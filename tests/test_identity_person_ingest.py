@@ -52,10 +52,9 @@ def _built(world, run, out="test"):
 
 
 def _lines(build_dir: Path, item_index: int) -> list[str]:
-    """Every decision line the review file offers for the n-th item, option after option, in order."""
-    text = (build_dir / "review" / "batch-001.md").read_text()
-    section = text.split("\n## ")[item_index + 1]
-    return [line for block in section.split("```\n")[1::2] for line in block.split("\n```", 1)[0].splitlines()]
+    """Every decision line the build offers for the n-th item, option after option, in order."""
+    items = json.loads((build_dir / "review" / "batch-001.options.json").read_text())["items"]
+    return [line for option in items[item_index]["options"] for line in option["lines"]]
 
 
 def _ingest(world, run, build_dir, lines, name="decide.jsonl"):

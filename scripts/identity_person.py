@@ -152,13 +152,16 @@ def current_state(evidence: ev.Evidence, key: ik.Key, decisions: list, latch: fr
 def build_files(evidence: ev.Evidence, key: ik.Key, as_of: str, state: dec.State, args: dict) -> dict[str, bytes]:
     queue = iq.build_queue(evidence, state, key, as_of)
     report = rep.build_report(queue, evidence)
+    options = _dump(iq.options_json(queue, evidence))
     manifest = {"as_of": as_of, "key_version": key.version, "args": args, "inputs": evidence.inputs,
-                "counts": evidence.counts, "latch_sha256": hashlib.sha256(dec.latch_bytes(state.latch)).hexdigest()}
+                "counts": evidence.counts, "latch_sha256": hashlib.sha256(dec.latch_bytes(state.latch)).hexdigest(),
+                "options_sha256": hashlib.sha256(options).hexdigest()}
     address = [{"row_id": r.row_id, "bucket": r.bucket, "address_hash": r.address_hash,
                 "reason": r.address_reason, "key_version": key.version} for r in evidence.rows]
     return {"manifest.json": _dump(manifest), "address-evidence.jsonl": _jsonl(address),
             "decisions-state.json": _dump(dec.state_json(state)), "queue.json": _dump(iq.queue_json(queue)),
             "review/batch-001.md": iq.render_batch(queue, evidence).encode(),
+            "review/batch-001.options.json": options,
             "report.json": _dump(report), "report.md": rep.render_report(report).encode()}
 
 
@@ -237,12 +240,80 @@ def _why(state: dec.State, d) -> str:
     return f"suspended ({reason})"
 
 
+ANSWER = re.compile(r"(\S+)\s+(\d+)")
+BATCH_LINE = re.compile(r"batch\s+(\S+)")
+
+
+def _rejected(why: str) -> ev.IdentityError:
+    return ev.IdentityError(f"batch rejected, nothing written: {why}")
+
+
+def read_options(build: Path, manifest: dict) -> dict:
+    """The build's options file, only if it is the one the build's manifest recorded."""
+    path = build / "review" / "batch-001.options.json"
+    try:
+        raw = path.read_bytes()
+        options = json.loads(raw)
+        options["items"], options["batch"]
+    except (OSError, ValueError, KeyError, TypeError):
+        raise ev.IdentityError(f"build {build.name} has no readable options file; rebuild") from None
+    if hashlib.sha256(raw).hexdigest() != manifest.get("options_sha256"):
+        raise ev.IdentityError(f"build {build.name}: the options file is not the one this build wrote; rebuild")
+    return options
+
+
+def expand_answers(text: str, options: dict) -> tuple[str, dict[int, str]]:
+    """A `batch <id>` line, then `<item number or id> <option number>` lines -> the options' decision lines.
+    Any bad answer rejects the whole file; answer tokens are never echoed. Two answers expanding to the same line
+    (one bucket matched to two people shares its `same`) write it once. Returns the decision text and, per expanded
+    line, the answer it came from."""
+    items = options["items"]
+    by_key = {str(i["n"]): i for i in items} | {i["id"]: i for i in items}
+    lines, origin, seen, batch = [], {}, set(), None
+    for number, raw in enumerate(text.splitlines(), start=1):
+        answer = raw.split("#", 1)[0].strip()
+        if not answer:
+            continue
+        where = f"answer line {number}"
+        if batch is None:
+            m = BATCH_LINE.fullmatch(answer)
+            if not m:
+                raise _rejected(f"{where}: the first answer line must be 'batch {options['batch']}' "
+                                "(copy it from the review file)")
+            if m.group(1) != options["batch"]:
+                raise _rejected(f"{where}: these answers are for another batch; this build's batch is "
+                                f"{options['batch']}")
+            batch = m.group(1)
+            continue
+        m = ANSWER.fullmatch(answer)
+        if not m:
+            raise _rejected(f"{where}: expected '<item> <option>'")
+        item = by_key.get(m.group(1))
+        if item is None:
+            raise _rejected(f"{where}: no such item in this batch")
+        if item["n"] in seen:
+            raise _rejected(f"{where}: item {item['n']} answered twice")
+        seen.add(item["n"])
+        option = next((o for o in item["options"] if o["n"] == int(m.group(2))), None)
+        if option is None:
+            raise _rejected(f"{where}: no such option for item {item['n']}")
+        for line in option["lines"]:
+            if line in lines:
+                continue
+            lines.append(line)
+            origin[len(lines)] = f"{where} (item {item['n']}, option {option['n']})"
+    if batch is None:
+        raise _rejected(f"no answers; the first line must be 'batch {options['batch']}'")
+    return "".join(line + "\n" for line in lines), origin
+
+
 def cmd_ingest(args) -> int:
     private = ik.private_dir()
     key = ik.load_key(private)
     build = _destination(private, args.build)
     try:
-        manifest = json.loads((build / "manifest.json").read_text())
+        manifest_raw = (build / "manifest.json").read_bytes()
+        manifest = json.loads(manifest_raw)
         recorded = manifest["args"]
     except (OSError, ValueError, KeyError):
         raise ev.IdentityError(f"build {args.build} has no readable manifest; run build first") from None
@@ -256,16 +327,32 @@ def cmd_ingest(args) -> int:
         return sorted((i["role"], i["path"], i["sha256"]) for i in inputs if i["role"] != "decisions")
     if pinned(evidence.inputs) != pinned(manifest["inputs"]):
         raise ev.IdentityError(f"the evidence inputs changed since build {args.build}; rebuild and review again")
+    source = args.answers or args.lines
     try:
-        offered = dec.parse_lines(Path(args.lines).read_text(encoding="utf-8"))
-    except dec.DecisionError as exc:
-        raise ev.IdentityError(f"batch rejected, nothing written: {exc}") from None
+        text = Path(source).read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError) as exc:
-        raise ev.IdentityError(f"{args.lines}: unreadable ({type(exc).__name__})") from None
-    late = [d.number for d in offered if d.date > manifest["as_of"]]
-    if late:
-        raise ev.IdentityError(f"batch rejected, nothing written: line {late[0]}: dated after the build's as-of")
-    with _locked(private):
+        raise ev.IdentityError(f"{source}: unreadable ({type(exc).__name__})") from None
+    with _locked(private):  # the build's files are read under the lock a rebuild takes
+        try:
+            unchanged = (build / "manifest.json").read_bytes() == manifest_raw
+        except OSError:
+            unchanged = False
+        if not unchanged:
+            raise ev.IdentityError(f"build {args.build} changed while ingesting; review the new build")
+        origin: dict[int, str] = {}  # expanded line number -> the answer it came from
+        if args.answers:
+            text, origin = expand_answers(text, read_options(build, manifest))
+
+        def at(number: int) -> str:
+            return origin.get(number, f"line {number}")
+        try:
+            offered = dec.parse_lines(text)
+        except dec.DecisionError as exc:
+            message = re.sub(r"\bline (\d+)\b", lambda m: at(int(m.group(1))), str(exc))
+            raise _rejected(message) from None
+        late = [d.number for d in offered if d.date > manifest["as_of"]]
+        if late:
+            raise _rejected(f"{at(late[0])}: dated after the build's as-of")
         before = decisions_path.read_text(encoding="utf-8") if decisions_path.exists() else ""
         existing = dec.parse_lines(before)
         known = {d.digest for d in existing}
@@ -277,7 +364,8 @@ def cmd_ingest(args) -> int:
         except dec.DecisionError as exc:
             raise ev.IdentityError(f"batch rejected, nothing written: decision file {exc}") from None
         state = current_state(evidence, key, existing + added, latch - revalidated)
-        bad = [f"line {d.number}: {_why(state, d)}" for d in offered if state.status[d.digest] != "effective"]
+        bad = [f"{at(d.number)}: {_why(state, d)}"
+               for d in offered if state.status[d.digest] != "effective"]
         if bad:
             raise ev.IdentityError("batch rejected, nothing written: " + " | ".join(bad))
         if not added and not revalidated:
@@ -312,7 +400,9 @@ def _parser() -> argparse.ArgumentParser:
     build.set_defaults(func=cmd_build)
     ingest = sub.add_parser("ingest", help="validate decision lines against a build and write them, or nothing")
     ingest.add_argument("--build", required=True, help="the build the lines were copied from (its name)")
-    ingest.add_argument("lines", type=Path, help="a file of decision lines, one per line")
+    given = ingest.add_mutually_exclusive_group(required=True)
+    given.add_argument("lines", type=Path, nargs="?", help="a file of decision lines, one per line")
+    given.add_argument("--answers", type=Path, help="a file of '<item> <option>' answers to the build's review file")
     ingest.set_defaults(func=cmd_ingest)
     return parser
 
