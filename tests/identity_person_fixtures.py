@@ -106,7 +106,13 @@ class World:
     decisions: Path
     private: Path
 
-    def build_args(self, as_of="2026-10-12", out="builds/test") -> list[str]:
+    @property
+    def inputs(self) -> list[Path]:
+        """The fixture's raw input workbooks: the only files allowed to hold a street."""
+        return sorted(p for root in (self.raw_root, self.root / "ledger-input") if root.exists()
+                      for p in root.rglob("*.zip"))
+
+    def build_args(self, as_of="2026-10-12", out="test") -> list[str]:
         return ["build", "--ledger", str(self.ledger_dir), "--raw-root", str(self.raw_root), "--export",
                 str(self.export_dir), "--decisions", str(self.decisions), "--as-of", as_of, "--out", out]
 
@@ -175,17 +181,27 @@ def build_world(tmp: Path, rows: dict | None = None, ledger_rows: dict | None = 
     return World(tmp, raw_root, ledger_dir, export_dir, decisions, private or tmp / "private" / "identity")
 
 
-def every_text(paths: list[Path]) -> str:
-    """Every byte under the given roots, decoded leniently, plus the names of every file."""
+def every_text(paths: list[Path], skip: list[Path] = (), exclude: list[Path] = ()) -> str:
+    """Every byte under the given roots, decoded leniently (ZIP members too), plus every file name; `skip` names the
+    exact input files allowed to hold streets, `exclude` whole directories left out (e.g. the private dir)."""
+    import zipfile
+
     chunks = []
+    skipped = {Path(p).resolve() for p in skip}
+    excluded = [Path(p).resolve() for p in exclude]
     for root in paths:
         for path in sorted(Path(root).rglob("*")):
+            real = path.resolve()
+            if any(real == e or e in real.parents for e in excluded):
+                continue
             chunks.append(str(path))
-            if path.is_file() and not path.is_symlink():
-                data = path.read_bytes()
-                if path.suffix == ".zip":
-                    continue  # the raw workbooks are the inputs that legitimately hold streets
-                chunks.append(data.decode("utf-8", errors="replace"))
+            if not path.is_file() or path.is_symlink() or real in skipped:
+                continue
+            data = path.read_bytes()
+            chunks.append(data.decode("utf-8", errors="replace"))
+            if zipfile.is_zipfile(path):
+                with zipfile.ZipFile(path) as zf:
+                    chunks += [zf.read(n).decode("utf-8", errors="replace") for n in zf.namelist()]
     return "\n".join(chunks)
 
 

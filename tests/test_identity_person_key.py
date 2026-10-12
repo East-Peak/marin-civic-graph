@@ -168,3 +168,29 @@ def test_nothing_outside_the_identity_tools_imports_the_key_module():
     app = REPO / "app"
     assert not any("identity_person" in p.read_text(errors="replace")
                    for p in app.rglob("*.ts") if "node_modules" not in p.parts)
+
+
+@pytest.mark.parametrize("version", [0, -1, 1_000_000])
+def test_init_key_refuses_a_version_it_could_not_read_back(private, version):
+    with pytest.raises(ik.IdentityKeyError, match="version"):
+        ik.init_key(private, version=version)
+    assert not private.exists()
+
+
+@pytest.mark.parametrize("stray", ["key-v01", "key-v1.bak", "key-vx", "key-"])
+def test_an_unrecognized_key_file_is_refused_not_ignored(private, stray):
+    ik.init_key(private, version=1)
+    (private / stray).write_bytes(b"x")
+    with pytest.raises(ik.IdentityKeyError, match="unrecognized"):
+        ik.load_key(private)
+    (private / "key-v1").unlink()
+    with pytest.raises(ik.IdentityKeyError, match="unrecognized"):
+        ik.init_key(private, version=2)
+
+
+def test_a_fifo_named_like_the_key_is_refused_without_blocking(private):
+    ik.init_key(private, version=1)
+    (private / "key-v1").unlink()
+    os.mkfifo(private / "key-v1", 0o600)
+    with pytest.raises(ik.IdentityKeyError, match="regular file"):
+        ik.load_key(private)

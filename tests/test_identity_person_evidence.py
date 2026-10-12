@@ -107,10 +107,23 @@ def test_address_hashes_are_keyed_versioned_and_domain_separated():
 
 # --- row references ----------------------------------------------------------------------------------------------
 
+VECTOR_KEY = ["example-cf", "1400001", "2024-01-01", "2024-01-20", "2024-02-01", "000", "A", "T-1"]
+
+
 def test_row_id_is_pinned_and_holds_no_file_sheet_row_or_sha():
-    key = ["example-cf", "1400001", "2024-01-01", "2024-01-20", "2024-02-01", "000", "A", "T-1"]
-    assert ev.row_id(key) == "r-" + __import__("hashlib").sha256(
-        b"open-marin/identity/row/v1\0" + json.dumps(key, separators=(",", ":")).encode()).hexdigest()[:20]
+    assert ev.row_id(VECTOR_KEY) == "r-5d2c5d5869b3cf55b725"
+
+
+def test_address_hash_and_fingerprint_vectors_are_pinned():
+    address = ev.canonical_address("12 Sample Street", "Apt. 3", "94901-1234")
+    assert ev.address_hash(KEY, address) == "e508850463192c6779f355d8af85d442c258781c219be9fbdea3d260c725714c"
+    values = {"name": ["Doe", "Pat", None, None], "entity": "IND", "filing": "filing-0", "date": "2024-01-05",
+              "amount": "5.00", "memo": [None, None], "flow": ["moneyflow-1", True, "retained", "person-doe-pat"],
+              "occupation": "Teacher", "employer": None, "city": "Exampleton", "state": "CA", "zip": "94901",
+              "address": ["12 Sample Street", None, "94901"]}
+    assert ev.fingerprint(KEY, ev.row_id(VECTOR_KEY), values) == (
+        "fp1:k1:9c60bf211bfb5213606c36fe8a13f632a4963691de6594610b04ff47b4abc2a2:0f99e337.fa74f6b6.06dcfbba."
+        "33c53a40.f7872d62.fe277c10.91576711.6de9012a.2e16eb87.30dcdfac.31527889.efcec813.dd647736")
 
 
 def test_row_ids_and_fingerprints_survive_a_redownload_that_reorders_rows(tmp_path):
@@ -240,6 +253,44 @@ def test_a_corrupt_workbook_fails_without_echoing_its_contents(world):
     assert_no_street(str(info.value))
 
 
+def _date_styled(world, column: str, value) -> None:
+    """Rewrite the raw workbook so the first A row's `column` holds `value` styled as a date (openpyxl warns when
+    such a number cannot become a date, quoting the value)."""
+    import hashlib
+    import zipfile
+
+    import openpyxl
+
+    [path] = list((world.raw_root / SOURCE).rglob("*.zip"))
+    with zipfile.ZipFile(path) as zf:
+        [inner] = zf.namelist()
+        wb = openpyxl.load_workbook(zf.open(inner))
+    ws = wb["A-Contributions"]
+    header = [c.value for c in ws[1]]
+    cell = ws.cell(row=2, column=header.index(column) + 1, value=value)
+    cell.number_format = "yyyy-mm-dd"
+    xlsx = path.with_suffix(".xlsx")
+    wb.save(xlsx)
+    with zipfile.ZipFile(path, "w") as zf:
+        zf.write(xlsx, inner)
+    xlsx.unlink()
+    manifest = world.ledger_dir / SOURCE / "manifest.json"
+    pinned = json.loads(manifest.read_text())
+    pinned["inputs"][0]["sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+    manifest.write_text(json.dumps(pinned))
+
+
+def test_parser_warnings_that_quote_a_street_cell_never_surface(world, capsys, recwarn):
+    _date_styled(world, "Tran_Adr1", 98765432123)
+    cli.main(["init-key"])
+    code, said = _build(world, capsys)
+    assert code == 0, said
+    assert "98765432123" not in said and not [w for w in recwarn if "98765432123" in str(w.message)]
+    manifest = json.loads((world.private / "builds" / "test" / "manifest.json").read_text())
+    assert manifest["counts"].get("workbook_warnings", 0) >= 0
+    assert "98765432123" not in every_text([world.root], skip=world.inputs)
+
+
 def test_a_non_text_street_cell_is_a_reason_not_a_crash(tmp_path):
     rows = base_rows()
     rows["A-Contributions"][0]["Tran_Adr1"] = 12345
@@ -249,7 +300,7 @@ def test_a_non_text_street_cell_is_a_reason_not_a_crash(tmp_path):
 
 # --- the build command --------------------------------------------------------------------------------------------
 
-def _build(w, capsys, *extra, as_of="2026-10-12", out="builds/test"):
+def _build(w, capsys, *extra, as_of="2026-10-12", out="test"):
     code = cli.main([*w.build_args(as_of=as_of, out=out), *extra])
     captured = capsys.readouterr()
     return code, captured.out + captured.err
@@ -274,16 +325,16 @@ def test_build_writes_the_manifest_and_address_evidence_only_in_the_private_dir(
     evidence = [json.loads(line) for line in (out / "address-evidence.jsonl").read_text().splitlines()]
     hashes = {e["address_hash"] for e in evidence if e["address_hash"]}
     assert hashes and all(len(h) == 64 for h in hashes)
-    outside = every_text([world.root / p for p in ("ledger", "export", "data-repo")]) + said
+    outside = every_text([world.root], skip=world.inputs, exclude=[world.private]) + said
     assert not any(h in outside for h in hashes)
-    assert_no_street(every_text([world.root]) + said)
+    assert_no_street(every_text([world.root], skip=world.inputs) + said)
     assert oct(os.stat(out / "address-evidence.jsonl").st_mode & 0o777) == "0o600"
 
 
 def test_two_builds_over_the_same_inputs_are_byte_identical(world, capsys):
     cli.main(["init-key"])
-    _build(world, capsys, out="builds/one")
-    _build(world, capsys, out="builds/two")
+    _build(world, capsys, out="one")
+    _build(world, capsys, out="two")
     one, two = world.private / "builds" / "one", world.private / "builds" / "two"
     assert sorted(p.name for p in one.iterdir()) == sorted(p.name for p in two.iterdir())
     for p in one.iterdir():
@@ -299,11 +350,38 @@ def test_a_rebuild_replaces_the_previous_output(world, capsys):
     assert not stray.exists()
 
 
-@pytest.mark.parametrize("out", ["../escape", "/tmp/elsewhere", "builds/../../escape"])
-def test_build_output_must_stay_inside_the_private_dir(world, capsys, out):
+def test_a_build_named_like_the_key_lands_under_builds_and_leaves_the_key_alone(world, capsys):
     cli.main(["init-key"])
+    secret = ik.load_key(world.private).secret
+    assert _build(world, capsys, out="key-v1")[0] == 0
+    assert (world.private / "builds" / "key-v1" / "manifest.json").is_file()
+    assert ik.load_key(world.private).secret == secret
+
+
+@pytest.mark.parametrize("out", ["../escape", "/tmp/elsewhere", "a/b", "..", ".", ""])
+def test_build_output_is_a_plain_name_under_builds(world, capsys, out):
+    cli.main(["init-key"])
+    secret = ik.load_key(world.private).secret
     code, said = _build(world, capsys, out=out)
-    assert code == 1 and "inside the private directory" in said
+    assert code == 1 and "plain name" in said
+    assert ik.load_key(world.private).secret == secret
+
+
+def test_build_refuses_an_output_inside_a_nested_checkout(world, capsys):
+    cli.main(["init-key"])
+    (world.private / "builds" / ".git").mkdir(parents=True)
+    code, said = _build(world, capsys)
+    assert code == 1 and "git checkout" in said
+    assert not (world.private / "builds" / "test").exists()
+
+
+def test_build_replaces_only_a_previous_build(world, capsys):
+    cli.main(["init-key"])
+    (world.private / "builds" / "test").mkdir(parents=True)
+    (world.private / "builds" / "test" / "notes.txt").write_text("mine")
+    code, said = _build(world, capsys)
+    assert code == 1 and "not a previous build" in said
+    assert (world.private / "builds" / "test" / "notes.txt").read_text() == "mine"
 
 
 def test_unexpected_errors_print_only_their_type(world, capsys, monkeypatch):
@@ -356,11 +434,11 @@ def test_the_cli_streams_never_carry_a_street_or_hash_on_success_or_failure(worl
     a = [r for r in rows if r.get("schedule") == "A"]
     a[0]["row_ref"]["row"], a[1]["row_ref"]["row"] = a[1]["row_ref"]["row"], a[0]["row_ref"]["row"]
     path.write_text("".join(json.dumps(r, sort_keys=True) + "\n" for r in rows))
-    streams.append(run(*world.build_args(out="builds/broken")))
+    streams.append(run(*world.build_args(out="broken")))
     assert streams[-1][0] == 1
     text = "\n".join(s for _, s in streams)
     assert "Traceback" not in text
-    assert_no_street(text + every_text([world.root]))
+    assert_no_street(text + every_text([world.root], skip=world.inputs))
     hashes = [json.loads(line)["address_hash"] for line in
               (world.private / "builds" / "test" / "address-evidence.jsonl").read_text().splitlines()]
     assert not any(h and h in text for h in hashes)

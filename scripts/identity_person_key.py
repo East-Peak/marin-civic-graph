@@ -19,6 +19,7 @@ from pathlib import Path
 ENV = "OPEN_MARIN_IDENTITY_DIR"
 DEFAULT_DIR = "~/.open-marin-private/identity"
 KEY_BYTES = 32
+MAX_VERSION = 999_999
 _KEY_NAME = re.compile(r"key-v([1-9][0-9]{0,5})")
 REPO = Path(__file__).resolve().parent.parent
 
@@ -91,13 +92,23 @@ def _check_owned(path: Path, mode: int, what: str) -> os.stat_result:
     return info
 
 
-def _keys(directory: Path) -> list[tuple[int, Path]]:
-    return sorted((int(m.group(1)), p) for p in directory.iterdir() if (m := _KEY_NAME.fullmatch(p.name)))
+def _key_names(names) -> list[tuple[int, str]]:
+    """(version, name) of every key file; any other `key-*` entry is an error, never silently ignored."""
+    out = []
+    for name in names:
+        if name.startswith("key-"):
+            match = _KEY_NAME.fullmatch(name)
+            if not match:
+                raise IdentityKeyError(f"unrecognized key file name {name!r} in the private directory")
+            out.append((int(match.group(1)), name))
+    return sorted(out)
 
 
 def init_key(directory: Path, version: int = 1, min_version: int = 1) -> Path:
     """Create the one key, `key-v{version}`: O_EXCL, 0600, in a 0700 directory. Refuses anything existing."""
     directory = Path(os.path.abspath(directory))
+    if not 1 <= version <= MAX_VERSION:
+        raise IdentityKeyError(f"key version must be between 1 and {MAX_VERSION}")
     if version < min_version:
         raise IdentityKeyError(f"the decision file already uses key versions below {min_version}; "
                                f"choose version {min_version} or higher")
@@ -108,9 +119,9 @@ def init_key(directory: Path, version: int = 1, min_version: int = 1) -> Path:
         os.chmod(part, 0o700)
     _refuse_symlinks(directory)
     _check_owned(directory, 0o700, "private directory")
-    existing = _keys(directory)
+    existing = _key_names(os.listdir(directory))
     if existing:
-        raise IdentityKeyError(f"{directory} already holds {existing[0][1].name}; a key is never replaced in place")
+        raise IdentityKeyError(f"{directory} already holds {existing[0][1]}; a key is never replaced in place")
     path = directory / f"key-v{version}"
     fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
     try:
@@ -159,19 +170,21 @@ def load_key(directory: Path) -> Key:
     dir_fd = _open_dir_nofollow(directory)
     try:
         _check_fd(dir_fd, 0o700, f"private directory {directory}")
-        keys = sorted((int(m.group(1)), name) for name in os.listdir(dir_fd) if (m := _KEY_NAME.fullmatch(name)))
+        keys = _key_names(os.listdir(dir_fd))
         if not keys:
             raise KeyMissing(f"no identity key at {directory}: run init-key")
         if len(keys) > 1:
             raise IdentityKeyError(f"{directory} holds more than one key; keep exactly one key-v*")
         version, name = keys[0]
-        try:
-            fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dir_fd)
+        try:  # O_NONBLOCK: a FIFO in the key's place must not hang the open
+            fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=dir_fd)
         except OSError:
             raise IdentityKeyError(f"key file {directory / name} is a symlink or unreadable") from None
         try:
-            info = _check_fd(fd, 0o600, f"key file {directory / name}")
-            secret = os.read(fd, KEY_BYTES + 1) if stat.S_ISREG(info.st_mode) else b""
+            if not stat.S_ISREG(os.fstat(fd).st_mode):
+                raise IdentityKeyError(f"key file {directory / name} must be a regular file of {KEY_BYTES} bytes")
+            _check_fd(fd, 0o600, f"key file {directory / name}")
+            secret = os.read(fd, KEY_BYTES + 1)
         finally:
             os.close(fd)
     finally:

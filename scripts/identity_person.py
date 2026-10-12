@@ -16,6 +16,7 @@ import re
 import shutil
 import sys
 import tempfile
+import warnings
 from datetime import date
 from pathlib import Path
 
@@ -66,28 +67,31 @@ def key_versions_used(decisions: Path | None) -> int:
 # Output: written only inside the private directory, atomically
 # ---------------------------------------------------------------------------
 
+_BUILD_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}")
+
+
 def _destination(private: Path, name: str) -> Path:
-    rel = Path(name)
-    real_private = private.resolve()
-    dest = (private / rel)
-    if rel.is_absolute() or ".." in rel.parts or not rel.parts:
-        raise ev.IdentityError(f"--out {name} must name a directory inside the private directory")
-    real = dest.resolve()
-    if real_private not in real.parents:
-        raise ev.IdentityError(f"--out {name} must name a directory inside the private directory")
-    current = private
-    for part in rel.parts:
-        current = current / part
-        if current.is_symlink():
-            raise ev.IdentityError(f"--out {name}: {current} is a symlink")
+    """<private>/builds/<name>: a plain name, no symlink or git checkout on the way, replacing only a build."""
+    if not _BUILD_NAME.fullmatch(name or "") or name in (".", ".."):
+        raise ev.IdentityError(f"--out {name!r} must be a plain name (letters, digits, . _ -): "
+                               "builds go to <private>/builds/<name>")
+    builds = private / "builds"
+    dest = builds / name
+    for path in (builds, dest):
+        if path.is_symlink():
+            raise ev.IdentityError(f"{path} is a symlink")
+        if (path / ".git").exists():
+            raise ev.IdentityError(f"{path} is a git checkout; builds never go into one")
+    if dest.exists() and not (dest.is_dir() and (dest / "manifest.json").is_file()):
+        raise ev.IdentityError(f"{dest} exists and is not a previous build; move it aside first")
     return dest
 
 
 def write_build(private: Path, name: str, files: dict[str, bytes]) -> Path:
-    """Write files into a fresh 0700 temp dir in the private directory, then swap it in for <private>/<name>."""
+    """Write files into a fresh 0700 temp dir in the private directory, then swap it in for the destination."""
     dest = _destination(private, name)
-    for parent in reversed([p for p in dest.parents if private in p.parents and not p.exists()]):
-        os.mkdir(parent, 0o700)
+    if not dest.parent.exists():
+        os.mkdir(dest.parent, 0o700)
     staging = Path(tempfile.mkdtemp(prefix=".build-", dir=private))
     try:
         for rel, data in sorted(files.items()):
@@ -146,9 +150,10 @@ def cmd_build(args) -> int:
                         ("--decisions", args.decisions)):
         if path is None:
             raise ev.IdentityError(f"{label} is required (no default found)")
-    _destination(private, args.out or f"builds/{args.as_of}")
+    out = args.out if args.out is not None else args.as_of
+    _destination(private, out)
     evidence = ev.collect(inputs, key)
-    dest = write_build(private, args.out or f"builds/{args.as_of}", build_files(evidence, key, args.as_of))
+    dest = write_build(private, out, build_files(evidence, key, args.as_of))
     print(f"built {dest}: {evidence.counts['in_scope']} rows in {evidence.counts['buckets']} buckets")
     return 0
 
@@ -166,21 +171,26 @@ def _parser() -> argparse.ArgumentParser:
     build.add_argument("--export", type=Path, required=True, help="frozen export_live_graph.py --backup dir")
     build.add_argument("--decisions", type=Path, default=_default("identity", "person", "decisions.jsonl"))
     build.add_argument("--as-of", type=_as_of, required=True, help="the frozen clock (YYYY-MM-DD)")
-    build.add_argument("--out", help="output dir inside the private dir (default builds/<as-of>)")
+    build.add_argument("--out", help="build name: <private>/builds/<name> (default: the --as-of date)")
     build.set_defaults(func=cmd_build)
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
-    try:
-        return args.func(args)
-    except (ev.IdentityError, ik.IdentityKeyError) as exc:
-        print(f"ERROR: {exc}", file=sys.stderr)
-        return 1
-    except Exception as exc:  # anything unforeseen may carry a cell value: print only its type
-        print(f"internal error: {type(exc).__name__} (details suppressed)", file=sys.stderr)
-        return 2
+    with warnings.catch_warnings(record=True) as caught:  # a library warning may quote a cell: never shown
+        warnings.simplefilter("always")
+        try:
+            code = args.func(args)
+        except (ev.IdentityError, ik.IdentityKeyError) as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            code = 1
+        except Exception as exc:  # anything unforeseen may carry a cell value: print only its type
+            print(f"internal error: {type(exc).__name__} (details suppressed)", file=sys.stderr)
+            code = 2
+    if caught:
+        print(f"{len(caught)} library warning(s) suppressed (they may quote private cells)", file=sys.stderr)
+    return code
 
 
 if __name__ == "__main__":

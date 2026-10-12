@@ -16,6 +16,7 @@ import hmac
 import json
 import re
 import unicodedata
+import warnings
 import zipfile
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
@@ -194,11 +195,14 @@ def diff_fields(old: str, new: str) -> list[str]:
 
 @dataclass
 class Graph:
-    labels: dict[str, str] = field(default_factory=dict)  # node id -> first label
+    labels: dict[str, frozenset[str]] = field(default_factory=dict)  # node id -> its labels
     props: dict[str, dict] = field(default_factory=dict)  # props of Person, Committee, Filing and MoneyFlow nodes
     flow_source: dict[str, str] = field(default_factory=dict)  # MoneyFlow id -> FROM_SOURCE start node
     person_edges: dict[str, list[tuple]] = field(default_factory=lambda: defaultdict(list))
     # person id -> [(direction "in"|"out", rel, other id, edge props)]
+
+    def has(self, node_id: str | None, label: str) -> bool:
+        return label in self.labels.get(node_id, ())
 
 
 _KEPT = {"Person", "Committee", "Filing", "MoneyFlow"}
@@ -217,18 +221,18 @@ def _jsonl(path: Path):
 def load_graph(export_dir: Path) -> Graph:
     graph = Graph()
     for _, node in _jsonl(Path(export_dir) / "nodes.jsonl"):
-        label = (node.get("labels") or [None])[0]
-        graph.labels[node["id"]] = label
-        if label in _KEPT:
+        labels = frozenset(node.get("labels") or ())
+        graph.labels[node["id"]] = labels
+        if labels & _KEPT:
             graph.props[node["id"]] = node.get("properties") or {}
     for _, edge in _jsonl(Path(export_dir) / "edges.jsonl"):
         start, end, rel = edge["start_id"], edge["end_id"], edge["type"]
         props = edge.get("properties") or {}
-        if rel == "FROM_SOURCE" and graph.labels.get(end) == "MoneyFlow":
+        if rel == "FROM_SOURCE" and graph.has(end, "MoneyFlow"):
             graph.flow_source[end] = start
-        if graph.labels.get(start) == "Person":
+        if graph.has(start, "Person"):
             graph.person_edges[start].append(("out", rel, end, props))
-        if graph.labels.get(end) == "Person":
+        if graph.has(end, "Person"):
             graph.person_edges[end].append(("in", rel, start, props))
     return graph
 
@@ -307,8 +311,17 @@ def _raw_workbook(raw_root: Path, rel: str, sha: str) -> Path:
     raise InputError(f"ledger input {rel}: no raw workbook under {raw_root} has its sha256")
 
 
-def _read_cells(path: Path, rel: str, wanted: set[int]) -> dict[int, tuple]:
-    """{excel row number: (Filer_ID, Report_Num, Tran_ID, Tran_Adr1, Tran_Adr2, Tran_Zip4)} for wanted rows."""
+def _read_cells(path: Path, rel: str, wanted: set[int]) -> tuple[dict[int, tuple], int]:
+    """({excel row number: (Filer_ID, Report_Num, Tran_ID, Tran_Adr1, Tran_Adr2, Tran_Zip4)}, warnings count).
+
+    Parser warnings can quote a cell (a street styled as a date): they are recorded and counted, never shown."""
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        cells = _read_sheet(path, rel, wanted)
+    return cells, len(caught)
+
+
+def _read_sheet(path: Path, rel: str, wanted: set[int]) -> dict[int, tuple]:
     try:
         with zipfile.ZipFile(path) as zf:
             [inner] = [n for n in zf.namelist() if n.endswith(".xlsx")]
@@ -363,7 +376,7 @@ def collect(inputs: Inputs, key: Key) -> Evidence:
                 counts["flow_not_in_export"] += 1
                 continue
             bucket = graph.flow_source.get(flow)
-            if graph.labels.get(bucket) != "Person":
+            if not graph.has(bucket, "Person"):
                 counts["source_not_person"] += 1
                 continue
             filing = filings[row["filing_id"]]
@@ -385,7 +398,8 @@ def collect(inputs: Inputs, key: Key) -> Evidence:
             raise InputError(f"ledger row file {rel} is not in its source manifest")
         path = _raw_workbook(inputs.raw_root, rel, pinned[rel])
         manifest_inputs.append(_input("raw_workbook", path))
-        cells = _read_cells(path, rel, {c[1]["row_ref"]["row"] for c in group})
+        cells, warned = _read_cells(path, rel, {c[1]["row_ref"]["row"] for c in group})
+        counts["workbook_warnings"] += warned
         for row_key, row, filing, bucket, _ in group:
             rid = row_id(list(row_key))
             found = cells.get(row["row_ref"]["row"])
@@ -422,5 +436,6 @@ def collect(inputs: Inputs, key: Key) -> Evidence:
     if inputs.decisions.exists():
         manifest_inputs.append(_input("decisions", Path(inputs.decisions)))
     return Evidence(rows, dict(sorted(counts.items())), manifest_inputs, graph)
+
 
 
