@@ -302,3 +302,38 @@ def test_every_government_fact_is_listed(tmp_path):
     e = _evidence(w)
     text = iq.render_batch(_queue(e), e)
     assert all(f"decision-extra-{n}" in text for n in range(8))
+
+
+def test_c_resolution_checks_distinct_against_whole_components(world):
+    e = _evidence(world)
+    a, b = _rows(e, "person-thornbury-casey")
+    x, y = _rows(e, "person-fable-jordan")
+    fps = {r.row_id: r.fp for r in (a, b, x, y)}
+    lines = [dec.decision_line("same", [[a.row_id, x.row_id]], fps, "stuart", "2026-10-12"),
+             dec.decision_line("same", [[b.row_id, y.row_id]], fps, "stuart", "2026-10-12"),
+             dec.decision_line("distinct", [[x.row_id], [y.row_id]], fps, "stuart", "2026-10-12")]
+    assert not [i for i in _queue(e, *lines).items if i.cls == "C"]
+
+
+@pytest.mark.parametrize("value", ["12 Sample Ridge", "Unit 3", {"street": "Example"}, ["ok", "12 Sample Ridge"],
+                                   "#4", "PO Box 12"])
+def test_address_like_or_structured_provenance_is_withheld(value):
+    assert iq._safe(value).startswith("withheld")
+
+
+@pytest.mark.parametrize("value", ["resolve_committee_candidates", "Avery Quill", "aye",
+                                   ["example-cf__2026-10-01", "form700-index"], 3, True])
+def test_plain_provenance_is_shown(value):
+    assert not iq._safe(value).startswith("withheld")
+
+
+def test_a_filed_at_that_is_not_a_date_is_withheld(tmp_path):
+    w = build_world(tmp_path)
+    nodes = [json.loads(t) for t in (w.export_dir / "nodes.jsonl").read_text().splitlines()]
+    for n in nodes:
+        if n["id"] == "filing-form700-example-2024-larkspur":
+            n["properties"]["filed_at"] = "12 Sample Ridge"
+    (w.export_dir / "nodes.jsonl").write_text("".join(json.dumps(n) + "\n" for n in nodes))
+    e = _evidence(w)
+    text = iq.render_batch(_queue(e), e)
+    assert "Sample Ridge" not in text and "filed_at withheld (not a date)" in text

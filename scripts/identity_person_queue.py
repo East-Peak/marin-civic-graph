@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 from decimal import Decimal
 
 import identity_person_decisions as dec
-from contributor_detail import CONTACT_DETECTORS, classify, detect, display
+from contributor_detail import CONTACT_DETECTORS, SUSPECT_DETECTORS, classify, detect, display
 from identity_person_evidence import Evidence, Graph, Row, canonical_json, government_roles
 from identity_person_key import Key
 
@@ -251,15 +251,15 @@ def _resolved(item_bucket: Bucket, target: str | None, state: dec.State) -> bool
             covered |= d.rows
             for r in d.rows:
                 uf.union(first, r)
-    members = defaultdict(set)
-    for r in rows:
-        members[uf.find(r)].add(r)
-    comps = sorted(members)
+    whole = defaultdict(set)  # each component's every row, inside the bucket or not
+    for r in covered | rows:
+        whole[uf.find(r)].add(r)
+    comps = sorted({uf.find(r) for r in rows})
     if len(comps) == 1:
         return rows <= covered
     for i, a in enumerate(comps):
         for b in comps[i + 1:]:
-            if not any(d.kind == "distinct" and _separates(d, members[a], members[b]) for d in effective):
+            if not any(d.kind == "distinct" and _separates(d, whole[a], whole[b]) for d in effective):
                 return False
     return True
 
@@ -453,9 +453,25 @@ _FACTS_INLINE = 5
 
 
 def _safe(value) -> str:
-    """A provenance value as text, withheld whole when it looks like an address or contact detail."""
-    text = ", ".join(map(str, value)) if isinstance(value, list) else str(value)
-    return "withheld (address-like)" if detect(text, CONTACT_DETECTORS) else text
+    """A provenance value as text, withheld whole unless it is a plain scalar (or a list of them) that matches no
+    contact, address, house-number or unit pattern. Conservative: a withheld fact still says it was withheld."""
+    if isinstance(value, (bool, int, float)):
+        return str(value)
+    if isinstance(value, list):
+        parts = [_safe(v) for v in value]
+        return "withheld (address-like)" if any(p.startswith("withheld") for p in parts) else ", ".join(parts)
+    if not isinstance(value, str):
+        return "withheld (not a plain value)"
+    if detect(value, CONTACT_DETECTORS) or detect(value, SUSPECT_DETECTORS) or "#" in value:
+        return "withheld (address-like)"
+    return value
+
+
+def _date(value) -> str:
+    if value is None:
+        return "missing: not recorded"
+    return value if isinstance(value, str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}(?:[T ][0-9:.+Z-]*)?", value) \
+        else "withheld (not a date)"
 
 
 def _provenance(props: dict) -> str:
@@ -480,7 +496,7 @@ def _facts(graph: Graph, pid: str) -> list[str]:
                 rendered.append(f"controller: {f['committee']} ({name}) — CONTROLLED_BY: {_provenance(f['edge'])}")
             elif kind == "form700_filer":
                 rendered.append(f"form700_filer: {f['filing']} — filer_name {_safe(f['filer_name'])!r}, filed_at "
-                                f"{f['filed_at'] or 'missing: not recorded'} — FILED_BY: {_provenance(f['edge'])}")
+                                f"{_date(f['filed_at'])} — FILED_BY: {_provenance(f['edge'])}")
             else:
                 rendered.append(f"cast_vote: {f['decision']} — CAST_VOTE: {_provenance(f['edge'])}")
         if len(rendered) <= _FACTS_INLINE:
