@@ -311,11 +311,12 @@ def _raw_workbook(raw_root: Path, rel: str, sha: str) -> Path:
     raise InputError(f"ledger input {rel}: no raw workbook under {raw_root} has its sha256")
 
 
-def _read_cells(path: Path, rel: str, wanted: set[int]) -> tuple[dict[int, tuple], set[int]]:
-    """({excel row number: (Filer_ID, Report_Num, Tran_ID, Tran_Adr1, Tran_Adr2, Tran_Zip4)}, lossy row numbers).
+def _read_cells(path: Path, rel: str, wanted: set[int]) -> tuple[dict[int, tuple], bool]:
+    """({excel row number: (Filer_ID, Report_Num, Tran_ID, Tran_Adr1, Tran_Adr2, Tran_Zip4)}, lossy).
 
-    A parser warning can quote a cell (a street styled as a date) and means the value was not read losslessly:
-    warnings are recorded, never shown, and the row they arose on is returned as lossy (out of scope)."""
+    A parser warning can quote a cell (a street styled as a date) and means a value was not read losslessly.
+    Warnings are recorded, never shown; since openpyxl parses ahead of the rows it yields, one cannot be pinned to
+    a row, so any warning makes the whole workbook lossy."""
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
         try:
@@ -327,19 +328,13 @@ def _read_cells(path: Path, rel: str, wanted: set[int]) -> tuple[dict[int, tuple
                         rows = wb["A-Contributions"].iter_rows(values_only=True)
                         header = list(next(rows, ()))
                         index = [header.index(col) for col in _READ]
-                        out, lossy = {}, set()
-                        number, seen = 1, len(caught)
-                        for number, values in enumerate(rows, start=2):
-                            if len(caught) > seen:
-                                seen = len(caught)
-                                lossy.add(number)
-                            if number in wanted:
-                                out[number] = tuple(values[i] if i < len(values) else None for i in index)
-                        return out, lossy & wanted
+                        out = {number: tuple(values[i] if i < len(values) else None for i in index)
+                               for number, values in enumerate(rows, start=2) if number in wanted}
                     finally:
                         wb.close()
         except Exception as exc:  # zip, XML, sheet or header problems: name the file, never a cell
             raise InputError(f"{rel}: not a readable workbook ({type(exc).__name__})") from None
+    return out, bool(caught)
 
 
 def _reported(cell):
@@ -399,11 +394,11 @@ def collect(inputs: Inputs, key: Key) -> Evidence:
         path = _raw_workbook(inputs.raw_root, rel, pinned[rel])
         manifest_inputs.append(_input("raw_workbook", path))
         cells, lossy = _read_cells(path, rel, {c[1]["row_ref"]["row"] for c in group})
+        if lossy:
+            counts["lossy_workbook_rows"] += len(group)
+            continue
         for row_key, row, filing, bucket, _ in group:
             rid = row_id(list(row_key))
-            if row["row_ref"]["row"] in lossy:
-                counts["lossy_cell"] += 1
-                continue
             found = cells.get(row["row_ref"]["row"])
             if found is None or row["row_ref"]["sheet"] != "A-Contributions" or \
                     (_text(found[0]), _text(found[1]), _text(found[2])) != \

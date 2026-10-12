@@ -289,12 +289,13 @@ def test_parser_warnings_that_quote_a_street_cell_never_surface(world, capsys, r
     assert "98765432123" not in every_text([world.root], skip=world.inputs)
 
 
-def test_a_row_the_parser_cannot_read_losslessly_is_out_of_scope(world):
+def test_a_workbook_the_parser_cannot_read_losslessly_puts_all_its_rows_out_of_scope(world):
+    # openpyxl parses ahead of the rows it yields, so a warning cannot be pinned to one row: the whole workbook
+    # is lossy, and its rows get no evidence at all (two different streets could otherwise hash alike).
     _date_styled(world, "Tran_Adr1", 98765432123)
     evidence = _collect(world)
-    assert evidence.counts["lossy_cell"] == 1
-    assert not [r for r in evidence.rows if r.tran_id == "A-1" and r.filer_id == "1400001"]
-    assert len(evidence.rows) == 13
+    assert evidence.counts["lossy_workbook_rows"] == 14
+    assert evidence.rows == []
 
 
 def test_a_non_text_street_cell_is_a_reason_not_a_crash(tmp_path):
