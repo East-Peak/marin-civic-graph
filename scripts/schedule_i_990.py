@@ -120,10 +120,11 @@ def _norm(text: str) -> str:
 
 
 def _forbidden_values(root: ET.Element) -> set[str]:
-    """Normalized person names (any *PersonNm, in both word orders) and Part III text in this return.
+    """Normalized person names (any *PersonNm, in both word orders) in this return.
 
     Free-text Schedule I fields are checked against these before output, so a
-    name copied from Part VII or Part III into a purpose line cannot leak.
+    name copied from Part VII into a purpose line cannot leak. Part III holds
+    grant types and counts, not names; it is never emitted and never matched.
     """
     found: set[str] = set()
     for el in root.iter():
@@ -131,8 +132,6 @@ def _forbidden_values(root: ET.Element) -> set[str]:
         if _local(el.tag).endswith("PersonNm") and text:
             tokens = text.split()
             found.update({text, " ".join(tokens[1:] + tokens[:1]), " ".join(tokens[-1:] + tokens[:-1])})
-        elif _local(el.tag) == "GrantsOtherAsstToIndivInUSGrp":
-            found.update(t for d in el.iter() if (t := _norm(d.text or "")) and not t.isdigit())
     return {f for f in found if len(f) >= 4}
 
 

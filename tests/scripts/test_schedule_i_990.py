@@ -198,8 +198,8 @@ def test_prefixed_namespace_extracts_fields():
 
 # --- privacy gate ----------------------------------------------------------
 
-@pytest.mark.parametrize("leak", [OFFICER_SENTINEL, "OFFICERSENTINEL, Zelda", PART_III_SENTINEL])
-def test_person_and_part_iii_text_withheld_from_free_text_fields(leak):
+@pytest.mark.parametrize("leak", [OFFICER_SENTINEL, "OFFICERSENTINEL, Zelda"])
+def test_person_text_withheld_from_free_text_fields(leak):
     rows = recipient(leak, cash="1", extra=f"<PurposeOfGrantTxt>Support from {leak} fund</PurposeOfGrantTxt>"
                      f"<NonCashAssistanceDesc>{leak}</NonCashAssistanceDesc>")
     rows += recipient("Clean Org", cash="2", extra="<PurposeOfGrantTxt>Housing</PurposeOfGrantTxt>")
@@ -351,3 +351,11 @@ def test_cli_refuses_git_checkout_and_data_normalized(tmp_path, staging):
     root = Path(s990.__file__).resolve().parent.parent
     with pytest.raises(UnsafeOutputError):
         s990.resolve_safe_output(root / "data" / "normalized" / "x")
+
+
+def test_part_iii_text_never_emitted_and_does_not_withhold_part_ii():
+    purpose = f"Support for {PART_III_SENTINEL.split()[-1]} programs"
+    rows = recipient("Clean Org", cash="2", extra=f"<PurposeOfGrantTxt>{purpose}</PurposeOfGrantTxt>")
+    r = s990.parse_return(make_return(schedule=rows + PART_III))
+    assert PART_III_SENTINEL not in json.dumps(r)
+    assert r["schedule_i"]["grants"][0]["purpose"] == purpose and r["withheld_fields"] == 0
