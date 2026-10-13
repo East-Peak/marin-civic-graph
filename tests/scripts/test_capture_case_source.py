@@ -9,8 +9,10 @@ from __future__ import annotations
 import email.utils
 import io
 import json
+import mimetypes
 import sys
 import threading
+import warnings
 import zipfile
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -154,8 +156,9 @@ class Env:
 
 
 @pytest.fixture
-def env(tmp_path):
+def env(tmp_path, monkeypatch):
     e = Env(tmp_path)
+    monkeypatch.setattr(ccs, "RAW_ROOT", e.raw)
     yield e
     for site in e.sites:
         site.stop()
@@ -395,7 +398,7 @@ def test_503_retry_after_http_date(env):
     site.routes["/a.html"] = flaky(status(503, **{"Retry-After": date}), page())
     env.capture(site.url("/a.html"))
     stamps = [t for _, p, t in site.hits if p == "/a.html"]
-    assert stamps[1] - stamps[0] >= 55
+    assert stamps[1] >= START + 61  # the full HTTP-date deadline, never earlier
 
 
 def test_retry_after_over_cap_stops_source_without_waiting(env):
@@ -579,8 +582,10 @@ def test_zip_member_captured_once(env):
     site.routes["/z.zip"] = ranged(make_zip())
     first = env.zip_member(site.url("/z.zip"), "Folder/202601234567_public.xml", range_chunk=512)
     seen = len(site.hits)
-    assert env.zip_member(site.url("/z.zip"), "folder/202601234567_PUBLIC.xml") == first
-    assert len(site.hits) == seen
+    assert env.zip_member(site.url("/z.zip"), "Folder/202601234567_public.xml") == first
+    assert len(site.hits) == seen  # exact repeat: no request at all
+    again = env.zip_member(site.url("/z.zip"), "folder/202601234567_PUBLIC.xml", range_chunk=512)
+    assert again == first and len(env.written()) == 1  # resolved to the same exact member
 
 
 def test_zip_refused_when_server_ignores_range(env):
@@ -673,10 +678,11 @@ def test_cli_requires_url_or_zip(cli):
 
 def test_cli_raw_root_must_be_data_raw(cli, tmp_path, capsys):
     site = cli.site()
-    for bad in (tmp_path / "raw", tmp_path / "data" / "extracted", tmp_path / "data" / "raw" / "sub"):
+    for bad in (tmp_path / "raw", tmp_path / "data" / "extracted", tmp_path / "data" / "raw" / "sub",
+                tmp_path / "other" / "data" / "raw"):
         assert run_cli(cli, "--url", site.url("/a.html"), raw=bad) != 0
     assert site.hits == []
-    assert "raw" in capsys.readouterr().err
+    assert "raw" in capsys.readouterr().err.lower()
 
 
 def test_cli_state_and_basis_must_be_under_staging(cli, tmp_path):
@@ -708,3 +714,281 @@ def test_cli_refusal_exit_code_and_message(cli, capsys):
     site = cli.site(approved=False)
     assert run_cli(cli, "--url", site.url("/a.html")) != 0
     assert "refused" in capsys.readouterr().err.lower()
+
+
+# --- review fixes (Codex) --------------------------------------------------------
+
+
+@pytest.mark.parametrize("code", [401, 403])
+def test_robots_401_403_stops_source_and_blocks_the_document(env, code):
+    site = env.site()
+    site.routes["/robots.txt"] = status(code)
+    site.routes["/a.html"] = page()
+    with pytest.raises(SourceRestricted):
+        env.capture(site.url("/a.html"))
+    assert site.paths() == ["/robots.txt"] and "example-fund" in env.state_json()["stopped"]
+
+
+def test_robots_429_waits_retry_after_then_proceeds(env):
+    site = env.site()
+    site.routes["/robots.txt"] = flaky(status(429, **{"Retry-After": "40"}), status(404))
+    site.routes["/a.html"] = page()
+    env.capture(site.url("/a.html"))
+    stamps = [t for _, p, t in site.hits if p == "/robots.txt"]
+    assert stamps[1] - stamps[0] >= 40
+
+
+def test_robots_429_over_cap_stops_source(env):
+    site = env.site()
+    site.routes["/robots.txt"] = status(429, **{"Retry-After": "900"})
+    with pytest.raises(SourceRestricted):
+        env.capture(site.url("/a.html"))
+    assert "/a.html" not in site.paths() and "example-fund" in env.state_json()["stopped"]
+
+
+def test_robots_html_challenge_stops_source(env):
+    site = env.site()
+    site.routes["/robots.txt"] = page(b"<html><div class='g-recaptcha'></div></html>", "text/plain")
+    with pytest.raises(SourceRestricted):
+        env.capture(site.url("/a.html"))
+    assert "/a.html" not in site.paths() and "example-fund" in env.state_json()["stopped"]
+
+
+def test_robots_disallow_persists_the_stop(env):
+    site = env.site()
+    site.routes["/robots.txt"] = page(b"User-agent: *\nDisallow: /\n", "text/plain")
+    with pytest.raises(SourceRestricted):
+        env.capture(site.url("/a.html"))
+    assert "example-fund" in env.state_json()["stopped"]
+
+
+@pytest.mark.parametrize("code", [404, 410])
+def test_robots_absent_means_allowed(env, code):
+    site = env.site()
+    site.routes["/robots.txt"] = status(code)
+    site.routes["/a.html"] = page()
+    assert env.capture(site.url("/a.html"))["access"]["robots_status"] == code
+
+
+def test_robots_other_4xx_is_unavailable_and_refuses(env):
+    site = env.site()
+    site.routes["/robots.txt"] = status(400)
+    with pytest.raises(AccessRefused):
+        env.capture(site.url("/a.html"))
+    assert "/a.html" not in site.paths()
+
+
+def test_concurrent_invocations_are_fully_serialised(env):
+    site = env.site()
+    for name in "ab":
+        site.routes[f"/{name}.html"] = page(name.encode())
+    site.routes["/same.html"] = page(b"same")
+    errors = []
+
+    def run(url):
+        try:
+            env.capture(url)
+        except Exception as err:  # pragma: no cover - reported below
+            errors.append(err)
+
+    urls = [site.url(p) for p in ("/a.html", "/b.html", "/same.html", "/same.html")]
+    threads = [threading.Thread(target=run, args=(u,)) for u in urls]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    assert errors == []
+    stamps = sorted(t for _, _, t in site.hits)
+    assert all(b - a >= 1.0 for a, b in zip(stamps, stamps[1:]))
+    assert site.paths().count("/same.html") == 1
+    assert env.state_json()["documents"] == 3
+
+
+def test_cooldown_deadline_persists_across_invocations(env):
+    site = env.site()
+    site.routes["/a.html"] = page()
+    env.state.write_text(json.dumps({"cooldown": {site.host: START + 50}}))
+    env.capture(site.url("/a.html"))
+    assert all(t >= START + 50 for _, _, t in site.hits)
+
+
+def test_raw_root_must_be_the_pinned_main_checkout_root(env, tmp_path):
+    site = env.site()
+    for bad in (tmp_path / "data" / "raw" / "sub", tmp_path / "other" / "data" / "raw"):
+        with pytest.raises(AccessRefused):
+            capture(site.url("/a.html"), **{**env.kw(), "raw_root": bad})
+    assert site.hits == []
+
+
+def test_symlinked_source_or_date_dir_is_refused(env, tmp_path):
+    site = env.site()
+    site.routes["/a.html"] = page()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    env.raw.mkdir(parents=True)
+    (env.raw / "example-fund").symlink_to(outside)
+    with pytest.raises(AccessRefused):
+        env.capture(site.url("/a.html"))
+    (env.raw / "example-fund").unlink()
+    (env.raw / "example-fund").mkdir()
+    (env.raw / "example-fund" / "2026-03-04").symlink_to(outside)
+    with pytest.raises(AccessRefused):
+        env.capture(site.url("/a.html"), date="2026-03-04")
+    assert list(outside.iterdir()) == []
+
+
+def test_symlinked_manifest_and_state_files_are_refused(env, tmp_path):
+    site = env.site()
+    site.routes["/a.html"] = page()
+    outside = tmp_path / "outside.jsonl"
+    outside.write_text("")
+    folder = env.raw / "example-fund" / "2026-03-04"
+    folder.mkdir(parents=True)
+    (folder / "manifest.jsonl").symlink_to(outside)
+    with pytest.raises(AccessRefused):
+        env.capture(site.url("/a.html"), date="2026-03-04")
+    assert outside.read_text() == ""
+    (folder / "manifest.jsonl").unlink()
+    real = tmp_path / "real-state.json"
+    real.write_text("{}")
+    env.state.unlink()
+    env.state.symlink_to(real)
+    with pytest.raises(AccessRefused):
+        env.capture(site.url("/a.html"), date="2026-03-04")
+
+
+@pytest.mark.parametrize("cap", [0, -1, 61])
+def test_cap_must_be_between_1_and_60(env, cap):
+    site = env.site()
+    with pytest.raises(AccessRefused):
+        env.capture(site.url("/a.html"), cap=cap)
+    assert site.hits == []
+
+
+def test_cli_rejects_cap_above_hard_ceiling(cli, capsys):
+    site = cli.site()
+    assert run_cli(cli, "--url", site.url("/a.html"), "--cap", "61") == 2
+    assert site.hits == []
+
+
+@pytest.mark.parametrize("missing", ["decision", "basis", "licence", "attribution", "terms_url"])
+def test_incomplete_basis_entry_is_refused_before_any_request(env, missing):
+    site = env.site(approved=False)
+    entry = host_entry()
+    del entry[missing]
+    env.basis.write_text(json.dumps({"hosts": {site.host: entry}}))
+    with pytest.raises(AccessRefused):
+        env.capture(site.url("/a.html"))
+    assert site.hits == []
+
+
+def test_blank_basis_text_is_refused_but_null_terms_url_is_fine(env):
+    site = env.site(basis="  ")
+    with pytest.raises(AccessRefused):
+        env.capture(site.url("/a.html"))
+    env.approve(site, terms_url=None)
+    site.routes["/a.html"] = page()
+    assert env.capture(site.url("/a.html"))["access"]["terms_url"] is None
+
+
+def test_every_hop_records_its_access_evidence(env):
+    site = env.site()
+    other = env.site(licence="ODbL")
+    site.routes["/old"] = status(301, Location=other.url("/new"))
+    other.routes["/new"] = page(b"new")
+    row = env.capture(site.url("/old"))
+    assert [h["url"] for h in row["hops"]] == [site.url("/old"), other.url("/new")]
+    assert [h["status"] for h in row["hops"]] == [301, 200]
+    assert row["hops"][0]["access"]["licence"] == "CC0" and row["hops"][1]["access"]["licence"] == "ODbL"
+    assert row["access"] == row["hops"][-1]["access"]
+
+
+def test_html_labelled_as_text_plain_is_still_sniffed(env):
+    site = env.site()
+    site.routes["/a.txt"] = page(b"<!DOCTYPE html><html><div class='h-captcha'>hcaptcha</div></html>", "text/plain")
+    with pytest.raises(SourceRestricted):
+        env.capture(site.url("/a.txt"))
+    assert env.written() == []
+
+
+def test_initial_login_path_is_refused_before_dispatch(env):
+    site = env.site()
+    site.routes["/login/data.html"] = page()
+    with pytest.raises(SourceRestricted):
+        env.capture(site.url("/login/data.html"))
+    assert site.hits == [] and "example-fund" in env.state_json()["stopped"]
+
+
+def test_challenge_page_on_a_range_request_stops_the_source(env):
+    site = env.site()
+    site.routes["/z.zip"] = page(b"<html><div class='g-recaptcha'></div></html>")
+    with pytest.raises(SourceRestricted):
+        env.zip_member(site.url("/z.zip"), "a.xml")
+    assert "example-fund" in env.state_json()["stopped"]
+
+
+def test_range_reply_longer_than_requested_or_misaligned_is_refused(env):
+    site = env.site()
+    blob = make_zip()
+    good = ranged(blob)
+
+    def too_long(req):
+        status_code, headers, body = good(req)
+        return status_code, headers, body + b"EXTRA" * 100
+
+    site.routes["/long.zip"] = too_long
+    site.routes["/skew.zip"] = lambda req: (206, {"Content-Range": f"bytes 5-5/{len(blob)}", "ETag": '"z1"'}, b"x")
+    for path in ("/long.zip", "/skew.zip"):
+        with pytest.raises(AccessRefused):
+            env.zip_member(site.url(path), "other.xml")
+    assert env.written() == []
+
+
+def test_zip_duplicate_exact_member_names_are_refused(env):
+    buf = io.BytesIO()
+    with warnings.catch_warnings(), zipfile.ZipFile(buf, "w") as zf:
+        warnings.simplefilter("ignore")
+        zf.writestr("a.xml", b"<one/>")
+        zf.writestr("a.xml", b"<two/>")
+    site = env.site()
+    site.routes["/z.zip"] = ranged(buf.getvalue())
+    with pytest.raises(AccessRefused):
+        env.zip_member(site.url("/z.zip"), "a.xml")
+    assert env.written() == []
+
+
+def test_zip_case_variants_are_distinct_members(env):
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as zf:
+        zf.writestr("A.xml", b"<upper/>")
+        zf.writestr("a.xml", b"<lower/>")
+    site = env.site()
+    site.routes["/z.zip"] = ranged(buf.getvalue())
+    with pytest.raises(AccessRefused):  # ambiguous fallback
+        env.zip_member(site.url("/z.zip"), "A.XML")
+    upper = env.zip_member(site.url("/z.zip"), "A.xml")
+    lower = env.zip_member(site.url("/z.zip"), "a.xml")
+    assert (upper["member"], lower["member"]) == ("A.xml", "a.xml") and upper["sha256"] != lower["sha256"]
+
+
+def test_zip_row_records_member_and_archive_content_types(env):
+    site = env.site()
+    site.routes["/z.zip"] = lambda req: (lambda r: (r[0], {**r[1], "Content-Type": "application/zip"}, r[2]))(
+        ranged(make_zip())(req)
+    )
+    row = env.zip_member(site.url("/z.zip"), "other.xml")
+    assert row["content_type"] == mimetypes.guess_type("other.xml")[0] == "application/xml"
+    assert row["zip_content_type"] == "application/zip"
+    assert row["hops"] and row["hops"][0]["url"] == site.url("/z.zip")
+
+
+def test_document_named_manifest_does_not_clobber_the_manifest(env):
+    site = env.site()
+    site.routes["/manifest.jsonl"] = page(b"not a manifest", "text/plain")
+    site.routes["/b.html"] = page(b"b")
+    row = env.capture(site.url("/manifest.jsonl"), date="2026-03-04")
+    env.capture(site.url("/b.html"), date="2026-03-04")
+    assert Path(row["path"]).name != "manifest.jsonl"
+    assert (env.raw / row["path"]).read_bytes() == b"not a manifest"
+    rows = (env.raw / "example-fund" / "2026-03-04" / "manifest.jsonl").read_text().splitlines()
+    assert len(rows) == 2 and json.loads(rows[0])["sha256"] == row["sha256"]

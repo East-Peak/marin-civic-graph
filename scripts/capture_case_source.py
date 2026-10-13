@@ -9,6 +9,9 @@ stopped-source latch, and every document lands with a manifest row recording the
 bytes' sha256 and the access decision that permitted it.
 
 Design notes:
+  * One capture call holds an exclusive lock on the state file from start to
+    finish, so invocations are fully serialised: dispatch, throttle, cooldown,
+    dedupe and budget cannot race.
   * urllib only, and redirects are NEVER followed automatically: each hop is
     re-checked (basis, robots, throttle) before it is requested, so a redirect
     to an unapproved host is never contacted.
@@ -29,6 +32,7 @@ import fcntl
 import hashlib
 import io
 import json
+import mimetypes
 import os
 import re
 import sys
@@ -37,7 +41,7 @@ import urllib.error
 import urllib.request
 import zipfile
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from email.message import Message
 from email.utils import parsedate_to_datetime
@@ -46,16 +50,23 @@ from urllib.parse import unquote, urljoin, urlsplit
 from urllib.robotparser import RobotFileParser
 
 STAGING_ROOT = Path.home() / "open-marin-staging" / "cf6-case"
+RAW_ROOT = Path.home() / "projects" / "marin-civic-graph" / "data" / "raw"  # main checkout only
 USER_AGENT = "OpenMarinCaseCapture/1.0 (public-records research; polite single-document fetches)"
-DEFAULT_CAP = 60
+MAX_CAP = DEFAULT_CAP = 60
 MIN_INTERVAL = 1.0  # seconds between ANY two requests
 MAX_RETRY_WAIT = 120.0  # longest Retry-After we are willing to sit out
 MAX_HOPS = 5
 RANGE_CHUNK = 512 * 1024  # read-ahead for ZIP member reads
+MAX_BODY = 256 * 1024 * 1024
+PEEK_BYTES = 64 * 1024  # how much of an unexpected reply we look at for a challenge page
 TIMEOUT = 30
+REQUIRED_BASIS = ("decision", "basis", "licence", "attribution")
+RESERVED_NAMES = {"manifest.jsonl"}
 
 LOGIN_PATH_RE = re.compile(r"(?<![a-z0-9])(login|signin|sign-in|sso|auth|account)s?(?![a-z0-9])")
 PASSWORD_INPUT_RE = re.compile(r"<input\b[^>]*\btype\s*=\s*[\"']?password", re.I)
+HTML_START_RE = re.compile(r"<\s*(!doctype\s+html|html|head|body|form|script|input|div)\b", re.I)
+CONTENT_RANGE_RE = re.compile(r"bytes (\d+)-(\d+)/(\d+)")
 RESTRICTION_MARKERS = (
     "captcha", "g-recaptcha", "hcaptcha", "cf-challenge", "cf-turnstile", "subscribe to continue", "paywall",
 )
@@ -87,38 +98,42 @@ class Response:
     body: bytes
     final_url: str
     access: dict
+    hops: list = field(default_factory=list)
 
 
 # --- state file ---------------------------------------------------------------------
 
 
-def read_state(path: Path) -> dict:
-    return json.loads(path.read_text()) if path.exists() else {}
+def refuse_symlink(path: Path) -> None:
+    if path.is_symlink():
+        raise AccessRefused(f"{path} is a symlink")
 
 
-@contextmanager
-def locked_state(path: Path):
-    """Yield the state dict; persist it atomically if the block completes."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with open(f"{path}.lock", "a") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX)
-        state = read_state(path)
-        yield state
-        tmp = path.with_name(path.name + ".tmp")
-        tmp.write_text(json.dumps(state, indent=2, sort_keys=True))
-        os.replace(tmp, path)
+class State:
+    """The JSON state file, exclusively locked for the lifetime of one capture call."""
 
+    def __init__(self, path: Path):
+        self.path, lock_path = Path(path), Path(f"{path}.lock")
+        for candidate in (self.path, lock_path):
+            refuse_symlink(candidate)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.lock = open(lock_path, "a")
+        fcntl.flock(self.lock, fcntl.LOCK_EX)
+        self.data = json.loads(self.path.read_text()) if self.path.exists() else {}
 
-def check_budget(state_path: Path, cap: int) -> None:
-    if read_state(state_path).get("documents", 0) >= cap:
-        raise BudgetExhausted(f"document budget of {cap} is used up")
+    def save(self) -> None:
+        tmp = self.path.with_name(self.path.name + ".tmp")
+        tmp.write_text(json.dumps(self.data, indent=2, sort_keys=True))
+        os.replace(tmp, self.path)
 
+    def __enter__(self):
+        return self
 
-def count_document(state_path: Path, cap: int) -> None:
-    with locked_state(state_path) as state:
-        if state.get("documents", 0) >= cap:
-            raise BudgetExhausted(f"document budget of {cap} is used up")
-        state["documents"] = state.get("documents", 0) + 1
+    def __exit__(self, *exc):
+        try:
+            self.save()
+        finally:
+            self.lock.close()  # releases the flock
 
 
 # --- guarded fetching ---------------------------------------------------------------
@@ -137,82 +152,132 @@ def parse_retry_after(value: str | None, now: float) -> float | None:
 
 
 def looks_restricted(body: bytes, content_type: str | None) -> bool:
-    if content_type and "html" not in content_type.lower():
-        return False
+    """Login, captcha or paywall page: any reply that is HTML by type or by content."""
     text = body[:500_000].decode("utf-8", "replace")
+    if "html" not in (content_type or "").lower() and not HTML_START_RE.search(text[:2048]):
+        return False
     lowered = text.lower()
     return bool(PASSWORD_INPUT_RE.search(text)) or any(m in lowered for m in RESTRICTION_MARKERS)
+
+
+def read_body(response, status: int, headers: Message, wanted: tuple[int, int] | None) -> bytes:
+    """Read no more than the request permits; judge a Range reply before reading it."""
+    if wanted is None:
+        limit = MAX_BODY
+    elif status == 206:
+        match = CONTENT_RANGE_RE.fullmatch(headers.get("Content-Range", ""))
+        if not match or int(match[1]) != wanted[0] or not wanted[0] <= int(match[2]) <= wanted[1]:
+            raise AccessRefused(f"Content-Range {headers.get('Content-Range')!r} does not match bytes={wanted[0]}-{wanted[1]}")
+        limit = int(match[2]) - wanted[0] + 1
+    else:
+        limit = PEEK_BYTES  # Range ignored or refused: just enough to spot a challenge page
+    body = response.read(limit + 1)
+    if len(body) > limit and (wanted is None or status == 206):
+        raise AccessRefused("reply is larger than the request permits")
+    return body[:limit]
 
 
 class Fetcher:
     """Every request this module makes goes through here."""
 
-    def __init__(self, *, source, state_path, basis_path, user_agent, clock, sleep):
+    def __init__(self, *, source, state: State, basis_path, user_agent, clock, sleep):
         if not SOURCE_RE.match(source):
             raise AccessRefused(f"source id {source!r} must match {SOURCE_RE.pattern}")
-        self.source, self.state_path, self.user_agent = source, Path(state_path), user_agent
-        self.hosts = read_state(Path(basis_path)).get("hosts", {})  # a missing basis file approves nothing
+        self.source, self.state, self.data, self.user_agent = source, state, state.data, user_agent
+        path = Path(basis_path)
+        self.hosts = json.loads(path.read_text()).get("hosts", {}) if path.exists() else {}
         self.clock, self.sleep = clock, sleep
         self.opener = urllib.request.build_opener(NoRedirects)
         self.robots_memo: dict[str, dict] = {}
 
     # state helpers
     def ensure_not_stopped(self) -> None:
-        reason = read_state(self.state_path).get("stopped", {}).get(self.source)
+        reason = self.data.get("stopped", {}).get(self.source)
         if reason:
             raise SourceRestricted(f"source {self.source!r} is stopped: {reason}")
 
     def stop(self, reason: str) -> SourceRestricted:
-        with locked_state(self.state_path) as state:
-            state.setdefault("stopped", {})[self.source] = reason
+        self.data.setdefault("stopped", {})[self.source] = reason
+        self.state.save()
         return SourceRestricted(f"source {self.source!r} stopped: {reason}")
 
     def throttle(self, netloc: str) -> None:
-        with locked_state(self.state_path) as state:
-            last = state.setdefault("last_request", {})
-            ready = max(last.get("*", 0.0), last.get(netloc, 0.0)) + MIN_INTERVAL
-            if ready > self.clock():
-                self.sleep(ready - self.clock())
-            last["*"] = last[netloc] = self.clock()
+        last = self.data.setdefault("last_request", {})
+        ready = max(last.get("*", 0.0), last.get(netloc, 0.0)) + MIN_INTERVAL
+        ready = max(ready, self.data.get("cooldown", {}).get(netloc, 0.0))
+        if ready > self.clock():
+            self.sleep(ready - self.clock())
+        last["*"] = last[netloc] = self.clock()
+        self.state.save()
 
     def send(self, url: str, method: str, headers: dict) -> tuple[int | None, Message, bytes]:
         """One throttled request; HTTP errors are returned, not raised."""
+        self.ensure_not_stopped()
         self.throttle(urlsplit(url).netloc.lower())
+        wanted = None
+        if "Range" in headers:
+            first, _, last = headers["Range"].removeprefix("bytes=").partition("-")
+            wanted = (int(first), int(last))
         request = urllib.request.Request(url, method=method, headers={"User-Agent": self.user_agent, **headers})
         try:
             with self.opener.open(request, timeout=TIMEOUT) as response:
-                return response.status, response.headers, response.read()
+                return response.status, response.headers, read_body(response, response.status, response.headers, wanted)
         except urllib.error.HTTPError as err:
             with err:
-                return err.code, err.headers, err.read()
+                return err.code, err.headers, read_body(err, err.code, err.headers, wanted)
         except (urllib.error.URLError, OSError):
             return None, Message(), b""
+
+    def request_checked(self, url: str, method: str, headers: dict) -> tuple[int | None, Message, bytes]:
+        """send() plus the rules every reply (documents and robots alike) must pass."""
+        netloc = urlsplit(url).netloc.lower()
+        for attempt in (0, 1):
+            status, response_headers, body = self.send(url, method, headers)
+            if status in (429, 503):
+                wait = parse_retry_after(response_headers.get("Retry-After"), self.clock())
+                if attempt or wait is None or wait > MAX_RETRY_WAIT:
+                    raise self.stop(f"HTTP {status} from {netloc} (Retry-After {response_headers.get('Retry-After')})")
+                self.data.setdefault("cooldown", {})[netloc] = self.clock() + wait
+                self.state.save()
+                continue
+            break
+        if status in (401, 403):
+            raise self.stop(f"HTTP {status} from {netloc}")
+        if status is not None and 200 <= status < 300 and looks_restricted(body, response_headers.get("Content-Type")):
+            raise self.stop(f"login, captcha or paywall page at {url}")
+        return status, response_headers, body
 
     # policy checks
     def host_entry(self, netloc: str) -> dict:
         entry = self.hosts.get(netloc)
         if not entry or entry.get("decision") != "allowed":
             raise AccessRefused(f"host {netloc!r} has no affirmative 'allowed' decision in the basis file")
+        missing = [k for k in REQUIRED_BASIS if not str(entry.get(k) or "").strip()] + \
+                  (["terms_url"] if "terms_url" not in entry else [])
+        if missing:
+            raise AccessRefused(f"basis entry for {netloc!r} lacks {', '.join(missing)}")
         return entry
+
+    def refuse_login_path(self, url: str) -> None:
+        path = unquote(urlsplit(url).path).lower()
+        if LOGIN_PATH_RE.search(path):
+            raise self.stop(f"login-like path: {path}")
 
     def robots_for(self, url: str) -> dict:
         parts = urlsplit(url)
         key = f"{parts.scheme}://{parts.netloc.lower()}"
         if key in self.robots_memo:
             return self.robots_memo[key]
-        cached = read_state(self.state_path).get("robots", {}).get(key)
+        cached = self.data.get("robots", {}).get(key)
         if cached is None:
             robots_url = f"{key}/robots.txt"
-            status, _, body = self.send(robots_url, "GET", {})
-            cached = {
-                "url": robots_url,
-                "status": status,
-                "sha256": hashlib.sha256(body).hexdigest() if status and 200 <= status < 300 else None,
-                "body": body.decode("utf-8", "replace") if status and 200 <= status < 300 else "",
-            }
-            if status and (200 <= status < 300 or 400 <= status < 500):  # outages are not cached
-                with locked_state(self.state_path) as state:
-                    state.setdefault("robots", {})[key] = cached
+            status, _, body = self.request_checked(robots_url, "GET", {})
+            ok = status is not None and 200 <= status < 300
+            cached = {"url": robots_url, "status": status,
+                      "sha256": hashlib.sha256(body).hexdigest() if ok else None,
+                      "body": body.decode("utf-8", "replace") if ok else ""}
+            if ok or status in (404, 410):  # outages and odd statuses are never cached
+                self.data.setdefault("robots", {})[key] = cached
         self.robots_memo[key] = cached
         return cached
 
@@ -225,51 +290,37 @@ class Fetcher:
             parser = RobotFileParser()
             parser.parse(robots["body"].splitlines())
             if not parser.can_fetch(self.user_agent, url):
-                raise SourceRestricted(f"robots.txt disallows {url}")
-        elif status is None or status >= 500 or status >= 300 and status < 400:
+                raise self.stop(f"robots.txt disallows {url}")
+        elif status not in (404, 410):  # absent robots.txt allows everything; anything else is an outage
             basis = entry.get("robots_unavailable_basis")
             if not basis:
                 raise AccessRefused(f"robots.txt unavailable (status {status}) and the host has no robots_unavailable_basis")
             access["robots_unavailable_basis"] = basis
-        return access  # 4xx: no robots file, everything allowed
+        return access
 
-    def request_with_retry(self, url: str, method: str, headers: dict) -> tuple[int | None, Message, bytes]:
-        for attempt in (0, 1):
-            status, response_headers, body = self.send(url, method, headers)
-            if status not in (429, 503):
-                return status, response_headers, body
-            wait = parse_retry_after(response_headers.get("Retry-After"), self.clock())
-            if attempt or wait is None or wait > MAX_RETRY_WAIT:
-                raise self.stop(f"HTTP {status} from {urlsplit(url).netloc} (Retry-After {response_headers.get('Retry-After')})")
-            self.sleep(wait)
-        raise AssertionError("unreachable")
-
-    def get(self, url: str, *, method="GET", headers=None, sniff=True) -> Response:
+    def get(self, url: str, *, headers=None) -> Response:
         """Fetch `url`, walking redirects hop by hop through every check."""
+        hops = []
         for _ in range(MAX_HOPS + 1):
             parts = urlsplit(url)
             if parts.scheme not in ("http", "https"):
                 raise AccessRefused(f"unsupported URL scheme in {url!r}")
             self.ensure_not_stopped()
+            self.refuse_login_path(url)
             entry = self.host_entry(parts.netloc.lower())
             access = {**self.check_robots(url, entry), "user_agent": self.user_agent,
-                      **{k: entry.get(k) for k in ("decision", "basis", "terms_url", "licence", "attribution")}}
-            status, response_headers, body = self.request_with_retry(url, method, headers or {})
+                      **{k: entry.get(k) for k in (*REQUIRED_BASIS, "terms_url")}}
+            status, response_headers, body = self.request_checked(url, "GET", headers or {})
+            hops.append({"url": url, "status": status, "access": access})
             if status is not None and 300 <= status < 400:
                 location = response_headers.get("Location")
                 if not location:
                     raise AccessRefused(f"HTTP {status} without Location from {url}")
                 url = urljoin(url, location)
-                if LOGIN_PATH_RE.search(urlsplit(url).path.lower()):
-                    raise self.stop(f"redirect to a login-like path: {urlsplit(url).path}")
                 continue
-            if status in (401, 403):
-                raise self.stop(f"HTTP {status} from {parts.netloc}")
             if status is None or not 200 <= status < 300:
                 raise AccessRefused(f"HTTP {status} from {url}")
-            if sniff and looks_restricted(body, response_headers.get("Content-Type")):
-                raise self.stop(f"login, captcha or paywall page at {url}")
-            return Response(status, response_headers, body, url, access)
+            return Response(status, response_headers, body, url, access, hops)
         raise AccessRefused(f"more than {MAX_HOPS} redirects")
 
 
@@ -278,24 +329,33 @@ class Fetcher:
 
 def manifest_rows(raw_root: Path, source: str):
     for manifest in sorted((raw_root / source).glob("*/manifest.jsonl")):
+        refuse_symlink(manifest)
         for line in manifest.read_text().splitlines():
             if line.strip():
                 yield json.loads(line)
 
 
 def safe_filename(name: str) -> str:
-    name = re.sub(r"[^A-Za-z0-9._-]+", "_", name).lstrip("._")[-120:]
-    return name or "index"
+    name = re.sub(r"[^A-Za-z0-9._-]+", "_", name).lstrip("._")[-120:] or "index"
+    return f"doc_{name}" if name.lower() in RESERVED_NAMES else name
 
 
-def write_document(raw_root: Path, source: str, day: str, name: str, data: bytes) -> Path:
+def output_folder(raw_root: Path, source: str, day: str) -> Path:
     folder = raw_root / source / day
+    for part in (raw_root / source, folder):
+        refuse_symlink(part)
     folder.mkdir(parents=True, exist_ok=True)
+    if not folder.resolve().is_relative_to(raw_root.resolve()):
+        raise AccessRefused(f"{folder} escapes {raw_root}")
+    return folder
+
+
+def write_document(folder: Path, name: str, data: bytes) -> Path:
     stem, dot, suffix = name.rpartition(".") if "." in name else (name, "", "")
     for n in range(10_000):
         candidate = folder / (name if n == 0 else f"{stem}-{n}{dot}{suffix}")
         try:
-            with open(candidate, "xb") as handle:
+            with open(candidate, "xb") as handle:  # O_EXCL: never follows or overwrites
                 handle.write(data)
             return candidate
         except FileExistsError:
@@ -303,30 +363,48 @@ def write_document(raw_root: Path, source: str, day: str, name: str, data: bytes
     raise AccessRefused(f"could not find a free filename for {name!r}")
 
 
-def finish(fetcher: Fetcher, *, raw_root, day, name, data, cap, now, access, fields) -> dict:
-    """Count the document, write it and its manifest row; return the row."""
-    count_document(fetcher.state_path, cap)
-    written = write_document(Path(raw_root), fetcher.source, day, name, data)
+def finish(fetcher: Fetcher, *, raw_root, day, name, data, now, cap, fields) -> dict:
+    """Write the document and its manifest row, then count it; return the row."""
+    folder = output_folder(raw_root, fetcher.source, day)
+    manifest = folder / "manifest.jsonl"
+    refuse_symlink(manifest)
+    written = write_document(folder, name, data)
     row = {
         "retrieved_at": datetime.fromtimestamp(now, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "sha256": hashlib.sha256(data).hexdigest(),
         "bytes": len(data),
         "path": written.relative_to(raw_root).as_posix(),
         **fields,
-        "access": access,
     }
-    with open(written.parent / "manifest.jsonl", "a") as manifest:
-        manifest.write(json.dumps(row, sort_keys=True) + "\n")
+    with open(manifest, "a") as handle:
+        handle.write(json.dumps(row, sort_keys=True) + "\n")
+    fetcher.data["documents"] = fetcher.data.get("documents", 0) + 1
     return row
 
 
-def start(source, raw_root, state_path, basis_path, date, user_agent, clock, sleep):
-    fetcher = Fetcher(source=source, state_path=state_path, basis_path=basis_path,
-                      user_agent=user_agent, clock=clock, sleep=sleep)
+def begin(state: State, *, source, raw_root, basis_path, date, user_agent, clock, sleep, cap):
+    """Validate the call's inputs; return (fetcher, pinned raw root, date string)."""
+    if not 1 <= cap <= MAX_CAP:
+        raise AccessRefused(f"cap must be between 1 and {MAX_CAP}")
+    raw_root = Path(raw_root)
+    if raw_root.resolve() != RAW_ROOT.resolve():
+        raise AccessRefused(f"raw root {raw_root.resolve()} is not the pinned {RAW_ROOT}")
+    fetcher = Fetcher(source=source, state=state, basis_path=basis_path, user_agent=user_agent,
+                      clock=clock, sleep=sleep)
+    refuse_symlink(raw_root / source)
     day = str(date) if date else datetime.fromtimestamp(clock(), timezone.utc).strftime("%Y-%m-%d")
     if not DATE_RE.match(day):
         raise AccessRefused(f"date {day!r} must be YYYY-MM-DD")
-    return fetcher, day
+    return fetcher, raw_root.resolve(), day
+
+
+def find_row(raw_root: Path, source: str, matches) -> dict | None:
+    return next((row for row in manifest_rows(raw_root, source) if matches(row)), None)
+
+
+def check_budget(fetcher: Fetcher, cap: int) -> None:
+    if fetcher.data.get("documents", 0) >= cap:
+        raise BudgetExhausted(f"document budget of {cap} is used up")
 
 
 # --- public API ---------------------------------------------------------------------
@@ -335,23 +413,24 @@ def start(source, raw_root, state_path, basis_path, date, user_agent, clock, sle
 def capture(url, *, source, raw_root, state_path, basis_path, date=None, user_agent=USER_AGENT,
             cap=DEFAULT_CAP, clock=time.time, sleep=time.sleep) -> dict:
     """Fetch one document once; return its manifest row."""
-    raw_root = Path(raw_root)
-    fetcher, day = start(source, raw_root, state_path, basis_path, date, user_agent, clock, sleep)
-    for row in manifest_rows(raw_root, source):
-        if row["url"] == url and "member" not in row:
-            return row
-    fetcher.ensure_not_stopped()
-    check_budget(fetcher.state_path, cap)
-    response = fetcher.get(url)
-    headers = response.headers
-    name = safe_filename(unquote(urlsplit(response.final_url).path.rpartition("/")[2]))
-    return finish(
-        fetcher, raw_root=raw_root, day=day, name=name, data=response.body, cap=cap, now=clock(),
-        access=response.access,
-        fields={"url": url, "final_url": response.final_url, "content_type": headers.get_content_type()
-                if headers.get("Content-Type") else None, "status": response.status,
-                "etag": headers.get("ETag"), "last_modified": headers.get("Last-Modified")},
-    )
+    with State(state_path) as state:
+        fetcher, raw_root, day = begin(state, source=source, raw_root=raw_root, basis_path=basis_path,
+                                       date=date, user_agent=user_agent, clock=clock, sleep=sleep, cap=cap)
+        existing = find_row(raw_root, source, lambda r: r["url"] == url and "member" not in r)
+        if existing:
+            return existing
+        fetcher.ensure_not_stopped()
+        check_budget(fetcher, cap)
+        response = fetcher.get(url)
+        content_type = response.headers.get_content_type() if response.headers.get("Content-Type") else None
+        return finish(
+            fetcher, raw_root=raw_root, day=day, data=response.body, now=clock(), cap=cap,
+            name=safe_filename(unquote(urlsplit(response.final_url).path.rpartition("/")[2])),
+            fields={"url": url, "final_url": response.final_url, "content_type": content_type,
+                    "status": response.status, "etag": response.headers.get("ETag"),
+                    "last_modified": response.headers.get("Last-Modified"),
+                    "access": response.access, "hops": response.hops},
+        )
 
 
 class RangeReader(io.RawIOBase):
@@ -361,19 +440,18 @@ class RangeReader(io.RawIOBase):
         self.fetcher, self.chunk = fetcher, chunk
         self.requests, self.pos, self.block = 0, 0, (0, b"")
         probe = self.fetch(url, 0, 0)
-        self.url, self.length = probe.final_url, int(probe.headers["Content-Range"].rpartition("/")[2])
+        self.url, self.length = probe.final_url, int(CONTENT_RANGE_RE.fullmatch(probe.headers["Content-Range"])[3])
         self.etag, self.last_modified = probe.headers.get("ETag"), probe.headers.get("Last-Modified")
-        self.access = probe.access
+        self.content_type = probe.headers.get("Content-Type")
+        self.access, self.hops = probe.access, probe.hops
 
     def fetch(self, url: str, first: int, last: int) -> Response:
-        response = self.fetcher.get(url, headers={"Range": f"bytes={first}-{last}"}, sniff=False)
+        response = self.fetcher.get(url, headers={"Range": f"bytes={first}-{last}"})
         self.requests += 1
-        match = re.fullmatch(r"bytes (\d+)-(\d+)/(\d+)", response.headers.get("Content-Range", ""))
-        if response.status != 206 or not match or int(match[1]) != first or int(match[2]) < first \
-                or int(match[2]) > last or len(response.body) != int(match[2]) - first + 1:
+        if response.status != 206:
             raise AccessRefused(f"server did not honour Range bytes={first}-{last} (status {response.status})")
-        if hasattr(self, "length") and (int(match[3]) != self.length or
-                                        response.headers.get("ETag") != self.etag):
+        if hasattr(self, "length") and (int(CONTENT_RANGE_RE.fullmatch(response.headers["Content-Range"])[3]) != self.length
+                                        or response.headers.get("ETag") != self.etag):
             raise AccessRefused("remote file changed while it was being read")
         return response
 
@@ -407,9 +485,8 @@ class RangeReader(io.RawIOBase):
 
 
 def find_member(names: list[str], wanted: str) -> str:
-    if wanted in names:
-        return wanted
-    matches = [n for n in names if n.lower() == wanted.lower()]
+    """Exact name if exactly one entry has it, else a unique case-insensitive match."""
+    matches = [n for n in names if n == wanted] or [n for n in names if n.lower() == wanted.lower()]
     if len(matches) != 1:
         raise AccessRefused(f"member {wanted!r} matches {len(matches)} entries in the archive")
     return matches[0]
@@ -419,26 +496,37 @@ def capture_zip_member(zip_url, member, *, source, raw_root, state_path, basis_p
                        user_agent=USER_AGENT, cap=DEFAULT_CAP, clock=time.time, sleep=time.sleep,
                        range_chunk=RANGE_CHUNK) -> dict:
     """Extract ONE member of a remote ZIP via Range reads; return its manifest row."""
-    raw_root = Path(raw_root)
-    fetcher, day = start(source, raw_root, state_path, basis_path, date, user_agent, clock, sleep)
-    for row in manifest_rows(raw_root, source):
-        if row.get("zip_url") == zip_url and row.get("member", "").lower() == member.lower():
-            return row
-    fetcher.ensure_not_stopped()
-    check_budget(fetcher.state_path, cap)
-    reader = RangeReader(fetcher, zip_url, range_chunk)
-    with zipfile.ZipFile(reader) as archive:
-        exact = find_member(archive.namelist(), member)
-        info = archive.getinfo(exact)
-        data = archive.read(info)  # zipfile verifies the CRC and raises BadZipFile on mismatch
-    return finish(
-        fetcher, raw_root=raw_root, day=day, name=safe_filename(Path(exact).name), data=data, cap=cap,
-        now=clock(), access=reader.access,
-        fields={"url": zip_url, "final_url": reader.url, "content_type": None, "status": 206,
-                "etag": None, "last_modified": None, "zip_url": zip_url, "zip_bytes": reader.length,
-                "zip_etag": reader.etag, "zip_last_modified": reader.last_modified, "member": exact,
-                "member_crc32": f"{info.CRC:08x}", "range_requests": reader.requests},
-    )
+    with State(state_path) as state:
+        fetcher, raw_root, day = begin(state, source=source, raw_root=raw_root, basis_path=basis_path,
+                                       date=date, user_agent=user_agent, clock=clock, sleep=sleep, cap=cap)
+
+        def same_member(name):
+            return lambda r: r.get("zip_url") == zip_url and r.get("member") == name
+
+        existing = find_row(raw_root, source, same_member(member))
+        if existing:
+            return existing
+        fetcher.ensure_not_stopped()
+        check_budget(fetcher, cap)
+        reader = RangeReader(fetcher, zip_url, range_chunk)
+        with zipfile.ZipFile(reader) as archive:
+            exact = find_member(archive.namelist(), member)
+            existing = find_row(raw_root, source, same_member(exact))
+            if existing:
+                return existing
+            info = archive.getinfo(exact)
+            data = archive.read(info)  # zipfile verifies the CRC and raises BadZipFile on mismatch
+        return finish(
+            fetcher, raw_root=raw_root, day=day, name=safe_filename(Path(exact).name), data=data, cap=cap,
+            now=clock(),
+            fields={"url": zip_url, "final_url": reader.url,
+                    "content_type": mimetypes.guess_type(exact)[0] or "application/octet-stream",
+                    "status": 206, "etag": None, "last_modified": None, "zip_url": zip_url,
+                    "zip_bytes": reader.length, "zip_etag": reader.etag,
+                    "zip_last_modified": reader.last_modified, "zip_content_type": reader.content_type,
+                    "member": exact, "member_crc32": f"{info.CRC:08x}", "range_requests": reader.requests,
+                    "access": reader.access, "hops": reader.hops},
+        )
 
 
 # --- CLI ----------------------------------------------------------------------------
@@ -448,13 +536,6 @@ def resolve_under_staging(path: str, label: str) -> Path:
     resolved, root = Path(path).resolve(), STAGING_ROOT.resolve()
     if not resolved.is_relative_to(root):
         raise AccessRefused(f"{label} {resolved} must resolve under {root}")
-    return resolved
-
-
-def resolve_raw_root(path: str) -> Path:
-    resolved = Path(path).resolve()
-    if resolved.name != "raw" or resolved.parent.name != "data":
-        raise AccessRefused(f"--raw-root {resolved} must resolve to a directory named data/raw")
     return resolved
 
 
@@ -473,7 +554,7 @@ def main(argv: list[str] | None = None, *, clock=time.time, sleep=time.sleep) ->
     if bool(args.zip_url) != bool(args.member):
         parser.error("--zip-url and --member go together")
     try:
-        common = dict(source=args.source, raw_root=resolve_raw_root(args.raw_root),
+        common = dict(source=args.source, raw_root=Path(args.raw_root),
                       state_path=resolve_under_staging(args.state, "--state"),
                       basis_path=resolve_under_staging(args.basis, "--basis"), cap=args.cap,
                       clock=clock, sleep=sleep)
