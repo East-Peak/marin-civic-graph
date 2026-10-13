@@ -35,7 +35,11 @@ DUPLICATE_WINDOW_DAYS = 7
 
 
 def money_surface(db_path: Path) -> dict[str, dict[str, str]]:
-    """Everything a public money total is derived from, keyed for diffing."""
+    """Everything a public money total is derived from, keyed for diffing.
+
+    Beyond the flows and their edges, every node adjacent to a flow is part of the surface in full (type, label,
+    props): consumers choose which flows to sum by their neighbours' types and join keys (local-pressure ranking
+    selects Programs by place ids, contribution queries by endpoint type)."""
     with sqlite3.connect(db_path) as conn:
         types = dict(conn.execute("SELECT id, type FROM nodes"))
         flows = {i for i, t in types.items() if t == "MoneyFlow"}
@@ -47,7 +51,10 @@ def money_surface(db_path: Path) -> dict[str, dict[str, str]]:
                                conn.execute("SELECT source, target, assertion_id, basis, decided_at, reviewer "
                                             "FROM identity_links")},
             "money_props": {},
+            "flow_neighbours": {},
         }
+        rows = {node_id: (types[node_id], label, props) for node_id, label, props in
+                conn.execute("SELECT id, search_label, props FROM nodes")}
         for node_id, props in conn.execute("SELECT id, props FROM nodes"):
             props = json.loads(props)
             if node_id in flows:
@@ -59,6 +66,9 @@ def money_surface(db_path: Path) -> dict[str, dict[str, str]]:
         for source, rel, target in conn.execute("SELECT source, rel, target FROM edges"):
             if source in flows or target in flows:
                 surface["flow_edges"][f"{source}|{rel}|{target}"] = "1"
+                for end in (source, target):
+                    if end not in flows and end in rows:
+                        surface["flow_neighbours"][end] = json.dumps(rows[end], sort_keys=True)
     return surface
 
 
@@ -69,6 +79,14 @@ def surface_changes(before: dict, after: dict) -> list[tuple[str, str, str | Non
             if before[surface].get(key) != after[surface].get(key):
                 changes.append((surface, key, before[surface].get(key), after[surface].get(key)))
     return changes
+
+
+def _edge(row: dict) -> dict:
+    """Export rows say start_id/type/end_id; the attach overlay says source_id/relationship_type/target_id."""
+    if "start_id" in row:
+        return row
+    return {"start_id": row["source_id"], "type": row["relationship_type"], "end_id": row["target_id"],
+            "properties": row.get("properties") or {}}
 
 
 def _closure(edges) -> dict[str, str]:
@@ -83,8 +101,8 @@ def _closure(edges) -> dict[str, str]:
             x = parent[x]
         return x
 
-    for e in edges:
-        if e["type"] == "SAME_AS" and e["properties"].get("assertion_id"):
+    for e in map(_edge, edges):
+        if e["type"] == "SAME_AS" and (e["properties"] or {}).get("assertion_id"):
             parent[find(e["start_id"])] = find(e["end_id"])
     return {x: find(x) for x in parent}
 
@@ -96,9 +114,10 @@ def _day(value) -> date | None:
         return None
 
 
-def _filing(flow: dict) -> str:
-    props = flow["properties"]
-    return props.get("filing_id") or "-".join(flow["id"].split("-")[:2])
+def _same_filing(a: dict, b: dict) -> bool:
+    """Only recorded filing provenance establishes one filing; a shared id prefix is the filer, not the filing."""
+    fa, fb = a["properties"].get("filing_id"), b["properties"].get("filing_id")
+    return bool(fa) and fa == fb
 
 
 def double_count_problems(nodes, edges, only: set[str] | None = None, identity_edges=()) -> list[str]:
@@ -146,7 +165,7 @@ def double_count_problems(nodes, edges, only: set[str] | None = None, identity_e
     for members in groups.values():
         for a, b in combinations(sorted(members), 2):
             da, db = _day(flows[a]["properties"].get("flow_date")), _day(flows[b]["properties"].get("flow_date"))
-            if (da and db and abs((da - db).days) <= DUPLICATE_WINDOW_DAYS and _filing(flows[a]) != _filing(flows[b])
+            if (da and db and abs((da - db).days) <= DUPLICATE_WINDOW_DAYS and not _same_filing(flows[a], flows[b])
                     and wanted(a, b)):
                 problems.append(f"{a} and {b}: same amount, same counterparties, {abs((da - db).days)} day(s) "
                                 f"apart in different filings — possibly one transfer reported twice")
@@ -160,17 +179,20 @@ def _read_jsonl(path: Path) -> list[dict]:
 
 def guard(baseline_db: Path, candidate_db: Path, candidate_export: Path, intended: list[dict],
           overlay: Path | None = None) -> list[str]:
-    allowed = {(c["surface"], c["key"]) for c in intended}
+    """Every change to the money surface must be intended with its exact before/after values; any change also
+    runs the double-count detector (over the whole candidate when an identity link changed)."""
+    allowed = {(c["surface"], c["key"]): (c.get("before"), c.get("after")) for c in intended}
     changes = surface_changes(money_surface(baseline_db), money_surface(candidate_db))
-    problems = [f"{surface} changed at {key}: {before} -> {after} (not in the intended changes)"
-                for surface, key, before, after in changes if (surface, key) not in allowed]
+    problems = [f"{surface} changed at {key}: {before} -> {after} (not intended with these values)"
+                for surface, key, before, after in changes if allowed.get((surface, key)) != (before, after)]
     touched = {key for surface, key, _, _ in changes if surface == "flows"}
     touched |= {part for surface, key, _, _ in changes if surface == "flow_edges" for part in key.split("|")}
     if changes:
         nodes = _read_jsonl(candidate_export / "nodes.jsonl")
         edges = _read_jsonl(candidate_export / "edges.jsonl")
         identity = _read_jsonl(overlay / "edges.jsonl") if overlay else []
-        problems += double_count_problems(nodes, edges, only=touched, identity_edges=identity)
+        whole = any(surface == "identity_links" for surface, *_ in changes)
+        problems += double_count_problems(nodes, edges, only=None if whole else touched, identity_edges=identity)
     return problems
 
 
@@ -179,7 +201,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--baseline-db", type=Path, required=True)
     parser.add_argument("--candidate-db", type=Path, required=True)
     parser.add_argument("--candidate-export", type=Path, required=True)
-    parser.add_argument("--intended", type=Path, required=True, help="JSON list of {surface, key} allowed to change")
+    parser.add_argument("--intended", type=Path, required=True, help="JSON list of {surface, key, before, after}: each change exactly as intended")
     parser.add_argument("--overlay", type=Path, help="the attach overlay dir the candidate bake read")
     args = parser.parse_args(argv)
     intended = json.loads(args.intended.read_text())

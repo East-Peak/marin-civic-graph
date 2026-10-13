@@ -130,6 +130,18 @@ class TestRefusals:
     def test_mixed_list_value(self):
         self._refused([_n("record-x", ["Record"], detail=[1, "a"])], [], "Neo4j")
 
+    def test_null_value(self):
+        self._refused([_n("record-x", ["Record"], detail=None)], [], "Neo4j")
+
+    def test_null_edge_value(self):
+        self._refused([], [_e("org-example-fund", "committee-netfile-7", "RELATED_TO", basis=None)], "Neo4j")
+
+    def test_out_of_range_integer(self):
+        self._refused([_n("record-x", ["Record"], count=2 ** 63)], [], "Neo4j")
+
+    def test_no_labels(self):
+        self._refused([_n("record-x", [])], [], "label")
+
     def test_duplicate_case_node(self):
         self._refused([_n("record-x", ["Record"]), _n("record-x", ["Record"])], [], "duplicate")
 
@@ -181,6 +193,13 @@ class TestVerify:
             if e["type"] == "PRIMARY_FOR_ELECTION":
                 e["properties"] = {}
         assert any("PRIMARY_FOR_ELECTION" in p for p in verify_additive(nodes, edges, bn, be, cn, ce))
+
+    def test_a_duplicated_candidate_node_fails(self):
+        bn, be = _baseline()
+        cn, ce = _case()
+        nodes, edges = apply_additive(bn, be, _plan())
+        bad = {**nodes[0], "properties": {**nodes[0]["properties"], "name": "Wrong"}}
+        assert any("duplicate" in p for p in verify_additive([bad, *nodes], edges, bn, be, cn, ce))
 
     def test_a_touched_baseline_property_fails(self):
         bn, be = _baseline()

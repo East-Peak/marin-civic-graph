@@ -7,11 +7,12 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from bake_public_substrate import bake_substrate  # noqa: E402
-from case_totals_guard import double_count_problems, guard, main, money_surface  # noqa: E402
+from case_totals_guard import double_count_problems, guard, main, money_surface, surface_changes  # noqa: E402
 
-REGISTRY = {"graph_node_types": {"Organization": {}, "MoneyFlow": {}, "Agreement": {}, "Committee": {}},
+REGISTRY = {"graph_node_types": {"Organization": {}, "MoneyFlow": {}, "Agreement": {}, "Committee": {},
+                                 "Program": {}},
             "id_prefixes": {"org-": "Organization", "moneyflow-": "MoneyFlow", "agreement-": "Agreement",
-                            "committee-": "Committee"}}
+                            "committee-": "Committee", "program-": "Program"}}
 
 
 def _n(id_, labels, **props):
@@ -48,6 +49,12 @@ def _with_grant(nodes, edges, *stages):
     return nodes, edges
 
 
+def _loader_edge(e):
+    """The attach overlay's own edge format."""
+    return {"source_id": e["start_id"], "relationship_type": e["type"], "target_id": e["end_id"],
+            "properties": e["properties"]}
+
+
 def _write_export(d: Path, nodes, edges):
     d.mkdir(parents=True)
     (d / "nodes.jsonl").write_text("".join(json.dumps(n) + "\n" for n in nodes))
@@ -57,7 +64,7 @@ def _write_export(d: Path, nodes, edges):
 def _bake(tmp_path: Path, name: str, nodes, edges, overlay_edges=()) -> tuple[Path, Path]:
     root = tmp_path / name
     _write_export(root / "export", nodes, edges)
-    _write_export(root / "overlay", [], list(overlay_edges))  # the bake's stamped SAME_AS authority
+    _write_export(root / "overlay", [], [_loader_edge(e) for e in overlay_edges])  # the stamped SAME_AS authority
     registry = root / "node-types.json"
     registry.write_text(json.dumps(REGISTRY))
     bake_substrate(registry_path=registry, sqlite_path=root / "public.sqlite", report_path=root / "report.json",
@@ -84,21 +91,37 @@ class TestDoubleCounting:
     def test_intending_the_change_does_not_bless_the_double_count(self, tmp_path):
         base_db, _ = _bake(tmp_path, "base", *_base_graph())
         cand_db, cand_export = _bake(tmp_path, "cand", *_with_grant(*_base_graph(), "authorization", "disbursement"))
-        intended = [{"surface": s, "key": k} for s, k in
-                    _all_changes(money_surface(base_db), money_surface(cand_db))]
-        assert any("authorization" in p for p in guard(base_db, cand_db, cand_export, intended=intended))
+        assert any("authorization" in p for p in guard(base_db, cand_db, cand_export,
+                                                        intended=_intend(base_db, cand_db)))
 
-    def test_a_held_back_authorization_passes(self, tmp_path):
-        base_db, base_export = _bake(tmp_path, "base", *_base_graph())
-        assert guard(base_db, base_db, base_export, intended=[]) == []
+    def test_holding_the_authorization_back_leaves_one_100_disbursement(self, tmp_path):
+        base_db, _ = _bake(tmp_path, "base", *_base_graph())
+        cand_db, cand_export = _bake(tmp_path, "cand", *_with_grant(*_base_graph(), "disbursement"))
+        assert _rollup(cand_db, "org-sample-agency") == (100.0, 0.0)
+        assert guard(base_db, cand_db, cand_export, intended=_intend(base_db, cand_db)) == []
 
     def test_one_intended_disbursement_passes(self, tmp_path):
         base_db, _ = _bake(tmp_path, "base", *_base_graph())
         cand_db, cand_export = _bake(tmp_path, "cand", *_with_grant(*_base_graph(), "disbursement"))
-        intended = [{"surface": s, "key": k} for s, k in
-                    _all_changes(money_surface(base_db), money_surface(cand_db))]
-        assert guard(base_db, cand_db, cand_export, intended=intended) == []
+        assert guard(base_db, cand_db, cand_export, intended=_intend(base_db, cand_db)) == []
         assert guard(base_db, cand_db, cand_export, intended=[]) != []  # but never silently
+
+    def test_an_intended_change_must_match_its_exact_values(self, tmp_path):
+        base_db, _ = _bake(tmp_path, "base", *_base_graph())
+        cand_db, cand_export = _bake(tmp_path, "cand", *_with_grant(*_base_graph(), "disbursement"))
+        intended = _intend(base_db, cand_db)
+        for change in intended:
+            if change["surface"] == "money_rollups":
+                change["after"] = change["after"].replace("100.0", "90.0")
+        assert any("money_rollups" in p for p in guard(base_db, cand_db, cand_export, intended=intended))
+
+    def test_missing_filing_provenance_never_means_same_filing(self):
+        nodes, edges = _base_graph()
+        nodes.append(_n("moneyflow-7-a2", ["MoneyFlow"], amount=125.0, flow_type="contribution",
+                        flow_date="2030-01-06"))
+        edges += [_e("org-example-fund", "moneyflow-7-a2", "FROM_SOURCE"),
+                  _e("moneyflow-7-a2", "committee-netfile-7", "TO_TARGET")]
+        assert double_count_problems(nodes, edges)
 
     def test_same_stage_duplicate_reports_are_caught(self, tmp_path):
         nodes, edges = _base_graph()
@@ -125,11 +148,10 @@ def _read(nodes, edges):
     return nodes, edges
 
 
-def _all_changes(before, after):
-    for surface in before:
-        for key in sorted(set(before[surface]) | set(after[surface])):
-            if before[surface].get(key) != after[surface].get(key):
-                yield surface, key
+def _intend(base_db, cand_db):
+    """An intended-changes list that states every change's exact before/after values."""
+    return [{"surface": s, "key": k, "before": b, "after": a}
+            for s, k, b, a in surface_changes(money_surface(base_db), money_surface(cand_db))]
 
 
 class TestInvariant:
@@ -138,7 +160,34 @@ class TestInvariant:
         base_db, _ = _bake(tmp_path, "base", nodes, edges)
         cand_db, cand_export = _bake(tmp_path, "cand", nodes, edges, overlay_edges=[
             _e("org-example-fund", "org-sample-agency", "SAME_AS", assertion_id="assertion-2")])
-        assert any("identity_links" in p for p in guard(base_db, cand_db, cand_export, intended=[]))
+        assert any("identity_links" in p for p in guard(base_db, cand_db, cand_export, intended=[],
+                                                         overlay=tmp_path / "cand" / "overlay"))
+
+    def test_an_intended_identity_link_that_joins_duplicates_is_still_caught(self, tmp_path):
+        nodes, edges = _base_graph()
+        nodes += [_n("org-example-fund-alias", ["Organization"], name="Example Fund Inc"),
+                  _n("moneyflow-8-e1", ["MoneyFlow"], amount=125.0, flow_type="expenditure", flow_date="2030-01-06",
+                     filing_id="filing-8")]
+        nodes[3]["properties"]["filing_id"] = "filing-7"
+        edges += [_e("org-example-fund-alias", "moneyflow-8-e1", "FROM_SOURCE"),
+                  _e("moneyflow-8-e1", "committee-netfile-7", "TO_TARGET")]
+        base_db, _ = _bake(tmp_path, "base", nodes, edges)
+        link = _e("org-example-fund", "org-example-fund-alias", "SAME_AS", assertion_id="assertion-3")
+        cand_db, cand_export = _bake(tmp_path, "cand", nodes, edges, overlay_edges=[link])
+        problems = guard(base_db, cand_db, cand_export, intended=_intend(base_db, cand_db),
+                         overlay=tmp_path / "cand" / "overlay")
+        assert any("moneyflow-7-a1" in p and "moneyflow-8-e1" in p for p in problems)
+
+    def test_a_join_key_on_a_flow_neighbour_fails(self, tmp_path):
+        # local-pressure ranking selects Programs by place keys and sums their adjacent flows
+        nodes, edges = _base_graph()
+        nodes.append(_n("program-sample", ["Program"], name="Sample program"))
+        edges.append(_e("program-sample", "moneyflow-7-a1", "RELATES_TO_PROGRAM"))
+        base_db, _ = _bake(tmp_path, "base", nodes, edges)
+        cand = [*nodes[:-1], _n("program-sample", ["Program"], name="Sample program",
+                                primary_place_id="place-sample")]
+        cand_db, cand_export = _bake(tmp_path, "cand", cand, edges)
+        assert any("flow_neighbours" in p for p in guard(base_db, cand_db, cand_export, intended=[]))
 
     def test_offsetting_amounts_fail_though_the_net_is_unchanged(self, tmp_path):
         nodes, edges = _base_graph()

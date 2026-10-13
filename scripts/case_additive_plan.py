@@ -43,15 +43,21 @@ def _edge_key(e: dict) -> tuple[str, str, str]:
     return e["start_id"], e["type"], e["end_id"]
 
 
-def _neo4j_value(value) -> bool:
-    """Neo4j stores scalars and homogeneous lists of scalars; never maps or mixed lists."""
-    scalar = (bool, int, float, str)
-    if value is None or isinstance(value, scalar):
+INT64 = (-2 ** 63, 2 ** 63 - 1)
+
+
+def _neo4j_scalar(value) -> bool:
+    if isinstance(value, bool) or isinstance(value, (float, str)):
         return True
+    return isinstance(value, int) and INT64[0] <= value <= INT64[1]
+
+
+def _neo4j_value(value) -> bool:
+    """What a SET round-trips: scalars and homogeneous lists of them. Never null (SET drops it), maps or
+    mixed lists."""
     if isinstance(value, list):
-        kinds = {type(v) for v in value}
-        return len(kinds) <= 1 and all(isinstance(v, scalar) for v in value)
-    return False
+        return len({type(v) for v in value}) <= 1 and all(_neo4j_scalar(v) for v in value)
+    return _neo4j_scalar(value)
 
 
 def _index(rows, key, what: str) -> dict:
@@ -82,6 +88,8 @@ def plan_additive(baseline_nodes, baseline_edges, case_nodes, case_edges) -> dic
         if props.get("id", nid) != nid:
             raise AdditivePlanError(f"{nid}: properties.id {props['id']!r} differs from the node id")
         _check_values(props, nid)
+        if not node["labels"]:
+            raise AdditivePlanError(f"{nid}: a node needs at least one label")
         for label in node["labels"]:
             if not IDENTIFIER.fullmatch(label):
                 raise AdditivePlanError(f"{nid}: label {label!r} is not a safe identifier")
@@ -146,7 +154,11 @@ def apply_additive(baseline_nodes, baseline_edges, ops) -> tuple[list[dict], lis
 def verify_additive(nodes, edges, baseline_nodes, baseline_edges, case_nodes, case_edges) -> list[str]:
     """Every intended node/edge property is in the candidate, and the rest of it is the baseline unchanged."""
     problems = []
-    cand = {n["id"]: n for n in nodes}
+    cand = {}
+    for n in nodes:
+        if n["id"] in cand:
+            problems.append(f"duplicate candidate node {n['id']}")
+        cand[n["id"]] = n
     cand_edges = {}
     for e in edges:
         if _edge_key(e) in cand_edges:
