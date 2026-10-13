@@ -91,7 +91,7 @@ def _edge(row: dict) -> dict:
 
 def _closure(edges) -> dict[str, str]:
     """Identity sets from stamped SAME_AS edges (an assertion_id), unioned. The bake takes them from the attach
-    overlay; callers pass the overlay's edges with the export's, a superset, so no duplicate hides behind one."""
+    overlay; the guard passes the candidate bake's own identity_links with the export's edges, a superset."""
     parent: dict[str, str] = {}
 
     def find(x):
@@ -177,8 +177,14 @@ def _read_jsonl(path: Path) -> list[dict]:
         return [json.loads(line) for line in f if line.strip()]
 
 
-def guard(baseline_db: Path, candidate_db: Path, candidate_export: Path, intended: list[dict],
-          overlay: Path | None = None) -> list[str]:
+def _identity_edges(db_path: Path) -> list[dict]:
+    """The identity links the candidate bake actually used (it takes them from the attach overlay)."""
+    with sqlite3.connect(db_path) as conn:
+        return [{"start_id": s, "type": "SAME_AS", "end_id": t, "properties": {"assertion_id": a}}
+                for s, t, a in conn.execute("SELECT source, target, assertion_id FROM identity_links")]
+
+
+def guard(baseline_db: Path, candidate_db: Path, candidate_export: Path, intended: list[dict]) -> list[str]:
     """Every change to the money surface must be intended with its exact before/after values; any change also
     runs the double-count detector (over the whole candidate when an identity link changed)."""
     allowed = {(c["surface"], c["key"]): (c.get("before"), c.get("after")) for c in intended}
@@ -190,7 +196,7 @@ def guard(baseline_db: Path, candidate_db: Path, candidate_export: Path, intende
     if changes:
         nodes = _read_jsonl(candidate_export / "nodes.jsonl")
         edges = _read_jsonl(candidate_export / "edges.jsonl")
-        identity = _read_jsonl(overlay / "edges.jsonl") if overlay else []
+        identity = _identity_edges(candidate_db)
         whole = any(surface == "identity_links" for surface, *_ in changes)
         problems += double_count_problems(nodes, edges, only=None if whole else touched, identity_edges=identity)
     return problems
@@ -202,11 +208,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--candidate-db", type=Path, required=True)
     parser.add_argument("--candidate-export", type=Path, required=True)
     parser.add_argument("--intended", type=Path, required=True, help="JSON list of {surface, key, before, after}: each change exactly as intended")
-    parser.add_argument("--overlay", type=Path, help="the attach overlay dir the candidate bake read")
     args = parser.parse_args(argv)
     intended = json.loads(args.intended.read_text())
     changes = surface_changes(money_surface(args.baseline_db), money_surface(args.candidate_db))
-    problems = guard(args.baseline_db, args.candidate_db, args.candidate_export, intended, args.overlay)
+    problems = guard(args.baseline_db, args.candidate_db, args.candidate_export, intended)
     print(f"money surface: {len(changes)} change(s), {len(intended)} intended")
     for surface, key, before, after in changes:
         print(f"  {surface} {key}: {before} -> {after}")

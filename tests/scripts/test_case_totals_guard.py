@@ -160,8 +160,7 @@ class TestInvariant:
         base_db, _ = _bake(tmp_path, "base", nodes, edges)
         cand_db, cand_export = _bake(tmp_path, "cand", nodes, edges, overlay_edges=[
             _e("org-example-fund", "org-sample-agency", "SAME_AS", assertion_id="assertion-2")])
-        assert any("identity_links" in p for p in guard(base_db, cand_db, cand_export, intended=[],
-                                                         overlay=tmp_path / "cand" / "overlay"))
+        assert any("identity_links" in p for p in guard(base_db, cand_db, cand_export, intended=[]))
 
     def test_an_intended_identity_link_that_joins_duplicates_is_still_caught(self, tmp_path):
         nodes, edges = _base_graph()
@@ -174,8 +173,7 @@ class TestInvariant:
         base_db, _ = _bake(tmp_path, "base", nodes, edges)
         link = _e("org-example-fund", "org-example-fund-alias", "SAME_AS", assertion_id="assertion-3")
         cand_db, cand_export = _bake(tmp_path, "cand", nodes, edges, overlay_edges=[link])
-        problems = guard(base_db, cand_db, cand_export, intended=_intend(base_db, cand_db),
-                         overlay=tmp_path / "cand" / "overlay")
+        problems = guard(base_db, cand_db, cand_export, intended=_intend(base_db, cand_db))
         assert any("moneyflow-7-a1" in p and "moneyflow-8-e1" in p for p in problems)
 
     def test_a_join_key_on_a_flow_neighbour_fails(self, tmp_path):
