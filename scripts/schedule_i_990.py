@@ -12,6 +12,11 @@ and Schedule I Part II rows only. Part VII officers and Schedule I Part III
 as a presence flag. Street address lines are never kept. Amounts stay exact
 decimal strings; absent is None, never 0.
 
+Part III text is never emitted and is not a withhold source: Schedule I Part
+III reports grant types and aggregate counts, not individuals' names; person
+names anywhere in the return are. Every string in an emitted grant row,
+address included, is checked against those names.
+
 Reuses ingest_990's namespace-agnostic helpers (IRS schemas vary by version).
 The CLI writes only under the case staging root and a directory that
 campaign_ledger.resolve_output_root accepts.
@@ -147,19 +152,26 @@ class _Redactor:
         return value
 
 
+def _redact_strings(value: Any, redact: _Redactor) -> Any:
+    """Apply `redact` to every string in a (nested) emitted structure, not a field list."""
+    if isinstance(value, dict):
+        return {k: _redact_strings(v, redact) for k, v in value.items()}
+    return redact(value) if isinstance(value, str) else value
+
+
 def _grant_row(row: ET.Element, redact: _Redactor) -> dict[str, Any]:
     ein = _normalize_ein(_direct(row, "RecipientEIN"))
-    return {
-        "recipient_name": redact(_recipient_name(row)),
+    return _redact_strings({
+        "recipient_name": _recipient_name(row),
         "recipient_ein": ein,
         "address": _address(row),
-        "irc_section": redact(_direct(row, "IRCSectionDesc")),
+        "irc_section": _direct(row, "IRCSectionDesc"),
         "cash_grant_amt": _amount(_direct(row, "CashGrantAmt")),
         "non_cash_assistance_amt": _amount(_direct(row, "NonCashAssistanceAmt")),
-        "non_cash_description": redact(_direct(row, "NonCashAssistanceDesc")),
-        "valuation_method": redact(_direct(row, "ValuationMethodUsedDesc")),
-        "purpose": redact(_direct(row, "PurposeOfGrantTxt")),
-    }
+        "non_cash_description": _direct(row, "NonCashAssistanceDesc"),
+        "valuation_method": _direct(row, "ValuationMethodUsedDesc"),
+        "purpose": _direct(row, "PurposeOfGrantTxt"),
+    }, redact)
 
 
 def _schedule_i(return_data: ET.Element, redact: _Redactor) -> dict[str, Any]:

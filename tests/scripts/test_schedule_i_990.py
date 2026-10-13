@@ -359,3 +359,10 @@ def test_part_iii_text_never_emitted_and_does_not_withhold_part_ii():
     r = s990.parse_return(make_return(schedule=rows + PART_III))
     assert PART_III_SENTINEL not in json.dumps(r)
     assert r["schedule_i"]["grants"][0]["purpose"] == purpose and r["withheld_fields"] == 0
+
+
+def test_person_name_in_address_city_is_withheld():
+    row = recipient("Clean Org", cash="1").replace("<CityNm>Exampleton</CityNm>", f"<CityNm>{OFFICER_SENTINEL}</CityNm>")
+    r = s990.parse_return(make_return(schedule=row))
+    assert r["schedule_i"]["grants"][0]["address"]["city"] == s990.WITHHELD
+    assert OFFICER_SENTINEL not in json.dumps(r) and r["withheld_fields"] == 1
