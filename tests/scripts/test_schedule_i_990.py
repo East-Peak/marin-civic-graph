@@ -180,8 +180,35 @@ def test_unknown_version_is_unsupported_not_parsed():
 
 
 def test_supported_versions_cover_data_years():
-    for v in ("2019v5.0", "2021v4.1", "2022v5.0", "2023v5.1", "2024v5.0"):
-        assert v in s990.SUPPORTED_RETURN_VERSIONS
+    for v in sorted(s990.SUPPORTED_RETURN_VERSIONS):
+        r = s990.parse_return(make_return(version=v, schedule=two_rows()))
+        assert r["status"] == "ok" and len(r["schedule_i"]["grants"]) == 2
+    assert "2019v5.0" not in s990.SUPPORTED_RETURN_VERSIONS
+
+
+def test_prefixed_namespace_extracts_fields():
+    xml = make_return(schedule=two_rows()).decode()
+    xml = xml.replace(' xmlns="http://www.irs.gov/efile"', "")
+    xml = xml.replace("<", "<irs:").replace("<irs:/", "</irs:").replace(
+        "<irs:Return ", '<irs:Return xmlns:irs="http://www.irs.gov/efile" ')
+    r = s990.parse_return(xml.encode())
+    assert r["status"] == "ok" and r["ein"] == EIN and r["total_revenue"] == "1000000.50"
+    assert r["schedule_i"]["grants"][0]["recipient_name"] == "Sample Housing Agency"
+
+
+# --- privacy gate ----------------------------------------------------------
+
+@pytest.mark.parametrize("leak", [OFFICER_SENTINEL, "OFFICERSENTINEL, Zelda", PART_III_SENTINEL])
+def test_person_and_part_iii_text_withheld_from_free_text_fields(leak):
+    rows = recipient(leak, cash="1", extra=f"<PurposeOfGrantTxt>Support from {leak} fund</PurposeOfGrantTxt>"
+                     f"<NonCashAssistanceDesc>{leak}</NonCashAssistanceDesc>")
+    rows += recipient("Clean Org", cash="2", extra="<PurposeOfGrantTxt>Housing</PurposeOfGrantTxt>")
+    r = s990.parse_return(make_return(schedule=rows + PART_III))
+    text = json.dumps(r)
+    assert "entinel" not in text.replace("Sentinel Line One", "")
+    first, clean = r["schedule_i"]["grants"]
+    assert first["recipient_name"] == first["purpose"] == first["non_cash_description"] == s990.WITHHELD
+    assert clean["purpose"] == "Housing" and r["withheld_fields"] == 3
 
 
 # --- selection -------------------------------------------------------------
@@ -217,7 +244,22 @@ def test_ineligible_returns_excluded():
     rows = [parsed("A"), parsed("OTHER", ein="009999999"), parsed("PF", rtype="990PF", data_child="IRS990PF"),
             parsed("V", version="2099v1.0")]
     sel = s990.select_latest_per_year(rows, EIN)
-    assert [c["object_id"] for c in sel["considered"]] == ["A"]
+    assert [c["object_id"] for c in sel["considered"]] == ["A", "V"]
+
+
+def test_unsupported_later_amendment_is_a_gap_not_substituted():
+    sel = s990.select_latest_per_year([
+        parsed("A", ts="2023-05-01T10:00:00-07:00"),
+        parsed("B", ts="2023-09-01T10:00:00-07:00", amended=True, version="2099v1.0")], EIN)
+    (y,) = sel["years"]
+    assert (y["status"], y["object_id"], y["superseded"], y["return_version"]) == \
+        ("unsupported_latest", "B", ["A"], "2099v1.0")
+    assert {c["object_id"] for c in sel["considered"]} == {"A", "B"}
+
+
+def test_newest_year_unsupported_is_reported_as_gap():
+    sel = s990.select_latest_per_year([parsed("A", year="2021"), parsed("N", year="2022", version="2099v1.0")], EIN)
+    assert [(y["tax_year"], y["status"]) for y in sel["years"]] == [("2022", "unsupported_latest"), ("2021", "ok")]
 
 
 # --- geography and targets -------------------------------------------------
@@ -228,7 +270,11 @@ def addr(country="US", state="CA", zip5="94903"):
 
 def test_marin_rule():
     assert s990.MARIN_ZIP_LIST_VERSION == "usps-preferred-city-2026-10"
-    assert len(s990.MARIN_ZIP5) == 40 and isinstance(s990.MARIN_ZIP5, frozenset)
+    assert isinstance(s990.MARIN_ZIP5, frozenset)
+    for z in ("94901", "94998", "94966", "94979"):
+        assert s990.marin_rule(addr(zip5=z)) == "in_rule"
+    for z in ("94102", "94801", "94590"):
+        assert s990.marin_rule(addr(zip5=z)) == "outside_rule"
     assert s990.marin_rule(addr()) == "in_rule"
     assert s990.marin_rule(addr(zip5="90001")) == "outside_rule"
     assert s990.marin_rule(addr(state="NV")) == "outside_rule"
@@ -244,6 +290,9 @@ def test_match_targets_independent_of_geography():
     far = addr(state="NV", zip5=None)
     assert s990.match_targets({"recipient_ein": "00-9876543", "recipient_name": "x", "address": far}, targets) == "ein_match:ha"
     assert s990.match_targets({"recipient_ein": None, "recipient_name": "COUNTY OF EXAMPLE, Inc.", "address": far}, targets) == "name_match:county"
+    # a differing EIN is never rescued by an equal name
+    assert s990.match_targets({"recipient_ein": "001111111", "recipient_name": "Sample Housing Agency",
+                               "address": far}, targets) is None
     assert s990.match_targets({"recipient_ein": None, "recipient_name": "Other", "address": addr()}, targets) is None
 
 

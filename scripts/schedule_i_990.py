@@ -47,22 +47,23 @@ from org_resolution import _normalize_name
 ROOT = Path(__file__).resolve().parent.parent
 STAGING_ROOT = Path("/Users/tammypais/open-marin-staging/cf6-case")
 
-# Return@returnVersion values whose Schedule I / header paths were checked
-# (2021v4.x-2024v5.0 seen in data/raw/990 and tests/fixtures/990; the 2019-2020
-# and intermediate versions share the same paths). Anything else is reported,
-# never parsed on a guess.
+# Return@returnVersion values actually observed (data/raw/990 and the committed
+# tests/fixtures/990 returns) whose Schedule I / header paths were checked.
+# Anything else is reported as unsupported, never parsed on a guess.
 SUPPORTED_RETURN_VERSIONS = frozenset({
-    "2019v5.0", "2019v5.1", "2020v1.0", "2020v2.0", "2020v3.0", "2020v3.1",
-    "2021v4.0", "2021v4.1", "2021v4.2", "2022v4.0", "2022v4.1", "2022v5.0",
-    "2023v5.0", "2023v5.1", "2023v6.0", "2024v5.0", "2024v5.1",
+    "2021v4.0", "2021v4.1", "2021v4.2", "2022v4.1", "2022v5.0",
+    "2023v5.0", "2023v5.1", "2023v6.0", "2024v5.0",
 })
 
+WITHHELD = "[withheld: matches a person named in the return]"
+
 MARIN_ZIP_LIST_VERSION = "usps-preferred-city-2026-10"
-# ZIP codes whose USPS preferred city lies in Marin County, CA.
+# USPS ZIP codes in Marin County per the California Volunteers county lookup
+# (californiavolunteers.ca.gov/look-up-your-county-by-zip-code/, fetched 2026-10).
 MARIN_ZIP5 = frozenset(
     "94901 94903 94904 94912 94913 94914 94915 94920 94924 94925 94929 94930 94933 94937 94938 "
     "94939 94940 94941 94942 94945 94946 94947 94948 94949 94950 94956 94957 94960 94963 94964 "
-    "94965 94966 94970 94971 94973 94974 94976 94977 94978 94979".split()
+    "94965 94966 94970 94971 94973 94974 94976 94977 94978 94979 94998".split()
 )
 
 
@@ -114,22 +115,55 @@ def _recipient_name(row: ET.Element) -> str | None:
     return " ".join(p for p in (line1, line2) if p) or None
 
 
-def _grant_row(row: ET.Element) -> dict[str, Any]:
+def _norm(text: str) -> str:
+    return " ".join(re.sub(r"[^0-9a-z]+", " ", text.casefold()).split())
+
+
+def _forbidden_values(root: ET.Element) -> set[str]:
+    """Normalized person names (any *PersonNm, in both word orders) and Part III text in this return.
+
+    Free-text Schedule I fields are checked against these before output, so a
+    name copied from Part VII or Part III into a purpose line cannot leak.
+    """
+    found: set[str] = set()
+    for el in root.iter():
+        text = _norm(el.text or "")
+        if _local(el.tag).endswith("PersonNm") and text:
+            tokens = text.split()
+            found.update({text, " ".join(tokens[1:] + tokens[:1]), " ".join(tokens[-1:] + tokens[:-1])})
+        elif _local(el.tag) == "GrantsOtherAsstToIndivInUSGrp":
+            found.update(t for d in el.iter() if (t := _norm(d.text or "")) and not t.isdigit())
+    return {f for f in found if len(f) >= 4}
+
+
+class _Redactor:
+    def __init__(self, forbidden: set[str]) -> None:
+        self.forbidden, self.withheld = forbidden, 0
+
+    def __call__(self, value: str | None) -> str | None:
+        padded = f" {_norm(value or '')} "
+        if value and any(f" {f} " in padded for f in self.forbidden):
+            self.withheld += 1
+            return WITHHELD
+        return value
+
+
+def _grant_row(row: ET.Element, redact: _Redactor) -> dict[str, Any]:
     ein = _normalize_ein(_direct(row, "RecipientEIN"))
     return {
-        "recipient_name": _recipient_name(row),
+        "recipient_name": redact(_recipient_name(row)),
         "recipient_ein": ein,
         "address": _address(row),
-        "irc_section": _direct(row, "IRCSectionDesc"),
+        "irc_section": redact(_direct(row, "IRCSectionDesc")),
         "cash_grant_amt": _amount(_direct(row, "CashGrantAmt")),
         "non_cash_assistance_amt": _amount(_direct(row, "NonCashAssistanceAmt")),
-        "non_cash_description": _direct(row, "NonCashAssistanceDesc"),
-        "valuation_method": _direct(row, "ValuationMethodUsedDesc"),
-        "purpose": _direct(row, "PurposeOfGrantTxt"),
+        "non_cash_description": redact(_direct(row, "NonCashAssistanceDesc")),
+        "valuation_method": redact(_direct(row, "ValuationMethodUsedDesc")),
+        "purpose": redact(_direct(row, "PurposeOfGrantTxt")),
     }
 
 
-def _schedule_i(return_data: ET.Element) -> dict[str, Any]:
+def _schedule_i(return_data: ET.Element, redact: _Redactor) -> dict[str, Any]:
     sched = next(iter(_children_by_local(return_data, "IRS990ScheduleI")), None)
     if sched is None:
         return {"present": False, "part_ii_present": False, "part_iii_present": False, "grants": None}
@@ -138,7 +172,7 @@ def _schedule_i(return_data: ET.Element) -> dict[str, Any]:
         "present": True,
         "part_ii_present": bool(rows),
         "part_iii_present": bool(_children_by_local(sched, "GrantsOtherAsstToIndivInUSGrp")),
-        "grants": [_grant_row(r) for r in rows] if rows else None,
+        "grants": [_grant_row(r, redact) for r in rows] if rows else None,
     }
 
 
@@ -171,6 +205,7 @@ def parse_return(source: Path | str | bytes, object_id: str | None = None) -> di
         "total_revenue": None,
         "government_grants": None,
         "schedule_i": None,
+        "withheld_fields": 0,
     }
     if out["return_type"] != "990" or irs990 is None:
         out["status"] = "not_form_990"
@@ -181,7 +216,9 @@ def parse_return(source: Path | str | bytes, object_id: str | None = None) -> di
         out["total_revenue"] = _amount(
             _direct(irs990, "TotalRevenueGrp", "TotalRevenueColumnAmt") or _direct(irs990, "CYTotalRevenueAmt"))
         out["government_grants"] = _amount(_descendant_text(irs990, "GovernmentGrantsAmt"))
-        out["schedule_i"] = _schedule_i(return_data)
+        redact = _Redactor(_forbidden_values(root))
+        out["schedule_i"] = _schedule_i(return_data, redact)
+        out["withheld_fields"] = redact.withheld
     return out
 
 
@@ -203,13 +240,15 @@ def _year_key(year: str) -> tuple[int, str]:
 
 
 def select_latest_per_year(parsed: list[dict[str, Any]], ein: str) -> dict[str, Any]:
-    """Latest ReturnTs per tax year among ok Form 990 returns of `ein`.
+    """Latest ReturnTs per tax year among Form 990 returns of `ein`, supported or not.
 
-    Equal or missing ReturnTs makes the year `ambiguous`; the pick is then
-    the highest object_id, deterministic but flagged, never a silent tie-break.
+    The latest filing decides: if it is an unsupported version the year is
+    reported as `unsupported_latest` (a gap), never replaced by an older
+    parse. Equal or missing ReturnTs makes the year `ambiguous`; the pick is
+    then the highest object_id, deterministic but flagged.
     """
     want = _normalize_ein(ein)
-    eligible = [r for r in parsed if r["status"] == "ok" and r["ein"] == want
+    eligible = [r for r in parsed if r["status"] in ("ok", "unsupported_version") and r["ein"] == want
                 and r["return_type"] == "990" and r["tax_year"]]
     by_year: dict[str, list[dict[str, Any]]] = {}
     for r in eligible:
@@ -222,17 +261,22 @@ def select_latest_per_year(parsed: list[dict[str, Any]], ein: str) -> dict[str, 
         latest = max((t for t, _ in stamped), default=None)
         pool = [r for t, r in stamped if t == latest] if latest else group
         chosen = max(pool, key=lambda r: r["object_id"] or "")
-        years.append({
+        entry = {
             "tax_year": year,
+            "status": "ok" if chosen["status"] == "ok" else "unsupported_latest",
             "object_id": chosen["object_id"],
             "amended": chosen["amended"],
             "superseded": sorted(r["object_id"] for r in group if r is not chosen),
             "ambiguous": len(pool) > 1 or len(stamped) < len(group),
-        })
+        }
+        if entry["status"] != "ok":
+            entry["return_version"] = chosen["return_version"]
+        years.append(entry)
     return {
         "ein": want,
         "years": years,
-        "considered": [{"object_id": r["object_id"], "tax_year": r["tax_year"], "return_ts": r["return_ts"]}
+        "considered": [{"object_id": r["object_id"], "tax_year": r["tax_year"], "return_ts": r["return_ts"],
+                        "status": r["status"], "return_version": r["return_version"]}
                        for r in sorted(eligible, key=lambda r: (_year_key(r["tax_year"]), r["object_id"] or ""))],
     }
 
@@ -261,12 +305,17 @@ def marin_rule(address: dict[str, str | None]) -> str:
 
 
 def match_targets(grant: dict[str, Any], targets: list[dict[str, Any]]) -> str | None:
-    """"ein_match:<label>" or "name_match:<label>" (normalized equality); geography plays no part."""
+    """"ein_match:<label>" or "name_match:<label>"; geography plays no part.
+
+    Name equality (normalized) is a fallback only for a recipient that
+    reports no EIN: a differing EIN is evidence of a different organization.
+    """
     ein = _normalize_ein(grant.get("recipient_ein"))
     if ein:
         for t in targets:
             if ein in {_normalize_ein(e) for e in t.get("eins", [])}:
                 return f"ein_match:{t['label']}"
+        return None
     name = _normalize_name(grant.get("recipient_name") or "")
     if name:
         for t in targets:
