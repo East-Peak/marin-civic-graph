@@ -162,12 +162,6 @@ def scan(paths, forbidden: dict[str, str]) -> list[dict]:
     return hits
 
 
-def _shown(path) -> str:
-    """A path as it may be printed: as given when relative, else just the file name."""
-    path = Path(path)
-    return path.name if path.is_absolute() else str(path)
-
-
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--scan", nargs="+", required=True, type=Path, help="case output files to scan")
@@ -175,29 +169,43 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--ledger", nargs="*", default=[], type=Path, help="ledger JSONL files")
     parser.add_argument("--extra", type=Path, help="operator list of further names, one per line")
     parser.add_argument("--allow", type=Path, help="officials allowed by name, one per line")
+    parser.add_argument("--allow-partial-sources", action="store_true",
+                        help="accept a run without both 990 XML and ledger originals")
+    parser.add_argument("--legend", action="store_true", help="print the target index -> path map to stderr")
     args = parser.parse_args(argv)
-    sources = [*args.xml, *args.ledger, *([args.extra] if args.extra else [])]
-    if not sources:
-        print("cannot run: no sources given (--xml, --ledger or --extra)", file=sys.stderr)
+    if not args.allow_partial_sources and not (args.xml and args.ledger):
+        print("cannot run: both --xml and --ledger originals are required (or --allow-partial-sources)",
+              file=sys.stderr)
         return 2
     try:
-        entries = forbidden_from_990(args.xml) + forbidden_from_ledger(args.ledger)
-        entries += forbidden_from_file(args.extra) if args.extra else []
+        groups = [("xml", p, forbidden_from_990([p])) for p in args.xml]
+        groups += [("ledger", p, forbidden_from_ledger([p])) for p in args.ledger]
+        groups += [("extra", args.extra, forbidden_from_file(args.extra))] if args.extra else []
         allow = [name for name, _ in forbidden_from_file(args.allow)] if args.allow else []
+        entries = [e for _, _, found in groups for e in found]
         forbidden, skipped = build_forbidden(entries, allow)
-        digests = [(_shown(p), hashlib.sha256(p.read_bytes()).hexdigest()) for p in sources]
+        if not forbidden:
+            print("cannot run: the forbidden set is empty, so a clean scan would prove nothing", file=sys.stderr)
+            return 2
+        digests = [(kind, hashlib.sha256(p.read_bytes()).hexdigest(), len(build_forbidden(found, allow)[0]))
+                   for kind, p, found in groups]
         hits = scan(args.scan, forbidden)
     except (OSError, ValueError, KeyError, TypeError, ET.ParseError) as exc:
         print(f"cannot run: {type(exc).__name__}", file=sys.stderr)
         return 2
-    for name, digest in digests:
-        print(f"source {name} sha256 {digest}")
+    for number, (kind, digest, count) in enumerate(digests):
+        print(f"source#{number} {kind} sha256 {digest} names {count}")
     counts = Counter(forbidden.values())
-    print("forbidden values: " + (", ".join(f"{c} {n}" for n, c in sorted(counts.items())) or "none")
+    print("forbidden values: " + ", ".join(f"{c} {n}" for n, c in sorted(counts.items()))
           + f"; skipped {skipped} too short to match")
     print(f"{len(hits)} hits")
+    index = {}
+    for number, path in enumerate(args.scan):
+        index.setdefault(str(path), number)
+        if args.legend:
+            print(f"target#{number} {path}", file=sys.stderr)
     for hit in hits:
-        print(f"{_shown(hit['file'])}:{hit['line']}:{hit['category']}")
+        print(f"target#{index[hit['file']]}:{hit['line']}:{hit['category']}")
     return 1 if hits else 0
 
 

@@ -359,13 +359,14 @@ def _signed(match: re.Match) -> Decimal:
     return -value if match["s1"] or match["s2"] or (match["open"] and match["close"]) else value
 
 
-def amount_in(text: str, amount: Decimal, whole_text_ok: bool = False) -> bool:
-    """True when text holds the signed amount as a whole currency token ($1,234 / -$100 / ($100) ...).
-
-    A bare number (no $) only counts when it is the entire text, as for the sole content of an XML element."""
-    stripped = text.strip()
-    return any(_signed(m) == amount for m in MONEY.finditer(text)
-               if m["cur"] or (whole_text_ok and m.group(0) == stripped))
+def amount_in(unit: str, context: str, amount: Decimal, bare_ok: bool = False) -> bool:
+    """True when a currency token overlapping the context, read with its sign from the full unit text, equals the
+    amount ($1,234 / -$100 / ($100) ...). A sign or parenthesis just outside the context still counts, so a source
+    "-$100.00" never supports +100.00. A bare number (no $) only counts when it is the unit's entire text."""
+    starts = [m.start() for m in re.finditer(re.escape(context), unit)]
+    return any(m.start() < start + len(context) and m.end() > start and _signed(m) == amount
+               for start in starts for m in MONEY.finditer(unit)
+               if m["cur"] or (bare_ok and m.group(0) == unit.strip()))
 
 
 # --- per-claim checks -------------------------------------------------------------------------------------------
@@ -407,8 +408,8 @@ def check_document_context(row: dict, sources: Sources) -> list[str]:
     context = _normalize(str(loc.get("context", "")))
     if not context or context not in unit:
         return [f"{cid}: context not found at the located position"]
-    if row["precision"] == "exact_cents" and not amount_in(context, Decimal(row["amount"]),
-                                                           whole_text_ok=context == unit):
+    if row["precision"] == "exact_cents" and not amount_in(
+            unit, context, Decimal(row["amount"]), bare_ok="element" in loc):
         return [f"{cid}: amount does not appear as a currency token inside the located context"]
     return []
 
@@ -522,7 +523,7 @@ def figures(line: str):
     for m in FIGURE.finditer(line):
         negative = bool(m["s1"] or m["s2"] or (m["open"] and m["close"]))
         approximate = bool(m["approx"])
-        first_suffix = m["suf"] or (m["suf2"] if m["num2"] and not m["cur2"] else None)
+        first_suffix = m["suf"] or (m["suf2"] if m["num2"] else None)  # "$2-$3 million": both in millions
         yield (m.group(0).strip(), *_endpoint(m["num"], m["frac"], first_suffix, negative, approximate))
         if m["num2"]:
             yield (m.group(0).strip(), *_endpoint(m["num2"], m["frac2"], m["suf2"] or (m["suf"] if not m["cur2"] else None),
@@ -538,7 +539,9 @@ def _supports(claim: dict, value: Decimal, tolerance: Decimal | None) -> bool:
     return claim["precision"] in ("approximate", "projected") and abs(amount - value) <= tolerance
 
 
-ABBREVIATIONS = {"e.g", "i.e", "dr", "mr", "ms", "mrs", "st", "vs", "inc", "co", "corp", "ltd", "jr", "sr", "approx"}
+ABBREVIATIONS = {"e.g", "i.e", "vs", "mr", "ms", "mrs", "dr", "jr", "sr", "no"}  # "Inc. Approved" is a sentence end
+STRUCTURAL_HEADINGS = {"what the records show", "what the records do not show", "public-funds connection", "gaps",
+                       "sources searched"}
 LIST_ITEM = re.compile(r"\s*(?:[-*+]|\d+[.)])\s+")
 SEPARATOR = re.compile(r"[\s|:*_=-]{3,}")
 HEADING = re.compile(r"(#{1,6})\s+(.*)")
@@ -549,6 +552,9 @@ def _sentences(text: str) -> list[tuple[int, str]]:
     found, start = [], 0
     for m in re.finditer(r"[.!?][\"')\]]*(?=\s|$)", text):
         if text[m.start()] == ".":
+            following = text[m.end():].lstrip()[:1]
+            if following and (following.islower() or following.isdigit()):
+                continue  # "approx. 2.5", "U.S. agency": the sentence goes on
             word = re.search(r"(\S+)$", text[start:m.start()])
             w = word.group(1).lower().lstrip("([\"'") if word else ""
             if w in ABBREVIATIONS or re.fullmatch(r"[a-z]", w) or re.search(r"\w\.\w", w):
@@ -606,7 +612,8 @@ def check_case_md(text: str, register_rows: list[dict]) -> list[str]:
             problems.append(f"line {number}: answer heading must read '## Q1' to '## Q6'")
         if in_answer and role == "body" and not cited:
             problems.append(f"line {number}: no claim cited")
-        if in_answer and role not in ("body", "h1", "h2") and not cited and re.search(r"[\d$]", unit):
+        if in_answer and role not in ("body", "h1", "h2") and not cited \
+                and unit.strip().rstrip(":").lower() not in STRUCTURAL_HEADINGS:
             problems.append(f"line {number}: heading states a fact without a cited claim")
         claims = [by_id[i] for i in cited if i in by_id]
         for display, value, tolerance in figures(unit):

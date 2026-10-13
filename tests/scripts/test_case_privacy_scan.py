@@ -113,16 +113,16 @@ class TestCli:
         out.write_text("ok\nQuillon Testperson was named.\n")
         code = ps.main(["--scan", str(out), "--xml", str(xml), "--ledger", str(led)])
         text = capsys.readouterr().out
-        assert code == 1 and "CASE.md:2:990_person" in text and str(tmp_path) not in text and "Testperson" not in text and "Mockwell" not in text
+        assert code == 1 and "target#0:2:990_person" in text and "CASE.md" not in text and str(tmp_path) not in text and "Testperson" not in text and "Mockwell" not in text
 
     def test_allowlist_and_clean_run_exit_zero(self, tmp_path, capsys):
         xml = tmp_path / "r.xml"
         xml.write_text(XML)
         allow = tmp_path / "allow.txt"
-        allow.write_text("Quillon Testperson\nMarlowe Samplesmith\nQ Initial Fakeman\n")
+        allow.write_text("Quillon Testperson\nQ Initial Fakeman\n")
         out = tmp_path / "CASE.md"
         out.write_text("Quillon Testperson signed in an official capacity.\n")
-        assert ps.main(["--scan", str(out), "--xml", str(xml), "--allow", str(allow)]) == 0
+        assert ps.main(["--scan", str(out), "--xml", str(xml), "--allow", str(allow), "--allow-partial-sources"]) == 0
         assert "0 hits" in capsys.readouterr().out
 
     def test_extra_list_and_skipped_count_reported(self, tmp_path, capsys):
@@ -130,7 +130,7 @@ class TestCli:
         extra.write_text("Brennick Notreal\nSingle\n")
         out = tmp_path / "x.md"
         out.write_text("Brennick Notreal\n")
-        assert ps.main(["--scan", str(out), "--extra", str(extra)]) == 1
+        assert ps.main(["--scan", str(out), "--extra", str(extra), "--allow-partial-sources"]) == 1
         text = capsys.readouterr().out
         assert "operator_list" in text and "skipped 1" in text
 
@@ -214,13 +214,15 @@ class TestDiagnostics:
     def test_cli_requires_sources(self, tmp_path, capsys):
         out = tmp_path / "CASE.md"
         out.write_text("clean\n")
+        assert ps.main(["--scan", str(out), "--allow-partial-sources"]) == 2  # empty forbidden set proves nothing
+        assert "empty" in capsys.readouterr().err
         assert ps.main(["--scan", str(out)]) == 2
-        assert "no sources" in capsys.readouterr().err
+        assert "--xml and --ledger" in capsys.readouterr().err
 
     def test_cli_unreadable_input_is_value_free(self, tmp_path, capsys):
         extra = tmp_path / "e.txt"
         extra.write_text("Brennick Notreal\n")
-        assert ps.main(["--scan", str(tmp_path / "missing.md"), "--extra", str(extra)]) == 2
+        assert ps.main(["--scan", str(tmp_path / "missing.md"), "--extra", str(extra), "--allow-partial-sources"]) == 2
         err = capsys.readouterr().err
         assert "Notreal" not in err and str(tmp_path) not in err
 
@@ -230,7 +232,52 @@ class TestDiagnostics:
         xml.write_text(PART_III_XML)
         out = tmp_path / "CASE.md"
         out.write_text("Zorblax emergency tuition aid\n")
-        assert ps.main(["--scan", str(out), "--xml", str(xml)]) == 1
+        assert ps.main(["--scan", str(out), "--xml", str(xml), "--allow-partial-sources"]) == 1
         text = capsys.readouterr().out
-        assert hashlib.sha256(xml.read_bytes()).hexdigest() in text and "CASE.md:1:990_part_iii" in text
+        assert hashlib.sha256(xml.read_bytes()).hexdigest() in text and "target#0:1:990_part_iii" in text
         assert "Zorblax" not in text
+
+
+class TestRound2:
+    def _originals(self, tmp_path):
+        xml, led = tmp_path / "r.xml", _ledger(tmp_path / "l.jsonl", [_ind("Ardith", "Mockwell")])
+        xml.write_text(XML)
+        return xml, led
+
+    def test_xml_alone_or_ledger_alone_is_refused_without_the_override(self, tmp_path, capsys):
+        xml, led = self._originals(tmp_path)
+        out = tmp_path / "o.md"
+        out.write_text("clean\n")
+        assert ps.main(["--scan", str(out), "--xml", str(xml)]) == 2
+        assert ps.main(["--scan", str(out), "--ledger", str(led)]) == 2
+        assert ps.main(["--scan", str(out), "--xml", str(xml), "--ledger", str(led)]) == 0
+
+    def test_empty_extra_list_exits_two(self, tmp_path):
+        extra, out = tmp_path / "e.txt", tmp_path / "o.md"
+        extra.write_text("")
+        out.write_text("clean\n")
+        assert ps.main(["--scan", str(out), "--extra", str(extra), "--allow-partial-sources"]) == 2
+
+    def test_source_lines_carry_hash_and_name_count_but_no_path(self, tmp_path, capsys):
+        import hashlib
+        xml, led = self._originals(tmp_path)
+        out = tmp_path / "o.md"
+        out.write_text("clean\n")
+        ps.main(["--scan", str(out), "--xml", str(xml), "--ledger", str(led)])
+        text = capsys.readouterr().out
+        assert f"source#0 xml sha256 {hashlib.sha256(xml.read_bytes()).hexdigest()} names " in text
+        assert "source#1 ledger" in text and "r.xml" not in text and "l.jsonl" not in text
+
+    def test_hits_use_target_indexes_and_legend_goes_to_stderr_only_on_request(self, tmp_path, capsys):
+        xml, led = self._originals(tmp_path)
+        clean, dirty = tmp_path / "clean-Ardith-name.md", tmp_path / "dirty.md"
+        clean.write_text("clean\n")
+        dirty.write_text("Ardith Mockwell\n")
+        argv = ["--scan", str(clean), str(dirty), "--xml", str(xml), "--ledger", str(led)]
+        assert ps.main(argv) == 1
+        captured = capsys.readouterr()
+        assert "target#1:1:individual_contributor" in captured.out and "dirty" not in captured.out + captured.err
+        assert "Ardith" not in captured.out + captured.err
+        ps.main(argv + ["--legend"])
+        captured = capsys.readouterr()
+        assert f"target#1 {dirty}" in captured.err and "dirty" not in captured.out

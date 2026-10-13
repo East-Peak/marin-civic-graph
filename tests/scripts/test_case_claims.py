@@ -335,7 +335,7 @@ class TestCaseMd:
         assert any("line 2" in p for p in problems)
 
     def test_headings_blank_lines_and_other_sections_exempt(self):
-        assert cc.check_case_md("## Q1\n### Sub\n\n## What the records show\nAnything goes.\n", self.ROWS) == []
+        assert cc.check_case_md("## Q1\n### Gaps\n\n## What the records show\nAnything goes.\n", self.ROWS) == []
 
     def test_cited_but_missing_id_fails(self):
         assert any("C-Q9-999" in p for p in cc.check_case_md("## Q1\nA claim [C-Q9-999].\n", self.ROWS))
@@ -595,3 +595,40 @@ class TestTripwireMasking:
 
     def test_balanced_quote_in_one_paragraph_does_not_leak_to_the_next(self):
         assert cc.tripwire('"quoted scheme"\n\nlaundering outside\n') == [(3, "laundering")]
+
+
+class TestRound2:
+    ROWS = TestCaseMdSentences.ROWS + [
+        claim(claim_id="C-Q1-007", amount="2000000", precision="approximate", reconciled=False),
+        claim(claim_id="C-Q1-008", amount="3000000", precision="approximate", reconciled=False),
+        claim(claim_id="C-Q1-009", amount="3.00", precision="exact_cents")]
+
+    def test_source_sign_outside_the_context_is_not_dropped(self, world):
+        tmp, sources, _, _ = world
+        row = _text_claim(tmp, sources, "Entry of -$100.00 noted.", "$100.00 noted", amount="100.00")
+        assert any("amount" in p for p in cc.check_register([row], sources))
+        row = _text_claim(tmp, sources, "Entry of ($100.00) noted.", "$100.00", amount="100.00", name="u.txt")
+        assert any("amount" in p for p in cc.check_register([row], sources))
+        row = _text_claim(tmp, sources, "Entry of -$100.00 noted.", "$100.00 noted", amount="-100.00", name="v.txt")
+        assert cc.check_register([row], sources) == []
+
+    def test_bare_number_only_as_a_whole_xml_element(self, world):
+        tmp, sources, _, _ = world
+        row = _text_claim(tmp, sources, "250000", "250000", name="w.txt")  # a line, not an element
+        assert any("amount" in p for p in cc.check_register([row], sources))
+
+    @pytest.mark.parametrize("text", ["$2\u2013$3 million", "$2-3 million", "$2 million to $3 million"])
+    def test_range_suffix_applies_to_both_endpoints(self, text):
+        rows = TestRound2.ROWS
+        assert cc.check_case_md(f"## Notes\nAbout {text} [C-Q1-007] [C-Q1-008].\n", rows) == []
+        assert cc.check_case_md(f"## Notes\nAbout {text} [C-Q1-009].\n", rows)  # not $2 and $3 exact dollars
+
+    def test_unstructured_subheadings_in_q_sections_need_citations(self):
+        assert any("heading" in p for p in cc.check_case_md("## Q1\n### The board approved the grant\n", self.ROWS))
+        assert cc.check_case_md("## Q1\n### Sources searched\n#### What the records show\n", self.ROWS) == []
+
+    def test_period_space_capital_ends_a_sentence(self):
+        text = "## Q1\nThe grantee was Example Inc. Approved it [C-Q1-004].\n"
+        assert any("line 2" in p for p in cc.check_case_md(text, self.ROWS))
+        assert cc.check_case_md("## Q1\nSee Dr. Jones and e.g. Mr. Lee on the U.S. board [C-Q1-004].\n",
+                                self.ROWS) == []
