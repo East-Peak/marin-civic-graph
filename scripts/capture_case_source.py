@@ -80,7 +80,10 @@ RESTRICTION_MARKERS = (
 )
 INLINE_CODE_RE = re.compile(r"(<(script|style)\b[^>]*>).*?(</\2\s*>)|<!--.*?-->", re.I | re.S)
 TITLE_RE = re.compile(r"<title\b[^>]*>(.*?)</title\s*>", re.I | re.S)
-CHALLENGE_TITLES = ("just a moment", "attention required", "access denied")
+CHALLENGE_TITLES = ("just a moment", "attention required", "access denied", "security verification")
+# Calls that put a challenge on screen; they count even inside a script, unlike a mere widget key there.
+CHALLENGE_CODE = ("grecaptcha.render", "grecaptcha.execute", "hcaptcha.render", "hcaptcha.execute",
+                  "turnstile.render", "_cf_chl_", "challenge-platform")
 SOURCE_RE = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
@@ -186,6 +189,7 @@ def looks_restricted(body: bytes, content_type: str | None) -> bool:
     markup = INLINE_CODE_RE.sub(lambda m: f"{m[1]}{m[3]}" if m[1] else " ", text).lower()
     title = TITLE_RE.search(markup)
     return (bool(PASSWORD_INPUT_RE.search(text)) or any(m in markup for m in RESTRICTION_MARKERS)
+            or any(c in text.lower() for c in CHALLENGE_CODE)
             or bool(title and any(t in title[1] for t in CHALLENGE_TITLES)))
 
 

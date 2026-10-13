@@ -1241,7 +1241,18 @@ def test_marker_in_markup_is_still_a_challenge(env):
         env.capture(site.url("/a.html"))
 
 
-@pytest.mark.parametrize("title", ["Just a moment...", "Attention Required! | Example", "Access denied"])
+@pytest.mark.parametrize("script", [
+    b"grecaptcha.render('box', {sitekey: 'k'})", b"grecaptcha.execute('k')", b"hcaptcha.render('box')",
+    b"turnstile.render('#box')", b"window._cf_chl_opt={cvId:'3'}"])
+def test_challenge_code_inside_a_script_is_still_a_challenge(env, script):
+    site = env.site()
+    site.routes["/a.html"] = page(b"<html><head><title>Sample</title><script>" + script + b"</script></head></html>")
+    with pytest.raises(SourceRestricted):
+        env.capture(site.url("/a.html"))
+
+
+@pytest.mark.parametrize("title", ["Just a moment...", "Attention Required! | Example", "Access denied",
+                                   "Security verification"])
 def test_challenge_titles_are_stopped(env, title):
     site = env.site()
     site.routes["/a.html"] = page(f"<html><head><title>{title}</title></head><body>hello</body></html>".encode())
