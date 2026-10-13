@@ -966,6 +966,25 @@ Examples:
 
 Only Tier A-C should promote a claim into the main graph.
 
+## Worked-Case Modelling
+
+A worked case (one funding/decision chain documented relationship by relationship) uses the existing types and
+loads only additively (`scripts/case_additive_plan.py`; never `cf_migration_plan.py`, which retires flows its
+bundle lacks):
+
+- a measure contest is an `Election`; its committee joins it with `PRIMARY_FOR_ELECTION`
+- a board's action is `Meeting` → `AgendaItem` → `Decision`; `CAST_VOTE` edges come only from minutes or a
+  recorded roll call, never from membership, attendance or a staff recommendation
+- grant or contract terms are an `Agreement` (approved amount as `authorized_amount`, term, purposes); a fund is
+  a `Program`; every case node is `EVIDENCED_BY` a `Record` of the captured document
+- amounts keep their stage apart: `money_stage` is `authorization` (an approved amount or ceiling),
+  `commitment`, `disbursement` (money actually paid) or `reported_transaction` (as filed); `funds_class` is
+  `private` or `public`. The bake's `money_rollups` sums every connected `MoneyFlow` as "VERIFIED MONEY" without
+  reading the stage, so an authorization stays on its `Agreement` and any `MoneyFlow` whose stage a public
+  consumer cannot show is held back from the publish (`scripts/case_totals_guard.py` checks the staging bakes)
+- separate transactions are not a money trail: no edge or property links one transaction's funds to another
+  unless a record ties them
+
 ## Example Queries
 
 - Show all comments, votes, documents, and money flows around one issue in San Rafael.
