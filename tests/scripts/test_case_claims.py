@@ -67,7 +67,7 @@ def claim(**over) -> dict:
 
 
 def doc_claim(sha: str, **over) -> dict:
-    locator = {"kind": "document", "doc_sha256": sha, "page": None, "context": "grant of $250,000.00 to the Sample"}
+    locator = {"kind": "document", "doc_sha256": sha, "line": 1, "context": "grant of $250,000.00 to the"}
     return claim(locator=locator, **over)
 
 
@@ -83,8 +83,19 @@ def computed_claim(ledger_sha: str, recompute: dict, amount: str, **over) -> dic
                  **over)
 
 
+def _text_claim(tmp, sources, text, context, name="t.txt", **over) -> dict:
+    """A claim quoting line 1 of a fresh text document containing `text`."""
+    path = tmp / name
+    path.write_text(text)
+    sha = _sha(path.read_bytes())
+    sources["documents"][sha] = str(path)
+    row = doc_claim(sha, **over)
+    row["locator"] = {"kind": "document", "doc_sha256": sha, "line": 1, "context": context}
+    return row
+
+
 def gap_claim(**over) -> dict:
-    base = {"amount": None, "precision": "none", "status": "gap", "reconciled": False,
+    base = {"question": "Q3", "amount": None, "precision": "none", "status": "gap", "reconciled": False,
             "locator": {"kind": "search_log", "search_id": "S-1"}}
     return claim(**{**base, **over})
 
@@ -130,6 +141,7 @@ class TestLocators:
     def test_unknown_document_sha_fails(self, world):
         _, sources, _, _ = world
         assert any("not in sources" in p for p in cc.check_register([doc_claim("0" * 64)], sources))
+        assert not any("0" * 12 in p for p in cc.check_register([doc_claim("0" * 64)], sources))
 
     def test_document_bytes_must_rehash(self, world):
         tmp, sources, sha, _ = world
@@ -147,7 +159,7 @@ class TestLocators:
 
     def test_record_source_must_rehash_and_record_exist(self, world):
         tmp, sources, _, _ = world
-        assert any("MF-9" in p for p in cc.check_register([record_claim(record_id="MF-9")], sources))
+        assert any("not found" in p for p in cc.check_register([record_claim(record_id="MF-9")], sources))
         (tmp / "ledger.jsonl").write_text("{}\n")
         assert any("hash" in p for p in cc.check_register([record_claim()], sources))
 
@@ -157,7 +169,7 @@ class TestLocators:
 
     def test_search_id_must_exist_and_log_rehash(self, world):
         tmp, sources, _, _ = world
-        assert any("S-9" in p for p in cc.check_register(
+        assert any("search_id" in p for p in cc.check_register(
             [gap_claim(locator={"kind": "search_log", "search_id": "S-9"})], sources))
         (tmp / "searches.jsonl").write_text("")
         assert any("hash" in p for p in cc.check_register([gap_claim()], sources))
@@ -172,22 +184,17 @@ class TestDocumentContext:
     def test_context_must_occur_whitespace_normalized_case_sensitive(self, world):
         _, sources, sha, _ = world
         ok = doc_claim(sha)
-        ok["locator"]["context"] = "The Example Fund authorizes a grant of $250,000.00 to the Sample"
+        ok["locator"]["context"] = "The Example Fund authorizes a grant of $250,000.00 to the"
         assert cc.check_register([ok], sources) == []
         bad = doc_claim(sha)
         bad["locator"]["context"] = "the example fund authorizes a grant of $250,000.00"
         assert any("context" in p for p in cc.check_register([bad], sources))
 
-    @pytest.mark.parametrize("rendered", ["$250,000", "$250,000.00", "250,000", "250000", "250000.00", "250,000.00"])
-    def test_standard_renderings_accepted(self, world, rendered):
+    @pytest.mark.parametrize("rendered", ["$250,000", "$250,000.00", "$250000", "$250000.00"])
+    def test_currency_renderings_accepted(self, world, rendered):
         tmp, sources, _, _ = world
         text = f"Award of {rendered} approved."
-        path = tmp / "r.txt"
-        path.write_text(text)
-        sha = _sha(path.read_bytes())
-        sources["documents"][sha] = str(path)
-        row = doc_claim(sha)
-        row["locator"] = {"kind": "document", "doc_sha256": sha, "page": None, "context": text}
+        row = _text_claim(tmp, sources, text, text)
         assert cc.check_register([row], sources) == []
 
     def test_wrong_cent_fails(self, world):
@@ -197,12 +204,7 @@ class TestDocumentContext:
     def test_amount_not_a_substring_of_a_larger_number(self, world):
         tmp, sources, _, _ = world
         text = "Total of $1,250,000.00 approved."
-        path = tmp / "big.txt"
-        path.write_text(text)
-        sha = _sha(path.read_bytes())
-        sources["documents"][sha] = str(path)
-        row = doc_claim(sha)
-        row["locator"] = {"kind": "document", "doc_sha256": sha, "page": None, "context": text}
+        row = _text_claim(tmp, sources, text, text)
         assert any("amount" in p for p in cc.check_register([row], sources))
 
     def test_html_is_stripped_and_unescaped(self, world):
@@ -213,7 +215,7 @@ class TestDocumentContext:
         sha = _sha(path.read_bytes())
         sources["documents"][sha] = str(path)
         row = doc_claim(sha)
-        row["locator"] = {"kind": "document", "doc_sha256": sha, "page": None, "context": "Grant of $250,000.00 & more"}
+        row["locator"] = {"kind": "document", "doc_sha256": sha, "line": 1, "context": "Grant of $250,000.00 & more"}
         assert cc.check_register([row], sources) == []
         row["locator"]["context"] = "var x='$999'"
         row["amount"] = None
@@ -235,6 +237,10 @@ class TestDocumentContext:
         assert any("context" in p for p in cc.check_register([row], sources))
         row["locator"] = {"kind": "document", "doc_sha256": sha, "page": None, "context": "Beta page only"}
         row["amount"], row["precision"], row["reconciled"] = None, "none", False
+        assert any("page" in p for p in cc.check_register([row], sources))  # a whole-PDF search is refused
+        row["locator"]["page"] = 0
+        assert any("page" in p for p in cc.check_register([row], sources))
+        row["locator"]["page"] = 2
         assert cc.check_register([row], sources) == []
 
 
@@ -299,13 +305,13 @@ class TestRecordAndComputed:
 
 
 class TestStatusRules:
-    def test_gap_and_negative_need_absence_locator(self, world):
+    def test_gap_and_negative_need_a_search_log_locator_and_no_amount(self, world):
         _, sources, sha, _ = world
         assert cc.check_register([gap_claim(), gap_claim(claim_id="C-Q3-002", status="negative")], sources) == []
-        bad = doc_claim(sha, amount=None, precision="none", status="gap", reconciled=False)
-        assert cc.check_register([bad], sources) == []  # a document locator may show the absence
+        assert cc.check_schema([gap_claim(amount="5.00", precision="approximate")])
+        assert cc.check_schema([doc_claim(sha, amount=None, precision="none", status="gap", reconciled=False)])
         rec = record_claim(status="gap", amount=None, precision="none", reconciled=False)
-        assert any("gap" in p for p in cc.check_register([rec], sources))
+        assert cc.check_schema([rec])
 
     def test_documented_amount_must_not_use_search_log(self, world):
         _, sources, _, _ = world
@@ -395,3 +401,197 @@ class TestCli:
         md.write_text("## Q1\nA scheme [C-Q1-001].\n")
         assert cc.main(self._write(tmp, [doc_claim(sha)], sources) + ["--case-md", str(md)]) == 1
         assert "tripwire" in capsys.readouterr().out
+
+
+class TestCompatibilityMatrix:
+    """Review finding 1: no exact amount may skip its check by pairing the wrong derivation and locator."""
+
+    def test_quoted_derivation_with_a_record_locator_fails(self, world):
+        _, sources, _, _ = world
+        row = record_claim(amount="999999.99", derivation={"kind": "quoted", "script": None, "artifact_sha": None,
+                                                           "recompute": None})
+        assert cc.check_register([row], sources)
+
+    def test_record_field_derivation_with_a_document_locator_fails(self, world):
+        _, sources, sha, _ = world
+        row = doc_claim(sha, derivation={"kind": "record_field", "script": None, "artifact_sha": None,
+                                         "recompute": None})
+        assert cc.check_register([row], sources)
+
+    def test_partially_documented_exact_amount_on_a_search_log_fails(self, world):
+        _, sources, _, _ = world
+        row = claim(amount="999.00", status="partially_documented", locator={"kind": "search_log", "search_id": "S-1"},
+                    question="Q3")
+        assert any("search_log" in p for p in cc.check_register([row], sources))
+
+    def test_invalid_claim_id_is_reported_by_position_only(self, world):
+        _, sources, sha, _ = world
+        problems = cc.check_register([doc_claim(sha, claim_id="SENTINEL-bad id")], sources)
+        assert problems and not any("SENTINEL" in p for p in problems)
+
+
+class TestLocatorShapes:
+    def test_text_document_needs_a_line_not_a_page(self, world):
+        tmp, sources, sha, _ = world
+        row = doc_claim(sha)
+        row["locator"].update(line=None, page=1)
+        assert any("line" in p for p in cc.check_register([row], sources))
+        row["locator"].update(line=None, page=None)
+        assert cc.check_register([row], sources)
+        row["locator"].update(line=99)
+        assert any("beyond" in p for p in cc.check_register([row], sources))
+
+    def test_line_numbering_counts_non_blank_normalized_lines(self, world):
+        tmp, sources, _, _ = world
+        row = _text_claim(tmp, sources, "\n\nfirst   line\n\nAward $5.00 here\n", "Award $5.00", amount="5.00")
+        assert any("context" in p for p in cc.check_register([row], sources))
+        row["locator"]["line"] = 2
+        assert cc.check_register([row], sources) == []
+
+    def test_html_lines_follow_block_elements(self, world):
+        tmp, sources, _, _ = world
+        path = tmp / "p.html"
+        path.write_text("<p>Intro</p><p>Award <b>$5.00</b> here</p>")
+        sha = _sha(path.read_bytes())
+        sources["documents"][sha] = str(path)
+        row = doc_claim(sha, amount="5.00")
+        row["locator"] = {"kind": "document", "doc_sha256": sha, "line": 2, "context": "Award $5.00 here"}
+        assert cc.check_register([row], sources) == []
+        row["locator"]["line"] = 1
+        assert cc.check_register([row], sources)
+
+    XML = ("<Return xmlns='urn:example'><IRS990ScheduleI><RecipientTable><CashGrantAmt>100</CashGrantAmt>"
+           "</RecipientTable><RecipientTable><CashGrantAmt>250000</CashGrantAmt><Note>resolution 250000</Note>"
+           "</RecipientTable></IRS990ScheduleI></Return>")
+
+    def _xml_claim(self, tmp, sources, element, context, amount="250000.00"):
+        path = tmp / "r.xml"
+        path.write_text(self.XML)
+        sha = _sha(path.read_bytes())
+        sources["documents"][sha] = str(path)
+        row = doc_claim(sha, amount=amount)
+        row["locator"] = {"kind": "document", "doc_sha256": sha, "element": element, "context": context}
+        return row
+
+    def test_xml_element_path_with_index_and_whole_element_number(self, world):
+        tmp, sources, _, _ = world
+        ok = self._xml_claim(tmp, sources, "IRS990ScheduleI/RecipientTable[2]/CashGrantAmt", "250000")
+        assert cc.check_register([ok], sources) == []
+        wrong = self._xml_claim(tmp, sources, "IRS990ScheduleI/RecipientTable[1]/CashGrantAmt", "100")
+        assert cc.check_register([wrong], sources)  # 100 is not the claimed 250000.00
+
+    def test_xml_bare_number_inside_longer_text_is_refused(self, world):
+        tmp, sources, _, _ = world
+        row = self._xml_claim(tmp, sources, "RecipientTable[2]/Note", "resolution 250000")
+        assert any("amount" in p for p in cc.check_register([row], sources))
+        row = self._xml_claim(tmp, sources, "RecipientTable[2]/Note", "250000")
+        assert any("context" in p for p in cc.check_register([row], sources))
+
+    def test_xml_ambiguous_or_malformed_path_is_refused(self, world):
+        tmp, sources, _, _ = world
+        assert any("matches 2" in p for p in cc.check_register(
+            [self._xml_claim(tmp, sources, "CashGrantAmt", "250000")], sources))
+        assert any("malformed" in p for p in cc.check_register(
+            [self._xml_claim(tmp, sources, "A[0]/B", "250000")], sources))
+
+
+class TestSignedAmounts:
+    @pytest.mark.parametrize("rendered, amount, ok", [
+        ("-$100.00", "-100.00", True), ("-$100.00", "100.00", False), ("$-100.00", "-100.00", True),
+        ("($100.00)", "-100.00", True), ("($100.00)", "100.00", False), ("$100.00", "-100.00", False),
+        ("$0.50", "-0.50", False), ("-$0.50", "-0.50", True), ("$0.50", "0.50", True)])
+    def test_sign_must_agree(self, world, rendered, amount, ok):
+        tmp, sources, _, _ = world
+        text = f"Entry of {rendered} noted."
+        row = _text_claim(tmp, sources, text, text, amount=amount)
+        assert (cc.check_register([row], sources) == []) is ok
+
+    def test_unrelated_bare_number_does_not_support_an_amount(self, world):
+        tmp, sources, _, _ = world
+        text = "See resolution 250000 for terms."
+        assert cc.check_register([_text_claim(tmp, sources, text, text)], sources)
+
+    def test_cents_are_not_truncated(self, world):
+        tmp, sources, _, _ = world
+        text = "Paid $250,000.99 on file."
+        assert cc.check_register([_text_claim(tmp, sources, text, text)], sources)  # claim says 250000.00
+
+
+class TestSearchLogContents:
+    def test_incomplete_log_row_fails(self, world):
+        tmp, sources, _, _ = world
+        sha = _jsonl(tmp / "searches.jsonl", [{"search_id": "S-1", "question": "Q3"}])
+        sources["search_log"]["sha256"] = sha
+        assert any("incomplete" in p for p in cc.check_register([gap_claim()], sources))
+
+    def test_blank_field_fails_and_question_must_match(self, world):
+        tmp, sources, _, _ = world
+        assert any("different question" in p for p in cc.check_register([gap_claim(question="Q5")], sources))
+        full = {"search_id": "S-1", "question": "Q3", "source": "a", "query_or_path": "b", "performed_at": "c",
+                "result": "d", "stop_reason": "e", "next_step": " "}
+        sources["search_log"]["sha256"] = _jsonl(tmp / "searches.jsonl", [full])
+        assert any("incomplete" in p for p in cc.check_register([gap_claim()], sources))
+
+
+class TestCaseMdSentences:
+    ROWS = [claim(claim_id="C-Q1-001"), claim(claim_id="C-Q1-002", amount="2400000", precision="approximate",
+                                              reconciled=False),
+            claim(claim_id="C-Q1-003", amount="-100.00"), claim(claim_id="C-Q1-004", amount=None, precision="none",
+                                                                 reconciled=False),
+            claim(claim_id="C-Q1-005", amount="900.00")]
+
+    def test_one_citation_does_not_cover_a_second_sentence(self):
+        text = "## Q1\nThe grant was approved [C-Q1-004]. A second claim has no source.\n"
+        assert any("line 2" in p for p in cc.check_case_md(text, self.ROWS))
+
+    def test_each_sentence_cited_passes_and_wrapped_lines_are_one_sentence(self):
+        text = "## Q1\nThe grant was\napproved [C-Q1-004]. And another one [C-Q1-004].\n"
+        assert cc.check_case_md(text, self.ROWS) == []
+
+    def test_abbreviations_and_decimals_do_not_split_sentences(self):
+        text = "## Q1\nThe U.S. agency cited approx. 2.5 items in Dr. Smith's file [C-Q1-004].\n"
+        assert cc.check_case_md(text, self.ROWS) == []
+
+    def test_list_items_are_separate_units(self):
+        text = "## Q1\n- first [C-Q1-004]\n- second has none\n"
+        assert any("line 3" in p for p in cc.check_case_md(text, self.ROWS))
+
+    def test_factual_subheading_needs_a_citation(self):
+        assert any("heading" in p for p in cc.check_case_md("## Q1\n### Total of 5 grants\n", self.ROWS))
+        assert cc.check_case_md("## Q1\n### Total of 5 grants [C-Q1-004]\n", self.ROWS) == []
+
+    @pytest.mark.parametrize("heading", ["## Question 1", "# Q1", "## Q 1", "## Q10"])
+    def test_nonconforming_answer_headings_are_flagged(self, heading):
+        assert any("answer heading" in p for p in cc.check_case_md(f"{heading}\nUncited.\n", self.ROWS))
+
+    def test_signs_and_both_range_endpoints_are_checked(self):
+        assert cc.check_case_md("## Notes\nA loss of -$100 [C-Q1-003].\n", self.ROWS) == []
+        assert cc.check_case_md("## Notes\nA loss of $-100 and ($100.00) [C-Q1-003].\n", self.ROWS) == []
+        assert cc.check_case_md("## Notes\nA gain of $100 [C-Q1-003].\n", self.ROWS)
+        assert cc.check_case_md("## Notes\nBetween $-100.00 to $900 [C-Q1-003] [C-Q1-005].\n", self.ROWS) == []
+        assert cc.check_case_md("## Notes\nThe range $100-900 [C-Q1-005].\n", self.ROWS)  # $100 unsupported
+        assert cc.check_case_md("## Notes\nThe range $900-$100 [C-Q1-005].\n", self.ROWS)
+
+    def test_tolerance_needs_approximation_language(self):
+        assert cc.check_case_md("## Notes\nExactly $2M [C-Q1-002].\n", self.ROWS)
+        assert cc.check_case_md("## Notes\nThe fund gave $2.4 million [C-Q1-002].\n", self.ROWS)
+        for word in ("about", "roughly", "approximately", "nearly", "some", "~"):
+            assert cc.check_case_md(f"## Notes\nThe fund gave {word} $2.4 million [C-Q1-002].\n", self.ROWS) == []
+        assert cc.check_case_md("## Notes\nThe fund gave about $2M [C-Q1-002].\n", self.ROWS) == []  # within 500k
+        assert cc.check_case_md("## Notes\nThe fund gave about $1M [C-Q1-002].\n", self.ROWS)
+
+    def test_bare_suffix_figure_matches_an_exact_claim_exactly(self):
+        rows = [claim(claim_id="C-Q1-006", amount="2000000.00")]
+        assert cc.check_case_md("## Notes\nGave $2M [C-Q1-006].\n", rows) == []
+        assert cc.check_case_md("## Notes\nGave $2.1M [C-Q1-006].\n", rows)
+
+
+class TestTripwireMasking:
+    def test_unmatched_inch_mark_does_not_hide_later_lines(self):
+        assert cc.tripwire('A 5" pole.\nA scheme here.\n') == [(2, "scheme")]
+
+    def test_phrase_split_across_a_line_break(self):
+        assert cc.tripwire("This was a quid\npro quo.\n") == [(1, "quid pro quo")]
+
+    def test_balanced_quote_in_one_paragraph_does_not_leak_to_the_next(self):
+        assert cc.tripwire('"quoted scheme"\n\nlaundering outside\n') == [(3, "laundering")]

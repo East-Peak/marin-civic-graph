@@ -55,7 +55,7 @@ class TestBuild:
     def test_single_token_and_short_token_names_are_skipped_and_counted(self):
         names, skipped = ps.build_forbidden([("Madeupname", "operator_list"), ("A Person", "operator_list"),
                                              ("Valid Person", "operator_list")], allow=[])
-        assert list(names.values()) == ["operator_list"] and skipped == 2
+        assert set(names) == {"valid person", "person valid"} and skipped == 2
 
     def test_middle_initial_names_keep_the_initial_free_variant(self):
         names, skipped = ps.build_forbidden([("Jorvan Q Fictional", "990_person")], allow=[])
@@ -65,11 +65,11 @@ class TestBuild:
         entries = [("Quillon Testperson", "990_person"), ("Testperson, Quillon", "990_person"),
                    ("Marlowe Samplesmith", "990_person")]
         names, _ = ps.build_forbidden(entries, allow=["QUILLON testperson"])
-        assert list(names) == ["marlowe samplesmith"]
+        assert set(names) == {"marlowe samplesmith", "samplesmith marlowe"}
 
     def test_first_category_wins(self):
         names, _ = ps.build_forbidden([("Same Name", "990_person"), ("same  name", "operator_list")], allow=[])
-        assert names == {"same name": "990_person"}
+        assert names == {"same name": "990_person", "name same": "990_person"}
 
 
 class TestScan:
@@ -113,7 +113,7 @@ class TestCli:
         out.write_text("ok\nQuillon Testperson was named.\n")
         code = ps.main(["--scan", str(out), "--xml", str(xml), "--ledger", str(led)])
         text = capsys.readouterr().out
-        assert code == 1 and f"{out}:2:990_person" in text and "Testperson" not in text and "Mockwell" not in text
+        assert code == 1 and "CASE.md:2:990_person" in text and str(tmp_path) not in text and "Testperson" not in text and "Mockwell" not in text
 
     def test_allowlist_and_clean_run_exit_zero(self, tmp_path, capsys):
         xml = tmp_path / "r.xml"
@@ -133,3 +133,104 @@ class TestCli:
         assert ps.main(["--scan", str(out), "--extra", str(extra)]) == 1
         text = capsys.readouterr().out
         assert "operator_list" in text and "skipped 1" in text
+
+
+PART_III_XML = """<Return xmlns="http://www.irs.gov/efile"><ReturnData><IRS990ScheduleI>
+  <RecipientTable><PurposeOfGrantTxt>Charitable operations</PurposeOfGrantTxt></RecipientTable>
+  <GrantsOtherAsstToIndivInUSGrp><GrantTypeTxt>Zorblax emergency tuition aid</GrantTypeTxt><RecipientCnt>12</RecipientCnt>
+  <CashGrantAmt>5000</CashGrantAmt><NonCashAssistanceDesc>Frobnicate voucher</NonCashAssistanceDesc>
+  </GrantsOtherAsstToIndivInUSGrp></IRS990ScheduleI></ReturnData></Return>"""
+
+
+class TestPartIII:
+    def test_text_under_part_iii_groups_only(self, tmp_path):
+        xml = tmp_path / "r.xml"
+        xml.write_text(PART_III_XML)
+        entries = ps.forbidden_from_990([xml])
+        texts = {t for t, c in entries if c == "990_part_iii"}
+        assert {"Zorblax emergency tuition aid", "Frobnicate voucher"} <= texts
+        assert "Charitable operations" not in texts
+
+    def test_phrases_need_two_tokens_and_letters_and_are_scanned(self, tmp_path):
+        names, skipped = ps.build_forbidden([("Zorblax emergency tuition aid", "990_part_iii"), ("12", "990_part_iii"),
+                                             ("5000", "990_part_iii"), ("Single", "990_part_iii")], allow=[])
+        assert list(names) == ["zorblax emergency tuition aid"] and skipped == 3
+        f = tmp_path / "out.md"
+        f.write_text("ok\nthe ZORBLAX emergency\ntuition aid was given\n")
+        assert ps.scan([f], names) == [{"file": str(f), "line": 2, "category": "990_part_iii"}]
+
+
+class TestNameVariants:
+    def forbidden(self, name="Quillon Testperson"):
+        return ps.build_forbidden([(name, "990_person")], allow=[])[0]
+
+    @pytest.mark.parametrize("text", [
+        "Quillon Testperson", "Testperson, Quillon", "Quillon J. Testperson", "Quillon J Testperson",
+        "Testperson Quillon", "QUILLON  TESTPERSON", "Quillon\nTestperson", "Testperson, Quillon J."])
+    def test_shapes_are_found(self, tmp_path, text):
+        f = tmp_path / "o.md"
+        f.write_text(f"x {text} y\n")
+        assert ps.scan([f], self.forbidden())
+
+    def test_middle_name_forms_from_the_original(self, tmp_path):
+        f = tmp_path / "o.md"
+        f.write_text("Quillon Jonas Testperson\n")
+        assert ps.scan([f], self.forbidden("Quillon Jonas Testperson"))
+        assert ps.scan([f], self.forbidden("Testperson, Quillon Jonas"))
+        assert ps.scan([f], self.forbidden("Quillon Testperson"))  # middle name inserted into the output
+
+    def test_hyphen_and_apostrophe_variants(self, tmp_path):
+        f = tmp_path / "o.md"
+        f.write_text("Marlowe Smith-Jones and Brenna O\u2019Fakely\n")
+        assert ps.scan([f], self.forbidden("Marlowe Smith Jones"))
+        assert ps.scan([f], self.forbidden("Brenna O'Fakely"))
+
+    def test_json_escaped_line_break_and_decoded_values(self, tmp_path):
+        f = tmp_path / "o.json"
+        f.write_text(json.dumps({"note": "signed by Quillon\nTestperson today"}))
+        assert [h["category"] for h in ps.scan([f], self.forbidden())] == ["990_person"]
+        g = tmp_path / "o.jsonl"
+        g.write_text(json.dumps({"k": "a"}) + "\n" + json.dumps({"note": "Quillon\nTestperson"}) + "\n")
+        assert [h["line"] for h in ps.scan([g], self.forbidden())] == [2]
+
+    def test_longer_words_are_not_hits(self, tmp_path):
+        f = tmp_path / "o.md"
+        f.write_text("Quillons Testpersonal\n")
+        assert ps.scan([f], self.forbidden()) == []
+
+
+class TestDiagnostics:
+    def test_unicode_case_folding_cannot_raise_with_the_value(self, tmp_path):
+        names, _ = ps.build_forbidden([("Stra\u00dfe Testperson", "operator_list")], allow=[])
+        f = tmp_path / "o.md"
+        f.write_text("STRASSE Testperson and STRA\u1e9eE TESTPERSON\n")
+        try:
+            hits = ps.scan([f], names)
+        except Exception as exc:  # noqa: BLE001 - the point is that nothing escapes with the value
+            assert "testperson" not in str(exc).lower()
+        else:
+            assert all(set(h) == {"file", "line", "category"} for h in hits)
+
+    def test_cli_requires_sources(self, tmp_path, capsys):
+        out = tmp_path / "CASE.md"
+        out.write_text("clean\n")
+        assert ps.main(["--scan", str(out)]) == 2
+        assert "no sources" in capsys.readouterr().err
+
+    def test_cli_unreadable_input_is_value_free(self, tmp_path, capsys):
+        extra = tmp_path / "e.txt"
+        extra.write_text("Brennick Notreal\n")
+        assert ps.main(["--scan", str(tmp_path / "missing.md"), "--extra", str(extra)]) == 2
+        err = capsys.readouterr().err
+        assert "Notreal" not in err and str(tmp_path) not in err
+
+    def test_cli_prints_source_hashes_and_part_iii_hits(self, tmp_path, capsys):
+        import hashlib
+        xml = tmp_path / "r.xml"
+        xml.write_text(PART_III_XML)
+        out = tmp_path / "CASE.md"
+        out.write_text("Zorblax emergency tuition aid\n")
+        assert ps.main(["--scan", str(out), "--xml", str(xml)]) == 1
+        text = capsys.readouterr().out
+        assert hashlib.sha256(xml.read_bytes()).hexdigest() in text and "CASE.md:1:990_part_iii" in text
+        assert "Zorblax" not in text
