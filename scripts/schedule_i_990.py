@@ -57,7 +57,7 @@ STAGING_ROOT = Path("/Users/tammypais/open-marin-staging/cf6-case")
 # Anything else is reported as unsupported, never parsed on a guess.
 SUPPORTED_RETURN_VERSIONS = frozenset({
     "2021v4.0", "2021v4.1", "2021v4.2", "2022v4.1", "2022v5.0",
-    "2023v5.0", "2023v5.1", "2023v6.0", "2024v5.0",
+    "2023v5.0", "2023v5.1", "2023v6.0", "2024v5.0", "2024v5.5",
 })
 
 WITHHELD = "[withheld: matches a person named in the return]"

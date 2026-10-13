@@ -186,6 +186,12 @@ def test_supported_versions_cover_data_years():
     assert "2019v5.0" not in s990.SUPPORTED_RETURN_VERSIONS
 
 
+def test_2024v5_5_is_supported():
+    # verified 2026-10-13: a real 2024v5.5 return's Schedule I uses exactly the element set of 2023v6.0
+    r = s990.parse_return(make_return(version="2024v5.5", schedule=two_rows()))
+    assert r["status"] == "ok" and len(r["schedule_i"]["grants"]) == 2
+
+
 def test_prefixed_namespace_extracts_fields():
     xml = make_return(schedule=two_rows()).decode()
     xml = xml.replace(' xmlns="http://www.irs.gov/efile"', "")
