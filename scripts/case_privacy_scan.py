@@ -162,6 +162,26 @@ def scan(paths, forbidden: dict[str, str]) -> list[dict]:
     return hits
 
 
+def _inventory_problem(inventory: Path, sources: list[Path]) -> str | None:
+    """None if the inventory pins exactly the sources passed and each re-hashes to its pin; else a value-free
+    message naming only source indexes."""
+    try:
+        pinned = json.loads(inventory.read_text(encoding="utf-8"))["sources"]
+        pins = {Path(path).resolve(): sha for path, sha in pinned.items()}
+        for number, source in enumerate(sources):
+            if pins.get(source.resolve()) is None:
+                return f"source#{number} is not in the inventory"
+            if hashlib.sha256(source.read_bytes()).hexdigest() != pins[source.resolve()]:
+                return f"source#{number} does not match its inventory hash"
+        passed = {s.resolve() for s in sources}
+        for number, path in enumerate(pins):
+            if path not in passed:
+                return f"inventory#{number} was not passed"
+    except (OSError, ValueError, KeyError, TypeError, AttributeError):
+        return "the inventory is unreadable"
+    return None
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--scan", nargs="+", required=True, type=Path, help="case output files to scan")
@@ -169,6 +189,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--ledger", nargs="*", default=[], type=Path, help="ledger JSONL files")
     parser.add_argument("--extra", type=Path, help="operator list of further names, one per line")
     parser.add_argument("--allow", type=Path, help="officials allowed by name, one per line")
+    parser.add_argument("--inventory", type=Path,
+                        help='JSON {"sources": {"<path>": "<sha256>"}} pinning every original passed')
     parser.add_argument("--allow-partial-sources", action="store_true",
                         help="accept a run without both 990 XML and ledger originals")
     parser.add_argument("--legend", action="store_true", help="print the target index -> path map to stderr")
@@ -177,6 +199,15 @@ def main(argv: list[str] | None = None) -> int:
         print("cannot run: both --xml and --ledger originals are required (or --allow-partial-sources)",
               file=sys.stderr)
         return 2
+    sources = [*args.xml, *args.ledger, *([args.extra] if args.extra else [])]
+    if not args.inventory and not args.allow_partial_sources:
+        print("cannot run: --inventory is required (or --allow-partial-sources)", file=sys.stderr)
+        return 2
+    if args.inventory:
+        problem = _inventory_problem(args.inventory, sources)
+        if problem:
+            print(f"cannot run: {problem}", file=sys.stderr)
+            return 2
     try:
         groups = [("xml", p, forbidden_from_990([p])) for p in args.xml]
         groups += [("ledger", p, forbidden_from_ledger([p])) for p in args.ledger]
@@ -203,7 +234,7 @@ def main(argv: list[str] | None = None) -> int:
     for number, path in enumerate(args.scan):
         index.setdefault(str(path), number)
         if args.legend:
-            print(f"target#{number} {path}", file=sys.stderr)
+            print(f"target#{number} {Path(path).name}", file=sys.stderr)
     for hit in hits:
         print(f"target#{index[hit['file']]}:{hit['line']}:{hit['category']}")
     return 1 if hits else 0

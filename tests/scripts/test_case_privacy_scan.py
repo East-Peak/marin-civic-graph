@@ -30,6 +30,14 @@ def _ind(first: str, last: str, cd: str = "IND") -> dict:
     return {"entity_cd": cd, "name": {"first": first, "last": last, "title": None, "suffix": None}}
 
 
+def _inventory(tmp_path: Path, *paths: Path, **overrides) -> str:
+    import hashlib
+    pins = {str(p): overrides.get(p.name, hashlib.sha256(p.read_bytes()).hexdigest()) for p in paths}
+    inv = tmp_path / "inventory.json"
+    inv.write_text(json.dumps({"sources": pins}))
+    return str(inv)
+
+
 class TestSources:
     def test_990_person_names(self, tmp_path):
         xml = tmp_path / "r.xml"
@@ -111,7 +119,8 @@ class TestCli:
         led = _ledger(tmp_path / "l.jsonl", [_ind("Ardith", "Mockwell")])
         out = tmp_path / "CASE.md"
         out.write_text("ok\nQuillon Testperson was named.\n")
-        code = ps.main(["--scan", str(out), "--xml", str(xml), "--ledger", str(led)])
+        code = ps.main(["--scan", str(out), "--xml", str(xml), "--ledger", str(led),
+                        "--inventory", _inventory(tmp_path, xml, led)])
         text = capsys.readouterr().out
         assert code == 1 and "target#0:2:990_person" in text and "CASE.md" not in text and str(tmp_path) not in text and "Testperson" not in text and "Mockwell" not in text
 
@@ -250,7 +259,8 @@ class TestRound2:
         out.write_text("clean\n")
         assert ps.main(["--scan", str(out), "--xml", str(xml)]) == 2
         assert ps.main(["--scan", str(out), "--ledger", str(led)]) == 2
-        assert ps.main(["--scan", str(out), "--xml", str(xml), "--ledger", str(led)]) == 0
+        assert ps.main(["--scan", str(out), "--xml", str(xml), "--ledger", str(led),
+                        "--inventory", _inventory(tmp_path, xml, led)]) == 0
 
     def test_empty_extra_list_exits_two(self, tmp_path):
         extra, out = tmp_path / "e.txt", tmp_path / "o.md"
@@ -263,7 +273,8 @@ class TestRound2:
         xml, led = self._originals(tmp_path)
         out = tmp_path / "o.md"
         out.write_text("clean\n")
-        ps.main(["--scan", str(out), "--xml", str(xml), "--ledger", str(led)])
+        ps.main(["--scan", str(out), "--xml", str(xml), "--ledger", str(led),
+                 "--inventory", _inventory(tmp_path, xml, led)])
         text = capsys.readouterr().out
         assert f"source#0 xml sha256 {hashlib.sha256(xml.read_bytes()).hexdigest()} names " in text
         assert "source#1 ledger" in text and "r.xml" not in text and "l.jsonl" not in text
@@ -273,11 +284,49 @@ class TestRound2:
         clean, dirty = tmp_path / "clean-Ardith-name.md", tmp_path / "dirty.md"
         clean.write_text("clean\n")
         dirty.write_text("Ardith Mockwell\n")
-        argv = ["--scan", str(clean), str(dirty), "--xml", str(xml), "--ledger", str(led)]
+        argv = ["--scan", str(clean), str(dirty), "--xml", str(xml), "--ledger", str(led),
+                "--inventory", _inventory(tmp_path, xml, led)]
         assert ps.main(argv) == 1
         captured = capsys.readouterr()
         assert "target#1:1:individual_contributor" in captured.out and "dirty" not in captured.out + captured.err
         assert "Ardith" not in captured.out + captured.err
         ps.main(argv + ["--legend"])
         captured = capsys.readouterr()
-        assert f"target#1 {dirty}" in captured.err and "dirty" not in captured.out
+        assert "target#1 dirty.md" in captured.err and str(tmp_path) not in captured.err and "dirty" not in captured.out
+
+
+class TestInventory:
+    def _setup(self, tmp_path):
+        xml, led = tmp_path / "r.xml", _ledger(tmp_path / "l.jsonl", [_ind("Ardith", "Mockwell")])
+        xml.write_text(XML)
+        out = tmp_path / "o.md"
+        out.write_text("clean\n")
+        return xml, led, ["--scan", str(out), "--xml", str(xml), "--ledger", str(led)]
+
+    def test_inventory_is_required_without_the_override(self, tmp_path, capsys):
+        xml, led, argv = self._setup(tmp_path)
+        assert ps.main(argv) == 2 and "--inventory" in capsys.readouterr().err
+
+    def test_hash_mismatch_exits_two_naming_only_the_index(self, tmp_path, capsys):
+        xml, led, argv = self._setup(tmp_path)
+        assert ps.main(argv + ["--inventory", _inventory(tmp_path, xml, led, **{"l.jsonl": "0" * 64})]) == 2
+        err = capsys.readouterr().err
+        assert "source#1" in err and "l.jsonl" not in err and str(tmp_path) not in err
+
+    def test_a_source_missing_from_the_inventory_exits_two(self, tmp_path, capsys):
+        xml, led, argv = self._setup(tmp_path)
+        assert ps.main(argv + ["--inventory", _inventory(tmp_path, xml)]) == 2
+        assert "source#1 is not in the inventory" in capsys.readouterr().err
+
+    def test_a_listed_source_not_passed_exits_two(self, tmp_path, capsys):
+        xml, led, argv = self._setup(tmp_path)
+        extra = tmp_path / "e.txt"
+        extra.write_text("Brennick Notreal\n")
+        assert ps.main(argv + ["--inventory", _inventory(tmp_path, xml, led, extra)]) == 2
+        assert "inventory#2 was not passed" in capsys.readouterr().err
+
+    def test_unreadable_inventory_exits_two(self, tmp_path):
+        xml, led, argv = self._setup(tmp_path)
+        bad = tmp_path / "bad.json"
+        bad.write_text("not json")
+        assert ps.main(argv + ["--inventory", str(bad)]) == 2

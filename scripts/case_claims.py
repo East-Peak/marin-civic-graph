@@ -399,6 +399,12 @@ def _search_problem(row: dict, sources: Sources) -> str | None:
     return None
 
 
+def _amount_element(loc: dict) -> bool:
+    """A bare number is a monetary field only when the element locator ends in an IRS amount element (...Amt)."""
+    last = str(loc.get("element") or "").rsplit("/", 1)[-1]
+    return re.sub(r"\[\d+\]$", "", last).endswith("Amt")
+
+
 def check_document_context(row: dict, sources: Sources) -> list[str]:
     """The verbatim context occurs at the located page/line/element, and holds the amount when it is exact."""
     cid, loc = row["claim_id"], row["locator"]
@@ -409,7 +415,7 @@ def check_document_context(row: dict, sources: Sources) -> list[str]:
     if not context or context not in unit:
         return [f"{cid}: context not found at the located position"]
     if row["precision"] == "exact_cents" and not amount_in(
-            unit, context, Decimal(row["amount"]), bare_ok="element" in loc):
+            unit, context, Decimal(row["amount"]), bare_ok=_amount_element(loc)):
         return [f"{cid}: amount does not appear as a currency token inside the located context"]
     return []
 
@@ -519,15 +525,28 @@ def _endpoint(digits: str, frac: str | None, suffix: str | None, negative: bool,
 
 
 def figures(line: str):
-    """(display text, value, tolerance) for every dollar figure in a unit, with both ends of a range."""
+    """(display text, value, tolerance) for every dollar figure in a unit, with both ends of a range.
+
+    A range's first endpoint inherits a trailing suffix ("$2-$3 million") only if that keeps it at or below the
+    second ("$500 to $2M" stays 500); a range still reversed is reported with value None."""
     for m in FIGURE.finditer(line):
         negative = bool(m["s1"] or m["s2"] or (m["open"] and m["close"]))
         approximate = bool(m["approx"])
-        first_suffix = m["suf"] or (m["suf2"] if m["num2"] else None)  # "$2-$3 million": both in millions
-        yield (m.group(0).strip(), *_endpoint(m["num"], m["frac"], first_suffix, negative, approximate))
-        if m["num2"]:
-            yield (m.group(0).strip(), *_endpoint(m["num2"], m["frac2"], m["suf2"] or (m["suf"] if not m["cur2"] else None),
-                                                  bool(m["s3"] or m["s4"]), approximate))
+        text = m.group(0).strip()
+        first = _endpoint(m["num"], m["frac"], m["suf"], negative, approximate)
+        if not m["num2"]:
+            yield (text, *first)
+            continue
+        second = _endpoint(m["num2"], m["frac2"], m["suf2"] or (m["suf"] if not m["cur2"] else None),
+                           bool(m["s3"] or m["s4"]), approximate)
+        if not m["suf"] and m["suf2"]:
+            scaled = _endpoint(m["num"], m["frac"], m["suf2"], negative, approximate)
+            first = scaled if scaled[0] <= second[0] else first
+        if first[0] > second[0]:
+            yield (text, None, None)
+        else:
+            yield (text, *first)
+            yield (text, *second)
 
 
 def _supports(claim: dict, value: Decimal, tolerance: Decimal | None) -> bool:
@@ -617,7 +636,9 @@ def check_case_md(text: str, register_rows: list[dict]) -> list[str]:
             problems.append(f"line {number}: heading states a fact without a cited claim")
         claims = [by_id[i] for i in cited if i in by_id]
         for display, value, tolerance in figures(unit):
-            if not any(_supports(c, value, tolerance) for c in claims):
+            if value is None:
+                problems.append(f"line {number}: range {display} is reversed")
+            elif not any(_supports(c, value, tolerance) for c in claims):
                 problems.append(f"line {number}: figure {display} has no matching cited claim")
     return problems
 

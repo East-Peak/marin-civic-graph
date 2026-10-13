@@ -632,3 +632,26 @@ class TestRound2:
         assert any("line 2" in p for p in cc.check_case_md(text, self.ROWS))
         assert cc.check_case_md("## Q1\nSee Dr. Jones and e.g. Mr. Lee on the U.S. board [C-Q1-004].\n",
                                 self.ROWS) == []
+
+
+class TestRound3:
+    ROWS = TestRound2.ROWS + [claim(claim_id="C-Q1-010", amount="500.00"), claim(claim_id="C-Q1-011", amount="2000000.00")]
+
+    def test_bare_number_needs_an_amt_element(self, world):
+        tmp, sources, _, _ = world
+        path = tmp / "c.xml"
+        path.write_text("<R><RecipientCnt>250000</RecipientCnt><CashGrantAmt>250000</CashGrantAmt></R>")
+        sha = _sha(path.read_bytes())
+        sources["documents"][sha] = str(path)
+        for element, ok in (("RecipientCnt", False), ("CashGrantAmt", True)):
+            row = doc_claim(sha)
+            row["locator"] = {"kind": "document", "doc_sha256": sha, "element": element, "context": "250000"}
+            assert (cc.check_register([row], sources) == []) is ok
+
+    def test_range_first_endpoint_inherits_suffix_only_when_it_stays_below(self):
+        assert cc.check_case_md("## Notes\nAbout $2\u2013$3 million [C-Q1-007] [C-Q1-008].\n", self.ROWS) == []
+        assert cc.check_case_md("## Notes\n$500 to $2M [C-Q1-010] [C-Q1-011].\n", self.ROWS) == []
+
+    def test_reversed_range_is_an_error(self):
+        problems = cc.check_case_md("## Notes\n$5M to $1M [C-Q1-007].\n", self.ROWS)
+        assert any("reversed" in p for p in problems)
