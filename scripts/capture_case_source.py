@@ -35,11 +35,16 @@ import json
 import mimetypes
 import os
 import re
+import shutil
+import struct
+import subprocess
 import sys
+import tempfile
 import time
 import urllib.error
 import urllib.request
 import zipfile
+import zlib
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -62,6 +67,9 @@ PEEK_BYTES = 64 * 1024  # how much of an unexpected reply we look at for a chall
 TIMEOUT = 30
 REQUIRED_BASIS = ("decision", "basis", "licence", "attribution")
 RESERVED_NAMES = {"manifest.jsonl"}
+UNZIP = "/usr/bin/unzip"
+EXTERNAL_METHODS = {9}  # compression methods zipfile cannot read (9 = Deflate64, used by IRS TEOS zips)
+UNZIP_TIMEOUT = 120
 
 LOGIN_PATH_RE = re.compile(r"(?<![a-z0-9])(login|signin|sign-in|sso|auth|account)s?(?![a-z0-9])")
 PASSWORD_INPUT_RE = re.compile(r"<input\b[^>]*\btype\s*=\s*[\"']?password", re.I)
@@ -70,6 +78,9 @@ CONTENT_RANGE_RE = re.compile(r"bytes (\d+)-(\d+)/(\d+)")
 RESTRICTION_MARKERS = (
     "captcha", "g-recaptcha", "hcaptcha", "cf-challenge", "cf-turnstile", "subscribe to continue", "paywall",
 )
+INLINE_CODE_RE = re.compile(r"(<(script|style)\b[^>]*>).*?(</\2\s*>)|<!--.*?-->", re.I | re.S)
+TITLE_RE = re.compile(r"<title\b[^>]*>(.*?)</title\s*>", re.I | re.S)
+CHALLENGE_TITLES = ("just a moment", "attention required", "access denied")
 SOURCE_RE = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
@@ -171,8 +182,11 @@ def looks_restricted(body: bytes, content_type: str | None) -> bool:
     text = body[:500_000].decode("utf-8", "replace")
     if "html" not in (content_type or "").lower() and not HTML_START_RE.search(text[:2048]):
         return False
-    lowered = text.lower()
-    return bool(PASSWORD_INPUT_RE.search(text)) or any(m in lowered for m in RESTRICTION_MARKERS)
+    # inline script/style bodies and comments (site-builder widget keys etc.) are not evidence of a challenge
+    markup = INLINE_CODE_RE.sub(lambda m: f"{m[1]}{m[3]}" if m[1] else " ", text).lower()
+    title = TITLE_RE.search(markup)
+    return (bool(PASSWORD_INPUT_RE.search(text)) or any(m in markup for m in RESTRICTION_MARKERS)
+            or bool(title and any(t in title[1] for t in CHALLENGE_TITLES)))
 
 
 def read_body(response, status: int, headers: Message, wanted: tuple[int, int] | None) -> bytes:
@@ -522,6 +536,42 @@ def find_member(names: list[str], wanted: str) -> str:
     return matches[0]
 
 
+def extract_external(reader: RangeReader, info: zipfile.ZipInfo) -> bytes:
+    """Decompress one member with unzip: rebuild a single-entry zip from its raw bytes (read via `reader`)."""
+    if info.flag_bits & 0x1 or max(info.compress_size, info.file_size) > 0xFFFFFFFF:
+        raise AccessRefused("encrypted or ZIP64-sized members cannot use the external decompressor")
+    reader.seek(info.header_offset)
+    local = reader.read(30)
+    if local[:4] != b"PK\x03\x04":
+        raise zipfile.BadZipFile("bad local file header")
+    name_len, extra_len = struct.unpack("<HH", local[26:30])
+    reader.seek(info.header_offset + 30 + name_len + extra_len)
+    raw = reader.read(info.compress_size)
+    name = b"member"  # neutral entry name: no glob characters for unzip to interpret
+    year, month, day, hour, minute, second = info.date_time
+    dos_time, dos_date = hour << 11 | minute << 5 | second // 2, (year - 1980) << 9 | month << 5 | day
+    fields = (20, 0, info.compress_type, dos_time, dos_date, info.CRC,
+              info.compress_size, info.file_size, len(name))
+    local_header = b"PK\x03\x04" + struct.pack("<HHHHHIIIHH", fields[0], *fields[1:], 0) + name
+    central = b"PK\x01\x02" + struct.pack("<HHHHHHIIIHHHHHII", 20, 20, 0, *fields[2:5], fields[5], fields[6],
+                                            fields[7], fields[8], 0, 0, 0, 0, 0, 0) + name
+    end = b"PK\x05\x06" + struct.pack("<HHHHIIH", 0, 0, 1, 1, len(central), len(local_header) + len(raw), 0)
+    folder = tempfile.mkdtemp(prefix="capture-unzip-")
+    try:
+        archive = Path(folder) / "entry.zip"
+        archive.write_bytes(local_header + raw + central + end)
+        try:
+            data = subprocess.run([UNZIP, "-p", str(archive), "member"], capture_output=True,
+                                  timeout=UNZIP_TIMEOUT, check=True).stdout
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as err:
+            raise zipfile.BadZipFile(f"external decompression failed: {err}") from err
+    finally:
+        shutil.rmtree(folder, ignore_errors=True)
+    if len(data) != info.file_size or zlib.crc32(data) != info.CRC:
+        raise zipfile.BadZipFile("external decompression gave the wrong size or CRC")
+    return data
+
+
 def capture_zip_member(zip_url, member, *, source, raw_root, state_path, basis_path, date=None,
                        user_agent=USER_AGENT, cap=DEFAULT_CAP, clock=time.time, sleep=time.sleep,
                        range_chunk=RANGE_CHUNK) -> dict:
@@ -545,7 +595,9 @@ def capture_zip_member(zip_url, member, *, source, raw_root, state_path, basis_p
             if existing:
                 return existing
             info = archive.getinfo(exact)
-            data = archive.read(info)  # zipfile verifies the CRC and raises BadZipFile on mismatch
+            external = info.compress_type in EXTERNAL_METHODS
+            # zipfile verifies the CRC itself and raises BadZipFile on mismatch
+            data = extract_external(reader, info) if external else archive.read(info)
         return finish(
             fetcher, raw_root=raw_root, day=day, name=safe_filename(Path(exact).name), data=data, cap=cap,
             now=clock(),
@@ -554,7 +606,9 @@ def capture_zip_member(zip_url, member, *, source, raw_root, state_path, basis_p
                     "status": 206, "etag": None, "last_modified": None, "zip_url": zip_url,
                     "zip_bytes": reader.length, "zip_etag": reader.etag,
                     "zip_last_modified": reader.last_modified, "zip_content_type": reader.content_type,
-                    "member": exact, "member_crc32": f"{info.CRC:08x}", "range_requests": reader.requests,
+                    "member": exact, "member_crc32": f"{info.CRC:08x}",
+                    "member_compress_type": info.compress_type,
+                    "decompressor": "unzip" if external else "zipfile", "range_requests": reader.requests,
                     "access": reader.access, "hops": reader.hops},
         )
 
@@ -562,26 +616,50 @@ def capture_zip_member(zip_url, member, *, source, raw_root, state_path, basis_p
 # --- CLI ----------------------------------------------------------------------------
 
 
+def clear_stop(state_path, source: str, reason: str, clock=time.time) -> dict:
+    """Lift a source's stop, leaving an audit entry in the state file."""
+    if not reason.strip():
+        raise AccessRefused("clearing a stop needs a non-empty reason")
+    with State(state_path) as state:
+        previous = state.data.get("stopped", {}).pop(source, None)
+        if previous is None:
+            raise AccessRefused(f"source {source!r} is not stopped")
+        entry = {"source": source, "reason": reason.strip(), "previous_stop": previous,
+                 "cleared_at": datetime.fromtimestamp(clock(), timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
+        state.data.setdefault("clearances", []).append(entry)
+    return entry
+
+
 def main(argv: list[str] | None = None, *, clock=time.time, sleep=time.sleep) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("--source", required=True)
-    parser.add_argument("--raw-root", required=True)
     parser.add_argument("--state", required=True)
-    parser.add_argument("--basis", required=True)
-    target = parser.add_mutually_exclusive_group(required=True)
+    parser.add_argument("--source")
+    parser.add_argument("--raw-root")
+    parser.add_argument("--basis")
+    target = parser.add_mutually_exclusive_group()
     target.add_argument("--url")
     target.add_argument("--zip-url")
+    target.add_argument("--clear-stop", metavar="SOURCE", help="lift SOURCE's stop (audited; needs --reason)")
     parser.add_argument("--member")
+    parser.add_argument("--reason")
     parser.add_argument("--cap", type=int, default=DEFAULT_CAP)
     args = parser.parse_args(argv)
-    if bool(args.zip_url) != bool(args.member):
+    if args.clear_stop:
+        if args.reason is None or any((args.source, args.raw_root, args.basis, args.member)):
+            parser.error("--clear-stop takes only --state and --reason")
+    elif not (args.source and args.raw_root and args.basis and (args.url or args.zip_url)):
+        parser.error("capture needs --source, --raw-root, --basis and --url or --zip-url")
+    elif bool(args.zip_url) != bool(args.member):
         parser.error("--zip-url and --member go together")
     try:
-        common = dict(source=args.source, raw_root=Path(args.raw_root),
-                      state_path=resolve_under_staging(args.state, "--state"),
-                      basis_path=resolve_under_staging(args.basis, "--basis"), cap=args.cap,
-                      clock=clock, sleep=sleep)
-        row = capture(args.url, **common) if args.url else capture_zip_member(args.zip_url, args.member, **common)
+        state_path = resolve_under_staging(args.state, "--state")
+        if args.clear_stop:
+            row = clear_stop(state_path, args.clear_stop, args.reason, clock)
+        else:
+            common = dict(source=args.source, raw_root=Path(args.raw_root), state_path=state_path,
+                          basis_path=resolve_under_staging(args.basis, "--basis"), cap=args.cap,
+                          clock=clock, sleep=sleep)
+            row = capture(args.url, **common) if args.url else capture_zip_member(args.zip_url, args.member, **common)
     except AccessRefused as err:
         print(f"refused: {type(err).__name__}: {err}", file=sys.stderr)
         return 2

@@ -1149,3 +1149,137 @@ def test_data_descriptor_member_is_extracted(env):
     site.routes["/z.zip"] = ranged(bytes(sink.data))
     row = env.zip_member(site.url("/z.zip"), "streamed.xml", range_chunk=256)
     assert (env.raw / row["path"]).read_bytes() == payload
+
+
+# --- external decompressor (Deflate64 and friends) ---------------------------------
+
+needs_unzip = pytest.mark.skipif(not Path(ccs.UNZIP).exists(), reason="/usr/bin/unzip is absent")
+
+
+def deflated_zip(payload):
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr("pad.xml", b"<p/>" * 500)
+        zf.writestr("data/return.xml", payload)
+    return buf.getvalue()
+
+
+def test_zipfile_is_the_default_decompressor(env):
+    site = env.site()
+    site.routes["/z.zip"] = ranged(make_zip())
+    row = env.zip_member(site.url("/z.zip"), "other.xml")
+    assert row["decompressor"] == "zipfile" and row["member_compress_type"] == zipfile.ZIP_STORED
+
+
+def test_deflate64_is_routed_to_the_external_path():
+    assert 9 in ccs.EXTERNAL_METHODS
+
+
+@needs_unzip
+@pytest.mark.parametrize("kind", ["stored", "deflated"])
+def test_external_path_yields_identical_bytes(env, monkeypatch, kind):
+    monkeypatch.setattr(ccs, "EXTERNAL_METHODS", {zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED})
+    payload = b"<Return>" + b"external grant ledger " * 300 + b"</Return>"
+    blob, name = (make_zip("data/return.xml", payload), "data/return.xml") if kind == "stored" \
+        else (deflated_zip(payload), "data/return.xml")
+    site = env.site()
+    site.routes["/z.zip"] = ranged(blob)
+    row = env.zip_member(site.url("/z.zip"), name, range_chunk=256)
+    assert (env.raw / row["path"]).read_bytes() == payload == zipfile.ZipFile(io.BytesIO(blob)).read(name)
+    assert row["decompressor"] == "unzip"
+    assert row["member_compress_type"] == (zipfile.ZIP_STORED if kind == "stored" else zipfile.ZIP_DEFLATED)
+    assert row["member_crc32"] and row["bytes"] == len(payload)
+
+
+@needs_unzip
+def test_external_path_crc_mismatch_raises_and_writes_nothing(env, monkeypatch):
+    import tempfile
+
+    monkeypatch.setattr(ccs, "EXTERNAL_METHODS", {zipfile.ZIP_STORED})
+    made = []
+    real = tempfile.mkdtemp
+    monkeypatch.setattr(ccs.tempfile, "mkdtemp", lambda *a, **k: made.append(real(*a, **k)) or made[-1])
+    blob = bytearray(make_zip())
+    blob[blob.find(MEMBER_XML) + 10] ^= 0xFF
+    site = env.site()
+    site.routes["/z.zip"] = ranged(bytes(blob))
+    with pytest.raises(zipfile.BadZipFile):
+        env.zip_member(site.url("/z.zip"), "Folder/202601234567_public.xml", range_chunk=512)
+    assert env.written() == [] and env.state_json().get("documents", 0) == 0
+    assert made and not any(Path(d).exists() for d in made)
+
+
+@needs_unzip
+def test_external_path_removes_its_temp_dir_on_success(env, monkeypatch):
+    import tempfile
+
+    monkeypatch.setattr(ccs, "EXTERNAL_METHODS", {zipfile.ZIP_STORED})
+    made = []
+    real = tempfile.mkdtemp
+    monkeypatch.setattr(ccs.tempfile, "mkdtemp", lambda *a, **k: made.append(real(*a, **k)) or made[-1])
+    site = env.site()
+    site.routes["/z.zip"] = ranged(make_zip())
+    env.zip_member(site.url("/z.zip"), "other.xml")
+    assert len(made) == 1 and not Path(made[0]).exists()
+
+
+# --- challenge detection ignores inline code; audited clearance --------------------
+
+
+def test_marker_only_inside_inline_script_or_style_or_comment_is_not_a_challenge(env):
+    site = env.site()
+    body = (b"<html><head><title>Minutes</title><script>var cfg={captcha:'public-key'};</script>"
+            b"<style>.captcha{color:red}</style><!-- paywall hcaptcha --></head><body><p>Minutes</p></body></html>")
+    site.routes["/a.html"] = page(body)
+    assert env.capture(site.url("/a.html"))["bytes"] == len(body)
+
+
+def test_marker_in_markup_is_still_a_challenge(env):
+    site = env.site()
+    site.routes["/a.html"] = page(b"<html><script>var x=1</script><div class='g-recaptcha'></div></html>")
+    with pytest.raises(SourceRestricted):
+        env.capture(site.url("/a.html"))
+
+
+@pytest.mark.parametrize("title", ["Just a moment...", "Attention Required! | Example", "Access denied"])
+def test_challenge_titles_are_stopped(env, title):
+    site = env.site()
+    site.routes["/a.html"] = page(f"<html><head><title>{title}</title></head><body>hello</body></html>".encode())
+    with pytest.raises(SourceRestricted):
+        env.capture(site.url("/a.html"))
+
+
+def stopped_env(env):
+    site = env.site()
+    site.routes["/a.html"] = status(403)
+    with pytest.raises(SourceRestricted):
+        env.capture(site.url("/a.html"))
+    return site
+
+
+def test_clear_stop_removes_the_stop_and_audits_it(cli, capsys):
+    site = stopped_env(cli)
+    assert "example-fund" in cli.state_json()["stopped"]
+    code = ccs.main(["--state", str(cli.state), "--clear-stop", "example-fund", "--reason", "Operator confirmed access"],
+                    clock=cli.clock, sleep=cli.clock.sleep)
+    assert code == 0
+    state = cli.state_json()
+    assert "example-fund" not in state.get("stopped", {})
+    entry, = state["clearances"]
+    assert entry["source"] == "example-fund" and entry["reason"] == "Operator confirmed access"
+    assert "403" in entry["previous_stop"] and entry["cleared_at"].endswith("Z")
+    site.routes["/a.html"] = page()
+    assert cli.capture(site.url("/a.html"))["status"] == 200
+
+
+def test_clear_stop_needs_a_reason_and_a_stopped_source(cli):
+    stopped_env(cli)
+    for argv in (["--clear-stop", "example-fund", "--reason", "  "], ["--clear-stop", "other-source", "--reason", "x"]):
+        assert ccs.main(["--state", str(cli.state), *argv], clock=cli.clock, sleep=cli.clock.sleep) == 2
+    assert "example-fund" in cli.state_json()["stopped"] and "clearances" not in cli.state_json()
+
+
+def test_clear_stop_is_exclusive_with_capture(cli):
+    with pytest.raises(SystemExit):
+        ccs.main(["--state", str(cli.state), "--clear-stop", "example-fund", "--reason", "x",
+                  "--url", "http://127.0.0.1:1/a"])
