@@ -144,7 +144,7 @@ describe("Connections", () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it("renders compact verified money rollups with formatted totals and linked counterparties", () => {
+  it("shows each kind of money on its own line and never adds kinds together", () => {
     render(
       <Connections
         entity={makeEntity({
@@ -153,12 +153,17 @@ describe("Connections", () => {
           label: "Target Vendor",
           money_rollup: {
             flows_in_count: 3,
-            money_in_total: 12500,
+            money_in_total: 12540,
             flows_out_count: 1,
             money_out_total: 2750,
+            by_kind: [
+              { kind: "county_contract", in_count: 2, in_total: 12500, out_count: 0, out_total: 0 },
+              { kind: "campaign_spending", in_count: 1, in_total: 40, out_count: 0, out_total: 0 },
+              { kind: "campaign_contribution", in_count: 0, in_total: 0, out_count: 1, out_total: 2750 },
+            ],
             top_counterparties: [
-              { id: "org-county", label: "County of Marin", total: 10000 },
-              { id: "org-consultant", label: "Consultant LLC", total: 2750 },
+              { id: "org-county", label: "County of Marin", total: 12500, kind: "county_contract" },
+              { id: "org-consultant", label: "Consultant LLC", total: 2750, kind: "campaign_contribution" },
             ],
           },
         })}
@@ -166,17 +171,23 @@ describe("Connections", () => {
     );
 
     const block = screen.getByTestId("verified-money");
-    expect(block.textContent).toContain("VERIFIED MONEY");
-    expect(block.textContent).toContain("$12,500");
-    expect(block.textContent).toContain("3 in");
-    expect(block.textContent).toContain("$2,750");
-    expect(block.textContent).toContain("1 out");
-    expect(screen.getByRole("link", { name: /County of Marin/i }).getAttribute("href")).toBe(
-      "/organization/county",
-    );
-    expect(screen.getByRole("link", { name: /Consultant LLC/i }).getAttribute("href")).toBe(
-      "/organization/consultant",
-    );
+    const text = block.textContent ?? "";
+    expect(text).toContain("MONEY ON RECORD");
+    expect(text).not.toContain("VERIFIED MONEY");
+    expect(text).toContain("County contract amounts");
+    expect(text).toContain("contract amounts, not payments");
+    expect(text).toContain("$12,500");
+    expect(text).toContain("2 contracts");
+    expect(text).toContain("Campaign spending");
+    expect(text).toContain("$40");
+    expect(text).toContain("Campaign contributions");
+    expect(text).toContain("$2,750");
+    expect(text).toContain("1 given");
+    expect(text).not.toContain("$12,540"); // kinds are never summed
+    const county = screen.getByRole("link", { name: /County of Marin/i });
+    expect(county.getAttribute("href")).toBe("/organization/county");
+    expect(county.textContent).toContain("county contract");
+    expect(screen.getByRole("link", { name: /Consultant LLC/i }).textContent).toContain("contribution");
   });
 
   it("does not render verified money when the rollup field is absent or null", () => {

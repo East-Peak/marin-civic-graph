@@ -243,7 +243,28 @@ class BakedEdge:
 
 
 IdentityLinkRow = tuple[str, str, str, str | None, str | None, str | None]
-MoneyRollupRow = tuple[str, int, float, int, float, str]
+MoneyRollupRow = tuple[str, int, float, int, float, str, str]
+
+# What kind of money a MoneyFlow is. Kinds are never added together on a public page: a county contract amount is
+# the contract's amount, not a payment (ingest_marin_county_contracts.py: not_invoice_payment); an authorization is
+# an approved amount; campaign money is what filers reported. An unrecognized flow_type is "other", never silently
+# another kind.
+MONEY_KIND_ORDER = ("county_contract", "authorization", "campaign_contribution", "campaign_spending",
+                    "behested_payment", "other")
+MONEY_KINDS = {
+    "delegated_contract": "county_contract",
+    "grant_award": "authorization",
+    "obligation": "authorization",
+    "contract_authorization": "authorization",
+    "amendment_authorization": "authorization",
+    "contingency_authorization": "authorization",
+    "property_acquisition_authorization": "authorization",
+    "contribution": "campaign_contribution",
+    "campaign_contribution": "campaign_contribution",
+    "expenditure": "campaign_spending",
+    "campaign_expenditure": "campaign_spending",
+    "behested_payment": "behested_payment",
+}
 
 
 def _read_jsonl(path: Path) -> list[dict]:
@@ -817,6 +838,10 @@ def _money_amount(node: BakedNode) -> Decimal:
         raise ValueError(f"Invalid MoneyFlow amount for {node.id}: {value!r}") from exc
 
 
+def _money_kind(node: BakedNode) -> str:
+    return MONEY_KINDS.get(str(node.props.get("flow_type") or ""), "other")
+
+
 def _decimal_as_float(value: Decimal) -> float:
     return float(value)
 
@@ -860,6 +885,7 @@ def _money_rollup_rows(
     amounts = {
         flow_id: _money_amount(node) for flow_id, node in money_nodes.items()
     }
+    kinds = {flow_id: _money_kind(node) for flow_id, node in money_nodes.items()}
     rows: list[MoneyRollupRow] = []
     for org_id in sorted(org_ids):
         identity_set = identity_sets[org_id]
@@ -884,29 +910,43 @@ def _money_rollup_rows(
             (amounts[flow_id] for flow_id in sorted(out_flow_ids)),
             Decimal("0"),
         )
-        counterparty_totals: dict[str, Decimal] = defaultdict(lambda: Decimal("0"))
+        by_kind = []
+        for kind in MONEY_KIND_ORDER:
+            kind_in = [f for f in sorted(in_flow_ids) if kinds[f] == kind]
+            kind_out = [f for f in sorted(out_flow_ids) if kinds[f] == kind]
+            if kind_in or kind_out:
+                by_kind.append({
+                    "kind": kind,
+                    "in_count": len(kind_in),
+                    "in_total": _decimal_as_float(sum((amounts[f] for f in kind_in), Decimal("0"))),
+                    "out_count": len(kind_out),
+                    "out_total": _decimal_as_float(sum((amounts[f] for f in kind_out), Decimal("0"))),
+                })
+        counterparty_totals: dict[tuple[str, str], Decimal] = defaultdict(lambda: Decimal("0"))
+        # Signed, like by_kind (a refund nets against its payment); only the ranking uses the magnitude.
         for flow_id in sorted(in_flow_ids):
-            amount = abs(amounts[flow_id])
+            amount = amounts[flow_id]
             for counterparty_id in sorted(
                 from_sources_by_flow.get(flow_id, set()) - identity_set
             ):
-                counterparty_totals[counterparty_id] += amount
+                counterparty_totals[(counterparty_id, kinds[flow_id])] += amount
         for flow_id in sorted(out_flow_ids):
-            amount = abs(amounts[flow_id])
+            amount = amounts[flow_id]
             for counterparty_id in sorted(
                 to_targets_by_flow.get(flow_id, set()) - identity_set
             ):
-                counterparty_totals[counterparty_id] += amount
+                counterparty_totals[(counterparty_id, kinds[flow_id])] += amount
 
         top_counterparties = [
             {
                 "id": counterparty_id,
                 "label": _node_label(nodes, counterparty_id),
                 "total": _decimal_as_float(total),
+                "kind": kind,
             }
-            for counterparty_id, total in sorted(
+            for (counterparty_id, kind), total in sorted(
                 counterparty_totals.items(),
-                key=lambda item: (-abs(item[1]), item[0]),
+                key=lambda item: (-abs(item[1]), item[0][0], MONEY_KIND_ORDER.index(item[0][1])),
             )[:5]
         ]
         rows.append(
@@ -917,6 +957,7 @@ def _money_rollup_rows(
                 len(out_flow_ids),
                 _decimal_as_float(money_out_total),
                 _json_dumps_stable(top_counterparties),
+                _json_dumps_stable(by_kind),
             )
         )
     return rows
@@ -1011,7 +1052,8 @@ def _write_sqlite(
                     flows_out_count INTEGER NOT NULL,
                     money_out_total REAL NOT NULL,
                     top_counterparties TEXT NOT NULL
-                        CHECK (json_valid(top_counterparties))
+                        CHECK (json_valid(top_counterparties)),
+                    by_kind TEXT NOT NULL CHECK (json_valid(by_kind))
                 );
                 CREATE TABLE browse_rows (
                     id TEXT PRIMARY KEY,
@@ -1171,9 +1213,10 @@ def _write_sqlite(
                     money_in_total,
                     flows_out_count,
                     money_out_total,
-                    top_counterparties
+                    top_counterparties,
+                    by_kind
                 )
-                VALUES (?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
                 money_rollups,
             )

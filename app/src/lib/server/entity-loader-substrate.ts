@@ -15,11 +15,13 @@ import type {
   EntityEdge,
   EntityPayload,
   IdentityLink,
+  MoneyKindTotal,
   MoneyRollup,
   Neighbor,
   RecordLineageItem,
 } from "@/lib/server/entity-loader";
 import { entityRoute, resolveEntityId } from "@/lib/entity-route";
+import { isMoneyKind } from "@/lib/money-kinds";
 
 const TIER1_TYPES: ReadonlySet<NodeType> = new Set<NodeType>([
   "Person",
@@ -181,6 +183,7 @@ type MoneyRollupRow = {
   flows_out_count: number;
   money_out_total: number;
   top_counterparties: string;
+  by_kind: string;
 };
 
 function peerLabel(peerId: string): string {
@@ -224,14 +227,36 @@ function parseCounterparties(value: string): MoneyRollup["top_counterparties"] {
   return parsed.flatMap((item) => {
     if (typeof item !== "object" || item === null) return [];
     const row = item as Record<string, unknown>;
-    if (typeof row.id !== "string" || typeof row.label !== "string") return [];
+    if (typeof row.id !== "string" || typeof row.label !== "string" || !isMoneyKind(row.kind)) return [];
     const total = Number(row.total);
     if (!Number.isFinite(total)) return [];
-    return [{ id: row.id, label: row.label, total }];
+    return [{ id: row.id, label: row.label, total, kind: row.kind }];
   });
 }
 
+function parseByKind(value: string): MoneyKindTotal[] {
+  const parsed = JSON.parse(value) as unknown;
+  if (!Array.isArray(parsed)) return [];
+  return parsed.flatMap((item) => {
+    if (typeof item !== "object" || item === null) return [];
+    const row = item as Record<string, unknown>;
+    if (!isMoneyKind(row.kind)) return [];
+    const numbers = [row.in_count, row.in_total, row.out_count, row.out_total].map(Number);
+    if (!numbers.every(Number.isFinite)) return [];
+    const [in_count, in_total, out_count, out_total] = numbers;
+    return [{ kind: row.kind, in_count, in_total, out_count, out_total }];
+  });
+}
+
+/** Artifacts baked before money was split by kind have no by_kind column: they show no money panel rather than
+ * a total that adds different kinds of money together. */
+function hasMoneyByKind(): boolean {
+  const columns = getSubstrateDb().prepare("PRAGMA table_info(money_rollups)").all() as Array<{ name: string }>;
+  return columns.some((column) => column.name === "by_kind");
+}
+
 function loadMoneyRollup(focusId: string): MoneyRollup | null {
+  if (!hasMoneyByKind()) return null;
   const db = getSubstrateDb();
   const row = db
     .prepare(
@@ -241,7 +266,8 @@ function loadMoneyRollup(focusId: string): MoneyRollup | null {
         money_in_total,
         flows_out_count,
         money_out_total,
-        top_counterparties
+        top_counterparties,
+        by_kind
       FROM money_rollups
       WHERE org_id = ?
       `,
@@ -253,6 +279,7 @@ function loadMoneyRollup(focusId: string): MoneyRollup | null {
     money_in_total: Number(row.money_in_total),
     flows_out_count: Number(row.flows_out_count),
     money_out_total: Number(row.money_out_total),
+    by_kind: parseByKind(row.by_kind),
     top_counterparties: parseCounterparties(row.top_counterparties),
   };
 }

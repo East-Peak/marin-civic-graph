@@ -18,6 +18,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
+import bake_public_substrate as bake_mod  # noqa: E402
 from bake_public_substrate import bake_substrate  # noqa: E402
 
 
@@ -811,9 +812,9 @@ def test_money_rollups_include_direct_flows_and_null_amounts(tmp_path: Path) -> 
 
     assert row[:5] == ("org-direct", 2, 100.0, 1, 25.0)
     assert json.loads(row[5]) == [
-        {"id": "org-county", "label": "County of Marin", "total": 100.0},
-        {"id": "org-recipient", "label": "Recipient Org", "total": 25.0},
-        {"id": "org-null-source", "label": "Null Source", "total": 0.0},
+        {"id": "org-county", "label": "County of Marin", "total": 100.0, "kind": "other"},
+        {"id": "org-recipient", "label": "Recipient Org", "total": 25.0, "kind": "other"},
+        {"id": "org-null-source", "label": "Null Source", "total": 0.0, "kind": "other"},
     ]
     assert report["side_table_counts"]["money_rollups"] == money_rollup_count
 
@@ -843,11 +844,11 @@ def test_money_rollups_expand_across_verified_identity_links_and_order_counterpa
 
     assert row[:4] == (4, 680.5, 3, 155.0)
     assert json.loads(row[4]) == [
-        {"id": "org-county", "label": "County of Marin", "total": 300.0},
-        {"id": "org-big", "label": "Big Counterparty", "total": 250.5},
-        {"id": "org-med", "label": "Medium Counterparty", "total": 120.0},
-        {"id": "org-out2", "label": "Outbound Two", "total": 80.0},
-        {"id": "org-recipient", "label": "Recipient Org", "total": 70.0},
+        {"id": "org-county", "label": "County of Marin", "total": 300.0, "kind": "other"},
+        {"id": "org-big", "label": "Big Counterparty", "total": 250.5, "kind": "other"},
+        {"id": "org-med", "label": "Medium Counterparty", "total": 120.0, "kind": "other"},
+        {"id": "org-out2", "label": "Outbound Two", "total": 80.0, "kind": "other"},
+        {"id": "org-recipient", "label": "Recipient Org", "total": 70.0, "kind": "other"},
     ]
 
 
@@ -1249,6 +1250,116 @@ def test_money_rollup_handles_county_edge_orientation(tmp_path: Path) -> None:
     assert json.loads(vendor[2])[0]["id"] == "org-dept-hhs"
     assert dept[0] == 1 and dept[1] == 1000
     assert json.loads(dept[2])[0]["id"] == "org-vendor"
+
+
+def test_money_rollups_keep_each_kind_of_money_apart(tmp_path: Path) -> None:
+    """A county contract amount is an authorized ceiling, not money paid; a campaign's payment and a contribution
+    are different things again. The rollup reports each kind separately (by_kind) so no page adds them together,
+    and every top counterparty says which kind its total is."""
+    def flow(fid, amount, flow_type=None):
+        props = {"amount": amount} | ({"flow_type": flow_type} if flow_type else {})
+        return {"id": fid, "node_type": "MoneyFlow", "labels": ["MoneyFlow"], "properties": props}
+
+    def org(oid, name):
+        return {"id": oid, "node_type": "Organization", "labels": ["Organization"], "properties": {"name": name}}
+
+    def edge(a, rel, b):
+        return {"source_id": a, "relationship_type": rel, "target_id": b, "properties": {}}
+
+    nodes = [org("org-vendor", "Vendor"), org("org-dept", "Dept"), org("org-campaign", "Campaign"),
+             org("org-cause", "Cause"), org("org-funder", "Funder"), org("org-misc", "Misc"),
+             flow("moneyflow-contract", 1000, "delegated_contract"),
+             flow("moneyflow-grant", 500, "grant_award"),
+             flow("moneyflow-paid", 40, "expenditure"),
+             flow("moneyflow-gave", 25, "contribution"),
+             flow("moneyflow-untyped", 7)]
+    edges = [edge("org-dept", "FROM_SOURCE", "moneyflow-contract"), edge("moneyflow-contract", "TO_TARGET", "org-vendor"),
+             edge("org-funder", "FROM_SOURCE", "moneyflow-grant"), edge("moneyflow-grant", "TO_TARGET", "org-vendor"),
+             edge("moneyflow-paid", "FROM_SOURCE", "org-campaign"), edge("moneyflow-paid", "TO_TARGET", "org-vendor"),
+             edge("moneyflow-gave", "FROM_SOURCE", "org-vendor"), edge("moneyflow-gave", "TO_TARGET", "org-cause"),
+             edge("org-misc", "FROM_SOURCE", "moneyflow-untyped"), edge("moneyflow-untyped", "TO_TARGET", "org-vendor")]
+    nodes_path = _write_jsonl(tmp_path / "graph-v2/nodes.jsonl", nodes)
+    edges_path = _write_jsonl(tmp_path / "graph-v2/edges.jsonl", edges)
+    _set_mtime_date([nodes_path, edges_path], "2026-07-06")
+    registry = _write_registry(tmp_path / "registry/node-types.json")
+    sqlite_path = tmp_path / "public-substrate.sqlite"
+    bake_substrate([nodes_path], [edges_path], registry, sqlite_path, tmp_path / "report.json")
+    with sqlite3.connect(sqlite_path) as conn:
+        by_kind, top = conn.execute(
+            "SELECT by_kind, top_counterparties FROM money_rollups WHERE org_id='org-vendor'").fetchone()
+    assert json.loads(by_kind) == [
+        {"kind": "county_contract", "in_count": 1, "in_total": 1000.0, "out_count": 0, "out_total": 0.0},
+        {"kind": "authorization", "in_count": 1, "in_total": 500.0, "out_count": 0, "out_total": 0.0},
+        {"kind": "campaign_contribution", "in_count": 0, "in_total": 0.0, "out_count": 1, "out_total": 25.0},
+        {"kind": "campaign_spending", "in_count": 1, "in_total": 40.0, "out_count": 0, "out_total": 0.0},
+        {"kind": "other", "in_count": 1, "in_total": 7.0, "out_count": 0, "out_total": 0.0},
+    ]
+    assert json.loads(top) == [
+        {"id": "org-dept", "label": "Dept", "total": 1000.0, "kind": "county_contract"},
+        {"id": "org-funder", "label": "Funder", "total": 500.0, "kind": "authorization"},
+        {"id": "org-campaign", "label": "Campaign", "total": 40.0, "kind": "campaign_spending"},
+        {"id": "org-cause", "label": "Cause", "total": 25.0, "kind": "campaign_contribution"},
+        {"id": "org-misc", "label": "Misc", "total": 7.0, "kind": "other"},
+    ]
+
+
+def test_every_recorded_flow_type_has_its_deliberate_money_kind() -> None:
+    """Each flow_type maps to the kind chosen for it, and an unknown type is "other", never another kind."""
+    assert bake_mod.MONEY_KINDS == {
+        "delegated_contract": "county_contract",
+        "grant_award": "authorization",
+        "obligation": "authorization",
+        "contract_authorization": "authorization",
+        "amendment_authorization": "authorization",
+        "contingency_authorization": "authorization",
+        "property_acquisition_authorization": "authorization",
+        "contribution": "campaign_contribution",
+        "campaign_contribution": "campaign_contribution",
+        "expenditure": "campaign_spending",
+        "campaign_expenditure": "campaign_spending",
+        "behested_payment": "behested_payment",
+    }
+    assert set(bake_mod.MONEY_KINDS.values()) | {"other"} == set(bake_mod.MONEY_KIND_ORDER)
+    node = bake_mod.BakedNode(id="moneyflow-x", type="MoneyFlow", search_label="x", props={"flow_type": "new_kind"})
+    assert bake_mod._money_kind(node) == "other"
+
+
+def test_counterparty_totals_keep_refunds_signed_and_split_by_kind(tmp_path: Path) -> None:
+    """A $100 payment and a $25 refund from one campaign net to $75 against it, as in by_kind; the same
+    counterparty under two kinds is listed once per kind."""
+    def flow(fid, amount, flow_type):
+        return {"id": fid, "node_type": "MoneyFlow", "labels": ["MoneyFlow"],
+                "properties": {"amount": amount, "flow_type": flow_type}}
+
+    def org(oid, name):
+        return {"id": oid, "node_type": "Organization", "labels": ["Organization"], "properties": {"name": name}}
+
+    def edge(a, rel, b):
+        return {"source_id": a, "relationship_type": rel, "target_id": b, "properties": {}}
+
+    nodes = [org("org-shop", "Shop"), org("org-campaign", "Campaign"),
+             flow("moneyflow-pay", 100, "expenditure"), flow("moneyflow-refund", -25, "expenditure"),
+             flow("moneyflow-gift", 10, "contribution")]
+    edges = [edge("moneyflow-pay", "FROM_SOURCE", "org-campaign"), edge("moneyflow-pay", "TO_TARGET", "org-shop"),
+             edge("moneyflow-refund", "FROM_SOURCE", "org-campaign"), edge("moneyflow-refund", "TO_TARGET", "org-shop"),
+             edge("moneyflow-gift", "FROM_SOURCE", "org-shop"), edge("moneyflow-gift", "TO_TARGET", "org-campaign")]
+    nodes_path = _write_jsonl(tmp_path / "graph-v2/nodes.jsonl", nodes)
+    edges_path = _write_jsonl(tmp_path / "graph-v2/edges.jsonl", edges)
+    _set_mtime_date([nodes_path, edges_path], "2026-07-06")
+    registry = _write_registry(tmp_path / "registry/node-types.json")
+    sqlite_path = tmp_path / "public-substrate.sqlite"
+    bake_substrate([nodes_path], [edges_path], registry, sqlite_path, tmp_path / "report.json")
+    with sqlite3.connect(sqlite_path) as conn:
+        by_kind, top = conn.execute(
+            "SELECT by_kind, top_counterparties FROM money_rollups WHERE org_id='org-shop'").fetchone()
+    assert json.loads(by_kind) == [
+        {"kind": "campaign_contribution", "in_count": 0, "in_total": 0.0, "out_count": 1, "out_total": 10.0},
+        {"kind": "campaign_spending", "in_count": 2, "in_total": 75.0, "out_count": 0, "out_total": 0.0},
+    ]
+    assert json.loads(top) == [
+        {"id": "org-campaign", "label": "Campaign", "total": 75.0, "kind": "campaign_spending"},
+        {"id": "org-campaign", "label": "Campaign", "total": 10.0, "kind": "campaign_contribution"},
+    ]
 
 
 # --- entity routes: no two nodes may share a URL ------------------------------------

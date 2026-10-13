@@ -100,7 +100,8 @@ function makeFixtureDb(): string {
       money_in_total REAL NOT NULL,
       flows_out_count INTEGER NOT NULL,
       money_out_total REAL NOT NULL,
-      top_counterparties TEXT NOT NULL CHECK (json_valid(top_counterparties))
+      top_counterparties TEXT NOT NULL CHECK (json_valid(top_counterparties)),
+      by_kind TEXT NOT NULL CHECK (json_valid(by_kind))
     );
   `);
 
@@ -234,8 +235,9 @@ function makeFixtureDb(): string {
        money_in_total,
        flows_out_count,
        money_out_total,
-       top_counterparties
-     ) VALUES (?, ?, ?, ?, ?, ?)`,
+       top_counterparties,
+       by_kind
+     ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
   ).run(
     "org-target",
     3,
@@ -243,8 +245,12 @@ function makeFixtureDb(): string {
     1,
     2750,
     JSON.stringify([
-      { id: "org-county", label: "County of Marin", total: 10000 },
-      { id: "org-consultant", label: "Consultant LLC", total: 2750 },
+      { id: "org-county", label: "County of Marin", total: 10000, kind: "county_contract" },
+      { id: "org-consultant", label: "Consultant LLC", total: 2750, kind: "campaign_spending" },
+    ]),
+    JSON.stringify([
+      { kind: "county_contract", in_count: 2, in_total: 10000, out_count: 0, out_total: 0 },
+      { kind: "campaign_spending", in_count: 1, in_total: 2500, out_count: 1, out_total: 2750 },
     ]),
   );
 
@@ -486,12 +492,26 @@ describe("loadEntitySubstrate", () => {
       money_in_total: 12500,
       flows_out_count: 1,
       money_out_total: 2750,
+      by_kind: [
+        { kind: "county_contract", in_count: 2, in_total: 10000, out_count: 0, out_total: 0 },
+        { kind: "campaign_spending", in_count: 1, in_total: 2500, out_count: 1, out_total: 2750 },
+      ],
       top_counterparties: [
-        { id: "org-county", label: "County of Marin", total: 10000 },
-        { id: "org-consultant", label: "Consultant LLC", total: 2750 },
+        { id: "org-county", label: "County of Marin", total: 10000, kind: "county_contract" },
+        { id: "org-consultant", label: "Consultant LLC", total: 2750, kind: "campaign_spending" },
       ],
     });
     expect(result?.record_lineage).toBeUndefined();
+  });
+
+  it("shows no money panel from an artifact baked before money was split by kind", async () => {
+    const old = new Database(process.env.SUBSTRATE_DB_PATH!);
+    old.exec("ALTER TABLE money_rollups DROP COLUMN by_kind");
+    old.close();
+    const { loadEntitySubstrate } = await import("@/lib/server/entity-loader-substrate");
+    const result = await loadEntitySubstrate("organization", "target");
+    expect(result?.id).toBe("org-target");
+    expect(result?.money_rollup).toBeNull();
   });
 
   it("populates a depth-capped DERIVED_FROM_RECORD lineage for Record focus pages", async () => {

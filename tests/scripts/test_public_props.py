@@ -198,7 +198,7 @@ def test_bake_serializes_allowlist_but_derives_from_bake_only_inputs(tmp_path: P
     assert label == "Display Only Org"
     assert browse == "org-a"
     assert terms_hit == [("org-a",)]
-    assert json.loads(rollup) == [{"id": "org-a", "label": "Display Only Org", "total": 10.0}]
+    assert json.loads(rollup) == [{"id": "org-a", "label": "Display Only Org", "total": 10.0, "kind": "other"}]
     # Edges are not node-allowlisted: identity assertion props survive.
     assert identity == [("as-1", "ein", "2026-07-01", "stuart")]
 

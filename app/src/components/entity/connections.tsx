@@ -6,6 +6,7 @@ import Link from "next/link";
 import type { EntityPayload, Neighbor } from "@/lib/server/entity-loader";
 import { displayNameForType } from "@/lib/type-display";
 import { entityRouteForId } from "@/lib/entity-route";
+import { MONEY_KIND_TEXT, type MoneyKind } from "@/lib/money-kinds";
 
 type Grouped = {
   relType: string;
@@ -77,9 +78,29 @@ function formatMoney(value: number): string {
 }
 
 
+function countPhrase(kind: MoneyKind, count: number, word: string): string {
+  if (kind === "county_contract") return `${count} contract${count === 1 ? "" : "s"}${word === "contract" ? "" : " awarded"}`;
+  return `${count} ${word}`;
+}
+
+function MoneySide({ kind, total, count, word }: { kind: MoneyKind; total: number; count: number; word: string }) {
+  return (
+    <div>
+      <div className="text-body" style={{ fontSize: "16px" }}>
+        {formatMoney(total)}
+      </div>
+      <div className="text-hairline" style={{ fontSize: "10px", letterSpacing: "0.08em" }}>
+        {countPhrase(kind, count, word)}
+      </div>
+    </div>
+  );
+}
+
+// One line per kind of money (county contract amounts, approved amounts, campaign money…), never a sum across
+// kinds: a contract amount is not a payment.
 function VerifiedMoneyBlock({ entity }: { entity: EntityPayload }) {
   const rollup = entity.money_rollup;
-  if (!rollup) return null;
+  if (!rollup || rollup.by_kind.length === 0) return null;
 
   return (
     <div className="border border-border-hairline bg-panel" data-testid="verified-money">
@@ -87,39 +108,43 @@ function VerifiedMoneyBlock({ entity }: { entity: EntityPayload }) {
         className="border-b border-border-hairline px-3 py-2 font-mono uppercase text-dim"
         style={{ fontSize: "10px", letterSpacing: "0.14em" }}
       >
-        VERIFIED MONEY
+        MONEY ON RECORD
       </div>
-      <div className="grid gap-3 px-3 py-3 font-mono md:grid-cols-[220px_1fr]">
-        <div className="grid grid-cols-2 gap-2">
-          <div>
-            <div className="text-body" style={{ fontSize: "16px" }}>
-              {formatMoney(rollup.money_in_total)}
-            </div>
-            <div className="text-hairline" style={{ fontSize: "10px", letterSpacing: "0.08em" }}>
-              {rollup.flows_in_count} in
-            </div>
-          </div>
-          <div>
-            <div className="text-body" style={{ fontSize: "16px" }}>
-              {formatMoney(rollup.money_out_total)}
-            </div>
-            <div className="text-hairline" style={{ fontSize: "10px", letterSpacing: "0.08em" }}>
-              {rollup.flows_out_count} out
-            </div>
-          </div>
+      <div className="grid gap-3 px-3 py-3 font-mono md:grid-cols-[minmax(220px,auto)_1fr]">
+        <div className="grid gap-3">
+          {rollup.by_kind.map((k) => {
+            const text = MONEY_KIND_TEXT[k.kind];
+            return (
+              <div key={k.kind} data-testid={`money-kind-${k.kind}`}>
+                <div className="text-dim" style={{ fontSize: "11px" }}>
+                  {text.title} <span className="text-hairline">· {text.note}</span>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {k.in_count > 0 && (
+                    <MoneySide kind={k.kind} total={k.in_total} count={k.in_count} word={text.inWord} />
+                  )}
+                  {k.out_count > 0 && (
+                    <MoneySide kind={k.kind} total={k.out_total} count={k.out_count} word={text.outWord} />
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
         {rollup.top_counterparties.length > 0 && (
-          <ul className="grid gap-1">
+          <ul className="grid content-start gap-1">
             {rollup.top_counterparties.map((counterparty) => {
               const route = entityRouteForId(counterparty.id);
               const inner = (
                 <>
                   <span className="text-body">{counterparty.label}</span>
-                  <span className="text-hairline">{formatMoney(counterparty.total)}</span>
+                  <span className="text-hairline">
+                    {formatMoney(counterparty.total)} · {MONEY_KIND_TEXT[counterparty.kind].counterparty}
+                  </span>
                 </>
               );
               return (
-                <li key={counterparty.id}>
+                <li key={`${counterparty.id}-${counterparty.kind}`}>
                   {route ? (
                     <Link
                       href={route}

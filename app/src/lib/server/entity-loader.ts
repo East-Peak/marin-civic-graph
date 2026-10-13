@@ -32,6 +32,7 @@ import { loadEntitySubstrate, loadEntitySubstrateById } from "@/lib/server/entit
 import { servingBackend } from "@/lib/server/substrate";
 import { type NodeType } from "@/lib/type-display";
 import { entityRoute } from "@/lib/entity-route";
+import type { MoneyKind } from "@/lib/money-kinds";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -73,15 +74,26 @@ export type IdentityLink = {
   decided_at: string | null;
 };
 
+export type MoneyKindTotal = {
+  kind: MoneyKind;
+  in_count: number;
+  in_total: number;
+  out_count: number;
+  out_total: number;
+};
+
 export type MoneyRollup = {
   flows_in_count: number;
   money_in_total: number;
   flows_out_count: number;
   money_out_total: number;
+  /** One entry per kind of money; pages show these and never the mixed totals above. */
+  by_kind: MoneyKindTotal[];
   top_counterparties: Array<{
     id: string;
     label: string;
     total: number;
+    kind: MoneyKind;
   }>;
 };
 
