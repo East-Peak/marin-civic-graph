@@ -990,6 +990,29 @@ def test_zip_case_variants_are_distinct_members(env):
     assert (upper["member"], lower["member"]) == ("A.xml", "a.xml") and upper["sha256"] != lower["sha256"]
 
 
+def test_zip_member_in_a_folder_is_found_by_its_unique_file_name(env):
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as zf:
+        zf.writestr("batch-01/0001_public.xml", b"<one/>")
+        zf.writestr("batch-01/0002_public.xml", b"<two/>")
+    site = env.site()
+    site.routes["/z.zip"] = ranged(buf.getvalue())
+    row = env.zip_member(site.url("/z.zip"), "0002_public.xml")
+    assert row["member"] == "batch-01/0002_public.xml"
+
+
+def test_zip_file_name_in_two_folders_is_ambiguous(env):
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as zf:
+        zf.writestr("a/0001_public.xml", b"<one/>")
+        zf.writestr("b/0001_public.xml", b"<two/>")
+    site = env.site()
+    site.routes["/z.zip"] = ranged(buf.getvalue())
+    with pytest.raises(AccessRefused):
+        env.zip_member(site.url("/z.zip"), "0001_public.xml")
+    assert env.written() == []
+
+
 def test_zip_row_records_member_and_archive_content_types(env):
     site = env.site()
     site.routes["/z.zip"] = lambda req: (lambda r: (r[0], {**r[1], "Content-Type": "application/zip"}, r[2]))(

@@ -533,8 +533,11 @@ class RangeReader(io.RawIOBase):
 
 
 def find_member(names: list[str], wanted: str) -> str:
-    """Exact name if exactly one entry has it, else a unique case-insensitive match."""
-    matches = [n for n in names if n == wanted] or [n for n in names if n.lower() == wanted.lower()]
+    """Exact name if exactly one entry has it, else a unique case-insensitive match, else a unique entry whose
+    file name (the part after any folder) is the wanted name — IRS batches keep members in a folder."""
+    base = wanted.rsplit("/", 1)[-1]
+    matches = ([n for n in names if n == wanted] or [n for n in names if n.lower() == wanted.lower()]
+               or [n for n in names if n.rsplit("/", 1)[-1] == base])
     if len(matches) != 1:
         raise AccessRefused(f"member {wanted!r} matches {len(matches)} entries in the archive")
     return matches[0]
