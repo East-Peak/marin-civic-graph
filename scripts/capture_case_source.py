@@ -82,6 +82,10 @@ class SourceRestricted(AccessRefused):
     """The source says no (robots, login, captcha, rate limit); further capture stops."""
 
 
+class RangeViolation(AccessRefused):
+    """The server's answer to a Range request broke the protocol."""
+
+
 class BudgetExhausted(AccessRefused):
     """The document cap would be exceeded."""
 
@@ -109,21 +113,32 @@ def refuse_symlink(path: Path) -> None:
         raise AccessRefused(f"{path} is a symlink")
 
 
+def resolve_under_staging(path, label: str) -> Path:
+    resolved, root = Path(path).resolve(), STAGING_ROOT.resolve()
+    if not resolved.is_relative_to(root):
+        raise AccessRefused(f"{label} {resolved} must resolve under {root}")
+    return resolved
+
+
 class State:
     """The JSON state file, exclusively locked for the lifetime of one capture call."""
 
     def __init__(self, path: Path):
-        self.path, lock_path = Path(path), Path(f"{path}.lock")
-        for candidate in (self.path, lock_path):
+        self.path = resolve_under_staging(path, "state file")
+        lock_path = Path(f"{self.path}.lock")
+        for candidate in (Path(path), self.path, lock_path):
             refuse_symlink(candidate)
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.lock = open(lock_path, "a")
+        self.lock = os.fdopen(os.open(lock_path, os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600), "r+")
         fcntl.flock(self.lock, fcntl.LOCK_EX)
         self.data = json.loads(self.path.read_text()) if self.path.exists() else {}
 
     def save(self) -> None:
         tmp = self.path.with_name(self.path.name + ".tmp")
-        tmp.write_text(json.dumps(self.data, indent=2, sort_keys=True))
+        tmp.unlink(missing_ok=True)  # under the lock, so any leftover is stale (or a planted link)
+        fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+        with os.fdopen(fd, "w") as handle:
+            handle.write(json.dumps(self.data, indent=2, sort_keys=True))
         os.replace(tmp, self.path)
 
     def __enter__(self):
@@ -167,12 +182,14 @@ def read_body(response, status: int, headers: Message, wanted: tuple[int, int] |
     elif status == 206:
         match = CONTENT_RANGE_RE.fullmatch(headers.get("Content-Range", ""))
         if not match or int(match[1]) != wanted[0] or not wanted[0] <= int(match[2]) <= wanted[1]:
-            raise AccessRefused(f"Content-Range {headers.get('Content-Range')!r} does not match bytes={wanted[0]}-{wanted[1]}")
+            raise RangeViolation(f"Content-Range {headers.get('Content-Range')!r} does not match bytes={wanted[0]}-{wanted[1]}")
         limit = int(match[2]) - wanted[0] + 1
     else:
         limit = PEEK_BYTES  # Range ignored or refused: just enough to spot a challenge page
     body = response.read(limit + 1)
-    if len(body) > limit and (wanted is None or status == 206):
+    if wanted is not None and status == 206 and len(body) != limit:
+        raise RangeViolation(f"206 body is {len(body)} bytes, Content-Range promised {limit}")
+    if len(body) > limit and wanted is None:
         raise AccessRefused("reply is larger than the request permits")
     return body[:limit]
 
@@ -184,7 +201,7 @@ class Fetcher:
         if not SOURCE_RE.match(source):
             raise AccessRefused(f"source id {source!r} must match {SOURCE_RE.pattern}")
         self.source, self.state, self.data, self.user_agent = source, state, state.data, user_agent
-        path = Path(basis_path)
+        path = resolve_under_staging(basis_path, "basis file")
         self.hosts = json.loads(path.read_text()).get("hosts", {}) if path.exists() else {}
         self.clock, self.sleep = clock, sleep
         self.opener = urllib.request.build_opener(NoRedirects)
@@ -225,6 +242,8 @@ class Fetcher:
         except urllib.error.HTTPError as err:
             with err:
                 return err.code, err.headers, read_body(err, err.code, err.headers, wanted)
+        except RangeViolation as err:
+            raise self.stop(str(err))
         except (urllib.error.URLError, OSError):
             return None, Message(), b""
 
@@ -395,7 +414,16 @@ def begin(state: State, *, source, raw_root, basis_path, date, user_agent, clock
     day = str(date) if date else datetime.fromtimestamp(clock(), timezone.utc).strftime("%Y-%m-%d")
     if not DATE_RE.match(day):
         raise AccessRefused(f"date {day!r} must be YYYY-MM-DD")
-    return fetcher, raw_root.resolve(), day
+    raw_root = raw_root.resolve()
+    reconcile_document_count(fetcher, raw_root)
+    return fetcher, raw_root, day
+
+
+def reconcile_document_count(fetcher: Fetcher, raw_root: Path) -> None:
+    """The manifests are the truth: a crash between manifest append and state save must not undercount."""
+    written = sum("access" in row for manifest in raw_root.glob("*/*/manifest.jsonl")
+                  for row in map(json.loads, filter(str.strip, manifest.read_text().splitlines())))
+    fetcher.data["documents"] = max(fetcher.data.get("documents", 0), written)
 
 
 def find_row(raw_root: Path, source: str, matches) -> dict | None:
@@ -449,10 +477,10 @@ class RangeReader(io.RawIOBase):
         response = self.fetcher.get(url, headers={"Range": f"bytes={first}-{last}"})
         self.requests += 1
         if response.status != 206:
-            raise AccessRefused(f"server did not honour Range bytes={first}-{last} (status {response.status})")
+            raise self.fetcher.stop(f"server did not honour Range bytes={first}-{last} (status {response.status})")
         if hasattr(self, "length") and (int(CONTENT_RANGE_RE.fullmatch(response.headers["Content-Range"])[3]) != self.length
                                         or response.headers.get("ETag") != self.etag):
-            raise AccessRefused("remote file changed while it was being read")
+            raise self.fetcher.stop("remote file changed while it was being read")
         return response
 
     def readable(self): return True
@@ -472,6 +500,8 @@ class RangeReader(io.RawIOBase):
             if not start <= self.pos < start + len(data):
                 last = min(self.length, self.pos + max(self.chunk, end - self.pos)) - 1
                 start, data = self.pos, self.fetch(self.url, self.pos, last).body
+                if not data:
+                    raise self.fetcher.stop("Range reply made no progress")
                 self.block = (start, data)
             piece = data[self.pos - start : end - start]
             out += piece
@@ -530,13 +560,6 @@ def capture_zip_member(zip_url, member, *, source, raw_root, state_path, basis_p
 
 
 # --- CLI ----------------------------------------------------------------------------
-
-
-def resolve_under_staging(path: str, label: str) -> Path:
-    resolved, root = Path(path).resolve(), STAGING_ROOT.resolve()
-    if not resolved.is_relative_to(root):
-        raise AccessRefused(f"{label} {resolved} must resolve under {root}")
-    return resolved
 
 
 def main(argv: list[str] | None = None, *, clock=time.time, sleep=time.sleep) -> int:

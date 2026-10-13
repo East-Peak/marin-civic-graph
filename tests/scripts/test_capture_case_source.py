@@ -50,12 +50,20 @@ class Clock:
         self.t += seconds
 
 
+class Stream:
+    """A large reply written piece by piece so the test can see how much the client pulled."""
+
+    def __init__(self, total, piece=b"x" * 65536):
+        self.total, self.piece = total, piece
+
+
 class Site:
     """Local server; routes map a request path to fn(handler) -> (status, headers, body)."""
 
     def __init__(self, clock):
         self.routes: dict = {}
         self.hits: list[tuple[str, str, float]] = []
+        self.sent = 0
         site = self
 
         class Handler(BaseHTTPRequestHandler):
@@ -66,6 +74,16 @@ class Site:
                 self.send_response(status)
                 for key, value in headers.items():
                     self.send_header(key, value)
+                if isinstance(body, Stream):
+                    self.send_header("Content-Length", str(body.total))
+                    self.end_headers()
+                    try:
+                        for _ in range(body.total // len(body.piece)):
+                            self.wfile.write(body.piece)
+                            site.sent += len(body.piece)
+                    except OSError:
+                        pass  # the client hung up, which is the point
+                    return
                 self.send_header("Content-Length", str(len(body)))
                 self.end_headers()
                 if self.command != "HEAD":
@@ -159,6 +177,7 @@ class Env:
 def env(tmp_path, monkeypatch):
     e = Env(tmp_path)
     monkeypatch.setattr(ccs, "RAW_ROOT", e.raw)
+    monkeypatch.setattr(ccs, "STAGING_ROOT", e.state.parent)
     yield e
     for site in e.sites:
         site.stop()
@@ -992,3 +1011,141 @@ def test_document_named_manifest_does_not_clobber_the_manifest(env):
     assert (env.raw / row["path"]).read_bytes() == b"not a manifest"
     rows = (env.raw / "example-fund" / "2026-03-04" / "manifest.jsonl").read_text().splitlines()
     assert len(rows) == 2 and json.loads(rows[0])["sha256"] == row["sha256"]
+
+
+# --- review round 2 --------------------------------------------------------------
+
+
+def test_empty_206_is_refused_after_exactly_one_request_and_stops_source(env):
+    site = env.site()
+    blob = make_zip()
+    site.routes["/z.zip"] = lambda req: (206, {"Content-Range": f"bytes 0-0/{len(blob)}", "ETag": '"z1"'}, b"")
+    with pytest.raises(AccessRefused):
+        env.zip_member(site.url("/z.zip"), "other.xml")
+    assert site.paths().count("/z.zip") == 1
+    assert "example-fund" in env.state_json()["stopped"]
+
+
+def test_short_206_body_is_refused(env):
+    site = env.site()
+    blob = make_zip()
+    good = ranged(blob)
+
+    def short(req):
+        code, headers, body = good(req)
+        return code, headers, body[:-1] if len(body) > 1 else body
+
+    site.routes["/z.zip"] = short
+    with pytest.raises(AccessRefused):
+        env.zip_member(site.url("/z.zip"), "other.xml", range_chunk=256)
+    assert "example-fund" in env.state_json()["stopped"]
+
+
+@pytest.mark.parametrize("path", ["/long.zip", "/skew.zip"])
+def test_range_violations_latch_the_source_stopped(env, path):
+    site = env.site()
+    blob = make_zip()
+    good = ranged(blob)
+    site.routes["/long.zip"] = lambda req: (lambda r: (r[0], r[1], r[2] + b"EXTRA" * 50))(good(req))
+    site.routes["/skew.zip"] = lambda req: (206, {"Content-Range": f"bytes 5-5/{len(blob)}", "ETag": '"z1"'}, b"x")
+    with pytest.raises(AccessRefused):
+        env.zip_member(site.url(path), "other.xml")
+    assert "example-fund" in env.state_json()["stopped"]
+
+
+def test_server_ignoring_range_cannot_make_us_download_the_archive(env):
+    site = env.site()
+    site.routes["/z.zip"] = lambda req: (200, {}, Stream(64 * 1024 * 1024))
+    with pytest.raises(AccessRefused):
+        env.zip_member(site.url("/z.zip"), "other.xml")
+    assert site.sent < 8 * 1024 * 1024
+
+
+def test_state_tmp_symlink_is_not_followed(env, tmp_path):
+    site = env.site()
+    site.routes["/a.html"] = page()
+    victim = tmp_path / "victim.txt"
+    victim.write_text("keep")
+    (env.state.parent / "state.json.tmp").symlink_to(victim)
+    env.capture(site.url("/a.html"))
+    assert victim.read_text() == "keep" and json.loads(env.state.read_text())["documents"] == 1
+
+
+def test_symlinked_lock_file_is_refused(env, tmp_path):
+    site = env.site()
+    (env.state.parent / "state.json.lock").symlink_to(tmp_path / "somewhere")
+    with pytest.raises(AccessRefused):
+        env.capture(site.url("/a.html"))
+    assert site.hits == []
+
+
+def test_library_state_and_basis_must_live_under_staging(env, tmp_path):
+    site = env.site()
+    outside = tmp_path / "elsewhere"
+    outside.mkdir()
+    with pytest.raises(AccessRefused):
+        capture(site.url("/a.html"), **{**env.kw(), "state_path": outside / "s.json"})
+    with pytest.raises(AccessRefused):
+        capture(site.url("/a.html"), **{**env.kw(), "basis_path": outside / "b.json"})
+    assert site.hits == [] and list(outside.iterdir()) == []
+
+
+def test_lost_state_after_a_crash_is_reconciled_from_the_manifests(env):
+    site = env.site()
+    for name in "abc":
+        site.routes[f"/{name}.html"] = page(name.encode())
+    env.capture(site.url("/a.html"), cap=1)
+    # simulate dying after the manifest append but before the state save
+    state = env.state_json()
+    state["documents"] = 0
+    env.state.write_text(json.dumps(state))
+    seen = len(site.hits)
+    with pytest.raises(BudgetExhausted):
+        env.capture(site.url("/b.html"), cap=1)
+    assert len(site.hits) == seen and env.state_json()["documents"] == 1
+
+
+def test_other_tools_manifest_rows_do_not_count_against_the_budget(env):
+    site = env.site()
+    site.routes["/a.html"] = page()
+    legacy = env.raw / "other-source" / "2026-01-01"
+    legacy.mkdir(parents=True)
+    (legacy / "manifest.jsonl").write_text(json.dumps({"url": "http://example.invalid/x"}) + "\n")
+    env.capture(site.url("/a.html"), cap=1)
+
+
+def test_deflated_member_is_extracted(env):
+    payload = b"<Return>" + b"compressible grant ledger " * 400 + b"</Return>"
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr("pad.xml", b"<p/>" * 500)
+        zf.writestr("data/return.xml", payload)
+    assert len(buf.getvalue()) < len(payload)
+    site = env.site()
+    site.routes["/z.zip"] = ranged(buf.getvalue())
+    row = env.zip_member(site.url("/z.zip"), "data/return.xml", range_chunk=256)
+    assert (env.raw / row["path"]).read_bytes() == payload
+
+
+def test_data_descriptor_member_is_extracted(env):
+    class Sink(io.RawIOBase):  # not seekable, so zipfile must write a data descriptor
+        def __init__(self):
+            self.data = bytearray()
+
+        def writable(self):
+            return True
+
+        def write(self, chunk):
+            self.data += chunk
+            return len(chunk)
+
+    payload = b"<Return>descriptor member</Return>" * 50
+    sink = Sink()
+    with zipfile.ZipFile(sink, "w", zipfile.ZIP_DEFLATED) as zf:
+        with zf.open("streamed.xml", "w") as member:
+            member.write(payload)
+    assert zipfile.ZipFile(io.BytesIO(bytes(sink.data))).infolist()[0].flag_bits & 0x08
+    site = env.site()
+    site.routes["/z.zip"] = ranged(bytes(sink.data))
+    row = env.zip_member(site.url("/z.zip"), "streamed.xml", range_chunk=256)
+    assert (env.raw / row["path"]).read_bytes() == payload
