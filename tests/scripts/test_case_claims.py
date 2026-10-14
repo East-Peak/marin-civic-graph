@@ -549,7 +549,7 @@ class TestCaseMdSentences:
         assert cc.check_case_md(text, self.ROWS) == []
 
     def test_abbreviations_and_decimals_do_not_split_sentences(self):
-        text = "## Q1\nThe U.S. agency cited approx. 2.5 items in Dr. Smith's file [C-Q1-004].\n"
+        text = "## Q1\nThe U.S. agency cited approx. 2.5 items per Mr. Example's note [C-Q1-004].\n"
         assert cc.check_case_md(text, self.ROWS) == []
 
     def test_list_items_are_separate_units(self):
