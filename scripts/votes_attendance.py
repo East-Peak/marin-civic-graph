@@ -93,6 +93,29 @@ def _late_in(fragment: str) -> list[str]:
     return [_key(m.group("n")) for m in _LATE_IN_ROLL_RE.finditer(fragment)]
 
 
+def _fully_named(fragment: str) -> bool:
+    """Every word of a member list is a title, a name it reads, or a connector."""
+    names = set(_names_in(fragment))
+    if not names:
+        return False
+    rest = re.sub(_REF, " ", fragment)
+    rest = _PLURAL_LIST_RE.sub(" ", rest)
+    return not re.sub(r"(?i)\b(?:and|or)\b|[,;.()\s-]", "", rest)
+
+
+_STATEMENT_STOP_RE = re.compile(r"\n[ \t]*\n|\n(?=[ \t]*(?:\d{1,2}\.|[A-Z]\.|M/s|AYES|NOES|Vote|Present|Absent|"
+                                r"COUNCIL\b|The\s+Board\b))")
+
+
+def _statement_rest(text: str, pos: int) -> str:
+    """The rest of a statement's sentence after pos: up to its period, across PDF line wraps, but
+    never past a blank line or a line that starts something else."""
+    stop = _STATEMENT_STOP_RE.search(text, pos)
+    limit = stop.start() if stop else len(text)
+    period = re.search(r"\.(?:\s|$)", text[pos:limit])
+    return text[pos:pos + (period.start() if period else limit - pos)]
+
+
 def _vacancies(fragment: str) -> int:
     return len(re.findall(r"\bvacan(?:t|cy)\b", fragment, re.I))
 
@@ -269,14 +292,13 @@ def _transitions(ct: CanonicalText, body: str, skip: list[tuple[int, int]]) -> l
         if not skipped(m.start()) and not inside_roll(m.start()):
             # the statement is the whole sentence: nothing more → everyone; an exception list → everyone
             # but them; anything else ("…for the afternoon", "…attending remotely") → uncertain
-            rest_end = re.search(r"\.(?:\s|$)|\n", text[m.end():])
-            rest = text[m.end():m.end() + (rest_end.start() if rest_end else len(text) - m.end())]
+            rest = _statement_rest(text, m.end())
             ex = re.fullmatch(r"\s*[,;:(\-]*\s*(?:except(?:\s+for)?|with\s+the\s+exception\s+of|but|other\s+than)\s+"
                               r"([^()]*?)\)?\s*", rest)
             end = m.end() + len(rest)
-            if not rest.strip(" \t,;:"):
+            if not rest.strip(" \t\n,;:"):
                 add(_T(m.start(), m.end(), "all_present"))
-            elif ex and _names_in(ex.group(1)):
+            elif ex and _fully_named(ex.group(1)):
                 add(_T(m.start(), end, "all_present", absent=frozenset(_names_in(ex.group(1)))))
             else:
                 add(_T(m.start(), end, "uncertain"))

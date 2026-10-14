@@ -306,6 +306,9 @@ class TestCodexRoundNine:
         (", with Supervisor Elm attending remotely.", ("held", [])),
         (" for the afternoon session.", ("held", [])),
         (".", ("expanded", FIVE)),
+        ("\n(except Supervisor Elm).", ("expanded", FIVE[:4])),
+        ("\n    except Supervisor Elm.", ("expanded", FIVE[:4])),
+        (" except Supervisor Elm and Cedar.", ("held", [])),
     ])
     def test_anything_after_all_present_is_read_or_makes_it_uncertain(self, tail, expect):
         lines = ["Roll Call", ROLL, "(Supervisor Elm absent at 10:00 a.m.)",
