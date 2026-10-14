@@ -539,6 +539,30 @@ class TestNovatoBasics:
         assert [(x["name"], x["kind"]) for x in ev["item_exceptions"]] == [("ELM", "recused")]
         assert ev["status"] == "named"
 
+    @pytest.mark.parametrize("sentence,names", [
+        ("Councilmember Elm announced that she was recusing herself from the item.", ["ELM"]),
+        ("President Elm announced that he would recuse himself from this item.", ["ELM"]),
+        ("Mayor Dogwood and Mayor Pro Tem Elm both announced that they would be recusing themselves.",
+         ["DOGWOOD", "ELM"]),
+        ("Mayor Pro Tem Elm was recused from item G.4.", ["ELM"]),
+        ("The minutes noted the abstention of Mayor Elm from agenda item G.7.", ["ELM"]),
+        ("The vote accounted for Councilmember Elm's recusal.", ["ELM"]),
+    ])
+    def test_more_recusal_forms(self, sentence, names):
+        lines = ["I.   ITEM", "     " + sentence, "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 3-0 via roll call to approve.",
+                 "     AYES: ALDER, BIRCH, CEDAR", "     NOES: None", "     Motion carried."]
+        _, [ev] = _parse(NOVATO, lines)
+        assert sorted(x["name"] for x in ev["item_exceptions"]) == names
+
+    def test_an_unread_recusal_never_holds_a_named_vote(self):
+        lines = ["I.   ITEM", "     Elm, the member for the district, recused from the item.",
+                 "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 3-0-1 via roll call to approve.",
+                 "     AYES: ALDER, BIRCH, CEDAR", "     NOES: None", "     RECUSED: ELM", "     Motion carried."]
+        _, [ev] = _parse(NOVATO, lines)
+        assert ev["status"] == "named"
+
     def test_votes_with_no_motion_are_held(self):
         lines = ["I.   ITEM", "     The Council discussed the matter.", "     AYES: ALDER, BIRCH",
                  "     NOES: None", "J.   NEXT"]

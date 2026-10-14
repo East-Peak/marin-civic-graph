@@ -21,7 +21,7 @@ import copy
 import re
 
 from votes_attendance import resolve
-from votes_exceptions import find_exceptions
+from votes_exceptions import find_exceptions, unread_exception_words
 from votes_text import CanonicalText
 
 _GRAMMAR = {
@@ -202,6 +202,9 @@ def _derived_exceptions(ct: CanonicalText, ev: dict, events: list[dict]) -> tupl
     if not (_ANY_LABEL_RE.match(text, block["start"]) or re.match(r"Votes?[ \t]*:", text[block["start"]:])):
         problems.append(f"{eid}: the vote block does not begin at a vote label")
     found = find_exceptions(text, reg["start"], reg["end"], [(block["start"], block["end"])])
+    if ev["status"] == "expanded" and unread_exception_words(
+            text, reg["start"], reg["end"], [(x["start"], x["end"]) for x in found], [(block["start"], block["end"])]):
+        problems.append(f"{eid}: its item has recusal or abstention wording no exception reads")
     derived = [{"name": x["name"], "kind": x["kind"], "span": ct.locate(x["start"], x["end"])} for x in found]
     if sorted((x["name"], x["kind"]) for x in derived) != sorted((x["name"], x["kind"])
                                                                  for x in ev.get("item_exceptions", [])):
@@ -216,8 +219,7 @@ def _pre_attendance(events: list[dict], derived: dict[str, list[dict]]) -> list[
     for ev in events:
         e = copy.deepcopy(ev)
         e.pop("attendance", None)
-        # what attendance must not read as transitions: the vote block and the motion clause only
-        e["consumed"] = [c for c in ([e.get("block")] + ([e["motion"]["span"]] if e.get("motion") else [])) if c]
+        e["consumed"] = [e["block"]] if e.get("block") else []
         if e["event_id"] in derived:
             e["item_exceptions"] = derived[e["event_id"]]
         if e["status"] == "expanded":

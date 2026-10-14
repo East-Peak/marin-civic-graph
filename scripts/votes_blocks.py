@@ -16,7 +16,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from votes_exceptions import find_exceptions
+from votes_exceptions import find_exceptions, unread_exception_words
 from votes_text import CanonicalText
 
 CATEGORIES = ("aye", "no", "abstain", "recused", "absent")
@@ -999,7 +999,15 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
     else:
         region_end = mo.region_end if mo else anchor
     block_skip = [(block_loc["start"], block_loc["end"])] if block_loc else []
-    for x in find_exceptions(text, region_start, region_end, block_skip):
+    found_exc = find_exceptions(text, region_start, region_end, block_skip)
+    motion_words = [(c["start"], c["end"]) for c in consumed]
+    # an ALL vote's ayes depend on every exception; a named vote lists each member itself
+    has_all_sentinel = any(lab.sentinel and lab.sentinel["token"] in _SENTINELS_ALL for lab in (blk or []))
+    if has_all_sentinel and unread_exception_words(text, region_start, region_end,
+                                                   [(x["start"], x["end"]) for x in found_exc],
+                                                   block_skip + motion_words):
+        hold.append("exception_unread")
+    for x in found_exc:
         span = _loc(ct, x["start"], x["end"])
         if span not in consumed:
             consumed.append(span)

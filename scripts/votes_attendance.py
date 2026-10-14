@@ -267,7 +267,14 @@ def _transitions(ct: CanonicalText, body: str, skip: list[tuple[int, int]]) -> l
 
     for m in _ALL_PRESENT_RE.finditer(text):
         if not skipped(m.start()) and not inside_roll(m.start()):
-            add(_T(m.start(), m.end(), "all_present"))
+            # "All Supervisors were present except Supervisor X": the exception is part of the statement
+            ex = re.match(r"\s+(?:except(?:\s+for)?|with\s+the\s+exception\s+of|but)\s+([^.\n]*)", text[m.end():])
+            if ex:
+                gone = frozenset(_names_in(ex.group(1)))
+                add(_T(m.start(), m.end() + ex.end(), "all_present", absent=gone) if gone
+                    else _T(m.start(), m.end() + ex.end(), "uncertain"))
+            else:
+                add(_T(m.start(), m.end(), "all_present"))
     for m in _TIMED_RE.finditer(text):
         if skipped(m.start()) or inside_roll(m.start()):
             continue
@@ -369,13 +376,9 @@ def _span(ct: CanonicalText, start: int, end: int) -> dict:
 def resolve(ct: CanonicalText, *, body: str, events: list[dict]) -> tuple[list[dict], list[dict]]:
     """(events with attendance decided, attendance trace)."""
     seats = SEATS[body]
-    # attendance never reads a vote block or a motion clause as a transition; everything else it
-    # reads (a recusal sentence may also say who left the room)
-    skip = []
-    for ev in events:
-        for c in ([ev.get("block")] + ([ev["motion"]["span"]] if ev.get("motion") else [])):
-            if c:
-                skip.append((c["start"], c["end"]))
+    # attendance never reads a vote block as a transition (the validator verifies blocks); it reads
+    # everything else, motion wording included (a recusal sentence may also say who left the room)
+    skip = [(ev["block"]["start"], ev["block"]["end"]) for ev in events if ev.get("block")]
     transitions = _transitions(ct, body, skip)
     items: list[tuple[int, int, str, object]] = [(t.start, 0, "t", t) for t in transitions]
     for ev in events:
@@ -406,7 +409,7 @@ def resolve(ct: CanonicalText, *, body: str, events: list[dict]) -> tuple[list[d
                 re_establish(span)
             elif t.kind == "all_present":
                 if st.known:
-                    st.present = set(st.roster)
+                    st.present = set(st.roster) - t.absent
                     st.pending_arrival.clear()
                     st.pending_departure.clear()
                 re_establish(span)

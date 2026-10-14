@@ -281,6 +281,26 @@ class TestCodexRoundOne:
         assert ev["status"] == "held" and ev["hold_reasons"] == ["pending_transition"]
 
 
+class TestCodexRoundNine:
+    def test_plural_recusal(self):
+        lines = ["Roll Call", ROLL, "1.", "Item.", "Supervisors Dogwood and Elm recused themselves from this item.",
+                 "M/s Supervisor Alder - Supervisor Birch to approve.", "AYES: ALL"]
+        _, [ev], _ = _run(lines)
+        assert ev["status"] == "expanded" and _ayes(ev) == FIVE[:3]
+
+    def test_all_present_except(self):
+        lines = ["Roll Call", ROLL, "The Board reconvened at 1:30 p.m. All Supervisors were present except "
+                 "Supervisor Elm.", *_item(1)]
+        _, [ev], _ = _run(lines)
+        assert ev["status"] == "expanded" and _ayes(ev) == FIVE[:4]
+
+    def test_an_unread_recusal_in_the_item_holds_the_event(self):
+        lines = ["Roll Call", ROLL, "1.", "Item.", "Elm, the member for the district, recused from the item.",
+                 "M/s Supervisor Alder - Supervisor Birch to approve.", "AYES: ALL"]
+        _, [ev], _ = _run(lines)
+        assert ev["status"] == "held" and "exception_unread" in ev["hold_reasons"]
+
+
 class TestRetrospectiveArrival:
     NOV_ROLL = ["A.   CONVENE AND ROLL CALL",
                 "     COUNCIL PRESENT: Mayor Ann Alder, Mayor Pro Tempore Bea Birch,",

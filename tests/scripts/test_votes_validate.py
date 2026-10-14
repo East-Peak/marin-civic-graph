@@ -272,6 +272,18 @@ def test_all_caps_prose_in_a_category_fails():
     assert validate_document(ct, BOS, forged)
 
 
+def test_a_motion_span_stretched_over_a_departure_fails():
+    lines = ["Roll Call", ROLL, "1.", "Item.", "(Supervisor Elm absent at 10:00 a.m.)",
+             "M/s Supervisor Alder - Supervisor Birch to approve.", "AYES: ALL"]
+    ct, evs = _world(lines)
+    assert "ELM" not in [n["name"] for n in evs[0]["categories"]["aye"]]
+    bad = copy.deepcopy(evs)
+    bad[0]["motion"]["span"] = ct.locate(ct.text.index("(Supervisor Elm"), bad[0]["motion"]["span"]["end"])
+    bad[0]["categories"]["aye"].append({"name": "ELM", "raw": None, "span": None, "inferred": True})
+    bad[0]["attendance"]["evidence"] = bad[0]["attendance"]["evidence"][:1]
+    assert validate_document(ct, BOS, bad)
+
+
 def test_held_events_are_not_validated_as_accepted():
     lines = ["1.", "Item.", "AYES: ALDER"]
     ct, evs = _world(lines)
