@@ -218,6 +218,48 @@ class TestFormats:
         assert r["gap"] == "no_minutes_link" and r["minutes_url"] is None
 
 
+class TestSharedDocuments:
+    def _share(self, world, mids_titles, html):
+        nodes = [json.loads(x) for x in (world["export"] / "nodes.jsonl").read_text().splitlines()]
+        edges = [json.loads(x) for x in (world["export"] / "edges.jsonl").read_text().splitlines()]
+        for mid, date, title in mids_titles:
+            nodes.append(_meeting(mid, date, title))
+            nodes.append(_record(f"record-{mid}-minutes", f"https://example.invalid/{mid}"))
+            edges.append(_edge(mid, f"record-{mid}-minutes"))
+            (world["raw"] / NOVATO / "minutes" / f"{mid}.html").write_bytes(b"<html><body>" + html + b"</body></html>")
+        (world["export"] / "nodes.jsonl").write_text("".join(json.dumps(n) + "\n" for n in nodes))
+        (world["export"] / "edges.jsonl").write_text("".join(json.dumps(e) + "\n" for e in edges))
+
+    def test_a_shared_document_goes_to_the_meeting_whose_date_it_prints(self, world):
+        html = (b"<p>City Council</p><p>MEETING MINUTES</p><p>Tuesday, March 23, 2021</p>"
+                b"<p>Roll call. The council adjourned.</p>")
+        self._share(world, [(f"meeting-{NOVATO}-301", "2021-02-23", "City Council"),
+                            (f"meeting-{NOVATO}-302", "2021-03-23", "City Council")], html)
+        inv = _build(world)
+        a, b = _row(inv, f"meeting-{NOVATO}-301"), _row(inv, f"meeting-{NOVATO}-302")
+        assert b["documents"] and b["gap"] is None
+        assert a["documents"] == [] and a["gap"] == f"document_of_other_meeting:meeting-{NOVATO}-302"
+
+    def test_a_same_day_tie_is_broken_by_the_closed_session_header(self, world):
+        html = b"<p>NOVATO CITY COUNCIL</p><p>MEETING MINUTES</p><p>July 11, 2023 - 6:00 PM</p><p>Roll call.</p>"
+        self._share(world, [(f"meeting-{NOVATO}-311", "2023-07-11", "City Council"),
+                            (f"meeting-{NOVATO}-312", "2023-07-11", "City Council Closed Session Meeting")], html)
+        inv = _build(world)
+        assert _row(inv, f"meeting-{NOVATO}-311")["documents"]
+        assert _row(inv, f"meeting-{NOVATO}-312")["gap"] == f"document_of_other_meeting:meeting-{NOVATO}-311"
+
+    def test_an_unresolvable_share_is_recorded_and_parsed_for_nobody(self, world):
+        html = b"<p>City Council</p><p>MEETING MINUTES</p><p>Roll call.</p>"
+        self._share(world, [(f"meeting-{NOVATO}-321", "2021-02-23", "City Council"),
+                            (f"meeting-{NOVATO}-322", "2021-03-23", "City Council")], html)
+        inv = _build(world)
+        for mid in ("321", "322"):
+            r = _row(inv, f"meeting-{NOVATO}-{mid}")
+            assert r["documents"] == [] and r["gap"] == "document_meeting_ambiguous"
+        [u] = inv["bodies"][NOVATO]["unplaced_documents"]
+        assert u["reason"] == "shared_by_several_meetings" and len(u["candidates"]) == 2
+
+
 class TestWriteAndVerify:
     def test_write_is_deterministic_and_round_trips(self, world, tmp_path):
         inv = _build(world)

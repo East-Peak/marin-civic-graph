@@ -173,6 +173,58 @@ def _add_document(docs: list[dict], path: str, data: bytes, origin: str) -> None
     docs.append(_doc([path], sha, data, origin))
 
 
+_MONTHS = ("january", "february", "march", "april", "may", "june", "july", "august", "september", "october",
+           "november", "december")
+_PRINTED_DATE_RE = re.compile(r"\b(" + "|".join(_MONTHS) + r")\s+(\d{1,2}),?\s+(\d{4})\b", re.I)
+
+
+def printed_date(path: Path, fmt: str) -> tuple[str | None, bool]:
+    """(the first date the document prints, whether its heading says closed session)."""
+    from votes_text import canonical_text
+
+    head = canonical_text(path, fmt).text[:3000]
+    m = _PRINTED_DATE_RE.search(head)
+    date = None
+    if m:
+        date = f"{int(m.group(3)):04d}-{_MONTHS.index(m.group(1).lower()) + 1:02d}-{int(m.group(2)):02d}"
+    return date, bool(re.search(r"closed\s+session", head[:400], re.I))
+
+
+def _assign_shared(meetings: dict, docs: dict, raw: Path, fetched: Path) -> tuple[dict, list]:
+    """A document (by sha256) attached to several meetings belongs to the one whose date it prints
+    (a same-day tie goes to the meeting whose closed-session-ness matches its heading); the others
+    record whose it is. Unresolvable shares are parsed for nobody and recorded."""
+    owners: dict[str, list[str]] = {}
+    for mid, ds in docs.items():
+        for d in ds:
+            owners.setdefault(d["sha256"], []).append(mid)
+    gaps: dict[str, str] = {}
+    unplaced: list = []
+    for sha, mids in sorted(owners.items()):
+        if len(mids) < 2:
+            continue
+        doc = next(d for d in docs[mids[0]] if d["sha256"] == sha)
+        root, _, rest = doc["paths"][0].partition("/")
+        path = (Path(raw) if root == "raw" else Path(fetched)) / rest
+        date, closed = printed_date(path, doc["format"])
+        cands = sorted(m for m in mids if meetings[m]["date"] == date)
+        if len(cands) > 1:
+            cands = [m for m in cands if bool(re.search(r"closed\s+session", meetings[m]["title"], re.I)) == closed]
+        for m in mids:
+            docs[m] = [d for d in docs[m] if d["sha256"] != sha]
+        if len(cands) == 1:
+            docs[cands[0]].append(doc)
+            for m in mids:
+                if m != cands[0]:
+                    gaps[m] = f"document_of_other_meeting:{cands[0]}"
+        else:
+            for m in mids:
+                gaps[m] = "document_meeting_ambiguous"
+            unplaced.append((meetings[mids[0]]["body"], {**doc, "reason": "shared_by_several_meetings",
+                                                        "candidates": sorted(mids)}))
+    return gaps, unplaced
+
+
 def build_inventory(export: Path, raw: Path, fetched: Path,
                     windows: dict[str, tuple[str, str]]) -> dict:
     export, raw, fetched = Path(export), Path(raw), Path(fetched)
@@ -191,7 +243,10 @@ def build_inventory(export: Path, raw: Path, fetched: Path,
             if f.is_file():
                 _add_document(docs[mid], f"fetched/{f.name}", f.read_bytes(), "fetched")
 
+    shared_gaps, shared_unplaced = _assign_shared(meetings, docs, raw, fetched)
     unplaced: dict[str, list[dict]] = {b: [] for b in windows}
+    for b, d in shared_unplaced:
+        unplaced[b].append(d)
     for body in windows:
         dated_dir = raw / body / "minutes-test"
         if not dated_dir.is_dir():
@@ -228,6 +283,8 @@ def build_inventory(export: Path, raw: Path, fetched: Path,
             documents = sorted(docs[mid], key=lambda d: (ORIGIN_ORDER[d["origin"]], d["paths"]))
             if body_class in BODIES[body]["out_of_scope_classes"]:
                 gap = "not_in_scope_body"
+            elif mid in shared_gaps and not documents:
+                gap = shared_gaps[mid]
             elif documents:
                 gap = None
             elif rec_id is None:
