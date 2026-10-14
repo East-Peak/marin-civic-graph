@@ -447,6 +447,14 @@ class TestNovatoBasics:
             assert any(c["start"] <= pos < c["end"] for c in ev["consumed"])
         assert ev["vacancies"] == ["DISTRICT 5"]
 
+    def test_prose_on_a_vacant_line_holds_the_event(self):
+        lines = ["I.   ITEM", "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 2-0 via roll call to approve.",
+                 "     VACANT:  Councilmember Elm recused himself from this item.",
+                 "     AYES:    ALDER, BIRCH", "     NOES:    NONE", "     Motion carried."]
+        _, [ev] = _parse(NOVATO, lines)
+        assert ev["status"] == "held" and "unparsed_block" in ev["hold_reasons"]
+
     def test_a_no_second_sentence_later_in_the_motion_region(self):
         lines = ["I.   ITEM", "     COUNCIL ACTION: Councilmember Elm made a motion to direct staff to return with",
                  "     a list of options for the general fund and every other fund that the City Council could",

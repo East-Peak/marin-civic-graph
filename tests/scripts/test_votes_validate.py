@@ -223,6 +223,19 @@ def test_a_block_extended_back_to_an_earlier_vote_label_over_prose_fails():
     assert validate_document(ct, BOS, bad)
 
 
+def test_prose_on_a_vacant_line_fails():
+    lines = ["Roll Call", ROLL, "1.", "Item.", "M/s Supervisor Alder - Supervisor Birch to approve.",
+             "VACANT: Supervisor Elm recused himself from this item.", "AYES: ALL"]
+    ct, evs = _world(lines)
+    forged = copy.deepcopy(evs)
+    for e in forged:
+        if e["block"]:
+            e["status"], e["hold_reasons"] = "expanded", []
+            e["categories"]["aye"] = [{"name": n, "raw": None, "span": None, "inferred": True}
+                                      for n in ["ALDER", "BIRCH", "CEDAR", "DOGWOOD", "ELM"]]
+    assert validate_document(ct, BOS, forged)
+
+
 def test_held_events_are_not_validated_as_accepted():
     lines = ["1.", "Item.", "AYES: ALDER"]
     ct, evs = _world(lines)

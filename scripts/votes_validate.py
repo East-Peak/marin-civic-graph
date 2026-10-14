@@ -140,7 +140,7 @@ def _check_membership(ct: CanonicalText, ev: dict) -> list[str]:
             word = lab.group(0).split(":")[0].strip().lower()
             ok = (word == "votes" and not value.strip()) or \
                  (word == "vote" and re.fullmatch(r"[ \t]*Motion\s+(?:carried|failed|passed)[^\n]*\s*", value, re.I)) or \
-                 (word == "vacant" and "\n" not in value.strip())
+                 (word == "vacant" and re.fullmatch(r"(?i)\s*(?:district|seat)\s+\d+\s*\.?\s*", value))
             if not ok:
                 problems.append(f"{ev['event_id']}: the {word} line in the vote block carries other text")
             continue

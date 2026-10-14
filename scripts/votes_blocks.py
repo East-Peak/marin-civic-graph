@@ -40,6 +40,7 @@ _LABELS = [
 _LABEL_RE = re.compile(r"(?<![\w-])(?:(?:" + "|".join(f"(?P<{c}>{p})" for c, p in _LABELS) + r")[ \t]*:"
                        r"|(?P<aye_bare>AYES)(?=[ \t]+(?:ALL|UNANIMOUS)\b))")
 _VACANT_RE = re.compile(r"(?<![\w-])VACANT[ \t]*:")
+_SEAT_RE = re.compile(r"(?i)\s*(?:district|seat)\s+\d+\s*\.?\s*")
 _TALLY_LINE_RE = re.compile(r"(?<![\w-])Vote[ \t]*:[ \t]*Motion\s+(?P<outcome>carried|failed|passed)"
                             r"(?P<rest>[^\n]*)", re.I)
 _VOTES_INTRO_RE = re.compile(r"^[ \t]*Votes[ \t]*:[ \t]*$", re.M)
@@ -892,6 +893,8 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
             if lab.category == "vacant":
                 consumed.append(_loc(ct, lab.start, lab.value_end))
                 vacancies.append(lab.value)
+                if not _SEAT_RE.fullmatch(lab.value):
+                    hold.append("unparsed_block")
                 continue
             if lab.category == "tally":
                 consumed.append(_loc(ct, lab.start, lab.value_end))
