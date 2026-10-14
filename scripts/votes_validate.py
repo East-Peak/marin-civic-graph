@@ -139,7 +139,7 @@ def _check_membership(ct: CanonicalText, ev: dict) -> list[str]:
                 value = value[:outcome.start()]
             word = lab.group(0).split(":")[0].strip().lower()
             ok = (word == "votes" and not value.strip()) or \
-                 (word == "vote" and re.fullmatch(r"[ \t]*Motion\s+(?:carried|failed|passed)[^\n]*\s*", value, re.I)) or \
+                 (word == "vote" and _TALLY_LINE_RE.fullmatch(value)) or \
                  (word == "vacant" and re.fullmatch(r"(?i)\s*(?:district|seat)\s+\d+\s*\.?\s*", value))
             if not ok:
                 problems.append(f"{ev['event_id']}: the {word} line in the vote block carries other text")
@@ -158,6 +158,8 @@ def _check_membership(ct: CanonicalText, ev: dict) -> list[str]:
     return problems
 
 
+_TALLY_LINE_RE = re.compile(r"[ \t]*Motion\s+(?:carried|failed|passed)(?:[ \t]+\d+-\d+\.?"
+                            r"(?:[ \t]+(?:Abstain|Absent|Recused?|Noes?)[ \t]*:[ \t]*\d+)*)?[ \t]*\.?\s*", re.I)
 _HEADING_LINE_RE = re.compile(r"^[ \t]*(?:\d{1,2}\.|[A-Z]\.(?:\d+\.?)?|C[AB]-\d+[a-z]?\.|[a-z]\.|[ivx]{1,4}\.)(?:[ \t]|$)",
                               re.M)
 

@@ -236,6 +236,18 @@ def test_prose_on_a_vacant_line_fails():
     assert validate_document(ct, BOS, forged)
 
 
+def test_prose_after_a_tally_line_fails():
+    lines = ["Roll Call", ROLL, "1.", "Item.", "M/s Supervisor Alder - Supervisor Birch to approve.",
+             "Vote: Motion carried 5-0. Supervisor Elm recused himself from this item.", "AYES: ALL"]
+    ct, evs = _world(lines)
+    assert evs[0]["status"] == "held"
+    forged = copy.deepcopy(evs)
+    forged[0]["status"], forged[0]["hold_reasons"] = "expanded", []
+    forged[0]["categories"]["aye"] = [{"name": n, "raw": None, "span": None, "inferred": True}
+                                      for n in ["ALDER", "BIRCH", "CEDAR", "DOGWOOD", "ELM"]]
+    assert validate_document(ct, BOS, forged)
+
+
 def test_held_events_are_not_validated_as_accepted():
     lines = ["1.", "Item.", "AYES: ALDER"]
     ct, evs = _world(lines)
