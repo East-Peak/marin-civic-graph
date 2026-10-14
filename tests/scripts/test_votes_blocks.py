@@ -447,6 +447,21 @@ class TestNovatoBasics:
             assert any(c["start"] <= pos < c["end"] for c in ev["consumed"])
         assert ev["vacancies"] == ["DISTRICT 5"]
 
+    def test_the_block_ends_at_the_outcome_phrase_not_the_line(self):
+        lines = ["I.   ITEM", "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 2-0 via roll call to approve.",
+                 "     AYES: ALDER, BIRCH", "     NOES: NONE",
+                 "     Motion carried. The City Council adopted Resolution No. 2019-013."]
+        ct, [ev] = _parse(NOVATO, lines)
+        assert ct.text[ev["block"]["end"] - len("Motion carried."):ev["block"]["end"]] == "Motion carried."
+        assert ev["exception_region"]["end"] == len(ct.text)
+
+    def test_a_recusal_after_the_outcome_on_its_line_is_an_item_exception(self):
+        lines = ["1.", "Item.", "M/s Supervisor Alder - Supervisor Birch to approve.", "AYES: ALL",
+                 "Motion carried 4-0. Supervisor Elm recused himself from this item."]
+        _, [ev] = _parse(BOS, lines)
+        assert [(x["name"], x["kind"]) for x in ev["item_exceptions"]] == [("ELM", "recused")]
+
     def test_prose_on_a_vacant_line_holds_the_event(self):
         lines = ["I.   ITEM", "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
                  "     Councilmember Birch, the City Council voted 2-0 via roll call to approve.",

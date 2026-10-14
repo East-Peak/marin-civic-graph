@@ -248,6 +248,20 @@ def test_prose_after_a_tally_line_fails():
     assert validate_document(ct, BOS, forged)
 
 
+def test_prose_after_the_outcome_inside_a_forged_block_fails():
+    lines = ["Roll Call", ROLL, "1.", "Item.", "M/s Supervisor Alder - Supervisor Birch to approve.", "AYES: ALL",
+             "Motion carried 4-0. Supervisor Elm recused himself from this item."]
+    ct, evs = _world(lines)
+    assert evs[0]["status"] == "expanded" and "ELM" not in [n["name"] for n in evs[0]["categories"]["aye"]]
+    assert validate_document(ct, BOS, evs) == []
+    forged = copy.deepcopy(evs)
+    forged[0]["block"] = ct.locate(forged[0]["block"]["start"], len(ct.text))
+    forged[0]["exception_region"] = ct.locate(forged[0]["exception_region"]["start"], len(ct.text))
+    forged[0]["item_exceptions"] = []
+    forged[0]["categories"]["aye"].append({"name": "ELM", "raw": None, "span": None, "inferred": True})
+    assert validate_document(ct, BOS, forged)
+
+
 def test_held_events_are_not_validated_as_accepted():
     lines = ["1.", "Item.", "AYES: ALDER"]
     ct, evs = _world(lines)

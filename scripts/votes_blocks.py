@@ -47,7 +47,9 @@ _VOTES_INTRO_RE = re.compile(r"^[ \t]*Votes[ \t]*:[ \t]*$", re.M)
 _KEYED_TALLY_RE = re.compile(r"^\s*(\d+)-(\d+)\.?((?:\s+(?:Abstain|Absent|Recused?|Noes?)\s*:\s*\d+)*)\s*\.?\s*$",
                              re.I)
 _TERMINATOR_RE = re.compile(r"\b(?:The\s+)?[Mm]otion\s+(?:carried|failed|passed)\b|\bMOTION\s+(?:CARRIED|FAILED)\b")
-_OUTCOME_LINE_RE = re.compile(r"^[ \t]*(?:The\s+)?[Mm]otion\s+(?P<o>carried|failed|passed)\b[^\n]*", re.M)
+# the outcome phrase itself (a printed count may follow); whatever else the line says is not the block
+_OUTCOME_LINE_RE = re.compile(r"^[ \t]*(?:The\s+)?[Mm]otion\s+(?P<o>carried|failed|passed)\b(?:[ \t]+\d+-\d+(?:-\d+)?)?\.?",
+                              re.M)
 _PAGE_NOISE_RE = re.compile(r"^\s*(?:\f|\d{1,3}|Page\s+\d+(?:\s+of\s+\d+)?)\s*$")
 _SCOPE_RE = re.compile(r"^[ \t]*\(\s*[A-Z]\.\d+(?:\s*(?:,|and|&)\s*[A-Z]\.\d+)*\s*\)[ \t]*$", re.M)
 _LEADIN_RE = re.compile(r"Thereafter,?\s+the\s+vote\s+on\s+the\s+pending\s+motion\s+was\s*$", re.I)
@@ -984,7 +986,12 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
     # prose exceptions inside the item region
     item_exceptions = []
     region_start = max((sub or top).start if (sub or top) else 0, exc_from)
-    region_end = block_loc["end"] if block_loc else (mo.region_end if mo else anchor)
+    if block_loc:
+        # a recusal stated after the outcome on its own line belongs to this item too
+        line_end = text.find("\n", block_loc["end"])
+        region_end = len(text) if line_end == -1 else line_end
+    else:
+        region_end = mo.region_end if mo else anchor
     block_skip = [(block_loc["start"], block_loc["end"])] if block_loc else []
     for x in find_exceptions(text, region_start, region_end, block_skip):
         span = _loc(ct, x["start"], x["end"])

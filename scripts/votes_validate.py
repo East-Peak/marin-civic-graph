@@ -146,6 +146,8 @@ def _check_membership(ct: CanonicalText, ev: dict) -> list[str]:
             continue
         stop = labels[i + 1].start() if i + 1 < len(labels) else block["end"]
         out = _OUTCOME_RE.search(text, lab.end(), stop)
+        if out and not _OUTCOME_ONLY_RE.fullmatch(text[out.start():stop]):
+            problems.append(f"{ev['event_id']}: the vote block carries text after its outcome")
         names = _own_names(text[lab.end():out.start() if out else stop])
         if names is None:
             problems.append(f"{ev['event_id']}: the {cat} value is unreadable to the validator")
@@ -158,6 +160,8 @@ def _check_membership(ct: CanonicalText, ev: dict) -> list[str]:
     return problems
 
 
+_OUTCOME_ONLY_RE = re.compile(r"(?:The\s+)?[Mm]otion\s+(?:carried|failed|passed)(?:[ \t]+\d+-\d+(?:-\d+)?)?\.?\s*"
+                              r"|MOTION\s+(?:CARRIED|FAILED)\.?\s*")
 _TALLY_LINE_RE = re.compile(r"[ \t]*Motion\s+(?:carried|failed|passed)(?:[ \t]+\d+-\d+\.?"
                             r"(?:[ \t]+(?:Abstain|Absent|Recused?|Noes?)[ \t]*:[ \t]*\d+)*)?[ \t]*\.?\s*", re.I)
 _HEADING_LINE_RE = re.compile(r"^[ \t]*(?:\d{1,2}\.|[A-Z]\.(?:\d+\.?)?|C[AB]-\d+[a-z]?\.|[a-z]\.|[ivx]{1,4}\.)(?:[ \t]|$)",
@@ -175,8 +179,9 @@ def _derived_exceptions(ct: CanonicalText, ev: dict, events: list[dict]) -> tupl
     if not reg or not block:
         return [], ([] if not block else [f"{eid}: no exception region"])
     problems: list[str] = []
-    if reg["end"] != block["end"]:
-        problems.append(f"{eid}: the exception region does not end at the vote block")
+    line_end = text.find("\n", block["end"])
+    if reg["end"] != (len(text) if line_end == -1 else line_end):
+        problems.append(f"{eid}: the exception region does not end with the vote block's line")
     ends = {0} | {c["end"] for e in events if e is not ev
                   for c in ([e.get("block")] + ([e["motion"]["span"]] if e.get("motion") else [])
                             + list(e.get("consumed", []))) if c}
