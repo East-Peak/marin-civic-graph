@@ -191,6 +191,24 @@ def test_an_exception_region_moved_past_the_exception_fails():
     assert validate_document(ct, BOS, bad)
 
 
+def test_a_category_span_moved_onto_the_prose_exception_fails():
+    ct, evs = _recusal_world()
+    bad = copy.deepcopy(evs)
+    bad[0]["item_exceptions"] = []
+    bad[0]["categories"]["aye"].append({"name": "ELM", "raw": None, "span": None, "inferred": True})
+    bad[0]["category_spans"]["recused"] = copy.deepcopy(evs[0]["item_exceptions"][0]["span"])
+    assert validate_document(ct, BOS, bad)
+
+
+def test_a_block_moved_back_over_the_prose_exception_fails():
+    ct, evs = _recusal_world()
+    bad = copy.deepcopy(evs)
+    bad[0]["item_exceptions"] = []
+    bad[0]["categories"]["aye"].append({"name": "ELM", "raw": None, "span": None, "inferred": True})
+    bad[0]["block"] = ct.locate(evs[0]["item_exceptions"][0]["span"]["start"], evs[0]["block"]["end"])
+    assert validate_document(ct, BOS, bad)
+
+
 def test_held_events_are_not_validated_as_accepted():
     lines = ["1.", "Item.", "AYES: ALDER"]
     ct, evs = _world(lines)

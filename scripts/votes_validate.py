@@ -168,8 +168,9 @@ def _derived_exceptions(ct: CanonicalText, ev: dict, events: list[dict]) -> tupl
         if not any(x["end"] <= h <= reg["start"] for h in headings):
             problems.append(f"{eid}: an exception before the region start is left out")
             break
-    skip = [(c["start"], c["end"]) for c in (ev.get("category_spans") or {}).values()]
-    found = find_exceptions(text, reg["start"], reg["end"], skip)
+    if not (_ANY_LABEL_RE.match(text, block["start"]) or re.match(r"Votes?[ \t]*:", text[block["start"]:])):
+        problems.append(f"{eid}: the vote block does not begin at a vote label")
+    found = find_exceptions(text, reg["start"], reg["end"], [(block["start"], block["end"])])
     derived = [{"name": x["name"], "kind": x["kind"], "span": ct.locate(x["start"], x["end"])} for x in found]
     if sorted((x["name"], x["kind"]) for x in derived) != sorted((x["name"], x["kind"])
                                                                  for x in ev.get("item_exceptions", [])):

@@ -81,13 +81,10 @@ _OTHER_BODY_RE = re.compile(
     r"|Court|Legislature|Senate|Assembly|voters|residents|Congress|City\s+of\s+\w+)\b"
     r"(?:\s+\w+){0,2}?\s+vot(?:ed|es|ing)\b", re.I)
 _MONTH = r"(?:January|February|March|April|May|June|July|August|September|October|November|December)"
-# an earlier vote: the earlier-ness must attach to the vote itself — "previously voted", "had
-# voted", a clause that opens with its date ("On March 3, 2020, the Board voted …"), or "at its
-# <date> meeting"; "voted to adopt the ordinance previously recommended" is a vote today
-_EARLIER_RE = re.compile(
-    rf"\b(?:previously|earlier|already|had)\s+(?:\w+\s+)?vot(?:ed|e)\b|\bvoted\s+(?:previously|earlier)\b"
-    rf"|^\W*(?:On|In)\s+(?:{_MONTH}\s+\d{{1,2}},?\s+)?(?:19|20)\d\d\b|^\W*On\s+{_MONTH}\s+\d{{1,2}}\b"
-    rf"|\bat\s+(?:its|their)\s+(?:{_MONTH}\s+\d{{1,2}}(?:,\s*\d{{4}})?\s+)?(?:\w+\s+)?meeting\b[^.]*\bvot", re.I)
+# an earlier vote: only wording that makes the vote itself earlier ("previously voted", "had voted",
+# "voted earlier"); a date or "previously" elsewhere in the sentence is not evidence
+_EARLIER_RE = re.compile(r"\b(?:previously|earlier|already|had)\s+(?:\w+\s+)?vot(?:ed|e)\b"
+                         r"|\bvoted\s+(?:previously|earlier)\b", re.I)
 _PROSPECTIVE_RE = re.compile(r"\b(?:possibly|may|will|to|could|would|shall|might)\s+(?:take\s+(?:a\s+)?)?vote\b"
                              r"|\bpossible\s+vote\b|\bfor\s+a\s+vote\b|\bcast\s+(?:the\s+)?(?:[\w']+\s+)?vote\b"
                              r"|\b(?:discuss|consider)\s+and\s+vote\b", re.I)

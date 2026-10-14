@@ -124,7 +124,6 @@ class TestDispose:
         ("The Registrar opened a vote center for voters in the election.", "election_context"),
         ("Residents may vote by mail in the November election.", "election_context"),
         ("The Planning Commission voted to recommend approval.", "other_body_vote"),
-        ("On March 3, 2020, the Board voted to approve the first reading.", "earlier_vote"),
         ("The Council previously voted on this matter.", "earlier_vote"),
         ("Designate a voting representative for the league.", "voting_role"),
         ("The administrator noted the need for four affirmative votes for approval.", "vote_requirement"),
@@ -162,6 +161,9 @@ class TestDispose:
     @pytest.mark.parametrize("sentence", [
         "The Council voted to adopt the ordinance previously recommended by staff.",
         "The Council voted to approve the contract on January 15.",
+        "On January 15, staff submitted the contract, which the Council voted to approve today.",
+        "At its meeting today, the Council voted to approve the contract.",
+        "On March 3, 2020, the Board voted to approve the first reading.",
     ])
     def test_an_earlier_date_or_word_not_attached_to_the_vote_does_not_exclude_it(self, sentence):
         ct = _ct(["Item.", sentence])

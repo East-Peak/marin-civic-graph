@@ -982,8 +982,8 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
     item_exceptions = []
     region_start = max((sub or top).start if (sub or top) else 0, exc_from)
     region_end = block_loc["end"] if block_loc else (mo.region_end if mo else anchor)
-    cat_skip = [(c["start"], c["end"]) for c in category_spans.values()]
-    for x in find_exceptions(text, region_start, region_end, cat_skip):
+    block_skip = [(block_loc["start"], block_loc["end"])] if block_loc else []
+    for x in find_exceptions(text, region_start, region_end, block_skip):
         span = _loc(ct, x["start"], x["end"])
         if span not in consumed:
             consumed.append(span)
