@@ -365,6 +365,24 @@ class TestNovatoBasics:
             ("G.1", ["no_vote_recorded"]), ("G.2", ["vote_without_motion"])]
         assert events[0]["consent"] is False
 
+    def test_a_wrapped_line_starting_with_an_item_reference_is_not_a_heading(self):
+        lines = ["E.   REPORTS", "",
+                 "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 3-0 via roll call to table item",
+                 "     E.3 to the special meeting next month.", "",
+                 "     AYES: ALDER, BIRCH, CEDAR", "     NOES: None", "", "     Motion carried.", "", "F.   NEXT"]
+        _, [ev] = _parse(NOVATO, lines)
+        assert ev["status"] == "named" and ev["motion"]["text"].endswith("next month.")
+
+    def test_grouped_wording_after_the_motion_is_not_evidence(self):
+        lines = ["G.   CONSENT CALENDAR", "     G.1.  First item.",
+                 "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch to continue the first item.", "     G.2.  Approve the Consent Calendar.",
+                 "     AYES: ALDER, BIRCH, CEDAR", "     NOES: None", "     Motion carried.", "H.   NEXT"]
+        _, events = _parse(NOVATO, lines)
+        assert [(e["item"]["sub"], e["hold_reasons"]) for e in events] == [
+            ("G.1", ["no_vote_recorded"]), ("G.2", ["vote_without_motion"])]
+
     def test_a_consent_motion_owns_its_vote_across_subitems(self):
         lines = ["G.   CONSENT CALENDAR", "     G.1.  First item.",
                  "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
@@ -511,6 +529,19 @@ class TestBoardOfSupervisors:
                  "3.", "Next."]
         _, [ev] = _parse(BOS, lines)
         assert ev["consent"] is True and ev["status"] == "needs_attendance"
+
+    def test_an_inline_item_number_does_not_end_the_motion_sentence(self):
+        lines = ["4.", "Earlier item.", "M/s Supervisor Alder - Supervisor Birch 5. Consent Calendar A (Items CA-1 "
+                 "through CA-2) (\"Consent Calendar A\" reflects items with prior approval.)", "CA-1. First.",
+                 "a.", "Sub.", "CA-2. Second.", "AYES: ALL", "6.", "Next."]
+        _, [ev] = _parse(BOS, lines)
+        assert ev["consent"] is True and ev["status"] == "needs_attendance"
+
+    def test_board_grouped_wording_after_the_motion_is_not_evidence(self):
+        lines = ["2.", "Items", "a.", "First.", "M/s Supervisor Alder - Supervisor Birch to continue the first item.",
+                 "b.", "Approve Consent Calendar A.", "AYES: ALL", "3.", "Next."]
+        _, events = _parse(BOS, lines)
+        assert [e["hold_reasons"] for e in events] == [["no_vote_recorded"], ["vote_without_motion"]]
 
     def test_vote_line_tally_and_named_block(self):
         _, events = _parse(BOS, BOS_DOC)

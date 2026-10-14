@@ -82,8 +82,11 @@ class _SentenceEnd:
     def search(text: str, start: int = 0, end: int | None = None):
         end = len(text) if end is None else end
         for m in _PERIOD_RE.finditer(text, start, end):
-            word = re.search(r"([A-Za-z]+)$", text[max(start, m.start() - 12):m.start()])
+            before = text[max(start, m.start() - 12):m.start()]
+            word = re.search(r"([A-Za-z]+)$", before)
             if word and (word.group(1).lower() in _ABBREVIATIONS or len(word.group(1)) == 1):
+                continue
+            if re.search(r"(?:^|\s)\d{1,2}$", before):  # an enumeration ("5. Consent Calendar")
                 continue
             return m
         return None
@@ -213,8 +216,22 @@ def _headings(ct: CanonicalText, body: str) -> list[_Heading]:
     top_re, sub_re = (_NOV_TOP_RE, _NOV_SUB_RE) if body == "novato-city-council" else (_BOS_TOP_RE, _BOS_SUB_RE)
     out: list[_Heading] = []
     last_top = None
+
+    def continues_sentence(pos: int, title: str | None) -> bool:
+        """The line at pos carries on the previous line's sentence (no blank line between, that line
+        ends mid-sentence, and the words after the label are lowercase): a wrapped "E.3 to April …"
+        is motion text, not a heading."""
+        if pos == 0 or not title or not title[:1].islower():
+            return False
+        prev_end = pos - 1
+        prev_start = text.rfind("\n", 0, prev_end) + 1
+        prev = text[prev_start:prev_end].rstrip()
+        return bool(prev) and bool(re.search(r"[a-z,;]$", prev))
+
     for level, rx in (("top", top_re), ("sub", sub_re)):
         for m in rx.finditer(text):
+            if continues_sentence(m.start(), m.group("t")):
+                continue
             if level == "top":
                 # top-level items only advance; a numbered or lettered list inside an item restarts
                 key = int(m.group("l")) if m.group("l").isdigit() else ord(m.group("l"))
@@ -476,6 +493,15 @@ _GROUPED_RE = re.compile(r"consent\s+(?:calendar|agenda)|\bconsent\s+[AB]\b"
                          r"|\bitems?\s+(?:C[AB]-\d+|[A-Z]\.\d+)\.?\s*(?:through|to|-|and|&)", re.I)
 
 
+def _own_sentence(text: str, headings: list[_Heading], start: int, limit: int) -> str:
+    """The motion's own words for grouped-motion evidence: from the motion to its first sentence
+    end, never past the next heading or `limit`."""
+    end = min(limit, _next_heading_after(headings, start, len(text)))
+    col = _collapsed(text, start, end)
+    m = _SENTENCE_END_RE.search(col)
+    return col[: m.end()] if m else col
+
+
 def _looks_consent(headings: list[_Heading], pos: int, lead: str) -> bool:
     """Grouped-motion evidence is the motion's own wording ("approve the Consent Calendar …");
     a section title alone never lets an individual motion cross its subitem."""
@@ -488,7 +514,7 @@ def _novato_motions(ct: CanonicalText, headings: list[_Heading]) -> list[_Motion
     motions: list[_Motion] = []
     for i, h in enumerate(heads):
         nxt = heads[i + 1].start() if i + 1 < len(heads) else len(text)
-        lead = _collapsed(text, h.end(), min(nxt, h.end() + 400))
+        lead = _own_sentence(text, headings, h.end(), min(nxt, h.end() + 1500))
         region_end = min(nxt, _region_end(headings, h.start(), len(text), _looks_consent(headings, h.start(), lead)))
         first_label = _LABEL_RE.search(text, h.end(), region_end)
         before_block = first_label.start() if first_label else region_end
@@ -594,7 +620,7 @@ def _bos_motions(ct: CanonicalText, headings: list[_Heading]) -> list[_Motion]:
     found.sort(key=lambda mo: mo.start)
     for i, mo in enumerate(found):
         nxt = found[i + 1].start if i + 1 < len(found) else len(text)
-        lead = _collapsed(text, mo.start, min(nxt, mo.start + 400))
+        lead = _own_sentence(text, headings, mo.start, min(nxt, mo.start + 1500))
         mo.region_end = min(nxt, _region_end(headings, mo.start, len(text), _looks_consent(headings, mo.start, lead)))
         lead = lead.lower()
         if "substitute motion" in lead:
