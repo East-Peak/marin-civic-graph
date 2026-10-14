@@ -44,14 +44,21 @@ def test_an_exact_match():
     assert _by(rows, "kind", "event") == []
 
 
-def test_a_truncated_decision_text_matches_by_prefix():
-    d = _dec(0, M, "determine that the need to take action arose subsequent to the agenda being posted to add the "
-                   "additional item to today's", ayes=["ALL"], source=BOS)
-    e = _ev("vev-1", M, "determine that the need to take action arose subsequent to the agenda being posted to add "
-                        "the additional item to today's agenda. related budget adjustments.", status="expanded",
+def test_an_overrunning_decision_text_matches_its_motion_by_prefix():
+    d = _dec(0, M, "approve consent calendar a items ca 1 through ca 2 as presented. ca 1 board of supervisors a "
+                   "request to adjourn", ayes=["ALL"], source=BOS)
+    e = _ev("vev-1", M, "approve Consent Calendar A (Items CA-1 through CA-2) as presented.", status="expanded",
             ayes=("ALDER", "BIRCH", "CEDAR", "DOGWOOD", "ELM"), body=BOS, sentinel="ALL")
     [row] = _by(reconcile([d], [e], {}), "kind", "decision")
     assert row["status"] == "matched"
+
+
+def test_prefixes_stop_at_word_boundaries_and_run_one_way():
+    for dec_text, ev_text in [("approve resolution 123 for the district", "approve resolution 12"),
+                              ("approve the agreement", "approve the agreement with the district and more")]:
+        rows = reconcile([_dec(0, M, dec_text)], [_ev("vev-1", M, ev_text)], {})
+        [row] = _by(rows, "kind", "decision")
+        assert row["status"] == "unmatched" and row["reason"] == "text_mismatch"
 
 
 def test_all_versus_an_expanded_set_and_none_versus_empty_are_not_conflicts():
@@ -98,6 +105,32 @@ def test_outcome_tally_and_mover_differences_are_conflicts():
     assert {"outcome", "tally", "mover"} <= set(row["differences"])
 
 
+def test_a_held_event_never_matches():
+    d = _dec(0, M, "approve it.", ayes=["ALL"], source=BOS)
+    e = _ev("vev-1", M, "approve it.", status="held", ayes=(), body=BOS, sentinel="ALL")
+    [row] = _by(reconcile([d], [e], {}), "kind", "decision")
+    assert (row["status"], row["reason"], row["event_id"]) == ("unmatched", "paired_event_held", "vev-1")
+    d2 = _dec(0, M, "approve it.")
+    e2 = _ev("vev-1", M, "approve it.", status="held")
+    [row2] = _by(reconcile([d2], [e2], {}), "kind", "decision")
+    assert row2["status"] == "unmatched" and row2["reason"] == "paired_event_held"
+
+
+def test_an_unknown_name_on_either_side_does_not_disambiguate():
+    d = _dec(0, M, "approve it.", seconder=None)
+    es = [_ev("vev-1", M, "approve it.", seconder=None), _ev("vev-2", M, "approve it.", seconder="CEDAR")]
+    rows = reconcile([d], es, {})
+    [row] = _by(rows, "kind", "decision")
+    assert row["status"] == "ambiguous" and row["candidates"] == ["vev-1", "vev-2"]
+
+
+def test_explicit_values_in_a_not_recorded_field_are_compared():
+    d = _dec(0, M, "approve it.", ayes=["ALL"], noes=["CEDAR"], source=BOS)
+    e = _ev("vev-1", M, "approve it.", status="expanded", ayes=("ALDER", "BIRCH", "CEDAR"), body=BOS, sentinel="ALL")
+    [row] = _by(reconcile([d], [e], {}), "kind", "decision")
+    assert row["status"] == "conflicting" and "no" in row["differences"]
+
+
 def test_duplicate_decisions_for_one_event_are_ambiguous_and_the_event_is_not_new():
     ds = [_dec(0, M, "approve it."), _dec(1, M, "approve it.")]
     rows = reconcile(ds, [_ev("vev-1", M, "approve it.")], {})
@@ -135,6 +168,20 @@ def test_unmatched_reasons():
     assert rows[ds[1]["id"]]["reason"] == "document_of_other_meeting:meeting-novato-city-council-9"
     assert rows[ds[2]["id"]]["reason"] == "out_of_window"
     assert rows[ds[3]["id"]]["reason"] == "no_event_in_meeting"
+
+
+def test_the_check_requires_every_event_accounted_for_exactly_once():
+    ds = [_dec(0, M, "approve it.")]
+    es = [_ev("vev-1", M, "approve it."), _ev("vev-2", M, "deny it.")]
+    rows = reconcile(ds, es, {})
+    assert check_reconciliation(ds, es, rows) == []
+    no_new = [r for r in rows if r["kind"] != "event"]
+    assert check_reconciliation(ds, es, no_new)
+    bad = [dict(r, event_id="vev-404") if r["kind"] == "decision" else r for r in rows]
+    assert check_reconciliation(ds, es, bad)
+    bad2 = [dict(r, candidates=["vev-404"]) if r["kind"] == "decision" else r for r in rows]
+    assert check_reconciliation(ds, es, bad2)
+    assert check_reconciliation(ds, es, rows + [r for r in rows if r["kind"] == "event"])
 
 
 def test_the_check_requires_every_decision_once():
