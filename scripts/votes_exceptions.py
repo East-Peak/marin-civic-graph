@@ -37,7 +37,7 @@ def find_exceptions(text: str, start: int, end: int, skip: list[tuple[int, int]]
         if any(s <= m.start() < e for s, e in skip):
             continue
         verb = (m.group("v") or m.group("noun") or m.group("noun3")).lower()
-        kind = "abstain" if verb.startswith("abstain") else "recused"
+        kind = "abstain" if verb.startswith(("abstain", "abstention")) else "recused"
         group = m.group("group") or m.group("group2") or m.group("group3")
         head = _PLURAL_HEAD_RE.match(group)
         names = ([n for n in re.findall(r"[A-Z][\w'\-]*", group[head.end():])] if head

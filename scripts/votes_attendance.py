@@ -268,7 +268,8 @@ def _transitions(ct: CanonicalText, body: str, skip: list[tuple[int, int]]) -> l
     for m in _ALL_PRESENT_RE.finditer(text):
         if not skipped(m.start()) and not inside_roll(m.start()):
             # "All Supervisors were present except Supervisor X": the exception is part of the statement
-            ex = re.match(r"\s+(?:except(?:\s+for)?|with\s+the\s+exception\s+of|but)\s+([^.\n]*)", text[m.end():])
+            ex = re.match(r"\s*[,;:-]?\s*(?:except(?:\s+for)?|with\s+the\s+exception\s+of|but|other\s+than)\s+"
+                          r"([^.\n]*)", text[m.end():])
             if ex:
                 gone = frozenset(_names_in(ex.group(1)))
                 add(_T(m.start(), m.end() + ex.end(), "all_present", absent=gone) if gone

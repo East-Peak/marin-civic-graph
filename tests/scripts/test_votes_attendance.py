@@ -294,6 +294,12 @@ class TestCodexRoundNine:
         _, [ev], _ = _run(lines)
         assert ev["status"] == "expanded" and _ayes(ev) == FIVE[:4]
 
+    def test_all_present_comma_except(self):
+        lines = ["Roll Call", ROLL, "The Board reconvened at 1:30 p.m. All Supervisors were present, except "
+                 "Supervisor Elm.", *_item(1)]
+        _, [ev], _ = _run(lines)
+        assert ev["status"] == "expanded" and _ayes(ev) == FIVE[:4]
+
     def test_an_unread_recusal_in_the_item_holds_the_event(self):
         lines = ["Roll Call", ROLL, "1.", "Item.", "Elm, the member for the district, recused from the item.",
                  "M/s Supervisor Alder - Supervisor Birch to approve.", "AYES: ALL"]

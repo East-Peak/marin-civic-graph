@@ -555,6 +555,14 @@ class TestNovatoBasics:
         _, [ev] = _parse(NOVATO, lines)
         assert sorted(x["name"] for x in ev["item_exceptions"]) == names
 
+    def test_a_noun_abstention_is_an_abstention(self):
+        lines = ["I.   ITEM", "     The minutes noted the abstention of Mayor Elm from agenda item G.7.",
+                 "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 3-0 via roll call to approve.",
+                 "     AYES: ALDER, BIRCH, CEDAR", "     NOES: None", "     Motion carried."]
+        _, [ev] = _parse(NOVATO, lines)
+        assert [(x["name"], x["kind"]) for x in ev["item_exceptions"]] == [("ELM", "abstain")]
+
     def test_an_unread_recusal_never_holds_a_named_vote(self):
         lines = ["I.   ITEM", "     Elm, the member for the district, recused from the item.",
                  "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
