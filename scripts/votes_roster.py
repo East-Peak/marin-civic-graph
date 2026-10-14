@@ -22,6 +22,12 @@ import re
 from datetime import date
 
 OPTIONS = ("confirm", "correct", "reject", "defer")
+# how a term boundary is known: stated (the record states the act or effective date), observed (first or
+# last appearance in the minutes), bound (known only to fall before/after), window (the term began before
+# the 2019 window or continues past today)
+BOUNDARY_KINDS = ("stated", "observed", "bound", "window")
+_ISO = re.compile(r"\d{4}-\d{2}-\d{2}")
+MIN_QUOTE = 8
 
 _EVIDENCE = [
     ("canvass", re.compile(r"canvass\w*\s+of\s+(?:the\s+)?election|declar\w*\s+the\s+results?|results?\s+of\s+the\s+"
@@ -110,10 +116,28 @@ def verify_drafts(drafts: dict, sources: dict, *, max_web_sources: int = 40) -> 
     if len(web) > max_web_sources:
         raise RosterError(f"{len(web)} web sources for one body; the cap is {max_web_sources}")
     problems: list[str] = []
+    ids = [t.get("draft_id") for t in drafts["terms"]]
+    for dup in sorted({i for i in ids if ids.count(i) > 1}):
+        problems.append(f"{dup}: draft id used twice")
     for t in drafts["terms"]:
-        tid = t["draft_id"]
+        tid = t.get("draft_id") or "?"
+        for f in ("draft_id", "member", "key", "seat", "basis"):
+            if not (t.get(f) or "").strip():
+                problems.append(f"{tid}: no {f}")
+        if not _ISO.fullmatch(t.get("start") or ""):
+            problems.append(f"{tid}: start is not a date")
+        if t.get("end") is not None and not _ISO.fullmatch(t["end"]):
+            problems.append(f"{tid}: end is not a date")
+        elif t.get("end") and (t.get("start") or "") > t["end"]:
+            problems.append(f"{tid}: ends before it starts")
+        for f in ("start_kind", "end_kind"):
+            if t.get(f, "stated") not in BOUNDARY_KINDS:
+                problems.append(f"{tid}: {f} must be one of {', '.join(BOUNDARY_KINDS)}")
         supported: set[str] = set()
         for ev in t.get("evidence", []):
+            if len(_ws(ev.get("quote"))) < MIN_QUOTE:
+                problems.append(f"{tid}: a quote shorter than {MIN_QUOTE} characters proves nothing")
+                continue
             src = sources.get(ev["source"])
             if src is None:
                 problems.append(f"{tid}: unknown source {ev['source']}")
@@ -131,14 +155,29 @@ def verify_drafts(drafts: dict, sources: dict, *, max_web_sources: int = 40) -> 
 
 
 def validate_seatservices(drafts: dict, services: list[dict]) -> list[dict]:
-    """Each existing SeatService against the drafted term for the same member and seat."""
+    """Each existing SeatService against the drafted term for the same member and seat: an exact
+    match first; otherwise the one term overlapping it (terms that only touch at a boundary do not
+    overlap); several → ambiguous; none overlapping → compared with the member's only term in the
+    seat, if there is exactly one."""
     rows = []
     for s in sorted(services, key=lambda x: x["id"]):
-        cands = [t for t in drafts["terms"] if t.get("key") == s["key"] and t.get("seat") == s["seat"]]
-        overlapping = [t for t in cands if (t.get("start") or "") <= (s.get("ended_at") or "9999")
-                       and (t.get("end") or "9999") >= (s.get("started_at") or "")]
-        best = (overlapping or cands or [None])[0]
-        if best is None:
+        cands = sorted((t for t in drafts["terms"] if t.get("key") == s["key"] and t.get("seat") == s["seat"]),
+                       key=lambda t: (t.get("start") or "", t.get("draft_id") or ""))
+        s_start, s_end = s.get("started_at") or "", s.get("ended_at") or "9999-12-31"
+        exact = [t for t in cands if t.get("start") == s.get("started_at")
+                 and (t.get("end") or None) == (s.get("ended_at") or None)]
+        overlapping = [t for t in cands if (t.get("start") or "") < s_end and (t.get("end") or "9999-12-31") > s_start]
+        if exact:
+            best = exact[0]
+        elif len(overlapping) == 1:
+            best = overlapping[0]
+        elif len(overlapping) > 1:
+            rows.append({"seatservice_id": s["id"], "verdict": "ambiguous", "draft_id": None,
+                         "candidates": [t["draft_id"] for t in overlapping], "differences": {}})
+            continue
+        elif len(cands) == 1:
+            best = cands[0]
+        else:
             rows.append({"seatservice_id": s["id"], "verdict": "no_evidence", "draft_id": None, "differences": {}})
             continue
         diffs = {}
@@ -152,11 +191,22 @@ def validate_seatservices(drafts: dict, services: list[dict]) -> list[dict]:
 
 
 def coverage(drafts: dict, seats: list[str], start: str, end: str) -> dict[str, dict]:
-    """Per seat: the drafted terms in the window, and the gaps no term covers."""
+    """Per single-member seat: the drafted terms clipped to the window, the gaps no term covers, and
+    the term boundaries that still need stated evidence (observed or bound ones). Multi-member
+    at-large seats and unstated seats are not single seats and are left out."""
     out = {}
     for seat in seats:
-        terms = sorted(([t["start"], t.get("end") or end] for t in drafts["terms"] if t.get("seat") == seat),
-                       key=lambda x: x[0])
+        terms = []
+        for t in drafts["terms"]:
+            if t.get("seat") != seat:
+                continue
+            s, e = t["start"], t.get("end") or end
+            if e < s:
+                raise RosterError(f"{t.get('draft_id')}: ends before it starts")
+            s, e = max(s, start), min(e, end)
+            if s < e:
+                terms.append([s, e])
+        terms.sort()
         gaps, cursor = [], start
         for s, e in terms:
             if s > cursor:
@@ -164,7 +214,9 @@ def coverage(drafts: dict, seats: list[str], start: str, end: str) -> dict[str, 
             cursor = max(cursor, e)
         if cursor < end:
             gaps.append([cursor, end])
-        out[seat] = {"terms": terms, "gaps": gaps}
+        confirm = [[t.get("draft_id"), side, t.get(f"{side}_kind")] for t in drafts["terms"] if t.get("seat") == seat
+                   for side in ("start", "end") if t.get(f"{side}_kind") in ("observed", "bound")]
+        out[seat] = {"terms": terms, "gaps": gaps, "boundaries_to_confirm": sorted(confirm)}
     return out
 
 
@@ -189,6 +241,9 @@ def render_batch(batch_id: str, drafts_by_body: dict, validations_by_body: dict,
             items.append({"item": item, "body": body, "draft_id": t["draft_id"], "options": list(OPTIONS)})
             lines.append(f"### {item}. {t['member']} — {t['seat']}, {t['start']} → {t.get('end') or 'present'} "
                          f"({t['basis']}, {t.get('confidence', 'unrated')})")
+            lines.append(f"Start {t.get('start_kind', 'stated')}, end "
+                         f"{t.get('end_kind', 'stated') if t.get('end') else 'open'}. The quotes below are proven to "
+                         "appear in their sources; whether they support the claim is yours to judge.")
             if t.get("notes"):
                 lines.append(f"_{t['notes']}_")
             for ev in t.get("evidence", []):
@@ -208,7 +263,8 @@ def render_batch(batch_id: str, drafts_by_body: dict, validations_by_body: dict,
             lines += ["### Coverage 2019 → today", ""]
             for seat, c in sorted(cov.items()):
                 gaps = ", ".join(f"{a} → {b}" for a, b in c["gaps"]) or "none"
-                lines.append(f"- {seat}: gaps {gaps}")
+                todo = ", ".join(f"{d} {side} ({kind})" for d, side, kind in c.get("boundaries_to_confirm", []))
+                lines.append(f"- {seat}: gaps {gaps}" + (f"; boundaries to confirm: {todo}" if todo else ""))
             lines.append("")
     return "\n".join(lines) + "\n", items
 

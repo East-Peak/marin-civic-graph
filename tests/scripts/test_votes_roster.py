@@ -105,7 +105,44 @@ class TestVerifyDrafts:
             verify_drafts(_draft(), {**SOURCES, **many}, max_web_sources=40)
 
 
+class TestDraftShape:
+    @pytest.mark.parametrize("over", [
+        {"evidence": [{"source": "minutes:m1", "quote": "", "supports": ["start", "seat"]}]},
+        {"evidence": [{"source": "minutes:m1", "quote": "1", "supports": ["start", "seat"]}]},
+        {"start": "garbage"},
+        {"end": "2019-01-01", "evidence": [{"source": "minutes:m1", "quote": "Districts 1 and 3",
+                                             "supports": ["start", "seat", "end"]}]},
+        {"start_kind": "guess"},
+        {"basis": ""},
+    ])
+    def test_malformed_terms_are_problems(self, over):
+        assert verify_drafts(_draft(**over), SOURCES)
+
+    def test_duplicate_draft_ids_are_problems(self):
+        d = _draft()
+        d["terms"].append(dict(d["terms"][0]))
+        assert verify_drafts(d, SOURCES)
+
+
 class TestSeatServices:
+    def test_an_exact_match_wins_over_an_adjacent_term(self):
+        drafts = {"body": NOV, "terms": [
+            {"draft_id": "a", "key": "ALDER", "seat": "District 1", "start": "2019-01-01", "end": "2023-01-01"},
+            {"draft_id": "b", "key": "ALDER", "seat": "District 1", "start": "2023-01-01", "end": None}]}
+        service = {"id": "s", "key": "ALDER", "seat": "District 1", "started_at": "2023-01-01", "ended_at": None}
+        for terms in (drafts["terms"], list(reversed(drafts["terms"]))):
+            [row] = validate_seatservices({"body": NOV, "terms": terms}, [service])
+            assert (row["verdict"], row["draft_id"]) == ("agree", "b")
+
+    def test_two_overlapping_non_exact_terms_are_ambiguous(self):
+        drafts = {"body": NOV, "terms": [
+            {"draft_id": "a", "key": "ALDER", "seat": "District 1", "start": "2019-01-01", "end": "2023-06-01"},
+            {"draft_id": "b", "key": "ALDER", "seat": "District 1", "start": "2023-01-01", "end": None}]}
+        service = {"id": "s", "key": "ALDER", "seat": "District 1", "started_at": "2022-01-01", "ended_at": "2024-01-01"}
+        [row] = validate_seatservices(drafts, [service])
+        assert row["verdict"] == "ambiguous"
+
+
     def test_agree_disagree_and_no_evidence(self):
         drafts = _draft(end="2022-12-13", evidence=[
             {"source": "minutes:m1", "quote": "Districts 1 and 3", "supports": ["start", "seat", "end"]}])
@@ -136,6 +173,25 @@ class TestCoverage:
         assert cov["District 1"]["gaps"] == []
         assert cov["District 2"]["gaps"] == [["2021-09-15", "2021-11-09"]]
         assert cov["District 3"]["gaps"] == [["2019-01-01", "2026-10-14"]]
+
+
+    def test_coverage_is_clipped_to_the_window_and_rejects_reversed_terms(self):
+        drafts = {"body": NOV, "terms": [{"seat": "District 1", "start": "2019-01-01", "end": "2030-01-01",
+                                          "key": "ALDER"}]}
+        assert coverage(drafts, ["District 1"], "2019-01-01", "2026-10-14")["District 1"]["gaps"] == []
+        bad = {"body": NOV, "terms": [{"seat": "District 1", "start": "2020-01-01", "end": "2019-01-01",
+                                       "key": "ALDER"}]}
+        with pytest.raises(RosterError):
+            coverage(bad, ["District 1"], "2019-01-01", "2026-10-14")
+
+    def test_boundaries_needing_evidence_are_listed(self):
+        drafts = {"body": NOV, "terms": [
+            {"draft_id": "a", "seat": "District 1", "start": "2019-01-01", "end": "2021-01-01", "key": "ALDER",
+             "end_kind": "observed"},
+            {"draft_id": "b", "seat": "District 1", "start": "2021-01-01", "end": None, "key": "BIRCH",
+             "start_kind": "stated"}]}
+        cov = coverage(drafts, ["District 1"], "2019-01-01", "2026-10-14")
+        assert cov["District 1"]["boundaries_to_confirm"] == [["a", "end", "observed"]]
 
 
 class TestBatch:
