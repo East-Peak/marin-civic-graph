@@ -1317,3 +1317,22 @@ def test_clear_stop_is_exclusive_with_capture(cli):
     with pytest.raises(SystemExit):
         ccs.main(["--state", str(cli.state), "--clear-stop", "example-fund", "--reason", "x",
                   "--url", "http://127.0.0.1:1/a"])
+
+
+def test_a_requested_folder_is_never_substituted(env):
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as zf:
+        zf.writestr("batch-02/0001_public.xml", b"<one/>")
+    site = env.site()
+    site.routes["/z.zip"] = ranged(buf.getvalue())
+    with pytest.raises(AccessRefused):
+        env.zip_member(site.url("/z.zip"), "batch-01/0001_public.xml")
+    assert env.written() == []
+
+
+@pytest.mark.parametrize("script", [b"grecaptcha.enterprise.render('box')", b"grecaptcha . render('box')"])
+def test_challenge_call_variants_still_stop(env, script):
+    site = env.site()
+    site.routes["/a.html"] = page(b"<html><head><title>Sample</title><script>" + script + b"</script></head></html>")
+    with pytest.raises(SourceRestricted):
+        env.capture(site.url("/a.html"))

@@ -82,7 +82,8 @@ INLINE_CODE_RE = re.compile(r"(<(script|style)\b[^>]*>).*?(</\2\s*>)|<!--.*?-->"
 TITLE_RE = re.compile(r"<title\b[^>]*>(.*?)</title\s*>", re.I | re.S)
 CHALLENGE_TITLES = ("just a moment", "attention required", "access denied", "security verification")
 # Calls that put a challenge on screen; they count even inside a script, unlike a mere widget key there.
-CHALLENGE_CODE = ("grecaptcha.render", "grecaptcha.execute", "hcaptcha.render", "hcaptcha.execute",
+CHALLENGE_CODE = ("grecaptcha.render", "grecaptcha.execute", "grecaptcha.enterprise.render",
+                  "grecaptcha.enterprise.execute", "hcaptcha.render", "hcaptcha.execute",
                   "turnstile.render", "_cf_chl_", "challenge-platform")
 SOURCE_RE = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -189,7 +190,7 @@ def looks_restricted(body: bytes, content_type: str | None) -> bool:
     markup = INLINE_CODE_RE.sub(lambda m: f"{m[1]}{m[3]}" if m[1] else " ", text).lower()
     title = TITLE_RE.search(markup)
     return (bool(PASSWORD_INPUT_RE.search(text)) or any(m in markup for m in RESTRICTION_MARKERS)
-            or any(c in text.lower() for c in CHALLENGE_CODE)
+            or any(c in re.sub(r"\s+", "", text.lower()) for c in CHALLENGE_CODE)
             or bool(title and any(t in title[1] for t in CHALLENGE_TITLES)))
 
 
@@ -537,7 +538,7 @@ def find_member(names: list[str], wanted: str) -> str:
     file name (the part after any folder) is the wanted name — IRS batches keep members in a folder."""
     base = wanted.rsplit("/", 1)[-1]
     matches = ([n for n in names if n == wanted] or [n for n in names if n.lower() == wanted.lower()]
-               or [n for n in names if n.rsplit("/", 1)[-1] == base])
+               or ([n for n in names if n.rsplit("/", 1)[-1] == base] if "/" not in wanted else []))
     if len(matches) != 1:
         raise AccessRefused(f"member {wanted!r} matches {len(matches)} entries in the archive")
     return matches[0]
