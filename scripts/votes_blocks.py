@@ -36,7 +36,9 @@ _LABELS = [
     ("recused", r"RECUS(?:ED|ALS?|E)|Recus(?:ed|als?|e)"),
     ("absent", r"EXCUSED\s+ABSENCE|ABSENT|Absent"),
 ]
-_LABEL_RE = re.compile(r"(?<![\w-])(?:" + "|".join(f"(?P<{c}>{p})" for c, p in _LABELS) + r")[ \t]*:")
+_LABEL_RE = re.compile(r"(?<![\w-])(?:(?:" + "|".join(f"(?P<{c}>{p})" for c, p in _LABELS) + r")[ \t]*:"
+                       r"|(?P<aye_bare>AYES)(?=[ \t]+(?:ALL|UNANIMOUS)\b))")
+_VACANT_RE = re.compile(r"(?<![\w-])VACANT[ \t]*:")
 _TALLY_LINE_RE = re.compile(r"(?<![\w-])Vote[ \t]*:[ \t]*Motion\s+(?P<outcome>carried|failed|passed)"
                             r"(?P<rest>[^\n]*)", re.I)
 _VOTES_INTRO_RE = re.compile(r"^[ \t]*Votes[ \t]*:[ \t]*$", re.M)
@@ -65,6 +67,9 @@ _NOV_MOVER_ONLY_RE = re.compile(
     rf"|(?:(?P<m2>{_NAME})\s+made\s+a\s+(?:substitute\s+)?motion)", re.I)
 _NOV_RESTATED_RE = re.compile(rf"(?P<m>{_NAME})\s+restated\s+(?:his|her|their|the)\s+motion", re.I)
 _NOV_SECONDED_LATER_RE = re.compile(rf"motion\s+was\s+seconded\s+by\s+(?P<s>{_NAME})", re.I)
+_NOV_NARRATIVE_MOTION_RE = re.compile(
+    rf"(?P<m>{_NAME}),\s+seconded\s+by\s+(?P<s>{_NAME}),\s+made\s+a\s+(?P<kind>main\s+|substitute\s+)?motion\s+(?:to\s+)?",
+    re.I)
 _NOV_TALLY_RE = re.compile(r"vot(?:ed|e)\s+(?:unanimously\s+)?(?:via\s+roll\s+call\s+)?"
                            r"(?P<a>\d+)-(?P<n>\d+)(?:-(?P<x>\d+))?(?![\d-])(?:\s+via\s+roll\s+call)?", re.I)
 # anything that prints a count after "voted" — if it is not exactly A-N[-X], the tally is unrecognized
@@ -108,11 +113,17 @@ _BOS_MS_RE = re.compile(rf"M/s\s+(?P<m>{_BOS_MOVER})\s*[-/]\s*(?:(?P<s>{_BOS_SEC
 _BOS_MOVED_RE = re.compile(rf"(?:Motion\s+to\s+)?(?P<text>[^\n.]*?)\s*moved\s+by\s+(?P<m>{_NAME})\s+and\s+"
                            rf"seconded\s+by\s+(?P<s>{_NAME})", re.I)
 
+_EXC_REF = rf"(?-i:(?i:{TITLE})\s+(?:[A-Z][\w']*\s+)?[A-Z][\w'\-]*)"
 _EXCEPTION_RE = re.compile(
-    rf"{TITLE}\s+(?:[A-Z][\w'\-]*\s+)?(?P<n>[A-Z][\w'\-]*)\s+(?P<v>recused\s+(?:himself|herself|themselves|themself)"
-    rf"|recused|abstained|did\s+not\s+participate)", re.I)
+    rf"(?P<group>{_EXC_REF}(?:\s*,?\s*(?:and\s+)?{_EXC_REF})*)\s+"
+    rf"(?:(?:announced|stated|indicated|advised)\s+(?:that\s+)?(?:she|he|they)\s+)?"
+    rf"(?:(?:would|will)\s+(?:also\s+)?be\s+|had\s+|(?:needed|had|would\s+have|will\s+have)\s+to\s+)?"
+    rf"(?P<v>recused|recusing|recuse|abstained|abstaining|abstain|did\s+not\s+participate)"
+    rf"(?:\s+(?:himself|herself|themselves|themself))?", re.I)
+_EXC_NAME_RE = re.compile(rf"(?-i:(?i:{TITLE})\s+(?:[A-Z][\w']*\s+)?(?P<n>[A-Z][\w'\-]*))")
 
-_TRANSCRIPT_LINE_RE = re.compile(r"^[A-Z][A-Z .'\-]{1,40}:\s")
+_TRANSCRIPT_LINE_RE = re.compile(r"^[A-Z][A-Z .,'\-]{1,40}:\s")
+_LINE_NUMBER_RE = re.compile(r"^\s*(?:\d{1,3}\s+)+|^\s*\d{1,3}\s*$")
 
 
 @dataclass
@@ -192,9 +203,15 @@ def surname(name_with_title: str | None) -> str | None:
 
 def is_transcript(ct: CanonicalText) -> bool:
     """A verbatim caption transcript (SPEAKER: text lines), not minutes."""
-    lines = [ln for ln in ct.text.split("\n") if ln.strip()]
+    raw = [ln for ln in ct.text.split("\n") if ln.strip()]
+    numbered = sum(1 for ln in raw if _LINE_NUMBER_RE.match(ln))
+    lines = [_LINE_NUMBER_RE.sub("", ln).strip() for ln in raw]
+    lines = [ln for ln in lines if ln]
     speakers = [ln for ln in lines if _TRANSCRIPT_LINE_RE.match(ln) and not _LABEL_RE.match(ln)]
-    return len(speakers) >= 5 and len(speakers) * 2 >= len(lines)
+    if len(speakers) >= 5 and len(speakers) * 2 >= len(lines):
+        return True
+    # a court reporter's line-numbered transcript: speech wraps onto unnumbered-speaker lines
+    return len(speakers) >= 20 and numbered * 10 >= len(raw) * 6
 
 
 @dataclass
@@ -312,8 +329,16 @@ def _labels(ct: CanonicalText, body: str) -> list[_Label]:
     text = ct.text
     found: list[_Label] = []
     for m in _LABEL_RE.finditer(text):
-        cat = next(c for c in CATEGORIES if m.group(c) is not None)
+        cat = "aye" if m.group("aye_bare") else next(c for c in CATEGORIES if m.group(c) is not None)
         found.append(_Label(cat, m.start(), m.end()))
+    for m in _VACANT_RE.finditer(text):
+        lab = _Label("vacant", m.start(), m.end())
+        _, le = _line_bounds(text, m.end())
+        lab.value_end = le
+        while lab.value_end > m.end() and text[lab.value_end - 1].isspace():
+            lab.value_end -= 1
+        lab.value = text[m.end():lab.value_end].strip()
+        found.append(lab)
     for m in _TALLY_LINE_RE.finditer(text):
         lab = _Label("tally", m.start(), m.end())
         lab.value_end = m.end()
@@ -340,10 +365,10 @@ def _labels(ct: CanonicalText, body: str) -> list[_Label]:
     # drop category labels that sit inside a tally line ("Abstain:1" after "Vote: Motion carried")
     tally_spans = [(lab.start, lab.value_end) for lab in found if lab.category == "tally"]
     found = [lab for lab in found
-             if lab.category in ("tally", "intro") or not any(s <= lab.start < e for s, e in tally_spans)]
+             if lab.category in ("tally", "intro", "vacant") or not any(s <= lab.start < e for s, e in tally_spans)]
 
     for i, lab in enumerate(found):
-        if lab.category in ("tally", "intro"):
+        if lab.category in ("tally", "intro", "vacant"):
             continue
         nxt = found[i + 1].start if i + 1 < len(found) else len(text)
         _read_value(text, lab, nxt, body)
@@ -460,6 +485,8 @@ class _Motion:
     on_behalf_of: str | None = None
     restates: "_Motion | None" = None
     restatement: "_Motion | None" = None
+    main_header: bool = False
+    narrative_main: bool = False
     extra_spans: list = field(default_factory=list)
     outcome: str | None = None
     text_start: int = 0
@@ -585,7 +612,7 @@ def _novato_motions(ct: CanonicalText, headings: list[_Heading]) -> list[_Motion
             mo.kind = "substitute"
         elif re.search(r"\bamendment\s+(?:was\s+)?(?:made\s+)?by\b", col[:clause_c_end or 120], re.I):
             mo.kind = "amendment"
-        ns = _NO_SECOND_RE.search(col[: max(clause_c_end, 0) + 200])
+        ns = _NO_SECOND_RE.search(col)
         if ns and not mo.seconder and not mo.tally:
             mo.kind = "failed_no_second"
             mo.outcome = "failed"
@@ -597,7 +624,20 @@ def _novato_motions(ct: CanonicalText, headings: list[_Heading]) -> list[_Motion
         mo.clause_end = at(clause_c_end) if clause_c_end else h.end()
         lead_m = re.match(r"[\s,]*(?:to\s+)?", text[mo.clause_end:region_end])
         mo.text_start = mo.clause_end + (lead_m.end() if lead_m else 0)
+        mo.main_header = bool(re.search(r"MAIN\s+MOTION", hdr))
         motions.append(mo)
+    # a motion stated in prose ("X, seconded by Y, made a main motion to …"), voted later under a header
+    for m in _NOV_NARRATIVE_MOTION_RE.finditer(text):
+        if any(mo.start <= m.start() < max(mo.clause_end, mo.text_start + 1) for mo in motions):
+            continue
+        nxt = min([mo.start for mo in motions if mo.start > m.start()] + [len(text)])
+        mo = _Motion(m.start(), m.end(), min(nxt, _region_end(headings, m.start(), len(text), False)))
+        mo.mover, mo.seconder = surname(m.group("m")), surname(m.group("s"))
+        mo.kind = "substitute" if (m.group("kind") or "").strip().lower() == "substitute" else "main"
+        mo.text_start = m.end()
+        mo.narrative_main = (m.group("kind") or "").strip().lower() == "main"
+        motions.append(mo)
+    motions.sort(key=lambda mo: mo.start)
     return motions
 
 
@@ -720,7 +760,8 @@ def parse_document(ct: CanonicalText, *, body: str, meeting_id: str, doc_sha256:
             if not same_item:
                 break
             if (later.blocks and later.mover == first.mover and later.seconder == first.seconder
-                    and re.search(r"restat", text[first.clause_end:later.start], re.I)):
+                    and (re.search(r"restat", text[first.clause_end:later.start], re.I)
+                         or (first.narrative_main and later.main_header))):
                 later.restates = first
                 later.kind = "restated"
                 folded.add(id(first))
@@ -797,6 +838,7 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
     outcome = mo.outcome if mo else None
     block_loc = None
     restatement = None
+    vacancies: list[str] = []
 
     anchor = mo.start if mo else blk[0].start
     top, sub = _item_at(headings, anchor)
@@ -855,6 +897,10 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
             if lab.category == "intro":
                 consumed.append(_loc(ct, lab.start, lab.value_end))
                 continue
+            if lab.category == "vacant":
+                consumed.append(_loc(ct, lab.start, lab.value_end))
+                vacancies.append(lab.value)
+                continue
             if lab.category == "tally":
                 consumed.append(_loc(ct, lab.start, lab.value_end))
                 if lab.tally.get("unrecognized"):
@@ -883,7 +929,7 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
                     flags.append(f)
         # outcome line right after the block
         after = text[bend:]
-        m = re.match(r"(?:[ \t]*\n)*", after)
+        m = re.match(r"(?:[ \t]*\n|[ \t]*(?:\f|\d{1,3}|Page\s+\d+(?:\s+of\s+\d+)?)[ \t]*\n)*", after)
         ol = _OUTCOME_LINE_RE.match(after, m.end() if m else 0)
         inline = _TERMINATOR_RE.match(after.lstrip(" \t"))
         if ol and (not mo or bend + ol.start() < mo.region_end):
@@ -947,12 +993,15 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
     for m in _EXCEPTION_RE.finditer(text, region_start, region_end):
         if any(c["start"] <= m.start() < c["end"] for c in category_spans.values()):
             continue
-        kind = {"recused": "recused", "abstained": "abstain"}.get(m.group("v").split()[0].lower(), "recused")
-        name = m.group("n").upper()
-        item_exceptions.append({"name": name, "kind": kind, "span": _loc(ct, m.start(), m.end())})
-        listed = next((c for c in CATEGORIES for n in categories[c] if n["name"] == name), None)
-        if blk and not has_all and listed != kind and not (kind == "recused" and listed == "absent"):
-            hold.append("exception_scope_conflict")
+        kind = "abstain" if m.group("v").lower().startswith("abstain") else "recused"
+        span = _loc(ct, m.start(), m.end())
+        consumed.append(span)
+        for nm in _EXC_NAME_RE.finditer(m.group("group")):
+            name = nm.group("n").upper()
+            item_exceptions.append({"name": name, "kind": kind, "span": span})
+            listed = next((c for c in CATEGORIES for n in categories[c] if n["name"] == name), None)
+            if blk and not has_all and listed != kind and not (kind == "recused" and listed == "absent"):
+                hold.append("exception_scope_conflict")
 
     consent = bool(motion and _GROUPED_RE.search(motion["text"]))
     item = {"top": top.label if top else None, "sub": None if consent else (sub.label if sub else None),
@@ -980,6 +1029,7 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
         "sentinels": sentinels,
         "item_exceptions": item_exceptions,
         "restatement": restatement,
+        "vacancies": vacancies,
         "block": block_loc,
         "consumed": sorted(consumed, key=lambda c: (c["start"], c["end"])),
         "flags": flags,

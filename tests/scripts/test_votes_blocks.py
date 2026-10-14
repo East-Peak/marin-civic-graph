@@ -435,6 +435,81 @@ class TestNovatoBasics:
         assert [e["motion"]["kind"] for e in events] == ["main", "restated"]
         assert events[1]["motion"]["restates"] == events[0]["event_id"]
 
+    def test_a_vacant_seat_line_inside_the_block_is_consumed(self):
+        lines = ["I.   ITEM", "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 4-0 via roll call to approve.",
+                 "     AYES:    ALDER, BIRCH, CEDAR, DOGWOOD", "     NOES:    NONE", "     VACANT:  DISTRICT 5", "",
+                 "     Motion carried.", "J.   NEXT"]
+        ct, [ev] = _parse(NOVATO, lines)
+        assert ev["status"] == "named" and ev["outcome"] == "carried"
+        for needle in ("VACANT", "Motion carried"):
+            pos = ct.text.index(needle)
+            assert any(c["start"] <= pos < c["end"] for c in ev["consumed"])
+        assert ev["vacancies"] == ["DISTRICT 5"]
+
+    def test_a_no_second_sentence_later_in_the_motion_region(self):
+        lines = ["I.   ITEM", "     COUNCIL ACTION: Councilmember Elm made a motion to direct staff to return with",
+                 "     a list of options for the general fund and every other fund that the City Council could",
+                 "     consider at a future meeting, including the reserves and the capital projects funds,",
+                 "     with as much detail as is practical for the purpose of the discussion, as possible by staff.",
+                 "     Motion failed for lack of a second.", "J.   NEXT"]
+        ct, [ev] = _parse(NOVATO, lines)
+        assert ev["motion"]["kind"] == "failed_no_second" and ev["outcome"] == "failed"
+        pos = ct.text.index("Motion failed")
+        assert any(c["start"] <= pos < c["end"] for c in ev["consumed"])
+
+    @pytest.mark.parametrize("sentence,names,kind", [
+        ("Councilmember Elm announced that she would be abstaining from item G.2 because of a conflict.",
+         ["ELM"], "abstain"),
+        ("It was announced that Mayor Pro Tem Elm would be recusing himself from item G.2.", ["ELM"], "recused"),
+        ("Mayor Dogwood and Councilmember Elm announced that they would be recusing themselves from item G.2.",
+         ["DOGWOOD", "ELM"], "recused"),
+    ])
+    def test_announced_recusals_and_abstentions_are_item_exceptions(self, sentence, names, kind):
+        lines = ["G.   CONSENT CALENDAR", "     " + sentence,
+                 "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 5-0 via roll call to approve the Consent Calendar.",
+                 "     AYES: ALDER, BIRCH, CEDAR, DOGWOOD, ELM", "     NOES: None", "     Motion carried."]
+        ct, [ev] = _parse(NOVATO, lines)
+        assert [(x["name"], x["kind"]) for x in ev["item_exceptions"]] == [(n, kind) for n in names]
+        assert ev["status"] == "held" and "exception_scope_conflict" in ev["hold_reasons"]
+        pos = min(i for i in (ct.text.find("recusing"), ct.text.find("abstaining")) if i >= 0)
+        assert any(c["start"] <= pos < c["end"] for c in ev["consumed"])
+
+    def test_mover_comma_seconded_by_made_a_motion(self):
+        lines = ["I.   ITEM", "     Councilmember Alder, seconded by Mayor Pro Tem Birch, made a main motion to",
+                 "     introduce the ordinance.", "     Discussion ensued on the conditions.",
+                 "     COUNCIL ACTION ON MAIN MOTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 3-0 via roll call to introduce the ordinance.",
+                 "     AYES: ALDER, BIRCH, CEDAR", "     NOES: None", "     Motion carried."]
+        ct, events = _parse(NOVATO, lines)
+        [ev] = events
+        assert ev["status"] == "named" and ev["motion"]["kind"] == "restated"
+        pos = ct.text.index("seconded by Mayor")
+        assert any(c["start"] <= pos < c["end"] for c in ev["consumed"])
+
+    def test_an_outcome_line_after_a_page_number(self):
+        lines = ["I.   ITEM", "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 2-1 via roll call to approve.",
+                 "     AYES:     ALDER, BIRCH", "     NOES:     CEDAR", "",
+                 "                                                     5", "\f", "     The motion carried.", "J.   NEXT"]
+        ct, [ev] = _parse(NOVATO, lines)
+        assert ev["outcome"] == "carried"
+        pos = ct.text.index("The motion carried")
+        assert any(c["start"] <= pos < c["end"] for c in ev["consumed"])
+
+    @pytest.mark.parametrize("sentence", [
+        "Councilmember Elm announced that she needed to recuse herself from this item.",
+        "Councilmember Elm announced that she would have to recuse herself from this item.",
+    ])
+    def test_needing_to_recuse(self, sentence):
+        lines = ["I.   ITEM", "     " + sentence, "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 4-0-1 via roll call to approve.",
+                 "     AYES: ALDER, BIRCH, CEDAR, DOGWOOD", "     NOES: None", "     RECUSED: ELM", "     Motion carried."]
+        _, [ev] = _parse(NOVATO, lines)
+        assert [(x["name"], x["kind"]) for x in ev["item_exceptions"]] == [("ELM", "recused")]
+        assert ev["status"] == "named"
+
     def test_votes_with_no_motion_are_held(self):
         lines = ["I.   ITEM", "     The Council discussed the matter.", "     AYES: ALDER, BIRCH",
                  "     NOES: None", "J.   NEXT"]
@@ -688,6 +763,12 @@ class TestBoardOfSupervisors:
         _, events = _parse(BOS, BOS_DOC)
         assert all(e["categories"]["aye"] == [] for e in events[:3])
 
+    def test_ayes_all_without_a_colon(self):
+        lines = ["1.", "Item.", "M/s Supervisor Alder - Supervisor Birch to approve.",
+                 "Thereafter, the vote on the pending motion was AYES ALL", "2.", "Next."]
+        _, [ev] = _parse(BOS, lines)
+        assert ev["status"] == "needs_attendance" and ev["sentinels"][0]["token"] == "ALL"
+
     def test_unanimous_sentinel(self):
         lines = ["1.", "Item.", "M/s Supervisor Alder - Supervisor Birch to approve.", "AYES: UNANIMOUS"]
         _, [ev] = _parse(BOS, lines)
@@ -704,6 +785,16 @@ class TestTranscripts:
         from votes_blocks import is_transcript
         assert is_transcript(ct)
         assert parse_document(ct, body=BOS, meeting_id="meeting-x-1", doc_sha256="d" * 64) == []
+
+    def test_a_line_numbered_court_reporter_transcript(self):
+        from votes_blocks import is_transcript
+        lines = ["     NOVEMBER 18, 2025", "    1        REGULAR MEETING OF THE FICTIONAL BOARD"]
+        speakers = ["PRES. ALDER SMITH: GOOD MORNING.", "BIRCH JONES: I MOVE THE ITEM.", "CEDAR LEE: SECOND.",
+                    "DOGWOOD KAY: AYE.", "ELM ROE: AYE."]
+        for i in range(30):
+            lines += [f"   {2 * i + 2:>3}    {speakers[i % 5]}", f"   {2 * i + 3:>3}    THE SPEECH CONTINUES ON",
+                      f"   {2 * i + 4:>3}    A FEW MORE LINES OF TEXT", f"   {2 * i + 5:>3}"]
+        assert is_transcript(CanonicalText.from_lines(lines))
 
     def test_minutes_are_not_transcripts(self):
         from votes_blocks import is_transcript
