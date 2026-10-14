@@ -372,3 +372,21 @@ def test_person_name_in_address_city_is_withheld():
     r = s990.parse_return(make_return(schedule=row))
     assert r["schedule_i"]["grants"][0]["address"]["city"] == s990.WITHHELD
     assert OFFICER_SENTINEL not in json.dumps(r) and r["withheld_fields"] == 1
+
+
+# --- real-shape returns already committed for ingest_990 (tests/fixtures/990) -----------------------------------
+
+FIXTURE_990 = Path(__file__).resolve().parents[1] / "fixtures" / "990"
+
+
+@pytest.mark.parametrize("path", sorted(FIXTURE_990.glob("*.xml")), ids=lambda p: p.stem)
+def test_each_committed_return_parses_under_its_own_schema_version(path):
+    r = s990.parse_return(path)
+    if r["return_type"] != "990":  # e.g. a 990-EZ: classified, never parsed as a Form 990
+        assert r["status"] == "not_form_990" and r["schedule_i"] is None
+        return
+    assert r["return_version"] in s990.SUPPORTED_RETURN_VERSIONS
+    assert r["status"] == "ok" and r["total_revenue"] is not None and r["tax_year"]
+    if r["schedule_i"]["part_ii_present"]:
+        g = r["schedule_i"]["grants"][0]
+        assert g["recipient_name"] and (g["cash_grant_amt"] is not None or g["non_cash_assistance_amt"] is not None)

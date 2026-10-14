@@ -559,6 +559,7 @@ def ranged(blob, *, etag='"z1"', honour=True, etag_after=None):
         state["n"] += 1
         tag = etag_after if etag_after and state["n"] > 2 else etag
         header = req.headers.get("Range")
+        route.ranges.append(header)
         if not honour or not header:
             return 200, {"ETag": tag}, blob
         first, _, last = header.removeprefix("bytes=").partition("-")
@@ -567,6 +568,7 @@ def ranged(blob, *, etag='"z1"', honour=True, etag_after=None):
         body = blob[start : stop + 1]
         return 206, {"ETag": tag, "Content-Range": f"bytes {start}-{stop}/{len(blob)}", "Last-Modified": "Mon, 01 Jun 2026 00:00:00 GMT"}, body
 
+    route.ranges = []
     return route
 
 
@@ -589,8 +591,9 @@ def test_zip_member_extracted_via_range_reads(env):
     assert row["path"].endswith("/202601234567_public.xml")
     assert (env.raw / row["path"]).read_bytes() == MEMBER_XML
     assert row["access"]["robots"] == "allowed"
-    # only part of the archive was transferred, never a plain full GET
-    assert all(h[0] == "GET" for h in site.hits)
+    # every archive request asked for a byte range: the whole archive was never requested
+    ranges = site.routes["/dist/2026_batch.zip"].ranges
+    assert ranges and all(r and r.startswith("bytes=") for r in ranges)
     assert env.state_json()["documents"] == 1
     stamps = [t for _, _, t in site.hits]
     assert all(b - a >= 1.0 for a, b in zip(stamps, stamps[1:]))
@@ -1336,3 +1339,22 @@ def test_challenge_call_variants_still_stop(env, script):
     site.routes["/a.html"] = page(b"<html><head><title>Sample</title><script>" + script + b"</script></head></html>")
     with pytest.raises(SourceRestricted):
         env.capture(site.url("/a.html"))
+
+
+def test_a_zip64_member_is_extracted(env):
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", compression=zipfile.ZIP_DEFLATED) as zf:
+        with zf.open("0001_public.xml", "w", force_zip64=True) as member:
+            member.write(b"<Return>zip64 member</Return>" * 40)
+    assert buf.getvalue()[18:26] == b"\xff" * 8  # sizes deferred to the zip64 extra field of the local header
+    site = env.site()
+    site.routes["/z.zip"] = ranged(buf.getvalue())
+    row = env.zip_member(site.url("/z.zip"), "0001_public.xml")
+    assert (env.raw / row["path"]).read_bytes() == b"<Return>zip64 member</Return>" * 40
+
+
+def test_challenge_code_inside_an_html_comment_is_not_a_challenge(env):
+    site = env.site()
+    body = b"<html><head><title>Minutes</title></head><body><!-- grecaptcha.render disabled --><p>Minutes</p></body></html>"
+    site.routes["/a.html"] = page(body)
+    assert env.capture(site.url("/a.html"))["bytes"] == len(body)
