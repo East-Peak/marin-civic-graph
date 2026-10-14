@@ -122,9 +122,27 @@ def _check_membership(ct: CanonicalText, ev: dict) -> list[str]:
     problems: list[str] = []
     found: dict[str, set[str]] = {}
     labels = list(_ANY_LABEL_RE.finditer(text, block["start"], block["end"]))
+    intro = re.compile(r"Votes[ \t]*:")
+    labels += [m for m in (intro.match(text, ls.end()) for ls in re.finditer(r"(?m)^[ \t]*", text[:block["end"]]))
+               if m and m.start() >= block["start"]]
+    labels.sort(key=lambda m: m.start())
+    if not labels or text[block["start"]:labels[0].start()].strip():
+        problems.append(f"{ev['event_id']}: the vote block does not begin at a vote label")
     for i, lab in enumerate(labels):
+        stop = labels[i + 1].start() if i + 1 < len(labels) else block["end"]
         cat = next((c for c, rx in _LABEL_AT.items() if rx.match(text, lab.start())), None)
         if cat is None:
+            # "Vote:" carries the tally line, "Votes:" nothing, "VACANT:" its seat; never prose
+            value = text[lab.end():stop]
+            outcome = _OUTCOME_RE.search(value)
+            if outcome and not value[outcome.end():].strip(" \t\n."):
+                value = value[:outcome.start()]
+            word = lab.group(0).split(":")[0].strip().lower()
+            ok = (word == "votes" and not value.strip()) or \
+                 (word == "vote" and re.fullmatch(r"[ \t]*Motion\s+(?:carried|failed|passed)[^\n]*\s*", value, re.I)) or \
+                 (word == "vacant" and "\n" not in value.strip())
+            if not ok:
+                problems.append(f"{ev['event_id']}: the {word} line in the vote block carries other text")
             continue
         stop = labels[i + 1].start() if i + 1 < len(labels) else block["end"]
         out = _OUTCOME_RE.search(text, lab.end(), stop)

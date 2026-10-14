@@ -209,6 +209,20 @@ def test_a_block_moved_back_over_the_prose_exception_fails():
     assert validate_document(ct, BOS, bad)
 
 
+def test_a_block_extended_back_to_an_earlier_vote_label_over_prose_fails():
+    lines = ["Roll Call", ROLL, "1.", "Item.", "Vote:", "Supervisor Elm recused himself from this item.",
+             "M/s Supervisor Alder - Supervisor Birch to approve.", "AYES: ALL"]
+    ct, evs = _world(lines)
+    ev = next(e for e in evs if e["status"] == "expanded")
+    assert validate_document(ct, BOS, evs) == []
+    bad = copy.deepcopy(evs)
+    e = next(x for x in bad if x["event_id"] == ev["event_id"])
+    e["block"] = ct.locate(ct.text.index("Vote:"), e["block"]["end"])
+    e["item_exceptions"] = []
+    e["categories"]["aye"].append({"name": "ELM", "raw": None, "span": None, "inferred": True})
+    assert validate_document(ct, BOS, bad)
+
+
 def test_held_events_are_not_validated_as_accepted():
     lines = ["1.", "Item.", "AYES: ALDER"]
     ct, evs = _world(lines)
