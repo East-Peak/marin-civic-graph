@@ -301,6 +301,94 @@ class TestNovatoBasics:
         assert events[0]["item_exceptions"] == []
         assert [x["name"] for x in events[1]["item_exceptions"]] == ["ELM"]
 
+    @pytest.mark.parametrize("clause", ["voted 2 to 1 via roll call", "voted 2-0-0-1 via roll call",
+                                        "voted five to zero via roll call"])
+    def test_a_printed_tally_in_any_other_shape_is_held_never_ignored(self, clause):
+        lines = ["I.   ITEM", "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 f"     Councilmember Birch, the City Council {clause} to approve.",
+                 "     AYES: ALDER, BIRCH", "     NOES: CEDAR", "     Motion carried."]
+        _, [ev] = _parse(NOVATO, lines)
+        assert ev["status"] == "held" and "tally_unrecognized" in ev["hold_reasons"]
+
+    @pytest.mark.parametrize("clause", ["voted via roll call 2-1", "vote 2-1 via roll call",
+                                        "voted unanimously via roll call 2-1"])
+    def test_tally_word_orders(self, clause):
+        lines = ["I.   ITEM", "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 f"     Councilmember Birch, the City Council {clause} to approve.",
+                 "     AYES: ALDER, BIRCH", "     NOES: CEDAR", "     Motion carried."]
+        _, [ev] = _parse(NOVATO, lines)
+        assert ev["tally"]["printed"] == "2-1" and ev["status"] == "named"
+
+    def test_a_friendly_amendment(self):
+        lines = ["I.   ITEM", "     COUNCIL ACTION: A friendly amendment was made by Councilmember Alder and",
+                 "     seconded by Councilmember Birch to add a condition. The City Council voted 3-0 via roll call.",
+                 "     AYES: ALDER, BIRCH, CEDAR", "     NOES: None", "     Motion carried."]
+        _, [ev] = _parse(NOVATO, lines)
+        assert ev["motion"]["kind"] == "amendment" and ev["motion"]["mover"] == "ALDER"
+        assert ev["motion"]["seconder"] == "BIRCH" and ev["tally"]["printed"] == "3-0"
+
+    def test_a_tally_far_from_the_mover_clause_is_still_checked(self):
+        lines = ["I.   ITEM", "     COUNCIL ACTION: Upon motion by Mayor Pro Tempore Ann Alder and seconded by",
+                 "     Councilmember Bea Birch to approve the item as amended by staff earlier this evening",
+                 "     with the two conditions read into the record by the City Attorney; the City Council",
+                 "     then voted 5-0 via roll call.",
+                 "     AYES: ALDER, BIRCH, CEDAR", "     NOES: None", "     Motion carried."]
+        _, [ev] = _parse(NOVATO, lines)
+        assert ev["tally"]["printed"] == "5-0"
+        assert ev["status"] == "held" and "tally_mismatch" in ev["hold_reasons"]
+
+    def test_a_motion_in_one_subitem_never_owns_the_next_subitems_vote(self):
+        lines = ["J.   GENERAL BUSINESS", "     J.1.  First item.",
+                 "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch to continue the item.", "     J.2.  Second item.",
+                 "     AYES: ALDER, BIRCH, CEDAR", "     NOES: None", "     Motion carried.", "K.   NEXT"]
+        _, events = _parse(NOVATO, lines)
+        assert [(e["motion"] and e["motion"]["mover"], e["hold_reasons"]) for e in events] == [
+            ("ALDER", ["no_vote_recorded"]), (None, ["vote_without_motion"])]
+
+    def test_a_consent_motion_owns_its_vote_across_subitems(self):
+        lines = ["G.   CONSENT CALENDAR", "     G.1.  First item.",
+                 "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 3-0 via roll call to approve the Consent",
+                 "     Calendar.", "     G.2.  Second item.", "     AYES: ALDER, BIRCH, CEDAR", "     NOES: None",
+                 "     Motion carried.", "H.   NEXT"]
+        _, [ev] = _parse(NOVATO, lines)
+        assert ev["status"] == "named" and ev["consent"] is True
+
+    def test_a_following_narrative_vote_is_not_consumed_by_the_motion(self):
+        lines = ["I.   ITEM", "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch to continue the item. The council voted unanimously to reconsider",
+                 "     a different motion.", "J.   NEXT"]
+        ct, [ev] = _parse(NOVATO, lines)
+        pos = ct.text.index("voted unanimously")
+        assert not any(c["start"] <= pos < c["end"] for c in ev["consumed"])
+
+    def test_identical_roll_calls_around_a_restatement_are_one_vote(self):
+        lines = ["I.   ITEM", "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 3-0 via roll call to approve.",
+                 "     AYES: ALDER, BIRCH, CEDAR", "     NOES: None", "     Motion carried.",
+                 "     The City Attorney restated the motion for the record.",
+                 "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 3-0 via roll call to approve.",
+                 "     AYES: ALDER, BIRCH, CEDAR", "     NOES: None", "     Motion carried.", "J.   NEXT"]
+        ct, events = _parse(NOVATO, lines)
+        [ev] = events
+        second = ct.text.rindex("AYES:")
+        assert ev["restatement"]["block"]["start"] == second
+        assert any(c["start"] <= second < c["end"] for c in ev["consumed"])
+
+    def test_a_different_roll_call_after_a_restatement_is_a_second_vote(self):
+        lines = ["I.   ITEM", "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 3-0 via roll call to approve.",
+                 "     AYES: ALDER, BIRCH, CEDAR", "     NOES: None", "     Motion carried.",
+                 "     The motion was restated and voted on again.",
+                 "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 2-1 via roll call to approve.",
+                 "     AYES: ALDER, BIRCH", "     NOES: CEDAR", "     Motion carried.", "J.   NEXT"]
+        _, events = _parse(NOVATO, lines)
+        assert [e["motion"]["kind"] for e in events] == ["main", "restated"]
+        assert events[1]["motion"]["restates"] == events[0]["event_id"]
+
     def test_votes_with_no_motion_are_held(self):
         lines = ["I.   ITEM", "     The Council discussed the matter.", "     AYES: ALDER, BIRCH",
                  "     NOES: None", "J.   NEXT"]
@@ -445,6 +533,13 @@ class TestBoardOfSupervisors:
         first = ct.text.index("M/s")
         assert ev["motion"]["restates_span"]["start"] == first
         assert any(c["start"] == first for c in ev["consumed"])
+
+    def test_a_narrative_vote_after_a_board_motion_is_not_consumed(self):
+        lines = ["1.", "Item.", "M/s Supervisor Alder - Supervisor Birch to adopt the plan.", "AYES: ALL",
+                 "The Board voted unanimously to reconsider a different motion.", "2.", "Next."]
+        ct, [ev] = _parse(BOS, lines)
+        pos = ct.text.index("voted unanimously")
+        assert not any(c["start"] <= pos < c["end"] for c in ev["consumed"])
 
     def test_moved_by_wording(self):
         lines = ["1.", "Special item.",

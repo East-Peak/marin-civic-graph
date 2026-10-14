@@ -58,15 +58,38 @@ _NOV_HEADER_RE = re.compile(
     r"(?<![\w-])(?P<hdr>(?:(?P<who>[A-Z]{2,}(?:\s[A-Z]{2,}){0,3})\s+ACTION(?:\s+ON\s+MAIN\s+MOTION|\s+-\s+MAIN\s+MOTION)?"
     r"|SUBSTITUTE\s+MOTION|COUNCIL\s+MOTION)\s*:)")
 _NOV_MOVER_SECONDER_RE = re.compile(
-    rf"(?:Upon\s+)?(?:a\s+)?(?:substitute\s+)?motion\s+(?:was\s+)?(?:made\s+)?by\s+(?P<m>{_NAME})\s*,?\s+"
+    rf"(?:Upon\s+)?(?:a\s+)?(?:substitute\s+|friendly\s+)?(?:motion|amendment)\s+(?:was\s+)?(?:made\s+)?by\s+(?P<m>{_NAME})\s*,?\s+"
     rf"(?:and\s+)?(?:was\s+)?seconded\s+by\s+(?P<s>{_NAME})", re.I)
 _NOV_MOVER_ONLY_RE = re.compile(
     rf"(?:(?:Upon\s+)?(?:a\s+)?(?:substitute\s+)?motion\s+(?:was\s+)?(?:made\s+)?by\s+(?P<m>{_NAME}))"
     rf"|(?:(?P<m2>{_NAME})\s+made\s+a\s+(?:substitute\s+)?motion)", re.I)
 _NOV_RESTATED_RE = re.compile(rf"(?P<m>{_NAME})\s+restated\s+(?:his|her|their|the)\s+motion", re.I)
 _NOV_SECONDED_LATER_RE = re.compile(rf"motion\s+was\s+seconded\s+by\s+(?P<s>{_NAME})", re.I)
-_NOV_TALLY_RE = re.compile(r"voted\s+(?:unanimously\s+)?(?P<a>\d+)-(?P<n>\d+)(?:-(?P<x>\d+))?"
-                           r"(?:\s+via\s+roll\s+call)?", re.I)
+_NOV_TALLY_RE = re.compile(r"vot(?:ed|e)\s+(?:unanimously\s+)?(?:via\s+roll\s+call\s+)?"
+                           r"(?P<a>\d+)-(?P<n>\d+)(?:-(?P<x>\d+))?(?![\d-])(?:\s+via\s+roll\s+call)?", re.I)
+# anything that prints a count after "voted" — if it is not exactly A-N[-X], the tally is unrecognized
+_NOV_TALLY_ANY_RE = re.compile(r"vot(?:ed|e)\s+(?:unanimously\s+)?(?:via\s+roll\s+call\s+)?"
+                               r"(?:\d|(?:zero|one|two|three|four|five)\b)", re.I)
+_ABBREVIATIONS = {"no", "nos", "st", "ave", "blvd", "dr", "mr", "ms", "mrs", "inc", "co", "corp", "ltd", "jr",
+                  "sr", "vs", "etc", "approx", "rd", "hwy", "dept"}
+_PERIOD_RE = re.compile(r"\.(?=\s+[A-Z(\"]|\s*$)")
+
+
+class _SentenceEnd:
+    """Finds the period that ends a sentence (not one after an abbreviation or an initial)."""
+
+    @staticmethod
+    def search(text: str, start: int = 0, end: int | None = None):
+        end = len(text) if end is None else end
+        for m in _PERIOD_RE.finditer(text, start, end):
+            word = re.search(r"([A-Za-z]+)$", text[max(start, m.start() - 12):m.start()])
+            if word and (word.group(1).lower() in _ABBREVIATIONS or len(word.group(1)) == 1):
+                continue
+            return m
+        return None
+
+
+_SENTENCE_END_RE = _SentenceEnd
 _NO_SECOND_RE = re.compile(r"no\s+second|lack\s+of\s+a\s+second|died\s+for\s+lack", re.I)
 
 # Board motions name each member as "[Supervisor] [Given] Surname". A given name is taken only when the
@@ -217,6 +240,19 @@ def _item_at(headings: list[_Heading], pos: int) -> tuple[_Heading | None, _Head
         else:
             sub = h
     return top, sub
+
+
+def _next_heading_after(headings: list[_Heading], pos: int, end: int) -> int:
+    for h in headings:
+        if h.start > pos:
+            return h.start
+    return end
+
+
+def _region_end(headings: list[_Heading], pos: int, end: int, consent: bool) -> int:
+    """A motion owns votes up to the next item: a consent motion up to the next top-level item
+    (its roll call may follow the subitems it covers), any other up to the next heading."""
+    return _next_top_after(headings, pos, end) if consent else _next_heading_after(headings, pos, end)
 
 
 def _next_top_after(headings: list[_Heading], pos: int, end: int) -> int:
@@ -406,6 +442,8 @@ class _Motion:
     acting_as: str | None = None
     on_behalf_of: str | None = None
     restates: "_Motion | None" = None
+    restatement: "_Motion | None" = None
+    extra_spans: list = field(default_factory=list)
     outcome: str | None = None
     text_start: int = 0
     blocks: list = field(default_factory=list)
@@ -434,20 +472,32 @@ def _map_collapsed(text: str, start: int, end: int, cpos: int) -> int:
     return end
 
 
+def _looks_consent(headings: list[_Heading], pos: int, lead: str) -> bool:
+    top, _ = _item_at(headings, pos)
+    return bool(re.search(r"consent\s+calendar", (top.title if top else "") + " " + lead, re.I))
+
+
 def _novato_motions(ct: CanonicalText, headings: list[_Heading]) -> list[_Motion]:
     text = ct.text
     heads = list(_NOV_HEADER_RE.finditer(text))
     motions: list[_Motion] = []
     for i, h in enumerate(heads):
         nxt = heads[i + 1].start() if i + 1 < len(heads) else len(text)
-        region_end = min(nxt, _next_top_after(headings, h.start(), len(text)))
-        window_end = min(region_end, h.end() + 600)
+        lead = _collapsed(text, h.end(), min(nxt, h.end() + 400))
+        region_end = min(nxt, _region_end(headings, h.start(), len(text), _looks_consent(headings, h.start(), lead)))
+        first_label = _LABEL_RE.search(text, h.end(), region_end)
+        before_block = first_label.start() if first_label else region_end
+        window_end = min(before_block, h.end() + 1500)
         col = _collapsed(text, h.end(), window_end)
         mo = _Motion(h.start(), h.end(), region_end)
         hdr = h.group("hdr")
         who = (h.group("who") or "").strip()
         if who and who not in ("COUNCIL", "COUCNIL", "SEPARATE"):
             mo.acting_as = who
+
+        def at(cpos: int) -> int:
+            return _map_collapsed(text, h.end(), window_end, cpos)
+
         ms = _NOV_MOVER_SECONDER_RE.search(col)
         rs = _NOV_RESTATED_RE.search(col)
         clause_c_end = 0
@@ -458,6 +508,7 @@ def _novato_motions(ct: CanonicalText, headings: list[_Heading]) -> list[_Motion
             later = _NOV_SECONDED_LATER_RE.search(col, clause_c_end)
             if later:
                 mo.seconder = surname(later.group("s"))
+                mo.extra_spans.append((at(later.start()), at(later.end())))
         elif ms and ms.start() < 80:
             mo.mover, mo.seconder = surname(ms.group("m")), surname(ms.group("s"))
             clause_c_end = ms.end()
@@ -466,25 +517,37 @@ def _novato_motions(ct: CanonicalText, headings: list[_Heading]) -> list[_Motion
             if mm and mm.start() < 80:
                 mo.mover = surname(mm.group("m") or mm.group("m2"))
                 clause_c_end = mm.end()
-        first_label = _LABEL_RE.search(col, clause_c_end)
-        t = _NOV_TALLY_RE.search(col, clause_c_end, first_label.start() if first_label else len(col))
-        if t and (t.start() - clause_c_end < 40 or mo.kind == "restated"):
+        t = _NOV_TALLY_RE.search(col, clause_c_end)
+        anyt = _NOV_TALLY_ANY_RE.search(col, clause_c_end)
+        if t:
             mo.tally = {"printed": "-".join(x for x in (t.group("a"), t.group("n"), t.group("x")) if x),
                         "a": int(t.group("a")), "n": int(t.group("n")),
                         "x": int(t.group("x")) if t.group("x") else None, "keyed": {}}
-            if mo.kind != "restated":
+            mo.extra_spans.append((at(t.start()), at(t.end())))
+            if t.start() - clause_c_end < 40 and mo.kind != "restated":
                 clause_c_end = t.end()
+        elif anyt:
+            mo.tally = {"printed": _collapsed(text, at(anyt.start()), min(window_end, at(anyt.start()) + 40)).strip(),
+                        "unrecognized": True}
+            mo.extra_spans.append((at(anyt.start()), at(anyt.end())))
         if mo.kind == "restated":
             pass
         elif "SUBSTITUTE" in hdr or re.search(r"substitute\s+motion", col[:clause_c_end or 120], re.I):
             mo.kind = "substitute"
-        head_text = col[: max(clause_c_end, 0) + 200]
-        if _NO_SECOND_RE.search(head_text) and not mo.seconder and not mo.tally:
+        elif re.search(r"\bamendment\s+(?:was\s+)?(?:made\s+)?by\b", col[:clause_c_end or 120], re.I):
+            mo.kind = "amendment"
+        ns = _NO_SECOND_RE.search(col[: max(clause_c_end, 0) + 200])
+        if ns and not mo.seconder and not mo.tally:
             mo.kind = "failed_no_second"
             mo.outcome = "failed"
-        mo.clause_end = _map_collapsed(text, h.end(), window_end, clause_c_end) if clause_c_end else h.end()
-        lead = re.match(r"[\s,]*(?:to\s+)?", text[mo.clause_end:region_end])
-        mo.text_start = mo.clause_end + (lead.end() if lead else 0)
+            # the sentence that says so is the outcome evidence
+            sent_start = col.rfind(".", 0, ns.start()) + 1
+            sent_end = _SENTENCE_END_RE.search(col, ns.end())
+            mo.extra_spans.append((at(sent_start + (1 if col[sent_start:sent_start + 1] == " " else 0)),
+                                   at(sent_end.end() if sent_end else ns.end())))
+        mo.clause_end = at(clause_c_end) if clause_c_end else h.end()
+        lead_m = re.match(r"[\s,]*(?:to\s+)?", text[mo.clause_end:region_end])
+        mo.text_start = mo.clause_end + (lead_m.end() if lead_m else 0)
         motions.append(mo)
     return motions
 
@@ -509,41 +572,39 @@ def _bos_motions(ct: CanonicalText, headings: list[_Heading]) -> list[_Motion]:
     found.sort(key=lambda mo: mo.start)
     for i, mo in enumerate(found):
         nxt = found[i + 1].start if i + 1 < len(found) else len(text)
-        mo.region_end = min(nxt, _next_top_after(headings, mo.start, len(text)))
-        lead = _collapsed(text, mo.start, min(mo.region_end, mo.start + 400)).lower()
+        lead = _collapsed(text, mo.start, min(nxt, mo.start + 400))
+        mo.region_end = min(nxt, _region_end(headings, mo.start, len(text), _looks_consent(headings, mo.start, lead)))
+        lead = lead.lower()
         if "substitute motion" in lead:
             mo.kind = "substitute"
     return found
 
 
-def _motion_text(text: str, mo: _Motion, stop: int, body: str) -> str:
+def _motion_text(text: str, mo: _Motion, stop: int, body: str) -> tuple[str, int]:
+    """The motion's own words and where they end in the text: the first sentence after the
+    mover clause (abbreviations like "No." do not end it), never past `stop`; for the Board, never
+    past the end of the motion's paragraph."""
     if hasattr(mo, "_moved_text_end"):
-        return re.sub(r"\s+", " ", text[mo.text_start:mo._moved_text_end]).strip()  # type: ignore[attr-defined]
+        e = mo._moved_text_end  # type: ignore[attr-defined]
+        return re.sub(r"\s+", " ", text[mo.text_start:e]).strip(), e
     end = stop
     if body != "novato-city-council":
-        # the motion paragraph: up to a blank line, a label line or a heading line
         pos = mo.text_start
-        while pos < stop:
-            ls, le = _line_bounds(text, pos)
-            nxt = le + 1
-            if nxt >= stop:
-                end = min(le, stop)
-                break
-            nls, nle = _line_bounds(text, nxt)
+        _, le = _line_bounds(text, pos)
+        end = min(le, stop)
+        while end < stop:
+            nls, nle = _line_bounds(text, end + 1)
             line = text[nls:nle]
-            if (not line.strip() or _LABEL_RE.match(line.strip()) or _TALLY_LINE_RE.match(line.strip())
-                    or _is_heading_line(line, body) or not line.startswith((" ", "\t"))
-                    and not text[ls:le].startswith((" ", "\t")) is False):
-                end = le
+            if (not line.strip() or not line[:1].isspace() or _LABEL_RE.match(line.strip())
+                    or _TALLY_LINE_RE.match(line.strip()) or _is_heading_line(line, body)):
                 break
-            if not line[:1].isspace() and not text[ls:le][:1].isspace():
-                end = le
-                break
-            pos = nxt
-        else:
-            end = stop
-    out = re.sub(r"\s+", " ", text[mo.text_start:end]).strip()
-    return out
+            end = min(nle, stop)
+    m = _SENTENCE_END_RE.search(text, mo.text_start, end)
+    if m:
+        end = m.end()
+    while end > mo.text_start and text[end - 1].isspace():
+        end -= 1
+    return re.sub(r"\s+", " ", text[mo.text_start:end]).strip(), end
 
 
 def _amendment(text: str) -> bool:
@@ -617,6 +678,27 @@ def parse_document(ct: CanonicalText, *, body: str, meeting_id: str, doc_sha256:
                 break
     motions = [mo for mo in motions if id(mo) not in folded]
 
+    # a second roll call on the same motion after it was restated: identical → the same vote, kept
+    # as evidence on the first event; different → a revote, its own event marked restated
+    def signature(blk):
+        return tuple((lab.category, tuple(sorted(n["name"] for n in lab.names)),
+                      lab.sentinel["token"] if lab.sentinel else None)
+                     for lab in blk if lab.category in CATEGORIES)
+
+    kept: list[_Motion] = []
+    for mo in motions:
+        prev = kept[-1] if kept else None
+        if (prev and prev.blocks and mo.blocks and len(prev.blocks) == 1 and len(mo.blocks) == 1
+                and prev.mover == mo.mover and prev.seconder == mo.seconder
+                and _item_at(headings, prev.start)[0] is _item_at(headings, mo.start)[0]
+                and re.search(r"restat", text[prev.blocks[0][0][-1].value_end:mo.start], re.I)):
+            if signature(prev.blocks[0][0]) == signature(mo.blocks[0][0]):
+                prev.restatement = mo
+                continue
+            mo.kind = "restated"
+        kept.append(mo)
+    motions = kept
+
     # where each motion's prose exceptions may start: after the previous motion's vote (or motion)
     ends = sorted([b[-1].value_end for b in blocks] + [mo.clause_end for mo in motions if not mo.blocks])
     suffix = meeting_id.removeprefix("meeting-")
@@ -665,6 +747,7 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
     tally = mo.tally if mo else None
     outcome = mo.outcome if mo else None
     block_loc = None
+    restatement = None
 
     anchor = mo.start if mo else blk[0].start
     top, sub = _item_at(headings, anchor)
@@ -673,8 +756,13 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
         stop = blk[0].start if blk else mo.region_end
         if blk and scope:
             stop = min(stop, scope[1][0])
-        consumed.append(_loc(ct, mo.start, max(mo.clause_end, mo.text_start)))
-        mtext = _motion_text(text, mo, stop, body)
+        consumed.append(_loc(ct, mo.start, max(mo.clause_end, mo.start)))
+        mtext, mtext_end = _motion_text(text, mo, stop, body)
+        if mtext:
+            consumed.append(_loc(ct, mo.text_start, mtext_end))
+        for es, ee in mo.extra_spans:
+            if ee > es:
+                consumed.append(_loc(ct, es, ee))
         if mo.kind == "failed_no_second":
             mtext = re.split(r"\.\s+(?:The\s+motion|There\s+was)", mtext)[0]
         kind = mo.kind
@@ -687,11 +775,25 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
             motion["acting_as"] = mo.acting_as
         if mo.on_behalf_of:
             motion["on_behalf_of"] = mo.on_behalf_of
+        if mo.restatement is not None:
+            r = mo.restatement
+            rblk = r.blocks[0][0]
+            motion_end = max(r.clause_end, r.text_start)
+            restatement = {"motion_span": _loc(ct, r.start, motion_end),
+                           "block": _loc(ct, rblk[0].start, rblk[-1].value_end)}
+            consumed.append(restatement["motion_span"])
+            for es, ee in r.extra_spans:
+                if ee > es:
+                    consumed.append(_loc(ct, es, ee))
+            for lab in rblk:
+                consumed.append(_loc(ct, lab.start, lab.value_end))
+            om = _OUTCOME_LINE_RE.match(text, rblk[-1].value_end + (len(text[rblk[-1].value_end:])
+                                                                     - len(text[rblk[-1].value_end:].lstrip())))
+            if om:
+                consumed.append(_loc(ct, om.start() + len(om.group(0)) - len(om.group(0).lstrip()), om.end()))
         if mo.restates is not None:
             motion["restates_span"] = _loc(ct, mo.restates.start, mo.restates.clause_end)
             consumed.append(_loc(ct, mo.restates.start, mo.restates.clause_end))
-        lead_ok = mo.text_start
-        consumed.append(_loc(ct, lead_ok, max(lead_ok, min(stop, mo.text_start + len(mtext) + 200))))
     else:
         motion = None
         hold.append("vote_without_motion")
@@ -775,6 +877,7 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
     # printed tally vs named counts
     if tally and tally.get("unrecognized"):
         tally = {"printed": tally["printed"], "unrecognized": True}
+        hold.append("tally_unrecognized")
     if blk and tally and not tally.get("unrecognized"):
         if multi:
             hold.append("tally_scope_ambiguous")
@@ -828,6 +931,7 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
         "category_spans": category_spans,
         "sentinels": sentinels,
         "item_exceptions": item_exceptions,
+        "restatement": restatement,
         "block": block_loc,
         "consumed": sorted(consumed, key=lambda c: (c["start"], c["end"])),
         "flags": flags,
