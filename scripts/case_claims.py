@@ -631,9 +631,9 @@ def check_case_md(text: str, register_rows: list[dict]) -> list[str]:
     for number, unit, role, in_answer in _units(text):
         cited = _cited(unit)
         problems += [f"line {number}: cites unknown claim {i}" for i in cited if i not in by_id]
-        if role in ("h1", "h2") and re.match(r"(?:q|question)\s*\.?\s*\d", unit, re.IGNORECASE) \
-                and not (role == "h2" and re.match(r"Q[1-6]\b", unit)):
-            problems.append(f"line {number}: answer heading must read '## Q1' to '## Q6'")
+        if role.startswith("h") and re.match(r"(?:q|question)\s*\.?\s*\d", unit, re.IGNORECASE) \
+                and not (role == "h2" and re.fullmatch(r"Q[1-6]", unit.strip())):
+            problems.append(f"line {number}: answer heading must read exactly '## Q1' to '## Q6'")
         if in_answer and role == "body" and not cited:
             problems.append(f"line {number}: no claim cited")
         if in_answer and role not in ("body", "h1", "h2") and not cited \

@@ -292,7 +292,9 @@ class TestRound2:
         assert "Ardith" not in captured.out + captured.err
         ps.main(argv + ["--legend"])
         captured = capsys.readouterr()
-        assert "target#1 dirty.md" in captured.err and str(tmp_path) not in captured.err and "dirty" not in captured.out
+        import hashlib
+        assert f"target#1 sha256 {hashlib.sha256(dirty.read_bytes()).hexdigest()}" in captured.err
+        assert "dirty" not in captured.out + captured.err  # a file name can itself be a forbidden value
 
 
 class TestInventory:

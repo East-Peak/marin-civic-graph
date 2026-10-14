@@ -234,7 +234,9 @@ def main(argv: list[str] | None = None) -> int:
     for number, path in enumerate(args.scan):
         index.setdefault(str(path), number)
         if args.legend:
-            print(f"target#{number} {Path(path).name}", file=sys.stderr)
+            # by content hash, never by name: a file name can itself be a forbidden value
+            digest = hashlib.sha256(Path(path).read_bytes()).hexdigest()
+            print(f"target#{number} sha256 {digest}", file=sys.stderr)
     for hit in hits:
         print(f"target#{index[hit['file']]}:{hit['line']}:{hit['category']}")
     return 1 if hits else 0

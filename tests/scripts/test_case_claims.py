@@ -326,7 +326,7 @@ class TestCaseMd:
             claim(claim_id="C-Q1-004", amount=None, precision="none", reconciled=False)]
 
     def test_clean_document_passes(self):
-        text = ("# Case\nIntro with no figure.\n\n## Q1 Grant\nThe grant was $250,000 [C-Q1-001].\n"
+        text = ("# Case\nIntro with no figure.\n\n## Q1\nThe grant was $250,000 [C-Q1-001].\n"
                 "Roughly ~$2.5M was projected [C-Q1-002].\nA finding [C-Q1-004].\n\n## Notes\nFree text.\n")
         assert cc.check_case_md(text, self.ROWS) == []
 
@@ -674,3 +674,15 @@ def test_a_word_scale_without_a_currency_sign_is_not_money():
 def test_a_scale_word_must_stand_alone():
     from decimal import Decimal as D
     assert not cc.amount_in("a $2 millionaire", "a $2 millionaire", D("2000000.00"))
+
+
+# --- answer headings are exact (confirmation pass) --------------------------------------------------------------
+
+def test_an_answer_heading_with_text_is_refused():
+    problems = cc.check_case_md("## Q1 The sample board approved the grant\n\nUncited prose.\n", [])
+    assert any("answer heading" in p for p in problems)
+
+
+def test_a_question_number_in_a_subheading_is_refused():
+    problems = cc.check_case_md("## Notes\n\n### Q1\n\nUncited prose.\n", [])
+    assert any("answer heading" in p for p in problems)
