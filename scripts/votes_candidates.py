@@ -24,7 +24,9 @@ CLASSES = ("named", "expanded", "held", "excluded")
 
 LABEL_KINDS = {"aye_label", "no_label", "absent_label", "abstain_label", "recuse_label", "vote_label", "ms",
                "moved_by", "seconded_by", "motion_outcome", "no_second"}
-NARRATIVE_KINDS = {"vote_word", "roll_call", "unanimous", "absent_word", "abstain_word", "recuse_word"}
+NARRATIVE_KINDS = {"vote_word", "roll_call", "unanimous", "aye_word", "no_word", "absent_word", "abstain_word",
+                   "recuse_word"}
+_VOTEISH = ("vote_word", "unanimous", "roll_call", "aye_word", "no_word")
 
 _COLON_AFTER = re.compile(r"[ \t]*:")
 
@@ -32,8 +34,8 @@ _SCANS: list[tuple[str, re.Pattern]] = [
     ("ms", re.compile(r"\bM/[sS]\b")),
     ("vote_label", re.compile(r"\bvotes?(?=[ \t]*:)", re.I)),
     ("motion_outcome", re.compile(r"\bmotion\s+(?:was\s+)?(?:carried|failed|passed)\b", re.I)),
-    ("aye_label", re.compile(r"\bAYES?\b|\bAyes?\b(?=[ \t]*:)")),
-    ("no_label", re.compile(r"\b(?:NOES?|NAYS?)\b|\b(?:Noes?|Nays?)\b(?=[ \t]*:)")),
+    ("aye", re.compile(r"\bayes?\b", re.I)),
+    ("no", re.compile(r"\b(?:noes?|nays?)\b", re.I)),
     ("absent", re.compile(r"\bexcused\s+absence\b|\babsent\b", re.I)),
     ("abstain", re.compile(r"\babstain\w*|\babstention\w*", re.I)),
     ("recuse", re.compile(r"\brecus\w*", re.I)),
@@ -54,6 +56,11 @@ def scan(ct: CanonicalText, doc_sha256: str = "0" * 64) -> list[dict]:
             k = kind
             if kind in ("absent", "abstain", "recuse"):
                 k = f"{kind}_label" if _COLON_AFTER.match(text, m.end()) else f"{kind}_word"
+            elif kind in ("aye", "no"):
+                # a label in any case: a colon, the all-caps form, or a sentinel right after it
+                label = (_COLON_AFTER.match(text, m.end()) or m.group(0).isupper()
+                         or re.match(r"[ \t]+(?:ALL|NONE|UNANIMOUS)\b", text[m.end():]))
+                k = f"{kind}_label" if label else f"{kind}_word"
             found[(m.start(), k)] = {"cand_id": f"cand-{doc_sha256[:8]}-{m.start()}-{k}", "kind": k,
                                      "text": m.group(0), "span": ct.locate(m.start(), m.end())}
     return [found[key] for key in sorted(found)]
@@ -96,12 +103,22 @@ def _roll_call_heading(text: str, span: dict) -> bool:
     return bool(re.match(r"\s*Present\s*:", text[span["end"]:span["end"] + 20]))
 
 
-def _sentence(text: str, pos: int) -> str:
-    left = max(text.rfind(". ", 0, pos), text.rfind(".\n", 0, pos), text.rfind("\n\n", 0, pos))
+def _sentence(text: str, pos: int) -> tuple[int, int]:
+    """The candidate's own sentence: bounded by sentence ends, blank lines, and line breaks before
+    an unindented line (in HTML-derived text every line is its own paragraph)."""
+    lefts = [text.rfind(". ", 0, pos), text.rfind(".\n", 0, pos), text.rfind("\n\n", 0, pos)]
+    lefts += [m.start() for m in re.finditer(r"\n(?=\S)", text[:pos])][-1:]
+    left = max(lefts)
     left = left + 1 if left >= 0 else 0
     rights = [i for i in (text.find(". ", pos), text.find(".\n", pos), text.find("\n\n", pos)) if i != -1]
+    nl = re.search(r"\n(?=\S)", text[pos:])
+    if nl:
+        rights.append(pos + nl.start() - 1)
     right = min(rights) + 1 if rights else len(text)
-    return text[left:right]
+    return left, right
+
+
+_COMPLETED_RE = re.compile(r"\b(?:voted|passed|carried|adopted|approved|unanimously)\b", re.I)
 
 
 def _overlaps(a: dict, b: dict) -> bool:
@@ -152,9 +169,10 @@ def dispose(ct: CanonicalText, candidates: list[dict], events: list[dict], *, at
             d.update({"class": "held", "reason": "unconsumed_label"})
             out.append(d)
             continue
-        sent = _sentence(text, sp["start"])
-        sent_start = text.find(sent)
-        evidence = ct.locate(max(0, sent_start), max(0, sent_start) + len(sent)) if sent_start >= 0 else sp
+        s0, s1 = _sentence(text, sp["start"])
+        sent = text[s0:s1]
+        evidence = ct.locate(s0, s1)
+        completed = bool(_COMPLETED_RE.search(sent))
         reason = None
         if cand["kind"] == "roll_call" and _roll_call_heading(text, sp):
             reason = "roll_call_heading"
@@ -163,12 +181,13 @@ def dispose(ct: CanonicalText, candidates: list[dict], events: list[dict], *, at
             evidence = ct.locate(ls, len(text) if le == -1 else le)
         elif cand["kind"] in ("absent_word",) and _NON_MEMBER_RE.search(sent):
             reason = "non_member_attendance"
-        elif cand["kind"] in ("vote_word", "unanimous", "roll_call"):
-            if _VOTING_ROLE_RE.search(sent):
+        elif cand["kind"] in _VOTEISH:
+            # a completed action is a vote record unless it is another body's or an earlier one
+            if not completed and _VOTING_ROLE_RE.search(sent):
                 reason = "voting_role"
-            elif _VOTE_REQUIREMENT_RE.search(sent):
+            elif not completed and _VOTE_REQUIREMENT_RE.search(sent):
                 reason = "vote_requirement"
-            elif _ELECTION_RE.search(sent):
+            elif not completed and _ELECTION_RE.search(sent):
                 reason = "election_context"
             elif _OTHER_BODY_RE.search(sent):
                 reason = "other_body_vote"
@@ -182,7 +201,7 @@ def dispose(ct: CanonicalText, candidates: list[dict], events: list[dict], *, at
             d.update({"class": "excluded", "reason": reason, "evidence": evidence})
         else:
             d.update({"class": "held", "reason": "narrative_vote_unaccounted"
-                      if cand["kind"] in ("vote_word", "unanimous", "roll_call") else "unaccounted_attendance_word"})
+                      if cand["kind"] in _VOTEISH else "unaccounted_attendance_word"})
         out.append(d)
     return out
 
@@ -204,9 +223,26 @@ def events_to_hold(candidates: list[dict], events: list[dict]) -> dict[str, str]
     return out
 
 
-def check_partition(candidates: list[dict], dispositions: list[dict], events: list[dict]) -> list[str]:
-    """Problems with the partition (empty list = every candidate has exactly one valid disposition)."""
+_CORE = ("cand_id", "kind", "class", "event_id", "reason", "evidence")
+
+
+def document_disposition(ct: CanonicalText, candidates: list[dict], *, doc_sha256: str) -> dict:
+    """A document-level record, so a document with no candidates is accounted for explicitly."""
+    first = next((ln.strip() for ln in ct.text.split("\n") if ln.strip() and ln.strip() != "\f"), "")
+    return {"doc_sha256": doc_sha256, "class": "has_candidates" if candidates else "no_candidates",
+            "candidates": len(candidates), "first_line": first[:120]}
+
+
+def check_partition(candidates: list[dict], dispositions: list[dict], events: list[dict], *,
+                    ct: CanonicalText | None = None, attendance_spans: list[dict] | None = None,
+                    transcript: bool = False) -> list[str]:
+    """Problems with the partition (empty list = every candidate has exactly one valid disposition).
+    With the document's text, every disposition is also re-derived from the rules and must agree
+    (ownership of consumed text, exclusion reason and evidence)."""
     problems: list[str] = []
+    event_ids = [e["event_id"] for e in events]
+    if len(set(event_ids)) != len(event_ids):
+        problems.append("duplicate event ids")
     cand_ids = [c["cand_id"] for c in candidates]
     disp_ids = [d["cand_id"] for d in dispositions]
     status = {e["event_id"]: e["status"] for e in events}
@@ -236,4 +272,12 @@ def check_partition(candidates: list[dict], dispositions: list[dict], events: li
             problems.append(f"{d['cand_id']}: {d['class']} without an event")
         if d["class"] == "excluded" and not d.get("evidence"):
             problems.append(f"{d['cand_id']}: excluded without evidence")
+    if ct is not None:
+        again = {d["cand_id"]: d for d in dispose(ct, candidates, events, attendance_spans=attendance_spans or [],
+                                                 transcript=transcript)}
+        for d in dispositions:
+            want = again.get(d["cand_id"])
+            if want and any(d.get(k) != want.get(k) for k in _CORE):
+                problems.append(f"{d['cand_id']}: disposition differs from the rules' ({want['class']}, "
+                                f"{want['reason']})")
     return problems

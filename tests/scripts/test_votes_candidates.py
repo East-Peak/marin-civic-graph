@@ -61,6 +61,14 @@ class TestScan:
                          "abstain_label", "recuse_label", "moved_by", "seconded_by", "vote_word", "roll_call",
                          "vote_word", "unanimous", "no_second"]
 
+    @pytest.mark.parametrize("lines,kinds", [
+        (["ayes: ALDER", "noes: BIRCH"], ["aye_label", "no_label"]),
+        (["Ayes ALL"], ["aye_label"]),
+        (["The ayes have it."], ["aye_word"]),
+    ])
+    def test_vote_labels_in_any_case(self, lines, kinds):
+        assert [c["kind"] for c in scan(_ct(lines))] == kinds
+
     def test_words_that_only_look_like_votes_are_not_candidates(self):
         ct = _ct(["The voters, a devoted volunteer and the Ayers family attended."])
         assert scan(ct) == []
@@ -112,7 +120,6 @@ class TestDispose:
 
     @pytest.mark.parametrize("sentence,reason", [
         ("Consent Calendar B reflects items requiring 4/5 vote of available members.", "vote_requirement"),
-        ("The ordinance passed by a majority vote of the Board.", "vote_requirement"),
         ("The measure needs a two-thirds vote of the electorate.", "vote_requirement"),
         ("The Registrar opened a vote center for voters in the election.", "election_context"),
         ("Residents may vote by mail in the November election.", "election_context"),
@@ -140,6 +147,21 @@ class TestDispose:
     def test_a_roll_call_vote_in_prose_is_not_a_heading(self):
         ct = _ct(["Item.", "The vote was taken by roll call."])
         [d] = [d for d in dispose(ct, scan(ct), [], attendance_spans=[]) if d["kind"] == "roll_call"]
+        assert d["class"] == "held"
+
+    @pytest.mark.parametrize("sentence", [
+        "The Council voted unanimously to certify the election.",
+        "The ordinance passed by a majority vote of the Board.",
+        "The Board voted to designate a voting representative.",
+    ])
+    def test_a_completed_vote_of_this_body_is_never_excluded(self, sentence):
+        ct = _ct(["Item.", sentence])
+        out = [d for d in dispose(ct, scan(ct), [], attendance_spans=[]) if d["kind"] in ("vote_word", "unanimous")]
+        assert out and {d["class"] for d in out} == {"held"}
+
+    def test_exclusion_evidence_stays_inside_the_candidates_own_line_on_html(self):
+        ct = _ct(["Thereafter the vote was", "M/s Supervisor Alder - Supervisor Birch on December 3, 2022, to adopt."])
+        [d] = [d for d in dispose(ct, scan(ct), [], attendance_spans=[]) if d["kind"] == "vote_word"]
         assert d["class"] == "held"
 
     def test_prospective_wording_in_the_description_before_any_motion_is_excluded(self):
@@ -193,6 +215,16 @@ class TestDispose:
         assert out and {(d["class"], d["reason"]) for d in out} == {("held", "transcript_document")}
 
 
+class TestDocuments:
+    def test_a_document_without_candidates_gets_its_own_disposition(self):
+        from votes_candidates import document_disposition
+        ct = _ct(["CLOSED SESSION MINUTES", "The meeting adjourned."])
+        d = document_disposition(ct, scan(ct), doc_sha256="ab" * 32)
+        assert d["class"] == "no_candidates" and d["first_line"] == "CLOSED SESSION MINUTES"
+        ct2 = _ct(["AYES: ALDER"])
+        assert document_disposition(ct2, scan(ct2), doc_sha256="ab" * 32)["class"] == "has_candidates"
+
+
 class TestPartition:
     def _world(self):
         ct = _ct(["AYES: ALDER", "NOES: None", "Item.", "AYES: BIRCH"])
@@ -217,6 +249,25 @@ class TestPartition:
         assert check_partition(cands, bad, evs)
         bad = [dict(disp[0], **{"class": "expanded"})] + disp[1:]
         assert check_partition(cands, bad, evs)
+
+    def test_a_candidate_assigned_to_an_event_that_did_not_consume_it_is_a_problem(self):
+        ct, cands, evs, disp = self._world()
+        orphan = next(d for d in disp if d["event_id"] is None and d["kind"] == "aye_label")
+        bad = [dict(d, **{"class": "named", "event_id": "vev-1", "reason": "consumed"}) if d is orphan else d
+               for d in disp]
+        assert check_partition(cands, bad, evs, ct=ct, attendance_spans=[])
+
+    def test_an_exclusion_without_its_rule_is_a_problem(self):
+        ct = _ct(["Item.", "The Council will vote next month."])
+        cands = scan(ct)
+        disp = dispose(ct, cands, [], attendance_spans=[])
+        assert check_partition(cands, disp, [], ct=ct, attendance_spans=[]) == []
+        forged = [dict(d, reason="anything", evidence={"bogus": True}) for d in disp]
+        assert check_partition(cands, forged, [], ct=ct, attendance_spans=[])
+
+    def test_duplicate_event_ids_are_a_problem(self):
+        ct, cands, evs, disp = self._world()
+        assert check_partition(cands, disp, evs + evs, ct=ct, attendance_spans=[])
 
     def test_classes(self):
         assert CLASSES == ("named", "expanded", "held", "excluded")
