@@ -489,8 +489,9 @@ def _map_collapsed(text: str, start: int, end: int, cpos: int) -> int:
     return end
 
 
-_GROUPED_RE = re.compile(r"consent\s+(?:calendar|agenda)|\bconsent\s+[AB]\b"
-                         r"|\bitems?\s+(?:C[AB]-\d+|[A-Z]\.\d+)\.?\s*(?:through|to|-|and|&)", re.I)
+_ITEM_ID = r"(?:C[AB]-\d+[a-z]?|[A-Z]\.\d+)"
+_GROUPED_RE = re.compile(rf"consent\s+(?:calendar|agenda)|\bconsent\s+[AB]\b"
+                         rf"|\bitems?\s+{_ITEM_ID}\.?\s*(?:through|to|-|and|&|,)\s*(?:items?\s+)?{_ITEM_ID}", re.I)
 
 
 def _own_sentence(text: str, headings: list[_Heading], start: int, limit: int) -> str:

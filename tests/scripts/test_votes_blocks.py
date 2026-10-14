@@ -374,6 +374,15 @@ class TestNovatoBasics:
         _, [ev] = _parse(NOVATO, lines)
         assert ev["status"] == "named" and ev["motion"]["text"].endswith("next month.")
 
+    def test_a_single_item_reference_is_not_grouped_wording(self):
+        lines = ["G.   CONSENT CALENDAR", "     G.1.  First item.", "",
+                 "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch to table item G.1 to the next meeting.", "", "     G.2.  Second item.", "",
+                 "     AYES: ALDER, BIRCH, CEDAR", "     NOES: None", "     Motion carried.", "H.   NEXT"]
+        _, events = _parse(NOVATO, lines)
+        assert [(e["item"]["sub"], e["consent"], e["hold_reasons"]) for e in events] == [
+            ("G.1", False, ["no_vote_recorded"]), ("G.2", False, ["vote_without_motion"])]
+
     def test_grouped_wording_after_the_motion_is_not_evidence(self):
         lines = ["G.   CONSENT CALENDAR", "     G.1.  First item.",
                  "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
