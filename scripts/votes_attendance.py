@@ -267,15 +267,19 @@ def _transitions(ct: CanonicalText, body: str, skip: list[tuple[int, int]]) -> l
 
     for m in _ALL_PRESENT_RE.finditer(text):
         if not skipped(m.start()) and not inside_roll(m.start()):
-            # "All Supervisors were present except Supervisor X": the exception is part of the statement
-            ex = re.match(r"\s*[,;:-]?\s*(?:except(?:\s+for)?|with\s+the\s+exception\s+of|but|other\s+than)\s+"
-                          r"([^.\n]*)", text[m.end():])
-            if ex:
-                gone = frozenset(_names_in(ex.group(1)))
-                add(_T(m.start(), m.end() + ex.end(), "all_present", absent=gone) if gone
-                    else _T(m.start(), m.end() + ex.end(), "uncertain"))
-            else:
+            # the statement is the whole sentence: nothing more → everyone; an exception list → everyone
+            # but them; anything else ("…for the afternoon", "…attending remotely") → uncertain
+            rest_end = re.search(r"\.(?:\s|$)|\n", text[m.end():])
+            rest = text[m.end():m.end() + (rest_end.start() if rest_end else len(text) - m.end())]
+            ex = re.fullmatch(r"\s*[,;:(\-]*\s*(?:except(?:\s+for)?|with\s+the\s+exception\s+of|but|other\s+than)\s+"
+                              r"([^()]*?)\)?\s*", rest)
+            end = m.end() + len(rest)
+            if not rest.strip(" \t,;:"):
                 add(_T(m.start(), m.end(), "all_present"))
+            elif ex and _names_in(ex.group(1)):
+                add(_T(m.start(), end, "all_present", absent=frozenset(_names_in(ex.group(1)))))
+            else:
+                add(_T(m.start(), end, "uncertain"))
     for m in _TIMED_RE.finditer(text):
         if skipped(m.start()) or inside_roll(m.start()):
             continue

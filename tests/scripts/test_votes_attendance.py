@@ -300,6 +300,19 @@ class TestCodexRoundNine:
         _, [ev], _ = _run(lines)
         assert ev["status"] == "expanded" and _ayes(ev) == FIVE[:4]
 
+    @pytest.mark.parametrize("tail,expect", [
+        (" (except Supervisor Elm).", ("expanded", FIVE[:4])),
+        (" - except Supervisor Elm.", ("expanded", FIVE[:4])),
+        (", with Supervisor Elm attending remotely.", ("held", [])),
+        (" for the afternoon session.", ("held", [])),
+        (".", ("expanded", FIVE)),
+    ])
+    def test_anything_after_all_present_is_read_or_makes_it_uncertain(self, tail, expect):
+        lines = ["Roll Call", ROLL, "(Supervisor Elm absent at 10:00 a.m.)",
+                 "The Board reconvened at 1:30 p.m. All Supervisors were present" + tail, *_item(1)]
+        _, [ev], _ = _run(lines)
+        assert (ev["status"], _ayes(ev)) == expect
+
     def test_an_unread_recusal_in_the_item_holds_the_event(self):
         lines = ["Roll Call", ROLL, "1.", "Item.", "Elm, the member for the district, recused from the item.",
                  "M/s Supervisor Alder - Supervisor Birch to approve.", "AYES: ALL"]
