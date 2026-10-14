@@ -159,6 +159,15 @@ class TestDispose:
         out = [d for d in dispose(ct, scan(ct), [], attendance_spans=[]) if d["kind"] in ("vote_word", "unanimous")]
         assert out and {d["class"] for d in out} == {"held"}
 
+    @pytest.mark.parametrize("sentence", [
+        "The Council voted to adopt the ordinance previously recommended by staff.",
+        "The Council voted to approve the contract on January 15.",
+    ])
+    def test_an_earlier_date_or_word_not_attached_to_the_vote_does_not_exclude_it(self, sentence):
+        ct = _ct(["Item.", sentence])
+        [d] = [d for d in dispose(ct, scan(ct), [], attendance_spans=[]) if d["kind"] == "vote_word"]
+        assert d["class"] == "held"
+
     def test_exclusion_evidence_stays_inside_the_candidates_own_line_on_html(self):
         ct = _ct(["Thereafter the vote was", "M/s Supervisor Alder - Supervisor Birch on December 3, 2022, to adopt."])
         [d] = [d for d in dispose(ct, scan(ct), [], attendance_spans=[]) if d["kind"] == "vote_word"]

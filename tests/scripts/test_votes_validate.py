@@ -166,6 +166,31 @@ def test_a_consumed_span_hiding_a_departure_fails():
     assert validate_document(ct, BOS, bad)
 
 
+def _recusal_world():
+    lines = ["Roll Call", ROLL, "1.", "Item.", "Supervisor Elm recused himself from this item.",
+             "M/s Supervisor Alder - Supervisor Birch to approve.", "AYES: ALL"]
+    return _world(lines)
+
+
+def test_a_deleted_prose_exception_fails():
+    ct, evs = _recusal_world()
+    assert evs[0]["status"] == "expanded" and validate_document(ct, BOS, evs) == []
+    bad = copy.deepcopy(evs)
+    bad[0]["item_exceptions"] = []
+    bad[0]["categories"]["aye"].append({"name": "ELM", "raw": None, "span": None, "inferred": True})
+    assert validate_document(ct, BOS, bad)
+
+
+def test_an_exception_region_moved_past_the_exception_fails():
+    ct, evs = _recusal_world()
+    bad = copy.deepcopy(evs)
+    start = ct.text.index("M/s")
+    bad[0]["exception_region"] = ct.locate(start, bad[0]["exception_region"]["end"])
+    bad[0]["item_exceptions"] = []
+    bad[0]["categories"]["aye"].append({"name": "ELM", "raw": None, "span": None, "inferred": True})
+    assert validate_document(ct, BOS, bad)
+
+
 def test_held_events_are_not_validated_as_accepted():
     lines = ["1.", "Item.", "AYES: ALDER"]
     ct, evs = _world(lines)

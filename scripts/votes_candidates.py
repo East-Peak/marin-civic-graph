@@ -81,8 +81,13 @@ _OTHER_BODY_RE = re.compile(
     r"|Court|Legislature|Senate|Assembly|voters|residents|Congress|City\s+of\s+\w+)\b"
     r"(?:\s+\w+){0,2}?\s+vot(?:ed|es|ing)\b", re.I)
 _MONTH = r"(?:January|February|March|April|May|June|July|August|September|October|November|December)"
-_EARLIER_RE = re.compile(rf"\b(?:previously|prior\s+to|earlier|last\s+(?:year|month|week)|in\s+(?:19|20)\d\d"
-                         rf"|on\s+{_MONTH}\s+\d{{1,2}})\b", re.I)
+# an earlier vote: the earlier-ness must attach to the vote itself — "previously voted", "had
+# voted", a clause that opens with its date ("On March 3, 2020, the Board voted …"), or "at its
+# <date> meeting"; "voted to adopt the ordinance previously recommended" is a vote today
+_EARLIER_RE = re.compile(
+    rf"\b(?:previously|earlier|already|had)\s+(?:\w+\s+)?vot(?:ed|e)\b|\bvoted\s+(?:previously|earlier)\b"
+    rf"|^\W*(?:On|In)\s+(?:{_MONTH}\s+\d{{1,2}},?\s+)?(?:19|20)\d\d\b|^\W*On\s+{_MONTH}\s+\d{{1,2}}\b"
+    rf"|\bat\s+(?:its|their)\s+(?:{_MONTH}\s+\d{{1,2}}(?:,\s*\d{{4}})?\s+)?(?:\w+\s+)?meeting\b[^.]*\bvot", re.I)
 _PROSPECTIVE_RE = re.compile(r"\b(?:possibly|may|will|to|could|would|shall|might)\s+(?:take\s+(?:a\s+)?)?vote\b"
                              r"|\bpossible\s+vote\b|\bfor\s+a\s+vote\b|\bcast\s+(?:the\s+)?(?:[\w']+\s+)?vote\b"
                              r"|\b(?:discuss|consider)\s+and\s+vote\b", re.I)
@@ -191,7 +196,7 @@ def dispose(ct: CanonicalText, candidates: list[dict], events: list[dict], *, at
                 reason = "election_context"
             elif _OTHER_BODY_RE.search(sent):
                 reason = "other_body_vote"
-            elif _EARLIER_RE.search(sent) and re.search(r"\bvot(?:ed|e)\b", sent, re.I):
+            elif _EARLIER_RE.search(sent.strip()) and re.search(r"\bvot(?:ed|e)\b", sent, re.I):
                 reason = "earlier_vote"
             elif _PROSPECTIVE_RE.search(sent) and not re.search(r"\bvoted\b|\bunanimously\b", sent, re.I):
                 item_start = _item_start(text, sp["start"])

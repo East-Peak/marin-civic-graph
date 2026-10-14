@@ -21,6 +21,7 @@ import copy
 import re
 
 from votes_attendance import resolve
+from votes_exceptions import find_exceptions
 from votes_text import CanonicalText
 
 _GRAMMAR = {
@@ -37,7 +38,6 @@ _ANY_LABEL_RE = re.compile(r"(?<![\w-])(?:(?:" + "|".join(_GRAMMAR.values()) + r
 _TITLES = re.compile(r"^(?:(?:Supe\w*visors?|Councilmembers?|Council\s+Members?|Councilwoman|Councilman|"
                      r"Mayor\s+Pro\s+Tem(?:pore)?|Vice\s+Mayor|Mayor|Vice\s+President|President|Pres\.|Vice\s+Chair|"
                      r"Chair|Board\s*Member|Director|Commissioner)(?:\s*/\s*Board\s*Member)?\s+)+", re.I)
-_EXCEPTION_WORD_RE = re.compile(r"recus|abstain|did\s+not\s+participate", re.I)
 _OUTCOME_RE = re.compile(r"\b(?:The\s+)?[Mm]otion\s+(?:carried|failed|passed)\b|\bMOTION\s+(?:CARRIED|FAILED)\b")
 
 
@@ -140,16 +140,44 @@ def _check_membership(ct: CanonicalText, ev: dict) -> list[str]:
     return problems
 
 
-def _check_exceptions(ct: CanonicalText, ev: dict) -> list[str]:
-    problems = []
-    for x in ev.get("item_exceptions", []):
-        said = ct.text[x["span"]["start"]:x["span"]["end"]]
-        if not _EXCEPTION_WORD_RE.search(said) or x["name"].lower() not in said.lower():
-            problems.append(f"{ev['event_id']}: the cited exception for {x['name']} does not say so")
-    return problems
+_HEADING_LINE_RE = re.compile(r"^[ \t]*(?:\d{1,2}\.|[A-Z]\.(?:\d+\.?)?|C[AB]-\d+[a-z]?\.|[a-z]\.|[ivx]{1,4}\.)(?:[ \t]|$)",
+                              re.M)
 
 
-def _pre_attendance(events: list[dict]) -> list[dict]:
+def _derived_exceptions(ct: CanonicalText, ev: dict, events: list[dict]) -> tuple[list[dict], list[str]]:
+    """The event's prose exceptions, re-read from the source over its exception region, after
+    checking that region: it ends at the vote block, and it starts at the start of the text, at
+    another event's block or motion clause end, or at a heading line — and no exception phrase
+    lies between the latest earlier boundary and that start without a heading between them."""
+    text = ct.text
+    eid = ev["event_id"]
+    reg, block = ev.get("exception_region"), ev.get("block")
+    if not reg or not block:
+        return [], ([] if not block else [f"{eid}: no exception region"])
+    problems: list[str] = []
+    if reg["end"] != block["end"]:
+        problems.append(f"{eid}: the exception region does not end at the vote block")
+    ends = {0} | {c["end"] for e in events if e is not ev
+                  for c in ([e.get("block")] + ([e["motion"]["span"]] if e.get("motion") else [])
+                            + list(e.get("consumed", []))) if c}
+    headings = {m.start() for m in _HEADING_LINE_RE.finditer(text)}
+    if reg["start"] not in ends | headings:
+        problems.append(f"{eid}: the exception region does not start at a boundary")
+    prior = max([b for b in ends | headings if b <= reg["start"]], default=0)
+    for x in find_exceptions(text, prior, reg["start"]):
+        if not any(x["end"] <= h <= reg["start"] for h in headings):
+            problems.append(f"{eid}: an exception before the region start is left out")
+            break
+    skip = [(c["start"], c["end"]) for c in (ev.get("category_spans") or {}).values()]
+    found = find_exceptions(text, reg["start"], reg["end"], skip)
+    derived = [{"name": x["name"], "kind": x["kind"], "span": ct.locate(x["start"], x["end"])} for x in found]
+    if sorted((x["name"], x["kind"]) for x in derived) != sorted((x["name"], x["kind"])
+                                                                 for x in ev.get("item_exceptions", [])):
+        problems.append(f"{eid}: its prose exceptions differ from the source's")
+    return derived, problems
+
+
+def _pre_attendance(events: list[dict], derived: dict[str, list[dict]]) -> list[dict]:
     """The events as the attendance stage received them: an expanded event back to
     needs_attendance with its inferred ayes removed; everything else as decided."""
     out = []
@@ -158,6 +186,8 @@ def _pre_attendance(events: list[dict]) -> list[dict]:
         e.pop("attendance", None)
         # what attendance must not read as transitions: the vote block and the motion clause only
         e["consumed"] = [c for c in ([e.get("block")] + ([e["motion"]["span"]] if e.get("motion") else [])) if c]
+        if e["event_id"] in derived:
+            e["item_exceptions"] = derived[e["event_id"]]
         if e["status"] == "expanded":
             e["status"] = "needs_attendance"
             e["categories"]["aye"] = [n for n in e["categories"]["aye"] if not n.get("inferred")]
@@ -169,14 +199,16 @@ def _pre_attendance(events: list[dict]) -> list[dict]:
 def validate_document(ct: CanonicalText, body: str, events: list[dict]) -> list[str]:
     problems: list[str] = []
     accepted = [e for e in events if e["status"] in ("named", "expanded")]
+    derived: dict[str, list[dict]] = {}
     for ev in accepted:
         problems += _check_categories(ct, ev)
         problems += _check_membership(ct, ev)
-        problems += _check_exceptions(ct, ev)
+        derived[ev["event_id"]], exc_problems = _derived_exceptions(ct, ev, events)
+        problems += exc_problems
     expanded = [e for e in accepted if e["status"] == "expanded"]
     if not expanded:
         return problems
-    rerun, _ = resolve(ct, body=body, events=_pre_attendance(events))
+    rerun, _ = resolve(ct, body=body, events=_pre_attendance(events, derived))
     by_id = {e["event_id"]: e for e in rerun}
     for ev in expanded:
         eid = ev["event_id"]

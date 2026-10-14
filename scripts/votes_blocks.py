@@ -16,6 +16,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
+from votes_exceptions import find_exceptions
 from votes_text import CanonicalText
 
 CATEGORIES = ("aye", "no", "abstain", "recused", "absent")
@@ -112,15 +113,6 @@ _BOS_MS_RE = re.compile(rf"M/s\s+(?P<m>{_BOS_MOVER})\s*[-/]\s*(?:(?P<s>{_BOS_SEC
                         rf"(?:,?\s+on\s+behalf\s+of\s+(?P<b>{_BOS_NAME}))?,?\s+(?:to\s+)?", re.I)
 _BOS_MOVED_RE = re.compile(rf"(?:Motion\s+to\s+)?(?P<text>[^\n.]*?)\s*moved\s+by\s+(?P<m>{_NAME})\s+and\s+"
                            rf"seconded\s+by\s+(?P<s>{_NAME})", re.I)
-
-_EXC_REF = rf"(?-i:(?i:{TITLE})\s+(?:[A-Z][\w']*\s+)?[A-Z][\w'\-]*)"
-_EXCEPTION_RE = re.compile(
-    rf"(?P<group>{_EXC_REF}(?:\s*,?\s*(?:and\s+)?{_EXC_REF})*)\s+"
-    rf"(?:(?:announced|stated|indicated|advised)\s+(?:that\s+)?(?:she|he|they)\s+)?"
-    rf"(?:(?:would|will)\s+(?:also\s+)?be\s+|had\s+|(?:needed|had|would\s+have|will\s+have)\s+to\s+)?"
-    rf"(?P<v>recused|recusing|recuse|abstained|abstaining|abstain|did\s+not\s+participate)"
-    rf"(?:\s+(?:himself|herself|themselves|themself))?", re.I)
-_EXC_NAME_RE = re.compile(rf"(?-i:(?i:{TITLE})\s+(?:[A-Z][\w']*\s+)?(?P<n>[A-Z][\w'\-]*))")
 
 _TRANSCRIPT_LINE_RE = re.compile(r"^[A-Z][A-Z .,'\-]{1,40}:\s")
 _LINE_NUMBER_RE = re.compile(r"^\s*(?:\d{1,3}\s+)+|^\s*\d{1,3}\s*$")
@@ -990,18 +982,15 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
     item_exceptions = []
     region_start = max((sub or top).start if (sub or top) else 0, exc_from)
     region_end = block_loc["end"] if block_loc else (mo.region_end if mo else anchor)
-    for m in _EXCEPTION_RE.finditer(text, region_start, region_end):
-        if any(c["start"] <= m.start() < c["end"] for c in category_spans.values()):
-            continue
-        kind = "abstain" if m.group("v").lower().startswith("abstain") else "recused"
-        span = _loc(ct, m.start(), m.end())
-        consumed.append(span)
-        for nm in _EXC_NAME_RE.finditer(m.group("group")):
-            name = nm.group("n").upper()
-            item_exceptions.append({"name": name, "kind": kind, "span": span})
-            listed = next((c for c in CATEGORIES for n in categories[c] if n["name"] == name), None)
-            if blk and not has_all and listed != kind and not (kind == "recused" and listed == "absent"):
-                hold.append("exception_scope_conflict")
+    cat_skip = [(c["start"], c["end"]) for c in category_spans.values()]
+    for x in find_exceptions(text, region_start, region_end, cat_skip):
+        span = _loc(ct, x["start"], x["end"])
+        if span not in consumed:
+            consumed.append(span)
+        item_exceptions.append({"name": x["name"], "kind": x["kind"], "span": span})
+        listed = next((c for c in CATEGORIES for n in categories[c] if n["name"] == x["name"]), None)
+        if blk and not has_all and listed != x["kind"] and not (x["kind"] == "recused" and listed == "absent"):
+            hold.append("exception_scope_conflict")
 
     consent = bool(motion and _GROUPED_RE.search(motion["text"]))
     item = {"top": top.label if top else None, "sub": None if consent else (sub.label if sub else None),
@@ -1028,6 +1017,7 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
         "category_spans": category_spans,
         "sentinels": sentinels,
         "item_exceptions": item_exceptions,
+        "exception_region": _loc(ct, region_start, region_end),
         "restatement": restatement,
         "vacancies": vacancies,
         "block": block_loc,
