@@ -188,7 +188,7 @@ class TestBuild:
         world["fetched"].mkdir()
         (world["fetched"] / "fetch-log.jsonl").write_text(json.dumps(
             {"meeting_id": f"meeting-{NOVATO}-102", "status": "failed", "error": "http_404",
-             "attempts": 3}) + "\n")
+             "attempt": 3}) + "\n")
         assert _row(_build(world), f"meeting-{NOVATO}-102")["gap"] == "fetch_failed:http_404"
 
 
@@ -244,8 +244,13 @@ class TestWriteAndVerify:
             verify_documents(inv, world["tmp"])
 
 
-MINUTES_HTML = (b"<html><body><p>MINUTES OF THE FICTIONAL COUNCIL</p><p>Roll Call Present: "
-                b"Councilmember Alder; Councilmember Birch</p>" + b"<p>filler text</p>" * 30 + b"</body></html>")
+MINUTES_HTML = (b"<html><body><p>MINUTES OF THE FICTIONAL CITY COUNCIL</p><p>Roll Call Present: "
+                b"Councilmember Alder; Councilmember Birch</p>" + b"<p>filler text</p>" * 30
+                + b"<p>The meeting adjourned at 9:00 p.m.</p></body></html>")
+MAINTENANCE_HTML = (b"<html><body><h1>Service temporarily unavailable</h1><p>The requested page cannot be "
+                    b"displayed at this time. Our service is undergoing maintenance. Please try again in a "
+                    b"few minutes. If the problem persists, contact the website administrator for "
+                    b"assistance. Present your ticket number when you call.</p></body></html>")
 ERROR_HTML = b"<html><body>Service unavailable</body></html>"
 OK = lambda: True  # noqa: E731
 
@@ -286,7 +291,7 @@ class TestFetch:
         assert summary == [{"meeting_id": f"meeting-{NOVATO}-102", "status": "ok", "attempts": 1,
                             "url": "https://example.invalid/m/102", "format": "html",
                             "sha256": hashlib.sha256(MINUTES_HTML).hexdigest()}]
-        assert [e["attempt"] for e in self._log(world)] == [1]
+        assert [(e["attempt"], e["status"]) for e in self._log(world)] == [(1, "started"), (1, "ok")]
 
     def test_every_http_request_including_redirect_hops_is_a_second_apart(self, world):
         inv = _build(world)
@@ -325,7 +330,7 @@ class TestFetch:
         assert len(calls) == 3
         assert summary[0]["status"] == "failed" and summary[0]["error"] == "http_404"
         assert summary[0]["attempts"] == 3
-        assert [e["attempt"] for e in self._log(world)] == [1, 2, 3]
+        assert [e["attempt"] for e in self._log(world) if e["status"] != "started"] == [1, 2, 3]
         assert not list(world["fetched"].glob("meeting-*"))
 
     def test_attempts_are_cumulative_across_runs(self, world):
@@ -346,11 +351,25 @@ class TestFetch:
             row = _row(inv, f"meeting-{NOVATO}-101")
             row.update(documents=[], gap="not_cached")
             fetch_gaps(inv, world["fetched"], fetch=boom, sleep=lambda s: None)
-        assert [e["meeting_id"] for e in self._log(world)].count(f"meeting-{NOVATO}-102") == 3
+        assert [e["meeting_id"] for e in self._log(world)].count(f"meeting-{NOVATO}-102") == 6
+
+    def test_an_interrupted_request_still_counts_as_an_attempt(self, world):
+        inv = _build(world)
+
+        def boom(url):
+            raise KeyboardInterrupt
+        for _ in range(3):
+            with pytest.raises(KeyboardInterrupt):
+                fetch_gaps(inv, world["fetched"], fetch=boom, sleep=lambda s: None)
+        fetch, calls = self._fetcher({"https://example.invalid/m/102": [(200, MINUTES_HTML)]})
+        assert fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=lambda s: None) == []
+        assert calls == []
+        assert _row(_build(world), f"meeting-{NOVATO}-102")["gap"] == "fetch_failed:interrupted"
 
     def test_docx_minutes_are_saved_as_docx(self, world):
         inv = _build(world)
-        body = _docx_bytes("MINUTES of the fictional council. Roll call. " + "words " * 60)
+        body = _docx_bytes("MINUTES of the fictional city council. Roll call. " + "words " * 60
+                           + "The meeting adjourned.")
         fetch, _ = self._fetcher({"https://example.invalid/m/102": [(200, body)]})
         summary = fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=lambda s: None)
         assert summary[0]["format"] == "docx"
@@ -360,6 +379,7 @@ class TestFetch:
     @pytest.mark.parametrize("body,error", [
         (b"", "empty_body"),
         (ERROR_HTML, "not_minutes"),
+        (MAINTENANCE_HTML, "not_minutes"),
         (b"<html><body></body></html>", "not_minutes"),
         (b"plain text", "unknown_format"),
     ])

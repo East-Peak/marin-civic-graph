@@ -39,7 +39,9 @@ MAX_FETCH_DOCS = 150
 MAX_ATTEMPTS = 3
 MAX_REDIRECT_HOPS = 5
 MIN_INTERVAL_S = 1.0
-_MINUTES_MARKER_RE = re.compile(r"\bminutes\b|roll call|\bpresent\b|called to order|\bconvened\b", re.I)
+_BODY_MARKER_RE = re.compile(r"board of supervisors|city council|\bcouncil(member)?s?\b|\bsupervisors?\b", re.I)
+_MEETING_MARKERS = (r"roll call", r"\bpresent:", r"called to order", r"\bconvened\b", r"\badjourn",
+                    r"\bayes\b", r"\bmotion\b", r"\bminutes\b")
 
 ORIGIN_ORDER = {"cache": 0, "fetched": 1, "cache_dated": 2}
 _DATED_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})\.\w+$")
@@ -118,14 +120,19 @@ def _pdftotext_version() -> str:
 
 
 def _read_fetch_log(fetched: Path) -> dict[str, dict]:
-    """Per meeting: cumulative attempts and the latest attempt (the log has one line per attempt)."""
+    """Per meeting: attempts used and the latest outcome. Each attempt is journaled `started`
+    before its request and again with its result; a `started` with no result is an interrupted
+    attempt and still counts."""
     log = fetched / "fetch-log.jsonl"
     history: dict[str, dict] = {}
     if log.is_file():
         for row in _iter_jsonl(log):
             h = history.setdefault(row["meeting_id"], {"attempts": 0, "latest": None})
-            h["attempts"] += 1
+            h["attempts"] = max(h["attempts"], row["attempt"])
             h["latest"] = row
+    for h in history.values():
+        if h["latest"]["status"] == "started":
+            h["latest"] = {**h["latest"], "status": "failed", "error": "interrupted"}
     return history
 
 
@@ -321,8 +328,11 @@ def document_text(data: bytes, fmt: str) -> str:
 
 
 def looks_like_minutes(data: bytes, fmt: str) -> bool:
+    """Meeting-specific evidence: some length, the governing body named, and at least three
+    distinct meeting-record markers (an error or maintenance page has none of these together)."""
     text = document_text(data, fmt)
-    return len(text.strip()) >= 200 and bool(_MINUTES_MARKER_RE.search(text))
+    markers = sum(1 for m in _MEETING_MARKERS if re.search(m, text, re.I))
+    return len(text.strip()) >= 200 and bool(_BODY_MARKER_RE.search(text)) and markers >= 3
 
 
 def fetch_gaps(inv: dict, fetched: Path, *,
@@ -373,6 +383,7 @@ def fetch_gaps(inv: dict, fetched: Path, *,
         while attempts < MAX_ATTEMPTS and summary is None:
             attempts += 1
             entry = {"meeting_id": row["meeting_id"], "attempt": attempts, "url": row["minutes_url"]}
+            journal({**entry, "status": "started"})
             url, error, body = row["minutes_url"], None, b""
             try:
                 for _ in range(MAX_REDIRECT_HOPS + 1):
