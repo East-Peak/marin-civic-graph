@@ -262,6 +262,16 @@ def test_prose_after_the_outcome_inside_a_forged_block_fails():
     assert validate_document(ct, BOS, forged)
 
 
+def test_all_caps_prose_in_a_category_fails():
+    lines = ["1.", "Item.", "M/s Supervisor Alder - Supervisor Birch to approve.",
+             "AYES: Supervisor Alder; SUPERVISOR ELM RECUSED HIMSELF", "NOES: NONE", "Motion carried."]
+    ct, evs = _world(lines)
+    assert evs[0]["status"] == "held"
+    forged = copy.deepcopy(evs)
+    forged[0]["status"], forged[0]["hold_reasons"] = "named", []
+    assert validate_document(ct, BOS, forged)
+
+
 def test_held_events_are_not_validated_as_accepted():
     lines = ["1.", "Item.", "AYES: ALDER"]
     ct, evs = _world(lines)

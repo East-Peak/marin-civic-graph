@@ -28,6 +28,10 @@ TITLE = (r"(?:Supe\w*visors?|Councilmember|Council\s+Member|Councilwoman|Council
 _TITLE_LEAD_RE = re.compile(rf"^\s*{TITLE}\s+", re.I)
 _NAME_TOKEN_RE = re.compile(r"^[A-Z][A-Za-z'\-]*\.?$")
 _ALLCAPS_TOKEN_RE = re.compile(r"^[A-Z][A-Z'\-]+$")
+# words that never belong to a name: a list chunk containing one is prose, not names
+_NOT_A_NAME = re.compile(r"^(?:RECUS\w*|ABSTAIN\w*|ABSENT|PRESENT|EXCUSED|LEFT|ARRIVED|DEPARTED|RETURNED|"
+                         r"HIMSELF|HERSELF|THEMSELVES|THEMSELF|VOT\w*|MOTION|CARRIED|FAILED|PASSED|AYES?|NOES?|"
+                         r"NAYS?|NONE|ALL|UNANIMOUS(?:LY)?|AND|THE|FROM|ITEM|WAS|WERE)$", re.I)
 
 # Category labels. Mixed case only where the minutes use it ("Abstain:", "Absent:").
 _LABELS = [
@@ -171,7 +175,9 @@ def split_names(raw: str) -> tuple[list[dict], list[str]]:
             tokens = [(off, tok) for off, tok in tokens if tok]
             if not tokens:
                 continue
-            if not all(_NAME_TOKEN_RE.match(tok) for _, tok in tokens):
+            if not all(_NAME_TOKEN_RE.match(tok) for _, tok in tokens) \
+                    or (len(tokens) > 1 and any(_NOT_A_NAME.match(tok.rstrip(".")) for _, tok in tokens)) \
+                    or (titled and len(tokens) > 2):
                 flags.append("unparsed")
                 continue
             if not titled and len(tokens) >= 2 and all(_ALLCAPS_TOKEN_RE.match(tok) for _, tok in tokens):

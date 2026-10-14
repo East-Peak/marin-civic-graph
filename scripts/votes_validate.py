@@ -105,6 +105,9 @@ def _own_names(value: str) -> set[str] | None:
         tokens = chunk.split()
         if not tokens or not all(re.fullmatch(r"[A-Z][A-Za-z'\-]*\.?", t) for t in tokens):
             return None
+        if (len(tokens) > 1 and any(_PROSE_WORD_RE.fullmatch(t.rstrip(".")) for t in tokens)) \
+                or (titled and len(tokens) > 2):
+            return None
         if not titled and len(tokens) > 1 and all(t.isupper() for t in tokens):
             names |= {_key(t) for t in tokens}
         else:
@@ -162,6 +165,9 @@ def _check_membership(ct: CanonicalText, ev: dict) -> list[str]:
 
 _OUTCOME_ONLY_RE = re.compile(r"(?:The\s+)?[Mm]otion\s+(?:carried|failed|passed)(?:[ \t]+\d+-\d+(?:-\d+)?)?\.?\s*"
                               r"|MOTION\s+(?:CARRIED|FAILED)\.?\s*")
+_PROSE_WORD_RE = re.compile(r"RECUS\w*|ABSTAIN\w*|ABSENT|PRESENT|EXCUSED|LEFT|ARRIVED|DEPARTED|RETURNED|HIMSELF|"
+                            r"HERSELF|THEMSELVES|THEMSELF|VOT\w*|MOTION|CARRIED|FAILED|PASSED|AYES?|NOES?|NAYS?|NONE|"
+                            r"ALL|UNANIMOUS(?:LY)?|AND|THE|FROM|ITEM|WAS|WERE", re.I)
 _TALLY_LINE_RE = re.compile(r"[ \t]*Motion\s+(?:carried|failed|passed)(?:[ \t]+\d+-\d+\.?"
                             r"(?:[ \t]+(?:Abstain|Absent|Recused?|Noes?)[ \t]*:[ \t]*\d+)*)?[ \t]*\.?\s*", re.I)
 _HEADING_LINE_RE = re.compile(r"^[ \t]*(?:\d{1,2}\.|[A-Z]\.(?:\d+\.?)?|C[AB]-\d+[a-z]?\.|[a-z]\.|[ivx]{1,4}\.)(?:[ \t]|$)",

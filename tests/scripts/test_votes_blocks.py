@@ -56,6 +56,12 @@ class TestSplitNames:
         assert [n["name"] for n in got] == names
         assert got_flags == flags
 
+    @pytest.mark.parametrize("raw", ["Supervisor Alder; SUPERVISOR ELM RECUSED HIMSELF", "ALDER, ELM ABSENT",
+                                     "Supervisor Ann Bea Alder", "ALDER, BIRCH VOTED NO"])
+    def test_prose_in_a_list_is_unparsed(self, raw):
+        _, flags = split_names(raw)
+        assert "unparsed" in flags
+
     def test_each_name_carries_its_offset_within_the_raw_value(self):
         raw = "Supervisor Alder, BIRCH"
         got, _ = split_names(raw)
