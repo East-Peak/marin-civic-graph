@@ -37,7 +37,9 @@ BODIES = {
 
 MAX_FETCH_DOCS = 150
 MAX_ATTEMPTS = 3
+MAX_REDIRECT_HOPS = 5
 MIN_INTERVAL_S = 1.0
+_MINUTES_MARKER_RE = re.compile(r"\bminutes\b|roll call|\bpresent\b|called to order|\bconvened\b", re.I)
 
 ORIGIN_ORDER = {"cache": 0, "fetched": 1, "cache_dated": 2}
 _DATED_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})\.\w+$")
@@ -116,13 +118,15 @@ def _pdftotext_version() -> str:
 
 
 def _read_fetch_log(fetched: Path) -> dict[str, dict]:
-    """Latest logged outcome per meeting."""
+    """Per meeting: cumulative attempts and the latest attempt (the log has one line per attempt)."""
     log = fetched / "fetch-log.jsonl"
-    latest: dict[str, dict] = {}
+    history: dict[str, dict] = {}
     if log.is_file():
         for row in _iter_jsonl(log):
-            latest[row["meeting_id"]] = row
-    return latest
+            h = history.setdefault(row["meeting_id"], {"attempts": 0, "latest": None})
+            h["attempts"] += 1
+            h["latest"] = row
+    return history
 
 
 def _load_export(export: Path, windows: dict[str, tuple[str, str]]):
@@ -208,6 +212,9 @@ def build_inventory(export: Path, raw: Path, fetched: Path,
                           key=lambda k: (meetings[k]["date"], k)):
             m = meetings[mid]
             rec_ids = sorted(minutes.get(mid, []))
+            if len(rec_ids) > 1:
+                raise InventoryError(f"{mid}: several minutes records {rec_ids}; each would need its own "
+                                     "document or gap, which this inventory does not model")
             rec_id = rec_ids[0] if rec_ids else None
             url = normalize_url(records[rec_id].get("preferred_public_url")) if rec_id else None
             body_class = classify_meeting(body, m["title"])
@@ -220,15 +227,13 @@ def build_inventory(export: Path, raw: Path, fetched: Path,
                 gap = "no_minutes_record"
             elif not url:
                 gap = "no_minutes_link"
-            elif fetch_log.get(mid, {}).get("status") == "failed":
-                gap = f"fetch_failed:{fetch_log[mid]['error']}"
+            elif (fetch_log.get(mid) or {}).get("latest", {}).get("status") == "failed":
+                gap = f"fetch_failed:{fetch_log[mid]['latest']['error']}"
             else:
                 gap = "not_cached"
             row = {"meeting_id": mid, "date": m["date"], "title": m["title"],
                    "body_class": body_class, "minutes_record_id": rec_id, "minutes_url": url,
                    "documents": documents, "gap": gap}
-            if len(rec_ids) > 1:
-                row["other_minutes_record_ids"] = rec_ids[1:]
             rows.append(row)
         bodies[body] = {"meetings": rows, "unplaced_documents": unplaced[body]}
 
@@ -284,60 +289,127 @@ def verify_documents(inv: dict, base: Path | None = None) -> None:
                 raise InventoryError(f"{row['meeting_id']}: {rel} does not match its inventoried sha256")
 
 
-def _http_fetch(url: str) -> tuple[int, bytes]:
+def _http_fetch(url: str) -> tuple[int, bytes, str | None]:
+    """One HTTP request, redirects NOT followed (the caller rate-limits every hop)."""
+    from urllib.parse import urljoin
+
     import requests  # only the fetch step needs the network stack
 
-    resp = requests.get(url, timeout=60, allow_redirects=True,
+    resp = requests.get(url, timeout=60, allow_redirects=False,
                         headers={"User-Agent": "open-marin-votes-inventory (civic research)"})
-    return resp.status_code, resp.content
+    loc = resp.headers.get("Location")
+    return resp.status_code, resp.content, urljoin(url, loc) if loc else None
 
 
-def fetch_gaps(inv: dict, fetched: Path, *, fetch: Callable[[str], tuple[int, bytes]] = _http_fetch,
-               sleep: Callable[[float], None] = time.sleep, max_docs: int = MAX_FETCH_DOCS) -> list[dict]:
-    """Download minutes for rows whose record has a link and no document; returns the log rows
-    (also appended to fetched/fetch-log.jsonl)."""
+def document_text(data: bytes, fmt: str) -> str:
+    """Rough text for the minutes sanity check (the parser has its own canonical text)."""
+    if fmt == "pdf":
+        try:
+            out = subprocess.run(["pdftotext", "-layout", "-", "-"], input=data,
+                                 capture_output=True, timeout=120)
+        except (OSError, subprocess.SubprocessError):
+            return ""
+        return out.stdout.decode("utf-8", "replace")
+    if fmt == "docx":
+        import io
+        import zipfile
+        with zipfile.ZipFile(io.BytesIO(data)) as z:
+            xml = z.read("word/document.xml").decode("utf-8", "replace")
+        return re.sub(r"<[^>]+>", " ", xml)
+    html = re.sub(r"(?is)<(script|style)\b.*?</\1>", " ", data.decode("utf-8", "replace"))
+    return re.sub(r"<[^>]+>", " ", html)
+
+
+def looks_like_minutes(data: bytes, fmt: str) -> bool:
+    text = document_text(data, fmt)
+    return len(text.strip()) >= 200 and bool(_MINUTES_MARKER_RE.search(text))
+
+
+def fetch_gaps(inv: dict, fetched: Path, *,
+               fetch: Callable[[str], tuple[int, bytes, str | None]] = _http_fetch,
+               sleep: Callable[[float], None] = time.sleep,
+               now: Callable[[], float] = time.monotonic,
+               max_docs: int = MAX_FETCH_DOCS,
+               validate: Callable[[bytes, str], bool] = looks_like_minutes) -> list[dict]:
+    """Download minutes for in-scope rows whose record has a link and no document.
+
+    Budgets are cumulative over every run, read from fetched/fetch-log.jsonl (one line per
+    attempt, appended as it happens): at most `max_docs` distinct meetings ever attempted and
+    MAX_ATTEMPTS attempts per meeting. Every HTTP request, redirect hops included, is at least
+    MIN_INTERVAL_S after the previous one. Returns one summary per meeting attempted this run."""
+    if not 0 <= max_docs <= MAX_FETCH_DOCS:
+        raise ValueError(f"max_docs must be within 0..{MAX_FETCH_DOCS}, got {max_docs}")
     fetched = Path(fetched)
-    todo = [row for b in inv["bodies"].values() for row in b["meetings"]
-            if row["gap"] == "not_cached" and row["minutes_url"]][:max_docs]
-    log: list[dict] = []
-    first = True
-    for row in todo:
-        attempts, error, entry = 0, None, None
-        while attempts < MAX_ATTEMPTS:
-            if not first:
-                sleep(MIN_INTERVAL_S)
-            first = False
-            attempts += 1
-            try:
-                status, body = fetch(row["minutes_url"])
-            except Exception as exc:  # network errors are recorded, never raised
-                error = f"error:{type(exc).__name__}"
-                continue
-            if status != 200:
-                error = f"http_{status}"
-                continue
-            if not body:
-                error = "empty_body"
-                continue
-            fmt = sniff_format(body)
-            if fmt is None:
-                error = "unknown_format"
-                continue
-            fetched.mkdir(parents=True, exist_ok=True)
-            (fetched / f"{row['meeting_id']}.{fmt}").write_bytes(body)
-            entry = {"meeting_id": row["meeting_id"], "status": "ok", "attempts": attempts,
-                     "url": row["minutes_url"], "format": fmt, "sha256": _sha256_bytes(body)}
-            break
-        if entry is None:
-            entry = {"meeting_id": row["meeting_id"], "status": "failed", "attempts": attempts,
-                     "url": row["minutes_url"], "error": error}
-        log.append(entry)
-    if log:
+    history = _read_fetch_log(fetched)
+    new_budget = max_docs - len(history)
+    last_request: list[float] = []
+
+    def request(url: str):
+        if last_request:
+            wait = MIN_INTERVAL_S - (now() - last_request[0])
+            if wait > 0:
+                sleep(wait)
+        last_request[:] = [now()]
+        return fetch(url)
+
+    def journal(entry: dict) -> None:
         fetched.mkdir(parents=True, exist_ok=True)
         with (fetched / "fetch-log.jsonl").open("a", encoding="utf-8") as fh:
-            for entry in log:
-                fh.write(json.dumps(entry, sort_keys=True) + "\n")
-    return log
+            fh.write(json.dumps(entry, sort_keys=True) + "\n")
+            fh.flush()
+
+    summaries: list[dict] = []
+    for row in (r for b in inv["bodies"].values() for r in b["meetings"]):
+        if row["documents"] or not row["minutes_url"] or row["gap"] == "not_in_scope_body":
+            continue
+        h = history.get(row["meeting_id"], {"attempts": 0, "latest": None})
+        if (h["latest"] or {}).get("status") == "ok" or h["attempts"] >= MAX_ATTEMPTS:
+            continue
+        if h["attempts"] == 0:
+            if new_budget <= 0:
+                continue
+            new_budget -= 1
+        attempts, summary = h["attempts"], None
+        while attempts < MAX_ATTEMPTS and summary is None:
+            attempts += 1
+            entry = {"meeting_id": row["meeting_id"], "attempt": attempts, "url": row["minutes_url"]}
+            url, error, body = row["minutes_url"], None, b""
+            try:
+                for _ in range(MAX_REDIRECT_HOPS + 1):
+                    status, body, location = request(url)
+                    if 300 <= status < 400 and location:
+                        url = location
+                        continue
+                    break
+                else:
+                    status, error = None, "too_many_redirects"
+            except Exception as exc:  # network errors are recorded, never raised
+                error = f"error:{type(exc).__name__}"
+            if error is None:
+                fmt = sniff_format(body) if status == 200 and body else None
+                if status != 200:
+                    error = f"http_{status}"
+                elif not body:
+                    error = "empty_body"
+                elif fmt is None:
+                    error = "unknown_format"
+                elif not validate(body, fmt):
+                    error = "not_minutes"
+            if error is None:
+                fetched.mkdir(parents=True, exist_ok=True)
+                (fetched / f"{row['meeting_id']}.{fmt}").write_bytes(body)
+                entry.update(status="ok", format=fmt, sha256=_sha256_bytes(body))
+                journal(entry)
+                summary = {"meeting_id": row["meeting_id"], "status": "ok", "attempts": attempts,
+                           "url": row["minutes_url"], "format": fmt, "sha256": entry["sha256"]}
+            else:
+                entry.update(status="failed", error=error)
+                journal(entry)
+                if attempts >= MAX_ATTEMPTS:
+                    summary = {"meeting_id": row["meeting_id"], "status": "failed",
+                               "attempts": attempts, "url": row["minutes_url"], "error": error}
+        summaries.append(summary)
+    return summaries
 
 
 def _parse_window(spec: str) -> tuple[str, tuple[str, str]]:
@@ -372,10 +444,9 @@ def main(argv=None) -> int:
             print(f"{body}: {len(bd['meetings'])} meetings {dict(sorted(gaps.items()))}")
         print(f"wrote {path}")
         return 0
-    log = fetch_gaps(load_inventory(args.inventory), args.fetched,
-                     max_docs=min(args.max_docs, MAX_FETCH_DOCS))
-    ok = sum(1 for r in log if r["status"] == "ok")
-    print(f"fetched {ok}/{len(log)}; log {args.fetched / 'fetch-log.jsonl'}")
+    summaries = fetch_gaps(load_inventory(args.inventory), args.fetched, max_docs=args.max_docs)
+    ok = sum(1 for r in summaries if r["status"] == "ok")
+    print(f"fetched {ok}/{len(summaries)}; log {args.fetched / 'fetch-log.jsonl'}")
     return 0
 
 

@@ -244,8 +244,15 @@ class TestWriteAndVerify:
             verify_documents(inv, world["tmp"])
 
 
+MINUTES_HTML = (b"<html><body><p>MINUTES OF THE FICTIONAL COUNCIL</p><p>Roll Call Present: "
+                b"Councilmember Alder; Councilmember Birch</p>" + b"<p>filler text</p>" * 30 + b"</body></html>")
+ERROR_HTML = b"<html><body>Service unavailable</body></html>"
+OK = lambda: True  # noqa: E731
+
+
 class TestFetch:
     def _fetcher(self, responses):
+        """responses: url -> list of (status, body[, location]) or exceptions, consumed in order."""
         calls = []
 
         def fetch(url):
@@ -253,60 +260,147 @@ class TestFetch:
             r = responses[url].pop(0)
             if isinstance(r, Exception):
                 raise r
-            return r
+            return r if len(r) == 3 else (r[0], r[1], None)
         return fetch, calls
 
-    def test_fetches_only_not_cached_rows_rate_limited(self, world):
+    def _clock(self):
+        """A fake monotonic clock that sleep() advances, so request spacing is observable."""
+        t = {"now": 100.0, "stamps": []}
+
+        def sleep(s):
+            t["now"] += s
+
+        def stamp():
+            t["stamps"].append(t["now"])
+        return t, sleep, stamp
+
+    def _log(self, world):
+        return [json.loads(x) for x in (world["fetched"] / "fetch-log.jsonl").read_text().splitlines()]
+
+    def test_fetches_only_not_cached_rows(self, world):
         inv = _build(world)
-        fetch, calls = self._fetcher({"https://example.invalid/m/102": [(200, b"%PDF-1.4 got")]})
-        sleeps = []
-        log = fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=sleeps.append)
+        fetch, calls = self._fetcher({"https://example.invalid/m/102": [(200, MINUTES_HTML)]})
+        summary = fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=lambda s: None)
         assert calls == ["https://example.invalid/m/102"]
-        assert (world["fetched"] / f"meeting-{NOVATO}-102.pdf").read_bytes() == b"%PDF-1.4 got"
-        assert log == [{"meeting_id": f"meeting-{NOVATO}-102", "status": "ok", "attempts": 1,
-                        "url": "https://example.invalid/m/102", "format": "pdf",
-                        "sha256": hashlib.sha256(b"%PDF-1.4 got").hexdigest()}]
-        assert all(s >= 1.0 for s in sleeps)
+        assert (world["fetched"] / f"meeting-{NOVATO}-102.html").read_bytes() == MINUTES_HTML
+        assert summary == [{"meeting_id": f"meeting-{NOVATO}-102", "status": "ok", "attempts": 1,
+                            "url": "https://example.invalid/m/102", "format": "html",
+                            "sha256": hashlib.sha256(MINUTES_HTML).hexdigest()}]
+        assert [e["attempt"] for e in self._log(world)] == [1]
+
+    def test_every_http_request_including_redirect_hops_is_a_second_apart(self, world):
+        inv = _build(world)
+        row = _row(inv, f"meeting-{NOVATO}-101")
+        row.update(documents=[], gap="not_cached")
+        t, sleep, stamp = self._clock()
+        responses = {
+            "https://example.invalid/m/101": [(302, b"", "https://example.invalid/m/101b")],
+            "https://example.invalid/m/101b": [(200, MINUTES_HTML)],
+            "https://example.invalid/m/102": [(500, b""), (200, MINUTES_HTML)],
+        }
+        fetch, calls = self._fetcher(responses)
+
+        def timed(url):
+            stamp()
+            return fetch(url)
+        fetch_gaps(inv, world["fetched"], fetch=timed, sleep=sleep, now=lambda: t["now"])
+        assert calls == ["https://example.invalid/m/101", "https://example.invalid/m/101b",
+                         "https://example.invalid/m/102", "https://example.invalid/m/102"]
+        gaps = [b - a for a, b in zip(t["stamps"], t["stamps"][1:])]
+        assert gaps and all(g >= 1.0 for g in gaps)
+
+    def test_redirect_hops_are_bounded(self, world):
+        inv = _build(world)
+        loop = {"https://example.invalid/m/102": [(302, b"", "https://example.invalid/m/102")] * 30}
+        fetch, calls = self._fetcher(loop)
+        summary = fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=lambda s: None)
+        assert summary[0]["status"] == "failed" and summary[0]["error"] == "too_many_redirects"
+        assert len(calls) <= 3 * 6
 
     def test_three_attempts_then_recorded_failure(self, world):
         inv = _build(world)
         fetch, calls = self._fetcher({"https://example.invalid/m/102": [
             OSError("x"), (503, b""), (404, b"")]})
-        log = fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=lambda s: None)
+        summary = fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=lambda s: None)
         assert len(calls) == 3
-        assert log[0]["status"] == "failed" and log[0]["error"] == "http_404" and log[0]["attempts"] == 3
-        assert not list(world["fetched"].glob("*.pdf"))
+        assert summary[0]["status"] == "failed" and summary[0]["error"] == "http_404"
+        assert summary[0]["attempts"] == 3
+        assert [e["attempt"] for e in self._log(world)] == [1, 2, 3]
+        assert not list(world["fetched"].glob("meeting-*"))
+
+    def test_attempts_are_cumulative_across_runs(self, world):
+        inv = _build(world)
+        fetch, calls = self._fetcher({"https://example.invalid/m/102": [(503, b"")] * 6})
+        fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=lambda s: None)
+        fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=lambda s: None)
+        assert len(calls) == 3
+
+    def test_an_interrupted_run_keeps_its_journaled_attempts(self, world):
+        inv = _build(world)
+
+        def boom(url):
+            raise KeyboardInterrupt
+        fetch, calls = self._fetcher({"https://example.invalid/m/102": [(503, b"")] * 3})
+        fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=lambda s: None)  # 3 attempts used
+        with pytest.raises(KeyboardInterrupt):
+            row = _row(inv, f"meeting-{NOVATO}-101")
+            row.update(documents=[], gap="not_cached")
+            fetch_gaps(inv, world["fetched"], fetch=boom, sleep=lambda s: None)
+        assert [e["meeting_id"] for e in self._log(world)].count(f"meeting-{NOVATO}-102") == 3
 
     def test_docx_minutes_are_saved_as_docx(self, world):
         inv = _build(world)
-        body = _docx_bytes()
+        body = _docx_bytes("MINUTES of the fictional council. Roll call. " + "words " * 60)
         fetch, _ = self._fetcher({"https://example.invalid/m/102": [(200, body)]})
-        log = fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=lambda s: None)
-        assert log[0]["format"] == "docx"
+        summary = fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=lambda s: None)
+        assert summary[0]["format"] == "docx"
         assert (world["fetched"] / f"meeting-{NOVATO}-102.docx").read_bytes() == body
         assert _row(_build(world), f"meeting-{NOVATO}-102")["documents"][0]["format"] == "docx"
 
-    def test_html_error_page_with_200_is_not_minutes(self, world):
+    @pytest.mark.parametrize("body,error", [
+        (b"", "empty_body"),
+        (ERROR_HTML, "not_minutes"),
+        (b"<html><body></body></html>", "not_minutes"),
+        (b"plain text", "unknown_format"),
+    ])
+    def test_a_200_that_is_not_minutes_is_a_failure(self, world, body, error):
         inv = _build(world)
-        fetch, _ = self._fetcher({"https://example.invalid/m/102": [(200, b"")] * 3})
-        log = fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=lambda s: None)
-        assert log[0]["status"] == "failed" and log[0]["error"] == "empty_body"
+        fetch, _ = self._fetcher({"https://example.invalid/m/102": [(200, body)] * 3})
+        summary = fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=lambda s: None)
+        assert summary[0]["status"] == "failed" and summary[0]["error"] == error
+        assert _row(_build(world), f"meeting-{NOVATO}-102")["gap"] == f"fetch_failed:{error}"
 
-    def test_consecutive_requests_are_at_least_a_second_apart(self, world):
+    @pytest.mark.parametrize("bad", [-1, 151])
+    def test_document_cap_is_validated(self, world, bad):
+        with pytest.raises(ValueError):
+            fetch_gaps(_build(world), world["fetched"], fetch=lambda u: (200, b"", None),
+                       sleep=lambda s: None, max_docs=bad)
+
+    def test_document_cap_is_cumulative_across_runs(self, world):
         inv = _build(world)
+        fetch, calls = self._fetcher({"https://example.invalid/m/102": [(503, b"")] * 3})
+        assert fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=lambda s: None, max_docs=1)
         row = _row(inv, f"meeting-{NOVATO}-101")
         row.update(documents=[], gap="not_cached")
-        fetch, calls = self._fetcher({"https://example.invalid/m/101": [(500, b""), (200, b"%PDF-1.4 a")],
-                                      "https://example.invalid/m/102": [(200, b"%PDF-1.4 b")]})
-        sleeps = []
-        fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=sleeps.append)
-        assert len(calls) == 3 and sleeps == [1.0, 1.0]
+        assert fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=lambda s: None, max_docs=1) == []
+        assert len(calls) == 3
 
-    def test_document_cap(self, world):
-        inv = _build(world)
+    def test_document_cap_zero(self, world):
         fetch, calls = self._fetcher({})
-        assert fetch_gaps(inv, world["fetched"], fetch=fetch, sleep=lambda s: None, max_docs=0) == []
+        assert fetch_gaps(_build(world), world["fetched"], fetch=fetch, sleep=lambda s: None,
+                          max_docs=0) == []
         assert calls == []
+
+
+class TestMinutesRecords:
+    def test_several_minutes_records_for_one_meeting_are_refused(self, world):
+        nodes = (world["export"] / "nodes.jsonl").read_text() + json.dumps(
+            _record(f"record-{NOVATO}-101-minutes-2", "https://example.invalid/m/101-2")) + "\n"
+        (world["export"] / "nodes.jsonl").write_text(nodes)
+        with (world["export"] / "edges.jsonl").open("a") as fh:
+            fh.write(json.dumps(_edge(f"meeting-{NOVATO}-101", f"record-{NOVATO}-101-minutes-2")) + "\n")
+        with pytest.raises(InventoryError, match="several minutes records"):
+            _build(world)
 
 
 class TestCli:
