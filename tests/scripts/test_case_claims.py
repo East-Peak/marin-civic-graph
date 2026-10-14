@@ -655,3 +655,22 @@ class TestRound3:
     def test_reversed_range_is_an_error(self):
         problems = cc.check_case_md("## Notes\n$5M to $1M [C-Q1-007].\n", self.ROWS)
         assert any("reversed" in p for p in problems)
+
+
+# --- word-scaled amounts in sources ("$2 million") ---------------------------------------------------------------
+
+def test_a_word_scaled_currency_token_counts_at_its_scale():
+    from decimal import Decimal as D
+    unit = "The board authorized $2 million for the sample fund."
+    assert cc.amount_in(unit, "authorized $2 million for", D("2000000.00"))
+    assert not cc.amount_in(unit, "authorized $2 million for", D("2.00"))
+
+
+def test_a_word_scale_without_a_currency_sign_is_not_money():
+    from decimal import Decimal as D
+    assert not cc.amount_in("served 2 million meals", "served 2 million meals", D("2000000.00"))
+
+
+def test_a_scale_word_must_stand_alone():
+    from decimal import Decimal as D
+    assert not cc.amount_in("a $2 millionaire", "a $2 millionaire", D("2000000.00"))

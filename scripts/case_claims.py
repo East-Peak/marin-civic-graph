@@ -351,11 +351,16 @@ def _xml_element_text(data: bytes, path: str) -> tuple[str | None, str | None]:
 # A currency token: optional sign / parentheses, optional $, digits with commas, optional decimals.
 INT = r"\d{1,3}(?:,\d{3})+|\d+"
 MONEY = re.compile(rf"(?<![\w,.])(?P<open>\()?(?P<s1>[{MINUS}])?(?P<cur>\$)?(?P<s2>[{MINUS}])?(?P<int>{INT})"
-                   rf"(?P<frac>\.\d+)?(?P<close>\))?(?!\w|,\d|\.\d)")
+                   rf"(?P<frac>\.\d+)?(?P<word>\s(?:million|billion|thousand)(?!\w))?(?P<close>\))?(?!\w|,\d|\.\d)",
+                   re.IGNORECASE)
+WORD_SCALE = {"million": Decimal(1_000_000), "billion": Decimal(10**9), "thousand": Decimal(1_000)}
 
 
 def _signed(match: re.Match) -> Decimal:
+    """The token's value; a written scale ("$2 million") counts only on a $ token, never on a bare number."""
     value = Decimal(match["int"].replace(",", "") + (match["frac"] or ""))
+    if match["word"]:
+        value *= WORD_SCALE[match["word"].strip().lower()] if match["cur"] else Decimal("NaN")
     return -value if match["s1"] or match["s2"] or (match["open"] and match["close"]) else value
 
 
