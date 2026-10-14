@@ -85,6 +85,14 @@ def _names_in(fragment: str) -> list[str]:
     return sorted(set(names), key=names.index)
 
 
+_LATE_IN_ROLL_RE = re.compile(rf"{_REF}\s*\(?\s*(?:arrived|present)\s+(?:at\s+)?{_TIME}", re.I)
+
+
+def _late_in(fragment: str) -> list[str]:
+    """Members a roll call lists with an arrival time: not there when it was taken."""
+    return [_key(m.group("n")) for m in _LATE_IN_ROLL_RE.finditer(fragment)]
+
+
 def _vacancies(fragment: str) -> int:
     return len(re.findall(r"\bvacan(?:t|cy)\b", fragment, re.I))
 
@@ -102,6 +110,7 @@ class _T:
     body: str | None = None
     retro: bool = False
     reset: bool = False
+    markers: tuple = ()
 
 
 @dataclass
@@ -113,6 +122,9 @@ class _State:
     pending_departure: set = field(default_factory=set)
     certain: bool = False
     body: str = "main"
+    before_closed: str = "main"
+    statement_from: tuple | None = None
+    statement_absent: set = field(default_factory=set)
     known: bool = False
     evidence: list = field(default_factory=list)
 
@@ -121,7 +133,8 @@ class _State:
 
 
 def _body_of(name: str, body: str) -> str:
-    n = name.strip()
+    # "the Board of Supervisors and Flood Control District, …": the first body named decides
+    n = re.split(r",|\s+and\s+(?=(?:the\s+)?[A-Z])", name.strip())[0].strip()
     if body == "marin-county-bos":
         if re.match(r"(?:the\s+)?(?:Marin\s+County\s+|Fictional\s+County\s+)?Board\s+of\s+Supervisors\b", n, re.I) \
                 and not _OTHER_BODY_WORDS.search(n.split(",")[0]):
@@ -165,17 +178,19 @@ def _transitions(ct: CanonicalText, body: str, skip: list[tuple[int, int]]) -> l
             if nxt:
                 abs_part = (abs_part + " " + nxt.group("a")).strip()
                 end = nxt.end()
+            late = frozenset(_late_in(pres_part))
             out.append(_T(m.start() + len(m.group(0)) - len(m.group(0).lstrip()), end, "roll_call",
-                          present=frozenset(_names_in(pres_part)), absent=frozenset(_names_in(abs_part)),
-                          vacancies=_vacancies(abs_part)))
+                          present=frozenset(_names_in(pres_part)) - late, absent=frozenset(_names_in(abs_part)),
+                          pending=late, vacancies=_vacancies(abs_part)))
     else:
         for m in _NOV_PRESENT_RE.finditer(text):
             stop = re.compile(r"\n[ \t]*\n|STAFF\s+PRESENT|COUNCIL\s+ABSENT|COUNCIL\s+EXCUSED|^[ \t]*EXCUSED|"
                               r"^[ \t]*[A-Z]\.[ \t]", re.I | re.M).search(text, m.end())
             pres_end = stop.start() if stop else min(len(text), m.end() + 400)
-            present = _names_in(text[m.end():pres_end])
+            late_here = _late_in(text[m.end():pres_end])
+            present = [n for n in _names_in(text[m.end():pres_end]) if n not in late_here]
             absent: list[str] = []
-            pending: list[str] = []
+            pending: list[str] = list(late_here)
             vac = 0
             end = pres_end
             window_end = min(len(text), pres_end + 600)
@@ -231,6 +246,25 @@ def _transitions(ct: CanonicalText, body: str, skip: list[tuple[int, int]]) -> l
         out.append(t)
         claimed.append((t.start, t.end))
 
+    # members may also be named by surname alone once a roll call has named them
+    roster_names = sorted({n for t in out for n in (t.present | t.absent | t.pending)}, key=len, reverse=True)
+    bare = None
+    if roster_names:
+        alts = "|".join(re.escape(v) for n in roster_names for v in {n.title(), n})
+        bare = rf"(?<![\w'\-])(?P<n>{alts})(?![\w'\-])"
+
+    def coordinated(m, kind: str) -> None:
+        """'left the meeting at 9:40 a.m. and returned at 10:00 a.m.': the same subject's second verb."""
+        end = text.find(". ", m.end())
+        end = len(text) if end == -1 else end
+        nl = text.find("\n\n", m.end())
+        end = min(end, nl) if nl != -1 else end
+        follow = re.compile(r"\band\s+(?:later\s+)?(?:returned|rejoined)\b" if kind == "depart"
+                            else r"\band\s+(?:later\s+)?(?:left|departed)\b", re.I).search(text, m.end(), end)
+        if follow:
+            add(_T(follow.start(), follow.end(), "arrive" if kind == "depart" else "depart",
+                   member=_key(m.group("n")), retro=retrospective(follow.start())))
+
     for m in _ALL_PRESENT_RE.finditer(text):
         if not skipped(m.start()) and not inside_roll(m.start()):
             add(_T(m.start(), m.end(), "all_present"))
@@ -255,11 +289,19 @@ def _transitions(ct: CanonicalText, body: str, skip: list[tuple[int, int]]) -> l
     for m in _RECUSE_LEFT_RE.finditer(text):
         if not skipped(m.start()) and not inside_roll(m.start()):
             add(_T(m.start(), m.end(), "depart", member=_key(m.group("n")), retro=retrospective(m.start())))
-    for rx, kind in ((_ARRIVE_RE, "arrive"), (_DEPART_RE, "depart"), (_WAS_ABSENT_RE, "absent_statement")):
+    rules = [(_ARRIVE_RE, "arrive"), (_DEPART_RE, "depart"), (_WAS_ABSENT_RE, "absent_statement")]
+    if bare:
+        verbs = {"arrive": r"(?:arrived|returned|rejoined|joined\s+the\s+meeting)\b",
+                 "depart": r"(?:left|departed|exited|stepped\s+(?:out|down|away)|was\s+excused)\b",
+                 "absent_statement": r"(?:was|is)\s+absent\b"}
+        rules += [(re.compile(rf"{bare}\s+{v}"), k) for k, v in verbs.items()]
+    for rx, kind in rules:
         for m in rx.finditer(text):
             if skipped(m.start()) or inside_roll(m.start()) or any(s <= m.start() < e for s, e in claimed):
                 continue
             add(_T(m.start(), m.end(), kind, member=_key(m.group("n")), retro=retrospective(m.start())))
+            if kind in ("arrive", "depart"):
+                coordinated(m, kind)
     for m in _WERE_ABSENT_RE.finditer(text):
         if skipped(m.start()) or inside_roll(m.start()):
             continue
@@ -276,28 +318,37 @@ def _transitions(ct: CanonicalText, body: str, skip: list[tuple[int, int]]) -> l
         s += lead
         recess = bool(_RECESS_RE.search(sent))
         reconvene = bool(_RECONVENE_RE.search(sent))
-        # the last body-changing clause of the sentence decides where the Board ends up
-        markers: list[tuple[int, str | None]] = []
+        # every body-changing clause, in order; the state machine walks them
+        markers: list[tuple[int, str, str | None]] = []
         for bm in _AS_BODY_RE.finditer(sent):
             if re.match(r"recess", bm.group(0), re.I):
-                markers.append((bm.start("b"), "recess"))
+                markers.append((bm.start("b"), "as", "recess"))
             else:
-                markers.append((bm.start("b"), _body_of(bm.group("b"), body)))
+                markers.append((bm.start("b"), "as", _body_of(bm.group("b"), body)))
         for cm in _CLOSED_RE.finditer(sent):
-            markers.append((cm.end(), "closed"))
+            markers.append((cm.end(), "closed", None))
         for om in _OPEN_RE.finditer(sent):
-            markers.append((om.end(), "main"))
+            markers.append((om.end(), "generic", None))
         for rm in _RECONVENE_RE.finditer(sent):
             if not _AS_BODY_RE.match(sent, rm.start()):
-                markers.append((rm.end(), "main"))
-        new_body = max(markers)[1] if markers else None
-        if new_body is None and not reconvene and not recess:
+                markers.append((rm.end(), "generic", None))
+        markers.sort()
+        # "reconvened in open session" is one return, not two
+        markers = [mk for i, mk in enumerate(markers)
+                   if not (mk[1] == "generic" and i and markers[i - 1][1] == "generic")]
+        if not markers and not reconvene and not recess:
             continue
-        add(_T(s, e, "reconvene" if reconvene and new_body != "recess" else "recess", body=new_body))
+        add(_T(s, e, "reconvene" if reconvene else "recess",
+               markers=tuple((k, v) for _, k, v in markers)))
 
     # member-anchored attendance wording no rule read: uncertainty
-    for ref in re.finditer(_REF, text):
-        m = _TRIGGER_RE.match(text, ref.start())
+    triggers = [_TRIGGER_RE]
+    if bare:
+        triggers.append(re.compile(_TRIGGER_RE.pattern.replace(_REF, bare, 1), re.I))
+    starts = sorted({r.start() for r in re.finditer(_REF, text)}
+                    | ({r.start() for r in re.finditer(bare, text)} if bare else set()))
+    for pos in starts:
+        m = next((mm for mm in (rx.match(text, pos) for rx in triggers) if mm), None)
         if m is None:
             continue
         if skipped(m.start()) or inside_roll(m.start()):
@@ -305,6 +356,7 @@ def _transitions(ct: CanonicalText, body: str, skip: list[tuple[int, int]]) -> l
         if any(s <= m.start() < e or s < m.end() <= e for s, e in claimed):
             continue
         add(_T(m.start(), m.end(), "uncertain", member=_key(m.group("n"))))
+        claimed.append((m.start(), m.end()))
 
     out.sort(key=lambda t: (t.start, t.kind))
     return out
@@ -317,14 +369,13 @@ def _span(ct: CanonicalText, start: int, end: int) -> dict:
 def resolve(ct: CanonicalText, *, body: str, events: list[dict]) -> tuple[list[dict], list[dict]]:
     """(events with attendance decided, attendance trace)."""
     seats = SEATS[body]
+    # attendance never reads a vote block or a motion clause as a transition; everything else it
+    # reads (a recusal sentence may also say who left the room)
     skip = []
     for ev in events:
-        prose = {(x["span"]["start"], x["span"]["end"]) for x in ev.get("item_exceptions", [])}
-        for c in ev["consumed"]:
-            if (c["start"], c["end"]) not in prose:  # a recusal sentence may also say who left
+        for c in ([ev.get("block")] + ([ev["motion"]["span"]] if ev.get("motion") else [])):
+            if c:
                 skip.append((c["start"], c["end"]))
-        if ev.get("block"):
-            skip.append((ev["block"]["start"], ev["block"]["end"]))
     transitions = _transitions(ct, body, skip)
     items: list[tuple[int, int, str, object]] = [(t.start, 0, "t", t) for t in transitions]
     for ev in events:
@@ -348,10 +399,10 @@ def resolve(ct: CanonicalText, *, body: str, events: list[dict]) -> tuple[list[d
                 st.roster = set(t.present | t.absent | t.pending)
                 st.vacancies = t.vacancies
                 st.present = set(t.present)
-                st.pending_arrival = set(t.pending)
-                st.pending_departure = set()
+                # an unplaced arrival stays pending until the member is seen present (fold 11)
+                st.pending_arrival = (st.pending_arrival - t.present) | set(t.pending)
+                st.pending_departure = st.pending_departure - t.absent
                 st.known = True
-                st.body = "main"
                 re_establish(span)
             elif t.kind == "all_present":
                 if st.known:
@@ -359,6 +410,14 @@ def resolve(ct: CanonicalText, *, body: str, events: list[dict]) -> tuple[list[d
                     st.pending_arrival.clear()
                     st.pending_departure.clear()
                 re_establish(span)
+            elif (t.kind == "absent_statement" and st.known and st.statement_from is not None
+                  and st.statement_from[0] <= t.start <= st.statement_from[1] + 3 and t.member in st.roster):
+                # "The Board reconvened at 2:00 p.m. Supervisor X was absent.": a statement of who is there
+                st.statement_absent.add(t.member)
+                st.present = set(st.roster) - st.statement_absent
+                st.pending_departure -= st.statement_absent
+                re_establish(span)
+                st.statement_from = (st.statement_from[0], max(st.statement_from[1], t.end))
             elif t.kind in ("arrive", "depart", "absent_statement"):
                 if t.retro and t.member and st.known and t.member not in st.roster:
                     st.roster.add(t.member)  # a summarized late arrival is a member all the same
@@ -380,18 +439,30 @@ def resolve(ct: CanonicalText, *, body: str, events: list[dict]) -> tuple[list[d
                         st.pending_departure.discard(t.member)
                     st.evidence.append(span)
                     st.certain = st.certain or False
-            elif t.kind == "recess":
-                if t.body == "recess":
-                    st.body = "recess"
-                elif t.body:
-                    st.body = t.body
+            elif t.kind in ("recess", "reconvene"):
+                entered_here = False
+                for kind, value in t.markers:
+                    if kind == "as":
+                        st.body = value
+                        entered_here = value != "main"
+                    elif kind == "closed":
+                        st.before_closed = st.body
+                        st.body = "closed"
+                    else:  # a generic reconvene / open session
+                        if st.body == "closed":
+                            st.body = st.before_closed
+                        elif st.body != "main":
+                            if st.body.startswith("other:") and not entered_here:
+                                st.certain = False  # back from another body: who returned is unstated
+                            st.body = "main"
                 st.evidence.append(span)
-            elif t.kind == "reconvene":
-                st.body = t.body or "main"
-                st.evidence.append(span)
+                if t.kind == "reconvene":
+                    st.statement_from, st.statement_absent = (t.start, t.end), set()
             elif t.kind == "uncertain":
                 st.certain = False
                 st.evidence.append(span)
+            if t.kind not in ("reconvene", "absent_statement"):
+                st.statement_from = None
             trace.append({"kind": t.kind, "span": span, "member": t.member, "body_after": st.body,
                           "present_after": sorted(st.present), "certain_after": st.certain,
                           "pending_after": sorted(st.pending_arrival | st.pending_departure)})

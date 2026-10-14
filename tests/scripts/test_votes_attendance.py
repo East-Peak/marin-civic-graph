@@ -206,6 +206,81 @@ class TestExpansion:
         assert ev["status"] == "held" and "tally_mismatch" in ev["hold_reasons"]
 
 
+class TestCodexRoundOne:
+    def test_a_bare_roster_surname_as_the_subject(self):
+        _, evs, _ = _run(["Roll Call", ROLL, *_item(1), "Elm left the meeting at 10:00 a.m.", *_item(2)])
+        assert [_ayes(e) for e in evs] == [FIVE, FIVE[:4]]
+
+    def test_left_and_returned_in_one_sentence(self):
+        lines = ["Roll Call", ROLL, *_item(1),
+                 "Supervisor Elm left the meeting at 9:40 a.m. and returned at 10:00 a.m.", *_item(2)]
+        _, evs, _ = _run(lines)
+        assert [_ayes(e) for e in evs] == [FIVE, FIVE]
+
+    def test_a_roll_call_of_another_body_does_not_restore_the_board(self):
+        lines = ["Roll Call", ROLL, "The Board recessed to meet as the Fictional Housing Authority.", ROLL,
+                 *_item(1)]
+        _, [ev], _ = _run(lines)
+        assert ev["status"] == "held" and ev["hold_reasons"] == ["body_unclear"]
+
+    def test_a_generic_reconvene_after_another_body_is_uncertain_until_attendance_is_stated(self):
+        lines = ["Roll Call", ROLL, "The Board recessed to meet as the Fictional Housing Authority.",
+                 "The Board reconvened at 2:00 p.m.", *_item(1),
+                 "The Board reconvened at 3:00 p.m. All Supervisors were present.", *_item(2)]
+        _, evs, _ = _run(lines)
+        assert [(e["status"], e["hold_reasons"]) for e in evs] == [("held", ["ambiguous_attendance"]),
+                                                                   ("expanded", [])]
+
+    def test_a_reconvene_with_an_absence_statement_re_establishes_attendance(self):
+        lines = ["Roll Call", ROLL, "The Board recessed to meet as the Fictional Housing Authority.",
+                 "The Board reconvened at 2:00 p.m. Supervisor Elm was absent.", *_item(1)]
+        _, [ev], _ = _run(lines)
+        assert ev["status"] == "expanded" and _ayes(ev) == FIVE[:4]
+
+    def test_two_members_stated_absent_on_reconvening(self):
+        lines = ["Roll Call", ROLL, "The Board recessed to meet as the Fictional Housing Authority.",
+                 "The Board reconvened in open session at 1:31 p.m. Supervisors Dogwood and Elm were absent.",
+                 *_item(1)]
+        _, [ev], _ = _run(lines)
+        assert ev["status"] == "expanded" and _ayes(ev) == FIVE[:3]
+
+    def test_returning_from_a_recess_of_the_board_itself_keeps_certainty(self):
+        lines = ["Roll Call", ROLL, "Recess as the Fictional County Board of Supervisors",
+                 "Reconvene in Open Session at 1:34 p.m.", *_item(1)]
+        _, [ev], _ = _run(lines)
+        assert ev["status"] == "expanded"
+
+    def test_convening_as_the_board_and_other_bodies_is_the_board(self):
+        lines = ["Roll Call", ROLL, "9:00 a.m. Convene as the Fictional County Board of Supervisors and Flood "
+                                    "Control District Board", *_item(1)]
+        _, [ev], _ = _run(lines)
+        assert ev["status"] == "expanded"
+
+    def test_closed_session_returns_to_the_body_that_left_for_it(self):
+        lines = ["Roll Call", ROLL, "The Board recessed to meet as the Fictional Housing Authority.",
+                 "The Authority recessed to meet in closed session.", "The meeting reconvened in open session.",
+                 *_item(1)]
+        _, [ev], _ = _run(lines)
+        assert ev["status"] == "held" and ev["hold_reasons"] == ["body_unclear"]
+
+    def test_a_timed_annotation_inside_the_roll_call_is_pending(self):
+        roll = ("Present: Supervisor Alder; Supervisor Birch; Supervisor Cedar; Supervisor Dogwood; "
+                "Supervisor Elm (arrived at 9:30 a.m.)")
+        _, [ev], _ = _run(["Roll Call", roll, *_item(1)])
+        assert ev["status"] == "held" and ev["hold_reasons"] == ["pending_transition"]
+
+    def test_a_later_roll_call_still_listing_the_member_absent_keeps_the_arrival_pending(self):
+        lines = ["A.   ROLL CALL", "     COUNCIL PRESENT: Councilmember Ann Alder, Councilmember Bea Birch,",
+                 "     Councilmember Cy Cedar, and Councilmember Di Dogwood",
+                 "     COUNCIL EXCUSED TARDINESS: Councilmember Ed Elm arrived at 6:52 p.m.", "",
+                 "B.   RECONVENE", "     COUNCIL PRESENT: Councilmember Ann Alder, Councilmember Bea Birch,",
+                 "     Councilmember Cy Cedar, and Councilmember Di Dogwood", "     COUNCIL ABSENT: Councilmember Ed Elm",
+                 "", "C.   ITEM", "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch to approve.", "     AYES: ALL", "     Motion carried."]
+        _, [ev], _ = _run(lines, body=NOVATO)
+        assert ev["status"] == "held" and ev["hold_reasons"] == ["pending_transition"]
+
+
 class TestRetrospectiveArrival:
     NOV_ROLL = ["A.   CONVENE AND ROLL CALL",
                 "     COUNCIL PRESENT: Mayor Ann Alder, Mayor Pro Tempore Bea Birch,",

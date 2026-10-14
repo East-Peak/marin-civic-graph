@@ -128,6 +128,44 @@ def test_a_name_key_that_does_not_match_its_text_fails():
     assert validate_document(ct, BOS, bad)
 
 
+def test_ayes_all_without_a_colon_validates():
+    lines = ["Roll Call", ROLL, "1.", "Item.", "M/s Supervisor Alder - Supervisor Birch to approve.",
+             "Thereafter, the vote on the pending motion was AYES ALL"]
+    ct, evs = _world(lines)
+    assert evs[0]["status"] == "expanded" and validate_document(ct, BOS, evs) == []
+
+
+def test_a_deleted_category_member_fails_even_with_the_name_inferred_instead():
+    lines = ["Roll Call", ROLL, "1.", "Item.", "M/s Supervisor Alder - Supervisor Birch to approve.",
+             "AYES: ALL", "ABSENT: Supervisor Elm"]
+    ct, evs = _world(lines)
+    bad = copy.deepcopy(evs)
+    bad[0]["categories"]["absent"] = []
+    bad[0]["categories"]["aye"].append({"name": "ELM", "raw": None, "span": None, "inferred": True})
+    assert validate_document(ct, BOS, bad)
+
+
+def test_a_fabricated_recusal_fails():
+    ct, evs = _world(["Roll Call", ROLL, "1.", "Item.", "M/s Supervisor Alder - Supervisor Birch to approve.",
+                      "AYES: ALL"])
+    bad = copy.deepcopy(evs)
+    bad[0]["item_exceptions"] = [{"name": "ELM", "kind": "recused", "span": bad[0]["motion"]["span"]}]
+    bad[0]["categories"]["aye"] = [n for n in bad[0]["categories"]["aye"] if n["name"] != "ELM"]
+    assert validate_document(ct, BOS, bad)
+
+
+def test_a_consumed_span_hiding_a_departure_fails():
+    lines = ["Roll Call", ROLL, "(Supervisor Elm absent at 10:00 a.m.)", "1.", "Item.",
+             "M/s Supervisor Alder - Supervisor Birch to approve.", "AYES: ALL"]
+    ct, evs = _world(lines)
+    bad = copy.deepcopy(evs)
+    dep = ct.text.index("(Supervisor Elm absent")
+    bad[0]["consumed"].append(ct.locate(dep, dep + len("(Supervisor Elm absent at 10:00 a.m.)")))
+    bad[0]["categories"]["aye"].append({"name": "ELM", "raw": None, "span": None, "inferred": True})
+    bad[0]["attendance"]["evidence"] = bad[0]["attendance"]["evidence"][:1]
+    assert validate_document(ct, BOS, bad)
+
+
 def test_held_events_are_not_validated_as_accepted():
     lines = ["1.", "Item.", "AYES: ALDER"]
     ct, evs = _world(lines)
