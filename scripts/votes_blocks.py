@@ -205,7 +205,7 @@ def surname(name_with_title: str | None) -> str | None:
 def is_transcript(ct: CanonicalText) -> bool:
     """A verbatim caption transcript (SPEAKER: text lines), not minutes."""
     raw = [ln for ln in ct.text.split("\n") if ln.strip()]
-    numbered = sum(1 for ln in raw if _LINE_NUMBER_RE.match(ln))
+    numbered = sum(1 for line in raw if _LINE_NUMBER_RE.match(line))
     lines = [_LINE_NUMBER_RE.sub("", ln).strip() for ln in raw]
     lines = [ln for ln in lines if ln]
     speakers = [ln for ln in lines if _TRANSCRIPT_LINE_RE.match(ln) and not _LABEL_RE.match(ln)]
