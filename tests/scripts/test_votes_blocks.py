@@ -346,6 +346,25 @@ class TestNovatoBasics:
         assert [(e["motion"] and e["motion"]["mover"], e["hold_reasons"]) for e in events] == [
             ("ALDER", ["no_vote_recorded"]), (None, ["vote_without_motion"])]
 
+    def test_a_numeric_narrative_vote_after_the_motion_is_neither_its_tally_nor_consumed(self):
+        lines = ["I.   ITEM", "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch to continue the item. The council voted 3-0 to reconsider a",
+                 "     different motion.", "J.   NEXT"]
+        ct, [ev] = _parse(NOVATO, lines)
+        assert ev["tally"] is None and ev["hold_reasons"] == ["no_vote_recorded"]
+        pos = ct.text.index("voted 3-0")
+        assert not any(c["start"] <= pos < c["end"] for c in ev["consumed"])
+
+    def test_an_individual_motion_under_a_consent_heading_keeps_its_subitem(self):
+        lines = ["G.   CONSENT CALENDAR", "     G.1.  First item pulled for discussion.",
+                 "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch to continue the first item.", "     G.2.  Second item.",
+                 "     AYES: ALDER, BIRCH, CEDAR", "     NOES: None", "     Motion carried.", "H.   NEXT"]
+        _, events = _parse(NOVATO, lines)
+        assert [(e["item"]["sub"], e["hold_reasons"]) for e in events] == [
+            ("G.1", ["no_vote_recorded"]), ("G.2", ["vote_without_motion"])]
+        assert events[0]["consent"] is False
+
     def test_a_consent_motion_owns_its_vote_across_subitems(self):
         lines = ["G.   CONSENT CALENDAR", "     G.1.  First item.",
                  "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
@@ -481,6 +500,17 @@ class TestBoardOfSupervisors:
         _, events = _parse(BOS, BOS_DOC)
         ev = events[2]
         assert ev["consent"] is True and ev["item"]["top"] == "2" and ev["item"]["sub"] is None
+
+    @pytest.mark.parametrize("motion", [
+        "M/s Supervisor Alder - Supervisor Birch to approve Consent A (Items CA-1 through CA-2 with the exception "
+        "of CA-3)",
+        "M/s Supervisor Alder - Supervisor Birch to approve Items CA-1 through CA-2.",
+    ])
+    def test_grouped_motion_wording_without_the_word_calendar(self, motion):
+        lines = ["2.", "Consent items", "CA-1. First.", motion, "CA-2. Second.", "CA2 - STAFF REPORT", "AYES: ALL",
+                 "3.", "Next."]
+        _, [ev] = _parse(BOS, lines)
+        assert ev["consent"] is True and ev["status"] == "needs_attendance"
 
     def test_vote_line_tally_and_named_block(self):
         _, events = _parse(BOS, BOS_DOC)

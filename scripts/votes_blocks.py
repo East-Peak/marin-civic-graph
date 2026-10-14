@@ -472,9 +472,14 @@ def _map_collapsed(text: str, start: int, end: int, cpos: int) -> int:
     return end
 
 
+_GROUPED_RE = re.compile(r"consent\s+(?:calendar|agenda)|\bconsent\s+[AB]\b"
+                         r"|\bitems?\s+(?:C[AB]-\d+|[A-Z]\.\d+)\.?\s*(?:through|to|-|and|&)", re.I)
+
+
 def _looks_consent(headings: list[_Heading], pos: int, lead: str) -> bool:
-    top, _ = _item_at(headings, pos)
-    return bool(re.search(r"consent\s+calendar", (top.title if top else "") + " " + lead, re.I))
+    """Grouped-motion evidence is the motion's own wording ("approve the Consent Calendar …");
+    a section title alone never lets an individual motion cross its subitem."""
+    return bool(_GROUPED_RE.search(lead))
 
 
 def _novato_motions(ct: CanonicalText, headings: list[_Heading]) -> list[_Motion]:
@@ -517,14 +522,31 @@ def _novato_motions(ct: CanonicalText, headings: list[_Heading]) -> list[_Motion
             if mm and mm.start() < 80:
                 mo.mover = surname(mm.group("m") or mm.group("m2"))
                 clause_c_end = mm.end()
+        # a printed tally belongs to this motion only if it sits in the motion's own sentence, or in
+        # the sentence that runs straight into this motion's vote block
+        first_end = _SENTENCE_END_RE.search(col, clause_c_end)
+        first_end_pos = first_end.end() if first_end else len(col)
+
+        def owned(m) -> bool:
+            if m is None:
+                return False
+            if m.start() < first_end_pos:
+                return True
+            if first_label is None:
+                return False
+            nxt_end = _SENTENCE_END_RE.search(col, m.end())
+            return nxt_end is None or not col[nxt_end.end():].strip()
+
         t = _NOV_TALLY_RE.search(col, clause_c_end)
         anyt = _NOV_TALLY_ANY_RE.search(col, clause_c_end)
+        t = t if owned(t) else None
+        anyt = anyt if owned(anyt) else None
         if t:
             mo.tally = {"printed": "-".join(x for x in (t.group("a"), t.group("n"), t.group("x")) if x),
                         "a": int(t.group("a")), "n": int(t.group("n")),
                         "x": int(t.group("x")) if t.group("x") else None, "keyed": {}}
             mo.extra_spans.append((at(t.start()), at(t.end())))
-            if t.start() - clause_c_end < 40 and mo.kind != "restated":
+            if t.start() - clause_c_end < 40 and t.start() < first_end_pos and mo.kind != "restated":
                 clause_c_end = t.end()
         elif anyt:
             mo.tally = {"printed": _collapsed(text, at(anyt.start()), min(window_end, at(anyt.start()) + 40)).strip(),
@@ -905,8 +927,7 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
         if blk and not has_all and listed != kind and not (kind == "recused" and listed == "absent"):
             hold.append("exception_scope_conflict")
 
-    consent = bool(re.search(r"consent\s+calendar", ((top.title if top else "") + " "
-                                                     + (motion["text"] if motion else "")), re.I))
+    consent = bool(motion and _GROUPED_RE.search(motion["text"]))
     item = {"top": top.label if top else None, "sub": None if consent else (sub.label if sub else None),
             "title": ((sub if (sub and not consent) else top).title if (sub or top) else None),
             "scope": scope[0] if scope else None}
