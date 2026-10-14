@@ -1358,3 +1358,11 @@ def test_challenge_code_inside_an_html_comment_is_not_a_challenge(env):
     body = b"<html><head><title>Minutes</title></head><body><!-- grecaptcha.render disabled --><p>Minutes</p></body></html>"
     site.routes["/a.html"] = page(body)
     assert env.capture(site.url("/a.html"))["bytes"] == len(body)
+
+
+def test_challenge_code_in_a_classic_commented_script_wrapper_still_stops(env):
+    site = env.site()
+    site.routes["/a.html"] = page(b"<html><head><title>Sample</title><script><!--\ngrecaptcha.render('box');\n//--></script>"
+                                  b"</head></html>")
+    with pytest.raises(SourceRestricted):
+        env.capture(site.url("/a.html"))

@@ -14,6 +14,8 @@ vi.mock("@/lib/neo4j", () => ({
   }),
 }));
 
+const KIND = "campaign_contribution";
+
 const CASE_NODES: [string, string, string, Record<string, unknown>][] = [
   ["election-2030-sample-measure-q", "Election", "Sample County Measure Q (2030)", { title: "Sample County Measure Q (2030)", election_type: "county_measure" }],
   ["decision-sample-board-1-item-6", "Decision", "Sample fund — board item 6", { title: "Establish the sample fund", vote_summary: "AYES: ALL", agenda_item_number: "6" }],
@@ -46,7 +48,8 @@ function makeDb(withCase: boolean): string {
   edge.run("org-example-fund", "FROM_SOURCE", "moneyflow-7-a1");
   edge.run("moneyflow-7-a1", "TO_TARGET", "committee-netfile-7");
   db.prepare("INSERT INTO money_rollups VALUES (?, ?, ?, ?, ?, ?, ?)").run(
-    "org-example-fund", 0, 0, 1, 250, JSON.stringify([]), JSON.stringify({}));
+    "org-example-fund", 0, 0, 1, 250, JSON.stringify([]),
+    JSON.stringify([{ kind: KIND, in_count: 0, in_total: 0, out_count: 1, out_total: 250 }]));
   if (withCase) {
     for (const [id, type, label, props] of CASE_NODES) {
       node.run(id, type, label, JSON.stringify({ name: label, ...props }));
@@ -97,6 +100,8 @@ describe("worked-case node types on existing entity pages", () => {
     expect(ids(before)).not.toContain("election-2030-sample-measure-q");
     const fundBefore = await load(base, "org-example-fund");
     const fundAfter = await load(withCase, "org-example-fund");
-    expect(JSON.stringify(fundAfter?.money_rollup ?? null)).toBe(JSON.stringify(fundBefore?.money_rollup ?? null));
+    expect(fundBefore?.money_rollup?.money_out_total).toBe(250);
+    expect(fundBefore?.money_rollup?.by_kind).toEqual([{ kind: KIND, in_count: 0, in_total: 0, out_count: 1, out_total: 250 }]);
+    expect(fundAfter?.money_rollup).toEqual(fundBefore?.money_rollup);
   });
 });
