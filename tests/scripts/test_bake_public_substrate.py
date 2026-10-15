@@ -1410,3 +1410,125 @@ def test_the_bake_refuses_an_artifact_with_colliding_routes(tmp_path: Path) -> N
         bake_substrate([*node_sources, node_sources[0].parent / "extra-nodes.jsonl"],
                        edge_sources, registry, sqlite_path, report_path)
     assert not sqlite_path.exists()
+
+
+# --- Edge properties (registry/edge-properties.json): only CAST_VOTE.vote, in vocabulary, reaches the artifact. ---
+
+EDGE_SENTINEL = "ledger_secret_code"
+EDGE_SENTINEL_VALUE = "fictional-s3cret-7731"
+
+
+def _live_export_fixture_with_votes(tmp_path: Path) -> tuple[Path, Path, Path, Path, Path]:
+    live_dir, attach_dir, registry, sqlite_path, report_path = _live_export_fixture(tmp_path)
+    nodes = [json.loads(line) for line in (live_dir / "nodes.jsonl").read_text().splitlines()]
+    edges = [json.loads(line) for line in (live_dir / "edges.jsonl").read_text().splitlines()]
+    nodes += [
+        {"id": "person-avery-quill", "labels": ["Person"], "properties": {"name": "Avery Quill"}},
+        {"id": "person-bo-tarn", "labels": ["Person"], "properties": {"name": "Bo Tarn"}},
+        {"id": "decision-fictional-levee", "labels": ["Decision"], "properties": {"title": "Fictional levee"}},
+    ]
+    edges += [
+        {
+            "start_id": "person-avery-quill",
+            "end_id": "decision-fictional-levee",
+            "type": "CAST_VOTE",
+            "properties": {
+                "vote": "absent",
+                "seat_id": "seat-fictional-d9",
+                "seat_service_id": "seatservice-fictional-d9",
+                EDGE_SENTINEL: EDGE_SENTINEL_VALUE,
+            },
+        },
+        {
+            "start_id": "person-bo-tarn",
+            "end_id": "decision-fictional-levee",
+            "type": "CAST_VOTE",
+            "properties": {"vote": "maybe-later-7731"},
+        },
+        {
+            "start_id": "person-avery-quill",
+            "end_id": "org-target",
+            "type": "DERIVED_FROM_RECORD",
+            "properties": {"vote": "aye", EDGE_SENTINEL: EDGE_SENTINEL_VALUE},
+        },
+    ]
+    _write_jsonl(live_dir / "nodes.jsonl", nodes)
+    _write_jsonl(live_dir / "edges.jsonl", edges)
+    return live_dir, attach_dir, registry, sqlite_path, report_path
+
+
+def _bake_votes(tmp_path: Path) -> tuple[Path, dict]:
+    live_dir, attach_dir, registry, sqlite_path, report_path = _live_export_fixture_with_votes(tmp_path)
+    report = bake_substrate(
+        registry_path=registry,
+        sqlite_path=sqlite_path,
+        report_path=report_path,
+        source="live-export",
+        live_export_dir=live_dir,
+        attach_overlay_dir=attach_dir,
+    )
+    return sqlite_path, report
+
+
+def test_the_edges_table_carries_only_allowlisted_in_vocabulary_props(tmp_path: Path) -> None:
+    sqlite_path, report = _bake_votes(tmp_path)
+
+    with sqlite3.connect(sqlite_path) as conn:
+        columns = [(row[1], row[2], row[3]) for row in conn.execute("PRAGMA table_info(edges)")]
+        rows = conn.execute("SELECT source, rel, target, props FROM edges ORDER BY source, rel, target").fetchall()
+
+    assert columns == [
+        ("source", "TEXT", 1),
+        ("rel", "TEXT", 1),
+        ("target", "TEXT", 1),
+        ("props", "TEXT", 0),
+    ]
+    by_triple = {(source, rel, target): props for source, rel, target, props in rows}
+    assert by_triple[("person-avery-quill", "CAST_VOTE", "decision-fictional-levee")] == '{"vote":"absent"}'
+    # An out-of-vocabulary vote and every non-allowlisted property leave no trace: NULL, never '{}'.
+    assert by_triple[("person-bo-tarn", "CAST_VOTE", "decision-fictional-levee")] is None
+    assert by_triple[("person-avery-quill", "DERIVED_FROM_RECORD", "org-target")] is None
+    assert [triple for triple, props in by_triple.items() if props is not None] == [
+        ("person-avery-quill", "CAST_VOTE", "decision-fictional-levee")
+    ]
+    assert report["edge_props"] == {
+        "CAST_VOTE": {
+            "kept": {"vote": 1},
+            "dropped_out_of_vocabulary": {"vote": 1},
+            "dropped_non_allowlisted": 3,
+        },
+        "DERIVED_FROM_RECORD": {
+            "kept": {},
+            "dropped_out_of_vocabulary": {},
+            "dropped_non_allowlisted": 2,
+        },
+        "SAME_AS": {
+            "kept": {},
+            "dropped_out_of_vocabulary": {},
+            "dropped_non_allowlisted": 4,
+        },
+    }
+
+
+def test_no_private_edge_property_or_invalid_vote_reaches_the_artifact_or_report(tmp_path: Path) -> None:
+    sqlite_path, _report = _bake_votes(tmp_path)
+
+    artifact = sqlite_path.read_bytes()
+    report_text = (tmp_path / "substrate-bake-report.json").read_text(encoding="utf-8")
+    for leaked in (EDGE_SENTINEL, EDGE_SENTINEL_VALUE, "maybe-later-7731", "seat-fictional-d9",
+                   "seatservice-fictional-d9", "seat_id", "seat_service_id"):
+        assert leaked.encode() not in artifact, leaked
+        assert leaked not in report_text, leaked
+
+
+def test_the_pre_props_reader_still_reads_the_new_edges_table(tmp_path: Path) -> None:
+    # Rollback safety: the serving code before this column selects three explicit columns.
+    sqlite_path, _report = _bake_votes(tmp_path)
+
+    with sqlite3.connect(sqlite_path) as conn:
+        rows = conn.execute("SELECT source, rel, target FROM edges WHERE rel IN ('CAST_VOTE')").fetchall()
+
+    assert sorted(rows) == [
+        ("person-avery-quill", "CAST_VOTE", "decision-fictional-levee"),
+        ("person-bo-tarn", "CAST_VOTE", "decision-fictional-levee"),
+    ]

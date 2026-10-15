@@ -1,0 +1,92 @@
+"""Which relationship properties are public: registry/edge-properties.json, shared with the app.
+
+A property survives only when its relationship type allowlists it and its value is one of the listed strings (exact
+match). Everything else is dropped and counted; the counts never carry a value or an unlisted property's name.
+"""
+from __future__ import annotations
+
+import json
+import re
+from collections import Counter, defaultdict
+from pathlib import Path
+
+DEFAULT_EDGE_PROPERTIES_PATH = Path(__file__).resolve().parent.parent / "registry" / "edge-properties.json"
+
+# The app builds Cypher from these names, so they are held to identifier shapes here and there.
+REL_NAME = re.compile(r"^[A-Z][A-Z_]*$")
+PROP_NAME = re.compile(r"^[a-z][a-z_]*$")
+
+EdgeAllowlist = dict[str, dict[str, tuple[str, ...]]]
+
+
+def load_edge_allowlist(path: Path | str = DEFAULT_EDGE_PROPERTIES_PATH) -> EdgeAllowlist:
+    relationships = json.loads(Path(path).read_text(encoding="utf-8"))["relationships"]
+    allowlist: EdgeAllowlist = {}
+    for rel, props in relationships.items():
+        if not REL_NAME.match(rel) or not isinstance(props, dict) or not props:
+            raise ValueError(f"edge-properties: bad relationship entry {rel!r}")
+        allowlist[rel] = {}
+        for prop, values in props.items():
+            if not PROP_NAME.match(prop):
+                raise ValueError(f"edge-properties: bad property name {prop!r} on {rel}")
+            if (
+                not isinstance(values, list)
+                or not values
+                or not all(isinstance(value, str) and value for value in values)
+                or len(set(values)) != len(values)
+            ):
+                raise ValueError(f"edge-properties: {rel}.{prop} needs a list of distinct nonempty strings")
+            allowlist[rel][prop] = tuple(values)
+    return allowlist
+
+
+class EdgePropStats:
+    def __init__(self) -> None:
+        self._kept: defaultdict[str, Counter[str]] = defaultdict(Counter)
+        self._out_of_vocabulary: defaultdict[str, Counter[str]] = defaultdict(Counter)
+        self._non_allowlisted: Counter[str] = Counter()
+        self._rels: set[str] = set()
+
+    def note(self, rel: str, prop: str, outcome: str) -> None:
+        """outcome: "kept", "out_of_vocabulary" or "non_allowlisted" (whose property name is never kept)."""
+        self._rels.add(rel)
+        if outcome == "kept":
+            self._kept[rel][prop] += 1
+        elif outcome == "out_of_vocabulary":
+            self._out_of_vocabulary[rel][prop] += 1
+        else:
+            self._non_allowlisted[rel] += 1
+
+    def as_report(self) -> dict:
+        return {
+            rel: {
+                "kept": dict(sorted(self._kept[rel].items())),
+                "dropped_out_of_vocabulary": dict(sorted(self._out_of_vocabulary[rel].items())),
+                "dropped_non_allowlisted": self._non_allowlisted[rel],
+            }
+            for rel in sorted(self._rels)
+        }
+
+
+def public_edge_props(
+    rel: str,
+    props: dict | None,
+    allowlist: EdgeAllowlist,
+    stats: EdgePropStats,
+) -> dict[str, str] | None:
+    """The public subset of one edge's properties, or None when nothing survives (the one "no property" form)."""
+    if not props:
+        return None
+    allowed = allowlist.get(rel, {})
+    kept: dict[str, str] = {}
+    for prop, value in props.items():
+        if value is None:
+            continue
+        if prop not in allowed:
+            stats.note(rel, prop, "non_allowlisted")
+        elif isinstance(value, str) and value in allowed[prop]:
+            kept[prop] = value
+            stats.note(rel, prop, "kept")
+        else:
+            stats.note(rel, prop, "out_of_vocabulary")
+    return kept or None

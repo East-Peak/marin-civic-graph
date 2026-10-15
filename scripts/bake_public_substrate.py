@@ -30,6 +30,7 @@ from public_exposure import (
     shared_address_levels,
     street_vocabulary,
 )
+from public_edge_props import EdgeAllowlist, EdgePropStats, load_edge_allowlist, public_edge_props
 from public_props import BAKE_ONLY_PROPS, public_props
 
 DEFAULT_NODE_SOURCES = (
@@ -1009,7 +1010,11 @@ def _write_sqlite(
     money_rollups: list[MoneyRollupRow],
     as_of_date: str,
     campaign_freshness: dict | None = None,
+    edge_allowlist: EdgeAllowlist | None = None,
+    edge_prop_stats: EdgePropStats | None = None,
 ) -> None:
+    edge_allowlist = load_edge_allowlist() if edge_allowlist is None else edge_allowlist
+    edge_prop_stats = EdgePropStats() if edge_prop_stats is None else edge_prop_stats
     sqlite_path.parent.mkdir(parents=True, exist_ok=True)
     fd, temp_name = tempfile.mkstemp(
         prefix=f".{sqlite_path.name}.",
@@ -1031,10 +1036,12 @@ def _write_sqlite(
                     search_label TEXT NOT NULL,
                     props TEXT NOT NULL CHECK (json_valid(props))
                 );
+                -- props: the edge's public properties (registry/edge-properties.json) as JSON, NULL when none.
                 CREATE TABLE edges (
                     source TEXT NOT NULL,
                     rel TEXT NOT NULL,
-                    target TEXT NOT NULL
+                    target TEXT NOT NULL,
+                    props TEXT CHECK (props IS NULL OR json_valid(props))
                 );
                 CREATE TABLE identity_links (
                     source TEXT NOT NULL,
@@ -1182,13 +1189,19 @@ def _write_sqlite(
                 ],
             )
             conn.executemany(
-                "INSERT INTO edges(source, rel, target) VALUES (?, ?, ?)",
+                "INSERT INTO edges(source, rel, target, props) VALUES (?, ?, ?, ?)",
                 [
-                    (edge.source, edge.rel, edge.target)
+                    (
+                        edge.source,
+                        edge.rel,
+                        edge.target,
+                        None if public is None else _json_dumps_stable(public),
+                    )
                     for edge in sorted(
                         edges.values(),
                         key=lambda item: (item.source, item.rel, item.target),
                     )
+                    for public in [public_edge_props(edge.rel, edge.props, edge_allowlist, edge_prop_stats)]
                 ],
             )
             conn.executemany(
@@ -1340,7 +1353,18 @@ def bake_substrate(
         from cf_freshness import verified
         campaign_freshness, freshness_report = verified(Path(live_export_dir), campaign_bundles)
 
-    _write_sqlite(sqlite_out, nodes, edges, identity_links, money_rollups, as_of_date, campaign_freshness)
+    edge_prop_stats = EdgePropStats()
+    _write_sqlite(
+        sqlite_out,
+        nodes,
+        edges,
+        identity_links,
+        money_rollups,
+        as_of_date,
+        campaign_freshness,
+        load_edge_allowlist(),
+        edge_prop_stats,
+    )
     _write_report(sqlite_out.parent / "status_manifest.json", status_manifest)
     _write_report(
         sqlite_out.parent / "catalog.json",
@@ -1388,6 +1412,7 @@ def bake_substrate(
         **({"campaign_freshness": freshness_report} if freshness_report is not None else {}),
         "node_counts_by_type": dict(sorted(node_counts.items())),
         "edge_counts_by_rel": dict(sorted(edge_counts.items())),
+        "edge_props": edge_prop_stats.as_report(),
         "gate_counts": _gate_counts(nodes, edges),
         "exposure": exposure,
         "sqlite": {
@@ -1416,6 +1441,11 @@ def _print_summary(report: dict, sqlite_path: Path, report_path: Path) -> None:
     print("gate counts:")
     for key, value in report["gate_counts"].items():
         print(f"  {key}: {value:,}")
+    for rel, counts in report.get("edge_props", {}).items():
+        for prop, kept in counts["kept"].items():
+            print(f"edge props: {rel}.{prop} kept {kept:,}")
+        for prop, dropped in counts["dropped_out_of_vocabulary"].items():
+            print(f"edge props: {rel}.{prop} DROPPED out of vocabulary {dropped:,}")
     sqlite = report["sqlite"]
     print(
         "sqlite size: "

@@ -1,0 +1,8 @@
+{
+  "description": "The only relationship properties that reach the public substrate and serving payloads. Per relationship type: property -> allowed values (exact match). Anything else on an edge, and any value outside its list, is dropped and counted (counts only). Read by scripts/public_edge_props.py and codegen'd into app/src/lib/edge-properties.generated.ts (app/scripts/codegen-edge-properties.mjs).",
+  "relationships": {
+    "CAST_VOTE": {
+      "vote": ["aye", "no", "abstain", "absent", "recused"]
+    }
+  }
+}
