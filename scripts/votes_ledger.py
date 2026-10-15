@@ -120,6 +120,40 @@ def _excerpt(text: str, loc: dict | None, pad: int = 0) -> str:
     return " ".join(text[max(0, loc["start"] - pad):loc["end"] + pad].split())
 
 
+def _roster_source(ref: str, inv: dict, rows_by_id: dict, texts: dict, web_root: Path) -> dict | None:
+    """A cited roster source: `minutes:<meeting>` (its inventoried document), `agenda:<meeting>` (the
+    cached agenda under the raw root), or `web:<path>` (a page captured into the roster's sources)."""
+    from votes_inventory import sniff_format
+
+    kind, _, ident = ref.partition(":")
+    if kind == "minutes":
+        row = rows_by_id.get(ident)
+        if not row or not row["documents"]:
+            return None
+        doc = row["documents"][0]
+        text = texts.get(f"{ident}.{doc['sha256'][:8]}") or \
+            canonical_text(resolve_path(inv, doc["paths"][0]), doc["format"]).text
+        return {"text": text, "sha256": doc["sha256"], "url": row["minutes_url"], "date": row["date"]}
+    if kind == "agenda":
+        body = next((b for b in inv["bodies"] if ident.startswith(f"meeting-{b}-")), None)
+        folder = Path(inv["roots"]["raw"]) / (body or "") / "agendas"
+        path = next((p for p in sorted(folder.glob(f"{ident}.*"))), None) if body else None
+    elif kind == "web":
+        path = (web_root / ident).resolve()
+        if not path.is_relative_to(web_root.resolve()):
+            return None
+    else:
+        return None
+    if path is None or not path.is_file():
+        return None
+    data = path.read_bytes()
+    fmt = sniff_format(data)
+    if fmt is None:
+        return None
+    return {"text": canonical_text(path, fmt).text, "sha256": hashlib.sha256(data).hexdigest(), "url": ref,
+            "date": None}
+
+
 def build(inventory_dir: Path, out: Path, *, roster_drafts: Path, seed: int, as_of: str,
           staging_root: Path = STAGING_ROOT) -> dict:
     inventory_dir = Path(inventory_dir)
@@ -195,14 +229,9 @@ def build(inventory_dir: Path, out: Path, *, roster_drafts: Path, seed: int, as_
         src = {}
         for t in drafts["terms"]:
             for e in t.get("evidence", []):
-                mid = e["source"].split(":", 1)[1]
-                row = rows_by_id.get(mid)
-                if row and row["documents"]:
-                    doc = row["documents"][0]
-                    k = f"{mid}.{doc['sha256'][:8]}"
-                    text = texts.get(k) or canonical_text(resolve_path(inv, doc["paths"][0]), doc["format"]).text
-                    src[e["source"]] = {"text": text, "sha256": doc["sha256"], "url": row["minutes_url"],
-                                        "date": row["date"]}
+                loaded = _roster_source(e["source"], inv, rows_by_id, texts, Path(roster_drafts).parent / "sources")
+                if loaded:
+                    src[e["source"]] = loaded
         sources.update(src)
         roster_out["verification"][body] = verify_drafts(drafts, src)
         problems += [f"roster {body}: {p}" for p in roster_out["verification"][body]]

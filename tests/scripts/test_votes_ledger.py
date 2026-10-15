@@ -188,6 +188,25 @@ def test_held_events_count_as_notable_samples():
     assert "attendance changes (1 of 1)" in md
 
 
+def test_roster_quotes_may_cite_agendas_and_captured_pages(world):
+    (world / "raw" / BOS / "agendas").mkdir(parents=True)
+    (world / "raw" / BOS / "agendas" / f"meeting-{BOS}-1.html").write_bytes(
+        b"<html><body><p>Oath of Office for reelected Supervisor Ann Alder (District 1)</p></body></html>")
+    (world / "sources" / "web").mkdir(parents=True)
+    (world / "sources" / "web" / "page").write_bytes(
+        b"<html><body><p>District 2 is represented by Bea Birch.</p></body></html>")
+    drafts = json.loads((world / "drafts.json").read_text())
+    drafts[BOS]["terms"][0]["evidence"] += [
+        {"source": f"agenda:meeting-{BOS}-1", "quote": "reelected Supervisor Ann Alder (District 1)", "supports": ["seat"]},
+        {"source": "web:web/page", "quote": "District 2 is represented by Bea Birch", "supports": []}]
+    (world / "drafts.json").write_text(json.dumps(drafts))
+    summary = _build(world, world / "out")
+    assert summary["problems"] == 0
+    drafts[BOS]["terms"][0]["evidence"][-1]["quote"] = "District 2 is represented by Cy Cedar"
+    (world / "drafts.json").write_text(json.dumps(drafts))
+    assert _build(world, world / "out2")["problems"] == 1
+
+
 def test_cli_build_and_check(world):
     out = world / "out"
     assert main(["build", "--inventory", str(world / "inventory"), "--out", str(out), "--roster-drafts",
