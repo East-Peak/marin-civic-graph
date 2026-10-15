@@ -85,7 +85,8 @@ def world(tmp_path):
 
 
 def _build(world, out):
-    return build(world / "inventory", out, roster_drafts=world / "drafts.json", seed=7, as_of="2020-12-31")
+    return build(world / "inventory", out, roster_drafts=world / "drafts.json", seed=7, as_of="2020-12-31",
+                 staging_root=world)
 
 
 def _jsonl(path):
@@ -128,7 +129,9 @@ def test_coverage_numbers(world):
     cov = json.loads((out / "coverage.json").read_text())[BOS]
     assert cov["meetings"] == 3 and cov["documents"] == 2 and cov["gaps"] == {"no_minutes_record": 1}
     assert cov["events"]["expanded"] == 1 and cov["events"]["named"] == 1
-    assert cov["decisions"]["matched"] == 1 and cov["decisions"]["new_events"] == 1
+    assert cov["existing_decisions"]["matched"] == 1
+    assert cov["new_events"] == {"accepted": 1, "held": 0}
+    assert cov["held_for_repair"] == 0 and cov["out_of_scope"] == 0 and cov["inventory_rows"] == 3
 
 
 def test_samples_carry_excerpts_and_every_dissent(world):
@@ -155,10 +158,41 @@ def test_a_changed_document_stops_the_build(world):
         _build(world, world / "out")
 
 
+def test_a_changed_export_stops_the_build(world):
+    nodes = world / "export" / "nodes.jsonl"
+    nodes.write_text(nodes.read_text().replace("approve item one.", "approve item 1."))
+    with pytest.raises(Exception, match="export"):
+        _build(world, world / "out")
+
+
+@pytest.mark.parametrize("where", ["outside", "root", "inventory"])
+def test_the_output_stays_inside_staging_and_off_its_inputs(world, where):
+    out = {"outside": world.parent / "elsewhere-votes-out", "root": world, "inventory": world / "inventory"}[where]
+    with pytest.raises(ValueError):
+        _build(world, out)
+
+
+def test_held_events_count_as_notable_samples():
+    from votes_ledger import _samples
+    text = "AYES: ALDER NOES: BIRCH"
+    span = {"start": 0, "end": len(text), "line_start": 1, "line_end": 1}
+    ev = {"event_id": "vev-x-1-d-L1", "body": BOS, "date": "2020-01-07", "status": "held", "doc_key": f"meeting-{BOS}-1.dddddddd",
+          "hold_reasons": ["tally_mismatch"], "motion": {"text": "approve", "mover": "ALDER", "seconder": "BIRCH"},
+          "outcome": "carried", "tally": {"printed": "2-0"}, "item_exceptions": [], "block": span,
+          "categories": {"aye": [{"name": "ALDER"}], "no": [{"name": "BIRCH"}], "abstain": [], "recused": [],
+                         "absent": []}}
+    key = f"meeting-{BOS}-1.dddddddd"
+    trace = {key: [{"kind": "reconvene", "member": None, "span": span}]}
+    md = _samples([ev], trace, {key: text}, 1)
+    assert "dissents (1 of 1)" in md and "held: tally_mismatch" in md
+    assert "attendance changes (1 of 1)" in md
+
+
 def test_cli_build_and_check(world):
     out = world / "out"
     assert main(["build", "--inventory", str(world / "inventory"), "--out", str(out), "--roster-drafts",
-                 str(world / "drafts.json"), "--seed", "7", "--as-of", "2020-12-31"]) == 0
+                 str(world / "drafts.json"), "--seed", "7", "--as-of", "2020-12-31",
+                 "--staging-root", str(world)]) == 0
     assert main(["check", "--out", str(out)]) == 0
     (out / "events.jsonl").write_text((out / "events.jsonl").read_text().replace('"named"', '"expanded"', 1))
     assert main(["check", "--out", str(out)]) == 1

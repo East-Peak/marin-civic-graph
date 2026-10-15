@@ -42,6 +42,24 @@ BODY_ORG = {"org-novato-city-council": "novato-city-council",
 SEATS = [f"District {i}" for i in range(1, 6)]
 SAMPLE_N = 20
 NOTABLE_N = 30
+STAGING_ROOT = Path.home() / "open-marin-staging" / "votes"
+
+
+class LedgerError(Exception):
+    pass
+
+
+def _guard_out(out: Path, staging_root: Path, inputs: list[Path]) -> Path:
+    """The output directory is deleted and rewritten, so it must lie strictly inside the staging
+    root and never be, contain or sit inside an input."""
+    out, root = Path(out).resolve(), Path(staging_root).resolve()
+    if out == root or not out.is_relative_to(root):
+        raise ValueError(f"--out {out} must be a directory inside {root}")
+    for inp in inputs:
+        inp = Path(inp).resolve()
+        if out == inp or out.is_relative_to(inp) or inp.is_relative_to(out):
+            raise ValueError(f"--out {out} overlaps the input {inp}")
+    return out
 
 
 def _dumps(obj) -> str:
@@ -60,6 +78,10 @@ def _write_json(path: Path, obj) -> None:
 
 def _export_rows(inv: dict):
     export = Path(inv["export"]["path"])
+    for name in ("nodes", "edges"):
+        got = hashlib.sha256((export / f"{name}.jsonl").read_bytes()).hexdigest()
+        if got != inv["export"][f"{name}_sha256"]:
+            raise LedgerError(f"the frozen export's {name}.jsonl no longer matches the inventory's sha256")
     nodes = [json.loads(x) for x in (export / "nodes.jsonl").read_text().splitlines() if x.strip()]
     edges = [json.loads(x) for x in (export / "edges.jsonl").read_text().splitlines() if x.strip()]
     return nodes, edges
@@ -98,10 +120,15 @@ def _excerpt(text: str, loc: dict | None, pad: int = 0) -> str:
     return " ".join(text[max(0, loc["start"] - pad):loc["end"] + pad].split())
 
 
-def build(inventory_dir: Path, out: Path, *, roster_drafts: Path, seed: int, as_of: str) -> dict:
-    inventory_dir, out = Path(inventory_dir), Path(out)
+def build(inventory_dir: Path, out: Path, *, roster_drafts: Path, seed: int, as_of: str,
+          staging_root: Path = STAGING_ROOT) -> dict:
+    inventory_dir = Path(inventory_dir)
     inv = load_inventory(inventory_dir)
+    out = _guard_out(out, staging_root, [inventory_dir, Path(inv["export"]["path"]), Path(roster_drafts).parent
+                                         if Path(roster_drafts).parent.resolve() != Path(staging_root).resolve()
+                                         else Path(roster_drafts)] + [Path(p) for p in inv["roots"].values()])
     verify_documents(inv)
+    _export_rows(inv)  # the frozen export must still be the one inventoried
     if out.exists():
         shutil.rmtree(out)
     out.mkdir(parents=True)
@@ -208,21 +235,29 @@ def build(inventory_dir: Path, out: Path, *, roster_drafts: Path, seed: int, as_
     _write_json(out / "check.json", {"problems": sorted(problems)})
     _write_json(out / "build.json", {"inventory": str(inventory_dir), "inventory_sha256": hashlib.sha256(
         (inventory_dir / "inventory.json").read_bytes()).hexdigest(), "roster_drafts": str(roster_drafts),
-        "seed": seed, "as_of": as_of})
+        "roster_drafts_sha256": hashlib.sha256(Path(roster_drafts).read_bytes()).hexdigest(),
+        "seed": seed, "as_of": as_of, "staging_root": str(Path(staging_root))})
     return {"problems": len(problems), "events": len(events_all), "candidates": len(cands_all)}
 
 
 def _coverage(inv, docs, events, disp, recon) -> dict:
     out = {}
     for body in sorted(inv["bodies"]):
-        meetings = inv["bodies"][body]["meetings"]
+        rows = inv["bodies"][body]["meetings"]
+        meetings = [r for r in rows if r["gap"] != "not_in_scope_body"]
         d_rows = [r for r in recon if r["kind"] == "decision" and r["meeting_id"].startswith(f"meeting-{body}-")]
+        new = [r for r in recon if r["kind"] == "event" and r["meeting_id"].startswith(f"meeting-{body}-")]
         cand = collections.defaultdict(collections.Counter)
         for d in disp:
             if d["body"] == body:
                 cand[d["class"]][d["reason"]] += 1
         evs = [e for e in events if e["body"] == body]
+        decisions = dict(collections.Counter(r["status"] for r in d_rows))
         out[body] = {
+            "inventory_rows": len(rows),
+            "out_of_scope": len(rows) - len(meetings),
+            "out_of_scope_classes": dict(collections.Counter(r["body_class"] for r in rows
+                                                             if r["gap"] == "not_in_scope_body")),
             "meetings": len(meetings),
             "documents": sum(1 for d in docs if d["body"] == body and d["class"] != "gap"),
             "gaps": dict(collections.Counter(r["gap"] for r in meetings if r["gap"])),
@@ -231,36 +266,41 @@ def _coverage(inv, docs, events, disp, recon) -> dict:
             "events": dict(collections.Counter(e["status"] for e in evs)),
             "held_reasons": dict(collections.Counter(r for e in evs for r in e["hold_reasons"])),
             "candidates": {k: dict(v) for k, v in sorted(cand.items())},
-            "decisions": {**dict(collections.Counter(r["status"] for r in d_rows)),
-                          "unmatched_reasons": dict(collections.Counter(r["reason"] for r in d_rows
-                                                                        if r["status"] == "unmatched")),
-                          "new_events": sum(1 for r in recon if r["kind"] == "event"
-                                            and r["meeting_id"].startswith(f"meeting-{body}-"))},
+            "existing_decisions": {**decisions, "total": len(d_rows),
+                                   "unmatched_reasons": dict(collections.Counter(
+                                       r["reason"] for r in d_rows if r["status"] == "unmatched"))},
+            "held_for_repair": sum(decisions.get(k, 0) for k in ("conflicting", "ambiguous", "unmatched")),
+            "new_events": {"accepted": sum(1 for r in new if r["event_status"] != "held"),
+                           "held": sum(1 for r in new if r["event_status"] == "held")},
         }
     return out
 
 
 def _coverage_md(cov: dict) -> str:
+    def kv(d):
+        return ", ".join(f"{k} {v}" for k, v in sorted(d.items()) if not isinstance(v, dict)) or "none"
     lines = ["# Vote ledger coverage", ""]
     for body, c in cov.items():
+        ed = c["existing_decisions"]
         lines += [f"## {body}", "",
-                  f"- meetings in window: {c['meetings']}; documents parsed: {c['documents']} "
+                  f"- inventory rows {c['inventory_rows']}; out of scope {c['out_of_scope']} ({kv(c['out_of_scope_classes'])})",
+                  f"- meetings in scope: {c['meetings']}; documents parsed: {c['documents']} "
                   f"(without vote candidates: {c['documents_without_candidates']}; caption transcripts: {c['transcripts']})",
-                  f"- gaps: {', '.join(f'{k} {v}' for k, v in sorted(c['gaps'].items())) or 'none'}",
-                  f"- events: {', '.join(f'{k} {v}' for k, v in sorted(c['events'].items()))}",
-                  f"- held reasons: {', '.join(f'{k} {v}' for k, v in sorted(c['held_reasons'].items())) or 'none'}",
-                  "- candidates: " + "; ".join(f"{cls}: " + ", ".join(f"{k} {v}" for k, v in sorted(r.items()))
-                                               for cls, r in sorted(c["candidates"].items())),
-                  "- existing Decisions: " + ", ".join(f"{k} {v}" for k, v in sorted(c["decisions"].items())
-                                                       if not isinstance(v, dict)),
-                  f"- unmatched reasons: {', '.join(f'{k} {v}' for k, v in sorted(c['decisions']['unmatched_reasons'].items())) or 'none'}",
+                  f"- gaps (in scope): {kv(c['gaps'])}",
+                  f"- events: {kv(c['events'])}",
+                  f"- held reasons: {kv(c['held_reasons'])}",
+                  "- candidates: " + "; ".join(f"{cls}: {kv(r)}" for cls, r in sorted(c["candidates"].items())),
+                  f"- existing Decisions ({ed['total']}): {kv(ed)}; unmatched reasons: {kv(ed['unmatched_reasons'])}",
+                  f"- held for repair (conflicting + ambiguous + unmatched): {c['held_for_repair']}",
+                  f"- new events (no Decision): accepted {c['new_events']['accepted']}, held {c['new_events']['held']}",
                   ""]
     return "\n".join(lines) + "\n"
 
 
 def _event_md(ev: dict, text: str) -> list[str]:
     cats = "; ".join(f"{c}: {', '.join(n['name'] for n in v)}" for c, v in ev["categories"].items() if v)
-    lines = [f"### {ev['event_id']} ({ev['date']}, {ev['status']})",
+    status = ev["status"] + (f": {', '.join(ev['hold_reasons'])}" if ev["status"] == "held" else "")
+    lines = [f"### {ev['event_id']} ({ev['date']}, {status})",
              f"- motion: {(ev['motion'] or {}).get('text', '')[:300]}",
              f"- mover/seconder: {(ev['motion'] or {}).get('mover')} / {(ev['motion'] or {}).get('seconder')}",
              f"- outcome {ev['outcome']}; tally {(ev.get('tally') or {}).get('printed')}; {cats}"]
@@ -294,12 +334,13 @@ def _samples(events, traces, texts, seed) -> str:
                              or any(x["kind"] == "recused" for x in e.get("item_exceptions", []))),
                             ("abstentions", lambda e: bool(e["categories"]["abstain"])
                              or any(x["kind"] == "abstain" for x in e.get("item_exceptions", [])))):
-            found = [e for e in evs if e["status"] in ("named", "expanded") and test(e)]
+            found = [e for e in evs if test(e)]  # held ones too: they are the hard cases
             lines += [f"## {body}: {label} ({min(len(found), NOTABLE_N)} of {len(found)})", ""]
             for e in found[:NOTABLE_N]:
                 lines += _event_md(e, texts[e["doc_key"]])
         changes = [(k, t) for k, tr in sorted(traces.items()) if k.startswith(f"meeting-{body}-")
-                   for t in tr if t["kind"] in ("arrive", "depart", "absent_statement", "uncertain")]
+                   for t in tr if t["kind"] in ("arrive", "depart", "absent_statement", "uncertain", "recess",
+                                                "reconvene", "all_present")]
         lines += [f"## {body}: attendance changes ({min(len(changes), NOTABLE_N)} of {len(changes)})", ""]
         for k, t in changes[:NOTABLE_N]:
             lines.append(f"- {k} line {t['span']['line_start']}: {t['kind']} {t['member']} — "
@@ -312,10 +353,12 @@ def check(out: Path) -> list[str]:
     out = Path(out)
     params = json.loads((out / "build.json").read_text())
     problems = list(json.loads((out / "check.json").read_text())["problems"])
-    with tempfile.TemporaryDirectory() as tmp:
+    root = Path(params["staging_root"])
+    root.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=root, prefix=".check-") as tmp:
         again = Path(tmp) / "ledger"
         build(Path(params["inventory"]), again, roster_drafts=Path(params["roster_drafts"]), seed=params["seed"],
-              as_of=params["as_of"])
+              as_of=params["as_of"], staging_root=Path(params["staging_root"]))
         mine = sorted(p.relative_to(out) for p in out.rglob("*") if p.is_file())
         theirs = sorted(p.relative_to(again) for p in again.rglob("*") if p.is_file())
         if mine != theirs:
@@ -335,11 +378,13 @@ def main(argv=None) -> int:
     b.add_argument("--roster-drafts", required=True, type=Path)
     b.add_argument("--seed", type=int, required=True)
     b.add_argument("--as-of", required=True)
+    b.add_argument("--staging-root", type=Path, default=STAGING_ROOT)
     c = sub.add_parser("check")
     c.add_argument("--out", required=True, type=Path)
     args = ap.parse_args(argv)
     if args.cmd == "build":
-        summary = build(args.inventory, args.out, roster_drafts=args.roster_drafts, seed=args.seed, as_of=args.as_of)
+        summary = build(args.inventory, args.out, roster_drafts=args.roster_drafts, seed=args.seed, as_of=args.as_of,
+                        staging_root=args.staging_root)
         print(json.dumps(summary, sort_keys=True))
         return 0 if summary["problems"] == 0 else 1
     problems = check(args.out)
