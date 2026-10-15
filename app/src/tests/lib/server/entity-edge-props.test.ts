@@ -3,6 +3,7 @@ import Database from "better-sqlite3";
 import { mkdtempSync } from "node:fs";
 import path from "node:path";
 import { tmpdir } from "node:os";
+import { Record as Neo4jRecord } from "neo4j-driver";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/neo4j", () => ({ runQuery: vi.fn() }));
@@ -136,16 +137,21 @@ function record(data: Record<string, unknown>) {
   return { get: (key: string) => data[key] };
 }
 
+/** A real driver Record: like Neo4j, get() of a column the query did not return throws. */
 function liveEdgeRow(start: string, end: string, props?: unknown) {
   const [source, target] = start < end ? [start, end] : [end, start];
-  return record({
-    source,
-    target,
-    rel_type: "CAST_VOTE",
-    start_id: start,
-    end_id: end,
-    ...(props === undefined ? {} : { props }),
-  });
+  const fields: Array<[string, unknown]> = [
+    ["source", source],
+    ["target", target],
+    ["rel_type", "CAST_VOTE"],
+    ["start_id", start],
+    ["end_id", end],
+    ...(props === undefined ? [] : [["props", props] as [string, unknown]]),
+  ];
+  return new Neo4jRecord(
+    fields.map(([key]) => key),
+    fields.map(([, value]) => value),
+  );
 }
 
 function installLive(edgeRows: unknown[]) {
@@ -221,4 +227,31 @@ describe("live payloads", () => {
     expect(payload.edges).toHaveLength(2);
     for (const edge of payload.edges) expect("props" in edge).toBe(false);
   });
+
+  it.each([false, true])(
+    "collapses duplicate relationships: agreeing votes show once, disagreeing ones show none (reversed: %s)",
+    async (reversed) => {
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      const rows = [
+        liveEdgeRow(PERSON, DECISION, { vote: "aye" }),
+        liveEdgeRow(PERSON, DECISION, { vote: "aye" }),
+        liveEdgeRow("person-bo-tarn", DECISION, { vote: "aye" }),
+        liveEdgeRow("person-bo-tarn", DECISION, { vote: "no" }),
+        liveEdgeRow("person-cy-lune", DECISION, { vote: "absent" }),
+        liveEdgeRow("person-cy-lune", DECISION, null),
+      ];
+      installLive(reversed ? rows.reverse() : rows);
+      const { loadEntity } = await import("@/lib/server/entity-loader");
+
+      const payload = (await loadEntity("decision", "fictional-levee"))!;
+
+      expect(focusVoteEdges(payload)).toEqual([
+        [PERSON, DECISION, { vote: "aye" }],
+        ["person-bo-tarn", DECISION, undefined],
+        ["person-cy-lune", DECISION, undefined],
+      ]);
+      expect(payload.edges).toHaveLength(3);
+      expect(JSON.stringify(warn.mock.calls)).toContain("2 conflicting duplicate");
+    },
+  );
 });

@@ -30,7 +30,7 @@ from public_exposure import (
     shared_address_levels,
     street_vocabulary,
 )
-from public_edge_props import EdgeAllowlist, EdgePropStats, load_edge_allowlist, public_edge_props
+from public_edge_props import EdgePropStats, load_edge_allowlist, public_props_by_triple
 from public_props import BAKE_ONLY_PROPS, public_props
 
 DEFAULT_NODE_SOURCES = (
@@ -1010,11 +1010,9 @@ def _write_sqlite(
     money_rollups: list[MoneyRollupRow],
     as_of_date: str,
     campaign_freshness: dict | None = None,
-    edge_allowlist: EdgeAllowlist | None = None,
-    edge_prop_stats: EdgePropStats | None = None,
+    edge_public_props: dict[tuple[str, str, str], dict | None] | None = None,
 ) -> None:
-    edge_allowlist = load_edge_allowlist() if edge_allowlist is None else edge_allowlist
-    edge_prop_stats = EdgePropStats() if edge_prop_stats is None else edge_prop_stats
+    edge_public_props = edge_public_props or {}
     sqlite_path.parent.mkdir(parents=True, exist_ok=True)
     fd, temp_name = tempfile.mkstemp(
         prefix=f".{sqlite_path.name}.",
@@ -1201,7 +1199,7 @@ def _write_sqlite(
                         edges.values(),
                         key=lambda item: (item.source, item.rel, item.target),
                     )
-                    for public in [public_edge_props(edge.rel, edge.props, edge_allowlist, edge_prop_stats)]
+                    for public in [edge_public_props.get((edge.source, edge.rel, edge.target))]
                 ],
             )
             conn.executemany(
@@ -1354,6 +1352,7 @@ def bake_substrate(
         campaign_freshness, freshness_report = verified(Path(live_export_dir), campaign_bundles)
 
     edge_prop_stats = EdgePropStats()
+    edge_public_props = public_props_by_triple(edge_rows, load_edge_allowlist(), edge_prop_stats)
     _write_sqlite(
         sqlite_out,
         nodes,
@@ -1362,8 +1361,7 @@ def bake_substrate(
         money_rollups,
         as_of_date,
         campaign_freshness,
-        load_edge_allowlist(),
-        edge_prop_stats,
+        edge_public_props,
     )
     _write_report(sqlite_out.parent / "status_manifest.json", status_manifest)
     _write_report(

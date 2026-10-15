@@ -289,13 +289,12 @@ describe("Connections", () => {
 
       render(<Connections entity={entity} />);
 
-      expect(cardFor("/decision/decision-aye").textContent).toContain("voted aye");
-      expect(cardFor("/decision/decision-no").textContent).toContain("voted no");
-      expect(cardFor("/decision/decision-abstain").textContent).toContain("abstained");
-      expect(cardFor("/decision/decision-absent").textContent).toContain("absent");
-      expect(cardFor("/decision/decision-recused").textContent).toContain("recused");
-      expect(cardFor("/decision/decision-absent").textContent).not.toMatch(/vot/);
-      expect(cardFor("/decision/decision-recused").textContent).not.toMatch(/vot/);
+      const labelOf = (route: string) => cardFor(route).querySelector('[data-testid="vote-label"]')?.textContent;
+      expect(labelOf("/decision/decision-aye")).toBe("voted aye");
+      expect(labelOf("/decision/decision-no")).toBe("voted no");
+      expect(labelOf("/decision/decision-abstain")).toBe("abstained");
+      expect(labelOf("/decision/decision-absent")).toBe("absent");
+      expect(labelOf("/decision/decision-recused")).toBe("recused");
       // A missing value shows no label at all.
       expect(cardFor("/decision/decision-unknown").querySelector('[data-testid="vote-label"]')).toBeNull();
       expect(screen.getAllByTestId("vote-label")).toHaveLength(5);

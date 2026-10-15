@@ -14,6 +14,7 @@ from public_edge_props import (  # noqa: E402
     EdgePropStats,
     load_edge_allowlist,
     public_edge_props,
+    public_props_by_triple,
 )
 
 SENTINEL = "ledger_secret_code"
@@ -73,8 +74,14 @@ def test_only_allowlisted_in_vocabulary_values_survive_and_drops_are_counted() -
             "kept": {"vote": 1},
             "dropped_out_of_vocabulary": {"vote": 2},
             "dropped_non_allowlisted": 4,
+            "suppressed_conflicting_duplicates": 0,
         },
-        "SAME_AS": {"kept": {}, "dropped_out_of_vocabulary": {}, "dropped_non_allowlisted": 2},
+        "SAME_AS": {
+            "kept": {},
+            "dropped_out_of_vocabulary": {},
+            "dropped_non_allowlisted": 2,
+            "suppressed_conflicting_duplicates": 0,
+        },
     }
     report_text = json.dumps(stats.as_report())
     for leaked in ("maybe-later", "AYE", "s3cret", SENTINEL, "seat_id", "seat-x", "assertion_id"):
@@ -92,4 +99,32 @@ def test_a_non_string_vote_is_out_of_vocabulary_and_null_is_absent() -> None:
         "kept": {},
         "dropped_out_of_vocabulary": {"vote": 1},
         "dropped_non_allowlisted": 0,
+        "suppressed_conflicting_duplicates": 0,
     }
+
+
+def _row(source: str, target: str, props: dict, rel: str = "CAST_VOTE") -> dict:
+    return {"source_id": source, "relationship_type": rel, "target_id": target, "properties": props}
+
+
+@pytest.mark.parametrize("reverse", [False, True])
+def test_duplicate_relationships_collapse_when_they_agree_and_show_nothing_when_they_disagree(reverse: bool) -> None:
+    allowlist = load_edge_allowlist(DEFAULT_EDGE_PROPERTIES_PATH)
+    stats = EdgePropStats()
+    rows = [
+        _row("person-avery-quill", "decision-one", {"vote": "aye", "seat_id": "seat-x"}),
+        _row("person-avery-quill", "decision-one", {"vote": "aye"}),
+        _row("person-bo-tarn", "decision-one", {"vote": "aye"}),
+        _row("person-bo-tarn", "decision-one", {"vote": "no"}),
+        _row("person-cy-lune", "decision-one", {"vote": "absent"}),
+        _row("person-cy-lune", "decision-one", {}),
+    ]
+
+    public = public_props_by_triple(list(reversed(rows)) if reverse else rows, allowlist, stats)
+
+    assert public == {
+        ("person-avery-quill", "CAST_VOTE", "decision-one"): {"vote": "aye"},
+        ("person-bo-tarn", "CAST_VOTE", "decision-one"): None,
+        ("person-cy-lune", "CAST_VOTE", "decision-one"): None,
+    }
+    assert stats.as_report()["CAST_VOTE"]["suppressed_conflicting_duplicates"] == 2

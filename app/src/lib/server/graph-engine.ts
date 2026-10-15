@@ -5,7 +5,14 @@ import {
   UNIVERSAL_EDGES_LIVE,
   specToLive,
 } from "@/lib/edge-vocabulary";
-import { type EdgeProps, newEdgePropStats, sanitizeEdgeProps } from "@/lib/edge-props";
+import {
+  type EdgeProps,
+  carriesEdgeProps,
+  describeDroppedEdgeProps,
+  newEdgePropStats,
+  sameEdgeProps,
+  sanitizeEdgeProps,
+} from "@/lib/edge-props";
 import { getSubstrateDb } from "@/lib/server/substrate";
 import type { NodeType } from "@/lib/type-display";
 
@@ -887,21 +894,28 @@ function createGraphEngine(): GraphEngine {
     )
     .all(...ADJACENCY_RELS) as StoredEdgeRow[];
   const edgeProps = new Map<string, EdgeProps>();
+  // Props seen per triple of an allowlisted relationship type, to catch disagreeing duplicate rows.
+  const firstProps = new Map<string, EdgeProps | undefined>();
+  const conflicted = new Set<string>();
   const dropped = newEdgePropStats();
   for (const row of edgeRows) {
     const edgeClass = edgeClassFor(row.rel);
     if (!edgeClass) continue;
     pushAdjacency(adjacency, row.source, row.target, row.rel, edgeClass);
-    if (row.props === null) continue;
-    const props = sanitizeEdgeProps(row.rel, JSON.parse(row.props), dropped);
-    if (props) edgeProps.set(edgeKey(row.rel, row.source, row.target), props);
+    const props = row.props === null ? undefined : sanitizeEdgeProps(row.rel, JSON.parse(row.props), dropped);
+    if (!carriesEdgeProps(row.rel)) continue;
+    const key = edgeKey(row.rel, row.source, row.target);
+    if (!firstProps.has(key)) {
+      firstProps.set(key, props);
+      if (props) edgeProps.set(key, props);
+    } else if (!sameEdgeProps(firstProps.get(key), props) && !conflicted.has(key)) {
+      conflicted.add(key);
+      edgeProps.delete(key);
+      dropped.suppressed_conflicting_duplicates += 1;
+    }
   }
-  if (dropped.dropped_out_of_vocabulary > 0 || dropped.dropped_non_allowlisted > 0) {
-    console.warn(
-      `[graph-engine] edge props dropped at load: ${dropped.dropped_out_of_vocabulary} out-of-vocabulary, ` +
-        `${dropped.dropped_non_allowlisted} non-allowlisted`,
-    );
-  }
+  const droppedLine = describeDroppedEdgeProps(dropped);
+  if (droppedLine) console.warn(`[graph-engine] edge props dropped at load: ${droppedLine}`);
 
   const propsStmt = db.prepare("SELECT props FROM nodes WHERE id = ?");
   const graph: GraphData = {

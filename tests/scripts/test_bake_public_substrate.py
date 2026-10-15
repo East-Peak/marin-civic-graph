@@ -1451,7 +1451,13 @@ def _live_export_fixture_with_votes(tmp_path: Path) -> tuple[Path, Path, Path, P
             "type": "DERIVED_FROM_RECORD",
             "properties": {"vote": "aye", EDGE_SENTINEL: EDGE_SENTINEL_VALUE},
         },
+        # Two relationships for one triple that disagree: neither vote is shown.
+        {"start_id": "person-cy-lune", "end_id": "decision-fictional-levee", "type": "CAST_VOTE",
+         "properties": {"vote": "aye"}},
+        {"start_id": "person-cy-lune", "end_id": "decision-fictional-levee", "type": "CAST_VOTE",
+         "properties": {"vote": "no"}},
     ]
+    nodes.append({"id": "person-cy-lune", "labels": ["Person"], "properties": {"name": "Cy Lune"}})
     _write_jsonl(live_dir / "nodes.jsonl", nodes)
     _write_jsonl(live_dir / "edges.jsonl", edges)
     return live_dir, attach_dir, registry, sqlite_path, report_path
@@ -1488,24 +1494,28 @@ def test_the_edges_table_carries_only_allowlisted_in_vocabulary_props(tmp_path: 
     # An out-of-vocabulary vote and every non-allowlisted property leave no trace: NULL, never '{}'.
     assert by_triple[("person-bo-tarn", "CAST_VOTE", "decision-fictional-levee")] is None
     assert by_triple[("person-avery-quill", "DERIVED_FROM_RECORD", "org-target")] is None
+    assert by_triple[("person-cy-lune", "CAST_VOTE", "decision-fictional-levee")] is None
     assert [triple for triple, props in by_triple.items() if props is not None] == [
         ("person-avery-quill", "CAST_VOTE", "decision-fictional-levee")
     ]
     assert report["edge_props"] == {
         "CAST_VOTE": {
-            "kept": {"vote": 1},
+            "kept": {"vote": 3},
             "dropped_out_of_vocabulary": {"vote": 1},
             "dropped_non_allowlisted": 3,
+            "suppressed_conflicting_duplicates": 1,
         },
         "DERIVED_FROM_RECORD": {
             "kept": {},
             "dropped_out_of_vocabulary": {},
             "dropped_non_allowlisted": 2,
+            "suppressed_conflicting_duplicates": 0,
         },
         "SAME_AS": {
             "kept": {},
             "dropped_out_of_vocabulary": {},
             "dropped_non_allowlisted": 4,
+            "suppressed_conflicting_duplicates": 0,
         },
     }
 
@@ -1531,4 +1541,5 @@ def test_the_pre_props_reader_still_reads_the_new_edges_table(tmp_path: Path) ->
     assert sorted(rows) == [
         ("person-avery-quill", "CAST_VOTE", "decision-fictional-levee"),
         ("person-bo-tarn", "CAST_VOTE", "decision-fictional-levee"),
+        ("person-cy-lune", "CAST_VOTE", "decision-fictional-levee"),
     ]

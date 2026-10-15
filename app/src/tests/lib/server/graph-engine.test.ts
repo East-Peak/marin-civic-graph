@@ -289,6 +289,8 @@ function makeVoteDb({ withProps }: { withProps: boolean }): string {
     ["person-cy-lune", "CAST_VOTE", "decision-fictional-levee", JSON.stringify({ vote: "maybe-later" })],
     ["person-dee-marsh", "CAST_VOTE", "decision-fictional-levee", null],
     ["decision-fictional-levee", "AT_MEETING", "meeting-fictional", JSON.stringify({ vote: "aye" })],
+    // The bake writes one row per triple; should an artifact hold disagreeing duplicates, neither vote is shown.
+    ["person-dee-marsh", "CAST_VOTE", "decision-fictional-levee", JSON.stringify({ vote: "aye" })],
   ];
   for (const [source, rel, target, props] of edges) {
     if (withProps) {
@@ -345,6 +347,7 @@ describe("graph-engine edge properties", () => {
     const logged = JSON.stringify(warn.mock.calls);
     expect(logged).toContain("1 out-of-vocabulary");
     expect(logged).toContain("3 non-allowlisted");
+    expect(logged).toContain("1 conflicting duplicate");
     for (const leaked of [SENTINEL, "s3cret", "seat_id", "maybe-later"]) expect(logged).not.toContain(leaked);
   });
 

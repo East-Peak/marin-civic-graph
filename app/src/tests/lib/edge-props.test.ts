@@ -7,7 +7,9 @@ import { describe, expect, it } from "vitest";
 import { EDGE_PROPERTY_ALLOWLIST } from "@/lib/edge-properties.generated";
 import {
   VOTE_LABEL,
+  carriesEdgeProps,
   edgePropsProjection,
+  sameEdgeProps,
   newEdgePropStats,
   sanitizeEdgeProps,
 } from "@/lib/edge-props";
@@ -55,7 +57,7 @@ describe("sanitizeEdgeProps", () => {
         stats,
       ),
     ).toEqual({ vote: "recused" });
-    expect(stats).toEqual({ dropped_out_of_vocabulary: 0, dropped_non_allowlisted: 3 });
+    expect(stats).toEqual({ dropped_out_of_vocabulary: 0, dropped_non_allowlisted: 3, suppressed_conflicting_duplicates: 0 });
   });
 
   it("drops and counts an out-of-vocabulary vote; the canonical empty form is undefined", () => {
@@ -63,7 +65,7 @@ describe("sanitizeEdgeProps", () => {
     expect(sanitizeEdgeProps("CAST_VOTE", { vote: "maybe-later" }, stats)).toBeUndefined();
     expect(sanitizeEdgeProps("CAST_VOTE", { vote: "AYE" }, stats)).toBeUndefined();
     expect(sanitizeEdgeProps("CAST_VOTE", { vote: 1 }, stats)).toBeUndefined();
-    expect(stats).toEqual({ dropped_out_of_vocabulary: 3, dropped_non_allowlisted: 0 });
+    expect(stats).toEqual({ dropped_out_of_vocabulary: 3, dropped_non_allowlisted: 0, suppressed_conflicting_duplicates: 0 });
   });
 
   it("treats null, missing and non-object input as no properties, uncounted", () => {
@@ -73,13 +75,13 @@ describe("sanitizeEdgeProps", () => {
     expect(sanitizeEdgeProps("CAST_VOTE", undefined, stats)).toBeUndefined();
     expect(sanitizeEdgeProps("CAST_VOTE", "{\"vote\":\"aye\"}", stats)).toBeUndefined();
     expect(sanitizeEdgeProps("CAST_VOTE", {}, stats)).toBeUndefined();
-    expect(stats).toEqual({ dropped_out_of_vocabulary: 0, dropped_non_allowlisted: 0 });
+    expect(stats).toEqual({ dropped_out_of_vocabulary: 0, dropped_non_allowlisted: 0, suppressed_conflicting_duplicates: 0 });
   });
 
   it("gives other relationships nothing, even a valid-looking vote", () => {
     const stats = newEdgePropStats();
     expect(sanitizeEdgeProps("ATTENDED", { vote: "aye" }, stats)).toBeUndefined();
-    expect(stats).toEqual({ dropped_out_of_vocabulary: 0, dropped_non_allowlisted: 1 });
+    expect(stats).toEqual({ dropped_out_of_vocabulary: 0, dropped_non_allowlisted: 1, suppressed_conflicting_duplicates: 0 });
   });
 
   it("works without a stats sink", () => {
@@ -109,5 +111,20 @@ describe("VOTE_LABEL", () => {
     });
     expect(VOTE_LABEL.absent).not.toMatch(/vot/);
     expect(VOTE_LABEL.recused).not.toMatch(/vot/);
+  });
+});
+
+describe("duplicate relationships", () => {
+  it("agree only when their public props are identical (missing equals missing)", () => {
+    expect(sameEdgeProps({ vote: "aye" }, { vote: "aye" })).toBe(true);
+    expect(sameEdgeProps(undefined, undefined)).toBe(true);
+    expect(sameEdgeProps({ vote: "aye" }, { vote: "no" })).toBe(false);
+    expect(sameEdgeProps({ vote: "absent" }, undefined)).toBe(false);
+  });
+
+  it("only allowlisted relationship types can carry props", () => {
+    expect(carriesEdgeProps("CAST_VOTE")).toBe(true);
+    expect(carriesEdgeProps("AT_MEETING")).toBe(false);
+    expect(carriesEdgeProps("toString")).toBe(false);
   });
 });

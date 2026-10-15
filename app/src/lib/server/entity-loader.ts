@@ -27,7 +27,13 @@ import {
   buildEdgesAmongSelectedQuery,
   buildTier2NeighborhoodQuery,
 } from "@/lib/server/entity-queries";
-import { type EdgeProps, newEdgePropStats, sanitizeEdgeProps } from "@/lib/edge-props";
+import {
+  type EdgeProps,
+  describeDroppedEdgeProps,
+  newEdgePropStats,
+  sameEdgeProps,
+  sanitizeEdgeProps,
+} from "@/lib/edge-props";
 import { effectiveEventDate } from "@/lib/server/entity-temporal";
 import { loadEntitySubstrate, loadEntitySubstrateById } from "@/lib/server/entity-loader-substrate";
 import { servingBackend } from "@/lib/server/substrate";
@@ -225,6 +231,8 @@ function toNumber(v: unknown): number {
 
 type Neo4jRecordLike = {
   get(key: string): unknown;
+  /** Driver records throw on get() of a column the query did not return; has() asks first. */
+  has?(key: string): boolean;
 };
 
 type Neo4jNodeLike = {
@@ -555,24 +563,33 @@ async function runEdgesAmongSelected(
     whitelist: PHASE2_WHITELIST_LIVE,
   })) as unknown as Neo4jRecordLike[];
   const dropped = newEdgePropStats();
-  const edges = records.map((r): EntityEdge => {
+  // DISTINCT keeps one row per relationship whose projected props differ, so a triple can arrive more than once;
+  // its props stand only if every row agrees (the bake's rule).
+  const byTriple = new Map<string, { edge: EntityEdge; props: EdgeProps | undefined; conflicted: boolean }>();
+  for (const r of records) {
     const relType = String(r.get("rel_type"));
-    const props = sanitizeEdgeProps(relType, r.get("props"), dropped);
-    return {
+    const raw = !r.has || r.has("props") ? r.get("props") : undefined;
+    const props = sanitizeEdgeProps(relType, raw, dropped);
+    const edge: EntityEdge = {
       source: String(r.get("start_id") ?? r.get("source")),
       target: String(r.get("end_id") ?? r.get("target")),
       type: relType,
       style: classifyEdgeStyle(relType),
-      ...(props ? { props } : {}),
     };
-  });
-  if (dropped.dropped_out_of_vocabulary > 0 || dropped.dropped_non_allowlisted > 0) {
-    console.warn(
-      `[entity-loader] edge props dropped: ${dropped.dropped_out_of_vocabulary} out-of-vocabulary, ` +
-        `${dropped.dropped_non_allowlisted} non-allowlisted`,
-    );
+    const key = `${edge.type}\u0000${edge.source}\u0000${edge.target}`;
+    const seen = byTriple.get(key);
+    if (!seen) {
+      byTriple.set(key, { edge, props, conflicted: false });
+    } else if (!seen.conflicted && !sameEdgeProps(seen.props, props)) {
+      seen.conflicted = true;
+      dropped.suppressed_conflicting_duplicates += 1;
+    }
   }
-  return edges;
+  const droppedLine = describeDroppedEdgeProps(dropped);
+  if (droppedLine) console.warn(`[entity-loader] edge props dropped: ${droppedLine}`);
+  return Array.from(byTriple.values(), ({ edge, props, conflicted }) =>
+    props && !conflicted ? { ...edge, props } : edge,
+  );
 }
 
 // ---------------------------------------------------------------------------
