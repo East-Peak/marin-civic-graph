@@ -1022,9 +1022,12 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
         hold.append("mover_is_seconder")
     if blk:
         # a member the minutes say did not vote, around this vote, is in no category we can trust
-        after_end = min(len(text), (mo.region_end if mo else block_loc["end"] + 400))
-        if _DID_NOT_VOTE_RE.search(text, region_start, max(after_end, block_loc["end"])):
-            hold.append("member_did_not_vote")
+        after_end = max(block_loc["end"], min(len(text), mo.region_end if mo else block_loc["end"] + 400))
+        listed_here = {n["name"] for c in CATEGORIES for n in categories[c]}
+        for m in _DID_NOT_VOTE_RE.finditer(text, block_loc["start"], after_end):
+            if surname(m.group(0).split(" did")[0].split(" was")[0].split(" abstained")[0]) not in listed_here:
+                hold.append("member_did_not_vote")
+                break
 
     consent = bool(motion and _GROUPED_RE.search(motion["text"]))
     item = {"top": top.label if top else None, "sub": None if consent else (sub.label if sub else None),
