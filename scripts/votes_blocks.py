@@ -68,7 +68,7 @@ _NOV_HEADER_RE = re.compile(
     r"(?<![\w-])(?P<hdr>(?:(?P<who>[A-Z]{2,}(?:\s[A-Z]{2,}){0,3})\s+ACTION(?:\s+ON\s+MAIN\s+MOTION|\s+-\s+MAIN\s+MOTION)?"
     r"|SUBSTITUTE\s+MOTION|COUNCIL\s+MOTION)\s*:)")
 _NOV_MOVER_SECONDER_RE = re.compile(
-    rf"(?:Upon\s+)?(?:a\s+)?(?:substitute\s+|friendly\s+)?(?:motion|amendment)\s+(?:was\s+)?(?:made\s+)?by\s+(?P<m>{_NAME})\s*,?\s+"
+    rf"(?:Upon\s+)?(?:a\s+)?(?:substitute\s+|friendly\s+)?(?:motion|amendment)\s+(?:was\s+)?(?:made\s+)?(?:by\s+)?(?P<m>{_NAME})\s*,?\s+"
     rf"(?:and\s+)?(?:was\s+)?seconded\s+by\s+(?P<s>{_NAME})", re.I)
 _NOV_MOVER_ONLY_RE = re.compile(
     rf"(?:(?:Upon\s+)?(?:a\s+)?(?:substitute\s+)?motion\s+(?:was\s+)?(?:made\s+)?by\s+(?P<m>{_NAME}))"
@@ -121,6 +121,8 @@ _BOS_MS_RE = re.compile(rf"M/s\s+(?P<m>{_BOS_MOVER})\s*[-/]\s*(?:(?P<s>{_BOS_SEC
 _BOS_MOVED_RE = re.compile(rf"(?:Motion\s+to\s+)?(?P<text>[^\n.]*?)\s*moved\s+by\s+(?P<m>{_NAME})\s+and\s+"
                            rf"seconded\s+by\s+(?P<s>{_NAME})", re.I)
 
+_DID_NOT_VOTE_RE = re.compile(rf"(?-i:(?i:{TITLE})\s+(?:[A-Z][\w']*\s+)?[A-Z][\w'\-]*)\s+(?:did\s+not\s+vote|"
+                              rf"did\s+not\s+cast|was\s+not\s+voting|abstained\s+from\s+voting)", re.I)
 _TRANSCRIPT_LINE_RE = re.compile(r"^[A-Z][A-Z .,'\-]{1,40}:\s")
 _LINE_NUMBER_RE = re.compile(r"^\s*(?:\d{1,3}\s+)+|^\s*\d{1,3}\s*$")
 
@@ -1015,6 +1017,14 @@ def _event(ct, body, meeting_id, doc_sha256, headings, mo: _Motion | None, blk, 
         listed = next((c for c in CATEGORIES for n in categories[c] if n["name"] == x["name"]), None)
         if blk and not has_all and listed != x["kind"] and not (x["kind"] == "recused" and listed == "absent"):
             hold.append("exception_scope_conflict")
+
+    if motion and motion["mover"] and motion["mover"] == motion["seconder"]:
+        hold.append("mover_is_seconder")
+    if blk:
+        # a member the minutes say did not vote, around this vote, is in no category we can trust
+        after_end = min(len(text), (mo.region_end if mo else block_loc["end"] + 400))
+        if _DID_NOT_VOTE_RE.search(text, region_start, max(after_end, block_loc["end"])):
+            hold.append("member_did_not_vote")
 
     consent = bool(motion and _GROUPED_RE.search(motion["text"]))
     item = {"top": top.label if top else None, "sub": None if consent else (sub.label if sub else None),

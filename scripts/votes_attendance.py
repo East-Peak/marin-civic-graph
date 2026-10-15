@@ -48,7 +48,7 @@ _TIMED_PLURAL_RE = re.compile(r"(?-i:(?i:Supervisors|Councilmembers)\s+(?P<list>
 _ARRIVE_RE = re.compile(rf"{_REF}\s+(?:arrived|returned|rejoined|joined\s+the\s+meeting)\b", re.I)
 _RECUSE_LEFT_RE = re.compile(rf"{_REF}\s+recused\b[^.\n]*?\band\s+(?:left|departed|exited)\b", re.I)
 _DEPART_RE = re.compile(rf"{_REF}\s+(?:left|departed|exited|stepped\s+(?:out|down|away)|was\s+excused)\b", re.I)
-_WAS_ABSENT_RE = re.compile(rf"{_REF}\s+(?:was|is)\s+absent\b", re.I)
+_WAS_ABSENT_RE = re.compile(rf"{_REF}\s+(?:(?:was|is|being)\s+)?absent\b", re.I)
 _WERE_ABSENT_RE = re.compile(r"(?-i:(?i:Supervisors|Councilmembers)\s+(?P<list>[A-Z][\w'\-]*(?:\s*,\s*[A-Z][\w'\-]*)*"
                              r"\s*,?\s+and\s+[A-Z][\w'\-]*))\s+were\s+absent\b", re.I)
 _RECESS_RE = re.compile(r"\brecess(?:ed)?\b|\btook\s+a\s+(?:brief\s+)?recess\b", re.I)
@@ -66,6 +66,9 @@ _TRIGGER_RE = re.compile(
     re.I)
 _OTHER_BODY_WORDS = re.compile(r"District|Authority|Agency|Housing|Commission|Open\s+Space|Financing|Successor|"
                                r"Joint\s+Powers|Board\s+of\s+Directors|Board\s+of\s+Commissioners|Corporation", re.I)
+
+
+_NARROW_SCOPE_RE = re.compile(r"\b(?:C[AB]-?\d+[a-z]?|[A-Z]\.\d+|items?\s+[A-Z]?[\d.-]+[a-z]?|minutes)\b", re.I)
 
 
 def _key(name: str) -> str:
@@ -364,6 +367,8 @@ def _transitions(ct: CanonicalText, body: str, skip: list[tuple[int, int]]) -> l
         for om in _OPEN_RE.finditer(sent):
             markers.append((om.end(), "generic", None))
         for rm in _RECONVENE_RE.finditer(sent):
+            if rm.group(0).lower().startswith("returned") and re.search(rf"{_REF}\s*$", sent[:rm.start()]):
+                continue  # a member returning, not the body
             if not _AS_BODY_RE.match(sent, rm.start()):
                 markers.append((rm.end(), "generic", None))
         markers.sort()
@@ -510,6 +515,14 @@ def resolve(ct: CanonicalText, *, body: str, events: list[dict]) -> tuple[list[d
                                else "ambiguous_attendance")
             elif st.body != "main" or (ev["motion"] and ev["motion"].get("acting_as")):
                 reasons.append("body_unclear")
+            else:
+                parties = {(ev["motion"] or {}).get(k) for k in ("mover", "seconder")} - {None}
+                if parties & st.roster - st.present:
+                    reasons.append("mover_not_present")  # whoever moved or seconded was there: the state is wrong
+                if ev.get("consent") and any(_NARROW_SCOPE_RE.search(ct.text[x["span"]["start"]:x["span"]["end"]
+                                                                               + 120].split(".")[0])
+                                             for x in ev.get("item_exceptions", [])):
+                    reasons.append("exception_scope_conflict")  # stood aside from part of the calendar only
             unknown = listed - st.roster if st.known else set()
             if unknown:
                 reasons.append("name_unknown")

@@ -323,6 +323,38 @@ class TestCodexRoundNine:
         assert ev["status"] == "held" and "exception_unread" in ev["hold_reasons"]
 
 
+class TestSampleReview:
+    @pytest.mark.parametrize("sentence", ["Supervisor Elm recused himself from voting on CA-2.",
+                                          "Supervisor Elm abstained from all prior minutes to be approved."])
+    def test_an_item_scoped_exception_on_a_consent_all_vote_is_held(self, sentence):
+        lines = ["Roll Call", ROLL, "1.", "Consent Calendar A", sentence,
+                 "M/s Supervisor Alder - Supervisor Birch to approve Consent Calendar A (Items CA-1 through CA-3).",
+                 "AYES: ALL"]
+        _, [ev], _ = _run(lines)
+        assert ev["status"] == "held" and "exception_scope_conflict" in ev["hold_reasons"]
+
+    def test_a_mover_the_state_shows_absent_holds_the_expansion(self):
+        lines = ["Roll Call", ROLL, "(Supervisor Alder absent at 10:00 a.m.)", *_item(1)]
+        _, [ev], _ = _run(lines)
+        assert ev["status"] == "held" and "mover_not_present" in ev["hold_reasons"]
+
+    @pytest.mark.parametrize("sentence,ayes", [
+        ("Supervisor Elm absent.", FIVE[:4]),
+        ("The item was heard with Supervisor Elm being absent.", FIVE[:4]),
+        ("The Council will cancel the August meeting for the summer recess.", FIVE),
+    ])
+    def test_more_attendance_wording(self, sentence, ayes):
+        _, [ev], _ = _run(["Roll Call", ROLL, sentence, *_item(1)])
+        assert ev["status"] == "expanded" and _ayes(ev) == ayes
+
+    def test_a_member_returning_is_not_the_body_reconvening(self):
+        lines = ["Roll Call", ROLL, "The Board recessed to meet as the Fictional Housing Authority.",
+                 "Supervisor Elm returned at 10:09 a.m.", *_item(1)]
+        _, [ev], trace = _run(lines)
+        assert ev["status"] == "held" and ev["hold_reasons"] == ["body_unclear"]
+        assert [t["kind"] for t in trace if "returned" in str(t)] in ([], ["arrive"])
+
+
 class TestRetrospectiveArrival:
     NOV_ROLL = ["A.   CONVENE AND ROLL CALL",
                 "     COUNCIL PRESENT: Mayor Ann Alder, Mayor Pro Tempore Bea Birch,",

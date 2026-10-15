@@ -571,6 +571,29 @@ class TestNovatoBasics:
         _, [ev] = _parse(NOVATO, lines)
         assert ev["status"] == "named"
 
+    def test_upon_motion_without_by(self):
+        lines = ["I.   ITEM", "     COUNCIL ACTION: Upon motion Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 2-1 via roll call to approve.",
+                 "     AYES: ALDER, BIRCH", "     NOES: CEDAR", "     Motion carried."]
+        _, [ev] = _parse(NOVATO, lines)
+        assert (ev["motion"]["mover"], ev["motion"]["seconder"]) == ("ALDER", "BIRCH")
+
+    def test_a_mover_who_is_also_the_seconder_is_held(self):
+        lines = ["I.   ITEM", "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Alder, the City Council voted 2-1 via roll call to approve.",
+                 "     AYES: ALDER, BIRCH", "     NOES: CEDAR", "     Motion carried."]
+        _, [ev] = _parse(NOVATO, lines)
+        assert ev["status"] == "held" and "mover_is_seconder" in ev["hold_reasons"]
+
+    def test_a_member_who_did_not_vote_holds_the_event(self):
+        lines = ["I.   ITEM", "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
+                 "     Councilmember Birch, the City Council voted 0-2 via roll call to approve.",
+                 "     AYES: None.", "     NOES: ALDER, BIRCH", "",
+                 "     Councilmember Cedar did not vote, because she wanted an answer first.", "",
+                 "     Motion failed.", "J.   NEXT"]
+        _, [ev] = _parse(NOVATO, lines)
+        assert ev["status"] == "held" and "member_did_not_vote" in ev["hold_reasons"]
+
     def test_votes_with_no_motion_are_held(self):
         lines = ["I.   ITEM", "     The Council discussed the matter.", "     AYES: ALDER, BIRCH",
                  "     NOES: None", "J.   NEXT"]
