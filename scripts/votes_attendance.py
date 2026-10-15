@@ -345,6 +345,13 @@ def _transitions(ct: CanonicalText, body: str, skip: list[tuple[int, int]]) -> l
         for n in re.findall(r"[A-Z][\w'\-]*", m.group("list")):
             add(_T(m.start(), m.end(), "absent_statement", member=_key(n), retro=retrospective(m.start())))
 
+    # a heading that opens another body's meeting ("Special Meeting of the … District Board")
+    for m in re.finditer(r"^[ \t]*(?:Special|Regular|Adjourned)\s+Meeting\s+of\s+the\s+(?P<b>[^\n]+?)[ \t]*$", text,
+                         re.I | re.M):
+        if skipped(m.start()) or inside_roll(m.start()):
+            continue
+        add(_T(m.start(), m.end(), "reconvene", markers=(("as", _body_of(m.group("b"), body)),)))
+
     # recess / reconvene / body changes, one per sentence
     for m in re.finditer(r"[^.\n]*(?:\brecess|\breconven|\bconvene|\bsitting\s+as|\breturned\s+at)[^.\n]*\.?", text, re.I):
         s, e = m.start(), m.end()

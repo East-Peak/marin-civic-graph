@@ -236,6 +236,7 @@ def _headings(ct: CanonicalText, body: str) -> list[_Heading]:
     top_re, sub_re = (_NOV_TOP_RE, _NOV_SUB_RE) if body == "novato-city-council" else (_BOS_TOP_RE, _BOS_SUB_RE)
     out: list[_Heading] = []
     last_top = None
+    prev_list = None
 
     def continues_sentence(pos: int, title: str | None) -> bool:
         """The line at pos carries on the previous line's sentence (no blank line between, that line
@@ -253,11 +254,19 @@ def _headings(ct: CanonicalText, body: str) -> list[_Heading]:
             if continues_sentence(m.start(), m.group("t")):
                 continue
             if level == "top":
-                # top-level items only advance; a numbered or lettered list inside an item restarts
+                # minutes may hear items out of order, so a lower number can be a real item; it is a list
+                # inside an item when its lead-in ends with ":" or it continues a list just rejected
                 key = int(m.group("l")) if m.group("l").isdigit() else ord(m.group("l"))
+                line_no = ct.line_of(m.start())
                 if last_top is not None and key <= last_top:
-                    continue
-                last_top = key
+                    before = text[:m.start()].rstrip().rsplit("\n", 1)[-1].rstrip()
+                    list_like = before.endswith(":") or (
+                        prev_list is not None and key == prev_list[0] + 1 and line_no - prev_list[1] <= 6)
+                    if list_like:
+                        prev_list = (key, line_no)
+                        continue
+                prev_list = None
+                last_top = key if last_top is None else max(last_top, key)
             title = (m.group("t") or "").strip()
             if not title:  # "1." alone on its line: the title is the next non-empty line
                 nxt = re.search(r"\n[ \t]*(\S[^\n]*)", text[m.end():])

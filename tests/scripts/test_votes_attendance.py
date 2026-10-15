@@ -355,6 +355,14 @@ class TestSampleReview:
         assert [t["kind"] for t in trace if "returned" in str(t)] in ([], ["arrive"])
 
 
+class TestBodyHeadings:
+    def test_a_special_meeting_heading_of_another_body_is_a_change_of_body(self):
+        lines = ["Special Meeting of the Fictional Flood Control District Board of Supervisors", "Roll Call", ROLL,
+                 *_item(1), "Special Meeting of the Fictional County Board of Supervisors", *_item(2)]
+        _, evs, _ = _run(lines)
+        assert [(e["status"], e["hold_reasons"]) for e in evs] == [("held", ["body_unclear"]), ("expanded", [])]
+
+
 class TestRetrospectiveArrival:
     NOV_ROLL = ["A.   CONVENE AND ROLL CALL",
                 "     COUNCIL PRESENT: Mayor Ann Alder, Mayor Pro Tempore Bea Birch,",

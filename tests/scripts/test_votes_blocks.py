@@ -840,6 +840,14 @@ class TestBoardOfSupervisors:
         assert ev["item"]["top"] == "15" and ev["status"] == "needs_attendance"
         assert ev["motion"]["mover"] == "ALDER"
 
+    def test_items_heard_out_of_order_keep_their_numbers(self):
+        lines = ["7.", "Request to appoint a sheriff.", "M/s Supervisor Alder - Supervisor Birch to appoint.", "AYES: ALL",
+                 "6.", "Consent Calendar B (Items CB-1 through CB-2)", "CB-1. First.", "CB-2. Second.",
+                 "M/s Supervisor Cedar - Supervisor Alder to approve Consent Calendar B (Items CB-1 through CB-2).",
+                 "AYES: ALL", "8.", "Next."]
+        _, events = _parse(BOS, lines)
+        assert [e["item"]["top"] for e in events] == ["7", "6"]
+
     def test_novato_sections_must_advance(self):
         lines = ["H.   PUBLIC HEARINGS", "     COUNCIL ACTION: Upon motion by Councilmember Alder and seconded by",
                  "     Councilmember Birch to adopt with these conditions:", "     A.  First condition.",
