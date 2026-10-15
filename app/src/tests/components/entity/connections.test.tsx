@@ -254,4 +254,109 @@ describe("Connections", () => {
     // RELATED always last
     expect(headings[headings.length - 1]).toBe("related");
   });
+
+  describe("votes on CAST_VOTE cards", () => {
+    const VOTES = ["aye", "no", "abstain", "absent", "recused"] as const;
+    const neighbor = (id: string, type: "Person" | "Decision") => ({
+      id,
+      type,
+      label: id,
+      route: `/${type.toLowerCase()}/${id}`,
+      ring: 1 as const,
+      role: "must-show" as const,
+      event_date: null,
+    });
+    const cardFor = (route: string) => screen.getAllByRole("link").find((a) => a.getAttribute("href") === route)!;
+
+    it("labels each decision on a Person page with how the person voted (the person is the edge's start)", () => {
+      const entity = makeEntity({
+        id: "person-avery-quill",
+        type: "Person",
+        label: "Avery Quill",
+        neighbors: [...VOTES.map((v) => neighbor(`decision-${v}`, "Decision")), neighbor("decision-unknown", "Decision")],
+        edges: [
+          ...VOTES.map((vote) => ({
+            source: "person-avery-quill",
+            target: `decision-${vote}`,
+            type: "CAST_VOTE",
+            style: "governance" as const,
+            props: { vote },
+          })),
+          { source: "person-avery-quill", target: "decision-unknown", type: "CAST_VOTE", style: "governance" },
+        ],
+        neighbor_total: 6,
+      });
+
+      render(<Connections entity={entity} />);
+
+      expect(cardFor("/decision/decision-aye").textContent).toContain("voted aye");
+      expect(cardFor("/decision/decision-no").textContent).toContain("voted no");
+      expect(cardFor("/decision/decision-abstain").textContent).toContain("abstained");
+      expect(cardFor("/decision/decision-absent").textContent).toContain("absent");
+      expect(cardFor("/decision/decision-recused").textContent).toContain("recused");
+      expect(cardFor("/decision/decision-absent").textContent).not.toMatch(/vot/);
+      expect(cardFor("/decision/decision-recused").textContent).not.toMatch(/vot/);
+      // A missing value shows no label at all.
+      expect(cardFor("/decision/decision-unknown").querySelector('[data-testid="vote-label"]')).toBeNull();
+      expect(screen.getAllByTestId("vote-label")).toHaveLength(5);
+    });
+
+    it("labels each member on a Decision page with their own vote (the decision is the edge's end)", () => {
+      const entity = makeEntity({
+        id: "decision-fictional-levee",
+        type: "Decision",
+        label: "Fictional levee",
+        neighbors: [neighbor("person-avery-quill", "Person"), neighbor("person-bo-tarn", "Person")],
+        edges: [
+          { source: "person-avery-quill", target: "decision-fictional-levee", type: "CAST_VOTE", style: "governance", props: { vote: "absent" } },
+          { source: "person-bo-tarn", target: "decision-fictional-levee", type: "CAST_VOTE", style: "governance", props: { vote: "no" } },
+          // An edge between two neighbors never labels a card: only the focus's own vote edges do.
+          { source: "person-bo-tarn", target: "person-avery-quill", type: "CAST_VOTE", style: "governance", props: { vote: "aye" } },
+        ],
+        neighbor_total: 2,
+      });
+
+      render(<Connections entity={entity} />);
+
+      expect(cardFor("/person/person-avery-quill").querySelector('[data-testid="vote-label"]')?.textContent).toBe("absent");
+      expect(cardFor("/person/person-bo-tarn").querySelector('[data-testid="vote-label"]')?.textContent).toBe("voted no");
+    });
+
+    it("heads the CAST_VOTE group 'roll call', so absent and recused members never sit under a voting heading", () => {
+      const entity = makeEntity({
+        id: "decision-fictional-levee",
+        type: "Decision",
+        neighbors: [neighbor("person-avery-quill", "Person")],
+        edges: [
+          { source: "person-avery-quill", target: "decision-fictional-levee", type: "CAST_VOTE", style: "governance", props: { vote: "absent" } },
+        ],
+        neighbor_total: 1,
+      });
+
+      render(<Connections entity={entity} />);
+
+      const heading = screen.getByTestId("connection-group-heading").textContent ?? "";
+      expect(heading).toMatch(/^roll call/);
+      expect(heading).not.toMatch(/vote/);
+    });
+
+    it("never labels a card in another group, even when that neighbor also has a vote edge", () => {
+      const entity = makeEntity({
+        id: "person-avery-quill",
+        type: "Person",
+        neighbors: [neighbor("decision-aye", "Decision")],
+        edges: [
+          { source: "person-avery-quill", target: "decision-aye", type: "CAST_VOTE", style: "governance", props: { vote: "aye" } },
+          { source: "person-avery-quill", target: "decision-aye", type: "MOVED", style: "governance" },
+        ],
+        neighbor_total: 1,
+      });
+
+      render(<Connections entity={entity} />);
+
+      const groups = screen.getAllByTestId("connection-group");
+      const labelled = groups.map((g) => g.querySelectorAll('[data-testid="vote-label"]').length);
+      expect(labelled.sort()).toEqual([0, 1]);
+    });
+  });
 });

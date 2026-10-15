@@ -3,24 +3,38 @@
 // Each card: type badge + Plex Sans title + mini-meta. Whole card is a link.
 
 import Link from "next/link";
+import { type EdgeProps, VOTE_LABEL } from "@/lib/edge-props";
 import type { EntityPayload, Neighbor } from "@/lib/server/entity-loader";
 import { displayNameForType } from "@/lib/type-display";
 import { entityRouteForId } from "@/lib/entity-route";
 import { MONEY_KIND_TEXT, type MoneyKind } from "@/lib/money-kinds";
 
+/** A neighbor's card, with the properties of the focus's edge to it (e.g. how a member voted). */
+type Card = {
+  neighbor: Neighbor;
+  props?: EdgeProps;
+};
+
 type Grouped = {
   relType: string;
-  neighbors: Neighbor[];
+  cards: Card[];
 };
+
+// A CAST_VOTE group also lists absent and recused members, so it is a roll call, not "cast vote".
+const REL_HEADINGS: Record<string, string> = { CAST_VOTE: "roll call" };
 
 function humanizeRel(rel: string): string {
   // e.g. PARTICIPATES_IN → participates in
-  return rel.toLowerCase().replace(/_/g, " ");
+  return REL_HEADINGS[rel] ?? rel.toLowerCase().replace(/_/g, " ");
+}
+
+function voteLabel(relType: string, props: EdgeProps | undefined): string | null {
+  return relType === "CAST_VOTE" && props?.vote ? VOTE_LABEL[props.vote] : null;
 }
 
 function groupNeighborsByRel(entity: EntityPayload): Grouped[] {
   const byId = new Map(entity.neighbors.map((n) => [n.id, n]));
-  const groups = new Map<string, Neighbor[]>();
+  const groups = new Map<string, Card[]>();
 
   for (const edge of entity.edges) {
     // Edge touching the focus: group the other endpoint under its rel type.
@@ -35,24 +49,24 @@ function groupNeighborsByRel(entity: EntityPayload): Grouped[] {
     if (!n) continue;
     if (!groups.has(edge.type)) groups.set(edge.type, []);
     const list = groups.get(edge.type)!;
-    if (!list.find((x) => x.id === n.id)) list.push(n);
+    if (!list.find((card) => card.neighbor.id === n.id)) list.push({ neighbor: n, props: edge.props });
   }
 
   // Any neighbors not picked up by an edge (orphans) go under "related".
   const claimed = new Set<string>();
-  for (const list of groups.values()) for (const n of list) claimed.add(n.id);
+  for (const list of groups.values()) for (const card of list) claimed.add(card.neighbor.id);
   const orphans = entity.neighbors.filter((n) => !claimed.has(n.id));
   if (orphans.length > 0) {
-    groups.set("RELATED", orphans);
+    groups.set("RELATED", orphans.map((neighbor) => ({ neighbor })));
   }
 
   // Sort groups by relation name and cards within each group by id, so the
   // same entity renders the same Connections layout every time regardless of
   // the backend's traversal order. RELATED goes last as a catch-all.
   const entries = Array.from(groups.entries())
-    .map(([relType, neighbors]): Grouped => ({
+    .map(([relType, cards]): Grouped => ({
       relType,
-      neighbors: [...neighbors].sort((a, b) => a.id.localeCompare(b.id)),
+      cards: [...cards].sort((a, b) => a.neighbor.id.localeCompare(b.neighbor.id)),
     }))
     .sort((a, b) => {
       if (a.relType === "RELATED" && b.relType !== "RELATED") return 1;
@@ -199,43 +213,49 @@ export function Connections({ entity }: { entity: EntityPayload }) {
                   data-testid="connection-group-heading"
                 >
                   {humanizeRel(g.relType)}
-                  <span className="ml-2 text-hairline">{g.neighbors.length}</span>
+                  <span className="ml-2 text-hairline">{g.cards.length}</span>
                 </div>
                 <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
-                  {g.neighbors.map((n) => (
-                    <li key={n.id}>
-                      <Link
-                        href={n.route}
-                        className="block border border-border-hairline bg-panel px-3 py-2.5 transition hover:border-[#262b35] hover:bg-surface"
-                      >
-                        <div
-                          className="font-mono uppercase text-dim"
-                          style={{ fontSize: "10px", letterSpacing: "0.14em" }}
+                  {g.cards.map(({ neighbor: n, props }) => {
+                    const meta = neighborMiniMeta(n);
+                    const vote = voteLabel(g.relType, props);
+                    return (
+                      <li key={n.id}>
+                        <Link
+                          href={n.route}
+                          className="block border border-border-hairline bg-panel px-3 py-2.5 transition hover:border-[#262b35] hover:bg-surface"
                         >
-                          {n.type}
-                        </div>
-                        <div
-                          className="mt-1 text-body"
-                          style={{
-                            fontFamily: "var(--font-plex-sans), ui-sans-serif, sans-serif",
-                            fontWeight: 500,
-                            fontSize: "13.5px",
-                            lineHeight: 1.35,
-                          }}
-                        >
-                          {n.label}
-                        </div>
-                        {neighborMiniMeta(n) && (
                           <div
-                            className="mt-1 font-mono text-hairline"
-                            style={{ fontSize: "11px" }}
+                            className="font-mono uppercase text-dim"
+                            style={{ fontSize: "10px", letterSpacing: "0.14em" }}
                           >
-                            {neighborMiniMeta(n)}
+                            {n.type}
                           </div>
-                        )}
-                      </Link>
-                    </li>
-                  ))}
+                          <div
+                            className="mt-1 text-body"
+                            style={{
+                              fontFamily: "var(--font-plex-sans), ui-sans-serif, sans-serif",
+                              fontWeight: 500,
+                              fontSize: "13.5px",
+                              lineHeight: 1.35,
+                            }}
+                          >
+                            {n.label}
+                          </div>
+                          {(meta || vote) && (
+                            <div
+                              className="mt-1 font-mono text-hairline"
+                              style={{ fontSize: "11px" }}
+                            >
+                              {meta}
+                              {meta && vote && " · "}
+                              {vote && <span data-testid="vote-label">{vote}</span>}
+                            </div>
+                          )}
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             ))}

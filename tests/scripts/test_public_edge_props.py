@@ -40,6 +40,7 @@ def test_the_shared_allowlist_admits_only_the_vote_on_cast_vote() -> None:
         {"CAST_VOTE": {"vote": []}},
         {"CAST_VOTE": {"vote": ["aye", 1]}},
         {"CAST_VOTE": {"vote": ["aye", "aye"]}},
+        {"CAST_VOTE": {"vote": ["it's"]}},
     ],
 )
 def test_a_malformed_allowlist_is_refused(tmp_path: Path, relationships: dict) -> None:

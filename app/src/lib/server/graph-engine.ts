@@ -5,6 +5,7 @@ import {
   UNIVERSAL_EDGES_LIVE,
   specToLive,
 } from "@/lib/edge-vocabulary";
+import { type EdgeProps, newEdgePropStats, sanitizeEdgeProps } from "@/lib/edge-props";
 import { getSubstrateDb } from "@/lib/server/substrate";
 import type { NodeType } from "@/lib/type-display";
 
@@ -61,6 +62,8 @@ export type Tier2GraphEdge = {
 export type SelectedGraphEdge = Tier2GraphEdge & {
   source: string;
   target: string;
+  /** Public edge properties (registry/edge-properties.json); absent when the edge has none. */
+  props?: EdgeProps;
 };
 
 export type GraphEngine = {
@@ -87,6 +90,7 @@ type StoredEdgeRow = {
   source: string;
   rel: string;
   target: string;
+  props: string | null;
 };
 
 type Direction = "out" | "in" | "any";
@@ -119,6 +123,8 @@ type Candidate = {
 type GraphData = {
   nodeMeta: Map<string, GraphNodeMeta>;
   adjacency: Map<string, AdjacencyEntry[]>;
+  /** Only edges that have public properties, keyed by edgeKey(rel, start, end). */
+  edgeProps: Map<string, EdgeProps>;
   getNodeProps(id: string): Record<string, unknown>;
 };
 
@@ -129,6 +135,10 @@ const ADJACENCY_RELS = Array.from(
   new Set([...PHASE2_WHITELIST_LIVE, ...UNIVERSAL_EDGES_LIVE, SAME_AS_REL]),
 );
 const PROPS_CACHE_LIMIT = 256;
+
+function edgeKey(rel: string, start: string, end: string): string {
+  return `${rel}\u0000${start}\u0000${end}`;
+}
 
 function unique(values: string[]): string[] {
   return Array.from(new Set(values));
@@ -759,7 +769,7 @@ function tier2Neighborhood(
   const edges: Tier2GraphEdge[] = [];
   for (const match of matches) {
     if (!selectedIds.has(match.edge.peer)) continue;
-    const key = `${match.edge.rel}\u0000${match.edge.start}\u0000${match.edge.end}`;
+    const key = edgeKey(match.edge.rel, match.edge.start, match.edge.end);
     if (seenEdges.has(key)) continue;
     seenEdges.add(key);
     edges.push({
@@ -790,15 +800,17 @@ function edgesAmongSelected(
       if (edge.start === edge.end) continue;
       const source = edge.start < edge.end ? edge.start : edge.end;
       const target = edge.start < edge.end ? edge.end : edge.start;
-      const key = `${edge.rel}\u0000${edge.start}\u0000${edge.end}`;
+      const key = edgeKey(edge.rel, edge.start, edge.end);
       if (seen.has(key)) continue;
       seen.add(key);
+      const props = graph.edgeProps.get(key);
       rows.push({
         source,
         target,
         relationship: edge.rel,
         start_id: edge.start,
         end_id: edge.end,
+        ...(props ? { props } : {}),
       });
     }
   }
@@ -864,20 +876,38 @@ function createGraphEngine(): GraphEngine {
     nodeMeta.set(row.id, { type: row.type, label: row.search_label ?? row.id });
   }
 
+  // An artifact baked before edges.props existed still serves: its edges simply have no properties.
+  const hasPropsColumn = (db.prepare("PRAGMA table_info(edges)").all() as Array<{ name: string }>).some(
+    (column) => column.name === "props",
+  );
   const placeholders = ADJACENCY_RELS.map(() => "?").join(", ");
   const edgeRows = db
-    .prepare(`SELECT source, rel, target FROM edges WHERE rel IN (${placeholders})`)
+    .prepare(
+      `SELECT source, rel, target, ${hasPropsColumn ? "props" : "NULL AS props"} FROM edges WHERE rel IN (${placeholders})`,
+    )
     .all(...ADJACENCY_RELS) as StoredEdgeRow[];
+  const edgeProps = new Map<string, EdgeProps>();
+  const dropped = newEdgePropStats();
   for (const row of edgeRows) {
     const edgeClass = edgeClassFor(row.rel);
     if (!edgeClass) continue;
     pushAdjacency(adjacency, row.source, row.target, row.rel, edgeClass);
+    if (row.props === null) continue;
+    const props = sanitizeEdgeProps(row.rel, JSON.parse(row.props), dropped);
+    if (props) edgeProps.set(edgeKey(row.rel, row.source, row.target), props);
+  }
+  if (dropped.dropped_out_of_vocabulary > 0 || dropped.dropped_non_allowlisted > 0) {
+    console.warn(
+      `[graph-engine] edge props dropped at load: ${dropped.dropped_out_of_vocabulary} out-of-vocabulary, ` +
+        `${dropped.dropped_non_allowlisted} non-allowlisted`,
+    );
   }
 
   const propsStmt = db.prepare("SELECT props FROM nodes WHERE id = ?");
   const graph: GraphData = {
     nodeMeta,
     adjacency,
+    edgeProps,
     getNodeProps(id: string) {
       const cached = propsCache.get(id);
       if (cached) return cached;

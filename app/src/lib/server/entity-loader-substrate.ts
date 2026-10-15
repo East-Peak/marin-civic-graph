@@ -6,6 +6,7 @@ import {
   MONEY_EDGES_LIVE,
   PHASE2_WHITELIST_LIVE,
 } from "@/lib/edge-vocabulary";
+import type { EdgeProps } from "@/lib/edge-props";
 import { effectiveEventDate } from "@/lib/server/entity-temporal";
 import { loadGraph } from "@/lib/server/graph-engine";
 import { getSubstrateDb } from "@/lib/server/substrate";
@@ -154,6 +155,7 @@ function toEntityEdge(
     start_id?: string;
     end_id?: string;
     relationship: string;
+    props?: EdgeProps;
   },
 ): EntityEdge {
   const source = edge.start_id ?? edge.source;
@@ -166,6 +168,7 @@ function toEntityEdge(
     target,
     type: edge.relationship,
     style: classifyEdgeStyle(edge.relationship),
+    ...(edge.props ? { props: edge.props } : {}),
   };
 }
 

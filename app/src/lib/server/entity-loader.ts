@@ -27,6 +27,7 @@ import {
   buildEdgesAmongSelectedQuery,
   buildTier2NeighborhoodQuery,
 } from "@/lib/server/entity-queries";
+import { type EdgeProps, newEdgePropStats, sanitizeEdgeProps } from "@/lib/edge-props";
 import { effectiveEventDate } from "@/lib/server/entity-temporal";
 import { loadEntitySubstrate, loadEntitySubstrateById } from "@/lib/server/entity-loader-substrate";
 import { servingBackend } from "@/lib/server/substrate";
@@ -63,6 +64,8 @@ export type EntityEdge = {
   target: string;
   type: string;
   style: EdgeStyle;
+  /** Public edge properties (registry/edge-properties.json), e.g. a CAST_VOTE's vote; absent when there are none. */
+  props?: EdgeProps;
 };
 
 export type IdentityLink = {
@@ -551,15 +554,25 @@ async function runEdgesAmongSelected(
     ids,
     whitelist: PHASE2_WHITELIST_LIVE,
   })) as unknown as Neo4jRecordLike[];
-  return records.map((r): EntityEdge => {
+  const dropped = newEdgePropStats();
+  const edges = records.map((r): EntityEdge => {
     const relType = String(r.get("rel_type"));
+    const props = sanitizeEdgeProps(relType, r.get("props"), dropped);
     return {
       source: String(r.get("start_id") ?? r.get("source")),
       target: String(r.get("end_id") ?? r.get("target")),
       type: relType,
       style: classifyEdgeStyle(relType),
+      ...(props ? { props } : {}),
     };
   });
+  if (dropped.dropped_out_of_vocabulary > 0 || dropped.dropped_non_allowlisted > 0) {
+    console.warn(
+      `[entity-loader] edge props dropped: ${dropped.dropped_out_of_vocabulary} out-of-vocabulary, ` +
+        `${dropped.dropped_non_allowlisted} non-allowlisted`,
+    );
+  }
+  return edges;
 }
 
 // ---------------------------------------------------------------------------

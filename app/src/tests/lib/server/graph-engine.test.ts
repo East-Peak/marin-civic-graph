@@ -246,3 +246,117 @@ describe("graph-engine", () => {
     expect(graph.neighborTotal("org-total", "Organization")).toBe(2);
   });
 });
+
+// Edge properties (registry/edge-properties.json). The reader detects the nullable `props` column by schema, so the
+// same code serves an artifact baked before the column existed.
+const SENTINEL = "ledger_secret_code";
+
+function makeVoteDb({ withProps }: { withProps: boolean }): string {
+  const dir = mkdtempSync(path.join(tmpdir(), "open-marin-graph-engine-votes-"));
+  const dbPath = path.join(dir, "public-substrate.sqlite");
+  const db = new Database(dbPath);
+  db.exec(`
+    CREATE TABLE nodes (
+      id TEXT PRIMARY KEY,
+      type TEXT NOT NULL,
+      search_label TEXT NOT NULL,
+      props TEXT NOT NULL CHECK (json_valid(props))
+    );
+    CREATE TABLE edges (
+      source TEXT NOT NULL,
+      rel TEXT NOT NULL,
+      target TEXT NOT NULL${withProps ? ",\n      props TEXT CHECK (props IS NULL OR json_valid(props))" : ""}
+    );
+  `);
+  for (const node of [
+    { id: "person-avery-quill", type: "Person", label: "Avery Quill" },
+    { id: "person-bo-tarn", type: "Person", label: "Bo Tarn" },
+    { id: "person-cy-lune", type: "Person", label: "Cy Lune" },
+    { id: "person-dee-marsh", type: "Person", label: "Dee Marsh" },
+    { id: "decision-fictional-levee", type: "Decision", label: "Fictional levee" },
+    { id: "meeting-fictional", type: "Meeting", label: "Fictional meeting" },
+  ]) {
+    insertNode(db, node);
+  }
+  const edges: Array<[string, string, string, string | null]> = [
+    ["person-avery-quill", "CAST_VOTE", "decision-fictional-levee", JSON.stringify({ vote: "absent" })],
+    [
+      "person-bo-tarn",
+      "CAST_VOTE",
+      "decision-fictional-levee",
+      JSON.stringify({ vote: "no", seat_id: "seat-fictional", [SENTINEL]: "s3cret" }),
+    ],
+    ["person-cy-lune", "CAST_VOTE", "decision-fictional-levee", JSON.stringify({ vote: "maybe-later" })],
+    ["person-dee-marsh", "CAST_VOTE", "decision-fictional-levee", null],
+    ["decision-fictional-levee", "AT_MEETING", "meeting-fictional", JSON.stringify({ vote: "aye" })],
+  ];
+  for (const [source, rel, target, props] of edges) {
+    if (withProps) {
+      db.prepare("INSERT INTO edges(source, rel, target, props) VALUES (?, ?, ?, ?)").run(source, rel, target, props);
+    } else {
+      insertEdge(db, { source, rel, target });
+    }
+  }
+  db.close();
+  return dbPath;
+}
+
+const VOTE_IDS = [
+  "decision-fictional-levee",
+  "meeting-fictional",
+  "person-avery-quill",
+  "person-bo-tarn",
+  "person-cy-lune",
+  "person-dee-marsh",
+];
+
+describe("graph-engine edge properties", () => {
+  beforeEach(() => {
+    vi.resetModules();
+  });
+
+  afterEach(async () => {
+    const mod = await import("@/lib/server/substrate");
+    mod.closeSubstrateDb();
+    delete process.env.SUBSTRATE_DB_PATH;
+    vi.restoreAllMocks();
+  });
+
+  it("attaches only allowlisted, in-vocabulary props from the new column and counts what it drops", async () => {
+    process.env.SUBSTRATE_DB_PATH = makeVoteDb({ withProps: true });
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const { loadGraph } = await import("@/lib/server/graph-engine");
+
+    const edges = loadGraph().edgesAmongSelected(VOTE_IDS, ["AT_MEETING", "CAST_VOTE"]);
+
+    expect(edges.map((edge) => [edge.start_id, edge.relationship, edge.props])).toEqual([
+      ["decision-fictional-levee", "AT_MEETING", undefined],
+      ["person-avery-quill", "CAST_VOTE", { vote: "absent" }],
+      ["person-bo-tarn", "CAST_VOTE", { vote: "no" }],
+      ["person-cy-lune", "CAST_VOTE", undefined],
+      ["person-dee-marsh", "CAST_VOTE", undefined],
+    ]);
+    // "No property" is one form: the key is absent, never {} or null.
+    for (const edge of edges.filter((e) => e.props === undefined)) expect("props" in edge).toBe(false);
+    const serialized = JSON.stringify(edges);
+    for (const leaked of [SENTINEL, "s3cret", "seat_id", "seat-fictional", "maybe-later"]) {
+      expect(serialized).not.toContain(leaked);
+    }
+    const logged = JSON.stringify(warn.mock.calls);
+    expect(logged).toContain("1 out-of-vocabulary");
+    expect(logged).toContain("3 non-allowlisted");
+    for (const leaked of [SENTINEL, "s3cret", "seat_id", "maybe-later"]) expect(logged).not.toContain(leaked);
+  });
+
+  it("reads an artifact baked before the props column: same edges, no props, no warning", async () => {
+    process.env.SUBSTRATE_DB_PATH = makeVoteDb({ withProps: false });
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const { loadGraph } = await import("@/lib/server/graph-engine");
+
+    const edges = loadGraph().edgesAmongSelected(VOTE_IDS, ["AT_MEETING", "CAST_VOTE"]);
+
+    expect(edges).toHaveLength(5);
+    for (const edge of edges) expect("props" in edge).toBe(false);
+    expect(warn).not.toHaveBeenCalled();
+  });
+});

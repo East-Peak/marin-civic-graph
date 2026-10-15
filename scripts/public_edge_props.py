@@ -15,6 +15,7 @@ DEFAULT_EDGE_PROPERTIES_PATH = Path(__file__).resolve().parent.parent / "registr
 # The app builds Cypher from these names, so they are held to identifier shapes here and there.
 REL_NAME = re.compile(r"^[A-Z][A-Z_]*$")
 PROP_NAME = re.compile(r"^[a-z][a-z_]*$")
+VALUE = re.compile(r"^[a-z][a-z_-]*$")
 
 EdgeAllowlist = dict[str, dict[str, tuple[str, ...]]]
 
@@ -23,19 +24,19 @@ def load_edge_allowlist(path: Path | str = DEFAULT_EDGE_PROPERTIES_PATH) -> Edge
     relationships = json.loads(Path(path).read_text(encoding="utf-8"))["relationships"]
     allowlist: EdgeAllowlist = {}
     for rel, props in relationships.items():
-        if not REL_NAME.match(rel) or not isinstance(props, dict) or not props:
+        if not REL_NAME.fullmatch(rel) or not isinstance(props, dict) or not props:
             raise ValueError(f"edge-properties: bad relationship entry {rel!r}")
         allowlist[rel] = {}
         for prop, values in props.items():
-            if not PROP_NAME.match(prop):
+            if not PROP_NAME.fullmatch(prop):
                 raise ValueError(f"edge-properties: bad property name {prop!r} on {rel}")
             if (
                 not isinstance(values, list)
                 or not values
-                or not all(isinstance(value, str) and value for value in values)
+                or not all(isinstance(value, str) and VALUE.fullmatch(value) for value in values)
                 or len(set(values)) != len(values)
             ):
-                raise ValueError(f"edge-properties: {rel}.{prop} needs a list of distinct nonempty strings")
+                raise ValueError(f"edge-properties: {rel}.{prop} needs a list of distinct lowercase words")
             allowlist[rel][prop] = tuple(values)
     return allowlist
 
