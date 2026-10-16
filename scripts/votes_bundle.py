@@ -11,7 +11,9 @@ Decision — or held with exactly one reason, checked in this order (the first f
    and exactly one DECIDED_AT, to that Meeting (`decision_shape`); a new id is not taken (`new_id_taken`);
 3. no CAST_VOTE already on the target (`existing_votes`); 4. no other accepted event on it (`target_collision`);
 5. a carried/failed Decision is not contradicted by a carried/failed ledger outcome (`status_contradiction`);
-   `unknown` against carried/failed attaches and is reported; `not_printed` never contradicts;
+   `unknown` against carried/failed attaches and is reported; `not_printed` never contradicts; an inferred (ALL)
+   roll call that leaves out a member who moved or seconded any motion at that meeting is `attendance_doubt` —
+   the minutes cannot say whether that member was in the room for this vote;
 6. every member resolves through the reviewed mapping (`duplicate_member`, `voter_<reason>`, `person_collision`).
    No partial roll calls.
 
@@ -27,6 +29,7 @@ import argparse
 import hashlib
 import json
 import random
+import re
 import shutil
 import sys
 import tempfile
@@ -60,13 +63,20 @@ def _canonical(obj) -> str:
     return json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
+_FULL_LABEL = re.compile(r"[A-Z]{1,3}[.-]\d{1,3}")
+
+
 def item_number(item: dict) -> str | None:
+    """The printed item label: the top item, a sub-label that is already a full label (`J.1`, or `G.2` heard
+    under J, `CB-2`), or top + a one-letter sub (`8a`). Anything else gets no item number — never an invented one."""
     top, sub = item.get("top"), item.get("sub")
     if not top:
         return None
     if not sub:
         return top
-    return sub if sub.startswith(top) else f"{top}{sub}"
+    if sub.startswith(top) or _FULL_LABEL.fullmatch(sub):
+        return sub
+    return f"{top}{sub}" if re.fullmatch(r"[a-z]", sub) else None
 
 
 def decision_label(body_name: str, number: str | None, status: str) -> str:
@@ -89,27 +99,48 @@ def evidence_string(ev: dict, member: dict, category: str) -> str:
 
 
 def _assignments(rows: list[dict]) -> dict[str, tuple]:
-    out = {}
+    """event id → ("matched", decision id) | ("new", event id); an event with more than one such row is a
+    ("conflict", None) — it never attaches to whichever row came last."""
+    found = defaultdict(list)
     for r in rows:
         if r["kind"] == "decision" and r["status"] == "matched":
-            out[r["event_id"]] = ("matched", r["decision_id"])
+            found[r["event_id"]].append(("matched", r["decision_id"]))
         elif r["kind"] == "event" and r["status"] == "new":
-            out[r["event_id"]] = ("new", r["event_id"])
-    return out
+            found[r["event_id"]].append(("new", r["event_id"]))
+    return {eid: rows[0] if len(rows) == 1 else ("conflict", None) for eid, rows in found.items()}
 
 
-def _changed_assignments(events, recon_rows, nodes, body_org) -> set[str]:
+def _revalidate(events, recon_rows, nodes, body_org) -> tuple[set[str], list[dict]]:
+    """(events whose assignment differs when re-reconciled on this baseline, the re-reconciled Decision rows that
+    differ from Part A's)."""
     decisions = [n["properties"] for n in nodes if "Decision" in n["labels"]
                  and n["properties"].get("source_id") in body_org]
-    before, after = _assignments(recon_rows), _assignments(reconcile(decisions, events, {}))
-    return {eid for eid in set(before) | set(after) if before.get(eid) != after.get(eid)}
+    fresh = reconcile(decisions, events, {})
+    before, after = _assignments(recon_rows), _assignments(fresh)
+    changed = {eid for eid in set(before) | set(after) if before.get(eid) != after.get(eid)}
+    keep = ("status", "event_id", "candidates", "differences")
+    old = {r["decision_id"]: {k: r.get(k) for k in keep} for r in recon_rows if r["kind"] == "decision"}
+    differ = [r for r in fresh if r["kind"] == "decision"
+              and old.get(r["decision_id"]) != {k: r.get(k) for k in keep}]
+    return changed, differ
 
 
 def build_bundle(events: list[dict], recon_rows: list[dict], resolver, mapping_rows: list[dict],
                  nodes: list[dict], edges: list[dict], *, body_org: dict[str, str] = BODY_ORG,
-                 body_name: dict[str, str] = BODY_NAME, revalidate: bool = True) -> dict:
+                 body_name: dict[str, str] = BODY_NAME, revalidate: bool = True,
+                 holds: list[dict] | None = None) -> dict:
+    """`holds`: reviewer holds from the spot check ({event_id, reason}); each holds its event before any rule."""
     events = sorted(events, key=lambda e: e["event_id"])
     accepted = [e for e in events if e["status"] in ("named", "expanded")]
+    held_by_reviewer = {h["event_id"]: h["reason"] for h in holds or []}
+    actors = defaultdict(set)  # meeting → every member who moved or seconded any motion there (held events too)
+    for e in events:
+        for role in ("mover", "seconder"):
+            if (e.get("motion") or {}).get(role):
+                actors[e["meeting_id"]].add(e["motion"][role])
+    unknown = sorted(set(held_by_reviewer) - {e["event_id"] for e in accepted})
+    if unknown:
+        raise BundleError(f"reviewer hold {unknown[0]} is not an accepted event")
     by_id = {n["id"]: n for n in nodes}
     decided_at, votes_into = defaultdict(list), Counter()
     for e in edges:
@@ -118,8 +149,9 @@ def build_bundle(events: list[dict], recon_rows: list[dict], resolver, mapping_r
         elif e["type"] == "CAST_VOTE":
             votes_into[e["end_id"]] += 1
     assigned = _assignments(recon_rows)
-    changed = _changed_assignments(events, recon_rows, nodes, body_org) if revalidate else set()
-    targets = Counter(assigned[e["event_id"]][1] for e in accepted if e["event_id"] in assigned)
+    changed, fresh_rows = _revalidate(events, recon_rows, nodes, body_org) if revalidate else (set(), [])
+    targets = Counter(assigned[e["event_id"]][1] for e in accepted
+                      if assigned.get(e["event_id"], ("", None))[1] is not None)
     new_person_name = {r["person_id"]: r["member"] for r in mapping_rows if r.get("status") == "verified_no_person"}
 
     out_nodes, out_edges, dispositions, status_report, repair = [], [], [], [], []
@@ -128,10 +160,22 @@ def build_bundle(events: list[dict], recon_rows: list[dict], resolver, mapping_r
         eid, body = ev["event_id"], ev["body"]
         kind, target = assigned.get(eid, (None, None))
         reason, voters, persons = None, [], {}
+        keys = [m["name"] for cat in VOTES for m in ev["categories"].get(cat, [])]
+        for key in sorted(set(keys)):  # every member, whatever rule fails first: the repair list needs them all
+            got = resolver.resolve(body, key, ev["date"])
+            if got[0] == "ok":
+                persons[key] = got[1]
+            else:
+                near = resolver.nearest_term(body, key, ev["date"])
+                voters.append({"key": key, "reason": got[1], "nearest_term": near["draft_id"] if near else None})
         meeting = by_id.get(ev["meeting_id"], {"labels": [], "properties": {}})
         decision = by_id.get(target, {"labels": [], "properties": {}}) if kind == "matched" else None
-        if kind is None:
+        if eid in held_by_reviewer:
+            reason = "reviewer_hold"
+        elif kind is None:
             reason = "decision_not_matched"
+        elif kind == "conflict":
+            reason = "assignment_conflict"
         elif eid in changed:
             reason = "assignment_changed"
         elif ("Meeting" not in meeting["labels"] or meeting["properties"].get("meeting_date") != ev["date"]
@@ -151,26 +195,19 @@ def build_bundle(events: list[dict], recon_rows: list[dict], resolver, mapping_r
         elif kind == "matched" and decision["properties"].get("status") in DECIDED and ev["outcome"] in DECIDED \
                 and decision["properties"]["status"] != ev["outcome"]:
             reason = "status_contradiction"
+        elif ev["status"] == "expanded" and (actors[ev["meeting_id"]] & set(ev["attendance"].get("roster") or [])) \
+                - set(keys):
+            reason = "attendance_doubt"  # an inferred ALL leaves out someone who moved or seconded at this meeting
         if reason is None:
             if kind == "matched" and decision["properties"].get("status") == "unknown" and ev["outcome"] in DECIDED:
                 status_report.append({"decision_id": target, "event_id": eid, "decision_status": "unknown",
                                       "ledger_outcome": ev["outcome"]})
-            keys = [m["name"] for cat in VOTES for m in ev["categories"].get(cat, [])]
             if len(keys) != len(set(keys)):
                 reason = "duplicate_member"
-            else:
-                for key in sorted(keys):
-                    got = resolver.resolve(body, key, ev["date"])
-                    if got[0] == "ok":
-                        persons[key] = got[1]
-                    else:
-                        near = resolver.nearest_term(body, key, ev["date"])
-                        voters.append({"key": key, "reason": got[1],
-                                       "nearest_term": near["draft_id"] if near else None})
-                if voters:
-                    reason = "voter_" + min((v["reason"] for v in voters), key=VOTER_REASONS.index)
-                elif len(set(persons.values())) != len(persons):
-                    reason = "person_collision"
+            elif voters:
+                reason = "voter_" + min((v["reason"] for v in voters), key=VOTER_REASONS.index)
+            elif len(set(persons.values())) != len(persons):
+                reason = "person_collision"
         row = {"event_id": eid, "body": body, "meeting_id": ev["meeting_id"], "date": ev["date"],
                "ledger_status": ev["status"], "target_kind": kind, "target": target,
                "reason": reason or "attached", "edges": 0}
@@ -193,7 +230,8 @@ def build_bundle(events: list[dict], recon_rows: list[dict], resolver, mapping_r
                                   "properties": {}})
         else:
             repair.append({"kind": "event", "event_id": eid, "body": body, "meeting_id": ev["meeting_id"],
-                           "date": ev["date"], "reason": reason, "target": target})
+                           "date": ev["date"], "reason": reason, "target": target,
+                           **({"note": held_by_reviewer[eid]} if eid in held_by_reviewer else {})})
             repair += [{"kind": "voter", "event_id": eid, "body": body, "date": ev["date"], **v} for v in voters]
         dispositions.append(row)
     for pid in sorted(used_new_persons):
@@ -201,16 +239,17 @@ def build_bundle(events: list[dict], recon_rows: list[dict], resolver, mapping_r
         out_nodes.append({"id": pid, "labels": ["Person"], "properties": {
             "id": pid, "name": name, "display_label": name, "search_label": name,
             "search_terms": f"{pid} {name.lower()}"}})
-    for r in recon_rows:
-        if r["kind"] == "decision" and r["status"] != "matched":
-            repair.append({"kind": "decision", "decision_id": r["decision_id"], "meeting_id": r["meeting_id"],
-                           "status": r["status"], "reason": r.get("reason"), "event_id": r.get("event_id"),
-                           "candidates": r.get("candidates", []), "differences": r.get("differences", {}),
-                           "notes": r.get("notes", [])})
+    for source, rows in (("part_a", [r for r in recon_rows if r["kind"] == "decision" and r["status"] != "matched"]),
+                         ("fresh_baseline", fresh_rows)):
+        for r in rows:
+            repair.append({"kind": "decision", "source": source, "decision_id": r["decision_id"],
+                           "meeting_id": r["meeting_id"], "status": r["status"], "reason": r.get("reason"),
+                           "event_id": r.get("event_id"), "candidates": r.get("candidates", []),
+                           "differences": r.get("differences", {}), "notes": r.get("notes", [])})
     repair += [{"kind": "status", **s} for s in status_report]
     order = {"decision": 0, "event": 1, "voter": 2, "status": 3}
-    repair.sort(key=lambda r: (order[r["kind"]], r.get("decision_id") or "", r.get("event_id") or "",
-                               r.get("key") or ""))
+    repair.sort(key=lambda r: (order[r["kind"]], r.get("source") or "", r.get("decision_id") or "",
+                               r.get("event_id") or "", r.get("key") or ""))
     return {
         "nodes": sorted(out_nodes, key=lambda n: n["id"]),
         "edges": sorted(out_edges, key=lambda e: (e["start_id"], e["type"], e["end_id"])),
@@ -347,7 +386,8 @@ def _write_json(path: Path, obj) -> None:
     path.write_text(json.dumps(obj, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def input_paths(ledger: Path, roster: Path, mapping: Path, baseline: Path, expected: Path | None) -> dict[str, Path]:
+def input_paths(ledger: Path, roster: Path, mapping: Path, baseline: Path, expected: Path | None,
+                holds: Path | None = None) -> dict[str, Path]:
     paths = {
         "ledger/events.jsonl": ledger / "events.jsonl",
         "ledger/reconciliation.jsonl": ledger / "reconciliation.jsonl",
@@ -363,6 +403,8 @@ def input_paths(ledger: Path, roster: Path, mapping: Path, baseline: Path, expec
     }
     if expected is not None:
         paths["expected-dispositions.json"] = expected
+    if holds is not None:
+        paths["reviewer-holds.json"] = holds
     return {k: Path(v).expanduser().resolve() for k, v in paths.items()}
 
 
@@ -413,8 +455,9 @@ def build_files(paths: dict[str, Path], out: Path, *, provisional: bool = False)
                                                _binding_hashes(paths))
     as_of = json.loads(paths["ledger/build.json"].read_text())["as_of"]
     resolver = Resolver(drafts, items, answers, rows, mapping_answers, as_of=as_of)
+    holds = json.loads(paths["reviewer-holds.json"].read_text())["holds"]
     bundle = build_bundle(_jsonl(paths["ledger/events.jsonl"]), _jsonl(paths["ledger/reconciliation.jsonl"]),
-                          resolver, rows, nodes, edges)
+                          resolver, rows, nodes, edges, holds=holds)
     expected = json.loads(paths["expected-dispositions.json"].read_text()) \
         if "expected-dispositions.json" in paths else None
     acc = accounting(bundle, expected)
@@ -514,7 +557,8 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--mapping", type=Path, required=True)
         p.add_argument("--baseline", type=Path, required=True)
         if name != "mapping-batch":
-            p.add_argument("--expected", type=Path)
+            p.add_argument("--expected", type=Path, required=True)
+            p.add_argument("--holds", type=Path, required=True, help="reviewer-holds.json ({holds: [...]})")
             p.add_argument("--out", type=Path, required=True)
             p.add_argument("--provisional", action="store_true")
     args = parser.parse_args(argv)
@@ -527,7 +571,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"spot check: {n} events → {args.out}")
         return 0
     expected = getattr(args, "expected", None)
-    paths = input_paths(args.ledger, args.roster, args.mapping, args.baseline, expected)
+    paths = input_paths(args.ledger, args.roster, args.mapping, args.baseline, expected, getattr(args, "holds", None))
     try:
         if args.cmd == "mapping-batch":
             problems = render_batch_files(paths, Path(args.mapping))
@@ -538,12 +582,14 @@ def main(argv: list[str] | None = None) -> int:
         if args.cmd == "build":
             acc = build_files(paths, args.out, provisional=args.provisional)
             print(_accounting_md(acc))
-            return 0 if acc.get("matches_expected", expected is None) else 1
+            return 0 if acc.get("matches_expected") else 1
         # check: rebuild twice into the staging root and require byte identity with --out
         problems = []
         with tempfile.TemporaryDirectory(dir=STAGING_ROOT, prefix=".check-") as tmp:
             again = Path(tmp) / "bundle"
-            build_files(paths, again, provisional=args.provisional)
+            acc = build_files(paths, again, provisional=args.provisional)
+            if not acc.get("matches_expected"):
+                problems.append("the rebuild does not match the expected-disposition manifest")
             mine = sorted(p.relative_to(args.out) for p in Path(args.out).rglob("*") if p.is_file())
             theirs = sorted(p.relative_to(again) for p in again.rglob("*") if p.is_file())
             if mine != theirs:

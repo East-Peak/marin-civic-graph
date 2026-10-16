@@ -112,13 +112,13 @@ def _recon(matched=(), new=(), other=()):
     return rows
 
 
-def _build(events, recon, nodes=None, edges=None, resolver=None):
+def _build(events, recon, nodes=None, edges=None, resolver=None, holds=None):
     if nodes is None:
         nodes, edges = _baseline()
     resolver = resolver or _resolver()[0]
     rows = _resolver()[1]
     return build_bundle(events, recon, resolver, rows, nodes, edges, body_org=BODY_ORG, body_name=BODY_NAME,
-                        revalidate=False)
+                        revalidate=False, holds=holds)
 
 
 MATCHED = _event("vev-body-x-1-aaaa-L10", MEET, "2020-06-09", motion="approve the minutes",
@@ -134,7 +134,9 @@ def _disp(bundle):
 
 class TestItemsAndLabels:
     @pytest.mark.parametrize("top, sub, want", [("5", None, "5"), ("8", "a", "8a"), ("J", "J.1", "J.1"),
-                                                (None, None, None), ("10", "c", "10c")])
+                                                (None, None, None), ("10", "c", "10c"),
+                                                ("J", "G.2", "G.2"), ("L", "G.10", "G.10"), ("5", "CB-2", "CB-2"),
+                                                ("4", "CA-11", "CA-11"), ("9", "ii", None), ("9", "a b", None)])
     def test_item_number(self, top, sub, want):
         assert item_number({"top": top, "sub": sub}) == want
 
@@ -264,6 +266,58 @@ class TestBuild:
         not_printed = {**MATCHED, "outcome": "not_printed"}
         b = _build([not_printed], _recon(matched=[(not_printed["event_id"], "decision-body-x-1-vote-0")]))
         assert _disp(b) == {not_printed["event_id"]: "attached"} and b["status_report"] == []
+
+    def test_a_reviewer_hold_holds_first_and_is_listed(self):
+        holds = [{"event_id": MATCHED["event_id"], "reason": "spot check S6: arrival not recorded"}]
+        b = _build([MATCHED], _recon(matched=[(MATCHED["event_id"], "decision-body-x-1-vote-0")]), holds=holds)
+        assert _disp(b) == {MATCHED["event_id"]: "reviewer_hold"} and b["edges"] == []
+        assert [r["note"] for r in b["repair"] if r["kind"] == "event"] == ["spot check S6: arrival not recorded"]
+        with pytest.raises(BundleError, match="not an accepted event"):
+            _build([MATCHED], _recon(), holds=[{"event_id": "vev-nope", "reason": "x"}])
+
+    def test_an_inferred_roll_call_omitting_a_member_who_moved_at_that_meeting_is_doubtful(self):
+        # Birch is not inferred present for this ALL, yet moves another motion at the same meeting
+        ev = {**NEW, "categories": {**NEW["categories"], "aye": [_member("ALDER", inferred=True),
+                                                                 _member("CEDAR", inferred=True)]},
+              "attendance": {**NEW["attendance"], "roster": ["ALDER", "BIRCH", "CEDAR"]}}
+        other = {**MATCHED, "event_id": "vev-body-x-1-aaaa-L90", "status": "held", "hold_reasons": ["x"],
+                 "motion": {**MATCHED["motion"], "mover": "BIRCH"}}
+        b = _build([ev, other], _recon(new=[ev["event_id"]]))
+        assert _disp(b) == {ev["event_id"]: "attendance_doubt"} and b["edges"] == []
+        seconded = {**other, "motion": {**other["motion"], "mover": None, "seconder": "BIRCH"}}
+        assert _disp(_build([ev, seconded], _recon(new=[ev["event_id"]]))) == {ev["event_id"]: "attendance_doubt"}
+        elsewhere = {**other, "meeting_id": MEET2}
+        assert _disp(_build([ev, elsewhere], _recon(new=[ev["event_id"]]))) == {ev["event_id"]: "attached"}
+        named = {**MATCHED, "categories": {**MATCHED["categories"], "absent": []}}  # named events are not inferred
+        assert _disp(_build([named, other], _recon(matched=[(named["event_id"], "decision-body-x-1-vote-0")]))) \
+            == {named["event_id"]: "attached"}
+
+    def test_duplicate_or_conflicting_assignments_hold(self):
+        twice = _recon(matched=[(MATCHED["event_id"], "decision-body-x-1-vote-0")]) * 2
+        assert _disp(_build([MATCHED], twice)) == {MATCHED["event_id"]: "assignment_conflict"}
+        both = _recon(matched=[(MATCHED["event_id"], "decision-body-x-1-vote-0")], new=[MATCHED["event_id"]])
+        assert _disp(_build([MATCHED], both)) == {MATCHED["event_id"]: "assignment_conflict"}
+
+    def test_voter_diagnostics_survive_an_earlier_hold(self):
+        ev = {**NEW, "date": "2021-09-14", "meeting_id": MEET2}
+        b = _build([ev], _recon())  # no target: held decision_not_matched, but Cedar's term problem is still listed
+        assert _disp(b) == {ev["event_id"]: "decision_not_matched"}
+        assert [(r["kind"], r["key"], r["reason"]) for r in b["repair"] if r["kind"] == "voter"] == [
+            ("voter", "CEDAR", "out_of_term")]
+
+    def test_fresh_reconciliation_failures_are_in_the_repair_list(self):
+        nodes, edges = _baseline()
+        nodes = nodes + [_n("decision-body-x-1-vote-1", ["Decision"], meeting_id=MEET, source_id=BODY,
+                            status="carried", outcome="carried", motion_text="approve the example item",
+                            ayes=["ALDER"], noes=[], decision_type="roll_call_vote")]
+        edges = edges + [_e("decision-body-x-1-vote-1", MEET, "DECIDED_AT")]
+        resolver, rows = _resolver()
+        b = build_bundle([NEW], _recon(new=[NEW["event_id"]]), resolver, rows, nodes, edges, body_org=BODY_ORG,
+                         body_name=BODY_NAME, revalidate=True)
+        fresh = [r for r in b["repair"] if r["kind"] == "decision" and r.get("source") == "fresh_baseline"]
+        # vote-1 is new on this baseline; vote-0 has no Part A row in this fixture, so it differs too
+        assert sorted(r["decision_id"] for r in fresh) == ["decision-body-x-1-vote-0", "decision-body-x-1-vote-1"]
+        assert [r["event_id"] for r in fresh if r["decision_id"].endswith("vote-1")] == [NEW["event_id"]]
 
     def test_two_keys_resolving_to_one_person_hold(self):
         ev = {**MATCHED, "categories": {**MATCHED["categories"], "no": [_member("DOGWOOD", 200)]}}
@@ -399,6 +453,8 @@ class TestCli:
         expected = tmp_path / "expected-dispositions.json"
         expected.write_text(json.dumps({"events": 1, "by_body": {nov: {"attached": 1}}, "edges_by_vote": {"aye": 2},
                                         "new_decisions": {nov: 1}, "new_persons": 0}))
+        (tmp_path / "reviewer-holds.json").write_text(json.dumps({"holds": []}))
+        self.holds = ["--holds", str(tmp_path / "reviewer-holds.json")]
         args = ["--ledger", str(ledger), "--roster", str(roster), "--mapping", str(mapping), "--baseline",
                 str(baseline)]
         return args, mapping, expected
@@ -408,9 +464,9 @@ class TestCli:
         assert votes_bundle.main(["mapping-batch", *args]) == 0
         assert "Person: `person-ann-alder`" in (mapping / "batch-map-001.md").read_text()
         out = tmp_path / "bundle"
-        assert votes_bundle.main(["build", *args, "--expected", str(expected), "--out", str(out)]) == 1  # no answers
+        assert votes_bundle.main(["build", *args, "--expected", str(expected), *self.holds, "--out", str(out)]) == 1  # no answers
         (mapping / "answers-map-001.txt").write_text("batch map-001\n1 confirm\n2 confirm\n")
-        assert votes_bundle.main(["build", *args, "--expected", str(expected), "--out", str(out)]) == 0
+        assert votes_bundle.main(["build", *args, "--expected", str(expected), *self.holds, "--out", str(out)]) == 0
         inputs = json.loads((out / "inputs.json").read_text())
         assert inputs["provisional"] is False and inputs["as_of"] == "2026-10-14"
         assert set(inputs["inputs"]) >= {"ledger/events.jsonl", "ledger/build.json", "mapping/answers-map-001.txt",
@@ -418,14 +474,14 @@ class TestCli:
                                          "expected-dispositions.json"}
         assert json.loads((out / "accounting.json").read_text())["matches_expected"] is True
         assert [e["type"] for e in _read_jsonl(out / "edges.jsonl")] == ["CAST_VOTE", "CAST_VOTE", "DECIDED_AT"]
-        assert votes_bundle.main(["check", *args, "--expected", str(expected), "--out", str(out)]) == 0
+        assert votes_bundle.main(["check", *args, "--expected", str(expected), *self.holds, "--out", str(out)]) == 0
 
     def test_hold_everything_cannot_pass_the_manifest(self, tmp_path, monkeypatch):
         args, mapping, expected = self._world(tmp_path, monkeypatch)
         votes_bundle.main(["mapping-batch", *args])
         (mapping / "answers-map-001.txt").write_text("batch map-001\n1 reject\n2 confirm\n")
         out = tmp_path / "bundle"
-        assert votes_bundle.main(["build", *args, "--expected", str(expected), "--out", str(out)]) == 1
+        assert votes_bundle.main(["build", *args, "--expected", str(expected), *self.holds, "--out", str(out)]) == 1
         assert json.loads((out / "accounting.json").read_text())["by_body"] == {
             self.NOV: {"voter_missing_mapping": 1}}
 
@@ -436,13 +492,26 @@ class TestCli:
         table = json.loads((mapping / "mapping.json").read_text())
         table["rows"][0]["notes"] = "edited after review"
         (mapping / "mapping.json").write_text(json.dumps(table))
-        assert votes_bundle.main(["build", *args, "--out", str(tmp_path / "bundle")]) == 1
+        assert votes_bundle.main(["build", *args, "--expected", str(expected), *self.holds, "--out",
+                                  str(tmp_path / "bundle")]) == 1
+
+    def test_the_manifest_is_required_and_check_fails_on_a_mismatch(self, tmp_path, monkeypatch):
+        args, mapping, expected = self._world(tmp_path, monkeypatch)
+        votes_bundle.main(["mapping-batch", *args])
+        (mapping / "answers-map-001.txt").write_text("batch map-001\n1 confirm\n2 confirm\n")
+        out = tmp_path / "bundle"
+        with pytest.raises(SystemExit):
+            votes_bundle.main(["build", *args, "--out", str(out)])
+        assert votes_bundle.main(["build", *args, "--expected", str(expected), *self.holds, "--out", str(out)]) == 0
+        wrong = tmp_path / "wrong.json"
+        wrong.write_text(json.dumps({**json.loads(expected.read_text()), "edges_by_vote": {"aye": 3}}))
+        assert votes_bundle.main(["check", *args, "--expected", str(wrong), *self.holds, "--out", str(out)]) == 1
 
     def test_provisional_build_is_marked(self, tmp_path, monkeypatch):
         args, mapping, expected = self._world(tmp_path, monkeypatch)
         votes_bundle.main(["mapping-batch", *args])
         out = tmp_path / "bundle"
-        assert votes_bundle.main(["build", *args, "--expected", str(expected), "--out", str(out),
+        assert votes_bundle.main(["build", *args, "--expected", str(expected), *self.holds, "--out", str(out),
                                   "--provisional"]) == 0
         inputs = json.loads((out / "inputs.json").read_text())
         assert inputs["provisional"] is True and "mapping/answers-map-001.txt" not in inputs["inputs"]
@@ -451,10 +520,11 @@ class TestCli:
         args, mapping, expected = self._world(tmp_path, monkeypatch)
         votes_bundle.main(["mapping-batch", *args])
         (mapping / "answers-map-001.txt").write_text("batch map-001\n1 confirm\n2 confirm\n")
-        assert votes_bundle.main(["build", *args, "--out", str(tmp_path.parent / "elsewhere")]) == 1
+        assert votes_bundle.main(["build", *args, "--expected", str(expected), *self.holds, "--out",
+                                  str(tmp_path.parent / "elsewhere")]) == 1
         (tmp_path / "keep").mkdir()
         (tmp_path / "keep" / "x.txt").write_text("not a bundle")
-        assert votes_bundle.main(["build", *args, "--out", str(tmp_path / "keep")]) == 1
+        assert votes_bundle.main(["build", *args, "--expected", str(expected), *self.holds, "--out", str(tmp_path / "keep")]) == 1
         assert (tmp_path / "keep" / "x.txt").exists()
 
 
