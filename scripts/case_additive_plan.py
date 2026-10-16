@@ -8,11 +8,15 @@ value or label, an edge that already exists with other properties, a dangling en
 store. The candidate is the baseline with exactly those ops applied; verification checks every intended node
 and edge property AND that removing the additions gives back the untouched baseline, byte for byte.
 
+A profile narrows what a goal's bundle may do (`--profile votes-b`: only new Decision and Person nodes, only
+CAST_VOTE and DECIDED_AT edges, no property additions, no restatements of baseline rows). The plan also carries
+the inverse (delete exactly the additions) for recovery.
+
 Bundle and baseline use export_live_graph.py's format: nodes {id, labels, properties}, edges
 {start_id, end_id, type, properties}. Nothing here connects to Neo4j.
 
 Usage:
-  python scripts/case_additive_plan.py --baseline <export dir> --case <bundle dir> --out <staging dir>
+  python scripts/case_additive_plan.py --baseline <export dir> --case <bundle dir> --out <staging dir> [--profile votes-b]
   python scripts/case_additive_plan.py --check-baseline <fresh export dir> --plan <staging dir>
 """
 from __future__ import annotations
@@ -26,7 +30,11 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-STAGING_ROOT = Path.home() / "open-marin-staging" / "cf6-case"
+STAGING_ROOTS = (Path.home() / "open-marin-staging" / "cf6-case", Path.home() / "open-marin-staging" / "votes-b")
+PROFILES = {
+    "votes-b": {"labels": frozenset({"Decision", "Person"}), "rel_types": frozenset({"CAST_VOTE", "DECIDED_AT"}),
+                "add_props": False, "noop": False},
+}
 EXPORT_FILES = ("nodes.jsonl", "edges.jsonl")
 IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 
@@ -76,7 +84,7 @@ def _check_values(props: dict, where: str) -> None:
         raise AdditivePlanError(f"{where}: property {bad} is not a Neo4j-storable key/value")
 
 
-def plan_additive(baseline_nodes, baseline_edges, case_nodes, case_edges) -> dict:
+def plan_additive(baseline_nodes, baseline_edges, case_nodes, case_edges, constraints: dict | None = None) -> dict:
     base = _index(baseline_nodes, lambda n: n["id"], "baseline node")
     base_edges = _index(baseline_edges, _edge_key, "baseline edge")
     case = _index(case_nodes, lambda n: n["id"], "case node")
@@ -126,6 +134,8 @@ def plan_additive(baseline_nodes, baseline_edges, case_nodes, case_edges) -> dic
         add_edges.append({"start_id": key[0], "end_id": key[2], "type": key[1],
                           "properties": dict(edge["properties"])})
 
+    if constraints is not None:
+        _enforce(constraints, add_nodes, add_props, add_edges, noop_nodes, noop_edges)
     return {
         "add_nodes": add_nodes,
         "add_props": add_props,
@@ -138,6 +148,21 @@ def plan_additive(baseline_nodes, baseline_edges, case_nodes, case_edges) -> dic
             "noop_edges": noop_edges,
         },
     }
+
+
+def _enforce(c: dict, add_nodes, add_props, add_edges, noop_nodes: int, noop_edges: int) -> None:
+    for node in add_nodes:
+        if not set(node["labels"]) <= c["labels"]:
+            raise AdditivePlanError(f"{node['id']}: label {sorted(set(node['labels']) - c['labels'])} is outside "
+                                    f"the profile's {sorted(c['labels'])}")
+    for edge in add_edges:
+        if edge["type"] not in c["rel_types"]:
+            raise AdditivePlanError(f"edge {_edge_key(edge)}: type {edge['type']} is outside the profile's "
+                                    f"{sorted(c['rel_types'])}")
+    if add_props and not c["add_props"]:
+        raise AdditivePlanError(f"the profile may not add properties to existing nodes ({sorted(add_props)[:3]})")
+    if (noop_nodes or noop_edges) and not c["noop"]:
+        raise AdditivePlanError(f"the profile may not restate baseline rows ({noop_nodes} nodes, {noop_edges} edges)")
 
 
 def apply_additive(baseline_nodes, baseline_edges, ops) -> tuple[list[dict], list[dict]]:
@@ -261,6 +286,34 @@ def statements(ops: dict) -> list[dict]:
     return stmts
 
 
+def inverse_statements(ops: dict) -> list[dict]:
+    """Recovery only: delete exactly the planned additions — edges first, then the nodes (which by then must have
+    no relationship left), then the added properties. Never DETACH; each statement must count its rows."""
+    stmts = []
+    by_type: dict[str, list[dict]] = {}
+    for e in ops["add_edges"]:
+        by_type.setdefault(e["type"], []).append({"start_id": e["start_id"], "end_id": e["end_id"]})
+    for rel, rows in sorted(by_type.items()):
+        stmts.append({"step": f"inverse:edges:{rel}", "query": f"UNWIND $rows AS e MATCH (s {{id: e.start_id}})"
+                      f"-[r:{rel}]->(t {{id: e.end_id}}) DELETE r RETURN count(*) AS n",
+                      "params": {"rows": rows}, "expect": len(rows)})
+    by_labels: dict[tuple[str, ...], list[str]] = {}
+    for node in ops["add_nodes"]:
+        by_labels.setdefault(tuple(node["labels"]), []).append(node["id"])
+    for labels, rows in sorted(by_labels.items()):
+        stmts.append({"step": f"inverse:nodes:{':'.join(labels)}", "query": f"UNWIND $rows AS id MATCH "
+                      f"(n:{':'.join(labels)} {{id: id}}) WHERE NOT (n)--() DELETE n RETURN count(*) AS n",
+                      "params": {"rows": rows}, "expect": len(rows)})
+    by_key: dict[str, list[str]] = {}
+    for nid, props in sorted(ops["add_props"].items()):
+        for key in sorted(props):
+            by_key.setdefault(key, []).append(nid)
+    for key, rows in sorted(by_key.items()):
+        stmts.append({"step": f"inverse:prop:{key}", "query": f"UNWIND $rows AS id MATCH (n {{id: id}}) "
+                      f"REMOVE n.{key} RETURN count(*) AS n", "params": {"rows": rows}, "expect": len(rows)})
+    return stmts
+
+
 def apply_in_transaction(tx, ops: dict) -> dict:
     """Run every statement on the caller's single transaction; any count off plan raises before the next.
 
@@ -304,11 +357,11 @@ def fingerprint(export_dir: Path) -> dict:
 
 
 def staging_dir(path: Path) -> Path:
-    """Resolve an output dir; refuse anything outside the goal's staging root (symlinks resolved) or non-empty."""
+    """Resolve an output dir; refuse anything outside the goals' staging roots (symlinks resolved) or non-empty."""
     out = Path(path).expanduser().resolve()
-    root = Path(STAGING_ROOT).expanduser().resolve()
-    if out != root and root not in out.parents:
-        raise AdditivePlanError(f"refusing to write outside {root}")
+    roots = [Path(r).expanduser().resolve() for r in STAGING_ROOTS]
+    if not any(out == root or root in out.parents for root in roots):
+        raise AdditivePlanError(f"refusing to write outside {', '.join(map(str, roots))}")
     if out.exists() and any(out.iterdir()):
         raise AdditivePlanError(f"output dir {out} is not empty")
     return out
@@ -339,7 +392,8 @@ def _render(report: dict, ops: dict) -> str:
         *[f"   - `{s['step']}` ({len(s['params']['rows'])} rows, expect {s['expect']}): `{s['query']}`"
           for s in statements(ops)],
         "4. Re-export; its sha256 must equal the candidate above.",
-        "5. Rollback: `restore_neo4j_local.py` from the step-1 export.", "",
+        "5. Rollback: `restore_neo4j_local.py` from the step-1 export; or, additions only, `inverse.json` "
+        "(deletes exactly the planned rows, each statement counted).", "",
     ]
     return "\n".join(lines)
 
@@ -352,6 +406,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--case", type=Path, help="case bundle dir (nodes.jsonl, edges.jsonl)")
     parser.add_argument("--out", type=Path, help="empty dir under the staging root")
     parser.add_argument("--plan", type=Path, help="a plan dir written by --baseline")
+    parser.add_argument("--profile", choices=sorted(PROFILES), help="constrain the bundle (e.g. votes-b)")
     args = parser.parse_args(argv)
 
     if args.check_baseline:
@@ -370,7 +425,8 @@ def main(argv: list[str] | None = None) -> int:
         baseline_edges = _read_jsonl(args.baseline / "edges.jsonl")
         case_nodes = _read_jsonl(args.case / "nodes.jsonl")
         case_edges = _read_jsonl(args.case / "edges.jsonl")
-        ops = plan_additive(baseline_nodes, baseline_edges, case_nodes, case_edges)
+        ops = plan_additive(baseline_nodes, baseline_edges, case_nodes, case_edges,
+                            constraints=PROFILES[args.profile] if args.profile else None)
     except AdditivePlanError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
@@ -389,10 +445,13 @@ def main(argv: list[str] | None = None) -> int:
         "baseline_reexport_identical": identical,
         "summary": ops["summary"],
         "verification": problems,
+        "profile": args.profile,
     }
     (out / "ops.json").write_text(json.dumps(ops, indent=1, sort_keys=True) + "\n")
     (out / "plan-report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     (out / "plan.md").write_text(_render(report, ops))
+    (out / "inverse.json").write_text(json.dumps({"statements": inverse_statements(ops)}, indent=1, sort_keys=True)
+                                      + "\n")
     for problem in problems:
         print(f"ERROR: {problem}", file=sys.stderr)
     print(f"plan: {out}  ({len(problems)} verification problem(s))")

@@ -7,13 +7,17 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
+import case_additive_plan  # noqa: E402
 from case_additive_plan import (  # noqa: E402
+    PROFILES,
     AdditivePlanError,
     StatementCountError,
     apply_additive,
     apply_in_transaction,
+    inverse_statements,
     main,
     plan_additive,
+    staging_dir,
     statements,
     verify_additive,
     write_export,
@@ -311,7 +315,7 @@ class TestCli:
 
     def test_writes_plan_and_candidate_under_the_staging_root(self, tmp_path, monkeypatch):
         import case_additive_plan
-        monkeypatch.setattr(case_additive_plan, "STAGING_ROOT", tmp_path)
+        monkeypatch.setattr(case_additive_plan, "STAGING_ROOTS", (tmp_path,))
         bn, be = _baseline()
         cn, ce = _case()
         self._write(tmp_path / "baseline", bn, be)
@@ -328,9 +332,124 @@ class TestCli:
 
     def test_refuses_an_output_outside_the_staging_root(self, tmp_path, monkeypatch):
         import case_additive_plan
-        monkeypatch.setattr(case_additive_plan, "STAGING_ROOT", tmp_path / "staging")
+        monkeypatch.setattr(case_additive_plan, "STAGING_ROOTS", (tmp_path / "staging",))
         bn, be = _baseline()
         self._write(tmp_path / "baseline", bn, be)
         self._write(tmp_path / "bundle", [], [])
         assert main(["--baseline", str(tmp_path / "baseline"), "--case", str(tmp_path / "bundle"),
                      "--out", str(tmp_path / "elsewhere")]) == 1
+
+
+class TestStagingRoots:
+    def test_the_allowed_roots(self):
+        home = Path.home() / "open-marin-staging"
+        assert case_additive_plan.STAGING_ROOTS == (home / "cf6-case", home / "votes-b")
+
+    def test_each_root_is_accepted_and_nothing_else(self, tmp_path, monkeypatch):
+        a, b = tmp_path / "cf6-case", tmp_path / "votes-b"
+        a.mkdir(), b.mkdir()
+        monkeypatch.setattr(case_additive_plan, "STAGING_ROOTS", (a, b))
+        assert staging_dir(a / "plan") == (a / "plan").resolve()
+        assert staging_dir(b / "x" / "plan") == (b / "x" / "plan").resolve()
+        for bad in (tmp_path / "votes-b-evil" / "plan", tmp_path / "plan", tmp_path / "votes-b" / ".." / "plan"):
+            with pytest.raises(AdditivePlanError, match="refusing to write outside"):
+                staging_dir(bad)
+        (b / "link").symlink_to(tmp_path)
+        with pytest.raises(AdditivePlanError, match="refusing to write outside"):
+            staging_dir(b / "link" / "plan")
+
+
+def _votes_case():
+    nodes = [_n("vev-sample-board-1-L10", ["Decision"], meeting_id="meeting-sample-1", status="carried"),
+             _n("person-new-member", ["Person"], name="New Member")]
+    edges = [_e("vev-sample-board-1-L10", "meeting-sample-1", "DECIDED_AT"),
+             _e("person-sample-official", "vev-sample-board-1-L10", "CAST_VOTE", vote="aye"),
+             _e("person-new-member", "decision-sample-board-1", "CAST_VOTE", vote="no")]
+    return nodes, edges
+
+
+def _votes_baseline():
+    bn, be = _baseline()
+    return bn + [_n("meeting-sample-1", ["Meeting"], meeting_date="2020-01-01")], be
+
+
+class TestVotesProfile:
+    PROFILE = PROFILES["votes-b"]
+
+    def test_the_profile(self):
+        assert self.PROFILE == {"labels": frozenset({"Decision", "Person"}),
+                                "rel_types": frozenset({"CAST_VOTE", "DECIDED_AT"}), "add_props": False,
+                                "noop": False}
+
+    def test_a_votes_bundle_plans(self):
+        ops = plan_additive(*_votes_baseline(), *_votes_case(), constraints=self.PROFILE)
+        assert ops["summary"]["added_edges"] == {"CAST_VOTE": 2, "DECIDED_AT": 1} and ops["add_props"] == {}
+
+    def test_a_label_outside_the_profile(self):
+        cn, ce = _votes_case()
+        cn = cn + [_n("org-new", ["Organization"], name="x")]
+        with pytest.raises(AdditivePlanError, match="label"):
+            plan_additive(*_votes_baseline(), cn, ce, constraints=self.PROFILE)
+        cn = [_n("vev-x", ["Decision", "Record"])]
+        with pytest.raises(AdditivePlanError, match="label"):
+            plan_additive(*_votes_baseline(), cn, [], constraints=self.PROFILE)
+
+    def test_a_relationship_type_outside_the_profile(self):
+        cn, ce = _votes_case()
+        ce = ce + [_e("person-new-member", "org-example-fund", "MEMBER_OF_ORG")]
+        with pytest.raises(AdditivePlanError, match="type"):
+            plan_additive(*_votes_baseline(), cn, ce, constraints=self.PROFILE)
+
+    def test_no_property_additions(self):
+        cn, ce = _votes_case()
+        cn = cn + [_n("decision-sample-board-1", ["Decision"], title="Approve a sample grant", status="carried")]
+        with pytest.raises(AdditivePlanError, match="add properties"):
+            plan_additive(*_votes_baseline(), cn, ce, constraints=self.PROFILE)
+
+    def test_no_restatements(self):
+        cn, ce = _votes_case()
+        cn = cn + [_n("person-sample-official", ["Person"], name="Sample Official")]
+        with pytest.raises(AdditivePlanError, match="restate"):
+            plan_additive(*_votes_baseline(), cn, ce, constraints=self.PROFILE)
+        bn, be = _votes_baseline()
+        with pytest.raises(AdditivePlanError, match="restate"):
+            plan_additive(bn, be + [_e("person-sample-official", "vev-sample-board-1-L10", "CAST_VOTE", vote="aye")],
+                          *_votes_case(), constraints=self.PROFILE)
+
+    def test_without_a_profile_nothing_changes(self):
+        cn, ce = _votes_case()
+        cn = cn + [_n("person-sample-official", ["Person"], name="Sample Official")]
+        assert plan_additive(*_votes_baseline(), cn, ce)["summary"]["noop_nodes"] == 1
+
+
+class TestInverse:
+    def test_inverse_deletes_exactly_the_additions_edges_first(self):
+        ops = plan_additive(*_votes_baseline(), *_votes_case(), constraints=PROFILES["votes-b"])
+        inv = inverse_statements(ops)
+        assert [s["step"] for s in inv] == ["inverse:edges:CAST_VOTE", "inverse:edges:DECIDED_AT",
+                                           "inverse:nodes:Decision", "inverse:nodes:Person"]
+        assert [s["expect"] for s in inv] == [2, 1, 1, 1]
+        assert all("DETACH" not in s["query"] for s in inv)
+        assert "WHERE NOT (n)--()" in inv[2]["query"]
+
+    def test_inverse_removes_added_properties(self):
+        ops = plan_additive(*_baseline(), *_case())
+        steps = {s["step"] for s in inverse_statements(ops)}
+        assert any(st.startswith("inverse:prop:") for st in steps) or not ops["add_props"]
+
+    def test_cli_writes_inverse_with_the_profile(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(case_additive_plan, "STAGING_ROOTS", (tmp_path,))
+        bn, be = _votes_baseline()
+        cn, ce = _votes_case()
+        write_export(tmp_path / "baseline", bn, be)
+        write_export(tmp_path / "bundle", cn, ce)
+        out = tmp_path / "plan"
+        assert main(["--baseline", str(tmp_path / "baseline"), "--case", str(tmp_path / "bundle"),
+                     "--out", str(out), "--profile", "votes-b"]) == 0
+        inverse = json.loads((out / "inverse.json").read_text())
+        assert [s["expect"] for s in inverse["statements"]] == [2, 1, 1, 1]
+        assert json.loads((out / "plan-report.json").read_text())["profile"] == "votes-b"
+        cn = cn + [_n("org-new", ["Organization"], name="x")]
+        write_export(tmp_path / "bundle2", cn, ce)
+        assert main(["--baseline", str(tmp_path / "baseline"), "--case", str(tmp_path / "bundle2"),
+                     "--out", str(tmp_path / "plan2"), "--profile", "votes-b"]) == 1
