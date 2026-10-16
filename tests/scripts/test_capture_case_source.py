@@ -270,6 +270,15 @@ def test_robots_disallow_refuses_and_writes_nothing(env):
     assert site.paths() == ["/robots.txt"] and env.written() == []
 
 
+def test_robots_wildcard_disallow_refuses_with_the_shared_parser(env):
+    site = env.site()
+    site.routes["/robots.txt"] = page(b"User-agent: *\nDisallow: /*?pager=\n", "text/plain")
+    site.routes["/list"] = page()
+    with pytest.raises(SourceRestricted, match=r"Disallow: /\*\?pager="):
+        env.capture(site.url("/list?pager=2"))
+    assert site.paths() == ["/robots.txt"] and env.written() == []
+
+
 def test_robots_allow_is_cached_with_sha_once_per_host(env):
     site = env.site()
     robots = b"User-agent: *\nDisallow: /private\n"

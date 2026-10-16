@@ -52,11 +52,14 @@ from email.message import Message
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 from urllib.parse import unquote, urljoin, urlsplit
-from urllib.robotparser import RobotFileParser
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from robots_gate import parse as parse_robots  # noqa: E402  the one robots.txt parser (RFC 9309 wildcards)
 
 STAGING_ROOT = Path.home() / "open-marin-staging" / "cf6-case"
 RAW_ROOT = Path.home() / "projects" / "marin-civic-graph" / "data" / "raw"  # main checkout only
-USER_AGENT = "OpenMarinCaseCapture/1.0 (public-records research; polite single-document fetches)"
+PRODUCT_TOKEN = "OpenMarinCaseCapture"
+USER_AGENT = f"{PRODUCT_TOKEN}/1.0 (public-records research; polite single-document fetches)"
 MAX_CAP = DEFAULT_CAP = 60
 MIN_INTERVAL = 1.0  # seconds between ANY two requests
 MAX_RETRY_WAIT = 120.0  # longest Retry-After we are willing to sit out
@@ -333,10 +336,9 @@ class Fetcher:
         access = {"robots": "allowed", "robots_url": robots["url"], "robots_status": status,
                   "robots_sha256": robots["sha256"]}
         if status is not None and 200 <= status < 300:
-            parser = RobotFileParser()
-            parser.parse(robots["body"].splitlines())
-            if not parser.can_fetch(self.user_agent, url):
-                raise self.stop(f"robots.txt disallows {url}")
+            allowed, rule = parse_robots(robots["body"], PRODUCT_TOKEN).decide(url)
+            if not allowed:
+                raise self.stop(f"robots.txt disallows {url} ({rule})")
         elif status not in (404, 410):  # absent robots.txt allows everything; anything else is an outage
             basis = entry.get("robots_unavailable_basis")
             if not basis:
