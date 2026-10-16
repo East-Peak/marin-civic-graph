@@ -151,12 +151,14 @@ def _verify_approval(state_dir: Path, approve: str) -> dict:
     raw = (state_dir / APPROVAL).read_bytes()
     if _sha_bytes(raw) != approve:
         raise ApplyRefused("--approve does not match plan/approval-inputs.json")
-    files = json.loads(raw)["files"]
-    for name, entry in sorted(files.items()):
+    verified = {}
+    for name, entry in sorted(json.loads(raw)["files"].items()):
         path = Path(entry["path"])
-        if not path.is_file() or _sha_bytes(path.read_bytes()) != entry["sha256"]:
+        data = path.read_bytes() if path.is_file() else None
+        if data is None or _sha_bytes(data) != entry["sha256"]:
             raise ApplyRefused(f"{name} changed since the approval was recorded")
-    return files
+        verified[name] = data
+    return verified  # name → the exact bytes that were hashed; callers parse these, never the files again
 
 
 def _tx_fingerprint(tx) -> dict:
@@ -187,11 +189,11 @@ def _recovery(state_dir: Path, reason: str, detail: str) -> None:
 def run_apply(state_dir: Path, *, approve: str, canonical_root: Path, uri: str | None, driver_factory,
               database: str, exporter=export_live_graph) -> str:
     state_dir = Path(state_dir)
-    files = _verify_approval(state_dir, approve)
+    verified = _verify_approval(state_dir, approve)
     if uri != OPERATOR_URI:
         raise ApplyRefused(f"NEO4J_URI must be {OPERATOR_URI} (got {uri!r})")
-    ops = json.loads(Path(files["plan/ops.json"]["path"]).read_bytes())
-    report = json.loads(Path(files["plan/plan-report.json"]["path"]).read_bytes())
+    ops = json.loads(verified["plan/ops.json"])
+    report = json.loads(verified["plan/plan-report.json"])
     apply_dir = state_dir / "apply"
     with run_lock(Path(canonical_root)):
         apply_dir.mkdir(exist_ok=True)
@@ -331,13 +333,20 @@ def page_problems(page_html: str, votes: list[tuple[str, str]]) -> list[str]:
     member's name, before the next member's, must be the planned one."""
     text = " ".join(html.unescape(re.sub(r"<[^>]+>", " ", page_html)).split())
     labels = "|".join(re.escape(x) for x in VOTE_LABEL.values())
+    others = sorted({n for n, _ in votes}, key=len, reverse=True)
+    stop = re.compile("|".join([r"\bPerson\b", *(re.escape(n) for n in others)]))
     problems = []
     for name, vote in votes:
         if name not in text:
             problems.append(f"{name} is not on the page")
             continue
-        shown = [m.group(1) for m in re.finditer(rf"{re.escape(name)}\b(?:(?!{labels}).){{0,40}}?\b({labels})\b",
-                                                 text)]
+        shown = []
+        for m in re.finditer(re.escape(name), text):
+            tail = text[m.end():m.end() + 60]
+            cut = stop.search(tail)
+            label = re.search(rf"\b({labels})\b", tail[:cut.start()] if cut else tail)
+            if label:
+                shown.append(label.group(1))
         if VOTE_LABEL[vote] not in shown:
             problems.append(f"{name} is not shown as {VOTE_LABEL[vote]!r}")
     return problems

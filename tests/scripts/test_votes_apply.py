@@ -201,6 +201,19 @@ class TestApproval:
                 _run(state, FakeGraph(BASE_NODES, BASE_EDGES), tmp_path)
         assert g.calls == []
 
+    def test_the_executed_ops_are_the_verified_bytes(self, tmp_path, monkeypatch):
+        state, *_ = _setup(tmp_path)
+        real_verify = votes_apply._verify_approval
+
+        def verify_then_swap(*a, **k):
+            verified = real_verify(*a, **k)
+            (state / "plan" / "ops.json").write_text(json.dumps({"add_nodes": [], "add_props": {}, "add_edges": []}))
+            return verified
+        monkeypatch.setattr(votes_apply, "_verify_approval", verify_then_swap)
+        g = FakeGraph(BASE_NODES, BASE_EDGES)
+        assert _run(state, g, tmp_path) == "APPLIED"  # the approved ops ran, not the swapped file
+        assert any(n["id"] == "vev-body-x-1-aaaa-L40" for n in g.nodes)
+
     def test_only_from_awaiting_apply(self, tmp_path):
         state, *_ = _setup(tmp_path)
         votes_apply.set_state(state, "APPLIED")
@@ -352,6 +365,12 @@ class TestReviewAndPages:
         swapped = "<li>Person Ann Alder People · voted no</li><li>Person Bea Birch People · voted aye</li>"
         assert votes_apply.page_problems(swapped, [("Ann Alder", "aye"), ("Bea Birch", "no")]) == [
             "Ann Alder is not shown as 'voted aye'", "Bea Birch is not shown as 'voted no'"]
+        unlabeled = "<li>Person Ann Alder People</li><li>Person Bea Birch People · voted aye</li>"
+        assert votes_apply.page_problems(unlabeled, [("Ann Alder", "aye"), ("Bea Birch", "aye")]) == [
+            "Ann Alder is not shown as 'voted aye'"]
+        bare = "<li>Ann Alder</li><li>Bea Birch voted aye</li>"
+        assert votes_apply.page_problems(bare, [("Ann Alder", "aye"), ("Bea Birch", "aye")]) == [
+            "Ann Alder is not shown as 'voted aye'"]
         real = "roll call 2 Person Ann Alder People · voted aye Person Bea Birch People · absent decided at"
         assert votes_apply.page_problems(real, [("Ann Alder", "aye"), ("Bea Birch", "absent")]) == []
 
