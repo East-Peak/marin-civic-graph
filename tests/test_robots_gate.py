@@ -417,3 +417,16 @@ def test_every_host_on_a_robots_redirect_chain_is_answered_once(tmp_path):
         gate.admit("https://b.example.test/no")
     assert robots.asked == ["https://a.example.test/robots.txt", "https://b.example.test/robots.txt",
                             "https://c.example.test/robots.txt"]
+
+
+def test_the_request_log_stamps_a_robots_fetch_when_it_is_sent_not_when_it_returns(tmp_path):
+    clock = Clock()
+
+    def slow_robots(url, timeout):
+        clock.t += 0.5  # the reply takes half a second
+        return rg.Reply(200, {}, b"User-agent: *\nCrawl-delay: 15\n", None)
+    gate = rg.RobotsGate(robots_transport=slow_robots, clock=clock, wall_clock=clock, sleep=clock.sleep,
+                         request_log=tmp_path / "requests.jsonl")
+    gate.admit(f"{HOST}/meetings")
+    robots, page = _log(tmp_path)
+    assert robots["monotonic"] == 1000.0 and page["monotonic"] == 1015.0

@@ -270,9 +270,10 @@ class RobotsGate:
         entry = None
         for hop in range(MAX_REDIRECTS + 1):
             waited = self._pace(url)  # a hop to a host we already know keeps its Crawl-delay
+            sent = (self.clock(), self.wall_clock())
             reply = self.transport(url, self.robots_timeout)
             self._log(kind="robots", method="GET", url=url, decision="fetched", status=reply.status,
-                      error=reply.error, waited=waited)
+                      error=reply.error, waited=waited, sent=sent)
             location = {k.lower(): v for k, v in reply.headers.items()}.get("location")
             if not (reply.status in REDIRECTS and location and hop < MAX_REDIRECTS):
                 break
@@ -327,11 +328,13 @@ class RobotsGate:
     def _now_iso(self) -> str:
         return datetime.fromtimestamp(self.wall_clock(), timezone.utc).isoformat(timespec="milliseconds")
 
-    def _log(self, **fields) -> None:
+    def _log(self, *, sent: tuple[float, float] | None = None, **fields) -> None:
+        """One request decision; stamped when the request was sent (`sent`: monotonic, wall) or now."""
         if not self.request_log:
             return
         self.request_log.parent.mkdir(parents=True, exist_ok=True)
-        entry = {"at": self._now_iso(), "monotonic": self.clock(),
-                 **{k: v for k, v in fields.items() if v is not None}}
+        monotonic, wall = sent or (self.clock(), self.wall_clock())
+        entry = {"at": datetime.fromtimestamp(wall, timezone.utc).isoformat(timespec="milliseconds"),
+                 "monotonic": monotonic, **{k: v for k, v in fields.items() if v is not None}}
         with self.request_log.open("a", encoding="utf-8") as fh:
             fh.write(json.dumps(entry, sort_keys=True) + "\n")
