@@ -71,12 +71,13 @@ class FakeGraph:
     """Enough of a Neo4j driver: committed nodes/edges, a transaction that stages writes, export paging."""
 
     def __init__(self, nodes, edges, *, commit_raises_after_commit=False, commit_raises_before=False,
-                 tamper_in_tx=False, tamper_after_commit=False):
+                 tamper_in_tx=False, tamper_after_commit=False, fail_on=None):
         self.nodes, self.edges = list(nodes), list(edges)
         self.calls = []
         self.commit_raises_after_commit = commit_raises_after_commit
         self.commit_raises_before = commit_raises_before
         self.tamper_in_tx, self.tamper_after_commit = tamper_in_tx, tamper_after_commit
+        self.fail_on = fail_on
 
     def session(self, database=None):
         self.calls.append("session")
@@ -124,15 +125,25 @@ class _Count:
 
 
 class FakeTx:
+    """neo4j 5.28's Transaction semantics: leaving a `with` block normally COMMITS (TransactionBase._exit), an
+    exception closes (rolls back); rollback()/commit() close it, after which exit does nothing."""
+
     def __init__(self, g):
         self.g, self.nodes, self.edges = g, list(g.nodes), list(g.edges)
-        self.committed = False
+        self.closed = False
 
     def __enter__(self):
         return self
 
-    def __exit__(self, *a):
-        return False  # leaving without commit = rollback: staged rows are dropped
+    def __exit__(self, exc_type, *a):
+        if not self.closed and exc_type is None:
+            self.commit()
+        self.closed = True
+        return False
+
+    def rollback(self):
+        self.g.calls.append("rollback")
+        self.closed = True
 
     def run(self, query, **params):
         self.g.calls.append("tx.run")
@@ -149,11 +160,14 @@ class FakeTx:
             rel = query.split("CREATE (s)-[r:")[1].split("]")[0]
             self.edges += [{"start_id": r["start_id"], "end_id": r["end_id"], "type": rel,
                             "properties": dict(r["props"])} for r in rows]
+        if self.g.fail_on and self.g.fail_on in query:
+            return FakeResult(n=len(rows) + 1)
         if self.g.tamper_in_tx and len(self.edges) > len(self.g.edges):
             self.edges[-1] = {**self.edges[-1], "properties": {**self.edges[-1]["properties"], "vote": "no"}}
         return FakeResult(n=len(rows))
 
     def commit(self):
+        self.closed = True
         if self.g.commit_raises_before:
             raise RuntimeError("connection reset before commit")
         self.g.nodes, self.g.edges = self.nodes, self.edges
@@ -254,8 +268,17 @@ class TestApply:
         state, *_ = _setup(tmp_path)
         g = FakeGraph(BASE_NODES, BASE_EDGES, tamper_in_tx=True)
         assert _run(state, g, tmp_path) == "ROLLED_BACK"
+        assert "commit" not in g.calls and "rollback" in g.calls
+        assert g.nodes == BASE_NODES and g.edges == BASE_EDGES
+        assert votes_apply.get_state(state) == "ROLLED_BACK"
+
+    def test_a_statement_count_off_plan_rolls_back_and_says_so(self, tmp_path):
+        state, *_ = _setup(tmp_path)
+        g = FakeGraph(BASE_NODES, BASE_EDGES, fail_on="CREATE (s)-[r:CAST_VOTE]")
+        assert _run(state, g, tmp_path) == "ROLLED_BACK"
         assert "commit" not in g.calls and g.nodes == BASE_NODES and g.edges == BASE_EDGES
         assert votes_apply.get_state(state) == "ROLLED_BACK"
+        assert "StatementCountError" in json.loads((state / "state.json").read_text())["reason"]
 
     def test_commit_failure_before_the_server_commits_is_still_unverified(self, tmp_path):
         state, *_ = _setup(tmp_path)
@@ -324,8 +347,13 @@ class TestReviewAndPages:
         html = "<li>Ann Alder <span>voted aye</span></li><li>Bea Birch <span>absent</span></li>"
         assert votes_apply.page_problems(html, [("Ann Alder", "aye"), ("Bea Birch", "absent")]) == []
         assert votes_apply.page_problems(html, [("Ann Alder", "aye"), ("Bea Birch", "no")]) == [
-            "expected 1 'voted no' label(s), found 0"]
+            "Bea Birch is not shown as 'voted no'"]
         assert votes_apply.page_problems(html, [("Cy Cedar", "aye")]) == ["Cy Cedar is not on the page"]
+        swapped = "<li>Person Ann Alder People · voted no</li><li>Person Bea Birch People · voted aye</li>"
+        assert votes_apply.page_problems(swapped, [("Ann Alder", "aye"), ("Bea Birch", "no")]) == [
+            "Ann Alder is not shown as 'voted aye'", "Bea Birch is not shown as 'voted no'"]
+        real = "roll call 2 Person Ann Alder People · voted aye Person Bea Birch People · absent decided at"
+        assert votes_apply.page_problems(real, [("Ann Alder", "aye"), ("Bea Birch", "absent")]) == []
 
 
 class TestBakeCheck:
@@ -348,7 +376,7 @@ class TestBakeCheck:
         con.commit()
         new = [{"id": "vev-body-x-1-aaaa-L40", "labels": ["Decision"], "properties": {
             "id": "vev-body-x-1-aaaa-L40", "search_label": label, "status": "carried", "item_number": "7",
-            "motion_text": None}}]
+            "search_terms": f"vev-body-x-1-aaaa-L40 {label.lower()}", "motion_text": None}}]
         exp = [{"start_id": "person-ann-alder", "end_id": "vev-body-x-1-aaaa-L40", "vote": "aye"}]
         assert votes_apply.bake_problems(db, new, exp, scope=("vev-body-x-",)) == []
         con.execute("UPDATE nodes SET props = ? WHERE id = 'vev-body-x-1-aaaa-L40'",
@@ -357,6 +385,27 @@ class TestBakeCheck:
         con.commit()
         probs = votes_apply.bake_problems(db, new, exp, scope=("vev-body-x-",))
         assert any("search_label" in p for p in probs) and any("motion_text" in p for p in probs)
+
+    def test_search_terms_allowlist_and_value_shapes(self, tmp_path):
+        import sqlite3
+        db = tmp_path / "s.sqlite"
+        con = sqlite3.connect(db)
+        con.execute("CREATE TABLE nodes (id TEXT PRIMARY KEY, type TEXT, search_label TEXT, props TEXT)")
+        con.execute("CREATE TABLE edges (source TEXT, rel TEXT, target TEXT, props TEXT)")
+        con.execute("CREATE VIRTUAL TABLE search_fts USING fts5(search_label, search_terms, content='', "
+                    "tokenize='unicode61')")
+        label, nid = "Example Council vote — carried", "vev-body-x-1-aaaa-L40"
+        con.execute("INSERT INTO nodes VALUES (?,?,?,?)", (nid, "Decision", label, json.dumps(
+            {"status": ["carried"], "source_id": "body-x"})))
+        con.execute("INSERT INTO search_fts(rowid, search_label, search_terms) VALUES (1, ?, '')", (label,))
+        con.commit()
+        new = [{"id": nid, "labels": ["Decision"], "properties": {
+            "id": nid, "search_label": label, "search_terms": f"{nid} {label.lower()}", "status": "carried",
+            "source_id": "body-x"}}]
+        probs = votes_apply.bake_problems(db, new, [], scope=("vev-body-x-",))
+        assert any("search_terms are not in the FTS index" in p for p in probs)
+        assert any("not public" in p and "source_id" in p for p in probs)
+        assert any("status" in p and "not a scalar" in p for p in probs)
 
 
 class TestPrepare:
@@ -384,9 +433,14 @@ class TestPrepare:
                                             str(plan), "--profile", "votes-b"]) == 0
         finally:
             case_additive_plan.STAGING_ROOTS = old
-        (state / "spot-check.md").write_text("### S1. vev-x\n")
-        (state / "spot-check-review.md").write_text(review)
-        (state / "bake-check.json").write_text(json.dumps({"problems": [] if bake_ok else ["x"]}))
+        bundle_fp = fingerprint(bundle)
+        sheet = f"# x\n\nBundle: nodes {bundle_fp['nodes.jsonl']} edges {bundle_fp['edges.jsonl']}\n\n### S1. vev-x\n"
+        (state / "spot-check.md").write_text(sheet)
+        sheet_sha = votes_apply._sha_bytes(sheet.encode())
+        (state / "spot-check-review.md").write_text(f"Sheet sha256: {sheet_sha}\n" + review)
+        cand = json.loads((plan / "plan-report.json").read_text())["candidate_sha256"]
+        (state / "bake-check.json").write_text(json.dumps({"problems": [] if bake_ok else ["x"],
+                                                           "candidate_sha256": cand, "bundle_sha256": bundle_fp}))
         return state
 
     def _prepare(self, state):
@@ -416,6 +470,23 @@ class TestPrepare:
         with pytest.raises(ApplyRefused, match=match):
             self._prepare(state)
         assert votes_apply.get_state(state) is None
+
+    def test_prepare_refuses_stale_reviews_and_bake_checks(self, tmp_path):
+        state = self._world(tmp_path)
+        review = (state / "spot-check-review.md").read_text()
+        (state / "spot-check-review.md").write_text("Sheet sha256: " + "0" * 64 + "\n" + review.split("\n", 1)[1])
+        with pytest.raises(ApplyRefused, match="review"):
+            self._prepare(state)
+        state = self._world(tmp_path / "b")
+        sheet = (state / "spot-check.md").read_text().replace("Bundle: nodes ", "Bundle: nodes 0")
+        (state / "spot-check.md").write_text(sheet)
+        with pytest.raises(ApplyRefused, match="sheet"):
+            self._prepare(state)
+        state = self._world(tmp_path / "c")
+        bake = json.loads((state / "bake-check.json").read_text())
+        (state / "bake-check.json").write_text(json.dumps({**bake, "candidate_sha256": {"nodes.jsonl": "0"}}))
+        with pytest.raises(ApplyRefused, match="bake"):
+            self._prepare(state)
 
     def test_prepare_refuses_a_plan_of_another_bundle(self, tmp_path):
         state = self._world(tmp_path)
@@ -451,13 +522,31 @@ class TestPublishedCli:
         (state / "plan").mkdir(parents=True)
         (state / "plan" / "expected-edges.jsonl").write_text("".join(
             json.dumps({"start_id": s, "end_id": t, "vote": v}) + "\n" for s, t, v in votes))
-        votes_apply.set_state(state, "APPLIED")
+        (state / "plan" / "plan-report.json").write_text(json.dumps({"verification": []}))
+        sha = votes_apply.write_approval(state, {"plan/plan-report.json": state / "plan" / "plan-report.json",
+                                                 "plan/expected-edges.jsonl": state / "plan" / "expected-edges.jsonl"})
+        votes_apply.set_state(state, "APPLIED", approval_sha256=sha)
         return db, state
+
+    def test_the_oracle_must_be_the_approved_one(self, tmp_path, monkeypatch):
+        db, state = self._artifact(tmp_path)
+        # the artifact and the page say Birch voted aye; a rewritten oracle agrees — only the approval says "no"
+        import sqlite3
+        con = sqlite3.connect(db)
+        con.execute("UPDATE edges SET props = '{\"vote\":\"aye\"}' WHERE source = 'person-bea-birch'")
+        con.commit()
+        con.close()
+        monkeypatch.setattr(votes_apply, "_fetch", lambda url: "Person Ann Alder People · voted aye "
+                                                               "Person Bea Birch People · voted aye")
+        oracle = state / "plan" / "expected-edges.jsonl"
+        oracle.write_text(oracle.read_text().replace('"vote": "no"', '"vote": "aye"'))
+        args = ["check-published", "--state-dir", str(state), "--sqlite", str(db), "--base-url", "https://site"]
+        assert votes_apply.main(args) == 1 and votes_apply.get_state(state) == "APPLIED"
 
     def test_published_verified_needs_edges_and_both_pages(self, tmp_path, monkeypatch):
         db, state = self._artifact(tmp_path)
-        pages = {"https://site/decision/vev-novato-city-council-1-aa-L1": "Ann Alder voted aye",
-                 "https://site/decision/vev-marin-county-bos-1-bb-L1": "Bea Birch voted no"}
+        pages = {"https://site/decision/vev-novato-city-council-1-aa-L1": "Person Ann Alder People · voted aye",
+                 "https://site/decision/vev-marin-county-bos-1-bb-L1": "Person Bea Birch People · voted no"}
         monkeypatch.setattr(votes_apply, "_fetch", lambda url: pages[url])
         args = ["check-published", "--state-dir", str(state), "--sqlite", str(db), "--base-url", "https://site"]
         assert votes_apply.main(args) == 0 and votes_apply.get_state(state) == "PUBLISHED_VERIFIED"

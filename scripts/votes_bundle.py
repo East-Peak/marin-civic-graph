@@ -36,7 +36,7 @@ import tempfile
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from case_additive_plan import write_export
+from case_additive_plan import fingerprint, write_export
 from votes_persons import MappingError, Resolver, load_mapping_answers, render_mapping_batch, validate_mapping
 from votes_reconcile import reconcile
 from votes_roster import parse_answers
@@ -320,7 +320,8 @@ def _excerpt(text: str, span: list[int] | dict, pad: int = 0) -> str:
 
 
 def render_samples(selection: dict, bundle: dict, events: dict[str, dict], texts: dict[str, str],
-                   names: dict[str, str], *, seed: int, sources: dict[str, str] | None = None) -> str:
+                   names: dict[str, str], *, seed: int, sources: dict[str, str] | None = None,
+                   bundle_fp: dict[str, str] | None = None) -> str:
     """The spot-check sheet: each sampled event's motion, block and every edge with its evidence excerpt and the
     resolved Person; one agree/disagree line per item for the independent reviewer."""
     by_event = defaultdict(list)
@@ -331,6 +332,8 @@ def render_samples(selection: dict, bundle: dict, events: dict[str, dict], texts
     lines = [f"# Votes B2 spot check (seed {seed})", "",
              "For each item, read the excerpts against the source minutes and record `S<n> agree` or "
              "`S<n> disagree: <why>` — is every member's vote right, and is each member the right Person?", ""]
+    if bundle_fp:
+        lines += [f"Bundle: nodes {bundle_fp['nodes.jsonl']} edges {bundle_fp['edges.jsonl']}", ""]
     k = 0
     for body, picks in selection.items():
         for label, ids in (("random attached", picks["random"]), ("no / abstain / recused", picks["notable"])):
@@ -538,8 +541,8 @@ def write_samples(bundle_dir: Path, ledger: Path, inventory: Path, baseline: Pat
     out = Path(out).expanduser().resolve()
     if not out.is_relative_to(STAGING_ROOT.expanduser().resolve()):
         raise BundleError(f"--out {out} must be inside {STAGING_ROOT}")
-    out.write_text(render_samples(selection, bundle, events, texts, names, seed=seed, sources=sources),
-                   encoding="utf-8")
+    out.write_text(render_samples(selection, bundle, events, texts, names, seed=seed, sources=sources,
+                                  bundle_fp=fingerprint(bundle_dir)), encoding="utf-8")
     return len(wanted)
 
 

@@ -28,7 +28,6 @@ import os
 import re
 import sqlite3
 import sys
-from collections import Counter
 from pathlib import Path
 
 from case_additive_plan import apply_in_transaction, fingerprint
@@ -111,6 +110,16 @@ def prepare(state_dir: Path, *, bundle: Path, plan: Path, sheet: Path, review: P
               for name in ("baseline/nodes.jsonl", "baseline/edges.jsonl")}
     if report["baseline"]["sha256"] != pinned:
         raise ApplyRefused("the plan's baseline is not the bundle's baseline")
+    fp = fingerprint(bundle)
+    sheet_text = Path(sheet).read_text()
+    if f"Bundle: nodes {fp['nodes.jsonl']} edges {fp['edges.jsonl']}" not in sheet_text:
+        raise ApplyRefused("the spot-check sheet was drawn from another bundle")
+    first = (Path(review).read_text().splitlines() or [""])[0]
+    if first != f"Sheet sha256: {_sha_bytes(sheet_text.encode())}":
+        raise ApplyRefused("the spot-check review is not of this sheet (first line `Sheet sha256: <sha>`)")
+    bake = json.loads(Path(bake_check).read_text())
+    if bake.get("candidate_sha256") != report["candidate_sha256"] or bake.get("bundle_sha256") != fp:
+        raise ApplyRefused("the staging bake check was not made from this plan's candidate and bundle")
     attached = {json.loads(x)["event_id"] for x in (bundle / "dispositions.jsonl").read_text().splitlines()
                 if x.strip() and json.loads(x)["reason"] == "attached"}
     problems = review_problems(Path(sheet).read_text(), Path(review).read_text(), attached=attached)
@@ -192,18 +201,25 @@ def run_apply(state_dir: Path, *, approve: str, canonical_root: Path, uri: str |
             exporter(driver, database=database, out_dir=backup, backup=True, progress=None)
             if fingerprint(backup) != report["baseline"]["sha256"]:
                 return "DRIFT"  # state stays AWAITING_APPLY; re-plan
-            committed = None
+            # No `with` around the transaction: neo4j 5's Transaction COMMITS when such a block exits normally.
             with driver.session(database=database) as session:
-                with session.begin_transaction() as tx:
+                tx = session.begin_transaction()
+                try:
                     apply_in_transaction(tx, ops)
-                    if _tx_fingerprint(tx) != report["candidate_sha256"]:
-                        set_state(state_dir, "ROLLED_BACK", reason="in_transaction_mismatch")
-                        return "ROLLED_BACK"  # leaving the block uncommitted rolls everything back
-                    try:
-                        tx.commit()
-                        committed = True
-                    except Exception as exc:  # the server may have committed before the error reached us
-                        committed = repr(exc)
+                    verified = _tx_fingerprint(tx) == report["candidate_sha256"]
+                except Exception as exc:  # nothing committed yet: roll back and say so
+                    tx.rollback()
+                    set_state(state_dir, "ROLLED_BACK", reason=f"before commit: {exc!r}")
+                    return "ROLLED_BACK"
+                if not verified:
+                    tx.rollback()
+                    set_state(state_dir, "ROLLED_BACK", reason="in_transaction_mismatch")
+                    return "ROLLED_BACK"
+                try:
+                    tx.commit()
+                    committed = True
+                except Exception as exc:  # the server may have committed before the error reached us
+                    committed = repr(exc)
             post, err = apply_dir / "post-apply-export", None
             try:
                 exporter(driver, database=database, out_dir=post, backup=True, progress=None)
@@ -218,7 +234,7 @@ def run_apply(state_dir: Path, *, approve: str, canonical_root: Path, uri: str |
                 set_state(state_dir, "APPLY_UNVERIFIED", reason="commit_uncertain")
                 return "APPLY_UNVERIFIED"
             if matches is True:
-                set_state(state_dir, "APPLIED")
+                set_state(state_dir, "APPLIED", approval_sha256=approve)
                 return "APPLIED"
             reason = "post_export_mismatch" if matches is False else "post_export_failed"
             _recovery(state_dir, reason, "Committed, but the post-apply export does not equal the candidate."
@@ -270,19 +286,33 @@ def bake_problems(sqlite_path: Path, new_nodes: list[dict], expected: list[dict]
             want = n["properties"]["search_label"]
             if typ != "Decision" or label != want:
                 problems.append(f"{n['id']}: search_label {label!r} is not the planned {want!r}")
-            phrase = '"' + want.replace('"', " ") + '"'
-            hits = {r for (r,) in con.execute("SELECT rowid FROM search_fts WHERE search_fts MATCH ?",
-                                              (f"search_label : {phrase}",))}
-            if rowid not in hits:
-                problems.append(f"{n['id']}: its label is not in the FTS index")
-            keys = set(json.loads(props))
-            extra = sorted(keys - set(n["properties"]))
-            bad = sorted(keys & FORBIDDEN_DECISION_KEYS)
+            for column, value in (("search_label", want), ("search_terms", n["properties"].get("search_terms", ""))):
+                phrase = '"' + value.replace('"', " ") + '"'
+                hits = {r for (r,) in con.execute("SELECT rowid FROM search_fts WHERE search_fts MATCH ?",
+                                                  (f"{column} : {phrase}",))} if value.strip() else set()
+                if rowid not in hits:
+                    what = "label is" if column == "search_label" else "search_terms are"
+                    problems.append(f"{n['id']}: its {what} not in the FTS index")
+            baked = json.loads(props)
+            allowed = _public_decision_keys()
+            extra = sorted(set(baked) - set(n["properties"]))
+            hidden = sorted(set(baked) - allowed)
+            bad = sorted(set(baked) & FORBIDDEN_DECISION_KEYS)
             if extra or bad:
                 problems.append(f"{n['id']}: public props {extra + bad} were not planned or are forbidden")
+            if hidden:
+                problems.append(f"{n['id']}: props {hidden} are not public Decision properties")
+            for key, value in sorted(baked.items()):
+                if not isinstance(value, (str, int, float, bool)):
+                    problems.append(f"{n['id']}: public prop {key} is not a scalar")
     finally:
         con.close()
     return problems + check_published_edges(sqlite_path, expected, scope=scope)
+
+
+def _public_decision_keys() -> frozenset[str]:
+    from public_props import _ALLOWED
+    return _ALLOWED["Decision"]
 
 
 def review_problems(sheet: str, review: str, *, attached: set[str]) -> list[str]:
@@ -297,13 +327,19 @@ def review_problems(sheet: str, review: str, *, attached: set[str]) -> list[str]
 
 
 def page_problems(page_html: str, votes: list[tuple[str, str]]) -> list[str]:
-    """A Decision page shows every planned member and as many of each vote label as planned."""
-    text = html.unescape(re.sub(r"<[^>]+>", " ", page_html))
-    problems = [f"{name} is not on the page" for name, _ in votes if name not in text]
-    for vote, n in sorted(Counter(v for _, v in votes).items()):
-        found = len(re.findall(rf"\b{re.escape(VOTE_LABEL[vote])}\b", text))
-        if found < n:
-            problems.append(f"expected {n} {VOTE_LABEL[vote]!r} label(s), found {found}")
+    """A Decision page shows every planned member with that member's own vote label: the first label after the
+    member's name, before the next member's, must be the planned one."""
+    text = " ".join(html.unescape(re.sub(r"<[^>]+>", " ", page_html)).split())
+    labels = "|".join(re.escape(x) for x in VOTE_LABEL.values())
+    problems = []
+    for name, vote in votes:
+        if name not in text:
+            problems.append(f"{name} is not on the page")
+            continue
+        shown = [m.group(1) for m in re.finditer(rf"{re.escape(name)}\b(?:(?!{labels}).){{0,40}}?\b({labels})\b",
+                                                 text)]
+        if VOTE_LABEL[vote] not in shown:
+            problems.append(f"{name} is not shown as {VOTE_LABEL[vote]!r}")
     return problems
 
 
@@ -335,6 +371,18 @@ def page_checks(sqlite_path: Path, expected: list[dict], base_url: str) -> dict:
             problems = [f"fetching {url} failed: {exc!r}"]
         out[prefix] = {"url": url, "votes": len(votes), "problems": problems}
     return out
+
+
+def _authenticate_oracle(state_dir: Path) -> None:
+    """The expected-edge file must be byte-for-byte the one the applied approval recorded."""
+    state = json.loads((Path(state_dir) / "state.json").read_text())
+    raw = (Path(state_dir) / APPROVAL).read_bytes()
+    if not state.get("approval_sha256") or _sha_bytes(raw) != state["approval_sha256"]:
+        raise ApplyRefused("the approval manifest is not the one that was applied")
+    entry = json.loads(raw)["files"].get("plan/expected-edges.jsonl")
+    oracle = Path(state_dir) / "plan" / "expected-edges.jsonl"
+    if entry is None or _sha_bytes(oracle.read_bytes()) != entry["sha256"]:
+        raise ApplyRefused("plan/expected-edges.jsonl is not the approved oracle")
 
 
 def _expected(state_dir: Path) -> list[dict]:
@@ -380,7 +428,10 @@ def main(argv: list[str] | None = None) -> int:
         expected = expected_edges(ops)
         new = [json.loads(x) for x in (args.bundle / "nodes.jsonl").read_text().splitlines() if x.strip()]
         result = {"problems": bake_problems(args.sqlite, new, expected, scope=SCOPE),
-                  "pages": page_checks(args.sqlite, expected, args.base_url)}
+                  "pages": page_checks(args.sqlite, expected, args.base_url),
+                  "candidate_sha256": json.loads((args.plan / "plan-report.json").read_text())["candidate_sha256"],
+                  "bundle_sha256": fingerprint(args.bundle),
+                  "sqlite_sha256": _sha_bytes(Path(args.sqlite).read_bytes())}
         result["problems"] += [f"{k}: {p}" for k, v in result["pages"].items() for p in v["problems"]]
         args.out.write_text(json.dumps(result, indent=1, sort_keys=True) + "\n")
         print(f"bake check: {len(result['problems'])} problem(s)")
@@ -388,6 +439,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "check-published":
         if get_state(args.state_dir) not in ("APPLIED", "PUBLISHED_VERIFIED"):
             print(f"REFUSED: state is {get_state(args.state_dir)}, not APPLIED", file=sys.stderr)
+            return 1
+        try:
+            _authenticate_oracle(args.state_dir)
+        except ApplyRefused as exc:
+            print(f"REFUSED: {exc}", file=sys.stderr)
             return 1
         expected = _expected(args.state_dir)
         problems = check_published_edges(args.sqlite, expected, scope=SCOPE)
@@ -397,7 +453,8 @@ def main(argv: list[str] | None = None) -> int:
             print(f"PROBLEM: {p}", file=sys.stderr)
         if problems:
             return 1
-        set_state(args.state_dir, "PUBLISHED_VERIFIED", sqlite_sha256=_sha_bytes(Path(args.sqlite).read_bytes()),
+        set_state(args.state_dir, "PUBLISHED_VERIFIED", approval_sha256=json.loads(
+            (args.state_dir / "state.json").read_text())["approval_sha256"], sqlite_sha256=_sha_bytes(Path(args.sqlite).read_bytes()),
                   pages={k: v["url"] for k, v in pages.items()})
         print(f"PUBLISHED_VERIFIED — {len(expected)} edges, pages {[v['url'] for v in pages.values()]}")
         return 0

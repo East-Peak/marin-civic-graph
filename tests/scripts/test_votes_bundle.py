@@ -553,7 +553,9 @@ class TestSamples:
         sel = {BODY: {"random": [evs[0]["event_id"]], "notable": []}}
         md = votes_bundle.render_samples(sel, b, {e["event_id"]: e for e in evs}, {"d" * 64: text},
                                          {"person-ann-alder": "Ann Alder", "person-bea-birch": "Bea Birch"}, seed=7,
-                                         sources={"d" * 64: "/x/minutes.pdf"})
+                                         sources={"d" * 64: "/x/minutes.pdf"},
+                                         bundle_fp={"nodes.jsonl": "1" * 64, "edges.jsonl": "2" * 64})
+        assert f"Bundle: nodes {'1' * 64} edges {'2' * 64}" in md
         assert "- source: /x/minutes.pdf" in md
         assert "### S1. vev-body-x-1-aaaa-L000" in md
         assert "- person-bea-birch (Bea Birch): **no** (named) — “BIRCH”" in md
