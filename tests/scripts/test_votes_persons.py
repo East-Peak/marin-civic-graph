@@ -355,10 +355,15 @@ class TestValidateMapping:
                  if r["item"] == "4" else r for r in rows]
         assert any("x-cedar: provenance kind 'filing' is not allowed for verified_no_person" in p
                    for p in _validate(extra, drafts, items, answers))
-        missing = [{**r, "status": "missing_mapping", "person_id": None,
-                    "provenance": [{"kind": "filing", "filing_id": "does-not-exist"}]} if r["item"] == "3" else r
-                   for r in rows]
-        assert any("x-birch: filing does-not-exist" in p for p in _validate(missing, drafts, items, answers))
+        for prov in ({"kind": "filing", "filing_id": "does-not-exist"}, {"kind": "same_member", "draft_id": "x-birch"},
+                     {"kind": "same_member", "draft_id": "x-nobody"}, FILING):
+            missing = [{**r, "status": "missing_mapping", "person_id": None, "provenance": [prov]}
+                       if r["item"] == "3" else r for r in rows]
+            assert any(f"x-birch: provenance kind {prov['kind']!r} is not allowed for missing_mapping" in p
+                       for p in _validate(missing, drafts, items, answers))
+        bare = [{**r, "status": "missing_mapping", "person_id": None, "provenance": []} if r["item"] == "3" else r
+                for r in rows]
+        assert _validate(bare, drafts, items, answers) == []
         searched = [{**r, "provenance": [FILING, {"kind": "searched", "patterns": ["birch"]}]} if r["item"] == "3"
                     else r for r in rows]
         assert any("x-birch: provenance kind 'searched' is not allowed for mapped" in p

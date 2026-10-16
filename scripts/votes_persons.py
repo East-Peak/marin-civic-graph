@@ -30,7 +30,7 @@ from votes_roster import RosterError, parse_answers
 
 STATUSES = ("mapped", "missing_mapping", "verified_no_person")
 DIRECT = ("seat_service", "filing")
-KINDS = {"mapped": (*DIRECT, "same_member"), "missing_mapping": (*DIRECT, "same_member"),
+KINDS = {"mapped": (*DIRECT, "same_member"), "missing_mapping": (),
          "verified_no_person": ("searched",)}
 BINDING_INPUTS = ("mapping.json", "drafts.json", "batch-001.json", "answers-001.txt")
 TERM_FIELDS = (("key", "key"), ("member", "member"), ("term_start", "start"), ("term_end", "end"))
@@ -157,10 +157,7 @@ def validate_mapping(rows: list[dict], drafts: dict, items: list[dict], answers:
         for p in r.get("provenance", []):
             if p.get("kind") not in KINDS[status]:
                 problems.append(f"{did}: provenance kind {p.get('kind')!r} is not allowed for {status}")
-        if status == "missing_mapping":
-            for p in r.get("provenance", []):
-                if p.get("kind") in DIRECT:
-                    problems += ev.check(p, {**r, "person_id": pid})[0]
+        if status == "missing_mapping":  # no Person, so nothing to prove: any provenance was refused above
             continue
         if not isinstance(pid, str) or not pid:
             problems.append(f"{did}: person_id {pid!r} must be a node id")
