@@ -1,0 +1,419 @@
+#!/usr/bin/env python3
+"""Votes Part B2, increment d: apply the approved additive plan to the operator graph — only on Stuart's "apply".
+
+    python scripts/votes_apply.py apply --state-dir ~/open-marin-staging/votes-b --approve <sha256> \\
+        --canonical-root ~/projects/marin-civic-graph
+
+1. Before any driver opens: the state is AWAITING_APPLY, `--approve` equals the sha256 of
+   plan/approval-inputs.json, every file it lists still has its recorded sha256, and NEO4J_URI is exactly
+   bolt://localhost:7688. The ops executed are parsed from the verified ops.json bytes.
+2. The weekly run's lock in the canonical checkout (scripts/run_lock.py) is held through every later step.
+3. A fresh full-fidelity export (`--backup`) to apply/pre-apply-backup must equal the plan's baseline (else DRIFT,
+   nothing written).
+4. One transaction: case_additive_plan.apply_in_transaction (prechecks 0, exact counts), then the whole graph is
+   re-read inside the same transaction and must equal the planned candidate byte for byte; otherwise it is left
+   uncommitted (ROLLED_BACK). A commit that raises may still have committed: APPLY_UNVERIFIED (commit_uncertain).
+5. A post-commit export to apply/post-apply-export must equal the candidate → APPLIED; anything else is
+   APPLY_UNVERIFIED with apply/RECOVERY.md. Nothing is ever retried automatically; the backup is never touched.
+
+`check-published` verifies a published artifact against plan/expected-edges.jsonl (and two real pages).
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import html
+import json
+import os
+import re
+import sqlite3
+import sys
+from collections import Counter
+from pathlib import Path
+
+from case_additive_plan import apply_in_transaction, fingerprint
+from export_live_graph import _iter_edge_page_rows, _iter_node_page_rows, _stable_line, export_live_graph
+from run_lock import RunLockHeld, run_lock
+
+OPERATOR_URI = "bolt://localhost:7688"
+STATES = ("AWAITING_MAPPING_REVIEW", "AWAITING_APPLY", "APPLIED", "ROLLED_BACK", "APPLY_UNVERIFIED",
+          "PUBLISHED_VERIFIED")
+SCOPE = ("decision-novato-city-council-", "decision-marin-county-bos-", "vev-novato-city-council-",
+         "vev-marin-county-bos-")
+APPROVAL = Path("plan/approval-inputs.json")
+__all__ = ["RunLockHeld"]
+
+
+class ApplyRefused(Exception):
+    """Nothing was opened or written."""
+
+
+def _sha_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def get_state(state_dir: Path) -> str | None:
+    path = Path(state_dir) / "state.json"
+    return json.loads(path.read_text())["state"] if path.exists() else None
+
+
+def set_state(state_dir: Path, state: str, **detail) -> None:
+    if state not in STATES:
+        raise ValueError(state)
+    path = Path(state_dir) / "state.json"
+    history = json.loads(path.read_text()).get("history", []) if path.exists() else []
+    path.write_text(json.dumps({"state": state, **detail, "history": history + [{"state": state, **detail}]},
+                               indent=1, sort_keys=True) + "\n")
+
+
+def expected_edges(ops: dict) -> list[dict]:
+    """The publication oracle: every planned CAST_VOTE as (start, end, vote), sorted."""
+    return sorted(({"start_id": e["start_id"], "end_id": e["end_id"], "vote": e["properties"]["vote"]}
+                   for e in ops["add_edges"] if e["type"] == "CAST_VOTE"),
+                  key=lambda r: (r["start_id"], r["end_id"]))
+
+
+def write_approval(state_dir: Path, files: dict[str, Path]) -> str:
+    """Record path + sha256 of every file the approval covers; the state becomes AWAITING_APPLY. Returns the
+    approval sha256 Stuart's "apply" is bound to."""
+    state_dir = Path(state_dir)
+    report_path = files.get("plan/plan-report.json")
+    if report_path is None:
+        raise ApplyRefused("the approval must cover plan/plan-report.json")
+    report = json.loads(Path(report_path).read_text())
+    if report.get("verification"):
+        raise ApplyRefused(f"the plan has verification problems: {report['verification'][:3]}")
+    manifest = {name: {"path": str(Path(p).resolve()), "sha256": _sha_bytes(Path(p).read_bytes())}
+                for name, p in sorted(files.items())}
+    path = state_dir / APPROVAL
+    path.write_text(json.dumps({"files": manifest}, indent=1, sort_keys=True) + "\n")
+    sha = _sha_bytes(path.read_bytes())
+    set_state(state_dir, "AWAITING_APPLY", approval_sha256=sha)
+    return sha
+
+
+def prepare(state_dir: Path, *, bundle: Path, plan: Path, sheet: Path, review: Path, bake_check: Path) -> str:
+    """AWAITING_APPLY, only for a final bundle that equals its manifest, a clean votes-b plan of exactly that
+    bundle on exactly the bundle's baseline, a fully answered spot check whose doubts are all held, and a clean
+    staging bake. Writes plan/expected-edges.jsonl and the approval manifest; returns the approval sha256."""
+    state_dir, bundle, plan = Path(state_dir), Path(bundle), Path(plan)
+    inputs = json.loads((bundle / "inputs.json").read_text())
+    if inputs.get("provisional") is not False:
+        raise ApplyRefused("the bundle is provisional (built before the mapping review was answered)")
+    if json.loads((bundle / "accounting.json").read_text()).get("matches_expected") is not True:
+        raise ApplyRefused("the bundle does not match the expected-disposition manifest")
+    report = json.loads((plan / "plan-report.json").read_text())
+    if report.get("profile") != "votes-b" or report.get("verification") or not report.get("baseline_reexport_identical"):
+        raise ApplyRefused("the plan is not a clean votes-b plan")
+    if report["case"]["sha256"] != fingerprint(bundle):
+        raise ApplyRefused("the plan was made from another bundle")
+    pinned = {name.split("/")[1]: inputs["inputs"][name]["sha256"]
+              for name in ("baseline/nodes.jsonl", "baseline/edges.jsonl")}
+    if report["baseline"]["sha256"] != pinned:
+        raise ApplyRefused("the plan's baseline is not the bundle's baseline")
+    attached = {json.loads(x)["event_id"] for x in (bundle / "dispositions.jsonl").read_text().splitlines()
+                if x.strip() and json.loads(x)["reason"] == "attached"}
+    problems = review_problems(Path(sheet).read_text(), Path(review).read_text(), attached=attached)
+    if problems or not re.search(r"^### S\d+\.", Path(sheet).read_text(), re.M):
+        raise ApplyRefused(f"spot check: {problems[:5] or ['the sheet has no items']}")
+    if json.loads(Path(bake_check).read_text()).get("problems") != []:
+        raise ApplyRefused("the staging bake check has problems")
+    ops = json.loads((plan / "ops.json").read_text())
+    (plan / "expected-edges.jsonl").write_text("".join(_stable_line(r) + "\n" for r in expected_edges(ops)))
+    files = {f"plan/{rel}": plan / rel for rel in ("ops.json", "plan-report.json", "inverse.json",
+                                                    "expected-edges.jsonl", "candidate/nodes.jsonl",
+                                                    "candidate/edges.jsonl")}
+    files.update({f"bundle/{p.name}": p for p in sorted(bundle.iterdir()) if p.is_file()})
+    files.update({f"input/{name}": Path(entry["path"]) for name, entry in inputs["inputs"].items()})
+    files.update({"spot-check.md": Path(sheet), "spot-check-review.md": Path(review), "bake-check.json": Path(bake_check)})
+    for name, entry in inputs["inputs"].items():
+        if _sha_bytes(Path(entry["path"]).read_bytes()) != entry["sha256"]:
+            raise ApplyRefused(f"bundle input {name} changed since the bundle was built")
+    return write_approval(state_dir, files)
+
+
+def approval_sha(state_dir: Path) -> str:
+    return _sha_bytes((Path(state_dir) / APPROVAL).read_bytes())
+
+
+def _verify_approval(state_dir: Path, approve: str) -> dict:
+    if get_state(state_dir) != "AWAITING_APPLY":
+        raise ApplyRefused(f"state is {get_state(state_dir)}, not AWAITING_APPLY")
+    raw = (state_dir / APPROVAL).read_bytes()
+    if _sha_bytes(raw) != approve:
+        raise ApplyRefused("--approve does not match plan/approval-inputs.json")
+    files = json.loads(raw)["files"]
+    for name, entry in sorted(files.items()):
+        path = Path(entry["path"])
+        if not path.is_file() or _sha_bytes(path.read_bytes()) != entry["sha256"]:
+            raise ApplyRefused(f"{name} changed since the approval was recorded")
+    return files
+
+
+def _tx_fingerprint(tx) -> dict:
+    """The whole graph as this transaction sees it, in export_live_graph --backup's exact bytes."""
+    out = {}
+    for name, rows in (("nodes.jsonl", _iter_node_page_rows(tx, batch_size=10_000, progress=lambda _: None,
+                                                             keep_all=True)),
+                       ("edges.jsonl", _iter_edge_page_rows(tx, batch_size=10_000, progress=lambda _: None,
+                                                            keep_all=True))):
+        h = hashlib.sha256()
+        for row in rows:
+            h.update((_stable_line(row) + "\n").encode("utf-8"))
+        out[name] = h.hexdigest()
+    return out
+
+
+def _recovery(state_dir: Path, reason: str, detail: str) -> None:
+    (state_dir / "apply" / "RECOVERY.md").write_text("\n".join([
+        f"# APPLY_UNVERIFIED — {reason}", "", detail, "",
+        "Nothing is retried automatically. To recover:",
+        f"1. The untouched pre-apply backup: `{state_dir / 'apply' / 'pre-apply-backup'}` (equals the plan baseline).",
+        f"2. Additions only: run `{state_dir / 'plan' / 'inverse.json'}`'s statements in ONE transaction, each "
+        "counting exactly its rows; or restore the whole graph from the backup with `restore_neo4j_local.py`.",
+        "3. Re-export (`export_live_graph.py --backup`) and compare with the backup / candidate before any next step.",
+        ""]) + "\n")
+
+
+def run_apply(state_dir: Path, *, approve: str, canonical_root: Path, uri: str | None, driver_factory,
+              database: str, exporter=export_live_graph) -> str:
+    state_dir = Path(state_dir)
+    files = _verify_approval(state_dir, approve)
+    if uri != OPERATOR_URI:
+        raise ApplyRefused(f"NEO4J_URI must be {OPERATOR_URI} (got {uri!r})")
+    ops = json.loads(Path(files["plan/ops.json"]["path"]).read_bytes())
+    report = json.loads(Path(files["plan/plan-report.json"]["path"]).read_bytes())
+    apply_dir = state_dir / "apply"
+    with run_lock(Path(canonical_root)):
+        apply_dir.mkdir(exist_ok=True)
+        driver = driver_factory()
+        try:
+            backup = apply_dir / "pre-apply-backup"
+            exporter(driver, database=database, out_dir=backup, backup=True, progress=None)
+            if fingerprint(backup) != report["baseline"]["sha256"]:
+                return "DRIFT"  # state stays AWAITING_APPLY; re-plan
+            committed = None
+            with driver.session(database=database) as session:
+                with session.begin_transaction() as tx:
+                    apply_in_transaction(tx, ops)
+                    if _tx_fingerprint(tx) != report["candidate_sha256"]:
+                        set_state(state_dir, "ROLLED_BACK", reason="in_transaction_mismatch")
+                        return "ROLLED_BACK"  # leaving the block uncommitted rolls everything back
+                    try:
+                        tx.commit()
+                        committed = True
+                    except Exception as exc:  # the server may have committed before the error reached us
+                        committed = repr(exc)
+            post, err = apply_dir / "post-apply-export", None
+            try:
+                exporter(driver, database=database, out_dir=post, backup=True, progress=None)
+                matches = fingerprint(post) == report["candidate_sha256"]
+            except Exception as exc:
+                matches, err = None, repr(exc)
+            if committed is not True:
+                seen = ("the post-apply export MATCHES the candidate" if matches is True else
+                        "the post-apply export does NOT match the candidate" if matches is False else
+                        f"the post-apply export failed: {err}")
+                _recovery(state_dir, "commit_uncertain", f"tx.commit() raised {committed}; {seen}.")
+                set_state(state_dir, "APPLY_UNVERIFIED", reason="commit_uncertain")
+                return "APPLY_UNVERIFIED"
+            if matches is True:
+                set_state(state_dir, "APPLIED")
+                return "APPLIED"
+            reason = "post_export_mismatch" if matches is False else "post_export_failed"
+            _recovery(state_dir, reason, "Committed, but the post-apply export does not equal the candidate."
+                      if matches is False else f"Committed, but the post-apply export failed: {err}")
+            set_state(state_dir, "APPLY_UNVERIFIED", reason=reason)
+            return "APPLY_UNVERIFIED"
+        finally:
+            driver.close()
+
+
+def check_published_edges(sqlite_path: Path, expected: list[dict], *, scope: tuple[str, ...]) -> list[str]:
+    """Problems: the artifact's CAST_VOTE edges into Decisions whose id starts with a `scope` prefix must equal the
+    expected (start, end, vote) set exactly."""
+    con = sqlite3.connect(f"file:{sqlite_path}?mode=ro", uri=True)
+    try:
+        have = {(s, t, (json.loads(p) or {}).get("vote") if p else None)
+                for s, t, p in con.execute("SELECT source, target, props FROM edges WHERE rel = 'CAST_VOTE'")
+                if t.startswith(scope)}
+    finally:
+        con.close()
+    want = {(e["start_id"], e["end_id"], e["vote"]) for e in expected}
+    problems = [f"missing {x}" for x in sorted(want - have)[:20]] + [f"unexpected {x}" for x in sorted(have - want)[:20]]
+    if want != have:
+        problems.append(f"{len(want - have)} missing, {len(have - want)} unexpected of {len(want)} expected")
+    return problems
+
+
+VOTE_LABEL = {"aye": "voted aye", "no": "voted no", "abstain": "abstained", "absent": "absent", "recused": "recused"}
+FORBIDDEN_DECISION_KEYS = frozenset({"motion_text", "ayes", "noes", "recused", "absent", "abstain", "mover",
+                                     "seconder", "tally", "embedding", "excerpt", "evidence", "motion"})
+
+
+def bake_problems(sqlite_path: Path, new_nodes: list[dict], expected: list[dict], *,
+                  scope: tuple[str, ...]) -> list[str]:
+    """A staging bake of the candidate: every new Decision has its planned label as nodes.search_label and in
+    the FTS index, public props that are a subset of what was planned and carry nothing forbidden; the scoped
+    CAST_VOTE edges equal the expected set."""
+    con = sqlite3.connect(f"file:{sqlite_path}?mode=ro", uri=True)
+    problems = []
+    try:
+        for n in new_nodes:
+            if "Decision" not in n["labels"]:
+                continue
+            row = con.execute("SELECT rowid, type, search_label, props FROM nodes WHERE id = ?", (n["id"],)).fetchone()
+            if row is None:
+                problems.append(f"{n['id']}: not in the bake")
+                continue
+            rowid, typ, label, props = row
+            want = n["properties"]["search_label"]
+            if typ != "Decision" or label != want:
+                problems.append(f"{n['id']}: search_label {label!r} is not the planned {want!r}")
+            phrase = '"' + want.replace('"', " ") + '"'
+            hits = {r for (r,) in con.execute("SELECT rowid FROM search_fts WHERE search_fts MATCH ?",
+                                              (f"search_label : {phrase}",))}
+            if rowid not in hits:
+                problems.append(f"{n['id']}: its label is not in the FTS index")
+            keys = set(json.loads(props))
+            extra = sorted(keys - set(n["properties"]))
+            bad = sorted(keys & FORBIDDEN_DECISION_KEYS)
+            if extra or bad:
+                problems.append(f"{n['id']}: public props {extra + bad} were not planned or are forbidden")
+    finally:
+        con.close()
+    return problems + check_published_edges(sqlite_path, expected, scope=scope)
+
+
+def review_problems(sheet: str, review: str, *, attached: set[str]) -> list[str]:
+    """Every spot-check item answered; any disagree or unsure item's event must not be attached."""
+    items = dict(re.findall(r"^### (S\d+)\. (\S+)", sheet, re.M))
+    answers = {m.group(1): m.group(2) for m in re.finditer(r"^(S\d+)\s+(agree|disagree|unsure)\b", review, re.M)}
+    problems = [f"{k} is not answered" for k in items if k not in answers]
+    problems += [f"{k} is not in the sheet" for k in answers if k not in items]
+    problems += [f"{k} ({items[k]}) is {v} but still attached" for k, v in answers.items()
+                 if v != "agree" and k in items and items[k] in attached]
+    return problems
+
+
+def page_problems(page_html: str, votes: list[tuple[str, str]]) -> list[str]:
+    """A Decision page shows every planned member and as many of each vote label as planned."""
+    text = html.unescape(re.sub(r"<[^>]+>", " ", page_html))
+    problems = [f"{name} is not on the page" for name, _ in votes if name not in text]
+    for vote, n in sorted(Counter(v for _, v in votes).items()):
+        found = len(re.findall(rf"\b{re.escape(VOTE_LABEL[vote])}\b", text))
+        if found < n:
+            problems.append(f"expected {n} {VOTE_LABEL[vote]!r} label(s), found {found}")
+    return problems
+
+
+def _fetch(url: str) -> str:
+    from urllib.request import urlopen
+    with urlopen(url, timeout=60) as resp:  # noqa: S310 — our own site, http(s) only
+        return resp.read().decode("utf-8", errors="replace")
+
+
+def page_checks(sqlite_path: Path, expected: list[dict], base_url: str) -> dict:
+    """One Novato and one Board Decision page (the first new Decision of each body in expected order) must show
+    each planned member with their vote label."""
+    con = sqlite3.connect(f"file:{sqlite_path}?mode=ro", uri=True)
+    try:
+        names = dict(con.execute("SELECT id, search_label FROM nodes WHERE type = 'Person'"))
+    finally:
+        con.close()
+    out = {}
+    for prefix in ("vev-novato-city-council-", "vev-marin-county-bos-"):
+        target = next((e["end_id"] for e in expected if e["end_id"].startswith(prefix)), None)
+        if target is None:
+            out[prefix] = {"problems": [f"no new {prefix} Decision in the expected set"]}
+            continue
+        url = f"{base_url.rstrip('/')}/decision/{target}"
+        votes = [(names.get(e["start_id"], e["start_id"]), e["vote"]) for e in expected if e["end_id"] == target]
+        try:
+            problems = page_problems(_fetch(url), votes)
+        except Exception as exc:
+            problems = [f"fetching {url} failed: {exc!r}"]
+        out[prefix] = {"url": url, "votes": len(votes), "problems": problems}
+    return out
+
+
+def _expected(state_dir: Path) -> list[dict]:
+    return [json.loads(x) for x in (Path(state_dir) / "plan" / "expected-edges.jsonl").read_text().splitlines()
+            if x.strip()]
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    sub = parser.add_subparsers(dest="cmd", required=True)
+    ap = sub.add_parser("apply")
+    ap.add_argument("--state-dir", type=Path, required=True)
+    ap.add_argument("--approve", required=True)
+    ap.add_argument("--canonical-root", type=Path, required=True)
+    mm = sub.add_parser("mark-mapping-review", help="state AWAITING_MAPPING_REVIEW (the batch is out)")
+    mm.add_argument("--state-dir", type=Path, required=True)
+    pp = sub.add_parser("prepare")
+    for flag in ("--state-dir", "--bundle", "--plan", "--sheet", "--review", "--bake-check"):
+        pp.add_argument(flag, type=Path, required=True)
+    bc = sub.add_parser("bake-check", help="check a staging bake of the candidate (+ pages from a local server)")
+    for flag in ("--sqlite", "--bundle", "--plan", "--out"):
+        bc.add_argument(flag, type=Path, required=True)
+    bc.add_argument("--base-url", required=True)
+    cp = sub.add_parser("check-published")
+    cp.add_argument("--state-dir", type=Path, required=True)
+    cp.add_argument("--sqlite", type=Path, required=True)
+    cp.add_argument("--base-url", required=True)
+    args = parser.parse_args(argv)
+    if args.cmd == "mark-mapping-review":
+        set_state(args.state_dir, "AWAITING_MAPPING_REVIEW")
+        return 0
+    if args.cmd == "prepare":
+        try:
+            sha = prepare(args.state_dir, bundle=args.bundle, plan=args.plan, sheet=args.sheet, review=args.review,
+                          bake_check=args.bake_check)
+        except ApplyRefused as exc:
+            print(f"REFUSED: {exc}", file=sys.stderr)
+            return 1
+        print(f"AWAITING_APPLY — approval sha256 {sha}")
+        return 0
+    if args.cmd == "bake-check":
+        ops = json.loads((args.plan / "ops.json").read_text())
+        expected = expected_edges(ops)
+        new = [json.loads(x) for x in (args.bundle / "nodes.jsonl").read_text().splitlines() if x.strip()]
+        result = {"problems": bake_problems(args.sqlite, new, expected, scope=SCOPE),
+                  "pages": page_checks(args.sqlite, expected, args.base_url)}
+        result["problems"] += [f"{k}: {p}" for k, v in result["pages"].items() for p in v["problems"]]
+        args.out.write_text(json.dumps(result, indent=1, sort_keys=True) + "\n")
+        print(f"bake check: {len(result['problems'])} problem(s)")
+        return 0 if not result["problems"] else 1
+    if args.cmd == "check-published":
+        if get_state(args.state_dir) not in ("APPLIED", "PUBLISHED_VERIFIED"):
+            print(f"REFUSED: state is {get_state(args.state_dir)}, not APPLIED", file=sys.stderr)
+            return 1
+        expected = _expected(args.state_dir)
+        problems = check_published_edges(args.sqlite, expected, scope=SCOPE)
+        pages = page_checks(args.sqlite, expected, args.base_url)
+        problems += [f"{k}: {p}" for k, v in pages.items() for p in v["problems"]]
+        for p in problems:
+            print(f"PROBLEM: {p}", file=sys.stderr)
+        if problems:
+            return 1
+        set_state(args.state_dir, "PUBLISHED_VERIFIED", sqlite_sha256=_sha_bytes(Path(args.sqlite).read_bytes()),
+                  pages={k: v["url"] for k, v in pages.items()})
+        print(f"PUBLISHED_VERIFIED — {len(expected)} edges, pages {[v['url'] for v in pages.values()]}")
+        return 0
+    try:
+        from neo4j_target import open_driver
+        uri = os.environ.get("NEO4J_URI")
+        result = run_apply(args.state_dir, approve=args.approve, canonical_root=args.canonical_root, uri=uri,
+                           database=os.environ.get("NEO4J_DATABASE", "neo4j"),
+                           driver_factory=lambda: open_driver(uri, auth=(os.environ["NEO4J_USER"],
+                                                                         os.environ["NEO4J_PASSWORD"])))
+    except (ApplyRefused, RunLockHeld) as exc:
+        print(f"REFUSED: {exc}", file=sys.stderr)
+        return 1
+    print(result)
+    return 0 if result == "APPLIED" else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
