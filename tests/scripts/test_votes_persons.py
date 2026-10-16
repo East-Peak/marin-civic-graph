@@ -226,6 +226,15 @@ class TestResolver:
         r = Resolver(drafts, items, answers, rows, _confirm_all(rows), as_of="2026-10-14")
         assert r.resolve(BODY, "BIRCH", "2020-06-09") == ("held", "unknown_key")
 
+    def test_a_bound_end_alone_is_out_of_term_on_its_date(self):
+        birch = {**BIRCH, "end_kind": "bound"}
+        drafts = _drafts(ALDER_A, ALDER_B, birch, CEDAR)
+        items, answers = _confirmed(drafts)
+        rows = _world()[3]
+        r = Resolver(drafts, items, answers, rows, _confirm_all(rows), as_of="2026-10-14")
+        assert r.resolve(BODY, "BIRCH", "2021-09-15") == ("held", "out_of_term")
+        assert r.resolve(BODY, "BIRCH", "2021-09-14")[0] == "ok"
+
     def test_nearest_term(self):
         r = _resolver()
         assert r.nearest_term(BODY, "BIRCH", "2021-10-01")["draft_id"] == "x-birch"
@@ -317,6 +326,44 @@ class TestValidateMapping:
                                    status="verified_no_person")]
         assert any("matches baseline Person person-o-dell-di" in p for p in _validate(rows, drafts, items, answers))
 
+    def test_review_items_are_unique(self):
+        drafts, items, answers, rows = _world()
+        rows[2] = {**rows[2], "item": "2"}
+        assert any("item 2 is used by 2 rows" in p for p in _validate(rows, drafts, items, answers))
+        with pytest.raises(MappingError, match="item 2"):
+            render_mapping_batch("map-001", rows, NODES, EDGES, drafts=drafts, body_org=BODY_ORG,
+                                 body_filing=BODY_FILING, input_hashes=HASHES)
+
+    def test_the_seat_path_is_typed(self):
+        drafts, items, answers, rows = _world()
+        relabeled = [{**n, "labels": ["Organization"]} if n["id"] == "seat-x-1" else n for n in NODES]
+        assert any("not a seat of body-x" in p for p in _validate(rows, drafts, items, answers, nodes=relabeled))
+        no_seat = [e for e in EDGES if e["start_id"] != "seatservice-ann-alder-x-2021" or e["type"] != "FOR_SEAT"]
+        assert any("not a seat of body-x" in p for p in _validate(rows, drafts, items, answers, edges=no_seat))
+
+    @pytest.mark.parametrize("pid", [None, "", 7])
+    def test_a_new_person_needs_an_id(self, pid):
+        drafts, items, answers, rows = _world()
+        rows[3] = {**rows[3], "person_id": pid}
+        assert any("x-cedar: person_id" in p for p in _validate(rows, drafts, items, answers))
+        rows[3] = {k: v for k, v in rows[3].items() if k != "person_id"}
+        assert any("x-cedar: person_id" in p for p in _validate(rows, drafts, items, answers))
+
+    def test_provenance_kinds_are_status_specific_and_every_entry_is_checked(self):
+        drafts, items, answers, rows = _world()
+        extra = [{**r, "provenance": r["provenance"] + [{"kind": "filing", "filing_id": "does-not-exist"}]}
+                 if r["item"] == "4" else r for r in rows]
+        assert any("x-cedar: provenance kind 'filing' is not allowed for verified_no_person" in p
+                   for p in _validate(extra, drafts, items, answers))
+        missing = [{**r, "status": "missing_mapping", "person_id": None,
+                    "provenance": [{"kind": "filing", "filing_id": "does-not-exist"}]} if r["item"] == "3" else r
+                   for r in rows]
+        assert any("x-birch: filing does-not-exist" in p for p in _validate(missing, drafts, items, answers))
+        searched = [{**r, "provenance": [FILING, {"kind": "searched", "patterns": ["birch"]}]} if r["item"] == "3"
+                    else r for r in rows]
+        assert any("x-birch: provenance kind 'searched' is not allowed for mapped" in p
+                   for p in _validate(searched, drafts, items, answers))
+
     def test_alternates_must_exist(self):
         drafts, items, answers, rows = _world()
         rows[0] = {**rows[0], "alternates": ["person-ghost"]}
@@ -332,10 +379,33 @@ class TestValidateMapping:
 
 
 class TestBatch:
-    def _md(self, rows=None):
-        rows = rows or _world()[3]
-        return render_mapping_batch("map-001", rows, NODES, EDGES, body_org=BODY_ORG, body_filing=BODY_FILING,
-                                    input_hashes=HASHES)
+    def _md(self, rows=None, nodes=NODES, hashes=HASHES):
+        drafts, _, _, world = _world()
+        return render_mapping_batch("map-001", rows or world, nodes, EDGES, drafts=drafts, body_org=BODY_ORG,
+                                    body_filing=BODY_FILING, input_hashes=hashes)
+
+    def test_overlap_wording_follows_the_coverage_rule(self):
+        # Alder A ends `bound` on 2021-01-05: a service starting that day does not overlap it
+        nodes = [{**n, "properties": {**n["properties"], "started_at": "2021-01-05"}}
+                 if n["id"] == "seatservice-ann-alder-x-2021" else n for n in NODES]
+        _, _, _, rows = _world()
+        rows[0] = {**rows[0], "provenance": [SEAT]}
+        md, _ = self._md(rows, nodes=nodes)
+        block = md.split("### 1.")[1].split("### 2.")[0]
+        assert "does not overlap this term" in block
+        block2 = md.split("### 2.")[1].split("### 3.")[0]
+        assert "overlaps this term" in block2 and "does not" not in block2
+
+    @pytest.mark.parametrize("name", ["mapping.json", "drafts.json", "batch-001.json", "answers-001.txt"])
+    def test_every_binding_input_is_required(self, name):
+        with pytest.raises(MappingError, match=name):
+            self._md(hashes={k: v for k, v in HASHES.items() if k != name})
+        _, batch = self._md()
+        stripped = {**batch, "inputs": {k: v for k, v in batch["inputs"].items() if k != name}}
+        with pytest.raises(MappingError, match=name):
+            load_mapping_answers("batch map-001\n1 confirm\n", stripped, HASHES)
+        with pytest.raises(MappingError, match=f"{name} changed"):
+            load_mapping_answers("batch map-001\n1 confirm\n", batch, {**HASHES, name: "f" * 64})
 
     def test_render_lists_each_row_with_evidence_in_words(self):
         md, batch = self._md()

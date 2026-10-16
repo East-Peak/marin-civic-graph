@@ -23,12 +23,16 @@ exclusive (the member was gone by then); an open term runs through the ledger's 
 from __future__ import annotations
 
 import re
-from collections import defaultdict
+from datetime import date, timedelta
+from collections import Counter, defaultdict
 
 from votes_roster import RosterError, parse_answers
 
 STATUSES = ("mapped", "missing_mapping", "verified_no_person")
 DIRECT = ("seat_service", "filing")
+KINDS = {"mapped": (*DIRECT, "same_member"), "missing_mapping": (*DIRECT, "same_member"),
+         "verified_no_person": ("searched",)}
+BINDING_INPUTS = ("mapping.json", "drafts.json", "batch-001.json", "answers-001.txt")
 TERM_FIELDS = (("key", "key"), ("member", "member"), ("term_start", "start"), ("term_end", "end"))
 
 
@@ -59,11 +63,12 @@ def _norm(text: str) -> str:
 
 def _seat_body_orgs(nodes: list[dict], edges: list[dict]) -> dict[str, set[str]]:
     """SeatService id → the orgs its Seat sits at (SeatService -FOR_SEAT-> Seat -AT_INSTITUTION-> org)."""
+    labels = {n["id"]: set(n["labels"]) for n in nodes}
     seat_of, inst = defaultdict(set), defaultdict(set)
     for e in edges:
-        if e["type"] == "FOR_SEAT":
+        if e["type"] == "FOR_SEAT" and "Seat" in labels.get(e["end_id"], set()):
             seat_of[e["start_id"]].add(e["end_id"])
-        elif e["type"] == "AT_INSTITUTION":
+        elif e["type"] == "AT_INSTITUTION" and "Seat" in labels.get(e["start_id"], set()):
             inst[e["start_id"]].add(e["end_id"])
     return {sid: {org for seat in seats for org in inst[seat]} for sid, seats in seat_of.items()}
 
@@ -103,6 +108,11 @@ class _Evidence:
         return [], _filing_names_body(self.props(fid), self.body_filing.get(body))
 
 
+def _duplicate_items(rows: list[dict]) -> list[str]:
+    counts = Counter(r.get("item") for r in rows)
+    return [f"review item {item} is used by {n} rows" for item, n in sorted(counts.items(), key=str) if n > 1]
+
+
 def _body_proved(row: dict, ev: _Evidence) -> bool:
     return any(ev.check(p, row) == ([], True) for p in row.get("provenance", []) if p.get("kind") in DIRECT)
 
@@ -127,6 +137,7 @@ def validate_mapping(rows: list[dict], drafts: dict, items: list[dict], answers:
             problems.append(f"{draft_id} has {len(rs)} mapping rows")
         if draft_id not in terms:
             problems.append(f"{draft_id} is not a confirmed term")
+    problems += _duplicate_items(rows)
     rows_by_draft = {r["draft_id"]: r for r in rows}
     for r in rows:
         did, pid = r["draft_id"], r.get("person_id")
@@ -144,9 +155,15 @@ def validate_mapping(rows: list[dict], drafts: dict, items: list[dict], answers:
             if "Person" not in ev.labels(alt):
                 problems.append(f"{did}: alternate {alt} is not a baseline Person")
         for p in r.get("provenance", []):
-            if p.get("kind") not in (*DIRECT, "same_member", "searched"):
-                problems.append(f"{did}: provenance kind {p.get('kind')!r} is not allowed")
+            if p.get("kind") not in KINDS[status]:
+                problems.append(f"{did}: provenance kind {p.get('kind')!r} is not allowed for {status}")
         if status == "missing_mapping":
+            for p in r.get("provenance", []):
+                if p.get("kind") in DIRECT:
+                    problems += ev.check(p, {**r, "person_id": pid})[0]
+            continue
+        if not isinstance(pid, str) or not pid:
+            problems.append(f"{did}: person_id {pid!r} must be a node id")
             continue
         if status == "verified_no_person":
             if pid in ev.nodes:
@@ -179,8 +196,6 @@ def validate_mapping(rows: list[dict], drafts: dict, items: list[dict], answers:
                                     f"member and Person")
                 else:
                     proved = True
-            elif p.get("kind") == "searched":
-                problems.append(f"{did}: a mapped row cannot cite a search")
         if not proved and not (r.get("reviewer_basis") or "").strip():
             problems.append(f"{did}: nothing proves the body {r['body']} and there is no reviewer_basis")
     return problems
@@ -194,7 +209,8 @@ class Resolver:
         self.as_of = as_of
         confirmed = {a["item"] for a in mapping_answers if a["option"] == "confirm"}
         self.person = {r["draft_id"]: r["person_id"] for r in rows
-                       if r["item"] in confirmed and r.get("status") in ("mapped", "verified_no_person")}
+                       if r["item"] in confirmed and r.get("status") in ("mapped", "verified_no_person")
+                       and isinstance(r.get("person_id"), str) and r["person_id"]}
         self.terms = defaultdict(list)
         for draft_id, (body, term) in sorted(_confirmed_terms(drafts, items, answers).items()):
             self.terms[(body, term["key"])].append(term)
@@ -223,17 +239,25 @@ class Resolver:
 
 
 def _days(a: str, b: str) -> int:
-    from datetime import date
     return (date.fromisoformat(a) - date.fromisoformat(b)).days
 
 
-def _evidence_line(p: dict, row: dict, rows_by_draft: dict, ev: _Evidence) -> str:
+def _last_day(term: dict) -> str:
+    """The last date a term covers (covers()'s rule), or 9999 for an open term."""
+    end = term.get("end")
+    if end is None:
+        return "9999"
+    return (date.fromisoformat(end) - timedelta(days=1)).isoformat() if term.get("end_kind") == "bound" else end
+
+
+def _evidence_line(p: dict, row: dict, rows_by_draft: dict, ev: _Evidence, term: dict) -> str:
     body = row["body"]
     if p["kind"] == "seat_service":
         sid = p["seat_service_id"]
         props = ev.props(sid)
         start, end = props.get("started_at") or "?", props.get("ended_at") or "open"
-        overlap = start <= (row["term_end"] or "9999") and row["term_start"] <= (props.get("ended_at") or "9999")
+        overlap = (props.get("started_at") or "0000") <= _last_day(term) and \
+            term["start"] <= (props.get("ended_at") or "9999")
         problems, proves = ev.check(p, row)
         tail = f"and is a seat of {body}" if proves else f"— PROBLEM: {'; '.join(problems)}"
         return (f"SeatService {sid} ({start} → {end}, {'overlaps' if overlap else 'does not overlap'} this term) "
@@ -255,10 +279,21 @@ def _evidence_line(p: dict, row: dict, rows_by_draft: dict, ev: _Evidence) -> st
     return f"No Person node matches {pats}; a new Person {row['person_id']} is created"
 
 
-def render_mapping_batch(batch_id: str, rows: list[dict], nodes: list[dict], edges: list[dict], *,
+def _require_binding(hashes: dict[str, str], what: str) -> None:
+    missing = [n for n in BINDING_INPUTS if not hashes.get(n)]
+    if missing:
+        raise MappingError(f"{what} lacks the hash of {', '.join(missing)}")
+
+
+def render_mapping_batch(batch_id: str, rows: list[dict], nodes: list[dict], edges: list[dict], *, drafts: dict,
                          body_org: dict[str, str], body_filing: dict[str, tuple[str, str]],
                          input_hashes: dict[str, str]) -> tuple[str, dict]:
     """The review batch for Stuart (markdown) and its machine-readable form, bound to the inputs it was drawn from."""
+    _require_binding(input_hashes, "the batch")
+    dup = _duplicate_items(rows)
+    if dup:
+        raise MappingError("; ".join(dup))
+    term_of = {t["draft_id"]: t for d in drafts.values() for t in d["terms"]}
     ev = _Evidence(nodes, edges, body_org, body_filing)
     rows_by_draft = {r["draft_id"]: r for r in rows}
     persons_of = defaultdict(set)
@@ -282,7 +317,8 @@ def render_mapping_batch(batch_id: str, rows: list[dict], nodes: list[dict], edg
         else:
             lines.append(f"- Person: `{r['person_id']}` ({name(r['person_id'])})"
                          + (" — new node" if r["status"] == "verified_no_person" else ""))
-        lines += [f"- {_evidence_line(p, r, rows_by_draft, ev)}" for p in r.get("provenance", [])]
+        term = term_of.get(r["draft_id"], {"start": r["term_start"], "end": r["term_end"], "end_kind": None})
+        lines += [f"- {_evidence_line(p, r, rows_by_draft, ev, term)}" for p in r.get("provenance", [])]
         if r["status"] == "mapped" and not _body_proved(r, ev) and not any(
                 p.get("kind") == "same_member" for p in r.get("provenance", [])):
             lines.append(f"- **WEAK — rests on your judgment:** {r.get('reviewer_basis') or '(no basis given)'}")
@@ -302,6 +338,7 @@ def render_mapping_batch(batch_id: str, rows: list[dict], nodes: list[dict], edg
 
 def load_mapping_answers(text: str, batch: dict, current_hashes: dict[str, str]) -> list[dict]:
     """The review answers, only if every input the batch was drawn from is byte-for-byte what it was."""
+    _require_binding(batch.get("inputs", {}), f"batch {batch.get('batch')}")
     for name, sha in sorted(batch["inputs"].items()):
         if current_hashes.get(name) != sha:
             raise MappingError(f"{name} changed since batch {batch['batch']} was rendered; re-render and re-review")
