@@ -231,7 +231,10 @@ def test_stage_captures_meetings_and_stages_refetchers_then_awaits_load_approval
     state = _state(root)
     assert state["status"] == "awaiting_load_approval"
     assert [h["status"] for h in state["history"]] == ["staging", "staged", "awaiting_load_approval"]
-    assert world.calls[0] == ["py", "scripts/ingest.py", "--all", "--registry", "registry/granicus-sources.yaml"]
+    run = root / f"data/ingest-runs/{RUN}"
+    assert world.calls[0] == ["py", str(rw.SCRIPTS / "ingest.py"), "--root", str(root), "--all",
+                              "--registry", "registry/granicus-sources.yaml", "--robots-cache", str(run / "robots.json"),
+                              "--request-log", str(run / "logs/requests-granicus.jsonl")]
     run_dir = root / f"data/ingest-runs/{RUN}"
     for name, script in STAGED_SCRIPTS.items():
         assert ["py", f"scripts/{script}", *rw.STAGED_SOURCES[name].args,

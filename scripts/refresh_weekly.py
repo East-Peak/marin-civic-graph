@@ -57,7 +57,8 @@ from neo4j_target import UnsafeNeo4jTarget, check_target  # noqa: E402
 from net_retry import retry_transient  # noqa: E402
 from run_lock import OWNER_ENV, RunLockHeld, run_lock  # noqa: E402
 
-ROOT = Path(__file__).resolve().parent.parent
+SCRIPTS = Path(__file__).resolve().parent
+ROOT = SCRIPTS.parent
 RUNS_DIR = Path("data/ingest-runs")
 LEDGER = RUNS_DIR / "ledger.jsonl"  # ingest.py's run ledger (I1)
 EXPORTS = Path("data/exports")
@@ -69,6 +70,10 @@ DATA_BRANCH = "main"
 LOAD_DATABASE = "neo4j"  # the loaders write to the server's default database
 PUBLISHED_ARTIFACTS = ("public-substrate.sqlite", "status_manifest.json", "catalog.json", "substrate-bake-report.json")
 MEETING_REGISTRIES = ("granicus", "civicplus", "drupal", "proudcity")  # registry/<name>-sources.yaml
+SAVED_PAGE_SCHEDULE = "saved-page"  # never fetched (robots.txt says no); the operator saves the page by hand
+SAVED_PAGE_DIR = Path("data/raw/manual")  # <YYYY-MM-DD>/<adapter>/<source id>.html; never moved or deleted
+SAVED_PAGE_FRESH_DAYS = 14
+SAVED_PAGE_RUNBOOK = "docs/runbooks/saved-pages.md"
 MIN_FREE_BYTES = 5 * 1024**3  # live export + staged bake + a backup of the published one
 
 # Wall-clock ceiling, in seconds, for each external step; one that outlives it is killed and
@@ -226,6 +231,7 @@ class Context:
     now: Callable[[], datetime] = lambda: datetime.now(timezone.utc)
     free_bytes: Callable[[Path], int] = lambda path: shutil.disk_usage(path).free
     meeting_registries: tuple[str, ...] = MEETING_REGISTRIES
+    staged_sources: Mapping[str, StagedSource] = field(default_factory=lambda: dict(STAGED_SOURCES))
     ping: Callable[[str, str], None] = lambda url, body: http_ping(url, body)
     netfile_fetch: Callable[[str], dict] = lambda url: cf_export_due.fetch_json(url)
     sleep: Callable[[float], None] = lambda seconds: time.sleep(seconds)
@@ -431,35 +437,128 @@ def _latest_capture(root: Path, source_id: str) -> Path | None:
     return captures[-1] if captures else None
 
 
+def _ingest(ctx: Context, run_id: str, name: str, *args: str) -> tuple[Result, list[dict], dict[str, dict]]:
+    """One ingest.py step under this run's root: (result, ledger history, this step's verdicts by source)."""
+    before = _read_ledger(ctx.root)
+    result = _step(ctx, run_id, name, [ctx.python, str(SCRIPTS / "ingest.py"), "--root", str(ctx.root), *args])
+    appended = _read_ledger(ctx.root)[len(before):]
+    # First-run baseline seeds (I5a) are history, not this run's verdicts.
+    history = before + [e for e in appended if e["run_at"].startswith("seed:")]
+    return result, history, {e["source_id"]: e for e in appended if not e["run_at"].startswith("seed:")}
+
+
+def _meeting_source(ctx: Context, sid: str, registry: str, entry: dict, history: list[dict]) -> dict:
+    last_good = next((e["rows"] for e in reversed(history) if e["source_id"] == sid and e["ok"]), None)
+    source = {"kind": "meetings", "registry": registry, "ok": entry["ok"], "rows": entry["rows"],
+              "last_good_rows": last_good, "reasons": entry["reasons"]}
+    if entry.get("outcome"):  # robots_disallowed / robots_unavailable: the gate refused a request
+        source.update(status=entry["outcome"], robots=entry.get("robots"))
+    capture = _latest_capture(ctx.root, sid) if source["ok"] else None
+    if capture is not None:
+        source["capture"] = {"path": capture.relative_to(ctx.root).as_posix(), "sha256": _sha256(capture)}
+    elif source["ok"]:
+        source.update(ok=False, reasons=["passed its floors but no capture file was written"])
+    return source
+
+
+def _no_verdict(name: str, result: Result) -> str:
+    return (f"no verdict recorded; {name} {_failure(name, result)}" if result.timed_out_after is not None
+            else f"no verdict recorded; the adapter errored (logs/{name}.log)")
+
+
 def _stage_meetings(ctx: Context, run_id: str, registry: str) -> dict[str, dict]:
-    """`ingest.py --all` for one registry; verdicts come from the ledger lines this run appended."""
+    """`ingest.py --all` for one registry; verdicts come from the ledger lines this run appended.
+
+    Every request goes through the robots gate; this run's ingest.py processes share one robots.txt
+    cache (<run>/robots.json, so each host's is fetched once) and log every request decision.
+    """
     registry_path = f"registry/{registry}-sources.yaml"
     expected = [s["id"] for s in resolve_sources(load_sources(ctx.root / registry_path), all_sources=True)]
     if not expected:
         return {}
-    before = _read_ledger(ctx.root)
+    run = run_dir(ctx.root, run_id)
     name = f"ingest-{registry}"
-    result = _step(ctx, run_id, name, [ctx.python, "scripts/ingest.py", "--all", "--registry", registry_path])
-    unfinished = (f"no verdict recorded; {name} {_failure(name, result)}" if result.timed_out_after is not None
-                  else f"no verdict recorded; the adapter errored (logs/{name}.log)")
-    appended = _read_ledger(ctx.root)[len(before):]
-    # First-run baseline seeds (I5a) are history, not this run's verdicts.
-    history = before + [e for e in appended if e["run_at"].startswith("seed:")]
-    verdicts = {e["source_id"]: e for e in appended if not e["run_at"].startswith("seed:")}
+    result, history, verdicts = _ingest(ctx, run_id, name, "--all", "--registry", registry_path,
+                                        "--robots-cache", str(run / "robots.json"),
+                                        "--request-log", str(run / "logs" / f"requests-{registry}.jsonl"))
+    unfinished = {"ok": False, "rows": None, "reasons": [_no_verdict(name, result)]}
+    return {sid: _meeting_source(ctx, sid, registry, verdicts.get(sid, unfinished), history) for sid in expected}
 
-    sources = {}
-    for sid in expected:
-        last_good = next((e["rows"] for e in reversed(history) if e["source_id"] == sid and e["ok"]), None)
-        entry = verdicts.get(sid, {"ok": False, "rows": None, "reasons": [unfinished]})
-        source = {"kind": "meetings", "registry": registry, "ok": entry["ok"], "rows": entry["rows"],
-                  "last_good_rows": last_good, "reasons": entry["reasons"]}
-        capture = _latest_capture(ctx.root, sid) if source["ok"] else None
-        if capture is not None:
-            source["capture"] = {"path": capture.relative_to(ctx.root).as_posix(), "sha256": _sha256(capture)}
-        elif source["ok"]:
-            source.update(ok=False, reasons=["passed its floors but no capture file was written"])
-        sources[sid] = source
-    return sources
+
+def _newest_saved_page(root: Path, adapter: str, sid: str) -> tuple[Path, str] | None:
+    pages = sorted((p.parent.parent.name, p) for p in (root / SAVED_PAGE_DIR).glob(f"*/{adapter}/{sid}.html")
+                   if re.fullmatch(r"\d{4}-\d{2}-\d{2}", p.parent.parent.name))
+    return (pages[-1][1], pages[-1][0]) if pages else None
+
+
+def _saved_page_history(root: Path, run_id: str, sid: str, sha: str) -> set[str]:
+    """What earlier runs did with these exact bytes: {"loaded"} and/or {"rejected"} (by their floors)."""
+    seen = set()
+    for path in sorted((root / RUNS_DIR).glob("*/state.json")):
+        if path.parent.name >= run_id:
+            continue
+        state = json.loads(path.read_text(encoding="utf-8"))
+        source = state["sources"].get(sid) or {}
+        if source.get("saved_page", {}).get("sha256") != sha:
+            continue
+        if sid in state.get("loaded", []):
+            seen.add("loaded")
+        elif source["saved_page"].get("verdict") == "rejected":
+            seen.add("rejected")
+    return seen
+
+
+def _stage_saved_pages(ctx: Context, run_id: str, registry: str) -> tuple[dict[str, dict], dict[str, dict]]:
+    """(sources, saved_pages) for this registry's saved-page sources; nothing is fetched.
+
+    Only an `accepted` page becomes a source (captured through `ingest.py --saved-page`, then loaded like
+    a fetch). missing / stale / unchanged / rejected are informational: they appear in the digest and
+    can fail neither the run nor the heartbeat. The saved files are only read.
+    """
+    registry_path = f"registry/{registry}-sources.yaml"
+    sources, pages = {}, {}
+    today = ctx.now().date()
+    for config in load_sources(ctx.root / registry_path):
+        if config.get("schedule") != SAVED_PAGE_SCHEDULE:
+            continue
+        sid = config["id"]
+        newest = _newest_saved_page(ctx.root, config["adapter"], sid)
+        if newest is None:
+            pages[sid] = {"outcome": "missing", "url": config["url"], "adapter": config["adapter"]}
+            continue
+        path, saved_on = newest
+        sha = _sha256(path)
+        page = {"url": config["url"], "adapter": config["adapter"], "path": path.relative_to(ctx.root).as_posix(), "saved_on": saved_on,
+                "age_days": (today - datetime.strptime(saved_on, "%Y-%m-%d").date()).days, "sha256": sha}
+        seen = _saved_page_history(ctx.root, run_id, sid, sha)
+        if page["age_days"] > SAVED_PAGE_FRESH_DAYS:
+            pages[sid] = {"outcome": "stale", **page}
+        elif "loaded" in seen:
+            pages[sid] = {"outcome": "unchanged", **page}
+        elif "rejected" in seen:
+            pages[sid] = {"outcome": "rejected", **page}
+        else:
+            pages[sid] = {"outcome": "accepted", **page}
+            sources[sid] = _ingest_saved_page(ctx, run_id, registry, config, path, page)
+    return sources, pages
+
+
+def _ingest_saved_page(ctx: Context, run_id: str, registry: str, config: dict, path: Path, page: dict) -> dict:
+    sid, name = config["id"], f"saved-{config['id']}"
+    result, history, verdicts = _ingest(ctx, run_id, name, "--source", sid,
+                                        "--registry", f"registry/{registry}-sources.yaml", "--saved-page", str(path))
+    entry = verdicts.get(sid)
+    verdict = "no verdict" if entry is None else "passed" if entry["ok"] else "rejected"
+    source = _meeting_source(ctx, sid, registry, entry or {"ok": False, "rows": None,
+                                                           "reasons": [_no_verdict(name, result)]}, history)
+    source["saved_page"] = {"path": page["path"], "sha256": page["sha256"], "saved_on": page["saved_on"],
+                            "verdict": verdict}
+    if source.get("capture"):
+        captured = json.loads((ctx.root / source["capture"]["path"]).read_text(encoding="utf-8")).get("raw_sha256")
+        if captured != page["sha256"]:
+            source.pop("capture")
+            source.update(ok=False, reasons=[f"the newest capture ({captured}) is not the saved page ({page['sha256']})"])
+    return source
 
 
 def _stage_refetcher(ctx: Context, run_id: str, name: str, src: StagedSource) -> dict:
@@ -505,9 +604,17 @@ def _stage(ctx: Context, state: dict) -> dict:
     if reasons:
         return _fail(ctx, state, "preflight failed; nothing was fetched")
 
+    state["saved_pages"] = {}
     for registry in ctx.meeting_registries:
         state["sources"].update(_stage_meetings(ctx, run_id, registry))
-    for name, src in STAGED_SOURCES.items():
+        saved_sources, saved_pages = _stage_saved_pages(ctx, run_id, registry)
+        state["sources"].update(saved_sources)
+        state["saved_pages"].update(saved_pages)
+    robots = run_dir(ctx.root, run_id) / "robots.json"
+    if robots.is_file():  # what each host's robots.txt said this run (bodies stay in robots.json)
+        state["robots"] = {origin: {k: v for k, v in entry.items() if k != "body"}
+                           for origin, entry in json.loads(robots.read_text(encoding="utf-8")).items()}
+    for name, src in ctx.staged_sources.items():
         state["sources"][name] = _stage_refetcher(ctx, run_id, name, src)
 
     if not any(s["ok"] for s in state["sources"].values()):
@@ -1142,6 +1249,7 @@ def render_digest(state: dict) -> str:
     failures = [(sid, s) for sid, s in sources if not s["ok"]]
     if failures:
         lines += ["## Failures", "", *(f"- **{sid}**: {'; '.join(s['reasons'])}" for sid, s in failures), ""]
+    lines += _saved_pages_digest(state)
     if state.get("bake"):
         totals, sqlite = state["bake"].get("totals") or {}, state["bake"]["sqlite"]
         lines += ["## Bake (data/exports/staging/)", "",
@@ -1171,6 +1279,25 @@ def render_digest(state: dict) -> str:
     return "\n".join(lines)
 
 
+def _saved_pages_digest(state: dict) -> list[str]:
+    pages = sorted((state.get("saved_pages") or {}).items())
+    if not pages:
+        return []
+    lines = ["## Saved pages", "",
+             f"robots.txt disallows fetching these listings, so they are saved by hand ({SAVED_PAGE_RUNBOOK}). "
+             "None of them fails the run.", "",
+             "| Source | Outcome | Newest saved page | Age (days) | Listing to save |", "|---|---|---|---:|---|"]
+    lines += [f"| {sid} | {p['outcome']} | {p.get('saved_on', '–')} | {_num(p.get('age_days'))} | {p['url']} |"
+              for sid, p in pages]
+    due = [(sid, p) for sid, p in pages if p["outcome"] == "missing" or p["age_days"] > SAVED_PAGE_FRESH_DAYS]
+    if due:
+        lines.append("")
+    lines += [f"- save a fresh page for **{sid}**: open {p['url']} and save it (Page Source / \"HTML Only\") as "
+              f"`{(SAVED_PAGE_DIR / state['run_id'][:10] / p['adapter'] / f'{sid}.html').as_posix()}`"
+              for sid, p in due]
+    return lines + [""]
+
+
 def latest_run_id(root: Path) -> str | None:
     runs = sorted(path.parent.name for path in (root / RUNS_DIR).glob("*/state.json"))
     return runs[-1] if runs else None
@@ -1197,6 +1324,7 @@ def _summary(state: dict) -> str:
     lines = [f"run {state['run_id']}: {state['status']}"]
     lines += [f"  {sid}: {'ok' if s['ok'] else 'FAILED — ' + '; '.join(s['reasons'])}"
               for sid, s in state["sources"].items()]
+    lines += [f"  {sid}: saved page {p['outcome']}" for sid, p in sorted((state.get("saved_pages") or {}).items())]
     if state.get("error"):
         lines.append(f"  error: {state['error']}")
     if state.get("snapshot", {}).get("ok") is False:

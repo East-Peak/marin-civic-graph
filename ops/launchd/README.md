@@ -131,6 +131,12 @@ That year then shows as a coverage warning instead of a daily demand, and comes 
 after `confirmed` (update the date when you have checked again). A file you later land for that year is still
 judged on its own: a bad one is due.
 
+## Saved pages (Granicus)
+
+The five Granicus listings disallow every agent in robots.txt, so the weekly run never fetches them;
+save them by hand when the digest's "Saved pages" table asks (docs/runbooks/saved-pages.md). A
+missing or stale saved page never fails the run.
+
 ## Installing (operator only)
 
 ```sh
