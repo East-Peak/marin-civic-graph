@@ -389,3 +389,31 @@ def test_a_truncated_robots_reply_is_unavailable_not_a_crash(tmp_path):
         httpd.shutdown()
     assert reply.status is None and reply.error == "IncompleteRead"
     assert error_body.status is None and error_body.error
+
+
+# --- review round 2 ---------------------------------------------------------------------
+
+
+def test_a_robots_redirect_hop_to_a_host_with_a_known_crawl_delay_waits_for_it(tmp_path):
+    answers = {f"{HOST}/robots.txt": (200, "User-agent: *\nCrawl-delay: 15\n"),
+               "https://other.example.test/robots.txt": (302, None, f"{HOST}/policies/robots.txt"),
+               f"{HOST}/policies/robots.txt": (404, "")}
+    gate, robots, clock = _gate(tmp_path, answers)
+    gate.admit(f"{HOST}/meetings")  # sent at 1015
+    gate.admit("https://other.example.test/x")
+    hop = next(e for e in _log(tmp_path) if e["url"] == f"{HOST}/policies/robots.txt")
+    assert hop["monotonic"] >= 1015 + 15
+
+
+def test_every_host_on_a_robots_redirect_chain_is_answered_once(tmp_path):
+    answers = {"https://a.example.test/robots.txt": (301, None, "https://b.example.test/robots.txt"),
+               "https://b.example.test/robots.txt": (301, None, "https://c.example.test/robots.txt"),
+               "https://c.example.test/robots.txt": (200, "User-agent: *\nDisallow: /no\n")}
+    gate, robots, _ = _gate(tmp_path, answers)
+    gate.admit("https://a.example.test/x")
+    gate.admit("https://b.example.test/x")
+    gate.admit("https://c.example.test/x")
+    with pytest.raises(rg.RobotsDisallowed):
+        gate.admit("https://b.example.test/no")
+    assert robots.asked == ["https://a.example.test/robots.txt", "https://b.example.test/robots.txt",
+                            "https://c.example.test/robots.txt"]

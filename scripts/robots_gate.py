@@ -231,7 +231,7 @@ class RobotsGate:
 
     def admit(self, url: str, *, kind: str = "page", method: str = "GET") -> None:
         """Return when `url` may be requested now (after any Crawl-delay wait); raise if it may not."""
-        origin, netloc = _origin(url), urlsplit(url).netloc.lower()
+        origin = _origin(url)
         entry = self._robots(origin)
         status = entry["status"]
         detail = {"url": url, "robots_url": entry["url"], "robots_status": status}
@@ -241,17 +241,9 @@ class RobotsGate:
             if not allowed:
                 self._refuse(RobotsDisallowed(url, {**detail, "rule": rule, "robots_sha256": entry["sha256"]}),
                              kind, method)
-            delay = robots.crawl_delay or 0.0
-        elif status in ABSENT:
-            delay = 0.0
-        else:
+        elif status not in ABSENT:
             self._refuse(RobotsUnavailable(url, {**detail, "error": entry.get("error")}), kind, method)
-        waited = 0.0
-        if netloc in self._last:
-            waited = max(0.0, self._last[netloc] + delay - self.clock())
-            if waited:
-                self.sleep(waited)
-        self._mark(url)
+        waited = self._pace(url)
         self._log(kind=kind, method=method, url=url, decision="allowed", waited=waited)
 
     def summary(self) -> dict[str, dict]:
@@ -272,32 +264,48 @@ class RobotsGate:
         return self.cache[origin]
 
     def _fetch_robots(self, origin: str) -> None:
-        url = robots_url = f"{origin}/robots.txt"
+        """Read `origin`'s robots.txt, following redirects; every host's /robots.txt on the way gets the answer."""
+        url = f"{origin}/robots.txt"
+        chain = [origin]  # origins whose /robots.txt this chain answers
+        entry = None
         for hop in range(MAX_REDIRECTS + 1):
-            self._mark(url)
+            waited = self._pace(url)  # a hop to a host we already know keeps its Crawl-delay
             reply = self.transport(url, self.robots_timeout)
             self._log(kind="robots", method="GET", url=url, decision="fetched", status=reply.status,
-                      error=reply.error, waited=0.0)
+                      error=reply.error, waited=waited)
             location = {k.lower(): v for k, v in reply.headers.items()}.get("location")
-            if reply.status in REDIRECTS and location and hop < MAX_REDIRECTS:
-                url = urljoin(url, location)
-                known = self.cache.get(_origin(url))
-                if known is not None and urlsplit(url).path == "/robots.txt":  # already read this run
-                    self.cache[origin] = {**known, "url": robots_url, "final_url": url}
-                    self._save()
-                    return
-                continue
-            break
-        ok = reply.status is not None and 200 <= reply.status < 300
-        entry = {"url": robots_url, "final_url": url, "status": reply.status, "error": reply.error,
-                 "sha256": hashlib.sha256(reply.body).hexdigest() if ok else None,
-                 "fetched_at": self._now_iso(), "last_request_wall": self.wall_clock(),
-                 "body": reply.body.decode("utf-8", "replace") if ok else ""}
-        self.cache[origin] = entry
-        final = _origin(url)
-        if final != origin and urlsplit(url).path == "/robots.txt" and final not in self.cache:
-            self.cache[final] = {**entry, "url": url}  # the redirect's target host is answered too
+            if not (reply.status in REDIRECTS and location and hop < MAX_REDIRECTS):
+                break
+            url = urljoin(url, location)
+            if urlsplit(url).path == "/robots.txt":
+                if _origin(url) in self.cache:  # already read this run
+                    entry = self.cache[_origin(url)]
+                    break
+                chain.append(_origin(url))
+        if entry is None:
+            ok = reply.status is not None and 200 <= reply.status < 300
+            entry = {"final_url": url, "status": reply.status, "error": reply.error,
+                     "sha256": hashlib.sha256(reply.body).hexdigest() if ok else None,
+                     "fetched_at": self._now_iso(), "body": reply.body.decode("utf-8", "replace") if ok else ""}
+        for host in chain:
+            if host not in self.cache:
+                self.cache[host] = {**entry, "url": f"{host}/robots.txt", "last_request_wall": self.wall_clock()}
         self._save()
+
+    def _pace(self, url: str) -> float:
+        """Wait out the host's Crawl-delay (when its robots.txt is known) since our last request to it,
+        then mark this request as sent. Returns the seconds waited."""
+        netloc, entry = urlsplit(url).netloc.lower(), self.cache.get(_origin(url))
+        delay = 0.0
+        if entry is not None and entry["status"] is not None and 200 <= entry["status"] < 300:
+            delay = self._parsed.setdefault(_origin(url), parse(entry["body"], self.token)).crawl_delay or 0.0
+        waited = 0.0
+        if netloc in self._last:
+            waited = max(0.0, self._last[netloc] + delay - self.clock())
+            if waited:
+                self.sleep(waited)
+        self._mark(url)
+        return waited
 
     def _save(self) -> None:
         if not self.cache_path:
