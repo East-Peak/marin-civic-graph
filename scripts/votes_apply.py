@@ -382,21 +382,17 @@ def page_checks(sqlite_path: Path, expected: list[dict], base_url: str) -> dict:
     return out
 
 
-def _authenticate_oracle(state_dir: Path) -> None:
-    """The expected-edge file must be byte-for-byte the one the applied approval recorded."""
+def _authenticate_oracle(state_dir: Path) -> bytes:
+    """The expected-edge file's bytes, only if they are byte-for-byte the ones the applied approval recorded."""
     state = json.loads((Path(state_dir) / "state.json").read_text())
     raw = (Path(state_dir) / APPROVAL).read_bytes()
     if not state.get("approval_sha256") or _sha_bytes(raw) != state["approval_sha256"]:
         raise ApplyRefused("the approval manifest is not the one that was applied")
     entry = json.loads(raw)["files"].get("plan/expected-edges.jsonl")
-    oracle = Path(state_dir) / "plan" / "expected-edges.jsonl"
-    if entry is None or _sha_bytes(oracle.read_bytes()) != entry["sha256"]:
+    data = (Path(state_dir) / "plan" / "expected-edges.jsonl").read_bytes()
+    if entry is None or _sha_bytes(data) != entry["sha256"]:
         raise ApplyRefused("plan/expected-edges.jsonl is not the approved oracle")
-
-
-def _expected(state_dir: Path) -> list[dict]:
-    return [json.loads(x) for x in (Path(state_dir) / "plan" / "expected-edges.jsonl").read_text().splitlines()
-            if x.strip()]
+    return data
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -450,11 +446,11 @@ def main(argv: list[str] | None = None) -> int:
             print(f"REFUSED: state is {get_state(args.state_dir)}, not APPLIED", file=sys.stderr)
             return 1
         try:
-            _authenticate_oracle(args.state_dir)
+            oracle = _authenticate_oracle(args.state_dir)
         except ApplyRefused as exc:
             print(f"REFUSED: {exc}", file=sys.stderr)
             return 1
-        expected = _expected(args.state_dir)
+        expected = [json.loads(x) for x in oracle.decode("utf-8").splitlines() if x.strip()]  # the verified bytes
         problems = check_published_edges(args.sqlite, expected, scope=SCOPE)
         pages = page_checks(args.sqlite, expected, args.base_url)
         problems += [f"{k}: {p}" for k, v in pages.items() for p in v["problems"]]

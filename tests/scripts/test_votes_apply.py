@@ -576,6 +576,22 @@ class TestPublishedCli:
         args = ["check-published", "--state-dir", str(state), "--sqlite", str(db), "--base-url", "https://site"]
         assert votes_apply.main(args) == 1 and votes_apply.get_state(state) == "APPLIED"
 
+    def test_the_checked_oracle_is_the_authenticated_bytes(self, tmp_path, monkeypatch):
+        db, state = self._artifact(tmp_path)
+        oracle = state / "plan" / "expected-edges.jsonl"
+        real_auth = votes_apply._authenticate_oracle
+
+        def auth_then_swap(state_dir):
+            data = real_auth(state_dir)
+            oracle.write_text("")  # replaced after authentication: an empty oracle would match nothing new
+            return data
+        monkeypatch.setattr(votes_apply, "_authenticate_oracle", auth_then_swap)
+        pages = {"https://site/decision/vev-novato-city-council-1-aa-L1": "Person Ann Alder People · voted aye",
+                 "https://site/decision/vev-marin-county-bos-1-bb-L1": "Person Bea Birch People · voted no"}
+        monkeypatch.setattr(votes_apply, "_fetch", lambda url: pages[url])
+        args = ["check-published", "--state-dir", str(state), "--sqlite", str(db), "--base-url", "https://site"]
+        assert votes_apply.main(args) == 0  # checked against the 2 approved edges, not the swapped empty file
+
     def test_only_after_applied(self, tmp_path, monkeypatch):
         db, state = self._artifact(tmp_path)
         votes_apply.set_state(state, "AWAITING_APPLY")
