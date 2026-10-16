@@ -416,6 +416,14 @@ class TestVotesProfile:
             plan_additive(bn, be + [_e("person-sample-official", "vev-sample-board-1-L10", "CAST_VOTE", vote="aye")],
                           *_votes_case(), constraints=self.PROFILE)
 
+    def test_restatements_are_refused_unless_a_constraint_allows_them(self):
+        cn, ce = _votes_case()
+        cn = cn + [_n("person-sample-official", ["Person"], name="Sample Official")]
+        three = {"labels": frozenset({"Decision", "Person"}), "rel_types": frozenset({"CAST_VOTE", "DECIDED_AT"}),
+                 "add_props": False}
+        with pytest.raises(AdditivePlanError, match="restate"):
+            plan_additive(*_votes_baseline(), cn, ce, constraints=three)
+
     def test_without_a_profile_nothing_changes(self):
         cn, ce = _votes_case()
         cn = cn + [_n("person-sample-official", ["Person"], name="Sample Official")]

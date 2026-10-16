@@ -161,7 +161,7 @@ def _enforce(c: dict, add_nodes, add_props, add_edges, noop_nodes: int, noop_edg
                                     f"{sorted(c['rel_types'])}")
     if add_props and not c["add_props"]:
         raise AdditivePlanError(f"the profile may not add properties to existing nodes ({sorted(add_props)[:3]})")
-    if (noop_nodes or noop_edges) and not c["noop"]:
+    if (noop_nodes or noop_edges) and not c.get("noop", False):
         raise AdditivePlanError(f"the profile may not restate baseline rows ({noop_nodes} nodes, {noop_edges} edges)")
 
 
