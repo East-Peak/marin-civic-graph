@@ -6,11 +6,16 @@ from abc import ABC, abstractmethod
 from datetime import datetime, timezone
 from pathlib import Path
 
+from robots_gate import RobotsGate
+
 
 class BaseAdapter(ABC):
-    def __init__(self, source_config: dict, root_dir: Path):
+    def __init__(self, source_config: dict, root_dir: Path, *, gate: RobotsGate | None = None):
         self.config = source_config
         self.root = root_dir
+        # Every request a meeting adapter makes goes through the robots gate; one gate per run
+        # (ingest.py) shares its robots cache and crawl-delay pacing across sources.
+        self.gate = gate or RobotsGate()
         self.source_id: str = source_config["id"]
         self.url: str = source_config["url"]
         self.jurisdiction_id: str = source_config["jurisdiction_id"]

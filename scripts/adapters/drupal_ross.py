@@ -228,7 +228,7 @@ class DrupalRossAdapter(BaseAdapter):
     @retry_transient
     def _fetch_page(self, url: str) -> str:
         req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-        with urllib.request.urlopen(req, timeout=30) as resp:
+        with self.gate.open(req, timeout=30) as resp:
             return resp.read().decode("utf-8", "ignore")
 
     def capture(self) -> dict:

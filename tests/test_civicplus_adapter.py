@@ -438,7 +438,10 @@ class TestCivicPlusYearFetchErrors:
             "backfill_from": "2019-01-01",
             "categories": ["Town Council"],
         }
-        adapter = CivicPlusAdapter(config, tmp_path)
+        from robots_gate import Reply, RobotsGate
+
+        no_robots = RobotsGate(robots_transport=lambda url, timeout: Reply(404, {}, b"", None))
+        adapter = CivicPlusAdapter(config, tmp_path, gate=no_robots)
         adapter._request_delay = 0
         adapter._fetch_page = lambda url: (FIXTURES / "civicplus-corte-madera.html").read_text(errors="ignore")
         monkeypatch.setattr(urllib.request, "build_opener", lambda *handlers: TimingOut())

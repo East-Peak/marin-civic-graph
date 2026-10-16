@@ -200,7 +200,7 @@ class ProudCityAdapter(BaseAdapter):
     def _fetch_page(self, url: str) -> str:
         """Fetch a URL and return HTML. Extracted as method for test monkey-patching."""
         req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-        with urllib.request.urlopen(req, timeout=30) as resp:
+        with self.gate.open(req, timeout=30) as resp:
             return resp.read().decode("utf-8", "ignore")
 
     def capture(self) -> dict:

@@ -305,9 +305,8 @@ class CivicPlusAdapter(BaseAdapter):
         request is replayed on subsequent POST requests.
         """
         jar = http.cookiejar.CookieJar()
-        opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
         req = urllib.request.Request(url, headers={"User-Agent": _USER_AGENT})
-        with opener.open(req, timeout=30) as resp:
+        with self.gate.open(req, timeout=30, handlers=(urllib.request.HTTPCookieProcessor(jar),)) as resp:
             charset = resp.headers.get_content_charset("utf-8")
             self._cookie_jar = jar
             return resp.read().decode(charset, errors="replace")
@@ -330,7 +329,6 @@ class CivicPlusAdapter(BaseAdapter):
             "catID": category_id,
         }).encode()
         jar = getattr(self, "_cookie_jar", None) or http.cookiejar.CookieJar()
-        opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
         req = urllib.request.Request(
             endpoint,
             data=payload,
@@ -340,7 +338,7 @@ class CivicPlusAdapter(BaseAdapter):
                 "X-Requested-With": "XMLHttpRequest",
             },
         )
-        with opener.open(req, timeout=15) as resp:
+        with self.gate.open(req, timeout=15, handlers=(urllib.request.HTTPCookieProcessor(jar),)) as resp:
             charset = resp.headers.get_content_charset("utf-8")
             return resp.read().decode(charset, errors="replace")
 

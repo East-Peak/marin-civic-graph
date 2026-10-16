@@ -8,6 +8,7 @@ from html import unescape
 from pathlib import Path
 
 from net_retry import retry_transient
+from robots_gate import RobotsGate
 
 from .base import BaseAdapter
 from .meeting_ids import assign_meeting_ids
@@ -124,14 +125,14 @@ def detect_variant(html: str) -> str:
 
 
 @retry_transient
-def fetch_html(url: str) -> str:
-    """Fetch *url* and return the decoded response body.
+def fetch_html(url: str, *, gate: RobotsGate) -> str:
+    """Fetch *url*, if *gate* admits it, and return the decoded response body.
 
     The timeout bounds each socket wait, not the whole transfer, so a multi-MB
     Publisher page streams well inside it.
     """
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(req, timeout=60) as resp:
+    with gate.open(req, timeout=60) as resp:
         return resp.read().decode(resp.headers.get_content_charset("utf-8"), errors="replace")
 
 
@@ -465,7 +466,7 @@ class GranicusAdapter(BaseAdapter):
 
     def _fetch(self, url: str) -> str:
         """Fetch HTML from URL. Extracted as method for test monkey-patching."""
-        return fetch_html(url)
+        return fetch_html(url, gate=self.gate)
 
     def capture(self) -> dict:
         html = self._fetch(self.url)

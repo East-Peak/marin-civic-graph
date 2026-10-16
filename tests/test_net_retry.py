@@ -24,10 +24,11 @@ import ingest_courtlistener_cases  # noqa: E402
 import ingest_form700  # noqa: E402
 import ingest_socrata_permits  # noqa: E402
 import net_retry  # noqa: E402
+import robots_gate  # noqa: E402
 from adapters import civicplus, drupal_ross, granicus, netfile, proudcity  # noqa: E402
 
 FETCHING_MODULES = [*sorted((SCRIPTS / "adapters").glob("*.py")),
-                    SCRIPTS / "ingest_socrata_permits.py", SCRIPTS / "ingest_form700.py",
+                    SCRIPTS / "robots_gate.py", SCRIPTS / "ingest_socrata_permits.py", SCRIPTS / "ingest_form700.py",
                     SCRIPTS / "ingest_courtlistener_cases.py"]
 
 
@@ -231,12 +232,21 @@ class FlakyRequests(FlakyTransport):
 CONFIG = {"id": "src", "url": "https://example.test/meetings", "jurisdiction_id": "j", "institution_id": "i"}
 
 
+def _no_robots(url, timeout):
+    return robots_gate.Reply(404, {}, b"", None)  # robots.txt absent: every page is allowed
+
+
+def _gate():
+    """A real gate that never touches the network for robots.txt, so these tests count page attempts."""
+    return robots_gate.RobotsGate(robots_transport=_no_robots)
+
+
 def _adapter(cls, tmp_path):
-    return cls(dict(CONFIG), tmp_path)
+    return cls(dict(CONFIG), tmp_path, gate=_gate())
 
 
 URLLIB_HELPERS = {
-    "granicus.fetch_html": lambda tmp: granicus.fetch_html("https://example.test"),
+    "granicus.fetch_html": lambda tmp: granicus.fetch_html("https://example.test", gate=_gate()),
     "civicplus._fetch_page": lambda tmp: _adapter(civicplus.CivicPlusAdapter, tmp)._fetch_page("https://example.test"),
     "civicplus._fetch_year": lambda tmp: _adapter(civicplus.CivicPlusAdapter, tmp)._fetch_year(
         "https://example.test/AgendaCenter", "1", 2026, None),
@@ -266,9 +276,10 @@ def test_each_urllib_fetch_helper_waits_a_bounded_time_and_retries_a_timeout(hel
 def test_a_urllib_fetch_helper_never_retries_a_404(monkeypatch):
     transport = FlakyTransport(b"", _http_error(404))
     monkeypatch.setattr(urllib.request, "urlopen", transport)
+    monkeypatch.setattr(urllib.request, "build_opener", lambda *handlers: transport)
 
     with pytest.raises(urllib.error.HTTPError):
-        granicus.fetch_html("https://example.test")
+        granicus.fetch_html("https://example.test", gate=_gate())
     assert len(transport.timeouts) == 1
 
 
@@ -324,3 +335,48 @@ def test_every_network_call_in_the_weekly_sources_has_an_explicit_timeout(path):
     missing = [f"{path.name}:{call.lineno}" for call in _network_calls(ast.parse(path.read_text()))
                if not any(kw.arg == "timeout" for kw in call.keywords)]
     assert not missing, f"network calls with no timeout (they can hang a weekly run): {missing}"
+
+
+# --- the robots gate is the meeting adapters' only door to the network ----------
+
+MEETING_ADAPTERS = [SCRIPTS / "adapters" / f"{name}.py" for name in ("granicus", "civicplus", "drupal_ross", "proudcity")]
+
+
+@pytest.mark.parametrize("path", MEETING_ADAPTERS, ids=lambda p: p.name)
+def test_a_meeting_adapter_never_opens_a_connection_except_through_the_gate(path):
+    tree = ast.parse(path.read_text())
+    direct = [f"{path.name}:{node.lineno}" for node in ast.walk(tree)
+              if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+              and node.func.attr in {"urlopen", "build_opener"}]
+    gated = [node for node in ast.walk(tree) if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+             and node.func.attr == "open" and "gate" in ast.unparse(node.func.value)]
+    assert not direct, f"a request that skips the robots gate: {direct}"
+    assert gated, "no fetch goes through the gate"
+
+
+class RefusingGate:
+    def __init__(self):
+        self.asked: list[str] = []
+
+    def open(self, request, *, timeout, handlers=()):
+        self.asked.append(request.full_url)
+        raise robots_gate.RobotsDisallowed(request.full_url, {"rule": "Disallow: /", "robots_url": "r"})
+
+
+@pytest.mark.parametrize("helper", sorted(h for h in URLLIB_HELPERS if not h.startswith(("netfile", "ingest_"))))
+def test_each_meeting_fetch_helper_asks_the_gate_and_never_retries_a_refusal(helper, monkeypatch, tmp_path):
+    def no_network(*args, **kwargs):
+        raise AssertionError("reached the network past a refusal")
+    monkeypatch.setattr(urllib.request, "urlopen", no_network)
+    monkeypatch.setattr(urllib.request, "build_opener", no_network)
+    gate = RefusingGate()
+    monkeypatch.setattr(sys.modules[__name__], "_gate", lambda: gate)
+
+    with pytest.raises(robots_gate.RobotsDisallowed):
+        URLLIB_HELPERS[helper](tmp_path)
+    assert len(gate.asked) == 1
+
+
+def test_an_adapter_built_without_a_gate_still_checks_robots(tmp_path):
+    adapter = drupal_ross.DrupalRossAdapter(dict(CONFIG), tmp_path)
+    assert isinstance(adapter.gate, robots_gate.RobotsGate)
