@@ -50,10 +50,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import cf_export_due  # noqa: E402
 import cf_prepare  # noqa: E402
 from cf_inventory import inventory as cf_inventory  # noqa: E402
-from ingest import load_sources, resolve_sources  # noqa: E402
+from ingest import is_date, load_sources, resolve_sources  # noqa: E402
 from ingest_guard import Floors, evaluate  # noqa: E402
 from load_from import STAGED_FILES  # noqa: E402
 from neo4j_target import UnsafeNeo4jTarget, check_target  # noqa: E402
+import robots_gate  # noqa: E402
 from net_retry import retry_transient  # noqa: E402
 from run_lock import OWNER_ENV, RunLockHeld, run_lock  # noqa: E402
 
@@ -486,8 +487,9 @@ def _stage_meetings(ctx: Context, run_id: str, registry: str) -> dict[str, dict]
 
 
 def _newest_saved_page(root: Path, adapter: str, sid: str) -> tuple[Path, str] | None:
+    """The newest saved page: under a real calendar date, and a readable file (not a dir or dangling link)."""
     pages = sorted((p.parent.parent.name, p) for p in (root / SAVED_PAGE_DIR).glob(f"*/{adapter}/{sid}.html")
-                   if re.fullmatch(r"\d{4}-\d{2}-\d{2}", p.parent.parent.name))
+                   if is_date(p.parent.parent.name) and p.is_file())
     return (pages[-1][1], pages[-1][0]) if pages else None
 
 
@@ -515,32 +517,41 @@ def _stage_saved_pages(ctx: Context, run_id: str, registry: str) -> tuple[dict[s
     a fetch). missing / stale / unchanged / rejected are informational: they appear in the digest and
     can fail neither the run nor the heartbeat. The saved files are only read.
     """
-    registry_path = f"registry/{registry}-sources.yaml"
     sources, pages = {}, {}
-    today = ctx.now().date()
-    for config in load_sources(ctx.root / registry_path):
+    for config in load_sources(ctx.root / f"registry/{registry}-sources.yaml"):
         if config.get("schedule") != SAVED_PAGE_SCHEDULE:
             continue
         sid = config["id"]
-        newest = _newest_saved_page(ctx.root, config["adapter"], sid)
-        if newest is None:
-            pages[sid] = {"outcome": "missing", "url": config["url"], "adapter": config["adapter"]}
-            continue
-        path, saved_on = newest
-        sha = _sha256(path)
-        page = {"url": config["url"], "adapter": config["adapter"], "path": path.relative_to(ctx.root).as_posix(), "saved_on": saved_on,
-                "age_days": (today - datetime.strptime(saved_on, "%Y-%m-%d").date()).days, "sha256": sha}
-        seen = _saved_page_history(ctx.root, run_id, sid, sha)
-        if page["age_days"] > SAVED_PAGE_FRESH_DAYS:
-            pages[sid] = {"outcome": "stale", **page}
-        elif "loaded" in seen:
-            pages[sid] = {"outcome": "unchanged", **page}
-        elif "rejected" in seen:
-            pages[sid] = {"outcome": "rejected", **page}
-        else:
-            pages[sid] = {"outcome": "accepted", **page}
-            sources[sid] = _ingest_saved_page(ctx, run_id, registry, config, path, page)
+        try:
+            pages[sid], source = _saved_page_outcome(ctx, run_id, registry, config)
+        except Exception as exc:  # one unreadable page fails its own source, never the rest of the stage
+            pages[sid] = {"outcome": "error", "url": config["url"], "adapter": config["adapter"]}
+            source = {"kind": "meetings", "registry": registry, "ok": False, "rows": None, "last_good_rows": None,
+                      "reasons": [f"saved page: {type(exc).__name__}: {exc}"]}
+        if source is not None:
+            sources[sid] = source
     return sources, pages
+
+
+def _saved_page_outcome(ctx: Context, run_id: str, registry: str, config: dict) -> tuple[dict, dict | None]:
+    """(this source's saved_pages entry, its state.sources entry when the page was accepted)."""
+    sid = config["id"]
+    known = {"url": config["url"], "adapter": config["adapter"]}
+    newest = _newest_saved_page(ctx.root, config["adapter"], sid)
+    if newest is None:
+        return {"outcome": "missing", **known}, None
+    path, saved_on = newest
+    page = {**known, "path": path.relative_to(ctx.root).as_posix(), "saved_on": saved_on,
+            "age_days": (ctx.now().date() - datetime.strptime(saved_on, "%Y-%m-%d").date()).days,
+            "sha256": _sha256(path)}
+    seen = _saved_page_history(ctx.root, run_id, sid, page["sha256"])
+    if page["age_days"] > SAVED_PAGE_FRESH_DAYS:
+        return {"outcome": "stale", **page}, None
+    if "loaded" in seen:
+        return {"outcome": "unchanged", **page}, None
+    if "rejected" in seen:
+        return {"outcome": "rejected", **page}, None
+    return {"outcome": "accepted", **page}, _ingest_saved_page(ctx, run_id, registry, config, path, page)
 
 
 def _ingest_saved_page(ctx: Context, run_id: str, registry: str, config: dict, path: Path, page: dict) -> dict:
@@ -612,8 +623,7 @@ def _stage(ctx: Context, state: dict) -> dict:
         state["saved_pages"].update(saved_pages)
     robots = run_dir(ctx.root, run_id) / "robots.json"
     if robots.is_file():  # what each host's robots.txt said this run (bodies stay in robots.json)
-        state["robots"] = {origin: {k: v for k, v in entry.items() if k != "body"}
-                           for origin, entry in json.loads(robots.read_text(encoding="utf-8")).items()}
+        state["robots"] = robots_gate.summarize(json.loads(robots.read_text(encoding="utf-8")))
     for name, src in ctx.staged_sources.items():
         state["sources"][name] = _stage_refetcher(ctx, run_id, name, src)
 
@@ -1289,7 +1299,8 @@ def _saved_pages_digest(state: dict) -> list[str]:
              "| Source | Outcome | Newest saved page | Age (days) | Listing to save |", "|---|---|---|---:|---|"]
     lines += [f"| {sid} | {p['outcome']} | {p.get('saved_on', '–')} | {_num(p.get('age_days'))} | {p['url']} |"
               for sid, p in pages]
-    due = [(sid, p) for sid, p in pages if p["outcome"] == "missing" or p["age_days"] > SAVED_PAGE_FRESH_DAYS]
+    due = [(sid, p) for sid, p in pages
+           if p["outcome"] in ("missing", "error") or p.get("age_days", 0) > SAVED_PAGE_FRESH_DAYS]
     if due:
         lines.append("")
     lines += [f"- save a fresh page for **{sid}**: open {p['url']} and save it (Page Source / \"HTML Only\") as "

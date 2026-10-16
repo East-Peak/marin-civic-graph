@@ -306,3 +306,86 @@ def test_the_default_robots_transport_reads_a_real_reply(server):
     assert gone.status == 404
     dead = rg.http_get("http://127.0.0.1:9/robots.txt", 2)  # nothing listens on the discard port
     assert dead.status is None and dead.error
+
+
+# --- review round 1 ---------------------------------------------------------------------
+
+
+def test_percent_escapes_of_unreserved_characters_and_hex_case_do_not_slip_past_a_rule():
+    robots = rg.parse("User-agent: *\nDisallow: /private\nDisallow: /x%aF\nDisallow: /a%2Fb\n")
+    assert robots.decide(f"{HOST}/%70rivate/minutes")[0] is False
+    assert robots.decide(f"{HOST}/x%AF")[0] is False
+    assert robots.decide(f"{HOST}/x%af")[0] is False
+    assert robots.decide(f"{HOST}/a%2fb")[0] is False
+    assert robots.decide(f"{HOST}/a/b")[0] is True  # an escaped reserved "/" stays escaped
+
+
+def test_a_redirect_is_paced_after_the_previous_reply_is_drained_not_before(tmp_path):
+    gate, _, clock = _gate(tmp_path, {f"{HOST}/robots.txt": (200, "User-agent: *\nCrawl-delay: 15\n")})
+    gate.admit(f"{HOST}/moved")  # t=1015 after the robots fetch at 1000
+
+    class SlowBody:
+        closed = False
+
+        def read(self):
+            clock.t += 20  # the redirect reply's body takes 20 s to arrive
+            return b"moved"
+
+        def close(self):
+            self.closed = True
+    body = SlowBody()
+    request = urllib.request.Request(f"{HOST}/moved")
+    rg._GatedRedirects(gate).redirect_request(request, body, 302, "Found", {}, f"{HOST}/meetings")
+    assert body.closed
+    times = [e["monotonic"] for e in _log(tmp_path)]
+    assert times[-1] == clock.t == 1015 + 20  # stamped when the hop is sent, after the drain
+    gate.admit(f"{HOST}/next")
+    assert clock.t - times[-1] >= 15  # so the next request keeps its distance from the real send
+
+
+def test_crawl_delay_holds_across_the_runs_processes(tmp_path):
+    clock = Clock()
+    answers = {f"{HOST}/robots.txt": (200, "User-agent: *\nCrawl-delay: 15\n")}
+    cache = tmp_path / "robots.json"
+    first, _, _ = _gate(tmp_path, answers, clock=clock, cache_path=cache)
+    first.admit(f"{HOST}/a")
+    second, robots, _ = _gate(tmp_path, answers, clock=clock, cache_path=cache)  # the next ingest.py
+    second.admit(f"{HOST}/b")
+    assert robots.asked == []
+    assert clock.slept == [15.0, 15.0]
+
+
+@pytest.mark.parametrize("cached_first", [True, False], ids=["destination-first", "alias-first"])
+def test_a_robots_redirect_to_a_host_already_read_reuses_it(tmp_path, cached_first):
+    answers = {"https://www.town.example.test/robots.txt": (301, None, "https://town.example.test/robots.txt"),
+               "https://town.example.test/robots.txt": (200, "User-agent: *\nDisallow: /x\n")}
+    gate, robots, _ = _gate(tmp_path, answers)
+    order = ["https://town.example.test/a", "https://www.town.example.test/a"]
+    for url in order if cached_first else order[::-1]:
+        gate.admit(url)
+    assert robots.asked.count("https://town.example.test/robots.txt") == 1
+    with pytest.raises(rg.RobotsDisallowed):
+        gate.admit("https://www.town.example.test/x")
+
+
+class _Truncated(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200 if self.path == "/robots.txt" else 500)
+        self.send_header("Content-Length", "1000")
+        self.end_headers()
+        self.wfile.write(b"User-agent: *\n")  # then hang up early
+
+    def log_message(self, *args):
+        pass
+
+
+def test_a_truncated_robots_reply_is_unavailable_not_a_crash(tmp_path):
+    httpd = http.server.HTTPServer(("127.0.0.1", 0), _Truncated)
+    threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    try:
+        reply = rg.http_get(f"http://127.0.0.1:{httpd.server_port}/robots.txt", 5)
+        error_body = rg.http_get(f"http://127.0.0.1:{httpd.server_port}/broken", 5)
+    finally:
+        httpd.shutdown()
+    assert reply.status is None and reply.error == "IncompleteRead"
+    assert error_body.status is None and error_body.error

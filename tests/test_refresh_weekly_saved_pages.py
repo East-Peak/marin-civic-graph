@@ -276,7 +276,8 @@ def test_a_robots_refusal_is_the_sources_outcome_in_state_and_digest_and_fails_t
             run = root / f"data/ingest-runs/{RUN}"
             (run / "robots.json").write_text(json.dumps({"https://agendas.example.test": {
                 "url": "https://agendas.example.test/robots.txt", "status": 200, "sha256": "ab" * 32,
-                "fetched_at": "2026-09-28T05:00:01.000+00:00", "body": "User-agent: *\nDisallow: /\n"}}))
+                "fetched_at": "2026-09-28T05:00:01.000+00:00", "last_request_wall": 1790000000.0,
+                "body": "User-agent: *\nDisallow: /\n"}}))
             robots = {"url": "https://agendas.example.test/x", "rule": "Disallow: /",
                       "robots_url": "https://agendas.example.test/robots.txt", "robots_status": 200}
             with (root / "data/ingest-runs/ledger.jsonl").open("a") as fh:
@@ -307,3 +308,33 @@ def test_the_harness_can_switch_the_refetchers_off(ctx, world, root):
     ctx = dataclasses.replace(ctx, staged_sources={})
     assert rw.main(["stage"], ctx) == 0
     assert world.scripts() == ["ingest.py"]
+
+
+def test_malformed_manual_entries_are_not_candidates_and_never_abort_the_stage(ctx, world, root, pings):
+    (root / "data/raw/manual/2026-09-99/granicus").mkdir(parents=True)
+    (root / "data/raw/manual/2026-09-99/granicus/town-1.html").write_text("impossible date")
+    (root / "data/raw/manual/2026-09-27/granicus/town-2.html").mkdir(parents=True)  # a directory, not a page
+    (root / "data/raw/manual/2026-09-27/granicus").joinpath("town-3.html").symlink_to(root / "nowhere.html")
+    good = _save(root, "town-4", "2026-09-20")
+    assert _weekly(ctx) == 0
+    outcomes = {sid: p["outcome"] for sid, p in _run_state(root)["saved_pages"].items()}
+    assert outcomes == {"town-1": "missing", "town-2": "missing", "town-3": "missing", "town-4": "accepted",
+                        "town-5": "missing"}
+    assert _saved_steps(world) == ["town-4"] and good.is_file()
+
+
+def test_a_saved_source_that_errors_becomes_a_failed_source_and_the_others_still_run(ctx, world, root, pings,
+                                                                                       monkeypatch):
+    _save(root, "town-1", "2026-09-26")
+    _save(root, "town-2", "2026-09-26")
+    real = rw._ingest_saved_page
+
+    def flaky(ctx, run_id, registry, config, path, page):
+        if config["id"] == "town-1":
+            raise PermissionError("unreadable")
+        return real(ctx, run_id, registry, config, path, page)
+    monkeypatch.setattr(rw, "_ingest_saved_page", flaky)
+    assert _weekly(ctx) == 1
+    state = _run_state(root)
+    assert state["sources"]["town-1"]["ok"] is False and "PermissionError" in state["sources"]["town-1"]["reasons"][0]
+    assert state["sources"]["town-2"]["ok"] is True

@@ -43,17 +43,26 @@ SAVED_PAGE_ADAPTERS = ("granicus",)
 SAVED_PAGE_RE = re.compile(r"data/raw/manual/(\d{4}-\d{2}-\d{2})/(?P<adapter>[a-z_]+)/(?P<sid>[^/]+)\.html")
 
 
+def is_date(text: str) -> bool:
+    try:
+        return date.fromisoformat(text).isoformat() == text
+    except ValueError:
+        return False
+
+
 def saved_page_path(root: Path, source_config: dict, path: Path) -> Path:
     """`path`, if it is where this source's saved page belongs: data/raw/manual/<YYYY-MM-DD>/<adapter>/<id>.html."""
     if source_config["adapter"] not in SAVED_PAGE_ADAPTERS:
         raise ValueError(f"{source_config['id']} ({source_config['adapter']}) does not take saved pages")
-    path = Path(path).resolve()
+    root = Path(root).resolve()
+    path = (root / path).resolve()  # a relative path is under the root, wherever we were started
     try:
-        rel = path.relative_to(Path(root).resolve()).as_posix()
+        rel = path.relative_to(root).as_posix()
     except ValueError:
         rel = path.as_posix()
     match = SAVED_PAGE_RE.fullmatch(rel)
-    if not (match and match["adapter"] == source_config["adapter"] and match["sid"] == source_config["id"]):
+    if not (match and match["adapter"] == source_config["adapter"] and match["sid"] == source_config["id"]
+            and is_date(match[1])):
         raise ValueError(f"a saved page for {source_config['id']} goes at data/raw/manual/<YYYY-MM-DD>/"
                          f"{source_config['adapter']}/{source_config['id']}.html under the root, not {path}")
     if not path.is_file():

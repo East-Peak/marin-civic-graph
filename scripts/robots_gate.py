@@ -16,9 +16,11 @@ same-agent groups merge). `urllib.robotparser` only prefix-matches, so it would 
 from __future__ import annotations
 
 import hashlib
+import http.client
 import json
 import os
 import re
+import string
 import tempfile
 import time
 import urllib.error
@@ -36,14 +38,19 @@ REDIRECTS = (301, 302, 303, 307, 308)
 ABSENT = (404, 410)  # no robots.txt: everything is allowed
 
 _SAFE = "".join(chr(c) for c in range(33, 127))  # leave printable ASCII (and existing %XX) alone
+_UNRESERVED = frozenset(string.ascii_letters + string.digits + "-._~")
 
 
 # --- the parser ----------------------------------------------------------------------
 
 
 def _norm(text: str) -> str:
-    """Percent-encode non-ASCII and upper-case existing escapes, so path and pattern compare alike."""
-    return re.sub(r"%[0-9a-f]{2}", lambda m: m.group().upper(), quote(text, safe=_SAFE))
+    """RFC 9309 / 3986 comparison form: non-ASCII percent-encoded, escaped unreserved characters decoded,
+    every other escape upper-cased; so `/%70rivate` meets `Disallow: /private`, and `%2F` stays a non-slash."""
+    def escape(match: re.Match) -> str:
+        char = chr(int(match.group(1), 16))
+        return char if char in _UNRESERVED else match.group().upper()
+    return re.sub(r"%([0-9A-Fa-f]{2})", escape, quote(text, safe=_SAFE))
 
 
 class Rule(NamedTuple):
@@ -154,12 +161,13 @@ def http_get(url: str, timeout: float) -> Reply:
     opener = urllib.request.build_opener(_NoRedirects)
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     try:
-        with opener.open(request, timeout=timeout) as resp:
-            return Reply(resp.status, dict(resp.headers), resp.read(), None)
-    except urllib.error.HTTPError as err:
-        with err:
-            return Reply(err.code, dict(err.headers or {}), err.read() or b"", None)
-    except (urllib.error.URLError, OSError) as exc:
+        try:
+            with opener.open(request, timeout=timeout) as resp:
+                return Reply(resp.status, dict(resp.headers), resp.read(), None)
+        except urllib.error.HTTPError as err:
+            with err:
+                return Reply(err.code, dict(err.headers or {}), err.read() or b"", None)
+    except (urllib.error.URLError, http.client.HTTPException, OSError) as exc:  # incl. a truncated body
         return Reply(None, {}, b"", type(getattr(exc, "reason", exc)).__name__)
 
 
@@ -172,11 +180,10 @@ class _GatedRedirects(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         new = super().redirect_request(req, fp, code, msg, headers, newurl)
         if new is not None:
-            try:
-                self.gate.admit(new.full_url, kind="redirect", method=new.get_method())
-            except RobotsRefused:
-                fp.close()
-                raise
+            # Drain this reply first (urllib would, right after us), so the hop is paced from when it is sent.
+            fp.read()
+            fp.close()
+            self.gate.admit(new.full_url, kind="redirect", method=new.get_method())
         return new
 
 
@@ -186,6 +193,14 @@ class _GatedRedirects(urllib.request.HTTPRedirectHandler):
 def _origin(url: str) -> str:
     parts = urlsplit(url)
     return f"{parts.scheme.lower()}://{parts.netloc.lower()}"
+
+
+PRIVATE = ("body", "last_request_wall")  # kept in the cache file, never in a run's state
+
+
+def summarize(cache: dict[str, dict]) -> dict[str, dict]:
+    """A robots cache as a run records it: per origin, its robots.txt URL, status, sha256, fetch time."""
+    return {origin: {k: v for k, v in entry.items() if k not in PRIVATE} for origin, entry in cache.items()}
 
 
 class RobotsGate:
@@ -201,7 +216,11 @@ class RobotsGate:
         if self.cache_path and self.cache_path.is_file():
             self.cache = json.loads(self.cache_path.read_text(encoding="utf-8"))
         self.refusals: list[RobotsRefused] = []
-        self._last: dict[str, float] = {}  # netloc -> when we last sent it a request
+        self._last: dict[str, float] = {}  # netloc -> when (on `clock`) we last sent it a request
+        for origin, entry in self.cache.items():  # an earlier process of this run: keep its pacing
+            if "last_request_wall" in entry:
+                ago = max(0.0, self.wall_clock() - entry["last_request_wall"])
+                self._last[urlsplit(origin).netloc] = self.clock() - ago
         self._parsed: dict[str, Robots] = {}
 
     def open(self, request: urllib.request.Request, *, timeout: float, handlers=()):
@@ -232,12 +251,12 @@ class RobotsGate:
             waited = max(0.0, self._last[netloc] + delay - self.clock())
             if waited:
                 self.sleep(waited)
-        self._mark(netloc)
+        self._mark(url)
         self._log(kind=kind, method=method, url=url, decision="allowed", waited=waited)
 
     def summary(self) -> dict[str, dict]:
         """The run's robots record for state.json: everything but the bodies."""
-        return {origin: {k: v for k, v in entry.items() if k != "body"} for origin, entry in self.cache.items()}
+        return summarize(self.cache)
 
     # internals
 
@@ -255,19 +274,25 @@ class RobotsGate:
     def _fetch_robots(self, origin: str) -> None:
         url = robots_url = f"{origin}/robots.txt"
         for hop in range(MAX_REDIRECTS + 1):
-            self._mark(urlsplit(url).netloc.lower())
+            self._mark(url)
             reply = self.transport(url, self.robots_timeout)
             self._log(kind="robots", method="GET", url=url, decision="fetched", status=reply.status,
                       error=reply.error, waited=0.0)
             location = {k.lower(): v for k, v in reply.headers.items()}.get("location")
             if reply.status in REDIRECTS and location and hop < MAX_REDIRECTS:
                 url = urljoin(url, location)
+                known = self.cache.get(_origin(url))
+                if known is not None and urlsplit(url).path == "/robots.txt":  # already read this run
+                    self.cache[origin] = {**known, "url": robots_url, "final_url": url}
+                    self._save()
+                    return
                 continue
             break
         ok = reply.status is not None and 200 <= reply.status < 300
         entry = {"url": robots_url, "final_url": url, "status": reply.status, "error": reply.error,
                  "sha256": hashlib.sha256(reply.body).hexdigest() if ok else None,
-                 "fetched_at": self._now_iso(), "body": reply.body.decode("utf-8", "replace") if ok else ""}
+                 "fetched_at": self._now_iso(), "last_request_wall": self.wall_clock(),
+                 "body": reply.body.decode("utf-8", "replace") if ok else ""}
         self.cache[origin] = entry
         final = _origin(url)
         if final != origin and urlsplit(url).path == "/robots.txt" and final not in self.cache:
@@ -283,8 +308,13 @@ class RobotsGate:
             json.dump(self.cache, fh, indent=2, sort_keys=True)
         os.replace(tmp, self.cache_path)
 
-    def _mark(self, netloc: str) -> None:
-        self._last[netloc] = self.clock()
+    def _mark(self, url: str) -> None:
+        """A request to `url`'s host goes out now; recorded in the cache file too, for the run's next process."""
+        self._last[urlsplit(url).netloc.lower()] = self.clock()
+        entry = self.cache.get(_origin(url))
+        if entry is not None:
+            entry["last_request_wall"] = self.wall_clock()
+            self._save()
 
     def _now_iso(self) -> str:
         return datetime.fromtimestamp(self.wall_clock(), timezone.utc).isoformat(timespec="milliseconds")

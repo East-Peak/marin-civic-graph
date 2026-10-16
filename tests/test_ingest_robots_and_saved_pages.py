@@ -276,3 +276,19 @@ def test_ingest_with_root_honors_the_gate_and_writes_nothing_under_the_real_root
         f"http://127.0.0.1:{port}", f"http://localhost:{port}"}
     assert len((root / "run" / "requests.jsonl").read_text().splitlines()) == 4
     assert {name: _tree(REPO / name) for name in ("data", "registry")} == before
+
+
+def test_a_relative_saved_page_path_resolves_under_root_not_the_working_directory(tmp_path, monkeypatch):
+    _registry(tmp_path, _config())
+    _save(tmp_path, "townsville-council", MODERN.read_bytes())
+    elsewhere = tmp_path.parent / f"{tmp_path.name}-cwd"
+    elsewhere.mkdir()
+    monkeypatch.chdir(elsewhere)
+    rel = "data/raw/manual/2026-10-12/granicus/townsville-council.html"
+    assert ingest.main(["--root", str(tmp_path), "--source", "townsville-council", "--saved-page", rel]) == 0
+
+
+def test_a_saved_page_under_an_impossible_date_is_refused(tmp_path, capsys):
+    _registry(tmp_path, _config())
+    manual = _save(tmp_path, "townsville-council", MODERN.read_bytes(), day="2026-10-99")
+    assert ingest.main(["--root", str(tmp_path), "--source", "townsville-council", "--saved-page", str(manual)]) == 1
