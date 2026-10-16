@@ -216,7 +216,7 @@ const currentOfficeholders: SqlBuilder = (filters) => {
       )
       SELECT
         ${label("p")} AS person_name,
-        coalesce(${prop("seat", "name")}, ${prop("svc", "seat_id")}, svc.id) AS seat_display,
+        coalesce(${prop("seat", "name")}, ${prop("svc", "seat_title")}, svc.id) AS seat_display,
         (
           SELECT count(DISTINCT f700.id)
           FROM nodes f700

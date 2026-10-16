@@ -142,7 +142,7 @@ function makeFixtureDb(): string {
       props: {
         ended_at: null,
         jurisdiction_id: "place-san-rafael",
-        seat_id: "seat-san-rafael-council",
+        seat_title: "Fictional Council Seat",
         started_at: "2020-01-01",
       },
     },
@@ -368,7 +368,7 @@ describe("SQL data query translations", () => {
     expect(result.rows).toEqual([
       {
         person_name: "Alice Council",
-        seat_display: "seat-san-rafael-council",
+        seat_display: "Fictional Council Seat",
         form_700_count: 2,
         form_803_count: 1,
         id: "person-alice-council",

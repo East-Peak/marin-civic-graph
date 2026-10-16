@@ -65,7 +65,7 @@ APP_READS: dict[str, tuple[str, ...]] = {
                   "reported_employer", "reported_city", "reported_state", "reported_zip5"),
     "Seat": ("title", "name", "institution_name", "jurisdiction_name", "jurisdiction_id"),
     "SeatService": ("seat_title", "person_name", "start_date", "end_date",
-                    "started_at", "ended_at", "jurisdiction_id", "seat_id"),
+                    "started_at", "ended_at", "jurisdiction_id"),
     "Election": ("name", "title", "election_date", "election_type", "jurisdiction_name"),
     "Candidacy": ("person_name", "name", "seat_title", "election_name", "outcome"),
     "AgendaItem": ("heading", "title", "meeting_title", "meeting_date", "item_number",
@@ -246,3 +246,11 @@ def test_bake_output_is_compacted(tmp_path: Path) -> None:
     with sqlite3.connect(sqlite_path) as conn:
         conn.execute("VACUUM INTO ?", (str(vacuumed),))
     assert sqlite_path.stat().st_size == vacuumed.stat().st_size
+
+
+def test_seat_ids_are_not_public_props() -> None:
+    # Votes B1: no seat_id / seat_service_id anywhere in the artifact. A SeatService's seat is its FOR_SEAT edge.
+    for node_type, keys in PUBLIC_PROPS.items():
+        assert "seat_id" not in keys, node_type
+        assert "seat_service_id" not in keys, node_type
+    assert public_props("SeatService", {"seat_title": "Mayor", "seat_id": "seat-fictional"}) == {"seat_title": "Mayor"}

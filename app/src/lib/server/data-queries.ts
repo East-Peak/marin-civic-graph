@@ -288,7 +288,7 @@ const currentOfficeholders: DataQueryDef = {
       OPTIONAL MATCH (f803:Filing {filing_type: 'form_803'})-[:FILED_BY]->(p)
       WITH p, svc, seat, form_700_count, count(DISTINCT f803) AS form_803_count
       RETURN coalesce(p.search_label, p.name, p.id) AS person_name,
-             coalesce(seat.name, svc.seat_id, svc.id) AS seat_display,
+             coalesce(seat.name, svc.seat_title, svc.id) AS seat_display,
              form_700_count,
              form_803_count,
              p.id AS id

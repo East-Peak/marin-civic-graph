@@ -63,7 +63,6 @@ function writeFixtureDb(): string {
   writeNode(db, "seatservice-alice", "SeatService", "Alice service", {
     ended_at: null,
     jurisdiction_id: "place-san-rafael",
-    seat_id: "seat-san-rafael-council",
   });
   writeNode(db, "filing-alice-700", "Filing", "Alice Form 700", {
     filing_type: "form_700",
@@ -117,7 +116,7 @@ describe("GET /api/data/[query] in substrate mode", () => {
     expect(body.rows).toEqual([
       {
         person_name: "Alice Council",
-        seat_display: "seat-san-rafael-council",
+        seat_display: "seatservice-alice",
         form_700_count: 1,
         form_803_count: 0,
         id: "person-alice",

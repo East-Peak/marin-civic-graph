@@ -67,7 +67,7 @@ PUBLIC_PROPS: dict[str, frozenset[str]] = {
     }),
     "Seat": frozenset({"title", "institution_name", "jurisdiction_id"}),
     "SeatService": frozenset({
-        "seat_title", "person_name", "end_date", "ended_at", "jurisdiction_id", "seat_id",
+        "seat_title", "person_name", "end_date", "ended_at", "jurisdiction_id",
     }),
     "Election": frozenset({"title", "election_type"}),
     "Candidacy": frozenset({"person_name", "seat_title", "election_name", "outcome"}),
