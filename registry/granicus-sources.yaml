@@ -5,7 +5,12 @@ sources:
     jurisdiction_id: place-marin-county
     institution_id: org-marin-county-board-of-supervisors
     backfill_from: "2019-01-01"
-    schedule: weekly
+    schedule: saved-page
+    schedule_note: >-
+      The host's robots.txt disallows every agent (User-agent: * / Disallow: /,
+      verified 2026-10-16), so this listing is never fetched. Save the page by
+      hand to data/raw/manual/<YYYY-MM-DD>/granicus/<id>.html; the weekly run
+      picks it up (docs/runbooks/saved-pages.md).
 
   - id: novato-city-council
     adapter: granicus
@@ -13,7 +18,12 @@ sources:
     jurisdiction_id: place-novato
     institution_id: org-novato-city-council
     backfill_from: "2019-01-01"
-    schedule: weekly
+    schedule: saved-page
+    schedule_note: >-
+      The host's robots.txt disallows every agent (User-agent: * / Disallow: /,
+      verified 2026-10-16), so this listing is never fetched. Save the page by
+      hand to data/raw/manual/<YYYY-MM-DD>/granicus/<id>.html; the weekly run
+      picks it up (docs/runbooks/saved-pages.md).
 
   - id: sausalito-city-council
     adapter: granicus
@@ -21,7 +31,12 @@ sources:
     jurisdiction_id: place-sausalito
     institution_id: org-sausalito-city-council
     backfill_from: "2019-01-01"
-    schedule: weekly
+    schedule: saved-page
+    schedule_note: >-
+      The host's robots.txt disallows every agent (User-agent: * / Disallow: /,
+      verified 2026-10-16), so this listing is never fetched. Save the page by
+      hand to data/raw/manual/<YYYY-MM-DD>/granicus/<id>.html; the weekly run
+      picks it up (docs/runbooks/saved-pages.md).
 
   - id: tiburon-town-council-granicus
     adapter: granicus
@@ -29,7 +44,12 @@ sources:
     jurisdiction_id: place-tiburon
     institution_id: org-tiburon-town-council
     backfill_from: "2019-01-01"
-    schedule: weekly
+    schedule: saved-page
+    schedule_note: >-
+      The host's robots.txt disallows every agent (User-agent: * / Disallow: /,
+      verified 2026-10-16), so this listing is never fetched. Save the page by
+      hand to data/raw/manual/<YYYY-MM-DD>/granicus/<id>.html; the weekly run
+      picks it up (docs/runbooks/saved-pages.md).
 
   - id: san-anselmo-town-council
     adapter: granicus
@@ -37,4 +57,9 @@ sources:
     jurisdiction_id: place-san-anselmo
     institution_id: org-san-anselmo-town-council
     backfill_from: "2019-01-01"
-    schedule: weekly
+    schedule: saved-page
+    schedule_note: >-
+      The host's robots.txt disallows every agent (User-agent: * / Disallow: /,
+      verified 2026-10-16), so this listing is never fetched. Save the page by
+      hand to data/raw/manual/<YYYY-MM-DD>/granicus/<id>.html; the weekly run
+      picks it up (docs/runbooks/saved-pages.md).

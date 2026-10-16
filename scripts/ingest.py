@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import time
 from datetime import date, datetime, timezone
@@ -18,6 +19,7 @@ from adapters import get_adapter_class
 from ingest_guard import BASELINE_WINDOW, Floors, RunLedger, Verdict, evaluate, newest_past_date, write_if_ok
 from meeting_identity import MeetingIdentityMap, merge_duplicate_meetings
 from ingest_baseline import seed_ledger
+from robots_gate import RobotsGate, RobotsRefused
 from run_lock import RunLockHeld, run_lock
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -33,8 +35,30 @@ def load_sources(registry_path: Path) -> list[dict]:
 
 # weekly: runs on the schedule (`--all`). manual: kept for one-off `--source`
 # runs (e.g. needs reconciliation first). retired: source is dead; kept only
-# so its historical captures stay attributable.
-SCHEDULES = ("weekly", "manual", "retired")
+# so its historical captures stay attributable. saved-page: its host's robots.txt
+# disallows us, so it is never fetched; the operator saves the listing page by hand
+# and `--saved-page` (or the weekly run, which finds it) parses it.
+SCHEDULES = ("weekly", "manual", "retired", "saved-page")
+SAVED_PAGE_ADAPTERS = ("granicus",)
+SAVED_PAGE_RE = re.compile(r"data/raw/manual/(\d{4}-\d{2}-\d{2})/(?P<adapter>[a-z_]+)/(?P<sid>[^/]+)\.html")
+
+
+def saved_page_path(root: Path, source_config: dict, path: Path) -> Path:
+    """`path`, if it is where this source's saved page belongs: data/raw/manual/<YYYY-MM-DD>/<adapter>/<id>.html."""
+    if source_config["adapter"] not in SAVED_PAGE_ADAPTERS:
+        raise ValueError(f"{source_config['id']} ({source_config['adapter']}) does not take saved pages")
+    path = Path(path).resolve()
+    try:
+        rel = path.relative_to(Path(root).resolve()).as_posix()
+    except ValueError:
+        rel = path.as_posix()
+    match = SAVED_PAGE_RE.fullmatch(rel)
+    if not (match and match["adapter"] == source_config["adapter"] and match["sid"] == source_config["id"]):
+        raise ValueError(f"a saved page for {source_config['id']} goes at data/raw/manual/<YYYY-MM-DD>/"
+                         f"{source_config['adapter']}/{source_config['id']}.html under the root, not {path}")
+    if not path.is_file():
+        raise ValueError(f"no saved page at {path}")
+    return path
 
 
 def resolve_sources(
@@ -69,17 +93,29 @@ def run_source(
     today: date,
     adapter_cls=None,
     identity=None,
+    gate: RobotsGate | None = None,
+    saved_page: Path | None = None,
 ) -> tuple[dict, Verdict]:
     """Capture one source and write it ONLY if it passes its floors.
 
     A failed pull writes nothing, so the previous good capture stays the
-    authoritative one, and the verdict is recorded in the run ledger.
+    authoritative one, and the verdict is recorded in the run ledger. A request
+    the robots gate refused ends the source `robots_disallowed` or
+    `robots_unavailable`, even when the adapter caught the refusal itself.
     """
     adapter_cls = adapter_cls or get_adapter_class(source_config["adapter"])
-    adapter = adapter_cls(source_config, root)
-    result = adapter.capture()
-
+    options = {k: v for k, v in (("gate", gate), ("saved_page", saved_page)) if v is not None}
+    adapter = adapter_cls(source_config, root, **options)
     source_id = source_config["id"]
+    gate = getattr(adapter, "gate", gate)
+    already = len(gate.refusals) if gate is not None else 0
+    try:
+        result = adapter.capture()
+    except RobotsRefused as refusal:
+        return _refused(ledger, source_id, refusal, {"meetings": [], "errors": [str(refusal)]})
+    if gate is not None and len(gate.refusals) > already:
+        return _refused(ledger, source_id, gate.refusals[already], result)
+
     rows = _row_count(result)
     newest = newest_past_date(result.get("meetings") or [], today)
     verdict = evaluate(
@@ -101,7 +137,21 @@ def run_source(
         result["meeting_count"] = len(result["meetings"])
     if write_if_ok(adapter.extracted_path(), json.dumps(result, indent=2) + "\n", verdict) and identity:
         identity.save()
-    ledger.append(source_id, datetime.now(timezone.utc).isoformat(timespec="seconds"), rows, newest, verdict)
+    provenance = {k: result[k] for k in ("raw_origin", "raw_sha256") if k in result}
+    if result.get("saved_page"):
+        provenance["saved_page"] = result["saved_page"]["path"]
+    ledger.append(source_id, _now(), rows, newest, verdict, **provenance)
+    return result, verdict
+
+
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def _refused(ledger: RunLedger, source_id: str, refusal: RobotsRefused, result: dict) -> tuple[dict, Verdict]:
+    """Nothing is written; the ledger names the outcome and the rule (or robots.txt status) behind it."""
+    verdict = Verdict(ok=False, reasons=[str(refusal)])
+    ledger.append(source_id, _now(), 0, None, verdict, outcome=refusal.outcome, robots=refusal.detail)
     return result, verdict
 
 
@@ -112,32 +162,44 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--registry",
         default="registry/granicus-sources.yaml",
-        help="Path to source registry",
+        help="Path to source registry (relative to --root)",
     )
+    parser.add_argument("--root", type=Path, default=ROOT,
+                        help="Repository root every path resolves under (default: this checkout)")
+    parser.add_argument("--saved-page", type=Path,
+                        help="Parse this saved listing page instead of fetching (needs --source)")
+    parser.add_argument("--robots-cache", type=Path, help="robots.txt cache shared by one run's processes")
+    parser.add_argument("--request-log", type=Path, help="Append every request decision here (JSONL)")
     args = parser.parse_args(argv)
 
-    registry_path = ROOT / args.registry
-    sources = load_sources(registry_path)
+    root = args.root.resolve()
+    sources = load_sources(root / args.registry)
 
     try:
+        if args.saved_page is not None and not args.source:
+            raise ValueError("--saved-page needs --source <id>")
         targets = resolve_sources(sources, source=args.source, all_sources=args.all_sources)
+        saved_page = None
+        if args.saved_page is not None:
+            saved_page = saved_page_path(root, targets[0], args.saved_page)
     except ValueError as e:
         print(f"Error: {e}", file=sys.stderr)
         return 1
 
+    gate = RobotsGate(cache_path=args.robots_cache, request_log=args.request_log)
     try:
-        with run_lock(ROOT):  # the ledger and identity map are read-modify-write
-            return _capture(targets)
+        with run_lock(root):  # the ledger and identity map are read-modify-write
+            return _capture(targets, root, gate, saved_page)
     except RunLockHeld as e:
         print(f"Error: {e}", file=sys.stderr)
         return 2
 
 
-def _capture(targets: list[dict]) -> int:
-    ledger = RunLedger(ROOT / LEDGER_PATH)
-    identity = MeetingIdentityMap(ROOT / IDENTITY_PATH)
+def _capture(targets: list[dict], root: Path, gate: RobotsGate, saved_page: Path | None = None) -> int:
+    ledger = RunLedger(root / LEDGER_PATH)
+    identity = MeetingIdentityMap(root / IDENTITY_PATH)
     # First scheduled run: judge against the last manual captures, not "any > 0".
-    for sid in seed_ledger(ledger, targets, ROOT / "data" / "extracted"):
+    for sid in seed_ledger(ledger, targets, root / "data" / "extracted"):
         print(f"  baseline seeded from last manual capture: {sid}")
     today = date.today()
     failed: list[str] = []
@@ -149,10 +211,11 @@ def _capture(targets: list[dict]) -> int:
         source_id = source_config["id"]
         print(f"\nCapturing: {source_id}")
         print(f"  Adapter: {source_config['adapter']}")
-        print(f"  URL: {source_config['url']}")
+        print(f"  URL: {source_config['url']}" if saved_page is None else f"  Saved page: {saved_page}")
 
         try:
-            result, verdict = run_source(source_config, ROOT, ledger=ledger, today=today, identity=identity)
+            result, verdict = run_source(source_config, root, ledger=ledger, today=today, identity=identity,
+                                         gate=gate, saved_page=saved_page)
             print(f"  Variant: {result.get('variant', 'unknown')}")
             print(f"  Meetings: {result.get('meeting_count', 'n/a')}")
             for art, count in sorted(result.get("artifact_counts", {}).items()):

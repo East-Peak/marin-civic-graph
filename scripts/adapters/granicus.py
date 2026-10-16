@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import codecs
+import hashlib
 import re
 import urllib.request
 from html import unescape
@@ -33,6 +35,9 @@ ONCLICK_URL_RE = re.compile(r"window\.open\('([^']+)'", re.I)
 
 # Matches Granicus legacy year-section comments, e.g. <!-- 2022 Start -->.
 YEAR_COMMENT_RE = re.compile(r"<!-- \d{4} Start -->")
+
+# The charset a saved page declares for itself (it has no HTTP header any more).
+META_CHARSET_RE = re.compile(rb"""<meta[^>]+charset\s*=\s*["']?([A-Za-z0-9_.:-]+)""", re.I)
 
 # Matches a tabbed-panel pattern present in modern Granicus pages.
 TABBED_PANEL_RE = re.compile(r"tabbed-panel|data-view|ng-", re.I)
@@ -462,22 +467,57 @@ def native_meeting_key(meeting: dict) -> str | None:
 class GranicusAdapter(BaseAdapter):
     """Granicus Publisher View adapter.
     Auto-detects legacy vs modern template and dispatches to the appropriate parser.
+
+    With ``saved_page`` (a ViewPublisher page the operator saved from a browser,
+    because the host's robots.txt disallows us) nothing is fetched: the saved
+    bytes go through exactly the parse a fetched page does, and are kept as this
+    capture's raw evidence under a name carrying their hash.
     """
+
+    def __init__(self, source_config: dict, root_dir: Path, *, gate=None, saved_page: Path | None = None):
+        super().__init__(source_config, root_dir, gate=gate)
+        self.saved_page = Path(saved_page) if saved_page else None
 
     def _fetch(self, url: str) -> str:
         """Fetch HTML from URL. Extracted as method for test monkey-patching."""
         return fetch_html(url, gate=self.gate)
 
-    def capture(self) -> dict:
-        html = self._fetch(self.url)
-        variant = detect_variant(html)
-        captured_at = self.utc_now_iso()
+    @staticmethod
+    def decode_saved_page(body: bytes) -> str:
+        """A saved page in the charset it declares (utf-8 when it declares none or one Python lacks)."""
+        match = META_CHARSET_RE.search(body[:8192])
+        charset = "utf-8"
+        if match:
+            try:
+                charset = codecs.lookup(match.group(1).decode("ascii")).name
+            except LookupError:
+                pass
+        return body.decode(charset, errors="replace")
 
-        # Write raw HTML
+    def _raw(self) -> tuple[str, Path, dict]:
+        """(html, where its bytes are kept, provenance), from the saved page or a fetch."""
         raw_dir = self.raw_dir()
+        if self.saved_page is not None:
+            body = self.saved_page.read_bytes()
+            html = self.decode_saved_page(body)
+            sha = hashlib.sha256(body).hexdigest()
+            raw_dir.mkdir(parents=True, exist_ok=True)
+            raw_path = raw_dir / f"saved-{sha[:16]}.html"
+            raw_path.write_bytes(body)
+            saved = self.saved_page.resolve().relative_to(Path(self.root).resolve()).as_posix()
+            return html, raw_path, {"raw_sha256": sha, "raw_origin": "saved_page",
+                                    "saved_page": {"path": saved, "saved_on": saved.split("/")[3]}}
+        html = self._fetch(self.url)
         raw_dir.mkdir(parents=True, exist_ok=True)
         raw_path = raw_dir / "source.html"
         raw_path.write_text(html, encoding="utf-8")
+        return html, raw_path, {"raw_sha256": hashlib.sha256(raw_path.read_bytes()).hexdigest(),
+                                "raw_origin": "fetched"}
+
+    def capture(self) -> dict:
+        html, raw_path, provenance = self._raw()
+        variant = detect_variant(html)
+        captured_at = self.utc_now_iso()
 
         # Parse meetings using the detected variant
         if variant == "legacy":
@@ -517,6 +557,7 @@ class GranicusAdapter(BaseAdapter):
             "jurisdiction_id": self.jurisdiction_id,
             "institution_id": self.institution_id,
             "raw_artifact": str(raw_path.relative_to(self.root)),
+            **provenance,
             "meeting_count": len(meetings),
             "artifact_counts": artifact_counts,
             "meetings": meetings,

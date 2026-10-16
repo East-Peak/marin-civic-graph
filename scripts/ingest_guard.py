@@ -144,8 +144,11 @@ class RunLedger:
         entries = (json.loads(line) for line in self.path.read_text(encoding="utf-8").splitlines())
         return [e for e in entries if e["source_id"] == source_id]
 
-    def append(self, source_id: str, run_at: str, rows: int, newest: date | None, verdict: Verdict) -> None:
+    def append(self, source_id: str, run_at: str, rows: int, newest: date | None, verdict: Verdict,
+               **extra: Any) -> None:
+        """`extra`: provenance the runner reads back (raw_origin, raw_sha256, saved_page; a robots outcome)."""
         self._write({
+            **extra,
             "source_id": source_id,
             "run_at": run_at,
             "rows": rows,
