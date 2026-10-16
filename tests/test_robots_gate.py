@@ -430,3 +430,13 @@ def test_the_request_log_stamps_a_robots_fetch_when_it_is_sent_not_when_it_retur
     gate.admit(f"{HOST}/meetings")
     robots, page = _log(tmp_path)
     assert robots["monotonic"] == 1000.0 and page["monotonic"] == 1015.0
+
+
+def test_a_hosts_crawl_delay_holds_across_http_and_https(tmp_path):
+    answers = {"http://town.example.test/robots.txt": (200, "User-agent: *\nCrawl-delay: 15\n"),
+               "https://town.example.test/robots.txt": (200, "User-agent: *\nCrawl-delay: 15\n")}
+    gate, _, clock = _gate(tmp_path, answers)
+    gate.admit("http://town.example.test/meetings")  # 1015
+    gate.admit("https://town.example.test/meetings")  # its robots fetch goes to the same host
+    times = [e["monotonic"] for e in _log(tmp_path)]
+    assert all(b - a >= 15 for a, b in zip(times, times[1:])), times

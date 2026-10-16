@@ -293,13 +293,18 @@ class RobotsGate:
                 self.cache[host] = {**entry, "url": f"{host}/robots.txt", "last_request_wall": self.wall_clock()}
         self._save()
 
+    def _crawl_delay(self, origin: str) -> float:
+        entry = self.cache[origin]
+        if entry["status"] is None or not 200 <= entry["status"] < 300:
+            return 0.0
+        return self._parsed.setdefault(origin, parse(entry["body"], self.token)).crawl_delay or 0.0
+
     def _pace(self, url: str) -> float:
         """Wait out the host's Crawl-delay (when its robots.txt is known) since our last request to it,
         then mark this request as sent. Returns the seconds waited."""
-        netloc, entry = urlsplit(url).netloc.lower(), self.cache.get(_origin(url))
-        delay = 0.0
-        if entry is not None and entry["status"] is not None and 200 <= entry["status"] < 300:
-            delay = self._parsed.setdefault(_origin(url), parse(entry["body"], self.token)).crawl_delay or 0.0
+        netloc = urlsplit(url).netloc.lower()
+        delay = max((self._crawl_delay(origin) for origin in self.cache if urlsplit(origin).netloc == netloc),
+                    default=0.0)  # http and https of one host share its delay
         waited = 0.0
         if netloc in self._last:
             waited = max(0.0, self._last[netloc] + delay - self.clock())
