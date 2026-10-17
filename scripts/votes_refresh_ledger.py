@@ -58,7 +58,11 @@ _MINUTES = re.compile(r"\bminutes\b", re.I)
 _SENTENCE_END = re.compile(r"(?<=[.!?])[”\"]?\s+(?=[“\"A-Z])")
 _OFFICE_WINDOW = 160
 HEADING_CHARS = 120
-SECTION_KINDS = ("appointment", "vacancy", "election")  # only these are read in the light of a section heading
+SECTION_KINDS = ("appointment", "vacancy")  # only these are read in the light of a section heading
+# the prepositions whose object is the office a signal acts on ("resigned FROM the council", "sworn in AS …");
+# a later "to take a job as director" names where a member went, never the seat they left
+OFFICE_PREPS = {"oath": ("as", "to"), "resignation": ("from", "as"), "vacancy": ("on", "in", "for", "of"),
+                "appointment": ("to", "as"), "election": ("to", "as")}
 
 
 def _office_class(text: str, body: str) -> str | None:
@@ -164,8 +168,10 @@ def roster_signals(ct, body: str, fmt: str = "pdf") -> list[dict]:
                     if certainty == "uncertain" and kind in SECTION_KINDS and _OTHER_BODY.search(heading) \
                             and not _BODY_INSTITUTION[body].search(heading):
                         certainty = None  # an appointment/vacancy listed under another body's heading
-                    if certainty == "uncertain" and any(a <= base < b for a, b in sections):
-                        certainty = None  # inside an appointments section: another body's seats
+                    if certainty == "uncertain" and any(a <= base < b for a, b in sections) and (
+                            kind in SECTION_KINDS or re.search(r"vacanc\w*\s+(?:due\s+to|following|created\s+by)\s+"
+                                                               r"(?:the\s+)?$", sent[:m.start()], re.I)):
+                        certainty = None  # an appointments section's own seats (and the resignations behind them)
                     if certainty is None:
                         continue
                     seen_kinds.add(kind)
@@ -174,7 +180,7 @@ def roster_signals(ct, body: str, fmt: str = "pdf") -> list[dict]:
     return sorted(out, key=lambda s: (s["span"]["start"], s["kind"]))
 
 
-_OFFICE_PREP = re.compile(r"\b(?:to|as|from|on|in|for)\b", re.I)
+_OFFICE_PREP = {kind: re.compile(r"\b(?:" + "|".join(preps) + r")\b", re.I) for kind, preps in OFFICE_PREPS.items()}
 
 
 def _certainty(sent: str, m, kind: str, body: str, previous: str) -> str | None:
@@ -186,14 +192,15 @@ def _certainty(sent: str, m, kind: str, body: str, previous: str) -> str | None:
     direct = re.match(r"\s+(?:the|his|her|their|its)\s+", after)  # "vacated her City Council seat"
     if direct:
         office = _office_class(after[direct.end():direct.end() + 40], body)
-    for prep in ([] if office else _OFFICE_PREP.finditer(after)):  # the first preposition naming an office decides
+    for prep in ([] if office else _OFFICE_PREP[kind].finditer(after)):  # the first such preposition naming an office
+        if kind == "resignation" and prep.group(0).lower() == "as" and after[:prep.start()].strip():
+            continue  # only "resigned as X" right after the verb names the office left
         office = _office_class(after[prep.end():prep.end() + 70], body)
         if office:
             break
-    if office is None:
-        office = {"other": "other", "role": "role"}.get(_office_class(after, body))
-    if office is None:  # "vacant land", "Vacancy … Hearing": the noun the signal word modifies
-        office = {"other": "other"}.get(_office_class(sent[max(0, m.start() - 40):m.end() + 25], body))
+    if office is None and kind in SECTION_KINDS:  # "vacant land", "Vacancy … Hearing", "appoint … Registrar"
+        office = {"other": "other", "role": "role"}.get(_office_class(after, body)) or \
+            {"other": "other"}.get(_office_class(sent[max(0, m.start() - 40):m.end() + 25], body))
     if office in ("other", "role"):
         return None
     if office == "body":

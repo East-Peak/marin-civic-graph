@@ -43,6 +43,13 @@ class TestSignals:
         assert _kinds(BOS, "M/s Supervisor Alder - Supervisor Birch to appoint Pat Doe, incumbent (At-Large), "
                            "and Lee Roe (District 2) to the First 5 Marin Children and Families Commission.") == []
 
+    def test_codex_c_r2_cases(self):
+        assert ("election", "uncertain") in _kinds(NOV, "Parks Commission report.", "Morgan Alder was elected.")
+        assert ("resignation", "uncertain") in _kinds(NOV, "Appointments", "Morgan Alder resigned.")
+        assert ("resignation", "certain") in _kinds(
+            NOV, "Councilmember Morgan Alder resigned to take a job as director.")
+        assert _kinds(NOV, "Morgan Alder resigned as director of the Parks Commission.") == []
+
     def test_an_appointments_section_lists_other_bodies_seats(self):
         text = CanonicalText.from_lines([
             "CA-1. Board of Supervisors", "c. Appointments",

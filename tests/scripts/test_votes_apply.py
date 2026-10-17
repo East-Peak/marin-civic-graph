@@ -770,6 +770,8 @@ class TestRefreshCommands:
                 "--base-url", "http://localhost:1", "--targets", str(plan / "targets.json"), "--baseline", str(base)]
         assert votes_apply.main(args) == 0, json.loads(out.read_text())["problems"]
         result = json.loads(out.read_text())
+        assert result["baseline_sha256"] == votes_apply.fingerprint(base)  # approve binds the check to its inputs
+        assert result["targets_sha256"] == votes_apply._sha_bytes((plan / "targets.json").read_bytes())
         assert result["pages"] == {"marin-county-bos": {"url": "http://localhost:1/decision/decision-marin-county-bos-7-vote-0",
                                                         "votes": 1, "problems": []}}
         import sqlite3

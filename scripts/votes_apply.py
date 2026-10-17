@@ -560,6 +560,8 @@ def main(argv: list[str] | None = None) -> int:
             problems = bake_problems(args.sqlite, new, expected, scope=SCOPE)
             pages = page_checks(args.sqlite, expected, args.base_url)
         result = {"problems": problems, "pages": pages,
+                  **({"targets_sha256": _sha_bytes(args.targets.read_bytes()), "baseline_sha256": fingerprint(args.baseline)}
+                     if args.targets else {}),
                   "candidate_sha256": json.loads((args.plan / "plan-report.json").read_text())["candidate_sha256"],
                   "bundle_sha256": fingerprint(args.bundle),
                   "sqlite_sha256": _sha_bytes(Path(args.sqlite).read_bytes())}
