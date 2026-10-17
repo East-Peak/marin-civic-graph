@@ -270,7 +270,7 @@ FORBIDDEN_DECISION_KEYS = frozenset({"motion_text", "ayes", "noes", "recused", "
 
 
 def bake_problems(sqlite_path: Path, new_nodes: list[dict], expected: list[dict], *,
-                  scope: tuple[str, ...]) -> list[str]:
+                  scope: tuple[str, ...], check_edges: bool = True) -> list[str]:
     """A staging bake of the candidate: every new Decision has its planned label as nodes.search_label and in
     the FTS index, public props that are a subset of what was planned and carry nothing forbidden; the scoped
     CAST_VOTE edges equal the expected set."""
@@ -309,7 +309,7 @@ def bake_problems(sqlite_path: Path, new_nodes: list[dict], expected: list[dict]
                     problems.append(f"{n['id']}: public prop {key} is not a scalar")
     finally:
         con.close()
-    return problems + check_published_edges(sqlite_path, expected, scope=scope)
+    return problems + (check_published_edges(sqlite_path, expected, scope=scope) if check_edges else [])
 
 
 # --- the votes refresh: verification scoped to one batch's target Decisions --------------------------------------
@@ -394,12 +394,35 @@ def existing_target_problems(sqlite_path: Path, baseline_nodes: list[dict], targ
             bad = sorted((set(baked) - allowed) | (set(baked) & FORBIDDEN_DECISION_KEYS))
             if bad:
                 problems.append(f"{t}: public props {bad} are not public Decision properties")
-            changed = sorted(k for k in set(baked) & set(want) if baked[k] != want[k])
-            if changed:
-                problems.append(f"{t}: public props {changed} differ from the baseline's")
+            if baked != want:
+                problems.append(f"{t}: public props {baked} are not the baseline's public projection {want}")
     finally:
         con.close()
     return problems
+
+
+def refresh_bake_problems(sqlite_path: Path, new_nodes: list[dict], expected: list[dict], targets: list[str],
+                          baseline_nodes: list[dict], baseline_edges: list[dict]) -> list[str]:
+    """A staging bake of a refresh batch's candidate: the new Decisions as B2 checks them, the existing targets'
+    public props unchanged, exact edges on the batch's targets, every baseline vote preserved, nothing unplanned."""
+    return (bake_problems(sqlite_path, new_nodes, expected, scope=(), check_edges=False)
+            + existing_target_problems(sqlite_path, baseline_nodes, targets)
+            + check_target_edges(sqlite_path, expected, targets)
+            + baseline_votes_preserved(sqlite_path, baseline_edges)
+            + unplanned_votes(sqlite_path, baseline_edges, expected))
+
+
+def _approved_file(state_dir: Path, name: str) -> bytes:
+    """A file's bytes, only if the applied approval recorded exactly these bytes for it."""
+    state = json.loads((Path(state_dir) / "state.json").read_text())
+    raw = (Path(state_dir) / APPROVAL).read_bytes()
+    if not state.get("approval_sha256") or _sha_bytes(raw) != state["approval_sha256"]:
+        raise ApplyRefused("the approval manifest is not the one that was applied")
+    entry = json.loads(raw)["files"].get(name)
+    data = Path(entry["path"]).read_bytes() if entry and Path(entry["path"]).is_file() else None
+    if data is None or _sha_bytes(data) != entry["sha256"]:
+        raise ApplyRefused(f"{name} is not the approved file")
+    return data
 
 
 def _public_decision_keys() -> frozenset[str]:
@@ -448,17 +471,19 @@ def _fetch(url: str) -> str:
         return resp.read().decode("utf-8", errors="replace")
 
 
-def page_checks(sqlite_path: Path, expected: list[dict], base_url: str) -> dict:
+def page_checks(sqlite_path: Path, expected: list[dict], base_url: str, targets: dict[str, str] | None = None) -> dict:
     """One Novato and one Board Decision page (the first new Decision of each body in expected order) must show
-    each planned member with their vote label."""
+    each planned member with their vote label. `targets` (a refresh batch): {body: the Decision page to check}."""
     con = sqlite3.connect(f"file:{sqlite_path}?mode=ro", uri=True)
     try:
         names = dict(con.execute("SELECT id, search_label FROM nodes WHERE type = 'Person'"))
     finally:
         con.close()
     out = {}
-    for prefix in ("vev-novato-city-council-", "vev-marin-county-bos-"):
-        target = next((e["end_id"] for e in expected if e["end_id"].startswith(prefix)), None)
+    picks = targets if targets is not None else {
+        prefix: next((e["end_id"] for e in expected if e["end_id"].startswith(prefix)), None)
+        for prefix in ("vev-novato-city-council-", "vev-marin-county-bos-")}
+    for prefix, target in picks.items():
         if target is None:
             out[prefix] = {"problems": [f"no new {prefix} Decision in the expected set"]}
             continue
@@ -501,6 +526,8 @@ def main(argv: list[str] | None = None) -> int:
     for flag in ("--sqlite", "--bundle", "--plan", "--out"):
         bc.add_argument(flag, type=Path, required=True)
     bc.add_argument("--base-url", required=True)
+    bc.add_argument("--targets", type=Path, help="a refresh batch's plan/targets.json: batch-scoped checks")
+    bc.add_argument("--baseline", type=Path, help="with --targets: the batch's baseline export")
     cp = sub.add_parser("check-published")
     cp.add_argument("--state-dir", type=Path, required=True)
     cp.add_argument("--sqlite", type=Path, required=True)
@@ -522,8 +549,17 @@ def main(argv: list[str] | None = None) -> int:
         ops = json.loads((args.plan / "ops.json").read_text())
         expected = expected_edges(ops)
         new = [json.loads(x) for x in (args.bundle / "nodes.jsonl").read_text().splitlines() if x.strip()]
-        result = {"problems": bake_problems(args.sqlite, new, expected, scope=SCOPE),
-                  "pages": page_checks(args.sqlite, expected, args.base_url),
+        if args.targets:
+            targets = json.loads(args.targets.read_text())["targets"]
+            base_nodes = [json.loads(x) for x in (args.baseline / "nodes.jsonl").read_text().splitlines() if x.strip()]
+            base_edges = [json.loads(x) for x in (args.baseline / "edges.jsonl").read_text().splitlines() if x.strip()]
+            problems = refresh_bake_problems(args.sqlite, new, expected, targets, base_nodes, base_edges)
+            pages = page_checks(args.sqlite, expected, args.base_url,
+                                targets=refresh_page_targets(expected, new_ids={n["id"] for n in new}))
+        else:
+            problems = bake_problems(args.sqlite, new, expected, scope=SCOPE)
+            pages = page_checks(args.sqlite, expected, args.base_url)
+        result = {"problems": problems, "pages": pages,
                   "candidate_sha256": json.loads((args.plan / "plan-report.json").read_text())["candidate_sha256"],
                   "bundle_sha256": fingerprint(args.bundle),
                   "sqlite_sha256": _sha_bytes(Path(args.sqlite).read_bytes())}
@@ -541,8 +577,21 @@ def main(argv: list[str] | None = None) -> int:
             print(f"REFUSED: {exc}", file=sys.stderr)
             return 1
         expected = [json.loads(x) for x in oracle.decode("utf-8").splitlines() if x.strip()]  # the verified bytes
-        problems = check_published_edges(args.sqlite, expected, scope=SCOPE)
-        pages = page_checks(args.sqlite, expected, args.base_url)
+        if (args.state_dir / "refresh-batch.json").is_file():  # a refresh batch: its own targets + the baseline
+            try:
+                targets = json.loads(_approved_file(args.state_dir, "plan/targets.json"))["targets"]
+                base_edges = [json.loads(x) for x in _approved_file(args.state_dir, "baseline/edges.jsonl")
+                              .decode("utf-8").splitlines() if x.strip()]
+            except ApplyRefused as exc:
+                print(f"REFUSED: {exc}", file=sys.stderr)
+                return 1
+            problems = refresh_publication_problems(args.sqlite, expected, targets, base_edges)
+            pages = page_checks(args.sqlite, expected, args.base_url,
+                                targets=refresh_page_targets(expected, new_ids={t for t in targets
+                                                                                if t.startswith("vev-")}))
+        else:
+            problems = check_published_edges(args.sqlite, expected, scope=SCOPE)
+            pages = page_checks(args.sqlite, expected, args.base_url)
         problems += [f"{k}: {p}" for k, v in pages.items() for p in v["problems"]]
         for p in problems:
             print(f"PROBLEM: {p}", file=sys.stderr)

@@ -20,7 +20,7 @@ import re
 _SIGNALS = (
     ("oath", re.compile(r"\boath\s+of\s+office\b|\bsworn\s+in\b|\bswore\s+in\b|\bswearing[\s-]in\b|\bseated\b", re.I)),
     ("resignation", re.compile(r"\bresign(?:ed|s|ing|ation)?\b", re.I)),
-    ("vacancy", re.compile(r"\bvacan(?:cy|cies|t)\b", re.I)),
+    ("vacancy", re.compile(r"\bvacan(?:cy|cies|t)\b|\bvacat(?:e|ed|es|ing)\b", re.I)),
     ("appointment", re.compile(r"\bappoint(?:ed|s|ing|ment)?\b", re.I)),
     ("election", re.compile(r"\b(?:newly\s+)?elected\b|\bcanvass\w*|\bdeclar\w*\s+the\s+results?\b", re.I)),
 )
@@ -45,19 +45,20 @@ _OTHER_BODY = re.compile(r"\b(?:commissions?|committees?|authority|advisory|jpa|
                          r"board\s+of\s+(?:directors|trustees|education)|library|parks|council\s+of\b|"
                          r"(?:disaster|youth|citizens?|county|regional)\s+(?:and\s+\w+\s+)?(?:corps\s+)?council|"
                          r"\b(?!the\b|county\b|marin\b)\w+\s+board\b(?!\s+of\s+supervisors)|association|conservancy|oversight|service\s+area|csa\b|flood\s+control|"
-                         r"zone\b|vector|pest\s+management|\w+\s+district\b(?<!\bdistrict\b)|"
+                         r"zone\b|vector|pest\s+management|\b(?!the\b|this\b|a\b|each\b)[A-Za-z]+\s+district\b(?!\s*\d)|"
                          # employment: an appointment of staff is not a seat on the body
                          r"public\s+employ\w*|city\s+(?:manager|attorney|clerk)|county\s+(?:administrator|counsel)|"
-                         r"director|interim|staff|positions?|fte|personnel|representative|member\s+vacancy)\b", re.I)
+                         r"director|interim|staff|positions?|fte|personnel|representative|member\s+vacancy|"
+                         r"registrar|executive|manager|officer|employees?|nominees|in\s+lieu|recruitment|"
+                         # not a seat at all
+                         r"land|right\s+of\s+way|property|parcel|easement|street|road)\b", re.I)
 _SEAT = re.compile(r"\bseat\b|\bdistrict\s*\d\b", re.I)
 _CORRESPONDENCE = re.compile(r"\b(?:letter|e-?mail|correspondence|wrote|public\s+comment|speaker)\b", re.I)
 _MINUTES = re.compile(r"\bminutes\b", re.I)
 _SENTENCE_END = re.compile(r"(?<=[.!?])[”\"]?\s+(?=[“\"A-Z])")
-_OFFICE_WINDOW = 90
-CONTEXT_PARAGRAPHS = 3
-# Calibrated on Part A's 593 documents: an unresolved appointment / vacancy / election mention is nearly always a
-# commission, district or staff appointment, so it is a packet hint; an unresolved oath or resignation is a hold.
-UNCERTAIN_HOLD_KINDS = ("oath", "resignation")
+_OFFICE_WINDOW = 160
+HEADING_CHARS = 120
+SECTION_KINDS = ("appointment", "vacancy", "election")  # only these are read in the light of a section heading
 
 
 def _office_class(text: str, body: str) -> str | None:
@@ -93,6 +94,39 @@ def _sentences(paragraph: str) -> list[tuple[int, str]]:
     return [(s, t) for s, t in out if t]
 
 
+_MARKER = re.compile(r"^\s*(?P<m>CA-\d+|[A-Z]{1,3}-\d+|\d{1,2}|[a-z]|[A-Z])[.)]\s")
+_APPOINTMENTS_HEADER = re.compile(r"^\s*(?:\S+[.)]\s+)?(?:board\s+and\s+commission\s+|board\s+)?appointments?\b", re.I)
+
+
+def _marker_kind(line: str) -> str | None:
+    m = _MARKER.match(line)
+    if not m:
+        return None
+    tok = m.group("m")
+    return "ca" if tok.startswith("CA-") or "-" in tok else "num" if tok.isdigit() else \
+        "lower" if tok.islower() else "upper"
+
+
+def appointment_sections(text: str) -> list[tuple[int, int]]:
+    """Character spans of agenda sections that list appointments to OTHER bodies' seats ("c. Appointments" and its
+    i./ii. sub-items, up to the next sibling item): the Board names commission members there, not its own."""
+    spans, offset, open_at, kind = [], 0, None, None
+    lines = text.split("\n")
+    for line in lines:
+        k = _marker_kind(line)
+        if open_at is not None and k is not None and (k == kind or k in ("ca", "num")):
+            spans.append((open_at, offset))
+            open_at = None
+        if open_at is None and len(line.strip()) <= HEADING_CHARS and _APPOINTMENTS_HEADER.match(line) \
+                and not _BODY_INSTITUTION["marin-county-bos"].search(line[:60] + " ") \
+                and not re.search(r"city\s+council|board\s+of\s+supervisors", line, re.I):
+            open_at, kind = offset, _marker_kind(line) or "none"
+        offset += len(line) + 1
+    if open_at is not None:
+        spans.append((open_at, offset))
+    return spans
+
+
 def _paragraphs(text: str, fmt: str):
     """(offset, paragraph): blank-line blocks in a PDF's layout text; every line of HTML/DOCX is a paragraph."""
     rx = r"[^\n]+" if fmt in ("html", "docx") else r"(?:[^\n]+\n?)+"
@@ -107,10 +141,13 @@ def roster_signals(ct, body: str, fmt: str = "pdf") -> list[dict]:
     and approval of minutes are never evidence."""
     text, out = ct.text, []
     paragraphs = _paragraphs(text, fmt)
+    sections = appointment_sections(text)
     for pi, (p_off, para) in enumerate(paragraphs):
         if _CORRESPONDENCE.search(para):
             continue
-        context = " ".join(p for _, p in paragraphs[max(0, pi - CONTEXT_PARAGRAPHS):pi])
+        # a section heading right above (a short line naming another body: "Parks Commission", "CSA #6 (…)")
+        heading = paragraphs[pi - 1][1] if pi else ""
+        heading = heading if len(heading.strip()) <= HEADING_CHARS else ""
         quotes = _quoted(para)
         sentences = _sentences(para)
         for i, (s_off, sent) in enumerate(sentences):
@@ -124,8 +161,11 @@ def roster_signals(ct, body: str, fmt: str = "pdf") -> list[dict]:
                     if any(a <= at <= b for a, b in quotes) or kind in seen_kinds:
                         continue
                     certainty = _certainty(sent, m, kind, body, sentences[i - 1][1] if i else "")
-                    if certainty == "uncertain" and _OTHER_BODY.search(context):
-                        certainty = None  # the section this sits in is another body's (its appointments)
+                    if certainty == "uncertain" and kind in SECTION_KINDS and _OTHER_BODY.search(heading) \
+                            and not _BODY_INSTITUTION[body].search(heading):
+                        certainty = None  # an appointment/vacancy listed under another body's heading
+                    if certainty == "uncertain" and any(a <= base < b for a, b in sections):
+                        certainty = None  # inside an appointments section: another body's seats
                     if certainty is None:
                         continue
                     seen_kinds.add(kind)
@@ -142,10 +182,18 @@ def _certainty(sent: str, m, kind: str, body: str, previous: str) -> str | None:
     the Parks Commission*") — never the appointee's own title. Then the subject: the body as an institution for any
     signal; a member's title only for an oath or a resignation (the member is the one sworn in or leaving)."""
     after = sent[m.end():m.end() + _OFFICE_WINDOW]
-    prep = _OFFICE_PREP.search(after)
-    office = _office_class(after[prep.end():], body) if prep else None
+    office = None
+    direct = re.match(r"\s+(?:the|his|her|their|its)\s+", after)  # "vacated her City Council seat"
+    if direct:
+        office = _office_class(after[direct.end():direct.end() + 40], body)
+    for prep in ([] if office else _OFFICE_PREP.finditer(after)):  # the first preposition naming an office decides
+        office = _office_class(after[prep.end():prep.end() + 70], body)
+        if office:
+            break
     if office is None:
         office = {"other": "other", "role": "role"}.get(_office_class(after, body))
+    if office is None:  # "vacant land", "Vacancy … Hearing": the noun the signal word modifies
+        office = {"other": "other"}.get(_office_class(sent[max(0, m.start() - 40):m.end() + 25], body))
     if office in ("other", "role"):
         return None
     if office == "body":
@@ -176,16 +224,11 @@ def hold_id(*parts) -> str:
 
 
 def signal_holds(signals: list[dict], body: str, date: str, doc_sha256: str, meeting_id: str, path: str) -> list[dict]:
-    """Certain signals and uncertain oaths/resignations hold; the other uncertain signals are hints (packet only)."""
+    """Every signal holds — an uncertain one too (`roster_event_uncertain`): it fails safe to Stuart's review."""
     return [{"hold_id": hold_id(body, date, "roster_event", doc_sha256, s["span"]["start"], s["span"]["end"]),
              "kind": "roster_event" if s["certainty"] == "certain" else "roster_event_uncertain",
              "signal": s["kind"], "body": body, "from_date": date, "meeting_id": meeting_id,
-             "doc_sha256": doc_sha256, "path": path, "excerpt": s["excerpt"], "span": s["span"]} for s in signals
-            if s["certainty"] == "certain" or s["kind"] in UNCERTAIN_HOLD_KINDS]
-
-
-def signal_hints(signals: list[dict]) -> list[dict]:
-    return [s for s in signals if s["certainty"] == "uncertain" and s["kind"] not in UNCERTAIN_HOLD_KINDS]
+             "doc_sha256": doc_sha256, "path": path, "excerpt": s["excerpt"], "span": s["span"]} for s in signals]
 
 
 def name_holds(events: list[dict], resolver, body: str) -> list[dict]:
@@ -309,10 +352,8 @@ def build_batch(docs: list[dict], repo, nodes: list[dict], edges: list[dict], cf
     for body in sorted({d["body"] for d in docs}):
         new_holds += name_holds(events, resolver, body)
         open_keys = sorted({t["key"] for t in cfg["drafts"].get(body, {}).get("terms", []) if t.get("end") is None})
-        hints[body] = {**roster_hints(body, {k: v for k, v in traces.items() if k.startswith(f"meeting-{body}-")},
-                                      open_keys),
-                       "uncertain_signals": [{"doc_key": k, **s} for k, sig in sorted(signals.items())
-                                             if k.startswith(f"meeting-{body}-") for s in signal_hints(sig)]}
+        hints[body] = roster_hints(body, {k: v for k, v in traces.items() if k.startswith(f"meeting-{body}-")},
+                                   open_keys)
     dedup = {}
     for h in new_holds:
         if h["hold_id"] not in known:
@@ -324,22 +365,29 @@ def build_batch(docs: list[dict], repo, nodes: list[dict], edges: list[dict], cf
     review = [dict(h, rule="reviewer_hold") for h in reviewer_holds if h["event_id"] not in roster_held]
     bundle = votes_bundle.build_bundle(events, recon, resolver, rows, nodes, edges, holds=event_holds + review,
                                        scope_meetings=mids)
-    expected = votes_refresh_expected.derive(
-        events=events, recon=recon, drafts=cfg["drafts"], items=cfg["items"], answers=cfg["answers"], rows=rows,
-        mapping_answers=cfg["mapping_answers"], nodes=nodes, edges=edges, holds=event_holds + review, as_of=as_of)
+    # the expected script sees the raw holds, never this module's assignment of them to events
+    expected_inputs = dict(events=events, recon=recon, drafts=cfg["drafts"], items=cfg["items"],
+                           answers=cfg["answers"], rows=rows, mapping_answers=cfg["mapping_answers"], nodes=nodes,
+                           edges=edges, roster_holds=effective, reviewer_holds=list(reviewer_holds), as_of=as_of)
+    expected = votes_refresh_expected.derive(**expected_inputs)
     ledger = {"events": events, "candidates": cands, "dispositions": disp, "documents": ledger_docs,
               "problems": problems, "traces": traces}
     accounting = candidate_accounting(docs, ledger, bundle)
     per_event = {d["event_id"]: d["reason"] for d in bundle["dispositions"]}
-    accounting["matches_expected"] = per_event == expected["per_event"]
+    bundle_acc = votes_bundle.accounting(bundle)
+    accounting["counts_match"] = all(bundle_acc[k] == expected["counts"][k]
+                                     for k in ("events", "by_body", "edges_by_vote", "new_decisions"))
+    if not accounting["counts_match"]:
+        accounting["problems"].append("bundle counts differ from the expected manifest's")
+    accounting["matches_expected"] = per_event == expected["per_event"] and accounting["counts_match"]
     if not accounting["matches_expected"]:
         accounting["problems"].append("per-event dispositions differ from the expected manifest: " + ", ".join(
             sorted(e for e in set(per_event) | set(expected["per_event"])
                    if per_event.get(e) != expected["per_event"].get(e))[:5]))
     return {"as_of": as_of, "documents_selected": docs, "ledger": ledger, "texts": texts, "reconciliation": recon,
             "signals": signals, "new_holds": new_holds, "effective_holds": effective, "event_holds": event_holds,
-            "reviewer_holds": review, "hints": hints, "bundle": bundle,
-            "bundle_accounting": votes_bundle.accounting(bundle), "expected": expected, "accounting": accounting,
+            "reviewer_holds": review, "hints": hints, "bundle": bundle, "expected_inputs": expected_inputs,
+            "bundle_accounting": bundle_acc, "expected": expected, "accounting": accounting,
             "attached": sum(1 for d in bundle["dispositions"] if d["reason"] == "attached")}
 
 
@@ -475,12 +523,19 @@ def init_config(refresh, *, part_a, votes_b) -> dict:
                 src = _roster_source(ref, inv, rows_by_id, {}, roster / "sources")
                 if src is None:
                     raise AdapterError(f"{body}: evidence source {ref} does not resolve")
-                if ref.startswith("minutes:"):
-                    doc = rows_by_id[ref.partition(":")[2]]["documents"][0]
+                kind, _, ident = ref.partition(":")
+                if kind == "minutes":
+                    doc = rows_by_id[ident]["documents"][0]
                     path = resolve_path(inv, doc["paths"][0])
                     if sha256_file(path) != doc["sha256"]:
                         raise AdapterError(f"{body}: {ref} no longer matches its inventoried sha256")
-                    files[f"source/{ref}"] = path
+                elif kind == "agenda":  # where votes_ledger._roster_source read it from
+                    path = sorted((Path(inv["roots"]["raw"]) / body / "agendas").glob(f"{ident}.*"))[0]
+                else:
+                    path = (roster / "sources" / ident).resolve()
+                if sha256_file(path) != src["sha256"]:
+                    raise AdapterError(f"{body}: {ref} changed while it was being verified")
+                files[f"source/{ref}"] = path
                 loaded[ref] = src
                 sources[ref] = src["sha256"]
         verification[body] = verify_drafts(drafts[body], loaded)
@@ -526,7 +581,7 @@ def load_config(refresh) -> dict:
     for name, entry in sorted(cfg["files"].items()):
         p = Path(entry["path"])
         if not p.is_file() or sha256_file(p) != entry["sha256"]:
-            raise AdapterError(f"pinned input {name} changed since init ({p}); re-run init after review")
+            raise AdapterError(f"pinned input {name} changed or is missing since init ({p}); re-run init after review")
     files = {name: Path(e["path"]) for name, e in cfg["files"].items()}
     items, answers, rows, mapping_answers = load_mapping(files)
     return {"drafts": json.loads(files["roster/drafts.json"].read_text()), "items": items, "answers": answers,

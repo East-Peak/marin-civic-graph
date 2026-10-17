@@ -131,3 +131,31 @@ class TestInit:
             fh.write("# edited\n")
         with pytest.raises(rl.AdapterError, match="answers-map-001.txt"):
             rl.load_config(refresh)
+
+
+def test_agenda_and_web_evidence_are_pinned_and_rechecked(world):
+    refresh, part_a, vb = world
+    web = part_a / "roster" / "sources" / "web" / "page.html"
+    web.parent.mkdir(parents=True)
+    web.write_text("<html><body><p>Pat Alder took office in District 1 that year.</p></body></html>")
+    d = json.loads((part_a / "roster/drafts.json").read_text())
+    d[NOV]["terms"][0]["evidence"].append({"source": "web:web/page.html", "quote": "Pat Alder took office in District 1",
+                                           "supports": ["seat"]})
+    (part_a / "roster/drafts.json").write_text(json.dumps(d))
+    _rebind(part_a, vb)
+    cfg = rl.init_config(refresh, part_a=part_a, votes_b=vb)
+    assert "source/web:web/page.html" in cfg["files"]
+    web.write_text("<html><body><p>changed</p></body></html>")
+    with pytest.raises(rl.AdapterError, match="web:web/page.html"):
+        rl.load_config(refresh)
+    web.unlink()
+    with pytest.raises(rl.AdapterError, match="web:web/page.html"):
+        rl.load_config(refresh)
+
+
+def _rebind(part_a, vb):
+    """Re-point Part A's build record and the mapping batch at edited drafts (a fixture shortcut)."""
+    (part_a / "ledger/build.json").write_text(json.dumps({"roster_drafts_sha256": _sha(part_a / "roster/drafts.json")}))
+    batch = json.loads((vb / "mapping/batch-map-001.json").read_text())
+    batch["inputs"]["drafts.json"] = _sha(part_a / "roster/drafts.json")
+    (vb / "mapping/batch-map-001.json").write_text(json.dumps(batch))

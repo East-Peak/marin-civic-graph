@@ -193,6 +193,21 @@ class TestCandidateAccounting:
 
 
 class TestExpected:
+    def test_the_expected_script_derives_roster_hold_coverage_itself(self, world):
+        out = _build(world, holds=[{"hold_id": "hold-aaaaaaaa", "body": BOS, "from_date": "2030-04-20"}])
+        assert out["expected"]["per_event"] == {d["event_id"]: d["reason"] for d in out["bundle"]["dispositions"]}
+        # a builder that dropped one hold assignment is caught: the expected script never saw event_holds
+        import votes_refresh_expected as vx2
+        kw = out["expected_inputs"]
+        again = vx2.derive(**kw)
+        assert again["per_event"] == out["expected"]["per_event"]
+        assert "event_holds" not in kw and "roster_holds" in kw and "reviewer_holds" in kw
+
+    def test_counts_are_compared_too(self, world):
+        out = _build(world)
+        assert out["expected"]["counts"]["edges_by_vote"] == out["bundle_accounting"]["edges_by_vote"]
+        assert out["accounting"]["counts_match"] is True
+
     def test_the_expected_script_imports_neither_builder(self):
         imports = [ln for ln in Path(vx.__file__).read_text().splitlines() if ln.startswith(("import ", "from "))]
         assert imports and not [ln for ln in imports if "votes_" in ln]

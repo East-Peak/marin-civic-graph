@@ -23,7 +23,10 @@ def _last_day(term: dict, as_of: str) -> str:
     return term["end"]
 
 
-def derive(*, events, recon, drafts, items, answers, rows, mapping_answers, nodes, edges, holds, as_of) -> dict:
+def derive(*, events, recon, drafts, items, answers, rows, mapping_answers, nodes, edges, roster_holds,
+           reviewer_holds, as_of) -> dict:
+    """roster_holds: every roster hold known to this batch ({hold_id, body, from_date[, resolved]}); an unresolved one
+    holds each accepted event of its body dated on/after its from-date. reviewer_holds: {event_id, reason}."""
     confirmed_items = {a["item"] for a in answers if a["option"] == "confirm"}
     confirmed_drafts = {i["draft_id"] for i in items if i["item"] in confirmed_items}
     terms = [(b, t) for b in drafts for t in drafts[b]["terms"] if t["draft_id"] in confirmed_drafts]
@@ -56,7 +59,11 @@ def derive(*, events, recon, drafts, items, answers, rows, mapping_answers, node
             targets[r["event_id"]].append(("matched", r["decision_id"]))
         elif r["kind"] == "event" and r["status"] == "new":
             targets[r["event_id"]].append(("new", r["event_id"]))
-    held = {h["event_id"]: h.get("rule", "reviewer_hold") for h in holds}
+    live = [h for h in roster_holds if not h.get("resolved")]
+    held = {e["event_id"]: "reviewer_hold" for e in events if e["event_id"] in {h["event_id"] for h in reviewer_holds}}
+    for e in events:
+        if any(h["body"] == e["body"] and e["date"] >= h["from_date"] for h in live):
+            held[e["event_id"]] = "roster_hold"  # a roster hold wins over a reviewer hold
     actors = defaultdict(set)
     for e in events:
         for role in ("mover", "seconder"):

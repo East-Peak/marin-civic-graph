@@ -669,3 +669,113 @@ class TestRefreshScope:
         con.commit()
         probs = votes_apply.existing_target_problems(db, base, ["decision-body-x-9-vote-0"])
         assert any("status" in p for p in probs) and any("motion_text" in p for p in probs)
+        con.execute("UPDATE nodes SET props = '{}'")
+        con.commit()
+        assert votes_apply.existing_target_problems(db, base, ["decision-body-x-9-vote-0"]) == [
+            "decision-body-x-9-vote-0: public props {} are not the baseline's public projection {'status': 'carried'}"]
+
+
+class TestRefreshCommands:
+    """bake-check and check-published run the batch-scoped checks for a refresh batch (one-body, existing-target-only
+    and two batches published together)."""
+
+    def _sqlite(self, path, edges, decisions=()):
+        import sqlite3
+        con = sqlite3.connect(path)
+        con.execute("CREATE TABLE nodes (id TEXT PRIMARY KEY, type TEXT, search_label TEXT, props TEXT)")
+        con.execute("CREATE TABLE edges (source TEXT, rel TEXT, target TEXT, props TEXT)")
+        con.execute("CREATE VIRTUAL TABLE search_fts USING fts5(search_label, search_terms, content='', "
+                    "tokenize='unicode61')")
+        con.execute("INSERT INTO nodes VALUES ('person-ann-alder', 'Person', 'Ann Alder', '{}')")
+        for nid, props in decisions:
+            con.execute("INSERT INTO nodes VALUES (?,?,?,?)", (nid, "Decision", "x", json.dumps(props)))
+        con.executemany("INSERT INTO edges VALUES (?,?,?,?)",
+                        [(s, "CAST_VOTE", t, json.dumps({"vote": v})) for s, t, v in edges])
+        con.commit()
+        con.close()
+        return path
+
+    def _batch(self, tmp_path, name, expected, targets, baseline_edges):
+        d = tmp_path / name
+        (d / "plan").mkdir(parents=True)
+        (d / "baseline").mkdir()
+        (d / "refresh-batch.json").write_text(json.dumps({"batch": name}))
+        (d / "plan" / "expected-edges.jsonl").write_text("".join(json.dumps(e, sort_keys=True) + "\n" for e in expected))
+        (d / "plan" / "targets.json").write_text(json.dumps({"targets": targets}))
+        (d / "baseline" / "edges.jsonl").write_text("".join(json.dumps(e) + "\n" for e in baseline_edges))
+        files = {k: d / k for k in ("plan/expected-edges.jsonl", "plan/targets.json", "baseline/edges.jsonl")}
+        manifest = {"files": {k: {"path": str(p), "sha256": votes_apply._sha_bytes(p.read_bytes())}
+                              for k, p in files.items()}}
+        (d / "plan" / "approval-inputs.json").write_text(json.dumps(manifest))
+        sha = votes_apply._sha_bytes((d / "plan" / "approval-inputs.json").read_bytes())
+        (d / "state.json").write_text(json.dumps({"state": "APPLIED", "approval_sha256": sha, "history": []}))
+        return d
+
+    BASE = [{"start_id": "person-ann-alder", "end_id": "decision-old-1", "type": "CAST_VOTE",
+             "properties": {"vote": "no"}}]
+
+    def test_two_batches_published_together_each_pass(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(votes_apply, "_fetch", lambda url: "Ann Alder voted aye")
+        a_exp = [{"start_id": "person-ann-alder", "end_id": "vev-novato-city-council-5-aaaa-L1", "vote": "aye"}]
+        b_exp = [{"start_id": "person-ann-alder", "end_id": "decision-marin-county-bos-7-vote-0", "vote": "aye"}]
+        a = self._batch(tmp_path, "a", a_exp, ["vev-novato-city-council-5-aaaa-L1"], self.BASE)
+        b = self._batch(tmp_path, "b", b_exp, ["decision-marin-county-bos-7-vote-0"], self.BASE)
+        db = self._sqlite(tmp_path / "pub.sqlite", [("person-ann-alder", "decision-old-1", "no"),
+                                                    ("person-ann-alder", "vev-novato-city-council-5-aaaa-L1", "aye"),
+                                                    ("person-ann-alder", "decision-marin-county-bos-7-vote-0", "aye")])
+        for d in (a, b):  # one-body batches; b targets an existing Decision only
+            assert votes_apply.main(["check-published", "--state-dir", str(d), "--sqlite", str(db),
+                                     "--base-url", "http://localhost:1"]) == 0
+            assert json.loads((d / "state.json").read_text())["state"] == "PUBLISHED_VERIFIED"
+
+    def test_a_changed_baseline_vote_fails_publication(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(votes_apply, "_fetch", lambda url: "Ann Alder voted aye")
+        exp = [{"start_id": "person-ann-alder", "end_id": "vev-novato-city-council-5-aaaa-L1", "vote": "aye"}]
+        d = self._batch(tmp_path, "a", exp, ["vev-novato-city-council-5-aaaa-L1"], self.BASE)
+        db = self._sqlite(tmp_path / "pub.sqlite", [("person-ann-alder", "decision-old-1", "aye"),
+                                                    ("person-ann-alder", "vev-novato-city-council-5-aaaa-L1", "aye")])
+        assert votes_apply.main(["check-published", "--state-dir", str(d), "--sqlite", str(db),
+                                 "--base-url", "http://localhost:1"]) == 1
+
+    def test_an_unapproved_targets_file_is_refused(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(votes_apply, "_fetch", lambda url: "Ann Alder voted aye")
+        exp = [{"start_id": "person-ann-alder", "end_id": "vev-novato-city-council-5-aaaa-L1", "vote": "aye"}]
+        d = self._batch(tmp_path, "a", exp, ["vev-novato-city-council-5-aaaa-L1"], self.BASE)
+        (d / "plan" / "targets.json").write_text(json.dumps({"targets": []}))
+        db = self._sqlite(tmp_path / "pub.sqlite", [("person-ann-alder", "decision-old-1", "no")])
+        assert votes_apply.main(["check-published", "--state-dir", str(d), "--sqlite", str(db),
+                                 "--base-url", "http://localhost:1"]) == 1
+
+    def test_bake_check_refresh_mode(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(votes_apply, "_fetch", lambda url: "Ann Alder voted aye")
+        bundle, plan, base = tmp_path / "bundle", tmp_path / "plan", tmp_path / "base"
+        for p in (bundle, plan, base):
+            p.mkdir()
+        (bundle / "nodes.jsonl").write_text("")
+        (bundle / "edges.jsonl").write_text("")
+        ops = {"add_nodes": [], "add_props": {}, "labels": {},
+               "add_edges": [{"start_id": "person-ann-alder", "end_id": "decision-marin-county-bos-7-vote-0",
+                              "type": "CAST_VOTE", "properties": {"vote": "aye"}}]}
+        (plan / "ops.json").write_text(json.dumps(ops))
+        (plan / "plan-report.json").write_text(json.dumps({"candidate_sha256": {"nodes.jsonl": "x", "edges.jsonl": "y"}}))
+        (plan / "targets.json").write_text(json.dumps({"targets": ["decision-marin-county-bos-7-vote-0"]}))
+        (base / "nodes.jsonl").write_text(json.dumps({"id": "decision-marin-county-bos-7-vote-0", "labels": ["Decision"],
+                                                      "properties": {"status": "carried"}}) + "\n")
+        (base / "edges.jsonl").write_text("".join(json.dumps(e) + "\n" for e in self.BASE))
+        db = self._sqlite(tmp_path / "bake.sqlite", [("person-ann-alder", "decision-old-1", "no"),
+                                                     ("person-ann-alder", "decision-marin-county-bos-7-vote-0", "aye")],
+                          decisions=[("decision-marin-county-bos-7-vote-0", {"status": "carried"})])
+        out = tmp_path / "bake-check.json"
+        args = ["bake-check", "--sqlite", str(db), "--bundle", str(bundle), "--plan", str(plan), "--out", str(out),
+                "--base-url", "http://localhost:1", "--targets", str(plan / "targets.json"), "--baseline", str(base)]
+        assert votes_apply.main(args) == 0, json.loads(out.read_text())["problems"]
+        result = json.loads(out.read_text())
+        assert result["pages"] == {"marin-county-bos": {"url": "http://localhost:1/decision/decision-marin-county-bos-7-vote-0",
+                                                        "votes": 1, "problems": []}}
+        import sqlite3
+        con = sqlite3.connect(db)
+        con.execute("INSERT INTO edges VALUES ('person-x', 'CAST_VOTE', 'vev-elsewhere', '{\"vote\":\"aye\"}')")
+        con.commit()
+        con.close()
+        assert votes_apply.main(args) == 1
+        assert any("unplanned vote" in p for p in json.loads(out.read_text())["problems"])

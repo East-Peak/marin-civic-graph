@@ -35,6 +35,23 @@ class TestSignals:
     def test_novato_changes_are_signals(self, text, kind):
         assert (kind, "certain") in _kinds(NOV, text)
 
+    def test_codex_c_r1_cases(self):
+        assert ("vacancy", "certain") in _kinds(NOV, "Morgan Alder vacated her City Council seat.")
+        assert ("resignation", "uncertain") in _kinds(NOV, "Parks Commission report.", "Morgan Alder resigned.")
+        assert _kinds(BOS, "Request to adopt a resolution to purchase the vacant land at B Street.") == []
+        assert _kinds(BOS, "Request to appoint Pat Doe to the Golden Gate Bridge District.") == []
+        assert _kinds(BOS, "M/s Supervisor Alder - Supervisor Birch to appoint Pat Doe, incumbent (At-Large), "
+                           "and Lee Roe (District 2) to the First 5 Marin Children and Families Commission.") == []
+
+    def test_an_appointments_section_lists_other_bodies_seats(self):
+        text = CanonicalText.from_lines([
+            "CA-1. Board of Supervisors", "c. Appointments",
+            "i. Integrated Pest Management One vacancy due to the resignation of Pat Doe (District 4).",
+            "ii. Pat Roe was appointed.", "d. Request from Supervisor Alder to adopt a resolution.",
+            "Morgan Alder was appointed."])
+        got = [(x["kind"], x["certainty"], x["span"]["line_start"]) for x in rl.roster_signals(text, BOS, "html")]
+        assert got == [("appointment", "uncertain", 6)]
+
     def test_the_council_context_carries_into_the_next_sentence(self):
         assert ("appointment", "certain") in _kinds(
             NOV, "The City Council considered the vacant seat. Morgan Alder was appointed.")
