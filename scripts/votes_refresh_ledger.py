@@ -163,7 +163,7 @@ def roster_signals(ct, body: str, fmt: str = "pdf") -> list[dict]:
                     if any(a <= at <= b for a, b in quotes) or kind in seen_kinds:
                         continue
                     certainty = _certainty(sent, m, kind, body, sentences[i - 1][1] if i else "")
-                    title = para[:para.index(sent, s_off) + m.start()]  # the sub-item's own title, before the signal
+                    title = sent[:m.start()]  # the sub-item's own title: its sentence, before the signal
                     if certainty == "uncertain" and any(a <= base < b for a, b in sections) \
                             and _OTHER_BODY.search(title) and not _BODY_INSTITUTION[body].search(title) and (
                             kind in SECTION_KINDS or re.search(r"vacanc\w*\s+(?:due\s+to|following|created\s+by)\s+"

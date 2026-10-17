@@ -701,3 +701,25 @@ class TestCodexD2:
         (w.rev() / "state.json").write_text(json.dumps({"state": "AWAITING_REVIEW", "history": None}))
         votes_apply.set_state(w.rev(), "ALL_HELD")
         assert votes_apply.get_state(w.rev()) == "ALL_HELD" and list(w.rev().glob("state.json.unreadable-*"))
+
+
+
+class TestCodexD3:
+    def test_any_extra_or_malformed_heading_is_refused(self, w):
+        w.save(7001)
+        w.prepare()
+        sheet = w.rev() / "spot-check.md"
+        sheet.write_text(sheet.read_text() + "\n### S1. held-event (note)\n")
+        with pytest.raises(vr.RefreshError, match="deterministic sample"):
+            w.approve()
+
+    @pytest.mark.parametrize("body", ["null", "[]", '{"state": "SOMETHING_ELSE"}'])
+    def test_a_structurally_invalid_state_reads_as_unreadable(self, w, body):
+        w.save(7001)
+        w.prepare()
+        w.approve()
+        (w.rev() / "state.json").write_text(body)
+        st = vr.batch_states(w.refresh, vr.Registry(w.refresh).records())["batch-001"]
+        assert st["state"] is None and "no readable state" in vr.blocked(w.refresh, vr.Registry(w.refresh).records())[BOS][0]
+        assert vr.resolve(w.refresh, "batch-001", canonical_root=w.tmp, driver_factory=w.graph,
+                          uri="bolt://localhost:7688") == "ROLLED_BACK"

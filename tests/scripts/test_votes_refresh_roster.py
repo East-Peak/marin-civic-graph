@@ -65,6 +65,11 @@ class TestSignals:
                                          "d. Next item."])
         assert rl.roster_signals(text, BOS, "html") == []
 
+    def test_codex_c_r5_case(self):
+        kinds = _kinds(BOS, "Appointments", "Morgan Alder received an offer from the Parks Commission. Discussion "
+                       "followed. One vacancy due to the resignation of Morgan Alder.")
+        assert ("resignation", "uncertain") in kinds and ("vacancy", "uncertain") in kinds
+
     def test_an_appointments_section_lists_other_bodies_seats(self):
         text = CanonicalText.from_lines([
             "CA-1. Board of Supervisors", "c. Appointments",

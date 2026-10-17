@@ -680,10 +680,14 @@ def rev_dir(refresh: Path, batch: str, rev: int) -> Path:
 def _read_state(path: Path) -> str | None:
     """The revision's state, or None when its state.json is missing or unreadable (= unresolved for a committed
     batch: it can never be mistaken for a clean one)."""
+    import votes_apply
     try:
-        return json.loads((Path(path) / "state.json").read_text())["state"]
-    except (OSError, ValueError, KeyError):
+        state = json.loads((Path(path) / "state.json").read_text())
+    except (OSError, ValueError):
         return None
+    if not isinstance(state, dict) or state.get("state") not in votes_apply.STATES:
+        return None
+    return state["state"]
 
 
 def batch_states(refresh: Path, records: list[dict]) -> dict[str, dict]:
@@ -1203,8 +1207,9 @@ def approve(refresh: Path, batch: str, *, review: Path, bake_check: Path) -> str
                   "dispositions": _read_jsonl(d / "bundle" / "dispositions.jsonl")}
         want_items = [eid for picks in spot_selection(bundle, seed=manifest["seed"]).values()
                       for eid in picks["random"] + picks["notable"]]
-        have = re.findall(r"^### (S\d+)\. (\S+)$", sheet, re.M)
-        if not want_items or [e for _, e in have] != want_items \
+        headings = [ln for ln in sheet.splitlines() if ln.startswith("###")]
+        have = [m.groups() for m in (re.fullmatch(r"### (S\d+)\. (\S+)", ln) for ln in headings) if m]
+        if len(have) != len(headings) or not want_items or [e for _, e in have] != want_items \
                 or [lab for lab, _ in have] != [f"S{i}" for i in range(1, len(have) + 1)]:
             raise RefreshError("the spot-check sheet is not this revision's deterministic sample")
         review_text = Path(review).read_text()
