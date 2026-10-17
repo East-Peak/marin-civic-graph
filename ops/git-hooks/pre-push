@@ -1,0 +1,4 @@
+#!/bin/sh
+# The committed-text tripwire must run and pass for every pushed commit (scripts/pre_push_tripwire.py).
+main=$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")
+exec "$main/.venv/bin/python" "$main/scripts/pre_push_tripwire.py"

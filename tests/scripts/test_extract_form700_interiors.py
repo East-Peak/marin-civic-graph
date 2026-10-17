@@ -10,6 +10,7 @@ Fixtures are consumed byte-verbatim, never fetched/modified. Local-only PDFs
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -625,6 +626,11 @@ class TestAddedText:
         assert not _ADDRESS_RE.search(_added_text(diff))
 
 
+def _tripwire_rev():
+    """The revision the scan reaches: HEAD, or the commit being pushed (scripts/pre_push_tripwire.py)."""
+    return os.environ.get("OPEN_MARIN_TRIPWIRE_REV", "HEAD")
+
+
 class TestCommittedTextScan:
     """COMPLETION 3 — no forbidden address/APN string (or shape) reaches the
     PUBLIC repo history or the workspace evidence file. Mask the allowlisted
@@ -637,7 +643,7 @@ class TestCommittedTextScan:
         import subprocess
 
         diff = subprocess.run(
-            ["git", "diff", "2c24ebc..HEAD"],
+            ["git", "diff", f"2c24ebc..{_tripwire_rev()}"],
             cwd=str(REPO_ROOT), capture_output=True, text=True, check=True,
         ).stdout
         text = _added_text(diff)
