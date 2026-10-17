@@ -394,3 +394,15 @@ class TestDeterminismAndOffline:
         monkeypatch.setattr(socket, "create_connection", refuse)
         w.save(7001)
         assert w.prepare()["state"] == "AWAITING_REVIEW"
+
+
+def test_the_cli_runs_prepare_status_check_and_refuses_cleanly(w, capsys):
+    w.save(7001)
+    common = ["--refresh-root", str(w.refresh), "--repo-root", str(w.repo), "--today", "2030-05-11"]
+    assert vr.main(["prepare", "--export", str(w.export), *common]) == 0
+    assert '"state": "AWAITING_REVIEW"' in capsys.readouterr().out
+    assert vr.main(["status", "--export", str(w.export), *common]) == 0
+    assert "batch-001 rev-1: AWAITING_REVIEW" in capsys.readouterr().out
+    assert vr.main(["check", "--batch", "batch-001", "--rev", "1", *common]) == 0
+    assert vr.main(["abandon", "--batch", "batch-009", *common]) == 1
+    assert "REFUSED" in capsys.readouterr().err

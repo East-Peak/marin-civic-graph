@@ -16,8 +16,12 @@ Durable state under REFRESH_ROOT (~/open-marin-staging/votes-refresh):
   applied.jsonl   the applied journal: only after a verified apply (post-apply MATCH)
   history.jsonl   one line per todo/prepare run: the backlog per body (excluded from determinism)
 
+    python scripts/votes_refresh.py init                       # verify the reviewed roster once, pin it
     python scripts/votes_refresh.py todo --export <export_live_graph --backup dir>
-    python scripts/votes_refresh.py status --export <dir>
+    python scripts/votes_refresh.py prepare --export <dir> [--batch N --reviewer-holds F]
+    python scripts/votes_refresh.py approve --batch N --review R --bake-check B
+    python scripts/votes_refresh.py status --export <dir>    # also: abandon, resolve, check
+The runbook is docs/runbooks/votes-refresh.md.
 """
 from __future__ import annotations
 
@@ -1204,35 +1208,115 @@ def resolve(refresh: Path, batch: str, *, canonical_root: Path, driver_factory, 
             return "UNRESOLVED"
 
 
+def status_lines(export: Path, repo: Path, refresh: Path, today: str) -> tuple[list[str], bool]:
+    """(the status report, whether anything blocks). Read-only."""
+    b = backlog(export, repo, refresh, today=today)
+    records = Registry(refresh).records()
+    stop = blocked(refresh, records)
+    lines = freshness_lines(listing_freshness(repo, today)) + [""]
+    lines += [f"BLOCKED — {body}: " + "; ".join(why) for body, why in sorted(stop.items())]
+    for body, rows in sorted(b.items()):
+        lines.append(f"{body}: {_counts(rows)}")
+        lines += _other_lines(rows)
+        lines += [f"- {r['date']} `{r['meeting_id']}` — awaiting_file; saved file not accepted: {r['file']['reason']}"
+                  for r in rows if r["state"] == "awaiting_file" and r["url"] and r["file"] and r["file"]["reason"]]
+    states = batch_states(refresh, records)
+    if states:
+        lines += ["", "Batches:"]
+        lines += [f"- {batch} rev-{st['rev']}: {st['state'] or 'NO READABLE STATE'}"
+                  f"{' (released)' if st['released'] else ''} — {len(st['claims'])} meeting(s)"
+                  for batch, st in sorted(states.items())]
+    holds = roster_holds(records)
+    if holds:
+        lines += ["", "Roster holds:"]
+        lines += [f"- {h['hold_id']} {h['body']} from {h['from_date']} ({h['kind']}"
+                  f"{': ' + h['key'] if h.get('key') else ''}) — {'dismissed' if h['resolved'] else 'OPEN'}: "
+                  f"roster-holds/{h['hold_id']}.md" for h in holds]
+    return lines, bool(stop)
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
+    common = argparse.ArgumentParser(add_help=False)
+    common.add_argument("--refresh-root", type=Path, default=REFRESH_ROOT)
+    common.add_argument("--repo-root", type=Path, default=REPO_ROOT, help="where data/raw/manual and run states live")
+    common.add_argument("--today")
     for name in ("todo", "status"):
-        p = sub.add_parser(name)
-        p.add_argument("--export", type=Path, required=True)
-        p.add_argument("--refresh-root", type=Path, default=REFRESH_ROOT)
-        p.add_argument("--repo-root", type=Path, default=REPO_ROOT, help="where data/raw/manual and run states live")
-        p.add_argument("--today")
+        sub.add_parser(name, parents=[common]).add_argument("--export", type=Path, required=True)
+    i = sub.add_parser("init", parents=[common])
+    i.add_argument("--part-a", type=Path, default=Path.home() / "open-marin-staging" / "votes")
+    i.add_argument("--votes-b", type=Path, default=Path.home() / "open-marin-staging" / "votes-b")
+    pr = sub.add_parser("prepare", parents=[common])
+    pr.add_argument("--export", type=Path, required=True, help="a read-only export_live_graph.py --backup dir")
+    pr.add_argument("--batch", help="make a new revision of this batch")
+    pr.add_argument("--reviewer-holds", type=Path, help='{"holds": [{"event_id", "reason"}]} from the spot check')
+    a = sub.add_parser("approve", parents=[common])
+    a.add_argument("--batch", required=True)
+    a.add_argument("--review", type=Path, required=True)
+    a.add_argument("--bake-check", type=Path, required=True)
+    sub.add_parser("abandon", parents=[common]).add_argument("--batch", required=True)
+    r = sub.add_parser("resolve", parents=[common])
+    r.add_argument("--batch", required=True)
+    r.add_argument("--canonical-root", type=Path, required=True)
+    c = sub.add_parser("check", parents=[common])
+    c.add_argument("--batch", required=True)
+    c.add_argument("--rev", type=int, required=True)
     args = ap.parse_args(argv)
     args.refresh_root.mkdir(parents=True, exist_ok=True)
-    if args.cmd == "todo":
-        out = write_todo(args.export, args.repo_root, args.refresh_root, today=args.today)
-        print((args.refresh_root / "todo.md").read_text())
-        print(f"{out['state']} — {out['items']} minutes to save; {args.refresh_root / 'todo.md'}")
-        return 0
     today = args.today or dt.date.today().isoformat()
-    b = backlog(args.export, args.repo_root, args.refresh_root, today=today)
-    blocked = blocked_bodies(args.refresh_root, Registry(args.refresh_root).records())
-    print("\n".join(freshness_lines(listing_freshness(args.repo_root, today))))
-    for body, why in sorted(blocked.items()):
-        print(f"BLOCKED — {body}: " + "; ".join(why))
-    for body, rows in sorted(b.items()):
-        print(f"{body}: {_counts(rows)}")
-        print("\n".join(_other_lines(rows)))
-        print("\n".join(f"- {r['date']} `{r['meeting_id']}` — awaiting_file; saved file not accepted: "
-                        f"{r['file']['reason']}" for r in rows
-                        if r["state"] == "awaiting_file" and r["url"] and r["file"] and r["file"]["reason"]))
-    return 1 if blocked else 0
+    try:
+        if args.cmd == "init":
+            import votes_refresh_ledger as rl
+            cfg = rl.init_config(args.refresh_root, part_a=args.part_a, votes_b=args.votes_b)
+            print(f"verified once and pinned {len(cfg['files'])} files; roster problems {cfg['verification']}; "
+                  f"applied persons {cfg['applied_persons']}")
+            return 0
+        if args.cmd == "todo":
+            out = write_todo(args.export, args.repo_root, args.refresh_root, today=today)
+            print((args.refresh_root / "todo.md").read_text())
+            print(f"{out['state']} — {out['items']} minutes to save; {args.refresh_root / 'todo.md'}")
+            return 0
+        if args.cmd == "status":
+            lines, stop = status_lines(args.export, args.repo_root, args.refresh_root, today)
+            print("\n".join(lines))
+            return 1 if stop else 0
+        if args.cmd == "prepare":
+            out = prepare(args.export, args.repo_root, args.refresh_root, today=today, batch=args.batch,
+                          reviewer_holds=args.reviewer_holds)
+            print(json.dumps({k: v for k, v in out.items() if k != "new_holds"}, indent=1, sort_keys=True, default=str))
+            for h in out.get("new_holds", []):
+                print(f"roster hold {h['hold_id']}: {args.refresh_root / 'roster-holds' / (h['hold_id'] + '.md')}")
+            return 0
+        if args.cmd == "approve":
+            sha = approve(args.refresh_root, args.batch, review=args.review, bake_check=args.bake_check)
+            st = batch_states(args.refresh_root, Registry(args.refresh_root).records())[args.batch]
+            print(f"AWAITING_APPLY — approval sha256 {sha}\napply (Stuart): python scripts/votes_apply.py apply "
+                  f"--state-dir {rev_dir(args.refresh_root, args.batch, st['rev'])} --approve {sha} "
+                  f"--canonical-root {REPO_ROOT}")
+            return 0
+        if args.cmd == "abandon":
+            abandon(args.refresh_root, args.batch)
+            print(f"{args.batch} released")
+            return 0
+        if args.cmd == "check":
+            problems = check_revision(args.refresh_root, args.repo_root, args.batch, args.rev)
+            for p in problems:
+                print(p)
+            print(f"determinism check: {len(problems)} problem(s)")
+            return 1 if problems else 0
+        import os as _os
+
+        from neo4j_target import open_driver
+        uri = _os.environ.get("NEO4J_URI")
+        print(resolve(args.refresh_root, args.batch, canonical_root=args.canonical_root,
+                      database=_os.environ.get("NEO4J_DATABASE", "neo4j"),
+                      driver_factory=lambda: open_driver(uri, auth=(_os.environ["NEO4J_USER"],
+                                                                    _os.environ["NEO4J_PASSWORD"]))))
+        return 0
+    except RefreshError as exc:
+        print(f"REFUSED: {exc}", file=sys.stderr)
+        return 1
 
 if __name__ == "__main__":
     sys.exit(main())
