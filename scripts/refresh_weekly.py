@@ -454,8 +454,12 @@ def _meeting_source(ctx: Context, sid: str, registry: str, entry: dict, history:
     last_good = next((e["rows"] for e in reversed(history) if e["source_id"] == sid and e["ok"]), None)
     source = {"kind": "meetings", "registry": registry, "ok": entry["ok"], "rows": entry["rows"],
               "last_good_rows": last_good, "reasons": entry["reasons"]}
-    if entry.get("outcome"):  # robots_disallowed / robots_unavailable: the gate refused a request
-        source.update(status=entry["outcome"], robots=entry.get("robots"))
+    if entry.get("outcome"):  # robots_* (the gate refused a request) / crosswalk_* (scripts/crosswalk.py)
+        source["status"] = entry["outcome"]
+        if entry["outcome"].startswith("robots_"):
+            source["robots"] = entry.get("robots")
+    if entry.get("crosswalk_sha256"):  # the crosswalk version this capture was made with; load re-checks it
+        source["crosswalk_sha256"] = entry["crosswalk_sha256"]
     capture = _latest_capture(ctx.root, sid) if source["ok"] else None
     if capture is not None:
         source["capture"] = {"path": capture.relative_to(ctx.root).as_posix(), "sha256": _sha256(capture)}

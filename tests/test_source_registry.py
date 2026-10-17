@@ -64,17 +64,19 @@ def test_source_ids_are_unique_across_registries():
     assert len(ids) == len(set(ids))
 
 
-def test_san_rafael_case_study_city_is_registered_pending_id_reconciliation():
-    # Registered so it can be captured with --source. Held off the weekly
-    # schedule until its meeting ids are reconciled with the hand-built
-    # wave-01 ids already in the graph (meeting-{date}-san-rafael-city-council),
-    # otherwise the first scheduled load would duplicate every meeting.
+def test_san_rafael_takes_its_ids_only_from_its_reviewed_crosswalk():
+    # Its graph ids were hand-built by the wave-01 scripts (meeting-{date}-san-rafael-city-council[-suffix]);
+    # the adapter's are meeting-{source_id}-{slug}. Identity is the crosswalk or the adapter's own id, and the
+    # crosswalk must be valid for the registry to be.
+    import crosswalk
+
     sr = _all_sources()["san-rafael-city-council"]
     assert sr["adapter"] == "proudcity"
     assert sr["institution_id"] == "org-san-rafael-city-council"
     assert sr["jurisdiction_id"] == "place-san-rafael"
-    assert sr["schedule"] == "manual"
-    assert "id" in sr["schedule_note"].lower()
+    assert crosswalk.required(sr)
+    xw = crosswalk.load(ROOT / sr["crosswalk"], sr["id"])
+    assert len(xw.entries) >= 261
 
 
 def test_fairfax_covers_2025_onward():

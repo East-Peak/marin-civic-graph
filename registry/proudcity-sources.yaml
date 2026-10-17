@@ -28,17 +28,21 @@ sources:
     archive_pages:
       - https://www.cityofbelvedere.org/city-council-meeting-archive/
 
-  # San Rafael, the case-study city. Captured so far only by the wave-01
-  # one-off scripts (scripts/capture_san_rafael_city_council_*.py).
+  # San Rafael, the case-study city. Its Meetings were built by the wave-01 one-off
+  # scripts (meeting-{date}-san-rafael-city-council[-suffix]), not by this adapter
+  # (meeting-{source_id}-{slug}): identity comes only from the reviewed crosswalk
+  # (exact meeting-page slug -> existing id) or the adapter's own id, and the load
+  # never overwrites an existing node (scripts/crosswalk.py; runbook
+  # docs/runbooks/san-rafael-weekly.md).
   - id: san-rafael-city-council
     adapter: proudcity
     url: https://www.cityofsanrafael.org/city-council-meetings/
     jurisdiction_id: place-san-rafael
     institution_id: org-san-rafael-city-council
     backfill_from: "2019-01-01"
+    identity: crosswalk-required
+    crosswalk: registry/crosswalks/san-rafael-city-council.json
     schedule: manual
     schedule_note: >-
-      Held off the weekly schedule until meeting ids are reconciled: the graph's
-      wave-01 ids are hand-built (meeting-{date}-san-rafael-city-council[-suffix])
-      while this adapter emits meeting-{source_id}-{slug}, so a scheduled load
-      would duplicate every San Rafael meeting.
+      Held off the weekly schedule until the no-overwrite load and its rehearsal
+      land and the switch is reviewed (docs/runbooks/san-rafael-weekly.md).

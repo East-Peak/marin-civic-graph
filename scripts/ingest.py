@@ -15,6 +15,7 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import crosswalk
 from adapters import get_adapter_class
 from ingest_guard import BASELINE_WINDOW, Floors, RunLedger, Verdict, evaluate, newest_past_date, write_if_ok
 from meeting_identity import MeetingIdentityMap, merge_duplicate_meetings
@@ -111,11 +112,22 @@ def run_source(
     authoritative one, and the verdict is recorded in the run ledger. A request
     the robots gate refused ends the source `robots_disallowed` or
     `robots_unavailable`, even when the adapter caught the refusal itself.
+
+    A source marked `identity: crosswalk-required` takes its ids from its
+    crosswalk (or keeps the adapter's) and never touches `identity`: an invalid
+    crosswalk ends it `crosswalk_invalid` before any request, and two meetings
+    claiming one id end it `crosswalk_conflict`; neither writes a capture.
     """
+    source_id = source_config["id"]
+    xw = None
+    if crosswalk.required(source_config):
+        try:
+            xw = crosswalk.load(root / source_config.get("crosswalk", ""), source_id)
+        except crosswalk.CrosswalkError as exc:
+            return _crosswalk_failed(ledger, source_id, "crosswalk_invalid", exc, {"meetings": [], "errors": [str(exc)]})
     adapter_cls = adapter_cls or get_adapter_class(source_config["adapter"])
     options = {k: v for k, v in (("gate", gate), ("saved_page", saved_page)) if v is not None}
     adapter = adapter_cls(source_config, root, **options)
-    source_id = source_config["id"]
     gate = getattr(adapter, "gate", gate)
     already = len(gate.refusals) if gate is not None else 0
     try:
@@ -140,7 +152,14 @@ def run_source(
     # baseline seeded from a capture matches one recorded by a run.
     result["pulled_rows"] = rows
     if verdict.ok and result.get("meetings"):
-        if identity is not None:
+        if xw is not None:
+            try:
+                summary = crosswalk.apply(xw, result["meetings"])
+            except crosswalk.CrosswalkError as exc:
+                return _crosswalk_failed(ledger, source_id, "crosswalk_conflict", exc, result)
+            result["crosswalk"] = {"path": source_config["crosswalk"], "sha256": xw.sha256, **summary}
+            identity = None
+        elif identity is not None:
             identity.canonicalize(source_id, result["meetings"])
         result["meetings"] = merge_duplicate_meetings(result["meetings"])
         result["meeting_count"] = len(result["meetings"])
@@ -149,12 +168,22 @@ def run_source(
     provenance = {k: result[k] for k in ("raw_origin", "raw_sha256") if k in result}
     if result.get("saved_page"):
         provenance["saved_page"] = result["saved_page"]["path"]
+    if xw is not None:
+        provenance["crosswalk_sha256"] = xw.sha256
     ledger.append(source_id, _now(), rows, newest, verdict, **provenance)
     return result, verdict
 
 
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def _crosswalk_failed(ledger: RunLedger, source_id: str, outcome: str, exc: Exception,
+                      result: dict) -> tuple[dict, Verdict]:
+    """Nothing is written: the previous good capture stays; the ledger names the outcome and why."""
+    verdict = Verdict(ok=False, reasons=[f"{outcome}: {exc}"])
+    ledger.append(source_id, _now(), 0, None, verdict, outcome=outcome)
+    return result, verdict
 
 
 def _refused(ledger: RunLedger, source_id: str, refusal: RobotsRefused, result: dict) -> tuple[dict, Verdict]:
@@ -206,7 +235,7 @@ def main(argv: list[str] | None = None) -> int:
 
 def _capture(targets: list[dict], root: Path, gate: RobotsGate, saved_page: Path | None = None) -> int:
     ledger = RunLedger(root / LEDGER_PATH)
-    identity = MeetingIdentityMap(root / IDENTITY_PATH)
+    identity = None  # built on first use: a crosswalk-required source never reads it
     # First scheduled run: judge against the last manual captures, not "any > 0".
     for sid in seed_ledger(ledger, targets, root / "data" / "extracted"):
         print(f"  baseline seeded from last manual capture: {sid}")
@@ -223,7 +252,10 @@ def _capture(targets: list[dict], root: Path, gate: RobotsGate, saved_page: Path
         print(f"  URL: {source_config['url']}" if saved_page is None else f"  Saved page: {saved_page}")
 
         try:
-            result, verdict = run_source(source_config, root, ledger=ledger, today=today, identity=identity,
+            if identity is None and not crosswalk.required(source_config):
+                identity = MeetingIdentityMap(root / IDENTITY_PATH)
+            result, verdict = run_source(source_config, root, ledger=ledger, today=today,
+                                         identity=None if crosswalk.required(source_config) else identity,
                                          gate=gate, saved_page=saved_page)
             print(f"  Variant: {result.get('variant', 'unknown')}")
             print(f"  Meetings: {result.get('meeting_count', 'n/a')}")
