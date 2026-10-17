@@ -59,10 +59,23 @@ class TestNewCommits:
 
         def git(*args):
             calls.append(args)
-            return f"{A}\n{B}\n"
+            return f"{A}\n{B}\n" if args[0] == "rev-list" else args[2].split("^")[0]
 
         assert new_commits([B, C], git) == [A, B]
-        assert calls == [("rev-list", "--reverse", B, C, "--not", "--remotes")]
+        assert calls == [
+            ("rev-parse", "--verify", f"{B}^{{commit}}"),
+            ("rev-parse", "--verify", f"{C}^{{commit}}"),
+            ("rev-list", "--reverse", B, C, "--not", "--remotes"),
+        ]
+
+    def test_a_tip_that_is_not_a_commit_is_refused(self):
+        def git(*args):
+            if args[0] == "rev-parse":
+                raise RuntimeError("not a commit")
+            return ""
+
+        with pytest.raises(RuntimeError):
+            new_commits([A], git)
 
     def test_no_tips_asks_git_nothing(self):
         assert new_commits([], lambda *a: pytest.fail("git called")) == []

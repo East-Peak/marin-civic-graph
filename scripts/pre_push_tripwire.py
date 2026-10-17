@@ -10,6 +10,8 @@ passing and naming the commit it scanned (`tripwire_rev`), is accepted; anything
 a failure, an error, an older scanner, a missing report, a nonzero exit — blocks the push.
 Install once per clone, with the main checkout's ABSOLUTE path so worktrees on older revisions
 cannot miss the hook: `git config core.hooksPath "$PWD/ops/git-hooks"` (run in the main checkout).
+Limits: `git push --no-verify` skips it, and it trusts the main checkout to stay on main (checked
+out at an older revision, the hook or this driver may be missing or older).
 """
 from __future__ import annotations
 
@@ -42,9 +44,12 @@ def pushed_shas(lines):
 
 
 def new_commits(tips, git):
-    """Every commit the push makes newly reachable (not on any known remote ref), oldest first."""
+    """Every commit the push makes newly reachable (not on any known remote ref), oldest first.
+    A tip that does not peel to a commit (a tag of a blob or tree) raises: its content is unscannable."""
     if not tips:
         return []
+    for tip in tips:
+        git("rev-parse", "--verify", f"{tip}^{{commit}}")
     return git("rev-list", "--reverse", *tips, "--not", "--remotes").split()
 
 
