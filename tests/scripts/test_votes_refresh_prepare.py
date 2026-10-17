@@ -181,6 +181,8 @@ def w(tmp_path):
 class TestStates:
     def test_nothing_saved_is_awaiting_minutes(self, w):
         assert w.prepare()["state"] == "AWAITING_MINUTES"
+        last = json.loads((w.refresh / "history.jsonl").read_text().splitlines()[-1])
+        assert (last["command"], last["state"], last["batch"]) == ("prepare", "AWAITING_MINUTES", None)
         assert "meeting-marin-county-bos-7001" in (w.refresh / "todo.md").read_text()
 
     def test_nothing_known_is_nothing_eligible(self, w):

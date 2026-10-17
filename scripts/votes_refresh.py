@@ -1046,8 +1046,10 @@ def prepare(export: Path, repo: Path, refresh: Path, *, today: str | None = None
             if not docs:
                 todo = write_todo(export, repo, refresh, today=today, reg=reg)
                 waiting = any(r["state"] == "file_saved" for body in stop for r in b.get(body, []))
-                return {"state": "BLOCKED" if waiting else todo["state"], "blocked": stop,
-                        "resolution_problems": res_problems}
+                state = "BLOCKED" if waiting else todo["state"]
+                append_history(refresh, {"command": "prepare", "today": today, "batch": None, "rev": None,
+                                         "state": state, "blocked": stop, "documents": []})
+                return {"state": state, "blocked": stop, "resolution_problems": res_problems}
             n = 1 + max([int(x.split("-")[1]) for x in current_revisions(records)] or [0])
             batch, rev = f"batch-{n:03d}", 1
         else:
