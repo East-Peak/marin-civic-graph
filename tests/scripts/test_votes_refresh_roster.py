@@ -58,6 +58,13 @@ class TestSignals:
         assert ("resignation", "certain") in _kinds(
             NOV, "Councilmember Morgan Alder resigned after receiving an offer from the Parks Commission.")
 
+    def test_codex_c_r4_case(self):
+        assert ("resignation", "uncertain") in _kinds(BOS, "Appointments", "One vacancy due to the resignation of "
+                                                      "Morgan Alder after receiving an offer from the Parks Commission.")
+        text = CanonicalText.from_lines(["c. Appointments", "i. FCZ #4 One vacancy due to the resignation of Pat Doe.",
+                                         "d. Next item."])
+        assert rl.roster_signals(text, BOS, "html") == []
+
     def test_an_appointments_section_lists_other_bodies_seats(self):
         text = CanonicalText.from_lines([
             "CA-1. Board of Supervisors", "c. Appointments",

@@ -45,7 +45,7 @@ _OTHER_BODY = re.compile(r"\b(?:commissions?|committees?|authority|advisory|jpa|
                          r"board\s+of\s+(?:directors|trustees|education)|library|parks|council\s+of\b|"
                          r"(?:disaster|youth|citizens?|county|regional)\s+(?:and\s+\w+\s+)?(?:corps\s+)?council|"
                          r"\b(?!the\b|county\b|marin\b)\w+\s+board\b(?!\s+of\s+supervisors)|association|conservancy|oversight|service\s+area|csa\b|flood\s+control|"
-                         r"zone\b|vector|pest\s+management|\b(?!the\b|this\b|a\b|each\b)[A-Za-z]+\s+district\b(?!\s*\d)|"
+                         r"zone\b|fcz\b|vector|pest\s+management|\b(?!the\b|this\b|a\b|each\b)[A-Za-z]+\s+district\b(?!\s*\d)|"
                          # employment: an appointment of staff is not a seat on the body
                          r"public\s+employ\w*|city\s+(?:manager|attorney|clerk)|county\s+(?:administrator|counsel)|"
                          r"director|interim|staff|positions?|fte|personnel|representative|member\s+vacancy|"
@@ -163,8 +163,9 @@ def roster_signals(ct, body: str, fmt: str = "pdf") -> list[dict]:
                     if any(a <= at <= b for a, b in quotes) or kind in seen_kinds:
                         continue
                     certainty = _certainty(sent, m, kind, body, sentences[i - 1][1] if i else "")
+                    title = para[:para.index(sent, s_off) + m.start()]  # the sub-item's own title, before the signal
                     if certainty == "uncertain" and any(a <= base < b for a, b in sections) \
-                            and _OTHER_BODY.search(para) and not _BODY_INSTITUTION[body].search(para) and (
+                            and _OTHER_BODY.search(title) and not _BODY_INSTITUTION[body].search(title) and (
                             kind in SECTION_KINDS or re.search(r"vacanc\w*\s+(?:due\s+to|following|created\s+by)\s+"
                                                                r"(?:the\s+)?$", sent[:m.start()], re.I)):
                         # a sub-item of an appointments section that itself names another body: that body's seat
