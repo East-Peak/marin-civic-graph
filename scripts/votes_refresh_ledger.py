@@ -150,8 +150,6 @@ def roster_signals(ct, body: str, fmt: str = "pdf") -> list[dict]:
         if _CORRESPONDENCE.search(para):
             continue
         # a section heading right above (a short line naming another body: "Parks Commission", "CSA #6 (…)")
-        heading = paragraphs[pi - 1][1] if pi else ""
-        heading = heading if len(heading.strip()) <= HEADING_CHARS else ""
         quotes = _quoted(para)
         sentences = _sentences(para)
         for i, (s_off, sent) in enumerate(sentences):
@@ -165,13 +163,13 @@ def roster_signals(ct, body: str, fmt: str = "pdf") -> list[dict]:
                     if any(a <= at <= b for a, b in quotes) or kind in seen_kinds:
                         continue
                     certainty = _certainty(sent, m, kind, body, sentences[i - 1][1] if i else "")
-                    if certainty == "uncertain" and kind in SECTION_KINDS and _OTHER_BODY.search(heading) \
-                            and not _BODY_INSTITUTION[body].search(heading):
-                        certainty = None  # an appointment/vacancy listed under another body's heading
-                    if certainty == "uncertain" and any(a <= base < b for a, b in sections) and (
+                    if certainty == "uncertain" and any(a <= base < b for a, b in sections) \
+                            and _OTHER_BODY.search(para) and not _BODY_INSTITUTION[body].search(para) and (
                             kind in SECTION_KINDS or re.search(r"vacanc\w*\s+(?:due\s+to|following|created\s+by)\s+"
                                                                r"(?:the\s+)?$", sent[:m.start()], re.I)):
-                        certainty = None  # an appointments section's own seats (and the resignations behind them)
+                        # a sub-item of an appointments section that itself names another body: that body's seat
+                        # (and the resignation behind its vacancy)
+                        certainty = None
                     if certainty is None:
                         continue
                     seen_kinds.add(kind)
@@ -193,8 +191,8 @@ def _certainty(sent: str, m, kind: str, body: str, previous: str) -> str | None:
     if direct:
         office = _office_class(after[direct.end():direct.end() + 40], body)
     for prep in ([] if office else _OFFICE_PREP[kind].finditer(after)):  # the first such preposition naming an office
-        if kind == "resignation" and prep.group(0).lower() == "as" and after[:prep.start()].strip():
-            continue  # only "resigned as X" right after the verb names the office left
+        if kind == "resignation" and after[:prep.start()].strip():
+            break  # only "resigned from/as X" right after the verb names the office left
         office = _office_class(after[prep.end():prep.end() + 70], body)
         if office:
             break

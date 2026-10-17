@@ -50,6 +50,14 @@ class TestSignals:
             NOV, "Councilmember Morgan Alder resigned to take a job as director.")
         assert _kinds(NOV, "Morgan Alder resigned as director of the Parks Commission.") == []
 
+    def test_codex_c_r3_cases(self):
+        assert ("appointment", "uncertain") in _kinds(BOS, "Appointments", "Morgan Alder was appointed.")
+        assert ("resignation", "uncertain") in _kinds(BOS, "Appointments",
+                                                      "One vacancy due to the resignation of Morgan Alder.")
+        assert ("appointment", "uncertain") in _kinds(NOV, "Parks Commission report.", "Morgan Alder was appointed.")
+        assert ("resignation", "certain") in _kinds(
+            NOV, "Councilmember Morgan Alder resigned after receiving an offer from the Parks Commission.")
+
     def test_an_appointments_section_lists_other_bodies_seats(self):
         text = CanonicalText.from_lines([
             "CA-1. Board of Supervisors", "c. Appointments",
@@ -57,7 +65,8 @@ class TestSignals:
             "ii. Pat Roe was appointed.", "d. Request from Supervisor Alder to adopt a resolution.",
             "Morgan Alder was appointed."])
         got = [(x["kind"], x["certainty"], x["span"]["line_start"]) for x in rl.roster_signals(text, BOS, "html")]
-        assert got == [("appointment", "uncertain", 6)]
+        # the sub-item naming another body is that body's seat; "ii. Pat Roe was appointed." names none: held
+        assert got == [("appointment", "uncertain", 4), ("appointment", "uncertain", 6)]
 
     def test_the_council_context_carries_into_the_next_sentence(self):
         assert ("appointment", "certain") in _kinds(
