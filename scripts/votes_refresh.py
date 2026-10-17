@@ -271,9 +271,14 @@ class Registry:
         self.path = self.root / "registry.jsonl"
         self._locked = False
 
+    _held: set[str] = set()  # roots this process has locked: flock is not re-entrant, so a nested lock would hang
+
     @contextlib.contextmanager
     def locked(self, wait: bool = True):
         self.root.mkdir(parents=True, exist_ok=True)
+        key = str(self.root.resolve())
+        if key in Registry._held:
+            raise RefreshError(f"{self.root}: the refresh lock is already held by this process (pass its Registry)")
         fh = open(self.root / ".lock", "a+")
         try:
             try:
@@ -281,9 +286,12 @@ class Registry:
             except BlockingIOError:
                 raise RefreshError(f"{self.root} is locked by another refresh process") from None
             self._locked = True
+            Registry._held.add(key)
             self._repair_tail()
             yield self
         finally:
+            if self._locked:
+                Registry._held.discard(key)
             self._locked = False
             fh.close()
 
@@ -554,14 +562,19 @@ def _other_lines(rows: list[dict]) -> list[str]:
     return lines
 
 
-def write_todo(export: Path, repo: Path, refresh: Path, today: str | None = None) -> dict:
+def write_todo(export: Path, repo: Path, refresh: Path, today: str | None = None, reg: Registry | None = None) -> dict:
+    """`reg`: a Registry whose lock the caller already holds (the lock is not re-entrant)."""
     today = today or dt.date.today().isoformat()
     refresh = Path(refresh)
     b = backlog(export, repo, refresh, today=today)
-    reg = Registry(refresh)
-    with reg.locked():
+    if reg is not None:
         record_conflicts(reg, b)
         records = reg.records()
+    else:
+        reg = Registry(refresh)
+        with reg.locked():
+            record_conflicts(reg, b)
+            records = reg.records()
     blocked = blocked_bodies(refresh, records)
     fresh = listing_freshness(repo, today)
     items = todo_items(b)
@@ -613,6 +626,582 @@ def render_digest_section(snap: dict) -> list[str]:
     lines += [f"- {i['date']} {i['body']} `{i['meeting_id']}`: {i['url']} → `{i['target']}`"
               + (f" (saved file not accepted: {i['reason']})" if i["reason"] else "") for i in snap["items"]]
     return lines + [""]
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# Batches: prepare → (review, bake) → approve → Stuart's apply (votes_apply.py) → journal
+# ---------------------------------------------------------------------------------------------------------------
+
+LIVE_STATES = ("AWAITING_REVIEW", "AWAITING_APPLY", "ALL_HELD", "AWAITING_ROSTER_REVIEW")
+UNRESOLVED_STATES = ("APPLY_IN_PROGRESS", "APPLY_UNVERIFIED")
+REVISABLE = ("AWAITING_REVIEW", "AWAITING_APPLY", "ALL_HELD", "AWAITING_ROSTER_REVIEW", "ROLLED_BACK")
+CODE_MODULES = ("votes_text", "votes_blocks", "votes_candidates", "votes_attendance", "votes_exceptions",
+                "votes_validate", "votes_reconcile", "votes_ledger", "votes_bundle", "votes_persons",
+                "votes_refresh_ledger", "votes_refresh_expected", "case_additive_plan")
+SAMPLE_PER_BODY = 10
+NOTABLE = ("no", "abstain", "recused")
+MARKER = "refresh-batch.json"
+
+
+def rev_dir(refresh: Path, batch: str, rev: int) -> Path:
+    return Path(refresh) / "batches" / batch / f"rev-{rev}"
+
+
+def _read_state(path: Path) -> str | None:
+    """The revision's state, or None when its state.json is missing or unreadable (= unresolved for a committed
+    batch: it can never be mistaken for a clean one)."""
+    try:
+        return json.loads((Path(path) / "state.json").read_text())["state"]
+    except (OSError, ValueError, KeyError):
+        return None
+
+
+def batch_states(refresh: Path, records: list[dict]) -> dict[str, dict]:
+    """batch → {rev, bodies, state, released, claims} for every committed batch."""
+    released = set()
+    for r in records:
+        if r["kind"] == "release":
+            released.add(r["batch"])
+        elif r["kind"] in ("claim", "revision"):
+            released.discard(r["batch"])  # a re-claim takes the batch back
+    out = {}
+    for batch, cur in current_revisions(records).items():
+        claims = next(r["claims"] for r in records if r["kind"] == "batch" and r["batch"] == batch)
+        out[batch] = {**cur, "state": _read_state(rev_dir(refresh, batch, cur["rev"])), "released": batch in released,
+                      "claims": claims}
+    return out
+
+
+def blocked(refresh: Path, records: list[dict]) -> dict[str, list[str]]:
+    """body → why no new batch may be prepared for it: damaged metadata, or an apply whose outcome is unresolved
+    (APPLY_IN_PROGRESS / APPLY_UNVERIFIED / a missing or corrupt state)."""
+    out = blocked_bodies(refresh, records)
+    for batch, b in sorted(batch_states(refresh, records).items()):
+        if b["state"] in UNRESOLVED_STATES or b["state"] is None:
+            for body in b["bodies"]:
+                out.setdefault(body, []).append(f"{batch}: apply outcome unresolved ({b['state'] or 'no readable state'}); "
+                                                f"run `votes_refresh.py resolve --batch {batch}`")
+    return out
+
+
+def roster_holds(records: list[dict]) -> list[dict]:
+    resolved = {r["hold_id"] for r in records if r["kind"] == "hold_resolved"}
+    return [{**r["hold"], "resolved": r["hold"]["hold_id"] in resolved} for r in records if r["kind"] == "roster_hold"]
+
+
+def _code_versions() -> dict[str, str]:
+    here = Path(__file__).resolve().parent
+    return {m: _sha_bytes((here / f"{m}.py").read_bytes()) for m in CODE_MODULES}
+
+
+def _pdftotext() -> str:
+    from votes_inventory import _pdftotext_version
+    return _pdftotext_version()
+
+
+def _write_json(path: Path, obj) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(obj, indent=1, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def _write_jsonl(path: Path, rows) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("".join(_canonical(r) + "\n" for r in rows), encoding="utf-8")
+
+
+def _publish(path: Path, data: bytes) -> None:
+    from votes_refresh_ledger import _write_atomic
+    _write_atomic(path, data)
+
+
+def _read_jsonl(path: Path) -> list[dict]:
+    return list(_jsonl(path)) if Path(path).is_file() else []
+
+
+def _resolutions(refresh: Path, records: list[dict], reg: Registry) -> list[str]:
+    """Record `<hold_id> dismiss: <why>` lines from roster-holds/resolutions.txt, each bound to the packet Stuart
+    read (its sha256 must be the one recorded with the hold). Returns problems with lines that do not apply."""
+    path = Path(refresh) / "roster-holds" / "resolutions.txt"
+    if not path.is_file():
+        return []
+    holds = {r["hold"]["hold_id"]: r for r in records if r["kind"] == "roster_hold"}
+    done = {r["hold_id"] for r in records if r["kind"] == "hold_resolved"}
+    problems = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        m = re.fullmatch(r"(hold-[0-9a-f]{8})\s+dismiss:\s*(\S.*)", line)
+        if not m:
+            problems.append(f"resolutions.txt: `{line}` is not `<hold_id> dismiss: <why>`")
+            continue
+        hid, why = m.groups()
+        if hid not in holds:
+            problems.append(f"resolutions.txt: {hid} is not a recorded roster hold")
+        elif hid not in done:
+            packet = Path(refresh) / "roster-holds" / f"{hid}.md"
+            if not packet.is_file() or _sha_bytes(packet.read_bytes()) != holds[hid]["packet_sha256"]:
+                problems.append(f"resolutions.txt: {hid}'s packet changed since it was written; not applied")
+                continue
+            reg.append({"kind": "hold_resolved", "hold_id": hid, "note": why, "packet_sha256": holds[hid]["packet_sha256"]})
+            done.add(hid)
+    return problems
+
+
+def sync_journal(refresh: Path, reg: Registry) -> list[str]:
+    """Under the lock: journal every verified apply (APPLIED/PUBLISHED_VERIFIED under its own approval, post-apply
+    export == planned candidate) once; release a batch whose apply rolled back. Never journals an unresolved one."""
+    from case_additive_plan import fingerprint
+
+    records = reg.records()
+    journaled = {a["batch"] for a in journal(refresh)}
+    done = []
+    for batch, b in sorted(batch_states(refresh, records).items()):
+        d = rev_dir(refresh, batch, b["rev"])
+        if b["state"] == "ROLLED_BACK" and not b["released"]:
+            reg.append({"kind": "release", "batch": batch, "reason": "rolled_back"})
+            done.append(f"{batch}: released (rolled back)")
+            continue
+        if b["state"] not in ("APPLIED", "PUBLISHED_VERIFIED") or batch in journaled:
+            continue
+        st = json.loads((d / "state.json").read_text())
+        if st.get("approval_sha256") != _sha_bytes((d / "plan" / "approval-inputs.json").read_bytes()):
+            continue
+        report = json.loads((d / "plan" / "plan-report.json").read_text())
+        post = d / "apply" / "post-apply-export"
+        if not post.is_dir() or fingerprint(post) != report["candidate_sha256"]:
+            continue
+        manifest = json.loads(manifest_path(refresh, batch, b["rev"]).read_text())
+        attached = defaultdict_list((x["meeting_id"], x["event_id"]) for x in _read_jsonl(d / "bundle" / "dispositions.jsonl")
+                                    if x["reason"] == "attached")
+        with open(Path(refresh) / "applied.jsonl", "a", encoding="utf-8") as fh:
+            for doc in manifest["documents"]:
+                fh.write(_canonical({"batch": batch, "rev": b["rev"], "approval_sha256": st["approval_sha256"],
+                                     "meeting_id": doc["meeting_id"], "slot": SLOT, "sha256": doc["sha256"],
+                                     "extraction": {"pdftotext": manifest["pdftotext"],
+                                                    "text_sha256": doc["text_sha256"]},
+                                     "parser": manifest["code"], "event_ids": attached.get(doc["meeting_id"], [])})
+                         + "\n")
+            fh.flush()
+            os.fsync(fh.fileno())
+        done.append(f"{batch}: journaled")
+    return done
+
+
+def defaultdict_list(pairs) -> dict[str, list]:
+    out: dict[str, list] = {}
+    for k, v in pairs:
+        out.setdefault(k, []).append(v)
+    return {k: sorted(v) for k, v in out.items()}
+
+
+def _load_export(export: Path):
+    nodes = list(_jsonl(Path(export) / "nodes.jsonl"))
+    edges = list(_jsonl(Path(export) / "edges.jsonl"))
+    return nodes, edges
+
+
+def build_revision(refresh: Path, repo: Path, manifest: dict, out: Path, cfg: dict) -> dict:
+    """Every artifact of one revision, a pure function of its manifest (documents and baseline re-verified by sha256,
+    holds and reviewer holds from the manifest itself) and the pinned config. Nothing else is read."""
+    import case_additive_plan as cap
+    import votes_bundle
+    import votes_refresh_ledger as rl
+    from votes_apply import expected_edges
+
+    base = Path(manifest["baseline"]["dir"])
+    if cap.fingerprint(base) != manifest["baseline"]["sha256"]:
+        raise RefreshError(f"the baseline export {base} is not the one this revision was prepared on")
+    if manifest["config_sha256"] != cfg["config_sha256"]:
+        raise RefreshError("the pinned roster/mapping config changed since this revision was prepared")
+    nodes, edges = _load_export(base)
+    docs = [{k: d[k] for k in ("body", "meeting_id", "date", "title", "record_id", "url", "path", "format", "sha256")}
+            for d in manifest["documents"]]
+    built = rl.build_batch(docs, repo, nodes, edges, cfg, holds=manifest["holds"],
+                           reviewer_holds=manifest["reviewer_holds"])
+    for d in manifest["documents"]:
+        key = f"{d['meeting_id']}.{d['sha256'][:8]}"
+        if _sha_bytes(built["texts"][key].encode("utf-8")) != d["text_sha256"]:
+            raise RefreshError(f"{d['meeting_id']}: canonical text differs from the manifest's (pdftotext changed?)")
+    led, bundle = built["ledger"], built["bundle"]
+    if out.exists():
+        import shutil
+        shutil.rmtree(out)
+    out.mkdir(parents=True)
+    _write_jsonl(out / "ledger" / "events.jsonl", sorted(led["events"], key=lambda e: e["event_id"]))
+    _write_jsonl(out / "ledger" / "candidates.jsonl", sorted(led["candidates"], key=lambda c: c["cand_id"]))
+    _write_jsonl(out / "ledger" / "dispositions.jsonl", sorted(led["dispositions"], key=lambda c: c["cand_id"]))
+    _write_jsonl(out / "ledger" / "documents.jsonl", sorted(led["documents"], key=lambda x: (x["meeting_id"],
+                                                                                           x.get("doc_sha256") or "")))
+    _write_jsonl(out / "ledger" / "reconciliation.jsonl", built["reconciliation"])
+    _write_json(out / "ledger" / "problems.json", {"problems": sorted(led["problems"])})
+    cap.write_export(out / "bundle", bundle["nodes"], bundle["edges"])
+    _write_jsonl(out / "bundle" / "dispositions.jsonl", bundle["dispositions"])
+    _write_jsonl(out / "bundle" / "repair.jsonl", bundle["repair"])
+    _write_json(out / "bundle" / "accounting.json", {**built["bundle_accounting"], **{
+        "matches_expected": built["accounting"]["matches_expected"]}})
+    _write_json(out / "bundle" / "expected.json", built["expected"])
+    _write_json(out / "bundle" / "candidate-accounting.json", built["accounting"])
+    _write_json(out / "holds.json", {"new": built["new_holds"], "event_holds": built["event_holds"],
+                                     "reviewer_holds": built["reviewer_holds"]})
+    _write_json(out / "hints.json", built["hints"])
+    result = {"attached": built["attached"], "new_holds": built["new_holds"], "accounting": built["accounting"],
+              "dispositions": bundle["dispositions"]}
+    if not built["attached"]:
+        return result
+    # the additive plan (votes-refresh profile), written with paths relative to the revision
+    ops = cap.plan_additive(nodes, edges, bundle["nodes"], bundle["edges"], constraints=cap.PROFILES["votes-refresh"])
+    cand_nodes, cand_edges = cap.apply_additive(nodes, edges, ops)
+    problems = cap.verify_additive(cand_nodes, cand_edges, nodes, edges, bundle["nodes"], bundle["edges"])
+    plan = out / "plan"
+    cand = cap.write_export(plan / "candidate", cand_nodes, cand_edges)
+    rest = cap.write_export(plan / "baseline-reexport", *cap.strip_additions(cand_nodes, cand_edges, ops))
+    if rest != manifest["baseline"]["sha256"]:
+        problems.append("the candidate minus the additions does not re-export as the baseline")
+    report = {"baseline": {"dir": "manifest:baseline", "sha256": manifest["baseline"]["sha256"]},
+              "case": {"dir": "bundle", "sha256": cap.fingerprint(out / "bundle")}, "candidate_sha256": cand,
+              "baseline_reexport_sha256": rest, "baseline_reexport_identical": rest == manifest["baseline"]["sha256"],
+              "summary": ops["summary"], "verification": problems, "profile": "votes-refresh"}
+    (plan / "ops.json").write_text(json.dumps(ops, indent=1, sort_keys=True) + "\n")
+    (plan / "plan-report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+    (plan / "plan.md").write_text(cap._render(report, ops))
+    (plan / "inverse.json").write_text(json.dumps({"statements": cap.inverse_statements(ops)}, indent=1,
+                                                  sort_keys=True) + "\n")
+    exp = expected_edges(ops)
+    from export_live_graph import _stable_line
+    (plan / "expected-edges.jsonl").write_text("".join(_stable_line(r) + "\n" for r in exp))
+    _write_json(plan / "targets.json", {"targets": sorted({e["end_id"] for e in exp})})
+    # the spot-check sheet
+    events = {e["event_id"]: e for e in led["events"]}
+    texts = {d["sha256"]: built["texts"][f"{d['meeting_id']}.{d['sha256'][:8]}"] for d in manifest["documents"]}
+    sources = {d["sha256"]: d["path"] for d in manifest["documents"]}
+    names = {n["id"]: n["properties"].get("name") for n in nodes if "Person" in n["labels"]}
+    sel = spot_selection(bundle, seed=manifest["seed"])
+    sheet = votes_bundle.render_samples(sel, bundle, events, texts, names, seed=manifest["seed"], sources=sources,
+                                        bundle_fp=cap.fingerprint(out / "bundle"))
+    (out / "spot-check.md").write_text(sheet.replace("# Votes B2 spot check", f"# Votes refresh {manifest['batch']} "
+                                                     f"rev-{manifest['rev']} spot check", 1), encoding="utf-8")
+    result["plan_problems"] = problems
+    return result
+
+
+def spot_selection(bundle: dict, *, seed: int) -> dict:
+    """Per body: min(10, N) seeded random attached events, then every other attached event with a no / abstain /
+    recused vote (uncapped)."""
+    import random
+
+    flagged = {e["properties"]["ledger_event_id"] for e in bundle["edges"]
+               if e["type"] == "CAST_VOTE" and e["properties"]["vote"] in NOTABLE}
+    out = {}
+    for body in sorted({d["body"] for d in bundle["dispositions"]}):
+        attached = sorted(d["event_id"] for d in bundle["dispositions"] if d["body"] == body and d["reason"] == "attached")
+        if not attached:
+            continue
+        rng = random.Random(f"{seed}:{body}")
+        picked = sorted(rng.sample(attached, min(SAMPLE_PER_BODY, len(attached))))
+        out[body] = {"random": picked, "notable": [e for e in attached if e in flagged and e not in picked]}
+    return out
+
+
+def _manifest(refresh, repo, batch, rev, docs, export, cfg, holds, reviewer_holds) -> dict:
+    import case_additive_plan as cap
+    from votes_text import canonical_text
+
+    documents = []
+    for d in sorted(docs, key=lambda d: (d["body"], d["date"], d["meeting_id"])):
+        text = canonical_text(Path(repo) / d["path"], d["format"]).text
+        documents.append({**d, "text_sha256": _sha_bytes(text.encode("utf-8"))})
+    m = {"schema": "votes-refresh-manifest-v1", "batch": batch, "rev": rev,
+         "bodies": sorted({d["body"] for d in documents}), "documents": documents,
+         "baseline": {"dir": str(Path(export).resolve()), "sha256": cap.fingerprint(Path(export))},
+         "config_sha256": cfg["config_sha256"], "holds": sorted(holds, key=lambda h: h["hold_id"]),
+         "reviewer_holds": sorted(reviewer_holds, key=lambda h: h["event_id"]), "code": _code_versions(),
+         "pdftotext": _pdftotext()}
+    m["seed"] = int(_sha_bytes(_canonical(m).encode())[:8], 16)
+    return m
+
+
+def _selected_docs(b: dict, skip_bodies: set[str]) -> list[dict]:
+    out = []
+    for body, rows in sorted(b.items()):
+        if body in skip_bodies:
+            continue
+        for r in rows:
+            if r["state"] == "file_saved":
+                f = r["file"]
+                out.append({"body": body, "meeting_id": r["meeting_id"], "date": r["date"], "title": r["title"],
+                            "record_id": r["record_id"], "url": r["url"], "path": f["path"], "format": f["ext"],
+                            "sha256": f["sha256"]})
+    return out
+
+
+def _finish_revision(refresh: Path, reg: Registry, batch: str, rev: int, result: dict) -> str:
+    """Record new holds (+ packets) and the revision's state."""
+    import votes_apply
+    import votes_refresh_ledger as rl
+
+    d = rev_dir(refresh, batch, rev)
+    known = {r["hold"]["hold_id"] for r in reg.records() if r["kind"] == "roster_hold"}
+    for h in result["new_holds"]:
+        if h["hold_id"] in known:
+            continue
+        packet = (Path(refresh) / "roster-holds" / f"{h['hold_id']}.md")
+        packet.parent.mkdir(parents=True, exist_ok=True)
+        packet.write_text(rl.render_packet(h), encoding="utf-8")
+        reg.append({"kind": "roster_hold", "batch": batch, "rev": rev, "hold": h,
+                    "packet_sha256": _sha_bytes(packet.read_bytes())})
+    (d / MARKER).write_text(json.dumps({"batch": batch, "rev": rev}, sort_keys=True) + "\n")
+    if result["attached"]:
+        state = "AWAITING_REVIEW"
+    elif any(x["reason"] == "roster_hold" for x in result["dispositions"]) or result["new_holds"]:
+        state = "AWAITING_ROSTER_REVIEW"
+    else:
+        state = "ALL_HELD"
+    votes_apply.set_state(d, state, batch=batch, rev=rev)
+    return state
+
+
+def prepare(export: Path, repo: Path, refresh: Path, *, today: str | None = None, batch: str | None = None,
+            reviewer_holds: Path | None = None) -> dict:
+    """A new batch from every pending meeting with an accepted saved file (bodies blocked by an unresolved apply or
+    damaged metadata are skipped), or — with `batch` — a new revision of that batch (same slots; --export rebases,
+    --reviewer-holds adds the spot check's holds). Offline: reads files only."""
+    import votes_refresh_ledger as rl
+
+    refresh, today = Path(refresh), today or dt.date.today().isoformat()
+    cfg = rl.load_config(refresh)
+    reg = Registry(refresh)
+    with reg.locked():
+        sync_journal(refresh, reg)
+        res_problems = _resolutions(refresh, reg.records(), reg)
+        b = backlog(export, repo, refresh, today=today)
+        record_conflicts(reg, b)
+        records = reg.records()
+        stop = blocked(refresh, records)
+        holds = roster_holds(records)
+        rh = json.loads(Path(reviewer_holds).read_text())["holds"] if reviewer_holds else []
+        if batch is None:
+            docs = _selected_docs(b, set(stop))
+            if not docs:
+                todo = write_todo(export, repo, refresh, today=today, reg=reg)
+                waiting = any(r["state"] == "file_saved" for body in stop for r in b.get(body, []))
+                return {"state": "BLOCKED" if waiting else todo["state"], "blocked": stop,
+                        "resolution_problems": res_problems}
+            n = 1 + max([int(x.split("-")[1]) for x in current_revisions(records)] or [0])
+            batch, rev = f"batch-{n:03d}", 1
+        else:
+            states = batch_states(refresh, records)
+            if batch not in states:
+                raise RefreshError(f"{batch} is not a committed batch")
+            st = states[batch]
+            if st["state"] not in REVISABLE:
+                raise RefreshError(f"{batch} is {st['state'] or 'without a readable state'}; it cannot be revised")
+            if batch in batch_integrity(refresh, records):
+                raise RefreshError(f"{batch}: {batch_integrity(refresh, records)[batch]}")
+            view = slot_view(records, journal(refresh))
+            for c in st["claims"]:
+                owner = view[(c["meeting_id"], c["slot"])]
+                if owner["applied"] or (owner.get("owner") not in (None, batch)):
+                    raise RefreshError(f"{batch}: {c['meeting_id']} is applied or owned by {owner.get('owner')}")
+            old = json.loads(manifest_path(refresh, batch, st["rev"]).read_text())
+            docs = [{k: d[k] for k in ("body", "meeting_id", "date", "title", "record_id", "url", "path", "format",
+                                       "sha256")} for d in old["documents"]]
+            rev = st["rev"] + 1
+        manifest = _manifest(refresh, repo, batch, rev, docs, export, cfg, holds, rh)
+        data = (json.dumps(manifest, indent=1, sort_keys=True) + "\n").encode()
+        _publish(manifest_path(refresh, batch, rev), data)  # durable before the registry references it
+        sha = _sha_bytes(data)
+        if rev == 1:
+            reg.append({"kind": "batch", "batch": batch, "rev": 1, "bodies": manifest["bodies"],
+                        "manifest_sha256": sha, "claims": [{"meeting_id": d["meeting_id"], "slot": SLOT,
+                                                            "sha256": d["sha256"]} for d in docs]})
+        else:
+            if batch_states(refresh, reg.records())[batch]["released"]:
+                for d in docs:
+                    reg.append({"kind": "claim", "batch": batch, "meeting_id": d["meeting_id"], "slot": SLOT,
+                                "sha256": d["sha256"]})
+            reg.append({"kind": "revision", "batch": batch, "rev": rev, "manifest_sha256": sha})
+        result = build_revision(refresh, repo, manifest, rev_dir(refresh, batch, rev) / "build", cfg)
+        _move_build(rev_dir(refresh, batch, rev))
+        state = _finish_revision(refresh, reg, batch, rev, result)
+    append_history(refresh, {"command": "prepare", "today": today, "batch": batch, "rev": rev, "state": state,
+                             "documents": [[d["meeting_id"], d["sha256"]] for d in docs],
+                             "attached": result["attached"], "new_holds": [h["hold_id"] for h in result["new_holds"]]})
+    write_todo(export, repo, refresh, today=today)
+    return {"state": state, "batch": batch, "rev": rev, "attached": result["attached"], "blocked": stop,
+            "new_holds": result["new_holds"], "resolution_problems": res_problems,
+            "accounting_problems": result["accounting"]["problems"], "plan_problems": result.get("plan_problems", [])}
+
+
+def _move_build(d: Path) -> None:
+    """build/ → the revision's top level (ledger/, bundle/, plan/, spot-check.md, holds.json, hints.json)."""
+    import shutil
+    for p in sorted((d / "build").iterdir()):
+        target = d / p.name
+        if target.exists():
+            shutil.rmtree(target) if target.is_dir() else target.unlink()
+        shutil.move(str(p), str(target))
+    (d / "build").rmdir()
+
+
+DETERMINISTIC = ("ledger", "bundle", "plan", "spot-check.md", "holds.json", "hints.json")
+
+
+def check_revision(refresh: Path, repo: Path, batch: str, rev: int) -> list[str]:
+    """Rebuild one revision from its manifest into a temporary dir; every artifact must be byte-identical."""
+    import tempfile
+
+    import votes_refresh_ledger as rl
+    d = rev_dir(refresh, batch, rev)
+    manifest = json.loads(manifest_path(refresh, batch, rev).read_text())
+    cfg = rl.load_config(refresh)
+    with tempfile.TemporaryDirectory(dir=refresh, prefix=".check-") as tmp:
+        again = Path(tmp) / "rev"
+        build_revision(refresh, repo, manifest, again, cfg)
+        mine = sorted(p.relative_to(d) for p in d.rglob("*") if p.is_file() and p.relative_to(d).parts[0] in DETERMINISTIC)
+        theirs = sorted(p.relative_to(again) for p in again.rglob("*") if p.is_file())
+        problems = [] if mine == theirs else [f"file lists differ: {sorted(set(mine) ^ set(theirs))[:5]}"]
+        problems += [f"{rel} differs from a rebuild" for rel in sorted(set(mine) & set(theirs))
+                     if (d / rel).read_bytes() != (again / rel).read_bytes()]
+    return problems
+
+
+def apply_guard(state_dir: Path, reg: Registry) -> None:
+    """Called by votes_apply under the refresh lock: this revision is its batch's current one, the batch still owns
+    its slots, and no unresolved roster hold covers any vote it attaches."""
+    d = Path(state_dir).resolve()
+    marker = json.loads((d / MARKER).read_text())
+    refresh = d.parents[2]
+    records = reg.records()
+    st = batch_states(refresh, records).get(marker["batch"])
+    if st is None or st["rev"] != marker["rev"] or d != rev_dir(refresh, marker["batch"], marker["rev"]).resolve():
+        raise RefreshError(f"{d} is not the current revision of a committed batch")
+    if st["released"]:
+        raise RefreshError(f"{marker['batch']} was released")
+    if marker["batch"] in batch_integrity(refresh, records):
+        raise RefreshError(f"{marker['batch']}: {batch_integrity(refresh, records)[marker['batch']]}")
+    live = [h for h in roster_holds(records) if not h["resolved"]]
+    for x in _read_jsonl(d / "bundle" / "dispositions.jsonl"):
+        if x["reason"] != "attached":
+            continue
+        h = next((h for h in live if h["body"] == x["body"] and x["date"] >= h["from_date"]), None)
+        if h:
+            raise RefreshError(f"{x['event_id']} is covered by unresolved roster hold {h['hold_id']} (recorded after "
+                               "this batch was approved): re-prepare the batch")
+
+
+def approve(refresh: Path, batch: str, *, review: Path, bake_check: Path) -> str:
+    """AWAITING_APPLY for the current revision of `batch`, only with a fully answered independent review of exactly
+    its spot-check sheet (every doubt held), a clean staging bake check of exactly its candidate / bundle / baseline
+    / targets, matching accounting, and no covering roster hold. Returns the approval sha256."""
+    import case_additive_plan as cap
+    import votes_apply
+
+    refresh = Path(refresh)
+    reg = Registry(refresh)
+    with reg.locked():
+        records = reg.records()
+        st = batch_states(refresh, records).get(batch)
+        if st is None or st["state"] != "AWAITING_REVIEW":
+            raise RefreshError(f"{batch} is {st and st['state']}, not AWAITING_REVIEW")
+        d = rev_dir(refresh, batch, st["rev"])
+        apply_guard(d, reg)
+        manifest = json.loads(manifest_path(refresh, batch, st["rev"]).read_text())
+        report = json.loads((d / "plan" / "plan-report.json").read_text())
+        if report.get("profile") != "votes-refresh" or report.get("verification") \
+                or not report.get("baseline_reexport_identical"):
+            raise RefreshError("the plan is not a clean votes-refresh plan")
+        if report["case"]["sha256"] != cap.fingerprint(d / "bundle"):
+            raise RefreshError("the plan was made from another bundle")
+        acc = json.loads((d / "bundle" / "candidate-accounting.json").read_text())
+        if acc["problems"] or acc.get("matches_expected") is not True:
+            raise RefreshError(f"accounting: {acc['problems'][:3] or ['does not match the expected manifest']}")
+        sheet = (d / "spot-check.md").read_text()
+        review_text = Path(review).read_text()
+        if (review_text.splitlines() or [""])[0] != f"Sheet sha256: {_sha_bytes(sheet.encode())}":
+            raise RefreshError("the review is not of this revision's sheet (first line `Sheet sha256: <sha>`)")
+        attached = {x["event_id"] for x in _read_jsonl(d / "bundle" / "dispositions.jsonl") if x["reason"] == "attached"}
+        problems = votes_apply.review_problems(sheet, review_text, attached=attached)
+        if problems:
+            raise RefreshError(f"spot check: {problems[:5]} — hold them (reviewer-holds.json) and re-prepare")
+        bake = json.loads(Path(bake_check).read_text())
+        want = {"candidate_sha256": report["candidate_sha256"], "bundle_sha256": cap.fingerprint(d / "bundle"),
+                "baseline_sha256": manifest["baseline"]["sha256"],
+                "targets_sha256": _sha_bytes((d / "plan" / "targets.json").read_bytes())}
+        if bake.get("problems") != [] or any(bake.get(k) != v for k, v in want.items()):
+            raise RefreshError("the staging bake check is not a clean check of this revision's candidate, bundle, "
+                               "baseline and targets")
+        (d / "spot-check-review.md").write_text(review_text)
+        (d / "bake-check.json").write_text(Path(bake_check).read_text())
+        base = Path(manifest["baseline"]["dir"])
+        files = {f"plan/{rel}": d / "plan" / rel for rel in ("ops.json", "plan-report.json", "inverse.json",
+                                                              "expected-edges.jsonl", "targets.json",
+                                                              "candidate/nodes.jsonl", "candidate/edges.jsonl")}
+        files.update({f"bundle/{p.name}": p for p in sorted((d / "bundle").iterdir()) if p.is_file()})
+        files.update({"baseline/nodes.jsonl": base / "nodes.jsonl", "baseline/edges.jsonl": base / "edges.jsonl",
+                      "manifest.json": manifest_path(refresh, batch, st["rev"]), "spot-check.md": d / "spot-check.md",
+                      "spot-check-review.md": d / "spot-check-review.md", "bake-check.json": d / "bake-check.json",
+                      MARKER: d / MARKER})
+        return votes_apply.write_approval(d, files)
+
+
+def abandon(refresh: Path, batch: str) -> None:
+    reg = Registry(refresh)
+    with reg.locked():
+        st = batch_states(refresh, reg.records()).get(batch)
+        if st is None:
+            raise RefreshError(f"{batch} is not a committed batch")
+        if st["state"] not in REVISABLE:
+            raise RefreshError(f"{batch} is {st['state'] or 'without a readable state'}; it cannot be abandoned")
+        if not st["released"]:
+            reg.append({"kind": "release", "batch": batch, "reason": "abandoned"})
+
+
+def resolve(refresh: Path, batch: str, *, canonical_root: Path, driver_factory, database: str = "neo4j",
+            exporter=None) -> str:
+    """An unresolved apply (APPLY_IN_PROGRESS / APPLY_UNVERIFIED / unreadable state), proved against the LIVE
+    operator graph: under refresh → weekly locks, a fresh read-only export; == candidate → APPLIED (journaled);
+    == baseline → ROLLED_BACK (released); anything else stays unresolved. No export can be supplied by hand."""
+    import case_additive_plan as cap
+    import votes_apply
+    from export_live_graph import export_live_graph
+    from run_lock import run_lock
+
+    exporter = exporter or export_live_graph
+    refresh = Path(refresh)
+    reg = Registry(refresh)
+    with reg.locked():
+        st = batch_states(refresh, reg.records()).get(batch)
+        if st is None or not (st["state"] in UNRESOLVED_STATES or st["state"] is None):
+            raise RefreshError(f"{batch} is {st and st['state']}; nothing to resolve")
+        d = rev_dir(refresh, batch, st["rev"])
+        report = json.loads((d / "plan" / "plan-report.json").read_text())
+        with run_lock(Path(canonical_root)):
+            n = len(list((d / "apply").glob("resolve-*"))) + 1 if (d / "apply").is_dir() else 1
+            out = d / "apply" / f"resolve-{n}"
+            driver = driver_factory()
+            try:
+                exporter(driver, database=database, out_dir=out, backup=True, progress=None)
+            finally:
+                driver.close()
+            live = cap.fingerprint(out)
+            if live == report["candidate_sha256"]:
+                post = d / "apply" / "post-apply-export"
+                if post.exists():
+                    import shutil
+                    shutil.rmtree(post)
+                import shutil
+                shutil.copytree(out, post)
+                approval = _sha_bytes((d / "plan" / "approval-inputs.json").read_bytes())
+                votes_apply.set_state(d, "APPLIED", approval_sha256=approval, resolved_by=out.name)
+                sync_journal(refresh, reg)
+                return "APPLIED"
+            if live == report["baseline"]["sha256"]:
+                votes_apply.set_state(d, "ROLLED_BACK", reason="resolved: the live graph equals the baseline",
+                                      resolved_by=out.name)
+                sync_journal(refresh, reg)
+                return "ROLLED_BACK"
+            return "UNRESOLVED"
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -36,7 +36,11 @@ from run_lock import RunLockHeld, run_lock
 
 OPERATOR_URI = "bolt://localhost:7688"
 STATES = ("AWAITING_MAPPING_REVIEW", "AWAITING_APPLY", "APPLIED", "ROLLED_BACK", "APPLY_UNVERIFIED",
-          "PUBLISHED_VERIFIED")
+          "PUBLISHED_VERIFIED",
+          # the votes refresh's revisions (scripts/votes_refresh.py)
+          "AWAITING_REVIEW", "ALL_HELD", "AWAITING_ROSTER_REVIEW",
+          # published durably just before the transaction opens; a crash leaves it, never AWAITING_APPLY
+          "APPLY_IN_PROGRESS")
 SCOPE = ("decision-novato-city-council-", "decision-marin-county-bos-", "vev-novato-city-council-",
          "vev-marin-county-bos-")
 APPROVAL = Path("plan/approval-inputs.json")
@@ -61,8 +65,32 @@ def set_state(state_dir: Path, state: str, **detail) -> None:
         raise ValueError(state)
     path = Path(state_dir) / "state.json"
     history = json.loads(path.read_text()).get("history", []) if path.exists() else []
-    path.write_text(json.dumps({"state": state, **detail, "history": history + [{"state": state, **detail}]},
-                               indent=1, sort_keys=True) + "\n")
+    data = json.dumps({"state": state, **detail, "history": history + [{"state": state, **detail}]},
+                      indent=1, sort_keys=True) + "\n"
+    tmp = path.with_name(".state.json.tmp")  # the old or the new file, never a torn one
+    with open(tmp, "w", encoding="utf-8") as fh:
+        fh.write(data)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+    fd = os.open(path.parent, os.O_RDONLY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
+def refresh_batch(state_dir: Path):
+    """For a votes-refresh revision dir, its refresh root (else None). A dir under the refresh batches root without
+    its marker is refused: it must never be applied as if it were an ordinary state dir."""
+    import votes_refresh
+
+    d = Path(state_dir).resolve()
+    root = votes_refresh.REFRESH_ROOT.resolve() / "batches"
+    marked = (d / votes_refresh.MARKER).is_file()
+    if d.is_relative_to(root) and not marked:
+        raise ApplyRefused(f"{d} is under the votes refresh but has no {votes_refresh.MARKER}")
+    return d.parents[2] if marked else None
 
 
 def expected_edges(ops: dict) -> list[dict]:
@@ -187,8 +215,30 @@ def _recovery(state_dir: Path, reason: str, detail: str) -> None:
 
 
 def run_apply(state_dir: Path, *, approve: str, canonical_root: Path, uri: str | None, driver_factory,
-              database: str, exporter=export_live_graph) -> str:
+               database: str, exporter=export_live_graph) -> str:
+    """For a votes-refresh revision the refresh lock is taken FIRST (then the weekly lock) and held throughout: the
+    refresh guard (current revision, not released, no covering roster hold) is checked under it, and the journal is
+    written before it is released."""
     state_dir = Path(state_dir)
+    root = refresh_batch(state_dir)
+    if root is None:
+        return _run_apply(state_dir, approve=approve, canonical_root=canonical_root, uri=uri,
+                          driver_factory=driver_factory, database=database, exporter=exporter)
+    import votes_refresh
+    reg = votes_refresh.Registry(root)
+    with reg.locked():
+        try:
+            votes_refresh.apply_guard(state_dir, reg)
+        except votes_refresh.RefreshError as exc:
+            raise ApplyRefused(str(exc)) from None
+        result = _run_apply(state_dir, approve=approve, canonical_root=canonical_root, uri=uri,
+                            driver_factory=driver_factory, database=database, exporter=exporter)
+        votes_refresh.sync_journal(root, reg)
+        return result
+
+
+def _run_apply(state_dir: Path, *, approve: str, canonical_root: Path, uri: str | None, driver_factory,
+               database: str, exporter=export_live_graph) -> str:
     verified = _verify_approval(state_dir, approve)
     if uri != OPERATOR_URI:
         raise ApplyRefused(f"NEO4J_URI must be {OPERATOR_URI} (got {uri!r})")
@@ -203,6 +253,7 @@ def run_apply(state_dir: Path, *, approve: str, canonical_root: Path, uri: str |
             exporter(driver, database=database, out_dir=backup, backup=True, progress=None)
             if fingerprint(backup) != report["baseline"]["sha256"]:
                 return "DRIFT"  # state stays AWAITING_APPLY; re-plan
+            set_state(state_dir, "APPLY_IN_PROGRESS", approval_sha256=approve)
             # No `with` around the transaction: neo4j 5's Transaction COMMITS when such a block exits normally.
             with driver.session(database=database) as session:
                 tx = session.begin_transaction()

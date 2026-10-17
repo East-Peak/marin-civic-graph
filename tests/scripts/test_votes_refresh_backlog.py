@@ -287,11 +287,28 @@ class TestRegistry:
         with pytest.raises(vr.RefreshError, match="corrupt"):
             vr.Registry(tmp_path).records()
 
-    def test_a_second_writer_is_refused_while_the_lock_is_held(self, tmp_path):
+    def test_a_nested_lock_in_one_process_is_refused_not_a_hang(self, tmp_path):
         with vr.Registry(tmp_path).locked():
-            with pytest.raises(vr.RefreshError, match="locked"):
+            with pytest.raises(vr.RefreshError, match="already held by this process"):
+                with vr.Registry(tmp_path).locked():
+                    pass
+        with vr.Registry(tmp_path).locked():  # released: lockable again
+            pass
+
+    def test_another_process_holding_the_lock_refuses_a_non_waiting_writer(self, tmp_path):
+        import subprocess
+        holder = subprocess.Popen([sys.executable, "-c", (
+            "import sys, time; sys.path.insert(0, %r); import votes_refresh as vr\n"
+            "with vr.Registry(%r).locked():\n    print('held', flush=True); time.sleep(30)") % (
+            str(Path(vr.__file__).parent), str(tmp_path))], stdout=subprocess.PIPE, text=True)
+        try:
+            assert holder.stdout.readline().strip() == "held"
+            with pytest.raises(vr.RefreshError, match="locked by another"):
                 with vr.Registry(tmp_path).locked(wait=False):
                     pass
+        finally:
+            holder.kill()
+            holder.wait()
 
 
 # --- listing freshness, todo, digest ------------------------------------------------------------------------------
