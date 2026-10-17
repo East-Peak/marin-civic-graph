@@ -639,11 +639,16 @@ class TestCommittedTextScan:
     workspace evidence file. Skipif the local-only strings file is absent."""
 
     @pytest.mark.skipif(not STRIPPED.is_file(), reason="local-only strings file absent")
-    def test_no_forbidden_string_or_shape_in_committed_diff_or_evidence(self):
+    def test_no_forbidden_string_or_shape_in_committed_diff_or_evidence(self, record_property):
         import subprocess
 
+        rev = subprocess.run(
+            ["git", "rev-parse", "--verify", f"{_tripwire_rev()}^{{commit}}"],
+            cwd=str(REPO_ROOT), capture_output=True, text=True, check=True,
+        ).stdout.strip()
+        record_property("tripwire_rev", rev)
         diff = subprocess.run(
-            ["git", "diff", f"2c24ebc..{_tripwire_rev()}"],
+            ["git", "diff", f"2c24ebc..{rev}"],
             cwd=str(REPO_ROOT), capture_output=True, text=True, check=True,
         ).stdout
         text = _added_text(diff)
