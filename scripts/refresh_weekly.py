@@ -931,18 +931,29 @@ def load(ctx: Context, run_id: str) -> dict:
         if result.returncode != 0:
             return _fail(ctx, state, f"backup {_failure('backup', result)}; nothing was loaded")
         state["backup"] = backup.as_posix()
+        state["backup_sha256"] = {f: _sha256(ctx.root / backup / f) for f in STAGED_FILES
+                                  if (ctx.root / backup / f).is_file()}  # what check-loaded binds to
         _persist(ctx, state)
-    steps = [(sid, [ctx.python, "scripts/normalize_meetings.py", "--source", sid,
-                    "--capture", str(ctx.root / source["capture"]["path"]), "--load"])
-             for sid, source in accepted.items() if source["kind"] == "meetings"]
+    reports = {sid: _fresh_report_path(ctx.root, run_id, sid)
+               for sid, source in accepted.items() if source["kind"] == "meetings"}
+    guarded = {sid for sid in reports if "crosswalk_sha256" in accepted[sid] or _crosswalk_required(ctx, accepted[sid], sid)}
+    steps = [(sid, meeting_load_cmd(ctx, sid, accepted[sid], reports[sid])) for sid in reports]
     steps += [(sid, [ctx.python, f"scripts/{STAGED_SOURCES[sid].script}", "--load-from", str(staged_root / sid)])
               for sid in refetchers]
+    held: list[str] = []
     try:
         for sid, cmd in steps:
             result = _step(ctx, run_id, f"load-{sid}", cmd)
             if result.returncode != 0:
                 return _set_status(ctx, state, "load_failed", error=f"load-{sid} {_failure(f'load-{sid}', result)}; "
                                    "nothing was promoted into data/normalized")
+            if sid in guarded:
+                problem = _take_load_report(state, sid, reports[sid])
+                if problem:
+                    return _set_status(ctx, state, "load_failed", error=f"load-{sid} exited 0 but {problem}")
+                if state["sources"][sid].get("held"):
+                    held.append(sid)
+                    _persist(ctx, state)
             if not _unchanged(ctx, run_id, sid, accepted[sid]):
                 return _fail(ctx, state, f"{sid} changed while loading; the graph may hold unreviewed bytes. "
                                          "Stage a fresh run.")
@@ -953,8 +964,59 @@ def load(ctx: Context, run_id: str) -> dict:
     except Exception as exc:
         _print_crash(ctx)
         return _set_status(ctx, state, "load_failed", error=f"load crashed: {type(exc).__name__}: {exc}")
-    _set_status(ctx, state, "loaded", loaded=list(accepted), error=None)
+    _set_status(ctx, state, "loaded", loaded=[sid for sid in accepted if sid not in held], error=None)
     return _export_and_bake(ctx, state, run_id, reconcile=True)
+
+
+def meeting_load_cmd(ctx: Context, sid: str, source: dict, report: Path) -> list[str]:
+    """The load step of one meeting source: normalize exactly the approved capture, under this run's root."""
+    return [ctx.python, "scripts/normalize_meetings.py", "--source", sid,
+            "--capture", str(ctx.root / source["capture"]["path"]), "--load",
+            "--root", str(ctx.root), "--report", str(report)]
+
+
+def _fresh_report_path(root: Path, run_id: str, sid: str) -> Path:
+    """A report path no earlier attempt of this run used: a leftover can never pass for this load's report."""
+    reports = run_dir(root, run_id) / "load-reports"
+    attempt = 1
+    while (reports / f"{sid}.{attempt}.json").exists():
+        attempt += 1
+    return reports / f"{sid}.{attempt}.json"
+
+
+def _crosswalk_required(ctx: Context, source: dict, sid: str) -> bool:
+    """Whether the registry, as it stands at load time, sends this source through the guarded load."""
+    import crosswalk
+
+    config = next((s for s in load_sources(ctx.root / f"registry/{source['registry']}-sources.yaml")
+                   if s["id"] == sid), {})
+    return crosswalk.required(config)
+
+
+def _take_load_report(state: dict, sid: str, path: Path) -> str | None:
+    """Record a crosswalk source's load report in the run; the problem, if it is not this load's own.
+
+    The no-overwrite load (scripts/guarded_load.py) exits 0 whether it loaded or held, so a success
+    without a fresh report naming this source, its approved capture and its pinned crosswalk is no
+    success. A `held` report fails only this source: nothing of it was written, and the run goes on.
+    """
+    source = state["sources"][sid]
+    try:
+        report = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return f"wrote no load report ({path.name})"
+    expected = {"source_id": sid, "capture_sha256": source["capture"]["sha256"],
+                "crosswalk_sha256": source.get("crosswalk_sha256")}  # none pinned: the report must say none
+    wrong = sorted(k for k, v in expected.items() if report.get(k) != v)
+    if wrong or report.get("outcome") not in ("loaded", "held"):
+        return f"its load report does not match this load ({', '.join(wrong) or 'outcome ' + repr(report.get('outcome'))})"
+    source["load_report"] = {"path": path.name, "outcome": report["outcome"], "holds": report.get("holds", [])}
+    if report["outcome"] == "held":
+        reasons = [f"held, nothing loaded: {h['reason']} "
+                   f"{json.dumps({k: v for k, v in h.items() if k != 'reason'}, sort_keys=True)}"
+                   for h in report.get("holds", [])] or ["held, nothing loaded"]
+        source.update(ok=False, held=True, reasons=reasons)
+    return None
 
 
 def _export_and_bake(ctx: Context, state: dict, run_id: str, *, reconcile: bool) -> dict:

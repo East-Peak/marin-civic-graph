@@ -175,7 +175,13 @@ def build_place_stub(capture: dict) -> dict:
     )
 
 
-def build_edges(meeting: dict, capture: dict) -> list[dict]:
+def template_record_id(meeting: dict, art_type: str, capture: dict) -> str:
+    """The default id of a meeting artifact's Record: record-<source>-<meeting id minus "meeting-">-<art>."""
+    return f"record-{capture['source_id']}-{meeting['meeting_id'].split('meeting-')[-1]}-{art_type}"
+
+
+def build_edges(meeting: dict, capture: dict, record_id=None) -> list[dict]:
+    record_id = record_id or (lambda m, art: template_record_id(m, art, capture))
     edges = []
     mid = meeting["meeting_id"]
 
@@ -190,16 +196,17 @@ def build_edges(meeting: dict, capture: dict) -> list[dict]:
     # Meeting → Record (evidence for each available artifact)
     for art_type, art in meeting.get("artifacts", {}).items():
         if art.get("available") and art.get("url"):
-            record_id = f"record-{capture['source_id']}-{meeting['meeting_id'].split('meeting-')[-1]}-{art_type}"
-            edges.append(_edge(mid, "Meeting", record_id, "Record",
+            edges.append(_edge(mid, "Meeting", record_id(meeting, art_type), "Record",
                                "EVIDENCED_BY", capture))
 
     return edges
 
 
-def normalize_source(capture: dict, output_dir: Path) -> tuple[list[dict], list[dict], dict]:
-    output_dir.mkdir(parents=True, exist_ok=True)
-
+def normalize_rows(capture: dict, *, record_id=None, meeting_props=None) -> tuple[list[dict], list[dict]]:
+    """(nodes, edges) for one capture. `record_id(meeting, art)` is the ONE place an artifact Record's id is
+    made, for its node and its EVIDENCED_BY edge alike (default: the template); `meeting_props(meeting)`
+    adds properties to each Meeting node (crosswalk-required sources record their page url)."""
+    record_id = record_id or (lambda m, art: template_record_id(m, art, capture))
     nodes: list[dict] = []
     edges: list[dict] = []
 
@@ -218,31 +225,39 @@ def normalize_source(capture: dict, output_dir: Path) -> tuple[list[dict], list[
 
     # Meetings + per-meeting artifact records + edges
     for meeting in capture.get("meetings", []):
-        nodes.append(build_meeting_node(meeting, capture))
-        meeting_edges = build_edges(meeting, capture)
-        edges.extend(meeting_edges)
+        node = build_meeting_node(meeting, capture)
+        if meeting_props:
+            node["properties"].update(meeting_props(meeting))
+        nodes.append(node)
+        edges.extend(build_edges(meeting, capture, record_id))
 
         # Create Record nodes for available artifacts
         for art_type, art in meeting.get("artifacts", {}).items():
             if art.get("available") and art.get("url"):
-                mid_suffix = meeting["meeting_id"].split("meeting-")[-1]
-                record_id = f"record-{capture['source_id']}-{mid_suffix}-{art_type}"
                 record_type = ARTIFACT_RECORD_TYPES.get(art_type, f"meeting_{art_type}")
                 nodes.append(build_record_node(
-                    {"id": record_id, "record_type": record_type,
+                    {"id": record_id(meeting, art_type), "record_type": record_type,
                      "source_id": capture["source_id"],
                      "source_url": art["url"],
                      "captured_at": capture["captured_at"]},
                     capture,
                 ))
+    return nodes, edges
 
-    # Write JSONL
+
+def write_rows(output_dir: Path, nodes: list[dict], edges: list[dict]) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
     with open(output_dir / "nodes.jsonl", "w") as f:
         for node in nodes:
             f.write(json.dumps(node, sort_keys=True) + "\n")
     with open(output_dir / "edges.jsonl", "w") as f:
         for edge in edges:
             f.write(json.dumps(edge, sort_keys=True) + "\n")
+
+
+def normalize_source(capture: dict, output_dir: Path) -> tuple[list[dict], list[dict], dict]:
+    nodes, edges = normalize_rows(capture)
+    write_rows(output_dir, nodes, edges)
 
     report = {
         "source_id": capture["source_id"],
@@ -260,23 +275,60 @@ def normalize_source(capture: dict, output_dir: Path) -> tuple[list[dict], list[
     return nodes, edges, report
 
 
-def find_latest_capture(source_id: str) -> Path | None:
+def find_latest_capture(source_id: str, root: Path | None = None) -> Path | None:
     """Newest dated capture (<YYYY-MM-DD>.json); stray non-date files never win."""
-    pattern = str(ROOT / "data" / "extracted" / source_id / "*.json")
+    pattern = str((root or ROOT) / "data" / "extracted" / source_id / "*.json")
     files = [f for f in sorted(glob.glob(pattern)) if re.fullmatch(r"\d{4}-\d{2}-\d{2}", Path(f).stem)]
     return Path(files[-1]) if files else None
 
 
-def resolve_capture(source_id: str, capture: str | None) -> Path | None:
+def resolve_capture(source_id: str, capture: str | None, root: Path | None = None) -> Path | None:
     """The capture to normalize: an explicit (approved) path, else the newest dated one.
 
     The weekly runner passes the exact capture a human approved, so a newer
     capture written in the meantime can never be the one that gets loaded.
     """
-    return Path(capture) if capture else find_latest_capture(source_id)
+    return Path(capture) if capture else find_latest_capture(source_id, root)
 
 
-def main() -> None:
+def load_guarded(source_config: dict, capture_path: Path, capture: dict, root: Path, output_dir: Path,
+                 report_path: Path | None) -> int:
+    """A crosswalk-required source (or any capture made under a crosswalk): the no-overwrite load.
+
+    A hold is a successful exit whose report says `held`; only a failure to load at all exits non-zero.
+    """
+    import crosswalk
+    import guarded_load
+
+    uri = os.getenv("NEO4J_URI")
+    if not uri:
+        print("  NEO4J_URI is required to load a crosswalk-required source", file=sys.stderr)
+        return 2
+    auth = (os.getenv("NEO4J_USER"), os.getenv("NEO4J_PASSWORD"))
+    if not uri.startswith(f"{guarded_load.FAKE_SCHEME}:") and not all(auth):
+        print("  NEO4J_USER and NEO4J_PASSWORD are required for --load", file=sys.stderr)
+        return 2
+    with guarded_load.open_port(uri, auth=auth, database=os.getenv("NEO4J_DATABASE") or None) as graph:
+        report = guarded_load.load_capture(graph, capture, source_config, root=root)
+    normalized = report.pop("normalized", None)
+    report["capture_sha256"] = crosswalk.sha256_file(capture_path)
+    if normalized:
+        write_rows(output_dir, normalized["nodes"], normalized["edges"])
+    output_dir.mkdir(parents=True, exist_ok=True)
+    text = json.dumps(report, indent=2, sort_keys=True) + "\n"
+    (output_dir / "load-report.json").write_text(text)
+    if report_path:
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(text)
+    created = report["created"]
+    print(f"  Guarded load: {report['outcome']}; created "
+          f"{ {t: len(ids) for t, ids in created['nodes'].items()} } nodes, {len(created['edges'])} edges")
+    for hold in report["holds"]:
+        print(f"    HOLD {hold['reason']}: {json.dumps({k: v for k, v in hold.items() if k != 'reason'})}")
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Normalize adapter meeting output to settled-ontology JSONL")
     parser.add_argument("--source", help="Source ID to normalize")
     parser.add_argument("--all", dest="all_sources", action="store_true", help="Normalize all available sources")
@@ -285,13 +337,19 @@ def main() -> None:
         "--capture",
         help="Normalize exactly this capture file instead of the newest (requires --source)",
     )
-    args = parser.parse_args()
+    parser.add_argument("--root", type=Path, default=ROOT,
+                        help="Repository root the registry, captures and output resolve under (default: this checkout)")
+    parser.add_argument("--report", type=Path,
+                        help="Also write a crosswalk-required source's load report here (the weekly run reads it)")
+    args = parser.parse_args(argv)
     if args.capture and not args.source:
         parser.error("--capture requires --source (it names one source's capture)")
+    root = args.root.resolve()
 
     import yaml
+    import crosswalk
     sources = []
-    for registry_file in (ROOT / "registry").glob("*-sources.yaml"):
+    for registry_file in (root / "registry").glob("*-sources.yaml"):
         with open(registry_file) as f:
             data = yaml.safe_load(f)
         sources.extend(data.get("sources", []))
@@ -300,16 +358,17 @@ def main() -> None:
         targets = [s for s in sources if s["id"] == args.source]
         if not targets:
             print(f"Unknown source: {args.source}", file=sys.stderr)
-            sys.exit(1)
+            return 1
     elif args.all_sources:
         targets = sources
     else:
         print("Specify --source <id> or --all", file=sys.stderr)
-        sys.exit(1)
+        return 1
 
+    status = 0
     for source_config in targets:
         source_id = source_config["id"]
-        capture_path = resolve_capture(source_id, args.capture)
+        capture_path = resolve_capture(source_id, args.capture, root)
         if not capture_path:
             print(f"  No captures found for {source_id}, skipping")
             continue
@@ -318,11 +377,26 @@ def main() -> None:
         print(f"  Capture: {capture_path}")
 
         capture = json.loads(capture_path.read_text())
+        output_dir = root / "data" / "normalized" / f"{source_id}-meetings"
+        if crosswalk.required(source_config) or "crosswalk" in capture:
+            if not args.load:
+                print(f"  {source_id} resolves Record ids against the graph: it only runs with --load",
+                      file=sys.stderr)
+                status = status or 2
+                continue
+            from run_lock import RunLockHeld, run_lock
+            try:
+                with run_lock(root):  # its graph reads and creates are only sound with no other writer
+                    status = load_guarded(source_config, capture_path, capture, root, output_dir,
+                                          args.report) or status
+            except RunLockHeld as exc:
+                print(f"  {exc}", file=sys.stderr)
+                status = 2
+            continue
         if capture.get("meeting_count", 0) == 0:
             print(f"  No meetings in capture, skipping")
             continue
 
-        output_dir = ROOT / "data" / "normalized" / f"{source_id}-meetings"
         nodes, edges, report = normalize_source(capture, output_dir)
 
         print(f"  Nodes: {report['node_count']}")
@@ -350,7 +424,8 @@ def main() -> None:
                 print(f"  Loaded.")
             finally:
                 driver.close()
+    return status
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

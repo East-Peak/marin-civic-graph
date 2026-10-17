@@ -388,7 +388,8 @@ def test_load_loads_only_accepted_sources_from_the_approved_bytes(ctx, world, ro
         ["py", "scripts/export_live_graph.py", "--backup", "--out-dir",
          str(root / f"data/exports/backups/pre-load-{RUN}")],
         # Meetings load from exactly the approved capture, never "the latest".
-        ["py", "scripts/normalize_meetings.py", "--source", "a", "--capture", str(root / approved_a), "--load"],
+        ["py", "scripts/normalize_meetings.py", "--source", "a", "--capture", str(root / approved_a), "--load",
+         "--root", str(root), "--report", str(run_dir / "load-reports" / "a.1.json")],
         ["py", "scripts/ingest_form700.py", "--load-from", str(run_dir / "staged/form700")],
         ["py", "scripts/ingest_courtlistener_cases.py", "--load-from", str(run_dir / "staged/courtlistener")],
         ["bash", "scripts/refresh_reconciliation.sh"],
