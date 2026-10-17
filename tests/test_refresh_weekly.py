@@ -181,7 +181,8 @@ def ctx(root: Path, world: FakeWorld, pings: list[str], alarm_pings: list[str]) 
     def ping(url: str, body: str) -> None:  # never the network; the export-due check's pings kept apart
         (alarm_pings if url.startswith(DUE_HOST) else pings).append((url, body))
     # Beside the fake repo, never inside it, and never the operator's ~/open-marin-staging.
-    env = {**ENV, rw.CF_STAGING_ENV: str(root.parent / f"{root.name}-cf-staging")}
+    env = {**ENV, rw.CF_STAGING_ENV: str(root.parent / f"{root.name}-cf-staging"),
+           rw.VOTES_REFRESH_ENV: str(root.parent / f"{root.name}-votes-refresh")}
     return rw.Context(root=root, runner=world, env=env, python="py",
                       now=lambda: datetime(2026, 9, 28, 5, 0, 0, tzinfo=timezone.utc),
                       free_bytes=lambda path: 50 * 1024**3, meeting_registries=("granicus",),
@@ -885,6 +886,8 @@ def test_digest_follows_the_run_through_load_and_publish(ctx, root):
     assert "awaiting_publish_approval" in digest
     assert "2 nodes · 1 edges · sqlite 26 bytes (budget 100: within budget)" in digest
     assert f"refresh_weekly.py publish {RUN}" in digest and "does not deploy" in digest
+    assert "## Votes minutes to save" in digest  # computed after the export; this fake export has none: reported
+    assert _state(root)["votes_minutes"]["error"].startswith("FileNotFoundError")
 
     assert rw.main(["publish", RUN], ctx) == 0
     assert _state(root)["published"]["sqlite_sha256"] in _digest(root)
@@ -1376,3 +1379,22 @@ def test_http_ping_posts_the_body(monkeypatch):
     rw.http_ping(FAIL, "run failed")
 
     assert transport.requests[0].data == b"run failed" and transport.requests[0].get_method() == "POST"
+
+
+def test_votes_minutes_are_listed_from_the_runs_export_read_only(ctx, root):
+    export = root / "data/exports/live-graph-export"
+    export.mkdir(parents=True)
+    meeting = {"id": "meeting-novato-city-council-9001", "labels": ["Meeting"],
+               "properties": {"meeting_date": "2030-04-08", "title": "City Council"}}
+    record = {"id": "record-min-9001", "labels": ["Record"],
+              "properties": {"record_type": "meeting_minutes",
+                             "source_url": "//novato.granicus.com/MinutesViewer.php?view_id=7&clip_id=9001&doc_id=d"}}
+    (export / "nodes.jsonl").write_text(json.dumps(meeting) + "\n" + json.dumps(record) + "\n")
+    (export / "edges.jsonl").write_text(json.dumps({"start_id": meeting["id"], "end_id": record["id"],
+                                                    "type": "EVIDENCED_BY", "properties": {}}) + "\n")
+    snap = rw._votes_minutes(ctx)
+    assert [i["meeting_id"] for i in snap["items"]] == ["meeting-novato-city-council-9001"]
+    assert not Path(ctx.env[rw.VOTES_REFRESH_ENV]).exists()  # nothing written there
+    digest = rw.render_digest({"run_id": RUN, "status": "awaiting_publish_approval", "sources": {},
+                               "votes_minutes": snap})
+    assert "https://novato.granicus.com/MinutesViewer.php?view_id=7&clip_id=9001&doc_id=d" in digest

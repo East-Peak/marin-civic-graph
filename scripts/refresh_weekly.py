@@ -55,6 +55,7 @@ from ingest_guard import Floors, evaluate  # noqa: E402
 from load_from import STAGED_FILES  # noqa: E402
 from neo4j_target import UnsafeNeo4jTarget, check_target  # noqa: E402
 import robots_gate  # noqa: E402
+import votes_refresh  # noqa: E402
 from net_retry import retry_transient  # noqa: E402
 from run_lock import OWNER_ENV, RunLockHeld, run_lock  # noqa: E402
 
@@ -147,6 +148,7 @@ TRANSITIONS = {
 
 CF_REGISTRY = Path("registry/netfile-sources.yaml")
 CF_STATE = RUNS_DIR / "campaign-finance.json"  # validation cache and campaign-export hashes (not a run)
+VOTES_REFRESH_ENV = "OPEN_MARIN_VOTES_REFRESH_ROOT"  # the votes refresh's registry, read only; default its REFRESH_ROOT
 CF_STAGING_ENV = "OPEN_MARIN_CF_STAGING"  # where preparations go; default ~/open-marin-staging/cf-refresh
 
 
@@ -977,6 +979,8 @@ def _export_and_bake_steps(ctx: Context, state: dict, run_id: str, *, reconcile:
         if name == "reconciliation":
             state["reconciled"] = True
             _persist(ctx, state)
+        if name == "export":  # the digest's list of minutes to save, from this run's export (never fails the run)
+            state["votes_minutes"] = _votes_minutes(ctx)
 
     missing = [n for n in PUBLISHED_ARTIFACTS if not (staging / n).is_file()]
     if missing:
@@ -988,6 +992,13 @@ def _export_and_bake_steps(ctx: Context, state: dict, run_id: str, *, reconcile:
         return _fail(ctx, state, f"baked sqlite is {report['sqlite']['size_bytes']:,} bytes, over its "
                                  f"{report['sqlite']['budget_bytes']:,}-byte budget")
     return _set_status(ctx, state, "awaiting_publish_approval")
+
+
+def _votes_minutes(ctx: Context) -> dict:
+    """Read-only: the votes refresh's pending minutes as of this run's export (votes_refresh.digest_snapshot)."""
+    refresh = Path(ctx.env.get(VOTES_REFRESH_ENV) or votes_refresh.REFRESH_ROOT)
+    return votes_refresh.digest_snapshot(ctx.root, ctx.root / EXPORTS / "live-graph-export", refresh,
+                                         today=ctx.now().date().isoformat())
 
 
 def rebake(ctx: Context, run_id: str) -> dict:
@@ -1260,6 +1271,8 @@ def render_digest(state: dict) -> str:
     if failures:
         lines += ["## Failures", "", *(f"- **{sid}**: {'; '.join(s['reasons'])}" for sid, s in failures), ""]
     lines += _saved_pages_digest(state)
+    if state.get("votes_minutes"):
+        lines += votes_refresh.render_digest_section(state["votes_minutes"])
     if state.get("bake"):
         totals, sqlite = state["bake"].get("totals") or {}, state["bake"]["sqlite"]
         lines += ["## Bake (data/exports/staging/)", "",
