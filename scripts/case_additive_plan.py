@@ -136,10 +136,17 @@ def plan_additive(baseline_nodes, baseline_edges, case_nodes, case_edges, constr
 
     if constraints is not None:
         _enforce(constraints, add_nodes, add_props, add_edges, noop_nodes, noop_edges)
+    labels = {}
+    for nid in sorted({e[end] for e in add_edges for end in ("start_id", "end_id")} | set(add_props)):
+        have = sorted((case.get(nid) or base[nid])["labels"])
+        if not have or not all(isinstance(x, str) and IDENTIFIER.fullmatch(x) for x in have):
+            raise AdditivePlanError(f"{nid}: labels {have!r} are not safe identifiers; statements match by label")
+        labels[nid] = have
     return {
         "add_nodes": add_nodes,
         "add_props": add_props,
         "add_edges": add_edges,
+        "labels": labels,
         "summary": {
             "added_nodes": dict(Counter("|".join(n["labels"]) for n in add_nodes)),
             "nodes_gaining_props": len(add_props),
@@ -249,9 +256,37 @@ def strip_additions(nodes, edges, ops) -> tuple[list[dict], list[dict]]:
 # Cypher for ONE explicit transaction (rendered into the plan; nothing here runs it)
 # ---------------------------------------------------------------------------
 
+def _label_of(ops: dict):
+    """node id → its `:A:B` label expression, from the plan's validated labels (no label-free fallback)."""
+    if "labels" not in ops:
+        raise AdditivePlanError("the plan has no node labels; re-plan (statements match nodes by label and id)")
+
+    def label(nid: str) -> str:
+        have = ops["labels"].get(nid)
+        if not have or not all(isinstance(x, str) and IDENTIFIER.fullmatch(x) for x in have):
+            raise AdditivePlanError(f"{nid}: the plan has no safe labels for it")
+        return ":" + ":".join(have)
+    return label
+
+
+def _by_endpoint_labels(ops: dict, edges, row) -> dict[tuple[str, str, str], list]:
+    label = _label_of(ops)
+    groups: dict[tuple[str, str, str], list] = {}
+    for e in edges:
+        groups.setdefault((e["type"], label(e["start_id"]), label(e["end_id"])), []).append(row(e))
+    return groups
+
+
+def _step_name(rel: str, start: str, end: str) -> str:
+    return f"{rel}:{start[1:]}->{end[1:]}"
+
+
 def statements(ops: dict) -> list[dict]:
-    """Prechecks (must count 0) then additions (must count exactly their rows), in dependency order."""
+    """Prechecks (must count 0) then additions (must count exactly their rows), in dependency order. Nodes are
+    matched by (label, id) so every lookup is an index seek; only the node-absence precheck is global (an id
+    must be free under every label)."""
     stmts = []
+    label = _label_of(ops)
 
     def add(step, query, rows, expect=None):
         if rows:
@@ -260,29 +295,30 @@ def statements(ops: dict) -> list[dict]:
 
     add("precheck:nodes_absent", "UNWIND $rows AS id OPTIONAL MATCH (n {id: id}) WITH n WHERE n IS NOT NULL",
         [n["id"] for n in ops["add_nodes"]], expect=0)
-    add("precheck:edges_absent", "UNWIND $rows AS e OPTIONAL MATCH (s {id: e.start_id})-[r]->(t {id: e.end_id}) "
-        "WITH r, e WHERE r IS NOT NULL AND type(r) = e.type",
-        [{"start_id": e["start_id"], "type": e["type"], "end_id": e["end_id"]} for e in ops["add_edges"]], expect=0)
+    pre = _by_endpoint_labels(ops, ops["add_edges"],
+                              lambda e: {"start_id": e["start_id"], "type": e["type"], "end_id": e["end_id"]})
+    for (rel, sl, tl), rows in sorted(pre.items()):
+        add(f"precheck:edges_absent:{_step_name(rel, sl, tl)}",
+            f"UNWIND $rows AS e OPTIONAL MATCH (s{sl} {{id: e.start_id}})-[r]->(t{tl} {{id: e.end_id}}) "
+            "WITH r, e WHERE r IS NOT NULL AND type(r) = e.type", rows, expect=0)
     by_labels: dict[tuple[str, ...], list[dict]] = {}
     for node in ops["add_nodes"]:
         by_labels.setdefault(tuple(node["labels"]), []).append({"props": node["properties"]})
     for labels, rows in sorted(by_labels.items()):
         add(f"add_nodes:{':'.join(labels)}", f"UNWIND $rows AS row CREATE (n:{':'.join(labels)}) SET n = row.props",
             rows)
-    by_key: dict[str, list[dict]] = {}
+    by_key: dict[tuple[str, str], list[dict]] = {}
     for nid, props in sorted(ops["add_props"].items()):
         for key, value in sorted(props.items()):
-            by_key.setdefault(key, []).append({"id": nid, "value": value})
-    for key, rows in sorted(by_key.items()):
-        add(f"add_prop:{key}", f"UNWIND $rows AS row MATCH (n {{id: row.id}}) WHERE n.{key} IS NULL "
+            by_key.setdefault((key, label(nid)), []).append({"id": nid, "value": value})
+    for (key, nl), rows in sorted(by_key.items()):
+        add(f"add_prop:{key}:{nl[1:]}", f"UNWIND $rows AS row MATCH (n{nl} {{id: row.id}}) WHERE n.{key} IS NULL "
             f"SET n.{key} = row.value", rows)
-    by_type: dict[str, list[dict]] = {}
-    for e in ops["add_edges"]:
-        by_type.setdefault(e["type"], []).append({"start_id": e["start_id"], "end_id": e["end_id"],
-                                                  "props": e["properties"]})
-    for rel, rows in sorted(by_type.items()):
-        add(f"add_edges:{rel}", f"UNWIND $rows AS e MATCH (s {{id: e.start_id}}) MATCH (t {{id: e.end_id}}) "
-            f"CREATE (s)-[r:{rel}]->(t) SET r = e.props", rows)
+    create = _by_endpoint_labels(ops, ops["add_edges"],
+                                 lambda e: {"start_id": e["start_id"], "end_id": e["end_id"], "props": e["properties"]})
+    for (rel, sl, tl), rows in sorted(create.items()):
+        add(f"add_edges:{_step_name(rel, sl, tl)}", f"UNWIND $rows AS e MATCH (s{sl} {{id: e.start_id}}) "
+            f"MATCH (t{tl} {{id: e.end_id}}) CREATE (s)-[r:{rel}]->(t) SET r = e.props", rows)
     return stmts
 
 
@@ -290,13 +326,12 @@ def inverse_statements(ops: dict) -> list[dict]:
     """Recovery only: delete exactly the planned additions — edges first, then the nodes (which by then must have
     no relationship left), then the added properties. Never DETACH; each statement must count its rows."""
     stmts = []
-    by_type: dict[str, list[dict]] = {}
-    for e in ops["add_edges"]:
-        by_type.setdefault(e["type"], []).append({"start_id": e["start_id"], "end_id": e["end_id"]})
-    for rel, rows in sorted(by_type.items()):
-        stmts.append({"step": f"inverse:edges:{rel}", "query": f"UNWIND $rows AS e MATCH (s {{id: e.start_id}})"
-                      f"-[r:{rel}]->(t {{id: e.end_id}}) DELETE r RETURN count(*) AS n",
-                      "params": {"rows": rows}, "expect": len(rows)})
+    label = _label_of(ops)
+    groups = _by_endpoint_labels(ops, ops["add_edges"], lambda e: {"start_id": e["start_id"], "end_id": e["end_id"]})
+    for (rel, sl, tl), rows in sorted(groups.items()):
+        stmts.append({"step": f"inverse:edges:{_step_name(rel, sl, tl)}",
+                      "query": f"UNWIND $rows AS e MATCH (s{sl} {{id: e.start_id}})-[r:{rel}]->(t{tl} {{id: e.end_id}}) "
+                      "DELETE r RETURN count(*) AS n", "params": {"rows": rows}, "expect": len(rows)})
     by_labels: dict[tuple[str, ...], list[str]] = {}
     for node in ops["add_nodes"]:
         by_labels.setdefault(tuple(node["labels"]), []).append(node["id"])
@@ -304,12 +339,12 @@ def inverse_statements(ops: dict) -> list[dict]:
         stmts.append({"step": f"inverse:nodes:{':'.join(labels)}", "query": f"UNWIND $rows AS id MATCH "
                       f"(n:{':'.join(labels)} {{id: id}}) WHERE NOT (n)--() DELETE n RETURN count(*) AS n",
                       "params": {"rows": rows}, "expect": len(rows)})
-    by_key: dict[str, list[str]] = {}
+    by_key: dict[tuple[str, str], list[str]] = {}
     for nid, props in sorted(ops["add_props"].items()):
         for key in sorted(props):
-            by_key.setdefault(key, []).append(nid)
-    for key, rows in sorted(by_key.items()):
-        stmts.append({"step": f"inverse:prop:{key}", "query": f"UNWIND $rows AS id MATCH (n {{id: id}}) "
+            by_key.setdefault((key, label(nid)), []).append(nid)
+    for (key, nl), rows in sorted(by_key.items()):
+        stmts.append({"step": f"inverse:prop:{key}:{nl[1:]}", "query": f"UNWIND $rows AS id MATCH (n{nl} {{id: id}}) "
                       f"REMOVE n.{key} RETURN count(*) AS n", "params": {"rows": rows}, "expect": len(rows)})
     return stmts
 

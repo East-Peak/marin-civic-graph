@@ -80,7 +80,7 @@ class TestPlan:
             "decision-sample-board-2", "election-2030-11-05-sample-measure", "record-sample-measure-page"]
         assert ops["add_props"] == {"committee-netfile-7": {"primary_election_id": "election-2030-11-05-sample-measure"}}
         assert len(ops["add_edges"]) == 3
-        assert set(ops) == {"add_nodes", "add_props", "add_edges", "summary"}
+        assert set(ops) == {"add_nodes", "add_props", "add_edges", "labels", "summary"}
 
     def test_an_unrelated_contribution_is_never_retired(self):
         (bn, be), _ = _baseline(), None
@@ -252,7 +252,7 @@ class FakeTx:
         rows = params["rows"]
         if query.startswith("UNWIND $rows AS id OPTIONAL MATCH"):
             n = sum(1 for r in rows if r in self.existing_ids)
-        elif "OPTIONAL MATCH (s {id: e.start_id})-[r]->" in query:
+        elif "OPTIONAL MATCH (s:" in query and "-[r]->" in query:
             n = sum(1 for r in rows if (r["start_id"], r["type"], r["end_id"]) in self.existing_edges)
         else:
             n = len(rows)
@@ -434,7 +434,8 @@ class TestInverse:
     def test_inverse_deletes_exactly_the_additions_edges_first(self):
         ops = plan_additive(*_votes_baseline(), *_votes_case(), constraints=PROFILES["votes-b"])
         inv = inverse_statements(ops)
-        assert [s["step"] for s in inv] == ["inverse:edges:CAST_VOTE", "inverse:edges:DECIDED_AT",
+        assert [s["step"] for s in inv] == ["inverse:edges:CAST_VOTE:Person->Decision",
+                                           "inverse:edges:DECIDED_AT:Decision->Meeting",
                                            "inverse:nodes:Decision", "inverse:nodes:Person"]
         assert [s["expect"] for s in inv] == [2, 1, 1, 1]
         assert all("DETACH" not in s["query"] for s in inv)
@@ -461,3 +462,95 @@ class TestInverse:
         write_export(tmp_path / "bundle2", cn, ce)
         assert main(["--baseline", str(tmp_path / "baseline"), "--case", str(tmp_path / "bundle2"),
                      "--out", str(tmp_path / "plan2"), "--profile", "votes-b"]) == 1
+
+
+class TestLabelledLookup:
+    """Every statement finds its nodes through (label, id) — an index seek — never a label-free scan."""
+
+    def _mixed(self):
+        bn, be = _baseline()
+        bn = bn + [_n("org-sample-county", ["Government", "Organization"], name="Sample County")]
+        cn = [_n("decision-sample-board-3", ["Decision"], title="Adopt a sample plan")]
+        ce = [_e("person-sample-official", "decision-sample-board-3", "CAST_VOTE", vote="aye"),
+              _e("org-sample-county", "decision-sample-board-3", "CAST_VOTE", vote="no"),
+              _e("decision-sample-board-3", "decision-sample-board-1", "CAST_VOTE", vote="abstain")]
+        return bn, be, cn, ce
+
+    def test_ops_carry_every_endpoints_labels(self):
+        ops = plan_additive(*self._mixed())
+        assert ops["labels"] == {"decision-sample-board-1": ["Decision"], "decision-sample-board-3": ["Decision"],
+                                 "org-sample-county": ["Government", "Organization"],
+                                 "person-sample-official": ["Person"]}
+
+    def test_one_statement_per_label_pair_with_exact_counts(self):
+        ops = plan_additive(*self._mixed())
+        creates = {s["step"]: s for s in statements(ops) if s["step"].startswith("add_edges:")}
+        assert sorted(creates) == ["add_edges:CAST_VOTE:Decision->Decision",
+                                   "add_edges:CAST_VOTE:Government:Organization->Decision",
+                                   "add_edges:CAST_VOTE:Person->Decision"]
+        q = creates["add_edges:CAST_VOTE:Government:Organization->Decision"]["query"]
+        assert "MATCH (s:Government:Organization {id: e.start_id}) MATCH (t:Decision {id: e.end_id})" in q
+        assert all(s["expect"] == 1 for s in creates.values())
+        assert apply_in_transaction(FakeTx(), ops)["add_edges:CAST_VOTE:Person->Decision"] == 1
+
+    def test_no_statement_matches_a_node_without_a_label_except_the_global_id_precheck(self):
+        ops = plan_additive(*_baseline(), *_case())
+        for s in statements(ops) + inverse_statements(ops):
+            if s["step"] == "precheck:nodes_absent":
+                assert "OPTIONAL MATCH (n {id: id})" in s["query"]  # global: any label holding the id
+                continue
+            if "MATCH" in s["query"]:
+                assert "({id:" not in s["query"] and " {id:" in s["query"], s["step"]
+
+    def test_edge_precheck_is_labelled_and_still_counts_existing_edges(self):
+        ops = plan_additive(*self._mixed())
+        pre = [s for s in statements(ops) if s["step"].startswith("precheck:edges_absent")]
+        assert pre and all(s["expect"] == 0 for s in pre)
+        assert any("OPTIONAL MATCH (s:Person {id: e.start_id})-[r]->(t:Decision {id: e.end_id})" in s["query"]
+                   for s in pre)
+        tx = FakeTx(existing_edges={("person-sample-official", "CAST_VOTE", "decision-sample-board-3")})
+        with pytest.raises(StatementCountError, match="precheck"):
+            apply_in_transaction(tx, ops)
+
+    def test_property_additions_are_labelled(self):
+        stmt = [s for s in statements(_plan()) if s["step"].startswith("add_prop:")][0]
+        assert "MATCH (n:Committee {id: row.id})" in stmt["query"]
+
+    def test_inverse_is_labelled(self):
+        ops = plan_additive(*self._mixed())
+        inv = inverse_statements(ops)
+        assert any("MATCH (s:Government:Organization {id: e.start_id})-[r:CAST_VOTE]->(t:Decision {id: e.end_id})"
+                   in s["query"] for s in inv)
+
+    def test_ops_without_labels_are_refused(self):
+        ops = plan_additive(*self._mixed())
+        del ops["labels"]
+        with pytest.raises(AdditivePlanError, match="label"):
+            statements(ops)
+        ops = plan_additive(*self._mixed())
+        del ops["labels"]["org-sample-county"]
+        with pytest.raises(AdditivePlanError, match="org-sample-county"):
+            statements(ops)
+
+    def test_a_malformed_baseline_label_on_an_endpoint_is_refused(self):
+        bn, be, cn, ce = self._mixed()
+        bn = [dict(n, labels=["Person) DETACH DELETE (x"]) if n["id"] == "person-sample-official" else n for n in bn]
+        with pytest.raises(AdditivePlanError, match="label"):
+            plan_additive(bn, be, cn, ce)
+        bn = [dict(n, labels=[]) if n["id"] == "org-sample-county" else n for n in self._mixed()[0]]
+        with pytest.raises(AdditivePlanError, match="label"):
+            plan_additive(bn, be, cn, ce)
+
+    def test_duplicate_ids_across_labels_are_refused(self):
+        bn, be, cn, ce = self._mixed()
+        with pytest.raises(AdditivePlanError, match="duplicate"):
+            plan_additive(bn + [_n("person-sample-official", ["Organization"], name="x")], be, cn, ce)
+        with pytest.raises(AdditivePlanError, match="labels"):
+            plan_additive(bn, be, cn + [_n("person-sample-official", ["Organization"])], ce)
+
+    def test_candidate_and_edges_are_unchanged_by_the_labels(self):
+        bn, be, cn, ce = self._mixed()
+        ops = plan_additive(bn, be, cn, ce)
+        assert all(set(e) == {"start_id", "end_id", "type", "properties"} for e in ops["add_edges"])
+        nodes, edges = apply_additive(bn, be, ops)
+        assert verify_additive(nodes, edges, bn, be, cn, ce) == []
