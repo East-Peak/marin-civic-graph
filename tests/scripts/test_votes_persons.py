@@ -447,3 +447,31 @@ class TestBatch:
             load_mapping_answers(text, batch, {**HASHES, "answers-001.txt": "e" * 64})
         with pytest.raises(MappingError, match="batch map-001"):
             load_mapping_answers("batch roster-001\n1 confirm\n", batch, HASHES)
+
+
+class TestAppliedPersons:
+    """Votes refresh: the Person B2 created for a verified_no_person row exists now; the B2 apply record proves it."""
+
+    def _rows_with_cedar_applied(self):
+        drafts, items, answers, rows = _world()
+        nodes = NODES + [_n("person-cy-cedar", ["Person"], name="Cedar")]
+        return drafts, items, answers, rows, nodes
+
+    def test_without_the_apply_record_the_row_fails_against_the_new_baseline(self):
+        drafts, items, answers, rows, nodes = self._rows_with_cedar_applied()
+        assert any("already exists" in p for p in _validate(rows, drafts, items, answers, nodes=nodes))
+
+    def test_an_applied_person_is_recognized(self):
+        drafts, items, answers, rows, nodes = self._rows_with_cedar_applied()
+        assert validate_mapping(rows, drafts, items, answers, nodes, EDGES, body_org=BODY_ORG,
+                                body_filing=BODY_FILING, applied_persons=frozenset({"person-cy-cedar"})) == []
+
+    def test_the_applied_person_must_be_that_member(self):
+        drafts, items, answers, rows, _ = self._rows_with_cedar_applied()
+        nodes = NODES + [_n("person-cy-cedar", ["Person"], name="Someone Else")]
+        problems = validate_mapping(rows, drafts, items, answers, nodes, EDGES, body_org=BODY_ORG,
+                                    body_filing=BODY_FILING, applied_persons=frozenset({"person-cy-cedar"}))
+        assert problems == ["x-cedar: applied Person person-cy-cedar is not a Person named 'Cedar' in the baseline"]
+        problems = validate_mapping(rows, drafts, items, answers, NODES, EDGES, body_org=BODY_ORG,
+                                    body_filing=BODY_FILING, applied_persons=frozenset({"person-cy-cedar"}))
+        assert problems == ["x-cedar: applied Person person-cy-cedar is not a Person named 'Cedar' in the baseline"]

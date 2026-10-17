@@ -598,3 +598,74 @@ class TestPublishedCli:
         monkeypatch.setattr(votes_apply, "_fetch", lambda url: "")
         args = ["check-published", "--state-dir", str(state), "--sqlite", str(db), "--base-url", "https://site"]
         assert votes_apply.main(args) == 1
+
+
+class TestRefreshScope:
+    """Votes refresh: verification compares exact edges on the batch's own target Decisions, and separately that
+    every baseline vote is preserved unchanged; the staging bake may hold nothing else, publication may."""
+
+    BASE_VOTES = [{"start_id": "person-ann-alder", "end_id": "decision-old-1", "type": "CAST_VOTE",
+                   "properties": {"vote": "no", "ledger_event_id": "vev-old", "evidence": "{}"}}]
+    EXP = [{"start_id": "person-ann-alder", "end_id": "vev-body-x-9-bbbb-L5", "vote": "aye"},
+           {"start_id": "person-bea-birch", "end_id": "decision-body-x-9-vote-0", "vote": "no"}]
+    TARGETS = ["decision-body-x-9-vote-0", "vev-body-x-9-bbbb-L5"]
+
+    def _db(self, tmp_path, extra=()):
+        import sqlite3
+        db = tmp_path / f"s{len(list(tmp_path.glob('s*.sqlite')))}.sqlite"
+        con = sqlite3.connect(db)
+        con.execute("CREATE TABLE edges (source TEXT, rel TEXT, target TEXT, props TEXT)")
+        rows = [("person-ann-alder", "CAST_VOTE", "decision-old-1", '{"vote":"no"}'),
+                ("person-ann-alder", "CAST_VOTE", "vev-body-x-9-bbbb-L5", '{"vote":"aye"}'),
+                ("person-bea-birch", "CAST_VOTE", "decision-body-x-9-vote-0", '{"vote":"no"}'), *extra]
+        con.executemany("INSERT INTO edges VALUES (?,?,?,?)", rows)
+        con.commit()
+        con.close()
+        return db
+
+    def test_target_edges_are_exact(self, tmp_path):
+        db = self._db(tmp_path)
+        assert votes_apply.check_target_edges(db, self.EXP, self.TARGETS) == []
+        assert votes_apply.check_target_edges(db, self.EXP[:1], self.TARGETS) != []  # one too many on a target
+
+    def test_baseline_votes_are_preserved_through_the_public_projection(self, tmp_path):
+        assert votes_apply.baseline_votes_preserved(self._db(tmp_path), self.BASE_VOTES) == []
+        import sqlite3
+        db = self._db(tmp_path)
+        con = sqlite3.connect(db)
+        con.execute("UPDATE edges SET props = '{\"vote\":\"aye\"}' WHERE target = 'decision-old-1'")
+        con.commit()
+        con.close()
+        assert votes_apply.baseline_votes_preserved(db, self.BASE_VOTES) == [
+            "baseline vote ('person-ann-alder', 'decision-old-1') changed: {'vote': 'no'} → {'vote': 'aye'}"]
+
+    def test_the_staging_bake_holds_nothing_unplanned_but_publication_may(self, tmp_path):
+        later = ("person-cy-cedar", "CAST_VOTE", "vev-body-x-10-cccc-L9", '{"vote":"aye"}')  # a later batch's
+        db = self._db(tmp_path, extra=[later])
+        assert votes_apply.unplanned_votes(db, self.BASE_VOTES, self.EXP) == [
+            "unplanned vote ('person-cy-cedar', 'vev-body-x-10-cccc-L9')"]
+        assert votes_apply.refresh_publication_problems(db, self.EXP, self.TARGETS, self.BASE_VOTES) == []
+
+    def test_pages_come_from_the_batch_targets_per_body_new_first(self):
+        exp = [{"start_id": "p", "end_id": "decision-novato-city-council-5-vote-0", "vote": "aye"},
+               {"start_id": "p", "end_id": "vev-marin-county-bos-7-aaaa-L1", "vote": "aye"},
+               {"start_id": "p", "end_id": "decision-marin-county-bos-7-vote-0", "vote": "aye"}]
+        picks = votes_apply.refresh_page_targets(exp, new_ids={"vev-marin-county-bos-7-aaaa-L1"})
+        assert picks == {"marin-county-bos": "vev-marin-county-bos-7-aaaa-L1",
+                         "novato-city-council": "decision-novato-city-council-5-vote-0"}
+
+    def test_existing_target_decisions_keep_their_public_props(self, tmp_path):
+        import sqlite3
+        db = tmp_path / "n.sqlite"
+        con = sqlite3.connect(db)
+        con.execute("CREATE TABLE nodes (id TEXT PRIMARY KEY, type TEXT, search_label TEXT, props TEXT)")
+        con.execute("INSERT INTO nodes VALUES (?,?,?,?)", ("decision-body-x-9-vote-0", "Decision", "x",
+                                                          json.dumps({"status": "carried"})))
+        con.commit()
+        base = [{"id": "decision-body-x-9-vote-0", "labels": ["Decision"],
+                 "properties": {"status": "carried", "motion_text": "private"}}]
+        assert votes_apply.existing_target_problems(db, base, ["decision-body-x-9-vote-0"]) == []
+        con.execute("UPDATE nodes SET props = ?", (json.dumps({"status": "failed", "motion_text": "private"}),))
+        con.commit()
+        probs = votes_apply.existing_target_problems(db, base, ["decision-body-x-9-vote-0"])
+        assert any("status" in p for p in probs) and any("motion_text" in p for p in probs)

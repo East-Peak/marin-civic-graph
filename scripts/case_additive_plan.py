@@ -30,10 +30,14 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-STAGING_ROOTS = (Path.home() / "open-marin-staging" / "cf6-case", Path.home() / "open-marin-staging" / "votes-b")
+STAGING_ROOTS = (Path.home() / "open-marin-staging" / "cf6-case", Path.home() / "open-marin-staging" / "votes-b",
+                 Path.home() / "open-marin-staging" / "votes-refresh" / "batches")
 PROFILES = {
     "votes-b": {"labels": frozenset({"Decision", "Person"}), "rel_types": frozenset({"CAST_VOTE", "DECIDED_AT"}),
                 "add_props": False, "noop": False},
+    # the votes refresh attaches to Persons that exist; it never creates one
+    "votes-refresh": {"labels": frozenset({"Decision"}), "rel_types": frozenset({"CAST_VOTE", "DECIDED_AT"}),
+                      "add_props": False, "noop": False},
 }
 EXPORT_FILES = ("nodes.jsonl", "edges.jsonl")
 IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")

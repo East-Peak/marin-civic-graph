@@ -110,11 +110,12 @@ def _assignments(rows: list[dict]) -> dict[str, tuple]:
     return {eid: rows[0] if len(rows) == 1 else ("conflict", None) for eid, rows in found.items()}
 
 
-def _revalidate(events, recon_rows, nodes, body_org) -> tuple[set[str], list[dict]]:
+def _revalidate(events, recon_rows, nodes, body_org, scope_meetings=None) -> tuple[set[str], list[dict]]:
     """(events whose assignment differs when re-reconciled on this baseline, the re-reconciled Decision rows that
-    differ from Part A's)."""
+    differ from Part A's). With `scope_meetings`, only those meetings' Decisions are re-reconciled."""
     decisions = [n["properties"] for n in nodes if "Decision" in n["labels"]
-                 and n["properties"].get("source_id") in body_org]
+                 and n["properties"].get("source_id") in body_org
+                 and (scope_meetings is None or n["properties"].get("meeting_id") in scope_meetings)]
     fresh = reconcile(decisions, events, {})
     before, after = _assignments(recon_rows), _assignments(fresh)
     changed = {eid for eid in set(before) | set(after) if before.get(eid) != after.get(eid)}
@@ -128,11 +129,14 @@ def _revalidate(events, recon_rows, nodes, body_org) -> tuple[set[str], list[dic
 def build_bundle(events: list[dict], recon_rows: list[dict], resolver, mapping_rows: list[dict],
                  nodes: list[dict], edges: list[dict], *, body_org: dict[str, str] = BODY_ORG,
                  body_name: dict[str, str] = BODY_NAME, revalidate: bool = True,
-                 holds: list[dict] | None = None) -> dict:
-    """`holds`: reviewer holds from the spot check ({event_id, reason}); each holds its event before any rule."""
+                 holds: list[dict] | None = None, scope_meetings: set[str] | None = None) -> dict:
+    """`holds`: {event_id, reason[, rule]} — reviewer holds from the spot check (rule `reviewer_hold`, the default)
+    or the votes refresh's roster holds (rule `roster_hold`); each holds its event before any rule.
+    `scope_meetings`: revalidate only those meetings' Decisions (a refresh batch's)."""
     events = sorted(events, key=lambda e: e["event_id"])
     accepted = [e for e in events if e["status"] in ("named", "expanded")]
     held_by_reviewer = {h["event_id"]: h["reason"] for h in holds or []}
+    hold_rule = {h["event_id"]: h.get("rule", "reviewer_hold") for h in holds or []}
     actors = defaultdict(set)  # meeting → every member who moved or seconded any motion there (held events too)
     for e in events:
         for role in ("mover", "seconder"):
@@ -149,7 +153,8 @@ def build_bundle(events: list[dict], recon_rows: list[dict], resolver, mapping_r
         elif e["type"] == "CAST_VOTE":
             votes_into[e["end_id"]] += 1
     assigned = _assignments(recon_rows)
-    changed, fresh_rows = _revalidate(events, recon_rows, nodes, body_org) if revalidate else (set(), [])
+    changed, fresh_rows = _revalidate(events, recon_rows, nodes, body_org, scope_meetings) if revalidate \
+        else (set(), [])
     targets = Counter(assigned[e["event_id"]][1] for e in accepted
                       if assigned.get(e["event_id"], ("", None))[1] is not None)
     new_person_name = {r["person_id"]: r["member"] for r in mapping_rows if r.get("status") == "verified_no_person"}
@@ -171,7 +176,7 @@ def build_bundle(events: list[dict], recon_rows: list[dict], resolver, mapping_r
         meeting = by_id.get(ev["meeting_id"], {"labels": [], "properties": {}})
         decision = by_id.get(target, {"labels": [], "properties": {}}) if kind == "matched" else None
         if eid in held_by_reviewer:
-            reason = "reviewer_hold"
+            reason = hold_rule[eid]
         elif kind is None:
             reason = "decision_not_matched"
         elif kind == "conflict":

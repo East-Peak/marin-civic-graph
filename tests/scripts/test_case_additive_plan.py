@@ -343,7 +343,8 @@ class TestCli:
 class TestStagingRoots:
     def test_the_allowed_roots(self):
         home = Path.home() / "open-marin-staging"
-        assert case_additive_plan.STAGING_ROOTS == (home / "cf6-case", home / "votes-b")
+        assert case_additive_plan.STAGING_ROOTS == (home / "cf6-case", home / "votes-b",
+                                                    home / "votes-refresh" / "batches")
 
     def test_each_root_is_accepted_and_nothing_else(self, tmp_path, monkeypatch):
         a, b = tmp_path / "cf6-case", tmp_path / "votes-b"
@@ -560,3 +561,25 @@ class TestLabelledLookup:
         assert all(set(e) == {"start_id", "end_id", "type", "properties"} for e in ops["add_edges"])
         nodes, edges = apply_additive(bn, be, ops)
         assert verify_additive(nodes, edges, bn, be, cn, ce) == []
+
+
+class TestRefreshProfile:
+    def test_votes_refresh_adds_only_decisions_and_votes(self):
+        prof = PROFILES["votes-refresh"]
+        assert prof["labels"] == {"Decision"} and prof["rel_types"] == {"CAST_VOTE", "DECIDED_AT"}
+        cn, ce = _votes_case()
+        with pytest.raises(AdditivePlanError, match="Person"):  # the refresh never creates a Person
+            plan_additive(*_votes_baseline(), cn, ce, constraints=prof)
+
+    def test_the_refresh_batches_dir_is_an_allowed_staging_root(self, tmp_path, monkeypatch):
+        root = tmp_path / "votes-refresh"
+        monkeypatch.setattr(case_additive_plan, "STAGING_ROOTS", (*case_additive_plan.STAGING_ROOTS[:2],
+                                                                   root / "batches"))
+        assert staging_dir(root / "batches" / "batch-001" / "rev-1" / "plan")
+        with pytest.raises(AdditivePlanError, match="outside"):
+            staging_dir(root / "elsewhere")
+
+    def test_the_real_roots_name_the_refresh_batches_and_nothing_wider(self):
+        names = [str(p) for p in case_additive_plan.STAGING_ROOTS]
+        assert any(n.endswith("open-marin-staging/votes-refresh/batches") for n in names)
+        assert not any(n.endswith("open-marin-staging") for n in names)

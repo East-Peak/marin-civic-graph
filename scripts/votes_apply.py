@@ -312,6 +312,96 @@ def bake_problems(sqlite_path: Path, new_nodes: list[dict], expected: list[dict]
     return problems + check_published_edges(sqlite_path, expected, scope=scope)
 
 
+# --- the votes refresh: verification scoped to one batch's target Decisions --------------------------------------
+
+def _cast_votes(sqlite_path: Path) -> dict[tuple[str, str], dict | None]:
+    con = sqlite3.connect(f"file:{sqlite_path}?mode=ro", uri=True)
+    try:
+        return {(s, t): (json.loads(p) if p else None)
+                for s, t, p in con.execute("SELECT source, target, props FROM edges WHERE rel = 'CAST_VOTE'")}
+    finally:
+        con.close()
+
+
+def check_target_edges(sqlite_path: Path, expected: list[dict], targets: list[str]) -> list[str]:
+    """The CAST_VOTE edges into exactly the batch's target Decisions equal the expected (start, end, vote) set."""
+    scope = set(targets)
+    have = {(s, t, (p or {}).get("vote")) for (s, t), p in _cast_votes(sqlite_path).items() if t in scope}
+    want = {(e["start_id"], e["end_id"], e["vote"]) for e in expected}
+    problems = [f"missing {x}" for x in sorted(want - have)[:20]] + [f"unexpected {x}" for x in sorted(have - want)[:20]]
+    if want != have:
+        problems.append(f"{len(want - have)} missing, {len(have - want)} unexpected of {len(want)} expected on "
+                        f"{len(scope)} target Decisions")
+    return problems
+
+
+def baseline_votes_preserved(sqlite_path: Path, baseline_edges: list[dict]) -> list[str]:
+    """Every baseline CAST_VOTE is in the artifact with its public properties unchanged (the bake's own projection,
+    registry/edge-properties.json)."""
+    from public_edge_props import EdgePropStats, load_edge_allowlist, public_edge_props
+
+    allow, stats = load_edge_allowlist(), EdgePropStats()
+    have = _cast_votes(sqlite_path)
+    problems = []
+    for e in sorted((e for e in baseline_edges if e["type"] == "CAST_VOTE"), key=lambda e: (e["start_id"], e["end_id"])):
+        key = (e["start_id"], e["end_id"])
+        want = public_edge_props("CAST_VOTE", e["properties"], allow, stats)
+        if key not in have:
+            problems.append(f"baseline vote {key} is missing")
+        elif have[key] != want:
+            problems.append(f"baseline vote {key} changed: {want} → {have[key]}")
+    return problems
+
+
+def unplanned_votes(sqlite_path: Path, baseline_edges: list[dict], expected: list[dict]) -> list[str]:
+    """Staging only: the candidate's bake holds no CAST_VOTE beyond the baseline's and this batch's."""
+    known = {(e["start_id"], e["end_id"]) for e in baseline_edges if e["type"] == "CAST_VOTE"} | \
+        {(e["start_id"], e["end_id"]) for e in expected}
+    return [f"unplanned vote {k}" for k in sorted(set(_cast_votes(sqlite_path)) - known)]
+
+
+def refresh_publication_problems(sqlite_path: Path, expected: list[dict], targets: list[str],
+                                 baseline_edges: list[dict]) -> list[str]:
+    """A published artifact: this batch's targets exact and every baseline vote unchanged. Votes elsewhere (later
+    batches) are allowed."""
+    return check_target_edges(sqlite_path, expected, targets) + baseline_votes_preserved(sqlite_path, baseline_edges)
+
+
+def refresh_page_targets(expected: list[dict], *, new_ids: set[str]) -> dict[str, str]:
+    """Per body present in the batch: its first new-Decision target, else its first existing-Decision target."""
+    out: dict[str, str] = {}
+    for body in ("marin-county-bos", "novato-city-council"):
+        mine = sorted({e["end_id"] for e in expected if e["end_id"].startswith((f"vev-{body}-", f"decision-{body}-"))})
+        if mine:
+            out[body] = next((t for t in mine if t in new_ids), mine[0])
+    return out
+
+
+def existing_target_problems(sqlite_path: Path, baseline_nodes: list[dict], targets: list[str]) -> list[str]:
+    """An existing target Decision keeps exactly the public projection of its baseline properties."""
+    allowed = _public_decision_keys()
+    base = {n["id"]: n for n in baseline_nodes}
+    con = sqlite3.connect(f"file:{sqlite_path}?mode=ro", uri=True)
+    problems = []
+    try:
+        for t in sorted(set(targets) & set(base)):
+            row = con.execute("SELECT props FROM nodes WHERE id = ?", (t,)).fetchone()
+            if row is None:
+                problems.append(f"{t}: not in the bake")
+                continue
+            baked = json.loads(row[0] or "{}")
+            want = {k: v for k, v in base[t]["properties"].items() if k in allowed}
+            bad = sorted((set(baked) - allowed) | (set(baked) & FORBIDDEN_DECISION_KEYS))
+            if bad:
+                problems.append(f"{t}: public props {bad} are not public Decision properties")
+            changed = sorted(k for k in set(baked) & set(want) if baked[k] != want[k])
+            if changed:
+                problems.append(f"{t}: public props {changed} differ from the baseline's")
+    finally:
+        con.close()
+    return problems
+
+
 def _public_decision_keys() -> frozenset[str]:
     from public_props import _ALLOWED
     return _ALLOWED["Decision"]

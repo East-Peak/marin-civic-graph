@@ -560,3 +560,30 @@ class TestSamples:
         assert "### S1. vev-body-x-1-aaaa-L000" in md
         assert "- person-bea-birch (Bea Birch): **no** (named) — “BIRCH”" in md
         assert "Reviewer: `S1 agree` / `S1 disagree: …`" in md
+
+
+class TestRefreshHooks:
+    """Votes refresh: holds may name their own rule, and revalidation can be scoped to the batch's meetings."""
+
+    def test_a_hold_with_a_rule_uses_it_as_the_reason(self):
+        b = _build([MATCHED, NEW], _recon(matched=[(MATCHED["event_id"], "decision-body-x-1-vote-0")],
+                                          new=[NEW["event_id"]]),
+                   holds=[{"event_id": NEW["event_id"], "reason": "hold-1a2b3c4d", "rule": "roster_hold"},
+                          {"event_id": MATCHED["event_id"], "reason": "S3"}])
+        assert _disp(b) == {NEW["event_id"]: "roster_hold", MATCHED["event_id"]: "reviewer_hold"}
+        notes = {r["event_id"]: r.get("note") for r in b["repair"] if r["kind"] == "event"}
+        assert notes == {NEW["event_id"]: "hold-1a2b3c4d", MATCHED["event_id"]: "S3"}
+
+    def test_scoped_revalidation_ignores_decisions_of_other_meetings(self):
+        other = _n("decision-body-x-9-vote-0", ["Decision"], meeting_id="meeting-body-x-9", source_id=BODY,
+                   status="carried", outcome="carried", motion_text="approve something else",
+                   decision_type="roll_call_vote")
+        nodes, edges = _baseline(extra_nodes=[other])
+        recon = _recon(new=[NEW["event_id"]])
+        kw = dict(body_org={BODY: ORG}, body_name=BODY_NAME)
+        unscoped = build_bundle([NEW], recon, _resolver()[0], _resolver()[1], nodes, edges, **kw)
+        assert any(r.get("decision_id") == "decision-body-x-9-vote-0" for r in unscoped["repair"])
+        scoped = build_bundle([NEW], recon, _resolver()[0], _resolver()[1], nodes, edges, scope_meetings={MEET},
+                              **kw)
+        assert {r["meeting_id"] for r in scoped["repair"] if r["kind"] == "decision"} == {MEET}
+        assert _disp(scoped) == _disp(unscoped)

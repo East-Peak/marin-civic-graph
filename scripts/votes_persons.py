@@ -119,10 +119,12 @@ def _body_proved(row: dict, ev: _Evidence) -> bool:
 
 def validate_mapping(rows: list[dict], drafts: dict, items: list[dict], answers: list[dict],
                      nodes: list[dict], edges: list[dict], *, body_org: dict[str, str],
-                     body_filing: dict[str, tuple[str, str]]) -> list[str]:
+                     body_filing: dict[str, tuple[str, str]], applied_persons: frozenset[str] = frozenset()) -> list[str]:
     """Every problem with the table, checked against the confirmed roster and the baseline export.
 
-    body_org: body → its org id (seats); body_filing: body → (Form 700 agency_id, department substring)."""
+    body_org: body → its org id (seats); body_filing: body → (Form 700 agency_id, department substring).
+    applied_persons: Person ids an authenticated earlier apply created for `verified_no_person` rows — such a
+    row is proved by that Person existing under the row's member name (the search no longer applies)."""
     terms = _confirmed_terms(drafts, items, answers)
     ev = _Evidence(nodes, edges, body_org, body_filing)
     persons = [n for n in nodes if "Person" in n["labels"]]
@@ -161,6 +163,10 @@ def validate_mapping(rows: list[dict], drafts: dict, items: list[dict], answers:
             continue
         if not isinstance(pid, str) or not pid:
             problems.append(f"{did}: person_id {pid!r} must be a node id")
+            continue
+        if status == "verified_no_person" and pid in applied_persons:
+            if "Person" not in ev.labels(pid) or ev.props(pid).get("name") != r["member"]:
+                problems.append(f"{did}: applied Person {pid} is not a Person named {r['member']!r} in the baseline")
             continue
         if status == "verified_no_person":
             if pid in ev.nodes:

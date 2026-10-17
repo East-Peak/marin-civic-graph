@@ -154,19 +154,11 @@ def _roster_source(ref: str, inv: dict, rows_by_id: dict, texts: dict, web_root:
             "date": None}
 
 
-def build(inventory_dir: Path, out: Path, *, roster_drafts: Path, seed: int, as_of: str,
-          staging_root: Path = STAGING_ROOT) -> dict:
-    inventory_dir = Path(inventory_dir)
-    inv = load_inventory(inventory_dir)
-    out = _guard_out(out, staging_root, [inventory_dir, Path(inv["export"]["path"]), Path(roster_drafts).parent
-                                         if Path(roster_drafts).parent.resolve() != Path(staging_root).resolve()
-                                         else Path(roster_drafts)] + [Path(p) for p in inv["roots"].values()])
-    verify_documents(inv)
-    _export_rows(inv)  # the frozen export must still be the one inventoried
-    if out.exists():
-        shutil.rmtree(out)
-    out.mkdir(parents=True)
-
+def ledger_documents(inv: dict, base: Path | None = None):
+    """Part A's per-document pipeline over every inventoried document (canonical text → events → held labels →
+    attendance and ALL expansion → candidate scan and dispositions → partition, evidence and tally checks).
+    Returns (events, candidates, dispositions, documents, problems, texts, traces, gaps by meeting); the votes
+    refresh runs it unchanged over the meetings it selects."""
     events_all, cands_all, disp_all, docs_all, problems = [], [], [], [], []
     texts: dict[str, str] = {}
     traces: dict[str, list] = {}
@@ -180,7 +172,7 @@ def build(inventory_dir: Path, out: Path, *, roster_drafts: Path, seed: int, as_
     for body, row, doc in iter_documents(inv):
         if row["gap"]:
             continue
-        ct = canonical_text(resolve_path(inv, doc["paths"][0]), doc["format"])
+        ct = canonical_text(resolve_path(inv, doc["paths"][0], base), doc["format"])
         key = f"{row['meeting_id']}.{doc['sha256'][:8]}"
         texts[key] = ct.text
         transcript = is_transcript(ct)
@@ -212,6 +204,24 @@ def build(inventory_dir: Path, out: Path, *, roster_drafts: Path, seed: int, as_
         events_all += resolved
         cands_all += [{**c, "body": body, "meeting_id": row["meeting_id"]} for c in cands]
         disp_all += [{**d, "body": body, "meeting_id": row["meeting_id"]} for d in disp]
+
+    return events_all, cands_all, disp_all, docs_all, problems, texts, traces, gaps_by_meeting
+
+
+def build(inventory_dir: Path, out: Path, *, roster_drafts: Path, seed: int, as_of: str,
+          staging_root: Path = STAGING_ROOT) -> dict:
+    inventory_dir = Path(inventory_dir)
+    inv = load_inventory(inventory_dir)
+    out = _guard_out(out, staging_root, [inventory_dir, Path(inv["export"]["path"]), Path(roster_drafts).parent
+                                         if Path(roster_drafts).parent.resolve() != Path(staging_root).resolve()
+                                         else Path(roster_drafts)] + [Path(p) for p in inv["roots"].values()])
+    verify_documents(inv)
+    _export_rows(inv)  # the frozen export must still be the one inventoried
+    if out.exists():
+        shutil.rmtree(out)
+    out.mkdir(parents=True)
+
+    events_all, cands_all, disp_all, docs_all, problems, texts, traces, gaps_by_meeting = ledger_documents(inv)
 
     decisions, services = _decisions_and_services(inv)
     in_inventory = {r["meeting_id"] for b in inv["bodies"].values() for r in b["meetings"]}
