@@ -812,14 +812,21 @@ def sync_journal(refresh: Path, reg: Registry) -> list[str]:
         if b["state"] not in ("APPLIED", "PUBLISHED_VERIFIED"):
             continue
         st = json.loads((d / "state.json").read_text())
-        if st.get("approval_sha256") != _sha_bytes((d / "plan" / "approval-inputs.json").read_bytes()):
+        if not b["approved"] or st.get("approval_sha256") != b["approved"]:
+            done.append(f"{batch}: not journaled — its state is not under the registry's approved anchor")
             continue
-        report = json.loads((d / "plan" / "plan-report.json").read_text())
+        try:  # everything journaled comes from the approved bytes
+            approved = _approved_inputs(d, b["approved"])
+        except RefreshError as exc:
+            done.append(f"{batch}: not journaled — {exc}")
+            continue
+        report = json.loads(approved["plan/plan-report.json"])
         post = d / "apply" / "post-apply-export"
         if not post.is_dir() or fingerprint(post) != report["candidate_sha256"]:
             continue
-        manifest = json.loads(manifest_path(refresh, batch, b["rev"]).read_text())
-        attached = defaultdict_list((x["meeting_id"], x["event_id"]) for x in _read_jsonl(d / "bundle" / "dispositions.jsonl")
+        manifest = json.loads(approved["manifest.json"])
+        attached = defaultdict_list((x["meeting_id"], x["event_id"])
+                                    for x in map(json.loads, approved["bundle/dispositions.jsonl"].decode().splitlines())
                                     if x["reason"] == "attached")
         with open(Path(refresh) / "applied.jsonl", "a", encoding="utf-8") as fh:
             for doc in manifest["documents"]:
@@ -1152,6 +1159,9 @@ def apply_guard(state_dir: Path, reg: Registry) -> None:
     why = body_blocks(refresh, records, marker["batch"])
     if why:
         raise RefreshError("blocked: " + "; ".join(why))
+    approval = d / "plan" / "approval-inputs.json"
+    if approval.is_file() and (st["approved"] is None or _sha_bytes(approval.read_bytes()) != st["approved"]):
+        raise RefreshError("the approval on disk is not the one the registry's approved anchor records")
     live = [h for h in roster_holds(records) if not h["resolved"]]
     for x in _read_jsonl(d / "bundle" / "dispositions.jsonl"):
         if x["reason"] != "attached":
@@ -1193,10 +1203,15 @@ def approve(refresh: Path, batch: str, *, review: Path, bake_check: Path) -> str
                   "dispositions": _read_jsonl(d / "bundle" / "dispositions.jsonl")}
         want_items = [eid for picks in spot_selection(bundle, seed=manifest["seed"]).values()
                       for eid in picks["random"] + picks["notable"]]
-        have_items = re.findall(r"^### S\d+\. (\S+)$", sheet, re.M)
-        if not want_items or have_items != want_items:
+        have = re.findall(r"^### (S\d+)\. (\S+)$", sheet, re.M)
+        if not want_items or [e for _, e in have] != want_items \
+                or [lab for lab, _ in have] != [f"S{i}" for i in range(1, len(have) + 1)]:
             raise RefreshError("the spot-check sheet is not this revision's deterministic sample")
         review_text = Path(review).read_text()
+        answered = re.findall(r"^(S\d+)\s+(?:agree|disagree|unsure)\b", review_text, re.M)
+        twice = sorted({a for a in answered if answered.count(a) > 1})
+        if twice:
+            raise RefreshError(f"review items {twice} are answered more than once")
         if (review_text.splitlines() or [""])[0] != f"Sheet sha256: {_sha_bytes(sheet.encode())}":
             raise RefreshError("the review is not of this revision's sheet (first line `Sheet sha256: <sha>`)")
         attached = {x["event_id"] for x in _read_jsonl(d / "bundle" / "dispositions.jsonl") if x["reason"] == "attached"}
@@ -1221,8 +1236,17 @@ def approve(refresh: Path, batch: str, *, review: Path, bake_check: Path) -> str
                       "manifest.json": manifest_path(refresh, batch, st["rev"]), "spot-check.md": d / "spot-check.md",
                       "spot-check-review.md": d / "spot-check-review.md", "bake-check.json": d / "bake-check.json",
                       MARKER: d / MARKER})
-        sha = votes_apply.write_approval(d, files)
-        reg.append({"kind": "approved", "batch": batch, "rev": st["rev"], "approval_sha256": sha})  # resolve's anchor
+        # the anchor first (what resolve and the journal authenticate against), then the state that enables apply
+        report_check = json.loads(files["plan/plan-report.json"].read_text())
+        if report_check.get("verification"):
+            raise RefreshError(f"the plan has verification problems: {report_check['verification'][:3]}")
+        manifest_files = {name: {"path": str(Path(path).resolve()), "sha256": _sha_bytes(Path(path).read_bytes())}
+                          for name, path in sorted(files.items())}
+        raw = (json.dumps({"files": manifest_files}, indent=1, sort_keys=True) + "\n").encode()
+        _publish(d / votes_apply.APPROVAL, raw)
+        sha = _sha_bytes(raw)
+        reg.append({"kind": "approved", "batch": batch, "rev": st["rev"], "approval_sha256": sha})
+        votes_apply.set_state(d, "AWAITING_APPLY", approval_sha256=sha)
         return sha
 
 

@@ -635,3 +635,69 @@ votes_apply.run_apply({str(d)!r}, approve=votes_apply.approval_sha({str(d)!r}), 
         w.prepare(batch="batch-001", export=rebased)
         with pytest.raises(votes_apply.ApplyRefused, match="current revision"):
             w.apply(w.graph(), rev=1)
+
+
+
+class TestCodexD2:
+    def test_the_approval_anchor_exists_before_the_batch_can_be_applied(self, w, monkeypatch):
+        w.save(7001)
+        w.prepare()
+        real = vr.Registry.append
+
+        def crash_on_anchor(self, record):
+            if record["kind"] == "approved":
+                raise KeyboardInterrupt  # the process dies writing the anchor
+            return real(self, record)
+        monkeypatch.setattr(vr.Registry, "append", crash_on_anchor)
+        with pytest.raises(KeyboardInterrupt):
+            w.approve()
+        monkeypatch.undo()
+        assert votes_apply.get_state(w.rev()) != "AWAITING_APPLY"  # never applyable without its anchor
+        with pytest.raises(votes_apply.ApplyRefused):
+            w.apply(w.graph())
+
+    def test_apply_requires_the_anchor_to_be_the_approval_on_disk(self, w):
+        w.save(7001)
+        w.prepare()
+        w.approve()
+        reg = vr.Registry(w.refresh)
+        with reg.locked():
+            reg.append({"kind": "approved", "batch": "batch-001", "rev": 1, "approval_sha256": "0" * 64})
+        with pytest.raises(votes_apply.ApplyRefused, match="anchor"):
+            w.apply(w.graph())
+
+    def test_the_journal_is_written_from_approved_bytes_only(self, w):
+        w.save(7001)
+        w.prepare()
+        w.approve()
+        assert w.apply(w.graph()) == "APPLIED"
+        (w.refresh / "applied.jsonl").write_text("")
+        disp = w.rev() / "bundle" / "dispositions.jsonl"
+        disp.write_text(disp.read_text().replace("meeting-marin-county-bos-7001", "meeting-INJECTED"))
+        reg = vr.Registry(w.refresh)
+        with reg.locked():
+            out = vr.sync_journal(w.refresh, reg)
+        assert w.journal() == b"" and any("changed" in x for x in out)
+
+    def test_duplicate_sheet_labels_and_answers_are_refused(self, w):
+        w.save(7001)
+        w.prepare()
+        sheet = w.rev() / "spot-check.md"
+        sheet.write_text(sheet.read_text().replace("### S2.", "### S1."))
+        with pytest.raises(vr.RefreshError, match="deterministic sample"):
+            w.approve()
+
+    def test_a_review_answering_an_item_twice_is_refused(self, w):
+        w.save(7001)
+        w.prepare()
+        review = w.review_all_agree()
+        review.write_text(review.read_text() + "S1 disagree: second thoughts\n")
+        with pytest.raises(vr.RefreshError, match="answered more than once"):
+            vr.approve(w.refresh, "batch-001", review=review, bake_check=w.bake_check())
+
+    def test_set_state_quarantines_a_malformed_history(self, w):
+        w.save(7001)
+        w.prepare()
+        (w.rev() / "state.json").write_text(json.dumps({"state": "AWAITING_REVIEW", "history": None}))
+        votes_apply.set_state(w.rev(), "ALL_HELD")
+        assert votes_apply.get_state(w.rev()) == "ALL_HELD" and list(w.rev().glob("state.json.unreadable-*"))

@@ -66,6 +66,8 @@ def set_state(state_dir: Path, state: str, **detail) -> None:
     path = Path(state_dir) / "state.json"
     try:
         history = json.loads(path.read_text()).get("history", []) if path.exists() else []
+        if not isinstance(history, list) or not all(isinstance(h, dict) for h in history):
+            raise ValueError("history is not a list of entries")
     except (OSError, ValueError, AttributeError):  # an unreadable state is kept beside, never parsed into history
         raw = path.read_bytes()
         keep = path.with_name(f"state.json.unreadable-{_sha_bytes(raw)[:8]}")
