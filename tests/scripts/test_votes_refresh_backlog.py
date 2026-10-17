@@ -367,3 +367,86 @@ class TestDigest:
         repo, _, refresh = env
         snap = vr.digest_snapshot(repo, repo / "missing-export", refresh, today="2030-06-02")
         assert "error" in snap and vr.render_digest_section(snap)[2].startswith("- unavailable")
+
+
+# --- Codex b-r1 -----------------------------------------------------------------------------------------------------
+
+def _batch(reg, batch, mid, sha, rev=1, manifest="0" * 64):
+    reg.append({"kind": "batch", "batch": batch, "rev": rev, "bodies": [NOV], "manifest_sha256": manifest,
+                "claims": [{"meeting_id": mid, "slot": "minutes", "sha256": sha}]})
+
+
+def _manifest(refresh, batch, rev=1, body=b'{"m": 1}\n'):
+    p = refresh / "batches" / batch / f"rev-{rev}" / "manifest.json"
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_bytes(body)
+    return vr._sha_bytes(body)
+
+
+class TestReviewFixes:
+    def test_another_marin_jurisdiction_in_a_novato_heading_is_refused(self, env):
+        text = _nov_html("April 8, 2030").replace("NOVATO CITY COUNCIL MEETING MINUTES",
+                                                  "SAMPLE RAFAEL CITY COUNCIL MEETING MINUTES")
+        text = text.replace("SAMPLE RAFAEL", "SAN RAFAEL").replace("COUNCIL CHAMBERS",
+                                                                   "Joint meeting with Novato City Council")
+        assert TestHeading()._check(env, f"meeting-{NOV}-901", text)["file"]["reason"] == \
+            "heading_other_jurisdiction:san rafael"
+
+    def test_a_released_slot_is_eligible_again_with_its_own_file(self, env):
+        repo, export, refresh = env
+        mid = f"meeting-{NOV}-901"
+        f = _save(repo, "2030-06-01", NOV, mid, _nov_html("April 8, 2030"))
+        reg = vr.Registry(refresh)
+        with reg.locked():
+            _batch(reg, "batch-001", mid, vr._sha_bytes(f.read_bytes()), manifest=_manifest(refresh, "batch-001"))
+            reg.append({"kind": "release", "batch": "batch-001", "reason": "abandoned"})
+        row = {r["meeting_id"]: r for r in vr.backlog(export, repo, refresh)[NOV]}[mid]
+        assert row["state"] == "file_saved" and row["conflicts"] == []
+
+    def test_ownership_replays_in_log_order(self):
+        recs = [{"kind": "batch", "batch": "b1", "rev": 1, "manifest_sha256": "0",
+                 "claims": [{"meeting_id": "m", "slot": "minutes", "sha256": "s"}]},
+                {"kind": "release", "batch": "b1", "reason": "rolled_back"},
+                {"kind": "claim", "batch": "b1", "meeting_id": "m", "slot": "minutes", "sha256": "s"}]
+        assert vr.slot_view(recs, [])[("m", "minutes")]["owner"] == "b1"
+        recs.append({"kind": "release", "batch": "b1", "reason": "abandoned"})
+        assert vr.slot_view(recs, [])[("m", "minutes")]["owner"] is None
+        assert vr.slot_view(recs, [])[("m", "minutes")]["sha256"] == "s"
+
+    def test_conflicts_and_rejected_files_reach_the_todo_and_are_recorded_once(self, env):
+        repo, export, refresh = env
+        mid = f"meeting-{NOV}-901"
+        reg = vr.Registry(refresh)
+        with reg.locked():
+            _batch(reg, "batch-001", mid, "a" * 64, manifest=_manifest(refresh, "batch-001"))
+        f = _save(repo, "2030-06-01", NOV, mid, _nov_html("April 8, 2030"))
+        _save(repo, "2030-06-01", NOV, f"meeting-{NOV}-903", _nov_html("May 13, 2030"))
+        for _ in range(2):
+            vr.write_todo(export, repo, refresh, today="2030-06-02")
+        conflicts = [r for r in vr.Registry(refresh).records() if r["kind"] == "conflict"]
+        assert conflicts == [{"kind": "conflict", "meeting_id": mid, "slot": "minutes",
+                              "sha256": vr._sha_bytes(f.read_bytes()), "path": f.relative_to(repo).as_posix(),
+                              "held_against": "a" * 64}]
+        md = (refresh / "todo.md").read_text()
+        assert "document_version_conflict" in md and f.relative_to(repo).as_posix() in md
+        other = {o["meeting_id"]: o for o in json.loads((refresh / "todo.json").read_text())["other"]}
+        assert other[mid]["state"] == "prepared" and other[mid]["conflicts"][0]["sha256"] == conflicts[0]["sha256"]
+        assert other[f"meeting-{NOV}-903"]["state"] == "file_saved"  # saved although no record lists it
+        assert f"meeting-{NOV}-902" not in other  # it is on the list itself
+
+    def test_a_missing_or_altered_manifest_blocks_its_body_and_is_reported(self, env):
+        repo, export, refresh = env
+        mid = f"meeting-{NOV}-901"
+        reg = vr.Registry(refresh)
+        with reg.locked():
+            _batch(reg, "batch-001", mid, "a" * 64, manifest="f" * 64)
+        problems = vr.batch_integrity(refresh, vr.Registry(refresh).records())
+        assert problems == {"batch-001": "manifest rev-1 missing"}
+        assert vr.blocked_bodies(refresh, vr.Registry(refresh).records()) == {NOV: ["batch-001: manifest rev-1 missing"]}
+        _manifest(refresh, "batch-001", body=b"tampered\n")
+        assert vr.batch_integrity(refresh, vr.Registry(refresh).records()) == {"batch-001": "manifest rev-1 altered"}
+        row = {r["meeting_id"]: r for r in vr.backlog(export, repo, refresh)[NOV]}[mid]
+        assert row["state"] == "prepared"  # its claim stays
+        out = vr.write_todo(export, repo, refresh, today="2030-06-02")
+        assert "batch-001: manifest rev-1 altered" in (refresh / "todo.md").read_text()
+        assert out["blocked"] == {NOV: ["batch-001: manifest rev-1 altered"]}

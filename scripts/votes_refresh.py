@@ -138,6 +138,11 @@ _HEADING_END = re.compile(r"(?m)^\s*(?:[A-Z]|\d{1,2})\.\s|\bcall\s+to\s+order\b|
 HEADING_MAX = 600
 _JURISDICTION = {"novato-city-council": (r"\bnovato\b", r"\bcity\s+council\b"),
                  "marin-county-bos": (r"\bmarin\b", r"\bboard\s+of\s+supervisors\b")}
+_OTHER_JURISDICTIONS = {  # a heading naming one of these is another body's minutes (or a joint meeting): pending
+    "novato-city-council": ("san rafael", "mill valley", "sausalito", "tiburon", "belvedere", "corte madera",
+                            "larkspur", "san anselmo", "fairfax", "ross"),
+    "marin-county-bos": ("sonoma", "napa", "san francisco", "contra costa", "solano", "alameda", "san mateo"),
+}
 _CLOSED = re.compile(r"\bclosed\s+(?:session|meeting)\b", re.I)
 _SPECIAL = re.compile(r"\bspecial\b", re.I)
 _REGULAR = re.compile(r"\bregular\s+meeting\b|\bregular\b", re.I)
@@ -194,6 +199,9 @@ def check_heading(text: str, raw: bytes, meeting: dict, siblings: list[dict]) ->
     flat = " ".join(heading.split())
     if not all(re.search(p, flat, re.I) for p in _JURISDICTION[body]):
         return "heading_jurisdiction_missing"
+    other = next((o for o in _OTHER_JURISDICTIONS[body] if re.search(rf"\b{o}\b", flat, re.I)), None)
+    if other:
+        return f"heading_other_jurisdiction:{other}"
     dates = sorted({f"{int(y):04d}-{_MONTHS.index(mo.lower()) + 1:02d}-{int(d):02d}"
                     for mo, d, y in _DATE_RE.findall(flat)})
     if not dates:
@@ -334,25 +342,82 @@ def journal(root: Path) -> list[dict]:
 
 
 def slot_view(records: list[dict], applied: list[dict]) -> dict:
-    """(meeting, slot) → {"sha256": the slot's permanent identity, "owner": the live batch or None, "applied"}."""
-    released = {r["batch"] for r in records if r["kind"] == "release"}
+    """(meeting, slot) → {"sha256": the slot's permanent identity (its first claim's file), "owner": the batch that
+    holds it now or None, "applied"}. Ownership replays in log order: a batch or claim takes, a release frees."""
     view: dict[tuple[str, str], dict] = {}
+
+    def take(batch: str, c: dict) -> None:
+        entry = view.setdefault((c["meeting_id"], c["slot"]), {"sha256": c["sha256"], "owner": None,
+                                                               "applied": False})
+        entry["owner"] = batch
+
     for r in records:
-        if r["kind"] != "batch":
-            continue
-        for c in r["claims"]:
-            entry = view.setdefault((c["meeting_id"], c["slot"]), {"sha256": c["sha256"], "owner": None,
-                                                                   "applied": False})
-            if r["batch"] not in released:
-                entry["owner"] = r["batch"]
-    for r in records:
-        if r["kind"] == "claim" and r["batch"] not in released:  # a released batch re-taking its own slots
-            view.setdefault((r["meeting_id"], r["slot"]), {"sha256": r["sha256"], "applied": False})["owner"] = \
-                r["batch"]
+        if r["kind"] == "batch":
+            for c in r["claims"]:
+                take(r["batch"], c)
+        elif r["kind"] == "claim":
+            take(r["batch"], r)
+        elif r["kind"] == "release":
+            for entry in view.values():
+                if entry["owner"] == r["batch"]:
+                    entry["owner"] = None
     for a in applied:
-        entry = view.setdefault((a["meeting_id"], a["slot"]), {"sha256": a["sha256"], "owner": None})
-        entry["applied"] = True
+        view.setdefault((a["meeting_id"], a["slot"]), {"sha256": a["sha256"], "owner": None})["applied"] = True
     return view
+
+
+def current_revisions(records: list[dict]) -> dict[str, dict]:
+    """batch → {"rev", "manifest_sha256", "bodies"} of its current revision (the last batch/revision line)."""
+    out: dict[str, dict] = {}
+    for r in records:
+        if r["kind"] == "batch":
+            out[r["batch"]] = {"rev": r.get("rev", 1), "manifest_sha256": r["manifest_sha256"],
+                               "bodies": list(r.get("bodies", []))}
+        elif r["kind"] == "revision" and r["batch"] in out:
+            out[r["batch"]].update(rev=r["rev"], manifest_sha256=r["manifest_sha256"])
+    return out
+
+
+def manifest_path(refresh: Path, batch: str, rev: int) -> Path:
+    return Path(refresh) / "batches" / batch / f"rev-{rev}" / "manifest.json"
+
+
+def batch_integrity(refresh: Path, records: list[dict]) -> dict[str, str]:
+    """batch → what is wrong with its committed metadata (the current revision's manifest missing or altered)."""
+    problems = {}
+    for batch, cur in sorted(current_revisions(records).items()):
+        path = manifest_path(refresh, batch, cur["rev"])
+        if not path.is_file():
+            problems[batch] = f"manifest rev-{cur['rev']} missing"
+        elif _sha_bytes(path.read_bytes()) != cur["manifest_sha256"]:
+            problems[batch] = f"manifest rev-{cur['rev']} altered"
+    return problems
+
+
+def blocked_bodies(refresh: Path, records: list[dict]) -> dict[str, list[str]]:
+    """body → why no new batch may be prepared for it (damaged committed metadata; later: unresolved applies)."""
+    revs = current_revisions(records)
+    out: dict[str, list[str]] = {}
+    for batch, why in batch_integrity(refresh, records).items():
+        for body in revs[batch]["bodies"]:
+            out.setdefault(body, []).append(f"{batch}: {why}")
+    return out
+
+
+def record_conflicts(reg: Registry, b: dict) -> int:
+    """Under the lock: one `conflict` line per (meeting, slot, sha256) a saved file has against its slot."""
+    seen = {(r["meeting_id"], r["slot"], r["sha256"]) for r in reg.records() if r["kind"] == "conflict"}
+    n = 0
+    for rows in b.values():
+        for row in rows:
+            for c in row["conflicts"]:
+                key = (row["meeting_id"], row["slot"], c["sha256"])
+                if key not in seen:
+                    reg.append({"kind": "conflict", "meeting_id": key[0], "slot": key[1], "sha256": key[2],
+                                "path": c["path"], "held_against": c["held_against"]})
+                    seen.add(key)
+                    n += 1
+    return n
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -385,8 +450,10 @@ def backlog(export: Path, repo: Path, refresh: Path, today: str | None = None) -
                    "target": f"{MANUAL_DIR.as_posix()}/{today}/minutes/{body}/{m['meeting_id']}."
                              # an untyped title is proven only by the MinutesViewer page's own clip_id
                              + ("html" if title_session(body, m["title"]) is None else "<pdf|docx|html>")}
-            if files and not slot:
-                newest = [f for f in files if f["saved_on"] == files[-1]["saved_on"]]
+            # a slot that was ever claimed may only ever take its first file again (after a release)
+            usable = [f for f in files if not slot or f["sha256"] == slot["sha256"]]
+            if usable and not (slot and (slot["applied"] or slot.get("owner"))):
+                newest = [f for f in usable if f["saved_on"] == usable[-1]["saved_on"]]
                 if len(newest) > 1:
                     row["file"] = {**newest[0], "reason": "several_files_saved_together"}
                 else:
@@ -395,10 +462,10 @@ def backlog(export: Path, repo: Path, refresh: Path, today: str | None = None) -
                 row["state"] = "applied"
             elif slot and slot.get("owner"):
                 row["state"] = "prepared"
-            elif conflicts:
-                row["state"] = "held"
             elif row["file"] and row["file"]["reason"] is None:
                 row["state"] = "file_saved"
+            elif conflicts:
+                row["state"] = "held"
             elif m["url"] or row["file"]:
                 row["state"] = "awaiting_file"
             else:
@@ -465,10 +532,22 @@ def append_history(refresh: Path, entry: dict) -> None:
         fh.write(_canonical(entry) + "\n")
 
 
+def other_rows(b: dict) -> list[dict]:
+    """Every meeting the to-do list does not ask Stuart to save, with what is known about it."""
+    return [{"body": body, "meeting_id": r["meeting_id"], "date": r["date"], "state": r["state"],
+             "url_reason": r["url_reason"], "file": r["file"], "conflicts": r["conflicts"]}
+            for body, rows in sorted(b.items()) for r in rows if not (r["state"] == "awaiting_file" and r["url"])]
+
+
 def write_todo(export: Path, repo: Path, refresh: Path, today: str | None = None) -> dict:
     today = today or dt.date.today().isoformat()
     refresh = Path(refresh)
     b = backlog(export, repo, refresh, today=today)
+    reg = Registry(refresh)
+    with reg.locked():
+        record_conflicts(reg, b)
+        records = reg.records()
+    blocked = blocked_bodies(refresh, records)
     fresh = listing_freshness(repo, today)
     items = todo_items(b)
     pending = [r for rows in b.values() for r in rows if r["state"] not in ("applied", "prepared")]
@@ -477,6 +556,8 @@ def write_todo(export: Path, repo: Path, refresh: Path, today: str | None = None
     lines = [f"# Votes refresh — minutes to save ({today})", "", *freshness_lines(fresh), "",
              f"State: **{state}**. Open each URL in your browser, save the minutes (PDF, or for the Board the "
              "MinutesViewer page as HTML) to the path shown. Nothing here is fetched by a script.", ""]
+    for body, why in sorted(blocked.items()):
+        lines += [f"**BLOCKED — {body}:** " + "; ".join(why), ""]
     for body in sorted(b):
         mine = [i for i in items if i["body"] == body]
         lines += [f"## {body} ({len(mine)} to save)", ""]
@@ -484,21 +565,27 @@ def write_todo(export: Path, repo: Path, refresh: Path, today: str | None = None
             lines += [f"- {i['date']} — {i['title']} (`{i['meeting_id']}`)", f"  {i['url']}", f"  → `{i['target']}`"]
             if i["reason"]:
                 lines.append(f"  saved file not accepted: {i['reason']}")
-        other = [r for r in b[body] if r["state"] in ("no_minutes_record", "held")]
+        other = [r for r in b[body] if not (r["state"] == "awaiting_file" and r["url"])]
         if other:
-            lines += ["", "Not listable:"] + [
-                f"- {r['date']} `{r['meeting_id']}` — {r['state']}"
-                + (f" ({r['url_reason']})" if r["state"] == "no_minutes_record" and r["url_reason"] != r["state"]
-                   else "") for r in other]
+            lines += ["", "Not on the list:"]
+            for r in other:
+                lines.append(f"- {r['date']} `{r['meeting_id']}` — {r['state']}"
+                             + (f" ({r['url_reason']})" if r["state"] == "no_minutes_record"
+                                and r["url_reason"] != r["state"] else "")
+                             + (f"; saved file not accepted: {r['file']['reason']}"
+                                if r["file"] and r["file"]["reason"] else ""))
+                lines += [f"  - document_version_conflict: `{c['path']}` (sha256 {c['sha256'][:12]}…) differs from "
+                          f"the slot's file ({c['held_against'][:12]}…); it is never parsed" for c in r["conflicts"]]
         lines.append("")
     (refresh / "todo.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     (refresh / "todo.json").write_text(json.dumps({"today": today, "state": state, "freshness": fresh,
-                                                   "items": items}, indent=1, sort_keys=True) + "\n")
+                                                   "items": items, "other": other_rows(b), "blocked": blocked},
+                                                  indent=1, sort_keys=True) + "\n")
     append_history(refresh, {"command": "todo", "today": today, "freshness": fresh,
                              "bodies": {body: {**_counts(rows), "meetings": [[r["meeting_id"], r["state"]]
                                                                              for r in rows]}
                                         for body, rows in sorted(b.items())}})
-    return {"state": state, "items": len(items)}
+    return {"state": state, "items": len(items), "blocked": blocked}
 
 
 def digest_snapshot(repo: Path, export: Path, refresh: Path, today: str | None = None) -> dict:
