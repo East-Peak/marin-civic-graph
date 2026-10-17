@@ -65,7 +65,7 @@ def _nov_html(date_text, kind="regular", extra=""):
     head = {"regular": "NOVATO CITY COUNCIL MEETING MINUTES", "closed": "NOVATO CITY COUNCIL CLOSED SESSION MEETING MINUTES",
             "special": "NOVATO CITY COUNCIL SPECIAL MEETING MINUTES"}[kind]
     first = ("A. CONVENE, PLEDGE OF ALLEGIANCE, AND ROLL CALL" if kind != "closed" else "A. CALL TO ORDER")
-    return (f"<html><body><p>{head}</p><p>COUNCIL CHAMBERS 1 SAMPLE AVENUE NOVATO, CA</p><p>{date_text} - 6:00 PM</p>"
+    return (f"<html><body><p>{head}</p><p>COUNCIL CHAMBERS, CITY HALL, NOVATO, CA</p><p>{date_text} - 6:00 PM</p>"
             f"<p>{first}</p><p>The meeting was called to order. COUNCIL PRESENT: Mayor Alder, Councilmember Birch."
             f"</p><p>{extra}</p></body></html>")
 
