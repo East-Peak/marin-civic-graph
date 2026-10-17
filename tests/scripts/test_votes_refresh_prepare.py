@@ -317,7 +317,8 @@ class TestApplyOutcomes:
         assert votes_apply.get_state(d) == "APPLY_IN_PROGRESS"
         assert vr.blocked(w.refresh, vr.Registry(w.refresh).records())[BOS]
         # resolve proves the outcome against the live graph (here: the fake, which did commit)
-        assert vr.resolve(w.refresh, "batch-001", canonical_root=w.tmp, driver_factory=lambda: g) == "APPLIED"
+        assert vr.resolve(w.refresh, "batch-001", canonical_root=w.tmp, driver_factory=lambda: g,
+                          uri="bolt://localhost:7688") == "APPLIED"
         assert [json.loads(x)["meeting_id"] for x in w.journal().decode().splitlines()] == [f"meeting-{BOS}-7001"]
 
     def test_resolve_after_a_rollback_releases(self, w):
@@ -326,7 +327,8 @@ class TestApplyOutcomes:
         w.approve()
         g = w.graph(commit_raises_before=True)
         assert w.apply(g) == "APPLY_UNVERIFIED"
-        assert vr.resolve(w.refresh, "batch-001", canonical_root=w.tmp, driver_factory=lambda: g) == "ROLLED_BACK"
+        assert vr.resolve(w.refresh, "batch-001", canonical_root=w.tmp, driver_factory=lambda: g,
+                          uri="bolt://localhost:7688") == "ROLLED_BACK"
         assert w.journal() == b""
         assert vr.batch_states(w.refresh, vr.Registry(w.refresh).records())["batch-001"]["released"]
 
@@ -366,13 +368,28 @@ class TestRevisions:
         out = w.prepare()
         assert out["batch"] == "batch-002" and out["attached"] == 2
 
-    def test_corrupt_state_blocks_and_cannot_be_revised(self, w):
+    def test_unreadable_state_before_approval_is_a_crashed_preparation(self, w):
         w.save(7001)
         w.prepare()
+        (w.rev() / "state.json").write_text("{torn")
+        assert vr.batch_states(w.refresh, vr.Registry(w.refresh).records())["batch-001"]["state"] == "PREPARING"
+        assert BOS not in vr.blocked(w.refresh, vr.Registry(w.refresh).records())
+        assert w.prepare(batch="batch-001")["state"] == "AWAITING_REVIEW"  # rev-2
+
+    def test_unreadable_state_after_approval_blocks_until_resolved(self, w):
+        w.save(7001)
+        w.prepare()
+        w.approve()
         (w.rev() / "state.json").write_text("{torn")
         assert "no readable state" in vr.blocked(w.refresh, vr.Registry(w.refresh).records())[BOS][0]
         with pytest.raises(vr.RefreshError, match="cannot be revised"):
             w.prepare(batch="batch-001")
+        with pytest.raises(vr.RefreshError, match="cannot be abandoned"):
+            vr.abandon(w.refresh, "batch-001")
+        g = w.graph()  # nothing was applied: the live graph is the baseline
+        assert vr.resolve(w.refresh, "batch-001", canonical_root=w.tmp, driver_factory=lambda: g,
+                          uri="bolt://localhost:7688") == "ROLLED_BACK"
+        assert list(w.rev().glob("state.json.unreadable-*"))  # the torn file is kept, never parsed
 
 
 class TestDeterminismAndOffline:
@@ -406,3 +423,215 @@ def test_the_cli_runs_prepare_status_check_and_refuses_cleanly(w, capsys):
     assert vr.main(["check", "--batch", "batch-001", "--rev", "1", *common]) == 0
     assert vr.main(["abandon", "--batch", "batch-009", *common]) == 1
     assert "REFUSED" in capsys.readouterr().err
+
+
+
+class TestCodexD1:
+    def test_resolve_refuses_another_server_and_unapproved_inputs(self, w):
+        w.save(7001)
+        w.prepare()
+        w.approve()
+        assert w.apply(w.graph(commit_raises_after_commit=True)) == "APPLY_UNVERIFIED"
+        with pytest.raises(vr.RefreshError, match="7688"):
+            vr.resolve(w.refresh, "batch-001", canonical_root=w.tmp, driver_factory=w.graph,
+                       uri="bolt://elsewhere:7688")
+        report = w.rev() / "plan" / "plan-report.json"
+        report.write_text(report.read_text().replace('"verification": []', '"verification": [] '))
+        with pytest.raises(vr.RefreshError, match="plan/plan-report.json changed"):
+            vr.resolve(w.refresh, "batch-001", canonical_root=w.tmp, driver_factory=w.graph,
+                       uri="bolt://localhost:7688")
+
+    def test_an_unresolved_batch_blocks_revising_approving_and_applying_another_of_its_body(self, w):
+        w.save(7001)
+        w.save(7002, day="2030-05-12")
+        w.prepare()  # batch-001 takes both
+        vr.abandon(w.refresh, "batch-001")
+        w.prepare()  # batch-002: both again (same files)
+        # make batch-001's revision look like an apply in flight, by hand-crafted approval (as if approved then crashed)
+        assert vr.batch_states(w.refresh, vr.Registry(w.refresh).records())["batch-002"]["state"] == "AWAITING_REVIEW"
+        votes_apply.set_state(w.rev("batch-001"), "APPLY_IN_PROGRESS", approval_sha256="0" * 64)
+        reg = vr.Registry(w.refresh)
+        with reg.locked():
+            reg.append({"kind": "claim", "batch": "batch-001", "meeting_id": "meeting-x", "slot": "minutes",
+                        "sha256": "f" * 64})  # un-release batch-001 without touching batch-002's slots
+        with pytest.raises(vr.RefreshError, match="cannot be revised while"):
+            w.prepare(batch="batch-002")
+        with pytest.raises(vr.RefreshError, match="blocked"):
+            w.approve(batch="batch-002")
+
+    def test_a_crash_between_claim_and_build_leaves_preparing_which_can_be_abandoned(self, w, monkeypatch):
+        w.save(7001)
+
+        def boom(*a, **k):
+            raise RuntimeError("the build died")
+        monkeypatch.setattr(vr, "build_revision", boom)
+        with pytest.raises(RuntimeError):
+            w.prepare()
+        st = vr.batch_states(w.refresh, vr.Registry(w.refresh).records())["batch-001"]
+        assert st["state"] == "PREPARING" and BOS not in vr.blocked(w.refresh, vr.Registry(w.refresh).records())
+        monkeypatch.undo()
+        assert w.prepare(batch="batch-001")["state"] == "AWAITING_REVIEW"
+
+    def test_a_revision_keeps_the_reviewer_holds_unless_replaced(self, w):
+        w.save(7001)
+        w.prepare()
+        first = sorted(x["event_id"] for x in vr._read_jsonl(w.rev() / "bundle" / "dispositions.jsonl"))[0]
+        holds = w.tmp / "rh.json"
+        holds.write_text(json.dumps({"holds": [{"event_id": first, "reason": "S1: wrong item"}]}))
+        assert w.prepare(batch="batch-001", reviewer_holds=holds)["attached"] == 1
+        rebased = w.write_export("export2", w.nodes, w.edges)
+        assert w.prepare(batch="batch-001", export=rebased)["attached"] == 1  # rev-3 keeps the hold
+        empty = w.tmp / "none.json"
+        empty.write_text(json.dumps({"holds": []}))
+        assert w.prepare(batch="batch-001", reviewer_holds=empty)["attached"] == 2  # an explicit replacement
+
+    def test_the_journal_completes_per_slot_after_an_interrupted_sync(self, w):
+        w.save(7001)
+        w.save(7002, day="2030-05-12")
+        w.prepare()
+        w.approve()
+        assert w.apply(w.graph()) == "APPLIED"
+        lines = w.journal().decode().splitlines()
+        assert len(lines) == 2
+        (w.refresh / "applied.jsonl").write_text(lines[0] + "\n" + lines[1][:20])  # crash mid-append
+        reg = vr.Registry(w.refresh)
+        with reg.locked():
+            vr.sync_journal(w.refresh, reg)
+        again = w.journal().decode().splitlines()
+        assert again == lines and list(w.refresh.glob("applied.tail-*.quarantine"))
+
+    def test_approval_refuses_a_sheet_that_is_not_the_deterministic_sample(self, w):
+        w.save(7001)
+        w.prepare()
+        sheet = w.rev() / "spot-check.md"
+        sheet.write_text(sheet.read_text().split("### S2.")[0])  # an item removed
+        with pytest.raises(vr.RefreshError, match="deterministic sample"):
+            w.approve()
+
+    def test_check_after_approval_and_its_pins(self, w):
+        w.save(7001)
+        w.prepare()
+        w.approve()
+        assert vr.check_revision(w.refresh, w.repo, "batch-001", 1) == []  # approval metadata is not a build output
+        m = vr.manifest_path(w.refresh, "batch-001", 1)
+        m.write_text(m.read_text().replace('"rev": 1', '"rev": 1 '))
+        assert "not the one the registry recorded" in vr.check_revision(w.refresh, w.repo, "batch-001", 1)[0]
+
+    def test_two_prepares_in_separate_roots_are_byte_identical(self, w, tmp_path):
+        import shutil
+        w.save(7001)
+        other = tmp_path / "refresh-2"
+        other.mkdir()
+        shutil.copy(w.refresh / "config.json", other / "config.json")
+        w.prepare()
+        vr.prepare(w.export, w.repo, other, today="2030-05-11")
+        a, b = w.rev(), vr.rev_dir(other, "batch-001", 1)
+        files = sorted(p.relative_to(a) for p in a.rglob("*") if p.is_file() and p.name != "state.json")
+        assert files == sorted(p.relative_to(b) for p in b.rglob("*") if p.is_file() and p.name != "state.json")
+        assert [f for f in files if (a / f).read_bytes() != (b / f).read_bytes()] == []
+
+
+class TestFixtureCoverage:
+    def test_all_held_and_its_revision(self, w):
+        w.save(7001)
+        w.prepare()
+        ids = sorted(x["event_id"] for x in vr._read_jsonl(w.rev() / "bundle" / "dispositions.jsonl"))
+        holds = w.tmp / "rh.json"
+        holds.write_text(json.dumps({"holds": [{"event_id": e, "reason": "S: doubt"} for e in ids]}))
+        assert w.prepare(batch="batch-001", reviewer_holds=holds)["state"] == "ALL_HELD"
+        holds.write_text(json.dumps({"holds": [{"event_id": ids[0], "reason": "S: doubt"}]}))
+        assert w.prepare(batch="batch-001", reviewer_holds=holds)["state"] == "AWAITING_REVIEW"
+
+    def test_wrong_meeting_and_same_day_session_files_stay_pending(self, w):
+        w.save(7001, minutes(7001).replace("APRIL 9, 2030", "APRIL 16, 2030"))
+        w.save(7002, minutes(7002).replace("clip_id=7002", "clip_id=7001"))
+        assert w.prepare()["state"] == "AWAITING_MINUTES"
+        todo = (w.refresh / "todo.md").read_text()
+        assert "heading_date_mismatch:2030-04-16" in todo and "clip_id_mismatch:7001" in todo
+
+    def test_a_quoted_resignation_holds_nothing(self, w):
+        w.save(7001, minutes(7001, "<p>Public comment: a speaker said “I resigned from the Board of Supervisors.”</p>"))
+        out = w.prepare()
+        assert out["new_holds"] == [] and out["attached"] == 2
+
+    def test_zero_usable_roll_calls_is_insufficient_evidence(self, w):
+        w.save(7001, minutes(7001).replace("<p>Roll Call</p>", "").replace("Present: ", "Seen: "))
+        w.prepare()
+        assert json.loads((w.rev() / "hints.json").read_text())[BOS]["evidence"] == "insufficient evidence"
+
+    def test_an_older_document_arriving_later_but_after_the_hold_is_held(self, w):
+        resign = "<p>Supervisor Elm resigned from the Board of Supervisors effective May 1.</p>"
+        w.save(7001, minutes(7001, resign))
+        w.save(7003)
+        w.prepare()  # the hold dates from 2030-04-09; 7003 (2030-05-07) held with it
+        w.save(7002, day="2030-05-12")  # 2030-04-23: older than 7003, arriving later, after the hold
+        out = w.prepare()
+        assert out["batch"] == "batch-002" and out["attached"] == 0
+
+    def test_a_process_killed_right_after_commit_leaves_apply_in_progress(self, w):
+        w.save(7001)
+        w.prepare()
+        w.approve()
+        d = w.rev()
+        script = f"""
+import os, sys, json
+sys.path[:0] = [{str(Path(vr.__file__).parent)!r}, {str(Path(__file__).parent)!r}]
+import votes_apply
+from test_votes_apply import FakeGraph
+nodes = [json.loads(x) for x in open({str(w.export / 'nodes.jsonl')!r})]
+edges = [json.loads(x) for x in open({str(w.export / 'edges.jsonl')!r})]
+g = FakeGraph(nodes, edges)
+real = votes_apply.export_live_graph
+def exporter(driver, *, out_dir, **kw):
+    if str(out_dir).endswith("post-apply-export"):
+        os._exit(9)  # killed right after the commit
+    return real(driver, out_dir=out_dir, **kw)
+votes_apply.run_apply({str(d)!r}, approve=votes_apply.approval_sha({str(d)!r}), canonical_root={str(w.tmp)!r},
+                      uri="bolt://localhost:7688", driver_factory=lambda: g, database="neo4j", exporter=exporter)
+"""
+        out = subprocess.run([sys.executable, "-c", script], capture_output=True, text=True)
+        assert out.returncode == 9, out.stderr
+        assert votes_apply.get_state(d) == "APPLY_IN_PROGRESS"
+        assert w.journal() == b""
+        assert "unresolved" in vr.blocked(w.refresh, vr.Registry(w.refresh).records())[BOS][0]
+        cand = [json.loads(x) for x in (d / "plan/candidate/nodes.jsonl").read_text().splitlines()]
+        cand_e = [json.loads(x) for x in (d / "plan/candidate/edges.jsonl").read_text().splitlines()]
+        live = FakeGraph(cand, cand_e)  # the graph as the killed process left it: committed
+        assert vr.resolve(w.refresh, "batch-001", canonical_root=w.tmp, driver_factory=lambda: live,
+                          uri="bolt://localhost:7688") == "APPLIED"
+        assert len(w.journal().decode().splitlines()) == 1
+
+    def test_a_state_write_interrupted_before_replace_leaves_the_old_state(self, w, monkeypatch):
+        w.save(7001)
+        w.prepare()
+        before = (w.rev() / "state.json").read_bytes()
+
+        def die(*a):
+            raise KeyboardInterrupt
+        monkeypatch.setattr(votes_apply.os, "replace", die)
+        with pytest.raises(KeyboardInterrupt):
+            votes_apply.set_state(w.rev(), "ALL_HELD")
+        assert (w.rev() / "state.json").read_bytes() == before
+
+    def test_a_concurrent_prepare_is_refused_while_another_holds_the_lock(self, w):
+        holder = subprocess.Popen([sys.executable, "-c", (
+            "import sys, time; sys.path.insert(0, %r); import votes_refresh as vr\n"
+            "with vr.Registry(%r).locked():\n    print('held', flush=True); time.sleep(30)") % (
+            str(Path(vr.__file__).parent), str(w.refresh))], stdout=subprocess.PIPE, text=True)
+        try:
+            assert holder.stdout.readline().strip() == "held"
+            w.save(7001)
+            with pytest.raises(vr.RefreshError, match="locked by another"):
+                w.prepare()
+        finally:
+            holder.kill()
+            holder.wait()
+
+    def test_a_rebase_voids_the_old_revisions_approval(self, w):
+        w.save(7001)
+        w.prepare()
+        w.approve()
+        rebased = w.write_export("export2", w.nodes, w.edges)
+        w.prepare(batch="batch-001", export=rebased)
+        with pytest.raises(votes_apply.ApplyRefused, match="current revision"):
+            w.apply(w.graph(), rev=1)

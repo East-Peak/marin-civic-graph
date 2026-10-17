@@ -278,7 +278,7 @@ class Registry:
     _held: set[str] = set()  # roots this process has locked: flock is not re-entrant, so a nested lock would hang
 
     @contextlib.contextmanager
-    def locked(self, wait: bool = True):
+    def locked(self, wait: bool = False):
         self.root.mkdir(parents=True, exist_ok=True)
         key = str(self.root.resolve())
         if key in Registry._held:
@@ -349,8 +349,34 @@ def _fsync_dir(path: Path) -> None:
 
 
 def journal(root: Path) -> list[dict]:
+    """The applied journal. An unterminated final line is an interrupted write: ignored here, quarantined by the
+    next locked writer (repair_journal); any other unreadable line refuses."""
     path = Path(root) / "applied.jsonl"
-    return list(_jsonl(path)) if path.is_file() else []
+    if not path.is_file():
+        return []
+    out = []
+    for i, line in enumerate(path.read_bytes().split(b"\n")[:-1], 1):
+        if line.strip():
+            try:
+                out.append(json.loads(line))
+            except json.JSONDecodeError:
+                raise RefreshError(f"{path}:{i} is corrupt; refusing to read the applied journal") from None
+    return out
+
+
+def repair_journal(root: Path) -> None:
+    path = Path(root) / "applied.jsonl"
+    if not path.is_file():
+        return
+    data = path.read_bytes()
+    if data and not data.endswith(b"\n"):
+        cut = data.rfind(b"\n") + 1
+        (Path(root) / f"applied.tail-{_sha_bytes(data[cut:])[:8]}.quarantine").write_bytes(data[cut:])
+        with open(path, "r+b") as fh:
+            fh.truncate(cut)
+            fh.flush()
+            os.fsync(fh.fileno())
+        _fsync_dir(Path(root))
 
 
 def slot_view(records: list[dict], applied: list[dict]) -> dict:
@@ -636,9 +662,9 @@ def render_digest_section(snap: dict) -> list[str]:
 # Batches: prepare → (review, bake) → approve → Stuart's apply (votes_apply.py) → journal
 # ---------------------------------------------------------------------------------------------------------------
 
-LIVE_STATES = ("AWAITING_REVIEW", "AWAITING_APPLY", "ALL_HELD", "AWAITING_ROSTER_REVIEW")
+LIVE_STATES = ("PREPARING", "AWAITING_REVIEW", "AWAITING_APPLY", "ALL_HELD", "AWAITING_ROSTER_REVIEW")
 UNRESOLVED_STATES = ("APPLY_IN_PROGRESS", "APPLY_UNVERIFIED")
-REVISABLE = ("AWAITING_REVIEW", "AWAITING_APPLY", "ALL_HELD", "AWAITING_ROSTER_REVIEW", "ROLLED_BACK")
+REVISABLE = ("PREPARING", "AWAITING_REVIEW", "AWAITING_APPLY", "ALL_HELD", "AWAITING_ROSTER_REVIEW", "ROLLED_BACK")
 CODE_MODULES = ("votes_text", "votes_blocks", "votes_candidates", "votes_attendance", "votes_exceptions",
                 "votes_validate", "votes_reconcile", "votes_ledger", "votes_bundle", "votes_persons",
                 "votes_refresh_ledger", "votes_refresh_expected", "case_additive_plan")
@@ -661,19 +687,35 @@ def _read_state(path: Path) -> str | None:
 
 
 def batch_states(refresh: Path, records: list[dict]) -> dict[str, dict]:
-    """batch → {rev, bodies, state, released, claims} for every committed batch."""
+    """batch → {rev, bodies, state, released, claims, approved} for every committed batch. A revision with no
+    readable state that was never approved crashed while being prepared (PREPARING: it cannot have been applied);
+    one that was approved has an unknown apply outcome (state None: unresolved)."""
     released = set()
     for r in records:
         if r["kind"] == "release":
+            released.discard(r["batch"])
             released.add(r["batch"])
-        elif r["kind"] in ("claim", "revision"):
+        elif r["kind"] in ("claim",):
             released.discard(r["batch"])  # a re-claim takes the batch back
     out = {}
     for batch, cur in current_revisions(records).items():
         claims = next(r["claims"] for r in records if r["kind"] == "batch" and r["batch"] == batch)
-        out[batch] = {**cur, "state": _read_state(rev_dir(refresh, batch, cur["rev"])), "released": batch in released,
-                      "claims": claims}
+        approved = next((r["approval_sha256"] for r in reversed(records) if r["kind"] == "approved"
+                         and r["batch"] == batch and r["rev"] == cur["rev"]), None)
+        state = _read_state(rev_dir(refresh, batch, cur["rev"]))
+        if state is None and approved is None:
+            state = "PREPARING"
+        out[batch] = {**cur, "state": state, "released": batch in released, "claims": claims, "approved": approved}
     return out
+
+
+def body_blocks(refresh: Path, records: list[dict], batch: str) -> list[str]:
+    """Why `batch` may not be revised, approved or applied: another batch of one of its bodies has an unresolved
+    apply (or damaged metadata)."""
+    states = batch_states(refresh, records)
+    mine = set(states[batch]["bodies"]) if batch in states else set()
+    return [why for body, whys in sorted(blocked(refresh, records).items()) if body in mine
+            for why in whys if not why.startswith(f"{batch}:")]
 
 
 def blocked(refresh: Path, records: list[dict]) -> dict[str, list[str]]:
@@ -758,7 +800,8 @@ def sync_journal(refresh: Path, reg: Registry) -> list[str]:
     from case_additive_plan import fingerprint
 
     records = reg.records()
-    journaled = {a["batch"] for a in journal(refresh)}
+    repair_journal(refresh)
+    journaled = {(a["batch"], a["meeting_id"], a["slot"]) for a in journal(refresh)}
     done = []
     for batch, b in sorted(batch_states(refresh, records).items()):
         d = rev_dir(refresh, batch, b["rev"])
@@ -766,7 +809,7 @@ def sync_journal(refresh: Path, reg: Registry) -> list[str]:
             reg.append({"kind": "release", "batch": batch, "reason": "rolled_back"})
             done.append(f"{batch}: released (rolled back)")
             continue
-        if b["state"] not in ("APPLIED", "PUBLISHED_VERIFIED") or batch in journaled:
+        if b["state"] not in ("APPLIED", "PUBLISHED_VERIFIED"):
             continue
         st = json.loads((d / "state.json").read_text())
         if st.get("approval_sha256") != _sha_bytes((d / "plan" / "approval-inputs.json").read_bytes()):
@@ -780,15 +823,17 @@ def sync_journal(refresh: Path, reg: Registry) -> list[str]:
                                     if x["reason"] == "attached")
         with open(Path(refresh) / "applied.jsonl", "a", encoding="utf-8") as fh:
             for doc in manifest["documents"]:
+                if (batch, doc["meeting_id"], SLOT) in journaled:
+                    continue  # per slot: an interrupted sync completes the rest, never duplicates
                 fh.write(_canonical({"batch": batch, "rev": b["rev"], "approval_sha256": st["approval_sha256"],
                                      "meeting_id": doc["meeting_id"], "slot": SLOT, "sha256": doc["sha256"],
                                      "extraction": {"pdftotext": manifest["pdftotext"],
                                                     "text_sha256": doc["text_sha256"]},
                                      "parser": manifest["code"], "event_ids": attached.get(doc["meeting_id"], [])})
                          + "\n")
-            fh.flush()
-            os.fsync(fh.fileno())
-        done.append(f"{batch}: journaled")
+                fh.flush()
+                os.fsync(fh.fileno())
+                done.append(f"{batch}: journaled {doc['meeting_id']}")
     return done
 
 
@@ -983,8 +1028,9 @@ def prepare(export: Path, repo: Path, refresh: Path, *, today: str | None = None
         records = reg.records()
         stop = blocked(refresh, records)
         holds = roster_holds(records)
-        rh = json.loads(Path(reviewer_holds).read_text())["holds"] if reviewer_holds else []
+        rh = json.loads(Path(reviewer_holds).read_text())["holds"] if reviewer_holds else None
         if batch is None:
+            rh = rh or []
             docs = _selected_docs(b, set(stop))
             if not docs:
                 todo = write_todo(export, repo, refresh, today=today, reg=reg)
@@ -1002,6 +1048,9 @@ def prepare(export: Path, repo: Path, refresh: Path, *, today: str | None = None
                 raise RefreshError(f"{batch} is {st['state'] or 'without a readable state'}; it cannot be revised")
             if batch in batch_integrity(refresh, records):
                 raise RefreshError(f"{batch}: {batch_integrity(refresh, records)[batch]}")
+            why = body_blocks(refresh, records, batch)
+            if why:
+                raise RefreshError(f"{batch} cannot be revised while " + "; ".join(why))
             view = slot_view(records, journal(refresh))
             for c in st["claims"]:
                 owner = view[(c["meeting_id"], c["slot"])]
@@ -1011,6 +1060,8 @@ def prepare(export: Path, repo: Path, refresh: Path, *, today: str | None = None
             docs = [{k: d[k] for k in ("body", "meeting_id", "date", "title", "record_id", "url", "path", "format",
                                        "sha256")} for d in old["documents"]]
             rev = st["rev"] + 1
+            if rh is None:  # a revision keeps the spot check's holds unless a replacement file is given
+                rh = old["reviewer_holds"]
         manifest = _manifest(refresh, repo, batch, rev, docs, export, cfg, holds, rh)
         data = (json.dumps(manifest, indent=1, sort_keys=True) + "\n").encode()
         _publish(manifest_path(refresh, batch, rev), data)  # durable before the registry references it
@@ -1025,6 +1076,8 @@ def prepare(export: Path, repo: Path, refresh: Path, *, today: str | None = None
                     reg.append({"kind": "claim", "batch": batch, "meeting_id": d["meeting_id"], "slot": SLOT,
                                 "sha256": d["sha256"]})
             reg.append({"kind": "revision", "batch": batch, "rev": rev, "manifest_sha256": sha})
+        import votes_apply
+        votes_apply.set_state(rev_dir(refresh, batch, rev), "PREPARING", batch=batch, rev=rev)  # before any artifact
         result = build_revision(refresh, repo, manifest, rev_dir(refresh, batch, rev) / "build", cfg)
         _move_build(rev_dir(refresh, batch, rev))
         state = _finish_revision(refresh, reg, batch, rev, result)
@@ -1057,12 +1110,24 @@ def check_revision(refresh: Path, repo: Path, batch: str, rev: int) -> list[str]
 
     import votes_refresh_ledger as rl
     d = rev_dir(refresh, batch, rev)
-    manifest = json.loads(manifest_path(refresh, batch, rev).read_text())
+    raw = manifest_path(refresh, batch, rev).read_bytes()
+    records = Registry(refresh).records()
+    recorded = {(r["batch"], r.get("rev", 1)): r["manifest_sha256"] for r in records if r["kind"] in ("batch", "revision")}
+    if recorded.get((batch, rev)) != _sha_bytes(raw):
+        return [f"{batch} rev-{rev}: the manifest is not the one the registry recorded"]
+    manifest = json.loads(raw)
+    pins = [f"code {m} changed since this revision was prepared" for m, sha in sorted(_code_versions().items())
+            if manifest["code"].get(m) != sha]
+    if manifest["pdftotext"] != _pdftotext():
+        pins.append(f"pdftotext is {_pdftotext()!r}, the revision used {manifest['pdftotext']!r}")
+    if pins:
+        return pins
     cfg = rl.load_config(refresh)
     with tempfile.TemporaryDirectory(dir=refresh, prefix=".check-") as tmp:
         again = Path(tmp) / "rev"
         build_revision(refresh, repo, manifest, again, cfg)
-        mine = sorted(p.relative_to(d) for p in d.rglob("*") if p.is_file() and p.relative_to(d).parts[0] in DETERMINISTIC)
+        mine = sorted(p.relative_to(d) for p in d.rglob("*") if p.is_file() and p.relative_to(d).parts[0] in DETERMINISTIC
+                      and p.relative_to(d).as_posix() != "plan/approval-inputs.json")  # approval metadata, not a build
         theirs = sorted(p.relative_to(again) for p in again.rglob("*") if p.is_file())
         problems = [] if mine == theirs else [f"file lists differ: {sorted(set(mine) ^ set(theirs))[:5]}"]
         problems += [f"{rel} differs from a rebuild" for rel in sorted(set(mine) & set(theirs))
@@ -1084,6 +1149,9 @@ def apply_guard(state_dir: Path, reg: Registry) -> None:
         raise RefreshError(f"{marker['batch']} was released")
     if marker["batch"] in batch_integrity(refresh, records):
         raise RefreshError(f"{marker['batch']}: {batch_integrity(refresh, records)[marker['batch']]}")
+    why = body_blocks(refresh, records, marker["batch"])
+    if why:
+        raise RefreshError("blocked: " + "; ".join(why))
     live = [h for h in roster_holds(records) if not h["resolved"]]
     for x in _read_jsonl(d / "bundle" / "dispositions.jsonl"):
         if x["reason"] != "attached":
@@ -1121,6 +1189,13 @@ def approve(refresh: Path, batch: str, *, review: Path, bake_check: Path) -> str
         if acc["problems"] or acc.get("matches_expected") is not True:
             raise RefreshError(f"accounting: {acc['problems'][:3] or ['does not match the expected manifest']}")
         sheet = (d / "spot-check.md").read_text()
+        bundle = {"edges": _read_jsonl(d / "bundle" / "edges.jsonl"),
+                  "dispositions": _read_jsonl(d / "bundle" / "dispositions.jsonl")}
+        want_items = [eid for picks in spot_selection(bundle, seed=manifest["seed"]).values()
+                      for eid in picks["random"] + picks["notable"]]
+        have_items = re.findall(r"^### S\d+\. (\S+)$", sheet, re.M)
+        if not want_items or have_items != want_items:
+            raise RefreshError("the spot-check sheet is not this revision's deterministic sample")
         review_text = Path(review).read_text()
         if (review_text.splitlines() or [""])[0] != f"Sheet sha256: {_sha_bytes(sheet.encode())}":
             raise RefreshError("the review is not of this revision's sheet (first line `Sheet sha256: <sha>`)")
@@ -1146,7 +1221,9 @@ def approve(refresh: Path, batch: str, *, review: Path, bake_check: Path) -> str
                       "manifest.json": manifest_path(refresh, batch, st["rev"]), "spot-check.md": d / "spot-check.md",
                       "spot-check-review.md": d / "spot-check-review.md", "bake-check.json": d / "bake-check.json",
                       MARKER: d / MARKER})
-        return votes_apply.write_approval(d, files)
+        sha = votes_apply.write_approval(d, files)
+        reg.append({"kind": "approved", "batch": batch, "rev": st["rev"], "approval_sha256": sha})  # resolve's anchor
+        return sha
 
 
 def abandon(refresh: Path, batch: str) -> None:
@@ -1161,25 +1238,50 @@ def abandon(refresh: Path, batch: str) -> None:
             reg.append({"kind": "release", "batch": batch, "reason": "abandoned"})
 
 
-def resolve(refresh: Path, batch: str, *, canonical_root: Path, driver_factory, database: str = "neo4j",
-            exporter=None) -> str:
-    """An unresolved apply (APPLY_IN_PROGRESS / APPLY_UNVERIFIED / unreadable state), proved against the LIVE
-    operator graph: under refresh → weekly locks, a fresh read-only export; == candidate → APPLIED (journaled);
-    == baseline → ROLLED_BACK (released); anything else stays unresolved. No export can be supplied by hand."""
+def _approved_inputs(d: Path, approval_sha: str) -> dict[str, bytes]:
+    """The approval manifest's files, only if the manifest is exactly the approved one and every file still has
+    its recorded sha256 (votes_apply._verify_approval without the state check)."""
+    raw = (d / "plan" / "approval-inputs.json").read_bytes()
+    if _sha_bytes(raw) != approval_sha:
+        raise RefreshError("the approval manifest on disk is not the approved one")
+    out = {}
+    for name, entry in sorted(json.loads(raw)["files"].items()):
+        path = Path(entry["path"])
+        data = path.read_bytes() if path.is_file() else None
+        if data is None or _sha_bytes(data) != entry["sha256"]:
+            raise RefreshError(f"approved input {name} changed")
+        out[name] = data
+    return out
+
+
+def resolve(refresh: Path, batch: str, *, canonical_root: Path, driver_factory, uri: str | None,
+            database: str = "neo4j", exporter=None) -> str:
+    """An unresolved apply (APPLY_IN_PROGRESS / APPLY_UNVERIFIED / unreadable state after approval), proved against
+    the LIVE operator graph: the attempted approval is authenticated (the registry's `approved` record, every approved
+    file), then under refresh → weekly locks a fresh read-only export of bolt://localhost:7688; == candidate →
+    APPLIED (journaled); == baseline → ROLLED_BACK (released); anything else stays unresolved."""
     import case_additive_plan as cap
     import votes_apply
     from export_live_graph import export_live_graph
     from run_lock import run_lock
 
+    if uri != votes_apply.OPERATOR_URI:
+        raise RefreshError(f"NEO4J_URI must be {votes_apply.OPERATOR_URI} (got {uri!r})")
     exporter = exporter or export_live_graph
     refresh = Path(refresh)
     reg = Registry(refresh)
     with reg.locked():
-        st = batch_states(refresh, reg.records()).get(batch)
+        records = reg.records()
+        st = batch_states(refresh, records).get(batch)
         if st is None or not (st["state"] in UNRESOLVED_STATES or st["state"] is None):
             raise RefreshError(f"{batch} is {st and st['state']}; nothing to resolve")
+        if batch in batch_integrity(refresh, records):
+            raise RefreshError(f"{batch}: {batch_integrity(refresh, records)[batch]}")
+        if not st["approved"]:
+            raise RefreshError(f"{batch} rev-{st['rev']} was never approved")
         d = rev_dir(refresh, batch, st["rev"])
-        report = json.loads((d / "plan" / "plan-report.json").read_text())
+        files = _approved_inputs(d, st["approved"])
+        report = json.loads(files["plan/plan-report.json"])
         with run_lock(Path(canonical_root)):
             n = len(list((d / "apply").glob("resolve-*"))) + 1 if (d / "apply").is_dir() else 1
             out = d / "apply" / f"resolve-{n}"
@@ -1190,14 +1292,12 @@ def resolve(refresh: Path, batch: str, *, canonical_root: Path, driver_factory, 
                 driver.close()
             live = cap.fingerprint(out)
             if live == report["candidate_sha256"]:
+                import shutil
                 post = d / "apply" / "post-apply-export"
                 if post.exists():
-                    import shutil
                     shutil.rmtree(post)
-                import shutil
                 shutil.copytree(out, post)
-                approval = _sha_bytes((d / "plan" / "approval-inputs.json").read_bytes())
-                votes_apply.set_state(d, "APPLIED", approval_sha256=approval, resolved_by=out.name)
+                votes_apply.set_state(d, "APPLIED", approval_sha256=st["approved"], resolved_by=out.name)
                 sync_journal(refresh, reg)
                 return "APPLIED"
             if live == report["baseline"]["sha256"]:
@@ -1309,7 +1409,7 @@ def main(argv: list[str] | None = None) -> int:
 
         from neo4j_target import open_driver
         uri = _os.environ.get("NEO4J_URI")
-        print(resolve(args.refresh_root, args.batch, canonical_root=args.canonical_root,
+        print(resolve(args.refresh_root, args.batch, canonical_root=args.canonical_root, uri=uri,
                       database=_os.environ.get("NEO4J_DATABASE", "neo4j"),
                       driver_factory=lambda: open_driver(uri, auth=(_os.environ["NEO4J_USER"],
                                                                     _os.environ["NEO4J_PASSWORD"]))))

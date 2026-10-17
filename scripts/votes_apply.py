@@ -40,7 +40,7 @@ STATES = ("AWAITING_MAPPING_REVIEW", "AWAITING_APPLY", "APPLIED", "ROLLED_BACK",
           # the votes refresh's revisions (scripts/votes_refresh.py)
           "AWAITING_REVIEW", "ALL_HELD", "AWAITING_ROSTER_REVIEW",
           # published durably just before the transaction opens; a crash leaves it, never AWAITING_APPLY
-          "APPLY_IN_PROGRESS")
+          "APPLY_IN_PROGRESS", "PREPARING")
 SCOPE = ("decision-novato-city-council-", "decision-marin-county-bos-", "vev-novato-city-council-",
          "vev-marin-county-bos-")
 APPROVAL = Path("plan/approval-inputs.json")
@@ -64,7 +64,13 @@ def set_state(state_dir: Path, state: str, **detail) -> None:
     if state not in STATES:
         raise ValueError(state)
     path = Path(state_dir) / "state.json"
-    history = json.loads(path.read_text()).get("history", []) if path.exists() else []
+    try:
+        history = json.loads(path.read_text()).get("history", []) if path.exists() else []
+    except (OSError, ValueError, AttributeError):  # an unreadable state is kept beside, never parsed into history
+        raw = path.read_bytes()
+        keep = path.with_name(f"state.json.unreadable-{_sha_bytes(raw)[:8]}")
+        keep.write_bytes(raw)
+        history = [{"state": "UNREADABLE", "kept": keep.name}]
     data = json.dumps({"state": state, **detail, "history": history + [{"state": state, **detail}]},
                       indent=1, sort_keys=True) + "\n"
     tmp = path.with_name(".state.json.tmp")  # the old or the new file, never a torn one
