@@ -640,6 +640,9 @@ def main(argv: list[str] | None = None) -> int:
     for body, rows in sorted(b.items()):
         print(f"{body}: {_counts(rows)}")
         print("\n".join(_other_lines(rows)))
+        print("\n".join(f"- {r['date']} `{r['meeting_id']}` — awaiting_file; saved file not accepted: "
+                        f"{r['file']['reason']}" for r in rows
+                        if r["state"] == "awaiting_file" and r["url"] and r["file"] and r["file"]["reason"]))
     return 1 if blocked else 0
 
 if __name__ == "__main__":

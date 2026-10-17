@@ -467,3 +467,8 @@ def test_status_reports_damaged_batches_conflicts_and_rejected_files(env, capsys
     assert f"document_version_conflict: `{f.relative_to(repo).as_posix()}`" in out
     assert "saved file not accepted: heading_date_mismatch:2030-04-22" in out
     assert not (refresh / "history.jsonl").exists()  # status writes nothing
+    _save(repo, "2030-06-01", NOV, f"meeting-{NOV}-902", _nov_html("April 8, 2030"))  # regular file, closed meeting
+    vr.main(["status", "--export", str(export), "--refresh-root", str(refresh), "--repo-root", str(repo),
+             "--today", "2030-06-02"])
+    assert f"meeting-{NOV}-902` — awaiting_file; saved file not accepted: heading_session_mismatch:regular≠closed" \
+        in capsys.readouterr().out
