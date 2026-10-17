@@ -464,6 +464,9 @@ class TestInverse:
                      "--out", str(tmp_path / "plan2"), "--profile", "votes-b"]) == 1
 
 
+_LABEL_FREE = __import__("re").compile(r"\(\w+\s*\{id:")  # a node pattern with a variable but no label
+
+
 class TestLabelledLookup:
     """Every statement finds its nodes through (label, id) — an index seek — never a label-free scan."""
 
@@ -499,8 +502,11 @@ class TestLabelledLookup:
             if s["step"] == "precheck:nodes_absent":
                 assert "OPTIONAL MATCH (n {id: id})" in s["query"]  # global: any label holding the id
                 continue
-            if "MATCH" in s["query"]:
-                assert "({id:" not in s["query"] and " {id:" in s["query"], s["step"]
+            assert not _LABEL_FREE.search(s["query"]), s["step"]
+
+    def test_the_label_free_detector_catches_the_old_form(self):
+        assert _LABEL_FREE.search("UNWIND $rows AS e MATCH (s {id: e.start_id}) MATCH (t:Decision {id: e.end_id})")
+        assert not _LABEL_FREE.search("MATCH (s:Person {id: e.start_id})-[r]->(t:Decision {id: e.end_id})")
 
     def test_edge_precheck_is_labelled_and_still_counts_existing_edges(self):
         ops = plan_additive(*self._mixed())
