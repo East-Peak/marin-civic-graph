@@ -450,3 +450,20 @@ class TestReviewFixes:
         out = vr.write_todo(export, repo, refresh, today="2030-06-02")
         assert "batch-001: manifest rev-1 altered" in (refresh / "todo.md").read_text()
         assert out["blocked"] == {NOV: ["batch-001: manifest rev-1 altered"]}
+
+
+def test_status_reports_damaged_batches_conflicts_and_rejected_files(env, capsys):
+    repo, export, refresh = env
+    mid = f"meeting-{NOV}-901"
+    reg = vr.Registry(refresh)
+    with reg.locked():
+        _batch(reg, "batch-001", mid, "a" * 64, manifest="f" * 64)
+    f = _save(repo, "2030-06-01", NOV, mid, _nov_html("April 8, 2030"))
+    _save(repo, "2030-06-01", NOV, f"meeting-{NOV}-903", _nov_html("April 22, 2030"))
+    assert vr.main(["status", "--export", str(export), "--refresh-root", str(refresh), "--repo-root", str(repo),
+                    "--today", "2030-06-02"]) == 1
+    out = capsys.readouterr().out
+    assert "BLOCKED — novato-city-council: batch-001: manifest rev-1 missing" in out
+    assert f"document_version_conflict: `{f.relative_to(repo).as_posix()}`" in out
+    assert "saved file not accepted: heading_date_mismatch:2030-04-22" in out
+    assert not (refresh / "history.jsonl").exists()  # status writes nothing

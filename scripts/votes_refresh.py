@@ -539,6 +539,21 @@ def other_rows(b: dict) -> list[dict]:
             for body, rows in sorted(b.items()) for r in rows if not (r["state"] == "awaiting_file" and r["url"])]
 
 
+def _other_lines(rows: list[dict]) -> list[str]:
+    other = [r for r in rows if not (r["state"] == "awaiting_file" and r["url"])]
+    if not other:
+        return []
+    lines = ["", "Not on the list:"]
+    for r in other:
+        lines.append(f"- {r['date']} `{r['meeting_id']}` — {r['state']}"
+                     + (f" ({r['url_reason']})" if r["state"] == "no_minutes_record" and r["url_reason"] != r["state"]
+                        else "")
+                     + (f"; saved file not accepted: {r['file']['reason']}" if r["file"] and r["file"]["reason"] else ""))
+        lines += [f"  - document_version_conflict: `{c['path']}` (sha256 {c['sha256'][:12]}…) differs from the "
+                  f"slot's file ({c['held_against'][:12]}…); it is never parsed" for c in r["conflicts"]]
+    return lines
+
+
 def write_todo(export: Path, repo: Path, refresh: Path, today: str | None = None) -> dict:
     today = today or dt.date.today().isoformat()
     refresh = Path(refresh)
@@ -565,17 +580,7 @@ def write_todo(export: Path, repo: Path, refresh: Path, today: str | None = None
             lines += [f"- {i['date']} — {i['title']} (`{i['meeting_id']}`)", f"  {i['url']}", f"  → `{i['target']}`"]
             if i["reason"]:
                 lines.append(f"  saved file not accepted: {i['reason']}")
-        other = [r for r in b[body] if not (r["state"] == "awaiting_file" and r["url"])]
-        if other:
-            lines += ["", "Not on the list:"]
-            for r in other:
-                lines.append(f"- {r['date']} `{r['meeting_id']}` — {r['state']}"
-                             + (f" ({r['url_reason']})" if r["state"] == "no_minutes_record"
-                                and r["url_reason"] != r["state"] else "")
-                             + (f"; saved file not accepted: {r['file']['reason']}"
-                                if r["file"] and r["file"]["reason"] else ""))
-                lines += [f"  - document_version_conflict: `{c['path']}` (sha256 {c['sha256'][:12]}…) differs from "
-                          f"the slot's file ({c['held_against'][:12]}…); it is never parsed" for c in r["conflicts"]]
+        lines += _other_lines(b[body])
         lines.append("")
     (refresh / "todo.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     (refresh / "todo.json").write_text(json.dumps({"today": today, "state": state, "freshness": fresh,
@@ -626,12 +631,16 @@ def main(argv: list[str] | None = None) -> int:
         print((args.refresh_root / "todo.md").read_text())
         print(f"{out['state']} — {out['items']} minutes to save; {args.refresh_root / 'todo.md'}")
         return 0
-    b = backlog(args.export, args.repo_root, args.refresh_root, today=args.today)
-    print("\n".join(freshness_lines(listing_freshness(args.repo_root, args.today or dt.date.today().isoformat()))))
+    today = args.today or dt.date.today().isoformat()
+    b = backlog(args.export, args.repo_root, args.refresh_root, today=today)
+    blocked = blocked_bodies(args.refresh_root, Registry(args.refresh_root).records())
+    print("\n".join(freshness_lines(listing_freshness(args.repo_root, today))))
+    for body, why in sorted(blocked.items()):
+        print(f"BLOCKED — {body}: " + "; ".join(why))
     for body, rows in sorted(b.items()):
         print(f"{body}: {_counts(rows)}")
-    return 0
-
+        print("\n".join(_other_lines(rows)))
+    return 1 if blocked else 0
 
 if __name__ == "__main__":
     sys.exit(main())
