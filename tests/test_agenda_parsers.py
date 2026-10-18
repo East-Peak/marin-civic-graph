@@ -181,7 +181,7 @@ def test_title_rule_stops_at_attachments_recommendations_bullets_and_blank_lines
 
 
 def test_every_parser_has_a_version():
-    assert {name: p.version for name, p in ap.PARSERS.items()} == {"outline": 3, "flat": 1}
+    assert {name: p.version for name, p in ap.PARSERS.items()} == {"outline": 4, "flat": 1}
 
 
 def test_a_list_in_a_description_that_happens_to_continue_the_numbering_is_not_an_entry():
@@ -219,3 +219,8 @@ def test_a_deeper_lettered_list_inside_a_sub_entry_is_description():
         ("2a", "Approve the Lakeport Library Policy a. First explanatory point about the policy b. Second "
                "explanatory point about the policy"),
         ("2b", "Approve the Contract with Fenwick Paving")]
+
+
+def test_a_lettered_list_under_numbered_sub_entries_is_description():
+    assert [(i["key"], i["title"]) for i in _parse("outline-nested-numbered.txt")["items"]] == [
+        ("2a", "Approve the Lakeport Library Policy."), ("2b", "Approve the Contract with Fenwick Paving.")]

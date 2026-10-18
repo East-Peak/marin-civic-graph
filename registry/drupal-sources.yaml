@@ -13,6 +13,5 @@ sources:
       parser: outline
       hosts: [www.townofrossca.gov]
       body: {title: "Town Council", other: "Committee|Commission|Group|Board", document: "Town Council"}
-      qualified: {parser: outline, version: 3, report: "~/open-marin-staging/weekly-agenda-items/REPORT.md#ross-town-council"}
     floors:
       min_ratio: 0.5  # rolling window: the listed count legitimately swings

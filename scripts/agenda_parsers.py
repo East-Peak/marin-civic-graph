@@ -129,6 +129,7 @@ class _Entry:
     parent: "_Entry | None" = None
     next_child: int = 0  # index of the letter (or number) the next child must carry
     child_indent: int | None = None  # the indent of its bare-letter children (a deeper list is description)
+    child_style: str | None = None  # "numbered" (4.A), "upper" (A.) or "lower" (a.): fixed by the first child
 
 
 _L2_NUMBERED = re.compile(r"^(\d{1,2})\.?([A-Za-z])(?:\.\s*|\s+)(\S.*)$")
@@ -165,17 +166,19 @@ def parse_outline(text: str) -> dict:
         m2 = _L2_NUMBERED.match(line)
         b2 = _L2_BARE.match(line)
         m1 = _L1.match(line)
-        entry = None
+        entry, form = None, None
         if l2 and m3 and int(m3.group(1)) == l2.next_child + 1:
             entry = _Entry(3, (*l2.parts, int(m3.group(1))), f"{l2.label}.({m3.group(1)})", indent, [m3.group(2)],
                            parent=l2)
-        elif l1 and m2 and int(m2.group(1)) == l1.parts[0] and m2.group(2).upper() == string.ascii_uppercase[l1.next_child]:
-            entry = _Entry(2, (l1.parts[0], m2.group(2).upper()), f"{l1.parts[0]}.{m2.group(2)}", indent,
-                           [m2.group(3)], parent=l1)
+        elif l1 and m2 and int(m2.group(1)) == l1.parts[0] and m2.group(2).upper() == string.ascii_uppercase[l1.next_child] \
+                and l1.child_style in (None, "numbered"):
+            entry, form = _Entry(2, (l1.parts[0], m2.group(2).upper()), f"{l1.parts[0]}.{m2.group(2)}", indent,
+                                 [m2.group(3)], parent=l1), "numbered"
         elif l1 and b2 and indent > l1.indent and b2.group(1).upper() == string.ascii_uppercase[l1.next_child] \
-                and (l1.child_indent is None or abs(indent - l1.child_indent) <= 2):  # siblings share an indent
-            entry = _Entry(2, (l1.parts[0], b2.group(1).upper()), f"{l1.parts[0]}.{b2.group(1)}", indent,
-                           [b2.group(2)], parent=l1)
+                and l1.child_style in (None, "upper" if b2.group(1).isupper() else "lower") \
+                and (l1.child_indent is None or abs(indent - l1.child_indent) <= 2):  # siblings share a layout
+            entry, form = _Entry(2, (l1.parts[0], b2.group(1).upper()), f"{l1.parts[0]}.{b2.group(1)}", indent,
+                                 [b2.group(2)], parent=l1), "upper" if b2.group(1).isupper() else "lower"
         elif m1 and top and int(m1.group(1)) == (l1.parts[0] + 1 if l1 else 1):
             entry = _Entry(1, (int(m1.group(1)),), m1.group(1), indent, [m1.group(2)])
             top_indent = indent if top_indent is None else top_indent
@@ -186,8 +189,9 @@ def parse_outline(text: str) -> dict:
         if entry.parent:
             entry.parent.children += 1
             entry.parent.next_child += 1
-            if entry.level == 2 and b2 and entry.parent.child_indent is None and not m2:
-                entry.parent.child_indent = indent
+            if form and entry.parent.child_style is None:  # the first child fixes its siblings' form and indent
+                entry.parent.child_style = form
+                entry.parent.child_indent = None if form == "numbered" else indent
         if entry.level == 1:
             l1, l2 = entry, None
         elif entry.level == 2:
@@ -258,7 +262,7 @@ def parse_flat(text: str) -> dict:
             "items": items}
 
 
-PARSERS: dict[str, Parser] = {"outline": Parser(3, parse_outline), "flat": Parser(1, parse_flat)}
+PARSERS: dict[str, Parser] = {"outline": Parser(4, parse_outline), "flat": Parser(1, parse_flat)}
 
 
 def extract_text(data: bytes) -> str:
