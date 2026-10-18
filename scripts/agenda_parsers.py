@@ -379,10 +379,15 @@ def parse_lettered(text: str) -> dict:
     header = lines[:first] if first is not None else lines
     notice = {"printed_date": _printed_date(header), "header": "\n".join(header), "notice": "cancellation",
               "items": []}
-    if not any(_AGENDA_TITLE.match(line.strip()) for line in header) and not _council_masthead(header):
+    titled = any(_AGENDA_TITLE.match(line.strip()) for line in header) or _council_masthead(header)
+    entry = next((i for i, raw in enumerate(lines) if (_LETTERED_TOP.match(raw.strip()) and _indent(raw) <= 8)
+                  or _LETTER.match(raw.strip())), len(lines))
+    if not titled:
         if _CANCELLED.search(text):
             return notice
         raise Unparseable("unparseable", "no AGENDA title line")
+    if any(_MINUTES_HEADING.match(line.strip()) for line in lines[:entry]):
+        raise Unparseable("unparseable", "a minutes document, not an agenda")
     end = next((i for i in range(first or 0, len(lines)) if _indent(lines[i]) <= 8
                 and _LETTERED_END.match(lines[i].strip())), None)
     stop = len(lines) if end is None else end
@@ -631,7 +636,7 @@ def parse_decimal(text: str) -> dict:
 
 
 PARSERS: dict[str, Parser] = {"outline": Parser(8, parse_outline), "flat": Parser(1, parse_flat),
-                              "lettered": Parser(3, parse_lettered), "decimal": Parser(1, parse_decimal)}
+                              "lettered": Parser(4, parse_lettered), "decimal": Parser(1, parse_decimal)}
 
 
 def extract_text(data: bytes) -> str:

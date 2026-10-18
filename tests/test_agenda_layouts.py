@@ -35,7 +35,7 @@ def _reason(parser, text):
 
 
 def test_both_layouts_are_registered():
-    assert (ap.PARSERS["lettered"].version, ap.PARSERS["decimal"].version) == (3, 1)
+    assert (ap.PARSERS["lettered"].version, ap.PARSERS["decimal"].version) == (4, 1)
 
 
 # --- lettered ----------------------------------------------------------------------------------------------
@@ -318,6 +318,8 @@ def test_lettered_a_council_masthead_with_a_session_line_is_an_agenda_title():
     "Harborview City Council\nSpecial Closed Session\nMonday, May 4, 2026\n",  # not in capitals
     "HARBORVIEW CITY COUNCIL\nRegular Meeting Minutes\nMonday, May 4, 2026\n",  # the session line is all of the line
     "HARBORVIEW CITY COUNCIL\nMeeting Date: May 4, 2026\n",
+    "HARBORVIEW CITY COUNCIL\nRegular Meeting\nMINUTES\nMonday, May 4, 2026\n",  # minutes under a masthead
+    "HARBORVIEW CITY COUNCIL\nRegular Meeting\nMonday, May 4, 2026\nMINUTES OF THE REGULAR MEETING\n",
 ])
 def test_lettered_only_a_councils_capital_masthead_and_session_line_stand_for_an_agenda_title(head):
     assert _reason("lettered", head + "OPEN SESSION\n   1. Announcements.\nADJOURNMENT:\n") == "unparseable"
