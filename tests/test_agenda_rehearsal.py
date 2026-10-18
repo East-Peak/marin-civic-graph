@@ -71,6 +71,36 @@ def test_qualification_exists_only_in_the_rehearsals_staging_registry(tmp_path):
     assert repo["ross-town-council"]["agenda_items"]["qualified"]["report"] != "rehearsal only"  # repo untouched
 
 
+
+def test_a_weekly_override_exists_only_in_the_rehearsals_staging_registry(tmp_path):
+    repo = {s["id"]: s for p in (REPO / "registry").glob("*-sources.yaml")
+            for s in yaml.safe_load(p.read_text()).get("sources") or []}
+    root = ar._root(tmp_path, 4, weekly=frozenset({"san-rafael-city-council"}))
+    sources = {s["id"]: s for p in (root / "registry").glob("*-sources.yaml")
+               for s in yaml.safe_load(p.read_text()).get("sources") or []}
+    assert sources["san-rafael-city-council"]["schedule"] == "weekly"
+    assert sources["larkspur-city-council"]["schedule"] == repo["larkspur-city-council"]["schedule"]  # not named
+    after = {s["id"]: s for p in (REPO / "registry").glob("*-sources.yaml")
+             for s in yaml.safe_load(p.read_text()).get("sources") or []}
+    assert after == repo  # the repo's registry is never written
+
+
+def _created(*ids):  # an item id here is "<source>/<n>"
+    return {i: {"id": i, "labels": ["AgendaItem"], "properties": {"id": i, "source_id": i.split("/")[0]}} for i in ids}
+
+
+EXPECTED = {"V1": {"items": {"harbor/1": {"source_id": "harbor"}}},
+            "V3": {"items": {"willow/1": {"source_id": "willow"}}}, "V4": {"items": {}}}
+
+
+@pytest.mark.parametrize("created, ok", [
+    ({"V1": _created("harbor/1"), "V3": _created("willow/1"), "V4": {}}, [True, True]),
+    ({"V1": _created("harbor/1"), "V3": {}, "V4": {}}, [True, False]),  # a target that loaded nothing fails
+    ({"V1": _created("harbor/1", "willow/1"), "V3": _created("willow/2"), "V4": {}}, [True, False]),  # not exact
+])
+def test_each_named_target_needs_a_nonempty_load_equal_to_its_expected_items(created, ok):
+    assert [r["ok"] for r in ar.target_checks(created, EXPECTED, ["harbor", "willow"])] == ok
+
 def _run_dir(tmp_path, *, tamper=None):
     """A finished run with its pinned stage inputs, as refresh_weekly leaves it."""
     import refresh_weekly as rw

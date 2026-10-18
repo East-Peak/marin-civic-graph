@@ -34,8 +34,8 @@ def _reason(parser, text):
     return exc.value.reason
 
 
-def test_both_layouts_are_registered_at_version_1():
-    assert (ap.PARSERS["lettered"].version, ap.PARSERS["decimal"].version) == (1, 1)
+def test_both_layouts_are_registered():
+    assert (ap.PARSERS["lettered"].version, ap.PARSERS["decimal"].version) == (2, 1)
 
 
 # --- lettered ----------------------------------------------------------------------------------------------
@@ -296,3 +296,26 @@ def test_lettered_a_title_stops_before_roman_points():
 ])
 def test_a_page_break_is_not_a_blank_line(parser, text, title):
     assert [i["title"] for i in ap.PARSERS[parser].parse(text)["items"]] == [title]
+
+
+
+def test_lettered_a_council_masthead_with_a_session_line_is_an_agenda_title():
+    parsed = _parse("lettered-council-masthead.txt", "lettered")
+    assert parsed["printed_date"] == "2026-10-19" and "Special Closed Session" in parsed["header"]
+    assert _items(parsed) == [
+        ("1", "", "Mayor Reyes to announce Closed Session items."),
+        ("2a", "Closed Session", "CONFERENCE WITH LEGAL COUNSEL—EXISTING LITIGATION, pursuant to Government Code "
+                                 "Section 54956.9(d)(1)"),
+        ("2b", "Closed Session", "CONFERENCE WITH LEGAL COUNSEL – ANTICIPATED LITIGATION, pursuant to Government "
+                                 "Code Section 54956.9(d)(4): one potential case"),
+    ]
+
+
+@pytest.mark.parametrize("head", [
+    "HARBORVIEW CITY COUNCIL AGENDA REPORT\nMeeting Date: May 4, 2026\n",  # a staff report
+    "HARBORVIEW CITY COUNCIL\nMINUTES\nMonday, May 4, 2026\n",  # minutes under the council's name
+    "MINUTES\nHARBORVIEW CITY COUNCIL\nSpecial Closed Session\nMonday, May 4, 2026\n",  # not its first line
+    "Harborview City Council\nSpecial Closed Session\nMonday, May 4, 2026\n",  # not in capitals
+])
+def test_lettered_only_a_councils_capital_masthead_and_session_line_stand_for_an_agenda_title(head):
+    assert _reason("lettered", head + "OPEN SESSION\n   1. Announcements.\nADJOURNMENT:\n") == "unparseable"

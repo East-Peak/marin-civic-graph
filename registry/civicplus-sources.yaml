@@ -103,3 +103,9 @@ sources:
         min_rows is the reviewed listing inventory of 2026-10-18 (228 meetings from 2019 on), so a
         partial parse cannot pass as the first baseline. If the city ever prunes old agendas, check the
         listing by hand and lower it with a reason.
+    agenda_items:
+      artifact: agenda
+      parser: decimal
+      hosts: [www.larkspur.ca.gov]
+      body: {title: "City Council", document: "City Council"}
+      qualified: {parser: decimal, version: 1, report: "~/open-marin-staging/agenda-parsers-sr-larkspur/REPORT.md#per-source"}

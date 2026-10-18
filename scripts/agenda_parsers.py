@@ -291,6 +291,8 @@ def parse_flat(text: str) -> dict:
 # --- lettered: lettered items under numbered sections or ALL-CAPS headings, no CALL TO ORDER -----------------
 
 _AGENDA_TITLE = re.compile(r"^(?:(?:REVISED|AMENDED)\s+)?AGENDA(?:\s*[-–—]\s*(?:REVISED|AMENDED))?$", re.IGNORECASE)
+_COUNCIL_MASTHEAD = re.compile(r"^[A-Z][A-Z .'’-]* CITY COUNCIL$")
+_SESSION_LINE = re.compile(r"^(?:(?:special|regular|adjourned)\s+)*(?:closed\s+session|meeting|session)\b", re.IGNORECASE)
 _CANCELLED = re.compile(r"\bcancel+ed\b|notice of cancellation", re.IGNORECASE)
 _LETTERED_END = re.compile(r"^ADJOURN(?:MENT)?\b(?!\s+TO\b)", re.IGNORECASE)
 _LETTERED_TOP = re.compile(r"^(\d{1,2})\.\s+(\S.*)$")
@@ -362,6 +364,13 @@ def _pages_joined(text: str) -> list[str]:
     return _clean(text.replace("\f", ""))
 
 
+def _council_masthead(header: list[str]) -> bool:
+    """An agenda titled by its masthead (the 2026 closed-session template): the document's first line is the
+    council's name in capitals and the next one names a session."""
+    top = [line.strip() for line in header if line.strip()][:2]
+    return len(top) == 2 and bool(_COUNCIL_MASTHEAD.match(top[0]) and _SESSION_LINE.match(top[1]))
+
+
 def parse_lettered(text: str) -> dict:
     lines = _pages_joined(text)
     dated = next((i for i, line in enumerate(lines) if _DATE.search(line)), len(lines))
@@ -370,7 +379,7 @@ def parse_lettered(text: str) -> dict:
     header = lines[:first] if first is not None else lines
     notice = {"printed_date": _printed_date(header), "header": "\n".join(header), "notice": "cancellation",
               "items": []}
-    if not any(_AGENDA_TITLE.match(line.strip()) for line in header):
+    if not any(_AGENDA_TITLE.match(line.strip()) for line in header) and not _council_masthead(header):
         if _CANCELLED.search(text):
             return notice
         raise Unparseable("unparseable", "no AGENDA title line")
@@ -621,7 +630,7 @@ def parse_decimal(text: str) -> dict:
 
 
 PARSERS: dict[str, Parser] = {"outline": Parser(8, parse_outline), "flat": Parser(1, parse_flat),
-                              "lettered": Parser(1, parse_lettered), "decimal": Parser(1, parse_decimal)}
+                              "lettered": Parser(2, parse_lettered), "decimal": Parser(1, parse_decimal)}
 
 
 def extract_text(data: bytes) -> str:

@@ -181,7 +181,7 @@ def test_title_rule_stops_at_attachments_recommendations_bullets_and_blank_lines
 
 
 def test_every_parser_has_a_version():
-    assert {name: p.version for name, p in ap.PARSERS.items()} == {"outline": 8, "flat": 1, "lettered": 1,
+    assert {name: p.version for name, p in ap.PARSERS.items()} == {"outline": 8, "flat": 1, "lettered": 2,
                                                                    "decimal": 1}
 
 

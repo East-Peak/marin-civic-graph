@@ -279,21 +279,32 @@ def test_a_pick_knows_its_title_and_whether_it_has_a_same_day_sibling():
 COUNCILS = ["belvedere-city-council", "corte-madera-town-council", "fairfax-town-council", "ross-town-council"]
 
 
-def test_the_registry_makes_exactly_the_four_qualified_weekly_councils_eligible():
+NEW = {"san-rafael-city-council": ("lettered", 2), "larkspur-city-council": ("decimal", 1)}
+
+
+def _registry():
+    import yaml
+
+    return {c["id"]: c for name in ai.MEETING_REGISTRIES if (REPO / "registry" / f"{name}-sources.yaml").is_file()
+            for c in yaml.safe_load((REPO / "registry" / f"{name}-sources.yaml").read_text())["sources"]}
+
+
+def test_the_registry_makes_exactly_the_qualified_weekly_councils_eligible():
     verdicts = {c["id"]: (ok, why) for c, ok, why in ai.eligible_sources(REPO)}
-    assert sorted(sid for sid, (ok, _) in verdicts.items() if ok) == COUNCILS
-    assert verdicts["san-rafael-city-council"] == (False, "schedule manual")
-    assert verdicts["larkspur-city-council"] == (False, "schedule manual")
+    registry = _registry()
+    weekly_new = sorted(sid for sid in NEW if registry[sid]["schedule"] == "weekly")  # once each flip lands
+    assert sorted(sid for sid, (ok, _) in verdicts.items() if ok) == sorted(COUNCILS + weekly_new)
     assert all(why == "adapter granicus" for c, ok, why in ai.eligible_sources(REPO) if c["adapter"] == "granicus")
 
 
-def test_a_later_flip_without_a_qualified_parser_stays_ineligible():
-    import yaml
-
-    for name in ("proudcity", "civicplus"):
-        for config in yaml.safe_load((REPO / "registry" / f"{name}-sources.yaml").read_text())["sources"]:
-            if config["id"] in ("san-rafael-city-council", "larkspur-city-council"):
-                assert ai.eligibility({**config, "schedule": "weekly"}) == (False, "no agenda_items block")
+@pytest.mark.parametrize("sid", sorted(NEW))
+def test_a_qualified_new_council_is_ineligible_while_manual_and_eligible_once_weekly(sid):
+    config = _registry()[sid]
+    parser, version = NEW[sid]
+    block = config["agenda_items"]
+    assert (block["parser"], block["qualified"]["parser"], block["qualified"]["version"]) == (parser, parser, version)
+    assert ai.eligibility({**config, "schedule": "manual"}) == (False, "schedule manual")
+    assert ai.eligibility({**config, "schedule": "weekly"}) == (True, "eligible")
 
 
 def test_the_four_qualified_councils_stay_pinned_to_the_versions_they_were_measured_at():

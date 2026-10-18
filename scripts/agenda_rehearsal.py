@@ -4,6 +4,7 @@
     agenda_rehearsal.py prime    --work <dir>                                  # record the listings once
     agenda_rehearsal.py withhold --work <dir> --source <id> --agenda-ids 1690,1681  # week 1 without them
     agenda_rehearsal.py rehearse --work <dir> --export <fresh export> [--expected <json>] [--cap 4]
+                                 [--weekly <ids>] [--acceptance --targets <ids>]
     agenda_rehearsal.py check-loaded <run-id> [--root <repo>]               # a real run's own stage delta
 
 `rehearse` runs refresh_weekly.stage -> ingest.py -> the adapters -> the robots gate -> refresh_weekly.load
@@ -88,10 +89,11 @@ def _lines(graph: Path) -> int:
     return len((graph / "overlay.jsonl").read_text().splitlines())
 
 
-def _root(work: Path, cap: int, qualify: frozenset[str] = frozenset()) -> Path:
-    """A weekly root: every meeting registry as in the repo, the configured sources capped for the rehearsal, and
-    the `qualify` ones qualified at their parser's current version in this staging copy only (the repo's registry
-    qualifies a source only once its held-out evidence exists)."""
+def _root(work: Path, cap: int, qualify: frozenset[str] = frozenset(), weekly: frozenset[str] = frozenset()) -> Path:
+    """A weekly root: every meeting registry as in the repo, the configured sources capped for the rehearsal, the
+    `qualify` ones qualified at their parser's current version and the `weekly` ones on the weekly schedule — in
+    this staging copy only (the repo's registry qualifies a source only once its held-out evidence exists, and
+    schedules it weekly only at its flip)."""
     import yaml
 
     from agenda_parsers import PARSERS
@@ -101,6 +103,9 @@ def _root(work: Path, cap: int, qualify: frozenset[str] = frozenset()) -> Path:
     for path in sorted((REPO / "registry").glob("*-sources.yaml")):
         doc = yaml.safe_load(path.read_text())
         for source in doc.get("sources") or []:
+            if source["id"] in weekly:
+                source["schedule"] = "weekly"
+                source.pop("schedule_note", None)
             block = source.get("agenda_items")
             if isinstance(block, dict):
                 block["cap"] = cap
@@ -179,7 +184,7 @@ def _new_rows(graph: Path, span: tuple[int, int]) -> list[dict]:
 
 
 def run_pass(work: Path, export: Path, *, label: str, mode: str, frozen: datetime, cap: int,
-             qualify: frozenset[str] = frozenset()) -> dict:
+             qualify: frozenset[str] = frozenset(), weekly: frozenset[str] = frozenset()) -> dict:
     """One pass of the four variants on a new root and graph."""
     import refresh_weekly as rw
 
@@ -188,7 +193,7 @@ def run_pass(work: Path, export: Path, *, label: str, mode: str, frozen: datetim
     meta = json.loads((work / "withheld.json").read_text()) if (work / "withheld.json").is_file() else {"meetings": []}
     seed = prune_seed(export, out / "seed", set(meta["meetings"]))
     graph = guarded_load.FakeGraphPort.create(out / "graph", seed=seed)
-    root = _root(out, cap, qualify)
+    root = _root(out, cap, qualify, weekly)
     store = ResponseStore(work / "responses")
     week1 = work / "week1" if (work / "week1").is_dir() else None
     runs = {}
@@ -226,7 +231,20 @@ def _title_ok(a: str, b: str) -> bool:
     return norm(a) == norm(b) or difflib.SequenceMatcher(None, norm(a), norm(b)).ratio() >= 0.90
 
 
-def checks(p1: dict, p2: dict | None, expected: dict | None, acceptance: bool = False) -> list[dict]:
+def target_checks(created_by: dict[str, dict], expected: dict, targets) -> list[dict]:
+    """Per named target: it loaded items in some variant, and exactly the expected ones (both nonempty)."""
+    out = []
+    for target in targets:
+        have = {i for items in created_by.values() for i, n in items.items() if n["properties"]["source_id"] == target}
+        want = {i for v in expected.values() for i, p in v["items"].items() if p["source_id"] == target}
+        out.append({"check": f"acceptance: {target} loaded a nonempty, independently expected set",
+                    "ok": bool(have) and have == want,
+                    "detail": {"created": len(have), "expected": len(want), "missing": sorted(want - have)[:5],
+                               "extra": sorted(have - want)[:5]}})
+    return out
+
+
+def checks(p1: dict, p2: dict | None, expected: dict | None, acceptance: bool = False, targets=()) -> list[dict]:
     out = []
 
     def check(name, ok, detail=None):
@@ -295,6 +313,8 @@ def checks(p1: dict, p2: dict | None, expected: dict | None, acceptance: bool = 
         v4 = {n["properties"]["meeting_id"] for n in created_by["V4"].values()}
         check("acceptance: the later week loaded a newly arrived meeting's items and the next backlog batch",
               bool(v4 & withheld) and bool(v4 - withheld), {"new": sorted(v4 & withheld), "backlog": len(v4 - withheld)})
+        if targets:
+            out += target_checks(created_by, expected or {}, targets)
     return out
 
 
@@ -375,6 +395,8 @@ def main(argv: list[str] | None = None) -> int:
     rh.add_argument("--frozen", required=True, help="ISO time of week 1 (kept for every pass)")
     rh.add_argument("--replay", action="store_true", help="also run pass 2: pure replay on a fresh graph")
     rh.add_argument("--qualify", default="", help="sources qualified in the rehearsal's staging registry only")
+    rh.add_argument("--weekly", default="", help="sources put on the weekly schedule in that staging registry only")
+    rh.add_argument("--targets", default="", help="with --acceptance: sources that must each load their expected items")
     rh.add_argument("--acceptance", action="store_true",
                     help="the run that counts: requires --expected and --replay, three sources, a later-week arrival")
     ck = sub.add_parser("check-loaded", help="after a real run: its agenda stage, from its own pinned inputs")
@@ -411,11 +433,14 @@ def main(argv: list[str] | None = None) -> int:
     frozen = datetime.fromisoformat(args.frozen)
     n = len(list(work.glob("pass-*")))
     qualify = frozenset(filter(None, args.qualify.split(",")))
-    p1 = run_pass(work, args.export, label=f"pass-{n + 1}", mode="fill", frozen=frozen, cap=args.cap, qualify=qualify)
+    weekly = frozenset(filter(None, args.weekly.split(",")))
+    p1 = run_pass(work, args.export, label=f"pass-{n + 1}", mode="fill", frozen=frozen, cap=args.cap, qualify=qualify,
+                  weekly=weekly)
     p2 = run_pass(work, args.export, label=f"pass-{n + 2}", mode="replay", frozen=frozen, cap=args.cap,
-                  qualify=qualify) if args.replay else None
+                  qualify=qualify, weekly=weekly) if args.replay else None
     expected = json.loads(args.expected.read_text()) if args.expected else None
-    results = checks(p1, p2, expected, acceptance=args.acceptance)
+    results = checks(p1, p2, expected, acceptance=args.acceptance,
+                     targets=[t for t in args.targets.split(",") if t])
     admitted = admitted_agendas(p1)
     (work / f"pass-{n + 1}" / "admitted.json").write_text(json.dumps(admitted, indent=1))
     (work / f"pass-{n + 1}" / "checks.json").write_text(json.dumps(results, indent=1, default=str))
