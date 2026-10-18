@@ -181,7 +181,7 @@ def test_title_rule_stops_at_attachments_recommendations_bullets_and_blank_lines
 
 
 def test_every_parser_has_a_version():
-    assert {name: p.version for name, p in ap.PARSERS.items()} == {"outline": 5, "flat": 1}
+    assert {name: p.version for name, p in ap.PARSERS.items()} == {"outline": 6, "flat": 1}
 
 
 def test_a_list_in_a_description_that_happens_to_continue_the_numbering_is_not_an_entry():
@@ -254,3 +254,24 @@ def test_a_second_session_after_a_notice_ended_agenda_holds_even_if_minutes_are_
     with pytest.raises(ap.Unparseable) as exc:
         ap.parse_outline(text)
     assert exc.value.reason == "multi_session_agenda"
+
+
+def test_a_staff_report_item_is_an_item_only_a_bare_link_is_not():
+    text = ("Tuesday, October 20, 2026\n1. CALL TO ORDER\n2. BUSINESS\n   2.A. Staff Report on the Annual Budget\n"
+            "   2.B. Approve the Contract\n3. ADJOURNMENT\n")
+    assert [i["title"] for i in ap.parse_outline(text)["items"]] == ["Staff Report on the Annual Budget",
+                                                                     "Approve the Contract"]
+
+
+def test_an_asterisk_rule_without_the_posting_notice_does_not_end_the_agenda():
+    text = ("Thursday, March 30, 2023\n1. CALL TO ORDER\n2. First item\n       **********\n3. Second item\n"
+            "4. ADJOURN\n")
+    assert [i["key"] for i in ap.parse_outline(text)["items"]] == ["2", "3"]
+
+
+def test_numbered_business_after_a_posting_notice_holds():
+    text = ("Thursday, March 30, 2023\n1. CALL TO ORDER\n2. First item\n       **********\n"
+            "THIS MEETING WAS PROPERLY NOTICED AND POSTED\n3. Second item\n")
+    with pytest.raises(ap.Unparseable) as exc:
+        ap.parse_outline(text)
+    assert exc.value.reason == "agenda_end_missing"

@@ -29,8 +29,10 @@ _TIME = r"(?:\d{1,2}:\d{2}\s*[ap]\.?\s*m\.?\s*[–—-]?\s*)?"
 _BODY_START = re.compile(rf"^\s*(?:1\.\s*)?{_TIME}CALL\s+TO\s+ORDER\b", re.IGNORECASE)  # begins an agenda body
 _NUMBERED_END = re.compile(rf"^(\d{{1,2}})\.\s*{_TIME}ADJOURN(?:MENT)?\b(?!\s+TO\b)", re.IGNORECASE)
 _BARE_END = re.compile(r"^ADJOURN(?:MENT)?\.?$", re.IGNORECASE)
-_NOTICE_END = re.compile(r"^\*{5,}$|^THIS MEETING WAS PROPERLY NOTICED", re.IGNORECASE)  # no ADJOURN: the posting
-_ATTACHMENT = re.compile(r"^(Staff\s+Report|Attachment)|\.pdf$", re.IGNORECASE)  # a link printed like an entry
+_RULE = re.compile(r"^\*{5,}$")
+_POSTED = re.compile(r"^THIS MEETING WAS PROPERLY NOTICED", re.IGNORECASE)  # no ADJOURN: the posting notice ends it
+# a link printed like an entry: exactly "Staff Report and Attachment(s)", "Attachment N", or a file name
+_ATTACHMENT = re.compile(r"^(Staff\s+Report\s+and\s+Attachments?|Attachments?(\s+\w+)?)\.?$|\.pdf$", re.IGNORECASE)
 _EXCLUDED = re.compile(rf"^{_TIME}(CALL\s+TO\s+ORDER|ROLL\s+CALL|PLEDGE|SALUTE\s+TO\s+THE\s+FLAG|ADJOURN)",
                        re.IGNORECASE)
 _NONE = re.compile(r"(^|:\s*)NONE\.?$", re.IGNORECASE)
@@ -164,7 +166,8 @@ def parse_outline(text: str) -> dict:
         if (numbered_end and int(numbered_end.group(1)) == (l1.parts[0] + 1 if l1 else 1)) or _BARE_END.match(line):
             end = i
             break
-        if l1 and _NOTICE_END.match(line):
+        if l1 and (_POSTED.match(line) or (_RULE.match(line) and any(
+                _POSTED.match(x.strip()) for x in [y for y in lines[i + 1:i + 6] if y.strip()][:2]))):
             end, by_notice = i, True
             break
         m3 = _L3.match(line)
@@ -212,6 +215,8 @@ def parse_outline(text: str) -> dict:
     for j, line in enumerate(rest):
         if _BODY_START.match(line) and (by_notice or not any(re.search(r"\bMINUTES\b", x, re.IGNORECASE) for x in rest[:j])):  # a packet's minutes follow an ADJOURN
             raise Unparseable("multi_session_agenda", "a second CALL TO ORDER after the agenda's end")
+    if by_notice and any((m := _L1.match(x.strip())) and int(m.group(1)) == l1.parts[0] + 1 for x in rest):
+        raise Unparseable("agenda_end_missing", "numbered business continues after the posting notice")
     items = []
     for e in entries:
         if e.children or _excluded(e.lines[0]) or _none_below(e.lines):
@@ -270,7 +275,7 @@ def parse_flat(text: str) -> dict:
             "items": items}
 
 
-PARSERS: dict[str, Parser] = {"outline": Parser(5, parse_outline), "flat": Parser(1, parse_flat)}
+PARSERS: dict[str, Parser] = {"outline": Parser(6, parse_outline), "flat": Parser(1, parse_flat)}
 
 
 def extract_text(data: bytes) -> str:
