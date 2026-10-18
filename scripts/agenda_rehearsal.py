@@ -25,6 +25,7 @@ import json
 import re
 import shutil
 import sys
+from collections import Counter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -225,7 +226,7 @@ def _title_ok(a: str, b: str) -> bool:
     return norm(a) == norm(b) or difflib.SequenceMatcher(None, norm(a), norm(b)).ratio() >= 0.90
 
 
-def checks(p1: dict, p2: dict | None, expected: dict | None) -> list[dict]:
+def checks(p1: dict, p2: dict | None, expected: dict | None, acceptance: bool = False) -> list[dict]:
     out = []
 
     def check(name, ok, detail=None):
@@ -264,6 +265,13 @@ def checks(p1: dict, p2: dict | None, expected: dict | None) -> list[dict]:
               withheld <= (v4_meetings | v4_held), sorted(withheld - v4_meetings - v4_held))
     if expected is not None:
         for name in ("V1", "V3", "V4"):
+            run = p1["runs"][name]
+            rows = [r for span in run["rows"] for r in _new_rows(graph, span)]
+            have_edges = Counter((r["edge"]["start_id"], r["edge"]["type"], r["edge"]["end_id"]) for r in rows if "edge" in r)
+            want_edges = Counter(tuple(e) for e in expected[name]["edges"])
+            check(f"{name}: new relationships == the expected set (endpoints and multiplicity)", have_edges == want_edges,
+                  {"missing": [list(e) for e in (want_edges - have_edges)][:5],
+                   "extra": [list(e) for e in (have_edges - want_edges)][:5]})
             want = expected[name]["items"]
             have = created_by[name]
             missing, extra = sorted(set(want) - set(have)), sorted(set(have) - set(want))
@@ -280,6 +288,13 @@ def checks(p1: dict, p2: dict | None, expected: dict | None) -> list[dict]:
     if p2 is not None:
         same = (p1["graph"] / "overlay.jsonl").read_text() == (p2["graph"] / "overlay.jsonl").read_text()
         check("pass 2 (pure replay, fresh graph) writes exactly pass 1's rows", same)
+    if acceptance:
+        check("acceptance: independent expectations and a pure replay were both run", expected is not None and p2 is not None)
+        sources = {n["properties"]["source_id"] for items in created_by.values() for n in items.values()}
+        check("acceptance: at least three sources loaded items", len(sources) >= 3, sorted(sources))
+        v4 = {n["properties"]["meeting_id"] for n in created_by["V4"].values()}
+        check("acceptance: the later week loaded a newly arrived meeting's items and the next backlog batch",
+              bool(v4 & withheld) and bool(v4 - withheld), {"new": sorted(v4 & withheld), "backlog": len(v4 - withheld)})
     return out
 
 
@@ -322,12 +337,22 @@ def check_loaded(root: Path, run_id: str) -> dict:
              or ledger[mid].get("sha256") != by_mid[mid]["sha256"] or ledger[mid].get("url") != by_mid[mid]["url"]]
     check("every committed meeting is in the ledger with the bundle's url and sha256", not wrong, wrong[:10])
     backup = root / state["backup"]
-    before = {n["id"]: n for n in map(json.loads, (backup / "nodes.jsonl").read_text().splitlines())
-              if n["labels"][:1] in (["AgendaItem"], ["Decision"])}
+    moved = {f: sha for f, sha in (state.get("backup_sha256") or {}).items() if rw._sha256(backup / f) != sha}
+    check("the pre-load backup is the one the run pinned", state.get("backup_sha256") and not moved, sorted(moved))
+    protected = lambda n: {"AgendaItem", "Decision"} & set(n["labels"])  # noqa: E731
+    before = {n["id"]: n for n in map(json.loads, (backup / "nodes.jsonl").read_text().splitlines()) if protected(n)}
     after = {n["id"]: n for n in map(json.loads, (work / "post" / "nodes.jsonl").read_text().splitlines())
              if n["id"] in before}
     changed = [i for i, n in before.items() if after.get(i) != n]
+
+    def incident(path: Path) -> Counter:
+        return Counter((e["start_id"], e["type"], e["end_id"], json.dumps(e.get("properties") or {}, sort_keys=True))
+                       for e in map(json.loads, (path / "edges.jsonl").read_text().splitlines())
+                       if e["start_id"] in before or e["end_id"] in before)
+
+    lost = sorted((incident(backup) - incident(work / "post")).elements())
     check("no AgendaItem or Decision that existed before the run changed or vanished", not changed, changed[:10])
+    check("none of their relationships changed or vanished", not lost, [list(x[:3]) for x in lost[:10]])
     return {"run_id": run_id, "checks": results, "verdict": "PASS" if all(c["ok"] for c in results) else "FAIL",
             "committed": committed, "added": {"nodes": delta["added_nodes"], "edges": delta["added_edges"]}}
 
@@ -350,6 +375,8 @@ def main(argv: list[str] | None = None) -> int:
     rh.add_argument("--frozen", required=True, help="ISO time of week 1 (kept for every pass)")
     rh.add_argument("--replay", action="store_true", help="also run pass 2: pure replay on a fresh graph")
     rh.add_argument("--qualify", default="", help="sources qualified in the rehearsal's staging registry only")
+    rh.add_argument("--acceptance", action="store_true",
+                    help="the run that counts: requires --expected and --replay, three sources, a later-week arrival")
     ck = sub.add_parser("check-loaded", help="after a real run: its agenda stage, from its own pinned inputs")
     ck.add_argument("run_id")
     ck.add_argument("--root", type=Path, default=REPO)
@@ -388,7 +415,7 @@ def main(argv: list[str] | None = None) -> int:
     p2 = run_pass(work, args.export, label=f"pass-{n + 2}", mode="replay", frozen=frozen, cap=args.cap,
                   qualify=qualify) if args.replay else None
     expected = json.loads(args.expected.read_text()) if args.expected else None
-    results = checks(p1, p2, expected)
+    results = checks(p1, p2, expected, acceptance=args.acceptance)
     admitted = admitted_agendas(p1)
     (work / f"pass-{n + 1}" / "admitted.json").write_text(json.dumps(admitted, indent=1))
     (work / f"pass-{n + 1}" / "checks.json").write_text(json.dumps(results, indent=1, default=str))

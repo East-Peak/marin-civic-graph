@@ -162,3 +162,33 @@ def test_the_digest_shows_legacy_and_waiting_holds(root, ctx, world):
     _load(ctx)
     digest = (rw.run_dir(root, RUN) / "digest.md").read_text().split("## Agenda items", 1)[1]
     assert "| 4 |" in digest and "2 waiting to retry" in digest
+
+
+# --- review (c) round 2 -------------------------------------------------------------------------------------
+
+
+def test_loaded_and_the_running_marker_are_one_write(root, ctx, world):
+    ctx.agenda_items = True
+    assert rw.main(["stage"], ctx) == 0
+    real = rw._agenda_stage
+
+    def die_on_entry(*a, **k):
+        raise Killed()
+
+    rw._agenda_stage = die_on_entry
+    try:
+        with pytest.raises(Killed):
+            rw.load(ctx, RUN)
+    finally:
+        rw._agenda_stage = real
+    state = _state(root)
+    assert state["status"] == "loaded" and state["agenda_items"]["status"] == "running"
+    assert rw._unresolved_load(root) == RUN
+
+
+def test_unchecked_revisions_make_the_run_unclean(root, ctx, world, pings):
+    ctx.agenda_items = True
+    ctx.env["OPEN_MARIN_HEARTBEAT_URL"] = "https://heartbeat.example/weekly-check"
+    world.stage_report["sources"]["lakeport-town-council"]["revision_unchecked"] = {"m9": "fetch_failed"}
+    assert rw.main(["weekly"], ctx) == 1
+    assert pings[-1][0].endswith("/fail") and "revision" in pings[-1][1]

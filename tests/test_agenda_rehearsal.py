@@ -96,8 +96,15 @@ def _run_dir(tmp_path, *, tamper=None):
     _write(root / "data/exports/backups/pre-load/nodes.jsonl", base_nodes)
     if tamper:
         tamper(work, root)
+    _write(root / "data/exports/backups/pre-load/edges.jsonl", base_edges + [_e("x", "ABOUT", "d1")])
+    _write(work / "pre/edges.jsonl", base_edges + [_e("x", "ABOUT", "d1")])
+    _write(work / "post/edges.jsonl", base_edges + new_edges + [_e("x", "ABOUT", "d1")])
+    if tamper:
+        tamper(work, root)
+    backup = root / "data/exports/backups/pre-load"
     state = {"run_id": run, "status": "awaiting_publish_approval", "history": [], "sources": {},
              "backup": "data/exports/backups/pre-load",
+             "backup_sha256": {f: sha(backup / f) for f in ("nodes.jsonl", "edges.jsonl")},
              "agenda_items": {"ok": True, "exports_sha256": {f"{s}/{f}": sha(work / s / f) for s in ("pre", "post")
                                                              for f in ("nodes.jsonl", "edges.jsonl")}}}
     (work.parent / "state.json").write_text(json.dumps(state))
@@ -122,6 +129,17 @@ def test_check_loaded_fails_what_is_not_exact(tmp_path, tamper, failing):
     root, run, _ = _run_dir(tmp_path, tamper=tamper)
     result = ar.check_loaded(root, run)
     assert result["verdict"] == "FAIL" and any(failing in c["check"] and not c["ok"] for c in result["checks"])
+
+
+def test_check_loaded_fails_a_legacy_relationship_lost_before_the_stage(tmp_path):
+    def lose(work, root):  # the whole run lost a Decision's edge; the stage's own pre/post both lack it
+        _write(work / "pre/edges.jsonl", [_e("m1", "EVIDENCED_BY", "r1")])
+        _write(work / "post/edges.jsonl", [_e("m1", "EVIDENCED_BY", "r1"), _e("agenda-item-x-1", "PART_OF_MEETING", "m1"),
+                                           _e("agenda-item-x-1", "EVIDENCED_BY", "r1")])
+
+    root, run, _ = _run_dir(tmp_path, tamper=lose)
+    result = ar.check_loaded(root, run)
+    assert result["verdict"] == "FAIL" and any("relationships" in c["check"] and not c["ok"] for c in result["checks"])
 
 
 def test_check_loaded_refuses_exports_changed_after_the_run(tmp_path):

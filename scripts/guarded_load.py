@@ -769,7 +769,8 @@ def bundle_meeting_loaded(graph, bundle: Path, meeting_id: str) -> bool:
     manifest, nodes, _ = _read_bundle(bundle)
     entry = next(m for m in manifest["meetings"] if m["meeting_id"] == meeting_id)
     with graph.transaction(()) as tx:
-        return _same_items(tx, entry, {n["id"]: n for n in nodes})
+        on_meeting = (tx.agenda_meetings(entry["institution_id"]).get(meeting_id) or {}).get("item_ids") or []
+        return sorted(on_meeting) == sorted(entry["item_ids"]) and _same_items(tx, entry, {n["id"]: n for n in nodes})
 
 
 def load_agenda_bundle(graph, bundle: Path, *, recheck) -> dict:

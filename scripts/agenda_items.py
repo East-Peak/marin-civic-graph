@@ -560,7 +560,8 @@ def _settle_pending(ledger: dict, port, eligible: dict, run_id: str, root: Path,
         bundle = Path(root) / e["bundle"] if e.get("bundle") else None
         if not items.get(mid):
             del ledger[mid]
-        elif bundle and bundle.is_dir() and guarded_load.bundle_meeting_loaded(port, bundle, mid):
+        elif sorted(items[mid]) == sorted(e["item_ids"]) and bundle and bundle.is_dir() \
+                and guarded_load.bundle_meeting_loaded(port, bundle, mid):
             ledger[mid] = {**e, "state": "loaded"}
         else:
             ledger[mid] = _held(e, e, "pending_mismatch", today)

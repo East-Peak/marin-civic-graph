@@ -668,6 +668,7 @@ def _clean_on_disk(ctx: Context, run_id: str) -> bool:
         return False
     return (persisted["status"] == "published" and all(s["ok"] for s in persisted["sources"].values())
             and (persisted.get("agenda_items") or {}).get("ok", True)
+            and not (persisted.get("agenda_items") or {}).get("unchecked_revisions")
             and persisted.get("snapshot", {}).get("ok") is True and digest == scrub(render_digest(persisted), ctx.env))
 
 
@@ -686,6 +687,8 @@ def _outcome_body(ctx: Context, state: dict | None, problem: str | None) -> str:
             lines.append("error: " + quote(state["error"]))
         if (state.get("agenda_items") or {}).get("ok") is False:
             lines.append("agenda items stage failed: " + quote(state["agenda_items"].get("error") or ""))
+        if (state.get("agenda_items") or {}).get("unchecked_revisions"):
+            lines.append(f"agenda revision checks that could not fetch: {state['agenda_items']['unchecked_revisions']}")
         if state.get("snapshot", {}).get("ok") is False:
             lines.append("private data snapshot failed: " + quote(state["snapshot"]["error"]))
         lines.append(f"digest: {(RUNS_DIR / state['run_id'] / 'digest.md').as_posix()}")
@@ -984,7 +987,9 @@ def load(ctx: Context, run_id: str) -> dict:
     except Exception as exc:
         _print_crash(ctx)
         return _set_status(ctx, state, "load_failed", error=f"load crashed: {type(exc).__name__}: {exc}")
-    _set_status(ctx, state, "loaded", loaded=[sid for sid in accepted if sid not in held], error=None)
+    running = {"agenda_items": {"ok": False, "status": "running"}} if ctx.agenda_items else {}
+    # one write: a process killed right after it leaves a run _unresolved_load names and `load` resumes
+    _set_status(ctx, state, "loaded", loaded=[sid for sid in accepted if sid not in held], error=None, **running)
     if ctx.agenda_items:
         _persist(ctx, _agenda_stage(ctx, state, run_id))
     return _export_and_bake(ctx, state, run_id, reconcile=True)
@@ -1023,6 +1028,9 @@ def _agenda_stage(ctx: Context, state: dict, run_id: str) -> dict:
                                   error=f"agenda-items wrote a report for {report.get('run_id')!r}, not this run")
                     return state
                 record["sources"] = _agenda_summary(report)
+                unchecked = sum(src.get("revision_unchecked", 0) for src in record["sources"].values())
+                if unchecked:  # a revision check that could not fetch is unverified, not fine
+                    record["unchecked_revisions"] = unchecked
         delta = json.loads((work / "delta.json").read_text(encoding="utf-8"))
         record["delta"] = {k: delta.get(k) for k in ("ok", "added_nodes", "added_edges", "problem_count")}
         record["exports_sha256"] = {f"{side}/{f}": _sha256(work / side / f) for side in ("pre", "post")

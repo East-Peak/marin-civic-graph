@@ -853,3 +853,17 @@ def test_a_pending_entry_whose_items_match_its_bundle_exactly_settles_loaded(tmp
     ai.write_ledger(root, ledger)
     _run(root, tmp_path, gl.FakeGraphPort(graph.path), {}, run="run2", run_id="r2", cap=0)
     assert ai.read_ledger(root)[M1]["state"] == "loaded"
+
+
+def test_a_pending_entry_with_an_extra_item_on_its_meeting_does_not_settle(tmp_path, graph):
+    root = tmp_path / "root"
+    _write_registry(root)
+    _run(root, tmp_path, graph, {AGENDA.format(1): b"%PDF 2026-10-06|Fine"}, cap=1, run_id="r1")
+    ledger = ai.read_ledger(root)
+    ledger[M1]["state"] = "pending"
+    ai.write_ledger(root, ledger)
+    with open(graph.path / "overlay.jsonl", "a") as fh:
+        fh.write(json.dumps({"node": _node("agenda-item-extra", ["AgendaItem"])}) + "\n")
+        fh.write(json.dumps({"edge": _edge("agenda-item-extra", "PART_OF_MEETING", M1)}) + "\n")
+    _run(root, tmp_path, gl.FakeGraphPort(graph.path), {}, run="run2", run_id="r2", cap=0)
+    assert ai.read_ledger(root)[M1]["hold"]["reason"] == "pending_mismatch"
