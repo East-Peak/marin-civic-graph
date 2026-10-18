@@ -181,7 +181,7 @@ def test_title_rule_stops_at_attachments_recommendations_bullets_and_blank_lines
 
 
 def test_every_parser_has_a_version():
-    assert {name: p.version for name, p in ap.PARSERS.items()} == {"outline": 4, "flat": 1}
+    assert {name: p.version for name, p in ap.PARSERS.items()} == {"outline": 5, "flat": 1}
 
 
 def test_a_list_in_a_description_that_happens_to_continue_the_numbering_is_not_an_entry():
@@ -224,3 +224,33 @@ def test_a_deeper_lettered_list_inside_a_sub_entry_is_description():
 def test_a_lettered_list_under_numbered_sub_entries_is_description():
     assert [(i["key"], i["title"]) for i in _parse("outline-nested-numbered.txt")["items"]] == [
         ("2a", "Approve the Lakeport Library Policy."), ("2b", "Approve the Contract with Fenwick Paving.")]
+
+
+def test_an_attachment_link_printed_like_a_sub_entry_is_not_an_item():
+    text = ("Tuesday, October 20, 2026\n1. CALL TO ORDER\n2. PRESENTATION: Lakeport Fire Annual Report\n"
+            "   2.A. Staff Report and Attachments\n3. CONSENT CALENDAR\n   3.A. Approve the Warrants\n"
+            "   3.B. Approve the Minutes\n        3.B. Draft Minutes.pdf\n4. ADJOURNMENT\n")
+    assert [i["key"] for i in ap.parse_outline(text)["items"]] == ["2", "3a", "3b"]
+
+
+def test_a_sub_label_printed_under_the_wrong_section_holds():
+    text = ("Tuesday, October 20, 2026\n1. CALL TO ORDER\n2. REPORTS\n"
+            "3. DISCUSSION OF DRAFT AGENDA FOR UPCOMING MEETING\n     2.A. Review of the Draft Agenda\n4. ADJOURNMENT\n")
+    with pytest.raises(ap.Unparseable) as exc:
+        ap.parse_outline(text)
+    assert exc.value.reason == "label_out_of_sequence"
+
+
+def test_without_an_adjourn_the_posting_notice_ends_the_agenda():
+    text = ("Thursday, March 30, 2023\n1. CALL TO ORDER\n2. CLOSED SESSION\n3. Consider the Housing Element\n"
+            "                    ***********************\nTHIS MEETING WAS PROPERLY NOTICED AND POSTED AT\n"
+            "1. City Hall bulletin\n2. Website\n")
+    assert [i["key"] for i in ap.parse_outline(text)["items"]] == ["2", "3"]
+
+
+def test_a_second_session_after_a_notice_ended_agenda_holds_even_if_minutes_are_mentioned():
+    text = ("Monday, February 13, 2023\n5:30 PM CALL TO ORDER\n1. CLOSED SESSION: approve minutes\n"
+            "       *******\nTHIS MEETING WAS PROPERLY NOTICED\n6:30 PM\n1. CALL TO ORDER\n2. CONSENT\n3. ADJOURN\n")
+    with pytest.raises(ap.Unparseable) as exc:
+        ap.parse_outline(text)
+    assert exc.value.reason == "multi_session_agenda"

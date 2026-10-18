@@ -29,6 +29,8 @@ _TIME = r"(?:\d{1,2}:\d{2}\s*[ap]\.?\s*m\.?\s*[–—-]?\s*)?"
 _BODY_START = re.compile(rf"^\s*(?:1\.\s*)?{_TIME}CALL\s+TO\s+ORDER\b", re.IGNORECASE)  # begins an agenda body
 _NUMBERED_END = re.compile(rf"^(\d{{1,2}})\.\s*{_TIME}ADJOURN(?:MENT)?\b(?!\s+TO\b)", re.IGNORECASE)
 _BARE_END = re.compile(r"^ADJOURN(?:MENT)?\.?$", re.IGNORECASE)
+_NOTICE_END = re.compile(r"^\*{5,}$|^THIS MEETING WAS PROPERLY NOTICED", re.IGNORECASE)  # no ADJOURN: the posting
+_ATTACHMENT = re.compile(r"^(Staff\s+Report|Attachment)|\.pdf$", re.IGNORECASE)  # a link printed like an entry
 _EXCLUDED = re.compile(rf"^{_TIME}(CALL\s+TO\s+ORDER|ROLL\s+CALL|PLEDGE|SALUTE\s+TO\s+THE\s+FLAG|ADJOURN)",
                        re.IGNORECASE)
 _NONE = re.compile(r"(^|:\s*)NONE\.?$", re.IGNORECASE)
@@ -147,7 +149,7 @@ def parse_outline(text: str) -> dict:
     l1 = l2 = None
     top_indent = None  # the first entry's indent: a top-level entry never sits deeper (a list in a description does)
     deepest = None
-    end = None
+    end, by_notice = None, False
     for i in range(start, len(lines)):
         raw = lines[i]
         line, indent = raw.strip(), len(raw) - len(raw.lstrip())
@@ -162,6 +164,9 @@ def parse_outline(text: str) -> dict:
         if (numbered_end and int(numbered_end.group(1)) == (l1.parts[0] + 1 if l1 else 1)) or _BARE_END.match(line):
             end = i
             break
+        if l1 and _NOTICE_END.match(line):
+            end, by_notice = i, True
+            break
         m3 = _L3.match(line)
         m2 = _L2_NUMBERED.match(line)
         b2 = _L2_BARE.match(line)
@@ -170,8 +175,11 @@ def parse_outline(text: str) -> dict:
         if l2 and m3 and int(m3.group(1)) == l2.next_child + 1:
             entry = _Entry(3, (*l2.parts, int(m3.group(1))), f"{l2.label}.({m3.group(1)})", indent, [m3.group(2)],
                            parent=l2)
+        elif l1 and m2 and int(m2.group(1)) != l1.parts[0] and l1.parts[0] - 3 <= int(m2.group(1)) < l1.parts[0] \
+                and not _ATTACHMENT.search(m2.group(3)):
+            raise Unparseable("label_out_of_sequence", f"{m2.group(1)}.{m2.group(2)} printed under section {l1.parts[0]}")
         elif l1 and m2 and int(m2.group(1)) == l1.parts[0] and m2.group(2).upper() == string.ascii_uppercase[l1.next_child] \
-                and l1.child_style in (None, "numbered"):
+                and l1.child_style in (None, "numbered") and not _ATTACHMENT.search(m2.group(3)):
             entry, form = _Entry(2, (l1.parts[0], m2.group(2).upper()), f"{l1.parts[0]}.{m2.group(2)}", indent,
                                  [m2.group(3)], parent=l1), "numbered"
         elif l1 and b2 and indent > l1.indent and b2.group(1).upper() == string.ascii_uppercase[l1.next_child] \
@@ -202,7 +210,7 @@ def parse_outline(text: str) -> dict:
         raise Unparseable("agenda_end_missing", "no top-level ADJOURN(MENT) after CALL TO ORDER")
     rest = lines[end + 1:]
     for j, line in enumerate(rest):
-        if _BODY_START.match(line) and not any(re.search(r"\bMINUTES\b", x, re.IGNORECASE) for x in rest[:j]):
+        if _BODY_START.match(line) and (by_notice or not any(re.search(r"\bMINUTES\b", x, re.IGNORECASE) for x in rest[:j])):  # a packet's minutes follow an ADJOURN
             raise Unparseable("multi_session_agenda", "a second CALL TO ORDER after the agenda's end")
     items = []
     for e in entries:
@@ -262,7 +270,7 @@ def parse_flat(text: str) -> dict:
             "items": items}
 
 
-PARSERS: dict[str, Parser] = {"outline": Parser(4, parse_outline), "flat": Parser(1, parse_flat)}
+PARSERS: dict[str, Parser] = {"outline": Parser(5, parse_outline), "flat": Parser(1, parse_flat)}
 
 
 def extract_text(data: bytes) -> str:
