@@ -90,11 +90,14 @@ Take the post-export and run check-loaded together **while holding the run lock*
 (a weekly run, votes apply) can land between them:
 
 ```
-cd ~/projects/marin-civic-graph && RUN=<run id> && .venv/bin/python - <<EOF
-import subprocess, sys
+cd ~/projects/marin-civic-graph && RUN=<run id> \
+  && set -a && . ops/launchd/weekly.env && set +a && export NEO4J_URI=bolt://localhost:7688 \
+  && .venv/bin/python - <<EOF
+import os, subprocess, sys
 from pathlib import Path
 sys.path.insert(0, "scripts")
 from run_lock import run_lock
+assert os.environ["NEO4J_URI"] == "bolt://localhost:7688" and os.environ.get("NEO4J_DATABASE") == "neo4j"
 post = Path.home() / "open-marin-staging/sr-weekly" / "post-$RUN"
 with run_lock(Path(".").resolve()):  # RunLockHeld = a run is in progress: retry later
     subprocess.run([".venv/bin/python", "scripts/export_live_graph.py", "--backup", "--out-dir", str(post)], check=True)
@@ -128,22 +131,30 @@ San Rafael is `schedule: manual` until the switch to `weekly` is merged, which n
    in progress while the checkout changes.
 
 ```
-cd ~/projects/marin-civic-graph && SHA=<the gated, pushed sha> && .venv/bin/python - <<EOF
+cd ~/projects/marin-civic-graph && SHA=<the full gated, pushed sha> && .venv/bin/python - <<EOF
 import subprocess, sys
 from pathlib import Path
 sys.path.insert(0, "scripts")
 from run_lock import run_lock
-with run_lock(Path(".").resolve()):
-    subprocess.run(["git", "fetch", "origin", "main"], check=True)
-    head = subprocess.run(["git", "rev-parse", "origin/main"], capture_output=True, text=True, check=True).stdout.strip()
-    if head != "$SHA":
-        sys.exit(f"origin/main is {head}, not the gated $SHA: re-gate first")
-    subprocess.run(["git", "merge", "--ff-only", "$SHA"], check=True)
-    print("canonical checkout at", subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout)
+git = lambda *a: subprocess.run(["git", *a], capture_output=True, text=True, check=True).stdout.strip()
+with run_lock(Path(".").resolve()):  # also the proof that no run is in progress
+    if git("branch", "--show-current") != "main" or git("status", "--porcelain", "--untracked-files=no"):
+        sys.exit("the canonical checkout is not a clean main: stop")
+    git("fetch", "origin", "main")
+    if git("rev-parse", "origin/main") != "$SHA":
+        sys.exit("origin/main moved since the gate: re-gate first")
+    if subprocess.run(["git", "merge-base", "--is-ancestor", "HEAD", "$SHA"]).returncode:
+        sys.exit("HEAD is not an ancestor of the gated sha: stop")
+    git("merge", "--ff-only", "$SHA")
+    if git("rev-parse", "HEAD") != "$SHA":
+        sys.exit("HEAD is not the gated sha after the fast-forward: stop")
+    print("canonical checkout at $SHA")
 EOF
 ```
 
-After the first weekly run that includes San Rafael, run check-loaded on it (above).
+Then hand the check-loaded snippet above to Claude in Stuart's planning tab, to run on the first weekly
+run after the flip (its run id: the first `data/ingest-runs/<run id>/` whose state lists
+`san-rafael-city-council` in `loaded`).
 
 ## Writer boundary
 
