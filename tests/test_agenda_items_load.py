@@ -430,3 +430,21 @@ def test_a_truncated_response_holds(monkeypatch):
     with pytest.raises(ai.AgendaHold) as held:
         ai.fetch(Gate(), AGENDA.format(1), [HOST])
     assert held.value.reason == "fetch_failed"
+
+
+def test_a_meeting_listed_twice_in_a_bundle_is_refused(tmp_path, graph):
+    a, b = _entry(M1, "2026-10-06", "One"), _entry(M1, "2026-10-06", "One", "Two")
+    b["nodes"], b["edges"] = b["nodes"][1:], b["edges"][2:]
+    with pytest.raises(gl.BundleError, match="twice"):
+        gl.load_agenda_bundle(graph, _bundle(tmp_path, [a, b]), recheck=_ok)
+    assert graph.overlay() == ([], [])
+
+
+@pytest.mark.parametrize("files", [{}, {"nodes.jsonl": None}])
+def test_a_manifest_must_hash_both_files(tmp_path, graph, files):
+    bundle = _bundle(tmp_path, [_entry(M1, "2026-10-06", "One")])
+    manifest = json.loads((bundle / "manifest.json").read_text())
+    manifest["files"] = {k: manifest["files"][k] for k in files}
+    (bundle / "manifest.json").write_text(json.dumps(manifest))
+    with pytest.raises(gl.BundleError, match="hash"):
+        gl.load_agenda_bundle(graph, bundle, recheck=_ok)

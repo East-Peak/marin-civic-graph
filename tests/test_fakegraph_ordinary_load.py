@@ -105,10 +105,10 @@ def test_an_unsafe_target_still_refuses(tmp_path, monkeypatch):
 
 def test_merge_on_an_id_held_by_another_label_fails_closed(tmp_path):
     port = _seed(tmp_path, [{"id": "x1", "labels": ["Record"], "properties": {"id": "x1"}}])
+    before = (port.path / "overlay.jsonl").read_text()
     with pytest.raises(gl.GraphWriteError, match="x1"):
         port.merge([{"id": "x1", "labels": ["Meeting"], "node_type": "Meeting", "properties": {}}], [])
-        with gl.FakeGraphPort(port.path).transaction(()) as tx:
-            tx.nodes(["x1"])
+    assert (port.path / "overlay.jsonl").read_text() == before
 
 
 def test_merge_updates_every_matching_relationship(tmp_path):

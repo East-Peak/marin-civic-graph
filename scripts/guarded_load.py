@@ -131,6 +131,13 @@ class FakeGraphPort:
             for n in nodes]
         rows += [{"merge_edge": {"start_id": e["source_id"], "type": e["relationship_type"], "end_id": e["target_id"],
                                  "properties": dict(e.get("properties") or {})}} for e in edges]
+        self._load()  # replay the rows on the current view first: a MERGE the fake cannot represent writes nothing
+        nodes, edges = dict(self._nodes), list(self._edges)
+        for row in rows:
+            if "merge_node" in row:
+                _merge_node(nodes, row["merge_node"])
+            else:
+                _merge_edge(nodes, edges, row["merge_edge"])
         self._append(rows)
 
     def _load(self) -> None:
@@ -707,11 +714,16 @@ def _read_bundle(bundle: Path) -> tuple[dict, list[dict], list[dict]]:
 
     bundle = Path(bundle)
     manifest = json.loads((bundle / "manifest.json").read_text(encoding="utf-8"))
+    if sorted(manifest.get("files") or {}) != ["edges.jsonl", "nodes.jsonl"]:
+        raise BundleError("the manifest must hash exactly nodes.jsonl and edges.jsonl")
     for name, sha in manifest["files"].items():
         if hashlib.sha256((bundle / name).read_bytes()).hexdigest() != sha:
             raise BundleError(f"{name} changed since the bundle was written")
     read = lambda name: [json.loads(x) for x in (bundle / name).read_text(encoding="utf-8").splitlines() if x]  # noqa: E731
     nodes, edges = read("nodes.jsonl"), read("edges.jsonl")
+    mids = [m["meeting_id"] for m in manifest["meetings"]]
+    if len(set(mids)) != len(mids):
+        raise BundleError("a meeting is listed twice in the manifest")
     empty = [m["meeting_id"] for m in manifest["meetings"] if not m["item_ids"]]
     if empty:
         raise BundleError(f"meetings with no items: {', '.join(empty)} (a zero-item agenda holds, it never loads)")
