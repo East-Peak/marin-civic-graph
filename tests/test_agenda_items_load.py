@@ -718,6 +718,75 @@ def test_a_closed_session_file_under_both_meetings_of_a_day_loads_only_for_the_c
         assert ledger[closed]["state"] == "loaded"
 
 
+def _sessions_parser():
+    def parse(text):
+        day, header, sessions, *titles = text.split("|")
+        return {**_parsed(day, *titles), "header": header, "sessions": int(sessions)}
+
+    return {"fake": Parser(version=1, parse=parse)}
+
+
+def test_a_two_session_file_holds_when_the_meeting_has_a_same_day_sibling(tmp_path, graph):
+    port, regular, closed = _session_graph(tmp_path)
+    root = tmp_path / "root"
+    _write_registry(root)
+    files = {AGENDA.format(101): b"%PDF 2026-10-06|Special Meeting and Regular Meeting|2|Conference|Minutes",
+             AGENDA.format(102): b"%PDF 2026-10-06|Special Meeting Closed Session|1|Conference with counsel"}
+    report = ai.run_stage(root=root, run_dir=tmp_path / "run", port=port, gate=_FakeGate(files), today="2026-10-18",
+                          parsers=_sessions_parser(), extract=lambda d: d.decode()[5:], sleep=lambda s: None)
+    assert report["sources"][SID]["held"] == {regular: "multi_session_sibling"}
+    assert report["sources"][SID]["loaded"] == {closed: 1}
+
+
+def test_a_two_session_file_without_a_sibling_loads(tmp_path, graph):
+    root = tmp_path / "root"
+    _write_registry(root)
+    files = {AGENDA.format(1): b"%PDF 2026-10-06|Special Meeting and Regular Meeting|2|Conference|Minutes"}
+    report = ai.run_stage(root=root, run_dir=tmp_path / "run", port=graph, gate=_FakeGate(files), today="2026-10-18",
+                          parsers=_sessions_parser(), extract=lambda d: d.decode()[5:], sleep=lambda s: None, cap=1)
+    assert report["sources"][SID]["loaded"] == {M1: 2}
+
+
+def _sr_pair(tmp_path, ids):
+    """Two same-day meetings with the generic title, told apart only by their ids (SR-shaped)."""
+    seed = tmp_path / "seed3"
+    seed.mkdir()
+    nodes, edges = [], []
+    for n, mid in enumerate(ids, 201):
+        nodes += [_meeting(mid, "2026-10-06"), _record(mid, n)]
+        nodes[-2]["properties"]["title"] = "Lakeport Town Council meeting"
+        edges.append(_edge(mid, "EVIDENCED_BY", _rid(mid)))
+    (seed / "nodes.jsonl").write_text("".join(json.dumps(n) + "\n" for n in nodes))
+    (seed / "edges.jsonl").write_text("".join(json.dumps(e) + "\n" for e in edges))
+    return gl.FakeGraphPort.create(tmp_path / "graph3", seed=seed)
+
+
+CLOSED_FILE = b"%PDF 2026-10-06|LAKEPORT TOWN COUNCIL SPECIAL CLOSED SESSION|Conference with counsel"
+REGULAR_FILE = b"%PDF 2026-10-06|LAKEPORT TOWN COUNCIL REGULAR MEETING AT 6:00 P.M.|Approve the minutes"
+SPECIAL_FILE = b"%PDF 2026-10-06|LAKEPORT TOWN COUNCIL SPECIAL MEETING AT 4:00 P.M.|Interviews"
+
+
+@pytest.mark.parametrize("suffix, own", [("", REGULAR_FILE), ("-special", SPECIAL_FILE)])
+@pytest.mark.parametrize("swapped", [False, True])
+@pytest.mark.parametrize("cap", [1, 2])
+def test_an_exact_session_source_never_takes_its_siblings_file(tmp_path, suffix, own, swapped, cap):
+    first, closed = f"meeting-2026-10-06-{SID}{suffix}", f"meeting-2026-10-06-{SID}-closed-session"
+    graph_path = _sr_pair(tmp_path, [first, closed])
+    root = tmp_path / "root"
+    _write_registry(root, body={"category": ["Town Council"]}, session={"from": ["title", "id"], "match": "exact"})
+    files = {AGENDA.format(201): CLOSED_FILE if swapped else own, AGENDA.format(202): own if swapped else CLOSED_FILE}
+    for run in ("r1", "r2"):
+        ai.run_stage(root=root, run_dir=tmp_path / run, port=gl.FakeGraphPort(graph_path), gate=_FakeGate(files),
+                     today="2026-10-18", parsers=_header_parser(), extract=lambda d: d.decode()[5:],
+                     sleep=lambda s: None, cap=cap)
+    ledger = ai.read_ledger(root)
+    want = "held" if swapped else "loaded"
+    assert (ledger[first]["state"], ledger[closed]["state"]) == (want, want)
+    if swapped:
+        assert {ledger[m]["hold"]["reason"] for m in (first, closed)} == {"agenda_session_mismatch"}
+        assert gl.FakeGraphPort(graph_path).overlay() == ([], [])
+
+
 def test_the_stage_refuses_while_another_writer_holds_the_graph(tmp_path, graph, monkeypatch):
     import graph_lock as gk
 

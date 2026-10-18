@@ -288,7 +288,330 @@ def parse_flat(text: str) -> dict:
             "items": items}
 
 
-PARSERS: dict[str, Parser] = {"outline": Parser(8, parse_outline), "flat": Parser(1, parse_flat)}
+# --- lettered: lettered items under numbered sections or ALL-CAPS headings, no CALL TO ORDER -----------------
+
+_AGENDA_TITLE = re.compile(r"^(?:(?:REVISED|AMENDED)\s+)?AGENDA(?:\s*[-–—]\s*(?:REVISED|AMENDED))?$", re.IGNORECASE)
+_CANCELLED = re.compile(r"\bcancel+ed\b|notice of cancellation", re.IGNORECASE)
+_LETTERED_END = re.compile(r"^ADJOURN(?:MENT)?\b(?!\s+TO\b)", re.IGNORECASE)
+_LETTERED_TOP = re.compile(r"^(\d{1,2})\.\s+(\S.*)$")
+_LETTER = re.compile(r"^([a-z])\.\s+(\S.*)$")
+_ROMAN = re.compile(r"^[ivx]{2,4}\.\s")
+_SESSION_TITLE = re.compile(r"\bMEETING\s+AT\s+\d{1,2}(?::\d{2})?\s*[AP]\.?\s*M", re.IGNORECASE)
+_OTHER_BODY = re.compile(r"\b(AGENCY|AUTHORITY|DISTRICT|BOARD)\b")
+_ONLY_NONE = re.compile(r"^(?:[^:]*:\s*)?[-–—\s]*NONE\.?$", re.IGNORECASE)
+_WRAPS = re.compile(r"(?:[-,–—]|\b(?:and|or|of|the|for|to|in|an|a|with|at|on|by|from))$")
+_LETTERED_STOP = re.compile(r"^(Recommended\s+Action|[•*\-–]\s)", re.IGNORECASE)
+_MINUTES_HEADING = re.compile(r"^MINUTES\b")
+
+
+def _indent(raw: str) -> int:
+    return len(raw) - len(raw.lstrip())
+
+
+def _is_caps_heading(raw: str) -> bool:
+    """A section heading: at the left (indent <= 4), capitals only (outside parentheses), not an entry."""
+    text = re.sub(r"\([^)]*\)", "", raw.strip())
+    return (_indent(raw) <= 4 and len(re.findall(r"[A-Z]", text)) >= 3 and not re.search(r"[a-z]", text)
+            and not _LETTERED_TOP.match(raw.strip()) and not _LETTERED_END.match(raw.strip())
+            and not _AGENDA_TITLE.match(raw.strip()))
+
+
+def _abbrev(heading: str) -> str:
+    return re.sub(r"[^A-Za-z]", "", heading)[:2].upper()
+
+
+@dataclass
+class _Parent:
+    """What lettered entries hang from: a numbered entry, a heading, or nothing (`GE`)."""
+    section: str
+    heading: str
+    label: str = ""
+    run: int | None = None
+    lines: list = field(default_factory=list)
+    letters: int = 0
+    line: int = 0
+
+
+def _lettered_title(lines: list[str]) -> str:
+    """The entry's line, then each line that starts lower-case or "(", or follows a line ending mid-phrase
+    (a connective, comma, hyphen or dash): a wrapped subject; the description that follows starts a new line."""
+    text = " ".join(_ODD.sub("", lines[0]).split())
+    for line in lines[1:]:
+        nxt = " ".join(_ODD.sub("", line).split())
+        if not nxt or _LETTERED_STOP.match(nxt) or not (nxt[0].islower() or nxt[0] == "(" or _WRAPS.search(text)):
+            break
+        text = f"{text} {nxt}"
+    return text
+
+
+def _roman_ahead(lines: list[str], i: int) -> bool:
+    """A line `i.` begins a roman list when `ii.` follows before the next lettered or numbered entry."""
+    for line in lines[i + 1:]:
+        text = line.strip()
+        if _ROMAN.match(text):
+            return text.startswith("ii.")
+        if _LETTER.match(text) or (_LETTERED_TOP.match(text) and _indent(line) <= 8):
+            return False
+    return False
+
+
+def parse_lettered(text: str) -> dict:
+    lines = _clean(text)
+    dated = next((i for i, line in enumerate(lines) if _DATE.search(line)), len(lines))
+    first = next((i for i, raw in enumerate(lines) if (_LETTERED_TOP.match(raw.strip()) and _indent(raw) <= 8)
+                  or _LETTER.match(raw.strip()) or (i > dated and _is_caps_heading(raw))), None)
+    header = lines[:first] if first is not None else lines
+    notice = {"printed_date": _printed_date(header), "header": "\n".join(header), "notice": "cancellation",
+              "items": []}
+    if not any(_AGENDA_TITLE.match(line.strip()) for line in header):
+        if _CANCELLED.search(text):
+            return notice
+        raise Unparseable("unparseable", "no AGENDA title line")
+    end = next((i for i in range(first or 0, len(lines)) if _indent(lines[i]) <= 8
+                and _LETTERED_END.match(lines[i].strip())), None)
+    stop = len(lines) if end is None else end
+    general = _Parent("GE", "")
+    heading, top, last, runs = None, None, 0, []  # runs: the heading each numbered run began under
+    entries: list[tuple[str, _Parent, str, list]] = []  # (kind, parent, label/letter, lines) in document order
+    session_lines, deepest = [], None
+    for i in range(first if first is not None else stop, stop):
+        raw = lines[i]
+        line = raw.strip()
+        if not line:
+            if deepest is not None:
+                deepest.append("")
+            continue
+        if _SESSION_TITLE.search(line):  # another session's title inside the body
+            session_lines.append(len(entries))
+            heading, top = None, None
+            continue
+        m = _LETTERED_TOP.match(line) if _indent(raw) <= 8 else None
+        if m and (int(m.group(1)) == last + 1 or int(m.group(1)) == 1):
+            if int(m.group(1)) == 1:
+                runs.append(heading)
+            last = int(m.group(1))
+            top = _Parent(m.group(1), "", label=m.group(1), run=len(runs) - 1, lines=[m.group(2)], line=i)
+            entries.append(("top", top, m.group(1), top.lines))
+            deepest = top.lines
+            continue
+        b = _LETTER.match(line)
+        parent = top or heading or general
+        if b and parent.letters < 26 and b.group(1) == string.ascii_lowercase[parent.letters] \
+                and not (b.group(1) in "ivx" and _roman_ahead(lines, i)):
+            parent.letters += 1
+            deepest = [b.group(2)]
+            entries.append(("letter", parent, b.group(1), deepest))
+            continue
+        if _is_caps_heading(raw):
+            heading, top = _Parent(_abbrev(line), _heading(line), line=i), None
+            deepest = None
+            continue
+        if deepest is not None:
+            deepest.append(raw)
+    if end is None:
+        if not entries:
+            return notice if _CANCELLED.search(text) else {**notice, "notice": None}
+        raise Unparseable("agenda_end_missing", "no ADJOURNMENT after the agenda's entries")
+    for line in lines[end + 1:]:
+        if _MINUTES_HEADING.match(line.strip()):
+            break
+        if _AGENDA_TITLE.match(line.strip()):
+            raise Unparseable("multi_session_agenda", "another agenda follows the ADJOURNMENT")
+
+    def leaf(kind, parent, lines):
+        return (kind == "letter" or not parent.letters) and not (
+            _excluded(lines[0]) or _ONLY_NONE.match(" ".join(lines[0].split())) or _none_below(lines))
+
+    leaves = [n for n, e in enumerate(entries) if leaf(e[0], e[1], e[3])]
+    if any(any(n < at for n in leaves) and any(n >= at for n in leaves) for at in session_lines):
+        raise Unparseable("multi_session_agenda", "items under two session titles")
+    prefixes = {}
+    for run, run_heading in enumerate(runs):
+        mine = [n for n in leaves if entries[n][1].run == run]
+        if run == 0 or not mine:
+            continue
+        if run_heading is None or not _OTHER_BODY.search(run_heading.heading.upper()):
+            raise Unparseable("multi_session_agenda", "a second numbered run with items")
+        prefixes[run] = run_heading.section
+    items = []
+    for n in leaves:
+        kind, parent, mark, entry_lines = entries[n]
+        if kind == "top":
+            section = prefixes.get(parent.run, "") + parent.section
+            items.append({"label": parent.label, "section_number": section, "item_number": "",
+                          "key": section.lower(), "heading": "", "title": _lettered_title(entry_lines)})
+            continue
+        numbered = parent.run is not None
+        section = prefixes.get(parent.run, "") + parent.section if numbered else parent.section
+        items.append({"label": f"{parent.label}.{mark}" if numbered else mark, "section_number": section,
+                      "item_number": mark.upper(), "key": (section + mark).lower(),
+                      "heading": _heading(parent.lines[0]) if numbered else parent.heading,
+                      "title": _lettered_title(entry_lines)})
+    return {"printed_date": _printed_date(header), "header": "\n".join(header), "notice": None, "items": items}
+
+
+# --- decimal: N. sections, N.M items, N.MA sub-items; one or more sessions to a document ---------------------
+
+_SESSION_START = re.compile(r"^1\.\s+(?:ROLL\s+CALL|CALL\s+TO\s+ORDER)\b", re.IGNORECASE)
+_SESSION_KIND = re.compile(r"^((?:[A-Z]+\s+)*)MEETING\b")
+_MASTHEAD = re.compile(r"MEETING of the (.+)$")
+_D1 = re.compile(r"^(\d{1,2})\.\s+(\S.*)$")
+_D2 = re.compile(r"^(\d{1,2})\.(\d{1,2})\s+(\S.*)$")
+_D3 = re.compile(r"^(\d{1,2})\.(\d{1,2})([A-Z])\s+(\S.*)$")
+_LIST_LABEL = re.compile(r"^(?:[A-Z]|\d{1,2})[.)]\s")  # "A. …", "1) …": a list under the title, not its wrap
+
+
+@dataclass
+class _Decimal:
+    parts: tuple
+    lines: list
+    parent: "_Decimal | None" = None
+    children: int = 0
+    implicit: bool = False
+
+
+def _caps_first_word(line: str) -> bool:
+    word = next((w for w in line.split() if re.search(r"[A-Za-z]", w)), None)
+    return word is not None and not re.search(r"[a-z]", word)
+
+
+def _decimal_title(lines: list[str], label: str) -> str:
+    """Capitals: the line and the following lines that also start in capitals (not a list under it); else the
+    sentence rule."""
+    first = " ".join(_ODD.sub("", lines[0]).split())
+    if not _caps_first_word(first):
+        return title_of(lines, label)
+    text = first
+    for line in lines[1:]:
+        nxt = " ".join(_ODD.sub("", line).split())
+        if not nxt or _STOP.match(nxt) or _LIST_LABEL.match(nxt) or not _caps_first_word(nxt):
+            break
+        text = f"{text} {nxt}"
+    return text
+
+
+def _session_kind(lines: list[str], start: int) -> str:
+    seen = 0
+    for line in reversed(lines[:start]):
+        if not line.strip():
+            continue
+        m = _SESSION_KIND.match(line.strip())
+        if m:
+            return re.sub(r"[^a-z]", "", m.group(1).lower())
+        seen += 1
+        if seen == 3:
+            break
+    return ""
+
+
+def _is_start(raw: str) -> bool:
+    return _indent(raw) <= 3 and bool(_SESSION_START.match(raw.strip()))
+
+
+def _decimal_session(lines: list[str], start: int) -> tuple[list[_Decimal], int]:
+    """One session's entries, from its `1. ROLL CALL` to its closing `N. ADJOURN…` (the end's index)."""
+    entries: list[_Decimal] = []
+    l1 = l2 = None
+    deepest = None
+    for i in range(start, len(lines)):
+        raw = lines[i]
+        line = raw.strip()
+        if not line:
+            if deepest:
+                deepest.lines.append("")
+            continue
+        if i > start and _is_start(raw):
+            raise Unparseable("multi_session_agenda", "a session starts before the previous one adjourns")
+        m3, m2 = _D3.match(line), _D2.match(line)
+        m1 = _D1.match(line) if _indent(raw) <= 3 else None
+        entry = None
+        if l1 and m3 and int(m3.group(1)) == l1.parts[0]:
+            sub, letter = int(m3.group(2)), m3.group(3)
+            if l2 and sub == l2.parts[1] and letter == string.ascii_uppercase[l2.children]:
+                entry = _Decimal((*l2.parts, letter), [m3.group(4)], parent=l2)
+            elif sub == l1.children + 1 and letter == "A":  # `7.1A` printed without its `7.1`
+                l2 = _Decimal((l1.parts[0], sub), [""], parent=l1, implicit=True)
+                l1.children += 1
+                entry = _Decimal((*l2.parts, letter), [m3.group(4)], parent=l2)
+        elif l1 and m2 and int(m2.group(1)) == l1.parts[0] and int(m2.group(2)) == l1.children + 1:
+            entry = _Decimal((l1.parts[0], int(m2.group(2))), [m2.group(3)], parent=l1)
+        elif m1 and int(m1.group(1)) == (l1.parts[0] + 1 if l1 else 1):
+            entry = _Decimal((int(m1.group(1)),), [m1.group(2)])
+            if re.match(r"ADJOURN", m1.group(2), re.IGNORECASE):
+                following = next((int(m.group(1)) for x in lines[i + 1:] if _indent(x) <= 3
+                                  for m in [_D1.match(x.strip())] if m), None)
+                if following != entry.parts[0] + 1:
+                    return entries + [entry], i
+        if entry is None:
+            if deepest:
+                deepest.lines.append(raw)
+            continue
+        if entry.parent:
+            entry.parent.children += 1
+        if len(entry.parts) == 1:
+            l1, l2 = entry, None
+        elif len(entry.parts) == 2:
+            l2 = entry
+        entries.append(entry)
+        deepest = entry
+    raise Unparseable("agenda_end_missing", "no ADJOURN closing the session")
+
+
+def _masthead_conflict(between: list[str], printed: str | None, body: str | None) -> bool:
+    """A later session's own masthead ("… MEETING of the <body>" and the date under it) for another day or body."""
+    at = next((i for i in range(len(between) - 1, -1, -1) if _MASTHEAD.search(between[i])), None)
+    if at is None:
+        return False
+    named = " ".join(_MASTHEAD.search(between[at]).group(1).split())
+    near = [x for x in between[at:] if x.strip()][:3]
+    day = _printed_date(near)
+    return (body is not None and named != body) or (day is not None and day != printed)
+
+
+def parse_decimal(text: str) -> dict:
+    lines = _clean(text)
+    start = next((i for i, raw in enumerate(lines) if _is_start(raw)), None)
+    if start is None:
+        return _no_body(text, lines)
+    header = lines[:start]
+    printed = _printed_date(header)
+    first_masthead = next((m for m in map(_MASTHEAD.search, header) if m), None)
+    body = " ".join(first_masthead.group(1).split()) if first_masthead else None
+    sessions = []
+    while start is not None:
+        entries, end = _decimal_session(lines, start)
+        sessions.append((_session_kind(lines, start), entries))
+        start = None
+        for i in range(end + 1, len(lines)):
+            if _MINUTES_HEADING.match(lines[i].strip()):  # an attached minutes document: not a session
+                break
+            if _is_start(lines[i]):
+                if _masthead_conflict(lines[end + 1:i], printed, body):
+                    raise Unparseable("multi_session_agenda", "a later session is another day's or body's")
+                start = i
+                break
+    kinds = [kind for kind, _ in sessions]
+    if len(sessions) > 1 and ("" in kinds or len(set(kinds)) < len(kinds)):
+        raise Unparseable("multi_session_agenda", f"sessions not told apart: {kinds}")
+    items = []
+    for kind, entries in sessions:
+        for e in entries:
+            if e.children or _excluded(e.lines[0]) or _none_below(e.lines):
+                continue
+            label = ".".join([str(e.parts[0]), "".join(str(p) for p in e.parts[1:])]) if len(e.parts) > 1 \
+                else str(e.parts[0])
+            top = e.parent.parent if len(e.parts) == 3 else e.parent
+            key = "".join(str(p) for p in e.parts).lower()
+            items.append({"label": label, "section_number": str(e.parts[0]),
+                          "item_number": "".join(str(p) for p in e.parts[1:]),
+                          "key": f"{kind}{key}" if len(sessions) > 1 else key,
+                          "heading": _heading(top.lines[0]) if top else "", "title": _decimal_title(e.lines, label)})
+    return {"printed_date": printed, "header": "\n".join(header), "notice": None, "items": items,
+            "sessions": len(sessions)}
+
+
+PARSERS: dict[str, Parser] = {"outline": Parser(8, parse_outline), "flat": Parser(1, parse_flat),
+                              "lettered": Parser(1, parse_lettered), "decimal": Parser(1, parse_decimal)}
 
 
 def extract_text(data: bytes) -> str:

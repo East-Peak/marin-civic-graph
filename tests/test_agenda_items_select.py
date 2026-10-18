@@ -224,6 +224,43 @@ def test_the_files_session_must_be_the_meetings(header, title, siblings, reason)
     assert ai.session_hold(header, title, siblings=siblings) == reason
 
 
+@pytest.mark.parametrize("header, meeting, siblings, reason", [
+    # `session: {match: exact}`: with a same-day sibling the kinds must be equal
+    ("HARBORVIEW CITY COUNCIL SPECIAL CLOSED SESSION", "meeting 2026 04 06 harborview closed session", True, None),
+    ("HARBORVIEW CITY COUNCIL SPECIAL CLOSED SESSION", "meeting 2026 04 06 harborview", True,
+     "agenda_session_mismatch"),
+    ("HARBORVIEW CITY COUNCIL SPECIAL CLOSED SESSION", "meeting 2026 04 06 harborview special", True,
+     "agenda_session_mismatch"),
+    ("HARBORVIEW CITY COUNCIL SPECIAL MEETING", "meeting 2026 04 06 harborview closed session", True,
+     "agenda_session_mismatch"),
+    ("HARBORVIEW CITY COUNCIL SPECIAL MEETING", "meeting 2026 04 06 harborview special", True, None),
+    ("REGULAR MEETING AT 6:00 P.M.", "meeting 2026 04 06 harborview", True, None),
+    ("REGULAR MEETING AT 6:00 P.M.", "meeting 2026 04 06 harborview closed session", True, "agenda_session_mismatch"),
+    # without one, only a closed-session file under a meeting known as regular holds
+    ("HARBORVIEW CITY COUNCIL SPECIAL CLOSED SESSION", "meeting 2023 12 06 harborview special", False, None),
+    ("HARBORVIEW CITY COUNCIL SPECIAL CLOSED SESSION", "meeting 2023 12 06 harborview", False,
+     "agenda_session_mismatch"),
+    ("HARBORVIEW CITY COUNCIL SPECIAL MEETING", "meeting 2023 12 06 harborview", False, None),
+])
+def test_an_exact_session_rule_matches_the_files_kind_to_the_meetings(header, meeting, siblings, reason):
+    assert ai.session_hold(header, meeting, siblings=siblings, exact=True) == reason
+
+
+def test_a_configured_session_source_reads_the_meetings_title_and_id():
+    config = _config(agenda_items={**BLOCK, "session": {"from": ["title", "id"], "match": "exact"}})
+    meetings = {"meeting-2026-10-06-lakeport-closed-session": _meeting(
+        "2026-10-06", records=[_agenda("m", 1)], title="Lakeport Town Council meeting")}
+    [pick] = ai.select(meetings, config, ledger={}, today="2026-10-18")["selected"]
+    assert pick["session_text"] == "Lakeport Town Council meeting meeting 2026 10 06 lakeport closed session"
+    assert pick["title"] == "Lakeport Town Council meeting"
+
+
+def test_without_a_session_block_a_pick_is_exactly_as_before():
+    meetings = {"meeting-a": _meeting("2026-10-06", records=[_agenda("meeting-a", 1)], title="Town Council Meeting")}
+    [pick] = ai.select(meetings, _config(), ledger={}, today="2026-10-18")["selected"]
+    assert set(pick) == {"meeting_id", "meeting_date", "record_id", "url", "retry", "title", "siblings"}
+
+
 def test_a_pick_knows_its_title_and_whether_it_has_a_same_day_sibling():
     meetings = {
         "meeting-a": _meeting("2026-10-06", records=[_agenda("meeting-a", 1)], title="Town Council Meeting"),
@@ -257,3 +294,18 @@ def test_a_later_flip_without_a_qualified_parser_stays_ineligible():
         for config in yaml.safe_load((REPO / "registry" / f"{name}-sources.yaml").read_text())["sources"]:
             if config["id"] in ("san-rafael-city-council", "larkspur-city-council"):
                 assert ai.eligibility({**config, "schedule": "weekly"}) == (False, "no agenda_items block")
+
+
+def test_the_four_qualified_councils_stay_pinned_to_the_versions_they_were_measured_at():
+    import yaml
+
+    pinned = {}
+    for name in ai.MEETING_REGISTRIES:
+        path = REPO / "registry" / f"{name}-sources.yaml"
+        for config in (yaml.safe_load(path.read_text()) if path.is_file() else {}).get("sources") or []:
+            if config["id"] in COUNCILS:
+                block = config["agenda_items"]
+                pinned[config["id"]] = (block["parser"], block["qualified"]["version"])
+                assert ai.eligibility(config) == (True, "eligible")
+    assert pinned == {"belvedere-city-council": ("outline", 8), "corte-madera-town-council": ("outline", 8),
+                      "fairfax-town-council": ("flat", 1), "ross-town-council": ("outline", 8)}

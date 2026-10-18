@@ -155,6 +155,7 @@ def select(meetings: dict[str, dict], config: dict, *, ledger: dict, today: str,
            held_retry_cap: int = HELD_RETRY_CAP, held_retry_days: int = HELD_RETRY_DAYS) -> dict:
     """This run's candidates for one source: up to `cap` fresh ones, newest first, plus due held retries."""
     cap = config["agenda_items"].get("cap", CAP) if cap is None else cap
+    session = config["agenda_items"].get("session")
     users = _url_users(meetings, _kinds(config))
     council_days = Counter(m["props"].get("meeting_date") for m in meetings.values()
                            if body_class(config, m["props"]) == "council")
@@ -175,6 +176,9 @@ def select(meetings: dict[str, dict], config: dict, *, ledger: dict, today: str,
         pick = {"meeting_id": mid, "meeting_date": m["props"]["meeting_date"], "record_id": record["id"],
                 "url": record["source_url"], "retry": entry.get("state") == "held",
                 "title": m["props"].get("title") or "", "siblings": council_days[m["props"]["meeting_date"]] > 1}
+        if session:  # the meeting's session, read from the configured fields (an id's hyphens as spaces)
+            pick["session_text"] = " ".join(str(mid if f == "id" else m["props"].get(f) or "")
+                                            for f in session["from"]).replace("-", " ")
         if not pick["retry"]:
             fresh.append(pick)
         elif _days_since((entry.get("hold") or {}).get("last_attempt"), today) >= held_retry_days:
@@ -236,13 +240,26 @@ def _kind(text: str) -> set[str]:
                                  ("regular", r"regular|open\s+session")) if re.search(pattern, text, re.IGNORECASE)}
 
 
-def session_hold(header: str, title: str, *, siblings: bool) -> str | None:
+def _one_kind(kinds: set[str]) -> str:
+    return "closed" if "closed" in kinds else "special" if "special" in kinds else "regular"
+
+
+def session_hold(header: str, title: str, *, siblings: bool, exact: bool = False) -> str | None:
     """`agenda_session_mismatch` when the file's session is not the meeting's (Ross: one closed-session file filed
     under both of a day's meetings). With a same-day sibling the header must name the meeting's kind; without one,
     only a closed-only file (a closed session named, and no header line naming an open meeting) under a meeting
-    that is not a closed session holds."""
+    that is not a closed session holds.
+
+    `exact` (a source whose `session` block says `match: exact`, its meetings told apart by the configured fields):
+    file and meeting each have one kind (closed > special > regular); with a sibling they must be equal, without one
+    only a closed-session file under a regular meeting holds (a special meeting may be agendized as a closed session)."""
     said, named = _kind(header), _kind(title)
-    meeting = "closed" if "closed" in named else "special" if "special" in named else "regular"
+    meeting = _one_kind(named)
+    if exact:
+        file = _one_kind(said)
+        if siblings:
+            return None if file == meeting else "agenda_session_mismatch"
+        return "agenda_session_mismatch" if file == "closed" and meeting == "regular" else None
     open_line = any(re.search(r"regular|open\s+session|special", line, re.IGNORECASE)
                     and not _CLOSED.search(line) for line in header.splitlines())
     closed_only = "closed" in said and not open_line
@@ -362,7 +379,10 @@ def _fetch_and_parse(pick: dict, config: dict, *, gate, pacer, files: Path, pars
         except Unparseable as exc:
             raise AgendaHold(exc.reason, str(exc)) from None
         reason = parse_hold(parsed, pick["meeting_date"], block["body"].get("document")) \
-            or session_hold(parsed.get("header") or "", pick.get("title") or "", siblings=pick.get("siblings", False))
+            or session_hold(parsed.get("header") or "", pick.get("session_text", pick.get("title") or ""),
+                            siblings=pick.get("siblings", False),
+                            exact=(block.get("session") or {}).get("match") == "exact") \
+            or ("multi_session_sibling" if parsed.get("sessions", 1) > 1 and pick.get("siblings") else None)
         if reason:
             raise AgendaHold(reason)
         out["parsed"] = parsed
