@@ -313,7 +313,7 @@ def check_loaded(root: Path, run_id: str) -> dict:
     stale = {f for f, sha in manifest["files"].items() if rw._sha256(work / "bundle" / f) != sha}
     check("the bundle is the one its manifest hashed", not stale, sorted(stale))
     report = json.loads((work / "report.json").read_text())
-    committed = list(report["load"]["created"]["meetings"])
+    committed = sorted(set(report["load"]["created"]["meetings"]) | set(report["load"].get("already_loaded") or []))
     delta = agenda_delta.compare(work / "pre", work / "post", work / "bundle", committed=committed)
     check("stage delta: exactly the committed items and their edges", delta["ok"], delta["problems"][:10])
     ledger = json.loads((root / "data/ingest-runs/agenda-items-ledger.json").read_text())["meetings"]

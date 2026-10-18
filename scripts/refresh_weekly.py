@@ -916,8 +916,15 @@ def _newer_loaded_run(root: Path, run_id: str) -> str | None:
     return None
 
 
+def _agenda_interrupted(state: dict) -> bool:
+    return state["status"] == "loaded" and (state.get("agenda_items") or {}).get("status") == "running"
+
+
 def load(ctx: Context, run_id: str) -> dict:
     state = read_state(ctx.root, run_id)
+    if _agenda_interrupted(state):  # the meetings are loaded; finish the agenda stage, then export + bake
+        _persist(ctx, _agenda_stage(ctx, state, run_id))
+        return _export_and_bake(ctx, state, run_id, reconcile=True)
     _require(state, "load", "awaiting_load_approval", "load_failed")
     newer = _newer_loaded_run(ctx.root, run_id)
     if newer:
@@ -990,25 +997,30 @@ def _agenda_stage(ctx: Context, state: dict, run_id: str) -> dict:
     being clean. Re-running a run's load re-runs a finished stage as a no-op (its report is kept)."""
     work = run_dir(ctx.root, run_id) / AGENDA_DIR
     export = [ctx.python, "scripts/export_live_graph.py", "--backup", "--out-dir"]
-    steps = [] if (work / "pre" / "nodes.jsonl").is_file() else [("agenda-pre", export + [str(work / "pre")])]
+    steps = [] if _pre_complete(work) else [("agenda-pre", export + [str(work / "pre")])]
     steps += [("agenda-items", [ctx.python, "scripts/agenda_items.py", "run", "--root", str(ctx.root),
                                 "--run-id", run_id]),
               ("agenda-post", export + [str(work / "post")]),
               ("agenda-delta", [ctx.python, "scripts/agenda_delta.py", "--pre", str(work / "pre"),
                                 "--post", str(work / "post"), "--bundle", str(work / "bundle"),
                                 "--stage-report", str(work / "report.json"), "--out", str(work / "delta.json")])]
-    record: dict = {"ok": False}
+    record: dict = {"ok": False, "status": "running"}
     state["agenda_items"] = record
+    _persist(ctx, state)  # a process killed from here on leaves a run that _unresolved_load names and `load` resumes
     try:
         for name, cmd in steps:
             result = _step(ctx, run_id, name, cmd)
             if result.returncode != 0:
-                record["error"] = f"{name} {_failure(name, result)}"
+                record.update(status="failed", error=f"{name} {_failure(name, result)}")
                 return state
+            if name == "agenda-pre":  # only a finished export is a baseline a retry may reuse
+                _write_atomic(work / "pre" / "complete.json", json.dumps(
+                    {f: _sha256(work / "pre" / f) for f in STAGED_FILES}, sort_keys=True))
             if name == "agenda-items":
                 report = json.loads((work / "report.json").read_text(encoding="utf-8"))
                 if report.get("run_id") != run_id:
-                    record["error"] = f"agenda-items wrote a report for {report.get('run_id')!r}, not this run"
+                    record.update(status="failed",
+                                  error=f"agenda-items wrote a report for {report.get('run_id')!r}, not this run")
                     return state
                 record["sources"] = _agenda_summary(report)
         delta = json.loads((work / "delta.json").read_text(encoding="utf-8"))
@@ -1016,15 +1028,23 @@ def _agenda_stage(ctx: Context, state: dict, run_id: str) -> dict:
         record["exports_sha256"] = {f"{side}/{f}": _sha256(work / side / f) for side in ("pre", "post")
                                     for f in STAGED_FILES}  # what check-loaded binds to
         if not delta.get("ok"):
-            record["error"] = "agenda-delta: the stage's writes are not exactly its committed items: " + \
-                "; ".join(delta.get("problems", [])[:5])
+            record.update(status="failed", error="agenda-delta: the stage's writes are not exactly its committed "
+                          "items: " + "; ".join(delta.get("problems", [])[:5]))
             return state
     except Exception as exc:  # the meetings are loaded either way: record it, never stop the run
         _print_crash(ctx)
-        record["error"] = f"agenda stage crashed: {type(exc).__name__}: {exc}"
+        record.update(status="failed", error=f"agenda stage crashed: {type(exc).__name__}: {exc}")
         return state
-    record["ok"] = True
+    record.update(ok=True, status="done")
     return state
+
+
+def _pre_complete(work: Path) -> bool:
+    marker = work / "pre" / "complete.json"
+    if not marker.is_file():
+        return False
+    want = json.loads(marker.read_text(encoding="utf-8"))
+    return all((work / "pre" / f).is_file() and _sha256(work / "pre" / f) == want.get(f) for f in STAGED_FILES)
 
 
 def _agenda_summary(report: dict) -> dict:
@@ -1036,6 +1056,7 @@ def _agenda_summary(report: dict) -> dict:
         cap = s.get("cap") or 1
         out[sid] = {"eligible": True, "loaded_meetings": len(s["loaded"]), "loaded_items": sum(s["loaded"].values()),
                     "held": dict(sorted(Counter(s["held"].values()).items())), "revised": len(s.get("revised") or {}),
+                    "revision_unchecked": len(s.get("revision_unchecked") or {}),
                     "backlog_after": s["backlog_after"], "catch_up_weeks": math.ceil(s["backlog_after"] / cap),
                     "held_waiting": s.get("held_waiting", 0), "unverifiable_legacy": s.get("unverifiable_legacy", 0)}
     return out
@@ -1306,7 +1327,8 @@ def _unresolved_load(root: Path) -> str | None:
     mid-load (its backup, taken just before the first load step, recorded; no outcome after)."""
     for path in sorted((root / RUNS_DIR).glob("*/state.json")):
         state = json.loads(path.read_text(encoding="utf-8"))
-        if state["status"] == "load_failed" or (state["status"] == "awaiting_load_approval" and "backup" in state):
+        if state["status"] == "load_failed" or (state["status"] == "awaiting_load_approval" and "backup" in state) \
+                or _agenda_interrupted(state):
             return path.parent.name
     return None
 
@@ -1471,15 +1493,18 @@ def _agenda_digest(state: dict) -> list[str]:
         lines += [f"**FAILED:** {agenda.get('error')}", ""]
     rows = [(sid, s) for sid, s in (agenda.get("sources") or {}).items()]
     if rows:
-        lines += ["| Source | Loaded (meetings / items) | Held | Revised | Backlog left | Catch-up weeks |",
-                  "|---|---:|---|---:|---:|---:|"]
+        lines += ["| Source | Loaded (meetings / items) | Held | Revised (unchecked) | Backlog left | Catch-up weeks "
+                  "| Legacy (no baseline) |", "|---|---:|---|---:|---:|---:|---:|"]
         for sid, s in rows:
             if not s["eligible"]:
-                lines.append(f"| {sid} | not eligible: {s['reason']} | | | | |")
+                lines.append(f"| {sid} | not eligible: {s['reason']} | | | | | |")
                 continue
             held = ", ".join(f"{reason} ×{n}" for reason, n in s["held"].items()) or "–"
+            if s.get("held_waiting"):
+                held += f"; {s['held_waiting']} waiting to retry"
             lines.append(f"| {sid} | {s['loaded_meetings']} / {s['loaded_items']} | {held} | {s['revised']} "
-                         f"| {s['backlog_after']} | {s['catch_up_weeks']} |")
+                         f"({s.get('revision_unchecked', 0)}) | {s['backlog_after']} | {s['catch_up_weeks']} "
+                         f"| {s.get('unverifiable_legacy', 0)} |")
         lines.append("")
     if agenda.get("delta"):
         d = agenda["delta"]

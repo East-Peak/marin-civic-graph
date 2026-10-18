@@ -411,7 +411,7 @@ def _run_stage(*, root, work, port, gate, today, run_id, parsers, extract, sleep
             eligible[config["id"]] = config
         elif config.get("agenda_items") or config.get("schedule") == "weekly":
             report["sources"][config["id"]] = {"eligible": False, "reason": reason}
-    ledger = _settle_pending(read_ledger(root), port, eligible, run_id)
+    ledger = _settle_pending(read_ledger(root), port, eligible, run_id, root, today)
 
     views: dict[str, dict] = {}
 
@@ -450,7 +450,8 @@ def _run_stage(*, root, work, port, gate, today, run_id, parsers, extract, sleep
         write_bundle(bundle, entries)
     manifest = json.loads((bundle / "manifest.json").read_text(encoding="utf-8"))
     for e in manifest["meetings"]:
-        ledger[e["meeting_id"]] = _ledger_entry(e, "pending", today, run_id)
+        ledger[e["meeting_id"]] = {**_ledger_entry(e, "pending", today, run_id),
+                                   "bundle": _ref(bundle, root)}
     write_ledger(root, ledger)
 
     rechecks = {sid: _recheck(config) for sid, config in eligible.items()}
@@ -459,7 +460,7 @@ def _run_stage(*, root, work, port, gate, today, run_id, parsers, extract, sleep
     for e in manifest["meetings"]:
         mid = e["meeting_id"]
         if mid in loaded["created"]["meetings"] or mid in loaded["already_loaded"]:
-            ledger[mid] = _ledger_entry(e, "loaded", today, run_id)
+            ledger[mid] = {**_ledger_entry(e, "loaded", today, run_id), "bundle": _ref(bundle, root)}
         else:
             ledger[mid] = _held(ledger.get(mid), e, load_holds.get(mid, "load_conflict"), today)
     for mid, r in results.items():
@@ -479,7 +480,10 @@ def _run_stage(*, root, work, port, gate, today, run_id, parsers, extract, sleep
             "cap": chosen["cap"],
             "backlog_after": chosen["backlog"] - sum(1 for p in chosen["selected"] if not p["retry"]),
             "held_waiting": chosen["held_waiting"], "unverifiable_legacy": chosen["unverifiable_legacy"],
-            "revised": {mid: r for mid, r in revised.items() if ledger[mid]["source_id"] == sid}}
+            "revised": {mid: e["revision"]["reason"] for mid, e in sorted(ledger.items())  # outstanding, every run
+                        if e.get("source_id") == sid and e.get("state") == "revised"},
+            "revision_unchecked": {mid: r["unchecked"] for mid, r in sorted(revised.items())
+                                   if "unchecked" in r and ledger[mid]["source_id"] == sid}}
     report["load"] = {k: loaded[k] for k in ("outcome", "holds", "already_loaded")} | {
         "created": loaded["created"]}
     _write_json(work / "report.json", report)
@@ -541,20 +545,25 @@ def _revisions(work: Path, eligible: dict, view, ledger: dict, today: str, gate,
             ledger[mid] = {**entry, "state": "revised", "revision": {**result, "detected": today}}
         elif "unchecked" not in result:
             ledger[mid] = {**entry, "last_checked": today}
-    return {mid: r["reason"] for mid, r in done.items() if r["reason"]}
+    return done
 
 
-def _settle_pending(ledger: dict, port, eligible: dict, run_id: str) -> dict:
-    """An earlier run's `pending` entry: loaded if its meeting carries exactly its items, else forgotten."""
+def _settle_pending(ledger: dict, port, eligible: dict, run_id: str, root: Path, today: str) -> dict:
+    """An earlier run's `pending` entry (its commit acknowledgement was lost): `loaded` only if the graph holds
+    exactly its bundle's items for the meeting; forgotten (selected again) if the meeting has no items; else
+    held `pending_mismatch` for a human."""
     stale = {mid: e for mid, e in ledger.items() if e["state"] == "pending" and e.get("loaded_run") != run_id}
     institutions = {eligible[e["source_id"]]["institution_id"] for e in stale.values() if e["source_id"] in eligible}
     items = {mid: m.get("item_ids") or [] for inst in sorted(institutions)
              for mid, m in _institution_meetings(port, inst).items()}
     for mid, e in stale.items():
-        if mid in items and sorted(items[mid]) == sorted(e["item_ids"]):
+        bundle = Path(root) / e["bundle"] if e.get("bundle") else None
+        if not items.get(mid):
+            del ledger[mid]
+        elif bundle and bundle.is_dir() and guarded_load.bundle_meeting_loaded(port, bundle, mid):
             ledger[mid] = {**e, "state": "loaded"}
         else:
-            del ledger[mid]
+            ledger[mid] = _held(e, e, "pending_mismatch", today)
     return ledger
 
 
@@ -572,6 +581,12 @@ def _hold_shared_content(results: dict[str, dict], ledger: dict) -> None:
             for mid in mids & set(results):
                 results[mid].update(hold="agenda_content_shared", detail=", ".join(sorted(mids - {mid})))
                 results[mid].pop("parsed", None)
+
+
+def _ref(path: Path, root: Path) -> str:
+    """A path as the ledger keeps it: relative to the root when inside it (a real run), else absolute."""
+    path, root = Path(path).resolve(), Path(root).resolve()
+    return path.relative_to(root).as_posix() if path.is_relative_to(root) else str(path)
 
 
 def _ledger_entry(e: dict, state: str, today: str, run_id: str) -> dict:

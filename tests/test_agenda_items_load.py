@@ -662,23 +662,17 @@ def test_a_resumed_run_keeps_its_selection_and_fetches_each_file_once(tmp_path, 
     assert again.calls == [] and report["sources"][SID]["loaded"] == {M1: 1}
 
 
-def test_an_earlier_runs_pending_entry_settles_from_the_graph(tmp_path, graph):
+def test_an_earlier_runs_pending_entry_that_never_committed_is_selected_again(tmp_path, graph):
     root = tmp_path / "root"
     _write_registry(root)
     _run(root, tmp_path, graph, {AGENDA.format(1): b"%PDF 2026-10-06|Fine"}, cap=1, run_id="r1")
     ledger = ai.read_ledger(root)
-    ledger[M1]["state"] = "pending"  # as if the ledger write after the commit was lost
-    ledger[M3] = {**ledger[M1], "meeting_date": "2026-09-01", "item_ids": ["agenda-item-never-loaded"],
-                  "record_id": _rid(M3), "url": AGENDA.format(3)}
+    ledger[M3] = {**ledger[M1], "state": "pending", "meeting_date": "2026-09-01",
+                  "item_ids": ["agenda-item-never-loaded"], "record_id": _rid(M3), "url": AGENDA.format(3)}
     ai.write_ledger(root, ledger)
     report = _run(root, tmp_path, gl.FakeGraphPort(graph.path), {AGENDA.format(3): b"%PDF 2026-09-01|Again"},
                   run="run2", run_id="r2", cap=1)
-    after = ai.read_ledger(root)
-    assert after[M1]["state"] == "loaded"  # its items are in the graph
     assert report["sources"][SID]["loaded"] == {M3: 1}  # never committed: selected again
-
-
-# --- session identity and the graph lock, through the stage ------------------------------------------------
 
 
 def _session_graph(tmp_path):
@@ -813,3 +807,49 @@ def test_new_arrivals_in_a_later_week_come_first_with_the_next_backlog_batch(tmp
     report = _run(root, tmp_path, gl.FakeGraphPort(graph.path), files, cap=2, run="w2", today="2026-10-17")
     assert report["sources"][SID]["loaded"] == {new: 1, M3: 1}  # the new meeting, then the next of the backlog
     assert report["sources"][SID]["backlog_after"] == 1
+
+
+# --- review (c1) ------------------------------------------------------------------------------------------
+
+
+def test_outstanding_revisions_are_reported_every_run_until_acted_on(tmp_path, graph):
+    root = tmp_path / "root"
+    port = _loaded_once(root, tmp_path, graph)
+    gate = _FakeGate({AGENDA.format(1): b"%PDF changed"})
+    _run(root, tmp_path, port, {}, gate=gate, cap=0, run="w2", today="2026-10-17")
+    report = _run(root, tmp_path, port, {}, gate=gate, cap=0, run="w3", today="2026-10-24")
+    assert report["sources"][SID]["revised"] == {M1: "content_changed"}
+
+
+def test_an_unchecked_revision_is_reported(tmp_path, graph):
+    root = tmp_path / "root"
+    port = _loaded_once(root, tmp_path, graph)
+    report = _run(root, tmp_path, port, {}, gate=_FakeGate({}), cap=0, run="w2", today="2026-10-17")
+    assert report["sources"][SID]["revision_unchecked"] == {M1: "fetch_failed"}
+    assert ai.read_ledger(root)[M1]["state"] == "loaded" and ai.read_ledger(root)[M1]["last_checked"] == "2026-10-10"
+
+
+def test_a_pending_entry_settles_only_on_an_exact_match_with_its_bundle(tmp_path, graph):
+    root = tmp_path / "root"
+    _write_registry(root)
+    _run(root, tmp_path, graph, {AGENDA.format(1): b"%PDF 2026-10-06|Fine"}, cap=1, run_id="r1")
+    ledger = ai.read_ledger(root)
+    ledger[M1]["state"] = "pending"
+    ai.write_ledger(root, ledger)
+    item = f"agenda-item-{SID}-101-4a"
+    with open(graph.path / "overlay.jsonl", "a") as fh:  # the graph's item differs from the bundle's
+        fh.write(json.dumps({"merge_node": {"id": item, "labels": ["AgendaItem"], "properties": {"title": "Edited"}}}) + "\n")
+    _run(root, tmp_path, gl.FakeGraphPort(graph.path), {}, run="run2", run_id="r2", cap=0)
+    entry = ai.read_ledger(root)[M1]
+    assert entry["state"] == "held" and entry["hold"]["reason"] == "pending_mismatch"
+
+
+def test_a_pending_entry_whose_items_match_its_bundle_exactly_settles_loaded(tmp_path, graph):
+    root = tmp_path / "root"
+    _write_registry(root)
+    _run(root, tmp_path, graph, {AGENDA.format(1): b"%PDF 2026-10-06|Fine"}, cap=1, run_id="r1")
+    ledger = ai.read_ledger(root)
+    ledger[M1]["state"] = "pending"
+    ai.write_ledger(root, ledger)
+    _run(root, tmp_path, gl.FakeGraphPort(graph.path), {}, run="run2", run_id="r2", cap=0)
+    assert ai.read_ledger(root)[M1]["state"] == "loaded"

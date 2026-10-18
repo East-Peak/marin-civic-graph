@@ -66,7 +66,9 @@ def main(argv: list[str] | None = None) -> int:
         parser.add_argument(flag, type=Path, required=True)
     args = parser.parse_args(argv)
     report = json.loads(args.stage_report.read_text(encoding="utf-8"))
-    result = compare(args.pre, args.post, args.bundle, committed=list(report["load"]["created"]["meetings"]))
+    load = report["load"]  # a commit whose acknowledgement was lost comes back as already_loaded: committed too
+    committed = sorted(set(load["created"]["meetings"]) | set(load.get("already_loaded") or []))
+    result = compare(args.pre, args.post, args.bundle, committed=committed)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=1) + "\n", encoding="utf-8")
     print(f"agenda delta: {'ok' if result['ok'] else 'PROBLEMS'} ({result['added_nodes']} nodes, "

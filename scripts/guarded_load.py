@@ -764,6 +764,14 @@ def _same_items(tx, meeting: dict, nodes: dict[str, dict]) -> bool:
     return sorted(tx.incident_edges(ids)) == sorted(want)
 
 
+def bundle_meeting_loaded(graph, bundle: Path, meeting_id: str) -> bool:
+    """Whether the graph holds exactly this bundle's items for the meeting (a lost commit acknowledgement)."""
+    manifest, nodes, _ = _read_bundle(bundle)
+    entry = next(m for m in manifest["meetings"] if m["meeting_id"] == meeting_id)
+    with graph.transaction(()) as tx:
+        return _same_items(tx, entry, {n["id"]: n for n in nodes})
+
+
 def load_agenda_bundle(graph, bundle: Path, *, recheck) -> dict:
     """Create one agenda-items bundle's nodes and edges in ONE transaction; nothing existing is written.
 

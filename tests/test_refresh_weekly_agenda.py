@@ -109,3 +109,56 @@ def test_a_weekly_run_with_a_failed_agenda_stage_pings_fail(root, ctx, world, pi
     world.exit_codes["agenda_items.py"] = 1
     assert rw.main(["weekly"], ctx) == 1
     assert pings and pings[-1][0].endswith("/fail") and "agenda items" in pings[-1][1]
+
+
+# --- review (c1) ------------------------------------------------------------------------------------------
+
+
+class Killed(BaseException):
+    """The process dies mid-step (not an Exception: nothing in the runner may catch it)."""
+
+
+def test_a_stage_killed_midway_blocks_later_runs_and_resumes_with_load(root, ctx, world):
+    ctx.agenda_items = True
+    assert rw.main(["stage"], ctx) == 0
+    real = AgendaWorld.__call__
+
+    def die(self, cmd, cwd, env, timeout):
+        if len(cmd) > 1 and Path(cmd[1]).name == "agenda_items.py":
+            raise Killed()
+        return real(self, cmd, cwd, env, timeout)
+
+    AgendaWorld.__call__ = die
+    try:
+        with pytest.raises(Killed):
+            rw.load(ctx, RUN)
+    finally:
+        AgendaWorld.__call__ = real
+    state = _state(root)
+    assert state["status"] == "loaded" and state["agenda_items"]["status"] == "running"
+    assert rw._unresolved_load(root) == RUN  # a weekly run would refuse to start over it
+    loads_before = world.scripts().count("normalize_meetings.py")
+    rw.main(["load", RUN], ctx)  # resumes the stage only, then export + bake
+    state = _state(root)
+    assert world.scripts().count("normalize_meetings.py") == loads_before
+    assert state["status"] == "awaiting_publish_approval" and state["agenda_items"]["ok"] is True
+    assert rw._unresolved_load(root) is None
+
+
+def test_a_pre_export_that_did_not_finish_is_taken_again(root, ctx, world):
+    ctx.agenda_items = True
+    assert rw.main(["stage"], ctx) == 0
+    pre = rw.run_dir(root, RUN) / "agenda-items" / "pre"
+    pre.mkdir(parents=True)
+    (pre / "nodes.jsonl").write_text('{"id": "half"}\n')  # an earlier attempt died after the nodes
+    rw.main(["load", RUN], ctx)
+    exports = [c for c in world.calls if len(c) > 1 and Path(c[1]).name == "export_live_graph.py"
+               and str(pre) in c]
+    assert exports and (pre / "complete.json").is_file()
+
+
+def test_the_digest_shows_legacy_and_waiting_holds(root, ctx, world):
+    world.stage_report["sources"]["lakeport-town-council"]["held_waiting"] = 2
+    _load(ctx)
+    digest = (rw.run_dir(root, RUN) / "digest.md").read_text().split("## Agenda items", 1)[1]
+    assert "| 4 |" in digest and "2 waiting to retry" in digest

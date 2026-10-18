@@ -81,3 +81,13 @@ def test_the_cli_writes_its_verdict(tmp_path):
     code = ad.main(["--pre", str(pre), "--post", str(post), "--bundle", str(bundle),
                     "--stage-report", str(tmp_path / "report.json"), "--out", str(out)])
     assert code == 0 and json.loads(out.read_text())["ok"] is True
+
+
+def test_a_recovered_commit_counts_as_committed(tmp_path):
+    pre = _export(tmp_path / "pre", BASE_NODES, BASE_EDGES)
+    post = _export(tmp_path / "post", BASE_NODES + [ITEM], BASE_EDGES + NEW_EDGES)
+    bundle = _bundle(tmp_path / "bundle")
+    (tmp_path / "report.json").write_text(json.dumps({"load": {"created": {"meetings": {}}, "already_loaded": [M]}}))
+    ad.main(["--pre", str(pre), "--post", str(post), "--bundle", str(bundle),
+             "--stage-report", str(tmp_path / "report.json"), "--out", str(tmp_path / "d.json")])
+    assert json.loads((tmp_path / "d.json").read_text())["ok"] is True
