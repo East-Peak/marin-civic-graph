@@ -260,3 +260,15 @@ def test_decimal_a_capitals_title_stops_before_a_lettered_list():
            "2. BUSINESS ITEMS\n   2.1 WINTER STORM PREPARATIONS\n       A. DECLARATION OF LOCAL EMERGENCY\n" \
            "       B. BUDGET IMPACTS\n3. ADJOURN\n"
     assert [i["title"] for i in ap.PARSERS["decimal"].parse(text)["items"]] == ["WINTER STORM PREPARATIONS"]
+
+
+def test_lettered_unparented_letters_restarting_after_a_session_title_hold():
+    text = "AGENDA\nHARBORVIEW CITY COUNCIL - MONDAY, MAY 4, 2026\n   a. First session business\n" \
+           "                REGULAR MEETING AT 6:00 P.M.\n   a. Second session business\nADJOURNMENT:\n"
+    assert _reason("lettered", text) == "multi_session_agenda"
+
+
+def test_decimal_a_minutes_document_is_not_an_agenda():
+    text = "MINUTES OF THE REGULAR MEETING of the Willow Bay City Council\nWednesday, March 18, 2020\n" \
+           "1. ROLL CALL\n2. BUSINESS ITEMS\n   2.1 Approved a contract.\n3. ADJOURN\n"
+    assert _reason("decimal", text) == "unparseable"

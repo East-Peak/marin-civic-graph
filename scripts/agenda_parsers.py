@@ -383,7 +383,7 @@ def parse_lettered(text: str) -> dict:
             continue
         if _SESSION_TITLE.search(line):  # another session's title inside the body
             session_lines.append(len(entries))
-            heading, top = None, None
+            heading, top, general, deepest = None, None, _Parent("GE", ""), None  # letters restart under nothing
             continue
         m = _LETTERED_TOP.match(line) if _indent(raw) <= 8 else None
         if m and (int(m.group(1)) == last + 1 or int(m.group(1)) == 1):
@@ -574,6 +574,8 @@ def parse_decimal(text: str) -> dict:
     if start is None:
         return _no_body(text, lines)
     header = lines[:start]
+    if any(_MINUTES_HEADING.match(line.strip()) for line in header):
+        raise Unparseable("unparseable", "a minutes document, not an agenda")
     printed = _printed_date(header)
     first_masthead = next((m for m in map(_MASTHEAD.search, header) if m), None)
     body = " ".join(first_masthead.group(1).split()) if first_masthead else None
