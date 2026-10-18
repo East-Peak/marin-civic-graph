@@ -8,6 +8,11 @@ no AgendaItems; newest first, up to the cap; held ones retried on their own slow
 through the robots gate with the source's host allowlist, parses it, and writes a normalized bundle that
 `guarded_load.load_agenda_bundle` creates in one transaction. Nothing existing is written or deleted. A meeting that
 does not fit holds alone, with a reason; it never loads as an empty success.
+
+The run's own directory holds every phase once (`<run>/agenda-items/`: selection, fetched results, bundle,
+report), so re-running the stage for a run resumes it with the same selection, and re-running a finished run
+does nothing. The ledger (data/ingest-runs/agenda-items-ledger.json) remembers, across runs, which agendas this
+stage loaded (url + sha256) and which are held.
 """
 from __future__ import annotations
 
@@ -17,22 +22,31 @@ import json
 import os
 import re
 import tempfile
+import time
 import urllib.error
 import urllib.request
 from collections import Counter
+from contextlib import nullcontext
 from datetime import date
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import yaml
 
 import guarded_load
 import robots_gate
-from agenda_parsers import PARSERS
+from agenda_parsers import PARSERS, Unparseable, extract_text
+from graph_lock import graph_lock
 
 MEETING_REGISTRIES = ("granicus", "civicplus", "drupal", "proudcity")  # registry/<name>-sources.yaml
+LEDGER = Path("data/ingest-runs/agenda-items-ledger.json")
 CAP = 20  # fresh candidates per source per run; `agenda_items.cap` overrides
 HELD_RETRY_DAYS = 28
 HELD_RETRY_CAP = 5
+REVISION_DAYS = 28  # a loaded agenda is re-checked weekly until this long after its meeting
+REVISION_EVERY = 6
+REVISION_CAP = 10  # re-checks per source per run, never from the cap
+MIN_SPACING = 5.0  # seconds between our requests to one host, on top of its Crawl-delay
 FETCH_TIMEOUT = 60
 MAX_BYTES = 50 * 1024 * 1024
 STATUS = "parsed_from_agenda"
@@ -168,7 +182,7 @@ def select(meetings: dict[str, dict], config: dict, *, ledger: dict, today: str,
         else:
             waiting += 1
     selected = fresh[:cap] + due[:held_retry_cap]
-    return {"selected": selected, "holds": holds, "excluded": dict(excluded), "backlog": len(fresh),
+    return {"selected": selected, "holds": holds, "excluded": dict(excluded), "backlog": len(fresh), "cap": cap,
             "held_waiting": waiting + max(0, len(due) - held_retry_cap)}
 
 
@@ -280,3 +294,344 @@ def write_bundle(path: Path, entries: list[dict]) -> Path:
     (tmp / "manifest.json").write_text(json.dumps(manifest, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     os.replace(tmp, path)
     return path
+
+
+# --- ledger ------------------------------------------------------------------------------------------------
+
+
+def _write_json(path: Path, value) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.")
+    with os.fdopen(fd, "w", encoding="utf-8") as fh:
+        json.dump(value, fh, indent=1, sort_keys=True)
+        fh.write("\n")
+    os.replace(tmp, path)
+
+
+def read_ledger(root: Path) -> dict:
+    path = Path(root) / LEDGER
+    return json.loads(path.read_text(encoding="utf-8"))["meetings"] if path.is_file() else {}
+
+
+def write_ledger(root: Path, meetings: dict) -> None:
+    _write_json(Path(root) / LEDGER, {"version": 1, "meetings": meetings})
+
+
+# --- the stage ---------------------------------------------------------------------------------------------
+
+
+class _Pacer:
+    def __init__(self, sleep, monotonic):
+        self.sleep, self.monotonic, self.last = sleep, monotonic, {}
+
+    def wait(self, url: str) -> None:
+        host = urlsplit(url).netloc.lower()
+        if host in self.last:
+            left = self.last[host] + MIN_SPACING - self.monotonic()
+            if left > 0:
+                self.sleep(left)
+        self.last[host] = self.monotonic()
+
+
+def _institution_meetings(port, institution_id: str) -> dict[str, dict]:
+    with port.transaction(constrained=()) as tx:
+        return tx.agenda_meetings(institution_id)
+
+
+def _fetch_and_parse(pick: dict, config: dict, *, gate, pacer, files: Path, parser, parser_tag, extract) -> dict:
+    """One selected meeting's result: {sha256, file, parsed} or {hold, detail}, plus the url."""
+    block = config["agenda_items"]
+    out = {"url": pick["url"]}
+    try:
+        pacer.wait(pick["url"])
+        data = fetch(gate, pick["url"], block["hosts"])
+        out["sha256"] = hashlib.sha256(data).hexdigest()
+        is_pdf = data[:4] == b"%PDF"
+        saved = files / f"{out['sha256']}.{'pdf' if is_pdf else 'html'}"
+        if not saved.exists():
+            saved.parent.mkdir(parents=True, exist_ok=True)
+            saved.write_bytes(data)
+        out["file"] = saved.name
+        if not is_pdf:
+            raise AgendaHold("not_pdf")
+        try:
+            text = extract(data)
+            if not text.strip():
+                raise AgendaHold("text_empty")
+            parsed = parser.parse(text)
+        except Unparseable as exc:
+            raise AgendaHold(exc.reason, str(exc)) from None
+        reason = parse_hold(parsed, pick["meeting_date"], block["body"].get("document")) \
+            or session_hold(parsed.get("header") or "", pick.get("title") or "", siblings=pick.get("siblings", False))
+        if reason:
+            raise AgendaHold(reason)
+        out["parsed"] = parsed
+    except AgendaHold as hold:
+        out.update(hold=hold.reason, detail=hold.detail)
+    out["parser"] = parser_tag
+    return out
+
+
+def _recheck(config: dict):
+    """The candidate predicate again, inside the load transaction, for one bundle meeting."""
+    def check(entry: dict, meetings: dict[str, dict]) -> str | None:
+        m = meetings.get(entry["meeting_id"])
+        status, reason, record = classify(entry["meeting_id"], m, config, _url_users(meetings, _kinds(config)))
+        if status != "candidate":
+            return reason
+        if (record["id"], record.get("source_url")) != (entry["record_id"], entry["url"]):
+            return "agenda_record_changed"
+        if m["props"].get("meeting_date") != entry["meeting_date"]:
+            return "meeting_date_changed"
+        return None
+    return check
+
+
+def run_stage(*, root: Path, run_dir: Path, port, gate, today: str, run_id: str = "", parsers=None,
+              extract=extract_text, sleep=None, monotonic=None, cap: int | None = None,
+              graph_uri: str | None = None) -> dict:
+    """The stage for one run; returns (and writes) its report. Re-running a finished run returns its report.
+
+    With `graph_uri`, the whole stage holds that graph's writer lock (scripts/graph_lock.py)."""
+    work = Path(run_dir) / "agenda-items"
+    if (work / "report.json").is_file():
+        return json.loads((work / "report.json").read_text(encoding="utf-8"))
+    with graph_lock(graph_uri) if graph_uri else nullcontext():
+        return _run_stage(root=root, work=work, port=port, gate=gate, today=today, run_id=run_id,
+                          parsers=PARSERS if parsers is None else parsers, extract=extract,
+                          sleep=sleep or time.sleep, monotonic=monotonic or time.monotonic, cap=cap)
+
+
+def _run_stage(*, root, work, port, gate, today, run_id, parsers, extract, sleep, monotonic, cap) -> dict:
+    verdicts = eligible_sources(root, parsers)
+    report = {"run_id": run_id, "today": today, "sources": {}}
+    eligible = {}
+    for config, ok, reason in verdicts:
+        if ok:
+            eligible[config["id"]] = config
+        elif config.get("agenda_items") or config.get("schedule") == "weekly":
+            report["sources"][config["id"]] = {"eligible": False, "reason": reason}
+    ledger = _settle_pending(read_ledger(root), port, eligible, run_id)
+
+    views: dict[str, dict] = {}
+
+    def view(sid: str) -> dict:  # the institution's meetings, read once per stage
+        if sid not in views:
+            views[sid] = _institution_meetings(port, eligible[sid]["institution_id"])
+        return views[sid]
+
+    pacer = _Pacer(sleep, monotonic)
+    revised = _revisions(work, eligible, view, ledger, today, gate, pacer)
+    write_ledger(root, ledger)
+    selection = _selection(work, eligible, view, ledger, today, cap)
+    results: dict[str, dict] = {}
+    for sid, chosen in selection.items():
+        config = eligible[sid]
+        name = config["agenda_items"]["parser"]
+        for pick in chosen["selected"]:
+            path = work / "fetched" / f"{pick['meeting_id']}.json"
+            if not path.is_file():  # each meeting is fetched once per run, even across a resumed stage
+                _write_json(path, {**pick, "source_id": sid, **_fetch_and_parse(
+                    pick, config, gate=gate, pacer=pacer, files=work / "files", parser=parsers[name],
+                    parser_tag=f"{name}@{parsers[name].version}", extract=extract)})
+            results[pick["meeting_id"]] = json.loads(path.read_text(encoding="utf-8"))
+    _hold_shared_content(results, ledger)
+
+    entries = []
+    for mid, r in results.items():
+        if "hold" not in r:
+            config = eligible[r["source_id"]]
+            nodes, edges = item_rows(mid, r["source_id"], r["record_id"], r["parsed"], r["parser"])
+            entries.append({"meeting_id": mid, "source_id": r["source_id"], "institution_id": config["institution_id"],
+                            "meeting_date": r["meeting_date"], "record_id": r["record_id"], "url": r["url"],
+                            "sha256": r["sha256"], "parser": r["parser"], "nodes": nodes, "edges": edges})
+    bundle = work / "bundle"
+    if not bundle.exists():
+        write_bundle(bundle, entries)
+    manifest = json.loads((bundle / "manifest.json").read_text(encoding="utf-8"))
+    for e in manifest["meetings"]:
+        ledger[e["meeting_id"]] = _ledger_entry(e, "pending", today, run_id)
+    write_ledger(root, ledger)
+
+    rechecks = {sid: _recheck(config) for sid, config in eligible.items()}
+    loaded = guarded_load.load_agenda_bundle(port, bundle, recheck=lambda e, ms: rechecks[e["source_id"]](e, ms))
+    load_holds = {h["meeting_id"]: h["reason"] for h in loaded["holds"]}
+    for e in manifest["meetings"]:
+        mid = e["meeting_id"]
+        if mid in loaded["created"]["meetings"] or mid in loaded["already_loaded"]:
+            ledger[mid] = _ledger_entry(e, "loaded", today, run_id)
+        else:
+            ledger[mid] = _held(ledger.get(mid), e, load_holds.get(mid, "load_conflict"), today)
+    for mid, r in results.items():
+        if "hold" in r:
+            ledger[mid] = _held(ledger.get(mid), r, r["hold"], today)
+    write_ledger(root, ledger)
+
+    for sid, chosen in selection.items():
+        mine = {mid: r for mid, r in results.items() if r["source_id"] == sid}
+        report["sources"][sid] = {
+            "eligible": True, "reason": "eligible",
+            "loaded": {mid: len(e["item_ids"]) for e in manifest["meetings"] for mid in [e["meeting_id"]]
+                       if e["source_id"] == sid and ledger[mid]["state"] == "loaded"},
+            "held": {**{h["meeting_id"]: h["reason"] for h in chosen["holds"]},
+                     **{mid: ledger[mid]["hold"]["reason"] for mid in mine if ledger[mid]["state"] == "held"}},
+            "selected": len(chosen["selected"]), "excluded": chosen["excluded"], "backlog": chosen["backlog"],
+            "cap": chosen["cap"],
+            "backlog_after": chosen["backlog"] - sum(1 for p in chosen["selected"] if not p["retry"]),
+            "held_waiting": chosen["held_waiting"], "unverifiable_legacy": chosen["unverifiable_legacy"],
+            "revised": {mid: r for mid, r in revised.items() if ledger[mid]["source_id"] == sid}}
+    report["load"] = {k: loaded[k] for k in ("outcome", "holds", "already_loaded")} | {
+        "created": loaded["created"]}
+    _write_json(work / "report.json", report)
+    return report
+
+
+def _selection(work: Path, eligible: dict, view, ledger: dict, today: str, cap: int | None) -> dict:
+    """This run's selection, made once and kept: a resumed stage never reselects."""
+    path = work / "selection.json"
+    if path.is_file():
+        return json.loads(path.read_text(encoding="utf-8"))
+    selection = {}
+    for sid, config in eligible.items():
+        meetings = view(sid)
+        selection[sid] = select(meetings, config, ledger=ledger, today=today, cap=cap)
+        selection[sid]["unverifiable_legacy"] = sum(1 for mid, m in meetings.items()
+                                                    if m.get("item_ids") and mid not in ledger)
+    _write_json(path, selection)
+    return selection
+
+
+def _revision_due(entry: dict, today: str) -> bool:
+    return (entry.get("state") == "loaded" and _days_since(entry.get("meeting_date"), today) <= REVISION_DAYS
+            and _days_since(entry.get("last_checked"), today) >= REVISION_EVERY)
+
+
+def _revisions(work: Path, eligible: dict, view, ledger: dict, today: str, gate, pacer) -> dict:
+    """Re-check the agendas this stage loaded, weekly until REVISION_DAYS after the meeting: a changed url (no
+    fetch) or new bytes at the same url marks the entry `revised` (reported, never re-parsed, items untouched).
+    Legacy items have no baseline and are never fetched. Results are kept per run, so a resumed stage reuses them."""
+    path = work / "revisions.json"
+    if path.is_file():
+        done = json.loads(path.read_text(encoding="utf-8"))
+    else:
+        done = {}
+        for sid, config in eligible.items():
+            due = sorted((mid for mid, e in ledger.items() if e.get("source_id") == sid and _revision_due(e, today)),
+                         key=lambda mid: ledger[mid]["meeting_date"], reverse=True)[:REVISION_CAP]
+            meetings = view(sid) if due else {}
+            for mid in due:
+                entry = ledger[mid]
+                record = next((r for r in (meetings.get(mid) or {}).get("records", ()) if r["id"] == entry["record_id"]),
+                              None)
+                if record is None or record.get("source_url") != entry["url"]:
+                    done[mid] = {"reason": "url_changed", "url": (record or {}).get("source_url")}
+                    continue
+                try:
+                    pacer.wait(entry["url"])
+                    sha = hashlib.sha256(fetch(gate, entry["url"], config["agenda_items"]["hosts"])).hexdigest()
+                except AgendaHold as hold:
+                    done[mid] = {"reason": None, "unchecked": hold.reason}
+                    continue
+                done[mid] = {"reason": "content_changed", "sha256": sha} if sha != entry["sha256"] else {"reason": None}
+        work.mkdir(parents=True, exist_ok=True)
+        _write_json(path, done)
+    for mid, result in done.items():
+        entry = ledger[mid]
+        if result["reason"]:
+            ledger[mid] = {**entry, "state": "revised", "revision": {**result, "detected": today}}
+        elif "unchecked" not in result:
+            ledger[mid] = {**entry, "last_checked": today}
+    return {mid: r["reason"] for mid, r in done.items() if r["reason"]}
+
+
+def _settle_pending(ledger: dict, port, eligible: dict, run_id: str) -> dict:
+    """An earlier run's `pending` entry: loaded if its meeting carries exactly its items, else forgotten."""
+    stale = {mid: e for mid, e in ledger.items() if e["state"] == "pending" and e.get("loaded_run") != run_id}
+    institutions = {eligible[e["source_id"]]["institution_id"] for e in stale.values() if e["source_id"] in eligible}
+    items = {mid: m.get("item_ids") or [] for inst in sorted(institutions)
+             for mid, m in _institution_meetings(port, inst).items()}
+    for mid, e in stale.items():
+        if mid in items and sorted(items[mid]) == sorted(e["item_ids"]):
+            ledger[mid] = {**e, "state": "loaded"}
+        else:
+            del ledger[mid]
+    return ledger
+
+
+def _hold_shared_content(results: dict[str, dict], ledger: dict) -> None:
+    """One file under two meetings (two urls, same bytes) is no meeting's agenda for sure: hold them all."""
+    owners: dict[str, set[str]] = {}
+    for mid, r in results.items():
+        if r.get("sha256"):
+            owners.setdefault(r["sha256"], set()).add(mid)
+    for mid, entry in ledger.items():
+        if entry.get("sha256") and entry.get("state") in LOADED_STATES and entry["sha256"] in owners:
+            owners[entry["sha256"]].add(mid)
+    for sha, mids in owners.items():
+        if len(mids) > 1:
+            for mid in mids & set(results):
+                results[mid].update(hold="agenda_content_shared", detail=", ".join(sorted(mids - {mid})))
+                results[mid].pop("parsed", None)
+
+
+def _ledger_entry(e: dict, state: str, today: str, run_id: str) -> dict:
+    return {"state": state, "source_id": e["source_id"], "url": e["url"], "sha256": e["sha256"],
+            "record_id": e["record_id"], "item_ids": e["item_ids"], "meeting_date": e["meeting_date"],
+            "loaded_run": run_id, "last_checked": today}
+
+
+def _held(previous: dict | None, e: dict, reason: str, today: str) -> dict:
+    attempts = ((previous or {}).get("hold") or {}).get("attempts", 0) + 1
+    return {"state": "held", "source_id": e["source_id"], "url": e["url"], "sha256": e.get("sha256"),
+            "record_id": e["record_id"], "meeting_date": e["meeting_date"],
+            "hold": {"reason": reason, "detail": e.get("detail", ""), "attempts": attempts, "last_attempt": today}}
+
+
+# --- command line ------------------------------------------------------------------------------------------
+
+
+def main(argv: list[str] | None = None) -> int:
+    """`agenda_items.py run --root <repo> --run-id <id>`: the stage for one weekly run (refresh_weekly calls it).
+
+    The graph is NEO4J_URI (a checked Open Marin target, or fakegraph:/// in a rehearsal); every request goes
+    through the robots gate with the run's robots cache and its own request log. Writes
+    <run>/agenda-items/report.json; exits 0 when the stage ran (holds included), 1 when it could not."""
+    import argparse
+    import os
+
+    from run_lock import run_lock
+
+    parser = argparse.ArgumentParser(description="The weekly agenda-items stage")
+    sub = parser.add_subparsers(dest="command", required=True)
+    run = sub.add_parser("run")
+    run.add_argument("--root", type=Path, required=True)
+    run.add_argument("--run-id", required=True)
+    run.add_argument("--today", help="YYYY-MM-DD (default: the run id's date)")
+    args = parser.parse_args(argv)
+    root = args.root.resolve()
+    run_dir = root / "data" / "ingest-runs" / args.run_id
+    uri = os.environ.get("NEO4J_URI") or ""
+    auth = None
+    if not guarded_load.is_fake(uri):
+        from neo4j_target import check_target
+
+        check_target(uri)
+        auth = (os.environ["NEO4J_USER"], os.environ["NEO4J_PASSWORD"])
+    gate = robots_gate.RobotsGate(cache_path=run_dir / "robots.json",
+                                  request_log=run_dir / "logs" / "requests-agenda-items.jsonl")
+    with run_lock(root), guarded_load.open_port(uri, auth=auth, database=os.environ.get("NEO4J_DATABASE")) as port:
+        report = run_stage(root=root, run_dir=run_dir, port=port, gate=gate, run_id=args.run_id,
+                           today=args.today or args.run_id[:10], graph_uri=uri)
+    for sid, s in sorted(report["sources"].items()):
+        if s.get("eligible"):
+            print(f"{sid}: {len(s['loaded'])} loaded, {len(s['held'])} held, {len(s['revised'])} revised, "
+                  f"{s['backlog_after']} left")
+        else:
+            print(f"{sid}: not eligible ({s['reason']})")
+    return 0
+
+
+if __name__ == "__main__":
+    import sys
+
+    sys.exit(main())

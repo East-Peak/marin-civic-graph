@@ -38,6 +38,7 @@ import time
 import traceback
 import urllib.parse
 import urllib.request
+from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -76,6 +77,10 @@ SAVED_PAGE_SCHEDULE = "saved-page"  # never fetched (robots.txt says no); the op
 SAVED_PAGE_DIR = Path("data/raw/manual")  # <YYYY-MM-DD>/<adapter>/<source id>.html; never moved or deleted
 SAVED_PAGE_FRESH_DAYS = 14
 SAVED_PAGE_RUNBOOK = "docs/runbooks/saved-pages.md"
+# The weekly agenda-items stage (scripts/agenda_items.py; docs/runbooks/weekly-agenda-items.md). Off until its
+# activation commit: a rehearsal turns it on through Context.agenda_items.
+AGENDA_ITEMS_ENABLED = False
+AGENDA_DIR = "agenda-items"  # <run>/agenda-items/: the stage's phases, its report, and the pre/post exports
 MIN_FREE_BYTES = 5 * 1024**3  # live export + staged bake + a backup of the published one
 
 # Wall-clock ceiling, in seconds, for each external step; one that outlives it is killed and
@@ -92,6 +97,7 @@ STEP_TIMEOUTS = {
     "backup": 60 * 60, "load": 60 * 60, "reconciliation": 3 * 3600, "export": 3 * 3600, "bake": 2 * 3600,
     "snapshot": 10 * 60,
     "cf": 2 * 3600,  # each campaign-preparation step (export, normalize, plan, a bake, the scan)
+    "agenda": 90 * 60,  # agenda-pre / agenda-items / agenda-post / agenda-delta
 }
 DEFAULT_STEP_TIMEOUT = 60 * 60
 TIMEOUT_ENV = "OPEN_MARIN_TIMEOUT_"
@@ -240,6 +246,7 @@ class Context:
     sleep: Callable[[float], None] = lambda seconds: time.sleep(seconds)
     monotonic: Callable[[], float] = lambda: time.monotonic()
     prepare_campaign_exports: bool = True  # tests of the alarm alone switch preparation off (it has its own)
+    agenda_items: bool = AGENDA_ITEMS_ENABLED
 
 
 # --- files and state ---------------------------------------------------------
@@ -660,6 +667,7 @@ def _clean_on_disk(ctx: Context, run_id: str) -> bool:
     except (Refused, OSError, ValueError):
         return False
     return (persisted["status"] == "published" and all(s["ok"] for s in persisted["sources"].values())
+            and (persisted.get("agenda_items") or {}).get("ok", True)
             and persisted.get("snapshot", {}).get("ok") is True and digest == scrub(render_digest(persisted), ctx.env))
 
 
@@ -676,6 +684,8 @@ def _outcome_body(ctx: Context, state: dict | None, problem: str | None) -> str:
             lines.append("held sources (not refreshed): " + ", ".join(held))
         if state.get("error"):
             lines.append("error: " + quote(state["error"]))
+        if (state.get("agenda_items") or {}).get("ok") is False:
+            lines.append("agenda items stage failed: " + quote(state["agenda_items"].get("error") or ""))
         if state.get("snapshot", {}).get("ok") is False:
             lines.append("private data snapshot failed: " + quote(state["snapshot"]["error"]))
         lines.append(f"digest: {(RUNS_DIR / state['run_id'] / 'digest.md').as_posix()}")
@@ -968,7 +978,67 @@ def load(ctx: Context, run_id: str) -> dict:
         _print_crash(ctx)
         return _set_status(ctx, state, "load_failed", error=f"load crashed: {type(exc).__name__}: {exc}")
     _set_status(ctx, state, "loaded", loaded=[sid for sid in accepted if sid not in held], error=None)
+    if ctx.agenda_items:
+        _persist(ctx, _agenda_stage(ctx, state, run_id))
     return _export_and_bake(ctx, state, run_id, reconcile=True)
+
+
+def _agenda_stage(ctx: Context, state: dict, run_id: str) -> dict:
+    """The agenda-items stage, bracketed by two full exports whose delta must be exactly what it committed.
+
+    It never fails the run (the meetings are loaded); a failure is recorded, reported, and keeps the run from
+    being clean. Re-running a run's load re-runs a finished stage as a no-op (its report is kept)."""
+    work = run_dir(ctx.root, run_id) / AGENDA_DIR
+    export = [ctx.python, "scripts/export_live_graph.py", "--backup", "--out-dir"]
+    steps = [] if (work / "pre" / "nodes.jsonl").is_file() else [("agenda-pre", export + [str(work / "pre")])]
+    steps += [("agenda-items", [ctx.python, "scripts/agenda_items.py", "run", "--root", str(ctx.root),
+                                "--run-id", run_id]),
+              ("agenda-post", export + [str(work / "post")]),
+              ("agenda-delta", [ctx.python, "scripts/agenda_delta.py", "--pre", str(work / "pre"),
+                                "--post", str(work / "post"), "--bundle", str(work / "bundle"),
+                                "--stage-report", str(work / "report.json"), "--out", str(work / "delta.json")])]
+    record: dict = {"ok": False}
+    state["agenda_items"] = record
+    try:
+        for name, cmd in steps:
+            result = _step(ctx, run_id, name, cmd)
+            if result.returncode != 0:
+                record["error"] = f"{name} {_failure(name, result)}"
+                return state
+            if name == "agenda-items":
+                report = json.loads((work / "report.json").read_text(encoding="utf-8"))
+                if report.get("run_id") != run_id:
+                    record["error"] = f"agenda-items wrote a report for {report.get('run_id')!r}, not this run"
+                    return state
+                record["sources"] = _agenda_summary(report)
+        delta = json.loads((work / "delta.json").read_text(encoding="utf-8"))
+        record["delta"] = {k: delta.get(k) for k in ("ok", "added_nodes", "added_edges", "problem_count")}
+        record["exports_sha256"] = {f"{side}/{f}": _sha256(work / side / f) for side in ("pre", "post")
+                                    for f in STAGED_FILES}  # what check-loaded binds to
+        if not delta.get("ok"):
+            record["error"] = "agenda-delta: the stage's writes are not exactly its committed items: " + \
+                "; ".join(delta.get("problems", [])[:5])
+            return state
+    except Exception as exc:  # the meetings are loaded either way: record it, never stop the run
+        _print_crash(ctx)
+        record["error"] = f"agenda stage crashed: {type(exc).__name__}: {exc}"
+        return state
+    record["ok"] = True
+    return state
+
+
+def _agenda_summary(report: dict) -> dict:
+    out = {}
+    for sid, s in sorted(report["sources"].items()):
+        if not s.get("eligible"):
+            out[sid] = {"eligible": False, "reason": s.get("reason")}
+            continue
+        cap = s.get("cap") or 1
+        out[sid] = {"eligible": True, "loaded_meetings": len(s["loaded"]), "loaded_items": sum(s["loaded"].values()),
+                    "held": dict(sorted(Counter(s["held"].values()).items())), "revised": len(s.get("revised") or {}),
+                    "backlog_after": s["backlog_after"], "catch_up_weeks": math.ceil(s["backlog_after"] / cap),
+                    "held_waiting": s.get("held_waiting", 0), "unverifiable_legacy": s.get("unverifiable_legacy", 0)}
+    return out
 
 
 def meeting_load_cmd(ctx: Context, sid: str, source: dict, report: Path) -> list[str]:
@@ -1340,6 +1410,7 @@ def render_digest(state: dict) -> str:
     if failures:
         lines += ["## Failures", "", *(f"- **{sid}**: {'; '.join(s['reasons'])}" for sid, s in failures), ""]
     lines += _saved_pages_digest(state)
+    lines += _agenda_digest(state)
     if state.get("votes_minutes"):
         lines += votes_refresh.render_digest_section(state["votes_minutes"])
     if state.get("bake"):
@@ -1389,6 +1460,32 @@ def _saved_pages_digest(state: dict) -> list[str]:
               f"`{(SAVED_PAGE_DIR / state['run_id'][:10] / p['adapter'] / f'{sid}.html').as_posix()}`"
               for sid, p in due]
     return lines + [""]
+
+
+def _agenda_digest(state: dict) -> list[str]:
+    agenda = state.get("agenda_items")
+    if not agenda:
+        return []
+    lines = ["## Agenda items", ""]
+    if not agenda["ok"]:
+        lines += [f"**FAILED:** {agenda.get('error')}", ""]
+    rows = [(sid, s) for sid, s in (agenda.get("sources") or {}).items()]
+    if rows:
+        lines += ["| Source | Loaded (meetings / items) | Held | Revised | Backlog left | Catch-up weeks |",
+                  "|---|---:|---|---:|---:|---:|"]
+        for sid, s in rows:
+            if not s["eligible"]:
+                lines.append(f"| {sid} | not eligible: {s['reason']} | | | | |")
+                continue
+            held = ", ".join(f"{reason} ×{n}" for reason, n in s["held"].items()) or "–"
+            lines.append(f"| {sid} | {s['loaded_meetings']} / {s['loaded_items']} | {held} | {s['revised']} "
+                         f"| {s['backlog_after']} | {s['catch_up_weeks']} |")
+        lines.append("")
+    if agenda.get("delta"):
+        d = agenda["delta"]
+        lines += [f"Stage delta (full exports before/after): {'exact' if d['ok'] else 'PROBLEMS'} — "
+                  f"{d['added_nodes']} nodes, {d['added_edges']} relationships added.", ""]
+    return lines
 
 
 def latest_run_id(root: Path) -> str | None:
