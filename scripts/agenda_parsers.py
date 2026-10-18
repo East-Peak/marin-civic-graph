@@ -128,6 +128,7 @@ class _Entry:
     children: int = 0
     parent: "_Entry | None" = None
     next_child: int = 0  # index of the letter (or number) the next child must carry
+    child_indent: int | None = None  # the indent of its bare-letter children (a deeper list is description)
 
 
 _L2_NUMBERED = re.compile(r"^(\d{1,2})\.?([A-Za-z])(?:\.\s*|\s+)(\S.*)$")
@@ -171,7 +172,8 @@ def parse_outline(text: str) -> dict:
         elif l1 and m2 and int(m2.group(1)) == l1.parts[0] and m2.group(2).upper() == string.ascii_uppercase[l1.next_child]:
             entry = _Entry(2, (l1.parts[0], m2.group(2).upper()), f"{l1.parts[0]}.{m2.group(2)}", indent,
                            [m2.group(3)], parent=l1)
-        elif l1 and b2 and indent > l1.indent and b2.group(1).upper() == string.ascii_uppercase[l1.next_child]:
+        elif l1 and b2 and indent > l1.indent and b2.group(1).upper() == string.ascii_uppercase[l1.next_child] \
+                and (l1.child_indent is None or abs(indent - l1.child_indent) <= 2):  # siblings share an indent
             entry = _Entry(2, (l1.parts[0], b2.group(1).upper()), f"{l1.parts[0]}.{b2.group(1)}", indent,
                            [b2.group(2)], parent=l1)
         elif m1 and top and int(m1.group(1)) == (l1.parts[0] + 1 if l1 else 1):
@@ -184,6 +186,8 @@ def parse_outline(text: str) -> dict:
         if entry.parent:
             entry.parent.children += 1
             entry.parent.next_child += 1
+            if entry.level == 2 and b2 and entry.parent.child_indent is None and not m2:
+                entry.parent.child_indent = indent
         if entry.level == 1:
             l1, l2 = entry, None
         elif entry.level == 2:
@@ -254,7 +258,7 @@ def parse_flat(text: str) -> dict:
             "items": items}
 
 
-PARSERS: dict[str, Parser] = {"outline": Parser(2, parse_outline), "flat": Parser(1, parse_flat)}
+PARSERS: dict[str, Parser] = {"outline": Parser(3, parse_outline), "flat": Parser(1, parse_flat)}
 
 
 def extract_text(data: bytes) -> str:

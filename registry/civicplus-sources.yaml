@@ -13,7 +13,7 @@ sources:
       parser: outline
       hosts: [cortemadera.gov]
       body: {category: ["Town Council"], document: "Town Council"}
-      qualified: {parser: outline, version: 2, report: "~/open-marin-staging/weekly-agenda-items/REPORT.md#corte-madera-town-council"}
+      qualified: {parser: outline, version: 3, report: "~/open-marin-staging/weekly-agenda-items/REPORT.md#corte-madera-town-council"}
     floors:
       note: >-
         The ledger seed came from the April capture, which held every CivicPlus
