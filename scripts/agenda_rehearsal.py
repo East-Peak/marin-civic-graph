@@ -232,15 +232,23 @@ def _title_ok(a: str, b: str) -> bool:
 
 
 def target_checks(created_by: dict[str, dict], expected: dict, targets) -> list[dict]:
-    """Per named target: it loaded items in some variant, and exactly the expected ones (both nonempty)."""
+    """Per named target: it loaded items in some variant, exactly the expected ones (both nonempty), and its own
+    titles/headings agree with the annotations on >= 95% of them (a target's few items are not lost in the pool)."""
     out = []
     for target in targets:
-        have = {i for items in created_by.values() for i, n in items.items() if n["properties"]["source_id"] == target}
-        want = {i for v in expected.values() for i, p in v["items"].items() if p["source_id"] == target}
+        have = {i: n["properties"] for items in created_by.values() for i, n in items.items()
+                if n["properties"]["source_id"] == target}
+        want = {i: p for v in expected.values() for i, p in v["items"].items() if p["source_id"] == target}
         out.append({"check": f"acceptance: {target} loaded a nonempty, independently expected set",
-                    "ok": bool(have) and have == want,
-                    "detail": {"created": len(have), "expected": len(want), "missing": sorted(want - have)[:5],
-                               "extra": sorted(have - want)[:5]}})
+                    "ok": bool(have) and have.keys() == want.keys(),
+                    "detail": {"created": len(have), "expected": len(want), "missing": sorted(want.keys() - have)[:5],
+                               "extra": sorted(have.keys() - want)[:5]}})
+        both = sorted(have.keys() & want.keys())
+        titles = [i for i in both if not _title_ok(have[i]["title"], want[i]["title"])
+                  or not _title_ok(have[i].get("heading", ""), want[i].get("heading", ""))]
+        out.append({"check": f"acceptance: {target}: its titles/headings agree with the annotations on >= 95%",
+                    "ok": bool(both) and 1 - len(titles) / len(both) >= 0.95,
+                    "detail": {"disagree": titles[:10], "of": len(both)}})
     return out
 
 

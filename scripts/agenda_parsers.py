@@ -81,9 +81,9 @@ def _heading(text: str) -> str:
     return string.capwords(text) if not re.search(r"[a-z]", text) else text
 
 
-def _printed_date(lines: list[str]) -> str | None:
+def _printed_date(lines: list[str], pattern: re.Pattern = _DATE) -> str | None:
     for line in lines:
-        m = _DATE.search(line)
+        m = pattern.search(line)
         if m:
             try:
                 return date(int(m.group(3)), _MONTHS.index(m.group(1).lower()) + 1, int(m.group(2))).isoformat()
@@ -302,9 +302,15 @@ _ROMAN_POINT = re.compile(r"^[ivx]{1,4}\.\s")  # a roman point under an item: it
 _SESSION_TITLE = re.compile(r"\bMEETING\s+AT\s+\d{1,2}(?::\d{2})?\s*[AP]\.?\s*M", re.IGNORECASE)
 _OTHER_BODY = re.compile(r"\b(AGENCY|AUTHORITY|DISTRICT|BOARD)\b")
 _ONLY_NONE = re.compile(r"^(?:[^:]*:\s*)?[-–—\s]*NONE\.?$", re.IGNORECASE)
-_WRAPS = re.compile(r"(?:[-,–—]|\b(?:and|or|of|the|for|to|in|an|a|with|at|on|by|from))$")
+_WRAPS = re.compile(r"(?:[-,–—&]|\b(?:and|or|of|the|for|to|in|an|a|with|at|on|by|from))$")
 _LETTERED_STOP = re.compile(r"^(Recommended\s+Action|[•*\-–]\s)", re.IGNORECASE)
 _MINUTES_HEADING = re.compile(r"^MINUTES\b")
+# lettered's date: a full month name not glued to a word before it, spaces, a 1-2 digit day, a 4-digit year ending there
+_EXACT_DATE = re.compile(rf"(?<![A-Za-z0-9_])({'|'.join(_MONTHS)}) +(\d{{1,2}}),? +(\d{{4}})(?![A-Za-z0-9_])",
+                         re.IGNORECASE)
+_SUBJECT = re.compile(r"^(?:title|position|position affected|name of case|case name|property):", re.IGNORECASE)
+_CLOSED_SESSION = re.compile(r"closed\s+session", re.IGNORECASE)
+_CAPTION = re.compile(r"\S\s+v\.?(?=\s|$)")  # "Ridley v. City …": a word, then v. or v standing alone
 
 
 def _indent(raw: str) -> int:
@@ -335,17 +341,32 @@ class _Parent:
     line: int = 0
 
 
-def _lettered_title(lines: list[str]) -> str:
-    """The entry's line, then each line that starts lower-case or "(", or follows a line ending mid-phrase
-    (a connective, comma, hyphen or dash): a wrapped subject; the description that follows starts a new line."""
+def _wrapped(lines: list[str]) -> tuple[str, int]:
+    """The first line, then each line that starts lower-case or "(", or follows a line ending mid-phrase (a
+    connective, comma, hyphen, dash or ampersand): a wrapped subject, and how many lines it took."""
     text = " ".join(_ODD.sub("", lines[0]).split())
-    for line in lines[1:]:
+    for n, line in enumerate(lines[1:], start=1):
         nxt = " ".join(_ODD.sub("", line).split())
         if not nxt or _LETTERED_STOP.match(nxt) or _ROMAN_POINT.match(nxt) \
                 or not (nxt[0].islower() or nxt[0] == "(" or _WRAPS.search(text)):
-            break
+            return text, n
         text = f"{text} {nxt}"
-    return text
+    return text, len(lines)
+
+
+def _lettered_title(lines: list[str], closed: bool = False) -> str:
+    """The entry's wrapped subject. A closed-session item's subject is boilerplate ("CONFERENCE WITH LEGAL
+    COUNSEL…"), so it takes " - " and the line that names its position, case or property, if one comes before a
+    blank line (a line beginning "v." is a roman point, not a case caption)."""
+    title, used = _wrapped(lines)
+    if closed:
+        for k in range(used, len(lines)):
+            line = " ".join(_ODD.sub("", lines[k]).split())
+            if not line:
+                break
+            if _SUBJECT.match(line) or (_CAPTION.search(line) and not line.startswith("v.")):
+                return f"{title} - {_wrapped(lines[k:])[0]}"
+    return title
 
 
 def _roman_ahead(lines: list[str], i: int) -> bool:
@@ -373,12 +394,12 @@ def _council_masthead(lines: list[str]) -> bool:
 
 def parse_lettered(text: str) -> dict:
     lines = _pages_joined(text)
-    dated = next((i for i, line in enumerate(lines) if _DATE.search(line)), len(lines))
+    dated = next((i for i, line in enumerate(lines) if _EXACT_DATE.search(line)), len(lines))
     first = next((i for i, raw in enumerate(lines) if (_LETTERED_TOP.match(raw.strip()) and _indent(raw) <= 8)
                   or _LETTER.match(raw.strip()) or (i > dated and _is_caps_heading(raw))), None)
     header = lines[:first] if first is not None else lines
-    notice = {"printed_date": _printed_date(header), "header": "\n".join(header), "notice": "cancellation",
-              "items": []}
+    printed = _printed_date(header, _EXACT_DATE)
+    notice = {"printed_date": printed, "header": "\n".join(header), "notice": "cancellation", "items": []}
     titled = any(_AGENDA_TITLE.match(line.strip()) for line in header) or _council_masthead(header)
     entry = next((i for i, raw in enumerate(lines) if (_LETTERED_TOP.match(raw.strip()) and _indent(raw) <= 8)
                   or _LETTER.match(raw.strip())), len(lines))
@@ -466,11 +487,11 @@ def parse_lettered(text: str) -> dict:
             continue
         numbered = parent.run is not None
         section = prefixes.get(parent.run, "") + parent.section if numbered else parent.section
+        heading = _heading(parent.lines[0]) if numbered else parent.heading
         items.append({"label": f"{parent.label}.{mark}" if numbered else mark, "section_number": section,
-                      "item_number": mark.upper(), "key": (section + mark).lower(),
-                      "heading": _heading(parent.lines[0]) if numbered else parent.heading,
-                      "title": _lettered_title(entry_lines)})
-    return {"printed_date": _printed_date(header), "header": "\n".join(header), "notice": None, "items": items}
+                      "item_number": mark.upper(), "key": (section + mark).lower(), "heading": heading,
+                      "title": _lettered_title(entry_lines, closed=bool(_CLOSED_SESSION.search(heading)))})
+    return {"printed_date": printed, "header": "\n".join(header), "notice": None, "items": items}
 
 
 # --- decimal: N. sections, N.M items, N.MA sub-items; one or more sessions to a document ---------------------
@@ -636,7 +657,7 @@ def parse_decimal(text: str) -> dict:
 
 
 PARSERS: dict[str, Parser] = {"outline": Parser(8, parse_outline), "flat": Parser(1, parse_flat),
-                              "lettered": Parser(4, parse_lettered), "decimal": Parser(1, parse_decimal)}
+                              "lettered": Parser(5, parse_lettered), "decimal": Parser(1, parse_decimal)}
 
 
 def extract_text(data: bytes) -> str:

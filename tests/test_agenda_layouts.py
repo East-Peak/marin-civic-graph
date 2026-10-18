@@ -35,7 +35,7 @@ def _reason(parser, text):
 
 
 def test_both_layouts_are_registered():
-    assert (ap.PARSERS["lettered"].version, ap.PARSERS["decimal"].version) == (4, 1)
+    assert (ap.PARSERS["lettered"].version, ap.PARSERS["decimal"].version) == (5, 1)
 
 
 # --- lettered ----------------------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ def test_lettered_closed_session_with_a_top_level_leaf():
         ("2a", "Closed Session", "CONFERENCE WITH LEGAL COUNSEL – ANTICIPATED LITIGATION, pursuant to "
                                  "Government Code Section 54956.9(d)(2): One potential claim."),
         ("2b", "Closed Session", "CONFERENCE WITH LEGAL COUNSEL—EXISTING LITIGATION, pursuant to "
-                                 "Government Code Section 54956.9(d)(1)"),
+                                 "Government Code Section 54956.9(d)(1) - Name of case: Doe v. City of Harborview"),
     ]
 
 
@@ -305,7 +305,7 @@ def test_lettered_a_council_masthead_with_a_session_line_is_an_agenda_title():
     assert _items(parsed) == [
         ("1", "", "Mayor Reyes to announce Closed Session items."),
         ("2a", "Closed Session", "CONFERENCE WITH LEGAL COUNSEL—EXISTING LITIGATION, pursuant to Government Code "
-                                 "Section 54956.9(d)(1)"),
+                                 "Section 54956.9(d)(1) - i. Name of case: Doe v. City of Harborview"),
         ("2b", "Closed Session", "CONFERENCE WITH LEGAL COUNSEL – ANTICIPATED LITIGATION, pursuant to Government "
                                  "Code Section 54956.9(d)(4): one potential case"),
     ]
@@ -330,3 +330,84 @@ def test_lettered_a_second_masthead_agenda_after_the_end_holds():
     one = (FIXTURES / "lettered-council-masthead.txt").read_text()
     other = one.replace("October 19, 2026", "November 2, 2026")
     assert _reason("lettered", one + "\n" + other) == "multi_session_agenda"
+
+
+# --- lettered v5: the `&` wrap, closed-session subjects, an exact date --------------------------------------
+
+def _lettered(body, head="AGENDA\nHARBORVIEW CITY COUNCIL - MONDAY, MAY 4, 2026\n"):
+    return ap.PARSERS["lettered"].parse(head + body + "ADJOURNMENT:\n")
+
+
+def test_lettered_a_title_ending_in_an_ampersand_wraps():
+    parsed = _lettered("1. Consent Calendar:\n   a. Agreement with Coast Pipe, Plumbing &\n      Drain Services\n"
+                       "      Authorize the City Manager to sign\n")
+    assert [i["title"] for i in parsed["items"]] == ["Agreement with Coast Pipe, Plumbing & Drain Services"]
+
+
+@pytest.mark.parametrize("first", ["Budget Hearing; Measure A", "Stipends for Boards; And", "Parks AND"])
+def test_lettered_a_capitalised_connective_does_not_wrap(first):
+    parsed = _lettered(f"1. Public Hearings:\n   a. {first}\n      Workplan for the Year\n")
+    assert [i["title"] for i in parsed["items"]] == [first]
+
+
+CLOSED = "CLOSED SESSION – THIRD FLOOR CONFERENCE ROOM\n  2. Closed Session:\n"
+
+
+@pytest.mark.parametrize("line", [
+    "Title: Harbor Master", "TITLE: Harbor Master", "Position: Harbor Master", "Position affected: Harbor Master",
+    "Name of case: Ridley v. City of Harborview", "Case name: Ridley and Others", "Property: Parcel 12 on the Spit",
+    "Ridley v. City of Harborview, Case No.", "Ridley, et al. v City of Harborview", "i. Name of case: Ridley v Gull",
+])
+def test_lettered_a_closed_session_item_takes_its_subject_line(line):
+    parsed = _lettered(CLOSED + "     a. PUBLIC EMPLOYMENT\n"
+                                "        Recruitment, Pursuant to Government Code Section 54957(b)\n"
+                                f"        {line}\n        Agency negotiator: Mayor Reyes\n")
+    assert [i["title"] for i in parsed["items"]] == [f"PUBLIC EMPLOYMENT - {line}"]
+
+
+def test_lettered_a_closed_session_subject_wraps_by_the_title_rule():
+    parsed = _lettered("CLOSED SESSION\n    a. CONFERENCE WITH REAL PROPERTY NEGOTIATORS\n"
+                       "       Property: Parcel 12 on the Harbor Spit &\n       Parcel 14\n"
+                       "       Agency negotiator: Mayor\n")
+    assert [(i["key"], i["title"]) for i in parsed["items"]] == [
+        ("cla", "CONFERENCE WITH REAL PROPERTY NEGOTIATORS - Property: Parcel 12 on the Harbor Spit & Parcel 14")]
+
+
+def test_lettered_the_subject_line_comes_after_the_titles_own_lines():
+    parsed = _lettered(CLOSED + "     a. CONFERENCE WITH LEGAL COUNSEL—EXISTING LITIGATION, pursuant to\n"
+                                "        Government Code Section 54956.9(d)(1)\n"
+                                "        Name of case: Ridley v. City of Harborview, Case No.\n        HV-0042\n")
+    assert [i["title"] for i in parsed["items"]] == [
+        "CONFERENCE WITH LEGAL COUNSEL—EXISTING LITIGATION, pursuant to Government Code Section 54956.9(d)(1) - "
+        "Name of case: Ridley v. City of Harborview, Case No."]
+
+
+@pytest.mark.parametrize("body", [
+    CLOSED + "     a. CONFERENCE WITH LEGAL COUNSEL\n\n        Name of case: Ridley v. City of Harborview\n",  # a blank
+    CLOSED + "     a. CONFERENCE WITH LEGAL COUNSEL\n        v. Ridley and the Harbor District\n",  # a roman point
+    CLOSED + "     a. CONFERENCE WITH LEGAL COUNSEL\n        Agency negotiator: Mayor Reyes\n",  # no subject
+    "1. Consent Calendar:\n   a. Harbor Dredging Contract\n      Title: Dredging Phase Two\n",  # not a closed session
+    "1. Consent Calendar:\n   a. Settlement Approval\n      Ridley v. City of Harborview\n",
+    CLOSED + "     a. CONFERENCE WITH LEGAL COUNSEL\n     b. PUBLIC EMPLOYMENT\n        Title: Harbor Master\n",
+])
+def test_lettered_a_title_takes_no_subject_line_past_a_blank_a_roman_point_or_outside_a_closed_session(body):
+    titles = [i["title"] for i in _lettered(body)["items"]]
+    assert titles[0] in ("CONFERENCE WITH LEGAL COUNSEL", "Harbor Dredging Contract", "Settlement Approval")
+
+
+@pytest.mark.parametrize("header, printed", [
+    ("HARBORVIEW CITY COUNCIL - MONDAY, MAY 4, 2026", "2026-05-04"),
+    ("HARBORVIEW CITY COUNCIL - May 4 2026", "2026-05-04"),
+    ("HARBORVIEW CITY COUNCIL - MONDAY, SEPTMBER 21, 2026", None),  # a misspelt month is no date
+    ("HARBORVIEW CITY COUNCIL - Sept. 21, 2026", None),
+    ("HARBORVIEW CITY COUNCIL - May 4th, 2026", None),
+    ("HARBORVIEW CITY COUNCIL - May 4, 20260", None),
+    ("HARBORVIEW CITY COUNCIL - May 4, 2026th", None),
+    ("HARBORVIEW CITY COUNCIL - May\t4, 2026", None),  # spaces only
+    ("HARBORVIEW CITY COUNCIL - XMay 4, 2026", None),
+    ("HARBORVIEW CITY COUNCIL - February 30, 2026", None),  # not a real day
+    ("HARBORVIEW CITY COUNCIL - May 4, 20260 and May 11, 2026", "2026-05-11"),  # the first date on the line
+])
+def test_lettered_the_printed_date_is_the_headers_first_exact_date(header, printed):
+    parsed = _lettered("1. Reports:\n   a. Harbor Update\n", head=f"AGENDA\n{header}\n")
+    assert parsed["printed_date"] == printed

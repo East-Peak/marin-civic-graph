@@ -85,12 +85,17 @@ def test_a_weekly_override_exists_only_in_the_rehearsals_staging_registry(tmp_pa
     assert after == repo  # the repo's registry is never written
 
 
-def _created(*ids):  # an item id here is "<source>/<n>"
-    return {i: {"id": i, "labels": ["AgendaItem"], "properties": {"id": i, "source_id": i.split("/")[0]}} for i in ids}
+def _created(*ids, wrong=()):  # an item id here is "<source>/<n>"; `wrong`: ids whose title differs from expected
+    return {i: {"id": i, "labels": ["AgendaItem"], "properties": {
+        "id": i, "source_id": i.split("/")[0], "heading": "Consent", "title": "Other" if i in wrong else f"Item {i}"}}
+        for i in ids}
 
 
-EXPECTED = {"V1": {"items": {"harbor/1": {"source_id": "harbor"}}},
-            "V3": {"items": {"willow/1": {"source_id": "willow"}}}, "V4": {"items": {}}}
+def _expected(*ids):
+    return {i: {"source_id": i.split("/")[0], "heading": "Consent", "title": f"Item {i}"} for i in ids}
+
+
+EXPECTED = {"V1": {"items": _expected("harbor/1")}, "V3": {"items": _expected("willow/1")}, "V4": {"items": {}}}
 
 
 @pytest.mark.parametrize("created, ok", [
@@ -99,7 +104,18 @@ EXPECTED = {"V1": {"items": {"harbor/1": {"source_id": "harbor"}}},
     ({"V1": _created("harbor/1", "willow/1"), "V3": _created("willow/2"), "V4": {}}, [True, False]),  # not exact
 ])
 def test_each_named_target_needs_a_nonempty_load_equal_to_its_expected_items(created, ok):
-    assert [r["ok"] for r in ar.target_checks(created, EXPECTED, ["harbor", "willow"])] == ok
+    checks = ar.target_checks(created, EXPECTED, ["harbor", "willow"])
+    assert [r["ok"] for r in checks if "independently expected set" in r["check"]] == ok
+
+
+@pytest.mark.parametrize("wrong, ok", [((), True), (("harbor/7",), True), (("harbor/7", "harbor/8"), False)])
+def test_each_named_targets_own_titles_and_headings_must_agree_on_95_percent_of_its_items(wrong, ok):
+    ids = [f"harbor/{n}" for n in range(20)]  # 1 of 20 wrong is 95%; 2 is not
+    created = {"V1": _created(*ids[:12], wrong=wrong), "V3": _created(*ids[12:], "willow/1", wrong=wrong), "V4": {}}
+    expected = {"V1": {"items": _expected(*ids[:12])}, "V3": {"items": _expected(*ids[12:], "willow/1")},
+                "V4": {"items": {}}}
+    titles = [r for r in ar.target_checks(created, expected, ["harbor"]) if "titles/headings" in r["check"]]
+    assert [r["ok"] for r in titles] == [ok] and titles[0]["detail"]["of"] == 20
 
 def _run_dir(tmp_path, *, tamper=None):
     """A finished run with its pinned stage inputs, as refresh_weekly leaves it."""
