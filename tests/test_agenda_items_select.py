@@ -242,10 +242,9 @@ def test_a_pick_knows_its_title_and_whether_it_has_a_same_day_sibling():
 COUNCILS = ["belvedere-city-council", "corte-madera-town-council", "fairfax-town-council", "ross-town-council"]
 
 
-def test_the_registry_configures_four_weekly_councils_none_qualified_before_their_evidence():
+def test_the_registry_makes_exactly_the_four_qualified_weekly_councils_eligible():
     verdicts = {c["id"]: (ok, why) for c, ok, why in ai.eligible_sources(REPO)}
-    assert not any(ok for ok, _ in verdicts.values())
-    assert {sid: verdicts[sid][1] for sid in COUNCILS} == {sid: "parser not qualified" for sid in COUNCILS}
+    assert sorted(sid for sid, (ok, _) in verdicts.items() if ok) == COUNCILS
     assert verdicts["san-rafael-city-council"] == (False, "schedule manual")
     assert verdicts["larkspur-city-council"] == (False, "schedule manual")
     assert all(why == "adapter granicus" for c, ok, why in ai.eligible_sources(REPO) if c["adapter"] == "granicus")

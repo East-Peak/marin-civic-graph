@@ -52,9 +52,10 @@ ledger; and checks that no AgendaItem or Decision that existed before the run ch
 backup vs post export). PASS is required.
 
 ## Activation
-The stage ships disabled (`AGENDA_ITEMS_ENABLED = False` in scripts/refresh_weekly.py) and no source is qualified
-in the repo registry until its held-out evidence is recorded. Activation is a separate commit that sets the flag
-(and, if not yet done, the `qualified` blocks), merged only after the San Rafael and Larkspur flips have landed
+The stage ships disabled (`AGENDA_ITEMS_ENABLED = False` in scripts/refresh_weekly.py). The registry qualifies
+Corte Madera, Fairfax, Belvedere and Ross (outline v6 / flat v1; evidence in the staging REPORT); San Rafael and
+Larkspur have no `agenda_items` block, so their flips do not enable them. Activation is a separate commit that sets
+the flag, merged only after the San Rafael and Larkspur flips have landed
 (or explicitly excluding whichever has not), on the same terms as docs/runbooks/san-rafael-weekly.md
 "Activation": inspect a weekly run, rebase, re-gate (`pytest tests/ -q -m "not operator_data"` and
 `cd app && npm run verify`), push, then fast-forward the canonical checkout to exactly the gated sha inside the

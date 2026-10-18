@@ -64,9 +64,11 @@ def test_qualification_exists_only_in_the_rehearsals_staging_registry(tmp_path):
                for s in yaml.safe_load(p.read_text()).get("sources") or []}
     assert sources["ross-town-council"]["agenda_items"]["qualified"]["report"] == "rehearsal only"
     assert sources["ross-town-council"]["agenda_items"]["cap"] == 4
-    assert "qualified" not in sources["fairfax-town-council"]["agenda_items"]
-    repo = yaml.safe_load((REPO / "registry" / "drupal-sources.yaml").read_text())["sources"][0]
-    assert "qualified" not in repo["agenda_items"]  # the repo's registry is untouched
+    repo = {s["id"]: s for p in (REPO / "registry").glob("*-sources.yaml")
+            for s in yaml.safe_load(p.read_text()).get("sources") or []}
+    assert sources["fairfax-town-council"]["agenda_items"].get("qualified") == \
+        repo["fairfax-town-council"]["agenda_items"].get("qualified")  # not named: the repo's own, unchanged
+    assert repo["ross-town-council"]["agenda_items"]["qualified"]["report"] != "rehearsal only"  # repo untouched
 
 
 def _run_dir(tmp_path, *, tamper=None):
