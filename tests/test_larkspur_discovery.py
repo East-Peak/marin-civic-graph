@@ -51,7 +51,7 @@ def _stage(tmp_path, schedule: str):
     civicplus = root / "registry" / "civicplus-sources.yaml"
     registry = yaml.safe_load(civicplus.read_text())
     [larkspur] = [s for s in registry["sources"] if s["id"] == SID]
-    assert larkspur["schedule"] == "manual"  # as committed
+    assert larkspur["schedule"] == "weekly"  # as committed
     larkspur["schedule"] = schedule
     civicplus.write_text(yaml.safe_dump(registry, sort_keys=False))
     recorder = Recorder(root)

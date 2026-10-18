@@ -91,10 +91,7 @@ sources:
     jurisdiction_id: place-larkspur
     institution_id: org-larkspur-city-council
     backfill_from: "2019-01-01"
-    schedule: manual
-    schedule_note: >-
-      Added 2026-10-18 off the schedule; it joins the weekly run once its guarded load and
-      rehearsal are in (docs/runbooks/larkspur-council.md).
+    schedule: weekly
     identity: native-only
     create_missing_stubs: true
     floors:
