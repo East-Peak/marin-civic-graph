@@ -54,10 +54,20 @@ ARTIFACT_KINDS = {
     "mp4": {"meeting_video_file"},
 }
 FAKE_SCHEME = "fakegraph"
+AGENDA_MEETING_PROPS = ("meeting_date", "title", "category", "meeting_type")
+AGENDA_EDGES = ("PART_OF_MEETING", "EVIDENCED_BY")
 
 
 class GraphWriteError(RuntimeError):
     """A create the graph refused (the id exists, a constraint is missing): the transaction rolled back."""
+
+
+class BundleError(ValueError):
+    """An agenda-items bundle that is not exactly what its manifest says: nothing is written."""
+
+
+def is_fake(uri: str | None) -> bool:
+    return urlsplit(uri or "").scheme == FAKE_SCHEME
 
 
 # --- graph ports -------------------------------------------------------------------------------------
@@ -108,8 +118,20 @@ class FakeGraphPort:
             fh.write(json.dumps(node) + "\n")
 
     def overlay(self) -> tuple[list[dict], list[dict]]:
+        """The creates (the ordinary loader's MERGE rows are not creates: see `merge`)."""
         rows = [json.loads(line) for line in (self.path / "overlay.jsonl").read_text().splitlines() if line]
         return [r["node"] for r in rows if "node" in r], [r["edge"] for r in rows if "edge" in r]
+
+    def merge(self, nodes: list[dict], edges: list[dict]) -> None:
+        """The ordinary loader's writes (load_neo4j_v2: MERGE by id, SET += props; edges MERGEd between existing
+        endpoints, SET += props), as overlay rows replayed in order. Normalized rows in, as load_nodes takes them."""
+        rows = [{"merge_node": {"id": n["id"], "labels": list(n["labels"]), "properties": {
+            **{k: v for k, v in (n.get("properties") or {}).items() if k != "payload_json"}, "id": n["id"],
+            "display_label": n.get("display_label", ""), "promotion_state": n.get("promotion_state", "")}}}
+            for n in nodes]
+        rows += [{"merge_edge": {"start_id": e["source_id"], "type": e["relationship_type"], "end_id": e["target_id"],
+                                 "properties": dict(e.get("properties") or {})}} for e in edges]
+        self._append(rows)
 
     def _load(self) -> None:
         if self._nodes is not None:
@@ -123,28 +145,67 @@ class FakeGraphPort:
                         nodes[node["id"]] = node
         with open(self.path / "seed" / "edges.jsonl", encoding="utf-8") as fh:
             edges = [json.loads(line) for line in fh if line.strip()]
-        overlay_nodes, overlay_edges = self.overlay()
-        nodes.update({n["id"]: n for n in overlay_nodes})
-        self._nodes, self._edges = nodes, edges + overlay_edges
+        for row in (json.loads(line) for line in (self.path / "overlay.jsonl").read_text().splitlines() if line):
+            if "node" in row:
+                nodes[row["node"]["id"]] = row["node"]
+            elif "edge" in row:
+                edges.append(row["edge"])
+            elif "merge_node" in row:
+                _merge_node(nodes, row["merge_node"])
+            else:
+                _merge_edge(nodes, edges, row["merge_edge"])
+        self._nodes, self._edges = nodes, edges
+
+    def _append(self, rows: list[dict]) -> None:
+        lines = (self.path / "overlay.jsonl").read_text() + "".join(json.dumps(r) + "\n" for r in rows)
+        fd, tmp = tempfile.mkstemp(dir=self.path, prefix=".overlay.", suffix=".tmp")
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            fh.write(lines)
+        os.replace(tmp, self.path / "overlay.jsonl")
+        self._nodes = self._edges = None
 
     @contextmanager
     def transaction(self, constrained=REQUIRED_CONSTRAINTS):
         self._load()
         tx = _FakeTx(self)
-        yield tx
+        try:
+            yield tx
+        except BaseException:
+            self._nodes = self._edges = None  # a rolled-back transaction leaves nothing, in memory either
+            raise
         if tx.rows:
-            lines = (self.path / "overlay.jsonl").read_text() + "".join(json.dumps(r) + "\n" for r in tx.rows)
-            fd, tmp = tempfile.mkstemp(dir=self.path, prefix=".overlay.", suffix=".tmp")
-            with os.fdopen(fd, "w", encoding="utf-8") as fh:
-                fh.write(lines)
-            os.replace(tmp, self.path / "overlay.jsonl")
-            self._nodes = self._edges = None
+            self._append(tx.rows)
 
     # reads, shared by the transaction
     def nodes(self, ids) -> dict[str, dict]:
         self._load()
         return {i: {"labels": list(self._nodes[i]["labels"]), "props": dict(self._nodes[i]["properties"])}
                 for i in ids if i in self._nodes}
+
+
+def _merge_node(nodes: dict[str, dict], row: dict) -> None:
+    """MERGE (n:Label {id}) SET n:Labels SET n += props: a null removes the property, as Neo4j does."""
+    have = nodes.get(row["id"]) or {"id": row["id"], "labels": [], "properties": {}}
+    props = dict(have["properties"])
+    for k, v in row["properties"].items():
+        if v is None:
+            props.pop(k, None)
+        else:
+            props[k] = v
+    nodes[row["id"]] = {"id": row["id"], "labels": have["labels"] + [x for x in row["labels"] if x not in have["labels"]],
+                        "properties": props}
+
+
+def _merge_edge(nodes: dict[str, dict], edges: list[dict], row: dict) -> None:
+    """MATCH both endpoints (none: no edge), MERGE the relationship, SET += props."""
+    if row["start_id"] not in nodes or row["end_id"] not in nodes:
+        return
+    for i, e in enumerate(edges):
+        if (e["start_id"], e["type"], e["end_id"]) == (row["start_id"], row["type"], row["end_id"]):
+            props = {**e["properties"], **row["properties"]}
+            edges[i] = {**e, "properties": {k: v for k, v in props.items() if v is not None}}
+            return
+    edges.append({**row, "properties": {k: v for k, v in row["properties"].items() if v is not None}})
 
 
 class _FakeTx:
@@ -172,6 +233,21 @@ class _FakeTx:
         wanted = set(triples)
         return {(e["start_id"], e["type"], e["end_id"]) for e in self.port._edges} & wanted
 
+    def agenda_meetings(self, institution_id: str) -> dict[str, dict]:
+        nodes = self.port._nodes
+        out = {i: {"props": {k: n["properties"].get(k) for k in AGENDA_MEETING_PROPS}, "records": [], "item_ids": []}
+               for i, n in nodes.items()
+               if "Meeting" in n["labels"] and n["properties"].get("institution_id") == institution_id}
+        for e in self.port._edges:
+            if e["type"] == "EVIDENCED_BY" and e["start_id"] in out and "Record" in nodes.get(e["end_id"], {}).get("labels", ()):
+                r = nodes[e["end_id"]]["properties"]
+                out[e["start_id"]]["records"].append({"id": e["end_id"], "record_type": r.get("record_type"),
+                                                      "source_url": r.get("source_url")})
+            elif e["type"] == "PART_OF_MEETING" and e["end_id"] in out \
+                    and "AgendaItem" in nodes.get(e["start_id"], {}).get("labels", ()):
+                out[e["end_id"]]["item_ids"].append(e["start_id"])
+        return out
+
     def create(self, nodes: list[dict], edges: list[dict]) -> None:
         taken = set(self.port._nodes)
         for node in nodes:
@@ -182,6 +258,8 @@ class _FakeTx:
             if edge["start_id"] not in taken or edge["end_id"] not in taken:
                 raise GraphWriteError(f"edge endpoint missing: {edge['start_id']} -> {edge['end_id']}")
         self.rows += [{"node": n} for n in nodes] + [{"edge": e} for e in edges]
+        self.port._nodes.update({n["id"]: n for n in nodes})  # later reads in this transaction see its creates
+        self.port._edges += edges
 
 
 def _q(identifier: str) -> str:
@@ -258,6 +336,17 @@ class _Neo4jTx:
             for row in self.tx.run(query, ids=ids):
                 found[row["id"]].add(row["record"])
         return found
+
+    def agenda_meetings(self, institution_id: str) -> dict[str, dict]:
+        rows = self.tx.run("MATCH (m:Meeting) WHERE m.institution_id = $inst "
+                           "RETURN m.id AS id, [k IN $keys | m[k]] AS values, "
+                           "COLLECT { MATCH (m)-[:EVIDENCED_BY]->(r:Record) "
+                           "RETURN r {.id, .record_type, .source_url} } AS records, "
+                           "COLLECT { MATCH (a:AgendaItem)-[:PART_OF_MEETING]->(m) RETURN a.id } AS items",
+                           inst=institution_id, keys=list(AGENDA_MEETING_PROPS))
+        return {row["id"]: {"props": dict(zip(AGENDA_MEETING_PROPS, row["values"])),
+                            "records": [dict(r) for r in row["records"]], "item_ids": list(row["items"])}
+                for row in rows}
 
     def existing_edges(self, triples) -> set[tuple[str, str, str]]:
         triples = sorted(set(triples))
@@ -587,3 +676,94 @@ def _plan(tx, nodes: list[dict], edges: list[dict], holds: _Holds, stubs=frozens
             holds.add("missing_node", edge=[s, rel, t])
     return {"nodes": create, "edges": new_edges, "skipped": skipped, "differences": differences,
             "unchanged": {"nodes": len(rows) - len(create), "edges": unchanged}}
+
+
+# --- the agenda-items load ---------------------------------------------------------------------------------
+
+
+def _read_bundle(bundle: Path) -> tuple[dict, list[dict], list[dict]]:
+    """(manifest, nodes, edges), refusing a bundle whose files are not the ones its manifest hashed, or whose rows
+    are anything but each manifest meeting's AgendaItems with exactly one PART_OF_MEETING and one EVIDENCED_BY."""
+    import hashlib
+
+    bundle = Path(bundle)
+    manifest = json.loads((bundle / "manifest.json").read_text(encoding="utf-8"))
+    for name, sha in manifest["files"].items():
+        if hashlib.sha256((bundle / name).read_bytes()).hexdigest() != sha:
+            raise BundleError(f"{name} changed since the bundle was written")
+    read = lambda name: [json.loads(x) for x in (bundle / name).read_text(encoding="utf-8").splitlines() if x]  # noqa: E731
+    nodes, edges = read("nodes.jsonl"), read("edges.jsonl")
+    owner = {i: m for m in manifest["meetings"] for i in m["item_ids"]}
+    if len(owner) != sum(len(m["item_ids"]) for m in manifest["meetings"]) or sorted(owner) != sorted(n["id"] for n in nodes):
+        raise BundleError("the nodes are not exactly the manifest's items")
+    for n in nodes:
+        if n["labels"] != ["AgendaItem"] or n["properties"].get("id") != n["id"] \
+                or n["properties"].get("meeting_id") != owner[n["id"]]["meeting_id"]:
+            raise BundleError(f"{n['id']} is not an AgendaItem of {owner[n['id']]['meeting_id']}")
+    want = sorted((i, "PART_OF_MEETING", m["meeting_id"]) for i, m in owner.items()) + \
+        sorted((i, "EVIDENCED_BY", m["record_id"]) for i, m in owner.items())
+    if sorted((e["start_id"], e["type"], e["end_id"]) for e in edges) != sorted(want) \
+            or any(e.get("properties") for e in edges):
+        raise BundleError("the edges are not exactly one PART_OF_MEETING and one EVIDENCED_BY per item")
+    return manifest, nodes, edges
+
+
+def _same_items(tx, meeting: dict, nodes: dict[str, dict]) -> bool:
+    """The graph already holds exactly this meeting's bundle items, properties and edges included."""
+    ids = meeting["item_ids"]
+    have = tx.nodes(ids)
+    if sorted(have) != sorted(ids) or any(have[i]["props"] != nodes[i]["properties"]
+                                          or have[i]["labels"] != ["AgendaItem"] for i in ids):
+        return False
+    triples = [(i, "PART_OF_MEETING", meeting["meeting_id"]) for i in ids] + \
+        [(i, "EVIDENCED_BY", meeting["record_id"]) for i in ids]
+    return tx.existing_edges(triples) == set(triples)
+
+
+def load_agenda_bundle(graph, bundle: Path, recheck=None) -> dict:
+    """Create one agenda-items bundle's nodes and edges in ONE transaction; nothing existing is written.
+
+    Per meeting, re-read in the transaction: the Meeting with its agenda Record (same id and url), no AgendaItems
+    (or exactly this bundle's, already loaded: nothing to do), no item id taken, and `recheck(entry, meetings)`
+    (the stage's whole candidate predicate) silent. A meeting that fails holds alone. The creates go in first —
+    a relationship to a Meeting write-locks it — and then every loaded meeting is read again: if any carries an item
+    that is not ours (a concurrent writer), the transaction raises and nothing is written.
+    """
+    manifest, nodes, edges = _read_bundle(bundle)
+    by_id = {n["id"]: n for n in nodes}
+    holds, created, already = [], {}, []
+    with graph.transaction(("AgendaItem",)) as tx:
+        meetings = {inst: tx.agenda_meetings(inst) for inst in sorted({m["institution_id"] for m in manifest["meetings"]})}
+        taken = set(tx.nodes([n["id"] for n in nodes]))
+        for m in manifest["meetings"]:
+            mid, here = m["meeting_id"], meetings[m["institution_id"]]
+            state = here.get(mid)
+            reason = None
+            if state is None:
+                reason = "meeting_missing"
+            elif not any((r["id"], r.get("source_url")) == (m["record_id"], m["url"]) for r in state["records"]):
+                reason = "agenda_record_changed"
+            elif state["item_ids"]:
+                if sorted(state["item_ids"]) == sorted(m["item_ids"]) and _same_items(tx, m, by_id):
+                    already.append(mid)
+                    continue
+                reason = "meeting_has_items"
+            elif taken & set(m["item_ids"]):
+                reason = "item_id_exists"
+            elif recheck is not None:
+                reason = recheck(m, here)
+            if reason:
+                holds.append({"meeting_id": mid, "reason": reason})
+            else:
+                created[mid] = list(m["item_ids"])
+        mine = {i for ids in created.values() for i in ids}
+        tx.create([by_id[i] for i in sorted(mine, key=lambda i: [n["id"] for n in nodes].index(i))],
+                  [e for e in edges if e["start_id"] in mine])
+        for inst in meetings:  # after the creates: each loaded meeting carries our items and nothing else
+            after = tx.agenda_meetings(inst)
+            for mid, ids in created.items():
+                if mid in after and sorted(after[mid]["item_ids"]) != sorted(ids):
+                    raise GraphWriteError(f"load_conflict: {mid} gained items from another writer")
+    outcome = "loaded" if created or already else "held" if holds else "nothing"
+    return {"outcome": outcome, "holds": holds, "already_loaded": already,
+            "created": {"meetings": created, "nodes": len(mine), "edges": 2 * len(mine)}}

@@ -348,6 +348,7 @@ def main(argv: list[str] | None = None) -> int:
 
     import yaml
     import crosswalk
+    import guarded_load
     sources = []
     for registry_file in (root / "registry").glob("*-sources.yaml"):
         with open(registry_file) as f:
@@ -405,7 +406,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  Records: {report['record_count']}")
         print(f"  Output: {output_dir}")
 
-        if args.load:
+        if args.load and guarded_load.is_fake(os.getenv("NEO4J_URI")):  # a rehearsal: the same MERGEs, on files
+            with guarded_load.open_port(os.environ["NEO4J_URI"]) as port:
+                port.merge(nodes, edges)
+            print("  Loaded (fake graph).")
+        elif args.load:
             from load_neo4j_v2 import load_nodes as neo4j_load_nodes, load_edges as neo4j_load_edges, apply_schema
             from neo4j_target import open_driver
 

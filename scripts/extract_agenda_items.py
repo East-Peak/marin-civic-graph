@@ -713,6 +713,13 @@ def main(argv=None):
         log.error("NEO4J_URI and NEO4J_PASSWORD must be set")
         sys.exit(1)
 
+    from graph_lock import graph_lock
+
+    with graph_lock(neo4j_uri):  # the weekly agenda-items stage writes AgendaItems too: never both at once
+        _run(args, neo4j_uri, neo4j_user, neo4j_password)
+
+
+def _run(args, neo4j_uri, neo4j_user, neo4j_password):
     driver = get_driver(neo4j_uri, neo4j_user, neo4j_password)
     source_id = args.source if not args.all else None
 
