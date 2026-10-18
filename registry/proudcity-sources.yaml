@@ -36,7 +36,7 @@ sources:
       parser: outline
       hosts: [storage.googleapis.com]
       body: {title: "City Council", document: "City Council"}
-      qualified: {parser: outline, version: 7, report: "~/open-marin-staging/weekly-agenda-items/REPORT.md#per-source"}
+      qualified: {parser: outline, version: 8, report: "~/open-marin-staging/weekly-agenda-items/REPORT.md#per-source"}
     archive_pages:
       - https://www.cityofbelvedere.org/city-council-meeting-archive/
 

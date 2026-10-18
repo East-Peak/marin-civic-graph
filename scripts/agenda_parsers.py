@@ -226,7 +226,9 @@ def parse_outline(text: str) -> dict:
     if by_notice and any(((m := _L1.match(x.strip())) and int(m.group(1)) == l1.parts[0] + 1)
                          or ((n := _L2_NUMBERED.match(x.strip())) and int(n.group(1)) == l1.parts[0])
                          or ((b := _L2_BARE.match(x.strip())) and x[:1].isspace()
-                             and b.group(1).upper() == string.ascii_uppercase[l1.next_child]) for x in rest):
+                             and b.group(1).upper() == string.ascii_uppercase[l1.next_child])
+                         or (l2 is not None and (c := _L3.match(x.strip())) and int(c.group(1)) == l2.next_child + 1)
+                         for x in rest):  # numbered business at any level after the notice: not the end
         raise Unparseable("agenda_end_missing", "numbered business continues after the posting notice")
     items = []
     for e in entries:
@@ -286,7 +288,7 @@ def parse_flat(text: str) -> dict:
             "items": items}
 
 
-PARSERS: dict[str, Parser] = {"outline": Parser(7, parse_outline), "flat": Parser(1, parse_flat)}
+PARSERS: dict[str, Parser] = {"outline": Parser(8, parse_outline), "flat": Parser(1, parse_flat)}
 
 
 def extract_text(data: bytes) -> str:

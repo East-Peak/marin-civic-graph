@@ -181,7 +181,7 @@ def test_title_rule_stops_at_attachments_recommendations_bullets_and_blank_lines
 
 
 def test_every_parser_has_a_version():
-    assert {name: p.version for name, p in ap.PARSERS.items()} == {"outline": 7, "flat": 1}
+    assert {name: p.version for name, p in ap.PARSERS.items()} == {"outline": 8, "flat": 1}
 
 
 def test_a_list_in_a_description_that_happens_to_continue_the_numbering_is_not_an_entry():
@@ -288,6 +288,14 @@ def test_an_attachment_like_child_followed_by_its_next_sibling_holds():
 def test_sub_entries_after_a_posting_notice_hold():
     text = ("Thursday, March 30, 2023\n1. CALL TO ORDER\n2. BUSINESS\n2.A. First item\n"
             "THIS MEETING WAS PROPERLY NOTICED AND POSTED\n2.B. Approve the Contract\n")
+    with pytest.raises(ap.Unparseable) as exc:
+        ap.parse_outline(text)
+    assert exc.value.reason == "agenda_end_missing"
+
+
+def test_a_third_level_entry_after_a_posting_notice_holds():
+    text = ("Thursday, March 30, 2023\n1. CALL TO ORDER\n2. BUSINESS\n2.A. Contracts\n   (1) First item\n"
+            "THIS MEETING WAS PROPERLY NOTICED AND POSTED\n   (2) Approve the Contract\n")
     with pytest.raises(ap.Unparseable) as exc:
         ap.parse_outline(text)
     assert exc.value.reason == "agenda_end_missing"
