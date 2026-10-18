@@ -411,3 +411,37 @@ def test_lettered_a_title_takes_no_subject_line_past_a_blank_a_roman_point_or_ou
 def test_lettered_the_printed_date_is_the_headers_first_exact_date(header, printed):
     parsed = _lettered("1. Reports:\n   a. Harbor Update\n", head=f"AGENDA\n{header}\n")
     assert parsed["printed_date"] == printed
+
+
+# --- lettered v5 review fixes: the brief's rules, literally ----------------------------------------------------
+
+def test_lettered_an_entry_whose_next_line_says_only_none_is_excluded():
+    parsed = _lettered("1. Reports:\n   a. Vacancies\n      None\n      For information only\n   b. Harbor Update\n")
+    assert [i["key"] for i in parsed["items"]] == ["1b"]
+
+
+def test_lettered_a_roman_list_looks_past_out_of_sequence_letters_for_its_ii():
+    letters = "".join(f"   {c}. Item {c.upper()}\n" for c in "abcdefgh")
+    parsed = _lettered("1. Consent Calendar:\n" + letters + "   i. Roman description\n      k. Not an entry\n"
+                       "      ii. More description\n")
+    assert [i["key"] for i in parsed["items"]] == [f"1{c}" for c in "abcdefgh"]
+
+
+def test_lettered_a_cancellation_under_an_agenda_title_is_a_notice():
+    parsed = _lettered("1. Regular Meeting cancelled\n",
+                       head="AGENDA\nHARBORVIEW CITY COUNCIL - MONDAY, MAY 4, 2026\nTHIS MEETING HAS BEEN CANCELLED\n")
+    assert parsed["notice"] == "cancellation"
+
+
+def test_lettered_an_item_cancelled_in_lower_case_is_still_an_agenda():
+    parsed = _lettered("1. Reports:\n   a. Harbor fair cancelled\n")
+    assert parsed["notice"] is None and [i["key"] for i in parsed["items"]] == ["1a"]
+
+
+@pytest.mark.parametrize("parent, subject", [
+    ("1. Personnel (Closed Session)", True),  # the heading's own words, parentheses included
+    ("1. Disclosed Session Notes", False),  # the words, not letters inside a word
+])
+def test_lettered_the_closed_session_test_reads_the_whole_heading_as_words(parent, subject):
+    parsed = _lettered(f"{parent}\n   a. PUBLIC EMPLOYMENT\n      Title: Harbor Master\n")
+    assert parsed["items"][0]["title"] == ("PUBLIC EMPLOYMENT - Title: Harbor Master" if subject else "PUBLIC EMPLOYMENT")

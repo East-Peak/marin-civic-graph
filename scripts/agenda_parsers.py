@@ -309,7 +309,8 @@ _MINUTES_HEADING = re.compile(r"^MINUTES\b")
 _EXACT_DATE = re.compile(rf"(?<![A-Za-z0-9_])({'|'.join(_MONTHS)}) +(\d{{1,2}}),? +(\d{{4}})(?![A-Za-z0-9_])",
                          re.IGNORECASE)
 _SUBJECT = re.compile(r"^(?:title|position|position affected|name of case|case name|property):", re.IGNORECASE)
-_CLOSED_SESSION = re.compile(r"closed\s+session", re.IGNORECASE)
+_CLOSED_SESSION = re.compile(r"\bclosed\s+session\b", re.IGNORECASE)
+_CANCELLATION = re.compile(r"\bCANCEL+(?:ED|ATION)\b")  # in capitals: a notice's heading, not an item's words
 _CAPTION = re.compile(r"\S\s+v\.?(?=\s|$)")  # "Ridley v. City …": a word, then v. or v standing alone
 
 
@@ -369,15 +370,23 @@ def _lettered_title(lines: list[str], closed: bool = False) -> str:
     return title
 
 
-def _roman_ahead(lines: list[str], i: int) -> bool:
-    """A line `i.` begins a roman list when `ii.` follows before the next lettered or numbered entry."""
+def _roman_ahead(lines: list[str], i: int, last: int) -> bool:
+    """A line `i.` begins a roman list when `ii.` follows before the next entry (the parent's `j.`, the next numbered
+    entry, a heading, a session title or the end); out-of-sequence letters and other points are description."""
     for line in lines[i + 1:]:
         text = line.strip()
-        if _ROMAN.match(text):
-            return text.startswith("ii.")
-        if _LETTER.match(text) or (_LETTERED_TOP.match(text) and _indent(line) <= 8):
+        if text.startswith("ii. "):
+            return True
+        top = _LETTERED_TOP.match(text) if _indent(line) <= 8 else None
+        if text.startswith("j. ") or (top and int(top.group(1)) in (last + 1, 1)) or _is_caps_heading(line) \
+                or _SESSION_TITLE.search(text) or (_indent(line) <= 8 and _LETTERED_END.match(text)):
             return False
     return False
+
+
+def _next_line_none(lines: list[str]) -> bool:
+    """The entry's next line says only NONE (the brief's lettered rule: whatever follows it)."""
+    return len(lines) > 1 and bool(re.fullmatch(r"NONE\.?", lines[1].strip(), re.IGNORECASE))
 
 
 def _pages_joined(text: str) -> list[str]:
@@ -403,6 +412,8 @@ def parse_lettered(text: str) -> dict:
     titled = any(_AGENDA_TITLE.match(line.strip()) for line in header) or _council_masthead(header)
     entry = next((i for i, raw in enumerate(lines) if (_LETTERED_TOP.match(raw.strip()) and _indent(raw) <= 8)
                   or _LETTER.match(raw.strip())), len(lines))
+    if any(_CANCELLATION.search(line) for line in lines[:entry]):  # "THIS MEETING HAS BEEN CANCELLED"
+        return notice
     if not titled:
         if _CANCELLED.search(text):
             return notice
@@ -439,7 +450,7 @@ def parse_lettered(text: str) -> dict:
         b = _LETTER.match(line)
         parent = top or heading or general
         if b and parent.letters < 26 and b.group(1) == string.ascii_lowercase[parent.letters] \
-                and not (b.group(1) in "ivx" and _roman_ahead(lines, i)):
+                and not (b.group(1) in "ivx" and _roman_ahead(lines, i, last)):
             parent.letters += 1
             deepest = [b.group(2)]
             entries.append(("letter", parent, b.group(1), deepest))
@@ -463,7 +474,7 @@ def parse_lettered(text: str) -> dict:
 
     def leaf(kind, parent, lines):
         return (kind == "letter" or not parent.letters) and not (
-            _excluded(lines[0]) or _ONLY_NONE.match(" ".join(lines[0].split())) or _none_below(lines))
+            _excluded(lines[0]) or _ONLY_NONE.match(" ".join(lines[0].split())) or _next_line_none(lines))
 
     leaves = [n for n, e in enumerate(entries) if leaf(e[0], e[1], e[3])]
     if any(any(n < at for n in leaves) and any(n >= at for n in leaves) for at in session_lines):
@@ -488,9 +499,10 @@ def parse_lettered(text: str) -> dict:
         numbered = parent.run is not None
         section = prefixes.get(parent.run, "") + parent.section if numbered else parent.section
         heading = _heading(parent.lines[0]) if numbered else parent.heading
+        as_printed = parent.lines[0] if numbered else lines[parent.line] if parent.heading else ""
         items.append({"label": f"{parent.label}.{mark}" if numbered else mark, "section_number": section,
                       "item_number": mark.upper(), "key": (section + mark).lower(), "heading": heading,
-                      "title": _lettered_title(entry_lines, closed=bool(_CLOSED_SESSION.search(heading)))})
+                      "title": _lettered_title(entry_lines, closed=bool(_CLOSED_SESSION.search(as_printed)))})
     return {"printed_date": printed, "header": "\n".join(header), "notice": None, "items": items}
 
 
