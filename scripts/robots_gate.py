@@ -141,6 +141,12 @@ class RobotsUnavailable(RobotsRefused):
     outcome = "robots_unavailable"
 
 
+class HostNotAllowed(RobotsRefused):
+    """The URL's host is outside the source's allowlist: not even its robots.txt is requested."""
+
+    outcome = "host_not_allowed"
+
+
 # --- transport -----------------------------------------------------------------------
 
 
@@ -174,8 +180,8 @@ def http_get(url: str, timeout: float) -> Reply:
 class _GatedRedirects(urllib.request.HTTPRedirectHandler):
     """urllib's own redirect handling, with every hop admitted by the gate first."""
 
-    def __init__(self, gate: "RobotsGate"):
-        self.gate = gate
+    def __init__(self, gate: "RobotsGate", hosts: frozenset[str] | None = None):
+        self.gate, self.hosts = gate, hosts
 
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         new = super().redirect_request(req, fp, code, msg, headers, newurl)
@@ -183,11 +189,15 @@ class _GatedRedirects(urllib.request.HTTPRedirectHandler):
             # Drain this reply first (urllib would, right after us), so the hop is paced from when it is sent.
             fp.read()
             fp.close()
-            self.gate.admit(new.full_url, kind="redirect", method=new.get_method())
+            self.gate.admit(new.full_url, kind="redirect", method=new.get_method(), hosts=self.hosts)
         return new
 
 
 # --- the gate ------------------------------------------------------------------------
+
+
+def _host(url: str) -> str:
+    return (urlsplit(url).hostname or "").lower()
 
 
 def _origin(url: str) -> str:
@@ -223,16 +233,24 @@ class RobotsGate:
                 self._last[urlsplit(origin).netloc] = self.clock() - ago
         self._parsed: dict[str, Robots] = {}
 
-    def open(self, request: urllib.request.Request, *, timeout: float, handlers=()):
-        """Admit the request, then send it; each redirect hop is admitted before it is followed."""
-        self.admit(request.full_url, method=request.get_method())
-        opener = urllib.request.build_opener(_GatedRedirects(self), *handlers)
+    def open(self, request: urllib.request.Request, *, timeout: float, handlers=(), hosts=None):
+        """Admit the request, then send it; each redirect hop is admitted before it is followed.
+
+        `hosts`, when given, is the source's allowlist: a URL (or redirect hop, or robots.txt redirect) on any
+        other host is refused before anything is sent to it.
+        """
+        hosts = frozenset(hosts) if hosts is not None else None
+        self.admit(request.full_url, method=request.get_method(), hosts=hosts)
+        opener = urllib.request.build_opener(_GatedRedirects(self, hosts), *handlers)
         return opener.open(request, timeout=timeout)
 
-    def admit(self, url: str, *, kind: str = "page", method: str = "GET") -> None:
+    def admit(self, url: str, *, kind: str = "page", method: str = "GET", hosts=None) -> None:
         """Return when `url` may be requested now (after any Crawl-delay wait); raise if it may not."""
+        if hosts is not None and _host(url) not in hosts:
+            self._refuse(HostNotAllowed(url, {"url": url, "robots_url": None, "robots_status": None,
+                                              "rule": f"host not in {sorted(hosts)}"}), kind, method)
         origin = _origin(url)
-        entry = self._robots(origin)
+        entry = self._robots(origin, hosts)
         status = entry["status"]
         detail = {"url": url, "robots_url": entry["url"], "robots_status": status}
         if status is not None and 200 <= status < 300:
@@ -258,13 +276,22 @@ class RobotsGate:
                   rule=refusal.detail.get("rule"), waited=0.0)
         raise refusal
 
-    def _robots(self, origin: str) -> dict:
+    def _robots(self, origin: str, hosts=None) -> dict:
+        """`origin`'s robots.txt entry. Under an allowlist, an answer that came via another host is not one."""
         if origin not in self.cache:
-            self._fetch_robots(origin)
-        return self.cache[origin]
+            stopped = self._fetch_robots(origin, hosts)
+            if stopped is not None:
+                return stopped
+        entry = self.cache[origin]
+        if hosts is not None and _host(entry["final_url"]) not in hosts:
+            return {**entry, "status": None, "error": "robots.txt answered via a host not allowed"}
+        return entry
 
-    def _fetch_robots(self, origin: str) -> None:
-        """Read `origin`'s robots.txt, following redirects; every host's /robots.txt on the way gets the answer."""
+    def _fetch_robots(self, origin: str, hosts=None) -> dict | None:
+        """Read `origin`'s robots.txt, following redirects; every host's /robots.txt on the way gets the answer.
+
+        A redirect to a host outside `hosts` is not followed: the robots.txt counts as unavailable for this
+        caller only, so it is returned rather than cached (a source without that allowlist reads it normally)."""
         url = f"{origin}/robots.txt"
         chain = [origin]  # origins whose /robots.txt this chain answers
         entry = None
@@ -278,6 +305,9 @@ class RobotsGate:
             if not (reply.status in REDIRECTS and location and hop < MAX_REDIRECTS):
                 break
             url = urljoin(url, location)
+            if hosts is not None and _host(url) not in hosts:
+                return {"url": f"{origin}/robots.txt", "final_url": url, "status": None,
+                        "error": "redirect to a host not allowed", "sha256": None, "body": ""}
             if urlsplit(url).path == "/robots.txt":
                 if _origin(url) in self.cache:  # already read this run
                     entry = self.cache[_origin(url)]
@@ -292,6 +322,7 @@ class RobotsGate:
             if host not in self.cache:
                 self.cache[host] = {**entry, "url": f"{host}/robots.txt", "last_request_wall": self.wall_clock()}
         self._save()
+        return None
 
     def _crawl_delay(self, origin: str) -> float:
         entry = self.cache[origin]

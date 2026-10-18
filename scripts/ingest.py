@@ -117,6 +117,8 @@ def run_source(
     crosswalk (or keeps the adapter's) and never touches `identity`: an invalid
     crosswalk ends it `crosswalk_invalid` before any request, and two meetings
     claiming one id end it `crosswalk_conflict`; neither writes a capture.
+    `identity: native-only` keeps the adapter's ids (checked the same way) and
+    pins the load policy it was staged under in the capture.
     """
     source_id = source_config["id"]
     xw = None
@@ -148,6 +150,8 @@ def run_source(
         floors=Floors.from_config(source_config),
         errors=len(result.get("errors") or []),
     )
+    if not verdict.ok and result.get("errors"):  # the ledger, the run's state and its digest say which
+        verdict = Verdict(ok=False, reasons=verdict.reasons + [f"adapter error: {e}" for e in result["errors"][:5]])
     # The ledger and the capture header both carry the pre-merge count, so a
     # baseline seeded from a capture matches one recorded by a run.
     result["pulled_rows"] = rows
@@ -158,6 +162,14 @@ def run_source(
             except crosswalk.CrosswalkError as exc:
                 return _crosswalk_failed(ledger, source_id, "crosswalk_conflict", exc, result)
             result["crosswalk"] = {"path": source_config["crosswalk"], "sha256": xw.sha256, **summary}
+            identity = None
+        elif source_config.get("identity") == crosswalk.NATIVE:
+            try:
+                summary = crosswalk.native(source_id, result["meetings"])
+            except crosswalk.CrosswalkError as exc:
+                return _crosswalk_failed(ledger, source_id, "crosswalk_conflict", exc, result)
+            result["identity"] = {"mode": crosswalk.NATIVE, **summary}
+            result["load_policy"] = crosswalk.load_policy(source_config)
             identity = None
         elif identity is not None:
             identity.canonicalize(source_id, result["meetings"])
@@ -170,6 +182,8 @@ def run_source(
         provenance["saved_page"] = result["saved_page"]["path"]
     if xw is not None:
         provenance["crosswalk_sha256"] = xw.sha256
+    if source_config.get("identity") == crosswalk.NATIVE:
+        provenance["identity"] = crosswalk.NATIVE
     ledger.append(source_id, _now(), rows, newest, verdict, **provenance)
     return result, verdict
 
@@ -235,7 +249,7 @@ def main(argv: list[str] | None = None) -> int:
 
 def _capture(targets: list[dict], root: Path, gate: RobotsGate, saved_page: Path | None = None) -> int:
     ledger = RunLedger(root / LEDGER_PATH)
-    identity = None  # built on first use: a crosswalk-required source never reads it
+    identity = None  # built on first use: a crosswalk-required or native-only source never reads it
     # First scheduled run: judge against the last manual captures, not "any > 0".
     for sid in seed_ledger(ledger, targets, root / "data" / "extracted"):
         print(f"  baseline seeded from last manual capture: {sid}")
@@ -252,10 +266,10 @@ def _capture(targets: list[dict], root: Path, gate: RobotsGate, saved_page: Path
         print(f"  URL: {source_config['url']}" if saved_page is None else f"  Saved page: {saved_page}")
 
         try:
-            if identity is None and not crosswalk.required(source_config):
+            if identity is None and not crosswalk.guarded(source_config):
                 identity = MeetingIdentityMap(root / IDENTITY_PATH)
             result, verdict = run_source(source_config, root, ledger=ledger, today=today,
-                                         identity=None if crosswalk.required(source_config) else identity,
+                                         identity=None if crosswalk.guarded(source_config) else identity,
                                          gate=gate, saved_page=saved_page)
             print(f"  Variant: {result.get('variant', 'unknown')}")
             print(f"  Meetings: {result.get('meeting_count', 'n/a')}")

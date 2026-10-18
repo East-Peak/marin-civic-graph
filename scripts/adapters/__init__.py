@@ -8,12 +8,14 @@ from .base import BaseAdapter
 def get_adapter_class(name: str) -> Type[BaseAdapter]:
     from .granicus import GranicusAdapter
     from .civicplus import CivicPlusAdapter
+    from .civicplus_archive import CivicPlusArchiveAdapter
     from .netfile import NetFileAdapter
     from .proudcity import ProudCityAdapter
     from .drupal_ross import DrupalRossAdapter
     registry: dict[str, Type[BaseAdapter]] = {
         "granicus": GranicusAdapter,
         "civicplus": CivicPlusAdapter,
+        "civicplus_archive": CivicPlusArchiveAdapter,
         "netfile": NetFileAdapter,
         "proudcity": ProudCityAdapter,
         "drupal_ross": DrupalRossAdapter,

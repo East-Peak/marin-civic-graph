@@ -293,7 +293,7 @@ def resolve_capture(source_id: str, capture: str | None, root: Path | None = Non
 
 def load_guarded(source_config: dict, capture_path: Path, capture: dict, root: Path, output_dir: Path,
                  report_path: Path | None) -> int:
-    """A crosswalk-required source (or any capture made under a crosswalk): the no-overwrite load.
+    """A crosswalk-required or native-only source (or any capture made under either): the no-overwrite load.
 
     A hold is a successful exit whose report says `held`; only a failure to load at all exits non-zero.
     """
@@ -378,7 +378,7 @@ def main(argv: list[str] | None = None) -> int:
 
         capture = json.loads(capture_path.read_text())
         output_dir = root / "data" / "normalized" / f"{source_id}-meetings"
-        if crosswalk.required(source_config) or "crosswalk" in capture:
+        if crosswalk.guarded(source_config) or "crosswalk" in capture or "identity" in capture:
             if not args.load:
                 print(f"  {source_id} resolves Record ids against the graph: it only runs with --load",
                       file=sys.stderr)

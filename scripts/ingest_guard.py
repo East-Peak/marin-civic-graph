@@ -35,6 +35,9 @@ class Floors:
     # 0: any adapter error is a partial pull. Raise it per source, with a
     # registry comment naming the known benign error.
     max_errors: int = 0
+    # A source's reviewed minimum (e.g. the inventory it was added with). Unlike the ratio it needs no
+    # baseline, so a first run's partial parse cannot become the baseline.
+    min_rows: int | None = None
 
     @classmethod
     def from_config(cls, source_config: dict[str, Any]) -> "Floors":
@@ -66,6 +69,8 @@ def evaluate(
         )
     if rows == 0:
         reasons.append("pull returned 0 rows")
+    elif floors.min_rows is not None and rows < floors.min_rows:
+        reasons.append(f"pull returned {rows} rows, below this source's floor of {floors.min_rows}")
     elif last_good_rows and rows < floors.min_ratio * last_good_rows:
         reasons.append(
             f"pull returned {rows} rows, below {floors.min_ratio:.0%} of {baseline} ({last_good_rows})"

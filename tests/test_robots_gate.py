@@ -440,3 +440,86 @@ def test_a_hosts_crawl_delay_holds_across_http_and_https(tmp_path):
     gate.admit("https://town.example.test/meetings")  # its robots fetch goes to the same host
     times = [e["monotonic"] for e in _log(tmp_path)]
     assert all(b - a >= 15 for a, b in zip(times, times[1:])), times
+
+
+# --- a source's host allowlist: forbidden hosts receive no request at all -----------------------------
+
+
+def test_a_url_on_a_host_outside_the_allowlist_is_refused_before_its_robots_txt(tmp_path):
+    gate, robots, _ = _gate(tmp_path, {})
+    with pytest.raises(rg.HostNotAllowed) as refused:
+        gate.admit("https://records.town.example.test/WebLink/", hosts={"www.town.example.test"})
+    assert refused.value.outcome == "host_not_allowed"
+    assert robots.asked == [] and gate.refusals == [refused.value]
+    assert [(e["kind"], e["decision"]) for e in _log(tmp_path)] == [("page", "host_not_allowed")]
+
+
+def test_hosts_none_keeps_every_host_open(tmp_path):
+    gate, robots, _ = _gate(tmp_path, {"https://records.town.example.test/robots.txt": (404, "")})
+    gate.admit("https://records.town.example.test/WebLink/")
+    assert robots.asked == ["https://records.town.example.test/robots.txt"]
+
+
+def test_a_robots_txt_redirect_to_a_host_outside_the_allowlist_is_not_followed(tmp_path, server):
+    httpd, handler = server
+    handler.routes = {"/robots.txt": (301, "", "http://localhost:{port}/robots.txt"),
+                      "/agendas": (200, "agendas")}
+    base = f"http://127.0.0.1:{httpd.server_port}"
+    gate = rg.RobotsGate(request_log=tmp_path / "requests.jsonl")
+    with pytest.raises(rg.RobotsUnavailable) as refused:
+        gate.open(urllib.request.Request(f"{base}/agendas"), timeout=5, hosts={"127.0.0.1"})
+    assert "not allowed" in (refused.value.detail.get("error") or "")
+    assert handler.seen == [(f"127.0.0.1:{httpd.server_port}", "/robots.txt")]  # localhost: nothing, not even robots
+
+
+def test_a_page_redirect_to_a_host_outside_the_allowlist_makes_no_request_there(tmp_path, server):
+    httpd, handler = server
+    handler.routes = {"/robots.txt": (200, "User-agent: *\nDisallow: /admin\n"),
+                      "/Archive.aspx": (302, "", "http://localhost:{port}/WebLink/doc.pdf"),
+                      "/WebLink/doc.pdf": (200, "minutes")}
+    base = f"http://127.0.0.1:{httpd.server_port}"
+    gate = rg.RobotsGate(request_log=tmp_path / "requests.jsonl")
+    with pytest.raises(rg.HostNotAllowed) as refused:
+        gate.open(urllib.request.Request(f"{base}/Archive.aspx"), timeout=5, hosts={"127.0.0.1"})
+    assert refused.value.url == f"http://localhost:{httpd.server_port}/WebLink/doc.pdf"
+    assert handler.seen == [(f"127.0.0.1:{httpd.server_port}", "/robots.txt"),
+                            (f"127.0.0.1:{httpd.server_port}", "/Archive.aspx")]
+    assert [(e["kind"], e["decision"]) for e in _log(tmp_path)] == \
+        [("robots", "fetched"), ("page", "allowed"), ("redirect", "host_not_allowed")]
+
+
+def test_an_allowed_redirect_inside_the_allowlist_is_followed(tmp_path, server):
+    httpd, handler = server
+    handler.routes = {"/robots.txt": (200, "User-agent: *\nDisallow: /admin\n"),
+                      "/Archive.aspx": (302, "", "http://127.0.0.1:{port}/ArchiveCenter/ViewFile/Item/7"),
+                      "/ArchiveCenter/ViewFile/Item/7": (200, "agenda")}
+    base = f"http://127.0.0.1:{httpd.server_port}"
+    gate = rg.RobotsGate()
+    with gate.open(urllib.request.Request(f"{base}/Archive.aspx"), timeout=5, hosts={"127.0.0.1"}) as resp:
+        assert resp.read() == b"agenda"
+
+
+def test_rules_cached_via_a_host_outside_the_allowlist_are_not_used(tmp_path):
+    answers = {"https://www.town.example.test/robots.txt": (302, None, "https://records.town.example.test/robots.txt"),
+               "https://records.town.example.test/robots.txt": (200, "User-agent: *\nDisallow: /admin\n")}
+    gate, robots, _ = _gate(tmp_path, answers)
+    gate.admit("https://www.town.example.test/agendas")  # an unrestricted source: follows the redirect
+    asked = list(robots.asked)
+    with pytest.raises(rg.RobotsUnavailable) as refused:
+        gate.admit("https://www.town.example.test/Archive.aspx", hosts={"www.town.example.test"})
+    assert "not allowed" in refused.value.detail["error"] and robots.asked == asked
+
+
+def test_a_restricted_stop_is_not_cached_for_an_unrestricted_source(tmp_path):
+    answers = {"https://www.town.example.test/robots.txt": (302, None, "https://records.town.example.test/robots.txt"),
+               "https://records.town.example.test/robots.txt": (200, "User-agent: *\nDisallow: /admin\n")}
+    gate, robots, _ = _gate(tmp_path, answers, cache_path=tmp_path / "robots.json")
+    with pytest.raises(rg.RobotsUnavailable):
+        gate.admit("https://www.town.example.test/Archive.aspx", hosts={"www.town.example.test"})
+    assert robots.asked == ["https://www.town.example.test/robots.txt"]
+    cached = json.loads((tmp_path / "robots.json").read_text()) if (tmp_path / "robots.json").exists() else {}
+    assert "https://www.town.example.test" not in cached
+    later = rg.RobotsGate(robots_transport=robots, cache_path=tmp_path / "robots.json")  # the run's next process
+    later.admit("https://www.town.example.test/agendas")
+    assert robots.asked[1:] == ["https://www.town.example.test/robots.txt",
+                                "https://records.town.example.test/robots.txt"]

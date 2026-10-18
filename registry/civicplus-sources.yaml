@@ -73,3 +73,27 @@ sources:
       covering these same bodies; scheduling per-body sources now would ingest the
       same meetings a second time under different institutions.
     categories: ["Parks & Recreation Commission"]
+
+  # Larkspur — City Council agendas from the CivicPlus Archive Center (not AgendaCenter). Agendas only:
+  # minutes live on records.cityoflarkspur.org (Laserfiche), whose robots.txt is `Disallow: /`, as is
+  # ca-larkspur2.civicplus.com's; the host allowlist keeps every request on www.larkspur.ca.gov.
+  - id: larkspur-city-council
+    adapter: civicplus_archive
+    url: https://www.larkspur.ca.gov/Archive.aspx?AMID=49
+    allowed_hosts: [www.larkspur.ca.gov]
+    archive_title: City Council Agendas
+    jurisdiction_id: place-larkspur
+    institution_id: org-larkspur-city-council
+    backfill_from: "2019-01-01"
+    schedule: manual
+    schedule_note: >-
+      Added 2026-10-18 off the schedule; it joins the weekly run once its guarded load and
+      rehearsal are in (docs/runbooks/larkspur-council.md).
+    identity: native-only
+    create_missing_stubs: true
+    floors:
+      min_rows: 228
+      note: >-
+        min_rows is the reviewed listing inventory of 2026-10-18 (228 meetings from 2019 on), so a
+        partial parse cannot pass as the first baseline. If the city ever prunes old agendas, check the
+        listing by hand and lower it with a reason.

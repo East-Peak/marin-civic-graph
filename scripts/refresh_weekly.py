@@ -460,6 +460,8 @@ def _meeting_source(ctx: Context, sid: str, registry: str, entry: dict, history:
             source["robots"] = entry.get("robots")
     if entry.get("crosswalk_sha256"):  # the crosswalk version this capture was made with; load re-checks it
         source["crosswalk_sha256"] = entry["crosswalk_sha256"]
+    if entry.get("identity"):  # native-only: its capture pins the load policy, which the load re-checks
+        source["identity"] = entry["identity"]
     capture = _latest_capture(ctx.root, sid) if source["ok"] else None
     if capture is not None:
         source["capture"] = {"path": capture.relative_to(ctx.root).as_posix(), "sha256": _sha256(capture)}
@@ -936,7 +938,8 @@ def load(ctx: Context, run_id: str) -> dict:
         _persist(ctx, state)
     reports = {sid: _fresh_report_path(ctx.root, run_id, sid)
                for sid, source in accepted.items() if source["kind"] == "meetings"}
-    guarded = {sid for sid in reports if "crosswalk_sha256" in accepted[sid] or _crosswalk_required(ctx, accepted[sid], sid)}
+    guarded = {sid for sid in reports if {"crosswalk_sha256", "identity"} & set(accepted[sid])
+               or _guarded(ctx, accepted[sid], sid)}
     steps = [(sid, meeting_load_cmd(ctx, sid, accepted[sid], reports[sid])) for sid in reports]
     steps += [(sid, [ctx.python, f"scripts/{STAGED_SOURCES[sid].script}", "--load-from", str(staged_root / sid)])
               for sid in refetchers]
@@ -984,13 +987,13 @@ def _fresh_report_path(root: Path, run_id: str, sid: str) -> Path:
     return reports / f"{sid}.{attempt}.json"
 
 
-def _crosswalk_required(ctx: Context, source: dict, sid: str) -> bool:
+def _guarded(ctx: Context, source: dict, sid: str) -> bool:
     """Whether the registry, as it stands at load time, sends this source through the guarded load."""
     import crosswalk
 
     config = next((s for s in load_sources(ctx.root / f"registry/{source['registry']}-sources.yaml")
                    if s["id"] == sid), {})
-    return crosswalk.required(config)
+    return crosswalk.guarded(config)
 
 
 def _take_load_report(state: dict, sid: str, path: Path) -> str | None:

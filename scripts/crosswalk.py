@@ -32,6 +32,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 FORMAT = 1
 REQUIRED = "crosswalk-required"
+NATIVE = "native-only"  # the adapter's own ids, nothing else; no crosswalk file (scripts/adapters/civicplus_archive.py)
+GUARDED = (REQUIRED, NATIVE)  # identities whose meetings load only through the no-overwrite load
 SLUG_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._~%-]*")  # one URL path segment (real slugs end in "_")
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -50,6 +52,32 @@ class Crosswalk:
 
 def required(config: dict) -> bool:
     return config.get("identity") == REQUIRED
+
+
+def guarded(config: dict) -> bool:
+    return config.get("identity") in GUARDED
+
+
+def load_policy(config: dict) -> dict:
+    """What a native-only source's load may do, as staged: pinned in its capture, recomputed at load."""
+    stubs = [[config["institution_id"], "Organization"], [config["jurisdiction_id"], "Place"]] \
+        if config.get("create_missing_stubs") else []
+    return {"identity": config.get("identity"), "source_id": config["id"], "institution_id": config["institution_id"],
+            "jurisdiction_id": config["jurisdiction_id"], "stubs": stubs}
+
+
+def native(source_id: str, meetings: list[dict]) -> dict[str, int]:
+    """A native-only pull: every id in the adapter's own form and distinct; stamps `adapter_meeting_id`."""
+    seen: dict[str, int] = {}
+    for i, meeting in enumerate(meetings):
+        own = meeting.get("meeting_id")
+        slug_of(source_id, own)
+        if own in seen:
+            raise CrosswalkError(f"rows {seen[own]} and {i} both claim {own}")
+        seen[own] = i
+    for meeting in meetings:
+        meeting["adapter_meeting_id"] = meeting["meeting_id"]
+    return {"meetings": len(meetings)}
 
 
 def sha256_file(path: Path) -> str:

@@ -79,6 +79,20 @@ def test_san_rafael_takes_its_ids_only_from_its_reviewed_crosswalk():
     assert len(xw.entries) >= 261
 
 
+def test_larkspur_reads_only_its_archive_page_with_native_ids_from_2019():
+    # Agendas only: minutes (records.cityoflarkspur.org) and the second CivicPlus host are robots `Disallow: /`,
+    # so the source may reach www.larkspur.ca.gov and nothing else, whatever any robots.txt says.
+    from urllib.parse import urlsplit
+
+    lk = _all_sources()["larkspur-city-council"]
+    assert lk["adapter"] == "civicplus_archive"
+    assert lk["url"] == "https://www.larkspur.ca.gov/Archive.aspx?AMID=49"
+    assert lk["allowed_hosts"] == ["www.larkspur.ca.gov"] == [urlsplit(lk["url"]).hostname]
+    assert (lk["institution_id"], lk["jurisdiction_id"]) == ("org-larkspur-city-council", "place-larkspur")
+    assert lk["backfill_from"] == "2019-01-01" and lk["identity"] == "native-only" and lk["create_missing_stubs"]
+    assert lk["floors"]["min_rows"] == 228  # the reviewed inventory of 2026-10-18
+
+
 def test_fairfax_covers_2025_onward():
     ff = _all_sources()["fairfax-town-council"]
     assert "https://townoffairfaxca.gov/agendas-town-council/" in ff["archive_pages"]
