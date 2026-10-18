@@ -258,3 +258,145 @@ def test_a_failed_archive_page_is_recorded_not_skipped(tmp_path):
     result = adapter.capture()
     assert result["meeting_count"] == 1
     assert len(result["errors"]) == 1 and "2024-archive" in result["errors"][0]
+
+
+# ---------------------------------------------------------------------------
+# agenda_artifact: attached (San Rafael). The agenda tab's body links staff
+# reports, minutes and correspondence; the agenda itself is the tab's attached
+# file, rendered as a sidebar and a footer file block with a `download` button.
+# ---------------------------------------------------------------------------
+
+GCS = "https://storage.googleapis.com/proudcity/examplecityca/2026/05"
+
+
+def _file_block(url, name="cc-agenda-2026-05-04", quote='"', download=f'download="cc-agenda"'):
+    return (f"<div title={quote}{name}{quote}>{name}.pdf</div><p><a href={quote}{url}{quote} "
+            f"class={quote}btn btn-primary btn-sm{quote} {download}><i class=\"fa fa-download\"></i>Download</a></p>")
+
+
+def _detail(agenda_body, *, after_agenda="", packet=f"{GCS}/agenda-packet-2026-05-04.pdf"):
+    return f'''
+    <ul><li><a data-toggle="tab" href="#tab-agenda">Agenda</a></li></ul>
+    <div class="tab-content">
+      <div id="tab-agenda" class="tab-pane fade in active">
+        <div class="row"><div class="col-md-9">{agenda_body}</div></div>
+      </div>
+      {after_agenda}
+      <div id="tab-agenda-packet" class="tab-pane fade">{_file_block(packet, "agenda-packet-2026-05-04")}</div>
+      <div id="tab-minutes" class="tab-pane fade"></div>
+    </div>'''
+
+
+SR_BODY = (f'<p>CONSENT CALENDAR<br/><a href="{GCS}/2.a-minutes-2026-04-20.pdf">Minutes</a><br/>'
+           f'<a href="{GCS}/2.b-harbor-spit-lighting.pdf">Staff Report</a><br/>'
+           f'<a href="{GCS}/letter-from-a-resident.pdf">Correspondence</a></p>')
+AGENDA = f"{GCS}/cc-agenda-2026-05-04.pdf"
+
+
+class TestAttachedAgendaArtifact:
+    def test_the_attached_file_is_the_agenda_not_the_first_pdf(self):
+        html = _detail(SR_BODY + "</div><div class=\"col-md-3\">" + _file_block(AGENDA) + _file_block(AGENDA))
+        assert extract_artifacts_from_detail(html, agenda_artifact="attached")["agenda"] == \
+            {"available": True, "url": AGENDA}
+        # Today's rule, unchanged when the option is absent: the first PDF in the tab.
+        assert extract_artifacts_from_detail(html)["agenda"] == \
+            {"available": True, "url": f"{GCS}/2.a-minutes-2026-04-20.pdf"}
+
+    def test_no_attached_file_is_unavailable_with_a_reason_never_the_first_pdf(self):
+        got = extract_artifacts_from_detail(_detail(SR_BODY), agenda_artifact="attached")["agenda"]
+        assert got == {"available": False, "url": None, "reason": "no attached file in the agenda tab"}
+
+    def test_no_agenda_tab_is_unavailable_with_a_reason(self):
+        html = f'<div id="tab-minutes">{_file_block(f"{GCS}/cc-minutes.pdf")}</div>'
+        got = extract_artifacts_from_detail(html, agenda_artifact="attached")["agenda"]
+        assert got == {"available": False, "url": None, "reason": "no agenda tab"}
+
+    def test_two_distinct_attached_files_are_unavailable_no_tie_break(self):
+        other = f"{GCS}/cc-agenda-2026-05-04-revised.pdf"
+        html = _detail(SR_BODY + _file_block(AGENDA) + _file_block(other, "revised"))
+        got = extract_artifacts_from_detail(html, agenda_artifact="attached")["agenda"]
+        assert got == {"available": False, "url": None, "reason": "2 attached files in the agenda tab"}
+
+    def test_other_tabs_are_selected_exactly_as_before(self):
+        html = _detail(SR_BODY + _file_block(AGENDA))
+        new, old = extract_artifacts_from_detail(html, agenda_artifact="attached"), extract_artifacts_from_detail(html)
+        assert {k: v for k, v in new.items() if k != "agenda"} == {k: v for k, v in old.items() if k != "agenda"}
+        assert new["packet"] == {"available": True, "url": f"{GCS}/agenda-packet-2026-05-04.pdf"}
+
+    def test_the_agenda_element_bounds_the_search_not_the_next_known_tab(self):
+        # A download in a following unknown tab (contact) or after the agenda element is not the agenda's.
+        contact = f'<div id="tab-contact" class="tab-pane fade">{_file_block(f"{GCS}/clerk-contacts.pdf")}</div>'
+        html = _detail(SR_BODY, after_agenda=contact) + _file_block(f"{GCS}/outside.pdf")
+        got = extract_artifacts_from_detail(html, agenda_artifact="attached")["agenda"]
+        assert got == {"available": False, "url": None, "reason": "no attached file in the agenda tab"}
+
+    def test_an_attachment_far_into_a_last_agenda_tab_is_found(self):
+        filler = "<p>" + "Item text. " * 2000 + "</p>"  # well past the legacy 8 KB tail
+        html = f'<div id="tab-agenda"><div>{SR_BODY}{filler}</div>{_file_block(AGENDA)}</div>'
+        assert extract_artifacts_from_detail(html, agenda_artifact="attached")["agenda"] == \
+            {"available": True, "url": AGENDA}
+
+    def test_attribute_variants_single_quotes_and_a_bare_download(self):
+        html = _detail(SR_BODY + _file_block(AGENDA, quote="'", download="download"))
+        assert extract_artifacts_from_detail(html, agenda_artifact="attached")["agenda"] == \
+            {"available": True, "url": AGENDA}
+
+    def test_a_download_that_is_not_a_pdf_does_not_count(self):
+        html = _detail(SR_BODY + _file_block(f"{GCS}/agenda.docx") + _file_block(f"{AGENDA}?v=2"))
+        assert extract_artifacts_from_detail(html, agenda_artifact="attached")["agenda"] == \
+            {"available": True, "url": f"{AGENDA}?v=2"}
+
+    def test_an_unknown_option_is_refused(self):
+        with pytest.raises(ValueError, match="agenda_artifact"):
+            extract_artifacts_from_detail(_detail(SR_BODY), agenda_artifact="first")
+
+    def test_capture_applies_the_registry_option(self, tmp_path):
+        list_html = '<table><tr><td><a href="/meetings/m1/">Council: May 4, 2026</a></td></tr></table>'
+        detail = _detail(SR_BODY + _file_block(AGENDA))
+        pages = {"https://example.gov/meetings/m1/": detail}
+        results = {}
+        for option in (None, "attached"):
+            config = {"id": "test", "adapter": "proudcity", "url": "https://example.gov/meetings/",
+                      "jurisdiction_id": "place-test", "institution_id": "org-test"}
+            if option:
+                config["agenda_artifact"] = option
+            adapter = ProudCityAdapter(config, tmp_path / str(option))
+            adapter._request_delay = 0
+            adapter._fetch_page = lambda url: pages.get(url, list_html)
+            results[option] = adapter.capture()["meetings"][0]["artifacts"]["agenda"]["url"]
+        assert results == {None: f"{GCS}/2.a-minutes-2026-04-20.pdf", "attached": AGENDA}
+
+
+def test_only_san_rafael_opts_into_the_attached_agenda_rule():
+    import yaml
+
+    sources = yaml.safe_load((Path(__file__).resolve().parent.parent / "registry" / "proudcity-sources.yaml")
+                             .read_text())["sources"]
+    assert {s["id"]: s.get("agenda_artifact") for s in sources if s.get("agenda_artifact")} == \
+        {"san-rafael-city-council": "attached"}
+
+
+def test_fairfax_saved_page_is_unchanged_by_the_option_it_does_not_set():
+    # Fairfax and Belvedere set no agenda_artifact: their pages go through the untouched first-PDF path.
+    html = (FIXTURES / "wordpress-fairfax-meeting.html").read_text(errors="ignore")
+    assert extract_artifacts_from_detail(html, agenda_artifact=None) == extract_artifacts_from_detail(html)
+
+
+def test_a_bad_registry_option_stops_the_capture_before_any_detail_page(tmp_path):
+    config = {"id": "test", "adapter": "proudcity", "url": "https://example.gov/meetings/",
+              "jurisdiction_id": "place-test", "institution_id": "org-test", "agenda_artifact": "first"}
+    adapter = ProudCityAdapter(config, tmp_path)
+    adapter._fetch_page = lambda url: pytest.fail(f"fetched {url}")
+    with pytest.raises(ValueError, match="agenda_artifact"):
+        adapter.capture()
+
+
+def test_an_attached_file_that_is_also_the_packet_is_no_agenda():
+    # A meeting whose agenda tab attaches the agenda packet: one url on two artifacts of a meeting holds
+    # the whole load (guarded_load artifact_url_shared), and the packet Record already carries it.
+    packet = f"{GCS}/agenda-packet-2026-05-04.pdf"
+    html = _detail(SR_BODY + _file_block(packet, "agenda-packet-2026-05-04"), packet=packet)
+    got = extract_artifacts_from_detail(html, agenda_artifact="attached")
+    assert got["agenda"] == {"available": False, "url": None,
+                             "reason": "the agenda tab's attached file is this meeting's packet"}
+    assert got["packet"] == {"available": True, "url": packet}

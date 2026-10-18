@@ -60,9 +60,10 @@ Corte Madera, Fairfax, Belvedere and Ross (outline v8 / flat v1; evidence in the
 stays ineligible while `schedule: manual` and becomes eligible when its flip lands. Its block reads each meeting's
 session from its title and id (`session: {from: [title, id], match: exact}`), because the wave-01 titles are all
 "San Rafael City Council meeting". A closed-session item's title carries its subject line (position, case or
-property) after " - ". Many San Rafael agenda Records name another file (minutes, an e-mail, a staff report: the
-adapter takes the first PDF in the agenda tab); the parser holds those `unparseable`, so until the adapter picks the
-agenda PDF, San Rafael's regular meetings yield no items. Activation is a separate commit that sets
+property) after " - ". San Rafael's agenda Record is its agenda tab's attached file (registry
+`agenda_artifact: attached`): the tab's body links minutes, e-mails and staff reports, so the first PDF in the tab,
+which other ProudCity sources still take, is seldom the agenda. A meeting whose tab has no single attached file gets
+no agenda Record (the capture says why). Activation is a separate commit that sets
 the flag, merged only after the San Rafael and Larkspur flips have landed
 (or explicitly excluding whichever has not), on the same terms as docs/runbooks/san-rafael-weekly.md
 "Activation": inspect a weekly run, rebase, re-gate (`pytest tests/ -q -m "not operator_data"` and

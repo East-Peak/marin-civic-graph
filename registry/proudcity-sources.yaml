@@ -51,6 +51,9 @@ sources:
     url: https://www.cityofsanrafael.org/city-council-meetings/
     jurisdiction_id: place-san-rafael
     institution_id: org-san-rafael-city-council
+    # Its agenda tab's body links staff reports, minutes and correspondence; the agenda is
+    # the tab's attached file, else none (never the first PDF; scripts/adapters/proudcity.py).
+    agenda_artifact: attached
     agenda_items:
       artifact: agenda
       parser: lettered

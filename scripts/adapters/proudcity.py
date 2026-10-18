@@ -15,8 +15,9 @@ import re
 import time
 import urllib.request
 from html import unescape
+from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit
 
 from net_retry import retry_transient
 
@@ -58,6 +59,10 @@ MONTH_NAMES = {
     "jun": 6, "jul": 7, "aug": 8, "sep": 9,
     "oct": 10, "nov": 11, "dec": 12,
 }
+
+# A source's registry `agenda_artifact`: None = the first PDF in the agenda tab;
+# "attached" = the agenda tab's attached file (San Rafael)
+AGENDA_ARTIFACTS = (None, "attached")
 
 # Next-tab marker — used to bound a section when scanning forward
 _NEXT_TAB_RE = re.compile(
@@ -138,15 +143,21 @@ def extract_meeting_urls(html: str, base_url: str) -> list[dict]:
     return meetings
 
 
-def extract_artifacts_from_detail(html: str) -> dict:
+def extract_artifacts_from_detail(html: str, *, agenda_artifact: str | None = None) -> dict:
     """Extract artifact PDF URLs from a ProudCity meeting detail page.
 
     Searches each known tab section (agenda, packet, minutes, video) for
     PDF href links. Bounds each section search at the next tab marker so
     that a PDF in one section is not attributed to another.
 
+    `agenda_artifact` (the source's registry option): absent, the agenda is the
+    first PDF in its tab; "attached", it is the tab's one attached file, else
+    unavailable with a "reason" (never the first PDF).
+
     Returns a dict keyed by artifact type with values {"available": bool, "url": str|None}.
     """
+    if agenda_artifact not in AGENDA_ARTIFACTS:
+        raise ValueError(f"unknown agenda_artifact {agenda_artifact!r}")
     artifacts: dict[str, dict] = {}
 
     # Build an ordered list of (art_type, start_pos) for tab sections found
@@ -179,7 +190,53 @@ def extract_artifacts_from_detail(html: str) -> dict:
         if art_type not in artifacts:
             artifacts[art_type] = {"available": False, "url": None}
 
+    if agenda_artifact == "attached":
+        agenda = _attached_agenda(html)
+        # An agenda tab can attach another artifact (the packet): one url on two artifacts is no agenda.
+        also = [art for art, a in artifacts.items() if art != "agenda" and a["url"] and a["url"] == agenda["url"]]
+        artifacts["agenda"] = agenda if not also else {
+            "available": False, "url": None, "reason": f"the agenda tab's attached file is this meeting's {also[0]}"}
     return artifacts
+
+
+class _AttachedFiles(HTMLParser):
+    """The PDF hrefs of `download` anchors inside the first element whose id is `tab_id`.
+
+    ProudCity renders a tab's attached document as a file block with a download button;
+    the tab's body links (staff reports, minutes, correspondence) carry no `download`.
+    The element itself bounds the search, by nesting depth of its own tag.
+    """
+
+    def __init__(self, tab_id: str):
+        super().__init__()
+        self.tab_id, self.tag, self.depth = tab_id, None, 0
+        self.found, self.urls = False, []
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if self.depth:
+            self.depth += tag == self.tag
+            href = attrs.get("href") or ""
+            if tag == "a" and "download" in attrs and urlsplit(href).path.lower().endswith(".pdf") \
+                    and href not in self.urls:
+                self.urls.append(href)
+        elif not self.found and attrs.get("id") == self.tab_id:
+            self.found, self.tag, self.depth = True, tag, 1
+
+    def handle_endtag(self, tag):
+        if self.depth and tag == self.tag:
+            self.depth -= 1
+
+
+def _attached_agenda(html: str) -> dict:
+    files = _AttachedFiles(TAB_IDS["agenda"])
+    files.feed(html)
+    files.close()
+    if len(files.urls) == 1:
+        return {"available": True, "url": files.urls[0]}
+    reason = ("no agenda tab" if not files.found else "no attached file in the agenda tab" if not files.urls
+              else f"{len(files.urls)} attached files in the agenda tab")
+    return {"available": False, "url": None, "reason": reason}
 
 
 # ---------------------------------------------------------------------------
@@ -204,6 +261,9 @@ class ProudCityAdapter(BaseAdapter):
             return resp.read().decode("utf-8", "ignore")
 
     def capture(self) -> dict:
+        agenda_artifact = self.config.get("agenda_artifact")
+        if agenda_artifact not in AGENDA_ARTIFACTS:
+            raise ValueError(f"{self.source_id}: unknown agenda_artifact {agenda_artifact!r}")
         captured_at = self.utc_now_iso()
         base_url = self.url.rstrip("/")
         # Strip trailing path segment to get domain root for resolving relative URLs
@@ -258,7 +318,7 @@ class ProudCityAdapter(BaseAdapter):
                 time.sleep(self._request_delay)
             try:
                 detail_html = self._fetch_page(entry["url"])
-                artifacts = extract_artifacts_from_detail(detail_html)
+                artifacts = extract_artifacts_from_detail(detail_html, agenda_artifact=agenda_artifact)
             except Exception as exc:
                 errors.append(f"Failed to fetch {entry['url']}: {exc}")
                 artifacts = {k: {"available": False, "url": None} for k in TAB_IDS}
