@@ -193,50 +193,77 @@ def extract_artifacts_from_detail(html: str, *, agenda_artifact: str | None = No
     if agenda_artifact == "attached":
         agenda = _attached_agenda(html)
         # An agenda tab can attach another artifact (the packet): one url on two artifacts is no agenda.
-        also = [art for art, a in artifacts.items() if art != "agenda" and a["url"] and a["url"] == agenda["url"]]
+        also = [art for art, a in artifacts.items()
+                if art != "agenda" and a["url"] and unescape(a["url"]) == agenda["url"]]
         artifacts["agenda"] = agenda if not also else {
             "available": False, "url": None, "reason": f"the agenda tab's attached file is this meeting's {also[0]}"}
     return artifacts
 
 
 class _AttachedFiles(HTMLParser):
-    """The PDF hrefs of `download` anchors inside the first element whose id is `tab_id`.
+    """The `download` anchors' PDF hrefs inside the first div whose id is `tab_id`.
 
     ProudCity renders a tab's attached document as a file block with a download button;
     the tab's body links (staff reports, minutes, correspondence) carry no `download`.
-    The element itself bounds the search, by nesting depth of its own tag.
+    The div bounds the search by its own nesting depth, and it must visibly close: an
+    end tag of an element opened outside it, other than a stray inline or list end, or
+    a document ending first, leaves it `broken`.
     """
+
+    _HARMLESS_ENDS = frozenset({"p", "li", "span", "a", "b", "i", "em", "strong", "u", "br", "font"})
 
     def __init__(self, tab_id: str):
         super().__init__()
-        self.tab_id, self.tag, self.depth = tab_id, None, 0
-        self.found, self.urls = False, []
+        self.tab_id, self.depth, self.inner = tab_id, 0, {}
+        self.found = self.closed = self.broken = False
+        self.hrefs: list[str] = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
         if self.depth:
-            self.depth += tag == self.tag
+            if tag == "div":
+                self.depth += 1
+            else:
+                self.inner[tag] = self.inner.get(tag, 0) + 1
             href = attrs.get("href") or ""
             if tag == "a" and "download" in attrs and urlsplit(href).path.lower().endswith(".pdf") \
-                    and href not in self.urls:
-                self.urls.append(href)
-        elif not self.found and attrs.get("id") == self.tab_id:
-            self.found, self.tag, self.depth = True, tag, 1
+                    and href not in self.hrefs:
+                self.hrefs.append(href)
+        elif not self.found and tag == "div" and attrs.get("id") == self.tab_id:
+            self.found, self.depth = True, 1
 
     def handle_endtag(self, tag):
-        if self.depth and tag == self.tag:
+        if not self.depth:
+            return
+        if tag == "div":
             self.depth -= 1
+            self.closed = not self.depth
+        elif self.inner.get(tag):
+            self.inner[tag] -= 1
+        elif tag not in self._HARMLESS_ENDS:
+            self.broken, self.depth = True, 0
 
 
 def _attached_agenda(html: str) -> dict:
+    def none(reason: str) -> dict:
+        return {"available": False, "url": None, "reason": reason}
+
     files = _AttachedFiles(TAB_IDS["agenda"])
-    files.feed(html)
-    files.close()
-    if len(files.urls) == 1:
-        return {"available": True, "url": files.urls[0]}
-    reason = ("no agenda tab" if not files.found else "no attached file in the agenda tab" if not files.urls
-              else f"{len(files.urls)} attached files in the agenda tab")
-    return {"available": False, "url": None, "reason": reason}
+    try:
+        files.feed(html)
+        files.close()
+    except Exception as exc:  # noqa: BLE001 - an unreadable agenda tab is no agenda, never a lost meeting
+        return none(f"the agenda tab could not be read: {type(exc).__name__}")
+    if not files.found:
+        return none("no agenda tab")
+    if files.broken or not files.closed:
+        return none("the agenda tab is not well-formed")
+    if any(urlsplit(h).scheme not in ("http", "https") or not urlsplit(h).netloc for h in files.hrefs):
+        return none("an attached file's url is not absolute http(s)")
+    if len(files.hrefs) != 1:
+        return none(f"{len(files.hrefs)} attached files in the agenda tab" if files.hrefs
+                    else "no attached file in the agenda tab")
+    return {"available": True, "url": files.hrefs[0]}
 
 
 # ---------------------------------------------------------------------------

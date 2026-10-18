@@ -400,3 +400,45 @@ def test_an_attached_file_that_is_also_the_packet_is_no_agenda():
     assert got["agenda"] == {"available": False, "url": None,
                              "reason": "the agenda tab's attached file is this meeting's packet"}
     assert got["packet"] == {"available": True, "url": packet}
+
+
+class TestAttachedAgendaBoundaries:
+    """Codex diff r1: the agenda element must be a div that visibly opens and closes; anything else is no agenda."""
+
+    CONTACT = f'<div id="tab-contact">{_file_block(f"{GCS}/clerk-contacts.pdf")}</div>'
+
+    def _agenda(self, html):
+        return extract_artifacts_from_detail(html, agenda_artifact="attached")["agenda"]
+
+    def test_an_id_on_a_void_element_is_no_agenda_tab(self):
+        got = self._agenda(f'<input id="tab-agenda">{self.CONTACT}')
+        assert got == {"available": False, "url": None, "reason": "no agenda tab"}
+
+    def test_an_ancestor_closing_inside_the_agenda_element_is_refused(self):
+        got = self._agenda(f'<main><div id="tab-agenda">{SR_BODY}</main>{self.CONTACT}')
+        assert got == {"available": False, "url": None, "reason": "the agenda tab is not well-formed"}
+
+    def test_an_agenda_element_that_never_closes_is_refused(self):
+        got = self._agenda(f'<div id="tab-agenda">{SR_BODY}{_file_block(AGENDA)}')
+        assert got == {"available": False, "url": None, "reason": "the agenda tab is not well-formed"}
+
+    def test_stray_paragraph_and_list_ends_inside_are_harmless(self):
+        got = self._agenda(f'<div id="tab-agenda"><p>One<p>Two</p></li>{_file_block(AGENDA)}</div>{self.CONTACT}')
+        assert got == {"available": True, "url": AGENDA}
+
+    def test_a_relative_attached_url_is_refused_not_kept(self):
+        for href in ("/files/agenda.PDF?v=2", "//storage.example/agenda.pdf"):
+            got = self._agenda(_detail(SR_BODY + _file_block(href)))
+            assert got == {"available": False, "url": None, "reason": "an attached file's url is not absolute http(s)"}
+
+    def test_a_malformed_url_is_contained_and_other_tabs_survive(self):
+        got = extract_artifacts_from_detail(_detail(SR_BODY + _file_block("https://[broken/agenda.pdf")),
+                                            agenda_artifact="attached")
+        assert got["agenda"]["available"] is False and got["agenda"]["reason"].startswith("the agenda tab could not be read")
+        assert got["packet"] == {"available": True, "url": f"{GCS}/agenda-packet-2026-05-04.pdf"}
+
+    def test_the_packet_collision_compares_decoded_urls(self):
+        packet = f"{GCS}/agenda-packet-a&amp;b.pdf"
+        html = _detail(SR_BODY + _file_block(packet), packet=packet)
+        assert self._agenda(html) == {"available": False, "url": None,
+                                      "reason": "the agenda tab's attached file is this meeting's packet"}
