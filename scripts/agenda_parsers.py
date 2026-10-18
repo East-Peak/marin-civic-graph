@@ -296,6 +296,7 @@ _LETTERED_END = re.compile(r"^ADJOURN(?:MENT)?\b(?!\s+TO\b)", re.IGNORECASE)
 _LETTERED_TOP = re.compile(r"^(\d{1,2})\.\s+(\S.*)$")
 _LETTER = re.compile(r"^([a-z])\.\s+(\S.*)$")
 _ROMAN = re.compile(r"^[ivx]{2,4}\.\s")
+_ROMAN_POINT = re.compile(r"^[ivx]{1,4}\.\s")  # a roman point under an item: its description, not its title
 _SESSION_TITLE = re.compile(r"\bMEETING\s+AT\s+\d{1,2}(?::\d{2})?\s*[AP]\.?\s*M", re.IGNORECASE)
 _OTHER_BODY = re.compile(r"\b(AGENCY|AUTHORITY|DISTRICT|BOARD)\b")
 _ONLY_NONE = re.compile(r"^(?:[^:]*:\s*)?[-–—\s]*NONE\.?$", re.IGNORECASE)
@@ -338,7 +339,8 @@ def _lettered_title(lines: list[str]) -> str:
     text = " ".join(_ODD.sub("", lines[0]).split())
     for line in lines[1:]:
         nxt = " ".join(_ODD.sub("", line).split())
-        if not nxt or _LETTERED_STOP.match(nxt) or not (nxt[0].islower() or nxt[0] == "(" or _WRAPS.search(text)):
+        if not nxt or _LETTERED_STOP.match(nxt) or _ROMAN_POINT.match(nxt) \
+                or not (nxt[0].islower() or nxt[0] == "(" or _WRAPS.search(text)):
             break
         text = f"{text} {nxt}"
     return text
@@ -355,8 +357,13 @@ def _roman_ahead(lines: list[str], i: int) -> bool:
     return False
 
 
+def _pages_joined(text: str) -> list[str]:
+    """The text's lines with page breaks (form feeds) removed: a page break is not a blank line."""
+    return _clean(text.replace("\f", ""))
+
+
 def parse_lettered(text: str) -> dict:
-    lines = _clean(text)
+    lines = _pages_joined(text)
     dated = next((i for i, line in enumerate(lines) if _DATE.search(line)), len(lines))
     first = next((i for i, raw in enumerate(lines) if (_LETTERED_TOP.match(raw.strip()) and _indent(raw) <= 8)
                   or _LETTER.match(raw.strip()) or (i > dated and _is_caps_heading(raw))), None)
@@ -425,10 +432,11 @@ def parse_lettered(text: str) -> dict:
     leaves = [n for n, e in enumerate(entries) if leaf(e[0], e[1], e[3])]
     if any(any(n < at for n in leaves) and any(n >= at for n in leaves) for at in session_lines):
         raise Unparseable("multi_session_agenda", "items under two session titles")
-    prefixes = {}
+    prefixes, main = {}, None  # main: the first run with an item (runs of excluded leaves only are ignored)
     for run, run_heading in enumerate(runs):
         mine = [n for n in leaves if entries[n][1].run == run]
-        if run == 0 or not mine:
+        if not mine or main is None:
+            main = run if mine else main
             continue
         if run_heading is None or not _OTHER_BODY.search(run_heading.heading.upper()):
             raise Unparseable("multi_session_agenda", "a second numbered run with items")
@@ -569,7 +577,7 @@ def _masthead_conflict(between: list[str], printed: str | None, body: str | None
 
 
 def parse_decimal(text: str) -> dict:
-    lines = _clean(text)
+    lines = _pages_joined(text)
     start = next((i for i, raw in enumerate(lines) if _is_start(raw)), None)
     if start is None:
         return _no_body(text, lines)

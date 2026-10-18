@@ -272,3 +272,27 @@ def test_decimal_a_minutes_document_is_not_an_agenda():
     text = "MINUTES OF THE REGULAR MEETING of the Willow Bay City Council\nWednesday, March 18, 2020\n" \
            "1. ROLL CALL\n2. BUSINESS ITEMS\n   2.1 Approved a contract.\n3. ADJOURN\n"
     assert _reason("decimal", text) == "unparseable"
+
+
+def test_lettered_an_empty_first_run_does_not_make_a_second_session():
+    text = "AGENDA\nHARBORVIEW CITY COUNCIL - MONDAY, MAY 4, 2026\n1. Closed Session: - None.\nREGULAR SESSION\n" \
+           "1. Reports:\n   a. Budget Study\nADJOURNMENT:\n"
+    assert [i["key"] for i in ap.PARSERS["lettered"].parse(text)["items"]] == ["1a"]
+
+
+def test_lettered_a_title_stops_before_roman_points():
+    text = "AGENDA\nHARBORVIEW CITY COUNCIL - MONDAY, MAY 4, 2026\n1. Public Hearings:\n" \
+           "   a. Amendments to the Parking Code\n     i.  Ordinance Repealing Chapter 4.10\n     ii. Ordinance Two\n" \
+           "ADJOURNMENT:\n"
+    assert [i["title"] for i in ap.PARSERS["lettered"].parse(text)["items"]] == ["Amendments to the Parking Code"]
+
+
+@pytest.mark.parametrize("parser, text, title", [
+    ("decimal", "REGULAR MEETING of the Willow Bay City Council\nMarch 18, 2020\nREGULAR MEETING\n1. ROLL CALL\n"
+                "2. HEARINGS\n   2.1 ADOPT ORDINANCE 9 FOR THE PREVENTION OF\n\fSTRUCTURE FIRES\n3. ADJOURN\n",
+     "ADOPT ORDINANCE 9 FOR THE PREVENTION OF STRUCTURE FIRES"),
+    ("lettered", "AGENDA\nHARBORVIEW CITY COUNCIL - MONDAY, MAY 4, 2026\n1. Consent:\n   a. Contract with Gull and\n"
+                 "\f      Tern Builders\nADJOURNMENT:\n", "Contract with Gull and Tern Builders"),
+])
+def test_a_page_break_is_not_a_blank_line(parser, text, title):
+    assert [i["title"] for i in ap.PARSERS[parser].parse(text)["items"]] == [title]
