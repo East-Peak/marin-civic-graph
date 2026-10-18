@@ -64,7 +64,4 @@ sources:
     backfill_from: "2019-01-01"
     identity: crosswalk-required
     crosswalk: registry/crosswalks/san-rafael-city-council.json
-    schedule: manual
-    schedule_note: >-
-      Held off the weekly schedule until the no-overwrite load and its rehearsal
-      land and the switch is reviewed (docs/runbooks/san-rafael-weekly.md).
+    schedule: weekly

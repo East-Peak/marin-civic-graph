@@ -75,6 +75,7 @@ def test_san_rafael_takes_its_ids_only_from_its_reviewed_crosswalk():
     assert sr["institution_id"] == "org-san-rafael-city-council"
     assert sr["jurisdiction_id"] == "place-san-rafael"
     assert crosswalk.required(sr)
+    assert sr["schedule"] == "weekly"
     xw = crosswalk.load(ROOT / sr["crosswalk"], sr["id"])
     assert len(xw.entries) >= 261
 
