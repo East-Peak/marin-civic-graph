@@ -506,3 +506,19 @@ def test_created_nodes_carry_no_null_properties_as_neo4j_would_store_them(root, 
     _load(root, graph_dir, _capture(root, [m]))
     nodes, _ = _overlay(graph_dir)
     assert all(v is not None for n in nodes for v in n["properties"].values())
+
+
+def test_a_crosswalk_capture_cannot_grant_itself_stub_creation(root, tmp_path):
+    export = tmp_path / "bare-export"
+    export.mkdir()
+    (export / "nodes.jsonl").write_text("".join(json.dumps(n) + "\n" for n in SEED_NODES if n["id"] not in (INST, PLACE)))
+    (export / "edges.jsonl").write_text("")
+    graph_dir = gl.FakeGraphPort.create(tmp_path / "bare-graph", seed=export)
+    capture = _capture(root, [_m("city-council-may-4-2026", "2026-05-04")])
+    capture["load_policy"] = {"stubs": [[INST, "Organization"], [PLACE, "Place"]]}
+    report = _load(root, graph_dir, capture)
+    assert report["outcome"] == "held" and {h["reason"] for h in report["holds"]} == {"policy_mismatch"}
+    del capture["load_policy"]
+    report = _load(root, graph_dir, capture)
+    assert report["outcome"] == "held" and {h["reason"] for h in report["holds"]} == {"missing_node"}
+    assert _overlay(graph_dir) == ([], [])

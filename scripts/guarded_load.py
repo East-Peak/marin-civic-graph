@@ -1,4 +1,4 @@
-"""The no-overwrite load for crosswalk-required meeting sources.
+"""The no-overwrite load for crosswalk-required and native-only meeting sources.
 
 The ordinary meeting load (load_neo4j_v2: `MERGE ... SET n += props`) rewrites every property it is
 handed, so loading an adapter's view of a hand-curated meeting would replace its meeting_type, title,
@@ -14,6 +14,11 @@ source (scripts/crosswalk.py) loads through here instead:
     meeting holds for the url (reused by a new meeting), else a new id from the template;
   * the graph is the memory for identity: a crosswalk target must be a Meeting of the institution whose
     page carries the slug; a meeting arriving native must not carry an existing meeting's slug;
+  * a native-only source (its ids are the city's item ids) loads under the policy pinned in its capture,
+    which must equal the registry's now; it may create its institution and place stubs when they are
+    absent (nothing else); and the graph remembers its listing: a loaded meeting whose item left the
+    listing, a new meeting on a listing key an existing one holds, a changed key, or a cancellation and a
+    regular meeting on one date across loads is a hold;
   * anything else is a hold: the source writes NOTHING, and the report says why.
 
 Reads and creates happen in one transaction (`GraphPort.transaction`). Writers serialize on the
@@ -35,6 +40,8 @@ import crosswalk
 
 NEW_NODE_TYPES = ("Meeting", "Record")
 REQUIRED_CONSTRAINTS = ("Meeting", "Record")
+LISTING_PROPS = ("meeting_page_url", "listing_key", "archive_item_id", "superseded_item_ids", "meeting_date",
+                 "meeting_type")
 LINK_EDGES = (("EVIDENCED_BY", "out"), ("RELATES_TO_MEETING", "in"))  # Meeting -> Record, Record -> Meeting
 # Record types that are the same artifact as an adapter artifact (wave-01 used its own names).
 ARTIFACT_KINDS = {
@@ -121,7 +128,7 @@ class FakeGraphPort:
         self._nodes, self._edges = nodes, edges + overlay_edges
 
     @contextmanager
-    def transaction(self):
+    def transaction(self, constrained=REQUIRED_CONSTRAINTS):
         self._load()
         tx = _FakeTx(self)
         yield tx
@@ -147,8 +154,8 @@ class _FakeTx:
     def nodes(self, ids):
         return self.port.nodes(ids)
 
-    def institution_meetings(self, institution_id: str) -> dict[str, str | None]:
-        return {i: n["properties"].get("meeting_page_url") for i, n in self.port._nodes.items()
+    def institution_meetings(self, institution_id: str) -> dict[str, dict]:
+        return {i: {k: n["properties"].get(k) for k in LISTING_PROPS} for i, n in self.port._nodes.items()
                 if "Meeting" in n["labels"] and n["properties"].get("institution_id") == institution_id}
 
     def linked_records(self, meeting_ids) -> dict[str, set[str]]:
@@ -188,13 +195,14 @@ class Neo4jPort:
         self.driver, self.database = driver, database
 
     @contextmanager
-    def transaction(self):
+    def transaction(self, constrained=REQUIRED_CONSTRAINTS):
+        """`constrained`: the labels this load may create, each of which needs its id uniqueness constraint."""
         from load_neo4j_v2 import _constrained_labels
 
         with self.driver.session(database=self.database) as session:
             labels = _constrained_labels(session)
             unique = _unique_id_labels(session)
-            missing = [label for label in REQUIRED_CONSTRAINTS if label not in unique]
+            missing = [label for label in constrained if label not in unique]
             if missing:
                 raise GraphWriteError(f"no id uniqueness constraint on {', '.join(missing)}; refusing to write")
             tx = session.begin_transaction()
@@ -234,10 +242,11 @@ class _Neo4jTx:
             pending = [i for i in pending if i not in found]
         return found
 
-    def institution_meetings(self, institution_id: str) -> dict[str, str | None]:
+    def institution_meetings(self, institution_id: str) -> dict[str, dict]:
         rows = self.tx.run("MATCH (m:Meeting) WHERE m.institution_id = $inst "
-                           "RETURN m.id AS id, m.meeting_page_url AS url", inst=institution_id)
-        return {row["id"]: row["url"] for row in rows}
+                           "RETURN m.id AS id, [k IN $keys | m[k]] AS values", inst=institution_id,
+                           keys=list(LISTING_PROPS))
+        return {row["id"]: dict(zip(LISTING_PROPS, row["values"])) for row in rows}
 
     def linked_records(self, meeting_ids) -> dict[str, set[str]]:
         ids = sorted(set(meeting_ids))
@@ -307,8 +316,16 @@ def _artifacts(meeting: dict) -> dict[str, str]:
 
 
 def _check_policy(capture: dict, config: dict, root: Path, holds: _Holds):
+    """(the identity to load under, the stubs it may create) — or (None, ...) with a hold."""
+    if config.get("identity") == crosswalk.NATIVE or "identity" in capture:
+        return _check_native_policy(capture, config, holds)
+    return _check_crosswalk_policy(capture, config, root, holds), frozenset()
+
+
+def _check_crosswalk_policy(capture: dict, config: dict, root: Path, holds: _Holds):
     header = capture.get("crosswalk")
-    if not crosswalk.required(config) or not isinstance(header, dict) or header.get("path") != config.get("crosswalk"):
+    if not crosswalk.required(config) or not isinstance(header, dict) or header.get("path") != config.get("crosswalk") \
+            or "load_policy" in capture:  # a crosswalk source creates no stubs; a capture cannot say otherwise
         holds.add("policy_mismatch", detail="the capture's crosswalk header and the registry's identity disagree")
         return None
     try:
@@ -322,14 +339,83 @@ def _check_policy(capture: dict, config: dict, root: Path, holds: _Holds):
     return xw
 
 
+def _check_native_policy(capture: dict, config: dict, holds: _Holds):
+    """The capture's pinned load policy must be the registry's now; an empty crosswalk stands in for identity."""
+    pinned = capture.get("load_policy")
+    now = crosswalk.load_policy(config) if config.get("identity") == crosswalk.NATIVE else None
+    header = capture.get("identity")
+    same_ids = isinstance(pinned, dict) and (capture.get("institution_id"), capture.get("jurisdiction_id")) == \
+        (pinned.get("institution_id"), pinned.get("jurisdiction_id"))
+    if now is None or "crosswalk" in capture or not isinstance(header, dict) \
+            or header.get("mode") != crosswalk.NATIVE or pinned != now or not same_ids:
+        changed = sorted(k for k in set(pinned or {}) | set(now or {}) if (pinned or {}).get(k) != (now or {}).get(k))
+        holds.add("policy_mismatch", detail="the capture's pinned load policy and the registry's disagree",
+                  fields=changed)
+        return None, frozenset()
+    return crosswalk.Crosswalk(config["id"], {}, "", Path()), frozenset(tuple(s) for s in now["stubs"])
+
+
+def _check_listing(capture: dict, meetings: dict[str, dict], pages: dict[str, dict], holds: _Holds) -> None:
+    """A native-only source's listing against the graph's memory of it (this institution's Meetings).
+
+    Every item a load took stays what it was: listed, a meeting, on the same listing keys (a multi-date
+    notice: the same set of dates); an item absorbed as a re-posting stays absorbed by the same meeting.
+    """
+    items = set((capture.get("inventory") or {}).get("items") or [])
+    keys_was: dict[int, set] = {}
+    absorbed_was: dict[int, int] = {}
+    for p in pages.values():
+        if p.get("archive_item_id") is not None:
+            keys_was.setdefault(p["archive_item_id"], set()).add(p.get("listing_key"))
+            absorbed_was.update({s: p["archive_item_id"] for s in p.get("superseded_item_ids") or []})
+    keys_now: dict[int, set] = {}
+    absorbed_now: dict[int, int] = {}
+    for x in meetings.values():
+        m = x["meeting"]
+        keys_now.setdefault(m.get("archive_item_id"), set()).add(m.get("listing_key"))
+        absorbed_now.update({s: m.get("archive_item_id") for s in m.get("superseded_item_ids") or []})
+    for item, keys in sorted(keys_was.items()):
+        if item not in items:
+            holds.add("listing_item_missing", archive_item_id=item)
+        elif item in absorbed_now:  # a loaded meeting's own item now reads as another item's re-post
+            holds.add("listing_item_reassigned", archive_item_id=item, absorbed_by=absorbed_now[item])
+        elif item in keys_now and keys_now[item] != keys:
+            holds.add("listing_key_changed", archive_item_id=item, listing_keys=sorted(keys_now[item]),
+                      was=sorted(keys))
+        elif item not in keys_now and item not in absorbed_now:
+            holds.add("listing_item_dropped", archive_item_id=item, detail="still listed, no longer a meeting")
+    for item, winner in sorted(absorbed_was.items()):
+        if item in keys_now or absorbed_now.get(item, winner) != winner:
+            holds.add("superseded_item_reappeared", archive_item_id=item, absorbed_by=winner)
+    for item, winner in sorted(absorbed_now.items()):  # a loaded Meeting's re-posts are fixed when it is made
+        if winner in keys_was and absorbed_was.get(item) != winner:
+            holds.add("new_repost_on_loaded_meeting", archive_item_id=item, meeting_item=winner)
+    owner = {p["listing_key"]: mid for mid, p in pages.items() if p.get("listing_key")}
+    on_date: dict[str, set[str]] = {}
+    for p in pages.values():
+        on_date.setdefault(p.get("meeting_date") or "", set()).add(p.get("meeting_type"))
+    claimed: dict[str, str] = {}
+    for mid, x in sorted(meetings.items()):
+        m, key = x["meeting"], x["meeting"].get("listing_key")
+        if key in claimed:
+            holds.add("duplicate_listing_key", meeting=mid, other=claimed[key], listing_key=key)
+        claimed[key] = mid
+        if x["existing"]:
+            continue  # its item's keys are checked above
+        if owner.get(key) not in (None, mid):
+            holds.add("repost_suspected", meeting=mid, listing_key=key, existing=owner[key])
+        elif {m.get("meeting_type"), *on_date.get(m.get("date") or "", set())} >= {"cancelled_meeting", "regular"}:
+            holds.add("cancellation_conflict", meeting=mid, date=m.get("date"))
+
+
 def _check_meetings(tx, capture: dict, config: dict, xw, holds: _Holds) -> dict[str, dict]:
     """canonical id -> {meeting, slug, existing}; holds for every identity the graph contradicts."""
     sid, inst = config["id"], config["institution_id"]
     pages = tx.institution_meetings(inst)
     slug_owner: dict[str, str] = {}
-    for mid, url in pages.items():
-        if crosswalk.page_slug(url):
-            slug_owner.setdefault(crosswalk.page_slug(url), mid)
+    for mid, props in pages.items():
+        if crosswalk.page_slug(props.get("meeting_page_url")):
+            slug_owner.setdefault(crosswalk.page_slug(props["meeting_page_url"]), mid)
     meetings = capture.get("meetings") or []
     canon = [m.get("meeting_id") for m in meetings]
     adapter = [m.get("adapter_meeting_id") for m in meetings]
@@ -359,6 +445,8 @@ def _check_meetings(tx, capture: dict, config: dict, xw, holds: _Holds) -> dict[
             holds.add("crosswalk_entry_missing", meeting=mid, slug=slug, existing=slug_owner[slug])
             continue
         out[mid] = {"meeting": m, "slug": slug, "existing": node is not None}
+    if config.get("identity") == crosswalk.NATIVE:
+        _check_listing(capture, out, pages, holds)
     return out
 
 
@@ -422,21 +510,22 @@ def load_capture(graph, capture: dict, config: dict, *, root: Path) -> dict:
 
     holds = _Holds()
     report = {"source_id": config["id"], "capture_id": capture.get("capture_id"),
-              "crosswalk_sha256": (capture.get("crosswalk") or {}).get("sha256"), "holds": holds,
+              "crosswalk_sha256": (capture.get("crosswalk") or {}).get("sha256"),
+              "identity": config.get("identity"), "holds": holds,
               "created": {"nodes": {}, "edges": []}, "unchanged": {"nodes": 0, "edges": 0},
               "skipped_edges": {}, "protected_differences": {}}
-    xw = _check_policy(capture, config, Path(root), holds)
+    xw, stubs = _check_policy(capture, config, Path(root), holds)
     if xw is None:
         return {**report, "outcome": "held"}
-    with graph.transaction() as tx:
+    with graph.transaction(REQUIRED_CONSTRAINTS + tuple(sorted({label for _, label in stubs}))) as tx:
         meetings = _check_meetings(tx, capture, config, xw, holds)
         resolved = _resolve_records(tx, config["id"], meetings, config["institution_id"], holds)
         if holds:
             return {**report, "outcome": "held"}
         nodes, edges = normalize_rows(
             capture, record_id=lambda m, art: resolved[(m["meeting_id"], art)],
-            meeting_props=lambda m: {"meeting_page_url": m["source_url"]} if m.get("source_url") else {})
-        plan = _plan(tx, nodes, edges, holds)
+            meeting_props=_meeting_props)
+        plan = _plan(tx, nodes, edges, holds, stubs=stubs)
         if holds:
             return {**report, "outcome": "held"}
         tx.create(plan["nodes"], plan["edges"])
@@ -450,6 +539,15 @@ def load_capture(graph, capture: dict, config: dict, *, root: Path) -> dict:
             "protected_differences": dict(plan["differences"])}
 
 
+def _meeting_props(meeting: dict) -> dict:
+    """What a new Meeting carries for later loads' identity guards: its page (crosswalk sources) or its
+    listing item and key (native-only sources)."""
+    props = {"meeting_page_url": meeting["source_url"]} if meeting.get("source_url") else {}
+    props.update({k: meeting[k] for k in ("listing_key", "archive_item_id", "superseded_item_ids", "description")
+                  if meeting.get(k) not in (None, "")})
+    return props
+
+
 def _export_row(node: dict) -> dict:
     """A normalized node as the graph stores it: display_label and promotion_state are properties."""
     props = {k: v for k, v in node["properties"].items() if k != "payload_json" and v is not None}  # Neo4j stores no nulls
@@ -458,7 +556,8 @@ def _export_row(node: dict) -> dict:
                            "promotion_state": node.get("promotion_state", "")}}
 
 
-def _plan(tx, nodes: list[dict], edges: list[dict], holds: _Holds) -> dict:
+def _plan(tx, nodes: list[dict], edges: list[dict], holds: _Holds, stubs=frozenset()) -> dict:
+    """`stubs`: the (id, label) pairs this load may create when absent, beside Meetings and Records."""
     rows: dict[str, dict] = {}
     for node in nodes:
         rows.setdefault(node["id"], _export_row(node))  # a shared Record: one row
@@ -469,7 +568,7 @@ def _plan(tx, nodes: list[dict], edges: list[dict], holds: _Holds) -> dict:
             have = existing[nid]["props"]
             label = row["labels"][0]
             differences.update(f"{label}.{k}" for k, v in row["properties"].items() if have.get(k) != v)
-        elif row["labels"][0] in NEW_NODE_TYPES:
+        elif row["labels"][0] in NEW_NODE_TYPES or (nid, row["labels"][0]) in stubs:
             create.append(row)
         else:
             holds.add("missing_node", node=nid, detail=f"{row['labels'][0]} is not created by this load")

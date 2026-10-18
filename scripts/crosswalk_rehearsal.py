@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Rehearse a crosswalk-required source's weekly path end to end; check a real run after it loaded.
+"""Rehearse a guarded (crosswalk-required or native-only) source's weekly path end to end; check a real run after.
 
     crosswalk_rehearsal.py rehearse --source <id> --export <dir> --work <staging dir> [--identity-cache <json>]
+                                    [--responses <dir>] [--expected <json>]
     crosswalk_rehearsal.py check-loaded <run-id> --source <id> --post-export <dir> [--root <repo>] [--out <dir>]
 
 `rehearse` (staging only; no graph writes) runs the real weekly chain: refresh_weekly.stage ->
@@ -12,7 +13,9 @@ robots gate) and records every response; the others replay them with the clock f
 identity cache, a second identical run and a later week (+7 days) see byte-identical inputs. It then
 checks what the goal requires: new Meetings == the listing-only set, new Records == an independent
 classification, nothing existing touched, no duplicate Meeting, cache-independence, replay no-op, a
-later week adds exactly its listing snapshot.
+later week adds exactly its listing snapshot. A native-only source has no crosswalk to derive its
+expectations from: `--expected` names its Meetings, artifact Records and stubs to create (from the
+reviewed listing inventory), and the source's own registry file is the one staged.
 
 `check-loaded` (read only) repeats the checks after a real Monday run: from that run's pinned backup,
 capture, crosswalk and load report, plus a full-property export taken after it
@@ -45,6 +48,7 @@ import crosswalk  # noqa: E402
 import guarded_load  # noqa: E402
 
 LINK_TYPES = ("EVIDENCED_BY", "RELATES_TO_MEETING")
+LISTING_RECORD = {"proudcity": "meetings-page", "civicplus_archive": "archive-page"}  # record-<sid>-<this>-<day>
 STUB_PROPERTIES = ("name", "subtype", "jurisdiction_id", "place_type", "display_label", "promotion_state")
 VARIANTS = ("empty-cache", "populated-cache", "replay", "later-week")
 
@@ -73,6 +77,12 @@ class ResponseStore:
 
     def __len__(self) -> int:
         return len(list(self.path.glob("*.json")))
+
+
+class _Body(io.BytesIO):
+    """A recorded response body, readable as the adapters read a reply (headers give its charset)."""
+
+    headers = SimpleNamespace(get_content_charset=lambda default=None: default)
 
 
 def install_shim(store: ResponseStore, mode: str, frozen: datetime) -> None:
@@ -105,14 +115,14 @@ def install_shim(store: ResponseStore, mode: str, frozen: datetime) -> None:
         store.put(url, status=reply.status, headers=reply.headers, body=reply.body, error=reply.error)
         return reply
 
-    def open_(self, request, *, timeout, handlers=()):
+    def open_(self, request, *, timeout, handlers=(), hosts=None):
         if mode == "replay":
-            self.admit(request.full_url, method=request.get_method())  # robots.txt still decides
-            return io.BytesIO(store.get(request.full_url)["body"])
-        with gate_open(self, request, timeout=timeout, handlers=handlers) as resp:
+            self.admit(request.full_url, method=request.get_method(), hosts=hosts)  # robots.txt still decides
+            return _Body(store.get(request.full_url)["body"])
+        with gate_open(self, request, timeout=timeout, handlers=handlers, hosts=hosts) as resp:
             body = resp.read()
         store.put(request.full_url, status=200, headers={}, body=body, error=None)
-        return io.BytesIO(body)
+        return _Body(body)
 
     robots_gate.RobotsGate.__init__.__kwdefaults__["robots_transport"] = robots_transport
     robots_gate.RobotsGate.open = open_
@@ -183,23 +193,36 @@ class RehearsalRunner:
         raise RuntimeError(f"the rehearsal does not run {cmd}")
 
 
-def _make_root(root: Path, repo: Path, source_id: str, identity_cache: dict | None) -> None:
-    """A weekly root: the registry with only `source_id` weekly, its crosswalk, the scripts, an empty data/."""
+def source_registry(repo: Path, source_id: str) -> tuple[str, dict]:
+    """(registry name, config) of the meeting registry (registry/<name>-sources.yaml) that holds `source_id`."""
+    import yaml
+
+    for path in sorted((Path(repo) / "registry").glob("*-sources.yaml")):
+        for config in yaml.safe_load(path.read_text()).get("sources") or []:
+            if config.get("id") == source_id:
+                return path.name.removesuffix("-sources.yaml"), config
+    raise ValueError(f"no registry holds {source_id}")
+
+
+def _make_root(root: Path, repo: Path, source_id: str, registry_name: str, identity_cache: dict | None) -> None:
+    """A weekly root: the source's registry with only `source_id` weekly, crosswalks, the scripts, an empty data/."""
     import yaml
 
     (root / "registry").mkdir(parents=True)
-    registry = yaml.safe_load((repo / "registry" / "proudcity-sources.yaml").read_text())
+    name = f"{registry_name}-sources.yaml"
+    registry = yaml.safe_load((repo / "registry" / name).read_text())
     for source in registry["sources"]:
         source["schedule"] = "weekly" if source["id"] == source_id else "manual"
-    (root / "registry" / "proudcity-sources.yaml").write_text(yaml.safe_dump(registry, sort_keys=False))
-    shutil.copytree(repo / "registry" / "crosswalks", root / "registry" / "crosswalks")
+    (root / "registry" / name).write_text(yaml.safe_dump(registry, sort_keys=False))
+    if (repo / "registry" / "crosswalks").is_dir():
+        shutil.copytree(repo / "registry" / "crosswalks", root / "registry" / "crosswalks")
     (root / "scripts").symlink_to(repo / "scripts", target_is_directory=True)
     (root / "data" / "ingest-runs").mkdir(parents=True)
     if identity_cache is not None:
         (root / "data" / "ingest-runs" / "meeting-identity.json").write_text(json.dumps(identity_cache))
 
 
-def _context(root: Path, runner, now: datetime, work: Path):
+def _context(root: Path, runner, now: datetime, work: Path, registry_name: str):
     import refresh_weekly as rw
 
     env = {"NEO4J_URI": "bolt://localhost:7688", "NEO4J_USER": "neo4j", "NEO4J_PASSWORD": "rehearsal-unused",
@@ -210,18 +233,19 @@ def _context(root: Path, runner, now: datetime, work: Path):
         raise RuntimeError("the rehearsal reaches for no network outside the robots-gated adapter")
 
     return rw.Context(root=root, runner=runner, env=env, python=sys.executable, now=lambda: now,
-                      meeting_registries=("proudcity",), staged_sources={}, ping=refuse, netfile_fetch=refuse,
+                      meeting_registries=(registry_name,), staged_sources={}, ping=refuse, netfile_fetch=refuse,
                       prepare_campaign_exports=False)
 
 
 def run_variant(name: str, work: Path, repo: Path, source_id: str, *, store: ResponseStore, mode: str,
-                frozen: datetime, graph: Path, seed: Path, identity_cache: dict | None) -> dict:
+                frozen: datetime, graph: Path, seed: Path, identity_cache: dict | None,
+                registry_name: str = "proudcity") -> dict:
     import refresh_weekly as rw
 
     root = work / name
-    _make_root(root, repo, source_id, identity_cache)
+    _make_root(root, repo, source_id, registry_name, identity_cache)
     runner = RehearsalRunner(store=store, mode=mode, frozen=frozen, graph_uri=f"fakegraph://{graph}", seed=seed)
-    ctx = _context(root, runner, frozen, work)
+    ctx = _context(root, runner, frozen, work, registry_name)
     staged = rw.stage(ctx)
     loaded = rw.load(ctx, staged["run_id"]) if staged["status"] == "awaiting_load_approval" else staged
     source = loaded["sources"].get(source_id, {})
@@ -302,24 +326,28 @@ def _check(results: dict, name: str, ok: bool, detail) -> None:
 
 
 def rehearse(source_id: str, export: Path, work: Path, *, repo: Path = REPO, identity_cache: Path | None = None,
-             responses: Path | None = None, now: datetime | None = None) -> dict:
-    import yaml
-
+             responses: Path | None = None, now: datetime | None = None, expected: Path | None = None) -> dict:
     work, export = Path(work).resolve(), Path(export).resolve()
     if work.is_relative_to(REPO) or work.is_relative_to(Path(repo).resolve()):
         raise ValueError(f"the rehearsal works in staging, never inside the repo ({work})")
+    registry_name, config = source_registry(repo, source_id)
+    if crosswalk.required(config):
+        xw, expect = crosswalk.load(repo / config["crosswalk"], source_id), None
+    elif config.get("identity") == crosswalk.NATIVE:
+        if expected is None:
+            raise ValueError(f"{source_id} is native-only: its rehearsal needs --expected (the reviewed inventory)")
+        xw, expect = None, json.loads(Path(expected).read_text())
+    else:
+        raise ValueError(f"{source_id} is not a guarded source (identity crosswalk-required or native-only)")
     work.mkdir(parents=True, exist_ok=False)
-    config = next(s for s in yaml.safe_load((repo / "registry" / "proudcity-sources.yaml").read_text())["sources"]
-                  if s["id"] == source_id)
-    xw = crosswalk.load(repo / config["crosswalk"], source_id)
     frozen = (now or datetime.now(timezone.utc)).replace(microsecond=0)
     store = ResponseStore(responses or work / "responses")
     first_mode = "replay" if len(store) else "record"
     graphs = {v: guarded_load.FakeGraphPort.create(work / f"graph-{v}", seed=export)
               for v in ("empty-cache", "populated-cache")}
     real_cache = json.loads(Path(identity_cache).read_text()) if identity_cache else {"by_id": {}, "by_key": {}}
-    wrong = {f"{source_id}|{crosswalk.adapter_id(source_id, slug)}": "meeting-wrong-from-cache"
-             for slug in list(xw.entries)[:5]}
+    ids = [crosswalk.adapter_id(source_id, slug) for slug in list(xw.entries)[:5]] if xw else expect["meetings"][:5]
+    wrong = {f"{source_id}|{mid}": "meeting-wrong-from-cache" for mid in ids}
     populated = {**real_cache, "by_id": {**real_cache.get("by_id", {}), **wrong}}
     plan = [("empty-cache", first_mode, frozen, graphs["empty-cache"], None),
             ("populated-cache", "replay", frozen, graphs["populated-cache"], populated),
@@ -328,14 +356,15 @@ def rehearse(source_id: str, export: Path, work: Path, *, repo: Path = REPO, ide
     runs, overlays = {}, {}
     for name, mode, at, graph, cache in plan:
         runs[name] = run_variant(name, work, repo, source_id, store=store, mode=mode, frozen=at, graph=graph,
-                                 seed=export, identity_cache=cache)
+                                 seed=export, identity_cache=cache, registry_name=registry_name)
         overlays[name] = guarded_load.FakeGraphPort(graph).overlay()
-    return _rehearsal_checks(source_id, config, xw, export, work, runs, overlays, store)
+    return _rehearsal_checks(source_id, config, xw, export, work, runs, overlays, store, expect)
 
 
-def _rehearsal_checks(source_id, config, xw, export, work, runs, overlays, store) -> dict:
-    results = {"source_id": source_id, "export": str(export), "crosswalk_sha256": xw.sha256, "work": str(work),
-               "responses": len(store), "runs": {}, "checks": []}
+def _rehearsal_checks(source_id, config, xw, export, work, runs, overlays, store, expect=None) -> dict:
+    results = {"source_id": source_id, "export": str(export), "crosswalk_sha256": xw.sha256 if xw else None,
+               "identity": config.get("identity"), "work": str(work), "responses": len(store), "runs": {},
+               "checks": []}
     for name, run in runs.items():
         results["runs"][name] = {"mode": run["mode"], "frozen": run["frozen"], "status": run["status"],
                                  "error": run["error"], "outcome": (run["report"] or {}).get("outcome"),
@@ -344,8 +373,12 @@ def _rehearsal_checks(source_id, config, xw, export, work, runs, overlays, store
         _check(results, f"{name}: the run reached awaiting_publish_approval with the source loaded",
                run["status"] == "awaiting_publish_approval" and source_id in run["state"].get("loaded", [])
                and (run["report"] or {}).get("outcome") == "loaded", run["error"] or run["source"].get("reasons"))
-        _check(results, f"{name}: the stage pinned the crosswalk version",
-               run["source"].get("crosswalk_sha256") == xw.sha256, run["source"].get("crosswalk_sha256"))
+        if xw:
+            _check(results, f"{name}: the stage pinned the crosswalk version",
+                   run["source"].get("crosswalk_sha256") == xw.sha256, run["source"].get("crosswalk_sha256"))
+        else:
+            _check(results, f"{name}: the stage pinned the native-only identity",
+                   run["source"].get("identity") == crosswalk.NATIVE, run["source"].get("identity"))
     if not all(c["ok"] for c in results["checks"]):
         return results
     first = runs["empty-cache"]
@@ -353,7 +386,9 @@ def _rehearsal_checks(source_id, config, xw, export, work, runs, overlays, store
     _check(results, "the first capture has no fetch errors (replays cannot hide a failed fetch)",
            not capture.get("errors"), capture.get("errors", [])[:5])
     nodes, edges = _read_export(export)
-    _coherent_clock(results, runs, source_id)
+    _coherent_clock(results, runs, source_id, LISTING_RECORD[config["adapter"]])
+    if xw is None:
+        return _native_checks(results, source_id, config, nodes, runs, overlays, expect)
 
     # new Meetings == the listing-only set, by the generator's own report on this run's listing
     listing = (first["root"] / "data" / "raw" / source_id / first["frozen"][:10] / "source.html").read_text()
@@ -392,30 +427,71 @@ def _rehearsal_checks(source_id, config, xw, export, work, runs, overlays, store
                          "skipped_edges": first["report"]["skipped_edges"],
                          "protected_differences": first["report"]["protected_differences"]}
 
-    populated = runs["populated-cache"]
-    _check(results, "empty and populated identity cache: identical capture and identical writes",
-           first["capture"].read_bytes() == populated["capture"].read_bytes()
-           and overlays["populated-cache"] == (o_nodes, o_edges), None)
-    replay = runs["replay"]
-    _check(results, "a second identical run is a no-op",
-           replay["capture"].read_bytes() == first["capture"].read_bytes()
-           and replay["report"]["created"] == {"nodes": {}, "edges": []}
-           and overlays["replay"] == (o_nodes, o_edges), replay["report"]["created"])
-    later = runs["later-week"]
-    listing_id = f"record-{source_id}-meetings-page-{later['frozen'][:10]}"
-    _check(results, "a later-week capture adds exactly its dated listing Record",
-           later["report"]["created"] == {"nodes": {"Record": [listing_id]}, "edges": []}, later["report"]["created"])
+    _replays(results, source_id, config, runs, overlays)
     return results
 
 
-def _coherent_clock(results: dict, runs: dict, source_id: str) -> None:
+def _replays(results: dict, source_id: str, config: dict, runs: dict, overlays: dict) -> None:
+    first, populated, replay, later = (runs[v] for v in VARIANTS)
+    _check(results, "empty and populated identity cache: identical capture and identical writes",
+           first["capture"].read_bytes() == populated["capture"].read_bytes()
+           and overlays["populated-cache"] == overlays["empty-cache"], None)
+    _check(results, "a second identical run is a no-op",
+           replay["capture"].read_bytes() == first["capture"].read_bytes()
+           and replay["report"]["created"] == {"nodes": {}, "edges": []}
+           and overlays["replay"] == overlays["empty-cache"], replay["report"]["created"])
+    listing_id = f"record-{source_id}-{LISTING_RECORD[config['adapter']]}-{later['frozen'][:10]}"
+    _check(results, "a later-week capture adds exactly its dated listing Record",
+           later["report"]["created"] == {"nodes": {"Record": [listing_id]}, "edges": []}, later["report"]["created"])
+
+
+def _native_checks(results, source_id, config, nodes, runs, overlays, expect) -> dict:
+    """A native-only source: its first load against the caller's expectation (the reviewed inventory)."""
+    first = runs["empty-cache"]
+    capture = json.loads(first["capture"].read_text())
+    created = first["report"]["created"]
+    _check(results, "new Meetings == the expected set (the reviewed inventory)",
+           sorted(created["nodes"].get("Meeting", [])) == sorted(expect["meetings"]),
+           {"created": len(created["nodes"].get("Meeting", [])), "expected": len(expect["meetings"]),
+            "unexpected": sorted(set(created["nodes"].get("Meeting", [])) - set(expect["meetings"]))[:10],
+            "missing": sorted(set(expect["meetings"]) - set(created["nodes"].get("Meeting", [])))[:10]})
+    records = sorted(expect["records"] + [r["id"] for r in capture.get("record_refs", [])])
+    results["expected_records"] = {"meetings": len(expect["meetings"]), "artifact_records": len(expect["records"]),
+                                   "listing_snapshot": len(capture.get("record_refs", [])),
+                                   "stubs": sorted(expect.get("stubs", []))}
+    _check(results, "new Records == the expected artifact Records + this run's listing snapshot",
+           sorted(created["nodes"].get("Record", [])) == records,
+           {"created": len(created["nodes"].get("Record", [])), "expected": len(records)})
+    stubs = sorted(created["nodes"].get("Organization", []) + created["nodes"].get("Place", []))
+    _check(results, "stubs created == the expected (absent) stubs, nothing else",
+           stubs == sorted(expect.get("stubs", [])), stubs)
+    o_nodes, o_edges = overlays["empty-cache"]
+    touched = [n["id"] for n in o_nodes if n["id"] in nodes]
+    created_ids = {n["id"] for n in o_nodes}
+    between_existing = [e for e in o_edges if e["start_id"] not in created_ids and e["end_id"] not in created_ids]
+    _check(results, "0 changes to existing nodes, labels or relationships (the overlay holds only creates)",
+           not touched and not between_existing, {"overwritten": touched, "edges_between_existing": between_existing})
+    keys = Counter(n["properties"].get("listing_key") for n in o_nodes if "Meeting" in n["labels"])
+    keys.update(n["properties"].get("listing_key") for n in nodes.values() if "Meeting" in n["labels"]
+                and n["properties"].get("institution_id") == config["institution_id"])
+    dupes = sorted(k for k, c in keys.items() if c > 1)
+    _check(results, "0 duplicate Meetings (one Meeting per listing key)", not dupes, dupes)
+    results["counts"] = {"new_meetings": len(created["nodes"].get("Meeting", [])),
+                         "new_records": len(created["nodes"].get("Record", [])), "new_stubs": stubs,
+                         "new_edges": len(created["edges"]), "skipped_edges": first["report"]["skipped_edges"],
+                         "protected_differences": first["report"]["protected_differences"]}
+    _replays(results, source_id, config, runs, overlays)
+    return results
+
+
+def _coherent_clock(results: dict, runs: dict, source_id: str, page: str = "meetings-page") -> None:
     problems = []
     for name, run in runs.items():
         day = run["frozen"][:10]
         capture = json.loads(run["capture"].read_text())
         listing = [r["id"] for r in capture.get("record_refs", [])]
         expect = {"capture file": f"{day}.json", "capture_id": f"{source_id}__{day}", "captured_at": day,
-                  "listing record": f"record-{source_id}-meetings-page-{day}",
+                  "listing record": f"record-{source_id}-{page}-{day}",
                   "raw path": f"data/raw/{source_id}/{day}/source.html"}
         got = {"capture file": run["capture"].name, "capture_id": capture.get("capture_id"),
                "captured_at": (capture.get("captured_at") or "")[:10], "listing record": (listing or [None])[0],
@@ -454,7 +530,7 @@ def _edge_key(e: dict) -> tuple:
     return (e["start_id"], e["type"], e["end_id"], json.dumps(e.get("properties") or {}, sort_keys=True))
 
 
-def _owned(nodes: dict[str, dict], edges: list[dict], source_id: str, institution_id: str):
+def _owned(nodes: dict[str, dict], edges: list[dict], source_id: str, institution_id: str, extra=frozenset()):
     """(owned node ids, every relationship touching one, as a multiset of (start, type, end, properties)).
 
     Owned: the source's Meetings (by institution), Records with its source_id, and Records on those
@@ -464,7 +540,7 @@ def _owned(nodes: dict[str, dict], edges: list[dict], source_id: str, institutio
     meetings = {i for i, n in nodes.items() if "Meeting" in n["labels"]
                 and n["properties"].get("institution_id") == institution_id}
     owned = meetings | {i for i, n in nodes.items() if "Record" in n["labels"]
-                        and n["properties"].get("source_id") == source_id}
+                        and n["properties"].get("source_id") == source_id} | (set(extra) & set(nodes))
     for e in edges:
         if e["type"] in LINK_TYPES and (e["start_id"] in meetings or e["end_id"] in meetings):
             other = e["end_id"] if e["start_id"] in meetings else e["start_id"]
@@ -487,8 +563,8 @@ def check_loaded(root: Path, run_id: str, source_id: str, post_export: Path, out
                                           {h["status"] for h in later["history"]} & {"loaded", "load_failed"}):
             raise CheckRefused(f"run {path.parent.name} attempted a load after {run_id}; the graph is not that run's")
     source = state["sources"].get(source_id) or {}
-    if "crosswalk_sha256" not in source or not source.get("load_report"):
-        raise CheckRefused(f"{source_id} was not a crosswalk-required load in run {run_id}")
+    if not ({"crosswalk_sha256", "identity"} & set(source)) or not source.get("load_report"):
+        raise CheckRefused(f"{source_id} was not a guarded (crosswalk-required or native-only) load in run {run_id}")
     backup = root / state["backup"]
     pinned = state.get("backup_sha256") or {}
     if not pinned or any(rw._sha256(backup / f) != h for f, h in pinned.items()):
@@ -498,8 +574,12 @@ def check_loaded(root: Path, run_id: str, source_id: str, post_export: Path, out
         raise CheckRefused(f"the capture {source['capture']['path']} changed since the run")
     configs = yaml.safe_load((root / f"registry/{source['registry']}-sources.yaml").read_text())["sources"]
     config = next(s for s in configs if s["id"] == source_id)
-    if crosswalk.sha256_file(root / config["crosswalk"]) != source["crosswalk_sha256"]:
-        raise CheckRefused("the crosswalk changed since the run; check out the pinned version first")
+    capture = json.loads(capture_path.read_text())
+    if "crosswalk_sha256" in source:
+        if crosswalk.sha256_file(root / config["crosswalk"]) != source["crosswalk_sha256"]:
+            raise CheckRefused("the crosswalk changed since the run; check out the pinned version first")
+    elif capture.get("load_policy") != crosswalk.load_policy(config):
+        raise CheckRefused("the registry's load policy changed since the run; check out the run's version first")
     loaded_at = next(h["at"] for h in state["history"] if h["status"] == "loaded")
     post_files = {f: post_export / f for f in ("nodes.jsonl", "edges.jsonl")}
     if not all(p.is_file() for p in post_files.values()):
@@ -518,14 +598,14 @@ def check_loaded(root: Path, run_id: str, source_id: str, post_export: Path, out
     if graph_dir.exists():
         shutil.rmtree(graph_dir)
     graph = guarded_load.FakeGraphPort.create(graph_dir, seed=backup)
-    capture = json.loads(capture_path.read_text())
     with guarded_load.open_port(f"fakegraph://{graph}") as port:
         expected = guarded_load.load_capture(port, capture, config, root=root)
     expected.pop("normalized", None)
 
     results = {"run_id": run_id, "source_id": source_id, "checks": [],
                "inputs": {"backup": state["backup"], "backup_sha256": pinned, "capture": source["capture"],
-                          "crosswalk_sha256": source["crosswalk_sha256"], "post_export": str(post_export),
+                          "crosswalk_sha256": source.get("crosswalk_sha256"), "identity": source.get("identity"),
+                          "post_export": str(post_export),
                           "post_export_sha256": {f: rw._sha256(p) for f, p in post_files.items()},
                           "post_export_taken": taken.isoformat(), "loaded_at": loaded_at}}
     if source.get("held") or source_id not in state.get("loaded", []) or final["outcome"] != "loaded":
@@ -545,13 +625,16 @@ def check_loaded(root: Path, run_id: str, source_id: str, post_export: Path, out
 
     before_nodes, before_edges = _read_export(backup)
     after_nodes, after_edges = _read_export(post_export)
+    stubs = [config["institution_id"], config["jurisdiction_id"]]
+    # A stub absent before the run is this source's own once it exists (only its load may create it).
+    new_stubs = {s for s in stubs if s not in before_nodes and (s in after_nodes or s in planned_nodes)}
     owned_before, edges_before = _owned(before_nodes, before_edges, source_id, config["institution_id"])
-    owned_after, edges_after = _owned(after_nodes, after_edges, source_id, config["institution_id"])
+    owned_after, edges_after = _owned(after_nodes, after_edges, source_id, config["institution_id"], new_stubs)
     new_nodes = owned_after - owned_before
     _check(results, "new owned nodes == the planned creates", new_nodes == set(planned_nodes),
            {"unexpected": sorted(new_nodes - set(planned_nodes))[:20],
             "missing": sorted(set(planned_nodes) - new_nodes)[:20]})
-    wrong_props = sorted(i for i in new_nodes & set(planned_nodes)
+    wrong_props = sorted(i for i in new_nodes & set(planned_nodes) if i in after_nodes
                          if after_nodes[i]["properties"] != planned_nodes[i]["properties"]
                          or sorted(after_nodes[i]["labels"]) != sorted(planned_nodes[i]["labels"]))
     _check(results, "created nodes carry exactly the planned labels and properties", not wrong_props, wrong_props[:20])
@@ -566,7 +649,6 @@ def check_loaded(root: Path, run_id: str, source_id: str, post_export: Path, out
                                         "missing": sorted(planned_edges - new_edges)[:20]})
     lost = edges_before - edges_after
     _check(results, "0 pre-existing relationships on owned nodes removed or changed", not lost, sorted(lost)[:20])
-    stubs = [config["institution_id"], config["jurisdiction_id"]]
     stub_changes = {s: {k: (before_nodes[s]["properties"].get(k), after_nodes.get(s, {}).get("properties", {}).get(k))
                         for k in STUB_PROPERTIES
                         if before_nodes[s]["properties"].get(k) != after_nodes.get(s, {}).get("properties", {}).get(k)}
@@ -604,6 +686,8 @@ def main(argv: list[str] | None = None) -> int:
     rh.add_argument("--work", type=Path, required=True, help="a new staging directory")
     rh.add_argument("--identity-cache", type=Path, help="a meeting-identity.json to copy for the populated run")
     rh.add_argument("--responses", type=Path, help="recorded responses to replay instead of fetching")
+    rh.add_argument("--expected", type=Path,
+                    help="a native-only source's expected {meetings, records, stubs} (the reviewed inventory)")
     ck = sub.add_parser("check-loaded", help="after a real run: what it wrote vs what it should have (read only)")
     ck.add_argument("run_id")
     ck.add_argument("--source", required=True)
@@ -624,7 +708,7 @@ def main(argv: list[str] | None = None) -> int:
         return _shim_main(args)
     if args.cmd == "rehearse":
         results = rehearse(args.source, args.export, args.work, identity_cache=args.identity_cache,
-                           responses=args.responses)
+                           responses=args.responses, expected=args.expected)
         text = render_rehearsal(results)
         (Path(args.work) / "rehearsal.json").write_text(json.dumps(results, indent=1, default=str) + "\n")
         (Path(args.work) / "rehearsal.md").write_text(text)
