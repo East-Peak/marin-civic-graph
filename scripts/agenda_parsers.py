@@ -311,9 +311,9 @@ _EXACT_DATE = re.compile(rf"(?<![A-Za-z0-9_])({'|'.join(_MONTHS)}) +(\d{{1,2}}),
 _SUBJECT = re.compile(r"^(?:title|position|position affected|name of case|case name|property):", re.IGNORECASE)
 _CLOSED_SESSION = re.compile(r"\bclosed\s+session\b", re.IGNORECASE)
 # a line that is a cancellation notice ("NOTICE OF CANCELLATION", "THIS MEETING HAS BEEN CANCELLED"), not boilerplate
-_CANCELLATION = re.compile(r"(?:notice\s+of\s+cancel+ation|cancel+ation\s+notice|(?:meeting\s+)?cancel+ed"
-                           r"|(?:this|the)(?:\s+\w+){0,3}\s+(?:meeting|session)\s+(?:has\s+been|is)\s+cancel+ed)\.?",
-                           re.IGNORECASE)
+_CANCELLATION = re.compile(r"(?:notice\s+of\s+cancel+ation\b|cancel+ation\s+notice\b|(?:meeting\s+)?cancel+ed\.?$"
+                           r"|(?:this|the)(?:\s+\w+){0,3}\s+(?:meeting|session)\s+(?:has\s+been|is)\s+cancel+ed\b)",
+                           re.IGNORECASE)  # at a line's start; what follows may explain why
 _CAPTION = re.compile(r"\S\s+v\.?(?=\s|$)")  # "Ridley v. City …": a word, then v. or v standing alone
 
 
@@ -417,7 +417,7 @@ def parse_lettered(text: str) -> dict:
     titled = any(_AGENDA_TITLE.match(line.strip()) for line in header) or _council_masthead(header)
     entry = next((i for i, raw in enumerate(lines) if (_LETTERED_TOP.match(raw.strip()) and _indent(raw) <= 8)
                   or _LETTER.match(raw.strip())), len(lines))
-    if any(_CANCELLATION.fullmatch(" ".join(line.split())) for line in lines[:entry]):
+    if any(_CANCELLATION.match(" ".join(line.split())) for line in lines[:entry]):
         return notice
     if not titled:
         if _CANCELLED.search(text):

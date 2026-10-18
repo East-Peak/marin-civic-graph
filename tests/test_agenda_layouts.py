@@ -461,6 +461,10 @@ def test_lettered_a_roman_candidate_stops_at_its_own_next_letter(roman, after):
 @pytest.mark.parametrize("line, notice", [
     ("Notice of Cancellation", "cancellation"), ("THIS MEETING HAS BEEN CANCELLED", "cancellation"),
     ("The Regular Meeting Is Cancelled.", "cancellation"),
+    ("THIS MEETING HAS BEEN CANCELLED DUE TO LACK OF A QUORUM.", "cancellation"),
+    ("NOTICE OF CANCELLATION OF THE REGULAR CITY COUNCIL MEETING", "cancellation"),
+    ("Meeting Cancelled.", "cancellation"), ("CANCELLED", "cancellation"),
+    ("Cancelled items will be rescheduled", None),
     ("If a meeting is CANCELLED, a notice will be posted here.", None),  # boilerplate, not a notice
 ])
 def test_lettered_a_cancellation_notice_is_a_line_that_says_so(line, notice):
