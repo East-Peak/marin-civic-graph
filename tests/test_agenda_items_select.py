@@ -234,3 +234,24 @@ def test_a_pick_knows_its_title_and_whether_it_has_a_same_day_sibling():
     picks = {c["meeting_id"]: c for c in ai.select(meetings, _config(), ledger={}, today="2026-10-18")["selected"]}
     assert (picks["meeting-a"]["title"], picks["meeting-a"]["siblings"]) == ("Town Council Meeting", True)
     assert picks["meeting-b"]["siblings"] is True and picks["meeting-d"]["siblings"] is False  # other bodies don't count
+
+
+# --- the real registry --------------------------------------------------------------------------------------
+
+
+def test_the_registry_makes_exactly_the_four_qualified_weekly_councils_eligible():
+    verdicts = {c["id"]: (ok, why) for c, ok, why in ai.eligible_sources(REPO)}
+    assert sorted(sid for sid, (ok, _) in verdicts.items() if ok) == [
+        "belvedere-city-council", "corte-madera-town-council", "fairfax-town-council", "ross-town-council"]
+    assert verdicts["san-rafael-city-council"] == (False, "schedule manual")
+    assert verdicts["larkspur-city-council"] == (False, "schedule manual")
+    assert all(why == "adapter granicus" for c, ok, why in ai.eligible_sources(REPO) if c["adapter"] == "granicus")
+
+
+def test_a_later_flip_without_a_qualified_parser_stays_ineligible():
+    import yaml
+
+    for name in ("proudcity", "civicplus"):
+        for config in yaml.safe_load((REPO / "registry" / f"{name}-sources.yaml").read_text())["sources"]:
+            if config["id"] in ("san-rafael-city-council", "larkspur-city-council"):
+                assert ai.eligibility({**config, "schedule": "weekly"}) == (False, "no agenda_items block")

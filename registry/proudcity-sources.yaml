@@ -6,6 +6,12 @@ sources:
     institution_id: org-fairfax-town-council
     backfill_from: "2019-01-01"
     schedule: weekly
+    agenda_items:
+      artifact: agenda
+      parser: flat
+      hosts: [storage.googleapis.com]
+      body: {title: "Town Council", document: "Town Council"}
+      qualified: {parser: flat, version: 1, report: "~/open-marin-staging/weekly-agenda-items/REPORT.md#fairfax-town-council"}
     archive_pages:
       # 2025 onward: the per-year archive pages stopped at 2024 (the 2025 one
       # 404s) and /meetings/ now lists only undated upcoming events. This page
@@ -25,6 +31,12 @@ sources:
     institution_id: org-belvedere-city-council
     backfill_from: "2019-01-01"
     schedule: weekly
+    agenda_items:
+      artifact: packet  # the adapter files the agenda PDF (whole packet before 2023) as the packet
+      parser: outline
+      hosts: [storage.googleapis.com]
+      body: {title: "City Council", document: "City Council"}
+      qualified: {parser: outline, version: 2, report: "~/open-marin-staging/weekly-agenda-items/REPORT.md#belvedere-city-council"}
     archive_pages:
       - https://www.cityofbelvedere.org/city-council-meeting-archive/
 

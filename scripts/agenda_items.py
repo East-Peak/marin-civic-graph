@@ -197,7 +197,7 @@ def parse_hold(parsed: dict, meeting_date: str, document: str | None = None) -> 
     """Why this parse cannot load for a meeting on `meeting_date`, or None."""
     if parsed.get("notice"):
         return f"{parsed['notice']}_notice"
-    if document and not re.search(document, parsed.get("header") or "", re.IGNORECASE):
+    if document and not re.search(document, " ".join((parsed.get("header") or "").split()), re.IGNORECASE):
         return "agenda_body_mismatch"
     items = parsed.get("items") or []
     if not items:

@@ -114,6 +114,13 @@ def test_a_parse_that_cannot_load_holds_with_a_reason(parsed, reason):
     assert ai.parse_hold(parsed, "2026-10-06") == reason
 
 
+def test_the_body_named_in_the_header_may_wrap_across_lines():
+    parsed = {**_parsed("2026-10-06", "a"), "header": "Town of Lakeport Regular Town\n    Council Meeting"}
+    assert ai.parse_hold(parsed, "2026-10-06", "Town Council") is None
+    assert ai.parse_hold({**parsed, "header": "Planning Commission"}, "2026-10-06", "Town Council") == \
+        "agenda_body_mismatch"
+
+
 def test_a_good_parse_does_not_hold():
     assert ai.parse_hold(_parsed("2026-10-06", "a", "b"), "2026-10-06") is None
 
