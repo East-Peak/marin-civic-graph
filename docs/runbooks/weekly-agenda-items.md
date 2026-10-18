@@ -55,12 +55,14 @@ backup vs post export). PASS is required.
 The stage ships disabled (`AGENDA_ITEMS_ENABLED = False` in scripts/refresh_weekly.py). The registry qualifies
 Corte Madera, Fairfax, Belvedere and Ross (outline v8 / flat v1; evidence in the staging REPORT), and Larkspur
 (decimal v1; evidence in ~/open-marin-staging/agenda-parsers-sr-larkspur/REPORT.md), which stays ineligible while
-`schedule: manual` and becomes eligible when its flip sets `weekly`, with no other change. San Rafael has no
-`agenda_items` block: its parser (`lettered` v4) missed the bar on its regular-meeting sample, so its flip does not
-enable it; requalify it on a fresh held-out sample before adding a block (its block would also need
-`session: {from: [title, id], match: exact}`, because the wave-01 titles are all "San Rafael City Council meeting").
-Many San Rafael agenda Records name another file (minutes, an e-mail, a staff report: the adapter takes the first PDF
-in the agenda tab); the parser holds those `unparseable`. Activation is a separate commit that sets
+`schedule: manual` and becomes eligible when its flip sets `weekly`, with no other change. San Rafael qualified at
+`lettered` v5 on a fresh held-out sample (evidence in ~/open-marin-staging/sr-agenda-requalify/REPORT.md); likewise it
+stays ineligible while `schedule: manual` and becomes eligible when its flip lands. Its block reads each meeting's
+session from its title and id (`session: {from: [title, id], match: exact}`), because the wave-01 titles are all
+"San Rafael City Council meeting". A closed-session item's title carries its subject line (position, case or
+property) after " - ". Many San Rafael agenda Records name another file (minutes, an e-mail, a staff report: the
+adapter takes the first PDF in the agenda tab); the parser holds those `unparseable`, so until the adapter picks the
+agenda PDF, San Rafael's regular meetings yield no items. Activation is a separate commit that sets
 the flag, merged only after the San Rafael and Larkspur flips have landed
 (or explicitly excluding whichever has not), on the same terms as docs/runbooks/san-rafael-weekly.md
 "Activation": inspect a weekly run, rebase, re-gate (`pytest tests/ -q -m "not operator_data"` and

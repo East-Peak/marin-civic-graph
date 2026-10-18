@@ -279,7 +279,7 @@ def test_a_pick_knows_its_title_and_whether_it_has_a_same_day_sibling():
 COUNCILS = ["belvedere-city-council", "corte-madera-town-council", "fairfax-town-council", "ross-town-council"]
 
 
-NEW = {"larkspur-city-council": ("decimal", 1)}
+NEW = {"larkspur-city-council": ("decimal", 1), "san-rafael-city-council": ("lettered", 5)}
 
 
 def _registry():
@@ -297,10 +297,9 @@ def test_the_registry_makes_exactly_the_qualified_weekly_councils_eligible():
     assert all(why == "adapter granicus" for c, ok, why in ai.eligible_sources(REPO) if c["adapter"] == "granicus")
 
 
-def test_san_rafael_has_no_agenda_items_block_so_its_flip_does_not_enable_it():
-    config = _registry()["san-rafael-city-council"]  # lettered missed the bar on its regular-meeting sample
-    assert "agenda_items" not in config
-    assert ai.eligibility({**config, "schedule": "weekly"}) == (False, "no agenda_items block")
+def test_san_rafael_tells_its_meetings_sessions_apart_by_title_and_id_exactly():
+    block = _registry()["san-rafael-city-council"]["agenda_items"]  # the wave-01 titles are all alike
+    assert block["session"] == {"from": ["title", "id"], "match": "exact"}
 
 
 @pytest.mark.parametrize("sid", sorted(NEW))
