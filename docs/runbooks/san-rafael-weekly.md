@@ -1,0 +1,136 @@
+# San Rafael in the weekly run: crosswalk identity, no-overwrite load
+
+San Rafael City Council's Meetings (283 as of 2026-10-17, 2010-02-16 onward) were built by the wave-01
+one-off scripts with hand-made ids, `meeting-{date}-san-rafael-city-council[-suffix]`. The ProudCity
+adapter emits `meeting-san-rafael-city-council-{slug}`. So San Rafael is `identity: crosswalk-required`
+in registry/proudcity-sources.yaml. Its ids come from a reviewed crosswalk or stay the adapter's own,
+and its load never writes to anything that already exists.
+
+| Piece | Where |
+|---|---|
+| Crosswalk (listing slug → existing Meeting id) | registry/crosswalks/san-rafael-city-council.json |
+| Generator / validator | scripts/crosswalk.py |
+| Ingest identity mode | scripts/ingest.py (`run_source`) |
+| No-overwrite load, Record resolver | scripts/guarded_load.py, scripts/normalize_meetings.py |
+| Weekly wiring (report, holds) | scripts/refresh_weekly.py (`load`, `_take_load_report`) |
+| Rehearsal, check-loaded | scripts/crosswalk_rehearsal.py |
+
+## How a Monday goes
+
+1. **Stage.** `ingest.py` loads the crosswalk before any request. If it is missing or invalid, the
+   source ends `crosswalk_invalid` and nothing is fetched. Each meeting's id becomes its crosswalk
+   target, or stays the adapter's own. Two meetings claiming one id end it `crosswalk_conflict`. The
+   date/title identity map is never used for San Rafael. The capture and the ledger pin the crosswalk's
+   sha256.
+2. **Load.** `normalize_meetings.py --load` takes San Rafael through `guarded_load`, in one transaction
+   under the run lock:
+   - It **creates** new Meetings, new Records, and the edges that touch them.
+   - It **never writes** to an existing node or relationship: no property, label, `display_label` or
+     `promotion_state`. The org/place stubs are included. Differences are only counted
+     (`protected_differences` in the load report).
+   - It **skips** an edge between two existing nodes (counted in `skipped_edges`).
+   - Each artifact's Record is the meeting's established Record of that kind, then another meeting's
+     Record for the same url (only for a new meeting), then a new `record-san-rafael-city-council-<meeting>-<art>`.
+3. **Report.** The load writes `data/ingest-runs/<run>/load-reports/san-rafael-city-council.<n>.json`.
+   `loaded` → the source is loaded. `held` → nothing of San Rafael was written. The source shows as
+   FAILED in the digest's Failures with the hold reasons, the heartbeat goes `/fail` (an email), and
+   every other source loads and publishes as usual.
+
+## When San Rafael is held
+
+The digest names the reason, and the report lists every hold:
+
+| Reason | Meaning | What to do |
+|---|---|---|
+| `artifact_url_changed` | A meeting's agenda/packet/minutes now points at a different url than its existing Record (A→B). | Look at both PDFs. If B replaces A, that's a reviewed migration (update the Record's url). Never let the load mint a second Record. |
+| `artifact_url_on_other_record` | An existing meeting's artifact url belongs to another meeting's Record. | Check the two meeting pages; usually a city posting error. |
+| `artifact_url_shared`, `artifact_url_shared_across_kinds` | One url on two artifact types (one meeting, or across new meetings). | Usually a city posting error; wait for a fix or hold the source manual. |
+| `crosswalk_target_mismatch`, `duplicate_native_meeting`, `crosswalk_entry_missing`, `crosswalk_disagrees` | The crosswalk and the graph disagree (a hand edit, a lost entry, an id that already exists). | Regenerate (below) and read the conflicts. Never hand-edit an entry to make a hold go away. |
+| `crosswalk_changed`, `crosswalk_invalid`, `policy_mismatch` | The crosswalk or the registry changed between stage and load. | Stage a fresh run. |
+| `missing_node` | A stub (org-san-rafael-city-council, place-san-rafael) is gone. | Investigate; the load never creates stubs. |
+
+## Regenerating the crosswalk
+
+Take a fresh read-only export first (`scripts/export_live_graph.py --out-dir <staging>`) and a saved
+listing (the live page through the robots gate). Then:
+
+```
+python scripts/crosswalk.py generate --source san-rafael-city-council \
+  --export <export dir> --listing <listing.html> --report <staging>/crosswalk-report.json [--write]
+```
+
+It is a dry run unless `--write` is given, and it never writes when there are conflicts. Entries are
+append-only: an established entry survives every regeneration, including meetings that have left the
+listing. Deleting or reassigning one is a conflict; doing it means a separate, reviewed migration.
+Meetings created by an earlier weekly load show up as `native` and never get an entry.
+
+Never auto-matched (Stuart's call, as of 2026-10-17):
+- graph-only 2024-08-19 (no `meeting_date`, no page url) and 2024-12-16 (no page url);
+- listing-only 2023-05-08 "Special (Revised)" and 2025-03-17 "Special & Regular". These load as new
+  Meetings; the second shares the wave-01 2025-03-17 study session's minutes PDF, so its Record is
+  reused, not duplicated.
+
+## Rehearsal (staging only, no graph writes)
+
+```
+python scripts/crosswalk_rehearsal.py rehearse --source san-rafael-city-council \
+  --export <fresh export dir> --work ~/open-marin-staging/sr-weekly/rehearsal-<date> \
+  --identity-cache data/ingest-runs/meeting-identity.json
+```
+
+The rehearsal runs the real `refresh_weekly.stage` → `ingest.py` → adapter → robots gate chain, then
+the real `refresh_weekly.load`, whose meeting step runs against a fake graph seeded from the export.
+The first run fetches live and records every response. Three replays follow with a frozen clock:
+populated identity cache, second identical run, and a later week. It writes `rehearsal.md` and exits 0
+only if every check passes.
+
+## After a real Monday run: check-loaded
+
+```
+python scripts/export_live_graph.py --backup --out-dir ~/open-marin-staging/sr-weekly/post-<run id>
+python scripts/crosswalk_rehearsal.py check-loaded <run id> --source san-rafael-city-council \
+  --post-export ~/open-marin-staging/sr-weekly/post-<run id>
+```
+
+Take the export after the run and before anything else writes to the graph (no votes apply in between).
+check-loaded binds itself to that run's pinned backup, capture, crosswalk and load report. It refuses
+if any later run attempted a load. It re-plans the load on the backup and compares:
+
+- new San Rafael nodes and edges against the plan, exactly;
+- every pre-existing San Rafael Meeting/Record and its edges, unchanged;
+- the shared stubs, on the properties San Rafael's normalizer would write. Other loaders legitimately
+  rewrite e.g. `place-san-rafael.source` every week.
+
+## Activation (the flip)
+
+San Rafael is `schedule: manual` until the switch to `weekly` is merged, which needs:
+
+1. a clean Monday run on the code that carries this (digest/state clean, B2 publication unaffected);
+2. the flip rebased on main and re-gated (pytest + `cd app && npm run verify`), then pushed;
+3. the canonical checkout (which the LaunchAgent runs) fast-forwarded **while holding the run lock**,
+   acquired exactly as refresh_weekly does. The lock file is never deleted or replaced. If the lock is
+   held, wait.
+
+```
+cd ~/projects/marin-civic-graph && .venv/bin/python - <<'EOF'
+import subprocess, sys
+from pathlib import Path
+sys.path.insert(0, "scripts")
+from run_lock import run_lock
+with run_lock(Path(".").resolve()):
+    subprocess.run(["git", "pull", "--ff-only", "origin", "main"], check=True)
+EOF
+```
+
+After the first weekly run that includes San Rafael, run check-loaded on it.
+
+## Writer boundary
+
+The guarded load's checks (slugs, artifact urls) hold because every ingestion writer takes the run
+lock and the load is one transaction. Manual writers outside the lock (votes apply) never create San
+Rafael Meetings or meeting-artifact Records. Don't run one during a Monday run.
+
+Mill Valley (registry/civicplus-sources.yaml) is held manual for the same id mismatch. It can follow
+with its own crosswalk file and `identity: crosswalk-required`. The identity mode, load, rehearsal and
+check-loaded are source-generic; the generator's listing parser (`extract_meeting_urls`) and the
+rehearsal's registry copy are ProudCity's, so a CivicPlus source needs those two pieces generalized first.
