@@ -57,7 +57,7 @@ sources:
       hosts: [storage.googleapis.com]
       body: {title: "City Council", document: "City Council"}
       session: {from: [title, id], match: exact}  # the wave-01 titles are all "San Rafael City Council meeting"
-      qualified: {parser: lettered, version: 2, report: "~/open-marin-staging/agenda-parsers-sr-larkspur/REPORT.md#per-source"}
+      qualified: {parser: lettered, version: 3, report: "~/open-marin-staging/agenda-parsers-sr-larkspur/REPORT.md#per-source"}
     backfill_from: "2019-01-01"
     identity: crosswalk-required
     crosswalk: registry/crosswalks/san-rafael-city-council.json

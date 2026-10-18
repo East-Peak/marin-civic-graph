@@ -279,7 +279,7 @@ def test_a_pick_knows_its_title_and_whether_it_has_a_same_day_sibling():
 COUNCILS = ["belvedere-city-council", "corte-madera-town-council", "fairfax-town-council", "ross-town-council"]
 
 
-NEW = {"san-rafael-city-council": ("lettered", 2), "larkspur-city-council": ("decimal", 1)}
+NEW = {"san-rafael-city-council": ("lettered", 3), "larkspur-city-council": ("decimal", 1)}
 
 
 def _registry():

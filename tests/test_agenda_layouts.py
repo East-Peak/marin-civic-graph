@@ -35,7 +35,7 @@ def _reason(parser, text):
 
 
 def test_both_layouts_are_registered():
-    assert (ap.PARSERS["lettered"].version, ap.PARSERS["decimal"].version) == (2, 1)
+    assert (ap.PARSERS["lettered"].version, ap.PARSERS["decimal"].version) == (3, 1)
 
 
 # --- lettered ----------------------------------------------------------------------------------------------
@@ -316,6 +316,15 @@ def test_lettered_a_council_masthead_with_a_session_line_is_an_agenda_title():
     "HARBORVIEW CITY COUNCIL\nMINUTES\nMonday, May 4, 2026\n",  # minutes under the council's name
     "MINUTES\nHARBORVIEW CITY COUNCIL\nSpecial Closed Session\nMonday, May 4, 2026\n",  # not its first line
     "Harborview City Council\nSpecial Closed Session\nMonday, May 4, 2026\n",  # not in capitals
+    "HARBORVIEW CITY COUNCIL\nRegular Meeting Minutes\nMonday, May 4, 2026\n",  # the session line is all of the line
+    "HARBORVIEW CITY COUNCIL\nMeeting Date: May 4, 2026\n",
 ])
 def test_lettered_only_a_councils_capital_masthead_and_session_line_stand_for_an_agenda_title(head):
     assert _reason("lettered", head + "OPEN SESSION\n   1. Announcements.\nADJOURNMENT:\n") == "unparseable"
+
+
+
+def test_lettered_a_second_masthead_agenda_after_the_end_holds():
+    one = (FIXTURES / "lettered-council-masthead.txt").read_text()
+    other = one.replace("October 19, 2026", "November 2, 2026")
+    assert _reason("lettered", one + "\n" + other) == "multi_session_agenda"

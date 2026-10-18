@@ -292,7 +292,7 @@ def parse_flat(text: str) -> dict:
 
 _AGENDA_TITLE = re.compile(r"^(?:(?:REVISED|AMENDED)\s+)?AGENDA(?:\s*[-–—]\s*(?:REVISED|AMENDED))?$", re.IGNORECASE)
 _COUNCIL_MASTHEAD = re.compile(r"^[A-Z][A-Z .'’-]* CITY COUNCIL$")
-_SESSION_LINE = re.compile(r"^(?:(?:special|regular|adjourned)\s+)*(?:closed\s+session|meeting|session)\b", re.IGNORECASE)
+_SESSION_LINE = re.compile(r"^(?:(?:special|regular|adjourned)\s+)*(?:closed\s+session|meeting|session)$", re.IGNORECASE)
 _CANCELLED = re.compile(r"\bcancel+ed\b|notice of cancellation", re.IGNORECASE)
 _LETTERED_END = re.compile(r"^ADJOURN(?:MENT)?\b(?!\s+TO\b)", re.IGNORECASE)
 _LETTERED_TOP = re.compile(r"^(\d{1,2})\.\s+(\S.*)$")
@@ -364,10 +364,10 @@ def _pages_joined(text: str) -> list[str]:
     return _clean(text.replace("\f", ""))
 
 
-def _council_masthead(header: list[str]) -> bool:
-    """An agenda titled by its masthead (the 2026 closed-session template): the document's first line is the
-    council's name in capitals and the next one names a session."""
-    top = [line.strip() for line in header if line.strip()][:2]
+def _council_masthead(lines: list[str]) -> bool:
+    """An agenda titled by its masthead (the 2026 closed-session template): its first line is the council's name
+    in capitals and the next one is all a session's name ("Special Closed Session")."""
+    top = [" ".join(line.split()) for line in lines if line.strip()][:2]
     return len(top) == 2 and bool(_COUNCIL_MASTHEAD.match(top[0]) and _SESSION_LINE.match(top[1]))
 
 
@@ -428,10 +428,11 @@ def parse_lettered(text: str) -> dict:
         if not entries:
             return notice if _CANCELLED.search(text) else {**notice, "notice": None}
         raise Unparseable("agenda_end_missing", "no ADJOURNMENT after the agenda's entries")
-    for line in lines[end + 1:]:
+    after = lines[end + 1:]
+    for k, line in enumerate(after):
         if _MINUTES_HEADING.match(line.strip()):
             break
-        if _AGENDA_TITLE.match(line.strip()):
+        if _AGENDA_TITLE.match(line.strip()) or (line.strip() and _council_masthead(after[k:])):
             raise Unparseable("multi_session_agenda", "another agenda follows the ADJOURNMENT")
 
     def leaf(kind, parent, lines):
@@ -630,7 +631,7 @@ def parse_decimal(text: str) -> dict:
 
 
 PARSERS: dict[str, Parser] = {"outline": Parser(8, parse_outline), "flat": Parser(1, parse_flat),
-                              "lettered": Parser(2, parse_lettered), "decimal": Parser(1, parse_decimal)}
+                              "lettered": Parser(3, parse_lettered), "decimal": Parser(1, parse_decimal)}
 
 
 def extract_text(data: bytes) -> str:
