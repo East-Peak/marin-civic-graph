@@ -134,6 +134,7 @@ class _Entry:
     next_child: int = 0  # index of the letter (or number) the next child must carry
     child_indent: int | None = None  # the indent of its bare-letter children (a deeper list is description)
     child_style: str | None = None  # "numbered" (4.A), "upper" (A.) or "lower" (a.): fixed by the first child
+    skipped_link: int | None = None  # the letter index a link-like "N.L. Staff Report…" line was printed with
 
 
 _L2_NUMBERED = re.compile(r"^(\d{1,2})\.?([A-Za-z])(?:\.\s*|\s+)(\S.*)$")
@@ -181,6 +182,10 @@ def parse_outline(text: str) -> dict:
         elif l1 and m2 and int(m2.group(1)) != l1.parts[0] and l1.parts[0] - 3 <= int(m2.group(1)) < l1.parts[0] \
                 and not _ATTACHMENT.search(m2.group(3)):
             raise Unparseable("label_out_of_sequence", f"{m2.group(1)}.{m2.group(2)} printed under section {l1.parts[0]}")
+        elif l1 and m2 and int(m2.group(1)) == l1.parts[0] and l1.skipped_link is not None \
+                and m2.group(2).upper() == string.ascii_uppercase[l1.skipped_link + 1]:
+            raise Unparseable("ambiguous_attachment",
+                              f"{m2.group(1)}.{m2.group(2)} follows a link-like {string.ascii_uppercase[l1.skipped_link]}")
         elif l1 and m2 and int(m2.group(1)) == l1.parts[0] and m2.group(2).upper() == string.ascii_uppercase[l1.next_child] \
                 and l1.child_style in (None, "numbered") and not _ATTACHMENT.search(m2.group(3)):
             entry, form = _Entry(2, (l1.parts[0], m2.group(2).upper()), f"{l1.parts[0]}.{m2.group(2)}", indent,
@@ -194,6 +199,9 @@ def parse_outline(text: str) -> dict:
             entry = _Entry(1, (int(m1.group(1)),), m1.group(1), indent, [m1.group(2)])
             top_indent = indent if top_indent is None else top_indent
         if entry is None:
+            if l1 and m2 and int(m2.group(1)) == l1.parts[0] and _ATTACHMENT.search(m2.group(3)) \
+                    and m2.group(2).upper() == string.ascii_uppercase[l1.next_child]:
+                l1.skipped_link = l1.next_child  # a link printed with the next letter: a sibling after it is ambiguous
             if deepest:
                 deepest.lines.append(raw)
             continue
@@ -215,7 +223,10 @@ def parse_outline(text: str) -> dict:
     for j, line in enumerate(rest):
         if _BODY_START.match(line) and (by_notice or not any(re.search(r"\bMINUTES\b", x, re.IGNORECASE) for x in rest[:j])):  # a packet's minutes follow an ADJOURN
             raise Unparseable("multi_session_agenda", "a second CALL TO ORDER after the agenda's end")
-    if by_notice and any((m := _L1.match(x.strip())) and int(m.group(1)) == l1.parts[0] + 1 for x in rest):
+    if by_notice and any(((m := _L1.match(x.strip())) and int(m.group(1)) == l1.parts[0] + 1)
+                         or ((n := _L2_NUMBERED.match(x.strip())) and int(n.group(1)) == l1.parts[0])
+                         or ((b := _L2_BARE.match(x.strip())) and x[:1].isspace()
+                             and b.group(1).upper() == string.ascii_uppercase[l1.next_child]) for x in rest):
         raise Unparseable("agenda_end_missing", "numbered business continues after the posting notice")
     items = []
     for e in entries:
@@ -275,7 +286,7 @@ def parse_flat(text: str) -> dict:
             "items": items}
 
 
-PARSERS: dict[str, Parser] = {"outline": Parser(6, parse_outline), "flat": Parser(1, parse_flat)}
+PARSERS: dict[str, Parser] = {"outline": Parser(7, parse_outline), "flat": Parser(1, parse_flat)}
 
 
 def extract_text(data: bytes) -> str:

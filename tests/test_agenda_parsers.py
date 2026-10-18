@@ -181,7 +181,7 @@ def test_title_rule_stops_at_attachments_recommendations_bullets_and_blank_lines
 
 
 def test_every_parser_has_a_version():
-    assert {name: p.version for name, p in ap.PARSERS.items()} == {"outline": 6, "flat": 1}
+    assert {name: p.version for name, p in ap.PARSERS.items()} == {"outline": 7, "flat": 1}
 
 
 def test_a_list_in_a_description_that_happens_to_continue_the_numbering_is_not_an_entry():
@@ -272,6 +272,22 @@ def test_an_asterisk_rule_without_the_posting_notice_does_not_end_the_agenda():
 def test_numbered_business_after_a_posting_notice_holds():
     text = ("Thursday, March 30, 2023\n1. CALL TO ORDER\n2. First item\n       **********\n"
             "THIS MEETING WAS PROPERLY NOTICED AND POSTED\n3. Second item\n")
+    with pytest.raises(ap.Unparseable) as exc:
+        ap.parse_outline(text)
+    assert exc.value.reason == "agenda_end_missing"
+
+
+def test_an_attachment_like_child_followed_by_its_next_sibling_holds():
+    text = ("Tuesday, October 20, 2026\n1. CALL TO ORDER\n2. BUSINESS\n   2.A. Attachment A\n"
+            "   2.B. Approve the Contract\n3. ADJOURNMENT\n")
+    with pytest.raises(ap.Unparseable) as exc:
+        ap.parse_outline(text)
+    assert exc.value.reason == "ambiguous_attachment"
+
+
+def test_sub_entries_after_a_posting_notice_hold():
+    text = ("Thursday, March 30, 2023\n1. CALL TO ORDER\n2. BUSINESS\n2.A. First item\n"
+            "THIS MEETING WAS PROPERLY NOTICED AND POSTED\n2.B. Approve the Contract\n")
     with pytest.raises(ap.Unparseable) as exc:
         ap.parse_outline(text)
     assert exc.value.reason == "agenda_end_missing"
