@@ -86,49 +86,71 @@ only if every check passes.
 
 ## After a real Monday run: check-loaded
 
+Take the post-export and run check-loaded together **while holding the run lock**, so no writer
+(a weekly run, votes apply) can land between them:
+
 ```
-python scripts/export_live_graph.py --backup --out-dir ~/open-marin-staging/sr-weekly/post-<run id>
-python scripts/crosswalk_rehearsal.py check-loaded <run id> --source san-rafael-city-council \
-  --post-export ~/open-marin-staging/sr-weekly/post-<run id>
+cd ~/projects/marin-civic-graph && RUN=<run id> && .venv/bin/python - <<EOF
+import subprocess, sys
+from pathlib import Path
+sys.path.insert(0, "scripts")
+from run_lock import run_lock
+post = Path.home() / "open-marin-staging/sr-weekly" / "post-$RUN"
+with run_lock(Path(".").resolve()):  # RunLockHeld = a run is in progress: retry later
+    subprocess.run([".venv/bin/python", "scripts/export_live_graph.py", "--backup", "--out-dir", str(post)], check=True)
+    sys.exit(subprocess.run([".venv/bin/python", "scripts/crosswalk_rehearsal.py", "check-loaded", "$RUN",
+                             "--source", "san-rafael-city-council", "--post-export", str(post)]).returncode)
+EOF
 ```
 
-Take the export after the run and before anything else writes to the graph (no votes apply in between).
-check-loaded binds itself to that run's pinned backup, capture, crosswalk and load report. It refuses
-if any later run attempted a load. It re-plans the load on the backup and compares:
+check-loaded binds itself to that run's pinned backup, capture, crosswalk and load report(s). It
+refuses if any later run attempted a load. It re-plans the load on the backup and compares:
 
-- new San Rafael nodes and edges against the plan, exactly;
-- every pre-existing San Rafael Meeting/Record and its edges, unchanged;
+- new San Rafael nodes and every relationship touching San Rafael's nodes against the plan, exactly;
+- every pre-existing San Rafael Meeting/Record (labels, every property), unchanged;
 - the shared stubs, on the properties San Rafael's normalizer would write. Other loaders legitimately
   rewrite e.g. `place-san-rafael.source` every week.
+
+Exit 0 = PASS. 1 = FAIL, or HELD (nothing of San Rafael loaded). 2 = refused (inputs not bound to the run).
 
 ## Activation (the flip)
 
 San Rafael is `schedule: manual` until the switch to `weekly` is merged, which needs:
 
-1. a clean Monday run on the code that carries this (digest/state clean, B2 publication unaffected);
-2. the flip rebased on main and re-gated (pytest + `cd app && npm run verify`), then pushed;
-3. the canonical checkout (which the LaunchAgent runs) fast-forwarded **while holding the run lock**,
-   acquired exactly as refresh_weekly does. The lock file is never deleted or replaced. If the lock is
-   held, wait.
+1. the 2026-10-19 weekly run inspected: digest/state clean, published, and B2's `check-published`
+   passed (that run still runs the pre-crosswalk canonical checkout; the point is that publication is
+   unaffected before San Rafael is switched on);
+2. the flip rebased on a freshly fetched main and re-gated (pytest + `cd app && npm run verify`),
+   then pushed. Record the exact SHA you gated and pushed;
+3. the canonical checkout (which the LaunchAgent runs) fast-forwarded to **exactly that SHA, while
+   holding the run lock**, acquired as refresh_weekly does. The lock file is never deleted or replaced.
+   If the lock is held, a run is in progress: wait. Holding the lock is also the proof that no run is
+   in progress while the checkout changes.
 
 ```
-cd ~/projects/marin-civic-graph && .venv/bin/python - <<'EOF'
+cd ~/projects/marin-civic-graph && SHA=<the gated, pushed sha> && .venv/bin/python - <<EOF
 import subprocess, sys
 from pathlib import Path
 sys.path.insert(0, "scripts")
 from run_lock import run_lock
 with run_lock(Path(".").resolve()):
-    subprocess.run(["git", "pull", "--ff-only", "origin", "main"], check=True)
+    subprocess.run(["git", "fetch", "origin", "main"], check=True)
+    head = subprocess.run(["git", "rev-parse", "origin/main"], capture_output=True, text=True, check=True).stdout.strip()
+    if head != "$SHA":
+        sys.exit(f"origin/main is {head}, not the gated $SHA: re-gate first")
+    subprocess.run(["git", "merge", "--ff-only", "$SHA"], check=True)
+    print("canonical checkout at", subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout)
 EOF
 ```
 
-After the first weekly run that includes San Rafael, run check-loaded on it.
+After the first weekly run that includes San Rafael, run check-loaded on it (above).
 
 ## Writer boundary
 
-The guarded load's checks (slugs, artifact urls) hold because every ingestion writer takes the run
-lock and the load is one transaction. Manual writers outside the lock (votes apply) never create San
-Rafael Meetings or meeting-artifact Records. Don't run one during a Monday run.
+The guarded load's checks (slugs, artifact urls) hold because every graph writer serializes on the
+ingestion run lock (data/ingest-runs/.lock): the weekly run, ingest.py, and votes apply
+(`votes_apply.py apply` takes it on the canonical root). The load is also one transaction. Between a
+Monday run and its check-loaded export, take nothing else: the check-loaded snippet holds the lock.
 
 Mill Valley (registry/civicplus-sources.yaml) is held manual for the same id mismatch. It can follow
 with its own crosswalk file and `identity: crosswalk-required`. The identity mode, load, rehearsal and
