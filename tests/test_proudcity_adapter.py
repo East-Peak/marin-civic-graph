@@ -422,6 +422,13 @@ class TestAttachedAgendaBoundaries:
         got = self._agenda(f'<div id="tab-agenda">{SR_BODY}{_file_block(AGENDA)}')
         assert got == {"available": False, "url": None, "reason": "the agenda tab is not well-formed"}
 
+    def test_an_element_left_open_inside_a_closed_div_cannot_mask_an_outer_close(self):
+        # Codex diff r2: an inner <section> never closed inside its div must not absorb the outer </section>.
+        html = (f'<section><div id="tab-agenda"><div><section>body</div></section>'
+                f'{self.CONTACT}</div>')
+        got = self._agenda(html)
+        assert got == {"available": False, "url": None, "reason": "the agenda tab is not well-formed"}
+
     def test_stray_paragraph_and_list_ends_inside_are_harmless(self):
         got = self._agenda(f'<div id="tab-agenda"><p>One<p>Two</p></li>{_file_block(AGENDA)}</div>{self.CONTACT}')
         assert got == {"available": True, "url": AGENDA}

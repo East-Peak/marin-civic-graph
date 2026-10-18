@@ -205,43 +205,53 @@ class _AttachedFiles(HTMLParser):
 
     ProudCity renders a tab's attached document as a file block with a download button;
     the tab's body links (staff reports, minutes, correspondence) carry no `download`.
-    The div bounds the search by its own nesting depth, and it must visibly close: an
-    end tag of an element opened outside it, other than a stray inline or list end, or
-    a document ending first, leaves it `broken`.
+    The div bounds the search, with a stack of the elements open inside it, and it must
+    visibly close: an end tag that would close an element left open inside it (other than
+    an inline or list one HTML closes implicitly) or one opened outside it, or a document
+    ending first, leaves it `broken`.
     """
 
-    _HARMLESS_ENDS = frozenset({"p", "li", "span", "a", "b", "i", "em", "strong", "u", "br", "font"})
+    _VOID = frozenset({"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param",
+                       "source", "track", "wbr"})
+    _IMPLIED = frozenset({"p", "li", "span", "a", "b", "i", "em", "strong", "u", "font"})
 
     def __init__(self, tab_id: str):
         super().__init__()
-        self.tab_id, self.depth, self.inner = tab_id, 0, {}
+        self.tab_id, self.stack = tab_id, None  # stack: the agenda div and the elements open inside it
         self.found = self.closed = self.broken = False
         self.hrefs: list[str] = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
-        if self.depth:
-            if tag == "div":
-                self.depth += 1
-            else:
-                self.inner[tag] = self.inner.get(tag, 0) + 1
+        if self.stack:
+            if tag not in self._VOID:
+                self.stack.append(tag)
             href = attrs.get("href") or ""
             if tag == "a" and "download" in attrs and urlsplit(href).path.lower().endswith(".pdf") \
                     and href not in self.hrefs:
                 self.hrefs.append(href)
         elif not self.found and tag == "div" and attrs.get("id") == self.tab_id:
-            self.found, self.depth = True, 1
+            self.found, self.stack = True, ["div"]
+
+    def handle_startendtag(self, tag, attrs):
+        self.handle_starttag(tag, attrs)
+        if self.stack and tag not in self._VOID and len(self.stack) > 1:
+            self.stack.pop()
 
     def handle_endtag(self, tag):
-        if not self.depth:
+        if not self.stack:
             return
-        if tag == "div":
-            self.depth -= 1
-            self.closed = not self.depth
-        elif self.inner.get(tag):
-            self.inner[tag] -= 1
-        elif tag not in self._HARMLESS_ENDS:
-            self.broken, self.depth = True, 0
+        if tag not in self.stack:
+            if tag not in self._IMPLIED:
+                self.broken, self.stack = True, None
+            return
+        while self.stack[-1] != tag:
+            if self.stack.pop() not in self._IMPLIED:
+                self.broken, self.stack = True, None
+                return
+        self.stack.pop()
+        if not self.stack:
+            self.closed, self.stack = True, None
 
 
 def _attached_agenda(html: str) -> dict:
