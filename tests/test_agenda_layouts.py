@@ -445,3 +445,30 @@ def test_lettered_an_item_cancelled_in_lower_case_is_still_an_agenda():
 def test_lettered_the_closed_session_test_reads_the_whole_heading_as_words(parent, subject):
     parsed = _lettered(f"{parent}\n   a. PUBLIC EMPLOYMENT\n      Title: Harbor Master\n")
     assert parsed["items"][0]["title"] == ("PUBLIC EMPLOYMENT - Title: Harbor Master" if subject else "PUBLIC EMPLOYMENT")
+
+
+@pytest.mark.parametrize("roman, after", [("i", "j"), ("v", "w"), ("x", "y")])
+def test_lettered_a_roman_candidate_stops_at_its_own_next_letter(roman, after):
+    import string
+    before = string.ascii_lowercase[:string.ascii_lowercase.index(roman)]
+    letters = "".join(f"   {c}. Item {c.upper()}\n" for c in before)
+    kept = _lettered("1. Consent:\n" + letters + f"   {roman}. Item\n   {after}. Item\n      ii. Description\n")
+    assert [i["key"] for i in kept["items"]][-2:] == [f"1{roman}", f"1{after}"]
+    roman_list = _lettered("1. Consent:\n" + letters + f"   {roman}. Point\n      q. Description\n      ii. Description\n")
+    assert f"1{roman}" not in [i["key"] for i in roman_list["items"]]
+
+
+@pytest.mark.parametrize("line, notice", [
+    ("Notice of Cancellation", "cancellation"), ("THIS MEETING HAS BEEN CANCELLED", "cancellation"),
+    ("The Regular Meeting Is Cancelled.", "cancellation"),
+    ("If a meeting is CANCELLED, a notice will be posted here.", None),  # boilerplate, not a notice
+])
+def test_lettered_a_cancellation_notice_is_a_line_that_says_so(line, notice):
+    parsed = _lettered("1. Reports:\n   a. Harbor Update\n",
+                       head=f"AGENDA\nHARBORVIEW CITY COUNCIL - MONDAY, MAY 4, 2026\n{line}\n")
+    assert parsed["notice"] == notice
+
+
+def test_lettered_a_none_line_at_the_left_is_the_entrys_none_not_a_heading():
+    parsed = _lettered("1. Reports:\n   a. Vacancies\n   NONE\n   b. Harbor Update\n")
+    assert [(i["key"], i["heading"]) for i in parsed["items"]] == [("1b", "Reports")]

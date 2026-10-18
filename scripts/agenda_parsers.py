@@ -310,7 +310,10 @@ _EXACT_DATE = re.compile(rf"(?<![A-Za-z0-9_])({'|'.join(_MONTHS)}) +(\d{{1,2}}),
                          re.IGNORECASE)
 _SUBJECT = re.compile(r"^(?:title|position|position affected|name of case|case name|property):", re.IGNORECASE)
 _CLOSED_SESSION = re.compile(r"\bclosed\s+session\b", re.IGNORECASE)
-_CANCELLATION = re.compile(r"\bCANCEL+(?:ED|ATION)\b")  # in capitals: a notice's heading, not an item's words
+# a line that is a cancellation notice ("NOTICE OF CANCELLATION", "THIS MEETING HAS BEEN CANCELLED"), not boilerplate
+_CANCELLATION = re.compile(r"(?:notice\s+of\s+cancel+ation|cancel+ation\s+notice|(?:meeting\s+)?cancel+ed"
+                           r"|(?:this|the)(?:\s+\w+){0,3}\s+(?:meeting|session)\s+(?:has\s+been|is)\s+cancel+ed)\.?",
+                           re.IGNORECASE)
 _CAPTION = re.compile(r"\S\s+v\.?(?=\s|$)")  # "Ridley v. City …": a word, then v. or v standing alone
 
 
@@ -323,7 +326,7 @@ def _is_caps_heading(raw: str) -> bool:
     text = re.sub(r"\([^)]*\)", "", raw.strip())
     return (_indent(raw) <= 4 and len(re.findall(r"[A-Z]", text)) >= 3 and not re.search(r"[a-z]", text)
             and not _LETTERED_TOP.match(raw.strip()) and not _LETTERED_END.match(raw.strip())
-            and not _AGENDA_TITLE.match(raw.strip()))
+            and not _AGENDA_TITLE.match(raw.strip()) and not re.fullmatch(r"NONE\.?", raw.strip()))
 
 
 def _abbrev(heading: str) -> str:
@@ -371,14 +374,16 @@ def _lettered_title(lines: list[str], closed: bool = False) -> str:
 
 
 def _roman_ahead(lines: list[str], i: int, last: int) -> bool:
-    """A line `i.` begins a roman list when `ii.` follows before the next entry (the parent's `j.`, the next numbered
-    entry, a heading, a session title or the end); out-of-sequence letters and other points are description."""
+    """A line `i.` (or `v.`, `x.`) begins a roman list when `ii.` follows before the next entry (the parent's next
+    letter, the next numbered entry, a heading, a session title or the end); other letters and points are
+    description."""
+    after = f"{chr(ord(lines[i].strip()[0]) + 1)}. "
     for line in lines[i + 1:]:
         text = line.strip()
         if text.startswith("ii. "):
             return True
         top = _LETTERED_TOP.match(text) if _indent(line) <= 8 else None
-        if text.startswith("j. ") or (top and int(top.group(1)) in (last + 1, 1)) or _is_caps_heading(line) \
+        if text.startswith(after) or (top and int(top.group(1)) in (last + 1, 1)) or _is_caps_heading(line) \
                 or _SESSION_TITLE.search(text) or (_indent(line) <= 8 and _LETTERED_END.match(text)):
             return False
     return False
@@ -412,7 +417,7 @@ def parse_lettered(text: str) -> dict:
     titled = any(_AGENDA_TITLE.match(line.strip()) for line in header) or _council_masthead(header)
     entry = next((i for i, raw in enumerate(lines) if (_LETTERED_TOP.match(raw.strip()) and _indent(raw) <= 8)
                   or _LETTER.match(raw.strip())), len(lines))
-    if any(_CANCELLATION.search(line) for line in lines[:entry]):  # "THIS MEETING HAS BEEN CANCELLED"
+    if any(_CANCELLATION.fullmatch(" ".join(line.split())) for line in lines[:entry]):
         return notice
     if not titled:
         if _CANCELLED.search(text):
