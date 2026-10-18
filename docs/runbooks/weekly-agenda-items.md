@@ -53,13 +53,14 @@ backup vs post export). PASS is required.
 
 ## Activation
 The stage ships disabled (`AGENDA_ITEMS_ENABLED = False` in scripts/refresh_weekly.py). The registry qualifies
-Corte Madera, Fairfax, Belvedere and Ross (outline v8 / flat v1; evidence in the staging REPORT), and San Rafael
-(lettered v2) and Larkspur (decimal v1; evidence in ~/open-marin-staging/agenda-parsers-sr-larkspur/REPORT.md). San
-Rafael and Larkspur stay ineligible while `schedule: manual`; each becomes eligible when its flip sets `weekly`, with
-no other change. San Rafael's block reads a meeting's session from its title and id (`session: {from, match:
-exact}`), because the wave-01 titles are all "San Rafael City Council meeting". Many San Rafael agenda Records name
-another file (minutes, an e-mail, a staff report: the adapter takes the first PDF in the agenda tab); those hold
-`unparseable` and never load. Activation is a separate commit that sets
+Corte Madera, Fairfax, Belvedere and Ross (outline v8 / flat v1; evidence in the staging REPORT), and Larkspur
+(decimal v1; evidence in ~/open-marin-staging/agenda-parsers-sr-larkspur/REPORT.md), which stays ineligible while
+`schedule: manual` and becomes eligible when its flip sets `weekly`, with no other change. San Rafael has no
+`agenda_items` block: its parser (`lettered` v4) missed the bar on its regular-meeting sample, so its flip does not
+enable it; requalify it on a fresh held-out sample before adding a block (its block would also need
+`session: {from: [title, id], match: exact}`, because the wave-01 titles are all "San Rafael City Council meeting").
+Many San Rafael agenda Records name another file (minutes, an e-mail, a staff report: the adapter takes the first PDF
+in the agenda tab); the parser holds those `unparseable`. Activation is a separate commit that sets
 the flag, merged only after the San Rafael and Larkspur flips have landed
 (or explicitly excluding whichever has not), on the same terms as docs/runbooks/san-rafael-weekly.md
 "Activation": inspect a weekly run, rebase, re-gate (`pytest tests/ -q -m "not operator_data"` and
