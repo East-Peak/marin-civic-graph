@@ -117,6 +117,15 @@ class FakeGraphPort:
         with open(self.path / "seed" / "nodes.jsonl", "a", encoding="utf-8") as fh:
             fh.write(json.dumps(node) + "\n")
 
+    def export(self, out: Path) -> Path:
+        """The graph as it stands (seed + overlay) as an export dir, the shape export_live_graph.py --backup writes."""
+        self._load()
+        out = Path(out)
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "nodes.jsonl").write_text("".join(json.dumps(n) + "\n" for n in self._nodes.values()), encoding="utf-8")
+        (out / "edges.jsonl").write_text("".join(json.dumps(e) + "\n" for e in self._edges), encoding="utf-8")
+        return out
+
     def overlay(self) -> tuple[list[dict], list[dict]]:
         """The creates (the ordinary loader's MERGE rows are not creates: see `merge`)."""
         rows = [json.loads(line) for line in (self.path / "overlay.jsonl").read_text().splitlines() if line]

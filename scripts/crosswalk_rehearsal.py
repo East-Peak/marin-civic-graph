@@ -61,15 +61,19 @@ class ResponseStore:
         self.path = Path(path)
         self.path.mkdir(parents=True, exist_ok=True)
 
-    def _file(self, url: str) -> Path:
-        return self.path / f"{hashlib.sha256(url.encode()).hexdigest()}.json"
+    def _file(self, url: str, data: bytes | None = None) -> Path:
+        key = url.encode() if data is None else url.encode() + b"\n" + data  # a POST is its url and its body
+        return self.path / f"{hashlib.sha256(key).hexdigest()}.json"
 
-    def put(self, url: str, **reply) -> None:
+    def has(self, url: str, data: bytes | None = None) -> bool:
+        return self._file(url, data).is_file()
+
+    def put(self, url: str, data: bytes | None = None, **reply) -> None:
         body = reply.pop("body")
-        self._file(url).write_text(json.dumps({"url": url, **reply, "body": base64.b64encode(body).decode()}))
+        self._file(url, data).write_text(json.dumps({"url": url, **reply, "body": base64.b64encode(body).decode()}))
 
-    def get(self, url: str) -> dict:
-        path = self._file(url)
+    def get(self, url: str, data: bytes | None = None) -> dict:
+        path = self._file(url, data)
         if not path.is_file():
             raise RuntimeError(f"replay has no recorded response for {url}")
         reply = json.loads(path.read_text())
@@ -85,7 +89,9 @@ class _Body(io.BytesIO):
     headers = SimpleNamespace(get_content_charset=lambda default=None: default)
 
 
-def install_shim(store: ResponseStore, mode: str, frozen: datetime) -> None:
+def install_shim(store: ResponseStore, mode: str, frozen: datetime, override: ResponseStore | None = None) -> None:
+    """record: fetch live (through the gate) and keep every response; replay: serve only kept responses, send
+    nothing; fill: serve what is kept, fetch-and-keep what is not. `override` answers first (a week's listing)."""
     import adapters.base as base
     import adapters.proudcity as proudcity
     import ingest
@@ -107,26 +113,42 @@ def install_shim(store: ResponseStore, mode: str, frozen: datetime) -> None:
     gate_open = robots_gate.RobotsGate.open
     real_get = robots_gate.http_get
 
+    def kept(url, data=None):
+        for s in (override, store):
+            if s is not None and s.has(url, data):
+                return s.get(url, data)
+        return None
+
     def robots_transport(url, timeout):
-        if mode == "replay":
-            r = store.get(url)
+        r = kept(url) if mode != "record" else None
+        if r is not None or mode == "replay":
+            r = r or store.get(url)
             return robots_gate.Reply(r["status"], r["headers"], r["body"], r["error"])
         reply = real_get(url, timeout)
         store.put(url, status=reply.status, headers=reply.headers, body=reply.body, error=reply.error)
         return reply
 
     def open_(self, request, *, timeout, handlers=(), hosts=None):
-        if mode == "replay":
-            self.admit(request.full_url, method=request.get_method(), hosts=hosts)  # robots.txt still decides
-            return _Body(store.get(request.full_url)["body"])
+        data = request.data
+        r = kept(request.full_url, data) if mode != "record" else None
+        if r is not None or mode == "replay":
+            r = r or store.get(request.full_url, data)
+            pace = self._pace
+            self._pace = lambda url: 0.0  # a kept response is not sent: nothing to pace
+            try:
+                self.admit(request.full_url, method=request.get_method(), hosts=hosts)  # robots.txt still decides
+            finally:
+                self._pace = pace
+            return _Body(r["body"])
         with gate_open(self, request, timeout=timeout, handlers=handlers, hosts=hosts) as resp:
             body = resp.read()
-        store.put(request.full_url, status=200, headers={}, body=body, error=None)
+        store.put(request.full_url, data, status=200, headers={}, body=body, error=None)
         return _Body(body)
 
     robots_gate.RobotsGate.__init__.__kwdefaults__["robots_transport"] = robots_transport
     robots_gate.RobotsGate.open = open_
     if mode == "replay":  # nothing is sent, so nothing is paced, and nothing may be
+        import time
         import urllib.request
 
         def no_network(*_, **__):
@@ -135,10 +157,16 @@ def install_shim(store: ResponseStore, mode: str, frozen: datetime) -> None:
         urllib.request.OpenerDirector.open = no_network
         robots_gate.RobotsGate._pace = lambda self, url: 0.0
         proudcity.time = ingest.time = SimpleNamespace(sleep=lambda seconds: None)
+        time.sleep = lambda seconds: None  # the agenda stage's own spacing (agenda_items resolves it at call time)
 
 
 def _shim_main(args) -> int:
-    install_shim(ResponseStore(args.responses), args.mode, datetime.fromisoformat(args.frozen))
+    override = ResponseStore(args.override) if getattr(args, "override", None) else None
+    install_shim(ResponseStore(args.responses), args.mode, datetime.fromisoformat(args.frozen), override)
+    if getattr(args, "program", "ingest") == "agenda":
+        import agenda_items
+
+        return agenda_items.main(args.ingest_args)
     import ingest
 
     return ingest.main(args.ingest_args)
@@ -690,15 +718,18 @@ def main(argv: list[str] | None = None) -> int:
                     help="a native-only source's expected {meetings, records, stubs} (the reviewed inventory)")
     ck = sub.add_parser("check-loaded", help="after a real run: what it wrote vs what it should have (read only)")
     ck.add_argument("run_id")
-    ck.add_argument("--source", required=True)
-    ck.add_argument("--post-export", type=Path, required=True,
+    ck.add_argument("--source", help="the guarded meeting source to check (or --agenda-items)")
+    ck.add_argument("--agenda-items", action="store_true", help="check the run's agenda-items stage instead")
+    ck.add_argument("--post-export", type=Path,
                     help="export_live_graph.py --backup --out-dir <dir>, taken after the run")
     ck.add_argument("--root", type=Path, default=REPO)
     ck.add_argument("--out", type=Path, help="where results go (default: <post-export>/check-loaded)")
     sh = sub.add_parser("ingest-shim", help=argparse.SUPPRESS)
     sh.add_argument("--responses", type=Path, required=True)
-    sh.add_argument("--mode", choices=("record", "replay"), required=True)
+    sh.add_argument("--mode", choices=("record", "replay", "fill"), required=True)
     sh.add_argument("--frozen", required=True)
+    sh.add_argument("--override", type=Path, help="responses that answer first (a week's listing)")
+    sh.add_argument("--program", choices=("ingest", "agenda"), default="ingest")
     sh.add_argument("ingest_args", nargs=argparse.REMAINDER)
     args = parser.parse_args(argv)
 
@@ -714,6 +745,12 @@ def main(argv: list[str] | None = None) -> int:
         (Path(args.work) / "rehearsal.md").write_text(text)
         print(text)
         return 0 if results["checks"] and all(c["ok"] for c in results["checks"]) else 1
+    if args.agenda_items:  # the stage pins its own before/after exports: no --post-export needed
+        import agenda_rehearsal
+
+        return agenda_rehearsal.main(["check-loaded", args.run_id, "--root", str(args.root)])
+    if not args.source or not args.post_export:
+        parser.error("check-loaded needs --source and --post-export (or --agenda-items)")
     out = args.out or args.post_export / "check-loaded"
     try:
         results = check_loaded(args.root, args.run_id, args.source, args.post_export, out)
