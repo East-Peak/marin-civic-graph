@@ -132,7 +132,7 @@ def _entry(mid, day, *titles, url_n=None):
 def test_the_bundle_loads_create_only(tmp_path, graph):
     bundle = _bundle(tmp_path, [_entry(M1, "2026-10-06", "Approve the minutes", "Adopt a budget"),
                                 _entry(M3, "2026-09-01", "Hear a report")])
-    report = gl.load_agenda_bundle(graph, bundle)
+    report = gl.load_agenda_bundle(graph, bundle, recheck=_ok)
     assert report["outcome"] == "loaded" and report["holds"] == []
     assert report["created"]["meetings"] == {M1: [f"agenda-item-{SID}-101-4a", f"agenda-item-{SID}-101-4b"],
                                              M3: [f"agenda-item-{SID}-103-4a"]}
@@ -149,22 +149,22 @@ def test_the_bundle_loads_create_only(tmp_path, graph):
 
 def test_loading_the_same_bundle_twice_creates_nothing_the_second_time(tmp_path, graph):
     bundle = _bundle(tmp_path, [_entry(M1, "2026-10-06", "Approve the minutes")])
-    gl.load_agenda_bundle(graph, bundle)
-    again = gl.load_agenda_bundle(gl.FakeGraphPort(graph.path), bundle)
+    gl.load_agenda_bundle(graph, bundle, recheck=_ok)
+    again = gl.load_agenda_bundle(gl.FakeGraphPort(graph.path), bundle, recheck=_ok)
     assert again["created"]["meetings"] == {} and again["holds"] == [] and again["already_loaded"] == [M1]
     assert len(gl.FakeGraphPort(graph.path).overlay()[0]) == 1
 
 
 def test_a_meeting_with_items_is_skipped_and_holds_alone(tmp_path, graph):
     bundle = _bundle(tmp_path, [_entry(M2, "2026-09-15", "A new item"), _entry(M1, "2026-10-06", "Fine")])
-    report = gl.load_agenda_bundle(graph, bundle)
+    report = gl.load_agenda_bundle(graph, bundle, recheck=_ok)
     assert [(h["meeting_id"], h["reason"]) for h in report["holds"]] == [(M2, "meeting_has_items")]
     assert list(report["created"]["meetings"]) == [M1]
 
 
 def test_a_record_whose_url_changed_since_the_fetch_holds(tmp_path, graph):
     bundle = _bundle(tmp_path, [_entry(M1, "2026-10-06", "Fine", url_n=99)])
-    report = gl.load_agenda_bundle(graph, bundle)
+    report = gl.load_agenda_bundle(graph, bundle, recheck=_ok)
     assert [h["reason"] for h in report["holds"]] == ["agenda_record_changed"] and graph.overlay() == ([], [])
 
 
@@ -175,21 +175,21 @@ def test_a_record_no_longer_linked_to_the_meeting_holds(tmp_path, graph):
     for e in entry["edges"]:
         if e["type"] == "EVIDENCED_BY":
             e["end_id"] = _rid(M3)
-    report = gl.load_agenda_bundle(graph, _bundle(tmp_path, [entry]))
+    report = gl.load_agenda_bundle(graph, _bundle(tmp_path, [entry]), recheck=_ok)
     assert [h["reason"] for h in report["holds"]] == ["agenda_record_changed"]
 
 
 def test_an_item_id_that_already_exists_holds_its_meeting(tmp_path, graph):
     entry = _entry(M1, "2026-10-06", "Fine")
     graph.add_seed_node(_node(entry["nodes"][0]["id"], ["AgendaItem"], title="someone else's"))
-    report = gl.load_agenda_bundle(gl.FakeGraphPort(graph.path), _bundle(tmp_path, [entry]))
+    report = gl.load_agenda_bundle(gl.FakeGraphPort(graph.path), _bundle(tmp_path, [entry]), recheck=_ok)
     assert [h["reason"] for h in report["holds"]] == ["item_id_exists"]
 
 
 def test_a_missing_meeting_holds(tmp_path, graph):
     entry = _entry(M1, "2026-10-06", "Fine")
     entry = json.loads(json.dumps(entry).replace(M1, f"meeting-{SID}-199"))
-    report = gl.load_agenda_bundle(graph, _bundle(tmp_path, [entry]))
+    report = gl.load_agenda_bundle(graph, _bundle(tmp_path, [entry]), recheck=_ok)
     assert [h["reason"] for h in report["holds"]] == ["meeting_missing"]
 
 
@@ -197,7 +197,7 @@ def test_a_bundle_whose_files_changed_after_writing_is_refused(tmp_path, graph):
     bundle = _bundle(tmp_path, [_entry(M1, "2026-10-06", "Fine")])
     (bundle / "nodes.jsonl").write_text((bundle / "nodes.jsonl").read_text().replace("Fine", "Altered"))
     with pytest.raises(gl.BundleError, match="nodes.jsonl"):
-        gl.load_agenda_bundle(graph, bundle)
+        gl.load_agenda_bundle(graph, bundle, recheck=_ok)
     assert graph.overlay() == ([], [])
 
 
@@ -212,7 +212,7 @@ def test_a_malformed_bundle_writes_nothing(tmp_path, graph, tamper):
     entry = _entry(M1, "2026-10-06", "Fine")
     tamper(entry)
     with pytest.raises(gl.BundleError):
-        gl.load_agenda_bundle(graph, _bundle(tmp_path, [entry]))
+        gl.load_agenda_bundle(graph, _bundle(tmp_path, [entry]), recheck=_ok)
     assert graph.overlay() == ([], [])
 
 
@@ -243,7 +243,7 @@ def test_a_concurrent_writer_rolls_the_whole_load_back(tmp_path, graph):
 
     with mock.patch.object(gl._FakeTx, "create", create_then_interleave):
         with pytest.raises(gl.GraphWriteError, match="load_conflict"):
-            gl.load_agenda_bundle(graph, bundle)
+            gl.load_agenda_bundle(graph, bundle, recheck=_ok)
     assert gl.FakeGraphPort(graph.path).overlay() == ([], [])
 
 
@@ -350,4 +350,83 @@ def test_a_failed_fetch_holds(monkeypatch):
     _Spy(monkeypatch)
     with pytest.raises(ai.AgendaHold) as held:
         ai.fetch(_gate([]), "http://127.0.0.1:9/agenda.pdf", ["127.0.0.1"])
+    assert held.value.reason == "fetch_failed"
+
+
+# --- review round 1 ---------------------------------------------------------------------------------------
+
+
+def _ok(entry, meetings):
+    return None
+
+
+def test_the_recheck_is_required():
+    with pytest.raises(TypeError):
+        gl.load_agenda_bundle(None, Path("x"))
+
+
+def test_the_candidate_predicate_is_checked_again_after_the_creates(tmp_path, graph):
+    bundle = _bundle(tmp_path, [_entry(M1, "2026-10-06", "Ours")])
+    calls = []
+
+    def recheck(entry, meetings):
+        calls.append(sorted(meetings[entry["meeting_id"]]["item_ids"]))
+        return None if len(calls) == 1 else "other_body"  # the meeting changed inside our window
+
+    with pytest.raises(gl.GraphWriteError, match="load_conflict"):
+        gl.load_agenda_bundle(graph, bundle, recheck=recheck)
+    assert calls == [[], []]  # after the creates, our own items are not "has items"
+    assert gl.FakeGraphPort(graph.path).overlay() == ([], [])
+
+
+def test_a_meeting_gone_after_the_creates_rolls_back(tmp_path, graph):
+    bundle = _bundle(tmp_path, [_entry(M1, "2026-10-06", "Ours")])
+    real = gl._FakeTx.create
+
+    def create_then_delete(self, nodes, edges):
+        real(self, nodes, edges)
+        self.port._nodes.pop(M1)
+
+    import unittest.mock as mock
+
+    with mock.patch.object(gl._FakeTx, "create", create_then_delete):
+        with pytest.raises(gl.GraphWriteError, match="load_conflict"):
+            gl.load_agenda_bundle(graph, bundle, recheck=_ok)
+
+
+@pytest.mark.parametrize("extra", [
+    lambda item: _edge(item, "ABOUT", M3),  # another relationship
+    lambda item: _edge(item, "EVIDENCED_BY", _rid(M1)),  # a duplicate
+    lambda item: {**_edge(item, "PART_OF_MEETING", M1), "properties": {"page": 2}},  # same triple, other props
+])
+def test_already_loaded_means_exactly_the_bundles_edges(tmp_path, graph, extra):
+    bundle = _bundle(tmp_path, [_entry(M1, "2026-10-06", "Ours")])
+    gl.load_agenda_bundle(graph, bundle, recheck=_ok)
+    item = f"agenda-item-{SID}-101-4a"
+    with open(graph.path / "overlay.jsonl", "a") as fh:
+        fh.write(json.dumps({"edge": extra(item)}) + "\n")
+    again = gl.load_agenda_bundle(gl.FakeGraphPort(graph.path), bundle, recheck=_ok)
+    assert again["already_loaded"] == [] and [h["reason"] for h in again["holds"]] == ["meeting_has_items"]
+
+
+def test_a_meeting_with_no_items_is_refused_at_the_bundle(tmp_path, graph):
+    entry = _entry(M1, "2026-10-06")
+    assert entry["nodes"] == []
+    with pytest.raises(gl.BundleError, match="no items"):
+        gl.load_agenda_bundle(graph, _bundle(tmp_path, [entry]), recheck=_ok)
+
+
+def test_a_truncated_response_holds(monkeypatch):
+    import http.client
+    import io
+
+    class Gate:
+        def open(self, request, **kw):
+            class Body(io.BytesIO):
+                def read(self, *a):
+                    raise http.client.IncompleteRead(b"%PDF", 100)
+            return Body()
+
+    with pytest.raises(ai.AgendaHold) as held:
+        ai.fetch(Gate(), AGENDA.format(1), [HOST])
     assert held.value.reason == "fetch_failed"

@@ -184,8 +184,13 @@ class FakeGraphPort:
 
 
 def _merge_node(nodes: dict[str, dict], row: dict) -> None:
-    """MERGE (n:Label {id}) SET n:Labels SET n += props: a null removes the property, as Neo4j does."""
-    have = nodes.get(row["id"]) or {"id": row["id"], "labels": [], "properties": {}}
+    """MERGE (n:Primary {id}) SET n:Labels SET n += props: a null removes the property, as Neo4j does. An id held by a
+    node without the primary label is not a node this MERGE matches; the real loader would make a second node with
+    that id (or hit a constraint), which a graph keyed by id cannot represent: refuse."""
+    have = nodes.get(row["id"])
+    if have is not None and row["labels"][0] not in have["labels"]:
+        raise GraphWriteError(f"{row['id']}: MERGE as {row['labels'][0]} on a node labelled {have['labels']}")
+    have = have or {"id": row["id"], "labels": [], "properties": {}}
     props = dict(have["properties"])
     for k, v in row["properties"].items():
         if v is None:
@@ -197,15 +202,18 @@ def _merge_node(nodes: dict[str, dict], row: dict) -> None:
 
 
 def _merge_edge(nodes: dict[str, dict], edges: list[dict], row: dict) -> None:
-    """MATCH both endpoints (none: no edge), MERGE the relationship, SET += props."""
+    """MATCH both endpoints (none: no edge), MERGE the relationship (every match is updated), SET += props."""
     if row["start_id"] not in nodes or row["end_id"] not in nodes:
         return
+    key = (row["start_id"], row["type"], row["end_id"])
+    matched = False
     for i, e in enumerate(edges):
-        if (e["start_id"], e["type"], e["end_id"]) == (row["start_id"], row["type"], row["end_id"]):
+        if (e["start_id"], e["type"], e["end_id"]) == key:
             props = {**e["properties"], **row["properties"]}
             edges[i] = {**e, "properties": {k: v for k, v in props.items() if v is not None}}
-            return
-    edges.append({**row, "properties": {k: v for k, v in row["properties"].items() if v is not None}})
+            matched = True
+    if not matched:
+        edges.append({**row, "properties": {k: v for k, v in row["properties"].items() if v is not None}})
 
 
 class _FakeTx:
@@ -247,6 +255,11 @@ class _FakeTx:
                     and "AgendaItem" in nodes.get(e["start_id"], {}).get("labels", ()):
                 out[e["end_id"]]["item_ids"].append(e["start_id"])
         return out
+
+    def incident_edges(self, ids) -> list[tuple]:
+        wanted = set(ids)
+        return [(e["start_id"], e["type"], e["end_id"], json.dumps(e.get("properties") or {}, sort_keys=True))
+                for e in self.port._edges if e["start_id"] in wanted or e["end_id"] in wanted]
 
     def create(self, nodes: list[dict], edges: list[dict]) -> None:
         taken = set(self.port._nodes)
@@ -347,6 +360,12 @@ class _Neo4jTx:
         return {row["id"]: {"props": dict(zip(AGENDA_MEETING_PROPS, row["values"])),
                             "records": [dict(r) for r in row["records"]], "item_ids": list(row["items"])}
                 for row in rows}
+
+    def incident_edges(self, ids) -> list[tuple]:
+        rows = self.tx.run("UNWIND $ids AS id MATCH (a:AgendaItem {id: id})-[r]-() "
+                           "RETURN DISTINCT elementId(r) AS rid, startNode(r).id AS s, type(r) AS t, endNode(r).id AS e, "
+                           "properties(r) AS props", ids=sorted(set(ids)))
+        return [(row["s"], row["t"], row["e"], json.dumps(dict(row["props"]), sort_keys=True)) for row in rows]
 
     def existing_edges(self, triples) -> set[tuple[str, str, str]]:
         triples = sorted(set(triples))
@@ -693,6 +712,9 @@ def _read_bundle(bundle: Path) -> tuple[dict, list[dict], list[dict]]:
             raise BundleError(f"{name} changed since the bundle was written")
     read = lambda name: [json.loads(x) for x in (bundle / name).read_text(encoding="utf-8").splitlines() if x]  # noqa: E731
     nodes, edges = read("nodes.jsonl"), read("edges.jsonl")
+    empty = [m["meeting_id"] for m in manifest["meetings"] if not m["item_ids"]]
+    if empty:
+        raise BundleError(f"meetings with no items: {', '.join(empty)} (a zero-item agenda holds, it never loads)")
     owner = {i: m for m in manifest["meetings"] for i in m["item_ids"]}
     if len(owner) != sum(len(m["item_ids"]) for m in manifest["meetings"]) or sorted(owner) != sorted(n["id"] for n in nodes):
         raise BundleError("the nodes are not exactly the manifest's items")
@@ -709,28 +731,30 @@ def _read_bundle(bundle: Path) -> tuple[dict, list[dict], list[dict]]:
 
 
 def _same_items(tx, meeting: dict, nodes: dict[str, dict]) -> bool:
-    """The graph already holds exactly this meeting's bundle items, properties and edges included."""
+    """The graph already holds exactly this meeting's bundle items: their labels and properties, and their incident
+    relationships as a multiset (endpoints, type, properties) — one PART_OF_MEETING and one EVIDENCED_BY each."""
     ids = meeting["item_ids"]
     have = tx.nodes(ids)
     if sorted(have) != sorted(ids) or any(have[i]["props"] != nodes[i]["properties"]
                                           or have[i]["labels"] != ["AgendaItem"] for i in ids):
         return False
-    triples = [(i, "PART_OF_MEETING", meeting["meeting_id"]) for i in ids] + \
-        [(i, "EVIDENCED_BY", meeting["record_id"]) for i in ids]
-    return tx.existing_edges(triples) == set(triples)
+    want = [(i, "PART_OF_MEETING", meeting["meeting_id"], "{}") for i in ids] + \
+        [(i, "EVIDENCED_BY", meeting["record_id"], "{}") for i in ids]
+    return sorted(tx.incident_edges(ids)) == sorted(want)
 
 
-def load_agenda_bundle(graph, bundle: Path, recheck=None) -> dict:
+def load_agenda_bundle(graph, bundle: Path, *, recheck) -> dict:
     """Create one agenda-items bundle's nodes and edges in ONE transaction; nothing existing is written.
 
     Per meeting, re-read in the transaction: the Meeting with its agenda Record (same id and url), no AgendaItems
     (or exactly this bundle's, already loaded: nothing to do), no item id taken, and `recheck(entry, meetings)`
-    (the stage's whole candidate predicate) silent. A meeting that fails holds alone. The creates go in first —
-    a relationship to a Meeting write-locks it — and then every loaded meeting is read again: if any carries an item
-    that is not ours (a concurrent writer), the transaction raises and nothing is written.
+    (the stage's whole candidate predicate) silent. A meeting that fails holds alone. The creates go in first,
+    then every loaded meeting is read again and must still pass `recheck` with exactly our items on it; anything
+    else (a concurrent writer, a meeting changed or gone) raises, and nothing is written.
     """
     manifest, nodes, edges = _read_bundle(bundle)
     by_id = {n["id"]: n for n in nodes}
+    entries = {m["meeting_id"]: m for m in manifest["meetings"]}
     holds, created, already = [], {}, []
     with graph.transaction(("AgendaItem",)) as tx:
         meetings = {inst: tx.agenda_meetings(inst) for inst in sorted({m["institution_id"] for m in manifest["meetings"]})}
@@ -750,20 +774,25 @@ def load_agenda_bundle(graph, bundle: Path, recheck=None) -> dict:
                 reason = "meeting_has_items"
             elif taken & set(m["item_ids"]):
                 reason = "item_id_exists"
-            elif recheck is not None:
+            else:
                 reason = recheck(m, here)
             if reason:
                 holds.append({"meeting_id": mid, "reason": reason})
             else:
                 created[mid] = list(m["item_ids"])
         mine = {i for ids in created.values() for i in ids}
-        tx.create([by_id[i] for i in sorted(mine, key=lambda i: [n["id"] for n in nodes].index(i))],
-                  [e for e in edges if e["start_id"] in mine])
-        for inst in meetings:  # after the creates: each loaded meeting carries our items and nothing else
+        tx.create([n for n in nodes if n["id"] in mine], [e for e in edges if e["start_id"] in mine])
+        for inst in meetings:  # after the creates: each loaded meeting still fits, carrying our items only
             after = tx.agenda_meetings(inst)
             for mid, ids in created.items():
-                if mid in after and sorted(after[mid]["item_ids"]) != sorted(ids):
-                    raise GraphWriteError(f"load_conflict: {mid} gained items from another writer")
+                if entries[mid]["institution_id"] != inst:
+                    continue
+                state = after.get(mid)
+                if state is None or sorted(state["item_ids"]) != sorted(ids):
+                    raise GraphWriteError(f"load_conflict: {mid} is gone or gained items from another writer")
+                problem = recheck(entries[mid], {**after, mid: {**state, "item_ids": []}})
+                if problem:
+                    raise GraphWriteError(f"load_conflict: {mid} no longer fits ({problem})")
     outcome = "loaded" if created or already else "held" if holds else "nothing"
     return {"outcome": outcome, "holds": holds, "already_loaded": already,
             "created": {"meetings": created, "nodes": len(mine), "edges": 2 * len(mine)}}

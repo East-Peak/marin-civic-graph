@@ -12,6 +12,7 @@ does not fit holds alone, with a reason; it never loads as an empty success.
 from __future__ import annotations
 
 import hashlib
+import http.client
 import json
 import os
 import re
@@ -182,7 +183,7 @@ def fetch(gate, url: str, hosts, *, timeout: float = FETCH_TIMEOUT, max_bytes: i
             data = resp.read(max_bytes + 1)
     except robots_gate.RobotsRefused as exc:
         raise AgendaHold(exc.outcome, str(exc)) from None
-    except (urllib.error.URLError, OSError, ValueError) as exc:
+    except (urllib.error.URLError, http.client.HTTPException, OSError, ValueError) as exc:
         raise AgendaHold("fetch_failed", f"{type(exc).__name__}: {exc}") from None
     if len(data) > max_bytes:
         raise AgendaHold("too_large", f"over {max_bytes} bytes")
@@ -213,25 +214,28 @@ def parse_hold(parsed: dict, meeting_date: str, document: str | None = None) -> 
     return None
 
 
+_CLOSED = re.compile(r"closed\s+session", re.IGNORECASE)
+
+
 def _kind(text: str) -> set[str]:
-    kinds = {k for k, pattern in (("closed", r"closed\s+session"), ("special", r"special"),
-                                  ("regular", r"regular|open\s+session")) if re.search(pattern, text, re.IGNORECASE)}
-    return kinds
+    return {k for k, pattern in (("closed", _CLOSED.pattern), ("special", r"special"),
+                                 ("regular", r"regular|open\s+session")) if re.search(pattern, text, re.IGNORECASE)}
 
 
 def session_hold(header: str, title: str, *, siblings: bool) -> str | None:
     """`agenda_session_mismatch` when the file's session is not the meeting's (Ross: one closed-session file filed
     under both of a day's meetings). With a same-day sibling the header must name the meeting's kind; without one,
-    only a closed-only file under an open meeting, or an open file under a closed one, holds."""
+    only a closed-only file (a closed session named, and no header line naming an open meeting) under a meeting
+    that is not a closed session holds."""
     said, named = _kind(header), _kind(title)
     meeting = "closed" if "closed" in named else "special" if "special" in named else "regular"
-    closed_only = "closed" in said and "regular" not in said
+    open_line = any(re.search(r"regular|open\s+session|special", line, re.IGNORECASE)
+                    and not _CLOSED.search(line) for line in header.splitlines())
+    closed_only = "closed" in said and not open_line
     if siblings:
         ok = meeting in said if meeting != "regular" else ("regular" in said or not said & {"special", "closed"})
         return None if ok else "agenda_session_mismatch"
-    if (meeting == "closed") != closed_only and (meeting == "closed" or closed_only):
-        return "agenda_session_mismatch"
-    return None
+    return "agenda_session_mismatch" if closed_only and meeting != "closed" else None
 
 
 def item_id(meeting_id: str, key: str) -> str:

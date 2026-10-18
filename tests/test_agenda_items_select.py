@@ -216,8 +216,8 @@ def test_a_held_retry_budget_bounds_retries():
     ("Special Meeting of the Town Council", "Town Council Closed Session", True, "agenda_session_mismatch"),
     # no sibling: only a closed-only file under an open meeting (or the reverse) holds
     ("Special Meeting Closed Session", "Town Council Meeting", False, "agenda_session_mismatch"),
-    ("Regular Meeting; Closed Session at 5:30", "Town Council Meeting", False, None),
-    ("Regular Meeting", "Town Council Closed Session", False, "agenda_session_mismatch"),
+    ("Regular Meeting\nClosed Session at 5:30", "Town Council Meeting", False, None),
+    ("Special Meeting of the Town Council", "Town Council Closed Session", False, None),
     ("Special Meeting", "Town Council Meeting", False, None),
 ])
 def test_the_files_session_must_be_the_meetings(header, title, siblings, reason):

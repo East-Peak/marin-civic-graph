@@ -24,7 +24,7 @@ def lock_dir(tmp_path, monkeypatch):
 
 def test_a_target_is_named_by_host_and_port():
     assert gk.lock_name("bolt://localhost:7688") == "graph-localhost-7688.lock"
-    assert gk.lock_name("neo4j://127.0.0.1:7688/") == "graph-127.0.0.1-7688.lock"
+    assert gk.lock_name("neo4j://127.0.0.1:7688/") == "graph-localhost-7688.lock"
 
 
 def test_a_fake_graph_is_named_by_its_directory():
@@ -58,3 +58,18 @@ def test_the_legacy_extractor_refuses_while_the_lock_is_held(monkeypatch):
     with gk.graph_lock("bolt://localhost:7688"):
         with pytest.raises(gk.GraphLockHeld):
             legacy.main(["--source", "lakeport-town-council", "--limit", "1"])
+
+
+def test_equivalent_addresses_share_one_lock(tmp_path):
+    names = {gk.lock_name(u) for u in ("bolt://localhost:7688", "bolt://127.0.0.1:7688", "neo4j://LOCALHOST:7688",
+                                       "bolt://[::1]:7688")}
+    assert names == {"graph-localhost-7688.lock"}
+    with gk.graph_lock("bolt://localhost:7688"):
+        with pytest.raises(gk.GraphLockHeld):
+            with gk.graph_lock("bolt://127.0.0.1:7688"):
+                pass
+
+
+def test_a_fake_graph_is_named_by_its_resolved_directory(tmp_path):
+    (tmp_path / "g").mkdir()
+    assert gk.lock_name(f"fakegraph://{tmp_path}/g") == gk.lock_name(f"fakegraph://{tmp_path}/./x/../g")

@@ -24,11 +24,17 @@ class GraphLockHeld(RuntimeError):
     """Another writer holds this graph's lock; nothing was done."""
 
 
+LOOPBACK = {"localhost", "127.0.0.1", "::1"}
+
+
 def lock_name(uri: str) -> str:
+    """One name per graph: loopback aliases are one host, a fake graph is its resolved directory."""
     parts = urlsplit(uri)
     if parts.scheme == "fakegraph":
-        return f"graph-fakegraph-{hashlib.sha256(parts.path.encode()).hexdigest()[:8]}.lock"
-    return f"graph-{(parts.hostname or 'unknown').lower()}-{parts.port or 'default'}.lock"
+        path = str(Path(parts.path).resolve())
+        return f"graph-fakegraph-{hashlib.sha256(path.encode()).hexdigest()[:8]}.lock"
+    host = (parts.hostname or "unknown").lower()
+    return f"graph-{'localhost' if host in LOOPBACK else host}-{parts.port or 'default'}.lock"
 
 
 @contextmanager

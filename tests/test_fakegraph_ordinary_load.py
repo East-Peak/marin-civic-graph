@@ -101,3 +101,21 @@ def test_an_unsafe_target_still_refuses(tmp_path, monkeypatch):
 
     with pytest.raises(UnsafeNeo4jTarget):
         nm.main(["--source", SID, "--capture", str(capture), "--load", "--root", str(root)])
+
+
+def test_merge_on_an_id_held_by_another_label_fails_closed(tmp_path):
+    port = _seed(tmp_path, [{"id": "x1", "labels": ["Record"], "properties": {"id": "x1"}}])
+    with pytest.raises(gl.GraphWriteError, match="x1"):
+        port.merge([{"id": "x1", "labels": ["Meeting"], "node_type": "Meeting", "properties": {}}], [])
+        with gl.FakeGraphPort(port.path).transaction(()) as tx:
+            tx.nodes(["x1"])
+
+
+def test_merge_updates_every_matching_relationship(tmp_path):
+    port = _seed(tmp_path, [{"id": "a", "labels": ["Meeting"], "properties": {"id": "a"}},
+                            {"id": "b", "labels": ["Record"], "properties": {"id": "b"}}],
+                 [{"start_id": "a", "type": "EVIDENCED_BY", "end_id": "b", "properties": {"n": 1}},
+                  {"start_id": "a", "type": "EVIDENCED_BY", "end_id": "b", "properties": {"n": 2}}])
+    port.merge([], [{"source_id": "a", "relationship_type": "EVIDENCED_BY", "target_id": "b", "properties": {"k": 9}}])
+    with gl.FakeGraphPort(port.path).transaction(()) as tx:
+        assert [e["properties"] for e in tx.port._edges] == [{"n": 1, "k": 9}, {"n": 2, "k": 9}]
