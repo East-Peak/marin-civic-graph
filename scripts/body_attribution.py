@@ -743,9 +743,11 @@ def _revision() -> str:
 
 
 def implementation(root: Path | None = None) -> dict:
-    """The code a proof ran or an approval covers: the revision, whether those files are committed as-is, their bytes."""
+    """The code a proof ran or an approval covers: the revision; whether the WHOLE tree is exactly that commit (no
+    change, no untracked file: then the revision alone names every line a proof executed — runners, adapters, the
+    bake, the app); and the bytes of the guard-enforcing files the canonical checkout must hold."""
     root = Path(root or REPO)
-    dirty = _git(root, "status", "--porcelain", "--", *IMPL_FILES).stdout.strip()
+    dirty = _git(root, "status", "--porcelain", "--untracked-files=all").stdout.strip()
     return {"revision": _git(root, "rev-parse", "HEAD").stdout.strip() if root != REPO else _revision(),
             "clean": not dirty, "sha256": {rel: _sha(root / rel) for rel in IMPL_FILES if (root / rel).is_file()}}
 
@@ -785,7 +787,7 @@ def prepare(plan: Path, map_dir: Path, bodies: Path, weekly: Path, app: Path, st
         raise AttributionError(f"{GUARD_PATH.name}: the guard does not name exactly the plan's moves")
     impl = implementation()
     if not impl["clean"]:
-        raise AttributionError("the implementation has uncommitted changes; commit, then re-run the proofs")
+        raise AttributionError("the tree has uncommitted changes or untracked files; commit, then re-run the proofs")
     want = {"candidate_sha256": cand, "baseline_sha256": base, "map_sha256": map_sha,
             "guard_sha256": _sha(GUARD_PATH), "implementation": impl}
     for name, path in (("weekly", weekly), ("app", app)):
@@ -923,13 +925,15 @@ def run_undo(state_dir: Path, *, approve: str, canonical_root: Path, uri: str | 
         manifest = _verified_manifest(state_dir, approve)
         report = json.loads(manifest["bytes"]["plan/plan-report.json"])
         stmts = json.loads(manifest["bytes"]["plan/inverse.json"])
-        if record.exists():
-            raise votes_apply.ApplyRefused(f"{record} exists: an undo already ran; inspect it, never retry blindly")
+        if record.exists() or undo.exists():
+            raise votes_apply.ApplyRefused(f"{record} or {undo} exists: an undo already ran; inspect it, never retry "
+                                           "blindly (`check` compares the graph with the candidate)")
         driver = driver_factory()
         try:
             export_live_graph(driver, database=database, out_dir=undo / "pre-undo-backup", backup=True, progress=None)
             if fingerprint(undo / "pre-undo-backup") != report["candidate_sha256"]:
                 return _undo_record(record, "DRIFT")
+            _undo_record(record, "UNDO_IN_PROGRESS")  # durably, before anything is written
             with driver.session(database=database) as session:
                 tx = session.begin_transaction()
                 try:
@@ -945,15 +949,29 @@ def run_undo(state_dir: Path, *, approve: str, canonical_root: Path, uri: str | 
                     tx.commit()
                 except Exception as exc:
                     return _undo_record(record, "UNDO_UNVERIFIED", reason=f"commit raised {exc!r}")
-            export_live_graph(driver, database=database, out_dir=undo / "post-undo-export", backup=True, progress=None)
-            ok = fingerprint(undo / "post-undo-export") == report["baseline"]["sha256"]
+            try:
+                export_live_graph(driver, database=database, out_dir=undo / "post-undo-export", backup=True,
+                                  progress=None)
+                ok = fingerprint(undo / "post-undo-export") == report["baseline"]["sha256"]
+            except Exception as exc:  # committed, but not verified: say so, never retry
+                return _undo_record(record, "UNDO_UNVERIFIED", reason=f"post-undo export failed: {exc!r}")
             return _undo_record(record, "UNDONE" if ok else "UNDO_UNVERIFIED")
         finally:
             driver.close()
 
 
 def _undo_record(path: Path, outcome: str, **detail) -> str:
-    path.write_text(json.dumps({"outcome": outcome, **detail}, indent=1, sort_keys=True) + "\n")
+    """Atomically and durably (the old record or the new one, never a torn one)."""
+    import os
+
+    history = _json(path).get("history", []) if path.exists() else []
+    tmp = path.with_name(f".{path.name}.tmp")
+    with open(tmp, "w", encoding="utf-8") as fh:
+        fh.write(json.dumps({"outcome": outcome, **detail, "history": history + [{"outcome": outcome, **detail}]},
+                            indent=1, sort_keys=True) + "\n")
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
     return outcome
 
 

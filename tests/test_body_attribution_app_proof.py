@@ -80,7 +80,8 @@ def test_the_bake_diff_must_be_exactly_the_planned_rows(tmp_path):
         failing(ap.diff_checks(before, after, planned))
     before2 = bake(tmp_path / "before2.sqlite",
                    edges=[(r["id"], r["from"]) for r in ROWS] + [("seat-lakeport-seat-1", COUNCIL)])
-    assert failing(ap.diff_checks(before2, after, planned)) == []
+    assert "the bake differs from the baseline's only by the planned rows (full rows)" not in \
+        failing(ap.diff_checks(before2, after, planned))
 
 
 def test_the_expected_neighborhood_comes_from_the_map_and_the_baseline_not_the_page(tmp_path):
@@ -142,3 +143,34 @@ def test_bakes_need_a_read_only_overlay_and_prove_refuses_bakes_of_another_candi
                                                           "attach_dir": str(attach), "attach": {}}))
     with pytest.raises(ap.ba.AttributionError, match="this plan's"):
         ap.prove(plan, tmp_path, bakedir, "http://127.0.0.1:1")
+
+
+def test_the_search_index_must_be_unchanged_for_every_existing_node(tmp_path):
+    def with_fts(path, entries):
+        con = sqlite3.connect(path)
+        con.execute("CREATE VIRTUAL TABLE search_fts USING fts5(search_label, search_terms)")
+        for nid, label in entries:
+            rowid = con.execute("SELECT rowid FROM nodes WHERE id = ?", (nid,)).fetchone()[0]
+            con.execute("INSERT INTO search_fts (rowid, search_label, search_terms) VALUES (?, ?, ?)",
+                        (rowid, label, label.lower()))
+        con.commit()
+        con.close()
+        return path
+
+    entries = [(COUNCIL, "Lakeport Town Council"), (COMMITTEES, "Shoreview Committees")]
+    edges = [(r["id"], r["from"]) for r in ROWS]
+    before = with_fts(bake(tmp_path / "b.sqlite", edges=edges), entries)
+    planned = {"nodes_added": {}, "at_institution": [], "in_jurisdiction_added": [], "template": COUNCIL}
+    same = with_fts(bake(tmp_path / "a.sqlite", edges=edges), entries)
+    assert "the search index differs only by the new institutions" not in failing(ap.diff_checks(before, same, planned))
+    lost = with_fts(bake(tmp_path / "c.sqlite", edges=edges), entries[:1])  # an existing entry vanished
+    assert "the search index differs only by the new institutions" in failing(ap.diff_checks(before, lost, planned))
+
+
+def test_a_bake_missing_its_sidecars_fails(tmp_path):
+    edges = [(r["id"], r["from"]) for r in ROWS]
+    (tmp_path / "b").mkdir()
+    (tmp_path / "a").mkdir()
+    before, after = bake(tmp_path / "b" / "s.sqlite", edges=edges), bake(tmp_path / "a" / "s.sqlite", edges=edges)
+    planned = {"nodes_added": {}, "at_institution": [], "in_jurisdiction_added": [], "template": COUNCIL}
+    assert "the bake's sidecars change only by the planned counts" in failing(ap.diff_checks(before, after, planned))

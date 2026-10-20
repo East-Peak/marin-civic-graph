@@ -35,6 +35,8 @@ sys.path.insert(0, str(SCRIPTS))
 import body_attribution as ba  # noqa: E402
 
 PREVIEW_CAP = 40  # app/src/lib/server/graph-engine.ts tier2Neighborhood
+BAKE_FILES = ("public-substrate.sqlite", "status_manifest.json", "catalog.json", "report.json")
+SERVING_TABLES = ("nodes", "edges", "browse_rows", "search_fts", "money_rollups", "identity_links", "meta")
 
 
 def _check(out, name, ok, detail=None):
@@ -90,9 +92,14 @@ def diff_checks(before: Path, after: Path, planned: dict) -> list[dict]:
     out: list[dict] = []
     a, b = _ro(after), _ro(before)
     try:
-        tables = {t for (t,) in a.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+        tables = {t for (t,) in a.execute("SELECT name FROM sqlite_master WHERE type = 'table'")} & \
+            {t for (t,) in b.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+        missing_tables = sorted(set(SERVING_TABLES) - tables)
         rows = {t: (_table(b, f"SELECT * FROM {t}"), _table(a, f"SELECT * FROM {t}"))
                 for t in ("nodes", "edges", "browse_rows", "money_rollups", "identity_links", "meta") if t in tables}
+        search = tuple({i: (label, terms) for i, label, terms in con.execute(
+            "SELECT n.id, f.search_label, f.search_terms FROM search_fts f JOIN nodes n ON n.rowid = f.rowid")}
+            if "search_fts" in tables else {} for con in (b, a))
         tpl = planned["template"]
         tpl_node = b.execute("SELECT type, props FROM nodes WHERE id = ?", (tpl,)).fetchone()
         tpl_browse = b.execute("SELECT * FROM browse_rows WHERE id = ?", (tpl,)).fetchone() \
@@ -133,19 +140,22 @@ def diff_checks(before: Path, after: Path, planned: dict) -> list[dict]:
         "edges_added": sum(got_add.values()), "edges_removed": sum(got_del.values()),
         "unplanned_edges": [list(k) for k in (got_add - want_add)][:3], "missing_edges": [list(k) for k in (want_add - got_add)][:3],
         "browse_added": sum(got_browse.values()), "other_tables_changed": unchanged})
+    _check(out, "the bake has the production serving tables", not missing_tables, missing_tables)
     _check(out, "every new institution is in the search index under its name", all(fts.values()),
            sorted(k for k, v in fts.items() if not v))
+    changed = sorted(i for i in set(search[0]) | set(search[1]) if search[0].get(i) != search[1].get(i))
+    _check(out, "the search index differs only by the new institutions",
+           "search_fts" in tables and changed == sorted(planned["nodes_added"]), changed[:5])
     side = {}
     for name in ("status_manifest.json", "catalog.json"):
         x, y = (_json_file(Path(d).parent / name) for d in (before, after))
-        if x is not None or y is not None:
-            side[name] = _flat_diff(x or {}, y or {})
+        side[name] = None if x is None or y is None else _flat_diff(x, y)
     n, e = len(planned["nodes_added"]), len(planned["in_jurisdiction_added"])
     want_side = {"status_manifest.json": {"per_type_counts.Organization": n, "node_count": n, "edge_count": e},
                  "catalog.json": {"counts.Organization": n, "per_type_counts.Organization": n, "node_count": n,
                                   "edge_count": e}}
     _check(out, "the bake's sidecars change only by the planned counts",
-           all(side.get(k, want) == want for k, want in want_side.items() if k in side), side)
+           all(side[k] == want for k, want in want_side.items()), side)
     return out
 
 
@@ -236,6 +246,8 @@ def prove(plan: Path, map_dir: Path, bake: Path, base_url: str) -> dict:
     attach = Path(inputs["attach_dir"])
     if {n: ba._sha(attach / n) for n in inputs["attach"]} != inputs["attach"]:
         raise ba.AttributionError("the attach overlay changed since the bakes")
+    if _outputs(bake) != inputs.get("outputs"):
+        raise ba.AttributionError("the baked files are not the ones the bakes wrote")
     ops = json.loads((plan / "ops.json").read_text())
     rows = list(ba.read_jsonl(Path(map_dir) / "map.jsonl"))
     if ba._sha(Path(map_dir) / "map.jsonl") != report["map"]["sha256"]:
@@ -287,16 +299,25 @@ def run_bakes(plan: Path, attach: Path, out: Path) -> None:
     if not files or any(os.stat(attach / n).st_mode & 0o222 for n in files):
         raise ba.AttributionError(f"{attach}: the attach overlay copy must exist and be read-only")
     exports = {"baseline": Path(report["baseline"]["dir"]), "candidate": Path(plan) / "candidate"}
+    before = {**{name: ba.fingerprint(export) for name, export in exports.items()},
+              "attach": {n: ba._sha(attach / n) for n in files}}
     for name, export in exports.items():
         (out / name).mkdir(parents=True)
         subprocess.run([sys.executable, str(SCRIPTS / "bake_public_substrate.py"), "--source", "live-export",
                         "--live-export-dir", str(export), "--attach-overlay-dir", str(attach),
                         "--sqlite", str(out / name / "public-substrate.sqlite"),
                         "--report", str(out / name / "report.json")], check=True)
+    after = {**{name: ba.fingerprint(export) for name, export in exports.items()},
+             "attach": {n: ba._sha(attach / n) for n in files}}
+    if after != before:
+        raise ba.AttributionError("a bake input changed while baking")
     (out / "bake-inputs.json").write_text(json.dumps({
-        **{name: ba.fingerprint(export) for name, export in exports.items()}, "attach_dir": str(attach),
-        "attach": {n: ba._sha(attach / n) for n in files},
-        "bake_script_sha256": ba._sha(SCRIPTS / "bake_public_substrate.py")}, indent=1, sort_keys=True) + "\n")
+        **before, "attach_dir": str(attach), "outputs": _outputs(out),
+        "implementation": ba.implementation()}, indent=1, sort_keys=True) + "\n")
+
+
+def _outputs(out: Path) -> dict:
+    return {name: {f: ba._sha(Path(out) / name / f) for f in BAKE_FILES} for name in ("baseline", "candidate")}
 
 
 def main(argv: list[str] | None = None) -> int:

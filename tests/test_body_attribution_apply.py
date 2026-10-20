@@ -111,6 +111,7 @@ def _replace_inverse(b):
     (_replace_inverse, "inverse.json is not the inverse"),
     (lambda b: (b["map"] / "map.jsonl").write_text((b["map"] / "map.jsonl").read_text() + "\n"), "map"),
     (lambda b: (b["worktree"] / "scripts" / "normalize_meetings.py").write_text("uncommitted\n"), "uncommitted"),
+    (lambda b: (b["worktree"] / "scripts" / "a_proof_dependency.py").write_text("untracked code\n"), "uncommitted"),
 ])
 def test_prepare_refuses_anything_that_is_not_of_this_bundle(bundle, spoil, match):
     spoil(bundle)
@@ -318,3 +319,41 @@ def test_undo_guard_failure_rolls_back(bundle):
     assert _undo(bundle, g) == "ROLLED_BACK"
     undo_calls = g.calls[len(g.calls) - g.calls[::-1].index("begin"):]
     assert (g.nodes, g.edges) == after and "commit" not in undo_calls and "rollback" in undo_calls
+
+
+def test_undo_journals_before_it_mutates_and_a_failed_verification_is_recorded(bundle, monkeypatch):
+    prepare(bundle)
+    g = _graph(bundle)
+    assert apply(bundle, g) == "APPLIED"
+    state = bundle["tmp"] / "staging" / "state"
+    seen = []
+    real_begin = g.session
+
+    def watching_session(database=None):
+        s = real_begin(database)
+        begin = s.begin_transaction
+
+        def begin_transaction():
+            seen.append(json.loads((state / ba.UNDO_STATE).read_text())["outcome"])
+            return begin()
+        s.begin_transaction = begin_transaction
+        return s
+
+    g.session = watching_session
+    import export_live_graph as elg
+    calls = {"n": 0}
+    real_export = elg.export_live_graph
+
+    def export_failing_after_commit(*a, **k):
+        calls["n"] += 1
+        if calls["n"] == 2:  # the post-undo export
+            raise RuntimeError("connection reset after the server committed")
+        return real_export(*a, **k)
+
+    monkeypatch.setattr(elg, "export_live_graph", export_failing_after_commit)
+    assert _undo(bundle, g) == "UNDO_UNVERIFIED"
+    assert seen == ["UNDO_IN_PROGRESS"]
+    record = json.loads((state / ba.UNDO_STATE).read_text())
+    assert record["outcome"] == "UNDO_UNVERIFIED" and "connection reset" in record["reason"]
+    with pytest.raises(votes_apply.ApplyRefused, match="already ran"):
+        _undo(bundle, g)
