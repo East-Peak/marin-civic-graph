@@ -10,7 +10,7 @@ reads an export (`export_live_graph.py --backup`), and for every Meeting of a so
 
   * a missing or unknown category                    -> held (never guessed);
   * a title naming a joint meeting                   -> held;
-  * the source's own category (e.g. "Town Council")  -> stays;
+  * the source's own category (e.g. "Town Council"), its title silent or naming that body too -> stays;
   * a title naming another known body                -> held (the category and the title disagree);
   * otherwise                                        -> moved to its category's body.
 
@@ -128,9 +128,10 @@ class Bodies:
             return Verdict("held", inst, f"unknown category {category!r}")
         if JOINT.search(title.lower()):
             return Verdict("held", inst, "joint meeting (title)")
-        if body is None:
+        named = self._mentioned(source, inst, title)
+        if body is None and (inst in named or not named):  # e.g. the Town Council's own interviews for a commission
             return Verdict("stays", inst, f"category {category} (the source's own body)")
-        others = {k: v for k, v in self._mentioned(source, inst, title).items() if k != body["institution_id"]}
+        others = {k: v for k, v in named.items() if k != (body or {}).get("institution_id", inst)}
         if others:
             return Verdict("held", inst, "title names another body: " + ", ".join(
                 f"{k} ({v!r})" for k, v in sorted(others.items())))
@@ -230,8 +231,8 @@ def _render_map(summary: dict, rows: list[dict], bodies: Bodies) -> str:
     return "\n".join(lines) + "\n"
 
 
-def write_map(export: Path, bodies_path: Path, out: Path, *, staging_root: Path = STAGING_ROOT) -> dict:
-    out = staging_out(out, staging_root)
+def write_map(export: Path, bodies_path: Path, out: Path, *, staging_root: Path | None = None) -> dict:
+    out = staging_out(out, staging_root or STAGING_ROOT)
     export = Path(export).resolve()
     bodies = Bodies.load(bodies_path)
     result = build_map(read_jsonl(export / "nodes.jsonl"), bodies)
@@ -262,11 +263,10 @@ def main(argv: list[str] | None = None) -> int:
     m = sub.add_parser("map", help="Write the attribution map for review from an export")
     m.add_argument("--export", type=Path, required=True)
     m.add_argument("--bodies", type=Path, default=BODIES_PATH)
-    m.add_argument("--out", type=Path, required=True)
-    m.add_argument("--staging-root", type=Path, default=STAGING_ROOT)
+    m.add_argument("--out", type=Path, required=True, help=f"A new directory under {STAGING_ROOT}")
     args = parser.parse_args(argv)
     try:
-        summary = write_map(args.export, args.bodies, args.out, staging_root=args.staging_root)
+        summary = write_map(args.export, args.bodies, args.out, staging_root=STAGING_ROOT)
     except AttributionError as exc:
         print(f"refused: {exc}", file=sys.stderr)
         return 2

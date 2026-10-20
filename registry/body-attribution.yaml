@@ -75,7 +75,7 @@ sources:
     own_aliases: []
     other_aliases:
       Mill Valley City Council: [city council]
-      Mill Valley Bicycle & Pedestrian Advisory Committee: [bicycle and pedestrian advisory committee, bicycle pedestrian advisory committee]
+      Mill Valley Bicycle & Pedestrian Advisory Committee: [bicycle and pedestrian advisory committee, bicycle pedestrian advisory committee, bpac]
     bodies:
       - category: Planning Commission
         institution_id: org-mill-valley-planning-commission

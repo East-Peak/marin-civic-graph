@@ -45,7 +45,7 @@ BODIES = {
             "own_category": None,
             "own_aliases": [],
             "other_aliases": {"Shoreview City Council": ["city council"],
-                              "Shoreview Ferry & Dock Committee": ["ferry & dock committee"]},
+                              "Shoreview Ferry & Dock Committee": ["ferry & dock committee", "fdc"]},
             "bodies": [
                 {"category": "Planning Commission", "institution_id": "org-shoreview-planning-commission",
                  "name": "Shoreview Planning Commission", "jurisdiction_id": "place-shoreview",
@@ -99,6 +99,9 @@ def test_category_decides_when_the_title_agrees_or_is_silent(bodies, category, t
      "Meeting for TPAC Interviews", "title names another body"),
     (COMMITTEES, "Harbor & Mobility Committee", "Ferry & Dock Committee Regular Meeting Agenda (PDF)",
      "title names another body"),
+    (COMMITTEES, "Harbor & Mobility Committee", "FDC Meeting Agenda 1/19/2022 (PDF)", "title names another body"),
+    # the source's own category, but a title naming only another body: the two disagree
+    (COUNCIL, "Town Council", "Harbor Commission Regular Meeting Agenda", "title names another body"),
     (COUNCIL, "Library Board", "Library Board Agenda", "unknown category"),
     (COUNCIL, None, "Harbor Commission Agenda", "missing category"),
     (COUNCIL, "", "Harbor Commission Agenda", "missing category"),
@@ -206,7 +209,8 @@ def test_map_covers_exactly_the_source_institutions_meetings(bodies):
     assert result.reused_institutions == ["org-shoreview-planning-commission"]
 
 
-def test_map_cli_writes_a_deterministic_reviewed_map_with_hashes(tmp_path):
+def test_map_cli_writes_a_deterministic_reviewed_map_with_hashes(tmp_path, monkeypatch):
+    monkeypatch.setattr(ba, "STAGING_ROOT", tmp_path / "staging")
     export = tmp_path / "export"
     export.mkdir()
     (export / "nodes.jsonl").write_text("".join(json.dumps(n) + "\n" for n in _nodes()))
@@ -216,8 +220,7 @@ def test_map_cli_writes_a_deterministic_reviewed_map_with_hashes(tmp_path):
     outs = []
     for name in ("one", "two"):
         out = tmp_path / "staging" / name
-        assert ba.main(["map", "--export", str(export), "--bodies", str(registry), "--out", str(out),
-                        "--staging-root", str(tmp_path / "staging")]) == 0
+        assert ba.main(["map", "--export", str(export), "--bodies", str(registry), "--out", str(out)]) == 0
         outs.append(out)
     for name in ("map.jsonl", "held.jsonl", "summary.json", "report.md"):
         assert (outs[0] / name).read_bytes() == (outs[1] / name).read_bytes()
@@ -233,15 +236,18 @@ def test_map_cli_writes_a_deterministic_reviewed_map_with_hashes(tmp_path):
     assert "Lakeport Water District No. 1" in report and "a subsidiary district (fictional filing)" in report
 
 
-def test_map_cli_refuses_outside_staging_or_into_a_nonempty_dir(tmp_path):
+def test_map_cli_refuses_outside_staging_or_into_a_nonempty_dir(tmp_path, monkeypatch):
+    monkeypatch.setattr(ba, "STAGING_ROOT", tmp_path / "staging")
     export = tmp_path / "export"
     export.mkdir()
     (export / "nodes.jsonl").write_text("")
     (export / "edges.jsonl").write_text("")
     registry = tmp_path / "bodies.yaml"
     registry.write_text(yaml.safe_dump(BODIES))
-    args = ["map", "--export", str(export), "--bodies", str(registry), "--staging-root", str(tmp_path / "staging")]
+    args = ["map", "--export", str(export), "--bodies", str(registry)]
     assert ba.main(args + ["--out", str(tmp_path / "elsewhere")]) == 2
+    with pytest.raises(SystemExit):  # the staging root is not the caller's to choose
+        ba.main(args + ["--out", str(tmp_path / "staging" / "x"), "--staging-root", str(tmp_path)])
     full = tmp_path / "staging" / "full"
     full.mkdir(parents=True)
     (full / "x").write_text("")
