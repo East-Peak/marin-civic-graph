@@ -211,19 +211,20 @@ def _tx_fingerprint(tx) -> dict:
     return out
 
 
-def _recovery(state_dir: Path, reason: str, detail: str) -> None:
+def _recovery(state_dir: Path, reason: str, detail: str, inverse: str | None = None) -> None:
     (state_dir / "apply" / "RECOVERY.md").write_text("\n".join([
         f"# APPLY_UNVERIFIED — {reason}", "", detail, "",
         "Nothing is retried automatically. To recover:",
         f"1. The untouched pre-apply backup: `{state_dir / 'apply' / 'pre-apply-backup'}` (equals the plan baseline).",
-        f"2. Additions only: run `{state_dir / 'plan' / 'inverse.json'}`'s statements in ONE transaction, each "
-        "counting exactly its rows; or restore the whole graph from the backup with `restore_neo4j_local.py`.",
+        inverse or (f"2. Additions only: run `{state_dir / 'plan' / 'inverse.json'}`'s statements in ONE transaction, "
+                    "each counting exactly its rows; or restore the whole graph from the backup with "
+                    "`restore_neo4j_local.py`."),
         "3. Re-export (`export_live_graph.py --backup`) and compare with the backup / candidate before any next step.",
         ""]) + "\n")
 
 
 def run_apply(state_dir: Path, *, approve: str, canonical_root: Path, uri: str | None, driver_factory,
-               database: str, exporter=export_live_graph) -> str:
+               database: str, exporter=export_live_graph, apply_ops=None, precheck=None, inverse: str | None = None) -> str:
     """For a votes-refresh revision the refresh lock is taken FIRST (then the weekly lock) and held throughout: the
     refresh guard (current revision, not released, no covering roster hold) is checked under it, and the journal is
     written before it is released."""
@@ -231,7 +232,8 @@ def run_apply(state_dir: Path, *, approve: str, canonical_root: Path, uri: str |
     root = refresh_batch(state_dir)
     if root is None:
         return _run_apply(state_dir, approve=approve, canonical_root=canonical_root, uri=uri,
-                          driver_factory=driver_factory, database=database, exporter=exporter)
+                          driver_factory=driver_factory, database=database, exporter=exporter, apply_ops=apply_ops,
+                          precheck=precheck, inverse=inverse)
     import votes_refresh
     reg = votes_refresh.Registry(root)
     with reg.locked():
@@ -246,7 +248,10 @@ def run_apply(state_dir: Path, *, approve: str, canonical_root: Path, uri: str |
 
 
 def _run_apply(state_dir: Path, *, approve: str, canonical_root: Path, uri: str | None, driver_factory,
-               database: str, exporter=export_live_graph) -> str:
+               database: str, exporter=export_live_graph, apply_ops=None, precheck=None, inverse=None) -> str:
+    """`apply_ops(tx, ops)` runs the plan's statements (default: the additive plan's); `precheck()`, under the lock
+    before any driver opens, may refuse (ApplyRefused); `inverse` is RECOVERY.md's undo step."""
+    apply_ops = apply_ops or apply_in_transaction
     verified = _verify_approval(state_dir, approve)
     if uri != OPERATOR_URI:
         raise ApplyRefused(f"NEO4J_URI must be {OPERATOR_URI} (got {uri!r})")
@@ -254,6 +259,8 @@ def _run_apply(state_dir: Path, *, approve: str, canonical_root: Path, uri: str 
     report = json.loads(verified["plan/plan-report.json"])
     apply_dir = state_dir / "apply"
     with run_lock(Path(canonical_root)):
+        if precheck is not None:
+            precheck()
         apply_dir.mkdir(exist_ok=True)
         driver = driver_factory()
         try:
@@ -266,7 +273,7 @@ def _run_apply(state_dir: Path, *, approve: str, canonical_root: Path, uri: str 
             with driver.session(database=database) as session:
                 tx = session.begin_transaction()
                 try:
-                    apply_in_transaction(tx, ops)
+                    apply_ops(tx, ops)
                     verified = _tx_fingerprint(tx) == report["candidate_sha256"]
                 except Exception as exc:  # nothing committed yet: roll back and say so
                     tx.rollback()
@@ -291,7 +298,7 @@ def _run_apply(state_dir: Path, *, approve: str, canonical_root: Path, uri: str 
                 seen = ("the post-apply export MATCHES the candidate" if matches is True else
                         "the post-apply export does NOT match the candidate" if matches is False else
                         f"the post-apply export failed: {err}")
-                _recovery(state_dir, "commit_uncertain", f"tx.commit() raised {committed}; {seen}.")
+                _recovery(state_dir, "commit_uncertain", f"tx.commit() raised {committed}; {seen}.", inverse)
                 set_state(state_dir, "APPLY_UNVERIFIED", reason="commit_uncertain")
                 return "APPLY_UNVERIFIED"
             if matches is True:
@@ -299,7 +306,7 @@ def _run_apply(state_dir: Path, *, approve: str, canonical_root: Path, uri: str 
                 return "APPLIED"
             reason = "post_export_mismatch" if matches is False else "post_export_failed"
             _recovery(state_dir, reason, "Committed, but the post-apply export does not equal the candidate."
-                      if matches is False else f"Committed, but the post-apply export failed: {err}")
+                      if matches is False else f"Committed, but the post-apply export failed: {err}", inverse)
             set_state(state_dir, "APPLY_UNVERIFIED", reason=reason)
             return "APPLY_UNVERIFIED"
         finally:

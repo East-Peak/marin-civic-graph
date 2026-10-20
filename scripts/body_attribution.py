@@ -31,6 +31,18 @@ writes registry/body-attribution-guard.yaml: every moved meeting id and its body
 meeting its source lists again whose guarded body is another institution (a re-categorized agenda keeps its id;
 the identity map can canonicalize a new id onto a moved one), and the loaders refuse, before any write, a batch
 whose Meeting or AT_INSTITUTION contradicts the guard. So no weekly run, nor a reload of an old bundle, undoes it.
+
+    body_attribution.py prepare --plan <dir> --map <dir> --weekly-proof <checks.json> --app-proof <checks.json>
+                                --state-dir <new staging dir>
+    body_attribution.py apply --state-dir <dir> --approve <sha256> --canonical-root ~/projects/marin-civic-graph \
+                              --database neo4j          # NEO4J_URI=bolt://localhost:7688, only on Stuart's "apply"
+    body_attribution.py check --state-dir <dir> --out <new dir> --canonical-root ~/projects/marin-civic-graph
+
+`prepare` (AWAITING_APPLY) binds the approval to the bytes of the plan, candidate, inverse proof, map, both proofs
+and the guard-enforcing implementation. `apply` is votes_apply's runner (approval bytes, URI, the canonical run
+lock throughout, drift check against the baseline, ONE transaction with exact counts and an in-transaction
+fingerprint == candidate before commit, no retry), first refusing a canonical checkout whose implementation is not
+the approved bytes. `check` compares a fresh read-only export with the candidate.
 """
 from __future__ import annotations
 
@@ -655,6 +667,8 @@ def load_guard(path: Path | None = None) -> dict[str, str]:
     if not path.is_file():
         return {}
     data = yaml.safe_load(path.read_text()) or {}
+    if not isinstance(data, dict) or not isinstance(data.get("sources"), dict):
+        raise AttributionError(f"{path}: not a body-attribution guard file")
     return {f"meeting-{source}-{n}": body for source, entry in (data.get("sources") or {}).items()
             for body, ns in entry["moved"].items() for n in ns}
 
@@ -706,6 +720,129 @@ def identity_problems(cache: dict, guard: dict[str, str], own_categories: dict[s
     return problems
 
 
+# --- the apply path -------------------------------------------------------------------------------------------------
+
+IMPL_FILES = ("scripts/body_attribution.py", "scripts/normalize_meetings.py", "scripts/load_neo4j_v2.py",
+              "registry/body-attribution-guard.yaml")
+
+
+def _revision() -> str:
+    import subprocess
+
+    return subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+
+
+def _json(path: Path) -> dict:
+    return json.loads(Path(path).read_text())
+
+
+def prepare(plan: Path, map_dir: Path, bodies: Path, weekly: Path, app: Path, state_dir: Path) -> str:
+    """AWAITING_APPLY, only for a clean plan whose inverse restored its baseline, whose map and guard are the ones it
+    was drawn from, and whose weekly and app proofs passed on exactly this candidate, guard and code. Returns the
+    approval sha256 Stuart's "apply" is bound to."""
+    import votes_apply
+
+    state_dir = staging_out(state_dir, STAGING_ROOT)
+    plan, map_dir = Path(plan), Path(map_dir)
+    report = _json(plan / "plan-report.json")
+    if report["verification"] or fingerprint(plan / "candidate") != report["candidate_sha256"]:
+        raise AttributionError("the plan has verification problems, or its candidate changed")
+    proof = _json(plan / "inverse-identity.json")
+    if proof.get("identical") is not True or proof.get("restored_sha256") != report["baseline"]["sha256"]:
+        raise AttributionError("the inverse did not restore the baseline byte for byte")
+    summary = _json(map_dir / "summary.json")
+    if _sha(map_dir / "map.jsonl") != summary["map_sha256"] != report["map"]["sha256"] or \
+            _sha(bodies) != report["bodies_sha256"]:
+        raise AttributionError("the map or the bodies file is not the plan's")
+    ops = _json(plan / "ops.json")
+    if load_guard(GUARD_PATH) != {r["id"]: r["to"] for r in ops["repoint"]}:
+        raise AttributionError(f"{GUARD_PATH.name}: the guard does not name exactly the plan's moves")
+    guard_sha, revision = _sha(GUARD_PATH), _revision()
+    for name, path in (("weekly", weekly), ("app", app)):
+        p = _json(path)
+        if p.get("all_pass") is not True:
+            raise AttributionError(f"the {name} proof did not pass")
+        if p.get("candidate_sha256") != report["candidate_sha256"]:
+            raise AttributionError(f"the {name} proof is of another candidate")
+        if p.get("guard_sha256") != guard_sha or p.get("code_revision") != revision:
+            raise AttributionError(f"the {name} proof ran another guard or other code (revision {p.get('code_revision')})")
+    files = {f"plan/{n}": plan / n for n in ("ops.json", "plan-report.json", "inverse.json", "inverse-identity.json")}
+    files |= {f"plan/candidate/{n}": plan / "candidate" / n for n in EXPORT_FILES}
+    files |= {"map/map.jsonl": map_dir / "map.jsonl", "map/summary.json": map_dir / "summary.json",
+              "proof/weekly.json": Path(weekly), "proof/app.json": Path(app), "bodies.yaml": Path(bodies)}
+    files |= {f"impl/{rel}": REPO / rel for rel in IMPL_FILES}
+    (state_dir / "plan").mkdir(parents=True)
+    sha = votes_apply.write_approval(state_dir, files)
+    (state_dir / "APPLY.md").write_text(_apply_md(state_dir, sha, report, revision), encoding="utf-8")
+    return sha
+
+
+def _apply_md(state_dir: Path, sha: str, report: dict, revision: str) -> str:
+    c = report["counts"]
+    return "\n".join([
+        "# Body attribution — AWAITING_APPLY", "",
+        f"Approval sha256: `{sha}` (plan/approval-inputs.json). Code revision {revision}.",
+        f"Moves {c['repoint']} meetings, creates {c['create_nodes']} institutions (+{c['create_edges']} "
+        f"IN_JURISDICTION), reuses {', '.join(c['reused'])}. Baseline nodes "
+        f"`{report['baseline']['sha256']['nodes.jsonl']}`; candidate nodes `{report['candidate_sha256']['nodes.jsonl']}`.",
+        "", "Only on Stuart's \"apply\", in his planning tab:", "",
+        "1. The canonical checkout must run the approved guard: fast-forward it to a main that contains it (apply "
+        "refuses otherwise). Optional extra backup (the procedure used 3x): stop cc.eastpeak.neo4j-openmarin, wait "
+        "for \"Stopped.\" in ~/neo4j-openmarin/logs/neo4j.log, neo4j-admin database dump, restart.",
+        "2. Apply (takes the run lock; its own full-fidelity pre-apply backup must equal the baseline, else DRIFT):", "",
+        "```", "cd ~/projects/marin-civic-graph && set -a && . app/.env.local && set +a && \\",
+        f"  .venv/bin/python scripts/body_attribution.py apply --state-dir {state_dir} \\",
+        f"  --approve {sha} --canonical-root ~/projects/marin-civic-graph --database neo4j", "```", "",
+        "3. Check (read only; a fresh export must equal the candidate):", "",
+        "```", "cd ~/projects/marin-civic-graph && set -a && . app/.env.local && set +a && \\",
+        f"  .venv/bin/python scripts/body_attribution.py check --state-dir {state_dir} \\",
+        f"  --out {state_dir}/check-1 --canonical-root ~/projects/marin-civic-graph", "```", "",
+        "Undo, if ever: plan/inverse.json in ONE transaction (`inverse_in_transaction`; it refuses if the created "
+        "institutions gained anything), then revert the guard commit.", ""])
+
+
+def _canonical_precheck(state_dir: Path, canonical_root: Path):
+    import votes_apply
+
+    def precheck():
+        files = json.loads((Path(state_dir) / votes_apply.APPROVAL).read_text())["files"]
+        for name, entry in sorted(files.items()):
+            if name.startswith("impl/"):
+                path = Path(canonical_root) / name.removeprefix("impl/")
+                if not path.is_file() or _sha(path) != entry["sha256"]:
+                    raise votes_apply.ApplyRefused(
+                        f"the canonical checkout's {name.removeprefix('impl/')} is not the approved bytes: the next "
+                        "weekly run would not run the approved guard")
+    return precheck
+
+
+def run_apply(state_dir: Path, *, approve: str, canonical_root: Path, uri: str | None, database: str,
+              driver_factory) -> str:
+    import votes_apply
+
+    return votes_apply.run_apply(
+        Path(state_dir), approve=approve, canonical_root=Path(canonical_root), uri=uri, database=database,
+        driver_factory=driver_factory, apply_ops=apply_in_transaction,
+        precheck=_canonical_precheck(state_dir, canonical_root),
+        inverse=f"2. Undo: run `{Path(state_dir) / 'plan' / 'inverse.json'}` (body_attribution.inverse_in_transaction) "
+                "in ONE transaction; it refuses if the created institutions gained anything. Or restore the whole "
+                "graph from the backup with `restore_neo4j_local.py`.")
+
+
+def check(state_dir: Path, driver, *, database: str, out: Path) -> dict:
+    """A fresh full-fidelity export, compared with the approved candidate (and baseline)."""
+    import votes_apply
+    from export_live_graph import export_live_graph
+
+    files = json.loads((Path(state_dir) / votes_apply.APPROVAL).read_text())["files"]
+    report = _json(files["plan/plan-report.json"]["path"])
+    out = staging_out(out, STAGING_ROOT)
+    export_live_graph(driver, database=database, out_dir=out, backup=True, progress=None)
+    got = fingerprint(out)
+    return {"sha256": got, "matches": got == report["candidate_sha256"],
+            "equals_baseline": got == report["baseline"]["sha256"]}
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -720,9 +857,30 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--out", type=Path, required=True, help=f"A new directory under {STAGING_ROOT}")
     g = sub.add_parser("guard", help="Write registry/body-attribution-guard.yaml from the reviewed map")
     g.add_argument("--map", type=Path, required=True)
+    pr = sub.add_parser("prepare", help="AWAITING_APPLY: bind the approval to the bundle, proofs and implementation")
+    pr.add_argument("--plan", type=Path, required=True)
+    pr.add_argument("--map", type=Path, required=True)
+    pr.add_argument("--bodies", type=Path, default=BODIES_PATH)
+    pr.add_argument("--weekly-proof", type=Path, required=True)
+    pr.add_argument("--app-proof", type=Path, required=True)
+    pr.add_argument("--state-dir", type=Path, required=True)
+    for name in ("apply", "check"):
+        a = sub.add_parser(name)
+        a.add_argument("--state-dir", type=Path, required=True)
+        a.add_argument("--canonical-root", type=Path, required=True)
+        a.add_argument("--database", default=None, help="explicit Neo4j database (apply requires it)")
+        if name == "apply":
+            a.add_argument("--approve", required=True)
+        else:
+            a.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
+    if args.cmd in ("apply", "check"):
+        return _graph_command(args)
     try:
-        if args.cmd == "guard":
+        if args.cmd == "prepare":
+            sha = prepare(args.plan, args.map, args.bodies, args.weekly_proof, args.app_proof, args.state_dir)
+            print(f"AWAITING_APPLY — approval sha256 {sha}; see {args.state_dir}/APPLY.md")
+        elif args.cmd == "guard":
             summary = json.loads((args.map / "summary.json").read_text())
             if _sha(args.map / "map.jsonl") != summary["map_sha256"]:
                 raise AttributionError("the map changed since it was written")
@@ -736,6 +894,41 @@ def main(argv: list[str] | None = None) -> int:
         print(f"refused: {exc}", file=sys.stderr)
         return 2
     return 0
+
+
+def _graph_command(args) -> int:
+    """apply / check against NEO4J_URI (apply: bolt://localhost:7688 only, explicit --database)."""
+    import os
+
+    import votes_apply
+    from neo4j_target import open_driver
+    from run_lock import run_lock
+
+    uri, database = os.environ.get("NEO4J_URI"), args.database
+    if not database:
+        print("refused: --database is required (explicit, never the default)", file=sys.stderr)
+        return 2
+
+    def driver():
+        return open_driver(uri, auth=(os.environ["NEO4J_USER"], os.environ["NEO4J_PASSWORD"]))
+
+    try:
+        if args.cmd == "apply":
+            result = run_apply(args.state_dir, approve=args.approve, canonical_root=args.canonical_root, uri=uri,
+                               database=database, driver_factory=driver)
+            print(result)
+            return 0 if result == "APPLIED" else 1
+        with run_lock(Path(args.canonical_root)):
+            d = driver()
+            try:
+                result = check(args.state_dir, d, database=database, out=args.out)
+            finally:
+                d.close()
+        print(json.dumps(result, indent=1))
+        return 0 if result["matches"] else 1
+    except (votes_apply.ApplyRefused, AttributionError) as exc:
+        print(f"refused: {exc}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":
