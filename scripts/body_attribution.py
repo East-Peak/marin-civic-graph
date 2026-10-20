@@ -24,6 +24,13 @@ Meeting's institution_id and its one AT_INSTITUTION are re-pointed; nothing else
 candidate export, inverse.json and inverse-identity.json (forward then inverse on the baseline, byte for byte).
 `statements` / `inverse_statements` are the same operations in Cypher, each with its exact expected count, for
 one transaction; the inverse first proves the migration's creations hold nothing else, or changes nothing.
+
+    body_attribution.py guard --map <map dir>
+
+writes registry/body-attribution-guard.yaml: every moved meeting id and its body. normalize_meetings drops a
+meeting its source lists again whose guarded body is another institution (a re-categorized agenda keeps its id;
+the identity map can canonicalize a new id onto a moved one), and the loaders refuse, before any write, a batch
+whose Meeting or AT_INSTITUTION contradicts the guard. So no weekly run, nor a reload of an old bundle, undoes it.
 """
 from __future__ import annotations
 
@@ -39,6 +46,8 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 BODIES_PATH = REPO / "registry" / "body-attribution.yaml"
+GUARD_PATH = REPO / "registry" / "body-attribution-guard.yaml"
+MEETING_ID = re.compile(r"^meeting-(?P<source>[a-z0-9-]+)-(?P<n>[0-9]+)$")
 STAGING_ROOT = Path.home() / "open-marin-staging" / "body-attribution"
 EXPORT_FILES = ("nodes.jsonl", "edges.jsonl")
 INSTITUTION_ID = re.compile(r"^org-[a-z0-9]+(-[a-z0-9]+)*$")
@@ -346,10 +355,15 @@ def plan_migration(nodes: list[dict], edges: list[dict], rows: list[dict], bodie
     for i in reused:
         if "Organization" not in by_id[i]["labels"]:
             raise AttributionError(f"{i}: reused, but not an Organization")
+    dependents = _dependents(nodes, edges, {r["id"] for r in repoint}, set(bodies.sources))
+    if dependents["institution_fields"] or "DECIDED_BY" in dependents["decision_edges"]:
+        raise AttributionError("what hangs off the moved meetings names an institution (fields "
+                               f"{dependents['institution_fields']}, decision edges {dependents['decision_edges']}); "
+                               "re-pointing it is not part of this migration")
     return {"repoint": sorted(repoint, key=lambda r: r["id"]), "create_nodes": create,
             "create_edges": [{"start_id": c["id"], "type": "IN_JURISDICTION",
                               "end_id": c["properties"]["jurisdiction_id"], "properties": {}} for c in create],
-            "reused": reused, "dependents": _dependents(nodes, edges, {r["id"] for r in repoint}, set(bodies.sources))}
+            "reused": reused, "dependents": dependents}
 
 
 def _dependents(nodes, edges, moved: set[str], sources: set[str]) -> dict:
@@ -410,6 +424,12 @@ def inverse_problems(nodes, edges, ops) -> list[str]:
             problems.append(f"{cid}: labels {have['labels']} are not the created {c['labels']}")
         elif have["properties"] != c["properties"]:
             problems.append(f"{cid}: properties changed since the migration created it")
+    for oid in sorted({r["from"] for r in ops["repoint"]}):
+        if "Organization" not in by_id.get(oid, {}).get("labels", []):
+            problems.append(f"{oid}: the institution to restore is not an Organization in this graph")
+    for place in sorted({e["end_id"] for e in ops["create_edges"]}):
+        if "Place" not in by_id.get(place, {}).get("labels", []):
+            problems.append(f"{place}: not a Place in this graph")
     touching = sorted(stable_line(e) for e in edges if e["start_id"] in created or e["end_id"] in created)
     if touching != _expected_creations(ops):
         problems.append(f"{len(touching)} relationships touch the created institutions, not exactly the "
@@ -420,7 +440,9 @@ def inverse_problems(nodes, edges, ops) -> list[str]:
             at.setdefault(e["start_id"], []).append(e)
     for r in ops["repoint"]:
         n = by_id.get(r["id"])
-        if n is None or n["properties"].get("institution_id") != r["to"]:
+        if n is None or "Meeting" not in n["labels"]:
+            problems.append(f"{r['id']}: no longer a Meeting")
+        elif n["properties"].get("institution_id") != r["to"]:
             problems.append(f"{r['id']}: institution_id is not {r['to']}")
         if [(e["end_id"], e["properties"]) for e in at.get(r["id"], [])] != [(r["to"], {})]:
             problems.append(f"{r['id']}: its AT_INSTITUTION is not exactly the one to {r['to']}")
@@ -485,27 +507,31 @@ def statements(ops: dict) -> list[dict]:
 
 
 def inverse_statements(ops: dict) -> list[dict]:
-    """Guards first — the created institutions exactly as created, touched by exactly the created relationships,
-    each moved meeting exactly at its `to` — then the restore. Institutions are deleted without DETACH, so one
+    """Guards first — the created institutions exactly as created, each touched by exactly as many relationships as
+    the migration made and each of those present exactly once, unchanged; each moved meeting exactly at its `to` —
+    then the restore. Institutions are deleted without DETACH, so one
     that gained a relationship meanwhile fails the transaction rather than losing it."""
     created = [c["id"] for c in ops["create_nodes"]]
-    expected = _expected_creations(ops)
-    juris = [e for e in ops["create_edges"]]
+    juris = list(ops["create_edges"])
     attrib = [{"start_id": r["id"], "end_id": r["to"]} for r in ops["repoint"] if r["to"] in set(created)]
     rows = _rows(ops, "to", "from")
     back = _rows(ops, "from", "to")
+    per_institution = Counter(e["start_id"] for e in juris) + Counter(e["end_id"] for e in attrib)
+    exact = ("UNWIND $rows AS e MATCH (s:{s} {{id: e.start_id}}) OPTIONAL MATCH (s)-[r:{rel}]->(t:{t} {{id: e.end_id}}) "
+             "WITH e, collect(properties(r)) AS ps WHERE ps = [{{}}] WITH e")
     return [
         _stmt("guard:institutions_as_created", "UNWIND $rows AS c MATCH (n:Organization {id: c.id}) "
               "WHERE size(labels(n)) = 2 AND n:Government AND properties(n) = c.props WITH n",
               {"rows": [{"id": c["id"], "props": c["properties"]} for c in ops["create_nodes"]]}, len(created)),
-        _stmt("guard:institution_relationship_count", "UNWIND $ids AS id MATCH (n:Organization {id: id})-[r]-() "
-              "WITH r", {"ids": created}, len(expected)),
-        _stmt("guard:created_jurisdictions_exact", "UNWIND $rows AS e MATCH (o:Organization {id: e.start_id})"
-              "-[r:IN_JURISDICTION]->(p:Place {id: e.end_id}) WHERE properties(r) = {} WITH r",
+        _stmt("guard:institution_incident_counts", "UNWIND $rows AS c MATCH (n:Organization {id: c.id}) "
+              "OPTIONAL MATCH (n)-[r]-() WITH c, count(r) AS k WHERE k = c.n WITH c",
+              {"rows": [{"id": i, "n": per_institution[i]} for i in created]}, len(created)),
+        _stmt("guard:created_jurisdictions_exact", exact.format(s="Organization", rel="IN_JURISDICTION", t="Place"),
               {"rows": juris}, len(juris)),
-        _stmt("guard:created_attributions_exact", "UNWIND $rows AS e MATCH (m:Meeting {id: e.start_id})"
-              "-[r:AT_INSTITUTION]->(o:Organization {id: e.end_id}) WHERE properties(r) = {} WITH r",
+        _stmt("guard:created_attributions_exact", exact.format(s="Meeting", rel="AT_INSTITUTION", t="Organization"),
               {"rows": attrib}, len(attrib)),
+        _stmt("guard:old_institutions_present", "UNWIND $ids AS id MATCH (o:Organization {id: id}) WITH o",
+              {"ids": sorted({r["from"] for r in ops["repoint"]})}, len({r["from"] for r in ops["repoint"]})),
         _stmt("guard:meetings_at_to", "UNWIND $rows AS r MATCH (m:Meeting {id: r.id}) WHERE m.institution_id = r.old "
               "OPTIONAL MATCH (m)-[a:AT_INSTITUTION]->(o) WITH r, m, collect([o.id, properties(a)]) AS outs "
               "WHERE outs = [[r.old, {}]] WITH m", {"rows": rows}, len(rows)),
@@ -587,6 +613,93 @@ def write_plan(baseline: Path, map_dir: Path, bodies_path: Path, out: Path) -> d
     return report
 
 
+# --- the guard ----------------------------------------------------------------------------------------------------
+
+def write_guard_file(rows: list[dict], map_sha256: str, path: Path = None) -> Path:
+    """The moved meetings, compactly: per old source, per body, the agenda-id suffixes of `meeting-<source>-<n>`."""
+    path = Path(path or GUARD_PATH)
+    sources: dict[str, dict] = {}
+    for r in rows:
+        if r["rule"] != "move":
+            continue
+        m = MEETING_ID.match(r["id"])
+        if not m:
+            raise AttributionError(f"{r['id']}: not meeting-<source>-<agenda id>; the guard cannot name it compactly")
+        entry = sources.setdefault(m["source"], {"institution_id": r["from"], "moved": {}})
+        if entry["institution_id"] != r["from"]:
+            raise AttributionError(f"{m['source']}: meetings from two institutions")
+        entry["moved"].setdefault(r["to"], []).append(int(m["n"]))
+    for entry in sources.values():
+        entry["moved"] = {k: sorted(v) for k, v in sorted(entry["moved"].items())}
+    import yaml
+
+    header = ("# Generated by scripts/body_attribution.py guard from the reviewed map; do not edit by hand.\n"
+              "# Each moved meeting is meeting-<source>-<n>; normalize_meetings drops it from any other institution's\n"
+              "# capture and the loaders refuse a contradicting row (see the module docstring).\n")
+    body = yaml.safe_dump({"map_sha256": map_sha256, "sources": dict(sorted(sources.items()))}, sort_keys=False,
+                          default_flow_style=None, width=118)
+    path.write_text(header + body, encoding="utf-8")
+    return path
+
+
+def load_guard(path: Path | None = None) -> dict[str, str]:
+    """Moved meeting id -> its body ({} when there is no guard file)."""
+    import yaml
+
+    path = Path(path or GUARD_PATH)
+    if not path.is_file():
+        return {}
+    data = yaml.safe_load(path.read_text()) or {}
+    return {f"meeting-{source}-{n}": body for source, entry in (data.get("sources") or {}).items()
+            for body, ns in entry["moved"].items() for n in ns}
+
+
+def without_guarded(capture: dict) -> tuple[dict, list[str]]:
+    """The capture minus the meetings the guard assigns to an institution other than the capture's."""
+    guard = load_guard()
+    inst = capture.get("institution_id")
+    drop = [m["meeting_id"] for m in capture.get("meetings") or []
+            if m.get("meeting_id") in guard and guard[m["meeting_id"]] != inst]
+    if not drop:
+        return capture, []
+    kept = [m for m in capture["meetings"] if m.get("meeting_id") not in set(drop)]
+    return {**capture, "meetings": kept, "meeting_count": len(kept)}, drop
+
+
+def preflight(nodes: list[dict], edges: list[dict]) -> None:
+    """Refuse a load (normalized rows: node `properties`, edge `source_id`/`target_id`/`relationship_type`) holding a
+    guarded Meeting at another institution, or an AT_INSTITUTION from one to another — before anything is written."""
+    guard = load_guard()
+    if not guard:
+        return
+    bad = [f"{n['id']} institution_id {n['properties']['institution_id']}" for n in nodes
+           if n.get("id") in guard and (n.get("properties") or {}).get("institution_id") not in (None, guard[n["id"]])]
+    bad += [f"{e['source_id']} AT_INSTITUTION {e['target_id']}" for e in edges
+            if e.get("relationship_type") == "AT_INSTITUTION" and e.get("source_id") in guard
+            and e.get("target_id") != guard[e["source_id"]]]
+    if bad:
+        raise AttributionError(f"refusing to load {len(bad)} rows that undo the body attribution "
+                               f"(registry/body-attribution-guard.yaml): {bad[:5]}")
+
+
+def identity_problems(cache: dict, guard: dict[str, str], own_categories: dict[str, list[str]]) -> list[str]:
+    """How the identity cache (data/ingest-runs/meeting-identity.json) could hand a moved meeting's id to its old
+    source's capture: a different id mapped onto it, or a key in that source's own categories linking to it."""
+    from adapters.meeting_ids import normalize_title
+
+    problems = []
+    for id_key, canonical in sorted((cache.get("by_id") or {}).items()):
+        source, _, incoming = id_key.partition("|")
+        if canonical in guard and incoming != canonical:
+            problems.append(f"by_id {id_key} maps {incoming} onto the moved {canonical}")
+    for key, canonical in sorted((cache.get("by_key") or {}).items()):
+        parts = key.split("|")
+        own = {normalize_title(c) for c in own_categories.get(parts[0], [])}
+        if canonical in guard and len(parts) == 4 and parts[2] in own:
+            problems.append(f"by_key {key}: a {parts[2]} key links to the moved {canonical}")
+    return problems
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -599,9 +712,16 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--map", type=Path, required=True)
     p.add_argument("--bodies", type=Path, default=BODIES_PATH)
     p.add_argument("--out", type=Path, required=True, help=f"A new directory under {STAGING_ROOT}")
+    g = sub.add_parser("guard", help="Write registry/body-attribution-guard.yaml from the reviewed map")
+    g.add_argument("--map", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
-        if args.cmd == "map":
+        if args.cmd == "guard":
+            summary = json.loads((args.map / "summary.json").read_text())
+            if _sha(args.map / "map.jsonl") != summary["map_sha256"]:
+                raise AttributionError("the map changed since it was written")
+            print(write_guard_file(list(read_jsonl(args.map / "map.jsonl")), summary["map_sha256"]))
+        elif args.cmd == "map":
             print(json.dumps(write_map(args.export, args.bodies, args.out, staging_root=STAGING_ROOT)["counts"],
                              indent=1))
         else:

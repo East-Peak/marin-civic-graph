@@ -20,6 +20,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import body_attribution  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 
 # Maps source_id patterns to human-readable institution display names
@@ -256,6 +258,7 @@ def write_rows(output_dir: Path, nodes: list[dict], edges: list[dict]) -> None:
 
 
 def normalize_source(capture: dict, output_dir: Path) -> tuple[list[dict], list[dict], dict]:
+    capture, dropped = body_attribution.without_guarded(capture)  # a moved meeting is never re-attributed here
     nodes, edges = normalize_rows(capture)
     write_rows(output_dir, nodes, edges)
 
@@ -267,6 +270,7 @@ def normalize_source(capture: dict, output_dir: Path) -> tuple[list[dict], list[
         "edge_count": len(edges),
         "meeting_count": len(capture.get("meetings", [])),
         "record_count": len([n for n in nodes if n["node_type"] == "Record"]),
+        "attribution_guard": {"dropped": dropped},
     }
     with open(output_dir / "normalization-report.json", "w") as f:
         json.dump(report, indent=2, fp=f)
@@ -407,6 +411,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  Output: {output_dir}")
 
         if args.load and guarded_load.is_fake(os.getenv("NEO4J_URI")):  # a rehearsal: the same MERGEs, on files
+            body_attribution.preflight(nodes, edges)
             with guarded_load.open_port(os.environ["NEO4J_URI"]) as port:
                 port.merge(nodes, edges)
             print("  Loaded (fake graph).")

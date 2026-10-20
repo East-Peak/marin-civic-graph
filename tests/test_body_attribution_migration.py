@@ -83,11 +83,6 @@ def plan(world):
     return ba.plan_migration(world["nodes"], world["edges"], rows, world["bodies"])
 
 
-def lines(nodes, edges):
-    return ([ba.stable_line(n) for n in sorted(nodes, key=lambda n: n["id"])],
-            [ba.stable_line(e) for e in sorted(edges, key=ba.edge_key)])
-
-
 # --- the plan ----------------------------------------------------------------------------------------------------
 
 def test_plan_repoints_moved_meetings_and_creates_only_new_institutions(world):
@@ -134,6 +129,19 @@ def test_plan_refuses_a_baseline_it_cannot_repoint_exactly(world, breakage, matc
         ba.plan_migration(nodes, edges, rows, world["bodies"])
 
 
+@pytest.mark.parametrize("dependent,match", [
+    (lambda n, e: _node(n, "decision-lakeport-town-council-13-vote-0")["properties"].update(institution_id=COUNCIL),
+     "Decision.institution_id"),
+    (lambda n, e: e.append(edge("decision-lakeport-town-council-13-vote-0", COUNCIL, "DECIDED_BY")), "DECIDED_BY"),
+])
+def test_plan_refuses_a_dependent_that_names_the_old_institution(world, dependent, match):
+    nodes, edges = copy.deepcopy(world["nodes"]), copy.deepcopy(world["edges"])
+    dependent(nodes, edges)
+    rows = ba.build_map(nodes, world["bodies"]).rows
+    with pytest.raises(ba.AttributionError, match=match):
+        ba.plan_migration(nodes, edges, rows, world["bodies"])
+
+
 def test_plan_refuses_a_map_whose_meeting_changed_institution_since(world):
     rows = ba.build_map(world["nodes"], world["bodies"]).rows
     nodes = copy.deepcopy(world["nodes"])
@@ -173,6 +181,13 @@ def test_forward_then_inverse_is_byte_identical(world):
     assert (world["tmp"] / "back" / "nodes.jsonl").read_bytes() == (world["dir"] / "nodes.jsonl").read_bytes()
 
 
+def _compensating_drift(nodes, edges):
+    gone = next(e for e in edges if e["start_id"] == "org-lakeport-harbor-commission" and e["type"] == "IN_JURISDICTION")
+    edges.remove(gone)
+    twice = next(e for e in edges if e["start_id"] == "org-lakeport-water-district-no-1" and e["type"] == "IN_JURISDICTION")
+    edges.append(copy.deepcopy(twice))
+
+
 @pytest.mark.parametrize("drift,match", [
     (lambda n, e: _node(n, "org-lakeport-harbor-commission")["properties"].update(website="x"), "properties"),
     (lambda n, e: _node(n, "org-lakeport-harbor-commission")["labels"].append("Committee"), "labels"),
@@ -185,8 +200,13 @@ def test_forward_then_inverse_is_byte_identical(world):
     (lambda n, e: _node(n, "meeting-lakeport-town-council-13")["properties"].update(institution_id=COUNCIL),
      "institution_id"),
     (lambda n, e: n.remove(_node(n, "org-lakeport-trail-pedestrian-advisory-committee")), "missing"),
+    (_compensating_drift, "relationships"),
+    (lambda n, e: _node(n, "meeting-lakeport-town-council-13")["labels"].remove("Meeting"), "Meeting"),
+    (lambda n, e: n.remove(_node(n, COUNCIL)), COUNCIL),
+    (lambda n, e: _node(n, "place-lake-county")["labels"].remove("Place"), "place-lake-county"),
 ])
 def test_inverse_refuses_when_its_creations_acquired_other_data(world, drift, match):
+    """Includes compensating drift: one institution loses its jurisdiction edge and another gains a second."""
     ops = plan(world)
     nodes, edges = ba.apply_ops(world["nodes"], world["edges"], ops)
     drift(nodes, edges)
@@ -215,9 +235,10 @@ def test_statements_cover_every_row_with_exact_counts(world):
     assert expect["create:institutions"] == 4 and expect["repoint:delete_old_edge"] == 3
     assert all("RETURN count(" in s["query"] for s in stmts)
     inv = [s["step"] for s in ba.inverse_statements(ops)]
-    assert inv[:5] == ["guard:institutions_as_created", "guard:institution_relationship_count",
-                       "guard:created_jurisdictions_exact", "guard:created_attributions_exact", "guard:meetings_at_to"]
-    assert inv[5:] == ["restore:delete_new_edge", "restore:create_old_edge", "restore:set_institution_id",
+    assert inv[:6] == ["guard:institutions_as_created", "guard:institution_incident_counts",
+                       "guard:created_jurisdictions_exact", "guard:created_attributions_exact",
+                       "guard:old_institutions_present", "guard:meetings_at_to"]
+    assert inv[6:] == ["restore:delete_new_edge", "restore:create_old_edge", "restore:set_institution_id",
                        "restore:delete_institution_jurisdictions", "restore:delete_institutions"]
 
 
@@ -260,10 +281,13 @@ def test_cypher_matches_the_pure_twins_and_rolls_back_midway(world):
     db = "neo4j"
     ops = plan(world)
 
-    def export(name):
+    def export(name):  # the export's own bytes, as the apply's fingerprints see them
         out = world["tmp"] / name
         export_live_graph(driver, database=db, out_dir=out, backup=True, progress=None)
-        return lines(*ba.read_export(out))
+        return ba.fingerprint(out)
+
+    def pure(name, nodes, edges):
+        return ba.write_export(world["tmp"] / name, nodes, edges)
 
     try:
         with driver.session(database=db) as s:
@@ -273,7 +297,7 @@ def test_cypher_matches_the_pure_twins_and_rolls_back_midway(world):
             for e in world["edges"]:
                 s.run(f"MATCH (a {{id: $s}}), (b {{id: $t}}) CREATE (a)-[r:{e['type']}]->(b) SET r = $p",
                       s=e["start_id"], t=e["end_id"], p=e["properties"]).consume()
-        assert export("seeded") == lines(world["nodes"], world["edges"])
+        assert export("seeded") == pure("p-seeded", world["nodes"], world["edges"])
         broken = copy.deepcopy(ops)
         broken["repoint"][-1]["from"] = "org-nowhere"  # the last re-point's old edge is not there: count off plan
         with driver.session(database=db) as s:
@@ -281,15 +305,35 @@ def test_cypher_matches_the_pure_twins_and_rolls_back_midway(world):
             with pytest.raises(ba.StatementCountError):
                 ba.run_statements(tx, [st for st in ba.statements(broken) if not st["step"].startswith("precheck")])
             tx.rollback()
-        assert export("after-rollback") == lines(world["nodes"], world["edges"])
-        for fn in (ba.apply_in_transaction, ba.inverse_in_transaction):
-            with driver.session(database=db) as s:
-                tx = s.begin_transaction()
-                fn(tx, ops)
-                tx.commit()
-            if fn is ba.apply_in_transaction:
-                assert export("forward") == lines(*ba.apply_ops(world["nodes"], world["edges"], ops))
-        assert export("inverse") == lines(world["nodes"], world["edges"])
+        assert export("after-rollback") == pure("p-rollback", world["nodes"], world["edges"])
+        with driver.session(database=db) as s:
+            tx = s.begin_transaction()
+            ba.apply_in_transaction(tx, ops)
+            tx.commit()
+        forward = export("forward")
+        assert forward == pure("p-forward", *ba.apply_ops(world["nodes"], world["edges"], ops))
+        with driver.session(database=db) as s:  # compensating drift: the inverse refuses and changes nothing
+            s.run("MATCH (:Organization {id: 'org-lakeport-harbor-commission'})-[r:IN_JURISDICTION]->() DELETE r").consume()
+            s.run("MATCH (o:Organization {id: 'org-lakeport-water-district-no-1'}), (p:Place {id: 'place-lake-county'}) "
+                  "CREATE (o)-[:IN_JURISDICTION]->(p)").consume()
+        drifted = export("drifted")
+        with driver.session(database=db) as s:
+            tx = s.begin_transaction()
+            with pytest.raises(ba.StatementCountError, match="guard"):
+                ba.inverse_in_transaction(tx, ops)
+            tx.rollback()
+        assert export("drift-refused") == drifted
+        with driver.session(database=db) as s:  # undo the drift by hand, then the inverse restores the baseline
+            s.run("MATCH (:Organization {id: 'org-lakeport-water-district-no-1'})-[r:IN_JURISDICTION]->() "
+                  "WITH r LIMIT 1 DELETE r").consume()
+            s.run("MATCH (o:Organization {id: 'org-lakeport-harbor-commission'}), (p:Place {id: 'place-lakeport'}) "
+                  "CREATE (o)-[:IN_JURISDICTION]->(p)").consume()
+        assert export("undrifted") == forward
+        with driver.session(database=db) as s:
+            tx = s.begin_transaction()
+            ba.inverse_in_transaction(tx, ops)
+            tx.commit()
+        assert export("inverse") == ba.fingerprint(world["dir"])
     finally:
         driver.close()
 

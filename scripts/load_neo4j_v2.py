@@ -21,6 +21,10 @@ from collections import Counter
 from pathlib import Path
 from typing import Iterator
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from body_attribution import preflight  # noqa: E402
+
 # ---------------------------------------------------------------------------
 # Pure functions (testable without a Neo4j connection)
 # ---------------------------------------------------------------------------
@@ -201,6 +205,7 @@ def load_nodes(driver, nodes: list[dict], batch_size: int = 500, database=None) 
     Returns a Counter of written nodes keyed by node_type. Writes to `database`
     (scoped — never a bare session, which would hit the default/live DB).
     """
+    preflight(nodes, [])  # the whole input, before the first batch
     # Group by frozenset-ordered tuple of labels for deterministic grouping
     by_labels: dict[tuple, list[dict]] = {}
     for node in nodes:
@@ -273,6 +278,7 @@ def load_edges(driver, edges: list[dict], batch_size: int = 500, database=None) 
     Returns a Counter of written edges keyed by relationship_type. Writes to
     `database` (scoped — never a bare session, which would hit the default/live DB).
     """
+    preflight([], edges)  # the whole input, before the first batch
     counts: Counter = Counter()
     with driver.session(database=database) as session:
         ids = {e["source_id"] for e in edges} | {e["target_id"] for e in edges}
@@ -430,6 +436,7 @@ def main() -> None:
         else:
             load_failed = False
 
+        preflight(nodes, clean_edges)  # nodes and edges alike, before any write
         print(f"Loading nodes into Neo4j (batch_size={args.batch_size}) ...")
         node_counts = load_nodes(driver, nodes, batch_size=args.batch_size, database=args.database)
         total_nodes = sum(node_counts.values())
