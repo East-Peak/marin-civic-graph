@@ -126,6 +126,7 @@ def test_a_decision_of_a_moved_meeting_shows_its_body_not_the_old_institution():
 
 def test_bakes_need_a_read_only_overlay_and_prove_refuses_bakes_of_another_candidate(tmp_path, monkeypatch):
     monkeypatch.setattr(ap.ba, "STAGING_ROOT", tmp_path)
+    monkeypatch.setattr(ap.ba, "implementation", lambda root=None: {"revision": "a" * 40, "clean": True, "sha256": {}})
     attach = tmp_path / "attach"
     attach.mkdir()
     (attach / "nodes.jsonl").write_text("")
@@ -148,7 +149,8 @@ def test_bakes_need_a_read_only_overlay_and_prove_refuses_bakes_of_another_candi
 def test_the_search_index_must_be_unchanged_for_every_existing_node(tmp_path):
     def with_fts(path, entries):
         con = sqlite3.connect(path)
-        con.execute("CREATE VIRTUAL TABLE search_fts USING fts5(search_label, search_terms)")
+        con.execute("CREATE VIRTUAL TABLE search_fts USING fts5(search_label, search_terms, content='', "
+                    "tokenize='unicode61')")  # the production schema: contentless
         for nid, label in entries:
             rowid = con.execute("SELECT rowid FROM nodes WHERE id = ?", (nid,)).fetchone()[0]
             con.execute("INSERT INTO search_fts (rowid, search_label, search_terms) VALUES (?, ?, ?)",
@@ -165,6 +167,8 @@ def test_the_search_index_must_be_unchanged_for_every_existing_node(tmp_path):
     assert "the search index differs only by the new institutions" not in failing(ap.diff_checks(before, same, planned))
     lost = with_fts(bake(tmp_path / "c.sqlite", edges=edges), entries[:1])  # an existing entry vanished
     assert "the search index differs only by the new institutions" in failing(ap.diff_checks(before, lost, planned))
+    renamed = with_fts(bake(tmp_path / "d.sqlite", edges=edges), [entries[0], (COMMITTEES, "Elsewhere")])
+    assert "the search index differs only by the new institutions" in failing(ap.diff_checks(before, renamed, planned))
 
 
 def test_a_bake_missing_its_sidecars_fails(tmp_path):
@@ -174,3 +178,26 @@ def test_a_bake_missing_its_sidecars_fails(tmp_path):
     before, after = bake(tmp_path / "b" / "s.sqlite", edges=edges), bake(tmp_path / "a" / "s.sqlite", edges=edges)
     planned = {"nodes_added": {}, "at_institution": [], "in_jurisdiction_added": [], "template": COUNCIL}
     assert "the bake's sidecars change only by the planned counts" in failing(ap.diff_checks(before, after, planned))
+
+
+def test_prove_refuses_bakes_made_by_other_code(tmp_path, monkeypatch):
+    monkeypatch.setattr(ap.ba, "STAGING_ROOT", tmp_path)
+    monkeypatch.setattr(ap.ba, "implementation", lambda root=None: {"revision": "a" * 40, "clean": True, "sha256": {}})
+    plan = tmp_path / "plan"
+    (plan / "candidate").mkdir(parents=True)
+    for n in ("nodes.jsonl", "edges.jsonl"):
+        (plan / "candidate" / n).write_text("")
+    fp = ap.ba.fingerprint(plan / "candidate")
+    (plan / "plan-report.json").write_text(json.dumps({"baseline": {"dir": str(plan / "candidate"), "sha256": fp},
+                                                       "candidate_sha256": fp}))
+    bakedir = tmp_path / "bake"
+    (bakedir / "baseline").mkdir(parents=True)
+    (bakedir / "candidate").mkdir()
+    for d in ("baseline", "candidate"):
+        for f in ap.BAKE_FILES:
+            (bakedir / d / f).write_text("x")
+    (bakedir / "bake-inputs.json").write_text(json.dumps({
+        "candidate": fp, "baseline": fp, "attach_dir": str(tmp_path), "attach": {}, "outputs": ap._outputs(bakedir),
+        "implementation": {"revision": "b" * 40, "clean": False, "sha256": {}}}))
+    with pytest.raises(ap.ba.AttributionError, match="other code"):
+        ap.prove(plan, tmp_path, bakedir, "http://127.0.0.1:1")

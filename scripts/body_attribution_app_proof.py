@@ -97,9 +97,7 @@ def diff_checks(before: Path, after: Path, planned: dict) -> list[dict]:
         missing_tables = sorted(set(SERVING_TABLES) - tables)
         rows = {t: (_table(b, f"SELECT * FROM {t}"), _table(a, f"SELECT * FROM {t}"))
                 for t in ("nodes", "edges", "browse_rows", "money_rollups", "identity_links", "meta") if t in tables}
-        search = tuple({i: (label, terms) for i, label, terms in con.execute(
-            "SELECT n.id, f.search_label, f.search_terms FROM search_fts f JOIN nodes n ON n.rowid = f.rowid")}
-            if "search_fts" in tables else {} for con in (b, a))
+        search = tuple(_search_index(con) if "search_fts" in tables else {} for con in (b, a))
         tpl = planned["template"]
         tpl_node = b.execute("SELECT type, props FROM nodes WHERE id = ?", (tpl,)).fetchone()
         tpl_browse = b.execute("SELECT * FROM browse_rows WHERE id = ?", (tpl,)).fetchone() \
@@ -157,6 +155,17 @@ def diff_checks(before: Path, after: Path, planned: dict) -> list[dict]:
     _check(out, "the bake's sidecars change only by the planned counts",
            all(side[k] == want for k, want in want_side.items()), side)
     return out
+
+
+def _search_index(con: sqlite3.Connection) -> dict[str, tuple]:
+    """What the (contentless, production) search index holds for each node: its indexed tokens with column and
+    position, read through fts5vocab (the text columns of a contentless table read back as NULL)."""
+    con.execute("CREATE VIRTUAL TABLE IF NOT EXISTS temp.search_vocab USING fts5vocab(main, search_fts, instance)")
+    ids = dict(con.execute("SELECT rowid, id FROM nodes"))
+    docs: dict[str, list] = defaultdict(list)
+    for doc, term, col, offset in con.execute("SELECT doc, term, col, offset FROM temp.search_vocab"):
+        docs[ids.get(doc, f"rowid:{doc}")].append((term, col, offset))
+    return {i: tuple(sorted(v)) for i, v in docs.items()}
 
 
 def _json_file(path: Path):
@@ -248,6 +257,9 @@ def prove(plan: Path, map_dir: Path, bake: Path, base_url: str) -> dict:
         raise ba.AttributionError("the attach overlay changed since the bakes")
     if _outputs(bake) != inputs.get("outputs"):
         raise ba.AttributionError("the baked files are not the ones the bakes wrote")
+    impl = ba.implementation()
+    if not impl["clean"] or inputs.get("implementation") != impl:
+        raise ba.AttributionError("the bakes were made by other code than this clean checkout's")
     ops = json.loads((plan / "ops.json").read_text())
     rows = list(ba.read_jsonl(Path(map_dir) / "map.jsonl"))
     if ba._sha(Path(map_dir) / "map.jsonl") != report["map"]["sha256"]:
@@ -295,6 +307,9 @@ def run_bakes(plan: Path, attach: Path, out: Path) -> None:
     report = json.loads((Path(plan) / "plan-report.json").read_text())
     out = ba.staging_out(out, ba.STAGING_ROOT)
     attach = Path(attach).resolve()
+    impl = ba.implementation()
+    if not impl["clean"]:
+        raise ba.AttributionError("the tree has uncommitted changes or untracked files; commit before baking")
     files = sorted(p.name for p in attach.iterdir() if p.is_file())
     if not files or any(os.stat(attach / n).st_mode & 0o222 for n in files):
         raise ba.AttributionError(f"{attach}: the attach overlay copy must exist and be read-only")
@@ -309,11 +324,11 @@ def run_bakes(plan: Path, attach: Path, out: Path) -> None:
                         "--report", str(out / name / "report.json")], check=True)
     after = {**{name: ba.fingerprint(export) for name, export in exports.items()},
              "attach": {n: ba._sha(attach / n) for n in files}}
-    if after != before:
-        raise ba.AttributionError("a bake input changed while baking")
+    if after != before or ba.implementation() != impl:
+        raise ba.AttributionError("a bake input or the code changed while baking")
     (out / "bake-inputs.json").write_text(json.dumps({
-        **before, "attach_dir": str(attach), "outputs": _outputs(out),
-        "implementation": ba.implementation()}, indent=1, sort_keys=True) + "\n")
+        **before, "attach_dir": str(attach), "outputs": _outputs(out), "implementation": impl},
+        indent=1, sort_keys=True) + "\n")
 
 
 def _outputs(out: Path) -> dict:
