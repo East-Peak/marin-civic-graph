@@ -20,7 +20,6 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
-import subprocess
 import sys
 from collections import Counter
 from datetime import datetime
@@ -158,7 +157,8 @@ def rehearse(plan: Path, responses: Path, frozen: datetime, ingest_runs: Path, c
                   yaml.safe_load((REPO / "registry" / f"{REGISTRY}-sources.yaml").read_text())["sources"]}
     staged_cache = json.loads((Path(ingest_runs) / "meeting-identity.json").read_text())
     result = {"plan": str(plan.resolve()), "candidate_sha256": report["candidate_sha256"],
-              "guard_sha256": ba._sha(ba.GUARD_PATH), "code_revision": _revision(),
+              "baseline_sha256": report["baseline"]["sha256"], "map_sha256": report["map"]["sha256"],
+              "guard_sha256": ba._sha(ba.GUARD_PATH), "implementation": ba.implementation(),
               "inputs": {"responses": str(Path(responses).resolve()), "frozen": frozen.isoformat(),
                          "ingest_runs": {n: ba._sha(Path(ingest_runs) / n)
                                          for n in ("ledger.jsonl", "meeting-identity.json")}},
@@ -181,10 +181,6 @@ def rehearse(plan: Path, responses: Path, frozen: datetime, ingest_runs: Path, c
         not any(result["identity"].values())
     (out / "checks.json").write_text(json.dumps(result, indent=1, sort_keys=True, default=str) + "\n")
     return result
-
-
-def _revision() -> str:
-    return subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
 
 
 def main(argv: list[str] | None = None) -> int:

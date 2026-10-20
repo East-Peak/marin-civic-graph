@@ -10,14 +10,18 @@ serving data and the app's own entity payloads.
 public-substrate.sqlite PARITY_DEBUG=1 next dev`) and checks: each source institution lists exactly its own and its
 held meetings; each moved meeting has exactly one AT_INSTITUTION, to its body; each new body is baked under its
 name; no meeting carries an institution_name; the candidate bake differs from the baseline bake only by the planned
-rows; each source institution's page previews exactly the first expected meetings (the page caps its list at 40);
-one moved meeting per body links exactly that body and its page names it. Staging only.
+rows (full rows, the search index, the sidecars); each source institution's page previews exactly the first expected
+peers (the page caps its list at 40; the expectation is computed from the map and the baseline bake) and links
+exactly those meetings; one moved meeting per body links exactly that body and its page names it; a decision of a
+moved meeting shows its body, not the old institution. `prove` refuses bakes not made from this plan. Staging only.
 """
 from __future__ import annotations
 
 import argparse
 import html
 import json
+import os
+import re
 import sqlite3
 import subprocess
 import sys
@@ -80,50 +84,129 @@ def _table(con, sql) -> Counter:
 
 
 def diff_checks(before: Path, after: Path, planned: dict) -> list[dict]:
-    """`planned`: nodes_added [id], at_institution [(meeting, old, new)], in_jurisdiction_added [(org, place)]."""
+    """The candidate bake against the baseline bake: every table row, the search index and both sidecars differ by
+    exactly the planned rows. `planned`: nodes_added {id: name}, at_institution [(meeting, old, new)],
+    in_jurisdiction_added [(org, place)], template (an existing government stub's id: the shape new rows take)."""
     out: list[dict] = []
     a, b = _ro(after), _ro(before)
     try:
         tables = {t for (t,) in a.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
-        nodes = (_table(b, "SELECT * FROM nodes"), _table(a, "SELECT * FROM nodes"))
-        edges = (_table(b, "SELECT source, rel, target, props FROM edges"),
-                 _table(a, "SELECT source, rel, target, props FROM edges"))
-        browse = (_table(b, "SELECT * FROM browse_rows"), _table(a, "SELECT * FROM browse_rows")) \
-            if "browse_rows" in tables else (Counter(), Counter())
-        others = {t: (_table(b, f"SELECT * FROM {t}"), _table(a, f"SELECT * FROM {t}"))
-                  for t in ("money_rollups", "identity_links", "meta") if t in tables}
+        rows = {t: (_table(b, f"SELECT * FROM {t}"), _table(a, f"SELECT * FROM {t}"))
+                for t in ("nodes", "edges", "browse_rows", "money_rollups", "identity_links", "meta") if t in tables}
+        tpl = planned["template"]
+        tpl_node = b.execute("SELECT type, props FROM nodes WHERE id = ?", (tpl,)).fetchone()
+        tpl_browse = b.execute("SELECT * FROM browse_rows WHERE id = ?", (tpl,)).fetchone() \
+            if "browse_rows" in tables else None
+        at_props = {p for (p,) in b.execute("SELECT props FROM edges WHERE rel = 'AT_INSTITUTION' AND target = ?",
+                                              (planned["at_institution"][0][1],))} if planned["at_institution"] else set()
+        juris_props = {p for (p,) in b.execute("SELECT props FROM edges WHERE rel = 'IN_JURISDICTION' AND source = ?",
+                                                 (tpl,))}
+        fts = {}
+        for oid, name in planned["nodes_added"].items():
+            rowid = a.execute("SELECT rowid FROM nodes WHERE id = ?", (oid,)).fetchone()
+            hits = {r for (r,) in a.execute("SELECT rowid FROM search_fts WHERE search_fts MATCH ?",
+                                             ('search_label : "' + name.replace('"', " ") + '"',))}
+            fts[oid] = bool(rowid) and rowid[0] in hits
     finally:
         a.close()
         b.close()
-    added = sorted(r[0] for r in (nodes[1] - nodes[0]).elements())
-    removed = sorted(r[0] for r in (nodes[0] - nodes[1]).elements())
-    want_add = Counter([(m, "AT_INSTITUTION", new) for m, _, new in planned["at_institution"]] +
-                       [(o, "IN_JURISDICTION", p) for o, p in planned["in_jurisdiction_added"]])
-    want_del = Counter((m, "AT_INSTITUTION", old) for m, old, _ in planned["at_institution"])
-    got_add = Counter(r[:3] for r in (edges[1] - edges[0]).elements())
-    got_del = Counter(r[:3] for r in (edges[0] - edges[1]).elements())
-    browse_added = sorted(r[0] for r in (browse[1] - browse[0]).elements())
-    ok = (added == sorted(planned["nodes_added"]) and not removed and got_add == want_add and got_del == want_del
-          and browse_added == (sorted(planned["nodes_added"]) if "browse_rows" in tables else [])
-          and not (browse[0] - browse[1])
-          and all(x == y for x, y in others.values()))
-    _check(out, "the bake differs from the baseline's only by the planned rows", ok, {
-        "nodes_added": len(added), "nodes_removed_or_changed": removed[:5], "edges_added": sum(got_add.values()),
-        "edges_removed": sum(got_del.values()), "unplanned_edges": [list(k) for k in (got_add - want_add)][:5],
-        "missing_edges": [list(k) for k in (want_add - got_add)][:5], "browse_added": len(browse_added),
-        "other_tables_changed": sorted(t for t, (x, y) in others.items() if x != y)})
+    tpl_props = {k: v for k, v in json.loads(tpl_node[1]).items() if k != "name"}
+    want_nodes = Counter((oid, tpl_node[0], name, json.dumps({"name": name, **tpl_props}, sort_keys=True))
+                         for oid, name in planned["nodes_added"].items())
+    got_nodes = Counter((i, t, label, json.dumps(json.loads(p), sort_keys=True))
+                        for i, t, label, p in (rows["nodes"][1] - rows["nodes"][0]).elements())
+    want_browse = Counter((oid, tpl_browse[1], name, name.lower(), *tpl_browse[4:])
+                          for oid, name in planned["nodes_added"].items()) if tpl_browse else Counter()
+    got_browse = rows["browse_rows"][1] - rows["browse_rows"][0] if "browse_rows" in rows else Counter()
+    (at_prop,), (j_prop,) = (at_props or {None}), (juris_props or {None})
+    want_add = Counter([(m, "AT_INSTITUTION", new, at_prop) for m, _, new in planned["at_institution"]] +
+                       [(o, "IN_JURISDICTION", pl, j_prop) for o, pl in planned["in_jurisdiction_added"]])
+    want_del = Counter((m, "AT_INSTITUTION", old, at_prop) for m, old, _ in planned["at_institution"])
+    got_add, got_del = rows["edges"][1] - rows["edges"][0], rows["edges"][0] - rows["edges"][1]
+    unchanged = sorted(t for t in ("money_rollups", "identity_links", "meta") if t in rows and rows[t][0] != rows[t][1])
+    ok = (got_nodes == want_nodes and not (rows["nodes"][0] - rows["nodes"][1]) and got_add == want_add
+          and got_del == want_del and got_browse == want_browse
+          and not (rows.get("browse_rows", (Counter(), Counter()))[0] - rows.get("browse_rows", (Counter(), Counter()))[1])
+          and not unchanged and len(at_props) <= 1 and len(juris_props) <= 1)
+    _check(out, "the bake differs from the baseline's only by the planned rows (full rows)", ok, {
+        "nodes_added": sum(got_nodes.values()), "unexpected_nodes": [list(k) for k in (got_nodes - want_nodes)][:3],
+        "edges_added": sum(got_add.values()), "edges_removed": sum(got_del.values()),
+        "unplanned_edges": [list(k) for k in (got_add - want_add)][:3], "missing_edges": [list(k) for k in (want_add - got_add)][:3],
+        "browse_added": sum(got_browse.values()), "other_tables_changed": unchanged})
+    _check(out, "every new institution is in the search index under its name", all(fts.values()),
+           sorted(k for k, v in fts.items() if not v))
+    side = {}
+    for name in ("status_manifest.json", "catalog.json"):
+        x, y = (_json_file(Path(d).parent / name) for d in (before, after))
+        if x is not None or y is not None:
+            side[name] = _flat_diff(x or {}, y or {})
+    n, e = len(planned["nodes_added"]), len(planned["in_jurisdiction_added"])
+    want_side = {"status_manifest.json": {"per_type_counts.Organization": n, "node_count": n, "edge_count": e},
+                 "catalog.json": {"counts.Organization": n, "per_type_counts.Organization": n, "node_count": n,
+                                  "edge_count": e}}
+    _check(out, "the bake's sidecars change only by the planned counts",
+           all(side.get(k, want) == want for k, want in want_side.items() if k in side), side)
     return out
 
 
-def preview_checks(inst: str, payload: dict, expected: set[str]) -> list[dict]:
-    """The page's neighbor list is capped; its meetings must be exactly the first expected ones in its order (id)."""
+def _json_file(path: Path):
+    return json.loads(path.read_text()) if path.is_file() else None
+
+
+def _flat_diff(x: dict, y: dict) -> dict:
+    """{dotted key: y - x} for every numeric value that differs (any other difference: the pair)."""
+    def flat(d, p=""):
+        o = {}
+        for k, v in d.items():
+            o.update(flat(v, f"{p}{k}.") if isinstance(v, dict) else {f"{p}{k}": v})
+        return o
+    fx, fy = flat(x), flat(y)
+    diff = {}
+    for k in sorted(set(fx) | set(fy)):
+        if fx.get(k) != fy.get(k):
+            both = isinstance(fx.get(k), int) and isinstance(fy.get(k), int)
+            diff[k] = fy[k] - fx[k] if both else [fx.get(k), fy.get(k)]
+    return diff
+
+
+def expected_neighborhood(baseline: Path, inst: str, meetings: set[str]) -> list[tuple[str, str]]:
+    """The institution page's eligible peers after the migration, as (type, id) in the page's order: its expected
+    meetings (from the reviewed map) and every other eligible peer from the BASELINE bake (the migration changes no
+    non-Meeting edge; diff_checks proves it). Eligible: a PHASE2 relationship, a peer that is not a Place or Issue
+    (graph-engine.ts isAllowedTier2Edge; the whitelist's canonical source is edge_vocabulary.py)."""
+    from edge_vocabulary import PHASE2_WHITELIST_LIVE
+
+    rels = set(PHASE2_WHITELIST_LIVE)
+    con = _ro(baseline)
+    try:
+        types = dict(con.execute("SELECT id, type FROM nodes"))
+        peers = {t if s == inst else s for s, rel, t in con.execute(
+            "SELECT source, rel, target FROM edges WHERE source = ? OR target = ?", (inst, inst)) if rel in rels}
+    finally:
+        con.close()
+    others = {(types[p], p) for p in peers if p != inst and p in types and types[p] not in ("Place", "Issue", "Meeting")}
+    return sorted(others | {("Meeting", m) for m in meetings})
+
+
+def preview_checks(inst: str, payload: dict, expected: list[tuple[str, str]], page: str) -> list[dict]:
+    """The page's neighbor list (capped) must be exactly the first expected peers, and the rendered page must link
+    exactly its meetings."""
     out: list[dict] = []
-    neighbors = payload.get("neighbors") or []
-    meetings = [n["id"] for n in neighbors if n["type"] == "Meeting"]
-    room = PREVIEW_CAP - sum(1 for n in neighbors if n["type"] != "Meeting")
-    n = min(len(expected), room)
-    _check(out, f"{inst}'s page previews the first {n} expected meetings", meetings == sorted(expected)[:n],
-           {"shown": len(meetings), "first_shown": meetings[:3]})
+    shown = [(n["type"], n["id"]) for n in payload.get("neighbors") or []]
+    want = sorted(expected)[:PREVIEW_CAP]
+    _check(out, f"{inst}'s page previews exactly the first {len(want)} expected peers", shown == want,
+           {"shown": len(shown), "first_shown": shown[:3], "first_expected": want[:3]})
+    linked = set(re.findall(r'href="/meeting/([^"]+)"', page))
+    want_links = {i.removeprefix("meeting-") for t, i in want if t == "Meeting"}
+    _check(out, f"{inst}'s rendered page links exactly the previewed meetings", linked == want_links,
+           {"linked": len(linked), "expected": len(want_links), "unexpected": sorted(linked - want_links)[:5]})
+    return out
+
+
+def decision_checks(did: str, payload: dict, body: str, old: str) -> list[dict]:
+    out: list[dict] = []
+    orgs = [n["id"] for n in payload.get("neighbors") or [] if n["type"] == "Organization"]
+    _check(out, f"{did} (a decision of a moved meeting) shows {body}, not {old}", body in orgs and old not in orgs, orgs)
     return out
 
 
@@ -146,44 +229,74 @@ def prove(plan: Path, map_dir: Path, bake: Path, base_url: str) -> dict:
         raise ba.AttributionError("the app proof reads only a local dev server")
     plan, bake = Path(plan), Path(bake)
     report = json.loads((plan / "plan-report.json").read_text())
+    inputs = json.loads((bake / "bake-inputs.json").read_text())
+    if inputs["candidate"] != ba.fingerprint(plan / "candidate") or inputs["candidate"] != report["candidate_sha256"] \
+            or inputs["baseline"] != report["baseline"]["sha256"]:
+        raise ba.AttributionError("the bakes were not made from this plan's baseline and candidate")
+    attach = Path(inputs["attach_dir"])
+    if {n: ba._sha(attach / n) for n in inputs["attach"]} != inputs["attach"]:
+        raise ba.AttributionError("the attach overlay changed since the bakes")
     ops = json.loads((plan / "ops.json").read_text())
     rows = list(ba.read_jsonl(Path(map_dir) / "map.jsonl"))
+    if ba._sha(Path(map_dir) / "map.jsonl") != report["map"]["sha256"]:
+        raise ba.AttributionError("the map is not the plan's")
     names = {c["id"]: c["properties"]["name"] for c in ops["create_nodes"]}
-    candidate = bake / "candidate" / "public-substrate.sqlite"
+    candidate, baseline = bake / "candidate" / "public-substrate.sqlite", bake / "baseline" / "public-substrate.sqlite"
     checks = sqlite_checks(candidate, rows, names)
-    checks += diff_checks(bake / "baseline" / "public-substrate.sqlite", candidate, {
-        "nodes_added": list(names), "at_institution": [(r["id"], r["from"], r["to"]) for r in ops["repoint"]],
-        "in_jurisdiction_added": [(e["start_id"], e["end_id"]) for e in ops["create_edges"]]})
+    checks += diff_checks(baseline, candidate, {
+        "nodes_added": names, "at_institution": [(r["id"], r["from"], r["to"]) for r in ops["repoint"]],
+        "in_jurisdiction_added": [(e["start_id"], e["end_id"]) for e in ops["create_edges"]],
+        "template": sorted({r["from"] for r in rows})[0]})
     con = _ro(candidate)
     labels = dict(con.execute("SELECT id, search_label FROM nodes"))
+    decided = defaultdict(list)
+    for d, m in con.execute("SELECT source, target FROM edges WHERE rel = 'DECIDED_AT'"):
+        decided[m].append(d)
     con.close()
     for inst in sorted({r["from"] for r in rows}):
         payload = json.loads(_get(f"{base_url}/api/parity-entity/organization/{inst}"))
-        checks += preview_checks(inst, payload, {r["id"] for r in rows if r["from"] == inst and r["to"] == inst})
+        own = {r["id"] for r in rows if r["from"] == inst and r["to"] == inst}
+        checks += preview_checks(inst, payload, expected_neighborhood(baseline, inst, own),
+                                 _get(f"{base_url}/organization/{inst}"))
     for body in sorted({r["to"] for r in ops["repoint"]}):
-        mid = min(r["id"] for r in ops["repoint"] if r["to"] == body)
+        moved = sorted(r["id"] for r in ops["repoint"] if r["to"] == body)
+        mid = moved[0]
         payload = json.loads(_get(f"{base_url}/api/parity-entity/meeting/{mid}"))
         checks += meeting_checks(mid, payload, _get(f"{base_url}/meeting/{mid}"), body, labels[body])
+        with_decision = [m for m in moved if decided.get(m)]
+        if with_decision:
+            did = sorted(decided[with_decision[0]])[0]
+            old = next(r["from"] for r in ops["repoint"] if r["id"] == with_decision[0])
+            checks += decision_checks(did, json.loads(_get(f"{base_url}/api/parity-entity/decision/{did}")), body, old)
     result = {"plan": str(plan.resolve()), "candidate_sha256": report["candidate_sha256"],
-              "candidate_bake_sha256": ba._sha(candidate),
-              "baseline_bake_sha256": ba._sha(bake / "baseline" / "public-substrate.sqlite"),
-              "guard_sha256": ba._sha(ba.GUARD_PATH),
-              "code_revision": subprocess.run(["git", "-C", str(SCRIPTS.parent), "rev-parse", "HEAD"],
-                                              capture_output=True, text=True).stdout.strip(),
-              "checks": checks, "all_pass": all(c["ok"] for c in checks)}
+              "baseline_sha256": report["baseline"]["sha256"], "map_sha256": report["map"]["sha256"],
+              "bake_inputs": inputs, "candidate_bake_sha256": ba._sha(candidate),
+              "baseline_bake_sha256": ba._sha(baseline), "guard_sha256": ba._sha(ba.GUARD_PATH),
+              "implementation": ba.implementation(), "checks": checks, "all_pass": all(c["ok"] for c in checks)}
     (bake / "checks.json").write_text(json.dumps(result, indent=1, sort_keys=True) + "\n")
     return result
 
 
 def run_bakes(plan: Path, attach: Path, out: Path) -> None:
+    """Both bakes, from a read-only staged copy of the attach overlay; bake-inputs.json records what they were made
+    from, for `prove` to verify."""
     report = json.loads((Path(plan) / "plan-report.json").read_text())
     out = ba.staging_out(out, ba.STAGING_ROOT)
-    for name, export in (("baseline", Path(report["baseline"]["dir"])), ("candidate", Path(plan) / "candidate")):
+    attach = Path(attach).resolve()
+    files = sorted(p.name for p in attach.iterdir() if p.is_file())
+    if not files or any(os.stat(attach / n).st_mode & 0o222 for n in files):
+        raise ba.AttributionError(f"{attach}: the attach overlay copy must exist and be read-only")
+    exports = {"baseline": Path(report["baseline"]["dir"]), "candidate": Path(plan) / "candidate"}
+    for name, export in exports.items():
         (out / name).mkdir(parents=True)
         subprocess.run([sys.executable, str(SCRIPTS / "bake_public_substrate.py"), "--source", "live-export",
                         "--live-export-dir", str(export), "--attach-overlay-dir", str(attach),
                         "--sqlite", str(out / name / "public-substrate.sqlite"),
                         "--report", str(out / name / "report.json")], check=True)
+    (out / "bake-inputs.json").write_text(json.dumps({
+        **{name: ba.fingerprint(export) for name, export in exports.items()}, "attach_dir": str(attach),
+        "attach": {n: ba._sha(attach / n) for n in files},
+        "bake_script_sha256": ba._sha(SCRIPTS / "bake_public_substrate.py")}, indent=1, sort_keys=True) + "\n")
 
 
 def main(argv: list[str] | None = None) -> int:
