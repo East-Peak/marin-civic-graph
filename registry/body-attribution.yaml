@@ -1,0 +1,143 @@
+# Body attribution (scripts/body_attribution.py): the April combined CivicPlus captures filed every AgendaCenter
+# category under one institution. For each such source institution: its own category (meetings that stay), and
+# the body that holds each other category. `aliases` are the names a meeting title uses for a body (a title that
+# names a body other than its category's is held for review); `source` cites the evidence for the body and its
+# jurisdiction. IN_JURISDICTION from an Organization means the Place whose public the body governs or serves; for
+# a multi-member body, the smallest Place in the graph containing all its members.
+sources:
+  org-corte-madera-town-council:
+    own_category: Town Council
+    own_aliases: [town council]
+    other_aliases: {}
+    bodies:
+      - category: Planning Commission
+        institution_id: org-corte-madera-planning-commission
+        name: Corte Madera Planning Commission
+        jurisdiction_id: place-corte-madera
+        aliases: [planning commission]
+        source: cortemadera.gov AgendaCenter category "Planning Commission" (a Town commission)
+      - category: Sanitary District No. 2 Board
+        institution_id: org-corte-madera-sanitary-district-no-2
+        name: Sanitary District No. 2 of Marin County
+        jurisdiction_id: place-corte-madera
+        aliases: [sanitary district no 2, sd2, sd 2]
+        source: >-
+          Form 700 agency field, e.g. filing-form700-ctm-2023-01-27-thomas-rosa-assuming-office-director-sanitary-district-no-2-of-marin-county-a-subsidiary-district-to-the-town-of-corte-madera:
+          "Sanitary District No. 2 of Marin County, a subsidiary district to the Town of Corte Madera" (its board
+          is the Town Council)
+      - category: Parks and Recreation Commission
+        institution_id: org-corte-madera-parks-recreation-commission
+        name: Corte Madera Parks and Recreation Commission
+        jurisdiction_id: place-corte-madera
+        aliases: [parks and recreation commission, parks and recreation special commission, parks and recreation regular commission]
+        source: cortemadera.gov AgendaCenter category "Parks and Recreation Commission"
+      - category: Climate Action Committee
+        institution_id: org-corte-madera-climate-action-committee
+        name: Corte Madera Climate Action Committee
+        jurisdiction_id: place-corte-madera
+        aliases: [climate action committee]
+        source: cortemadera.gov AgendaCenter category "Climate Action Committee"
+      - category: Bicycle Pedestrian Advisory Committee
+        institution_id: org-corte-madera-bicycle-pedestrian-advisory-committee
+        name: Corte Madera Bicycle Pedestrian Advisory Committee
+        jurisdiction_id: place-corte-madera
+        aliases: [bicycle pedestrian advisory committee, bpac]
+        source: cortemadera.gov AgendaCenter category "Bicycle Pedestrian Advisory Committee"
+      - category: Flood Control Board
+        institution_id: org-corte-madera-flood-control-board
+        name: Corte Madera Flood Control Board
+        jurisdiction_id: place-corte-madera
+        aliases: [flood control board]
+        source: cortemadera.gov AgendaCenter category "Flood Control Board" (titles "Corte Madera Flood Control Board")
+      - category: Fire Council - Central Marin Fire Authority
+        institution_id: org-central-marin-fire-authority
+        name: Central Marin Fire Authority
+        jurisdiction_id: place-marin-county
+        aliases: [central marin fire authority, central marin fire council, fire council]
+        source: >-
+          CMFA Fire Council agenda 2021-05-13 (meeting-corte-madera-town-council-1004): a joint powers authority of
+          two "member agencies, the City of Larkspur and the Town of Corte Madera. Each member agency pays 50%"
+      - category: Sales Tax Citizens' Oversight Committee
+        institution_id: org-corte-madera-sales-tax-citizens-oversight-committee
+        name: Corte Madera Sales Tax Citizens' Oversight Committee
+        jurisdiction_id: place-corte-madera
+        aliases: [sales tax citizens oversight committee, sales tax citizens' oversight committee]
+        source: cortemadera.gov AgendaCenter category "Sales Tax Citizens' Oversight Committee"
+      - category: Finance Advisory Committee
+        institution_id: org-corte-madera-finance-advisory-committee
+        name: Corte Madera Finance Advisory Committee
+        jurisdiction_id: place-corte-madera
+        aliases: [finance advisory committee]
+        source: cortemadera.gov AgendaCenter category "Finance Advisory Committee"
+
+  org-mill-valley-committees:
+    own_category: null
+    own_aliases: []
+    other_aliases:
+      Mill Valley City Council: [city council]
+      Mill Valley Bicycle & Pedestrian Advisory Committee: [bicycle and pedestrian advisory committee, bicycle pedestrian advisory committee]
+    bodies:
+      - category: Planning Commission
+        institution_id: org-mill-valley-planning-commission
+        name: Mill Valley Planning Commission
+        jurisdiction_id: place-mill-valley
+        aliases: [planning commission, plannig commission]
+        source: cityofmillvalley.gov AgendaCenter category "Planning Commission"; node already in the graph (reused)
+      - category: Arts Commission
+        institution_id: org-mill-valley-arts-commission
+        name: Mill Valley Arts Commission
+        jurisdiction_id: place-mill-valley
+        aliases: [arts commission]
+        source: cityofmillvalley.gov AgendaCenter category "Arts Commission"
+      - category: Emergency Preparedness Commission
+        institution_id: org-mill-valley-emergency-preparedness-commission
+        name: Mill Valley Emergency Preparedness Commission
+        jurisdiction_id: place-mill-valley
+        aliases: [emergency preparedness commission]
+        source: cityofmillvalley.gov AgendaCenter category "Emergency Preparedness Commission"
+      - category: Library Board of Trustees
+        institution_id: org-mill-valley-library-board-of-trustees
+        name: Mill Valley Library Board of Trustees
+        jurisdiction_id: place-mill-valley
+        aliases: [library board of trustees]
+        source: cityofmillvalley.gov AgendaCenter category "Library Board of Trustees"
+      - category: Sewerage Agency of Southern Marin Board of Commissioners
+        institution_id: org-sewerage-agency-of-southern-marin
+        name: Sewerage Agency of Southern Marin
+        jurisdiction_id: place-marin-county
+        aliases: [sewerage agency of southern marin, sewerage agency of south marin, sasm]
+        source: >-
+          SASM agenda 2021-09-16 (meeting-mill-valley-committees-250), masthead: "A Joint Powers Agency" of Almonte
+          S.D., Alto S.D., City of Mill Valley, Homestead Valley S.D., Richardson Bay S.D. (members beyond the city)
+      - category: Parks & Recreation Commission
+        institution_id: org-mill-valley-parks-recreation-commission
+        name: Mill Valley Parks & Recreation Commission
+        jurisdiction_id: place-mill-valley
+        aliases: [parks and recreation commission, park and recreation commission, parks and recreation regular commission]
+        source: >-
+          cityofmillvalley.gov AgendaCenter category "Parks & Recreation Commission"; the id the manual
+          mill-valley-parks-recreation source already names (registry/civicplus-sources.yaml)
+      - category: Zoning Administrator
+        institution_id: org-mill-valley-zoning-administrator
+        name: Mill Valley Zoning Administrator
+        jurisdiction_id: place-mill-valley
+        aliases: [zoning administrator]
+        source: cityofmillvalley.gov AgendaCenter category "Zoning Administrator"
+      - category: Transportation & Mobility Advisory Committee
+        institution_id: org-mill-valley-transportation-mobility-advisory-committee
+        name: Mill Valley Transportation & Mobility Advisory Committee
+        jurisdiction_id: place-mill-valley
+        aliases: [transportation and mobility advisory committee, traffic and mobility advisory committee, tmac]
+        source: cityofmillvalley.gov AgendaCenter category "Transportation & Mobility Advisory Committee"
+      - category: Design Advisory Committee
+        institution_id: org-mill-valley-design-advisory-committee
+        name: Mill Valley Design Advisory Committee
+        jurisdiction_id: place-mill-valley
+        aliases: [design advisory committee]
+        source: cityofmillvalley.gov AgendaCenter category "Design Advisory Committee"
+      - category: Infrastructure Funding Study Committee
+        institution_id: org-mill-valley-infrastructure-funding-study-committee
+        name: Mill Valley Infrastructure Funding Study Committee
+        jurisdiction_id: place-mill-valley
+        aliases: [infrastructure funding study committee]
+        source: cityofmillvalley.gov AgendaCenter category "Infrastructure Funding Study Committee"
