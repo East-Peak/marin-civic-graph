@@ -43,8 +43,8 @@ def _relationships(edges, ids: set[str]) -> Counter:
 
 def checks(*, candidate: tuple[list, list], post: tuple[list, list], capture: dict | None, overlay: list[dict],
            source_state: dict, run_status: str, guard: dict[str, str], control: str,
-           agenda: dict | None = None) -> list[dict]:
-    """`agenda`: the run's agenda-items stage outcome, when the variant switches the stage on."""
+           agenda: dict | None = None, agenda_required: bool = False) -> list[dict]:
+    """`agenda_required`: the variant switches the agenda-items stage on, so `agenda` (its outcome) must be ok."""
     """The proof's checks for one variant, each {name, ok, detail}."""
     out = []
 
@@ -78,7 +78,7 @@ def checks(*, candidate: tuple[list, list], post: tuple[list, list], capture: di
              and e["end_id"] != guard[e["start_id"]]]
     check("every moved meeting has exactly one AT_INSTITUTION, to its body",
           not stray and all(at[i] == 1 for i in moved), len(stray))
-    if agenda is not None:
+    if agenda_required:
         items = [r["node"] for r in overlay if "node" in r and "AgendaItem" in r["node"]["labels"]]
         check("the agenda-items stage ran and created AgendaItems", (agenda or {}).get("ok") and items,
               {"stage": agenda, "created": len(items)})
@@ -176,7 +176,7 @@ def rehearse(plan: Path, responses: Path, frozen: datetime, ingest_runs: Path, c
             "overlay_rows": dict(Counter(next(iter(r)) for r in run["overlay"])),
             "checks": checks(candidate=candidate, post=ba.read_export(run["post"]), capture=run["capture"],
                              overlay=run["overlay"], source_state=run["source"], run_status=run["status"],
-                             guard=guard, control=control, agenda=run["agenda"] if agenda else None)}
+                             guard=guard, control=control, agenda=run["agenda"], agenda_required=agenda)}
     result["all_pass"] = all(c["ok"] for v in result["variants"].values() for c in v["checks"]) and \
         not any(result["identity"].values())
     (out / "checks.json").write_text(json.dumps(result, indent=1, sort_keys=True, default=str) + "\n")

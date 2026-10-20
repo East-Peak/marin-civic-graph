@@ -144,6 +144,14 @@ def test_an_edge_only_contradiction_refuses_before_any_edge_write(guard):
     assert driver.runs == []
 
 
+def test_an_explicit_null_institution_on_a_guarded_meeting_is_refused(guard):
+    """SET n += props removes a property given as null: that would erase the migrated attribution."""
+    node = norm_node("meeting-lakeport-town-council-11")
+    node["properties"]["institution_id"] = None
+    with pytest.raises(ba.AttributionError, match="meeting-lakeport-town-council-11"):
+        ba.preflight([node], [])
+
+
 def test_rows_that_agree_with_the_guard_or_are_unrelated_pass(guard):
     ba.preflight([norm_node("meeting-lakeport-town-council-11", HARBOR), norm_node("meeting-other-1", COUNCIL),
                   norm_node("meeting-lakeport-town-council-11", None),
@@ -179,6 +187,75 @@ def test_normalize_load_preflights_the_whole_source_before_the_fake_merge(guard,
     with pytest.raises(ba.AttributionError, match="whole source"):
         nm.main(["--source", SOURCE, "--capture", str(path), "--load", "--root", str(root)])
     assert (graph / "overlay.jsonl").read_text() == ""
+
+
+def test_through_ingest_normalize_and_the_fake_load_a_remapped_native_id_never_re_points(guard, tmp_path,
+                                                                                    monkeypatch):
+    """The real chain: ingest.run_source (floors, the identity map, the capture write), then normalize_meetings
+    --load into a fake graph. The identity cache links a new native id onto a moved meeting (the worst case
+    identity_problems flags); the control council meeting loads, and the moved meeting is untouched."""
+    from datetime import date
+
+    import guarded_load as gl
+    import ingest
+    from adapters.base import BaseAdapter
+    from ingest_guard import RunLedger
+
+    root = tmp_path / "root"
+    (root / "registry").mkdir(parents=True)
+    config = {"id": SOURCE, "adapter": "civicplus", "url": "https://www.lakeport.example/AgendaCenter",
+              "institution_id": COUNCIL, "jurisdiction_id": "place-lakeport", "schedule": "weekly",
+              "categories": ["Town Council"]}
+    (root / "registry" / "civicplus-sources.yaml").write_text(yaml.safe_dump({"sources": [config]}))
+    runs = root / "data" / "ingest-runs"
+    runs.mkdir(parents=True)
+    moved = "meeting-lakeport-town-council-13"
+    (runs / "meeting-identity.json").write_text(json.dumps({
+        "by_id": {f"{SOURCE}|{moved}": moved}, "by_key": {f"{SOURCE}|2026-10-06|town council|t": moved},
+        "ambiguous_keys": []}))
+
+    class Listing(BaseAdapter):
+        def capture(self):
+            meetings = [{"meeting_id": f"meeting-{SOURCE}-{n}", "agenda_id": str(n), "title": title,
+                         "date": "2026-10-06", "category": "Town Council", "meeting_type": "regular",
+                         "institution_id": COUNCIL, "artifacts": {}} for n, title in ((10, "Council"), (99, "T"))]
+            return {"capture_id": self.capture_id(), "source_id": SOURCE, "adapter": "civicplus",
+                    "captured_at": "2026-10-18T12:00:00Z", "url": self.url, "institution_id": COUNCIL,
+                    "jurisdiction_id": "place-lakeport", "meeting_count": 2, "meetings": meetings,
+                    "record_refs": [], "errors": []}
+
+    result, verdict = ingest.run_source(config, root, ledger=RunLedger(runs / "ledger.jsonl"), today=date(2026, 10, 18),
+                                        adapter_cls=Listing, identity=MeetingIdentityMap(runs / "meeting-identity.json"))
+    assert verdict.ok
+    assert [m["meeting_id"] for m in result["meetings"]] == [f"meeting-{SOURCE}-10", moved]  # the identity map at work
+    capture_path = next((root / "data" / "extracted" / SOURCE).glob("*.json"))
+
+    seed = tmp_path / "seed"
+    seed.mkdir()
+    seed_nodes = [{"id": i, "labels": labels, "properties": {"id": i, **props}} for i, labels, props in (
+        (COUNCIL, ["Government", "Organization"], {"name": "Lakeport Town Council"}),
+        (HARBOR, ["Government", "Organization"], {"name": "Lakeport Harbor Commission"}),
+        ("place-lakeport", ["Place"], {"name": "Lakeport"}),
+        (moved, ["Meeting"], {"institution_id": HARBOR, "title": "Harbor Commission agenda"}),
+        (f"meeting-{SOURCE}-10", ["Meeting"], {"institution_id": COUNCIL, "title": "Council"}))]
+    seed_edges = [{"start_id": moved, "type": "AT_INSTITUTION", "end_id": HARBOR, "properties": {}},
+                  {"start_id": f"meeting-{SOURCE}-10", "type": "AT_INSTITUTION", "end_id": COUNCIL, "properties": {}}]
+    (seed / "nodes.jsonl").write_text("".join(json.dumps(n) + "\n" for n in seed_nodes))
+    (seed / "edges.jsonl").write_text("".join(json.dumps(e) + "\n" for e in seed_edges))
+    graph = gl.FakeGraphPort.create(tmp_path / "graph", seed=seed)
+    monkeypatch.setenv("NEO4J_URI", f"fakegraph://{graph}")
+    assert nm.main(["--source", SOURCE, "--capture", str(capture_path), "--load", "--root", str(root)]) == 0
+
+    rows = [json.loads(x) for x in (graph / "overlay.jsonl").read_text().splitlines()]
+    assert {"merge_node"} <= {k for r in rows for k in r}
+    assert f"meeting-{SOURCE}-10" in {r["merge_node"]["id"] for r in rows if "merge_node" in r}
+    touched = {v for r in rows for row in r.values() for k, v in row.items() if k in ("id", "start_id", "end_id")}
+    assert moved not in touched
+    out = gl.FakeGraphPort(graph).export(tmp_path / "post")
+    post_nodes = {n["id"]: n for n in map(json.loads, (out / "nodes.jsonl").read_text().splitlines())}
+    assert post_nodes[moved] == seed_nodes[3]
+    post_edges = [json.loads(x) for x in (out / "edges.jsonl").read_text().splitlines()]
+    assert [e for e in post_edges if moved in (e["start_id"], e["end_id"])] == [seed_edges[0]]
 
 
 # --- the identity cache --------------------------------------------------------------------------------------------

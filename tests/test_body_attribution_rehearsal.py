@@ -38,7 +38,7 @@ def test_a_clean_run_passes_every_check():
     assert failing(world()) == []
     w = world()
     w["overlay"].append({"node": {"id": "agenda-item-10-1", "labels": ["AgendaItem"]}})
-    assert failing(w, agenda={"ok": True}) == []
+    assert failing(w, agenda={"ok": True}, agenda_required=True) == []
 
 
 @pytest.mark.parametrize("breakage,name", [
@@ -65,6 +65,10 @@ def test_each_breakage_fails_its_own_check(breakage, name):
 
 
 def test_the_agenda_variant_fails_when_its_stage_failed_or_created_nothing():
-    assert failing(world(), agenda={"ok": False, "error": "replay has no recorded response"}) == [
+    assert failing(world(), agenda={"ok": False, "error": "replay has no recorded response"},
+                   agenda_required=True) == [
         "the agenda-items stage ran and created AgendaItems"]
-    assert failing(world(), agenda={"ok": True}) == ["the agenda-items stage ran and created AgendaItems"]
+    assert failing(world(), agenda={"ok": True}, agenda_required=True) == [
+        "the agenda-items stage ran and created AgendaItems"]
+    # the stage switched on but no result at all (a regression that skips it) fails too
+    assert failing(world(), agenda=None, agenda_required=True) == ["the agenda-items stage ran and created AgendaItems"]

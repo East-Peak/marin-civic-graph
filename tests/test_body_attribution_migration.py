@@ -204,6 +204,8 @@ def _compensating_drift(nodes, edges):
     (lambda n, e: _node(n, "meeting-lakeport-town-council-13")["labels"].remove("Meeting"), "Meeting"),
     (lambda n, e: n.remove(_node(n, COUNCIL)), COUNCIL),
     (lambda n, e: _node(n, "place-lake-county")["labels"].remove("Place"), "place-lake-county"),
+    (lambda n, e: _node(n, "org-shoreview-planning-commission")["labels"].remove("Organization"),
+     "org-shoreview-planning-commission"),
 ])
 def test_inverse_refuses_when_its_creations_acquired_other_data(world, drift, match):
     """Includes compensating drift: one institution loses its jurisdiction edge and another gains a second."""
@@ -235,10 +237,11 @@ def test_statements_cover_every_row_with_exact_counts(world):
     assert expect["create:institutions"] == 4 and expect["repoint:delete_old_edge"] == 3
     assert all("RETURN count(" in s["query"] for s in stmts)
     inv = [s["step"] for s in ba.inverse_statements(ops)]
-    assert inv[:6] == ["guard:institutions_as_created", "guard:institution_incident_counts",
+    assert inv[:7] == ["guard:institutions_as_created", "guard:institution_incident_counts",
                        "guard:created_jurisdictions_exact", "guard:created_attributions_exact",
-                       "guard:old_institutions_present", "guard:meetings_at_to"]
-    assert inv[6:] == ["restore:delete_new_edge", "restore:create_old_edge", "restore:set_institution_id",
+                       "guard:old_institutions_present", "guard:destination_institutions_present",
+                       "guard:meetings_at_to"]
+    assert inv[7:] == ["restore:delete_new_edge", "restore:create_old_edge", "restore:set_institution_id",
                        "restore:delete_institution_jurisdictions", "restore:delete_institutions"]
 
 

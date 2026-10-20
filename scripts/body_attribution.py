@@ -427,6 +427,9 @@ def inverse_problems(nodes, edges, ops) -> list[str]:
     for oid in sorted({r["from"] for r in ops["repoint"]}):
         if "Organization" not in by_id.get(oid, {}).get("labels", []):
             problems.append(f"{oid}: the institution to restore is not an Organization in this graph")
+    for oid in sorted(set(ops["reused"])):
+        if "Organization" not in by_id.get(oid, {}).get("labels", []):
+            problems.append(f"{oid}: the reused institution is not an Organization in this graph")
     for place in sorted({e["end_id"] for e in ops["create_edges"]}):
         if "Place" not in by_id.get(place, {}).get("labels", []):
             problems.append(f"{place}: not a Place in this graph")
@@ -532,6 +535,8 @@ def inverse_statements(ops: dict) -> list[dict]:
               {"rows": attrib}, len(attrib)),
         _stmt("guard:old_institutions_present", "UNWIND $ids AS id MATCH (o:Organization {id: id}) WITH o",
               {"ids": sorted({r["from"] for r in ops["repoint"]})}, len({r["from"] for r in ops["repoint"]})),
+        _stmt("guard:destination_institutions_present", "UNWIND $ids AS id MATCH (o:Organization {id: id}) WITH o",
+              {"ids": ops["reused"]}, len(ops["reused"])),
         _stmt("guard:meetings_at_to", "UNWIND $rows AS r MATCH (m:Meeting {id: r.id}) WHERE m.institution_id = r.old "
               "OPTIONAL MATCH (m)-[a:AT_INSTITUTION]->(o) WITH r, m, collect([o.id, properties(a)]) AS outs "
               "WHERE outs = [[r.old, {}]] WITH m", {"rows": rows}, len(rows)),
@@ -672,8 +677,9 @@ def preflight(nodes: list[dict], edges: list[dict]) -> None:
     guard = load_guard()
     if not guard:
         return
-    bad = [f"{n['id']} institution_id {n['properties']['institution_id']}" for n in nodes
-           if n.get("id") in guard and (n.get("properties") or {}).get("institution_id") not in (None, guard[n["id"]])]
+    bad = [f"{n['id']} institution_id {n['properties']['institution_id']}" for n in nodes  # null too: SET += erases
+           if n.get("id") in guard and "institution_id" in (n.get("properties") or {})
+           and n["properties"]["institution_id"] != guard[n["id"]]]
     bad += [f"{e['source_id']} AT_INSTITUTION {e['target_id']}" for e in edges
             if e.get("relationship_type") == "AT_INSTITUTION" and e.get("source_id") in guard
             and e.get("target_id") != guard[e["source_id"]]]
